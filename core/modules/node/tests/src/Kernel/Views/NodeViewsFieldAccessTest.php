@@ -68,7 +68,7 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->assertFieldAccess('node', 'sticky', 'Off');
 
     // $this->assertFieldAccess('node', 'created', \Drupal::service('date.formatter')->format(123456));
-    // $this->assertFieldAccess('node', 'changed', \Drupal::service('date.formatter')->format(REQUEST_TIME));
+    // $this->assertFieldAccess('node', 'changed', \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime()));
   }
 
 }

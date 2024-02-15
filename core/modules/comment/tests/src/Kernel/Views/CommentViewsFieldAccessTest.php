@@ -78,7 +78,7 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->assertFieldAccess('comment', 'homepage', 'https://example.com');
     $this->assertFieldAccess('comment', 'uid', $user->getAccountName());
     // $this->assertFieldAccess('comment', 'created', \Drupal::service('date.formatter')->format(123456));
-    // $this->assertFieldAccess('comment', 'changed', \Drupal::service('date.formatter')->format(REQUEST_TIME));
+    // $this->assertFieldAccess('comment', 'changed', \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime()));
     $this->assertFieldAccess('comment', 'status', 'On');
   }
 

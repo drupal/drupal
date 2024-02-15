@@ -55,7 +55,7 @@ class UserViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->assertFieldAccess('user', 'timezone', 'ut1');
     $this->assertFieldAccess('user', 'status', 'On');
     // $this->assertFieldAccess('user', 'created', \Drupal::service('date.formatter')->format(123456));
-    // $this->assertFieldAccess('user', 'changed', \Drupal::service('date.formatter')->format(REQUEST_TIME));
+    // $this->assertFieldAccess('user', 'changed', \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime()));
   }
 
 }

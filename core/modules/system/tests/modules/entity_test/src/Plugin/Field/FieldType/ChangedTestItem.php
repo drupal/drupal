@@ -27,7 +27,7 @@ class ChangedTestItem extends ChangedItem {
   public function preSave() {
     parent::preSave();
 
-    if ($this->value == REQUEST_TIME) {
+    if ($this->value == \Drupal::time()->getRequestTime()) {
       // During a test the request time is immutable. To allow tests of the
       // algorithm of
       // Drupal\Core\Field\Plugin\Field\FieldType\ChangedItem::preSave() we need

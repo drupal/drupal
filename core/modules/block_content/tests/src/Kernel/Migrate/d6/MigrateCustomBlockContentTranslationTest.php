@@ -45,7 +45,7 @@ class MigrateCustomBlockContentTranslationTest extends MigrateDrupal6TestBase {
     /** @var \Drupal\block_content\Entity\BlockContent $block */
     $block = BlockContent::load(1)->getTranslation('fr');
     $this->assertSame('fr - Static Block', $block->label());
-    $this->assertGreaterThanOrEqual(REQUEST_TIME, $block->getChangedTime());
+    $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $block->getChangedTime());
     $this->assertLessThanOrEqual(time(), $block->getChangedTime());
     $this->assertSame('fr', $block->language()->getId());
     $this->assertSame('<h3>fr - My first content block body</h3>', $block->body->value);
@@ -53,7 +53,7 @@ class MigrateCustomBlockContentTranslationTest extends MigrateDrupal6TestBase {
 
     $block = $block->getTranslation('zu');
     $this->assertSame('My block 1', $block->label());
-    $this->assertGreaterThanOrEqual(REQUEST_TIME, $block->getChangedTime());
+    $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $block->getChangedTime());
     $this->assertLessThanOrEqual(time(), $block->getChangedTime());
     $this->assertSame('zu', $block->language()->getId());
     $this->assertSame('<h3>zu - My first content block body</h3>', $block->body->value);
@@ -61,7 +61,7 @@ class MigrateCustomBlockContentTranslationTest extends MigrateDrupal6TestBase {
 
     $block = BlockContent::load(2)->getTranslation('fr');
     $this->assertSame('Encore un bloc statique', $block->label());
-    $this->assertGreaterThanOrEqual(REQUEST_TIME, $block->getChangedTime());
+    $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $block->getChangedTime());
     $this->assertLessThanOrEqual(time(), $block->getChangedTime());
     $this->assertSame('fr', $block->language()->getId());
     $this->assertSame('Nom de vocabulaire beaucoup plus long que trente-deux caractères', $block->body->value);

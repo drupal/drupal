@@ -89,7 +89,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
       $this->testUsers[$i] = User::create([
         'name' => 'test ' . $i,
         'timezone' => User::getAllowedTimezones()[$i],
-        'created' => REQUEST_TIME - rand(0, 3600),
+        'created' => \Drupal::time()->getRequestTime() - rand(0, 3600),
       ]);
       $this->testUsers[$i]->save();
     }

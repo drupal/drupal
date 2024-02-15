@@ -72,7 +72,6 @@ class WhoIsOnlineBlockTest extends KernelTestBase {
    * Tests the Who's Online block.
    */
   public function testWhoIsOnlineBlock() {
-    $request_time = \Drupal::time()->getRequestTime();
     // Generate users.
     $user1 = User::create([
       'name' => 'user1',
@@ -80,7 +79,8 @@ class WhoIsOnlineBlockTest extends KernelTestBase {
     ]);
     $user1->addRole('administrator');
     $user1->activate();
-    $user1->setLastAccessTime($request_time);
+    $requestTime = \Drupal::time()->getRequestTime();
+    $user1->setLastAccessTime($requestTime);
     $user1->save();
 
     $user2 = User::create([
@@ -88,7 +88,7 @@ class WhoIsOnlineBlockTest extends KernelTestBase {
       'mail' => 'user2@example.com',
     ]);
     $user2->activate();
-    $user2->setLastAccessTime($request_time + 1);
+    $user2->setLastAccessTime($requestTime + 1);
     $user2->save();
 
     $user3 = User::create([
@@ -97,7 +97,7 @@ class WhoIsOnlineBlockTest extends KernelTestBase {
     ]);
     $user3->activate();
     // Insert an inactive user who should not be seen in the block.
-    $inactive_time = $request_time - (60 * 60);
+    $inactive_time = $requestTime - (60 * 60);
     $user3->setLastAccessTime($inactive_time);
     $user3->save();
 
