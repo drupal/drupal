@@ -2,9 +2,11 @@
 
 namespace Drupal\history\Plugin\views\filter;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\UncacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Filter for new content.
@@ -24,6 +26,38 @@ class HistoryUserTimestamp extends FilterPluginBase {
    * {@inheritdoc}
    */
   public $no_operator = TRUE;
+
+  /**
+   * Constructs a HistoryUserTimestamp object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   The time service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected ?TimeInterface $time = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    if (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3395991', E_USER_DEPRECATED);
+      $this->time = \Drupal::service('datetime.time');
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('datetime.time'),
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -81,7 +115,7 @@ class HistoryUserTimestamp extends FilterPluginBase {
 
     // Hey, Drupal kills old history, so nodes that haven't been updated
     // since HISTORY_READ_LIMIT are outta here!
-    $limit = REQUEST_TIME - HISTORY_READ_LIMIT;
+    $limit = $this->time->getRequestTime() - HISTORY_READ_LIMIT;
 
     $this->ensureMyTable();
     $field = "$this->tableAlias.$this->realField";
