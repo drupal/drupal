@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\PerformanceTestTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,6 +27,19 @@ class PerformanceTestBase extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->doSetUpTasks();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
+    $db = Database::getConnection();
+    $test_file_name = (new \ReflectionClass($this))->getFileName();
+    $is_core_test = str_starts_with($test_file_name, DRUPAL_ROOT . DIRECTORY_SEPARATOR . 'core');
+    if ($db->databaseType() !== 'mysql' && $is_core_test) {
+      $this->markTestSkipped('Drupal core performance tests only run on MySQL');
+    }
   }
 
   /**

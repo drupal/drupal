@@ -407,4 +407,26 @@ trait PerformanceTestTrait {
     }
   }
 
+  /**
+   * Asserts that a count is between a min and max inclusively.
+   *
+   * @param int $min
+   *   Minimum value.
+   * @param int $max
+   *   Maximum value.
+   * @param int $actual
+   *   The number to assert against.
+   *
+   * @return void
+   *
+   * @throws \PHPUnit\Framework\ExpectationFailedException
+   */
+  protected function assertCountBetween(int $min, int $max, int $actual) {
+    static::assertThat(
+      $actual,
+      static::logicalAnd(static::greaterThanOrEqual($min), static::lessThanOrEqual($max)),
+      "$actual is greater or equal to $min and is smaller or equal to $max",
+    );
+  }
+
 }

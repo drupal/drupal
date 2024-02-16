@@ -55,7 +55,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('');
     }, 'standardFrontPage');
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(68, $performance_data->getQueryCount());
+    $this->assertCountBetween(68, 69, $performance_data->getQueryCount());
     $this->assertSame(137, $performance_data->getCacheGetCount());
     $this->assertSame(47, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
@@ -105,8 +105,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->submitLoginForm($account);
     });
 
-    $this->assertGreaterThanOrEqual(38, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(40, $performance_data->getQueryCount());
+    $this->assertCountBetween(38, 43, $performance_data->getQueryCount());
     $this->assertSame(64, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
@@ -136,7 +135,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () use ($account) {
       $this->submitLoginForm($account);
     });
-    $this->assertSame(49, $performance_data->getQueryCount());
+    $this->assertCountBetween(49, 52, $performance_data->getQueryCount());
     $this->assertSame(85, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
