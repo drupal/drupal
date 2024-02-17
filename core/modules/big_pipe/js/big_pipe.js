@@ -113,7 +113,12 @@
     // occur if the script node was first observed with empty content and then
     // the child text node was added in full later.
     // @see `@ingroup large_chunk` for more information.
-    else if (checkMutation(node.parentNode)) {
+    // If an element is added and then immediately (faster than the next
+    // setImmediate is triggered) removed to a watched element of a
+    // MutationObserver, the observer will notice and add a mutation for both
+    // the addedNode and the removedNode - but the referenced element will not
+    // have a parent node.
+    else if (node.parentNode !== null && checkMutation(node.parentNode)) {
       processReplacement(node.parentNode);
     }
   }
