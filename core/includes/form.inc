@@ -255,7 +255,6 @@ function template_preprocess_details(&$variables) {
       $variables['summary_attributes']['aria-controls'] = $element['#attributes']['id'];
     }
     $variables['summary_attributes']['aria-expanded'] = !empty($element['#attributes']['open']) ? 'true' : 'false';
-    $variables['summary_attributes']['aria-pressed'] = $variables['summary_attributes']['aria-expanded'];
   }
   $variables['title'] = (!empty($element['#title'])) ? $element['#title'] : '';
   // If the element title is a string, wrap it a render array so that markup
