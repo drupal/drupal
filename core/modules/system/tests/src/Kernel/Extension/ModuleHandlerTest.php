@@ -324,6 +324,8 @@ class ModuleHandlerTest extends KernelTestBase {
     file_exists('dummy://');
     $stream_wrappers = \Drupal::service('stream_wrapper_manager')->getWrappers();
     $this->assertTrue(isset($stream_wrappers['dummy']));
+    $this->assertTrue(isset($stream_wrappers['dummy1']));
+    $this->assertTrue(isset($stream_wrappers['dummy2']));
   }
 
   /**

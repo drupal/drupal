@@ -15,3 +15,8 @@ services:
     class: Drupal\file_test\StreamWrapper\DummyExternalReadOnlyWrapper
     tags:
       - { name: stream_wrapper, scheme: dummy-external-readonly }
+  stream_wrapper.dummy_multiple:
+    class: Drupal\file_test\StreamWrapper\DummyMultipleStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: dummy1 }
+      - { name: stream_wrapper, scheme: dummy2 }
