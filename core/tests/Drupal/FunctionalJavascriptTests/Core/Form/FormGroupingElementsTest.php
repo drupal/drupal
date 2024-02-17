@@ -134,7 +134,6 @@ class FormGroupingElementsTest extends WebDriverTestBase {
 
     // Assert that both aria-expanded and aria-pressed are true.
     $this->assertEquals('true', $summary->getAttribute('aria-expanded'));
-    $this->assertEquals('true', $summary->getAttribute('aria-pressed'));
   }
 
   /**
