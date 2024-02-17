@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   locale.default.config.storage:
     class: Drupal\locale\LocaleDefaultConfigStorage
     arguments: ['@config.storage', '@language_manager', '%install_profile%']
@@ -35,10 +37,6 @@ services:
   locale.config_subscriber:
     class: Drupal\locale\LocaleConfigSubscriber
     arguments: ['@config.factory', '@locale.config_manager']
-    tags:
-      - { name: event_subscriber }
   locale.locale_translation_cache_tag:
     class: Drupal\locale\EventSubscriber\LocaleTranslationCacheTag
     arguments: ['@cache_tags.invalidator']
-    tags:
-      - { name: event_subscriber }

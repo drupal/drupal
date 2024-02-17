@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   cache.dynamic_page_cache:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -12,8 +14,6 @@ services:
   dynamic_page_cache_subscriber:
     class: Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber
     arguments: ['@dynamic_page_cache_request_policy', '@dynamic_page_cache_response_policy', '@variation_cache.dynamic_page_cache', '@cache_contexts_manager', '%renderer.config%']
-    tags:
-      - { name: event_subscriber }
 
   # Request & response policies.
   dynamic_page_cache_request_policy:

@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   content_translation.synchronizer:
     class: Drupal\content_translation\FieldTranslationSynchronizer
     arguments: ['@entity_type.manager', '@plugin.manager.field.field_type']
@@ -7,8 +9,6 @@ services:
   content_translation.subscriber:
     class: Drupal\content_translation\Routing\ContentTranslationRouteSubscriber
     arguments: ['@content_translation.manager']
-    tags:
-      - { name: event_subscriber }
 
   content_translation.delete_access:
     class: Drupal\content_translation\Access\ContentTranslationDeleteAccess

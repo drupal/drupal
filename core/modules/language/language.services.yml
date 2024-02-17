@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   plugin.manager.language_negotiation_method:
     class: Drupal\language\LanguageNegotiationMethodManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
@@ -11,14 +13,11 @@ services:
   language.config_subscriber:
     class: Drupal\language\EventSubscriber\ConfigSubscriber
     arguments: ['@language_manager', '@language.default', '@config.factory', '@language_negotiator']
-    tags:
-      - { name: event_subscriber }
   language.config_factory_override:
     class: Drupal\language\Config\LanguageConfigFactoryOverride
     arguments: ['@config.storage', '@event_dispatcher', '@config.typed', '@language.default']
     tags:
       - { name: config.factory.override, priority: -254 }
-      - { name: event_subscriber }
   Drupal\language\Config\LanguageConfigFactoryOverrideInterface: '@language.config_factory_override'
   Drupal\Core\Config\ConfigFactoryOverrideInterface: '@language.config_factory_override'
   language_converter:

@@ -1,8 +1,8 @@
 services:
+  _defaults:
+    autoconfigure: true
   migrate.plugin_event_subscriber:
     class: Drupal\migrate\Plugin\PluginEventSubscriber
-    tags:
-      - { name: event_subscriber }
   cache.migrate:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

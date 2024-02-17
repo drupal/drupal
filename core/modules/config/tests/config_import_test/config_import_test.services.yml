@@ -1,6 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   config_import_test.event_subscriber:
     class: Drupal\config_import_test\EventSubscriber
-    tags:
-      - { name: event_subscriber }
     arguments: ['@state']

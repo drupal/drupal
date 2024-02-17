@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   layout_builder.tempstore_repository:
     class: Drupal\layout_builder\LayoutTempstoreRepository
     arguments: ['@tempstore.shared']
@@ -15,8 +17,6 @@ services:
   layout_builder.routes:
     class: Drupal\layout_builder\Routing\LayoutBuilderRoutes
     arguments: ['@plugin.manager.layout_builder.section_storage']
-    tags:
-      - { name: event_subscriber }
   layout_builder.tempstore.route_enhancer:
     class: Drupal\layout_builder\Routing\LayoutTempstoreRouteEnhancer
     arguments: ['@layout_builder.tempstore_repository']
@@ -50,8 +50,6 @@ services:
   layout_builder.render_block_component_subscriber:
     class: Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray
     arguments: ['@current_user']
-    tags:
-      - { name: event_subscriber }
   logger.channel.layout_builder:
     parent: logger.channel_base
     arguments: ['layout_builder']
@@ -70,5 +68,3 @@ services:
   layout_builder.element.prepare_layout:
     class: Drupal\layout_builder\EventSubscriber\PrepareLayout
     arguments: ['@layout_builder.tempstore_repository', '@messenger']
-    tags:
-      - { name: event_subscriber }

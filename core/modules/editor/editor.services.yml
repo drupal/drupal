@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   plugin.manager.editor:
     class: Drupal\editor\Plugin\EditorManager
     parent: default_plugin_manager
@@ -9,5 +11,3 @@ services:
   editor.config_translation_mapper_subscriber:
     class: Drupal\editor\EventSubscriber\EditorConfigTranslationSubscriber
     arguments: ['@config.factory']
-    tags:
-      - {name: event_subscriber}

@@ -1,8 +1,8 @@
 services:
+  _defaults:
+    autoconfigure: true
   path_alias.subscriber:
     class: Drupal\path_alias\EventSubscriber\PathAliasSubscriber
-    tags:
-      - { name: event_subscriber }
     arguments: ['@path_alias.manager', '@path.current']
   path_alias.path_processor:
     class: Drupal\path_alias\PathProcessor\AliasPathProcessor

@@ -1,5 +1,5 @@
 services:
+  _defaults:
+    autoconfigure: true
   # A test subscriber for the database API events.
-  Drupal\database_test\EventSubscriber\DatabaseEventSubscriber:
-    tags:
-      - { name: event_subscriber }
+  Drupal\database_test\EventSubscriber\DatabaseEventSubscriber: ~

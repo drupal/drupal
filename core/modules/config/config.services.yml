@@ -1,5 +1,5 @@
 services:
+  _defaults:
+    autoconfigure: true
   config.config_subscriber:
     class: Drupal\config\ConfigSubscriber
-    tags:
-      - { name: event_subscriber }

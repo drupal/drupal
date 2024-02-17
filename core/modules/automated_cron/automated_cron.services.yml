@@ -1,6 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   automated_cron.subscriber:
     class: Drupal\automated_cron\EventSubscriber\AutomatedCron
     arguments: ['@cron', '@config.factory', '@state']
-    tags:
-      - { name: event_subscriber }

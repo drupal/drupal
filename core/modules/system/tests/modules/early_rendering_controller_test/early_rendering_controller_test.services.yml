@@ -1,5 +1,5 @@
 services:
+  _defaults:
+    autoconfigure: true
   test_domain_object.view_subscriber:
     class: Drupal\early_rendering_controller_test\TestDomainObjectViewSubscriber
-    tags:
-      - { name: event_subscriber }

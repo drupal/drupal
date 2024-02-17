@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   workspaces.manager:
     class: Drupal\workspaces\WorkspaceManager
     arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association']
@@ -14,7 +16,6 @@ services:
     arguments: ['@database', '@entity_type.manager', '@workspaces.repository', '@logger.channel.workspaces']
     tags:
       - { name: backend_overridable }
-      - { name: event_subscriber }
   Drupal\workspaces\WorkspaceAssociationInterface: '@workspaces.association'
   workspaces.repository:
     class: Drupal\workspaces\WorkspaceRepository
@@ -41,13 +42,9 @@ services:
   workspaces.entity_schema_listener:
     class: Drupal\workspaces\EventSubscriber\EntitySchemaSubscriber
     arguments: ['@entity.definition_update_manager', '@entity.last_installed_schema.repository', '@workspaces.manager']
-    tags:
-      - { name: 'event_subscriber' }
   workspaces.workspace_subscriber:
     class: Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber
     arguments: ['@path_alias.manager', '@path.current', '@router.route_provider', '@workspaces.manager']
-    tags:
-      - { name: event_subscriber }
 
   cache_context.workspace:
     class: Drupal\workspaces\WorkspaceCacheContext

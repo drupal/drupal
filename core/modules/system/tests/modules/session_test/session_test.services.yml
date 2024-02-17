@@ -1,8 +1,8 @@
 services:
+  _defaults:
+    autoconfigure: true
   session_test.subscriber:
     class: Drupal\session_test\EventSubscriber\SessionTestSubscriber
-    tags:
-      - { name: event_subscriber }
   session_test.session_handler.test_proxy:
     class: Drupal\session_test\Session\TestSessionHandlerProxy
     tags:

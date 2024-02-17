@@ -1,9 +1,9 @@
 services:
+  _defaults:
+    autoconfigure: true
   config_translation.route_subscriber:
     class: Drupal\config_translation\Routing\RouteSubscriber
     arguments: ['@plugin.manager.config_translation.mapper']
-    tags:
-      - { name: event_subscriber }
 
   config_translation.access.overview:
     class: Drupal\config_translation\Access\ConfigTranslationOverviewAccess

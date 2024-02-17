@@ -1,5 +1,5 @@
 services:
+  _defaults:
+    autoconfigure: true
   media_test_embed.route_subscriber:
     class: Drupal\media_test_embed\Routing\RouteSubscriber
-    tags:
-      - { name: event_subscriber }

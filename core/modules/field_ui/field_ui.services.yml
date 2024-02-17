@@ -1,9 +1,9 @@
 services:
+  _defaults:
+    autoconfigure: true
   field_ui.subscriber:
     class: Drupal\field_ui\Routing\RouteSubscriber
     arguments: ['@entity_type.manager']
-    tags:
-      - { name: event_subscriber }
   access_check.field_ui.view_mode:
     class: Drupal\field_ui\Access\ViewModeAccessCheck
     arguments: ['@entity_type.manager']
