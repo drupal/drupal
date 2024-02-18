@@ -153,6 +153,8 @@ class BooleanOperator extends FilterPluginBase {
     if (!isset($this->valueOptions)) {
       $this->valueOptions = [1 => $this->t('True'), 0 => $this->t('False')];
     }
+
+    return $this->valueOptions;
   }
 
   protected function defineOptions() {

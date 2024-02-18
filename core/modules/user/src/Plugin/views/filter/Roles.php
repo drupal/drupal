@@ -52,11 +52,16 @@ class Roles extends ManyToOne {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getValueOptions() {
-    $roles = $this->roleStorage->loadMultiple();
-    unset($roles[RoleInterface::ANONYMOUS_ID]);
-    unset($roles[RoleInterface::AUTHENTICATED_ID]);
-    $this->valueOptions = array_map(fn(RoleInterface $role) => $role->label(), $roles);
+    if (!isset($this->valueOptions)) {
+      $roles = $this->roleStorage->loadMultiple();
+      unset($roles[RoleInterface::ANONYMOUS_ID]);
+      unset($roles[RoleInterface::AUTHENTICATED_ID]);
+      $this->valueOptions = array_map(fn(RoleInterface $role) => $role->label(), $roles);
+    }
     return $this->valueOptions;
 
   }

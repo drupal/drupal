@@ -14,12 +14,17 @@ use Drupal\views\Plugin\views\filter\InOperator;
  */
 class NodeComment extends InOperator {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getValueOptions() {
-    $this->valueOptions = [
-      CommentItemInterface::HIDDEN => $this->t('Hidden'),
-      CommentItemInterface::CLOSED => $this->t('Closed'),
-      CommentItemInterface::OPEN => $this->t('Open'),
-    ];
+    if (!isset($this->valueOptions)) {
+      $this->valueOptions = [
+        CommentItemInterface::HIDDEN => $this->t('Hidden'),
+        CommentItemInterface::CLOSED => $this->t('Closed'),
+        CommentItemInterface::OPEN => $this->t('Open'),
+      ];
+    }
     return $this->valueOptions;
   }
 
