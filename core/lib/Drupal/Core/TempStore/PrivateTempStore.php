@@ -102,7 +102,7 @@ class PrivateTempStore {
    *   The data associated with the key, or NULL if the key does not exist.
    */
   public function get($key) {
-    $key = $this->createkey($key);
+    $key = $this->createKey($key);
     if (($object = $this->storage->get($key)) && ($object->owner == $this->getOwner())) {
       return $object->data;
     }
@@ -132,7 +132,7 @@ class PrivateTempStore {
       }
     }
 
-    $key = $this->createkey($key);
+    $key = $this->createKey($key);
     if (!$this->lockBackend->acquire($key)) {
       $this->lockBackend->wait($key);
       if (!$this->lockBackend->acquire($key)) {
@@ -160,7 +160,7 @@ class PrivateTempStore {
    *   NULL otherwise.
    */
   public function getMetadata($key) {
-    $key = $this->createkey($key);
+    $key = $this->createKey($key);
     // Fetch the key/value pair and its metadata.
     $object = $this->storage->get($key);
     if ($object) {
@@ -184,7 +184,7 @@ class PrivateTempStore {
    *   Thrown when a lock for the backend storage could not be acquired.
    */
   public function delete($key) {
-    $key = $this->createkey($key);
+    $key = $this->createKey($key);
     if (!$object = $this->storage->get($key)) {
       return TRUE;
     }
@@ -211,7 +211,7 @@ class PrivateTempStore {
    * @return string
    *   The unique key for the user.
    */
-  protected function createkey($key) {
+  protected function createKey($key) {
     return $this->getOwner() . ':' . $key;
   }
 

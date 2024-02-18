@@ -45,7 +45,7 @@ abstract class Element extends TypedData {
    *   The typed config manager. This must be an instance of
    *   \Drupal\Core\Config\TypedConfigManagerInterface. If it is not, then this
    *   method will error when assertions are enabled. We can not narrow the
-   *   typehint as this will cause PHP errors.
+   *   type hint as this will cause PHP errors.
    *
    * @return $this
    */

@@ -13,6 +13,8 @@ use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore htkey
+
 /**
  * Tests BrowserTestBase functionality.
  *
@@ -524,7 +526,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   /**
    * Tests the protections provided by .htkey.
    */
-  public function testHtkey() {
+  public function testHtKey() {
     // Remove the Simpletest private key file so we can test the protection
     // against requests that forge a valid testing user agent to gain access
     // to the installer.

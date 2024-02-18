@@ -9,7 +9,6 @@ adminforms
 afterclose
 aftercreate
 ahah
-ajaxcallback
 ajaxing
 allwords
 alphadecimal
@@ -20,7 +19,6 @@ applix
 archiver
 archivers
 arrakis
-arrayx
 arrowrefresh
 arrowreturn
 arrowreturnthick
@@ -163,7 +161,6 @@ controlgroup
 conv
 corge
 cpio
-createkey
 createrole
 createuser
 crema
@@ -274,7 +271,6 @@ falsey
 falsish
 fapi
 fastcgi
-fatals
 favourite
 favstar
 fcgi
@@ -336,7 +332,6 @@ hoglet
 hookname
 hosters
 hrefs
-htkey
 htmlcorrector
 httpheader
 httplug
@@ -350,7 +345,6 @@ idekey
 iframes
 iframeupload
 imagecache
-imagecreatefrom
 imagetextalternative
 indexname
 inited
@@ -426,7 +420,6 @@ mank
 maryjane
 matchout
 mathematica
-maxage
 maximumred
 maxlifetime
 maynot
@@ -798,9 +791,6 @@ testcase
 testcontent
 testcontextawareblock
 testdialog
-testfilter
-testfunc
-testfunction
 testgroups
 testkey
 testlogger
@@ -852,7 +842,6 @@ troopal
 truecolor
 twistie
 twocol
-typehint
 tzid
 uids
 ulwa

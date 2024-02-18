@@ -50,7 +50,7 @@
  *     all operations have finished, this is passed to callback_batch_finished()
  *     where results may be referenced to display information to the end-user,
  *     such as how many total items were processed.
- *   It is discouraged to typehint this parameter as an array, to allow an
+ *   It is discouraged to type hint this parameter as an array, to allow an
  *   object implement \ArrayAccess to be passed.
  */
 function callback_batch_operation($multiple_params, &$context) {

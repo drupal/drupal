@@ -247,7 +247,7 @@ class RequestHandler implements ContainerInjectionInterface {
     // methods historically receive the unserialized request body as the N+1th
     // method argument, where N is the number of route parameters specified on
     // the accompanying route. To be able to use the argument resolver, which is
-    // not based on position but on name and typehint, specify commonly used
+    // not based on position but on name and type hint, specify commonly used
     // names here. Similarly, those methods receive the original stored object
     // as the first method argument.
 

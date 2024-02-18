@@ -263,7 +263,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   /**
    * Set cache max-age on the returned render array.
    */
-  public function system_test_cache_maxage_page() {
+  public function system_test_cache_max_age_page() {
     $build['main'] = [
       '#cache' => ['max-age' => 90],
       'message' => [

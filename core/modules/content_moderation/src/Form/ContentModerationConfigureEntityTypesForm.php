@@ -161,14 +161,14 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
       '#button_type' => 'primary',
       '#value' => $this->t('Save'),
       '#ajax' => [
-        'callback' => [$this, 'ajaxcallback'],
+        'callback' => [$this, 'ajaxCallback'],
       ],
     ];
     $form['actions']['cancel'] = [
       '#type' => 'button',
       '#value' => $this->t('Cancel'),
       '#ajax' => [
-        'callback' => [$this, 'ajaxcallback'],
+        'callback' => [$this, 'ajaxCallback'],
       ],
     ];
 

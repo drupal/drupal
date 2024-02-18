@@ -76,10 +76,10 @@ system_test.cache_tags_page:
   requirements:
     _access: 'TRUE'
 
-system_test.cache_maxage_page:
-  path: '/system-test/cache_maxage_page'
+system_test.cache_max_age_page:
+  path: '/system-test/cache_max_age_page'
   defaults:
-    _controller: '\Drupal\system_test\Controller\SystemTestController::system_test_cache_maxage_page'
+    _controller: '\Drupal\system_test\Controller\SystemTestController::system_test_cache_max_age_page'
   requirements:
     _access: 'TRUE'
 

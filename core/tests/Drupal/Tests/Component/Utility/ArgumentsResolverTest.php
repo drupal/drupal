@@ -124,11 +124,11 @@ class ArgumentsResolverTest extends TestCase {
   }
 
   /**
-   * Tests getArgument() with a wildcard parameter with no typehint.
+   * Tests getArgument() with a wildcard parameter with no type hint.
    *
-   * Without the typehint, the wildcard object will not be passed to the callable.
+   * Without the type hint, the wildcard object will not be passed to the callable.
    */
-  public function testGetWildcardArgumentNoTypehint() {
+  public function testGetWildcardArgumentNoTypeHint() {
     $a = $this->getMockBuilder('\Drupal\Tests\Component\Utility\Test1Interface')->getMock();
     $wildcards = [$a];
     $resolver = new ArgumentsResolver([], [], $wildcards);
@@ -140,12 +140,12 @@ class ArgumentsResolverTest extends TestCase {
   }
 
   /**
-   * Tests getArgument() with a named parameter with no typehint and a value.
+   * Tests getArgument() with a named parameter with no type hint and a value.
    *
-   * Without the typehint, passing a value to a named parameter will still
+   * Without the type hint, passing a value to a named parameter will still
    * receive the provided value.
    */
-  public function testGetArgumentRouteNoTypehintAndValue() {
+  public function testGetArgumentRouteNoTypeHintAndValue() {
     $scalars = ['route' => 'foo'];
     $resolver = new ArgumentsResolver($scalars, [], []);
 

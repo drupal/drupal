@@ -11,6 +11,8 @@ use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
+// cspell:ignore htkey
+
 /**
  * Error reporting level: display no errors.
  */

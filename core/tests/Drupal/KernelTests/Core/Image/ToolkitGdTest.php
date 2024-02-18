@@ -7,6 +7,8 @@ use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore imagecreatefrom
+
 /**
  * Tests for the GD image toolkit.
  *

@@ -174,7 +174,7 @@ class StorageCopyTraitTest extends UnitTestCase {
 class TestStorage extends MemoryStorage {
 
   /**
-   * Provides a setter to bypass the array typehint on ::write().
+   * Provides a setter to bypass the array type hint on ::write().
    *
    * This method allows us to create invalid configurations. The method
    * ::write() only allows values of the type array.
