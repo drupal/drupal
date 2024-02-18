@@ -4,6 +4,7 @@ namespace Drupal\config_import_test;
 
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
+use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\Importer\MissingContentEvent;
 use Drupal\Core\State\StateInterface;
@@ -72,6 +73,9 @@ class EventSubscriber implements EventSubscriberInterface {
    *   The missing content event.
    */
   public function onConfigImporterMissingContentTwo(MissingContentEvent $event) {
+    if (!$event->getConfigImporter() instanceof ConfigImporter) {
+      throw new \LogicException('\Drupal\Core\Config\Importer\MissingContentEvent is missing the ConfigImporter');
+    }
     if ($this->state->get('config_import_test.config_import_missing_content', FALSE) && $this->state->get('config_import_test.config_import_missing_content_two', FALSE) === FALSE) {
       $missing = $event->getMissingContent();
       $uuid = key($missing);
