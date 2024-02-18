@@ -130,7 +130,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    * @return array[]
    *   The test cases.
    */
-  public function providerInvalidMachineNameCharacters(): array {
+  public static function providerInvalidMachineNameCharacters(): array {
     return [
       'INVALID: space separated' => ['space separated', FALSE],
       'INVALID: dash separated' => ['dash-separated', FALSE],

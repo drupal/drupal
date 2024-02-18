@@ -55,11 +55,11 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   /**
    * Block names are atypical in that they allow periods in the machine name.
    */
-  public function providerInvalidMachineNameCharacters(): array {
+  public static function providerInvalidMachineNameCharacters(): array {
     $cases = parent::providerInvalidMachineNameCharacters();
     // Remove the existing test case that verifies a machine name containing
     // periods is invalid.
-    $this->assertSame(['period.separated', FALSE], $cases['INVALID: period separated']);
+    self::assertSame(['period.separated', FALSE], $cases['INVALID: period separated']);
     unset($cases['INVALID: period separated']);
     // And instead add a test case that verifies it is allowed for blocks.
     $cases['VALID: period separated'] = ['period.separated', TRUE];
