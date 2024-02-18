@@ -249,17 +249,51 @@ class EntityTypeManagerTest extends UnitTestCase {
   }
 
   /**
+   * Provides test data for testGetFormObjectInvalidOperation().
+   *
+   * @return array
+   *   Test data.
+   */
+  public function provideFormObjectInvalidOperationData(): array {
+    return [
+      'missing_form_handler' => [
+        'test_entity_type',
+        'edit',
+        '',
+        'The "test_entity_type" entity type did not specify a "edit" form class.',
+      ],
+      'missing_form_handler_class' => [
+        'test_entity_type',
+        'edit',
+        'Drupal\test_entity_type\Form\NonExistingClass',
+        'The "edit" form handler of the "test_entity_type" entity type specifies a non-existent class "Drupal\test_entity_type\Form\NonExistingClass".',
+      ],
+    ];
+  }
+
+  /**
    * Tests the getFormObject() method with an invalid operation.
    *
    * @covers ::getFormObject
+   *
+   * @dataProvider provideFormObjectInvalidOperationData
    */
-  public function testGetFormObjectInvalidOperation() {
+  public function testGetFormObjectInvalidOperation(string $entity_type_id, string $operation, string $form_class, string $exception_message): void {
     $entity = $this->prophesize(EntityTypeInterface::class);
-    $entity->getFormClass('edit')->willReturn('');
-    $this->setUpEntityTypeDefinitions(['test_entity_type' => $entity]);
+    $entity->getFormClass($operation)->willReturn(NULL);
+    if (!$form_class) {
+      $entity->getHandlerClasses()->willReturn([]);
+    }
+    else {
+      $entity->getHandlerClasses()->willReturn([
+        'form' => [$operation => $form_class],
+      ]);
+    }
+    $this->setUpEntityTypeDefinitions([$entity_type_id => $entity]);
 
     $this->expectException(InvalidPluginDefinitionException::class);
-    $this->entityTypeManager->getFormObject('test_entity_type', 'edit');
+    $this->expectExceptionMessage($exception_message);
+    $this->entityTypeManager->getFormObject($entity_type_id, $operation);
   }
 
   /**

@@ -207,7 +207,11 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    */
   public function getFormObject($entity_type_id, $operation) {
     if (!$class = $this->getDefinition($entity_type_id, TRUE)->getFormClass($operation)) {
-      throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" entity type did not specify a "%s" form class.', $entity_type_id, $operation));
+      $handlers = $this->getDefinition($entity_type_id, TRUE)->getHandlerClasses();
+      if (!isset($handlers['form'][$operation])) {
+        throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" entity type did not specify a "%s" form class.', $entity_type_id, $operation));
+      }
+      throw new InvalidPluginDefinitionException($entity_type_id, sprintf('The "%s" form handler of the "%s" entity type specifies a non-existent class "%s".', $operation, $entity_type_id, $handlers['form'][$operation]));
     }
 
     $form_object = $this->classResolver->getInstanceFromDefinition($class);
