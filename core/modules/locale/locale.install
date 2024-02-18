@@ -21,6 +21,12 @@ function locale_install() {
     \Drupal::configFactory()->getEditable('locale.settings')->set('translation.path', $directory)->save();
   }
   \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
+  $t_args = [
+    ':translate_status' => base_path() . 'admin/reports/translations/check?destination=' . urlencode(base_path() . 'admin/reports/translations'),
+  ];
+  $message = t('Check <a href=":translate_status">available translations</a> for your language(s).', $t_args);
+  \Drupal::messenger()->addStatus($message);
 }
 
 /**
