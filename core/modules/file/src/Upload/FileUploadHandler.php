@@ -280,7 +280,7 @@ class FileUploadHandler {
     $file->setFilename($this->fileSystem->basename($file->getFileUri()));
 
     if ($replace === FileSystemInterface::EXISTS_REPLACE) {
-      $existingFile = $this->loadByUri($file->getFileUri());
+      $existingFile = $this->fileRepository->loadByUri($file->getFileUri());
       if ($existingFile) {
         $file->fid = $existingFile->id();
         $file->setOriginalId($existingFile->id());
@@ -401,8 +401,14 @@ class FileUploadHandler {
    *
    * @return \Drupal\file\FileInterface|null
    *   The first file with the matched URI if found, NULL otherwise.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
+   *   Use \Drupal\file\FileRepositoryInterface::loadByUri().
+   *
+   * @see https://www.drupal.org/node/3409326
    */
   protected function loadByUri(string $uri): ?FileInterface {
+    @trigger_error('FileUploadHandler::loadByUri() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\FileRepositoryInterface::loadByUri(). See https://www.drupal.org/node/3409326', E_USER_DEPRECATED);
     return $this->fileRepository->loadByUri($uri);
   }
 
