@@ -982,4 +982,15 @@ class ConnectionTest extends UnitTestCase {
     $statement->setFetchMode($mode);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function tearDown(): void {
+    parent::tearDown();
+
+    // Removes the default connection added by the
+    // testFindCallerFromDebugBacktrace test.
+    Database::removeConnection('default');
+  }
+
 }
