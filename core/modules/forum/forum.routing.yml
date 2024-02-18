@@ -29,6 +29,7 @@ forum.page:
     _title_callback: '\Drupal\taxonomy\Controller\TaxonomyController::termTitle'
   requirements:
     _permission: 'access content'
+    _entity_access: 'taxonomy_term.view'
 
 forum.add_container:
   path: '/admin/structure/forum/add/container'
