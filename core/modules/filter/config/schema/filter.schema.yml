@@ -49,9 +49,6 @@ filter.format.*:
       label: 'Enabled filters'
       sequence:
         type: filter
-    dependencies:
-      type: config_dependencies
-      label: 'Dependencies'
 
 filter_settings.*:
   type: mapping
