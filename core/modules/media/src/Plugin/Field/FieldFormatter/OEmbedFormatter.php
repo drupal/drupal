@@ -177,7 +177,11 @@ class OEmbedFormatter extends FormatterBase {
         $resource = $this->resourceFetcher->fetchResource($resource_url);
       }
       catch (ResourceException $exception) {
-        $this->logger->error("Could not retrieve the remote URL (@url).", ['@url' => $value]);
+        $this->logger->error("Could not retrieve the remote URL (@url): %error", [
+          '@url' => $value,
+          '%error' => $exception->getPrevious() ? $exception->getPrevious()->getMessage() : $exception->getMessage(),
+          'exception' => $exception,
+        ]);
         continue;
       }
 

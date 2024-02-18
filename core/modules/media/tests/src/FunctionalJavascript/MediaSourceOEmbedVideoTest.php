@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Database\Database;
+use Drupal\dblog\Controller\DbLogController;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 use Drupal\media_test_oembed\Controller\ResourceController;
@@ -22,7 +24,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['media_test_oembed'];
+  protected static $modules = ['media_test_oembed', 'dblog'];
 
   /**
    * {@inheritdoc}
@@ -189,6 +191,24 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // Although the resource's thumbnail URL doesn't have a file extension, we
     // should have deduced the correct one.
     $this->assertStringEndsWith('.png', $thumbnail);
+
+    // Test ResourceException logging.
+    $video_url = 'https://vimeo.com/1111';
+    ResourceController::setResourceUrl($video_url, $this->getFixturesDirectory() . '/video_vimeo.json');
+    $this->drupalGet("media/add/$media_type_id");
+    $assert_session->fieldExists('Remote video URL')->setValue($video_url);
+    $assert_session->buttonExists('Save')->press();
+    $assert_session->addressEquals('admin/content/media');
+    ResourceController::setResource404($video_url);
+    $this->drupalGet($this->assertLinkToCreatedMedia());
+    $row = Database::getConnection()->select('watchdog')
+      ->fields('watchdog', ['message', 'variables'])
+      ->orderBy('wid', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchObject();
+    $message = (string) DbLogController::create($this->container)->formatMessage($row);
+    $this->assertStringContainsString('resulted in a `404 Not Found` response', $message);
 
     // Test anonymous access to media via iframe.
     $this->drupalLogout();
