@@ -123,10 +123,6 @@ class SkipOnEmpty extends ProcessPluginBase {
    *
    * @return mixed
    *   The input value, $value, if it is not empty.
-   *
-   * @throws \Drupal\migrate\MigrateSkipProcessException
-   *   Thrown if the source property is not set and rest of the process should
-   *   be skipped.
    */
   public function process($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (!$value) {

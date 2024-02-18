@@ -5,7 +5,6 @@ namespace Drupal\Tests\filter\Kernel\Plugin\migrate\process;
 use Drupal\filter\Plugin\migrate\process\FilterID;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 
@@ -47,7 +46,7 @@ class FilterIdTest extends KernelTestBase {
    * @param string $invalid_id
    *   (optional) The invalid plugin ID which is expected to be logged by the
    *   MigrateExecutable object.
-   * @param bool $skip_exception
+   * @param bool $stop_pipeline
    *   (optional) Set to TRUE if we expect the filter to be skipped because it
    *   is a transformation-only filter.
    *
@@ -55,7 +54,7 @@ class FilterIdTest extends KernelTestBase {
    *
    * @covers ::transform
    */
-  public function testTransform($value, $expected_value, $invalid_id = NULL, $skip_exception = FALSE) {
+  public function testTransform($value, $expected_value, $invalid_id = NULL, $stop_pipeline = FALSE) {
     $configuration = [
       'bypass' => TRUE,
       'map' => [
@@ -65,7 +64,7 @@ class FilterIdTest extends KernelTestBase {
     ];
     $plugin = FilterID::create($this->container, $configuration, 'filter_id', []);
 
-    if ($skip_exception) {
+    if ($stop_pipeline) {
       $this->executable
         ->expects($this->exactly(1))
         ->method('saveMessage')
@@ -73,8 +72,6 @@ class FilterIdTest extends KernelTestBase {
           sprintf('Filter %s could not be mapped to an existing filter plugin; omitted since it is a transformation-only filter. Install and configure a successor after the migration.', $value),
           MigrationInterface::MESSAGE_INFORMATIONAL
         );
-      $this->expectException(MigrateSkipProcessException::class);
-      $this->expectExceptionMessage(sprintf("The transformation-only filter %s was skipped.", $value));
     }
 
     if (isset($invalid_id)) {
@@ -91,6 +88,7 @@ class FilterIdTest extends KernelTestBase {
     $output_value = $plugin->transform($value, $this->executable, $row, 'foo');
 
     $this->assertSame($expected_value, $output_value);
+    $this->assertSame($stop_pipeline, $plugin->isPipelineStopped());
   }
 
   /**
@@ -128,7 +126,7 @@ class FilterIdTest extends KernelTestBase {
       ],
       'transformation-only D7 contrib filter' => [
         'editor_align',
-        '',
+        NULL,
         NULL,
         TRUE,
       ],

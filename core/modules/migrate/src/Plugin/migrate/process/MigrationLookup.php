@@ -6,7 +6,6 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateLookupInterface;
-use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\MigrateStubInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -114,9 +113,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @endcode
  *
  * If the source value passed in to the plugin is NULL, boolean FALSE, an empty
- * array or an empty string, the plugin will throw a
- * MigrateSkipProcessException, causing further plugins in the process to be
- * skipped.
+ * array or an empty string, the plugin will return NULL and stop further
+ * processing on the pipeline. This is done for backwards compatibility reasons,
+ * and future versions of this plugin should simply return NULL and allow
+ * processing to continue.
+ * @see https://www.drupal.org/project/drupal/issues/3246666
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  *
@@ -187,7 +188,6 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    *
-   * @throws \Drupal\migrate\MigrateSkipProcessException
    * @throws \Drupal\migrate\MigrateException
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
@@ -205,6 +205,9 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       }
       $lookup_value = (array) $lookup_value;
       $this->skipInvalid($lookup_value);
+      if ($this->isPipelineStopped()) {
+        return NULL;
+      }
       $source_id_values[$lookup_migration_id] = $lookup_value;
 
       // Re-throw any PluginException as a MigrateException so the executable
@@ -281,12 +284,10 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
    *
    * @param array $value
    *   The incoming value to check.
-   *
-   * @throws \Drupal\migrate\MigrateSkipProcessException
    */
   protected function skipInvalid(array $value) {
     if (!array_filter($value, [$this, 'isValid'])) {
-      throw new MigrateSkipProcessException();
+      $this->stopPipeline();
     }
   }
 

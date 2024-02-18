@@ -220,9 +220,8 @@ class SubProcess extends ProcessPluginBase {
           $key = $this->transformKey($key, $migrate_executable, $new_row);
         }
         // Do not save the result if the key is NULL. The configured process
-        // pipeline used in transformKey() will return NULL if a
-        // MigrateSkipProcessException is thrown.
-        // @see \Drupal\filter\Plugin\migrate\process\FilterID
+        // pipeline used in transformKey() will return NULL if the key can not
+        // be transformed.
         if ($key !== NULL) {
           $return[$key] = $destination;
         }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
-use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MigrationLookup;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -90,8 +89,9 @@ class MigrationLookupTest extends MigrationLookupTestCase {
     $migration_plugin_manager->createInstances(['foo'])
       ->willReturn(['foo' => $migration_plugin->reveal()]);
     $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
-    $this->expectException(MigrateSkipProcessException::class);
-    $migration->transform($value, $this->migrateExecutable, $this->row, 'foo');
+    $result = $migration->transform($value, $this->migrateExecutable, $this->row, 'foo');
+    $this->assertTrue($migration->isPipelineStopped());
+    $this->assertNull($result);
   }
 
   /**
@@ -164,9 +164,10 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    * @param string|array $expected_value
    *   The expected value(s) of the migration process plugin.
    *
-   * @dataProvider successfulLookupDataProvider
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\migrate\MigrateException
    *
-   * @throws \Drupal\migrate\MigrateSkipProcessException
+   * @dataProvider successfulLookupDataProvider
    */
   public function testSuccessfulLookup(array $source_id_values, array $destination_id_values, $source_value, $expected_value) {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
