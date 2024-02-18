@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the block_content module.
  */
 
+use Drupal\block_content\BlockContentStorageSchema;
 use Drupal\Core\Entity\Form\RevisionDeleteForm;
 use Drupal\Core\Entity\Form\RevisionRevertForm;
 use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
@@ -49,4 +50,16 @@ function block_content_update_10200() {
     $field_storage_definition->setConstraints($constraints);
     $definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
   }
+}
+
+/**
+ * Apply index to reusable column.
+ */
+function block_content_update_10300(): void {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $manager->getEntityType('block_content')
+    ->setHandlerClass('storage_schema', BlockContentStorageSchema::class);
+  $manager->updateEntityType($entity_type);
+  $manager->updateFieldStorageDefinition(\Drupal::service('entity_field.manager')
+    ->getBaseFieldDefinitions('block_content')['reusable']);
 }
