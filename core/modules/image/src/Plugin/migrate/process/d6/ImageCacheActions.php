@@ -6,6 +6,8 @@ use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
+// cspell:ignore imagecache
+
 /**
  * @MigrateProcessPlugin(
  *   id = "d6_imagecache_actions"

@@ -19,6 +19,8 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
+// cspell:ignore plid
+
 /**
  * Defines a book manager.
  */
@@ -1006,8 +1008,8 @@ class BookManager implements BookManagerInterface {
 
       foreach ($book_links as $book_link) {
         $nid = $book_link['nid'];
-        foreach ($node_links[$nid] as $mlid => $link) {
-          $node_links[$nid][$mlid]['access'] = TRUE;
+        foreach ($node_links[$nid] as $menu_link_id => $link) {
+          $node_links[$nid][$menu_link_id]['access'] = TRUE;
         }
       }
     }

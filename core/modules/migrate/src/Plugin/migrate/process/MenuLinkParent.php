@@ -15,6 +15,8 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore plid
+
 /**
  * Determines the parent of a menu link.
  *

@@ -5,6 +5,8 @@ namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore trid
+
 /**
  * Drupal 6 taxonomy term source from database.
  *

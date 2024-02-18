@@ -11,6 +11,8 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
 
+// cspell:ignore totalcount
+
 /**
  * Implements hook_help().
  */

@@ -2,7 +2,7 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
-// cspell:ignore objectid objectindex
+// cspell:ignore objectid objectindex plid textgroup
 
 /**
  * Drupal 7 i18n vocabulary translations source from database.

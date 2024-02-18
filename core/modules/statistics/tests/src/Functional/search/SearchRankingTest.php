@@ -7,6 +7,8 @@ use Drupal\search\Entity\SearchPage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
+// cspell:ignore daycount totalcount
+
 /**
  * Indexes content and tests ranking factors.
  *

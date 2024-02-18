@@ -9,6 +9,8 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore daycount totalcount
+
 /**
  * Destination for node counter.
  *

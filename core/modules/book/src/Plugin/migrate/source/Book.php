@@ -4,6 +4,8 @@ namespace Drupal\book\Plugin\migrate\source;
 
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
+// cspell:ignore mlid plid
+
 /**
  * Drupal 6/7 book source from database.
  *

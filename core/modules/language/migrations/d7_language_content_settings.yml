@@ -1,3 +1,4 @@
+# cspell:ignore newnode
 id: d7_language_content_settings
 label: Drupal 7 language content settings
 migration_tags:

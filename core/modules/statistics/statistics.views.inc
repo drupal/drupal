@@ -5,6 +5,8 @@
  * Provide views data for statistics.module.
  */
 
+// cspell:ignore daycount totalcount
+
 /**
  * Implements hook_views_data().
  */

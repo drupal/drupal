@@ -4,6 +4,8 @@ namespace Drupal\Tests\shortcut\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore mlid plid
+
 /**
  * Tests D7 Shortcut source plugin.
  *

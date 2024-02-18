@@ -107,7 +107,7 @@ class RowTest extends UnitTestCase {
     $multi_source_ids = $this->testSourceIds + ['vid' => 'Node revision'];
     $multi_source_ids_values = $this->testValues + ['vid' => 1];
     $row = new Row($multi_source_ids_values, $multi_source_ids);
-    $this->assertSame($multi_source_ids_values, $row->getSource(), 'Row with data, multifield id.');
+    $this->assertSame($multi_source_ids_values, $row->getSource(), 'Row with data, multiple source id.');
   }
 
   /**

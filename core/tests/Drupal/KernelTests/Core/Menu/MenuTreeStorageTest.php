@@ -7,6 +7,8 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Menu\MenuTreeStorage;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore mlid
+
 /**
  * Tests the menu tree storage.
  *

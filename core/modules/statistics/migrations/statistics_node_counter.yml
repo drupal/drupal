@@ -1,3 +1,4 @@
+# cspell:ignore daycount totalcount
 id: statistics_node_counter
 label: Node counter
 migration_tags:

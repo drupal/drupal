@@ -4,7 +4,7 @@ namespace Drupal\Tests\image\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
-// cspell:ignore actionid
+// cspell:ignore actionid imagecache presetid presetname
 
 /**
  * Tests the d6_imagecache_presets source plugin.

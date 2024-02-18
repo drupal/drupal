@@ -261,13 +261,13 @@ class BreadcrumbTest extends BrowserTestBase {
       }
       $parent_tid = $term->id();
     }
-    $parent_mlid = '';
+    $parent_menu_link_id = '';
     foreach ($tags as $name => $data) {
       $term = $data['term'];
       $edit = [
         'title[0][value]' => "$name link",
         'link[0][uri]' => "/taxonomy/term/{$term->id()}",
-        'menu_parent' => "$menu:{$parent_mlid}",
+        'menu_parent' => "$menu:{$parent_menu_link_id}",
         'enabled[value]' => 1,
       ];
       $this->drupalGet("admin/structure/menu/manage/{$menu}/add");
@@ -277,7 +277,7 @@ class BreadcrumbTest extends BrowserTestBase {
         'link.uri' => 'internal:/taxonomy/term/' . $term->id(),
       ]);
       $tags[$name]['link'] = reset($menu_links);
-      $parent_mlid = $tags[$name]['link']->getPluginId();
+      $parent_menu_link_id = $tags[$name]['link']->getPluginId();
     }
 
     // Verify expected breadcrumbs for menu links.

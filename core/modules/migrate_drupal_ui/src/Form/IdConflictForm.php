@@ -6,6 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\migrate\Audit\IdAuditor;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 
+// cspell:ignore idconflict
+
 /**
  * Migrate Upgrade Id Conflict form.
  *

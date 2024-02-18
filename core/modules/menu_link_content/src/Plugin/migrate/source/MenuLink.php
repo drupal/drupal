@@ -6,7 +6,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
-// cspell:ignore objectid tsid
+// cspell:ignore mlid objectid plid textgroup tsid
 
 /**
  * Drupal 6/7 menu link source from database.

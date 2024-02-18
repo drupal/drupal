@@ -12,6 +12,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Query\SelectInterface;
 
+// cspell:ignore mlid
+
 /**
  * Provides a menu tree storage using the database.
  */

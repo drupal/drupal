@@ -6,6 +6,8 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+// cspell:ignore daycount totalcount
+
 /**
  * Provides the default database storage backend for statistics.
  */

@@ -1,3 +1,4 @@
+# cspell:ignore accesslog
 id: statistics_settings
 label: Statistics configuration
 migration_tags:

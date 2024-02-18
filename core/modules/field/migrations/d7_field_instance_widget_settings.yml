@@ -1,4 +1,4 @@
-# cspell:ignore entityreference
+# cspell:ignore entityreference onoff
 id: d7_field_instance_widget_settings
 label: Field instance widget configuration
 migration_tags:

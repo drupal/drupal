@@ -6,7 +6,7 @@ use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
 use Drupal\migrate\Row;
 use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
 
-// cspell:ignore objectid
+// cspell:ignore mlid objectid textgroup
 
 /**
  * Drupal 7 i18n menu link translations source from database.

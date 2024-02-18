@@ -2,6 +2,8 @@
 
 namespace Drupal\statistics;
 
+// cspell:ignore daycount totalcount
+
 /**
  * Provides an interface defining Statistics Storage.
  *

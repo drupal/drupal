@@ -900,12 +900,12 @@ class MenuUiTest extends BrowserTestBase {
    *   The menu the menu link will be moved to.
    */
   public function moveMenuLink(MenuLinkContent $item, $parent, $menu_name) {
-    $mlid = $item->id();
+    $menu_link_id = $item->id();
 
     $edit = [
       'menu_parent' => $menu_name . ':' . $parent,
     ];
-    $this->drupalGet("admin/structure/menu/item/{$mlid}/edit");
+    $this->drupalGet("admin/structure/menu/item/{$menu_link_id}/edit");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
   }
@@ -919,13 +919,13 @@ class MenuUiTest extends BrowserTestBase {
   public function modifyMenuLink(MenuLinkContent $item) {
     $item->title->value = $this->randomMachineName(16);
 
-    $mlid = $item->id();
+    $menu_link_id = $item->id();
     $title = $item->getTitle();
 
     // Edit menu link.
     $edit = [];
     $edit['title[0][value]'] = $title;
-    $this->drupalGet("admin/structure/menu/item/{$mlid}/edit");
+    $this->drupalGet("admin/structure/menu/item/{$menu_link_id}/edit");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('The menu link has been saved.');
@@ -980,11 +980,11 @@ class MenuUiTest extends BrowserTestBase {
    *   Menu link.
    */
   public function deleteMenuLink(MenuLinkContent $item) {
-    $mlid = $item->id();
+    $menu_link_id = $item->id();
     $title = $item->getTitle();
 
     // Delete menu link.
-    $this->drupalGet("admin/structure/menu/item/{$mlid}/delete");
+    $this->drupalGet("admin/structure/menu/item/{$menu_link_id}/delete");
     $this->submitForm([], 'Delete');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains("The menu link $title has been deleted.");
@@ -1020,9 +1020,9 @@ class MenuUiTest extends BrowserTestBase {
    *   Menu link.
    */
   public function disableMenuLink(MenuLinkContent $item) {
-    $mlid = $item->id();
+    $menu_link_id = $item->id();
     $edit['enabled[value]'] = FALSE;
-    $this->drupalGet("admin/structure/menu/item/{$mlid}/edit");
+    $this->drupalGet("admin/structure/menu/item/{$menu_link_id}/edit");
     $this->submitForm($edit, 'Save');
 
     // Unlike most other modules, there is no confirmation message displayed.
@@ -1037,9 +1037,9 @@ class MenuUiTest extends BrowserTestBase {
    *   Menu link.
    */
   public function enableMenuLink(MenuLinkContent $item) {
-    $mlid = $item->id();
+    $menu_link_id = $item->id();
     $edit['enabled[value]'] = TRUE;
-    $this->drupalGet("admin/structure/menu/item/{$mlid}/edit");
+    $this->drupalGet("admin/structure/menu/item/{$menu_link_id}/edit");
     $this->submitForm($edit, 'Save');
 
     // Verify in the database.

@@ -1,3 +1,4 @@
+# cspell:ignore newnode
 id: d6_language_content_comment_settings
 label: Drupal 6 language content comment settings
 migration_tags:

@@ -17,6 +17,8 @@ use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MenuLinkParent;
 
+// cspell:ignore plid
+
 /**
  * Tests the menu link parent process plugin.
  *

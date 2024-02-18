@@ -4,6 +4,8 @@ namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore trid
+
 /**
  * Tests taxonomy term source plugin.
  *

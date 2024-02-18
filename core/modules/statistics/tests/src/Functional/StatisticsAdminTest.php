@@ -6,6 +6,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 
+// cspell:ignore accesslog daycount
+
 /**
  * Tests the statistics admin.
  *

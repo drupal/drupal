@@ -17,6 +17,8 @@ use GuzzleHttp\ClientInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore idconflict
+
 /**
  * Migrate Upgrade database credential form.
  *

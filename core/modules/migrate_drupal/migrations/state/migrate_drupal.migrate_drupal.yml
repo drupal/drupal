@@ -2,8 +2,8 @@
 # assigned so that they appear in the will not be upgraded list on the Review
 # form.
 # cspell:ignore blogapi calendarsignup ctools datepicker ddblock entityreference
-# cspell:ignore filefield imageapi imagefield imagemagick multigroup multiupload
-# cspell:ignore nodeaccess openid
+# cspell:ignore filefield imageapi imagefield imagecache imagemagick multigroup
+# cspell:ignore multiupload nodeaccess openid
 finished:
   6:
     # The following do not have an upgrade path.

@@ -4,7 +4,7 @@ namespace Drupal\block\Plugin\migrate\source\d7;
 
 use Drupal\block\Plugin\migrate\source\Block;
 
-// cspell:ignore objectid objectindex
+// cspell:ignore objectid objectindex plid textgroup
 
 /**
  * Drupal 7 i18n block data from database.

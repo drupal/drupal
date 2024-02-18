@@ -371,7 +371,8 @@ class FormTest extends FieldTestBase {
 
     // Display creation form -> 1 widget.
     $this->drupalGet('entity_test/add');
-    // Check that the Required symbol is present for the multifield label.
+    // Check that the Required symbol is present for the label of the field
+    // with unlimited cardinality.
     $this->assertSession()->elementAttributeContains('xpath', "//h4[contains(@class, 'label') and contains(text(), '{$this->field['label']}')]", 'class', 'js-form-required');
     // Check that the label of the field input is visually hidden and contains
     // the field title and an indication of the delta for a11y.
