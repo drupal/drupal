@@ -24,22 +24,29 @@
  * feedback would be a usability/accessibility issue as well.
  */
 
-.js .form-autocomplete {
-  background-image: url(../../images/icons/868686/magnifier.svg);
-  background-repeat: no-repeat;
-  background-position: 100% 50%;
-}
-.js[dir="rtl"] .form-autocomplete {
-  background-image: url(../../images/icons/868686/magnifier-rtl.svg);
-  background-position: 0 50%;
-}
-.js .form-autocomplete.is-autocompleting {
-  background-image: url(../../images/icons/003ecc/spinner.svg);
-  background-position: center right -10px;
-}
-.js[dir="rtl"] .form-autocomplete.is-autocompleting {
-  background-image: url(../../images/icons/003ecc/spinner-rtl.svg);
-  background-position: center left 10px;
+.js {
+  & .form-autocomplete {
+    background-image: url(../../images/icons/868686/magnifier.svg);
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
+
+    &.is-autocompleting {
+      background-image: url(../../images/icons/003ecc/spinner.svg);
+      background-position: center right -10px;
+    }
+  }
+
+  &[dir="rtl"] {
+    & .form-autocomplete {
+      background-image: url(../../images/icons/868686/magnifier-rtl.svg);
+      background-position: 0 50%;
+
+      &.is-autocompleting {
+        background-image: url(../../images/icons/003ecc/spinner-rtl.svg);
+        background-position: center left 10px;
+      }
+    }
+  }
 }
 
 /**
@@ -50,18 +57,15 @@
   display: inline-block;
   max-width: 100%;
 }
+
 .claro-autocomplete__message {
   position: absolute;
-  right: 0;
-  bottom: 100%;
+  inset-inline-end: 0;
+  inset-block-end: 100%;
   max-width: 100%;
-  margin-bottom: 0.15rem;
+  margin-block-end: 0.15rem;
   color: var(--color-link);
   font-size: var(--font-size-xxs); /* ~11px */
   font-weight: bold;
   line-height: calc(18rem / 16); /* 18px */
-}
-[dir="rtl"] .claro-autocomplete__message {
-  right: auto;
-  left: 0;
 }
