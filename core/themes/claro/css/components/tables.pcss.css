@@ -72,22 +72,25 @@ th {
       margin-block-start: -0.5rem;
       content: "";
       opacity: 0.5;
-      background: url(../../images/icons/000f33/sort--inactive--ltr.svg) no-repeat 50% 50%;
+      background: url(../../images/icons/000f33/sort--inactive.svg) no-repeat 50% 50%;
       background-size: contain;
+      
+      [dir="rtl"] & {
+        /* Horizontally flip the element. */
+        transform: scaleX(-1);
+        background-image: url(../../images/icons/000f33/sort--inactive.svg);
+
+        @media (forced-colors: active) {
+          mask: url(../../images/icons/000f33/sort--inactive.svg) no-repeat 50% 50%;
+        }
+      }
 
       @media (forced-colors: active) {
         opacity: 1;
         background: linktext;
-        mask: url(../../images/icons/000f33/sort--inactive--ltr.svg) no-repeat 50% 50%;
+        mask: url(../../images/icons/000f33/sort--inactive.svg) no-repeat 50% 50%;
       }
 
-      @nest [dir="rtl"] & {
-        background-image: url(../../images/icons/000f33/sort--inactive--rtl.svg);
-
-        @media (forced-colors: active) {
-          mask: url(../../images/icons/000f33/sort--inactive--rtl.svg) no-repeat 50% 50%;
-        }
-      }
     }
   }
 
@@ -137,11 +140,11 @@ td {
   padding: var(--space-xs) var(--space-m);
   text-align: start;
 
-  @nest & .item-list ul {
+  & .item-list ul {
     margin: 0;
   }
 
-  @nest &.is-active {
+  &.is-active {
     background: none;
   }
 }
@@ -150,19 +153,21 @@ td {
  * Target every .form-element input that parent is a form-item of a table cell.
  * This ignores the filter format select of the textarea editor.
  */
-td > .form-item > .form-element,
-td > .ajax-new-content > .form-item > .form-element,
-td > .form-item > .claro-autocomplete,
-td > .form-item > .claro-autocomplete > .form-element,
-td > .ajax-new-content > .form-item > .claro-autocomplete,
-td > .ajax-new-content > .form-item > .claro-autocomplete > .form-element {
-  width: 100%;
-}
+td {
+  & > .form-item > .form-element,
+  & > .ajax-new-content > .form-item > .form-element,
+  & > .form-item > .claro-autocomplete,
+  & > .form-item > .claro-autocomplete > .form-element,
+  & > .ajax-new-content > .form-item > .claro-autocomplete,
+  & > .ajax-new-content > .form-item > .claro-autocomplete > .form-element {
+    width: 100%;
+  }
 
-td > .form-item > .form-element--type-select,
-td > .ajax-new-content > .form-item > .form-element--type-select {
-  width: max-content;
-  min-width: 100%;
+  & > .form-item > .form-element--type-select,
+  & > .ajax-new-content > .form-item > .form-element--type-select {
+    width: max-content;
+    min-width: 100%;
+  }
 }
 
 /* Win over table-file-multiple-widget. */
