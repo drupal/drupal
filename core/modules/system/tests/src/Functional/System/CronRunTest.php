@@ -54,7 +54,7 @@ class CronRunTest extends BrowserTestBase {
   /**
    * Ensure that the automated cron run module is working.
    *
-   * In these tests we do not use REQUEST_TIME to track start time, because we
+   * In these tests we do not use \Drupal::time()->getRequestTime() to track start time, because we
    * need the exact time when cron is triggered.
    */
   public function testAutomatedCron() {

@@ -50,7 +50,7 @@ trait FakeLogEntries {
       'request_uri' => $base_root . \Drupal::request()->getRequestUri(),
       'referer'     => \Drupal::request()->server->get('HTTP_REFERER'),
       'ip'          => '127.0.0.1',
-      'timestamp'   => REQUEST_TIME,
+      'timestamp'   => \Drupal::time()->getRequestTime(),
     ];
 
     $logger = $this->container->get('logger.dblog');

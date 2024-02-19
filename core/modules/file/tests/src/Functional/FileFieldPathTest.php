@@ -39,8 +39,8 @@ class FileFieldPathTest extends FileFieldTestBase {
     $date_formatter = $this->container->get('date.formatter');
     $expected_filename =
       'public://' .
-      $date_formatter->format(REQUEST_TIME, 'custom', 'Y') . '-' .
-      $date_formatter->format(REQUEST_TIME, 'custom', 'm') . '/' .
+      $date_formatter->format(\Drupal::time()->getRequestTime(), 'custom', 'Y') . '-' .
+      $date_formatter->format(\Drupal::time()->getRequestTime(), 'custom', 'm') . '/' .
       $test_file->getFilename();
     $this->assertPathMatch($expected_filename, $node_file->getFileUri(), "The file {$node_file->getFileUri()} was uploaded to the correct path.");
 

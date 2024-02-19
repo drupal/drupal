@@ -43,7 +43,7 @@ class BulkFormTest extends BrowserTestBase {
     for ($i = 0; $i < 10; $i++) {
       // Ensure nodes are sorted in the same order they are inserted in the
       // array.
-      $timestamp = REQUEST_TIME - $i;
+      $timestamp = \Drupal::time()->getRequestTime() - $i;
       $nodes[] = $this->drupalCreateNode([
         'title' => 'Node ' . $i,
         'sticky' => FALSE,

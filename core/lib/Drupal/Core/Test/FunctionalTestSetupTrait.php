@@ -264,9 +264,10 @@ trait FunctionalTestSetupTrait {
 
     $request = Request::create($request_path, 'GET', [], [], [], $server);
     $request->setSession(new Session(new MockArraySessionStorage()));
-    // Ensure the request time is REQUEST_TIME to ensure that API calls
-    // in the test use the right timestamp.
-    $request->server->set('REQUEST_TIME', REQUEST_TIME);
+
+    // Ensure the request time is \Drupal::time()->getRequestTime() to ensure
+    // that API calls in the test use the right timestamp.
+    $request->server->set('REQUEST_TIME', \Drupal::time()->getRequestTime());
 
     $this->container->get('request_stack')->push($request);
     // The request context is normally set by the router_listener from within

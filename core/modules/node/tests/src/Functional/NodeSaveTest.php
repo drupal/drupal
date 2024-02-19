@@ -95,8 +95,8 @@ class NodeSaveTest extends NodeTestBase {
 
     Node::create($edit)->save();
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertEquals(REQUEST_TIME, $node->getCreatedTime(), 'Creating a node sets default "created" timestamp.');
-    $this->assertEquals(REQUEST_TIME, $node->getChangedTime(), 'Creating a node sets default "changed" timestamp.');
+    $this->assertEquals(\Drupal::time()->getRequestTime(), $node->getCreatedTime(), 'Creating a node sets default "created" timestamp.');
+    $this->assertEquals(\Drupal::time()->getRequestTime(), $node->getChangedTime(), 'Creating a node sets default "changed" timestamp.');
 
     // Store the timestamps.
     $created = $node->getCreatedTime();

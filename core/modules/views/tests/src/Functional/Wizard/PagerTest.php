@@ -22,7 +22,7 @@ class PagerTest extends WizardTestBase {
     // conditions that are meaningful for the use of a pager.
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 12; $i++) {
-      $this->drupalCreateNode(['created' => REQUEST_TIME - $i]);
+      $this->drupalCreateNode(['created' => \Drupal::time()->getRequestTime() - $i]);
     }
 
     // Make a View that uses a pager.

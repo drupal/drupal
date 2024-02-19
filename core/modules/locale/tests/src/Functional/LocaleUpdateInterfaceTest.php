@@ -113,14 +113,14 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     // Override Drupal core translation status as 'translations available'.
     $status = locale_translation_get_status();
     $status['drupal']['de']->type = 'local';
-    $status['drupal']['de']->files['local']->timestamp = REQUEST_TIME;
+    $status['drupal']['de']->files['local']->timestamp = \Drupal::time()->getRequestTime();
     $status['drupal']['de']->files['local']->info['version'] = '8.1.1';
     \Drupal::keyValue('locale.translation_status')->set('drupal', $status['drupal']);
 
     // Check if translations are available for Drupal core.
     $this->drupalGet('admin/reports/translations');
     $this->assertSession()->pageTextContains('Updates for: Drupal core');
-    $this->assertSession()->pageTextContains('Drupal core (' . $this->container->get('date.formatter')->format(REQUEST_TIME, 'html_date') . ')');
+    $this->assertSession()->pageTextContains('Drupal core (' . $this->container->get('date.formatter')->format(\Drupal::time()->getRequestTime(), 'html_date') . ')');
     $this->assertSession()->buttonExists('Update translations');
   }
 
