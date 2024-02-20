@@ -318,7 +318,11 @@ trait PerformanceTestTrait {
       ResourceAttributes::DEPLOYMENT_ENVIRONMENT => 'local',
     ])));
 
-    $transport = (new OtlpHttpTransportFactory())->create($collector, 'application/x-protobuf');
+    $otel_collector_headers = getenv('OTEL_COLLECTOR_HEADERS') ?: [];
+    if ($otel_collector_headers) {
+      $otel_collector_headers = json_decode($otel_collector_headers, TRUE);
+    }
+    $transport = (new OtlpHttpTransportFactory())->create($collector, 'application/x-protobuf', $otel_collector_headers);
     $exporter = new SpanExporter($transport);
     $tracerProvider = new TracerProvider(new SimpleSpanProcessor($exporter), NULL, $resource);
     $tracer = $tracerProvider->getTracer('Drupal');
