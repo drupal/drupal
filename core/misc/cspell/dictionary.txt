@@ -191,9 +191,6 @@ delsp
 denormalizable
 denormalizer
 denormalizers
-dependee
-dependee's
-dependees
 derivedfrom
 desaturate
 desaturated
