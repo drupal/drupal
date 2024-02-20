@@ -50,7 +50,7 @@
     "jquery/no-trigger": 0,
     "jquery/no-trim": 2,
     "jquery/no-val": 2,
-    "jquery/no-when": 0,
+    "jquery/no-when": 2,
     "jquery/no-wrap": 0
   }
 }
