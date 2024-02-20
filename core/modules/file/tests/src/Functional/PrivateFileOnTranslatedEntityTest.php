@@ -79,11 +79,15 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $default_language_node = $this->drupalCreateNode(['type' => 'page']);
 
     // Edit the node to upload a file.
-    $edit = [];
-    $name = 'files[' . $this->fieldName . '_0]';
-    $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[0]->uri);
-    $this->drupalGet('node/' . $default_language_node->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    $file = File::create(
+      [
+        'uri' => $this->drupalGetTestFiles('text')[0]->uri,
+      ]
+    );
+    $file->save();
+
+    $default_language_node->set($this->fieldName, $file->id());
+    $default_language_node->save();
     $last_fid_prior = $this->getLastFileId();
 
     // Languages are cached on many levels, and we need to clear those caches.
@@ -97,18 +101,31 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Translate the node into French.
-    $this->drupalGet('node/' . $default_language_node->id() . '/translations');
-    $this->clickLink('Add');
+    $node->addTranslation(
+      'fr', [
+        'title' => $this->randomString(),
+      ]
+    );
+    $node->save();
 
     // Remove the existing file.
-    $this->submitForm([], 'Remove');
+    $existing_file = $node->{$this->fieldName}->entity;
+    if ($existing_file) {
+      $node->set($this->fieldName, NULL);
+      $existing_file->delete();
+      $node->save();
+    }
 
     // Upload a different file.
-    $edit = [];
-    $edit['title[0][value]'] = $this->randomMachineName();
-    $name = 'files[' . $this->fieldName . '_0]';
-    $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[1]->uri);
-    $this->submitForm($edit, 'Save (this translation)');
+    $default_language_node = $node->getTranslation('fr');
+    $file = File::create(
+      [
+        'uri' => $this->drupalGetTestFiles('text')[1]->uri,
+      ]
+    );
+    $file->save();
+    $default_language_node->set($this->fieldName, $file->id());
+    $default_language_node->save();
     $last_fid = $this->getLastFileId();
 
     // Verify the translation was created.
