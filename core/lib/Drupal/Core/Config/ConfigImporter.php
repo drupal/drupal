@@ -698,7 +698,7 @@ class ConfigImporter {
       $missing_content = $sandbox['missing_content']['data'];
     }
     if (!empty($missing_content)) {
-      $event = new MissingContentEvent($missing_content, $this);
+      $event = new MissingContentEvent($missing_content);
       // Fire an event to allow listeners to create the missing content.
       $this->eventDispatcher->dispatch($event, ConfigEvents::IMPORT_MISSING_CONTENT);
       $sandbox['missing_content']['data'] = $event->getMissingContent();
