@@ -486,10 +486,18 @@ abstract class Database {
     if (!isset($key)) {
       $key = self::$activeKey;
     }
-    if (isset($target)) {
+    if (isset($target) && isset(self::$connections[$key][$target])) {
+      if (self::$connections[$key][$target] instanceof Connection) {
+        self::$connections[$key][$target]->commitAll();
+      }
       unset(self::$connections[$key][$target]);
     }
-    else {
+    elseif (isset(self::$connections[$key])) {
+      foreach (self::$connections[$key] as $connection) {
+        if ($connection instanceof Connection) {
+          $connection->commitAll();
+        }
+      }
       unset(self::$connections[$key]);
     }
     // Force garbage collection to run. This ensures that client connection
@@ -738,6 +746,47 @@ abstract class Database {
     // @see \Drupal\Core\DrupalKernel::getModuleNamespacesPsr4()
     // @see https://www.drupal.org/docs/8/creating-custom-modules/naming-and-placing-your-drupal-8-module#s-name-your-module
     return ($first === 'Drupal' && strtolower($second) === $second);
+  }
+
+  /**
+   * Calls commitAll() on all the open connections.
+   *
+   * If drupal_register_shutdown_function() exists the commit will occur during
+   * shutdown so that it occurs at the latest possible moment.
+   *
+   * @param bool $shutdown
+   *   Internal param to denote that the method is being called by
+   *   _drupal_shutdown_function().
+   *
+   * @return void
+   *
+   * @internal
+   *   This method exists only to work around a bug caused by Drupal incorrectly
+   *   relying on object destruction order to commit transactions. Xdebug 3.3.0
+   *   changes the order of object destruction when the develop mode is enabled.
+   */
+  public static function commitAllOnShutdown(bool $shutdown = FALSE): void {
+    static $registered = FALSE;
+
+    if ($shutdown) {
+      foreach (self::$connections as $targets) {
+        foreach ($targets as $connection) {
+          if ($connection instanceof Connection) {
+            $connection->commitAll();
+          }
+        }
+      }
+      return;
+    }
+
+    if (!function_exists('drupal_register_shutdown_function')) {
+      return;
+    }
+
+    if (!$registered) {
+      $registered = TRUE;
+      drupal_register_shutdown_function('\Drupal\Core\Database\Database::commitAllOnShutdown', TRUE);
+    }
   }
 
 }
