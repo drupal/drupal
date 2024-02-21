@@ -290,11 +290,12 @@ class DateHelper {
    */
   public static function years($min = 0, $max = 0, $required = FALSE) {
     // Ensure $min and $max are valid values.
+    $requestTime = \Drupal::time()->getRequestTime();
     if (empty($min)) {
-      $min = intval(date('Y', REQUEST_TIME) - 3);
+      $min = intval(date('Y', $requestTime) - 3);
     }
     if (empty($max)) {
-      $max = intval(date('Y', REQUEST_TIME) + 3);
+      $max = intval(date('Y', $requestTime) + 3);
     }
     $none = ['' => ''];
     $range = range($min, $max);
