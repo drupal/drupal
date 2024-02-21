@@ -3,8 +3,10 @@
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Transaction\ClientConnectionTransactionState;
 use Drupal\Core\Database\Transaction\StackItem;
 use Drupal\Core\Database\Transaction\StackItemType;
+use Drupal\Core\Database\Transaction\TransactionManagerBase;
 use Drupal\Core\Database\TransactionExplicitCommitNotAllowedException;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
@@ -885,11 +887,24 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $testConnection = Database::getConnection('test_fail');
 
     // Add a fake item to the stack.
-    $reflectionMethod = new \ReflectionMethod(get_class($testConnection->transactionManager()), 'addStackItem');
-    $reflectionMethod->invoke($testConnection->transactionManager(), 'bar', new StackItem('qux', StackItemType::Savepoint));
+    $manager = $testConnection->transactionManager();
+    $reflectionMethod = new \ReflectionMethod($manager, 'addStackItem');
+    $reflectionMethod->invoke($manager, 'bar', new StackItem('qux', StackItemType::Root));
+    // Ensure transaction state can be determined during object destruction.
+    // This is necessary for the test to pass when xdebug.mode has the 'develop'
+    // option enabled.
+    $reflectionProperty = new \ReflectionProperty(TransactionManagerBase::class, 'connectionTransactionState');
+    $reflectionProperty->setValue($manager, ClientConnectionTransactionState::Active);
 
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessageMatches("/^Transaction .stack was not empty\\. Active stack: bar\\\\qux/");
+    // Ensure that __destruct() results in an assertion error. Note that this
+    // will normally be called by PHP during the object's destruction but Drupal
+    // will commit all transactions when a database is closed thereby making
+    // this impossible to test with calling it directly.
+    $manager->__destruct();
+
+    // Clean up.
     unset($testConnection);
     Database::closeConnection('test_fail');
   }
@@ -932,6 +947,10 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->expectDeprecation('Drupal\\Core\\Database\\Connection::popCommittableTransactions() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002');
     $this->expectDeprecation('Drupal\\Core\\Database\\Connection::doCommit() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002');
     $this->connection->popTransaction('foo');
+
+    // Ensure there are no outstanding transactions left. This is necessary for
+    // the test to pass when xdebug.mode has the 'develop' option enabled.
+    $this->connection->commitAll();
   }
 
 }

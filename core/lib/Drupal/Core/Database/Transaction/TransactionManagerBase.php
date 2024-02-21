@@ -128,6 +128,20 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   }
 
   /**
+   * Commits the entire transaction stack.
+   *
+   * @internal
+   *   This method exists only to work around a bug caused by Drupal incorrectly
+   *   relying on object destruction order to commit transactions. Xdebug 3.3.0
+   *   changes the order of object destruction when the develop mode is enabled.
+   */
+  public function commitAll(): void {
+    foreach (array_reverse($this->stack()) as $id => $item) {
+      $this->unpile($item->name, $id);
+    }
+  }
+
+  /**
    * Adds an item to the transaction stack.
    *
    * Drivers should not override this method unless they also override the
@@ -253,7 +267,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     // DDL statement breaking an active transaction). That should be listed in
     // $voidedItems, so we can remove it from there.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
-      assert(isset($this->voidedItems[$id]), "Transaction {$id}/{$name} is out of sequence. Active stack: " . $this->dumpStackItemsAsString());
       unset($this->voidedItems[$id]);
       return;
     }
