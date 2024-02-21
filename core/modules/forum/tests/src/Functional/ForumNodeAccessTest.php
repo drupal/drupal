@@ -9,6 +9,7 @@ use Drupal\node\Entity\NodeType;
  * Tests forum block view for private node access.
  *
  * @group forum
+ * @group legacy
  */
 class ForumNodeAccessTest extends BrowserTestBase {
 

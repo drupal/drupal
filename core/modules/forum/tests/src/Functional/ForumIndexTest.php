@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the forum index listing.
  *
  * @group forum
+ * @group legacy
  */
 class ForumIndexTest extends BrowserTestBase {
 

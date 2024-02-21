@@ -13,6 +13,7 @@ use Drupal\Tests\node\Kernel\Migrate\d6\MigrateNodeTestBase;
  * Tests forum migration from Drupal 6 to Drupal 8.
  *
  * @group migrate_drupal_6
+ * @group legacy
  */
 class MigrateForumTest extends MigrateNodeTestBase {
 

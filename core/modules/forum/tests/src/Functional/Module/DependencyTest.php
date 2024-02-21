@@ -8,6 +8,7 @@ use Drupal\Tests\system\Functional\Module\ModuleTestBase;
  * Enable module without dependency enabled.
  *
  * @group form
+ * @group legacy
  */
 class DependencyTest extends ModuleTestBase {
 

@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests access controlled node views have the right amount of comment pages.
  *
  * @group form
+ * @group legacy
  */
 class NodeAccessPagerTest extends BrowserTestBase {
 

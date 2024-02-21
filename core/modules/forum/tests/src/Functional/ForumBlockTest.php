@@ -11,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the forum blocks.
  *
  * @group forum
+ * @group legacy
  */
 class ForumBlockTest extends BrowserTestBase {
 

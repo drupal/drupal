@@ -10,6 +10,7 @@ use Drupal\taxonomy\Entity\Term;
  * Tests forum validation constraints.
  *
  * @group forum
+ * @group legacy
  */
 class ForumValidationTest extends EntityKernelTestBase {
 

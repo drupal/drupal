@@ -8,6 +8,7 @@ use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
  * Generic module test for forum.
  *
  * @group forum
+ * @group legacy
  */
 class GenericTest extends GenericModuleTestBase {
 

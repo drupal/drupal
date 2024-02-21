@@ -10,6 +10,7 @@ use Drupal\taxonomy\Entity\Term;
  * Tests altering the inbound path and the outbound path.
  *
  * @group form
+ * @group legacy
  */
 class UrlAlterFunctionalTest extends BrowserTestBase {
 

@@ -10,3 +10,5 @@ dependencies:
 package: Core
 version: VERSION
 configure: forum.overview
+lifecycle: deprecated
+lifecycle_link: "https://www.drupal.org/node/3223395#s-forum"

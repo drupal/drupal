@@ -9,6 +9,7 @@ use Drupal\taxonomy\Entity\Term;
  * Tests forum taxonomy terms for access.
  *
  * @group forum
+ * @group legacy
  */
 class ForumTermAccessTest extends BrowserTestBase {
 

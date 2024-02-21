@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Container;
 /**
  * @coversDefaultClass \Drupal\forum\Breadcrumb\ForumListingBreadcrumbBuilder
  * @group forum
+ * @group legacy
  */
 class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
 

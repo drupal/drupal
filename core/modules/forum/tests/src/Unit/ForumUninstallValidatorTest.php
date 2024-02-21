@@ -10,6 +10,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\forum\ForumUninstallValidator
  * @group forum
+ * @group legacy
  */
 class ForumUninstallValidatorTest extends UnitTestCase {
 
