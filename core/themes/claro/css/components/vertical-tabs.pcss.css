@@ -170,6 +170,10 @@
   border-start-end-radius: 0;
   border-end-end-radius: 0;
   border-end-start-radius: var(--base-border-radius);
+
+  @media (forced-colors: active) {
+    border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid canvastext;
+  }
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover::before {

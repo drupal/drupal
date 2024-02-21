@@ -193,6 +193,12 @@
   border-end-start-radius: var(--base-border-radius);
 }
 
+@media (forced-colors: active) {
+  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+    border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid canvastext;
+  }
+}
+
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover::before {
   background: none;
 }
