@@ -12,3 +12,8 @@ services:
     public: false
     decorates: cache_factory
     arguments: ['@performance_test.cache_factory.inner', '@Drupal\performance_test\PerformanceDataCollector']
+  performance_test.cache_tags.invalidator.checksum:
+    class: Drupal\performance_test\Cache\CacheTagsChecksumDecorator
+    public: false
+    decorates: cache_tags.invalidator.checksum
+    arguments: ['@performance_test.cache_tags.invalidator.checksum.inner', '@Drupal\performance_test\PerformanceDataCollector']

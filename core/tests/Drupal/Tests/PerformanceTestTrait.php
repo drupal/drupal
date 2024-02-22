@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
+use Drupal\performance_test\Cache\CacheTagOperation;
 use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\Contrib\Otlp\OtlpHttpTransportFactory;
 use OpenTelemetry\Contrib\Otlp\SpanExporter;
@@ -123,10 +124,17 @@ trait PerformanceTestTrait {
       $cache_get_count = 0;
       $cache_set_count = 0;
       $cache_delete_count = 0;
+      $cache_tag_is_valid_count = 0;
+      $cache_tag_invalidation_count = 0;
+      $cache_tag_checksum_count = 0;
       foreach ($performance_test_data['database_events'] as $event) {
         // Don't log queries from the database cache backend because they're
         // logged separately as cache operations.
-        if (!(isset($event->caller['class']) && is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE))) {
+        $database_cache = FALSE;
+        if (isset($event->caller['class'])) {
+          $database_cache = is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a(str_replace('\\\\', '\\', $event->caller['class']), 'Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
+        }
+        if (!$database_cache) {
           $query_count++;
         }
       }
@@ -141,10 +149,20 @@ trait PerformanceTestTrait {
           $cache_delete_count++;
         }
       }
+      foreach ($performance_test_data['cache_tag_operations'] as $operation) {
+        match($operation['operation']) {
+          CacheTagOperation::getCurrentChecksum => $cache_tag_checksum_count++,
+          CacheTagOperation::isValid => $cache_tag_is_valid_count++,
+          CacheTagOperation::invalidateTags => $cache_tag_invalidation_count++,
+        };
+      }
       $performance_data->setQueryCount($query_count);
       $performance_data->setCacheGetCount($cache_get_count);
       $performance_data->setCacheSetCount($cache_set_count);
       $performance_data->setCacheDeleteCount($cache_delete_count);
+      $performance_data->setCacheTagChecksumCount($cache_tag_checksum_count);
+      $performance_data->setCacheTagIsValidCount($cache_tag_is_valid_count);
+      $performance_data->setCacheTagInvalidationCount($cache_tag_invalidation_count);
     }
 
     return $performance_data;
@@ -357,13 +375,22 @@ trait PerformanceTestTrait {
       }
       $cache_operations = $performance_test_data['cache_operations'] ?? [];
       foreach ($cache_operations as $operation) {
-        $cache_span = $tracer->spanBuilder($operation['operation'] . ' ' . $operation['bin'])
+        $cache_span = $tracer->spanBuilder('cache ' . $operation['operation'] . ' ' . $operation['bin'])
           ->setStartTimestamp((int) ($operation['start'] * $nanoseconds_per_second))
           ->setAttribute('cache.operation', $operation['operation'])
           ->setAttribute('cache.cids', $operation['cids'])
           ->setAttribute('cache.bin', $operation['bin'])
           ->startSpan();
         $cache_span->end((int) ($operation['stop'] * $nanoseconds_per_second));
+      }
+      $cache_tag_operations = $performance_test_data['cache_tag_operations'] ?? [];
+      foreach ($cache_tag_operations as $operation) {
+        $cache_tag_span = $tracer->spanBuilder('cache_tag ' . $operation['operation']->name . ' ' . $operation['tags'])
+          ->setStartTimestamp((int) ($operation['start'] * $nanoseconds_per_second))
+          ->setAttribute('cache_tag.operation', $operation['operation']->name)
+          ->setAttribute('cache_tag.tags', $operation['tags'])
+          ->startSpan();
+        $cache_tag_span->end((int) ($operation['stop'] * $nanoseconds_per_second));
       }
 
       $lcp_timestamp = NULL;

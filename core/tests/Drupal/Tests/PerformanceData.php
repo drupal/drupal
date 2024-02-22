@@ -42,6 +42,21 @@ class PerformanceData {
   protected int $cacheDeleteCount = 0;
 
   /**
+   * The number of cache tag checksum checks.
+   */
+  protected int $cacheTagChecksumCount = 0;
+
+  /**
+   * The number of cache tag validity checks.
+   */
+  protected int $cacheTagIsValidCount = 0;
+
+  /**
+   * The number of cache tag invalidations.
+   */
+  protected int $cacheTagInvalidationCount = 0;
+
+  /**
    * The original return value.
    */
   protected $returnValue;
@@ -164,6 +179,66 @@ class PerformanceData {
    */
   public function getCacheDeleteCount(): int {
     return $this->cacheDeleteCount;
+  }
+
+  /**
+   * Sets the cache tag checksum count.
+   *
+   * @param int $count
+   *   The number of cache tag checksum checks recorded.
+   */
+  public function setCacheTagChecksumCount(int $count): void {
+    $this->cacheTagChecksumCount = $count;
+  }
+
+  /**
+   * Gets the cache tag checksum count.
+   *
+   * @return int
+   *   The number of cache tag checksum checks recorded.
+   */
+  public function getCacheTagChecksumCount(): int {
+    return $this->cacheTagChecksumCount;
+  }
+
+  /**
+   * Sets the cache tag isValid count.
+   *
+   * @param int $count
+   *   The number of cache tag isValid checks recorded.
+   */
+  public function setCacheTagIsValidCount(int $count): void {
+    $this->cacheTagIsValidCount = $count;
+  }
+
+  /**
+   * Gets the cache tag isValid count.
+   *
+   * @return int
+   *   The number of cache tag isValid checks recorded.
+   */
+  public function getCacheTagIsValidCount(): int {
+    return $this->cacheTagIsValidCount;
+  }
+
+  /**
+   * Sets the cache tag invalidation count.
+   *
+   * @param int $count
+   *   The number of cache tag invalidations recorded.
+   */
+  public function setCacheTagInvalidationCount(int $count): void {
+    $this->cacheTagInvalidationCount = $count;
+  }
+
+  /**
+   * Gets the cache tag invalidation count.
+   *
+   * @return int
+   *   The number of cache tag invalidations recorded.
+   */
+  public function getCacheTagInvalidationCount(): int {
+    return $this->cacheTagInvalidationCount;
   }
 
   /**
