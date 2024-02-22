@@ -5,10 +5,12 @@ namespace Drupal\big_pipe\Render;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\MessageCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -205,29 +207,17 @@ class BigPipe {
    */
   protected $configFactory;
 
-  /**
-   * Constructs a new BigPipe class.
-   *
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
-   * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-   *   The session.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
-   *   The HTTP kernel.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   */
-  public function __construct(RendererInterface $renderer, SessionInterface $session, RequestStack $request_stack, HttpKernelInterface $http_kernel, EventDispatcherInterface $event_dispatcher, ConfigFactoryInterface $config_factory) {
+  public function __construct(RendererInterface $renderer, SessionInterface $session, RequestStack $request_stack, HttpKernelInterface $http_kernel, EventDispatcherInterface $event_dispatcher, ConfigFactoryInterface $config_factory, protected ?MessengerInterface $messenger = NULL) {
     $this->renderer = $renderer;
     $this->session = $session;
     $this->requestStack = $request_stack;
     $this->httpKernel = $http_kernel;
     $this->eventDispatcher = $event_dispatcher;
     $this->configFactory = $config_factory;
+    if (!isset($this->messenger)) {
+      @trigger_error('Calling ' . __CLASS__ . '::_construct() without the $messenger argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3343754', E_USER_DEPRECATED);
+      $this->messenger = \Drupal::messenger();
+    }
   }
 
   /**
@@ -538,29 +528,16 @@ class BigPipe {
 
     // Create a Fiber for each placeholder.
     $fibers = [];
-    $message_placeholder_id = NULL;
     foreach ($placeholder_order as $placeholder_id) {
       if (!isset($placeholders[$placeholder_id])) {
         continue;
       }
       $placeholder_render_array = $placeholders[$placeholder_id];
-
-      // Ensure the messages placeholder renders last, the render order of every
-      // other placeholder is safe to change.
-      // @see static::getPlaceholderOrder()
-      if (isset($placeholder_render_array['#lazy_builder']) && $placeholder_render_array['#lazy_builder'][0] === 'Drupal\Core\Render\Element\StatusMessages::renderMessages') {
-        $message_placeholder_id = $placeholder_id;
-      }
       $fibers[$placeholder_id] = new \Fiber(fn() => $this->renderPlaceholder($placeholder_id, $placeholder_render_array));
     }
     $iterations = 0;
     while (count($fibers) > 0) {
       foreach ($fibers as $placeholder_id => $fiber) {
-        // Keep skipping the messages placeholder until it's the only Fiber
-        // remaining. @todo https://www.drupal.org/project/drupal/issues/3379885
-        if (isset($message_placeholder_id) && $placeholder_id === $message_placeholder_id && count($fibers) > 1) {
-          continue;
-        }
         try {
           if (!$fiber->isStarted()) {
             $fiber->start();
@@ -593,6 +570,15 @@ class BigPipe {
           $big_pipe_js_placeholder_id = Html::decodeEntities($placeholder_id);
           $ajax_response->addCommand(new ReplaceCommand(sprintf('[data-big-pipe-placeholder-id="%s"]', $big_pipe_js_placeholder_id), $elements['#markup']));
           $ajax_response->setAttachments($elements['#attached']);
+
+          // Delete all messages that were generated during the rendering of this
+          // placeholder, to render them in a BigPipe-optimized way.
+          $messages = $this->messenger->deleteAll();
+          foreach ($messages as $type => $type_messages) {
+            foreach ($type_messages as $message) {
+              $ajax_response->addCommand(new MessageCommand($message, NULL, ['type' => $type], FALSE));
+            }
+          }
 
           // Push a fake request with the asset libraries loaded so far and
           // dispatch KernelEvents::RESPONSE event. This results in the
@@ -736,8 +722,7 @@ EOF;
    *
    * @return array
    *   Indexed array; the order in which the BigPipe placeholders will start
-   *   execution. Placeholders begin execution in DOM order, except for the
-   *   messages placeholder which must always be executed last. Note that due to
+   *   execution. Placeholders begin execution in DOM order. Note that due to
    *   the Fibers implementation of BigPipe, although placeholders will start
    *   executing in DOM order, they may finish and render in any order. Values
    *   are the BigPipe placeholder IDs. Note that only unique placeholders are
@@ -751,35 +736,7 @@ EOF;
     foreach ($xpath->query('//span[@data-big-pipe-placeholder-id]') as $node) {
       $placeholder_ids[] = Html::escape($node->getAttribute('data-big-pipe-placeholder-id'));
     }
-    $placeholder_ids = array_unique($placeholder_ids);
-
-    // The 'status messages' placeholder needs to be special cased, because it
-    // depends on global state that can be modified when other placeholders are
-    // being rendered: any code can add messages to render.
-    // This violates the principle that each lazy builder must be able to render
-    // itself in isolation, and therefore in any order. However, we cannot
-    // change the way \Drupal\Core\Messenger\MessengerInterface::addMessage()
-    // works in the Drupal 8 cycle. So we have to accommodate its special needs.
-    // Allowing placeholders to be rendered in a particular order (in this case:
-    // last) would violate this isolation principle. Thus a monopoly is granted
-    // to this one special case, with this hard-coded solution.
-    // @see \Drupal\Core\Render\Element\StatusMessages
-    // @see \Drupal\Core\Render\Renderer::replacePlaceholders()
-    // @see https://www.drupal.org/node/2712935#comment-11368923
-    $message_placeholder_ids = [];
-    foreach ($placeholders as $placeholder_id => $placeholder_element) {
-      if (isset($placeholder_element['#lazy_builder']) && $placeholder_element['#lazy_builder'][0] === 'Drupal\Core\Render\Element\StatusMessages::renderMessages') {
-        $message_placeholder_ids[] = $placeholder_id;
-      }
-    }
-
-    // Return placeholder IDs in DOM order, but with the 'status messages'
-    // placeholders at the end, if they are present.
-    $ordered_placeholder_ids = array_merge(
-      array_diff($placeholder_ids, $message_placeholder_ids),
-      array_intersect($placeholder_ids, $message_placeholder_ids)
-    );
-    return $ordered_placeholder_ids;
+    return array_unique($placeholder_ids);
   }
 
   /**
