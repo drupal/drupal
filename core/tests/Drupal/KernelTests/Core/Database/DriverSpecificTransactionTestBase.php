@@ -818,15 +818,21 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $reflectionProperty = new \ReflectionProperty(TransactionManagerBase::class, 'connectionTransactionState');
     $reflectionProperty->setValue($manager, ClientConnectionTransactionState::Active);
 
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessageMatches("/^Transaction .stack was not empty\\. Active stack: bar\\\\qux/");
     // Ensure that __destruct() results in an assertion error. Note that this
     // will normally be called by PHP during the object's destruction but Drupal
     // will commit all transactions when a database is closed thereby making
     // this impossible to test unless it is called directly.
-    $manager->__destruct();
+    try {
+      $manager->__destruct();
+      $this->fail("Expected AssertionError error not thrown");
+    }
+    catch (\AssertionError $e) {
+      $this->assertStringStartsWith('Transaction $stack was not empty. Active stack: bar\\qux', $e->getMessage());
+    }
 
     // Clean up.
+    $reflectionProperty = new \ReflectionProperty(TransactionManagerBase::class, 'stack');
+    $reflectionProperty->setValue($manager, []);
     unset($testConnection);
     Database::closeConnection('test_fail');
   }
