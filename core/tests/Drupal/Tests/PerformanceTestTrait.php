@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
+use Drupal\Core\Database\Event\DatabaseEvent;
 use Drupal\performance_test\Cache\CacheTagOperation;
 use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\Contrib\Otlp\OtlpHttpTransportFactory;
@@ -130,11 +131,7 @@ trait PerformanceTestTrait {
       foreach ($performance_test_data['database_events'] as $event) {
         // Don't log queries from the database cache backend because they're
         // logged separately as cache operations.
-        $database_cache = FALSE;
-        if (isset($event->caller['class'])) {
-          $database_cache = is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a(str_replace('\\\\', '\\', $event->caller['class']), 'Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
-        }
-        if (!$database_cache) {
+        if (!static::isDatabaseCache($event)) {
           $query_count++;
         }
       }
@@ -361,7 +358,7 @@ trait PerformanceTestTrait {
       $performance_test_data = $collection->get('performance_test_data');
       $query_events = $performance_test_data['database_events'] ?? [];
       foreach ($query_events as $key => $event) {
-        if (isset($event->caller['class']) && is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE)) {
+        if (static::isDatabaseCache($event)) {
           continue;
         }
         // Use the first part of the database query for the span name.
@@ -458,6 +455,20 @@ trait PerformanceTestTrait {
       static::logicalAnd(static::greaterThanOrEqual($min), static::lessThanOrEqual($max)),
       "$actual is greater or equal to $min and is smaller or equal to $max",
     );
+  }
+
+  /**
+   * Checks whether a database event is from the database cache implementation.
+   *
+   * @param Drupal\Core\Database\Event\DatabaseEvent $event
+   *   The database event.
+   *
+   * @return bool
+   *   Whether the event was triggered by the database cache implementation.
+   */
+  protected static function isDatabaseCache(DatabaseEvent $event): bool {
+    $class = str_replace('\\\\', '\\', $event->caller['class']);
+    return is_a($class, '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a($class, '\Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
   }
 
 }
