@@ -82,8 +82,7 @@ JS;
     $this->assertTrue($this->container->get('module_installer')->install(['render_placeholder_message_test'], TRUE), 'Installed modules.');
 
     $this->drupalLogin($this->drupalCreateUser());
-    $messages_markup = '<div role="contentinfo" aria-label="Status message"';
-
+    $messages_markup = '<div class="messages messages--status" role="status"';
     $test_routes = [
       // Messages placeholder rendered first.
       'render_placeholder_message_test.first',
@@ -104,9 +103,9 @@ JS;
       $assert->elementContains('css', 'p.logged-message:nth-of-type(1)', 'Message: P1');
       $assert->elementContains('css', 'p.logged-message:nth-of-type(2)', 'Message: P2');
       $assert->responseContains($messages_markup);
-      $assert->elementExists('css', 'div[aria-label="Status message"] ul');
-      $assert->elementContains('css', 'div[aria-label="Status message"] ul li:nth-of-type(1)', 'P1');
-      $assert->elementContains('css', 'div[aria-label="Status message"] ul li:nth-of-type(2)', 'P2');
+      $assert->elementExists('css', 'div[aria-label="Status message"]');
+      $assert->responseContains('aria-label="Status message">P1');
+      $assert->responseContains('aria-label="Status message">P2');
 
       // Verify that we end with all messages printed, hence again zero queued.
       $this->drupalGet(Url::fromRoute('render_placeholder_message_test.queued'));
