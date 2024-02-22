@@ -221,16 +221,6 @@ class BigPipe {
   }
 
   /**
-   * Performs tasks before sending content (and rendering placeholders).
-   */
-  protected function performPreSendTasks() {
-    // The content in the placeholders may depend on the session, and by the
-    // time the response is sent (see index.php), the session is already
-    // closed. Reopen it for the duration that we are rendering placeholders.
-    $this->session->start();
-  }
-
-  /**
    * Performs tasks after sending content (and rendering placeholders).
    */
   protected function performPostSendTasks() {
@@ -281,8 +271,6 @@ class BigPipe {
     // @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.41
     $cumulative_assets = AttachedAssets::createFromRenderArray(['#attached' => $attachments]);
     $cumulative_assets->setAlreadyLoadedLibraries($attachments['library']);
-
-    $this->performPreSendTasks();
 
     // Find the closing </body> tag and get the strings before and after. But be
     // careful to use the latest occurrence of the string "</body>", to ensure

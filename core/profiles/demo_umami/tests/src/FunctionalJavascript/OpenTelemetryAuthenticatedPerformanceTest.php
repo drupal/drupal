@@ -35,8 +35,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'authenticatedFrontPage');
-    $this->assertGreaterThanOrEqual(10, $performance_data->getQueryCount());
-    $this->assertLessThanOrEqual(12, $performance_data->getQueryCount());
+    $this->assertCountBetween(9, 11, $performance_data->getQueryCount());
     $this->assertSame(45, $performance_data->getCacheGetCount());
     $this->assertSame(0, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
