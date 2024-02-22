@@ -87,6 +87,10 @@
   padding-left: 4em;
 }
 
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon.is-active::before {
+  filter: invert(100%);
+}
+
 /**
  * Top level icons.
  */
