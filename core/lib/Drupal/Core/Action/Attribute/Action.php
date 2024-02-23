@@ -15,8 +15,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see \Drupal\Core\Action\ActionBase
  * @see \Drupal\Core\Action\Plugin\Action\UnpublishAction
  * @see plugin_api
- *
- * @Annotation
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Action extends Plugin {
