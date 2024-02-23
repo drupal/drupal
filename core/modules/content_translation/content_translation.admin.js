@@ -89,7 +89,7 @@
       ).forEach((input) => {
         const $input = $(input);
         const $bundleSettings = $input.closest('.bundle-settings');
-        if (input.checked) {
+        if (!input.checked) {
           $bundleSettings.nextUntil('.bundle-settings').hide();
         } else {
           $bundleSettings
