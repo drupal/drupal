@@ -129,13 +129,17 @@ trait FunctionalTestSetupTrait {
       // Otherwise, use the default services as a starting point for overrides.
       $settings_services_file = DRUPAL_ROOT . '/sites/default/default.services.yml';
     }
-    // Copy the testing-specific service overrides in place.
-    copy($settings_services_file, $directory . '/services.yml');
+
+    // Put the testing-specific service overrides in place.
+    $yaml = new SymfonyYaml();
+    $content = file_get_contents($settings_services_file);
+    // Disable session garbage collection since test environments do not last
+    // long enough to have stale sessions. This prevents random delete queries
+    // from running during tests.
+    $services = $yaml->parse($content);
+    $services['parameters']['session.storage.options']['gc_probability'] = 0;
     if ($this->strictConfigSchema) {
       // Add a listener to validate configuration schema on save.
-      $yaml = new SymfonyYaml();
-      $content = file_get_contents($directory . '/services.yml');
-      $services = $yaml->parse($content);
       $test_file_name = (new \ReflectionClass($this))->getFileName();
       // @todo Decide in https://www.drupal.org/project/drupal/issues/3395099 when/how to trigger deprecation errors or even failures for contrib modules.
       $is_core_test = str_starts_with($test_file_name, DRUPAL_ROOT . DIRECTORY_SEPARATOR . 'core');
@@ -144,8 +148,8 @@ trait FunctionalTestSetupTrait {
         'arguments' => ['@config.typed', $this->getConfigSchemaExclusions(), $is_core_test],
         'tags' => [['name' => 'event_subscriber']],
       ];
-      file_put_contents($directory . '/services.yml', $yaml->dump($services));
     }
+    file_put_contents($directory . '/services.yml', $yaml->dump($services));
     // Since Drupal is bootstrapped already, install_begin_request() will not
     // bootstrap again. Hence, we have to reload the newly written custom
     // settings.php manually.
