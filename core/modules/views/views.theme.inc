@@ -35,17 +35,10 @@ function template_preprocess_views_view(&$variables) {
 
   $css_class = $view->display_handler->getOption('css_class');
   if (!empty($css_class)) {
-    // Views uses its own sanitization method. This is preserved to keep
-    // backwards compatibility.
-    // @todo https://www.drupal.org/project/drupal/issues/2977950 Decide what to
-    //   do with the backwards compatibility layer.
-    $bc_classes = explode(' ', preg_replace('/[^a-zA-Z0-9- ]/', '-', $css_class));
-    // Sanitize the classes using the classes using the proper API.
     $sanitized_classes = array_map('\Drupal\Component\Utility\Html::cleanCssIdentifier', explode(' ', $css_class));
-    $view_classes = array_unique(array_merge($bc_classes, $sanitized_classes));
     // Merge the view display classes into any existing classes if they exist.
-    $variables['attributes']['class'] = !empty($variables['attributes']['class']) ? array_merge($variables['attributes']['class'], $view_classes) : $view_classes;
-    $variables['css_class'] = implode(' ', $view_classes);
+    $variables['attributes']['class'] = !empty($variables['attributes']['class']) ? array_merge($variables['attributes']['class'], $sanitized_classes) : $sanitized_classes;
+    $variables['css_class'] = implode(' ', $sanitized_classes);
   }
 
   // contextual_preprocess() only works on render elements, and since this theme
