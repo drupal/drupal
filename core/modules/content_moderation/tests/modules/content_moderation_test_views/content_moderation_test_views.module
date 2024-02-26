@@ -20,3 +20,26 @@ function content_moderation_test_views_views_query_alter(ViewExecutable $view, Q
     $query->addOrderBy('node_field_revision', 'vid', 'ASC');
   }
 }
+
+/**
+ * Implements hook_views_data_alter().
+ *
+ * @see \Drupal\Tests\content_moderation\Kernel\ViewsModerationStateFilterTest
+ */
+function content_moderation_test_views_views_data_alter(array &$data) {
+  if (isset($data['users_field_data'])) {
+    $data['users_field_data']['uid_revision_test'] = [
+      'help' => t('Relate the content revision to the user who created it.'),
+      'real field' => 'uid',
+      'relationship' => [
+        'title' => t('Content revision authored'),
+        'help' => t('Relate the content revision to the user who created it. This relationship will create one record for each content revision item created by the user.'),
+        'id' => 'standard',
+        'base' => 'node_field_revision',
+        'base field' => 'uid',
+        'field' => 'uid',
+        'label' => t('node revisions'),
+      ],
+    ];
+  }
+}
