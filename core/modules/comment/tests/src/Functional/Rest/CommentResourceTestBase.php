@@ -359,6 +359,9 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $this->assertResourceResponse(201, FALSE, $response);
     $this->assertFalse($unserialized->isPublished());
 
+    // Make sure the role save below properly invalidates cache tags.
+    $this->refreshVariables();
+
     // Grant anonymous permission to skip comment approval.
     $this->grantPermissionsToTestedRole(['skip comment approval']);
 
