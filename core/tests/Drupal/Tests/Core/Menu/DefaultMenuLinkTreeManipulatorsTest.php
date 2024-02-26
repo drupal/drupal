@@ -207,15 +207,12 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->cacheContextManager->assertValidTokens(['user'])->shouldBeCalled()->willReturn(TRUE);
     $this->originalTree[8]->access = AccessResult::allowed()->cachePerUser();
 
-    // Since \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators::checkAccess()
-    // allows access to any link if the user has the 'link to any page'
-    // permission, *every* single access result is varied by permissions.
     $tree = $this->defaultMenuTreeManipulators->checkAccess($this->originalTree);
 
     // Menu link 1: route without parameters, access forbidden, but at level 0,
     // hence kept.
     $element = $tree[1];
-    $this->assertEquals(AccessResult::forbidden()->cachePerPermissions(), $element->access);
+    $this->assertEquals(AccessResult::forbidden(), $element->access);
     $this->assertInstanceOf('\Drupal\Core\Menu\InaccessibleMenuLink', $element->link);
     // Menu link 2: route with parameters, access granted.
     $element = $tree[2];
@@ -223,21 +220,19 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertNotInstanceOf('\Drupal\Core\Menu\InaccessibleMenuLink', $element->link);
     // Menu link 3: route with parameters, AccessResult::neutral(), top-level
     // inaccessible link, hence kept for its cacheability metadata.
-    // Note that the permissions cache context is added automatically, because
-    // we always check the "link to any page" permission.
     $element = $tree[2]->subtree[3];
-    $this->assertEquals(AccessResult::neutral()->cachePerPermissions(), $element->access);
+    $this->assertEquals(AccessResult::neutral(), $element->access);
     $this->assertInstanceOf('\Drupal\Core\Menu\InaccessibleMenuLink', $element->link);
     // Menu link 4: child of menu link 3, which was AccessResult::neutral(),
     // hence menu link 3's subtree is removed, of which this menu link is one.
     $this->assertArrayNotHasKey(4, $tree[2]->subtree[3]->subtree);
     // Menu link 5: no route name, treated as external, hence access granted.
     $element = $tree[5];
-    $this->assertEquals(AccessResult::allowed()->cachePerPermissions(), $element->access);
+    $this->assertEquals(AccessResult::allowed(), $element->access);
     $this->assertNotInstanceOf('\Drupal\Core\Menu\InaccessibleMenuLink', $element->link);
     // Menu link 6: external URL, hence access granted.
     $element = $tree[6];
-    $this->assertEquals(AccessResult::allowed()->cachePerPermissions(), $element->access);
+    $this->assertEquals(AccessResult::allowed(), $element->access);
     $this->assertNotInstanceOf('\Drupal\Core\Menu\InaccessibleMenuLink', $element->link);
     // Menu link 7: 'access' already set: AccessResult::neutral(), top-level
     // inaccessible link, hence kept for its cacheability metadata.
@@ -247,31 +242,31 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $element = $tree[5]->subtree[7];
     $this->assertEquals(AccessResult::neutral(), $element->access);
     $this->assertInstanceOf('\Drupal\Core\Menu\InaccessibleMenuLink', $element->link);
-    // Menu link 8: 'access' already set, note that 'per permissions' caching
-    // is not added.
+    // Menu link 8: 'access' already set.
     $element = $tree[8];
     $this->assertEquals(AccessResult::allowed()->cachePerUser(), $element->access);
     $this->assertNotInstanceOf('\Drupal\Core\Menu\InaccessibleMenuLink', $element->link);
   }
 
   /**
-   * Tests checkAccess() tree manipulator with 'link to any page' permission.
+   * Tests checkAccess() tree manipulator.
    *
    * @covers ::checkAccess
    * @covers ::menuLinkCheckAccess
    */
-  public function testCheckAccessWithLinkToAnyPagePermission() {
+  public function testCheckAccessTreeManipulator(): void {
     $this->mockTree();
-    $this->currentUser->expects($this->exactly(9))
-      ->method('hasPermission')
-      ->with('link to any page')
-      ->willReturn(TRUE);
+    // There are 9 checks but one is on an external link, so the route access
+    // checker should be called only 8 times.
+    // @see \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators::menuLinkCheckAccess()
+    $this->accessManager->expects($this->exactly(8))
+      ->method('checkNamedRoute')
+      ->willReturn(AccessResult::allowed());
 
     $this->mockTree();
-    $this->cacheContextManager->assertValidTokens(['user.permissions'])->shouldBeCalled()->willReturn(TRUE);
     $this->defaultMenuTreeManipulators->checkAccess($this->originalTree);
 
-    $expected_access_result = AccessResult::allowed()->cachePerPermissions();
+    $expected_access_result = AccessResult::allowed();
     $this->assertEquals($expected_access_result, $this->originalTree[1]->access);
     $this->assertEquals($expected_access_result, $this->originalTree[2]->access);
     $this->assertEquals($expected_access_result, $this->originalTree[2]->subtree[3]->access);
@@ -366,8 +361,8 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertEquals($node_access_result, $tree[1]->access);
     $this->assertEquals($node_access_result, $tree[2]->access);
     $this->assertEquals(AccessResult::neutral(), $tree[2]->subtree[3]->access);
-    $this->assertEquals(AccessResult::allowed()->cachePerPermissions(), $tree[5]->access);
-    $this->assertEquals(AccessResult::neutral()->cachePerPermissions(), $tree[5]->subtree[6]->access);
+    $this->assertEquals(AccessResult::allowed(), $tree[5]->access);
+    $this->assertEquals(AccessResult::neutral(), $tree[5]->subtree[6]->access);
   }
 
   /**
