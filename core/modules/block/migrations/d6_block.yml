@@ -22,6 +22,23 @@ process:
     postfix: _
     length: 29
     source: module
+  _block_module_plugin_id:
+    -
+      plugin: static_map
+      source:
+        - module
+      map:
+        block: block
+      default_value: ''
+    -
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration:
+        - d6_custom_block
+      source:
+        - delta
   plugin:
     -
       plugin: static_map
@@ -87,6 +104,9 @@ process:
       - delta
       - settings
       - title
+  _role_ids:
+    plugin: roles_lookup
+    migration: d6_user_role
   visibility:
     plugin: block_visibility
     source:
