@@ -13,6 +13,27 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Migrate filter format serial to string id in permission name.
  *
+ * The filter_format_permission plugin is used to get the filter formats for a
+ * role and convert it to a permission name.
+ *
+ *  Available configuration keys:
+ *  - migration: (optional) The filter migration. Defaults to
+ *  'd6_filter_format'.
+ *
+ *  Examples:
+ *
+ * @code
+ *  process:
+ *    result:
+ *      plugin: filter_format_permission
+ *      migration: d6_filter_format
+ * @endcode
+ *
+ *  This will use the 'd6_filter_format' migration to lookup the destination
+ *  filter formats for a role.
+ *
+ * @see \Drupal\migrate\Plugin\MigrateProcessInterface
+ *
  * @MigrateProcessPlugin(
  *   id = "filter_format_permission",
  *   handle_multiples = TRUE

@@ -97,13 +97,22 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
         ],
         'negate' => FALSE,
       ];
-
+      // Legacy generated migrations will not have the destination property
+      // '_role_ids'.
+      $role_ids = $row->getDestinationProperty('_role_ids');
       foreach ($roles as $key => $role_id) {
-        $lookup_result = $this->migrateLookup->lookup(['d6_user_role', 'd7_user_role'], [$role_id]);
+        if (!$role_ids) {
+          $lookup = $this->migrateLookup->lookup(['d6_user_role', 'd7_user_role'], [$role_id]);
+          $lookup_result = $lookup[0]['id'];
+        }
+        else {
+          $lookup_result = $role_ids[$role_id] ?? NULL;
+        }
         if ($lookup_result) {
-          $roles[$key] = $lookup_result[0]['id'];
+          $roles[$key] = $lookup_result;
         }
       }
+
       $visibility['user_role']['roles'] = array_combine($roles, $roles);
     }
 

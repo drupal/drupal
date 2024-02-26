@@ -9,6 +9,7 @@ source:
   plugin: d7_field_instance
   constants:
     status: true
+    comment_node: comment_node_
 process:
   type:
     plugin: process_field
@@ -25,6 +26,22 @@ process:
     bypass: true
     map:
       comment_node_forum: comment_forum
+  _comment_type:
+    -
+      plugin: explode
+      source: bundle
+      delimiter: comment_node_
+    -
+      plugin: extract
+      index: [1]
+      default: false
+    -
+      plugin: skip_on_empty
+      method: process
+    -
+      plugin: migration_lookup
+      migration:
+        - d7_comment_type
   bundle:
     plugin: field_bundle
     source:
