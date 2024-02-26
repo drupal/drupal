@@ -55,8 +55,23 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
    */
   public function access(RouteMatchInterface $route_match, AccountInterface $account): AccessResultInterface {
     $parameters = $route_match->getParameters()->all();
-    // Load links in the 'admin' menu matching this route.
+    $route = $route_match->getRouteObject();
+    // Load links in the 'admin' menu matching this route. First, try to find
+    // the menu link using all specified parameters.
     $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters, 'admin');
+    // If the menu link was not found, try finding it without the parameters
+    // that match the route defaults. Depending on whether the parameter is
+    // specified in the menu item with a value matching the default, or not
+    // specified at all, will change how it is stored in the menu_tree table. In
+    // both cases the route match parameters will always include the default
+    // parameters. This fallback method of finding the menu item is needed so
+    // that menu items will work in either case.
+    // @todo Remove this fallback in https://drupal.org/i/3359511.
+    if (empty($links)) {
+
+      $parameters_without_defaults = array_filter($parameters, fn ($key) => !$route->hasDefault($key) || $route->getDefault($key) !== $parameters[$key], ARRAY_FILTER_USE_KEY);
+      $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters_without_defaults, 'admin');
+    }
     if (empty($links)) {
       // If we did not find a link then we have no opinion on access.
       return AccessResult::neutral();
@@ -65,7 +80,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
   }
 
   /**
-   * Check that the given route has access to one of it's child routes.
+   * Check that the given route has access to child routes.
    *
    * @param \Drupal\Core\Menu\MenuLinkInterface $link
    *   The menu link.
@@ -87,7 +102,10 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
     if (empty($tree)) {
       $route = $this->router->getRouteCollection()->get($link->getRouteName());
       if ($route) {
-        return AccessResult::allowedIf(empty($route->getRequirement('_access_admin_menu_block_page')));
+        return AccessResult::allowedIf(
+          empty($route->getRequirement('_access_admin_menu_block_page'))
+          && empty($route->getRequirement('_access_admin_overview_page'))
+        );
       }
       return AccessResult::neutral();
     }

@@ -7,12 +7,15 @@ access child1 test page:
 access child2 test page:
   title: 'Access child2 test page'
   restrict access: true
-access super child1 test page:
-  title: 'Access super child1 test page'
+access grand child1 test page:
+  title: 'Access grand child1 test page'
   restrict access: true
-access super child2 test page:
-  title: 'Access super child2 test page'
+access grand child2 test page:
+  title: 'Access grand child2 test page'
   restrict access: true
-access super child3 test page:
-  title: 'Access super child3 test page'
+access grand child3 test page:
+  title: 'Access grand child3 test page'
+  restrict access: true
+access great grand child1 test page:
+  title: 'Access great grand child1 test page'
   restrict access: true
