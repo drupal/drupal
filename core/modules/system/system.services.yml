@@ -14,6 +14,11 @@ services:
     arguments: ['@access_manager', '@menu.link_tree', '@router', '@plugin.manager.menu.link']
     tags:
       - { name: access_check, applies_to: _access_admin_menu_block_page }
+  access_check.admin_overview_page:
+    class: Drupal\system\Access\SystemAdminMenuBlockAccessCheck
+    arguments: [ '@access_manager', '@menu.link_tree', '@router', '@plugin.manager.menu.link' ]
+    tags:
+      - { name: access_check, applies_to: _access_admin_overview_page }
   system.manager:
     class: Drupal\system\SystemManager
     arguments: ['@module_handler', '@request_stack', '@menu.link_tree', '@menu.active_trail']
