@@ -23,4 +23,15 @@ class ConfigExistsConstraint extends Constraint {
    */
   public string $message = "The '@name' config does not exist.";
 
+  /**
+   * Optional prefix, to be specified when this contains a config entity ID.
+   *
+   * Every config entity type can have multiple instances, all with unique IDs
+   * but the same config prefix. When config refers to a config entity,
+   * typically only the ID is stored, not the prefix.
+   *
+   * @var string
+   */
+  public string $prefix = '';
+
 }
