@@ -2,8 +2,11 @@
 
 namespace Drupal\KernelTests\Core\Menu;
 
+use Drupal\Core\Menu\InaccessibleMenuLink;
 use Drupal\Core\Menu\MenuLinkTreeElement;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\Core\Session\UserSession;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
 
@@ -131,6 +134,44 @@ class MenuLinkTreeTest extends KernelTestBase {
     $this->assertEquals($links[3]->getPluginId(), $child->link->getPluginId());
     $height = $this->linkTree->getSubtreeHeight('test.example2');
     $this->assertEquals(3, $height);
+  }
+
+  /**
+   * Tests user/login and user/logout links.
+   */
+  public function testUserLoginAndUserLogoutLinks() {
+    $account_switcher = $this->container->get('account_switcher');
+
+    $login_menu_link = MenuLinkMock::create(['id' => 'user_login_example', 'route_name' => 'user.login']);
+    $logout_menu_link = MenuLinkMock::create(['id' => 'user_logout_example', 'route_name' => 'user.logout']);
+
+    $this->menuLinkManager->addDefinition($login_menu_link->getPluginId(), $login_menu_link->getPluginDefinition());
+    $this->menuLinkManager->addDefinition($logout_menu_link->getPluginId(), $logout_menu_link->getPluginDefinition());
+
+    // Returns the accessible links from transformed 'mock' menu tree.
+    $get_accessible_links = function () {
+      $parameters = new MenuTreeParameters();
+      $manipulators = [
+        ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+      ];
+
+      $tree = $this->linkTree->load('mock', $parameters);
+      $this->linkTree->transform($tree, $manipulators);
+
+      return array_keys(
+        array_filter($tree, function (MenuLinkTreeElement $element) {
+          return !$element->link instanceof InaccessibleMenuLink;
+        })
+      );
+    };
+
+    // Check that anonymous can only access the login link.
+    $account_switcher->switchTo(new AnonymousUserSession());
+    $this->assertSame(['user_login_example'], $get_accessible_links());
+
+    // Ensure that also user 1 does not see the login link.
+    $account_switcher->switchTo(new UserSession(['uid' => 1]));
+    $this->assertSame(['user_logout_example'], $get_accessible_links());
   }
 
 }
