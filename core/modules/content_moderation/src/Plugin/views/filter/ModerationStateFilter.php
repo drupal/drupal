@@ -144,16 +144,17 @@ class ModerationStateFilter extends InOperator implements DependentWithRemovalPl
         $entity_base_table = $entity_type->getBaseTable();
         $entity_revision_base_table = $entity_type->isTranslatable() ? $entity_type->getRevisionDataTable() : $entity_type->getRevisionTable();
         if ($this->table === $entity_revision_base_table) {
+          $entity_revision_base_table_alias = $this->relationship ?: $this->table;
           $configuration = [
             'table' => $entity_base_table,
             'field' => $entity_type->getKey('id'),
-            'left_table' => $entity_revision_base_table,
+            'left_table' => $entity_revision_base_table_alias,
             'left_field' => $entity_type->getKey('id'),
             'type' => 'INNER',
           ];
 
           $join = Views::pluginManager('join')->createInstance('standard', $configuration);
-          $entity_base_table_alias = $this->query->addRelationship($entity_base_table, $join, $entity_revision_base_table);
+          $entity_base_table_alias = $this->query->addRelationship($entity_base_table, $join, $entity_revision_base_table_alias);
         }
 
         $bundle_condition = $this->view->query->getConnection()->condition('AND');
