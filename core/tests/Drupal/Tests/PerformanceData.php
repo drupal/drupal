@@ -27,6 +27,11 @@ class PerformanceData {
   protected int $queryCount = 0;
 
   /**
+   * The individual database queries recorded.
+   */
+  protected array $queries = [];
+
+  /**
    * The number of cache gets recorded.
    */
   protected int $cacheGetCount = 0;
@@ -102,13 +107,24 @@ class PerformanceData {
   }
 
   /**
-   * Sets the query count.
+   * Logs a database query.
    *
-   * @param int $count
-   *   The number of database queries recorded.
+   * @param string $query
+   *   The database query recorded.
    */
-  public function setQueryCount(int $count): void {
-    $this->queryCount = $count;
+  public function logQuery(string $query): void {
+    $this->queries[] = $query;
+    $this->queryCount++;
+  }
+
+  /**
+   * Gets the queries.
+   *
+   * @return string[]
+   *   The database queries recorded.
+   */
+  public function getQueries(): array {
+    return $this->queries;
   }
 
   /**
