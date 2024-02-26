@@ -119,9 +119,13 @@ trait PerformanceTestTrait {
 
     $performance_test_data = $collection->get('performance_test_data');
     if ($performance_test_data) {
+      // This property is set by \Drupal\Core\Test\TestSetupTrait and is needed.
+      if (!isset($this->databasePrefix)) {
+        throw new \Exception('Cannot log queries without knowing the database prefix.');
+      }
+
       // Separate queries into two buckets, one for queries from the cache
       // backend, and one for everything else (including those for cache tags).
-      $query_count = 0;
       $cache_get_count = 0;
       $cache_set_count = 0;
       $cache_delete_count = 0;
@@ -132,7 +136,12 @@ trait PerformanceTestTrait {
         // Don't log queries from the database cache backend because they're
         // logged separately as cache operations.
         if (!static::isDatabaseCache($event)) {
-          $query_count++;
+          // Make the query easier to read and log it.
+          static::logQuery(
+            $performance_data,
+            str_replace([$this->databasePrefix, "\r\n", "\r", "\n"], ['', ' ', ' ', ' '], $event->queryString),
+            $event->args
+          );
         }
       }
       foreach ($performance_test_data['cache_operations'] as $operation) {
@@ -153,7 +162,6 @@ trait PerformanceTestTrait {
           CacheTagOperation::invalidateTags => $cache_tag_invalidation_count++,
         };
       }
-      $performance_data->setQueryCount($query_count);
       $performance_data->setCacheGetCount($cache_get_count);
       $performance_data->setCacheSetCount($cache_set_count);
       $performance_data->setCacheDeleteCount($cache_delete_count);
@@ -163,6 +171,96 @@ trait PerformanceTestTrait {
     }
 
     return $performance_data;
+  }
+
+  /**
+   * Logs a query in the performance data.
+   *
+   * @param \Drupal\Tests\PerformanceData $performance_data
+   *   The performance data object to log the query on.
+   * @param string $query
+   *   The raw query.
+   * @param array $args
+   *   The query arguments.
+   */
+  protected static function logQuery(PerformanceData $performance_data, string $query, array $args): void {
+    // Make queries with random variables invariable.
+    if (str_starts_with($query, 'INSERT INTO "semaphore"')) {
+      $args[':db_insert_placeholder_1'] = 'LOCK_ID';
+      $args[':db_insert_placeholder_2'] = 'EXPIRE';
+    }
+    elseif (str_starts_with($query, 'DELETE FROM "semaphore"')) {
+      $args[':db_condition_placeholder_1'] = 'LOCK_ID';
+    }
+    elseif (str_starts_with($query, 'SELECT "base_table"."uid" AS "uid", "base_table"."uid" AS "base_table_uid" FROM "users"')) {
+      $args[':db_condition_placeholder_0'] = 'ACCOUNT_NAME';
+    }
+    elseif (str_starts_with($query, 'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "flood" "f"')) {
+      $args[':db_condition_placeholder_1'] = 'CLIENT_IP';
+      $args[':db_condition_placeholder_2'] = 'TIMESTAMP';
+    }
+    elseif (str_starts_with($query, 'UPDATE "users_field_data" SET "login"')) {
+      $args[':db_update_placeholder_0'] = 'TIMESTAMP';
+    }
+    elseif (str_starts_with($query, 'INSERT INTO "sessions"')) {
+      $args[':db_insert_placeholder_0'] = 'SESSION_ID';
+      $args[':db_insert_placeholder_2'] = 'CLIENT_IP';
+      $args[':db_insert_placeholder_3'] = 'SESSION_DATA';
+      $args[':db_insert_placeholder_4'] = 'TIMESTAMP';
+    }
+    elseif (str_starts_with($query, 'SELECT "session" FROM "sessions"')) {
+      $args[':sid'] = 'SESSION_ID';
+    }
+    elseif (str_starts_with($query, 'SELECT 1 AS "expression" FROM "sessions"')) {
+      $args[':db_condition_placeholder_0'] = 'SESSION_ID';
+    }
+    elseif (str_starts_with($query, 'DELETE FROM "sessions"')) {
+      $args[':db_condition_placeholder_0'] = 'TIMESTAMP';
+    }
+    elseif (str_starts_with($query, 'INSERT INTO "watchdog"')) {
+      $args[':db_insert_placeholder_3'] = 'WATCHDOG_DATA';
+      $args[':db_insert_placeholder_6'] = 'LOCATION';
+      $args[':db_insert_placeholder_7'] = 'REFERER';
+      $args[':db_insert_placeholder_8'] = 'CLIENT_IP';
+      $args[':db_insert_placeholder_9'] = 'TIMESTAMP';
+    }
+    elseif (str_starts_with($query, 'SELECT "name", "route", "fit" FROM "router"')) {
+      if (preg_match('@/sites/simpletest/(\d{8})/files/css/(.*)@', $args[':patterns__0'], $matches)) {
+        $search = [$matches[1], $matches[2]];
+        $replace = ['TEST_ID', 'CSS_FILE'];
+        foreach ($args as $name => $arg) {
+          if (!is_string($arg)) {
+            continue;
+          }
+          $args[$name] = str_replace($search, $replace, $arg);
+        }
+      }
+    }
+    elseif (str_starts_with($query, 'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table"')) {
+      if (str_contains($args[':db_condition_placeholder_1'], 'files/css')) {
+        $args[':db_condition_placeholder_1'] = 'CSS_FILE';
+      }
+    }
+
+    // Inline query arguments and log the query.
+    $query = str_replace(array_keys($args), array_values(static::quoteQueryArgs($args)), $query);
+    $performance_data->logQuery($query);
+  }
+
+  /**
+   * Wraps query arguments in double quotes if they're a string.
+   *
+   * @param array $args
+   *   The raw query arguments.
+   *
+   * @return array
+   *   The conditionally quoted query arguments.
+   */
+  protected static function quoteQueryArgs(array $args): array {
+    $conditionalQuote = function ($arg) {
+      return is_int($arg) || is_float($arg) ? $arg : '"' . $arg . '"';
+    };
+    return array_map($conditionalQuote, $args);
   }
 
   /**
