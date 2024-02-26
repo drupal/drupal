@@ -80,9 +80,9 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
   /**
    * Description of the vocabulary.
    *
-   * @var string
+   * @var string|null
    */
-  protected $description;
+  protected $description = NULL;
 
   /**
    * The weight of this vocabulary in relation to other vocabularies.
@@ -102,7 +102,7 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->description;
+    return $this->description ?? '';
   }
 
   /**
