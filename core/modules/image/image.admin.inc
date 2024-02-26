@@ -58,6 +58,11 @@ function template_preprocess_image_style_preview(&$variables) {
     $style->createDerivative($original_path, $preview_file);
   }
   $preview_image = $image_factory->get($preview_file);
+
+  // Generate an itok.
+  $defaultScheme = \Drupal::config('system.file')->get('default_scheme');
+  $variables['itok'] = $style->getPathToken($defaultScheme . '://' . $original_path);
+
   $variables['derivative'] = [
     'url' => $file_url_generator->generateString($preview_file),
     'width' => $preview_image->getWidth(),
@@ -89,7 +94,7 @@ function template_preprocess_image_style_preview(&$variables) {
   // to prevent caching of images on the client side.
   $variables['derivative']['rendered'] = [
     '#theme' => 'image',
-    '#uri' => $variables['derivative']['url'] . '?cache_bypass=' . $variables['cache_bypass'],
+    '#uri' => $variables['derivative']['url'] . '?cache_bypass=' . $variables['cache_bypass'] . '&itok=' . $variables['itok'],
     '#alt' => t('Sample modified image'),
     '#title' => '',
     '#attributes' => [

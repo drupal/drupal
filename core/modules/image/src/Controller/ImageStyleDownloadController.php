@@ -110,6 +110,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     $target = $request->query->get('file');
     $image_uri = $scheme . '://' . $target;
     $image_uri = $this->streamWrapperManager->normalizeUri($image_uri);
+    $sample_image_uri = $scheme . '://' . $this->config('image.settings')->get('preview_image');
 
     if ($this->streamWrapperManager->isValidScheme($scheme)) {
       $normalized_target = $this->streamWrapperManager->getTarget($image_uri);
@@ -173,6 +174,11 @@ class ImageStyleDownloadController extends FileDownloadController {
       if (in_array(-1, $headers) || empty($headers)) {
         throw new AccessDeniedHttpException();
       }
+    }
+
+    // If it is default sample.png, ignore scheme.
+    if ($image_uri === $sample_image_uri) {
+      $image_uri = $target;
     }
 
     // Don't try to generate file if source is missing.
