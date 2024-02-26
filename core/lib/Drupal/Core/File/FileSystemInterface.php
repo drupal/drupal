@@ -90,7 +90,8 @@ interface FileSystemInterface {
    *   more information.
    *
    * @return bool
-   *   TRUE for success, FALSE in the event of an error.
+   *   TRUE for success, FALSE in the event of an error. Note, it is the
+   *   caller's to log an error if necessary.
    *
    * @ingroup php_wrappers
    */
