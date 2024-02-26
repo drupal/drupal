@@ -375,6 +375,9 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     static::recursiveKSort($actual);
     $this->assertSame($expected, $actual);
 
+    // Make sure the role save below properly invalidates cache tags.
+    $this->refreshVariables();
+
     // To still run the complete test coverage for POSTing a Media entity, we
     // must revoke the additional permissions that we granted.
     $role = Role::load(static::$auth ? RoleInterface::AUTHENTICATED_ID : RoleInterface::ANONYMOUS_ID);
