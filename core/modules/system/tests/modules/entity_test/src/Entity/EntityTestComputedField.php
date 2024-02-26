@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\entity_test\Plugin\Field\ComputedReferenceTestFieldItemList;
+use Drupal\entity_test\Plugin\Field\ComputedTestCacheableIntegerItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestCacheableStringItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 
@@ -49,12 +50,22 @@ class EntityTestComputedField extends EntityTest {
       ->setSetting('target_type', 'entity_test')
       ->setClass(ComputedReferenceTestFieldItemList::class);
 
+    // Cacheable metadata can either be provided via the field item properties
+    // or via the field item list class directly. Add a computed string field
+    // which does the former and a computed integer field which does the latter.
     $fields['computed_test_cacheable_string_field'] = BaseFieldDefinition::create('computed_test_cacheable_string_item')
       ->setLabel(new TranslatableMarkup('Computed Cacheable String Field Test'))
       ->setComputed(TRUE)
       ->setClass(ComputedTestCacheableStringItemList::class)
       ->setReadOnly(FALSE)
       ->setInternal(FALSE);
+    $fields['computed_test_cacheable_integer_field'] = BaseFieldDefinition::create('integer')
+      ->setLabel(new TranslatableMarkup('Computed Cacheable Integer Field Test'))
+      ->setComputed(TRUE)
+      ->setClass(ComputedTestCacheableIntegerItemList::class)
+      ->setReadOnly(FALSE)
+      ->setInternal(FALSE)
+      ->setDisplayOptions('view', ['weight' => 10]);
 
     return $fields;
   }

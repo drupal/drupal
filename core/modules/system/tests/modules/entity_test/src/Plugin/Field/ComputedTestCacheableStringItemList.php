@@ -8,6 +8,10 @@ use Drupal\Core\TypedData\ComputedItemListTrait;
 
 /**
  * Item list class for computed cacheable string field.
+ *
+ *  This class sets the cacheable metadata on the field item properties.
+ *
+ * @see \Drupal\entity_test\Plugin\Field\ComputedTestCacheableIntegerItemList
  */
 class ComputedTestCacheableStringItemList extends FieldItemList {
 
