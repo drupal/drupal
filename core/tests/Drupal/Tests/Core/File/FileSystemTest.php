@@ -45,8 +45,7 @@ class FileSystemTest extends UnitTestCase {
 
     $settings = new Settings([]);
     $this->streamWrapperManager = $this->createMock(StreamWrapperManagerInterface::class);
-    $this->logger = $this->createMock('Psr\Log\LoggerInterface');
-    $this->fileSystem = new FileSystem($this->streamWrapperManager, $settings, $this->logger);
+    $this->fileSystem = new FileSystem($this->streamWrapperManager, $settings);
   }
 
   /**
@@ -82,8 +81,6 @@ class FileSystemTest extends UnitTestCase {
    */
   public function testChmodUnsuccessful() {
     vfsStream::setup('dir');
-    $this->logger->expects($this->once())
-      ->method('error');
     $this->assertFalse($this->fileSystem->chmod('vfs://dir/test.txt'));
   }
 

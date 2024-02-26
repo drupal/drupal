@@ -34,9 +34,8 @@ class FileSystemTempDirectoryTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $stream_wrapper_manager = $this->container->get('stream_wrapper_manager');
-    $logger = $this->container->get('logger.channel.file');
     $settings = $this->container->get('settings');
-    $this->fileSystem = new FileSystem($stream_wrapper_manager, $settings, $logger);
+    $this->fileSystem = new FileSystem($stream_wrapper_manager, $settings);
   }
 
   /**
