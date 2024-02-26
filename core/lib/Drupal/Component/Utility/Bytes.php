@@ -2,6 +2,8 @@
 
 namespace Drupal\Component\Utility;
 
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
 /**
  * Provides helper methods for byte conversions.
  */
@@ -107,6 +109,32 @@ class Bytes {
     $string = trim($string);
 
     return in_array(strtolower($string), self::ALLOWED_SUFFIXES);
+  }
+
+  /**
+   * Validates a string is a representation of a number of bytes.
+   *
+   * To be used with the `Callback` constraint.
+   *
+   * @param string|int|float|null $value
+   *   The string, integer or float to validate.
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
+   *   The validation execution context.
+   *
+   * @see \Symfony\Component\Validator\Constraints\CallbackValidator
+   * @see core/config/schema/core.data_types.schema.yml
+   */
+  public static function validateConstraint(string|int|float|null $value, ExecutionContextInterface $context): void {
+    // Ignore NULL values (i.e. support `nullable: true`).
+    if ($value === NULL) {
+      return;
+    }
+
+    if (!self::validate((string) $value)) {
+      $context->addViolation('This value must be a number of bytes, optionally with a unit such as "MB" or "megabytes". %value does not represent a number of bytes.', [
+        '%value' => $value,
+      ]);
+    }
   }
 
 }

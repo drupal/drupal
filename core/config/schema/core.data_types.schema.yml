@@ -160,6 +160,14 @@ langcode:
     Choice:
       callback: 'Drupal\Core\TypedData\Plugin\DataType\LanguageReference::getAllValidLangcodes'
 
+# A number of bytes; either a plain number or with a size indication such as "MB".
+# @see \Drupal\Component\Utility\Bytes
+bytes:
+  type: string
+  label: 'Bytes'
+  constraints:
+    Callback: ['\Drupal\Component\Utility\Bytes', 'validateConstraint']
+
 # Complex extended data types:
 
 # Root of a configuration object.
