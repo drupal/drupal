@@ -167,6 +167,20 @@ function image_file_download($uri) {
     }
     return -1;
   }
+
+  // If it is the sample image we need to grant access.
+  $samplePath = \Drupal::config('image.settings')->get('preview_image');
+  if ($path === $samplePath) {
+    $image = \Drupal::service('image.factory')->get($samplePath);
+    return [
+      // Send headers describing the image's size, and MIME-type.
+      'Content-Type' => $image->getMimeType(),
+      'Content-Length' => $image->getFileSize(),
+      // By not explicitly setting them here, this uses normal Drupal
+      // Expires, Cache-Control and ETag headers to prevent proxy or
+      // browser caching of private images.
+    ];
+  }
 }
 
 /**
