@@ -56,6 +56,12 @@ class EntityTestComputedFieldNormalizerTest extends EntityTestResourceTestBase {
         'value' => 'computed test cacheable string field',
       ],
     ];
+    // @see \Drupal\entity_test\Plugin\Field\ComputedTestCacheableIntegerItemList::computeValue().
+    $expected['computed_test_cacheable_integer_field'] = [
+      [
+        'value' => 0,
+      ],
+    ];
 
     $expected['uuid'] = [
       0 => [
