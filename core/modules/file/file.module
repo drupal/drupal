@@ -289,6 +289,8 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
         if ($image->scale($width, $height)) {
           $scaling = TRUE;
           $image->save();
+          // Update the file size now that the image has been resized.
+          $file->setSize($image->getFileSize());
           if (!empty($width) && !empty($height)) {
             $message = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
               [
