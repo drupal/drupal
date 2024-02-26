@@ -1,0 +1,7 @@
+name: Testing language negotiation
+type: profile
+description: 'Minimal profile for running tests related the language negotiation.'
+version: VERSION
+hidden: true
+install:
+  - drupal:language

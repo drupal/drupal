@@ -1,0 +1,39 @@
+all:
+  - language_interface
+  - language_content
+  - language_url
+configurable:
+  - language_interface
+  - language_content
+negotiation:
+  language_content:
+    enabled:
+      test_language_negotiation_method: -10
+      language-url: -8
+      language-selected: 12
+    method_weights:
+      test_language_negotiation_method: -10
+      language-content-entity: -9
+      language-url: -8
+      language-session: -6
+      language-user: -4
+      language-browser: -2
+      language-interface: 9
+      language-selected: 12
+  language_url:
+    enabled:
+      language-url: 0
+      language-url-fallback: 1
+  language_interface:
+    enabled:
+      language-user-admin: -20
+      language-user: -19
+      language-url: -18
+      language-selected: -15
+    method_weights:
+      language-user-admin: -20
+      language-user: -19
+      language-url: -18
+      language-session: -17
+      language-browser: -16
+      language-selected: -15

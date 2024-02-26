@@ -7,12 +7,15 @@
 
 use Drupal\Core\Url;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -289,8 +292,26 @@ function language_negotiation_url_prefixes_update() {
 /**
  * Implements hook_modules_installed().
  */
-function language_modules_installed($modules) {
+function language_modules_installed($modules, $is_syncing) {
+  if ($is_syncing) {
+    return;
+  }
+
   if (!in_array('language', $modules)) {
+    if (InstallerKernel::installationAttempted()) {
+      // If the install profile provides its own language.types configuration do
+      // not overwrite it.
+      $profile_directory = \Drupal::service('extension.list.profile')->getPath(\Drupal::installProfile());
+      $profile_storages = [
+        new FileStorage($profile_directory . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY),
+        new FileStorage($profile_directory . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY),
+      ];
+      foreach ($profile_storages as $storage) {
+        if ($storage->exists('language.types')) {
+          return;
+        }
+      }
+    }
     // Since newly (un)installed modules may change the default settings for
     // non-locked language types (e.g. content language), we need to resave the
     // language type configuration.
@@ -318,8 +339,8 @@ function language_modules_installed($modules) {
 /**
  * Implements hook_modules_uninstalled().
  */
-function language_modules_uninstalled($modules) {
-  language_modules_installed($modules);
+function language_modules_uninstalled($modules, $is_syncing) {
+  language_modules_installed($modules, $is_syncing);
 }
 
 /**
