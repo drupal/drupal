@@ -45,6 +45,21 @@ class VocabularyForm extends BundleEntityFormBase {
   /**
    * {@inheritdoc}
    */
+  public function buildEntity(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\taxonomy\VocabularyInterface $entity */
+    $entity = parent::buildEntity($form, $form_state);
+
+    // The description cannot be an empty string.
+    if (trim($form_state->getValue('description')) === '') {
+      $entity->set('description', NULL);
+    }
+
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function form(array $form, FormStateInterface $form_state) {
     $vocabulary = $this->entity;
     if ($vocabulary->isNew()) {

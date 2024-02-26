@@ -15,6 +15,11 @@ class VocabularyValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static array $propertiesWithOptionalValues = ['description'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['taxonomy'];
 
   /**
