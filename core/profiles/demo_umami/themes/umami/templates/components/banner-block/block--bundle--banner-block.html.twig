@@ -36,19 +36,21 @@
 %}
 
 <div{{ attributes.addClass(classes) }}>
-  <div class="banner-block__inner">
-    {{ title_prefix }}
-    {% if label %}
-      <h2{{ title_attributes }}>{{ label }}</h2>
-    {% endif %}
-    {{ title_suffix }}
-    {% block content %}
-      <div class="banner-block__image">
-        {{ content.field_media_image }}
-      </div>
-      <div class="banner-block__content">
-        {{ content|without('field_media_image') }}
-      </div>
-    {% endblock %}
+  <div class="container">
+    <div class="banner-block__inner">
+      {{ title_prefix }}
+      {% if label %}
+        <h2{{ title_attributes }}>{{ label }}</h2>
+      {% endif %}
+      {{ title_suffix }}
+      {% block content %}
+        <div class="banner-block__image">
+          {{ content.field_media_image }}
+        </div>
+        <div class="banner-block__content">
+          {{ content|without('field_media_image') }}
+        </div>
+      {% endblock %}
+    </div>
   </div>
 </div>

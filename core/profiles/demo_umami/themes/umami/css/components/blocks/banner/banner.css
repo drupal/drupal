@@ -50,7 +50,6 @@
   .banner-block__inner {
     display: flex;
     align-items: center;
-    max-width: 1200px;
     min-height: 54vw;
     margin: auto;
     padding: 0 4%;
