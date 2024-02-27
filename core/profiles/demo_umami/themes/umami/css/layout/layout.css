@@ -7,9 +7,10 @@
  */
 
 .container {
-  max-width: 1200px;
+  max-width: min(calc(100vw - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px) - 2rem), 1200px);
   margin: auto;
 }
+
 /* Add responsive side gutters to the outer layout container 'main' at smaller sizes */
 .main {
   padding: 0 4%;
