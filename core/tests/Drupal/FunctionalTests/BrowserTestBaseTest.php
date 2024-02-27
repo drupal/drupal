@@ -362,13 +362,13 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Part 1 - Test by name.
     // Test that checkboxes are found/not found correctly by name, when using
-    // TRUE or FALSE to match their 'checked' state.
+    // '1' or '' to match their 'checked' state.
     $this->assertSession()->fieldExists('checkbox_enabled');
     $this->assertSession()->fieldExists('checkbox_disabled');
-    $this->assertSession()->fieldValueEquals('checkbox_enabled', TRUE);
-    $this->assertSession()->fieldValueEquals('checkbox_disabled', FALSE);
-    $this->assertSession()->fieldValueNotEquals('checkbox_enabled', FALSE);
-    $this->assertSession()->fieldValueNotEquals('checkbox_disabled', TRUE);
+    $this->assertSession()->fieldValueEquals('checkbox_enabled', '1');
+    $this->assertSession()->fieldValueEquals('checkbox_disabled', '');
+    $this->assertSession()->fieldValueNotEquals('checkbox_enabled', '');
+    $this->assertSession()->fieldValueNotEquals('checkbox_disabled', '1');
 
     // Test that we have legacy support.
     $this->assertSession()->fieldValueEquals('checkbox_enabled', '1');
@@ -376,7 +376,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test that the assertion fails correctly if given the right value.
     try {
-      $this->assertSession()->fieldValueNotEquals('checkbox_enabled', TRUE);
+      $this->assertSession()->fieldValueNotEquals('checkbox_enabled', '1');
       $this->fail('fieldValueNotEquals failed to throw an exception.');
     }
     catch (ExpectationException $e) {
@@ -385,11 +385,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Part 2 - Test by ID.
     // Test that checkboxes are found/not found correctly by ID, when using
-    // TRUE or FALSE to match their 'checked' state.
-    $this->assertSession()->fieldValueEquals('edit-checkbox-enabled', TRUE);
-    $this->assertSession()->fieldValueEquals('edit-checkbox-disabled', FALSE);
-    $this->assertSession()->fieldValueNotEquals('edit-checkbox-enabled', FALSE);
-    $this->assertSession()->fieldValueNotEquals('edit-checkbox-disabled', TRUE);
+    // '1' or '' to match their 'checked' state.
+    $this->assertSession()->fieldValueEquals('edit-checkbox-enabled', '1');
+    $this->assertSession()->fieldValueEquals('edit-checkbox-disabled', '');
+    $this->assertSession()->fieldValueNotEquals('edit-checkbox-enabled', '');
+    $this->assertSession()->fieldValueNotEquals('edit-checkbox-disabled', '1');
 
     // Test that checkboxes are found by ID, when using NULL to ignore the
     // 'checked' state.
