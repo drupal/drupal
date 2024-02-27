@@ -572,7 +572,7 @@ use Drupal\node\Entity\NodeType;
  * @code
  * $fids = Drupal::entityQuery('file')
  *   ->condition('status', \Drupal\file\FileInterface::STATUS_PERMANENT, '<>')
- *   ->condition('changed', REQUEST_TIME - $age, '<')
+ *   ->condition('changed', \Drupal::time()->getRequestTime() - $age, '<')
  *   ->range(0, 100)
  *   ->execute();
  * $files = $storage->loadMultiple($fids);
@@ -1176,8 +1176,8 @@ function hook_entity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
     ->fields([
       'type' => $entity->getEntityTypeId(),
       'id' => $entity->id(),
-      'created' => REQUEST_TIME,
-      'updated' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'updated' => \Drupal::time()->getRequestTime(),
     ])
     ->execute();
 }
@@ -1199,8 +1199,8 @@ function hook_ENTITY_TYPE_insert(\Drupal\Core\Entity\EntityInterface $entity) {
   \Drupal::database()->insert('example_entity')
     ->fields([
       'id' => $entity->id(),
-      'created' => REQUEST_TIME,
-      'updated' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'updated' => \Drupal::time()->getRequestTime(),
     ])
     ->execute();
 }
@@ -1222,7 +1222,7 @@ function hook_entity_update(\Drupal\Core\Entity\EntityInterface $entity) {
   // Update the entity's entry in a fictional table of all entities.
   \Drupal::database()->update('example_entity')
     ->fields([
-      'updated' => REQUEST_TIME,
+      'updated' => \Drupal::time()->getRequestTime(),
     ])
     ->condition('type', $entity->getEntityTypeId())
     ->condition('id', $entity->id())
@@ -1246,7 +1246,7 @@ function hook_ENTITY_TYPE_update(\Drupal\Core\Entity\EntityInterface $entity) {
   // Update the entity's entry in a fictional table of this type of entity.
   \Drupal::database()->update('example_entity')
     ->fields([
-      'updated' => REQUEST_TIME,
+      'updated' => \Drupal::time()->getRequestTime(),
     ])
     ->condition('id', $entity->id())
     ->execute();

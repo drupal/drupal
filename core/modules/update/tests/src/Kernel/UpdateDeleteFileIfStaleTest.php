@@ -42,7 +42,8 @@ class UpdateDeleteFileIfStaleTest extends KernelTestBase {
     $this->assertFalse($deleted);
     $this->assertFileExists($file_path);
 
-    // Set the maximum age to a number smaller than REQUEST_TIME - $filectime.
+    // Set the maximum age to a number smaller than
+    // \Drupal::time()->getRequestTime() - $filectime.
     $this->config('system.file')
       ->set('temporary_maximum_age', -100000)
       ->save();
