@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Verifies help page display of tours.
  *
  * @group help
+ * @group legacy
  */
 class TourHelpPageTest extends BrowserTestBase {
 

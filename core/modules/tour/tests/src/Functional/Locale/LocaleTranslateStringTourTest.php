@@ -8,6 +8,7 @@ use Drupal\Tests\tour\Functional\TourTestBase;
  * Tests the Translate Interface tour.
  *
  * @group tour
+ * @group legacy
  */
 class LocaleTranslateStringTourTest extends TourTestBase {
 

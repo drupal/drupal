@@ -8,6 +8,7 @@ use Drupal\Tests\tour\Functional\TourTestBase;
  * Tests the Block Layout tour.
  *
  * @group tour
+ * @group legacy
  */
 class BlockLayoutTourTest extends TourTestBase {
 

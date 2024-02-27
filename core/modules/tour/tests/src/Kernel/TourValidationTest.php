@@ -9,6 +9,7 @@ use Drupal\tour\Entity\Tour;
  * Tests validation of tour entities.
  *
  * @group tour
+ * @group legacy
  */
 class TourValidationTest extends ConfigEntityValidationTestBase {
 

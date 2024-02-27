@@ -11,6 +11,7 @@ use Drupal\tour\TipPluginBase;
  * @coversDefaultClass \Drupal\tour\TipPluginBase
  *
  * @group tour
+ * @group legacy
  */
 class TipPluginBaseTest extends UnitTestCase {
 
