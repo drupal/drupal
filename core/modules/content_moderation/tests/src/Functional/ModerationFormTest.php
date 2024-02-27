@@ -312,7 +312,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $french = \Drupal::languageManager()->getLanguage('fr');
 
     $this->drupalGet($latest_version_path);
-    $this->assertSession()->statusCodeEquals('403');
+    $this->assertSession()->statusCodeEquals(403);
     $this->assertSession()->elementNotExists('xpath', '//ul[@class="entity-moderation-form"]');
 
     // Add french translation (revision 2).
@@ -326,7 +326,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     ], 'Save (this translation)');
 
     $this->drupalGet($latest_version_path, ['language' => $french]);
-    $this->assertSession()->statusCodeEquals('403');
+    $this->assertSession()->statusCodeEquals(403);
     $this->assertSession()->elementNotExists('xpath', '//ul[@class="entity-moderation-form"]');
 
     // Add french pending revision (revision 3).
