@@ -20,7 +20,6 @@ interface TimeInterface {
    * This method can replace instances of
    * @code
    * $request_time = $_SERVER['REQUEST_TIME'];
-   * $request_time = REQUEST_TIME;
    * $request_time = $requestStack->getCurrentRequest()->server->get('REQUEST_TIME');
    * $request_time = $request->server->get('REQUEST_TIME');
    * @endcode

@@ -76,7 +76,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
     // A dummy query-string is added to filenames, to gain control over
     // browser-caching. The string changes on every update or full cache
     // flush, forcing browsers to load a new copy of the files, as the
-    // URL changed. Files that should not be cached get REQUEST_TIME as
+    // URL changed. Files that should not be cached get the request time as a
     // query-string instead, to enforce reload on every page request.
     $default_query_string = $this->assetQueryString->get();
 
