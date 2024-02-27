@@ -8,7 +8,9 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\tour\Entity\Tour
+ *
  * @group tour
+ * @group legacy
  */
 class TourTest extends UnitTestCase {
 

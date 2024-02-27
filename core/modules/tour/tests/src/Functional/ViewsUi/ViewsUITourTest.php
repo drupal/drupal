@@ -9,6 +9,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests the Views UI tour.
  *
  * @group tour
+ * @group legacy
  */
 class ViewsUITourTest extends TourTestBase {
 

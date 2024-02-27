@@ -12,6 +12,7 @@ use Drupal\tour\Entity\Tour;
  * Tests the functionality of tour tips.
  *
  * @group tour
+ * @group legacy
  */
 class TourTest extends TourTestBasic {
 

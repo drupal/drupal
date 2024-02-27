@@ -8,6 +8,7 @@ use Drupal\Tests\tour\Functional\TourTestBase;
  * Tests tour functionality.
  *
  * @group tour
+ * @group legacy
  */
 class LanguageTourTest extends TourTestBase {
 

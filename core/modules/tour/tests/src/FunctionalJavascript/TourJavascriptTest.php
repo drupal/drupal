@@ -10,6 +10,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * General Tour tests that require JavaScript.
  *
  * @group tour
+ * @group legacy
  */
 class TourJavascriptTest extends WebDriverTestBase {
 

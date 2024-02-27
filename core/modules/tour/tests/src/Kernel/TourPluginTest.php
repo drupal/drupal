@@ -8,6 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the functionality of tour plugins.
  *
  * @group tour
+ * @group legacy
  */
 class TourPluginTest extends KernelTestBase {
 
