@@ -12,11 +12,8 @@ class EntityTypeConstraintValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($entity, Constraint $constraint): void {
     if (!isset($entity)) {
       return;
     }

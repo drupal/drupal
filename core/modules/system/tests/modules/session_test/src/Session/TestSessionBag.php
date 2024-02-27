@@ -72,7 +72,7 @@ class TestSessionBag implements SessionBagInterface {
   /**
    * {@inheritdoc}
    */
-  public function initialize(array &$attributes) {
+  public function initialize(array &$attributes): void {
     $this->attributes = &$attributes;
   }
 

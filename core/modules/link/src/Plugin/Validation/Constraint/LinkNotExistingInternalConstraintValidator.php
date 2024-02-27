@@ -15,11 +15,8 @@ class LinkNotExistingInternalConstraintValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if (isset($value)) {
       try {
         /** @var \Drupal\Core\Url $url */

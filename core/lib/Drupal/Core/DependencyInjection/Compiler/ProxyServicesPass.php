@@ -16,11 +16,8 @@ class ProxyServicesPass implements CompilerPassInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     foreach ($container->getDefinitions() as $service_id => $definition) {
       if ($definition->isLazy()) {
         $proxy_class = ProxyBuilder::buildProxyClassName($definition->getClass());

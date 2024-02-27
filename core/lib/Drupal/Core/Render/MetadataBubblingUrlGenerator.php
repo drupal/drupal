@@ -49,11 +49,8 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function setContext(SymfonyRequestContext $context) {
+  public function setContext(SymfonyRequestContext $context): void {
     $this->urlGenerator->setContext($context);
   }
 

@@ -20,11 +20,8 @@ class NotNullConstraintValidator extends NotNullValidator {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     $typed_data = $this->getTypedData();
     // TRICKY: the Mapping and Sequence data types both extend ArrayElement
     // (which implements ComplexDataInterface), but configuration schema sees a

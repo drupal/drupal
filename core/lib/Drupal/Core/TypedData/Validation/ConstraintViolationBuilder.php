@@ -214,11 +214,8 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
 
     /**
      * {@inheritdoc}
-     *
-     * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-     * @return void
      */
-    public function addViolation()
+    public function addViolation(): void
     {
       if (null === $this->plural) {
         $translatedMessage = $this->translator->trans(

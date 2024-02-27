@@ -551,11 +551,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function setContainer(ContainerInterface $container = NULL) {
+  public function setContainer(ContainerInterface $container = NULL): void {
     if (isset($this->container)) {
       throw new \Exception('The container should not override an existing container.');
     }
@@ -564,7 +561,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     $this->container = $container;
-    return $this;
   }
 
   /**
@@ -698,11 +694,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function terminate(Request $request, Response $response) {
+  public function terminate(Request $request, Response $response): void {
     if ($this->booted && $this->getHttpKernel() instanceof TerminableInterface) {
       // Only run terminate() when essential services have been set up properly
       // by preHandle() before.

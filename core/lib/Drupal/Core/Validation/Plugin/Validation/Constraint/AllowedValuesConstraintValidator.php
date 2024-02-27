@@ -47,7 +47,7 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     $typed_data = $this->getTypedData();
 
     if ($typed_data instanceof OptionsProviderInterface) {

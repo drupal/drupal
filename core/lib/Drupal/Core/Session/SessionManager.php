@@ -174,7 +174,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * {@inheritdoc}
    */
-  public function save() {
+  public function save(): void {
     if ($this->isCli()) {
       // We don't have anything to do if we are not allowed to save the session.
       return;

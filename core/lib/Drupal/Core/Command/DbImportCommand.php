@@ -22,7 +22,7 @@ class DbImportCommand extends DbCommandBase {
   /**
    * {@inheritdoc}
    */
-  protected function configure() {
+  protected function configure(): void {
     parent::configure();
     $this->setName('import')
       ->setDescription('Import database from a generation script.')

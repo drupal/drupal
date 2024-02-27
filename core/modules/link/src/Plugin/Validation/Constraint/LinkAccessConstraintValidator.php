@@ -41,11 +41,8 @@ class LinkAccessConstraintValidator extends ConstraintValidator implements Conta
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if (isset($value)) {
       try {
         $url = $value->getUrl();

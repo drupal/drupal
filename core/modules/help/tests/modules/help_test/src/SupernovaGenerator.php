@@ -13,7 +13,7 @@ class SupernovaGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function setContext(RequestContext $context) {
+  public function setContext(RequestContext $context): void {
     throw new \Exception();
   }
 

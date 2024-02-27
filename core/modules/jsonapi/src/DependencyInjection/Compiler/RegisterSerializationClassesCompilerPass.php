@@ -62,7 +62,7 @@ class RegisterSerializationClassesCompilerPass extends DrupalRegisterSerializati
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   The container to process.
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $definition = $container->getDefinition(static::OVERRIDDEN_SERVICE_ID);
 
     // Retrieve registered Normalizers and Encoders from the container.

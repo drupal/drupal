@@ -36,14 +36,11 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    * override Symfony's ContainerBuilder's restriction on setting services in a
    * frozen builder.
    *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
-   *
    * @todo Restrict this to synthetic services only. Ideally, the upstream
    *   ContainerBuilder class should be fixed to allow setting synthetic
    *   services in a frozen builder.
    */
-  public function set($id, $service) {
+  public function set($id, $service): void {
     SymfonyContainer::set($id, $service);
   }
 
@@ -70,11 +67,8 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function setParameter($name, $value) {
+  public function setParameter($name, $value): void {
     if (strtolower($name) !== $name) {
       throw new \InvalidArgumentException("Parameter names must be lowercase: $name");
     }
