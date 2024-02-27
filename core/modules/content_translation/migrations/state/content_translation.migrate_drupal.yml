@@ -17,7 +17,6 @@ finished:
     menu: content_translation
     # Node revision translations.
     node: content_translation
-    statistics: statistics
     taxonomy: content_translation
   7:
     entity_translation: content_translation
@@ -32,6 +31,5 @@ finished:
     i18n_menu: content_translation
     i18n_string: content_translation
     i18n_taxonomy: content_translation
-    statistics: statistics
     # Node revision translations.
     node: content_translation
