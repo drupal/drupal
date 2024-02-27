@@ -182,7 +182,7 @@ class TwigTransTest extends BrowserTestBase {
     // Makes sure https://www.drupal.org/node/2489024 doesn't happen without
     // twig debug.
     // Ensure that running php code inside a Twig trans is not possible.
-    $this->assertSession()->pageTextNotContains(pi());
+    $this->assertSession()->pageTextNotContains((string) pi());
   }
 
   /**

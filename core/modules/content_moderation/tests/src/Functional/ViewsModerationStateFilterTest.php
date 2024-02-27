@@ -341,7 +341,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
     // Check that the size of the select element does not exceed 8 options.
     if ($check_size) {
       $this->assertGreaterThan(8, count($states));
-      $assert_session->elementAttributeContains('css', '#edit-default-revision-state', 'size', 8);
+      $assert_session->elementAttributeContains('css', '#edit-default-revision-state', 'size', '8');
     }
 
     // Check that an option exists for each of the expected states.
