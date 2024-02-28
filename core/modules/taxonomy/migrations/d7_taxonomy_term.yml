@@ -9,8 +9,9 @@ source:
   plugin: d7_taxonomy_term
 process:
   # If you are using this file to build a custom migration consider removing
-  # the tid field to allow incremental migrations.
+  # the tid and revision_id fields to allow incremental migrations.
   tid: tid
+  revision_id: tid
   vid:
     plugin: migration_lookup
     migration: d7_taxonomy_vocabulary
