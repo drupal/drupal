@@ -433,14 +433,6 @@ parameters:
 			path: lib/Drupal/Core/DrupalKernel.php
 
 		-
-			message: """
-				#^Interface Drupal\\\\Core\\\\DrupalKernelInterface extends deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/DrupalKernelInterface.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityConfirmFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/ContentEntityConfirmFormBase.php

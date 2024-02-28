@@ -552,20 +552,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
-  public function setContainer(ContainerInterface $container = NULL): void {
-    if (isset($this->container)) {
-      throw new \Exception('The container should not override an existing container.');
-    }
-    if ($this->booted) {
-      throw new \Exception('The container cannot be set after a booted kernel.');
-    }
-
-    $this->container = $container;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCachedContainerDefinition() {
     $cache = $this->bootstrapContainer->get('cache.container')->get($this->getContainerCacheKey());
 
@@ -940,22 +926,15 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $all_messages = $this->container->get('messenger')->all();
     }
 
-    // If we haven't booted yet but there is a container, then we're asked to
-    // boot the container injected via setContainer().
-    // @see \Drupal\KernelTests\KernelTestBase::setUp()
-    if (isset($this->container) && !$this->booted) {
-      $container = $this->container;
-    }
-
     // If the module list hasn't already been set in updateModules and we are
     // not forcing a rebuild, then try and load the container from the cache.
     if (empty($this->moduleList) && !$this->containerNeedsRebuild) {
       $container_definition = $this->getCachedContainerDefinition();
     }
 
-    // If there is no container and no cached container definition, build a new
-    // one from scratch.
-    if (!isset($container) && !isset($container_definition)) {
+    // If there is no cached container definition, build a new container from
+    // scratch.
+    if (!isset($container_definition)) {
       $container = $this->compileContainer();
 
       // Only dump the container if dumping is allowed. This is useful for
