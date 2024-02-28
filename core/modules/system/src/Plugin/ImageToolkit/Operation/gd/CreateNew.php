@@ -3,18 +3,19 @@
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
 use Drupal\Component\Utility\Color;
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines GD2 create_new image operation.
- *
- * @ImageToolkitOperation(
- *   id = "gd_create_new",
- *   toolkit = "gd",
- *   operation = "create_new",
- *   label = @Translation("Set a new image"),
- *   description = @Translation("Creates a new transparent object and sets it for the image.")
- * )
  */
+#[ImageToolkitOperation(
+  id: "gd_create_new",
+  toolkit: "gd",
+  operation: "create_new",
+  label: new TranslatableMarkup("Set a new image"),
+  description: new TranslatableMarkup("Creates a new transparent object and sets it for the image.")
+)]
 class CreateNew extends GDImageToolkitOperationBase {
 
   /**

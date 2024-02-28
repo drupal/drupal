@@ -2,17 +2,19 @@
 
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Defines GD2 Scale operation.
- *
- * @ImageToolkitOperation(
- *   id = "gd_scale",
- *   toolkit = "gd",
- *   operation = "scale",
- *   label = @Translation("Scale"),
- *   description = @Translation("Scales an image while maintaining aspect ratio. The resulting image can be smaller for one or both target dimensions.")
- * )
  */
+#[ImageToolkitOperation(
+  id: "gd_scale",
+  toolkit: "gd",
+  operation: "scale",
+  label: new TranslatableMarkup("Scale"),
+  description: new TranslatableMarkup("Scales an image while maintaining aspect ratio. The resulting image can be smaller for one or both target dimensions.")
+)]
 class Scale extends Resize {
 
   /**

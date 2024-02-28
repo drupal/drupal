@@ -2,12 +2,13 @@
 
 namespace Drupal\Core\ImageToolkit;
 
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation;
+use Drupal\Core\Plugin\DefaultPluginManager;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -50,7 +51,14 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
    *   The image toolkit manager.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LoggerInterface $logger, ImageToolkitManager $toolkit_manager) {
-    parent::__construct('Plugin/ImageToolkit/Operation', $namespaces, $module_handler, 'Drupal\Core\ImageToolkit\ImageToolkitOperationInterface', 'Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation');
+    parent::__construct(
+      'Plugin/ImageToolkit/Operation',
+      $namespaces,
+      $module_handler,
+      ImageToolkitOperationInterface::class,
+      ImageToolkitOperation::class,
+      'Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation',
+    );
 
     $this->alterInfo('image_toolkit_operation');
     $this->setCacheBackend($cache_backend, 'image_toolkit_operation_plugins');

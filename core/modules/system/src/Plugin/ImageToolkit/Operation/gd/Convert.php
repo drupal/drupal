@@ -2,17 +2,19 @@
 
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Defines GD2 convert operation.
- *
- * @ImageToolkitOperation(
- *   id = "gd_convert",
- *   toolkit = "gd",
- *   operation = "convert",
- *   label = @Translation("Convert"),
- *   description = @Translation("Instructs the toolkit to save the image with a specified extension.")
- * )
  */
+#[ImageToolkitOperation(
+  id: "gd_convert",
+  toolkit: "gd",
+  operation: "convert",
+  label: new TranslatableMarkup("Convert"),
+  description: new TranslatableMarkup("Instructs the toolkit to save the image with a specified extension.")
+)]
 class Convert extends GDImageToolkitOperationBase {
 
   /**
