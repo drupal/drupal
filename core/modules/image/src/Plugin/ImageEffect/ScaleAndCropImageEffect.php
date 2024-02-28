@@ -3,16 +3,17 @@
 namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Core\Image\ImageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\image\Attribute\ImageEffect;
 
 /**
  * Scales and crops an image resource.
- *
- * @ImageEffect(
- *   id = "image_scale_and_crop",
- *   label = @Translation("Scale and crop"),
- *   description = @Translation("Scale and crop will maintain the aspect-ratio of the original image, then crop the larger dimension. This is most useful for creating perfectly square thumbnails without stretching the image.")
- * )
  */
+#[ImageEffect(
+  id: "image_scale_and_crop",
+  label: new TranslatableMarkup("Scale and crop"),
+  description: new TranslatableMarkup("Scale and crop will maintain the aspect-ratio of the original image, then crop the larger dimension. This is most useful for creating perfectly square thumbnails without stretching the image.")
+)]
 class ScaleAndCropImageEffect extends CropImageEffect {
 
   /**

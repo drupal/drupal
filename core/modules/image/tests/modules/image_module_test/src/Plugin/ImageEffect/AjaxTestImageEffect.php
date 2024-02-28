@@ -6,16 +6,17 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\image\Attribute\ImageEffect;
 use Drupal\image\ConfigurableImageEffectBase;
 
 /**
  * Provides a test effect using Ajax in the configuration form.
- *
- * @ImageEffect(
- *   id = "image_module_test_ajax",
- *   label = @Translation("Ajax test")
- * )
  */
+#[ImageEffect(
+  id: "image_module_test_ajax",
+  label: new TranslatableMarkup("Ajax test")
+)]
 class AjaxTestImageEffect extends ConfigurableImageEffectBase {
 
   /**

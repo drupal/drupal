@@ -3,16 +3,17 @@
 namespace Drupal\image_module_test\Plugin\ImageEffect;
 
 use Drupal\Core\Image\ImageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\image\Attribute\ImageEffect;
 use Drupal\image\ImageEffectBase;
 
 /**
  * Performs an image operation that depends on the URI of the original image.
- *
- * @ImageEffect(
- *   id = "image_module_test_uri_dependent",
- *   label = @Translation("URI dependent test image effect")
- * )
  */
+#[ImageEffect(
+  id: "image_module_test_uri_dependent",
+  label: new TranslatableMarkup("URI dependent test image effect")
+)]
 class UriDependentTestImageEffect extends ImageEffectBase {
 
   /**
