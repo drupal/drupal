@@ -3,16 +3,17 @@
 namespace Drupal\image_module_test\Plugin\ImageEffect;
 
 use Drupal\Core\Image\ImageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\image\Attribute\ImageEffect;
 use Drupal\image\ImageEffectBase;
 
 /**
  * Performs no operation on an image resource.
- *
- * @ImageEffect(
- *   id = "image_module_test_null",
- *   label = @Translation("Image module test")
- * )
  */
+#[ImageEffect(
+  id: "image_module_test_null",
+  label: new TranslatableMarkup("Image module test")
+)]
 class NullTestImageEffect extends ImageEffectBase {
 
   /**

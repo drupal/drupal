@@ -6,17 +6,18 @@ use Drupal\Component\Utility\Color;
 use Drupal\Component\Utility\Rectangle;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\image\Attribute\ImageEffect;
 use Drupal\image\ConfigurableImageEffectBase;
 
 /**
  * Rotates an image resource.
- *
- * @ImageEffect(
- *   id = "image_rotate",
- *   label = @Translation("Rotate"),
- *   description = @Translation("Rotating an image may cause the dimensions of an image to increase to fit the diagonal.")
- * )
  */
+#[ImageEffect(
+  id: "image_rotate",
+  label: new TranslatableMarkup("Rotate"),
+  description: new TranslatableMarkup("Rotating an image may cause the dimensions of an image to increase to fit the diagonal.")
+)]
 class RotateImageEffect extends ConfigurableImageEffectBase {
 
   /**

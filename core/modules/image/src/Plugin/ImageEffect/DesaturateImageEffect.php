@@ -3,17 +3,18 @@
 namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Core\Image\ImageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\image\Attribute\ImageEffect;
 use Drupal\image\ImageEffectBase;
 
 /**
  * Desaturates (grayscale) an image resource.
- *
- * @ImageEffect(
- *   id = "image_desaturate",
- *   label = @Translation("Desaturate"),
- *   description = @Translation("Desaturate converts an image to grayscale.")
- * )
  */
+#[ImageEffect(
+  id: "image_desaturate",
+  label: new TranslatableMarkup("Desaturate"),
+  description: new TranslatableMarkup("Desaturate converts an image to grayscale."),
+)]
 class DesaturateImageEffect extends ImageEffectBase {
 
   /**

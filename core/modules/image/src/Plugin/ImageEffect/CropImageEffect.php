@@ -4,16 +4,17 @@ namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\image\Attribute\ImageEffect;
 
 /**
  * Crops an image resource.
- *
- * @ImageEffect(
- *   id = "image_crop",
- *   label = @Translation("Crop"),
- *   description = @Translation("Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.")
- * )
  */
+#[ImageEffect(
+  id: "image_crop",
+  label: new TranslatableMarkup("Crop"),
+  description: new TranslatableMarkup("Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately."),
+)]
 class CropImageEffect extends ResizeImageEffect {
 
   /**

@@ -4,17 +4,18 @@ namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\image\Attribute\ImageEffect;
 use Drupal\image\ConfigurableImageEffectBase;
 
 /**
  * Resizes an image resource.
- *
- * @ImageEffect(
- *   id = "image_resize",
- *   label = @Translation("Resize"),
- *   description = @Translation("Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.")
- * )
  */
+#[ImageEffect(
+  id: "image_resize",
+  label: new TranslatableMarkup("Resize"),
+  description: new TranslatableMarkup("Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately."),
+)]
 class ResizeImageEffect extends ConfigurableImageEffectBase {
 
   /**
