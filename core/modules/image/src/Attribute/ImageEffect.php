@@ -21,7 +21,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see \Drupal\image\ImageEffectInterface
  * @see \Drupal\image\ImageEffectBase
  * @see \Drupal\image\ImageEffectManager
- * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation
+ * @see \Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
