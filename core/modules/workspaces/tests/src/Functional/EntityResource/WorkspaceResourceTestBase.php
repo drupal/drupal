@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workspaces\Functional\EntityResource;
 
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;

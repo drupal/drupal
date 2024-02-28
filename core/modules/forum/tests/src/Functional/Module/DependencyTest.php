@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\forum\Functional\Module;
 
 use Drupal\Tests\system\Functional\Module\ModuleTestBase;

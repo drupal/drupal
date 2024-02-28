@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\page_cache\Functional;
 
 use Drupal\Component\Datetime\DateTimePlus;

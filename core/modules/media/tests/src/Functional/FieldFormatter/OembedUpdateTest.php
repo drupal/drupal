@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Functional\FieldFormatter;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;

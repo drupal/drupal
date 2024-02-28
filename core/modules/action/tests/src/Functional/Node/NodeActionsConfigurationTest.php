@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\action\Functional\Node;
 
 use Drupal\Component\Serialization\Json;

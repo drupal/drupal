@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Cache\Cache;
@@ -53,21 +55,21 @@ class EntityComputedFieldTest extends BrowserTestBase {
     $this->state->set('entity_test_computed_integer_value', 2024);
     $this->drupalGet($entity->toUrl('canonical')->toString());
     $field_item_selector = '.field--name-computed-test-cacheable-integer-field .field__item';
-    $this->assertSession()->elementTextEquals('css', $field_item_selector, 2024);
+    $this->assertSession()->elementTextEquals('css', $field_item_selector, '2024');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'url.query_args:computed_test_cacheable_integer_field');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'field:computed_test_cacheable_integer_field');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Max-Age', "31536000");
 
     $this->state->set('entity_test_computed_integer_value', 2025);
     $this->drupalGet($entity->toUrl('canonical')->toString());
-    $this->assertSession()->elementTextEquals('css', $field_item_selector, 2024);
+    $this->assertSession()->elementTextEquals('css', $field_item_selector, '2024');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'url.query_args:computed_test_cacheable_integer_field');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'field:computed_test_cacheable_integer_field');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Max-Age', "31536000");
 
     Cache::invalidateTags(['field:computed_test_cacheable_integer_field']);
     $this->drupalGet($entity->toUrl('canonical')->toString());
-    $this->assertSession()->elementTextEquals('css', $field_item_selector, 2025);
+    $this->assertSession()->elementTextEquals('css', $field_item_selector, '2025');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'url.query_args:computed_test_cacheable_integer_field');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'field:computed_test_cacheable_integer_field');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Max-Age', "31536000");

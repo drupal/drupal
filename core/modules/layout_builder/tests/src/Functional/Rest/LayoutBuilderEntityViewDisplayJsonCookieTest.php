@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;

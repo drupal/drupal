@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\SecurityAdvisories;
 
 use Drupal\advisory_feed_test\AdvisoryTestClientMiddleware;

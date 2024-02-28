@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Ajax;
 
 use Drupal\ajax_test\Controller\AjaxTestController;

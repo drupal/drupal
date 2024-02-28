@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\EventSubscriber;
 
 use Drupal\file\Entity\File;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\forum\Functional\Views;
 
 use Drupal\node\NodeInterface;

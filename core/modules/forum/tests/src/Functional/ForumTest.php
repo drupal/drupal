@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\forum\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;

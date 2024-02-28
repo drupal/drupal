@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\editor\Functional\Rest;
 
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
