@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Test;
 use Drupal\Tests\TestSuites\TestSuiteBase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 // The test suite class is not part of the autoloader, we need to include it
 // manually.
@@ -18,6 +19,8 @@ require_once __DIR__ . '/../../../../TestSuites/TestSuiteBase.php';
  * @group TestSuite
  */
 class TestSuiteBaseTest extends TestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * Helper method to set up the file system.
@@ -81,11 +84,16 @@ class TestSuiteBaseTest extends TestCase {
   /**
    * Tests for special case behavior of unit test suite namespaces in core.
    *
+   * @group legacy
+   *
    * @covers ::addTestsBySuiteNamespace
    *
    * @dataProvider provideCoreTests
    */
   public function testAddTestsBySuiteNamespaceCore($filesystem, $suite_namespace, $expected_tests) {
+
+    $this->expectDeprecation('Drupal\\Tests\\Core\\Test\\StubTestSuiteBase is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement and test discovery will be handled differently in PHPUnit 10. See https://www.drupal.org/node/3405829');
+
     // Set up the file system.
     $vfs = vfsStream::setup('root');
     vfsStream::create($filesystem, $vfs);
@@ -118,6 +126,8 @@ class TestSuiteBaseTest extends TestCase {
  *
  * We use this class to alter the behavior of TestSuiteBase so it can be
  * testable.
+ *
+ * @phpstan-ignore-next-line
  */
 class StubTestSuiteBase extends TestSuiteBase {
 
@@ -127,6 +137,12 @@ class StubTestSuiteBase extends TestSuiteBase {
    * @var string[]
    */
   public $testFiles = [];
+
+  public function __construct(string $name) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement and test discovery will be handled differently in PHPUnit 10. See https://www.drupal.org/node/3405829', E_USER_DEPRECATED);
+    // @phpstan-ignore-next-line
+    parent::__construct($name);
+  }
 
   /**
    * {@inheritdoc}
