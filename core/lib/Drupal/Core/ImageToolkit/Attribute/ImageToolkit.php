@@ -18,7 +18,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * For a working example, see
  * \Drupal\system\Plugin\ImageToolkit\GDToolkit
  *
- * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkitOperation
+ * @see \Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation
  * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface
  * @see \Drupal\Core\ImageToolkit\ImageToolkitBase
  * @see \Drupal\Core\ImageToolkit\ImageToolkitManager

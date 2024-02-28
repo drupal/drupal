@@ -19,8 +19,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * For a working example, see
  * \Drupal\system\Plugin\ImageToolkit\Operation\gd\Crop
  *
- * @see \Drupal\Core\ImageToolkit\Annotation\ImageToolkit
- * @see \Drupal\image\Annotation\ImageEffect
+ * @see \Drupal\Core\ImageToolkit\Attribute\ImageToolkit
+ * @see \Drupal\image\Attribute\ImageEffect
  * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface
  * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationBase
  * @see \Drupal\Core\ImageToolkit\ImageToolkitOperationManager
