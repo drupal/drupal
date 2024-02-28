@@ -2933,3 +2933,48 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/Listeners/DrupalListener.php
+
+		-
+			message: """
+				#^Class Drupal\\\\Tests\\\\TestSuites\\\\BuildTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
+				in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
+				  replacement and test discovery will be handled differently in PHPUnit 10\\.$#
+			"""
+			count: 1
+			path: tests/TestSuites/BuildTestSuite.php
+
+		-
+			message: """
+				#^Class Drupal\\\\Tests\\\\TestSuites\\\\FunctionalJavascriptTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
+				in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
+				  replacement and test discovery will be handled differently in PHPUnit 10\\.$#
+			"""
+			count: 1
+			path: tests/TestSuites/FunctionalJavascriptTestSuite.php
+
+		-
+			message: """
+				#^Class Drupal\\\\Tests\\\\TestSuites\\\\FunctionalTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
+				in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
+				  replacement and test discovery will be handled differently in PHPUnit 10\\.$#
+			"""
+			count: 1
+			path: tests/TestSuites/FunctionalTestSuite.php
+
+		-
+			message: """
+				#^Class Drupal\\\\Tests\\\\TestSuites\\\\KernelTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
+				in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
+				  replacement and test discovery will be handled differently in PHPUnit 10\\.$#
+			"""
+			count: 1
+			path: tests/TestSuites/KernelTestSuite.php
+
+		-
+			message: """
+				#^Class Drupal\\\\Tests\\\\TestSuites\\\\UnitTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
+				in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
+				  replacement and test discovery will be handled differently in PHPUnit 10\\.$#
+			"""
+			count: 1
+			path: tests/TestSuites/UnitTestSuite.php

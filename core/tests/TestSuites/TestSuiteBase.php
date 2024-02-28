@@ -9,6 +9,11 @@ use PHPUnit\Framework\TestSuite;
 
 /**
  * Base class for Drupal test suites.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
+ *   replacement and test discovery will be handled differently in PHPUnit 10.
+ *
+ * @see https://www.drupal.org/node/3405829
  */
 abstract class TestSuiteBase extends TestSuite {
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\Process\Process;
 
 /**
@@ -15,18 +16,31 @@ class PhpUnitCliTest extends UnitTestCase {
 
   /**
    * Ensure that the test suites are able to discover tests without incident.
+   *
+   * Generate the list of tests for all the tests that PHPUnit can discover.
+   * The goal here is to successfully generate the list, without any
+   * duplicate namespace errors, deprecation errors or so forth. This keeps
+   * us from committing tests which don't break under run-tests.sh, but do
+   * break under the PHPUnit CLI test runner tool.
    */
   public function testPhpUnitListTests() {
-    // Generate the list of tests for all the tests the suites can discover.
-    // The goal here is to successfully generate the list, without any
-    // duplicate namespace errors or so forth. This keeps us from committing
-    // tests which don't break under run-tests.sh, but do break under the
-    // phpunit test runner tool.
-    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose --list-tests');
-    $process->setWorkingDirectory($this->root)
+    $command = [
+      'vendor/bin/phpunit',
+      '--configuration',
+      'core',
+      '--list-tests',
+    ];
+
+    // PHPUnit 10 dropped the --verbose command line option.
+    if (RunnerVersion::getMajor() < 10) {
+      $command[] = '--verbose';
+    }
+
+    $process = new Process($command, $this->root);
+    $process
       ->setTimeout(300)
-      ->setIdleTimeout(300);
-    $process->run();
+      ->setIdleTimeout(300)
+      ->run();
     $this->assertEquals(0, $process->getExitCode(),
       'COMMAND: ' . $process->getCommandLine() . "\n" .
       'OUTPUT: ' . $process->getOutput() . "\n" .
