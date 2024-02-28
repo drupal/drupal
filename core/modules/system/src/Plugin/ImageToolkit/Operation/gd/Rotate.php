@@ -3,18 +3,19 @@
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
 use Drupal\Component\Utility\Color;
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines GD2 rotate operation.
- *
- * @ImageToolkitOperation(
- *   id = "gd_rotate",
- *   toolkit = "gd",
- *   operation = "rotate",
- *   label = @Translation("Rotate"),
- *   description = @Translation("Rotates an image by the given number of degrees.")
- * )
  */
+#[ImageToolkitOperation(
+  id: "gd_rotate",
+  toolkit: "gd",
+  operation: "rotate",
+  label: new TranslatableMarkup("Rotate"),
+  description: new TranslatableMarkup("Rotates an image by the given number of degrees.")
+)]
 class Rotate extends GDImageToolkitOperationBase {
 
   /**

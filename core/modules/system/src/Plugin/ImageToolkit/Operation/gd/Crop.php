@@ -2,17 +2,19 @@
 
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Defines GD2 Crop operation.
- *
- * @ImageToolkitOperation(
- *   id = "gd_crop",
- *   toolkit = "gd",
- *   operation = "crop",
- *   label = @Translation("Crop"),
- *   description = @Translation("Crops an image to a rectangle specified by the given dimensions.")
- * )
  */
+#[ImageToolkitOperation(
+  id: "gd_crop",
+  toolkit: "gd",
+  operation: "crop",
+  label: new TranslatableMarkup("Crop"),
+  description: new TranslatableMarkup("Crops an image to a rectangle specified by the given dimensions.")
+)]
 class Crop extends GDImageToolkitOperationBase {
 
   /**

@@ -2,17 +2,19 @@
 
 namespace Drupal\system\Plugin\ImageToolkit\Operation\gd;
 
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkitOperation;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Defines GD2 Desaturate operation.
- *
- * @ImageToolkitOperation(
- *   id = "gd_desaturate",
- *   toolkit = "gd",
- *   operation = "desaturate",
- *   label = @Translation("Desaturate"),
- *   description = @Translation("Converts an image to grayscale.")
- * )
  */
+#[ImageToolkitOperation(
+  id: "gd_desaturate",
+  toolkit: "gd",
+  operation: "desaturate",
+  label: new TranslatableMarkup("Desaturate"),
+  description: new TranslatableMarkup("Converts an image to grayscale.")
+)]
 class Desaturate extends GDImageToolkitOperationBase {
 
   /**
