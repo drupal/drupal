@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config_test\Functional\Rest;
 
 use Drupal\config_test\Entity\ConfigTest;

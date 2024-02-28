@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\demo_umami_content\Functional;
 
 use Drupal\Tests\BrowserTestBase;

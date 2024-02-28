@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\datetime\Functional\Views;
 
 use Drupal\Core\Datetime\DrupalDateTime;

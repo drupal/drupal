@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Breadcrumb;
 
 use Drupal\Tests\block\Traits\BlockCreationTrait;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workspaces\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\book\Functional\Views;
 
 use Drupal\Tests\views\Functional\ViewTestBase;

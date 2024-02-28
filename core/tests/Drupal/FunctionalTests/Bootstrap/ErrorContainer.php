@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Bootstrap;
 
 use Drupal\Core\DependencyInjection\Container;
