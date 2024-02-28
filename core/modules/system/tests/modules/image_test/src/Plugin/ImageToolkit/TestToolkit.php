@@ -4,20 +4,21 @@ namespace Drupal\image_test\Plugin\ImageToolkit;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkit;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
 use Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a Test toolkit for image manipulation within Drupal.
- *
- * @ImageToolkit(
- *   id = "test",
- *   title = @Translation("A dummy toolkit that works")
- * )
  */
+#[ImageToolkit(
+  id: "test",
+  title: new TranslatableMarkup("A dummy toolkit that works"),
+)]
 class TestToolkit extends ImageToolkitBase {
 
   /**

@@ -7,11 +7,13 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\ImageToolkit\Attribute\ImageToolkit;
 use Drupal\Core\ImageToolkit\ImageToolkitBase;
 use Drupal\Core\ImageToolkit\ImageToolkitOperationManagerInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,12 +21,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the GD2 toolkit for image manipulation within Drupal.
- *
- * @ImageToolkit(
- *   id = "gd",
- *   title = @Translation("GD2 image manipulation toolkit")
- * )
  */
+#[ImageToolkit(
+  id: "gd",
+  title: new TranslatableMarkup("GD2 image manipulation toolkit"),
+)]
 class GDToolkit extends ImageToolkitBase {
 
   /**
