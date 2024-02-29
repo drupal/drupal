@@ -19,7 +19,7 @@ class DrupalLogErrorTest extends UnitTestCase {
    *
    * @dataProvider provideFatalExitCodeData
    */
-  public function testFatalExitCode(string $script, string $output, string $errorOutput, bool $processIsSuccessful) {
+  public function testFatalExitCode(string $script, string $output, string $errorOutput, bool $processIsSuccessful): void {
     // We need to override the current working directory for invocations from
     // run-tests.sh to work properly.
     $process = new PhpProcess($script, $this->root);
@@ -32,9 +32,9 @@ class DrupalLogErrorTest extends UnitTestCase {
     $this->assertSame($processIsSuccessful, $process->isSuccessful());
   }
 
-  public function provideFatalExitCodeData() {
+  public function provideFatalExitCodeData(): array {
     $verbose = "\$GLOBALS['config']['system.logging']['error_level'] = 'verbose';";
-    $scriptBody = $this->getScriptBody();
+    $scriptBody = self::getScriptBody();
     $data['normal'] = [
       "<?php\n\$fatal = TRUE;\n$scriptBody",
       "kernel test: This is a test message in test_function (line 456 of test.module).\n",
@@ -50,7 +50,7 @@ class DrupalLogErrorTest extends UnitTestCase {
     return $data;
   }
 
-  protected function getScriptBody() {
+  protected static function getScriptBody(): string {
     return <<<'EOT'
 if (PHP_SAPI !== 'cli') {
   return;
