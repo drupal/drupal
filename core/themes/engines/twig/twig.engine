@@ -89,7 +89,7 @@ function twig_render_template($template_file, array $variables) {
           continue;
         }
         $template = strtr($suggestion, '_', '-') . $extension;
-        $prefix = ($template == $current_template) ? 'x' : '*';
+        $prefix = ($template == $current_template) ? '✅' : '▪️';
         $suggestion = $prefix . ' ' . $template;
       }
       $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . Html::escape(implode("\n   ", $suggestions)) . "\n-->";
@@ -101,8 +101,15 @@ function twig_render_template($template_file, array $variables) {
         $output['debug_info'] .= "\n-->";
       }
     }
-    $output['debug_info']   .= "\n<!-- BEGIN OUTPUT from '" . Html::escape($template_file) . "' -->\n";
-    $output['debug_suffix'] .= "\n<!-- END OUTPUT from '" . Html::escape($template_file) . "' -->\n\n";
+    // Check if the template_file belongs to a custom theme
+    $template_override_status_output = "BEGIN OUTPUT";
+    $template_override_suffix_output = "END OUTPUT";
+    if (str_starts_with($template_file, $variables['directory'])) {
+      $template_override_status_output = "💡 BEGIN CUSTOM TEMPLATE OUTPUT";
+      $template_override_suffix_output = "END CUSTOM TEMPLATE OUTPUT";
+    }
+    $output['debug_info']   .= "\n<!-- " . $template_override_status_output . " from '" . Html::escape($template_file) . "' -->\n";
+    $output['debug_suffix'] .= "\n<!-- " . $template_override_suffix_output . " from '" . Html::escape($template_file) . "' -->\n\n";
   }
   // This output has already been rendered and is therefore considered safe.
   return Markup::create(implode('', $output));
