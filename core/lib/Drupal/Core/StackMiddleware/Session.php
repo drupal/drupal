@@ -3,7 +3,7 @@
 namespace Drupal\Core\StackMiddleware;
 
 use Drupal\Core\Session\ResponseKeepSessionOpenInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -11,13 +11,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Wrap session logic around a HTTP request.
  *
- * Note, the session service is not injected into this class in order to prevent
- * premature initialization of session storage (database). Instead the session
- * service is retrieved from the container only when handling the request.
+ * Note, the session service is wrapped in a closure in order to prevent
+ * premature initialization of session storage (database).
  */
 class Session implements HttpKernelInterface {
-
-  use ContainerAwareTrait;
 
   /**
    * The wrapped HTTP kernel.
@@ -27,23 +24,19 @@ class Session implements HttpKernelInterface {
   protected $httpKernel;
 
   /**
-   * The session service name.
-   *
-   * @var string
-   */
-  protected $sessionServiceName;
-
-  /**
    * Constructs a Session stack middleware object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The decorated kernel.
-   * @param string $service_name
-   *   The name of the session service, defaults to "session".
+   * @param \Closure $sessionClosure
+   *   A closure that wraps the session service.
    */
-  public function __construct(HttpKernelInterface $http_kernel, $service_name = 'session') {
+  public function __construct(
+    HttpKernelInterface $http_kernel,
+    #[AutowireServiceClosure('session')]
+    protected \Closure $sessionClosure,
+  ) {
     $this->httpKernel = $http_kernel;
-    $this->sessionServiceName = $service_name;
   }
 
   /**
@@ -83,7 +76,8 @@ class Session implements HttpKernelInterface {
    * @see \Drupal\Core\DrupalKernel::preHandle()
    */
   protected function initializePersistentSession(Request $request): void {
-    $session = $this->container->get($this->sessionServiceName);
+    /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
+    $session = ($this->sessionClosure)();
     $session->start();
     $request->setSession($session);
   }
