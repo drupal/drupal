@@ -70,6 +70,19 @@ function umami_theme_suggestions_block_alter(array &$suggestions, array $variabl
 }
 
 /**
+ * Implements hook_umami_preprocess_block__bundle__banner_block().
+ */
+function umami_preprocess_block__bundle__banner_block(&$variables) {
+  if (isset($variables['content']['field_content_link'])) {
+    foreach (Element::children($variables['content']['field_content_link']) as $key) {
+      $variables['content']['field_content_link'][$key]['#attributes']['class'][] = 'button';
+      $variables['content']['field_content_link'][$key]['#attributes']['class'][] = 'button--primary';
+      $variables['content']['field_content_link'][$key]['#attributes']['class'][] = 'banner__button';
+    }
+  }
+}
+
+/**
  * Implements hook_umami_preprocess_block__bundle__footer_promo_block().
  */
 function umami_preprocess_block__bundle__footer_promo_block(&$variables) {

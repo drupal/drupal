@@ -30,6 +30,19 @@
   background-color: #e6eee0;
 }
 
+.button--primary {
+  border-color: #d93760;
+  background-color: #d93760;
+}
+
+.button--primary:hover,
+.button--primary:active,
+.button--primary:focus {
+  outline-color: #fff;
+  outline-offset: 2px;
+  background-color: #fcece7;
+}
+
 .button[disabled]:hover,
 .button[disabled]:active,
 .button[disabled]:focus,
