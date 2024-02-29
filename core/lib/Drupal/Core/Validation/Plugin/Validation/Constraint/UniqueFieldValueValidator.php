@@ -91,7 +91,7 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
           ->setParameter('@field_name', $field_label)
           ->setParameter('%value', $dupe);
         if ($is_multiple) {
-          $violation->atPath($delta);
+          $violation->atPath((string) $delta);
         }
         $violation->addViolation();
       }
@@ -106,7 +106,7 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
           ->setParameter('@entity_type', $entity_label)
           ->setParameter('@field_name', $field_label)
           ->setParameter('%value', $dupe)
-          ->atPath($delta)
+          ->atPath((string) $delta)
           ->addViolation();
       }
     }

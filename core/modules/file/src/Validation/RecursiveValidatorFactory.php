@@ -4,7 +4,7 @@ namespace Drupal\file\Validation;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
-use Drupal\Core\TypedData\Validation\ExecutionContextFactory;
+use Drupal\Core\Validation\ExecutionContextFactory;
 use Drupal\Core\TypedData\Validation\RecursiveValidator;
 use Drupal\Core\Validation\ConstraintValidatorFactory;
 use Drupal\Core\Validation\DrupalTranslator;
