@@ -3,6 +3,7 @@
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests base field access in Views for the entity_test entity.
@@ -23,6 +24,8 @@ class EntityTestViewsFieldAccessTest extends FieldFieldAccessTestBase {
     parent::setUp($import_test_views);
 
     $this->installEntitySchema('entity_test');
+    // Make the site multilingual to have a working language field handler.
+    ConfigurableLanguage::create(['id' => 'es', 'title' => 'Spanish title', 'label' => 'Spanish label'])->save();
   }
 
   public function testEntityTestFields() {
