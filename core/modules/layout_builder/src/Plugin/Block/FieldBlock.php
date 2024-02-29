@@ -215,7 +215,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     if ($field->isEmpty() && !$field->getFieldDefinition()->getDefaultValue($entity)) {
       // @todo Remove special handling of image fields after
       //   https://www.drupal.org/project/drupal/issues/3005528.
-      if ($field->getFieldDefinition()->getType() === 'image' && $field->getFieldDefinition()->getSetting('default_image')) {
+      if ($field->getFieldDefinition()->getType() === 'image' && !empty($field->getFieldDefinition()->getSetting('default_image')['uuid'])) {
         return $access;
       }
 
