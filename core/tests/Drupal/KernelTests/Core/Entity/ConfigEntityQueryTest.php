@@ -499,6 +499,40 @@ class ConfigEntityQueryTest extends KernelTestBase {
       ->execute();
     $this->assertSame(['1', '2', '3'], array_values($this->queryResults));
 
+    // Omit optional parameters for the range and sort.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->range()
+      ->sort('id')
+      ->execute();
+    $this->assertSame(['1', '2', '3', '4', '5', '6', '7'], array_values($this->queryResults));
+
+    // Explicitly pass NULL for the range and sort.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->range(NULL, NULL)
+      ->sort('id')
+      ->execute();
+    $this->assertSame(['1', '2', '3', '4', '5', '6', '7'], array_values($this->queryResults));
+
+    // Omit the optional start parameter for the range.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->range(NULL, 1)
+      ->sort('id')
+      ->execute();
+    $this->assertSame(['1'], array_values($this->queryResults));
+
+    // Omit the optional length parameter for the range.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->range(4)
+      ->sort('id')
+      ->execute();
+    $this->assertSame(['5', '6', '7'], array_values($this->queryResults));
+
+    // Request an empty range.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->range(0, 0)
+      ->execute();
+    $this->assertEmpty($this->queryResults);
+
     // Apply a pager with limit 4.
     $this->queryResults = $this->entityStorage->getQuery()
       ->pager('4', 0)
