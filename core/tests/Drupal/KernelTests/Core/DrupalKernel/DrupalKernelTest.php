@@ -245,4 +245,52 @@ class DrupalKernelTest extends KernelTestBase {
     $kernel->boot();
   }
 
+  /**
+   * @covers ::resetContainer
+   */
+  public function testResetContainer() {
+    $modules_enabled = [
+      'system' => 'system',
+      'user' => 'user',
+    ];
+
+    $request = Request::createFromGlobals();
+    $kernel = $this->getTestKernel($request, $modules_enabled);
+    $container = $kernel->getContainer();
+
+    // Ensure services are reset when ::resetContainer is called.
+    $this->assertFalse($container->initialized('renderer'));
+    $renderer = $container->get('renderer');
+    $this->assertTrue($container->initialized('renderer'));
+
+    // Ensure the current user is maintained through a container reset.
+    $this->assertSame(0, $container->get('current_user')->id());
+    $container->get('current_user')->setInitialAccountId(2);
+
+    // Ensure messages are maintained through a container reset.
+    $this->assertEmpty($container->get('messenger')->messagesByType('Container reset'));
+    $container->get('messenger')->addMessage('Test reset', 'Container reset');
+    $this->assertSame(['Test reset'], $container->get('messenger')->messagesByType('Container reset'));
+
+    // Ensure persisted services are persisted.
+    $request_stack = $container->get('request_stack');
+
+    $kernel->resetContainer();
+
+    // Ensure services are reset when ::resetContainer is called.
+    $this->assertFalse($container->initialized('renderer'));
+    $this->assertNotSame($renderer, $container->get('renderer'));
+    $this->assertTrue($container->initialized('renderer'));
+    $this->assertSame($kernel, $container->get('kernel'));
+
+    // Ensure the current user is maintained through a container reset.
+    $this->assertSame(2, $container->get('current_user')->id());
+
+    // Ensure messages are maintained through a container reset.
+    $this->assertSame(['Test reset'], $container->get('messenger')->messagesByType('Container reset'));
+
+    // Ensure persisted services are persisted.
+    $this->assertSame($request_stack, $container->get('request_stack'));
+  }
+
 }
