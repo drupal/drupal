@@ -57,11 +57,11 @@ class ViewsTemplateTest extends ViewsKernelTestBase {
     $output = $this->render($build);
     $extension = '.html.twig';
     $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
-      . '   * container--more-link--test-page-display--default' . $extension . PHP_EOL
-      . '   * container--more-link--default' . $extension . PHP_EOL
-      . '   * container--more-link--test-page-display' . $extension . PHP_EOL
-      . '   * container--more-link' . $extension . PHP_EOL
-      . '   x container' . $extension . PHP_EOL
+      . '   ▪️ container--more-link--test-page-display--default' . $extension . PHP_EOL
+      . '   ▪️ container--more-link--default' . $extension . PHP_EOL
+      . '   ▪️ container--more-link--test-page-display' . $extension . PHP_EOL
+      . '   ▪️ container--more-link' . $extension . PHP_EOL
+      . '   ✅ container' . $extension . PHP_EOL
       . '-->' . PHP_EOL;
     $this->assertStringContainsString($expected, $output, 'Views more link container suggestions found in Twig debug output');
   }
