@@ -810,10 +810,11 @@ class Renderer implements RendererInterface {
    * @param array $elements
    *   A render array with #markup set.
    *
-   * @return \Drupal\Component\Render\MarkupInterface|string
-   *   The escaped markup wrapped in a Markup object. If $elements['#markup']
-   *   is an instance of \Drupal\Component\Render\MarkupInterface, it won't be
-   *   escaped or filtered again.
+   * @return array
+   *   The given array with the escaped markup wrapped in a Markup object.
+   *   If $elements['#markup'] is an instance of
+   *   \Drupal\Component\Render\MarkupInterface, it won't be escaped or filtered
+   *   again.
    *
    * @see \Drupal\Component\Utility\Html::escape()
    * @see \Drupal\Component\Utility\Xss::filter()
