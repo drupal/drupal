@@ -74,6 +74,13 @@ interface ThemeHandlerInterface {
    *
    * @return \Drupal\Core\Extension\Extension[]
    *   An associative array of theme extensions.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   *   \Drupal::service('extension.list.theme')->reset()->getList() instead.
+   *
+   * @see https://www.drupal.org/node/3413196
+   * @see \Drupal\Core\Extension\ThemeExtensionList::reset()
+   * @see \Drupal\Core\Extension\ThemeExtensionList::getList()
    */
   public function rebuildThemeData();
 

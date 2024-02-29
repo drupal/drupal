@@ -343,7 +343,7 @@ class ThemeTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Check the display of non stable themes.
-    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
+    $themes = \Drupal::service('extension.list.theme')->reset()->getList();
     $experimental_version = $themes['experimental_theme_test']->info['version'];
     $deprecated_version = $themes['deprecated_theme_test']->info['version'];
     $this->drupalGet('admin/appearance');
@@ -531,7 +531,7 @@ class ThemeTest extends BrowserTestBase {
       // This checks for a regression. See https://www.drupal.org/node/2498691.
       $this->assertSession()->pageTextNotContains("The $theme_machine_name theme was not found.");
 
-      $themes = \Drupal::service('theme_handler')->rebuildThemeData();
+      $themes = \Drupal::service('extension.list.theme')->reset()->getList();
       $version = $themes[$theme_machine_name]->info['version'];
 
       // Confirm the theme is indicated as the default theme and administration
