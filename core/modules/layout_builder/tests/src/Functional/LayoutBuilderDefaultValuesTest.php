@@ -13,6 +13,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
+// cspell:ignore blocknodetest typefield
+
 /**
  * Tests rendering default field values in Layout Builder.
  *
@@ -139,6 +141,15 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
    * Test for expected text on node 2.
    */
   protected function assertNodeWithDefaultValues() {
+    // Switch theme to starterkit_theme so that layout builder components will
+    // have block classes.
+    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer->install(['starterkit_theme']);
+    $this->config('system.theme')
+      ->set('default', 'starterkit_theme')
+      ->save();
+
     $this->drupalGet('node/2');
     $assert_session = $this->assertSession();
     // String field with no default should not render.
@@ -158,6 +169,9 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     $assert_session->responseContains('test-file-1');
     // Image field with no default should not render.
     $assert_session->pageTextNotContains('field_image_no_default');
+    // Confirm that there is no DOM element for the field_image_with_no_default
+    // field block.
+    $assert_session->elementNotExists('css', '.block-field-blocknodetest-node-typefield-image-no-default');
   }
 
   /**
