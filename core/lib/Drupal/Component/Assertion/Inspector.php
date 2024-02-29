@@ -26,9 +26,15 @@ class Inspector {
    *
    * @return bool
    *   TRUE if $traversable can be traversed with foreach.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   is_iterable() instead.
+   *
+   * @see https://www.drupal.org/node/3422775
    */
   public static function assertTraversable($traversable) {
-    return is_array($traversable) || $traversable instanceof \Traversable;
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use is_iterable() instead. See https://www.drupal.org/node/3422775', E_USER_DEPRECATED);
+    return is_iterable($traversable);
   }
 
   /**
@@ -51,7 +57,7 @@ class Inspector {
    * @see http://php.net/manual/language.types.callable.php
    */
   public static function assertAll(callable $callable, $traversable) {
-    if (static::assertTraversable($traversable)) {
+    if (is_iterable($traversable)) {
       foreach ($traversable as $member) {
         if (!$callable($member)) {
           return FALSE;
@@ -89,7 +95,7 @@ class Inspector {
    *   objects with __toString().
    */
   public static function assertAllStringable($traversable) {
-    if (static::assertTraversable($traversable)) {
+    if (is_iterable($traversable)) {
       foreach ($traversable as $member) {
         if (!static::assertStringable($member)) {
           return FALSE;
@@ -207,7 +213,7 @@ class Inspector {
     $args = func_get_args();
     unset($args[0]);
 
-    if (static::assertTraversable($traversable)) {
+    if (is_iterable($traversable)) {
       foreach ($traversable as $member) {
         foreach ($args as $key) {
           if (!array_key_exists($key, $member)) {
@@ -270,7 +276,7 @@ class Inspector {
    *   TRUE if $traversable can be traversed and all members not empty.
    */
   public static function assertAllNotEmpty($traversable) {
-    if (static::assertTraversable($traversable)) {
+    if (is_iterable($traversable)) {
       foreach ($traversable as $member) {
         if (empty($member)) {
           return FALSE;
@@ -311,7 +317,7 @@ class Inspector {
    *   containing $pattern.
    */
   public static function assertAllMatch($pattern, $traversable, $case_sensitive = FALSE) {
-    if (static::assertTraversable($traversable)) {
+    if (is_iterable($traversable)) {
       if ($case_sensitive) {
         foreach ($traversable as $member) {
           if (!(is_string($member) && strstr($member, $pattern))) {
@@ -344,7 +350,7 @@ class Inspector {
    *   matching $pattern.
    */
   public static function assertAllRegularExpressionMatch($pattern, $traversable) {
-    if (static::assertTraversable($traversable)) {
+    if (is_iterable($traversable)) {
       foreach ($traversable as $member) {
         if (!is_string($member)) {
           return FALSE;
@@ -394,7 +400,7 @@ class Inspector {
     $args = func_get_args();
     unset($args[0]);
 
-    if (static::assertTraversable($traversable)) {
+    if (is_iterable($traversable)) {
       foreach ($traversable as $member) {
         if (count($args) > 0) {
           foreach ($args as $instance) {

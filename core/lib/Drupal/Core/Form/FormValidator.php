@@ -256,8 +256,7 @@ class FormValidator implements FormValidatorInterface {
         // length if it's a string, and the item count if it's an array.
         // An unchecked checkbox has a #value of integer 0, different than
         // string '0', which could be a valid value.
-        $is_countable = is_array($elements['#value']) || $elements['#value'] instanceof \Countable;
-        $is_empty_multiple = $is_countable && count($elements['#value']) == 0;
+        $is_empty_multiple = is_countable($elements['#value']) && count($elements['#value']) == 0;
         $is_empty_string = (is_string($elements['#value']) && mb_strlen(trim($elements['#value'])) == 0);
         $is_empty_value = ($elements['#value'] === 0);
         $is_empty_null = is_null($elements['#value']);

@@ -130,7 +130,7 @@ class CacheableNormalization extends TemporaryArrayObjectThrowingExceptions impl
    */
   protected static function hasNoNestedInstances($array) {
     foreach ($array as $value) {
-      if ((is_array($value) || $value instanceof \Traversable) && !static::hasNoNestedInstances($value) || $value instanceof static) {
+      if (is_iterable($value) && !static::hasNoNestedInstances($value) || $value instanceof static) {
         return FALSE;
       }
     }
