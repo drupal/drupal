@@ -41,7 +41,7 @@ class BlockContentForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function actions(array $form, FormStateInterface $form_state): array {
+  protected function actions(array $form, FormStateInterface $form_state): array {
     $element = parent::actions($form, $form_state);
 
     if ($this->getRequest()->query->has('theme')) {
