@@ -99,6 +99,65 @@ class FilterCombineTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests the Combine field filter with the 'regular_expression' operator.
+   */
+  public function testFilterCombineRegEx() {
+    $view = Views::getView('test_view');
+    $view->setDisplay();
+
+    $fields = $view->displayHandlers->get('default')->getOption('fields');
+    $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
+      'job' => [
+        'id' => 'job',
+        'table' => 'views_test_data',
+        'field' => 'job',
+        'relationship' => 'none',
+      ],
+    ]);
+
+    // Change the filtering.
+    $view->displayHandlers->get('default')->overrideOption('filters', [
+      'age' => [
+        'id' => 'combine',
+        'table' => 'views',
+        'field' => 'combine',
+        'relationship' => 'none',
+        'operator' => 'regular_expression',
+        'fields' => [
+          'name',
+          'job',
+        ],
+        'value' => '(ing|write)',
+      ],
+    ]);
+
+    $this->executeView($view);
+    $resultset = [
+      [
+        'name' => 'John',
+        'job' => 'Singer',
+      ],
+      [
+        'name' => 'George',
+        'job' => 'Singer',
+      ],
+      [
+        'name' => 'Ringo',
+        'job' => 'Drummer',
+      ],
+      [
+        'name' => 'Paul',
+        'job' => 'Songwriter',
+      ],
+      [
+        'name' => 'Ginger',
+        'job' => NULL,
+      ],
+    ];
+    $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
+  }
+
+  /**
    * Tests the Combine field filter with the 'word' operator.
    */
   public function testFilterCombineWord() {
