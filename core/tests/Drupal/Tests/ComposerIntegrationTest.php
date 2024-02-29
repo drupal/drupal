@@ -53,7 +53,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    * @dataProvider providerTestComposerJson
    */
   public function testComposerTilde($path) {
-    if (preg_match('#composer/Metapackage/CoreRecommended/composer.json$#', $path)) {
+    if (str_ends_with($path, 'composer/Metapackage/CoreRecommended/composer.json')) {
       $this->markTestSkipped("$path has tilde");
     }
     $content = json_decode(file_get_contents($path), TRUE);

@@ -883,13 +883,13 @@ EOD;
       ':table_name' => $full_name,
     ])->fetchAll();
     foreach ($result as $row) {
-      if (preg_match('/_pkey$/', $row->index_name)) {
+      if (str_ends_with($row->index_name, '_pkey')) {
         $index_schema['primary key'][] = $row->column_name;
       }
-      elseif (preg_match('/_key$/', $row->index_name)) {
+      elseif (str_ends_with($row->index_name, '_key')) {
         $index_schema['unique keys'][$row->index_name][] = $row->column_name;
       }
-      elseif (preg_match('/_idx$/', $row->index_name)) {
+      elseif (str_ends_with($row->index_name, '_idx')) {
         $index_schema['indexes'][$row->index_name][] = $row->column_name;
       }
     }

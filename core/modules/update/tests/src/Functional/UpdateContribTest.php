@@ -347,7 +347,7 @@ class UpdateContribTest extends UpdateTestBase {
     // Make sure all the update_test_* themes are disabled.
     $extension_config = $this->config('core.extension');
     foreach ($extension_config->get('theme') as $theme => $weight) {
-      if (preg_match('/^update_test_/', $theme)) {
+      if (str_starts_with($theme, 'update_test_')) {
         $extension_config->clear("theme.$theme");
       }
     }

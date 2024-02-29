@@ -428,7 +428,7 @@ class PagerTest extends ViewTestBase {
     $view->pager = NULL;
     $output = $view->render();
     $output = (string) \Drupal::service('renderer')->renderRoot($output);
-    $this->assertEquals(0, preg_match('/<ul class="pager">/', $output), 'The pager is not rendered.');
+    $this->assertStringNotContainsString('<ul class="pager">', $output);
   }
 
   /**
