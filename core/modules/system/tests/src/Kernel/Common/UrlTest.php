@@ -243,7 +243,7 @@ class UrlTest extends KernelTestBase {
     $this->assertEquals($result, UrlHelper::parse($url), 'Relative URL parsed correctly.');
 
     // Test that drupal can recognize an absolute URL. Used to prevent attack vectors.
-    $url = 'https://www.drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
+    $url = 'https://www.example.org/foo/bar?foo=bar&bar=baz&baz#foo';
     $this->assertTrue(UrlHelper::isExternal($url), 'Correctly identified an external URL.');
 
     // Test that UrlHelper::parse() does not allow spoofing a URL to force a malicious redirect.
