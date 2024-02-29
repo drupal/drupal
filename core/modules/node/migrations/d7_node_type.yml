@@ -18,7 +18,23 @@ process:
   new_revision: 'options/revision'
   create_body: create_body
   create_body_label: body_label
-  'third_party_settings/menu_ui/available_menus': available_menus
-  'third_party_settings/menu_ui/parent': parent
+  'third_party_settings/menu_ui/available_menus':
+    plugin: static_map
+    bypass: true
+    source: available_menus
+    map:
+      main-menu: main
+      management: admin
+      navigation: tools
+      user-menu: account
+  'third_party_settings/menu_ui/parent':
+    plugin: static_map
+    bypass: true
+    source: parent
+    map:
+      'main-menu:0:': 'main:'
+      'management:0:': 'admin:'
+      'navigation:0:': 'tools:'
+      'user-menu:0:': 'account:'
 destination:
   plugin: entity:node_type
