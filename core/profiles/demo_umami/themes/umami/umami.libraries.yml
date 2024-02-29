@@ -4,7 +4,6 @@ global:
     base:
       css/base.css: {}
     component:
-      css/components/blocks/banner/banner.css: {}
       css/components/blocks/help/help.css: {}
       css/components/blocks/page-title/page-title.css: {}
       css/components/blocks/language-switcher/language-switcher.css: {}

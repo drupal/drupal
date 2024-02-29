@@ -1,0 +1,12 @@
+<div{{ attributes.addClass('banner') }}>
+  <div class="container">
+    <div class="banner__inner">
+      <div class="banner__image">
+        {% block image %}{% endblock %}
+      </div>
+      <div class="banner__content">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</div>
