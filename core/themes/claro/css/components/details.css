@@ -288,7 +288,8 @@ td .claro-details {
 
 @media (forced-colors: active) {
   .claro-details__summary:hover::before,
-  .claro-details__summary:hover:focus::before {
+  .claro-details__summary:hover:focus::before,
+  .claro-details[open] > .claro-details__summary:focus::before {
     background: none;
   }
 
