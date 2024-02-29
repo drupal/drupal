@@ -61,7 +61,10 @@
           $element = $fields.filter(filterFieldsList);
         }
 
-        if ($element[0].matches(`input[value="${column}"]:checked`)) {
+        if (
+          $element.length &&
+          $element[0].matches(`input[value="${column}"]:checked`)
+        ) {
           $fields.prop('checked', true).not($element).prop('disabled', true);
         } else {
           $fields.prop('disabled', false);
