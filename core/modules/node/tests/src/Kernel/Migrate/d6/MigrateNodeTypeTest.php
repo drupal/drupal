@@ -45,9 +45,9 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertSame('This is the body field label', $field->getLabel(), 'Body field was found.');
 
     // Test default menus.
-    $expected_available_menus = ['navigation'];
+    $expected_available_menus = ['tools'];
     $this->assertSame($expected_available_menus, $node_type_page->getThirdPartySetting('menu_ui', 'available_menus'));
-    $expected_parent = 'navigation:';
+    $expected_parent = 'tools:';
     $this->assertSame($expected_parent, $node_type_page->getThirdPartySetting('menu_ui', 'parent'));
 
     // Test the test_story content type.
@@ -64,9 +64,9 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertNull($field, 'No body field found');
 
     // Test default menus.
-    $expected_available_menus = ['navigation'];
+    $expected_available_menus = ['tools'];
     $this->assertSame($expected_available_menus, $node_type_story->getThirdPartySetting('menu_ui', 'available_menus'));
-    $expected_parent = 'navigation:';
+    $expected_parent = 'tools:';
     $this->assertSame($expected_parent, $node_type_story->getThirdPartySetting('menu_ui', 'parent'));
 
     // Test the test_event content type.
@@ -82,9 +82,9 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $field = FieldConfig::loadByName('node', 'test_event', 'body');
     $this->assertSame('Body', $field->getLabel(), 'Body field was found.');
 
-    $expected_available_menus = ['navigation'];
+    $expected_available_menus = ['tools'];
     $this->assertSame($expected_available_menus, $node_type_event->getThirdPartySetting('menu_ui', 'available_menus'));
-    $expected_parent = 'navigation:';
+    $expected_parent = 'tools:';
     $this->assertSame($expected_parent, $node_type_event->getThirdPartySetting('menu_ui', 'parent'));
 
     // Test the 32 character type name exists.

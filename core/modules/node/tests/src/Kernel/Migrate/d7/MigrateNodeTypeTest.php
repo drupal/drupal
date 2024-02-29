@@ -81,8 +81,8 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
    * Tests Drupal 7 node type to Drupal 8 migration.
    */
   public function testNodeType() {
-    $expected_available_menus = ['main-menu'];
-    $expected_parent = 'main-menu:0:';
+    $expected_available_menus = ['main'];
+    $expected_parent = 'main:';
 
     $this->assertEntity('article', 'Article', 'Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.', 'Help text for articles', TRUE, FALSE, $expected_available_menus, $expected_parent, "Body");
     $this->assertEntity('blog', 'Blog entry', 'Use for multi-user blogs. Every user gets a personal blog.', 'Blog away, good sir!', TRUE, FALSE, $expected_available_menus, $expected_parent, 'Body');
@@ -95,10 +95,10 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
 
     // This node type does not carry a body field.
     $expected_available_menus = [
-      'main-menu',
-      'management',
-      'navigation',
-      'user-menu',
+      'main',
+      'admin',
+      'tools',
+      'account',
     ];
     $this->assertEntity('test_content_type', 'Test content type', 'This is the description of the test content type.', 'Help text for test content type', FALSE, TRUE, $expected_available_menus, $expected_parent);
   }
