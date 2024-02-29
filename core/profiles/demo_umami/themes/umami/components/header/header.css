@@ -1,0 +1,84 @@
+.umami-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 4%;
+}
+
+/* Medium */
+@media screen and (min-width: 48rem) { /* 768px */
+  .umami-header {
+    padding-top: 0;
+  }
+}
+
+/* Extra large + side margins */
+@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+  .umami-header {
+    padding: 0;
+  }
+}
+
+.umami-header__burger {
+  width: 41px;
+  height: 41px;
+  margin-right: -9px;
+  /* the padding, margin & transparent border means the hamburger doesn't move on focus/hover */
+  padding: 0 6px;
+  text-align: left;
+  border: 3px solid transparent;
+  border-radius: 0;
+  background-color: transparent;
+  line-height: 1;
+}
+
+.umami-header__burger:hover {
+  background-color: transparent;
+}
+
+.umami-header__burger svg {
+  display: block;
+}
+
+@media screen and (min-width: 48em) {
+  .umami-header__burger {
+    display: none;
+  }
+}
+
+.umami-header__dropdown {
+  overflow: hidden;
+  flex-basis: 100%;
+  max-height: 0;
+  transition: max-height 0.5s ease-in;
+}
+
+@media screen and (min-width: 48em) {
+  .umami-header__dropdown {
+    overflow: auto;
+    flex-basis: auto;
+    max-height: none;
+  }
+}
+
+.umami-header__burger[aria-expanded="true"] ~ .umami-header__dropdown {
+  overflow-y: auto;
+  /**
+   * An exact max-height value must be set to make possible to animate the menu display.
+   * It my not be much larger than the content because that would break the animation.
+   * See: https://css-tricks.com/using-css-transitions-auto-dimensions/
+   */
+  max-height: 18.75rem;
+}
+
+.umami-header__logo {
+  flex: 0 1 40%;
+}
+
+@media screen and (min-width: 48em) {
+  .umami-header__logo {
+    flex: 0 1 220px;
+    margin: 2.5rem 0;
+  }
+}

@@ -4,44 +4,14 @@
  */
 
 .menu-main {
-  overflow: hidden;
-  max-height: 0;
   margin: 0;
   padding: 0;
   list-style-type: none;
-  transition: max-height 0.5s ease-in;
   color: #000;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.266rem;
   font-weight: 400;
   line-height: 1.2;
-}
-.menu-main--active {
-  overflow-y: auto;
-  /**
-   * An exact max-height value must be set to make possible to animate the menu display.
-   * It my not be much larger than the content because that would break the animation.
-   * See: https://css-tricks.com/using-css-transitions-auto-dimensions/
-   */
-  max-height: 18.75rem;
-}
-.menu-main-toggle {
-  width: 41px;
-  height: 41px;
-  margin-right: -9px;
-  /* the padding, margin & transparent border means the hamburger doesn't move on focus/hover */
-  padding: 0 6px;
-  text-align: left;
-  border: 3px solid transparent;
-  border-radius: 0;
-  background-color: transparent;
-  line-height: 1;
-}
-.menu-main-toggle:hover {
-  background-color: transparent;
-}
-.menu-main-toggle svg {
-  display: block;
 }
 .menu-main__item {
   margin-top: 0.8em;
@@ -75,13 +45,8 @@
 @media screen and (min-width: 48em) {
   .menu-main {
     display: flex;
-    overflow: auto;
     flex-wrap: wrap;
     justify-content: flex-end;
-    max-height: none;
-  }
-  .menu-main-toggle {
-    display: none;
   }
   .menu-main__item {
     margin-top: 0;
@@ -93,12 +58,6 @@
   [dir="rtl"] .menu-main__item + .menu-main__item {
     margin-right: 2.5em;
     margin-left: 0;
-  }
-}
-
-@media screen and (min-width: 48em) {
-  .menu-main-togglewrap {
-    display: none;
   }
 }
 

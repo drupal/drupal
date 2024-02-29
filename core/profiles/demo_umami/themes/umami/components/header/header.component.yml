@@ -1,0 +1,44 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/modules/sdc/src/metadata.schema.json
+
+# The human readable name.
+name: Umami header
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+# Schema for the props. We support www.json-schema.org. Learn more about the
+# syntax there.
+props:
+  # Props are always an object with keys. Each key is a variable in your
+  # component template.
+  type: object
+
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Wrapper attributes.
+    label:
+      type: string
+
+# Slots always hold arbitrary markup. We know that beforehand, so no need for
+# a schema for slots.
+slots:
+  # The key is the name of the slot. In your template you will use
+  # {% block content %}.
+  logo:
+    title: Logo
+  dropdown:
+    title: Dropdown
+
+# This is how you take control of the keys in your library
+# declaration. The overrides specified here will be merged (shallow merge) with
+# the auto-generated library. The result of the merge will become the library
+# for the component.
+libraryOverrides:
+  # Once you add a key in the overrides, you take control of it. What you type
+  # here is what will end up in the library component.
+  dependencies:
+    - core/drupal
+    - core/once
