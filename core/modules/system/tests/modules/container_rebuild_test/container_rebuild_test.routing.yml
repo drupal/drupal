@@ -4,3 +4,11 @@ container_rebuild_test.module_path:
     _controller: '\Drupal\container_rebuild_test\TestController::showModuleInfo'
   requirements:
     _access: 'TRUE'
+
+
+container_rebuild_test.container_reset:
+  path: '/container_rebuild_test/container_reset'
+  defaults:
+    _controller: '\Drupal\container_rebuild_test\TestController::containerReset'
+  requirements:
+    _user_is_logged_in: 'TRUE'
