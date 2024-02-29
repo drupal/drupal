@@ -51,7 +51,7 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public function providerTestValidAbsoluteData() {
+  public static function providerTestValidAbsoluteData(): array {
     $urls = [
       'example.com',
       'www.example.com',
@@ -75,7 +75,7 @@ class UrlHelperTest extends TestCase {
       '[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html',
     ];
 
-    return $this->dataEnhanceWithScheme($urls);
+    return self::dataEnhanceWithScheme($urls);
   }
 
   /**
@@ -89,7 +89,7 @@ class UrlHelperTest extends TestCase {
    * @param string $scheme
    *   The scheme to test.
    */
-  public function testValidAbsolute($url, $scheme) {
+  public function testValidAbsolute(string $url, string $scheme): void {
     $test_url = $scheme . '://' . $url;
     $valid_url = UrlHelper::isValid($test_url, TRUE);
     $this->assertTrue($valid_url, $test_url . ' is a valid URL.');
@@ -100,13 +100,13 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public function providerTestInvalidAbsolute() {
+  public static function providerTestInvalidAbsolute(): array {
     $data = [
       '',
       'ex!ample.com',
       'ex%ample.com',
     ];
-    return $this->dataEnhanceWithScheme($data);
+    return self::dataEnhanceWithScheme($data);
   }
 
   /**
@@ -144,7 +144,7 @@ class UrlHelperTest extends TestCase {
    * @param string $scheme
    *   The scheme to test.
    */
-  public function testInvalidAbsolute($url, $scheme) {
+  public function testInvalidAbsolute(string $url, string $scheme): void {
     $test_url = $scheme . '://' . $url;
     $valid_url = UrlHelper::isValid($test_url, TRUE);
     $this->assertFalse($valid_url, $test_url . ' is NOT a valid URL.');
@@ -155,7 +155,7 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public function providerTestValidRelativeData() {
+  public static function providerTestValidRelativeData(): array {
     $data = [
       'paren(the)sis',
       'index.html#pagetop',
@@ -164,7 +164,7 @@ class UrlHelperTest extends TestCase {
       'login.php?do=login&style=%23#pagetop',
     ];
 
-    return $this->dataEnhanceWithPrefix($data);
+    return self::dataEnhanceWithPrefix($data);
   }
 
   /**
@@ -178,7 +178,7 @@ class UrlHelperTest extends TestCase {
    * @param string $prefix
    *   The prefix to test.
    */
-  public function testValidRelative($url, $prefix) {
+  public function testValidRelative(string $url, string $prefix): void {
     $test_url = $prefix . $url;
     $valid_url = UrlHelper::isValid($test_url);
     $this->assertTrue($valid_url, $test_url . ' is a valid URL.');
@@ -189,14 +189,14 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public function providerTestInvalidRelativeData() {
+  public static function providerTestInvalidRelativeData(): array {
     $data = [
       // cspell:disable-next-line
       'ex^mple',
       'example<>',
       'ex%ample',
     ];
-    return $this->dataEnhanceWithPrefix($data);
+    return self::dataEnhanceWithPrefix($data);
   }
 
   /**
@@ -210,7 +210,7 @@ class UrlHelperTest extends TestCase {
    * @param string $prefix
    *   The prefix to test.
    */
-  public function testInvalidRelative($url, $prefix) {
+  public function testInvalidRelative(string $url, string $prefix): void {
     $test_url = $prefix . $url;
     $valid_url = UrlHelper::isValid($test_url);
     $this->assertFalse($valid_url, $test_url . ' is NOT a valid URL.');
@@ -553,7 +553,7 @@ class UrlHelperTest extends TestCase {
    * @return array
    *   A list of provider data with schemes.
    */
-  protected function dataEnhanceWithScheme(array $urls) {
+  protected static function dataEnhanceWithScheme(array $urls): array {
     $url_schemes = ['http', 'https', 'ftp'];
     $data = [];
     foreach ($url_schemes as $scheme) {
@@ -573,7 +573,7 @@ class UrlHelperTest extends TestCase {
    * @return array
    *   A list of provider data with prefixes.
    */
-  protected function dataEnhanceWithPrefix(array $urls) {
+  protected static function dataEnhanceWithPrefix(array $urls): array {
     $prefixes = ['', '/'];
     $data = [];
     foreach ($prefixes as $prefix) {
