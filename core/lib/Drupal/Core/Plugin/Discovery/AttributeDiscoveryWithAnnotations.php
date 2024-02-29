@@ -63,9 +63,6 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
   public function getDefinitions() {
     // Clear the annotation loaders of any previous annotation classes.
     AnnotationRegistry::reset();
-    // Register the namespaces of classes that can be used for annotations.
-    // @phpstan-ignore-next-line
-    AnnotationRegistry::registerLoader('class_exists');
 
     $definitions = parent::getDefinitions();
 

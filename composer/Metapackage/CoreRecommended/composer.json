@@ -10,7 +10,7 @@
         "drupal/core": "11.x-dev",
         "asm89/stack-cors": "~v2.2.0",
         "composer/semver": "~3.4.0",
-        "doctrine/annotations": "~1.14.3",
+        "doctrine/annotations": "~2.0.1",
         "doctrine/deprecations": "~1.1.2",
         "doctrine/lexer": "~2.1.0",
         "egulias/email-validator": "~4.0.2",

@@ -50,15 +50,6 @@ parameters:
 			path: includes/theme.maintenance.inc
 
 		-
-			message: """
-				#^Call to deprecated method registerLoader\\(\\) of class Doctrine\\\\Common\\\\Annotations\\\\AnnotationRegistry\\:
-				This method is deprecated and will be removed in
-				            doctrine/annotations 2\\.0\\. Annotations will be autoloaded in 2\\.0\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Component/Annotation/Plugin/Discovery/AnnotatedClassDiscovery.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\Component\\\\Datetime\\\\DateTimePlus\\:\\:getTimeZone\\(\\)\\.$#"
 			count: 1
 			path: lib/Drupal/Component/Datetime/DateTimePlus.php
@@ -1417,15 +1408,6 @@ parameters:
 			path: modules/migrate/src/MigrateException.php
 
 		-
-			message: """
-				#^Call to deprecated method registerLoader\\(\\) of class Doctrine\\\\Common\\\\Annotations\\\\AnnotationRegistry\\:
-				This method is deprecated and will be removed in
-				            doctrine/annotations 2\\.0\\. Annotations will be autoloaded in 2\\.0\\.$#
-			"""
-			count: 1
-			path: modules/migrate/src/Plugin/Discovery/AnnotatedClassDiscoveryAutomatedProviders.php
-
-		-
 			message: "#^Missing cache backend declaration for performance\\.$#"
 			count: 1
 			path: modules/migrate/src/Plugin/MigrateDestinationPluginManager.php
@@ -2589,15 +2571,6 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: """
-				#^Call to deprecated method registerAutoloadNamespace\\(\\) of class Doctrine\\\\Common\\\\Annotations\\\\AnnotationRegistry\\:
-				This method is deprecated and will be removed in
-				            doctrine/annotations 2\\.0\\. Annotations will be autoloaded in 2\\.0\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
 
 		-
 			message: "#^Constructor of class Symfony\\\\Component\\\\ExpressionLanguage\\\\Expression has an unused parameter \\$expression\\.$#"
