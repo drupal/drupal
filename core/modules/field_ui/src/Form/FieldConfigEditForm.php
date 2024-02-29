@@ -451,7 +451,7 @@ class FieldConfigEditForm extends EntityForm {
       }
     }
     catch (\Exception $e) {
-      $this->messenger()->addStatus(
+      $this->messenger()->addError(
         $this->t(
           'Attempt to update field %label failed: %message.',
           [
