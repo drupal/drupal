@@ -425,7 +425,7 @@ class UpdateContribTest extends UpdateTestBase {
       ],
     ]);
     $projects = \Drupal::service('update.manager')->getProjects();
-    $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
+    $theme_data = \Drupal::service('extension.list.theme')->reset()->getList();
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE);
 

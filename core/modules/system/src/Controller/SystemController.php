@@ -8,7 +8,6 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\ModuleDependencyMessageTrait;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
-use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
@@ -47,13 +46,6 @@ class SystemController extends ControllerBase {
   protected $formBuilder;
 
   /**
-   * The theme handler service.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * The menu link tree service.
    *
    * @var \Drupal\Core\Menu\MenuLinkTreeInterface
@@ -68,6 +60,13 @@ class SystemController extends ControllerBase {
   protected $moduleExtensionList;
 
   /**
+   * The theme extension list.
+   *
+   * @var \Drupal\Core\Extension\ThemeExtensionList
+   */
+  protected ThemeExtensionList $themeExtensionList;
+
+  /**
    * Constructs a new SystemController.
    *
    * @param \Drupal\system\SystemManager $systemManager
@@ -76,20 +75,20 @@ class SystemController extends ControllerBase {
    *   The theme access checker service.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_link_tree
    *   The menu link tree service.
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
    *   The module extension list.
+   * @param \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list
+   *   The theme extension list.
    */
-  public function __construct(SystemManager $systemManager, ThemeAccessCheck $theme_access, FormBuilderInterface $form_builder, ThemeHandlerInterface $theme_handler, MenuLinkTreeInterface $menu_link_tree, ModuleExtensionList $module_extension_list) {
+  public function __construct(SystemManager $systemManager, ThemeAccessCheck $theme_access, FormBuilderInterface $form_builder, MenuLinkTreeInterface $menu_link_tree, ModuleExtensionList $module_extension_list, ThemeExtensionList $theme_extension_list) {
     $this->systemManager = $systemManager;
     $this->themeAccess = $theme_access;
     $this->formBuilder = $form_builder;
-    $this->themeHandler = $theme_handler;
     $this->menuLinkTree = $menu_link_tree;
     $this->moduleExtensionList = $module_extension_list;
+    $this->themeExtensionList = $theme_extension_list;
   }
 
   /**
@@ -100,9 +99,9 @@ class SystemController extends ControllerBase {
       $container->get('system.manager'),
       $container->get('access_check.theme'),
       $container->get('form_builder'),
-      $container->get('theme_handler'),
       $container->get('menu.link_tree'),
-      $container->get('extension.list.module')
+      $container->get('extension.list.module'),
+      $container->get('extension.list.theme'),
     );
   }
 
@@ -204,7 +203,7 @@ class SystemController extends ControllerBase {
   public function themesPage() {
     $config = $this->config('system.theme');
     // Get all available themes.
-    $themes = $this->themeHandler->rebuildThemeData();
+    $themes = $this->themeExtensionList->reset()->getList();
 
     // Remove obsolete themes.
     $themes = array_filter($themes, function ($theme) {

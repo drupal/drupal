@@ -10,7 +10,7 @@ use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Extension\ConfigImportModuleUninstallValidatorInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
-use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Installer\InstallerKernel;
 
 /**
@@ -33,11 +33,11 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
   protected $moduleExtensionList;
 
   /**
-   * The theme handler.
+   * The theme extension list.
    *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   * @var \Drupal\Core\Extension\ThemeExtensionList
    */
-  protected $themeHandler;
+  protected ThemeExtensionList $themeList;
 
   /**
    * The uninstall validators.
@@ -49,13 +49,13 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
   /**
    * Constructs the ConfigImportSubscriber.
    *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
+   * @param \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list
+   *   The theme extension list.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The module extension list.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module) {
-    $this->themeHandler = $theme_handler;
+  public function __construct(ThemeExtensionList $theme_extension_list, ModuleExtensionList $extension_list_module) {
+    $this->themeList = $theme_extension_list;
     $this->moduleExtensionList = $extension_list_module;
   }
 
@@ -353,7 +353,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    */
   protected function getThemeData() {
     if (!isset($this->themeData)) {
-      $this->themeData = $this->themeHandler->rebuildThemeData();
+      $this->themeData = $this->themeList->reset()->getList();
     }
     return $this->themeData;
   }
