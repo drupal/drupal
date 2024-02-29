@@ -49,7 +49,7 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @dataProvider moduleListDataProvider
    */
-  public function testModuleConfig($module) {
+  public function testModuleConfig(string $module): void {
     $this->assertExtensionConfig($module, 'module');
   }
 
@@ -171,8 +171,8 @@ class DefaultConfigTest extends KernelTestBase {
    *   An array of module names to test, with both key and value being the name
    *   of the module.
    */
-  public function moduleListDataProvider() {
-    $modules_keyed = $this->coreModuleListDataProvider();
+  public static function moduleListDataProvider(): array {
+    $modules_keyed = self::coreModuleListDataProvider();
 
     // Add a deprecated module with config.
     $modules_keyed['deprecated_module'] = ['deprecated_module'];
