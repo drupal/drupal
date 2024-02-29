@@ -251,7 +251,7 @@ export default class ImageAlternativeTextFormView extends View {
     labeledInput
       .bind('class')
       .to(this.decorativeToggle, 'isOn', (value) => (value ? 'ck-hidden' : ''));
-    labeledInput.label = Drupal.t('Text alternative');
+    labeledInput.label = Drupal.t('Alternative text');
 
     return labeledInput;
   }
