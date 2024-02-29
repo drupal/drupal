@@ -766,7 +766,7 @@ class FilterKernelTest extends KernelTestBase {
       Absolute URL and query string with 2 different punctuation characters (http://www.example.com/q=abc).
       Partial URL with brackets in the URL as well as surrounded brackets (www.foo.com/more_(than)_one_(parens)).
       Absolute URL with square brackets in the URL as well as surrounded brackets [https://www.drupal.org/?class[]=1]
-      Absolute URL with quotes "https://www.drupal.org/sample"' => [
+      Absolute URL with quotes "https://www.example.org/sample"' => [
         'period <a href="http://www.partial.com">www.partial.com</a>.' => TRUE,
         'comma <a href="mailto:person@example.com">person@example.com</a>,' => TRUE,
         'question <a href="http://www.absolute.com">http://www.absolute.com</a>?' => TRUE,
@@ -776,7 +776,7 @@ class FilterKernelTest extends KernelTestBase {
         'characters (<a href="http://www.example.com/q=abc">http://www.example.com/q=abc</a>).' => TRUE,
         'brackets (<a href="http://www.foo.com/more_(than)_one_(parens)">www.foo.com/more_(than)_one_(parens)</a>).' => TRUE,
         'brackets [<a href="https://www.drupal.org/?class[]=1">https://www.drupal.org/?class[]=1</a>]' => TRUE,
-        'quotes "<a href="https://www.drupal.org/sample">https://www.drupal.org/sample</a>"' => TRUE,
+        'quotes "<a href="https://www.example.org/sample">https://www.example.org/sample</a>"' => TRUE,
       ],
       '(www.parenthesis.com/dir?a=1&b=2#a)' => [
         '(<a href="http://www.parenthesis.com/dir?a=1&amp;b=2#a">www.parenthesis.com/dir?a=1&amp;b=2#a</a>)' => TRUE,
