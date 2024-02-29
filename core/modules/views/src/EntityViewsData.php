@@ -509,7 +509,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         break;
 
       case 'language':
-        $views_field['field']['id'] = 'field';
+        $views_field['field']['id'] = 'field_language';
         $views_field['argument']['id'] = 'language';
         $views_field['filter']['id'] = 'language';
         $views_field['sort']['id'] = 'standard';

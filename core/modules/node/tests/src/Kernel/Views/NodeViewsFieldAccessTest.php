@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Kernel\Views;
 
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
@@ -26,6 +27,8 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
     parent::setUp($import_test_views);
 
     $this->installEntitySchema('node');
+    // Make the site multilingual to have a working language field handler.
+    ConfigurableLanguage::create(['id' => 'es', 'title' => 'Spanish title', 'label' => 'Spanish label'])->save();
   }
 
   /**

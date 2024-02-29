@@ -771,7 +771,7 @@ class EntityViewsDataTest extends KernelTestBase {
    * @internal
    */
   protected function assertLanguageField(array $data): void {
-    $this->assertEquals('field', $data['field']['id']);
+    $this->assertEquals('field_language', $data['field']['id']);
     $this->assertEquals('language', $data['filter']['id']);
     $this->assertEquals('language', $data['argument']['id']);
     $this->assertEquals('standard', $data['sort']['id']);
