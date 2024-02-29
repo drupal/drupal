@@ -203,7 +203,7 @@ class SubProcess extends ProcessPluginBase {
       $source[$key] = $row->getSource();
     }
 
-    if (is_array($value) || $value instanceof \Traversable) {
+    if (is_iterable($value)) {
       foreach ($value as $key => $new_value) {
         if (!is_array($new_value)) {
           throw new MigrateException(sprintf("Input array should hold elements of type array, instead element was of type '%s'", gettype($new_value)));
