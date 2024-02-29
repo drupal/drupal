@@ -941,10 +941,9 @@ services:
       - { name: http_middleware, priority: 100 }
   http_middleware.session:
     class: Drupal\Core\StackMiddleware\Session
+    autowire: true
     tags:
       - { name: http_middleware, priority: 50 }
-    calls:
-      - [setContainer, ['@service_container']]
   http_middleware.cors:
     class: Asm89\Stack\Cors
     arguments: ['%cors.config%']
