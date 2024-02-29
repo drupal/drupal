@@ -5,6 +5,7 @@
  * Allows the creation of content blocks through the user interface.
  */
 
+use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -182,4 +183,34 @@ function _block_content_has_reusable_condition(array $condition, array $tables) 
 
   }
   return FALSE;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter() for block templates.
+ */
+function block_content_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+  $suggestions_new = [];
+  $content = $variables['elements']['content'];
+
+  $block_content = $variables['elements']['content']['#block_content'] ?? NULL;
+
+  if ($block_content instanceof BlockContentInterface) {
+    $bundle = $content['#block_content']->bundle();
+    $view_mode = strtr($variables['elements']['#configuration']['view_mode'], '.', '_');
+
+    $suggestions_new[] = 'block__block_content__view__' . $view_mode;
+    $suggestions_new[] = 'block__block_content__type__' . $bundle;
+    $suggestions_new[] = 'block__block_content__view_type__' . $bundle . '__' . $view_mode;
+
+    if (!empty($variables['elements']['#id'])) {
+      $suggestions_new[] = 'block__block_content__id__' . $variables['elements']['#id'];
+      $suggestions_new[] = 'block__block_content__id_view__' . $variables['elements']['#id'] . '__' . $view_mode;
+    }
+
+    // Remove duplicate block__block_content.
+    $suggestions = array_unique($suggestions);
+    array_splice($suggestions, 1, 0, $suggestions_new);
+  }
+
+  return $suggestions;
 }
