@@ -1,0 +1,18 @@
+<div{{ attributes.addClass('umami-header') }}>
+  <div class="umami-header__logo">
+    {% block logo %}{% endblock %}
+  </div>
+  <button
+    type="button"
+    class="umami-header__burger"
+    aria-controls="umami-header__dropdown"
+    aria-expanded="false"
+    aria-label="{{ 'Toggle the menu'|t }}"
+  >
+    {{ source(componentMetadata.path ~ '/icons/burger.svg') }}
+  </button>
+  <div class="umami-header__dropdown">
+    {% block dropdown %}{% endblock %}
+  </div>
+  </div>
+</div>
