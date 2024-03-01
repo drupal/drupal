@@ -116,30 +116,6 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirms that we can fetch a record into a new instance of a custom class.
-   *
-   * The name of the class is determined from a value of the first column.
-   *
-   * @see \Drupal\Tests\system\Functional\Database\FakeRecord
-   *
-   * @group legacy
-   */
-  public function testQueryFetchClasstype() {
-    $this->expectDeprecation('Fetch mode FETCH_CLASS | FETCH_CLASSTYPE is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999');
-    $records = [];
-    $result = $this->connection->query('SELECT [classname], [name], [job] FROM {test_classtype} WHERE [age] = :age', [':age' => 26], ['fetch' => \PDO::FETCH_CLASS | \PDO::FETCH_CLASSTYPE]);
-    foreach ($result as $record) {
-      $records[] = $record;
-      $this->assertInstanceOf(FakeRecord::class, $record);
-      $this->assertSame('Kay', $record->name);
-      $this->assertSame('Web Developer', $record->job);
-      $this->assertFalse(isset($record->classname), 'Classname field not found, as intended.');
-    }
-
-    $this->assertCount(1, $records, 'There is only one record.');
-  }
-
-  /**
    * Confirms that we can fetch a record into an indexed array explicitly.
    */
   public function testQueryFetchNum() {
@@ -153,27 +129,6 @@ class FetchTest extends DatabaseTestBase {
     }
 
     $this->assertCount(1, $records, 'There is only one record');
-  }
-
-  /**
-   * Confirms that we can fetch a record into a doubly-keyed array explicitly.
-   *
-   * @group legacy
-   */
-  public function testQueryFetchBoth() {
-    $this->expectDeprecation('Fetch mode FETCH_BOTH is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999');
-    $records = [];
-    $result = $this->connection->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25], ['fetch' => \PDO::FETCH_BOTH]);
-    foreach ($result as $record) {
-      $records[] = $record;
-      $this->assertIsArray($record);
-      $this->assertArrayHasKey(0, $record);
-      $this->assertSame('John', $record[0]);
-      $this->assertArrayHasKey('name', $record);
-      $this->assertSame('John', $record['name']);
-    }
-
-    $this->assertCount(1, $records, 'There is only one record.');
   }
 
   /**

@@ -174,7 +174,7 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
       ->method('schema')
       ->willReturn($schema);
     $database->expects($this->any())
-      ->method('tablePrefix')
+      ->method('getPrefix')
       ->willReturn('');
     $migration = $this->getMigration();
     $plugin = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');

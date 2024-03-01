@@ -105,10 +105,9 @@ trait StatementIteratorTrait {
   public function rewind(): void {
     // Nothing to do: our DatabaseStatement can't be rewound. Error out when
     // attempted.
-    // @todo convert the error to an exception in Drupal 11.
     if ($this->resultsetKey >= 0) {
-      trigger_error('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.', E_USER_WARNING);
       $this->markResultsetIterable(FALSE);
+      throw new DatabaseExceptionWrapper('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
     }
   }
 

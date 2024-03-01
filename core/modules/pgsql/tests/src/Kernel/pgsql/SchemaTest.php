@@ -234,7 +234,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Database\Driver\pgsql\Schema::extensionExists
+   * @covers \Drupal\pgsql\Driver\Database\pgsql\Schema::extensionExists
    */
   public function testPgsqlExtensionExists(): void {
     // Test the method for a non existing extension.

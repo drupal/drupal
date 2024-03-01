@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
@@ -134,9 +133,6 @@ class Merge extends Query implements ConditionInterface {
    *   Array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
-    // @todo Remove $options['return'] in Drupal 11.
-    // @see https://www.drupal.org/project/drupal/issues/3256524
-    $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
     $this->conditionTable = $table;
@@ -331,14 +327,8 @@ class Merge extends Query implements ConditionInterface {
    * @see \Drupal\Core\Database\Query\Merge::keys()
    */
   public function key($field, $value = NULL) {
-    // @todo D9: Remove this backwards-compatibility shim.
-    if (is_array($field)) {
-      @trigger_error("Passing an array to the \$field argument of " . __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2205327', E_USER_DEPRECATED);
-      $this->keys($field, $value ?? []);
-    }
-    else {
-      $this->keys([$field => $value]);
-    }
+    assert(is_string($field));
+    $this->keys([$field => $value]);
     return $this;
   }
 

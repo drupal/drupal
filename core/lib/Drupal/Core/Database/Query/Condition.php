@@ -111,8 +111,7 @@ class Condition implements ConditionInterface, \Countable {
         throw new InvalidQueryException(sprintf("Query condition '%s %s %s' must have an array compatible operator.", $field, $operator, $value));
       }
       else {
-        $value = $value[0];
-        @trigger_error('Calling ' . __METHOD__ . '() without an array compatible operator is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3350985', E_USER_DEPRECATED);
+        throw new InvalidQueryException('Calling ' . __METHOD__ . '() without an array compatible operator is not supported. See https://www.drupal.org/node/3350985');
       }
     }
 

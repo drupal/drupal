@@ -269,9 +269,8 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    if (!in_array($mode, $this->supportedFetchModes)) {
-      @trigger_error('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999', E_USER_DEPRECATED);
-    }
+    assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
@@ -286,9 +285,8 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL) {
-    if (isset($mode) && !in_array($mode, $this->supportedFetchModes)) {
-      @trigger_error('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999', E_USER_DEPRECATED);
-    }
+    assert(!isset($mode) || in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to pass the exact number of arguments we were given.
@@ -312,9 +310,8 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    if (isset($mode) && !in_array($mode, $this->supportedFetchModes)) {
-      @trigger_error('Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use supported modes only. See https://www.drupal.org/node/3377999', E_USER_DEPRECATED);
-    }
+    assert(!isset($mode) || in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.

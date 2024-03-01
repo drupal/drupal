@@ -5,7 +5,6 @@ namespace Drupal\Core\Entity\Sql;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -940,10 +939,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
       }
       else {
-        // @todo Remove the 'return' option in Drupal 11.
-        // @see https://www.drupal.org/project/drupal/issues/3256524
         $insert_id = $this->database
-          ->insert($this->baseTable, ['return' => Database::RETURN_INSERT_ID])
+          ->insert($this->baseTable)
           ->fields((array) $record)
           ->execute();
         // Even if this is a new entity the ID key might have been set, in which
@@ -1145,10 +1142,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $entity->preSaveRevision($this, $record);
 
     if ($entity->isNewRevision()) {
-      // @todo Remove the 'return' option in Drupal 11.
-      // @see https://www.drupal.org/project/drupal/issues/3256524
       $insert_id = $this->database
-        ->insert($this->revisionTable, ['return' => Database::RETURN_INSERT_ID])
+        ->insert($this->revisionTable)
         ->fields((array) $record)
         ->execute();
       // Even if this is a new revision, the revision ID key might have been

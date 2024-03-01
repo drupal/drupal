@@ -21,15 +21,6 @@ parameters:
 			path: includes/form.inc
 
 		-
-			message: """
-				#^Call to deprecated method getFromDriverName\\(\\) of class Drupal\\\\Core\\\\Extension\\\\DatabaseDriverList\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				  DatabaseDriverList\\:\\:get\\(\\) instead, passing a database driver namespace\\.$#
-			"""
-			count: 1
-			path: includes/install.core.inc
-
-		-
 			message: "#^Function install_config_download_translations\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: includes/install.core.inc
@@ -189,15 +180,6 @@ parameters:
 			path: lib/Drupal/Core/Condition/ConditionManager.php
 
 		-
-			message: """
-				#^Fetching deprecated class constant RETURN_AFFECTED of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 4
-			path: lib/Drupal/Core/Config/DatabaseStorage.php
-
-		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 2
 			path: lib/Drupal/Core/Config/Entity/Query/Condition.php
@@ -208,54 +190,9 @@ parameters:
 			path: lib/Drupal/Core/Config/ExtensionInstallStorage.php
 
 		-
-			message: """
-				#^Fetching deprecated class constant RETURN_AFFECTED of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Connection.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_INSERT_ID of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Connection.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_NULL of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Connection.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_STATEMENT of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 2
-			path: lib/Drupal/Core/Database/Connection.php
-
-		-
 			message: "#^Variable \\$statement might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Database/Connection.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_AFFECTED of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Query/Delete.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Database\\\\Query\\\\Delete\\:\\:execute\\(\\) should return int but return statement is missing\\.$#"
@@ -263,63 +200,9 @@ parameters:
 			path: lib/Drupal/Core/Database/Query/Delete.php
 
 		-
-			message: """
-				#^Fetching deprecated class constant RETURN_INSERT_ID of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Query/Insert.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_AFFECTED of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Query/Merge.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Database\\\\Query\\\\Merge\\:\\:__toString\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Database/Query/Merge.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_STATEMENT of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Query/Select.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_AFFECTED of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Query/Truncate.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_AFFECTED of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Query/Update.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_AFFECTED of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Database/Query/Upsert.php
 
 		-
 			message: "#^Variable \\$affected_rows might not be defined\\.$#"
@@ -444,15 +327,6 @@ parameters:
 			message: "#^Variable \\$relationship_specifier might not be defined\\.$#"
 			count: 5
 			path: lib/Drupal/Core/Entity/Query/Sql/Tables.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_INSERT_ID of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 2
-			path: lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php
 
 		-
 			message: "#^Variable \\$revision_query might not be defined\\.$#"
@@ -633,15 +507,6 @@ parameters:
 			message: "#^Missing cache backend declaration for performance\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
-
-		-
-			message: """
-				#^Fetching deprecated class constant RETURN_INSERT_ID of class Drupal\\\\Core\\\\Database\\\\Database\\:
-				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Menu/MenuTreeStorage.php
 
 		-
 			message: "#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#"
@@ -1485,15 +1350,6 @@ parameters:
 			path: modules/migrate_drupal_ui/tests/src/Functional/MultilingualReviewPageTestBase.php
 
 		-
-			message: """
-				#^Access to deprecated property \\$needsCleanup of class Drupal\\\\mysql\\\\Driver\\\\Database\\\\mysql\\\\Connection\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. There's no
-				   replacement\\.$#
-			"""
-			count: 1
-			path: modules/mysql/src/Driver/Database/mysql/Connection.php
-
-		-
 			message: "#^Variable \\$last_insert_id might not be defined\\.$#"
 			count: 1
 			path: modules/mysql/src/Driver/Database/mysql/Insert.php
@@ -1589,15 +1445,6 @@ parameters:
 			path: modules/path/src/Plugin/Field/FieldType/PathItem.php
 
 		-
-			message: """
-				#^Call to deprecated method makeSequenceName\\(\\) of class Drupal\\\\Core\\\\Database\\\\Connection\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is
-				  no replacement\\.$#
-			"""
-			count: 1
-			path: modules/pgsql/src/Driver/Database/pgsql/Schema.php
-
-		-
 			message: "#^Variable \\$table_field might not be defined\\.$#"
 			count: 1
 			path: modules/pgsql/src/Driver/Database/pgsql/Select.php
@@ -1606,15 +1453,6 @@ parameters:
 			message: "#^Method Drupal\\\\pgsql\\\\Driver\\\\Database\\\\pgsql\\\\Upsert\\:\\:execute\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/pgsql/src/Driver/Database/pgsql/Upsert.php
-
-		-
-			message: """
-				#^Call to deprecated method makeSequenceName\\(\\) of class Drupal\\\\Core\\\\Database\\\\Connection\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is
-				  no replacement\\.$#
-			"""
-			count: 1
-			path: modules/pgsql/src/Update10101.php
 
 		-
 			message: "#^Variable \\$responsive_image_styles in empty\\(\\) always exists and is not falsy\\.$#"
@@ -2413,22 +2251,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
 
 		-
-			message: """
-				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 3
-			path: tests/Drupal/KernelTests/Core/Database/StatementTest.php
-
-		-
-			message: """
-				#^Call to deprecated method expectErrorMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 3
-			path: tests/Drupal/KernelTests/Core/Database/StatementTest.php
-
-		-
 			message: "#^Variable \\$title might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Entity/CreateSampleEntityTest.php
@@ -2616,24 +2438,6 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
-
-		-
-			message: """
-				#^Call to deprecated method findCaller\\(\\) of class Drupal\\\\Core\\\\Database\\\\Log\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				  Connection\\:\\:findCallerFromDebugBacktrace\\(\\)\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/Stub/StubConnection.php
-
-		-
-			message: """
-				#^Fetching class constant class of deprecated class Drupal\\\\Core\\\\Database\\\\StatementWrapper\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				  \\\\Drupal\\\\Core\\\\Database\\\\StatementWrapperIterator instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/Database/Stub/StubConnection.php
 
 		-
 			message: """

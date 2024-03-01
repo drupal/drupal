@@ -7,7 +7,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\ExceptionHandler;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
@@ -344,49 +343,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   }
 
   /**
-   * Retrieve a the next id in a sequence.
-   *
-   * PostgreSQL has built in sequences. We'll use these instead of inserting
-   * and updating a sequences table.
-   */
-  public function nextId($existing = 0) {
-    @trigger_error('Drupal\Core\Database\Connection::nextId() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules should use instead the keyvalue storage for the last used id. See https://www.drupal.org/node/3349345', E_USER_DEPRECATED);
-    // Retrieve the name of the sequence. This information cannot be cached
-    // because the prefix may change, for example, like it does in tests.
-    $sequence_name = $this->makeSequenceName('sequences', 'value');
-
-    // When PostgreSQL gets a value too small then it will lock the table,
-    // retry the INSERT and if it's still too small then alter the sequence.
-    $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
-    if ($id > $existing) {
-      return $id;
-    }
-
-    // PostgreSQL advisory locks are simply locks to be used by an
-    // application such as Drupal. This will prevent other Drupal processes
-    // from altering the sequence while we are.
-    $this->query("SELECT pg_advisory_lock(" . self::POSTGRESQL_NEXTID_LOCK . ")");
-
-    // While waiting to obtain the lock, the sequence may have been altered
-    // so lets try again to obtain an adequate value.
-    $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
-    if ($id > $existing) {
-      $this->query("SELECT pg_advisory_unlock(" . self::POSTGRESQL_NEXTID_LOCK . ")");
-      return $id;
-    }
-
-    // Reset the sequence to a higher value than the existing id.
-    $this->query("ALTER SEQUENCE " . $sequence_name . " RESTART WITH " . ($existing + 1));
-
-    // Retrieve the next id. We know this will be as high as we want it.
-    $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
-
-    $this->query("SELECT pg_advisory_unlock(" . self::POSTGRESQL_NEXTID_LOCK . ")");
-
-    return $id;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getFullQualifiedTableName($table) {
@@ -477,13 +433,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  public function merge($table, array $options = []) {
-    return new Merge($this, $table, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function upsert($table, array $options = []) {
     return new Upsert($this, $table, $options);
   }
@@ -522,22 +471,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  public function condition($conjunction) {
-    return new Condition($conjunction);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function driverTransactionManager(): TransactionManagerInterface {
     return new TransactionManager($this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function startTransaction($name = '') {
-    return $this->transactionManager()->push($name);
   }
 
 }

@@ -17,49 +17,6 @@ use Drupal\Core\Cache\NullBackend;
 abstract class Database {
 
   /**
-   * Flag to indicate a query call should simply return NULL.
-   *
-   * This is used for queries that have no reasonable return value anyway, such
-   * as INSERT statements to a table without a serial primary key.
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3185520
-   */
-  const RETURN_NULL = 0;
-
-  /**
-   * Flag to indicate a query call should return the prepared statement.
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3185520
-   */
-  const RETURN_STATEMENT = 1;
-
-  /**
-   * Flag to indicate a query call should return the number of matched rows.
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3185520
-   */
-  const RETURN_AFFECTED = 2;
-
-  /**
-   * Flag to indicate a query call should return the "last insert id".
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3185520
-   */
-  const RETURN_INSERT_ID = 3;
-
-  /**
    * A nested array of active connections, keyed by database name and target.
    *
    * @var array
@@ -622,75 +579,6 @@ abstract class Database {
   }
 
   /**
-   * Finds the directory to add to the autoloader for the driver's namespace.
-   *
-   * For Drupal sites that manage their codebase with Composer, the package
-   * that provides the database driver should add the driver's namespace to
-   * Composer's autoloader. However, to support sites that add Drupal modules
-   * without Composer, and because the database connection must be established
-   * before Drupal adds the module's entire namespace to the autoloader, the
-   * database connection info array can include an "autoload" key containing
-   * the autoload directory for the driver's namespace. For requests that
-   * connect to the database via a connection info array, the value of the
-   * "autoload" key is automatically added to the autoloader.
-   *
-   * This method can be called to find the default value of that key when the
-   * database connection info array isn't available. This includes:
-   * - Console commands and test runners that connect to a database specified
-   *   by a database URL rather than a connection info array.
-   * - During installation, prior to the connection info array being written to
-   *   settings.php.
-   *
-   * This method returns the directory that must be added to the autoloader for
-   * the given namespace.
-   * - If the namespace is a sub-namespace of a Drupal module, then this method
-   *   returns the autoload directory for that namespace, allowing Drupal
-   *   modules containing database drivers to be added to a Drupal website
-   *   without Composer.
-   * - If the namespace is a sub-namespace of Drupal\Core or Drupal\Driver,
-   *   then this method returns FALSE, because Drupal core's autoloader already
-   *   includes these namespaces, so no additional autoload directory is
-   *   required for any code within them.
-   * - If the namespace is anything else, then this method returns FALSE,
-   *   because neither drupal_get_database_types() nor
-   *   static::convertDbUrlToConnectionInfo() support that anyway. One can
-   *   manually edit the connection info array in settings.php to reference
-   *   any arbitrary namespace, but requests using that would use the
-   *   corresponding 'autoload' key in that connection info rather than calling
-   *   this method.
-   *
-   * @param string $namespace
-   *   The database driver's namespace.
-   * @param string $root
-   *   The root directory of the Drupal installation.
-   * @param bool|null $include_test_drivers
-   *   (optional) Whether to include test extensions. If FALSE, all 'tests'
-   *   directories are excluded in the search. When NULL will be determined by
-   *   the extension_discovery_scan_tests setting.
-   *
-   * @return string|false
-   *   The PSR-4 directory to add to the autoloader for the namespace if the
-   *   namespace is a sub-namespace of a Drupal module. FALSE otherwise, as
-   *   explained above.
-   *
-   * @throws \RuntimeException
-   *   Exception thrown when a module provided database driver does not exist.
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   DatabaseDriverList::getList() instead.
-   *
-   * @see https://www.drupal.org/node/3258175
-   */
-  public static function findDriverAutoloadDirectory($namespace, $root, ?bool $include_test_drivers = NULL) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175', E_USER_DEPRECATED);
-    $autoload_info = static::getDriverList()
-      ->includeTestDrivers($include_test_drivers)
-      ->get($namespace)
-      ->getAutoloadInfo();
-    return $autoload_info['autoload'] ?? FALSE;
-  }
-
-  /**
    * Gets database connection info as a URL.
    *
    * @param string $key
@@ -708,44 +596,12 @@ abstract class Database {
       throw new \RuntimeException("Database connection $key not defined or missing the 'default' settings");
     }
     $namespace = $db_info['default']['namespace'];
-
-    // If the driver namespace is within a Drupal module, add the module name
-    // to the connection options to make it easy for the connection class's
-    // createUrlFromConnectionOptions() method to add it to the URL.
-    if (static::isWithinModuleNamespace($namespace)) {
-      $db_info['default']['module'] = explode('\\', $namespace)[1];
-    }
-
+    // Add the module name to the connection options to make it easy for the
+    // connection class's createUrlFromConnectionOptions() method to add it to
+    // the URL.
+    $db_info['default']['module'] = explode('\\', $namespace)[1];
     $connection_class = $namespace . '\\Connection';
     return $connection_class::createUrlFromConnectionOptions($db_info['default']);
-  }
-
-  /**
-   * Checks whether a namespace is within the namespace of a Drupal module.
-   *
-   * This can be used to determine if a database driver's namespace is provided
-   * by a Drupal module.
-   *
-   * @param string $namespace
-   *   The namespace (for example, of a database driver) to check.
-   *
-   * @return bool
-   *   TRUE if the passed in namespace is a sub-namespace of a Drupal module's
-   *   namespace.
-   *
-   * @todo remove in Drupal 11.
-   *
-   * @see https://www.drupal.org/node/3256524
-   */
-  private static function isWithinModuleNamespace(string $namespace) {
-    [$first, $second] = explode('\\', $namespace, 3);
-
-    // The namespace for Drupal modules is Drupal\MODULE_NAME, and the module
-    // name must be all lowercase. Second-level namespaces containing uppercase
-    // letters (e.g., "Core", "Component", "Driver") are not modules.
-    // @see \Drupal\Core\DrupalKernel::getModuleNamespacesPsr4()
-    // @see https://www.drupal.org/docs/8/creating-custom-modules/naming-and-placing-your-drupal-8-module#s-name-your-module
-    return ($first === 'Drupal' && strtolower($second) === $second);
   }
 
   /**

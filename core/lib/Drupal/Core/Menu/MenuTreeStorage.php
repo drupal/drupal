@@ -8,7 +8,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Query\SelectInterface;
 
@@ -289,10 +288,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $transaction = $this->connection->startTransaction();
       if (!$original) {
         // Generate a new mlid.
-        // @todo Remove the 'return' option in Drupal 11.
-        // @see https://www.drupal.org/project/drupal/issues/3256524
-        $options = ['return' => Database::RETURN_INSERT_ID] + $this->options;
-        $link['mlid'] = $this->connection->insert($this->table, $options)
+        $link['mlid'] = $this->connection->insert($this->table, $this->options)
           ->fields(['id' => $link['id'], 'menu_name' => $link['menu_name']])
           ->execute();
         $fields = $this->preSave($link, []);

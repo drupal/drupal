@@ -56,22 +56,6 @@ abstract class Connection {
   protected $logger = NULL;
 
   /**
-   * Tracks the number of "layers" of transactions currently active.
-   *
-   * On many databases transactions cannot nest.  Instead, we track
-   * nested calls to transactions and collapse them into a single
-   * transaction.
-   *
-   * @var array
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The
-   *   transaction stack is now managed by TransactionManager.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  protected $transactionLayers = [];
-
-  /**
    * Index of what driver-specific class to use for various operations.
    *
    * @var array
@@ -135,54 +119,6 @@ abstract class Connection {
   protected array $tablePlaceholderReplacements;
 
   /**
-   * The prefixes used by this database connection.
-   *
-   * @var array
-   *
-   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
-   *   no replacement.
-   *
-   * @see https://www.drupal.org/node/3257198
-   */
-  protected $prefixes = [];
-
-  /**
-   * List of search values for use in prefixTables().
-   *
-   * @var array
-   *
-   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
-   *   no replacement.
-   *
-   * @see https://www.drupal.org/node/3257198
-   */
-  protected $prefixSearch = [];
-
-  /**
-   * List of replacement values for use in prefixTables().
-   *
-   * @var array
-   *
-   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
-   *   no replacement.
-   *
-   * @see https://www.drupal.org/node/3257198
-   */
-  protected $prefixReplace = [];
-
-  /**
-   * List of un-prefixed table names, keyed by prefixed table names.
-   *
-   * @var array
-   *
-   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
-   *   no replacement.
-   *
-   * @see https://www.drupal.org/node/3257198
-   */
-  protected $unprefixedTablesMap = [];
-
-  /**
    * List of escaped table names, keyed by unescaped names.
    *
    * @var array
@@ -207,18 +143,6 @@ abstract class Connection {
   protected $escapedAliases = [];
 
   /**
-   * Post-root (non-nested) transaction commit callbacks.
-   *
-   * @var callable[]
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. The
-   *   transaction end callbacks are now managed by TransactionManager.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  protected $rootTransactionEndCallbacks = [];
-
-  /**
    * The identifier quote characters for the database type.
    *
    * An array containing the start and end identifier quote characters for the
@@ -240,7 +164,7 @@ abstract class Connection {
   /**
    * The transaction manager.
    */
-  protected TransactionManagerInterface|FALSE $transactionManager;
+  protected TransactionManagerInterface $transactionManager;
 
   /**
    * Constructs a Connection object.
@@ -302,18 +226,8 @@ abstract class Connection {
    */
   public function commitAll() {
     $manager = $this->transactionManager();
-    if ($manager && $manager->inTransaction() && method_exists($manager, 'commitAll')) {
+    if ($manager->inTransaction() && method_exists($manager, 'commitAll')) {
       $this->transactionManager()->commitAll();
-    }
-
-    // BC layer.
-    // @phpstan-ignore-next-line
-    if (!empty($this->transactionLayers)) {
-      // Make all transactions committable.
-      // @phpstan-ignore-next-line
-      $this->transactionLayers = array_fill_keys(array_keys($this->transactionLayers), FALSE);
-      // @phpstan-ignore-next-line
-      $this->popCommittableTransactions();
     }
   }
 
@@ -342,27 +256,6 @@ abstract class Connection {
    *   class. If a string is specified, each record will be fetched into a new
    *   object of that class. The behavior of all other values is defined by PDO.
    *   See http://php.net/manual/pdostatement.fetch.php
-   * - return: (deprecated) Depending on the type of query, different return
-   *   values may be meaningful. This directive instructs the system which type
-   *   of return value is desired. The system will generally set the correct
-   *   value automatically, so it is extremely rare that a module developer will
-   *   ever need to specify this value. Setting it incorrectly will likely lead
-   *   to unpredictable results or fatal errors. Legal values include:
-   *   - Database::RETURN_STATEMENT: Return the prepared statement object for
-   *     the query. This is usually only meaningful for SELECT queries, where
-   *     the statement object is how one accesses the result set returned by the
-   *     query.
-   *   - Database::RETURN_AFFECTED: Return the number of rows found (matched) by
-   *     the WHERE clause of an UPDATE or DELETE query (not the number of rows
-   *     actually changed). Note that although named RETURN_AFFECTED for
-   *     historical reasons, the number of rows matched is returned for
-   *     consistency across database engines.
-   *   - Database::RETURN_INSERT_ID: Return the sequence ID (primary key)
-   *     created by an INSERT statement on a table that contains a serial
-   *     column.
-   *   - Database::RETURN_NULL: Do not return anything, as there is no
-   *     meaningful value to return. That is the case for INSERT queries on
-   *     tables that do not contain a serial column.
    * - allow_delimiter_in_query: By default, queries which have the ; delimiter
    *   any place in them will cause an exception. This reduces the chance of SQL
    *   injection attacks that terminate the original query and add one or more
@@ -497,42 +390,6 @@ abstract class Connection {
   }
 
   /**
-   * Find the prefix for a table.
-   *
-   * This function is for when you want to know the prefix of a table. This
-   * is not used in prefixTables due to performance reasons.
-   *
-   * @param string $table
-   *   (optional) The table to find the prefix for.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
-   * Instead, you should just use Connection::getPrefix().
-   *
-   * @see https://www.drupal.org/node/3260849
-   */
-  public function tablePrefix($table = 'default') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849', E_USER_DEPRECATED);
-    return $this->prefix;
-  }
-
-  /**
-   * Gets a list of individually prefixed table names.
-   *
-   * @return array
-   *   An array of un-prefixed table names, keyed by their fully qualified table
-   *   names (i.e. prefix + table_name).
-   *
-   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is
-   *   no replacement.
-   *
-   * @see https://www.drupal.org/node/3257198
-   */
-  public function getUnprefixedTablesMap() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3257198', E_USER_DEPRECATED);
-    return $this->unprefixedTablesMap;
-  }
-
-  /**
    * Get a fully qualified table name.
    *
    * @param string $table
@@ -573,9 +430,7 @@ abstract class Connection {
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
-    if (isset($options['return'])) {
-      @trigger_error('Passing "return" option to ' . __METHOD__ . '() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
-    }
+    assert(!isset($options['return']), 'Passing "return" option to prepareStatement() has no effect. See https://www.drupal.org/node/3185520');
 
     try {
       $query = $this->preprocessStatement($query, $options);
@@ -705,39 +560,6 @@ abstract class Connection {
   }
 
   /**
-   * Creates the appropriate sequence name for a given table and serial field.
-   *
-   * This information is exposed to all database drivers, although it is only
-   * useful on some of them. This method is table prefix-aware.
-   *
-   * Note that if a sequence was generated automatically by the database, its
-   * name might not match the one returned by this function. Therefore, in those
-   * cases, it is generally advised to use a database-specific way of retrieving
-   * the name of an auto-created sequence. For example, PostgreSQL provides a
-   * dedicated function for this purpose: pg_get_serial_sequence().
-   *
-   * @param string $table
-   *   The table name to use for the sequence.
-   * @param string $field
-   *   The field name to use for the sequence.
-   *
-   * @return string
-   *   A table prefix-parsed string for the sequence name.
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is
-   *   no replacement.
-   *
-   * @see https://www.drupal.org/node/3377046
-   */
-  public function makeSequenceName($table, $field) {
-    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3377046", E_USER_DEPRECATED);
-    $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
-    // Remove identifier quotes as we are constructing a new name from a
-    // prefixed and quoted table name.
-    return str_replace($this->identifierQuotes, '', $sequence_name);
-  }
-
-  /**
    * Flatten an array of query comments into a single comment string.
    *
    * The comment string will be sanitized to avoid SQL injection attacks.
@@ -814,17 +636,8 @@ abstract class Connection {
    *   Typically, $options['return'] will be set by a default or by a query
    *   builder, and should not be set by a user.
    *
-   * @return \Drupal\Core\Database\StatementInterface|int|string|null
-   *   This method will return one of the following:
-   *   - If either $options['return'] === self::RETURN_STATEMENT, or
-   *     $options['return'] is not set (due to self::defaultOptions()),
-   *     returns the executed statement.
-   *   - If $options['return'] === self::RETURN_AFFECTED,
-   *     returns the number of rows matched by the query
-   *     (not the number affected).
-   *   - If $options['return'] === self::RETURN_INSERT_ID,
-   *     returns the generated insert ID of the last query as a string.
-   *   - If $options['return'] === self::RETURN_NULL, returns NULL.
+   * @return \Drupal\Core\Database\StatementInterface|null
+   *   The executed statement.
    *
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
@@ -834,54 +647,22 @@ abstract class Connection {
    */
   public function query($query, array $args = [], $options = []) {
     assert(is_string($query), 'The \'$query\' argument to ' . __METHOD__ . '() must be a string');
+    assert(!isset($options['return']), 'Passing "return" option to query() has no effect. See https://www.drupal.org/node/3185520');
+    assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
 
     // Use default values if not already set.
     $options += $this->defaultOptions();
 
-    if (isset($options['return'])) {
-      @trigger_error('Passing "return" option to ' . __METHOD__ . '() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
-    }
-
-    assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
-
     $this->expandArguments($query, $args);
-    $stmt = $this->prepareStatement($query, $options);
-
+    $statement = $this->prepareStatement($query, $options);
     try {
-      $stmt->execute($args, $options);
-
-      // Depending on the type of query we may need to return a different value.
-      // See DatabaseConnection::defaultOptions() for a description of each
-      // value.
-      // @todo the block below is deprecated and as of Drupal 11 will be
-      //   removed, query() will only return a StatementInterface object.
-      // @see https://www.drupal.org/project/drupal/issues/3256524
-      switch ($options['return'] ?? Database::RETURN_STATEMENT) {
-        case Database::RETURN_STATEMENT:
-          return $stmt;
-
-        // Database::RETURN_AFFECTED should not be used; enable row counting
-        // by passing the appropriate argument to the constructor instead.
-        // @see https://www.drupal.org/node/3186368
-        case Database::RETURN_AFFECTED:
-          $stmt->allowRowCount = TRUE;
-          return $stmt->rowCount();
-
-        case Database::RETURN_INSERT_ID:
-          $sequence_name = $options['sequence_name'] ?? NULL;
-          return $this->lastInsertId($sequence_name);
-
-        case Database::RETURN_NULL:
-          return NULL;
-
-        default:
-          throw new \PDOException('Invalid return directive: ' . $options['return']);
-
-      }
+      $result = $statement->execute($args, $options);
     }
     catch (\Exception $e) {
-      $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, $options);
+      $this->exceptionHandler()->handleExecutionException($e, $statement, $args, $options);
+      $result = FALSE;
     }
+    return $result ? $statement : NULL;
   }
 
   /**
@@ -972,7 +753,7 @@ abstract class Connection {
       'Truncate',
       'Schema',
       'Condition',
-      'Transaction' => @trigger_error('Calling ' . __METHOD__ . '() for \'' . $class . '\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED),
+      'Transaction' => throw new InvalidQueryException('Calling ' . __METHOD__ . '() for \'' . $class . '\' is not supported. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534'),
       default => NULL,
     };
     if (empty($this->driverClasses[$class])) {
@@ -1039,12 +820,9 @@ abstract class Connection {
    *
    * @return \Drupal\Core\Database\ExceptionHandler
    *   The database exceptions handler.
-   *
-   * @todo in drupal:11.0.0, return a new ExceptionHandler instance directly.
    */
   public function exceptionHandler() {
-    $class = $this->getDriverClass('ExceptionHandler');
-    return new $class();
+    return new ExceptionHandler();
   }
 
   /**
@@ -1065,13 +843,10 @@ abstract class Connection {
    *   driver.
    *
    * @see \Drupal\Core\Database\Query\Select
-   *
-   * @todo in drupal:11.0.0, return a new Query\Select instance directly.
    */
   public function select($table, $alias = NULL, array $options = []) {
     assert(is_string($alias) || $alias === NULL, 'The \'$alias\' argument to ' . __METHOD__ . '() must be a string or NULL');
-    $class = $this->getDriverClass('Select');
-    return new $class($this, $table, $alias, $options);
+    return new Select($this, $table, $alias, $options);
   }
 
   /**
@@ -1089,12 +864,9 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Insert
    * @see \Drupal\Core\Database\Connection::defaultOptions()
-   *
-   * @todo in drupal:11.0.0, return a new Query\Insert instance directly.
    */
   public function insert($table, array $options = []) {
-    $class = $this->getDriverClass('Insert');
-    return new $class($this, $table, $options);
+    return new Insert($this, $table, $options);
   }
 
   /**
@@ -1139,12 +911,9 @@ abstract class Connection {
    *   A new Merge query object.
    *
    * @see \Drupal\Core\Database\Query\Merge
-   *
-   * @todo in drupal:11.0.0, return a new Query\Merge instance directly.
    */
   public function merge($table, array $options = []) {
-    $class = $this->getDriverClass('Merge');
-    return new $class($this, $table, $options);
+    return new Merge($this, $table, $options);
   }
 
   /**
@@ -1159,14 +928,8 @@ abstract class Connection {
    *   A new Upsert query object.
    *
    * @see \Drupal\Core\Database\Query\Upsert
-   *
-   * @todo in drupal:11.0.0, make this method abstract since Query\Upsert is
-   *   an abstract class.
    */
-  public function upsert($table, array $options = []) {
-    $class = $this->getDriverClass('Upsert');
-    return new $class($this, $table, $options);
-  }
+  abstract public function upsert($table, array $options = []);
 
   /**
    * Prepares and returns an UPDATE query object.
@@ -1183,12 +946,9 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Update
    * @see \Drupal\Core\Database\Connection::defaultOptions()
-   *
-   * @todo in drupal:11.0.0, return a new Query\Update instance directly.
    */
   public function update($table, array $options = []) {
-    $class = $this->getDriverClass('Update');
-    return new $class($this, $table, $options);
+    return new Update($this, $table, $options);
   }
 
   /**
@@ -1206,12 +966,9 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Delete
    * @see \Drupal\Core\Database\Connection::defaultOptions()
-   *
-   * @todo in drupal:11.0.0, return a new Query\Delete instance directly.
    */
   public function delete($table, array $options = []) {
-    $class = $this->getDriverClass('Delete');
-    return new $class($this, $table, $options);
+    return new Delete($this, $table, $options);
   }
 
   /**
@@ -1226,12 +983,9 @@ abstract class Connection {
    *   A new Truncate query object.
    *
    * @see \Drupal\Core\Database\Query\Truncate
-   *
-   * @todo in drupal:11.0.0, return a new Query\Truncate instance directly.
    */
   public function truncate($table, array $options = []) {
-    $class = $this->getDriverClass('Truncate');
-    return new $class($this, $table, $options);
+    return new Truncate($this, $table, $options);
   }
 
   /**
@@ -1241,17 +995,8 @@ abstract class Connection {
    *
    * @return \Drupal\Core\Database\Schema
    *   The database Schema object for this connection.
-   *
-   * @todo in drupal:11.0.0, make this method abstract since Schema is
-   *   an abstract class.
    */
-  public function schema() {
-    if (empty($this->schema)) {
-      $class = $this->getDriverClass('Schema');
-      $this->schema = new $class($this);
-    }
-    return $this->schema;
-  }
+  abstract public function schema();
 
   /**
    * Prepares and returns a CONDITION query object.
@@ -1263,15 +1008,12 @@ abstract class Connection {
    *   A new Condition query object.
    *
    * @see \Drupal\Core\Database\Query\Condition
-   *
-   * @todo in drupal:11.0.0, return a new Condition instance directly.
    */
   public function condition($conjunction) {
-    $class = $this->getDriverClass('Condition');
     // Creating an instance of the class Drupal\Core\Database\Query\Condition
     // should only be created from the database layer. This will allow database
     // drivers to override the default Condition class.
-    return new $class($conjunction);
+    return new Condition($conjunction);
   }
 
   /**
@@ -1395,17 +1137,15 @@ abstract class Connection {
   /**
    * Returns the transaction manager.
    *
-   * @return \Drupal\Core\Database\Transaction\TransactionManagerInterface|false
+   * @return \Drupal\Core\Database\Transaction\TransactionManagerInterface
    *   The transaction manager, or FALSE if not available.
+   *
+   * @throws \LogicException
+   *   If the transaction manager is undefined or unavailable.
    */
-  public function transactionManager(): TransactionManagerInterface|FALSE {
+  public function transactionManager(): TransactionManagerInterface {
     if (!isset($this->transactionManager)) {
-      try {
-        $this->transactionManager = $this->driverTransactionManager();
-      }
-      catch (\LogicException $e) {
-        $this->transactionManager = FALSE;
-      }
+      $this->transactionManager = $this->driverTransactionManager();
     }
     return $this->transactionManager;
   }
@@ -1434,32 +1174,7 @@ abstract class Connection {
    *   TRUE if we're currently in a transaction, FALSE otherwise.
    */
   public function inTransaction() {
-    if ($this->transactionManager()) {
-      return $this->transactionManager()->inTransaction();
-    }
-    // Start of BC layer.
-    // @phpstan-ignore-next-line
-    return ($this->transactionDepth() > 0);
-    // End of BC layer.
-  }
-
-  /**
-   * Determines the current transaction depth.
-   *
-   * @return int
-   *   The current transaction depth.
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not
-   *   access the transaction stack depth, it is an implementation detail.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  public function transactionDepth() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not access the transaction stack depth, it is an implementation detail. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
-    if ($this->transactionManager()) {
-      return $this->transactionManager()->stackDepth();
-    }
-    return count($this->transactionLayers);
+    return $this->transactionManager()->inTransaction();
   }
 
   /**
@@ -1472,248 +1187,9 @@ abstract class Connection {
    *   A Transaction object.
    *
    * @see \Drupal\Core\Database\Transaction
-   *
-   * @todo in drupal:11.0.0, push to the TransactionManager directly.
    */
   public function startTransaction($name = '') {
-    if ($this->transactionManager()) {
-      return $this->transactionManager()->push($name);
-    }
-    $class = $this->getDriverClass('Transaction');
-    return new $class($this, $name);
-  }
-
-  /**
-   * Rolls back the transaction entirely or to a named savepoint.
-   *
-   * This method throws an exception if no transaction is active.
-   *
-   * @param string $savepoint_name
-   *   (optional) The name of the savepoint. The default, 'drupal_transaction',
-   *    will roll the entire transaction back.
-   *
-   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
-   * @throws \Drupal\Core\Database\TransactionNoActiveException
-   *
-   * @see \Drupal\Core\Database\Transaction::rollBack()
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not
-   *   rollback the connection, roll back the Transaction objects instead.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  public function rollBack($savepoint_name = 'drupal_transaction') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not rollback the connection, roll back the Transaction objects instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
-    if ($this->transactionManager()) {
-      $this->transactionManager()->rollback($savepoint_name, 'bc-force-rollback');
-      return;
-    }
-    if (!$this->inTransaction()) {
-      throw new TransactionNoActiveException();
-    }
-    // A previous rollback to an earlier savepoint may mean that the savepoint
-    // in question has already been accidentally committed.
-    if (!isset($this->transactionLayers[$savepoint_name])) {
-      throw new TransactionNoActiveException();
-    }
-
-    // We need to find the point we're rolling back to, all other savepoints
-    // before are no longer needed. If we rolled back other active savepoints,
-    // we need to throw an exception.
-    $rolled_back_other_active_savepoints = FALSE;
-    while ($savepoint = array_pop($this->transactionLayers)) {
-      if ($savepoint == $savepoint_name) {
-        // If it is the last the transaction in the stack, then it is not a
-        // savepoint, it is the transaction itself so we will need to roll back
-        // the transaction rather than a savepoint.
-        if (empty($this->transactionLayers)) {
-          break;
-        }
-        $this->query('ROLLBACK TO SAVEPOINT ' . $savepoint);
-        $this->popCommittableTransactions();
-        if ($rolled_back_other_active_savepoints) {
-          throw new TransactionOutOfOrderException();
-        }
-        return;
-      }
-      else {
-        $rolled_back_other_active_savepoints = TRUE;
-      }
-    }
-
-    // Notify the callbacks about the rollback.
-    $callbacks = $this->rootTransactionEndCallbacks;
-    $this->rootTransactionEndCallbacks = [];
-    foreach ($callbacks as $callback) {
-      call_user_func($callback, FALSE);
-    }
-
-    $this->connection->rollBack();
-    if ($rolled_back_other_active_savepoints) {
-      throw new TransactionOutOfOrderException();
-    }
-  }
-
-  /**
-   * Increases the depth of transaction nesting.
-   *
-   * If no transaction is already active, we begin a new transaction.
-   *
-   * @param string $name
-   *   The name of the transaction.
-   *
-   * @throws \Drupal\Core\Database\TransactionNameNonUniqueException
-   *
-   * @see \Drupal\Core\Database\Transaction
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   TransactionManagerInterface methods instead.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  public function pushTransaction($name) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
-    if (isset($this->transactionLayers[$name])) {
-      throw new TransactionNameNonUniqueException($name . " is already in use.");
-    }
-    // If we're already in a transaction then we want to create a savepoint
-    // rather than try to create another transaction.
-    if ($this->inTransaction()) {
-      $this->query('SAVEPOINT ' . $name);
-    }
-    else {
-      $this->connection->beginTransaction();
-    }
-    $this->transactionLayers[$name] = $name;
-  }
-
-  /**
-   * Decreases the depth of transaction nesting.
-   *
-   * If we pop off the last transaction layer, then we either commit or roll
-   * back the transaction as necessary. If no transaction is active, we return
-   * because the transaction may have manually been rolled back.
-   *
-   * @param string $name
-   *   The name of the savepoint.
-   *
-   * @throws \Drupal\Core\Database\TransactionNoActiveException
-   * @throws \Drupal\Core\Database\TransactionCommitFailedException
-   *
-   * @see \Drupal\Core\Database\Transaction
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   TransactionManagerInterface methods instead.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  public function popTransaction($name) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
-    // The transaction has already been committed earlier. There is nothing we
-    // need to do. If this transaction was part of an earlier out-of-order
-    // rollback, an exception would already have been thrown by
-    // Database::rollBack().
-    if (!isset($this->transactionLayers[$name])) {
-      return;
-    }
-
-    // Mark this layer as committable.
-    $this->transactionLayers[$name] = FALSE;
-    $this->popCommittableTransactions();
-  }
-
-  /**
-   * Adds a root transaction end callback.
-   *
-   * These callbacks are invoked immediately after the transaction has been
-   * committed.
-   *
-   * It can for example be used to avoid deadlocks on write-heavy tables that
-   * do not need to be part of the transaction, like cache tag invalidations.
-   *
-   * Another use case is that services using alternative backends like Redis and
-   * Memcache cache implementations can replicate the transaction-behavior of
-   * the database cache backend and avoid race conditions.
-   *
-   * An argument is passed to the callbacks that indicates whether the
-   * transaction was successful or not.
-   *
-   * @param callable $callback
-   *   The callback to invoke.
-   *
-   * @see \Drupal\Core\Database\Connection::doCommit()
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   TransactionManagerInterface::addPostTransactionCallback() instead.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  public function addRootTransactionEndCallback(callable $callback) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface::addPostTransactionCallback() instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
-    if ($this->transactionManager()) {
-      $this->transactionManager()->addPostTransactionCallback($callback);
-      return;
-    }
-    if (!$this->transactionLayers) {
-      throw new \LogicException('Root transaction end callbacks can only be added when there is an active transaction.');
-    }
-    $this->rootTransactionEndCallbacks[] = $callback;
-  }
-
-  /**
-   * Commit all the transaction layers that can commit.
-   *
-   * @internal
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   TransactionManagerInterface methods instead.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  protected function popCommittableTransactions() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
-    // Commit all the committable layers.
-    foreach (array_reverse($this->transactionLayers) as $name => $active) {
-      // Stop once we found an active transaction.
-      if ($active) {
-        break;
-      }
-
-      // If there are no more layers left then we should commit.
-      unset($this->transactionLayers[$name]);
-      if (empty($this->transactionLayers)) {
-        $this->doCommit();
-      }
-      else {
-        $this->query('RELEASE SAVEPOINT ' . $name);
-      }
-    }
-  }
-
-  /**
-   * Do the actual commit, invoke post-commit callbacks.
-   *
-   * @internal
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   TransactionManagerInterface methods instead.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  protected function doCommit() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
-    $success = $this->connection->commit();
-    if (!empty($this->rootTransactionEndCallbacks)) {
-      $callbacks = $this->rootTransactionEndCallbacks;
-      $this->rootTransactionEndCallbacks = [];
-      foreach ($callbacks as $callback) {
-        call_user_func($callback, $success);
-      }
-    }
-
-    if (!$success) {
-      throw new TransactionCommitFailedException();
-    }
+    return $this->transactionManager()->push($name);
   }
 
   /**
@@ -1827,52 +1303,6 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Condition::compile()
    */
   abstract public function mapConditionOperator($operator);
-
-  /**
-   * Throws an exception to deny direct access to transaction commits.
-   *
-   * We do not want to allow users to commit transactions at any time, only
-   * by destroying the transaction object or allowing it to go out of scope.
-   * A direct commit bypasses all of the safety checks we've built on top of
-   * the database client's transaction routines.
-   *
-   * @throws \Drupal\Core\Database\TransactionExplicitCommitNotAllowedException
-   *
-   * @see \Drupal\Core\Database\Transaction
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not
-   *   commit the connection, void the Transaction objects instead.
-   *
-   * @see https://www.drupal.org/node/3381002
-   */
-  public function commit() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not commit the connection, void the Transaction objects instead. See https://www.drupal.org/node/3381002', E_USER_DEPRECATED);
-    throw new TransactionExplicitCommitNotAllowedException();
-  }
-
-  /**
-   * Retrieves a unique ID from a given sequence.
-   *
-   * Use this function if for some reason you can't use a serial field. For
-   * example, MySQL has no ways of reading of the current value of a sequence
-   * and PostgreSQL can not advance the sequence to be larger than a given
-   * value. Or sometimes you just need a unique integer.
-   *
-   * @param $existing_id
-   *   (optional) After a database import, it might be that the sequences table
-   *   is behind, so by passing in the maximum existing ID, it can be assured
-   *   that we never issue the same ID.
-   *
-   * @return int|string
-   *   An integer number larger than any number returned by earlier calls and
-   *   also larger than the $existing_id if one was passed in.
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules
-   *   should use instead the keyvalue storage for the last used id.
-   *
-   * @see https://www.drupal.org/node/3349345
-   */
-  abstract public function nextId($existing_id = 0);
 
   /**
    * Quotes a string for use in a query.
