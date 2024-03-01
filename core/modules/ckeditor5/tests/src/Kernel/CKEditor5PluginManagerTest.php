@@ -1594,7 +1594,7 @@ PHP,
    * @return \Generator
    *   Test scenarios.
    */
-  public function providerTestDerivedPluginDefinitions(): \Generator {
+  public static function providerTestDerivedPluginDefinitions(): \Generator {
     // Defaults inherited from CKEditor5AspectsOfCKEditor5Plugin.
     $ckeditor5_aspects_defaults = get_class_vars(CKEditor5AspectsOfCKEditor5Plugin::class);
     // Defaults inherited from DrupalAspectsOfCKEditor5Plugin.
