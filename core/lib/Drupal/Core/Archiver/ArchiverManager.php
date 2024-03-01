@@ -3,6 +3,7 @@
 namespace Drupal\Core\Archiver;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Archiver\Attribute\Archiver;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
@@ -11,7 +12,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 /**
  * Provides an Archiver plugin manager.
  *
- * @see \Drupal\Core\Archiver\Annotation\Archiver
+ * @see \Drupal\Core\Archiver\Attribute\Archiver
  * @see \Drupal\Core\Archiver\ArchiverInterface
  * @see plugin_api
  */
@@ -38,7 +39,7 @@ class ArchiverManager extends DefaultPluginManager {
    *   The file handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, FileSystemInterface $file_system) {
-    parent::__construct('Plugin/Archiver', $namespaces, $module_handler, 'Drupal\Core\Archiver\ArchiverInterface', 'Drupal\Core\Archiver\Annotation\Archiver');
+    parent::__construct('Plugin/Archiver', $namespaces, $module_handler, 'Drupal\Core\Archiver\ArchiverInterface', Archiver::class, 'Drupal\Core\Archiver\Annotation\Archiver');
     $this->alterInfo('archiver_info');
     $this->setCacheBackend($cache_backend, 'archiver_info_plugins');
     $this->fileSystem = $file_system;
