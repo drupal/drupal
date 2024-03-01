@@ -2,21 +2,22 @@
 
 namespace Drupal\system\Plugin\Condition;
 
+use Drupal\Core\Condition\Attribute\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'Current Theme' condition.
- *
- * @Condition(
- *   id = "current_theme",
- *   label = @Translation("Current Theme"),
- * )
  */
+#[Condition(
+  id: "current_theme",
+  label: new TranslatableMarkup("Current Theme"),
+)]
 class CurrentThemeCondition extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**

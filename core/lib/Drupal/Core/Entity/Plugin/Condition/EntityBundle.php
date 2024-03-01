@@ -2,20 +2,21 @@
 
 namespace Drupal\Core\Entity\Plugin\Condition;
 
+use Drupal\Core\Condition\Attribute\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\Plugin\Condition\Deriver\EntityBundle as EntityBundleDeriver;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the 'Entity Bundle' condition.
- *
- * @Condition(
- *   id = "entity_bundle",
- *   deriver = "\Drupal\Core\Entity\Plugin\Condition\Deriver\EntityBundle",
- * )
  */
+#[Condition(
+  id: "entity_bundle",
+  deriver: EntityBundleDeriver::class,
+)]
 class EntityBundle extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**

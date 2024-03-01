@@ -2,23 +2,24 @@
 
 namespace Drupal\system\Plugin\Condition;
 
+use Drupal\Core\Condition\Attribute\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\path_alias\AliasManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a 'Request Path' condition.
- *
- * @Condition(
- *   id = "request_path",
- *   label = @Translation("Request Path"),
- * )
  */
+#[Condition(
+  id: "request_path",
+  label: new TranslatableMarkup("Request Path"),
+)]
 class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
