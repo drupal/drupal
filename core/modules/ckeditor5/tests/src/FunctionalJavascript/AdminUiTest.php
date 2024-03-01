@@ -178,6 +178,55 @@ JS;
   }
 
   /**
+   * Tests that image upload settings (stored out of band) are validated too.
+   */
+  public function testImageUploadSettingsAreValidated(): void {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->addNewTextFormat($page, $assert_session);
+    $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
+
+    // Add the image plugin to the CKEditor 5 toolbar.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-drupalInsertImage'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-drupalInsertImage', 'ArrowDown');
+    $assert_session->assertExpectedAjaxRequest(1);
+
+    // Open the vertical tab with its settings.
+    $page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-image"]')->click();
+    $this->assertTrue($assert_session->waitForText('Enable image uploads'));
+
+    // Check the "Enable image uploads" checkbox.
+    $assert_session->checkboxNotChecked('editor[settings][plugins][ckeditor5_image][status]');
+    $page->checkField('editor[settings][plugins][ckeditor5_image][status]');
+    $assert_session->assertExpectedAjaxRequest(2);
+
+    // Enter a nonsensical maximum file size.
+    $page->fillField('editor[settings][plugins][ckeditor5_image][max_size]', 'foobar');
+    $this->assertNoRealtimeValidationErrors();
+
+    // Enable another toolbar item to trigger validation.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
+    $assert_session->assertExpectedAjaxRequest(3);
+
+    // The expected validation error must be present.
+    $assert_session->elementExists('css', '[role=alert]:contains("This value must be a number of bytes, optionally with a unit such as "MB" or "megabytes".")');
+
+    // Enter no maximum file size because it is optional, this should result in
+    // no validation error and it being set to `null`.
+    $page->findField('editor[settings][plugins][ckeditor5_image][max_size]')->setValue('');
+
+    // Remove a toolbar item to trigger validation.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowUp');
+    $assert_session->assertExpectedAjaxRequest(4);
+
+    // No more validation errors, let's save.
+    $this->assertNoRealtimeValidationErrors();
+    $page->pressButton('Save configuration');
+    $assert_session->pageTextContains('The text format ckeditor5 has been updated');
+  }
+
+  /**
    * Ensure CKEditor 5 admin UI's real-time validation errors do not accumulate.
    */
   public function testMessagesDoNotAccumulate(): void {

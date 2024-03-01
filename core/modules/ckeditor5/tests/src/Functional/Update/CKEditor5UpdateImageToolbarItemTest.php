@@ -138,7 +138,14 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
-      iterator_to_array(CKEditor5::validatePair($editor_after, $filter_format_after))
+      // @todo Fix stream wrappers not being available early enough in
+      //   https://www.drupal.org/project/drupal/issues/3416735. Then remove the
+      //   array_filter().
+      // @see \Drupal\Core\Config\Schema\SchemaCheckTrait::$ignoredPropertyPaths
+      array_filter(
+        iterator_to_array(CKEditor5::validatePair($editor_after, $filter_format_after)),
+        fn(ConstraintViolation $v) => $v->getMessage() != 'The file storage you selected is not a visible, readable and writable stream wrapper. Possible choices: <em class="placeholder"></em>.',
+      )
     ));
   }
 

@@ -660,7 +660,13 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     // All plugin settings have been collected, including defaults that depend
     // on visibility. Store the collected settings, throw away the interim state
     // that allowed determining which defaults to add.
+    // Create a new clone, because the plugins whose data is being stored
+    // out-of-band may have modified the Text Editor config entity in the form
+    // state.
+    // @see \Drupal\editor\EditorInterface::setImageUploadSettings()
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image::submitConfigurationForm()
     unset($eventual_editor_and_format_for_plugin_settings_visibility);
+    $submitted_editor = clone $form_state->get('editor');
     $submitted_editor->setSettings($settings);
 
     // Validate the text editor + text format pair.
@@ -901,6 +907,14 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     // Filters are top-level.
     if (preg_match('/^filters\..*/', $property_path)) {
       return implode('][', array_merge(explode('.', $property_path), ['settings']));
+    }
+
+    // Image upload settings are stored out-of-band and may also trigger
+    // validation errors.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
+    if (str_starts_with($property_path, 'image_upload.')) {
+      $image_upload_setting_property_path = str_replace('image_upload.', '', $property_path);
+      return 'editor][settings][plugins][ckeditor5_image][' . implode('][', explode('.', $image_upload_setting_property_path));
     }
 
     // Everything else is in the subform.

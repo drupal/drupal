@@ -89,6 +89,7 @@ class BytesTest extends TestCase {
    *
    * @dataProvider providerTestValidate
    * @covers ::validate
+   * @covers ::validateConstraint
    */
   public function testValidate($string, bool $expected_result): void {
     $this->assertSame($expected_result, Bytes::validate($string));
