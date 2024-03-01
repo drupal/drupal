@@ -25,8 +25,7 @@ class TimestampDatetimeWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $parent_entity = $items->getParent()->getValue();
-    $default_value = (!$parent_entity->isNew() && isset($items[$delta]->value)) ? DrupalDateTime::createFromTimestamp($items[$delta]->value) : '';
+    $default_value = isset($items[$delta]->value) ? DrupalDateTime::createFromTimestamp($items[$delta]->value) : '';
     $element['value'] = $element + [
       '#type' => 'datetime',
       '#default_value' => $default_value,
