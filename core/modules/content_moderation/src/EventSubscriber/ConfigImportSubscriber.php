@@ -47,7 +47,8 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     foreach (['update', 'delete'] as $op) {
       $unprocessed_configurations = $event->getConfigImporter()->getUnprocessedConfiguration($op);
       foreach ($unprocessed_configurations as $unprocessed_configuration) {
-        if ($workflow = $this->getWorkflow($unprocessed_configuration)) {
+        if (($workflow = $this->getWorkflow($unprocessed_configuration))
+            && $workflow->getTypePlugin()->getPluginId() === 'content_moderation') {
           if ($op === 'update') {
             $original_workflow_config = $event->getConfigImporter()
               ->getStorageComparer()
