@@ -184,10 +184,6 @@ class EditorLoadingTest extends BrowserTestBase {
     $select = $this->assertSession()->elementExists('css', 'select.js-filter-list');
     $this->assertSame('edit-body-0-value', $select->getAttribute('data-editor-for'));
 
-    // Load the editor image dialog form and make sure it does not fatal.
-    $this->drupalGet('editor/dialog/image/full_html');
-    $this->assertSession()->statusCodeEquals(200);
-
     $this->drupalLogout();
 
     // Also associate a text editor with the "Plain Text" text format.

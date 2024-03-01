@@ -515,8 +515,7 @@ function media_filter_format_edit_form_validate($form, FormStateInterface $form_
  */
 function media_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
   // Add an attribute so that text editors plugins can pass the host entity's
-  // language to EditorMediaDialog, allowing it to present entities in the same
-  // language.
+  // language, allowing it to present entities in the same language.
   if (!empty($element['#type']) && $element['#type'] == 'text_format') {
     $element['#attributes']['data-media-embed-host-entity-langcode'] = $context['items']->getLangcode();
   }

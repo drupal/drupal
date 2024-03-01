@@ -456,11 +456,10 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
 
       if (!empty($settings['alt_field']) && $node->hasAttribute('alt')) {
         // Allow the display of the image without an alt tag in special cases.
-        // Since setting the value in the EditorMediaDialog to an empty string
-        // restores the default value, this allows special cases where the alt
-        // text should not be set to the default value, but should be
-        // explicitly empty instead so it can be ignored by assistive
-        // technologies, such as screen readers.
+        // Since setting the value to an empty string restores the default
+        // value, this allows special cases where the alt text should not be set
+        // to the default value, but should be explicitly empty instead, so it
+        // can be ignored by assistive technologies, such as screen readers.
         if ($node->getAttribute('alt') === '""') {
           $node->setAttribute('alt', '');
         }

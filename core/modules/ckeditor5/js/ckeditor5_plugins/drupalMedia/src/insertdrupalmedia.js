@@ -48,9 +48,7 @@ export default class InsertDrupalMediaCommand extends Command {
       {},
     );
 
-    // \Drupal\media\Form\EditorMediaDialog returns data in keyed by
-    // data-attributes used in view data. This converts data-attribute keys to
-    // keys used in model.
+    // This converts data-attribute keys to keys used in model.
     const modelAttributes = Object.keys(attributes).reduce(
       (result, attribute) => {
         if (dataAttributeMapping[attribute]) {

@@ -111,7 +111,6 @@ class Language extends CKEditor5PluginDefault implements CKEditor5PluginConfigur
   /**
    * {@inheritdoc}
    *
-   * @see \Drupal\editor\Form\EditorImageDialog
    * @see editor_image_upload_settings_form()
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {

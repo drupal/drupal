@@ -21,12 +21,3 @@ media.filter.preview:
   requirements:
     _entity_access: 'filter_format.use'
     _custom_access: '\Drupal\media\Controller\MediaFilterController::formatUsesMediaEmbedFilter'
-
-editor.media_dialog:
-  path: '/editor/dialog/media/{editor}'
-  defaults:
-    _form: '\Drupal\media\Form\EditorMediaDialog'
-    _title: 'Edit media'
-  methods: [POST]
-  requirements:
-    _entity_access: 'editor.use'
