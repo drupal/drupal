@@ -3,16 +3,18 @@
 namespace Drupal\update_test\Plugin\Archiver;
 
 use Drupal\Core\Archiver\ArchiverInterface;
+use Drupal\Core\Archiver\Attribute\Archiver;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a test archiver implementation.
- *
- * @Archiver(
- *   id = "update_test_archiver",
- *   title = @Translation("Update Test Archiver"),
- *   extensions = {"update-test-extension"}
- * )
  */
+#[Archiver(
+  id: 'update_test_archiver',
+  title: new TranslatableMarkup('Tar'),
+  description: new TranslatableMarkup('Update Test Archiver'),
+  extensions: ['update-test-extension']
+)]
 class UpdateTestArchiver implements ArchiverInterface {
 
   /**
