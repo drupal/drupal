@@ -4,9 +4,10 @@ namespace Drupal\Core\Condition;
 
 use Drupal\Component\Plugin\CategorizingPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Condition\Attribute\Condition;
 use Drupal\Core\Executable\ExecutableException;
-use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Executable\ExecutableInterface;
+use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -16,7 +17,7 @@ use Drupal\Core\Plugin\FilteredPluginManagerTrait;
 /**
  * A plugin manager for condition plugins.
  *
- * @see \Drupal\Core\Condition\Annotation\Condition
+ * @see \Drupal\Core\Condition\Attribute\Condition
  * @see \Drupal\Core\Condition\ConditionInterface
  * @see \Drupal\Core\Condition\ConditionPluginBase
  *
@@ -42,7 +43,14 @@ class ConditionManager extends DefaultPluginManager implements ExecutableManager
     $this->alterInfo('condition_info');
     $this->setCacheBackend($cache_backend, 'condition_plugins');
 
-    parent::__construct('Plugin/Condition', $namespaces, $module_handler, 'Drupal\Core\Condition\ConditionInterface', 'Drupal\Core\Condition\Annotation\Condition');
+    parent::__construct(
+      'Plugin/Condition',
+      $namespaces,
+      $module_handler,
+      ConditionInterface::class,
+      Condition::class,
+      'Drupal\Core\Condition\Annotation\Condition'
+    );
   }
 
   /**

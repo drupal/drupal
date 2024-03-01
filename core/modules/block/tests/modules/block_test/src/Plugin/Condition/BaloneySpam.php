@@ -2,16 +2,17 @@
 
 namespace Drupal\block_test\Plugin\Condition;
 
+use Drupal\Core\Condition\Attribute\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a 'baloney_spam' condition.
- *
- * @Condition(
- *   id = "baloney_spam",
- *   label = @Translation("Baloney spam"),
- * )
  */
+#[Condition(
+  id: "baloney_spam",
+  label: new TranslatableMarkup("Baloney spam"),
+)]
 class BaloneySpam extends ConditionPluginBase {
 
   /**

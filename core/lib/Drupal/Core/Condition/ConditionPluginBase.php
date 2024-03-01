@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
  * Provides a basis for fulfilling contexts for condition plugins.
  *
  * @see \Drupal\Core\Condition\Annotation\Condition
+ * @see \Drupal\Core\Condition\Attribute\Condition
  * @see \Drupal\Core\Condition\ConditionInterface
  * @see \Drupal\Core\Condition\ConditionManager
  *

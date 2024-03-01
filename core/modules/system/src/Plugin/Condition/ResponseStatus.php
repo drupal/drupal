@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\system\Plugin\Condition;
 
+use Drupal\Core\Condition\Attribute\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +17,11 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 /**
  * Provides a 'Response status' condition.
- *
- * @Condition(
- *   id = "response_status",
- *   label = @Translation("Response status"),
- * )
  */
+#[Condition(
+  id: "response_status",
+  label: new TranslatableMarkup("Response status"),
+)]
 class ResponseStatus extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**

@@ -2,22 +2,28 @@
 
 namespace Drupal\condition_test\Plugin\Condition;
 
+use Drupal\Core\Condition\Attribute\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a condition with an optional node context.
  *
  * The context type entity:node is used since that would allow to also use this
  * for web tests with the node route context.
- *
- * @Condition(
- *   id = "condition_test_optional_context",
- *   label = @Translation("Optional context"),
- *   context_definitions = {
- *     "node" = @ContextDefinition("entity:node", label = @Translation("Node"), required = FALSE),
- *   }
- * )
  */
+#[Condition(
+  id: "condition_test_optional_context",
+  label: new TranslatableMarkup("Optional context"),
+  context_definitions: [
+    "node" => new EntityContextDefinition(
+      data_type: "entity:node",
+      label: new TranslatableMarkup("Node"),
+      required: FALSE,
+    ),
+  ]
+)]
 class OptionalContextCondition extends ConditionPluginBase {
 
   /**

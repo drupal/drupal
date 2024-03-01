@@ -3,22 +3,27 @@
 namespace Drupal\user\Plugin\Condition;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Condition\Attribute\Condition;
 use Drupal\Core\Condition\ConditionPluginBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
  * Provides a 'User Role' condition.
- *
- * @Condition(
- *   id = "user_role",
- *   label = @Translation("User Role"),
- *   context_definitions = {
- *     "user" = @ContextDefinition("entity:user", label = @Translation("User"))
- *   }
- * )
  */
+#[Condition(
+  id: "user_role",
+  label: new TranslatableMarkup("User Role"),
+  context_definitions: [
+    "user" => new EntityContextDefinition(
+      data_type: "entity:user",
+      label: new TranslatableMarkup("User"),
+    ),
+  ],
+)]
 class UserRole extends ConditionPluginBase {
 
   /**
