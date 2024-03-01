@@ -343,27 +343,27 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
       return;
     }
 
-    $this->io->writeError(sprintf('%sCleaning directories in <comment>%s</comment>', str_repeat(' ', 4), $package_name), TRUE, IOInterface::VERY_VERBOSE);
+    $this->io->writeError(sprintf('%sCleaning paths in <comment>%s</comment>', str_repeat(' ', 4), $package_name), TRUE, IOInterface::VERY_VERBOSE);
     $fs = new Filesystem();
     foreach ($paths_for_package as $cleanup_item) {
       $cleanup_path = $package_dir . '/' . $cleanup_item;
-      if (!is_dir($cleanup_path)) {
+      if (!file_exists($cleanup_path)) {
         // If the package has changed or the --prefer-dist version does not
         // include the directory. This is not an error.
-        $this->io->writeError(sprintf("%s<comment>Directory '%s' does not exist.</comment>", str_repeat(' ', 6), $cleanup_path), TRUE, IOInterface::VERY_VERBOSE);
+        $this->io->writeError(sprintf("%s<comment>Path '%s' does not exist.</comment>", str_repeat(' ', 6), $cleanup_path), TRUE, IOInterface::VERY_VERBOSE);
         continue;
       }
 
-      if (!$fs->removeDirectory($cleanup_path)) {
+      if (!$fs->remove($cleanup_path)) {
         // Always display a message if this fails as it means something
         // has gone wrong. Therefore the message has to include the
         // package name as the first informational message might not
         // exist.
-        $this->io->writeError(sprintf("%s<error>Failure removing directory '%s'</error> in package <comment>%s</comment>.", str_repeat(' ', 6), $cleanup_item, $package_name), TRUE, IOInterface::NORMAL);
+        $this->io->writeError(sprintf("%s<error>Failure removing path '%s'</error> in package <comment>%s</comment>.", str_repeat(' ', 6), $cleanup_item, $package_name), TRUE, IOInterface::NORMAL);
         continue;
       }
 
-      $this->io->writeError(sprintf("%sRemoving directory <info>'%s'</info>", str_repeat(' ', 4), $cleanup_item), TRUE, IOInterface::VERBOSE);
+      $this->io->writeError(sprintf("%sRemoving path <info>'%s'</info>", str_repeat(' ', 4), $cleanup_item), TRUE, IOInterface::VERBOSE);
     }
   }
 
