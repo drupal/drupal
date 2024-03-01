@@ -89,61 +89,6 @@ parameters:
 			path: lib/Drupal/Component/Diff/DiffFormatter.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$in_seq\\.$#"
-			count: 3
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$lcs\\.$#"
-			count: 4
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$seq\\.$#"
-			count: 7
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$xchanged\\.$#"
-			count: 6
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$xind\\.$#"
-			count: 2
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$xv\\.$#"
-			count: 5
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$ychanged\\.$#"
-			count: 5
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$yind\\.$#"
-			count: 2
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$yv\\.$#"
-			count: 5
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Variable \\$k might not be defined\\.$#"
-			count: 4
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
-			message: "#^Variable \\$seps might not be defined\\.$#"
-			count: 3
-			path: lib/Drupal/Component/Diff/Engine/DiffEngine.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\Component\\\\FileCache\\\\NullFileCache has an unused parameter \\$cache_backend_class\\.$#"
 			count: 1
 			path: lib/Drupal/Component/FileCache/NullFileCache.php
@@ -389,24 +334,6 @@ parameters:
 			"""
 			count: 1
 			path: lib/Drupal/Core/DependencyInjection/ContainerBuilder.php
-
-		-
-			message: """
-				#^Call to deprecated method closing\\(\\) of class Drupal\\\\Component\\\\Diff\\\\WordLevelDiff\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Diff/DiffFormatter.php
-
-		-
-			message: """
-				#^Call to deprecated method orig\\(\\) of class Drupal\\\\Component\\\\Diff\\\\WordLevelDiff\\:
-				in drupal\\:10\\.1\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-				  replacement\\.$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Diff/DiffFormatter.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\DrupalKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#"
