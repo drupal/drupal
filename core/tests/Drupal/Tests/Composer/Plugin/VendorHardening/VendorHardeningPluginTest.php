@@ -35,6 +35,7 @@ class VendorHardeningPluginTest extends TestCase {
           'tests' => [
             'SomeTest.php' => '<?php',
           ],
+          'SomeFile.php' => '<?php',
         ],
       ],
     ]);
@@ -92,14 +93,16 @@ class VendorHardeningPluginTest extends TestCase {
     $ref_io->setValue($plugin, $io->reveal());
 
     $this->assertFileExists(vfsStream::url('vendor/drupal/package/tests/SomeTest.php'));
+    $this->assertFileExists(vfsStream::url('vendor/drupal/package/SomeFile.php'));
 
     $package = $this->prophesize(PackageInterface::class);
     $package->getName()->willReturn('drupal/package');
 
     $ref_clean = new \ReflectionMethod($plugin, 'cleanPathsForPackage');
-    $ref_clean->invokeArgs($plugin, [$package->reveal(), ['tests']]);
+    $ref_clean->invokeArgs($plugin, [$package->reveal(), ['tests', 'SomeFile.php']]);
 
     $this->assertFileDoesNotExist(vfsStream::url('vendor/drupal/package/tests'));
+    $this->assertFileDoesNotExist(vfsStream::url('vendor/drupal/package/SomeFile.php'));
   }
 
   /**
