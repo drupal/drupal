@@ -18,6 +18,7 @@ use Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollectio
 use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\Random;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\ConfigEntityBase
@@ -354,23 +355,23 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $instance = new TestConfigurablePlugin([], $instance_id, []);
 
     $plugin_manager = $this->prophesize(PluginManagerInterface::class);
-    $plugin_manager->createInstance($instance_id, ['id' => $instance_id])->willReturn($instance);
+    $plugin_manager->createInstance($instance_id, Argument::any())->willReturn($instance);
 
     // Also set up a container with the plugin manager so that we can assert
     // that the plugin manager itself is also not serialized.
     $container = TestKernel::setContainerWithKernel();
     $container->set('plugin.manager.foo', $plugin_manager->reveal());
 
-    $entity_values = ['the_plugin_collection_config' => [$instance_id => ['foo' => 'original_value']]];
+    $entity_values = ['the_plugin_collection_config' => [$instance_id => ['id' => $instance_id, 'foo' => 'original_value']]];
     $entity = new TestConfigEntityWithPluginCollections($entity_values, $this->entityTypeId);
     $entity->setPluginManager($plugin_manager->reveal());
 
     // After creating the entity, change the plugin configuration.
-    $instance->setConfiguration(['foo' => 'new_value']);
+    $instance->setConfiguration(['id' => $instance_id, 'foo' => 'new_value']);
 
     // After changing the plugin configuration, the entity still has the
     // original value.
-    $expected_plugin_config = [$instance_id => ['foo' => 'original_value']];
+    $expected_plugin_config = [$instance_id => ['id' => $instance_id, 'foo' => 'original_value']];
     $this->assertSame($expected_plugin_config, $entity->get('the_plugin_collection_config'));
 
     // Ensure the plugin collection and manager is not stored.
@@ -379,7 +380,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->assertNotContains('pluginManager', $vars);
     $this->assertSame(['pluginManager' => 'plugin.manager.foo'], $entity->get('_serviceIds'));
 
-    $expected_plugin_config = [$instance_id => ['foo' => 'new_value']];
+    $expected_plugin_config = [$instance_id => ['id' => $instance_id, 'foo' => 'new_value']];
     // Ensure the updated values are stored in the entity.
     $this->assertSame($expected_plugin_config, $entity->get('the_plugin_collection_config'));
   }
@@ -636,6 +637,85 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->entity->toArray();
   }
 
+  /**
+   * @covers ::set
+   * @dataProvider providerTestSetAndPreSaveWithPluginCollections
+   */
+  public function testSetWithPluginCollections(bool $syncing, string $expected_value) {
+    $instance_id = 'the_instance_id';
+    $instance = new TestConfigurablePlugin(['foo' => 'original_value'], $instance_id, []);
+
+    $plugin_manager = $this->prophesize(PluginManagerInterface::class);
+    if ($syncing) {
+      $plugin_manager->createInstance(Argument::cetera())->shouldNotBeCalled();
+    }
+    else {
+      $plugin_manager->createInstance($instance_id, Argument::any())->willReturn($instance);
+    }
+
+    $entity_values = ['the_plugin_collection_config' => [$instance_id => ['id' => $instance_id, 'foo' => 'original_value']]];
+    $entity = new TestConfigEntityWithPluginCollections($entity_values, $this->entityTypeId);
+    $entity->setSyncing($syncing);
+    $entity->setPluginManager($plugin_manager->reveal());
+
+    // After creating the entity, change the configuration using the entity.
+    $entity->set('the_plugin_collection_config', [$instance_id => ['id' => $instance_id, 'foo' => 'new_value']]);
+
+    $this->assertSame($expected_value, $instance->getConfiguration()['foo']);
+  }
+
+  /**
+   * @covers ::preSave
+   * @dataProvider providerTestSetAndPreSaveWithPluginCollections
+   */
+  public function testPreSaveWithPluginCollections(bool $syncing, string $expected_value) {
+    $instance_id = 'the_instance_id';
+    $instance = new TestConfigurablePlugin(['foo' => 'original_value'], $instance_id, ['provider' => 'core']);
+
+    $plugin_manager = $this->prophesize(PluginManagerInterface::class);
+    if ($syncing) {
+      $plugin_manager->createInstance(Argument::cetera())->shouldNotBeCalled();
+    }
+    else {
+      $plugin_manager->createInstance($instance_id, Argument::any())->willReturn($instance);
+    }
+
+    $entity_values = ['the_plugin_collection_config' => [$instance_id => ['id' => $instance_id, 'foo' => 'original_value']]];
+    $entity = new TestConfigEntityWithPluginCollections($entity_values, $this->entityTypeId);
+    $entity->setSyncing($syncing);
+    $entity->setPluginManager($plugin_manager->reveal());
+
+    // After creating the entity, change the plugin configuration.
+    $instance->setConfiguration(['foo' => 'new_value']);
+
+    $query = $this->createMock('\Drupal\Core\Entity\Query\QueryInterface');
+    $storage = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');
+
+    $query->expects($this->any())
+      ->method('execute')
+      ->willReturn([]);
+    $query->expects($this->any())
+      ->method('condition')
+      ->willReturn($query);
+    $storage->expects($this->any())
+      ->method('getQuery')
+      ->willReturn($query);
+    $storage->expects($this->any())
+      ->method('loadUnchanged')
+      ->willReturn($entity);
+
+    $entity->preSave($storage);
+
+    $this->assertSame($expected_value, $entity->get('the_plugin_collection_config')[$instance_id]['foo']);
+  }
+
+  public function providerTestSetAndPreSaveWithPluginCollections(): array {
+    return [
+      'Not syncing' => [FALSE, 'new_value'],
+      'Syncing' => [TRUE, 'original_value'],
+    ];
+  }
+
 }
 
 class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCollections {
@@ -644,7 +724,7 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
 
   protected $pluginManager;
 
-  protected $the_plugin_collection_config;
+  protected array $the_plugin_collection_config = [];
 
   public function setPluginManager(PluginManagerInterface $plugin_manager) {
     $this->pluginManager = $plugin_manager;
@@ -655,7 +735,7 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
    */
   public function getPluginCollections() {
     if (!$this->pluginCollection) {
-      $this->pluginCollection = new DefaultLazyPluginCollection($this->pluginManager, ['the_instance_id' => ['id' => 'the_instance_id']]);
+      $this->pluginCollection = new DefaultLazyPluginCollection($this->pluginManager, $this->the_plugin_collection_config);
     }
     return ['the_plugin_collection_config' => $this->pluginCollection];
   }

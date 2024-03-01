@@ -1,0 +1,6 @@
+name: CKEditor Test
+type: module
+description: "Provides test a test editor that with the ID ckeditor."
+package: Testing
+dependencies:
+  - drupal:editor_test

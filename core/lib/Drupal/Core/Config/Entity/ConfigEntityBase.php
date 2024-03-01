@@ -158,7 +158,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * {@inheritdoc}
    */
   public function set($property_name, $value) {
-    if ($this instanceof EntityWithPluginCollectionInterface) {
+    if ($this instanceof EntityWithPluginCollectionInterface && !$this->isSyncing()) {
       $plugin_collections = $this->getPluginCollections();
       if (isset($plugin_collections[$property_name])) {
         // If external code updates the settings, pass it along to the plugin.
@@ -288,7 +288,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage */
     parent::preSave($storage);
 
-    if ($this instanceof EntityWithPluginCollectionInterface) {
+    if ($this instanceof EntityWithPluginCollectionInterface && !$this->isSyncing()) {
       // Any changes to the plugin configuration must be saved to the entity's
       // copy as well.
       foreach ($this->getPluginCollections() as $plugin_config_key => $plugin_collection) {
