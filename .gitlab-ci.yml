@@ -146,14 +146,30 @@ default:
     _TARGET_DB: "mysql-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OTEL_COLLECTOR: $OTEL_COLLECTOR
-  # Run on MR, schedule, push and performance test.
+  # Run on MR, schedule, push, parent pipeline and performance test.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
       allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
       allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
     - if: $PERFORMANCE_TEST == "1"
+
+# Re-run the pipeline, but with Composer updates.
+'DEFAULT: Updated dependencies (PHP 8.2 MySQL 8)':
+  <<: *default-stage
+  # Run daily and allow manual runs on MRs.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+      allow_failure: true
+  variables:
+    COMPOSER_UPDATE: "1"
+  trigger:
+    include: .gitlab-ci.yml
 
 # Special job for MRs for test-only checks.
 'DEFAULT: Test-only (PHP 8.2 MySQL 8)':
@@ -322,6 +338,10 @@ default:
   script:
       - composer validate
       - composer install
+      - if [ -n "$COMPOSER_UPDATE" ]; then
+          composer update;
+          composer outdated;
+        fi
 
 '📦️ Yarn':
   variables:
@@ -352,6 +372,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
+    - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
     - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json || EXIT_CODE=$?
@@ -381,6 +402,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
+    - vendor/bin/phpcs --version
     - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     reports:
