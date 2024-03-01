@@ -508,7 +508,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->assertSaveLayout();
     $node_1_block_id = $this->getLatestBlockEntityId();
 
-    $this->drupalGet("block/$node_1_block_id");
+    $this->drupalGet("admin/content/block/$node_1_block_id");
     $assert_session->pageTextNotContains('You are not authorized to access this page');
 
     $this->drupalLogout();
@@ -516,13 +516,13 @@ class InlineBlockTest extends InlineBlockTestBase {
       'administer nodes',
     ]));
 
-    $this->drupalGet("block/$node_1_block_id");
+    $this->drupalGet("admin/content/block/$node_1_block_id");
     $assert_session->pageTextContains('You are not authorized to access this page');
 
     $this->drupalLogin($this->drupalCreateUser([
       'create and edit custom blocks',
     ]));
-    $this->drupalGet("block/$node_1_block_id");
+    $this->drupalGet("admin/content/block/$node_1_block_id");
     $assert_session->pageTextNotContains('You are not authorized to access this page');
   }
 
