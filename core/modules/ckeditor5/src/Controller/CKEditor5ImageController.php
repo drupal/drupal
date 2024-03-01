@@ -175,7 +175,9 @@ class CKEditor5ImageController extends ControllerBase {
    * Gets the image upload validators.
    */
   protected function getImageUploadValidators(array $settings): array {
-    $max_filesize = min(Bytes::toNumber($settings['max_size']), Environment::getUploadMaxSize());
+    $max_filesize = $settings['max_size']
+      ? Bytes::toNumber($settings['max_size'])
+      : Environment::getUploadMaxSize();
     $max_dimensions = 0;
     if (!empty($settings['max_dimensions']['width']) || !empty($settings['max_dimensions']['height'])) {
       $max_dimensions = $settings['max_dimensions']['width'] . 'x' . $settings['max_dimensions']['height'];

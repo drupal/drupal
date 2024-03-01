@@ -7,6 +7,11 @@ editor.editor.*:
     format:
       type: string
       label: 'Name'
+      constraints:
+        # @see \Drupal\editor\Entity\Editor::getFilterFormat()
+        # @see \Drupal\editor\Entity\Editor::calculateDependencies()
+        ConfigExists:
+          prefix: 'filter.format.'
     editor:
       type: string
       label: 'Text editor'
@@ -17,30 +22,71 @@ editor.editor.*:
     settings:
       type: editor.settings.[%parent.editor]
     image_upload:
+      type: editor.image_upload_settings.[status]
+  constraints:
+    FullyValidatable: ~
+
+editor.image_upload_settings.*:
+  type: mapping
+  label: 'Image uploads'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    status:
+      type: boolean
+      label: 'Status'
+
+editor.image_upload_settings.1:
+  type: editor.image_upload_settings.*
+  label: 'Image upload settings'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    scheme:
+      type: string
+      label: 'File storage'
+      constraints:
+        Choice:
+          callback: \Drupal\editor\Entity\Editor::getValidStreamWrappers
+          message: 'The file storage you selected is not a visible, readable and writable stream wrapper. Possible choices: %choices.'
+    directory:
+      type: string
+      label: 'Upload directory'
+      nullable: true
+      constraints:
+        # `""` is not allowed, but `null` is.
+        NotBlank:
+          allowNull: true
+        Regex:
+          # Forbid any kind of control character.
+          # @see https://stackoverflow.com/a/66587087
+          pattern: '/([^\PC])/u'
+          match: false
+          message: 'The image upload directory is not allowed to span multiple lines or contain control characters.'
+    max_size:
+      # @see \Drupal\file\Plugin\Validation\Constraint\FileSizeLimitConstraintValidator
+      type: bytes
+      label: 'Maximum file size'
+      nullable: true
+    max_dimensions:
       type: mapping
-      label: 'Image upload settings'
+      label: 'Maximum dimensions'
       mapping:
-        status:
-          type: boolean
-          label: 'Status'
-        scheme:
-          type: string
-          label: 'File storage'
-        directory:
-          type: string
-          label: 'Upload directory'
-        max_size:
-          type: string
-          label: 'Maximum file size'
-        max_dimensions:
-          type: mapping
-          label: 'Maximum dimensions'
-          mapping:
-            width:
-              type: integer
-              nullable: true
-              label: 'Maximum width'
-            height:
-              type: integer
-              nullable: true
-              label: 'Maximum height'
+        width:
+          type: integer
+          nullable: true
+          label: 'Maximum width'
+          constraints:
+            Range:
+              # @see editor_image_upload_settings_form()
+              min: 1
+              max: 99999
+        height:
+          type: integer
+          nullable: true
+          label: 'Maximum height'
+          constraints:
+            Range:
+              # @see editor_image_upload_settings_form()
+              min: 1
+              max: 99999
