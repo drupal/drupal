@@ -109,7 +109,7 @@ class SubProcessWithSkipTest extends KernelTestBase {
    *
    * @return array
    */
-  public function providerTestSubProcessSkip(): array {
+  public static function providerTestSubProcessSkip(): array {
     return [
       'skip row' => [
         'method' => 'row',
