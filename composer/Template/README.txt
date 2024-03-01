@@ -63,4 +63,4 @@ These template projects use drupal/core-composer-scaffold to place the scaffold
 files. This plugin allows the top-level composer.json file for a Drupal site to
 transform the scaffold files in different ways, e.g. to append new entries to
 the end of robots.txt and so on. For documentation on how scaffolding works, see
-https://git.drupalcode.org/project/drupal/tree/8.8.x/composer/Plugin/Scaffold
+https://www.drupal.org/docs/develop/using-composer/using-drupals-composer-scaffold
