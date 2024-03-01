@@ -2,17 +2,36 @@
 
 namespace Drupal\KernelTests\Core\Config;
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Component\Plugin\PluginBase;
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Core\Block\Plugin\Block\Broken;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Logger\RfcLoggerTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * Tests importing configuration which has missing content dependencies.
  *
  * @group config
  */
-class ConfigImporterMissingContentTest extends KernelTestBase {
+class ConfigImporterMissingContentTest extends KernelTestBase implements LoggerInterface {
+  use BlockCreationTrait;
+  use RfcLoggerTrait;
+
+  /**
+   * The logged messages.
+   *
+   * @var string[]
+   */
+  protected $logMessages = [];
 
   /**
    * Config Importer object used for testing.
@@ -33,6 +52,15 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
     'config_test',
     'config_import_test',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+    $container->register('logger.ConfigImporterMissingContentTest', __CLASS__)->addTag('logger');
+    $container->set('logger.ConfigImporterMissingContentTest', $this);
+  }
 
   /**
    * {@inheritdoc}
@@ -105,6 +133,66 @@ class ConfigImporterMissingContentTest extends KernelTestBase {
     $this->assertEquals($entity_two->uuid(), \Drupal::state()->get('config_import_test.config_import_missing_content_two'), 'The missing content event is fired during configuration import.');
     $original_dynamic_data = $storage->read($dynamic_name);
     $this->assertEquals([$entity_one->getConfigDependencyName(), $entity_two->getConfigDependencyName(), $entity_three->getConfigDependencyName()], $original_dynamic_data['dependencies']['content'], 'The imported configuration entity has the missing content entity dependency.');
+  }
+
+  /**
+   * Tests the missing content, config import and the block plugin manager.
+   *
+   * @see \Drupal\Core\Config\ConfigImporter::processMissingContent()
+   * @see \Drupal\config_import_test\EventSubscriber
+   */
+  public function testMissingBlockContent() {
+    $this->enableModules([
+      'block',
+      'block_content',
+    ]);
+    $this->container->get('theme_installer')->install(['stark']);
+    $this->installEntitySchema('block_content');
+    // Create a block content type.
+    $block_content_type = BlockContentType::create([
+      'id' => 'test',
+      'label' => 'Test block content',
+      'description' => "Provides a block type",
+    ]);
+    $block_content_type->save();
+    // And a block content entity.
+    $block_content = BlockContent::create([
+      'info' => 'Prototype',
+      'type' => 'test',
+      // Set the UUID to make asserting against missing test easy.
+      'uuid' => '6376f337-fcbf-4b28-b30e-ed5b6932e692',
+    ]);
+    $block_content->save();
+    $plugin_id = 'block_content' . PluginBase::DERIVATIVE_SEPARATOR . $block_content->uuid();
+    $block = $this->placeBlock($plugin_id);
+
+    $storage = $this->container->get('config.storage');
+    $sync = $this->container->get('config.storage.sync');
+
+    $this->copyConfig($storage, $sync);
+
+    $block->delete();
+    $block_content->delete();
+    $block_content_type->delete();
+
+    // Import.
+    $this->logMessages = [];
+    $config_importer = $this->configImporter();
+    $config_importer->import();
+    $this->assertNotContains('The "block_content:6376f337-fcbf-4b28-b30e-ed5b6932e692" was not found', $this->logMessages);
+
+    // Ensure the expected message is generated when creating an instance of the
+    // block.
+    $instance = $this->container->get('plugin.manager.block')->createInstance($plugin_id);
+    $this->assertContains('The "block_content:6376f337-fcbf-4b28-b30e-ed5b6932e692" was not found', $this->logMessages);
+    $this->assertInstanceOf(Broken::class, $instance);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function log($level, $message, array $context = []): void {
+    $this->logMessages[] = PlainTextOutput::renderFromHtml(new FormattableMarkup($message, $context));
   }
 
 }
