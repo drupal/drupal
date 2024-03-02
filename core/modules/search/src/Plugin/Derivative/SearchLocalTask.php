@@ -44,13 +44,13 @@ class SearchLocalTask extends DeriverBase implements ContainerDeriverInterface {
   public function getDerivativeDefinitions($base_plugin_definition) {
     $this->derivatives = [];
 
-    if ($default = $this->searchPageRepository->getDefaultSearchPage()) {
+    if ($this->searchPageRepository->getDefaultSearchPage()) {
       $active_search_pages = $this->searchPageRepository->getActiveSearchPages();
       foreach ($this->searchPageRepository->sortSearchPages($active_search_pages) as $entity_id => $entity) {
         $this->derivatives[$entity_id] = [
           'title' => $entity->label(),
           'route_name' => 'search.view_' . $entity_id,
-          'base_route' => 'search.plugins:' . $default,
+          'base_route' => 'search.view',
           'weight' => $entity->getWeight(),
         ];
       }
