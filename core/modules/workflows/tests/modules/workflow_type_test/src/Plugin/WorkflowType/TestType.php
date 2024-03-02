@@ -2,16 +2,17 @@
 
 namespace Drupal\workflow_type_test\Plugin\WorkflowType;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\workflows\Attribute\WorkflowType;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
 
 /**
  * Test workflow type.
- *
- * @WorkflowType(
- *   id = "workflow_type_test",
- *   label = @Translation("Workflow Type Test"),
- * )
  */
+#[WorkflowType(
+  id: 'workflow_type_test',
+  label: new TranslatableMarkup('Workflow Type Test')
+)]
 class TestType extends WorkflowTypeBase {
 
   /**
