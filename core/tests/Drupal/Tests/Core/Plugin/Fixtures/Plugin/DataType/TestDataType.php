@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Plugin\Fixtures\Plugin\DataType;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\TypedData;
 
 /**
  * Provides a test data type.
- *
- * @DataType(
- *   id = "test_data_type",
- *   label = @Translation("Test data type"),
- *   deriver = "Drupal\Tests\Core\Plugin\Fixtures\Plugin\DataType\TestDataTypeDeriver"
- * )
  */
+#[DataType(
+  id: "test_data_type",
+  label: new TranslatableMarkup("Test data type"),
+  deriver: TestDataTypeDeriver::class,
+)]
 class TestDataType extends TypedData {
 
   /**

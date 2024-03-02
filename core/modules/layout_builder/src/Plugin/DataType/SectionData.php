@@ -2,21 +2,22 @@
 
 namespace Drupal\layout_builder\Plugin\DataType;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\TypedData;
 use Drupal\layout_builder\Section;
 
 /**
  * Provides a data type wrapping \Drupal\layout_builder\Section.
  *
- * @DataType(
- *   id = "layout_section",
- *   label = @Translation("Layout Section"),
- *   description = @Translation("A layout section"),
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[DataType(
+  id: "layout_section",
+  label: new TranslatableMarkup("Layout Section"),
+  description: new TranslatableMarkup("A layout section"),
+)]
 class SectionData extends TypedData {
 
   /**

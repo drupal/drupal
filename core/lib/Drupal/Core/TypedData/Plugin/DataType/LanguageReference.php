@@ -3,7 +3,10 @@
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\DataReferenceBase;
+use Drupal\Core\TypedData\DataReferenceDefinition;
 
 /**
  * Defines the 'language_reference' data type.
@@ -14,13 +17,12 @@ use Drupal\Core\TypedData\DataReferenceBase;
  * The plain value is the language object, i.e. an instance of
  * \Drupal\Core\Language\Language. For setting the value the language object or
  * the language code as string may be passed.
- *
- * @DataType(
- *   id = "language_reference",
- *   label = @Translation("Language reference"),
- *   definition_class = "\Drupal\Core\TypedData\DataReferenceDefinition"
- * )
  */
+#[DataType(
+  id: "language_reference",
+  label: new TranslatableMarkup("Language reference"),
+  definition_class: DataReferenceDefinition::class,
+)]
 class LanguageReference extends DataReferenceBase {
 
   /**

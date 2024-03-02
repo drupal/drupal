@@ -2,8 +2,11 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
-use Drupal\Core\TypedData\TypedData;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\TypedData\TypedData;
 
 /**
  * The "map" data type.
@@ -17,13 +20,12 @@ use Drupal\Core\TypedData\ComplexDataInterface;
  * it.
  *
  * @ingroup typed_data
- *
- * @DataType(
- *   id = "map",
- *   label = @Translation("Map"),
- *   definition_class = "\Drupal\Core\TypedData\MapDataDefinition"
- * )
  */
+#[DataType(
+  id: "map",
+  label: new TranslatableMarkup("Map"),
+  definition_class: MapDataDefinition::class,
+)]
 class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface {
 
   /**
