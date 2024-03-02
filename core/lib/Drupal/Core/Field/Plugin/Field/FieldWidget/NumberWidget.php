@@ -2,25 +2,26 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'number' widget.
- *
- * @FieldWidget(
- *   id = "number",
- *   label = @Translation("Number field"),
- *   field_types = {
- *     "integer",
- *     "decimal",
- *     "float"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'number',
+  label: new TranslatableMarkup('Number field'),
+  field_types: [
+    'integer',
+    'decimal',
+    'float',
+  ],
+)]
 class NumberWidget extends WidgetBase {
 
   /**

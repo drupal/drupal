@@ -2,21 +2,20 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'string_textfield' widget.
- *
- * @FieldWidget(
- *   id = "string_textfield",
- *   label = @Translation("Textfield"),
- *   field_types = {
- *     "string"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'string_textfield',
+  label: new TranslatableMarkup('Textfield'),
+  field_types: ['string'],
+)]
 class StringTextfieldWidget extends WidgetBase {
 
   /**

@@ -3,6 +3,7 @@
 namespace Drupal\file\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -18,15 +19,12 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Plugin implementation of the 'file_generic' widget.
- *
- * @FieldWidget(
- *   id = "file_generic",
- *   label = @Translation("File"),
- *   field_types = {
- *     "file"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'file_generic',
+  label: new TranslatableMarkup('File'),
+  field_types: ['file'],
+)]
 class FileWidget extends WidgetBase {
 
   /**

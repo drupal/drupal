@@ -2,21 +2,20 @@
 
 namespace Drupal\datetime_range\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 
 /**
  * Plugin implementation of the 'daterange_datelist' widget.
- *
- * @FieldWidget(
- *   id = "daterange_datelist",
- *   label = @Translation("Select list"),
- *   field_types = {
- *     "daterange"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'daterange_datelist',
+  label: new TranslatableMarkup('Select list'),
+  field_types: ['daterange'],
+)]
 class DateRangeDatelistWidget extends DateRangeWidgetBase {
 
   /**

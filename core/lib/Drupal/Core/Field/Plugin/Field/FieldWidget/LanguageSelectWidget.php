@@ -2,22 +2,21 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'Language' widget.
- *
- * @FieldWidget(
- *   id = "language_select",
- *   label = @Translation("Language select"),
- *   field_types = {
- *     "language"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'language_select',
+  label: new TranslatableMarkup('Language select'),
+  field_types: ['language'],
+)]
 class LanguageSelectWidget extends WidgetBase {
 
   /**

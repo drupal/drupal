@@ -2,22 +2,21 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'boolean_checkbox' widget.
- *
- * @FieldWidget(
- *   id = "boolean_checkbox",
- *   label = @Translation("Single on/off checkbox"),
- *   field_types = {
- *     "boolean"
- *   },
- *   multiple_values = TRUE
- * )
  */
+#[FieldWidget(
+  id: 'boolean_checkbox',
+  label: new TranslatableMarkup('Single on/off checkbox'),
+  field_types: ['boolean'],
+  multiple_values: TRUE,
+)]
 class BooleanCheckboxWidget extends WidgetBase {
 
   /**

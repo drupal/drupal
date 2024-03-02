@@ -2,6 +2,7 @@
 
 namespace Drupal\image\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Image\ImageFactory;
@@ -14,15 +15,12 @@ use Drupal\image\Entity\ImageStyle;
 
 /**
  * Plugin implementation of the 'image_image' widget.
- *
- * @FieldWidget(
- *   id = "image_image",
- *   label = @Translation("Image"),
- *   field_types = {
- *     "image"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'image_image',
+  label: new TranslatableMarkup('Image'),
+  field_types: ['image'],
+)]
 class ImageWidget extends FileWidget {
 
   /**

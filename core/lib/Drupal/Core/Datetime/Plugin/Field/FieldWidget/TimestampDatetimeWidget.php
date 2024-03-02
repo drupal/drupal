@@ -3,22 +3,23 @@
 namespace Drupal\Core\Datetime\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'datetime timestamp' widget.
- *
- * @FieldWidget(
- *   id = "datetime_timestamp",
- *   label = @Translation("Datetime Timestamp"),
- *   field_types = {
- *     "timestamp",
- *     "created",
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'datetime_timestamp',
+  label: new TranslatableMarkup('Datetime Timestamp'),
+  field_types: [
+    'timestamp',
+    'created',
+  ],
+)]
 class TimestampDatetimeWidget extends WidgetBase {
 
   /**

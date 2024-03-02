@@ -2,26 +2,25 @@
 
 namespace Drupal\layout_builder\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * A widget to display the layout form.
  *
- * @FieldWidget(
- *   id = "layout_builder_widget",
- *   label = @Translation("Layout Builder Widget"),
- *   description = @Translation("A field widget for Layout Builder."),
- *   field_types = {
- *     "layout_section",
- *   },
- *   multiple_values = TRUE,
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[FieldWidget(
+  id: 'layout_builder_widget',
+  label: new TranslatableMarkup('Layout Builder Widget'),
+  description: new TranslatableMarkup('A field widget for Layout Builder.'),
+  field_types: ['layout_section'],
+  multiple_values: TRUE,
+)]
 class LayoutBuilderWidget extends WidgetBase {
 
   /**

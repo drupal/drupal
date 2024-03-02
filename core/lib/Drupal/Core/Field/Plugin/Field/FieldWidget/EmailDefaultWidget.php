@@ -2,22 +2,21 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Email;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'email_default' widget.
- *
- * @FieldWidget(
- *   id = "email_default",
- *   label = @Translation("Email"),
- *   field_types = {
- *     "email"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'email_default',
+  label: new TranslatableMarkup('Email'),
+  field_types: ['email'],
+)]
 class EmailDefaultWidget extends WidgetBase {
 
   /**

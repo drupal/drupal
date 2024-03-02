@@ -4,6 +4,7 @@ namespace Drupal\content_moderation\Plugin\Field\FieldWidget;
 
 use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\OptionsSelectWidget;
@@ -11,19 +12,17 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\content_moderation\ModerationInformation;
 use Drupal\content_moderation\StateTransitionValidationInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'moderation_state_default' widget.
- *
- * @FieldWidget(
- *   id = "moderation_state_default",
- *   label = @Translation("Moderation state"),
- *   field_types = {
- *     "string"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'moderation_state_default',
+  label: new TranslatableMarkup('Moderation state'),
+  field_types: ['string'],
+)]
 class ModerationStateWidget extends OptionsSelectWidget {
 
   /**
