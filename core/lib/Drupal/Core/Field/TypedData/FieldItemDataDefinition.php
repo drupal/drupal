@@ -87,4 +87,19 @@ class FieldItemDataDefinition extends DataDefinition implements FieldItemDataDef
     return $this;
   }
 
+  /**
+   * Gets the label of the field type.
+   *
+   * If the label hasn't been set, then fall back to the label of the
+   * typed data definition.
+   *
+   * @return string
+   *   The label of the field type.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getLabel() {
+    return parent::getLabel() ?: $this->getTypedDataManager()->getDefinition($this->getDataType())['label'];
+  }
+
 }

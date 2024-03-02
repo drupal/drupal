@@ -99,4 +99,16 @@ class FieldItemTest extends EntityKernelTestBase {
     $this->assertEquals($expected_value, $entity->{$this->fieldName}->value);
   }
 
+  /**
+   * Tests \Drupal\Core\Field\TypedData\FieldItemDataDefinition::getLabel().
+   */
+  public function testGetLabel(): void {
+    $data_definition = \Drupal::service('typed_data_manager')->createDataDefinition('field_item:string');
+    $this->assertEquals('Text (plain)', $data_definition->getLabel());
+
+    $label = 'Foo bar';
+    $data_definition->setLabel($label);
+    $this->assertEquals($label, $data_definition->getLabel());
+  }
+
 }
