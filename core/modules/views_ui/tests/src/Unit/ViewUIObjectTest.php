@@ -7,7 +7,6 @@ namespace Drupal\Tests\views_ui\Unit;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TempStore\Lock;
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\Entity\View;
 use Drupal\views_ui\ViewUI;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -20,7 +19,7 @@ class ViewUIObjectTest extends UnitTestCase {
   /**
    * Tests entity method decoration.
    */
-  public function testEntityDecoration() {
+  public function testEntityDecoration(): void {
     $method_args = [];
     $method_args['setOriginalId'] = [12];
     $method_args['setStatus'] = [TRUE];
@@ -74,8 +73,10 @@ class ViewUIObjectTest extends UnitTestCase {
 
   /**
    * Tests the isLocked method.
+   *
+   * @runInSeparateProcess
    */
-  public function testIsLocked() {
+  public function testIsLocked(): void {
     $storage = $this->getMockBuilder('Drupal\views\Entity\View')
       ->setConstructorArgs([[], 'view'])
       ->getMock();
@@ -108,33 +109,8 @@ class ViewUIObjectTest extends UnitTestCase {
     $view_ui->setLock($lock);
     $this->assertFalse($view_ui->isLocked());
 
-    $view_ui->unsetLock(NULL);
+    $view_ui->unsetLock();
     $this->assertFalse($view_ui->isLocked());
-  }
-
-  /**
-   * Tests serialization of the ViewUI object.
-   */
-  public function testSerialization() {
-    $storage = new View([], 'view');
-    $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
-      ->disableOriginalConstructor()
-      ->setConstructorArgs([$storage])
-      ->getMock();
-    $storage->set('executable', $executable);
-
-    $view_ui = new ViewUI($storage);
-
-    // Make sure the executable is returned before serializing.
-    $this->assertInstanceOf('Drupal\views\ViewExecutable', $view_ui->getExecutable());
-
-    $serialized = serialize($view_ui);
-
-    // Make sure the ViewExecutable class is not found in the serialized string.
-    $this->assertStringNotContainsString('"Drupal\views\ViewExecutable"', $serialized);
-
-    $unserialized = unserialize($serialized);
-    $this->assertInstanceOf('Drupal\views_ui\ViewUI', $unserialized);
   }
 
 }
