@@ -31,14 +31,6 @@ field.formatter.settings.daterange_default:
   type: field.formatter.settings.datetime_default
   label: 'Date range default display format settings'
   mapping:
-    from_to:
-      type: string
-      label: 'Display'
-      constraints:
-        Choice:
-          - both
-          - start_date
-          - end_date
     separator:
       type: label
       label: 'Separator'
@@ -48,14 +40,6 @@ field.formatter.settings.daterange_plain:
   type: field.formatter.settings.datetime_plain
   label: 'Date range plain display format settings'
   mapping:
-    from_to:
-      type: string
-      label: 'Display'
-      constraints:
-        Choice:
-          - both
-          - start_date
-          - end_date
     separator:
       type: label
       label: 'Separator'
@@ -65,14 +49,6 @@ field.formatter.settings.daterange_custom:
   type: field.formatter.settings.datetime_custom
   label: 'Date range custom display format settings'
   mapping:
-    from_to:
-      type: string
-      label: 'Display'
-      constraints:
-        Choice:
-          - both
-          - start_date
-          - end_date
     separator:
       type: label
       label: 'Separator'
