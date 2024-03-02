@@ -5,6 +5,7 @@ namespace Drupal\Core\Queue;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\Queue\Attribute\QueueWorker;
 
 /**
  * Defines the queue worker manager.
@@ -28,7 +29,7 @@ class QueueWorkerManager extends DefaultPluginManager implements QueueWorkerMana
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/QueueWorker', $namespaces, $module_handler, 'Drupal\Core\Queue\QueueWorkerInterface', 'Drupal\Core\Annotation\QueueWorker');
+    parent::__construct('Plugin/QueueWorker', $namespaces, $module_handler, 'Drupal\Core\Queue\QueueWorkerInterface', QueueWorker::class, 'Drupal\Core\Annotation\QueueWorker');
 
     $this->setCacheBackend($cache_backend, 'queue_plugins');
     $this->alterInfo('queue_info');

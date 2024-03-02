@@ -4,19 +4,20 @@ namespace Drupal\locale\Plugin\QueueWorker;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Queue\Attribute\QueueWorker;
 use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Executes interface translation queue tasks.
- *
- * @QueueWorker(
- *   id = "locale_translation",
- *   title = @Translation("Update translations"),
- *   cron = {"time" = 30}
- * )
  */
+#[QueueWorker(
+  id: 'locale_translation',
+  title: new TranslatableMarkup('Update translations'),
+  cron: ['time' => 30]
+)]
 class LocaleTranslation extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
   /**
