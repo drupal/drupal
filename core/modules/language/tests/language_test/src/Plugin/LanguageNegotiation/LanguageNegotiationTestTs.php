@@ -2,17 +2,19 @@
 
 namespace Drupal\language_test\Plugin\LanguageNegotiation;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\language\Attribute\LanguageNegotiation;
+
 /**
  * Class for identifying language from a selected language.
- *
- * @LanguageNegotiation(
- *   id = "test_language_negotiation_method_ts",
- *   weight = -10,
- *   name = @Translation("Type-specific test"),
- *   description = @Translation("This is a test language negotiation method."),
- *   types = {"test_language_type"}
- * )
  */
+#[LanguageNegotiation(
+  id: LanguageNegotiationTestTs::METHOD_ID,
+  name: new TranslatableMarkup('Type-specific test'),
+  types: ['test_language_type'],
+  weight: -10,
+  description: new TranslatableMarkup('This is a test language negotiation method.'),
+)]
 class LanguageNegotiationTestTs extends LanguageNegotiationTest {
 
   /**

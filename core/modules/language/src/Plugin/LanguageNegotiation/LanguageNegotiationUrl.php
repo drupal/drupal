@@ -6,25 +6,27 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\language\Attribute\LanguageNegotiation;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Drupal\language\LanguageSwitcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class for identifying language via URL prefix or domain.
- *
- * @LanguageNegotiation(
- *   id = \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::METHOD_ID,
- *   types = {\Drupal\Core\Language\LanguageInterface::TYPE_INTERFACE,
- *   \Drupal\Core\Language\LanguageInterface::TYPE_CONTENT,
- *   \Drupal\Core\Language\LanguageInterface::TYPE_URL},
- *   weight = -8,
- *   name = @Translation("URL"),
- *   description = @Translation("Language from the URL (Path prefix or domain)."),
- *   config_route_name = "language.negotiation_url"
- * )
  */
+#[LanguageNegotiation(
+  id: LanguageNegotiationUrl::METHOD_ID,
+  name: new TranslatableMarkup('URL'),
+  types: [LanguageInterface::TYPE_INTERFACE,
+    LanguageInterface::TYPE_CONTENT,
+    LanguageInterface::TYPE_URL,
+  ],
+  weight: -8,
+  description: new TranslatableMarkup("Language from the URL (Path prefix or domain)."),
+  config_route_name: 'language.negotiation_url'
+)]
 class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements InboundPathProcessorInterface, OutboundPathProcessorInterface, LanguageSwitcherInterface {
 
   /**

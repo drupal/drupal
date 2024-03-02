@@ -2,10 +2,13 @@
 
 namespace Drupal\user\Plugin\LanguageNegotiation;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\language\Attribute\LanguageNegotiation;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,15 +19,14 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 /**
  * Identifies admin language from the user preferences.
- *
- * @LanguageNegotiation(
- *   id = Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUserAdmin::METHOD_ID,
- *   types = {Drupal\Core\Language\LanguageInterface::TYPE_INTERFACE},
- *   weight = -10,
- *   name = @Translation("Account administration pages"),
- *   description = @Translation("Account administration pages language setting.")
- * )
  */
+#[LanguageNegotiation(
+  id: LanguageNegotiationUserAdmin::METHOD_ID,
+  name: new TranslatableMarkup('Account administration pages'),
+  types: [LanguageInterface::TYPE_INTERFACE],
+  weight: -10,
+  description: new TranslatableMarkup('Account administration pages language setting.')
+)]
 class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase implements ContainerFactoryPluginInterface {
 
   /**

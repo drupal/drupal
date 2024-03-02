@@ -4,21 +4,22 @@ namespace Drupal\language\Plugin\LanguageNegotiation;
 
 use Drupal\Component\Utility\UserAgent;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\language\Attribute\LanguageNegotiation;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class for identifying language from the browser Accept-language HTTP header.
- *
- * @LanguageNegotiation(
- *   id = \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser::METHOD_ID,
- *   weight = -2,
- *   name = @Translation("Browser"),
- *   description = @Translation("Language from the browser's language settings."),
- *   config_route_name = "language.negotiation_browser"
- * )
  */
+#[LanguageNegotiation(
+  id: LanguageNegotiationBrowser::METHOD_ID,
+  name: new TranslatableMarkup('Browser'),
+  weight: -2,
+  description: new TranslatableMarkup("Language from the browser's language settings."),
+  config_route_name: 'language.negotiation_browser'
+)]
 class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase implements ContainerFactoryPluginInterface {
 
   /**
