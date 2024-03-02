@@ -3,10 +3,12 @@
 namespace Drupal\media\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\image\ImageStyleStorageInterface;
 use Drupal\image\Plugin\Field\FieldFormatter\ImageFormatter;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
@@ -17,15 +19,14 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Plugin implementation of the 'media_thumbnail' formatter.
- *
- * @FieldFormatter(
- *   id = "media_thumbnail",
- *   label = @Translation("Thumbnail"),
- *   field_types = {
- *     "entity_reference"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'media_thumbnail',
+  label: new TranslatableMarkup('Thumbnail'),
+  field_types: [
+    'entity_reference',
+  ],
+)]
 class MediaThumbnailFormatter extends ImageFormatter {
 
   /**

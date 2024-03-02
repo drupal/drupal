@@ -2,21 +2,22 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the 'email_mailto' formatter.
- *
- * @FieldFormatter(
- *   id = "email_mailto",
- *   label = @Translation("Email"),
- *   field_types = {
- *     "email"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'email_mailto',
+  label: new TranslatableMarkup('Email'),
+  field_types: [
+    'email',
+  ],
+)]
 class MailToFormatter extends FormatterBase {
 
   /**

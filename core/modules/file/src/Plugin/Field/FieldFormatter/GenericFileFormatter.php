@@ -2,19 +2,20 @@
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'file_default' formatter.
- *
- * @FieldFormatter(
- *   id = "file_default",
- *   label = @Translation("Generic file"),
- *   field_types = {
- *     "file"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'file_default',
+  label: new TranslatableMarkup('Generic file'),
+  field_types: [
+    'file',
+  ],
+)]
 class GenericFileFormatter extends DescriptionAwareFileFormatterBase {
 
   /**

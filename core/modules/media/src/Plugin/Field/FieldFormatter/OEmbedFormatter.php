@@ -4,12 +4,14 @@ namespace Drupal\media\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\IFrameUrlHelper;
@@ -27,17 +29,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   This is an internal part of the oEmbed system and should only be used by
  *   oEmbed-related code in Drupal core.
- *
- * @FieldFormatter(
- *   id = "oembed",
- *   label = @Translation("oEmbed content"),
- *   field_types = {
- *     "link",
- *     "string",
- *     "string_long",
- *   },
- * )
  */
+#[FieldFormatter(
+  id: 'oembed',
+  label: new TranslatableMarkup('oEmbed content'),
+  field_types: [
+    'link',
+    'string',
+    'string_long',
+  ],
+)]
 class OEmbedFormatter extends FormatterBase {
 
   /**

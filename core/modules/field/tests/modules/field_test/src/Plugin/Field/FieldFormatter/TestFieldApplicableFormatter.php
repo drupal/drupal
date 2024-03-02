@@ -2,25 +2,26 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'field_test_applicable' formatter.
  *
  * It is applicable to test_field fields unless their name is 'deny_applicable'.
- *
- * @FieldFormatter(
- *   id = "field_test_applicable",
- *   label = @Translation("Applicable"),
- *   description = @Translation("Applicable formatter"),
- *   field_types = {
- *     "test_field"
- *   },
- *   weight = 15,
- * )
  */
+#[FieldFormatter(
+  id: 'field_test_applicable',
+  label: new TranslatableMarkup('Applicable'),
+  description: new TranslatableMarkup('Applicable formatter'),
+  field_types: [
+    'test_field',
+  ],
+  weight: 15,
+)]
 class TestFieldApplicableFormatter extends FormatterBase {
 
   /**

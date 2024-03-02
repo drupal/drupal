@@ -4,25 +4,26 @@ namespace Drupal\image\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'image_url' formatter.
- *
- * @FieldFormatter(
- *   id = "image_url",
- *   label = @Translation("URL to image"),
- *   field_types = {
- *     "image"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'image_url',
+  label: new TranslatableMarkup('URL to image'),
+  field_types: [
+    'image',
+  ],
+)]
 class ImageUrlFormatter extends ImageFormatterBase {
 
   /**

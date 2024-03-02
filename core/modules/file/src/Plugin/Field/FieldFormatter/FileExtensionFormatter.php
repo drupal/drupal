@@ -2,21 +2,22 @@
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Formatter to render a filename as file extension.
- *
- * @FieldFormatter(
- *   id = "file_extension",
- *   label = @Translation("File extension"),
- *   field_types = {
- *     "string"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'file_extension',
+  label: new TranslatableMarkup('File extension'),
+  field_types: [
+    'string',
+  ],
+)]
 class FileExtensionFormatter extends BaseFieldFileFormatterBase {
 
   /**

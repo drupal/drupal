@@ -2,21 +2,22 @@
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Formatter to render the file MIME type, with an optional icon.
- *
- * @FieldFormatter(
- *   id = "file_filemime",
- *   label = @Translation("File MIME"),
- *   field_types = {
- *     "string"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'file_filemime',
+  label: new TranslatableMarkup('File MIME'),
+  field_types: [
+    'string',
+  ],
+)]
 class FilemimeFormatter extends BaseFieldFileFormatterBase {
 
   /**

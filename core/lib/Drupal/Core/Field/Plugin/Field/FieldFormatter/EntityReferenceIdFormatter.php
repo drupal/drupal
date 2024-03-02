@@ -2,20 +2,21 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'entity reference ID' formatter.
- *
- * @FieldFormatter(
- *   id = "entity_reference_entity_id",
- *   label = @Translation("Entity ID"),
- *   description = @Translation("Display the ID of the referenced entities."),
- *   field_types = {
- *     "entity_reference"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'entity_reference_entity_id',
+  label: new TranslatableMarkup('Entity ID'),
+  description: new TranslatableMarkup('Display the ID of the referenced entities.'),
+  field_types: [
+    'entity_reference',
+  ],
+)]
 class EntityReferenceIdFormatter extends EntityReferenceFormatterBase {
 
   /**

@@ -2,23 +2,24 @@
 
 namespace Drupal\user\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'user_name' formatter.
- *
- * @FieldFormatter(
- *   id = "user_name",
- *   label = @Translation("User name"),
- *   description = @Translation("Display the user or author name."),
- *   field_types = {
- *     "string"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'user_name',
+  label: new TranslatableMarkup('User name'),
+  description: new TranslatableMarkup('Display the user or author name.'),
+  field_types: [
+    'string',
+  ],
+)]
 class UserNameFormatter extends FormatterBase {
 
   /**

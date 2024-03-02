@@ -2,7 +2,9 @@
 
 namespace Drupal\datetime_range\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeDefaultFormatter;
 use Drupal\datetime_range\DateTimeRangeTrait;
 
@@ -12,15 +14,14 @@ use Drupal\datetime_range\DateTimeRangeTrait;
  * This formatter renders the data range using <time> elements, with
  * configurable date formats (from the list of configured formats) and a
  * separator.
- *
- * @FieldFormatter(
- *   id = "daterange_default",
- *   label = @Translation("Default"),
- *   field_types = {
- *     "daterange"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'daterange_default',
+  label: new TranslatableMarkup('Default'),
+  field_types: [
+    'daterange',
+  ],
+)]
 class DateRangeDefaultFormatter extends DateTimeDefaultFormatter {
 
   use DateTimeRangeTrait;

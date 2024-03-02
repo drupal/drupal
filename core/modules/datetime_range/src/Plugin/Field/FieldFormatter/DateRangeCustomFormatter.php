@@ -2,8 +2,10 @@
 
 namespace Drupal\datetime_range\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeCustomFormatter;
 use Drupal\datetime_range\DateTimeRangeTrait;
 
@@ -12,15 +14,14 @@ use Drupal\datetime_range\DateTimeRangeTrait;
  *
  * This formatter renders the data range as plain text, with a fully
  * configurable date format using the PHP date syntax and separator.
- *
- * @FieldFormatter(
- *   id = "daterange_custom",
- *   label = @Translation("Custom"),
- *   field_types = {
- *     "daterange"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'daterange_custom',
+  label: new TranslatableMarkup('Custom'),
+  field_types: [
+    'daterange',
+  ],
+)]
 class DateRangeCustomFormatter extends DateTimeCustomFormatter {
 
   use DateTimeRangeTrait;

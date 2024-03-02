@@ -4,24 +4,25 @@ namespace Drupal\comment\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'comment_permalink' formatter.
  *
  * All the other entities use 'canonical' or 'revision' links to link the entity
  * to itself but comments use permalink URL.
- *
- * @FieldFormatter(
- *   id = "comment_permalink",
- *   label = @Translation("Comment Permalink"),
- *   field_types = {
- *     "string",
- *     "uri",
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'comment_permalink',
+  label: new TranslatableMarkup('Comment Permalink'),
+  field_types: [
+    'string',
+    'uri',
+  ],
+)]
 class CommentPermalinkFormatter extends StringFormatter {
 
   /**

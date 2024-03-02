@@ -3,22 +3,23 @@
 namespace Drupal\user\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'author' formatter.
- *
- * @FieldFormatter(
- *   id = "author",
- *   label = @Translation("Author"),
- *   description = @Translation("Display the referenced author user entity."),
- *   field_types = {
- *     "entity_reference"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'author',
+  label: new TranslatableMarkup('Author'),
+  description: new TranslatableMarkup('Display the referenced author user entity.'),
+  field_types: [
+    'entity_reference',
+  ],
+)]
 class AuthorFormatter extends EntityReferenceFormatterBase {
 
   /**

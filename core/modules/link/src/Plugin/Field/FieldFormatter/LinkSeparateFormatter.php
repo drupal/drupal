@@ -3,7 +3,9 @@
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'link_separate' formatter.
@@ -11,15 +13,14 @@ use Drupal\Core\Field\FieldItemListInterface;
  * @todo https://www.drupal.org/node/1829202 Merge into 'link' formatter once
  *   there is a #type like 'item' that can render a compound label and content
  *   outside of a form context.
- *
- * @FieldFormatter(
- *   id = "link_separate",
- *   label = @Translation("Separate link text and URL"),
- *   field_types = {
- *     "link"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'link_separate',
+  label: new TranslatableMarkup('Separate link text and URL'),
+  field_types: [
+    'link',
+  ],
+)]
 class LinkSeparateFormatter extends LinkFormatter {
 
   /**

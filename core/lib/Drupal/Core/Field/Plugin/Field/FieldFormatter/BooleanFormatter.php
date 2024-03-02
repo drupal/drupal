@@ -2,21 +2,22 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'boolean' formatter.
- *
- * @FieldFormatter(
- *   id = "boolean",
- *   label = @Translation("Boolean"),
- *   field_types = {
- *     "boolean",
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'boolean',
+  label: new TranslatableMarkup('Boolean'),
+  field_types: [
+    'boolean',
+  ],
+)]
 class BooleanFormatter extends FormatterBase {
 
   /**

@@ -2,10 +2,12 @@
 
 namespace Drupal\text\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'text_trimmed' formatter.
@@ -14,17 +16,16 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  * 'text_summary_or_trimmed' formatter.
  *
  * @see \Drupal\text\Field\Formatter\TextSummaryOrTrimmedFormatter
- *
- * @FieldFormatter(
- *   id = "text_trimmed",
- *   label = @Translation("Trimmed"),
- *   field_types = {
- *     "text",
- *     "text_long",
- *     "text_with_summary"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'text_trimmed',
+  label: new TranslatableMarkup('Trimmed'),
+  field_types: [
+    'text',
+    'text_long',
+    'text_with_summary',
+  ],
+)]
 class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInterface {
 
   /**

@@ -2,20 +2,21 @@
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\FileInterface;
 
 /**
  * Plugin implementation of the 'file_url_plain' formatter.
- *
- * @FieldFormatter(
- *   id = "file_url_plain",
- *   label = @Translation("URL to file"),
- *   field_types = {
- *     "file"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'file_url_plain',
+  label: new TranslatableMarkup('URL to file'),
+  field_types: [
+    'file',
+  ],
+)]
 class UrlPlainFormatter extends FileFormatterBase {
 
   /**

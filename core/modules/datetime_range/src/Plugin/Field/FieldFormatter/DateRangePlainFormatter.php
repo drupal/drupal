@@ -2,8 +2,10 @@
 
 namespace Drupal\datetime_range\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimePlainFormatter;
 use Drupal\datetime_range\DateTimeRangeTrait;
 
@@ -12,15 +14,14 @@ use Drupal\datetime_range\DateTimeRangeTrait;
  *
  * This formatter renders the data range as a plain text string, with a
  * configurable separator using an ISO-like date format string.
- *
- * @FieldFormatter(
- *   id = "daterange_plain",
- *   label = @Translation("Plain"),
- *   field_types = {
- *     "daterange"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'daterange_plain',
+  label: new TranslatableMarkup('Plain'),
+  field_types: [
+    'daterange',
+  ],
+)]
 class DateRangePlainFormatter extends DateTimePlainFormatter {
 
   use DateTimeRangeTrait;

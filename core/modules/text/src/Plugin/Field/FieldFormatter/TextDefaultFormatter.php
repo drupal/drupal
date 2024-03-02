@@ -2,22 +2,23 @@
 
 namespace Drupal\text\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'text_default' formatter.
- *
- * @FieldFormatter(
- *   id = "text_default",
- *   label = @Translation("Default"),
- *   field_types = {
- *     "text",
- *     "text_long",
- *     "text_with_summary",
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'text_default',
+  label: new TranslatableMarkup('Default'),
+  field_types: [
+    'text',
+    'text_long',
+    'text_with_summary',
+  ],
+)]
 class TextDefaultFormatter extends FormatterBase {
 
   /**

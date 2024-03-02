@@ -8,25 +8,26 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'timestamp' formatter.
- *
- * @FieldFormatter(
- *   id = "timestamp",
- *   label = @Translation("Default"),
- *   field_types = {
- *     "timestamp",
- *     "created",
- *     "changed",
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'timestamp',
+  label: new TranslatableMarkup('Default'),
+  field_types: [
+    'timestamp',
+    'created',
+    'changed',
+  ],
+)]
 class TimestampFormatter extends FormatterBase {
 
   /**

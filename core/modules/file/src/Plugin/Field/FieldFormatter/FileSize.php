@@ -2,22 +2,23 @@
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Formatter that shows the file size in a human readable way.
- *
- * @FieldFormatter(
- *   id = "file_size",
- *   label = @Translation("File size"),
- *   field_types = {
- *     "integer"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'file_size',
+  label: new TranslatableMarkup('File size'),
+  field_types: [
+    'integer',
+  ],
+)]
 class FileSize extends FormatterBase {
 
   /**

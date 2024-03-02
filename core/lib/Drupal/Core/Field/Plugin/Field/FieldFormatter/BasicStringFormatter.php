@@ -2,21 +2,22 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'basic_string' formatter.
- *
- * @FieldFormatter(
- *   id = "basic_string",
- *   label = @Translation("Plain text"),
- *   field_types = {
- *     "string_long",
- *     "email"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'basic_string',
+  label: new TranslatableMarkup('Plain text'),
+  field_types: [
+    'string_long',
+    'email',
+  ],
+)]
 class BasicStringFormatter extends FormatterBase {
 
   /**

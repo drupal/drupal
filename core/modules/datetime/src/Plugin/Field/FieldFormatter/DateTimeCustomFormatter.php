@@ -3,21 +3,22 @@
 namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * Plugin implementation of the 'Custom' formatter for 'datetime' fields.
- *
- * @FieldFormatter(
- *   id = "datetime_custom",
- *   label = @Translation("Custom"),
- *   field_types = {
- *     "datetime"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'datetime_custom',
+  label: new TranslatableMarkup('Custom'),
+  field_types: [
+    'datetime',
+  ],
+)]
 class DateTimeCustomFormatter extends DateTimeFormatterBase {
 
   /**

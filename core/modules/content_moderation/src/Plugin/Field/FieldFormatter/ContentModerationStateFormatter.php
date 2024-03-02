@@ -3,22 +3,23 @@
 namespace Drupal\content_moderation\Plugin\Field\FieldFormatter;
 
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'content_moderation_state' formatter.
- *
- * @FieldFormatter(
- *   id = "content_moderation_state",
- *   label = @Translation("Content moderation state"),
- *   field_types = {
- *     "string",
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'content_moderation_state',
+  label: new TranslatableMarkup('Content moderation state'),
+  field_types: [
+    'string',
+  ],
+)]
 class ContentModerationStateFormatter extends FormatterBase {
 
   /**
