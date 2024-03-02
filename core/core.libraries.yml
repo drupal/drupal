@@ -338,11 +338,6 @@ ckeditor5.autoformat:
   dependencies:
     - core/ckeditor5
 
-css.escape:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
 drupal:
   version: VERSION
   js:
@@ -471,16 +466,6 @@ drupal.autocomplete:
     - core/tabbable.jquery.shim
     - core/drupal.jquery.position
 
-drupal.array.find:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
-drupal.array.includes:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
 drupal.batch:
   version: VERSION
   js:
@@ -511,11 +496,6 @@ drupal.collapse:
     - core/drupal
     - core/drupal.form
     - core/once
-
-drupal.customevent:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.debounce:
   version: VERSION
@@ -597,16 +577,6 @@ drupal.dropbutton:
     - core/drupalSettings
     - core/once
 
-drupal.element.closest:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
-drupal.element.matches:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
 drupal.entity-form:
   version: VERSION
   js:
@@ -644,16 +614,6 @@ drupal.message:
     - core/drupal
     - core/drupal.announce
 
-drupal.nodelist.foreach:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
-drupal.object.assign:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
 drupal.progress:
   version: VERSION
   js:
@@ -672,11 +632,6 @@ drupal.states:
     - core/drupal
     - core/drupalSettings
     - core/once
-
-drupal.string.includes:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.tabbingmanager:
   version: VERSION
@@ -776,11 +731,6 @@ drupal.vertical-tabs:
     - core/drupalSettings
     - core/drupal.form
 
-es6-promise:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
 jquery:
   remote: https://github.com/jquery/jquery
   version: "3.7.1"
@@ -857,11 +807,6 @@ once:
     gpl-compatible: true
   js:
     assets/vendor/once/once.min.js: { weight: -19, minified: true }
-
-picturefill:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
