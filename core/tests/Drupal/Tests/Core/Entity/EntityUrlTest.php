@@ -237,7 +237,7 @@ class EntityUrlTest extends UnitTestCase {
    * @return array
    *   An array of test cases for testToUrlLinkTemplateRevision().
    */
-  public function providerTestToUrlLinkTemplateRevision(): array {
+  public static function providerTestToUrlLinkTemplateRevision(): array {
     $test_cases = [];
 
     $route_parameters = ['test_entity' => static::ENTITY_ID];

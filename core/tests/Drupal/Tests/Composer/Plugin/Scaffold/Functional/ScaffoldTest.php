@@ -260,10 +260,10 @@ class ScaffoldTest extends TestCase {
   /**
    * Provides test values for testDrupalDrupalFileWasAppended.
    */
-  public function scaffoldAppendTestValues() {
+  public static function scaffoldAppendTestValues(): array {
     return array_merge(
-      $this->scaffoldAppendTestValuesToPermute(FALSE),
-      $this->scaffoldAppendTestValuesToPermute(TRUE),
+      static::scaffoldAppendTestValuesToPermute(FALSE),
+      static::scaffoldAppendTestValuesToPermute(TRUE),
       [
         [
           'drupal-drupal-append-settings',
@@ -286,7 +286,7 @@ include __DIR__ . "/settings-custom-additions.php";',
    * @param bool $is_link
    *   Whether or not symlinking should be used.
    */
-  protected function scaffoldAppendTestValuesToPermute($is_link) {
+  protected static function scaffoldAppendTestValuesToPermute($is_link) {
     return [
       [
         'drupal-drupal-test-append',
@@ -344,7 +344,7 @@ include __DIR__ . "/settings-custom-additions.php";',
    *
    * @dataProvider scaffoldAppendTestValues
    */
-  public function testDrupalDrupalFileWasAppended($fixture_name, $is_link, $scaffold_file_path, $scaffold_file_contents, $scaffoldOutputContains) {
+  public function testDrupalDrupalFileWasAppended(string $fixture_name, bool $is_link, string $scaffold_file_path, string $scaffold_file_contents, string $scaffoldOutputContains): void {
     $result = $this->scaffoldSut($fixture_name, $is_link, FALSE);
     $this->assertStringContainsString($scaffoldOutputContains, $result->scaffoldOutput());
 
