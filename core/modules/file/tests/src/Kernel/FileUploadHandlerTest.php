@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\file\Kernel;
 
+use Drupal\Core\Lock\LockAcquiringException;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\file\Upload\FileUploadHandler;
 use Drupal\file\Upload\UploadedFileInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -68,6 +70,37 @@ class FileUploadHandlerTest extends KernelTestBase {
 
     $subscriber = $this->container->get('file_validation_sanitization_subscriber');
     $this->assertEquals(['txt'], $subscriber->getAllowedExtensions());
+  }
+
+  /**
+   * Test the lock acquire exception.
+   */
+  public function testLockAcquireException(): void {
+
+    $lock = $this->createMock(LockBackendInterface::class);
+    $lock->expects($this->once())->method('acquire')->willReturn(FALSE);
+
+    $fileUploadHandler = new FileUploadHandler(
+      $this->container->get('file_system'),
+      $this->container->get('entity_type.manager'),
+      $this->container->get('stream_wrapper_manager'),
+      $this->container->get('event_dispatcher'),
+      $this->container->get('file.mime_type.guesser'),
+      $this->container->get('current_user'),
+      $this->container->get('request_stack'),
+      $this->container->get('file.repository'),
+      $this->container->get('file.validator'),
+      $lock
+    );
+
+    $file_name = $this->randomMachineName();
+    $file_info = $this->createMock(UploadedFileInterface::class);
+    $file_info->expects($this->once())->method('getClientOriginalName')->willReturn($file_name);
+
+    $this->expectException(LockAcquiringException::class);
+    $this->expectExceptionMessage(sprintf('File "temporary://%s" is already locked for writing.', $file_name));
+
+    $fileUploadHandler->handleFileUpload(uploadedFile: $file_info, throw: FALSE);
   }
 
 }
