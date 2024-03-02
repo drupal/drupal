@@ -36,7 +36,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
    */
   protected function getWeight(EntityInterface $entity): int|float {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
-    return $entity->get($this->weightKey);
+    return $entity->get($this->weightKey) ?: 0;
   }
 
   /**
