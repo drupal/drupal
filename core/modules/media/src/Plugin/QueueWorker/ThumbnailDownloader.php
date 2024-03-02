@@ -4,18 +4,19 @@ namespace Drupal\media\Plugin\QueueWorker;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Queue\Attribute\QueueWorker;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Process a queue of media items to fetch their thumbnails.
- *
- * @QueueWorker(
- *   id = "media_entity_thumbnail",
- *   title = @Translation("Thumbnail downloader"),
- *   cron = {"time" = 60}
- * )
  */
+#[QueueWorker(
+  id: 'media_entity_thumbnail',
+  title: new TranslatableMarkup('Thumbnail downloader'),
+  cron: ['time' => 60]
+)]
 class ThumbnailDownloader extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
   /**
