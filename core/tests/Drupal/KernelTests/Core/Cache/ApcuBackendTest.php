@@ -24,8 +24,8 @@ class ApcuBackendTest extends GenericCacheBackendUnitTestBase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
-    foreach ($this->cachebackends as $bin => $cachebackend) {
-      $this->cachebackends[$bin]->removeBin();
+    foreach ($this->cacheBackends as $bin => $cache_backend) {
+      $this->cacheBackends[$bin]->removeBin();
     }
     parent::tearDown();
   }

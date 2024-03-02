@@ -23,7 +23,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $cachebackends;
+  protected $cacheBackends;
 
   /**
    * Cache bin to use for testing.
@@ -93,19 +93,19 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     if (!isset($bin)) {
       $bin = $this->getTestBin();
     }
-    if (!isset($this->cachebackends[$bin])) {
-      $this->cachebackends[$bin] = $this->createCacheBackend($bin);
+    if (!isset($this->cacheBackends[$bin])) {
+      $this->cacheBackends[$bin] = $this->createCacheBackend($bin);
       // Ensure the backend is empty.
-      $this->cachebackends[$bin]->deleteAll();
+      $this->cacheBackends[$bin]->deleteAll();
     }
-    return $this->cachebackends[$bin];
+    return $this->cacheBackends[$bin];
   }
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->cachebackends = [];
+    $this->cacheBackends = [];
     $this->defaultValue = $this->randomMachineName(10);
 
     parent::setUp();
@@ -120,10 +120,10 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     // Destruct the registered backend, each test will get a fresh instance,
     // properly emptying it here ensure that on persistent data backends they
     // will come up empty the next test.
-    foreach ($this->cachebackends as $bin => $cachebackend) {
-      $this->cachebackends[$bin]->deleteAll();
+    foreach ($this->cacheBackends as $bin => $cache_backend) {
+      $this->cacheBackends[$bin]->deleteAll();
     }
-    unset($this->cachebackends);
+    unset($this->cacheBackends);
 
     $this->tearDownCacheBackend();
 
