@@ -2,22 +2,23 @@
 
 namespace Drupal\comment\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'comment_username' formatter.
- *
- * @FieldFormatter(
- *   id = "comment_username",
- *   label = @Translation("Author name"),
- *   description = @Translation("Display the author name."),
- *   field_types = {
- *     "string"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'comment_username',
+  label: new TranslatableMarkup('Author name'),
+  description: new TranslatableMarkup('Display the author name.'),
+  field_types: [
+    'string',
+  ],
+)]
 class AuthorNameFormatter extends FormatterBase {
 
   /**

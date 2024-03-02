@@ -2,6 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -9,16 +11,15 @@ use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase;
 
 /**
  * Plugin implementation of the 'entity reference taxonomy term RSS' formatter.
- *
- * @FieldFormatter(
- *   id = "entity_reference_rss_category",
- *   label = @Translation("RSS category"),
- *   description = @Translation("Display reference to taxonomy term in RSS."),
- *   field_types = {
- *     "entity_reference"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'entity_reference_rss_category',
+  label: new TranslatableMarkup('RSS category'),
+  description: new TranslatableMarkup('Display reference to taxonomy term in RSS.'),
+  field_types: [
+    'entity_reference',
+  ],
+)]
 class EntityReferenceTaxonomyTermRssFormatter extends EntityReferenceFormatterBase {
 
   /**

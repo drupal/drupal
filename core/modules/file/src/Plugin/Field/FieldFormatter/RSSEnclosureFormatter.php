@@ -2,19 +2,20 @@
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'file_rss_enclosure' formatter.
- *
- * @FieldFormatter(
- *   id = "file_rss_enclosure",
- *   label = @Translation("RSS enclosure"),
- *   field_types = {
- *     "file"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'file_rss_enclosure',
+  label: new TranslatableMarkup('RSS enclosure'),
+  field_types: [
+    'file',
+  ],
+)]
 class RSSEnclosureFormatter extends FileFormatterBase {
 
   /**

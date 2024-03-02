@@ -2,21 +2,22 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'field_empty_test' formatter.
- *
- * @FieldFormatter(
- *   id = "field_empty_test",
- *   label = @Translation("Field empty test"),
- *   field_types = {
- *     "test_field",
- *   },
- *   weight = -5
- * )
  */
+#[FieldFormatter(
+  id: 'field_empty_test',
+  label: new TranslatableMarkup('Field empty test'),
+  field_types: [
+    'test_field',
+  ],
+  weight: -5,
+)]
 class TestFieldEmptyFormatter extends FormatterBase {
 
   /**

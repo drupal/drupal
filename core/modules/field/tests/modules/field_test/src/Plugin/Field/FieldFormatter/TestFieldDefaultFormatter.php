@@ -2,24 +2,25 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'field_test_default' formatter.
- *
- * @FieldFormatter(
- *   id = "field_test_default",
- *   label = @Translation("Default"),
- *   description = @Translation("Default formatter"),
- *   field_types = {
- *     "test_field",
- *     "test_field_with_preconfigured_options"
- *   },
- *   weight = 1
- * )
  */
+#[FieldFormatter(
+  id: 'field_test_default',
+  label: new TranslatableMarkup('Default'),
+  description: new TranslatableMarkup('Default formatter'),
+  field_types: [
+    'test_field',
+    'test_field_with_preconfigured_options',
+  ],
+  weight: 1,
+)]
 class TestFieldDefaultFormatter extends FormatterBase {
 
   /**

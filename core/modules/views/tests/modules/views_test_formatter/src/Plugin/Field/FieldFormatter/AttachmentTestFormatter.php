@@ -2,22 +2,23 @@
 
 namespace Drupal\views_test_formatter\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\NumericUnformattedFormatter;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'number_unformatted_with_attachment' formatter.
- *
- * @FieldFormatter(
- *   id = "number_unformatted_with_attachment",
- *   label = @Translation("Unformatted, with attachments"),
- *   field_types = {
- *     "integer",
- *     "decimal",
- *     "float"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'number_unformatted_with_attachment',
+  label: new TranslatableMarkup('Unformatted, with attachments'),
+  field_types: [
+    'integer',
+    'decimal',
+    'float',
+  ],
+)]
 class AttachmentTestFormatter extends NumericUnformattedFormatter {
 
   /**

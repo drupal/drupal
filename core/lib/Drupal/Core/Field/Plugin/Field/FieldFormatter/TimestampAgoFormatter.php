@@ -6,26 +6,27 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Plugin implementation of the 'timestamp' formatter as time ago.
- *
- * @FieldFormatter(
- *   id = "timestamp_ago",
- *   label = @Translation("Time ago"),
- *   field_types = {
- *     "timestamp",
- *     "created",
- *     "changed",
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'timestamp_ago',
+  label: new TranslatableMarkup('Time ago'),
+  field_types: [
+    'timestamp',
+    'created',
+    'changed',
+  ],
+)]
 class TimestampAgoFormatter extends FormatterBase {
 
   /**

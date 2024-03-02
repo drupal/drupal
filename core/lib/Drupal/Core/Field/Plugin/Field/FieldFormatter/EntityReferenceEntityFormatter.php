@@ -4,24 +4,25 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'entity reference rendered entity' formatter.
- *
- * @FieldFormatter(
- *   id = "entity_reference_entity_view",
- *   label = @Translation("Rendered entity"),
- *   description = @Translation("Render the referenced entity."),
- *   field_types = {
- *     "entity_reference"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'entity_reference_entity_view',
+  label: new TranslatableMarkup('Rendered entity'),
+  description: new TranslatableMarkup('Render the referenced entity.'),
+  field_types: [
+    'entity_reference',
+  ],
+)]
 class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
 
   /**

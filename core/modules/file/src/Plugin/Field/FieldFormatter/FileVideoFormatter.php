@@ -2,20 +2,21 @@
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'file_video' formatter.
- *
- * @FieldFormatter(
- *   id = "file_video",
- *   label = @Translation("Video"),
- *   description = @Translation("Display the file using an HTML5 video tag."),
- *   field_types = {
- *     "file"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'file_video',
+  label: new TranslatableMarkup('Video'),
+  description: new TranslatableMarkup('Display the file using an HTML5 video tag.'),
+  field_types: [
+    'file',
+  ],
+)]
 class FileVideoFormatter extends FileMediaFormatterBase {
 
   /**

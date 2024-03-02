@@ -2,21 +2,22 @@
 
 namespace Drupal\datetime\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * Plugin implementation of the 'Plain' formatter for 'datetime' fields.
- *
- * @FieldFormatter(
- *   id = "datetime_plain",
- *   label = @Translation("Plain"),
- *   field_types = {
- *     "datetime"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'datetime_plain',
+  label: new TranslatableMarkup('Plain'),
+  field_types: [
+    'datetime',
+  ],
+)]
 class DateTimePlainFormatter extends DateTimeFormatterBase {
 
   /**

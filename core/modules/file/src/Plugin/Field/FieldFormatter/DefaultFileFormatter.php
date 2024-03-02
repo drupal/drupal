@@ -2,20 +2,21 @@
 
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Formatter for a text field on a file entity that links the field to the file.
- *
- * @FieldFormatter(
- *   id = "file_link",
- *   label = @Translation("File link"),
- *   field_types = {
- *     "string"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'file_link',
+  label: new TranslatableMarkup('File link'),
+  field_types: [
+    'string',
+  ],
+)]
 class DefaultFileFormatter extends BaseFieldFileFormatterBase {
 
   /**

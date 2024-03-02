@@ -3,24 +3,25 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'language' formatter.
- *
- * @FieldFormatter(
- *   id = "language",
- *   label = @Translation("Language"),
- *   field_types = {
- *     "language"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'language',
+  label: new TranslatableMarkup('Language'),
+  field_types: [
+    'language',
+  ],
+)]
 class LanguageFormatter extends StringFormatter {
 
   /**
