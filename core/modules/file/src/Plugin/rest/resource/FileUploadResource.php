@@ -12,12 +12,14 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Token;
 use Drupal\file\Entity\File;
 use Drupal\file\Upload\ContentDispositionFilenameParser;
 use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\file\Validation\FileValidatorSettingsTrait;
+use Drupal\rest\Attribute\RestResource;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
@@ -45,16 +47,15 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *     to be later moved when they are referenced from a file field.
  *   - Permission to upload a file can be determined by a users field level
  *     create access to the file field.
- *
- * @RestResource(
- *   id = "file:upload",
- *   label = @Translation("File Upload"),
- *   serialization_class = "Drupal\file\Entity\File",
- *   uri_paths = {
- *     "create" = "/file/upload/{entity_type_id}/{bundle}/{field_name}"
- *   }
- * )
  */
+#[RestResource(
+  id: "file:upload",
+  label: new TranslatableMarkup("File Upload"),
+  serialization_class: File::class,
+  uri_paths: [
+    "create" => "/file/upload/{entity_type_id}/{bundle}/{field_name}",
+  ]
+)]
 class FileUploadResource extends ResourceBase {
 
   use FileValidatorSettingsTrait;
