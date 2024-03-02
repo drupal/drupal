@@ -586,23 +586,17 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
     $batch_builder->addOperation('locale_config_batch_set_config_langcodes');
   }
 
-  $i = 0;
-  $batch_names = [];
-  foreach ($names as $name) {
-    $batch_names[] = $name;
-    $i++;
+  // Chunking the array of names into batches of 20 for better performance.
+  $name_chunks = array_chunk($names, 20);
+
+  foreach ($name_chunks as $chunk) {
     // During installation the caching of configuration objects is disabled so
     // it is very expensive to initialize the \Drupal::config() object on each
     // request. We batch a small number of configuration object upgrades
     // together to improve the overall performance of the process.
-    if ($i % 20 == 0) {
-      $batch_builder->addOperation('locale_config_batch_refresh_name', [$batch_names, $langcodes]);
-      $batch_names = [];
-    }
+    $batch_builder->addOperation('locale_config_batch_refresh_name', [$chunk, $langcodes]);
   }
-  if (!empty($batch_names)) {
-    $batch_builder->addOperation('locale_config_batch_refresh_name', [$batch_names, $langcodes]);
-  }
+
   if (!empty($options['finish_feedback'])) {
     $batch_builder->setFinishCallback('locale_config_batch_finished');
   }
