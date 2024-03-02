@@ -535,6 +535,7 @@ abstract class Database {
     // called during regular runtime.
     $additional_class_loader = new ClassLoader();
     $additional_class_loader->addPsr4($driverNamespace . '\\', $driver->getPath());
+    $additional_class_loader->register();
     $connection_class = $driverNamespace . '\\Connection';
     if (!class_exists($connection_class)) {
       throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$connection_class' does not exist");
