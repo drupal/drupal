@@ -3,6 +3,8 @@
 namespace Drupal\help\Plugin\HelpSection;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\help\Attribute\HelpSection;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\help\SearchableHelpInterface;
 use Drupal\help\HelpTopicPluginInterface;
 use Drupal\help\HelpTopicPluginManagerInterface;
@@ -18,17 +20,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides the help topics list section for the help page.
  *
- * @HelpSection(
- *   id = "help_topics",
- *   title = @Translation("Topics"),
- *   weight = -10,
- *   description = @Translation("Topics can be provided by modules or themes. Top-level help topics on your site:"),
- *   permission = "access help pages"
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[HelpSection(
+  id: 'help_topics',
+  title: new TranslatableMarkup('Topics'),
+  description: new TranslatableMarkup('Topics can be provided by modules or themes. Top-level help topics on your site:'),
+  weight: -10
+)]
 class HelpTopicSection extends HelpSectionPluginBase implements ContainerFactoryPluginInterface, SearchableHelpInterface {
 
   /**

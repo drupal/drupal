@@ -3,19 +3,20 @@
 namespace Drupal\help\Plugin\HelpSection;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\help\Attribute\HelpSection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the module topics list section for the help page.
- *
- * @HelpSection(
- *   id = "hook_help",
- *   title = @Translation("Module overviews"),
- *   description = @Translation("Module overviews are provided by modules. Overviews available for your installed modules:"),
- * )
  */
+#[HelpSection(
+  id: 'hook_help',
+  title: new TranslatableMarkup('Module overviews'),
+  description: new TranslatableMarkup('Module overviews are provided by modules. Overviews available for your installed modules:')
+)]
 class HookHelpSection extends HelpSectionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
