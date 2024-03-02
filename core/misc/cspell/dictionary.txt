@@ -1,5 +1,3 @@
-abcdefghijkmnopqrstuvwxyz
-abcdefghjklmnpqrstuvwxyz
 absolutezero
 accesslog
 adamson
@@ -103,8 +101,6 @@ buttonset
 buttontext
 buytaert
 bytea
-cachebackend
-cachebackends
 cachetag
 cachetags
 cafr
@@ -322,7 +318,6 @@ hateoas
 hexcode
 hilited
 hinode
-hippopotamidae
 hmac
 hoglet
 hookname
@@ -354,7 +349,6 @@ invalididentifier
 invokable
 isam
 isinstallable
-itoa
 itok
 ized
 javascripts
@@ -543,7 +537,6 @@ phpcbf
 phpcodesniffer
 phpcs
 phpdocumentor
-phpfile
 phpserialize
 phpspec
 pickable

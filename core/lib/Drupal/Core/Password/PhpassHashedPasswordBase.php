@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Password;
 
+// cspell:ignore ITOA64
+
 /**
  * Legacy password hashing framework.
  *
