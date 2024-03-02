@@ -137,8 +137,8 @@ EOD;
     $request->server->set('SERVER_NAME', 'www.example.org');
     $request->server->set('SERVER_PORT', '8888');
     $request->server->set('SCRIPT_NAME', '/index.php');
-    $this->assertEquals('sites/example', DrupalKernel::findSitePath($request, TRUE, $vfs_root->url('drupal_root')));
-    $this->assertEquals('sites/example', DrupalKernel::findSitePath($request, FALSE, $vfs_root->url('drupal_root')));
+    $this->assertEquals('sites/example', DrupalKernel::findSitePath($request, TRUE, $vfs_root->url()));
+    $this->assertEquals('sites/example', DrupalKernel::findSitePath($request, FALSE, $vfs_root->url()));
   }
 
   /**

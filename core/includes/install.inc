@@ -511,7 +511,7 @@ function drupal_install_system($install_state) {
   $kernel = \Drupal::service('kernel');
   $kernel->shutdown();
   // Have installer rebuild from the disk, rather then building from scratch.
-  $kernel->rebuildContainer(FALSE);
+  $kernel->rebuildContainer();
   // Reboot the kernel with new container.
   $kernel->boot();
   $kernel->preHandle($request);

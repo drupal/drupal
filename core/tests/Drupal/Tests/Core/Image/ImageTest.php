@@ -339,7 +339,7 @@ class ImageTest extends UnitTestCase {
       ->method('execute')
       ->will($this->returnArgument(0));
 
-    $ret = $this->image->scaleAndCrop(34, 50, FALSE);
+    $ret = $this->image->scaleAndCrop(34, 50);
     $this->assertEquals(5, $ret['x']);
   }
 

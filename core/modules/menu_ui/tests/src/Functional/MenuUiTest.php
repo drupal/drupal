@@ -1138,21 +1138,21 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet('admin/help/menu');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertSession()->pageTextContains('Menu', 'Menu help was displayed');
+      $this->assertSession()->pageTextContains('Menu');
     }
 
     // View menu build overview page.
     $this->drupalGet('admin/structure/menu');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertSession()->pageTextContains('Menus', 'Menu build overview page was displayed');
+      $this->assertSession()->pageTextContains('Menus');
     }
 
     // View tools menu customization page.
     $this->drupalGet('admin/structure/menu/manage/' . $this->menu->id());
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertSession()->pageTextContains('Tools', 'Tools menu page was displayed');
+      $this->assertSession()->pageTextContains('Tools');
     }
 
     // View menu edit page for a static link.
@@ -1160,14 +1160,14 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/menu/link/' . $item->getPluginId() . '/edit');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertSession()->pageTextContains('Edit menu item', 'Menu edit page was displayed');
+      $this->assertSession()->pageTextContains('Edit menu item');
     }
 
     // View add menu page.
     $this->drupalGet('admin/structure/menu/add');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertSession()->pageTextContains('Menus', 'Add menu page was displayed');
+      $this->assertSession()->pageTextContains('Menus');
     }
   }
 
