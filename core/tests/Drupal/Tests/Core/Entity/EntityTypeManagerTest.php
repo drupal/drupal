@@ -254,7 +254,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function provideFormObjectInvalidOperationData(): array {
+  public static function provideFormObjectInvalidOperationData(): array {
     return [
       'missing_form_handler' => [
         'test_entity_type',

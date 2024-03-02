@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -21,7 +22,7 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getRouteMatch($name, Route $route, array $parameters, array $raw_parameters) {
+  protected static function getRouteMatch(string $name, Route $route, array $parameters, array $raw_parameters): RouteMatchInterface {
     $request_stack = new RequestStack();
     $request = new Request();
     $request_stack->push($request);

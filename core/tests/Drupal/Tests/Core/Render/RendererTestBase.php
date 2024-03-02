@@ -216,7 +216,7 @@ abstract class RendererTestBase extends UnitTestCase {
    * @see PlaceholdersTest::callback()
    * @see https://www.drupal.org/node/2151609
    */
-  protected function randomContextValue() {
+  protected static function randomContextValue(): string {
     $tokens = ['llama', 'alpaca', 'camel', 'moose', 'elk'];
     return $tokens[mt_rand(0, 4)];
   }
