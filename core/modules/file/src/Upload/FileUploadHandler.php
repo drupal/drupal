@@ -2,12 +2,15 @@
 
 namespace Drupal\file\Upload;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileExistsException;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Lock\LockAcquiringException;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\file\Entity\File;
@@ -120,8 +123,21 @@ class FileUploadHandler {
    *   The file repository.
    * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
    *   The file validator.
+   * @param \Drupal\Core\Lock\LockBackendInterface|null $lock
+   *   The lock.
    */
-  public function __construct(FileSystemInterface $fileSystem, EntityTypeManagerInterface $entityTypeManager, StreamWrapperManagerInterface $streamWrapperManager, EventDispatcherInterface $eventDispatcher, MimeTypeGuesserInterface $mimeTypeGuesser, AccountInterface $currentUser, RequestStack $requestStack, FileRepositoryInterface $fileRepository = NULL, FileValidatorInterface $file_validator = NULL) {
+  public function __construct(
+    FileSystemInterface $fileSystem,
+    EntityTypeManagerInterface $entityTypeManager,
+    StreamWrapperManagerInterface $streamWrapperManager,
+    EventDispatcherInterface $eventDispatcher,
+    MimeTypeGuesserInterface $mimeTypeGuesser,
+    AccountInterface $currentUser,
+    RequestStack $requestStack,
+    FileRepositoryInterface $fileRepository = NULL,
+    FileValidatorInterface $file_validator = NULL,
+    protected ?LockBackendInterface $lock = NULL,
+  ) {
     $this->fileSystem = $fileSystem;
     $this->entityTypeManager = $entityTypeManager;
     $this->streamWrapperManager = $streamWrapperManager;
@@ -139,6 +155,10 @@ class FileUploadHandler {
       $file_validator = \Drupal::service('file.validator');
     }
     $this->fileValidator = $file_validator;
+    if (!$this->lock) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $lock argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3389017', E_USER_DEPRECATED);
+      $this->lock = \Drupal::service('lock');
+    }
   }
 
   /**
@@ -170,6 +190,8 @@ class FileUploadHandler {
    *    Thrown when a file system error occurs and $throws is TRUE.
    * @throws \Drupal\file\Upload\FileValidationException
    *    Thrown when file validation fails and $throws is TRUE.
+   * @throws \Drupal\Core\Lock\LockAcquiringException
+   *   Thrown when a lock cannot be acquired.
    */
   public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', int $replace = FileSystemInterface::EXISTS_REPLACE, bool $throw = TRUE): FileUploadResult {
     $originalName = $uploadedFile->getClientOriginalName();
@@ -236,96 +258,124 @@ class FileUploadHandler {
       throw new FileExistsException(sprintf('Destination file "%s" exists', $destinationFilename));
     }
 
-    $file = File::create([
-      'uid' => $this->currentUser->id(),
-      'status' => 0,
-      'uri' => $uploadedFile->getRealPath(),
-    ]);
+    // Lock based on the prepared file URI.
+    $lock_id = $this->generateLockId($destinationFilename);
 
-    // This will be replaced later with a filename based on the destination.
-    $file->setFilename($filename);
-    $file->setMimeType($mimeType);
-    $file->setSize($uploadedFile->getSize());
-
-    // Add in our check of the file name length.
-    $validators['FileNameLength'] = [];
-
-    $result = new FileUploadResult();
-
-    // Call the validation functions specified by this function's caller.
-    $violations = $this->fileValidator->validate($file, $validators);
-    if (count($violations) > 0) {
-      $result->addViolations($violations);
-      return $result;
-    }
-
-    if ($throw) {
-      $errors = [];
-      foreach ($violations as $violation) {
-        $errors[] = $violation->getMessage();
+    try {
+      if (!$this->lock->acquire($lock_id)) {
+        throw new LockAcquiringException(
+          sprintf(
+            'File "%s" is already locked for writing.',
+            $destinationFilename
+          )
+        );
       }
-      if (!empty($errors)) {
-        throw new FileValidationException('File validation failed', $filename, $errors);
+
+      $file = File::create([
+        'uid' => $this->currentUser->id(),
+        'status' => 0,
+        'uri' => $uploadedFile->getRealPath(),
+      ]);
+
+      // This will be replaced later with a filename based on the destination.
+      $file->setFilename($filename);
+      $file->setMimeType($mimeType);
+      $file->setSize($uploadedFile->getSize());
+
+      // Add in our check of the file name length.
+      $validators['FileNameLength'] = [];
+
+      $result = new FileUploadResult();
+
+      // Call the validation functions specified by this function's caller.
+      $violations = $this->fileValidator->validate($file, $validators);
+      if (count($violations) > 0) {
+        $result->addViolations($violations);
+
+        return $result;
+      }
+
+      if ($throw) {
+        $errors = [];
+        foreach ($violations as $violation) {
+          $errors[] = $violation->getMessage();
+        }
+        if (!empty($errors)) {
+          throw new FileValidationException(
+            'File validation failed',
+            $filename,
+            $errors
+          );
+        }
+      }
+
+      $file->setFileUri($destinationFilename);
+
+      if (!$this->moveUploadedFile($uploadedFile, $file->getFileUri())) {
+        throw new FileWriteException(
+          'File upload error. Could not move uploaded file.'
+        );
+      }
+
+      // Update the filename with any changes as a result of security or
+      // renaming due to an existing file.
+      $file->setFilename($this->fileSystem->basename($file->getFileUri()));
+
+      if ($replace === FileSystemInterface::EXISTS_REPLACE) {
+        $existingFile = $this->fileRepository->loadByUri($file->getFileUri());
+        if ($existingFile) {
+          $file->fid = $existingFile->id();
+          $file->setOriginalId($existingFile->id());
+        }
+      }
+
+      $result->setOriginalFilename($originalName)
+        ->setSanitizedFilename($filename)
+        ->setFile($file);
+
+      // If the filename has been modified, let the user know.
+      if ($event->isSecurityRename()) {
+        $result->setSecurityRename();
+      }
+
+      // Set the permissions on the new file.
+      $this->fileSystem->chmod($file->getFileUri());
+
+      // We can now validate the file object itself before it's saved.
+      $violations = $file->validate();
+      if ($throw) {
+        foreach ($violations as $violation) {
+          $errors[] = $violation->getMessage();
+        }
+        if (!empty($errors)) {
+          throw new FileValidationException(
+            'File validation failed',
+            $filename,
+            $errors
+          );
+        }
+      }
+      if (count($violations) > 0) {
+        $result->addViolations($violations);
+
+        return $result;
+      }
+
+      // If we made it this far it's safe to record this file in the database.
+      $file->save();
+
+      // Allow an anonymous user who creates a non-public file to see it. See
+      // \Drupal\file\FileAccessControlHandler::checkAccess().
+      if ($this->currentUser->isAnonymous() && $destinationScheme !== 'public') {
+        $session = $this->requestStack->getCurrentRequest()->getSession();
+        $allowed_temp_files = $session->get('anonymous_allowed_file_ids', []);
+        $allowed_temp_files[$file->id()] = $file->id();
+        $session->set('anonymous_allowed_file_ids', $allowed_temp_files);
       }
     }
-
-    $file->setFileUri($destinationFilename);
-
-    if (!$this->moveUploadedFile($uploadedFile, $file->getFileUri())) {
-      throw new FileWriteException('File upload error. Could not move uploaded file.');
+    finally {
+      $this->lock->release($lock_id);
     }
-
-    // Update the filename with any changes as a result of security or renaming
-    // due to an existing file.
-    $file->setFilename($this->fileSystem->basename($file->getFileUri()));
-
-    if ($replace === FileSystemInterface::EXISTS_REPLACE) {
-      $existingFile = $this->fileRepository->loadByUri($file->getFileUri());
-      if ($existingFile) {
-        $file->fid = $existingFile->id();
-        $file->setOriginalId($existingFile->id());
-      }
-    }
-
-    $result->setOriginalFilename($originalName)
-      ->setSanitizedFilename($filename)
-      ->setFile($file);
-
-    // If the filename has been modified, let the user know.
-    if ($event->isSecurityRename()) {
-      $result->setSecurityRename();
-    }
-
-    // Set the permissions on the new file.
-    $this->fileSystem->chmod($file->getFileUri());
-
-    // We can now validate the file object itself before it's saved.
-    $violations = $file->validate();
-    if ($throw) {
-      foreach ($violations as $violation) {
-        $errors[] = $violation->getMessage();
-      }
-      if (!empty($errors)) {
-        throw new FileValidationException('File validation failed', $filename, $errors);
-      }
-    }
-    if (count($violations) > 0) {
-      $result->addViolations($violations);
-      return $result;
-    }
-
-    // If we made it this far it's safe to record this file in the database.
-    $file->save();
-
-    // Allow an anonymous user who creates a non-public file to see it. See
-    // \Drupal\file\FileAccessControlHandler::checkAccess().
-    if ($this->currentUser->isAnonymous() && $destinationScheme !== 'public') {
-      $session = $this->requestStack->getCurrentRequest()->getSession();
-      $allowed_temp_files = $session->get('anonymous_allowed_file_ids', []);
-      $allowed_temp_files[$file->id()] = $file->id();
-      $session->set('anonymous_allowed_file_ids', $allowed_temp_files);
-    }
-
     return $result;
   }
 
@@ -410,6 +460,13 @@ class FileUploadHandler {
   protected function loadByUri(string $uri): ?FileInterface {
     @trigger_error('FileUploadHandler::loadByUri() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\FileRepositoryInterface::loadByUri(). See https://www.drupal.org/node/3409326', E_USER_DEPRECATED);
     return $this->fileRepository->loadByUri($uri);
+  }
+
+  /**
+   * Generates a lock ID based on the file URI.
+   */
+  protected static function generateLockId(string $fileUri): string {
+    return 'file:upload:' . Crypt::hashBase64($fileUri);
   }
 
 }

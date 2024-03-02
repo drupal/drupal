@@ -17,6 +17,7 @@ use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Lock\LockAcquiringException;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
@@ -710,6 +711,10 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     }
     catch (FileException $e) {
       \Drupal::messenger()->addError(t('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $uploaded_file->getClientOriginalName()]));
+      $files[$i] = FALSE;
+    }
+    catch (LockAcquiringException $e) {
+      \Drupal::messenger()->addError(t('File already locked for writing.'));
       $files[$i] = FALSE;
     }
   }
