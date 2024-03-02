@@ -341,31 +341,43 @@ class FileUploadHandler {
    *   The space delimited list of allowed file extensions.
    */
   protected function handleExtensionValidation(array &$validators): string {
-    // Build a list of allowed extensions.
-    if (isset($validators['FileExtension'])) {
-      if (!isset($validators['FileExtension']['extensions'])) {
-        // If 'FileExtension' is set and the list is empty then the caller wants
-        // to allow any extension. In this case we have to remove the validator
-        // or else it will reject all extensions.
-        unset($validators['FileExtension']);
+    // Handle legacy extension validation.
+    if (isset($validators['file_validate_extensions'])) {
+      @trigger_error(
+        '\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700',
+        E_USER_DEPRECATED
+      );
+      // Empty string means all extensions are allowed so we should remove the
+      // validator.
+      if (\is_string($validators['file_validate_extensions']) && empty($validators['file_validate_extensions'])) {
+        unset($validators['file_validate_extensions']);
+        return '';
       }
+      // The deprecated 'file_validate_extensions' has configuration, so that
+      // should be used.
+      $validators['FileExtension']['extensions'] = $validators['file_validate_extensions'][0];
+      unset($validators['file_validate_extensions']);
+      return $validators['FileExtension']['extensions'];
     }
-    else {
-      if (!empty($validators['file_validate_extensions'][0])) {
-        // The deprecated 'file_validate_extensions' has configuration, so that
-        // should be used.
-        $validators['FileExtension']['extensions'] = $validators['file_validate_extensions'][0];
-        @trigger_error('\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
-        return $validators['FileExtension']['extensions'];
-      }
 
-      // No validator was provided, so add one using the default list.
-      // Build a default non-munged safe list for
-      // \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber::sanitizeName().
+    // No validator was provided, so add one using the default list.
+    // Build a default non-munged safe list for
+    // \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber::sanitizeName().
+    if (!isset($validators['FileExtension'])) {
       $validators['FileExtension'] = ['extensions' => self::DEFAULT_EXTENSIONS];
-
+      return self::DEFAULT_EXTENSIONS;
     }
-    return $validators['FileExtension']['extensions'] ?? '';
+
+    // Check if we want to allow all extensions.
+    if (!isset($validators['FileExtension']['extensions'])) {
+      // If 'FileExtension' is set and the list is empty then the caller wants
+      // to allow any extension. In this case we have to remove the validator
+      // or else it will reject all extensions.
+      unset($validators['FileExtension']);
+      return '';
+    }
+
+    return $validators['FileExtension']['extensions'];
   }
 
   /**

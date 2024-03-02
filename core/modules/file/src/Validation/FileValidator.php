@@ -46,6 +46,9 @@ class FileValidator implements FileValidatorInterface {
     foreach ($validators as $validator => $options) {
       if (function_exists($validator)) {
         @trigger_error('Support for file validation function ' . $validator . '() is deprecated in drupal:10.2.0 and will be removed in drupal:11.0.0. Use Symfony Constraints instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+        if (!is_array($options)) {
+          $options = [$options];
+        }
         array_unshift($options, $file);
         // Call the validation function.
         // Options are a list of function args.
