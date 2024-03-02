@@ -336,7 +336,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $display_handler->expects($this->once())
-      ->method('setOption', '0')
+      ->method('setOption')
       ->with($this->equalTo('pager_element'));
 
     $display_collection = $this->getMockBuilder('Drupal\views\DisplayPluginCollection')

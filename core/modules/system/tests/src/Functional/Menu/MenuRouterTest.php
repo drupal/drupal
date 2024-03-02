@@ -82,8 +82,8 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestTitleCallbackFalse() {
     $this->drupalGet('test-page');
-    $this->assertSession()->pageTextContains('A title with @placeholder', 'Raw text found on the page');
-    $this->assertSession()->pageTextNotContains('A title with some other text', 'Text with placeholder substitutions not found.');
+    $this->assertSession()->pageTextContains('A title with @placeholder');
+    $this->assertSession()->pageTextNotContains('A title with some other text');
   }
 
   /**
