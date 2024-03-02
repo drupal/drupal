@@ -2,23 +2,24 @@
 
 namespace Drupal\workflow_type_test\Plugin\WorkflowType;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\workflows\Attribute\WorkflowType;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
 use Drupal\workflows\State;
 
 /**
  * Test workflow type.
- *
- * @WorkflowType(
- *   id = "predefined_states_workflow_test_type",
- *   label = @Translation("Predefined States Workflow Test Type"),
- *   required_states = {
- *     "pay_blinds",
- *     "bet",
- *     "raise",
- *     "fold",
- *   }
- * )
  */
+#[WorkflowType(
+  id: 'predefined_states_workflow_test_type',
+  label: new TranslatableMarkup('Predefined States Workflow Test Type'),
+  required_states: [
+    'pay_blinds',
+    'bet',
+    'raise',
+    'fold',
+  ]
+)]
 class PredefinedStatesWorkflowTestType extends WorkflowTypeBase {
 
   /**

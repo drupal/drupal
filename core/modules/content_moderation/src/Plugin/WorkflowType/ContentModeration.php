@@ -10,6 +10,8 @@ use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\content_moderation\ContentModerationState;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\workflows\Attribute\WorkflowType;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
 use Drupal\workflows\StateInterface;
 use Drupal\workflows\WorkflowInterface;
@@ -17,20 +19,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Attaches workflows to content entity types and their bundles.
- *
- * @WorkflowType(
- *   id = "content_moderation",
- *   label = @Translation("Content moderation"),
- *   required_states = {
- *     "draft",
- *     "published",
- *   },
- *   forms = {
- *     "configure" = "\Drupal\content_moderation\Form\ContentModerationConfigureForm",
- *     "state" = "\Drupal\content_moderation\Form\ContentModerationStateForm"
- *   },
- * )
  */
+#[WorkflowType(
+  id: 'content_moderation',
+  label: new TranslatableMarkup('Content moderation'),
+  forms: [
+    'configure' => '\Drupal\content_moderation\Form\ContentModerationConfigureForm',
+    'state' => '\Drupal\content_moderation\Form\ContentModerationStateForm',
+  ],
+  required_states: [
+    'draft',
+    'published',
+  ]
+)]
 class ContentModeration extends WorkflowTypeBase implements ContentModerationInterface, ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;

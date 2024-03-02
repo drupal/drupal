@@ -4,17 +4,18 @@ namespace Drupal\workflow_type_test\Plugin\WorkflowType;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\workflows\Attribute\WorkflowType;
 use Drupal\workflows\Plugin\WorkflowTypeBase;
 use Drupal\workflows\WorkflowInterface;
 
 /**
  * A test workflow with custom state/transition access rules applied.
- *
- * @WorkflowType(
- *   id = "workflow_custom_access_type",
- *   label = @Translation("Workflow Custom Access Type Test"),
- * )
  */
+#[WorkflowType(
+  id: 'workflow_custom_access_type',
+  label: new TranslatableMarkup('Workflow Custom Access Type Test')
+)]
 class WorkflowCustomAccessType extends WorkflowTypeBase {
 
   /**
