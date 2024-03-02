@@ -3,22 +3,21 @@
 namespace Drupal\image_module_test\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Default widget for Dummy AJAX test.
- *
- * @FieldWidget(
- *   id = "image_module_test_dummy_ajax_widget",
- *   label = @Translation("Dummy AJAX widget"),
- *   field_types = {
- *     "image_module_test_dummy_ajax"
- *   },
- *   multiple_values = TRUE,
- * )
  */
+#[FieldWidget(
+  id: 'image_module_test_dummy_ajax_widget',
+  label: new TranslatableMarkup('Dummy AJAX widget'),
+  field_types: ['image_module_test_dummy_ajax'],
+  multiple_values: TRUE,
+)]
 class DummyAjaxWidget extends WidgetBase {
 
   /**

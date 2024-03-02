@@ -2,24 +2,23 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'entity_reference_autocomplete' widget.
- *
- * @FieldWidget(
- *   id = "entity_reference_autocomplete",
- *   label = @Translation("Autocomplete"),
- *   description = @Translation("An autocomplete text field."),
- *   field_types = {
- *     "entity_reference"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'entity_reference_autocomplete',
+  label: new TranslatableMarkup('Autocomplete'),
+  description: new TranslatableMarkup('An autocomplete text field.'),
+  field_types: ['entity_reference'],
+)]
 class EntityReferenceAutocompleteWidget extends WidgetBase {
 
   /**

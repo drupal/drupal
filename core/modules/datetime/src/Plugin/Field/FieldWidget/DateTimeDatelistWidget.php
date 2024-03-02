@@ -2,20 +2,19 @@
 
 namespace Drupal\datetime\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'datetime_datelist' widget.
- *
- * @FieldWidget(
- *   id = "datetime_datelist",
- *   label = @Translation("Select list"),
- *   field_types = {
- *     "datetime"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'datetime_datelist',
+  label: new TranslatableMarkup('Select list'),
+  field_types: ['datetime'],
+)]
 class DateTimeDatelistWidget extends DateTimeWidgetBase {
 
   /**

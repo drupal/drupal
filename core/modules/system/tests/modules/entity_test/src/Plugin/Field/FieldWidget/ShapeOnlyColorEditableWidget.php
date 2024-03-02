@@ -2,21 +2,20 @@
 
 namespace Drupal\entity_test\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'shape_only_color_editable_widget' widget.
- *
- * @FieldWidget(
- *   id = "shape_only_color_editable_widget",
- *   label = @Translation("Shape widget with only color editable property"),
- *   field_types = {
- *     "shape"
- *   },
- * )
  */
+#[FieldWidget(
+  id: 'shape_only_color_editable_widget',
+  label: new TranslatableMarkup('Shape widget with only color editable property'),
+  field_types: ['shape'],
+)]
 class ShapeOnlyColorEditableWidget extends WidgetBase {
 
   /**

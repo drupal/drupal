@@ -2,22 +2,21 @@
 
 namespace Drupal\text\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\StringTextareaWidget;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'text_textarea' widget.
- *
- * @FieldWidget(
- *   id = "text_textarea",
- *   label = @Translation("Text area (multiple rows)"),
- *   field_types = {
- *     "text_long"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'text_textarea',
+  label: new TranslatableMarkup('Text area (multiple rows)'),
+  field_types: ['text_long'],
+)]
 class TextareaWidget extends StringTextareaWidget {
 
   /**

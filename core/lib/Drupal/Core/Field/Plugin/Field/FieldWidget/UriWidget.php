@@ -2,21 +2,20 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'uri' widget.
- *
- * @FieldWidget(
- *   id = "uri",
- *   label = @Translation("URI field"),
- *   field_types = {
- *     "uri",
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'uri',
+  label: new TranslatableMarkup('URI field'),
+  field_types: ['uri'],
+)]
 class UriWidget extends WidgetBase {
 
   /**

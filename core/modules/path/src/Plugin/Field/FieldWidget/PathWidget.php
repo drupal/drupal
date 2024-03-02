@@ -2,22 +2,21 @@
 
 namespace Drupal\path\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'path' widget.
- *
- * @FieldWidget(
- *   id = "path",
- *   label = @Translation("URL alias"),
- *   field_types = {
- *     "path"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'path',
+  label: new TranslatableMarkup('URL alias'),
+  field_types: ['path']
+)]
 class PathWidget extends WidgetBase {
 
   /**

@@ -3,23 +3,22 @@
 namespace Drupal\datetime\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'datetime_default' widget.
- *
- * @FieldWidget(
- *   id = "datetime_default",
- *   label = @Translation("Date and time"),
- *   field_types = {
- *     "datetime"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'datetime_default',
+  label: new TranslatableMarkup('Date and time'),
+  field_types: ['datetime'],
+)]
 class DateTimeDefaultWidget extends DateTimeWidgetBase {
 
   /**

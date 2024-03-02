@@ -3,23 +3,22 @@
 namespace Drupal\datetime_range\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'daterange_default' widget.
- *
- * @FieldWidget(
- *   id = "daterange_default",
- *   label = @Translation("Date and time range"),
- *   field_types = {
- *     "daterange"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'daterange_default',
+  label: new TranslatableMarkup('Date and time range'),
+  field_types: ['daterange'],
+)]
 class DateRangeDefaultWidget extends DateRangeWidgetBase {
 
   /**

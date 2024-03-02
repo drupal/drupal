@@ -151,11 +151,11 @@ function hook_field_storage_config_update_forbid(\Drupal\field\FieldStorageConfi
  * which widget to use.
  *
  * Widgets are Plugins managed by the
- * \Drupal\Core\Field\WidgetPluginManager class. A widget is a plugin annotated
- * with class \Drupal\Core\Field\Annotation\FieldWidget that implements
- * \Drupal\Core\Field\WidgetInterface (in most cases, by
- * subclassing \Drupal\Core\Field\WidgetBase). Widget plugins need to be in the
- * namespace \Drupal\{your_module}\Plugin\Field\FieldWidget.
+ * \Drupal\Core\Field\WidgetPluginManager class. A widget is a plugin
+ * attributed with class \Drupal\Core\Field\Attribute\FieldWidget that
+ * implements \Drupal\Core\Field\WidgetInterface (in most cases, by subclassing
+ * \Drupal\Core\Field\WidgetBase). Widget plugins need to be in the namespace
+ * \Drupal\{your_module}\Plugin\Field\FieldWidget.
  *
  * Widgets are @link form_api Form API @endlink elements with additional
  * processing capabilities. The methods of the WidgetInterface object are
@@ -173,7 +173,7 @@ function hook_field_storage_config_update_forbid(\Drupal\field\FieldStorageConfi
  *
  * @param array $info
  *   An array of information on existing widget types, as collected by the
- *   annotation discovery mechanism.
+ *   plugin discovery mechanism.
  */
 function hook_field_widget_info_alter(array &$info) {
   // Let a new field type re-use an existing widget.

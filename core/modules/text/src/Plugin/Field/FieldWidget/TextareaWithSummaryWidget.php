@@ -2,21 +2,20 @@
 
 namespace Drupal\text\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'text_textarea_with_summary' widget.
- *
- * @FieldWidget(
- *   id = "text_textarea_with_summary",
- *   label = @Translation("Text area with a summary"),
- *   field_types = {
- *     "text_with_summary"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'text_textarea_with_summary',
+  label: new TranslatableMarkup('Text area with a summary'),
+  field_types: ['text_with_summary'],
+)]
 class TextareaWithSummaryWidget extends TextareaWidget {
 
   /**

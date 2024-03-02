@@ -2,10 +2,12 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -15,14 +17,13 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  * hook_field_widget_info_alter().
  *
  * @see field_test_field_widget_info_alter()
- *
- * @FieldWidget(
- *   id = "test_field_widget_multiple",
- *   label = @Translation("Test widget - multiple"),
- *   multiple_values = TRUE,
- *   weight = 10
- * )
  */
+#[FieldWidget(
+  id: 'test_field_widget_multiple',
+  label: new TranslatableMarkup('Test widget - multiple'),
+  multiple_values: TRUE,
+  weight: 10,
+)]
 class TestFieldWidgetMultiple extends WidgetBase {
 
   /**

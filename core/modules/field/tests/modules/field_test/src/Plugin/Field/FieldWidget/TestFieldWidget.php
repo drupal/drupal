@@ -2,26 +2,27 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'test_field_widget' widget.
- *
- * @FieldWidget(
- *   id = "test_field_widget",
- *   label = @Translation("Test widget"),
- *   field_types = {
- *     "field_test",
- *     "test_field",
- *     "hidden_test_field",
- *     "test_field_with_preconfigured_options"
- *   },
- *   weight = -10
- * )
  */
+#[FieldWidget(
+  id: 'test_field_widget',
+  label: new TranslatableMarkup('Test widget'),
+  field_types: [
+    'field_test',
+    'test_field',
+    'hidden_test_field',
+    'test_field_with_preconfigured_options',
+  ],
+  weight: -10,
+)]
 class TestFieldWidget extends WidgetBase {
 
   /**

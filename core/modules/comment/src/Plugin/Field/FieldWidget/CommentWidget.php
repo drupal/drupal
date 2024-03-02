@@ -4,21 +4,20 @@ namespace Drupal\comment\Plugin\Field\FieldWidget;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a default comment widget.
- *
- * @FieldWidget(
- *   id = "comment_default",
- *   label = @Translation("Comment"),
- *   field_types = {
- *     "comment"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'comment_default',
+  label: new TranslatableMarkup('Comment'),
+  field_types: ['comment'],
+)]
 class CommentWidget extends WidgetBase {
 
   /**
