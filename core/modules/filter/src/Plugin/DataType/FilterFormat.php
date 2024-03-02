@@ -3,17 +3,18 @@
 namespace Drupal\filter\Plugin\DataType;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\Plugin\DataType\StringData;
 
 /**
  * The filter format data type.
- *
- * @DataType(
- *   id = "filter_format",
- *   label = @Translation("Filter format")
- * )
  */
+#[DataType(
+  id: "filter_format",
+  label: new TranslatableMarkup("Filter format"),
+)]
 class FilterFormat extends StringData implements OptionsProviderInterface {
 
   /**

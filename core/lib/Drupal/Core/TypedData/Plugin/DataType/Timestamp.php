@@ -3,16 +3,17 @@
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\Type\DateTimeInterface;
 
 /**
  * The timestamp data type.
- *
- * @DataType(
- *   id = "timestamp",
- *   label = @Translation("Timestamp")
- * )
  */
+#[DataType(
+  id: "timestamp",
+  label: new TranslatableMarkup("Timestamp"),
+)]
 class Timestamp extends IntegerData implements DateTimeInterface {
 
   /**

@@ -3,18 +3,19 @@
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\Type\DateTimeInterface;
 
 /**
  * A data type for ISO 8601 date strings.
  *
  * The plain value of this data type is a date string in ISO 8601 format.
- *
- * @DataType(
- *   id = "datetime_iso8601",
- *   label = @Translation("Date")
- * )
  */
+#[DataType(
+  id: "datetime_iso8601",
+  label: new TranslatableMarkup("Date")
+)]
 class DateTimeIso8601 extends StringData implements DateTimeInterface {
 
   /**

@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\Type\DurationInterface;
 
 /**
@@ -13,13 +15,12 @@ use Drupal\Core\TypedData\Type\DurationInterface;
  * hours due to daylight savings). If that's an issue, consider using
  * \Drupal\Core\TypedData\Type\DurationIso8601 instead.
  *
- * @DataType(
- *   id = "timespan",
- *   label = @Translation("Time span in seconds")
- * )
- *
  * @see \Drupal\Core\TypedData\Type\DurationIso8601
  */
+#[DataType(
+  id: "timespan",
+  label: new TranslatableMarkup("Time span in seconds"),
+)]
 class TimeSpan extends IntegerData implements DurationInterface {
 
   /**
