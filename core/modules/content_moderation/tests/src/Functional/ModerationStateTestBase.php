@@ -49,6 +49,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     'use editorial transition archive',
     'use editorial transition archived_draft',
     'use editorial transition archived_published',
+    'administer taxonomy',
   ];
 
   /**
@@ -69,6 +70,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
     'block_content',
     'node',
     'entity_test',
+    'taxonomy',
   ];
 
   /**
