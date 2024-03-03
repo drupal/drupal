@@ -2,20 +2,21 @@
 
 namespace Drupal\content_translation\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Validation constraint for the entity changed timestamp.
  *
  * @internal
- *
- * @Constraint(
- *   id = "ContentTranslationSynchronizedFields",
- *   label = @Translation("Content translation synchronized fields", context = "Validation"),
- *   type = {"entity"}
- * )
  */
-class ContentTranslationSynchronizedFieldsConstraint extends Constraint {
+#[Constraint(
+  id: 'ContentTranslationSynchronizedFields',
+  label: new TranslatableMarkup('Content translation synchronized fields', [], ['context' => 'Validation']),
+  type: ['entity']
+)]
+class ContentTranslationSynchronizedFieldsConstraint extends SymfonyConstraint {
 
   /**
    * Message shown for non-translatable field changes in non-default revision.

@@ -4,19 +4,20 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * The fundamental compatibility constraint.
  *
- * @Constraint(
- *   id = "CKEditor5FundamentalCompatibility",
- *   label = @Translation("CKEditor 5 fundamental text format compatibility", context = "Validation"),
- * )
- *
  * @internal
  */
-class FundamentalCompatibilityConstraint extends Constraint {
+#[Constraint(
+  id: 'CKEditor5FundamentalCompatibility',
+  label: new TranslatableMarkup('CKEditor 5 fundamental text format compatibility', [], ['context' => 'Validation'])
+)]
+class FundamentalCompatibilityConstraint extends SymfonyConstraint {
 
   /**
    * The violation message when no markup filters are enabled.

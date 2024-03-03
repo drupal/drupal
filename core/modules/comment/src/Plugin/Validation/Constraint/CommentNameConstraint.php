@@ -3,16 +3,17 @@
 namespace Drupal\comment\Plugin\Validation\Constraint;
 
 use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
 
 /**
  * Supports validating comment author names.
- *
- * @Constraint(
- *   id = "CommentName",
- *   label = @Translation("Comment author name", context = "Validation"),
- *   type = "entity:comment"
- * )
  */
+#[Constraint(
+  id: 'CommentName',
+  label: new TranslatableMarkup('Comment author name', [], ['context' => 'Validation']),
+  type: 'entity:comment'
+)]
 class CommentNameConstraint extends CompositeConstraintBase {
 
   /**

@@ -2,18 +2,19 @@
 
 namespace Drupal\file\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * File name length constraint.
- *
- * @Constraint(
- *   id = "FileNameLength",
- *   label = @Translation("File Name Length", context = "Validation"),
- *   type = "file"
- * )
  */
-class FileNameLengthConstraint extends Constraint {
+#[Constraint(
+  id: 'FileNameLength',
+  label: new TranslatableMarkup('File Name Length', [], ['context' => 'Validation']),
+  type: 'file'
+)]
+class FileNameLengthConstraint extends SymfonyConstraint {
 
   /**
    * The maximum file name length.

@@ -2,17 +2,18 @@
 
 namespace Drupal\user\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Checks if a value is a valid user name.
- *
- * @Constraint(
- *   id = "UserName",
- *   label = @Translation("User name", context = "Validation"),
- * )
  */
-class UserNameConstraint extends Constraint {
+#[Constraint(
+  id: 'UserName',
+  label: new TranslatableMarkup('User name', [], ['context' => 'Validation'])
+)]
+class UserNameConstraint extends SymfonyConstraint {
 
   public $emptyMessage = 'You must enter a username.';
   public $spaceBeginMessage = 'The username cannot begin with a space.';

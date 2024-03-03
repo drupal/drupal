@@ -2,18 +2,19 @@
 
 namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Checks if a value is an entity that has a specific field.
- *
- * @Constraint(
- *   id = "EntityHasField",
- *   label = @Translation("Entity has field", context = "Validation"),
- *   type = { "entity" },
- * )
  */
-class EntityHasFieldConstraint extends Constraint {
+#[Constraint(
+  id: 'EntityHasField',
+  label: new TranslatableMarkup('Entity has field', [], ['context' => 'Validation']),
+  type: ['entity']
+)]
+class EntityHasFieldConstraint extends SymfonyConstraint {
 
   /**
    * The default violation message.
@@ -38,6 +39,12 @@ class EntityHasFieldConstraint extends Constraint {
 
   /**
    * {@inheritdoc}
+   *
+   * @return ?string
+   *   Name of the default option.
+   *
+   * @todo Add method return type declaration.
+   * @see https://www.drupal.org/project/drupal/issues/3425150
    */
   public function getDefaultOption() {
     return 'field_name';
@@ -45,6 +52,12 @@ class EntityHasFieldConstraint extends Constraint {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The names of the required options.
+   *
+   * @todo Add method return type declaration.
+   * @see https://www.drupal.org/project/drupal/issues/3425150
    */
   public function getRequiredOptions() {
     return (array) $this->getDefaultOption();

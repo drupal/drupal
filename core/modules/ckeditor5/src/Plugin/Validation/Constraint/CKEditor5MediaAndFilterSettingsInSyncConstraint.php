@@ -4,19 +4,20 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Ensure CKEditor 5 media plugin's and media filter's settings are in sync.
  *
- * @Constraint(
- *   id = "CKEditor5MediaAndFilterSettingsInSync",
- *   label = @Translation("CKEditor 5 Media plugin in sync with filter settings", context = "Validation"),
- * )
- *
  * @internal
  */
-class CKEditor5MediaAndFilterSettingsInSyncConstraint extends Constraint {
+#[Constraint(
+  id: 'CKEditor5MediaAndFilterSettingsInSync',
+  label: new TranslatableMarkup('CKEditor 5 Media plugin in sync with filter settings', [], ['context' => 'Validation'])
+)]
+class CKEditor5MediaAndFilterSettingsInSyncConstraint extends SymfonyConstraint {
 
   /**
    * The default violation message.

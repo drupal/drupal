@@ -2,18 +2,19 @@
 
 namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Checks if a value is a valid entity type.
- *
- * @Constraint(
- *   id = "EntityType",
- *   label = @Translation("Entity type", context = "Validation"),
- *   type = { "entity", "entity_reference" }
- * )
  */
-class EntityTypeConstraint extends Constraint {
+#[Constraint(
+  id: 'EntityType',
+  label: new TranslatableMarkup('Entity type', [], ['context' => 'Validation']),
+  type: ['entity', 'entity_reference']
+)]
+class EntityTypeConstraint extends SymfonyConstraint {
 
   /**
    * The default violation message.

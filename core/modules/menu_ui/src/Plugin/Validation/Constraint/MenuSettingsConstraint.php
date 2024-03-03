@@ -2,17 +2,18 @@
 
 namespace Drupal\menu_ui\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Validation constraint for changing the menu settings in pending revisions.
- *
- * @Constraint(
- *   id = "MenuSettings",
- *   label = @Translation("Menu settings.", context = "Validation"),
- * )
  */
-class MenuSettingsConstraint extends Constraint {
+#[Constraint(
+  id: 'MenuSettings',
+  label: new TranslatableMarkup('Menu settings.', [], ['context' => 'Validation'])
+)]
+class MenuSettingsConstraint extends SymfonyConstraint {
 
   public $message = 'You can only change the menu settings for the <em>published</em> version of this content.';
   public $messageWeight = 'You can only change the menu link weight for the <em>published</em> version of this content.';

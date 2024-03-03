@@ -2,18 +2,19 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\Validator\Constraints\Choice;
 
 /**
  * Checks for the value being allowed.
  *
- * @Constraint(
- *   id = "AllowedValues",
- *   label = @Translation("Allowed values", context = "Validation")
- * )
- *
  * @see \Drupal\Core\TypedData\OptionsProviderInterface
  */
+#[Constraint(
+  id: 'AllowedValues',
+  label: new TranslatableMarkup('Allowed values', [], ['context' => 'Validation'])
+)]
 class AllowedValuesConstraint extends Choice {
 
   public $strict = TRUE;
