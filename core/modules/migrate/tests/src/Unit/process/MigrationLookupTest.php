@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-use Drupal\migrate\MigrateException;
+use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MigrationLookup;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -48,8 +48,10 @@ class MigrationLookupTest extends MigrationLookupTestCase {
 
   /**
    * @covers ::transform
+   *
+   * @dataProvider providerTestTransformWithStubbing
    */
-  public function testTransformWithStubbing() {
+  public function testTransformWithStubbing($exception_class, $exception_message, $expected_message): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $this->migrateLookup->lookup('destination_migration', [1])->willReturn(NULL);
     $this->migrateStub->createStub('destination_migration', [1], [], FALSE)->willReturn([2]);
@@ -63,11 +65,35 @@ class MigrationLookupTest extends MigrationLookupTestCase {
     $result = $migration->transform(1, $this->migrateExecutable, $this->row, '');
     $this->assertEquals(2, $result);
 
-    $this->migrateStub->createStub('destination_migration', [1], [], FALSE)->willThrow(new \Exception('Oh noes!'));
+    $this->migrateStub->createStub('destination_migration', [1], [], FALSE)->willThrow(new $exception_class($exception_message));
     $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
-    $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage('Exception was thrown while attempting to stub: Oh noes!');
+    $this->expectException($exception_class);
+    $this->expectExceptionMessage($expected_message);
     $migration->transform(1, $this->migrateExecutable, $this->row, '');
+
+  }
+
+  /**
+   * Provides data for testTransformWithStubbing().
+   */
+  public static function providerTestTransformWithStubbing(): array {
+    return [
+      [
+        \Exception::class,
+        'Oh noes!',
+        'Exception was thrown while attempting to stub: Oh noes!',
+      ],
+      [
+        MigrateSkipRowException::class,
+        'Oh noes!',
+        "Migration lookup for destination '' attempted to create a stub using migration destination_migration, which resulted in a row skip, with message 'Oh noes!'",
+      ],
+      [
+        MigrateSkipRowException::class,
+        '',
+        "Migration lookup for destination '' attempted to create a stub using migration destination_migration, which resulted in a row skip",
+      ],
+    ];
   }
 
   /**
