@@ -845,41 +845,9 @@ parameters:
 			path: lib/Drupal/Core/TypedData/Validation/RecursiveContextualValidator.php
 
 		-
-			message: """
-				#^Class Drupal\\\\Core\\\\Update\\\\UpdateHookRegistryFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateHookRegistryFactory.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Update\\\\UpdateHookRegistryFactory\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateHookRegistryFactory.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Update/UpdateKernel.php
-
-		-
-			message: """
-				#^Class Drupal\\\\Core\\\\Update\\\\UpdateRegistryFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateRegistryFactory.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Update\\\\UpdateRegistryFactory\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/Update/UpdateRegistryFactory.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Updater\\\\Module\\:\\:postUpdateTasks\\(\\) should return array but return statement is missing\\.$#"
