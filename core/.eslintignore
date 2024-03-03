@@ -9,6 +9,9 @@ modules/system/tests/fixtures/HtaccessTest/access_test.yml
 modules/system/tests/themes/test_theme_libraries_empty/test_theme_libraries_empty.info.yml
 tests/Drupal/Tests/Core/Asset/library_test_files/empty.libraries.yml
 tests/Drupal/Tests/Core/Asset/library_test_files/invalid_file.libraries.yml
+tests/Drupal/Tests/Composer/Plugin/Scaffold/fixtures/drupal-assets-fixture/assets/default.services.yml
+tests/Drupal/Tests/Composer/Plugin/Scaffold/fixtures/drupal-profile/assets/profile.default.services.yml
+modules/sdc/tests/themes/sdc_theme_test/components/bar/bar.component.yml
 
 # Temporary until they are brought up to standards
 scripts/**/*
