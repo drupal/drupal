@@ -389,8 +389,7 @@ function install_begin_request($class_loader, &$install_state) {
   if ($install_state['settings_verified']) {
     try {
       $system_schema = system_schema();
-      end($system_schema);
-      $table = key($system_schema);
+      $table = array_key_last($system_schema);
       $install_state['base_system_verified'] = Database::getConnection()->schema()->tableExists($table);
     }
     catch (DatabaseExceptionWrapper $e) {
@@ -558,9 +557,7 @@ function install_run_tasks(&$install_state, callable $callback = NULL) {
     // so we regenerate the remaining tasks based on the installation state,
     // each time through the loop.
     $tasks_to_perform = install_tasks_to_perform($install_state);
-    // Run the first task on the list.
-    reset($tasks_to_perform);
-    $task_name = key($tasks_to_perform);
+    $task_name = array_key_first($tasks_to_perform);
     $task = array_shift($tasks_to_perform);
     $install_state['active_task'] = $task_name;
     $original_parameters = $install_state['parameters'];
@@ -1167,8 +1164,7 @@ function install_verify_database_settings($site_path) {
  */
 function install_verify_database_ready() {
   $system_schema = system_schema();
-  end($system_schema);
-  $table = key($system_schema);
+  $table = array_key_last($system_schema);
 
   $existing_install = FALSE;
   if (Database::getConnectionInfo()) {
