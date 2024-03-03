@@ -400,8 +400,7 @@ class PagerTest extends ViewTestBase {
     $view->display_handler->setOption('pager', $pager);
     $view->save();
 
-    // Stable9 will be addressed in https://www.drupal.org/project/drupal/issues/3333418
-    $themes = ['stark', 'olivero', 'claro', 'starterkit_theme'];
+    $themes = ['stark', 'olivero', 'claro', 'starterkit_theme', 'stable9'];
     $this->container->get('theme_installer')->install($themes);
 
     foreach ($themes as $theme) {
