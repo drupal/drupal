@@ -126,6 +126,7 @@ tr .form-item,
 @media screen and (min-width: 37.5625rem) {
   .form-item__suffix {
     margin-inline-start: var(--space-xs);
+    white-space: nowrap;
   }
 }
 
