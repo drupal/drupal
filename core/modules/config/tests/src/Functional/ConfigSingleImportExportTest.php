@@ -192,21 +192,9 @@ EOD;
     ];
     $this->drupalGet('admin/config/development/configuration/single/import');
     $this->submitForm($edit, 'Import');
-    if (extension_loaded('yaml')) {
-      // If the yaml extension is loaded it will work but not create the PHP
-      // object.
-      $this->assertSession()->pageTextContains('Are you sure you want to update the second test configuration?');
-      $this->submitForm([], 'Confirm');
-      $entity = $storage->load('second');
-      $this->assertSession()->pageTextContains('The configuration was imported successfully.');
-      $this->assertIsString($entity->label());
-      $this->assertStringContainsString('ObjectSerialization', $entity->label(), 'Label contains serialized object');
-    }
-    else {
-      // If the Symfony parser is used there will be an error.
-      $this->assertSession()->responseContains('The import failed with the following message:');
-      $this->assertSession()->responseContains('Object support when parsing a YAML file has been disabled');
-    }
+    // @see \Drupal\Tests\Component\Serialization\YamlSymfonyTest:: testDecodeObjectSupportDisabled()
+    $this->assertSession()->responseContains('The import failed with the following message:');
+    $this->assertSession()->responseContains('Object support when parsing a YAML file has been disabled');
   }
 
   /**
