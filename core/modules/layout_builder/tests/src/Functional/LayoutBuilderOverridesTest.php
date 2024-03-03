@@ -129,8 +129,7 @@ class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
 
     // Get the UUID of the component.
     $components = Node::load(1)->get('layout_builder__layout')->getSection(0)->getComponents();
-    end($components);
-    $uuid = key($components);
+    $uuid = array_key_last($components);
 
     $this->drupalGet('layout_builder/update/block/overrides/node.1/0/content/' . $uuid);
     $page->uncheckField('settings[label_display]');

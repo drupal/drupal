@@ -35,8 +35,7 @@ class OptionsButtonsWidget extends OptionsWidgetBase {
 
     // If required and there is one single option, preselect it.
     if ($this->required && count($options) == 1) {
-      reset($options);
-      $selected = [key($options)];
+      $selected = [array_key_first($options)];
     }
 
     if ($this->multiple) {

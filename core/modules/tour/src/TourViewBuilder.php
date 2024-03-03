@@ -74,8 +74,7 @@ class TourViewBuilder extends EntityViewBuilder {
 
     // If there is at least one tour item, build the tour.
     if ($items) {
-      end($items);
-      $key = key($items);
+      $key = array_key_last($items);
       $items[$key]['cancelText'] = t('End tour');
     }
 

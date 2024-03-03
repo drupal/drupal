@@ -1176,9 +1176,7 @@ function claro_preprocess_table(&$variables) {
           $variables['attributes']['class'][] = 'draggable-table';
           $draggable_row_found = TRUE;
         }
-
-        reset($row['cells']);
-        $first_cell_key = key($row['cells']);
+        $first_cell_key = array_key_first($row['cells']);
         // The 'attributes' key is always here and it is an
         // \Drupal\Core\Template\Attribute.
         // @see template_preprocess_table();
