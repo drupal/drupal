@@ -20,6 +20,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\content_moderation\Entity\Handler\BlockContentModerationHandler;
 use Drupal\content_moderation\Entity\Handler\ModerationHandler;
 use Drupal\content_moderation\Entity\Handler\NodeModerationHandler;
+use Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler;
 use Drupal\content_moderation\Entity\Routing\EntityModerationRouteProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -80,6 +81,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   protected $moderationHandlers = [
     'node' => NodeModerationHandler::class,
     'block_content' => BlockContentModerationHandler::class,
+    'taxonomy_term' => TaxonomyTermModerationHandler::class,
   ];
 
   /**
@@ -144,7 +146,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       $entity_type_to_exclude = [
         'path_alias',
         'workspace',
-        'taxonomy_term',
       ];
       if ($entity_type->isRevisionable() && !$entity_type->isInternal() && !in_array($entity_type_id, $entity_type_to_exclude)) {
         $entity_types[$entity_type_id] = $this->addModerationToEntityType($entity_type);
