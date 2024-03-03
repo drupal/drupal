@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\file\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * File extension dimensions constraint.
- *
- * @Constraint(
- *   id = "FileImageDimensions",
- *   label = @Translation("File Image Dimensions", context = "Validation"),
- *   type = "file"
- * )
  */
-class FileImageDimensionsConstraint extends Constraint {
+#[Constraint(
+  id: 'FileImageDimensions',
+  label: new TranslatableMarkup('File Image Dimensions', [], ['context' => 'Validation']),
+  type: 'file'
+)]
+class FileImageDimensionsConstraint extends SymfonyConstraint {
 
   /**
    * The minimum dimensions.

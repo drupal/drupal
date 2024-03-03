@@ -2,7 +2,9 @@
 
 namespace Drupal\media\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Checks if a value represents a valid oEmbed resource URL.
@@ -10,14 +12,13 @@ use Symfony\Component\Validator\Constraint;
  * @internal
  *   This is an internal part of the oEmbed system and should only be used by
  *   oEmbed-related code in Drupal core.
- *
- * @Constraint(
- *   id = "oembed_resource",
- *   label = @Translation("oEmbed resource", context = "Validation"),
- *   type = {"link", "string", "string_long"}
- * )
  */
-class OEmbedResourceConstraint extends Constraint {
+#[Constraint(
+  id: 'oembed_resource',
+  label: new TranslatableMarkup('oEmbed resource', [], ['context' => 'Validation']),
+  type: ['link', 'string', 'string_long']
+)]
+class OEmbedResourceConstraint extends SymfonyConstraint {
 
   /**
    * The error message if the URL does not match any known provider.

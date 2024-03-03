@@ -4,19 +4,20 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * The CKEditor 5 plugin settings.
  *
- * @Constraint(
- *   id = "CKEditor5EnabledConfigurablePlugins",
- *   label = @Translation("CKEditor 5 enabled configurable plugins", context = "Validation"),
- * )
- *
  * @internal
  */
-class EnabledConfigurablePluginsConstraint extends Constraint {
+#[Constraint(
+  id: 'CKEditor5EnabledConfigurablePlugins',
+  label: new TranslatableMarkup('CKEditor 5 enabled configurable plugins', [], ['context' => 'Validation'])
+)]
+class EnabledConfigurablePluginsConstraint extends SymfonyConstraint {
 
   /**
    * The default violation message.

@@ -4,12 +4,15 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
- * @Constraint(
- *   id = "FullyValidatable",
- *   label = @Translation("Whether this config schema type is fully validatable", context = "Validation"),
- * )
+ * Constraint for fully validatable config schema type.
  */
-final class FullyValidatableConstraint extends Constraint {}
+#[Constraint(
+  id: 'FullyValidatable',
+  label: new TranslatableMarkup('Whether this config schema type is fully validatable', [], ['context' => 'Validation'])
+)]
+final class FullyValidatableConstraint extends SymfonyConstraint {}

@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\Validator\Constraints\Range;
 
 /**
@@ -10,13 +12,12 @@ use Symfony\Component\Validator\Constraints\Range;
  * Overrides the symfony constraint to use Drupal-style replacement patterns.
  *
  * @todo: Move this below the TypedData core component.
- *
- * @Constraint(
- *   id = "Range",
- *   label = @Translation("Range", context = "Validation"),
- *   type = { "integer", "float" }
- * )
  */
+#[Constraint(
+  id: 'Range',
+  label: new TranslatableMarkup('Range', [], ['context' => 'Validation']),
+  type: ['integer', 'float']
+)]
 class RangeConstraint extends Range {
 
   /**

@@ -2,17 +2,18 @@
 
 namespace Drupal\workspaces\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Deleted workspace constraint.
- *
- * @Constraint(
- *   id = "DeletedWorkspace",
- *   label = @Translation("Deleted workspace", context = "Validation"),
- * )
  */
-class DeletedWorkspaceConstraint extends Constraint {
+#[Constraint(
+  id: 'DeletedWorkspace',
+  label: new TranslatableMarkup('Deleted workspace', [], ['context' => 'Validation'])
+)]
+class DeletedWorkspaceConstraint extends SymfonyConstraint {
 
   /**
    * The default violation message.

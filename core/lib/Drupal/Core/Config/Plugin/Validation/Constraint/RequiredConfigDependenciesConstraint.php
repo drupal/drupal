@@ -4,17 +4,18 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Config\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Checks that config dependencies contain specific types of entities.
- *
- * @Constraint(
- *   id = "RequiredConfigDependencies",
- *   label = @Translation("Required config dependency types", context = "Validation")
- * )
  */
-class RequiredConfigDependenciesConstraint extends Constraint {
+#[Constraint(
+  id: 'RequiredConfigDependencies',
+  label: new TranslatableMarkup('Required config dependency types', [], ['context' => 'Validation'])
+)]
+class RequiredConfigDependenciesConstraint extends SymfonyConstraint {
 
   /**
    * The error message.

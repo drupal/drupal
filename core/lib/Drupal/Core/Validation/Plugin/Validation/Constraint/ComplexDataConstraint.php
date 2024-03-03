@@ -2,19 +2,20 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Complex data constraint.
  *
  * Validates properties of complex data structures.
- *
- * @Constraint(
- *   id = "ComplexData",
- *   label = @Translation("Complex data", context = "Validation")
- * )
  */
-class ComplexDataConstraint extends Constraint {
+#[Constraint(
+  id: 'ComplexData',
+  label: new TranslatableMarkup('Complex data', [], ['context' => 'Validation'])
+)]
+class ComplexDataConstraint extends SymfonyConstraint {
 
   /**
    * An array of constraints for contained properties, keyed by property name.
@@ -46,6 +47,12 @@ class ComplexDataConstraint extends Constraint {
 
   /**
    * {@inheritdoc}
+   *
+   * @return ?string
+   *   Name of the default option.
+   *
+   * @todo Add method return type declaration.
+   * @see https://www.drupal.org/project/drupal/issues/3425150
    */
   public function getDefaultOption() {
     return 'properties';
@@ -53,6 +60,12 @@ class ComplexDataConstraint extends Constraint {
 
   /**
    * {@inheritdoc}
+   *
+   * @return array
+   *   The names of the required options.
+   *
+   * @todo Add method return type declaration.
+   * @see https://www.drupal.org/project/drupal/issues/3425150
    */
   public function getRequiredOptions() {
     return ['properties'];

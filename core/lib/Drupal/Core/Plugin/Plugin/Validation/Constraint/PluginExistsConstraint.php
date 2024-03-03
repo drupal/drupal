@@ -6,19 +6,20 @@ namespace Drupal\Core\Plugin\Plugin\Validation\Constraint;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 use Symfony\Component\Validator\Exception\MissingOptionsException;
 
 /**
  * Checks if a plugin exists and optionally implements a particular interface.
- *
- * @Constraint(
- *   id = "PluginExists",
- *   label = @Translation("Plugin exists", context = "Validation"),
- * )
  */
-class PluginExistsConstraint extends Constraint implements ContainerFactoryPluginInterface {
+#[Constraint(
+  id: 'PluginExists',
+  label: new TranslatableMarkup('Plugin exists', [], ['context' => 'Validation'])
+)]
+class PluginExistsConstraint extends SymfonyConstraint implements ContainerFactoryPluginInterface {
 
   /**
    * The error message if a plugin does not exist.

@@ -4,19 +4,20 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Uniquely labeled list item constraint.
  *
- * @Constraint(
- *   id = "UniqueLabelInList",
- *   label = @Translation("Unique label in list", context = "Validation"),
- * )
- *
  * @internal
  */
-class UniqueLabelInListConstraint extends Constraint {
+#[Constraint(
+  id: 'UniqueLabelInList',
+  label: new TranslatableMarkup('Unique label in list', [], ['context' => 'Validation'])
+)]
+class UniqueLabelInListConstraint extends SymfonyConstraint {
 
   /**
    * The default violation message.

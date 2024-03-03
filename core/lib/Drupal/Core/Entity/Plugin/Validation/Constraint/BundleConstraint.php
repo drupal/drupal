@@ -2,21 +2,22 @@
 
 namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
-use Symfony\Component\Validator\Constraint;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
+use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Checks if a value is a valid entity type.
  *
  * This differs from the `EntityBundleExists` constraint in that checks that the
  * validated value is an *entity* of a particular bundle.
- *
- * @Constraint(
- *   id = "Bundle",
- *   label = @Translation("Bundle", context = "Validation"),
- *   type = { "entity", "entity_reference" }
- * )
  */
-class BundleConstraint extends Constraint {
+#[Constraint(
+  id: 'Bundle',
+  label: new TranslatableMarkup('Bundle', [], ['context' => 'Validation']),
+  type: ['entity', 'entity_reference']
+)]
+class BundleConstraint extends SymfonyConstraint {
 
   /**
    * The default violation message.

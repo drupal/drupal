@@ -2,17 +2,18 @@
 
 namespace Drupal\field_test\Plugin\Validation\Constraint;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\Validator\Constraints\NotEqualTo;
 
 /**
  * Checks if a value is not equal.
- *
- * @Constraint(
- *   id = "TestField",
- *   label = @Translation("Test Field", context = "Validation"),
- *   type = { "integer" }
- * )
  */
+#[Constraint(
+  id: 'TestField',
+  label: new TranslatableMarkup('Test Field', [], ['context' => 'Validation']),
+  type: ['integer']
+)]
 class TestFieldConstraint extends NotEqualTo {
 
   /**
