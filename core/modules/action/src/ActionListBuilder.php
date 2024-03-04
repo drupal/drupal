@@ -2,11 +2,13 @@
 
 namespace Drupal\action;
 
+use Drupal\action\Form\ActionAdminManageForm;
 use Drupal\Core\Action\ActionManager;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -38,11 +40,22 @@ class ActionListBuilder extends ConfigEntityListBuilder {
    *   The action storage.
    * @param \Drupal\Core\Action\ActionManager $action_manager
    *   The action plugin manager.
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
+   *   The form builder.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ActionManager $action_manager) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityStorageInterface $storage,
+    ActionManager $action_manager,
+    protected ?FormBuilderInterface $formBuilder = NULL,
+  ) {
     parent::__construct($entity_type, $storage);
 
     $this->actionManager = $action_manager;
+    if (!$formBuilder) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $formBuilder argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3159776', E_USER_DEPRECATED);
+      $this->formBuilder = \Drupal::service('form_builder');
+    }
   }
 
   /**
@@ -52,7 +65,8 @@ class ActionListBuilder extends ConfigEntityListBuilder {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
-      $container->get('plugin.manager.action')
+      $container->get('plugin.manager.action'),
+      $container->get('form_builder')
     );
   }
 
@@ -108,7 +122,7 @@ class ActionListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
-    $build['action_admin_manage_form'] = \Drupal::formBuilder()->getForm('Drupal\action\Form\ActionAdminManageForm');
+    $build['action_admin_manage_form'] = $this->formBuilder->getForm(ActionAdminManageForm::class);
     $build['action_header']['#markup'] = '<h3>' . $this->t('Available actions:') . '</h3>';
     $build['action_table'] = parent::render();
     if (!$this->hasConfigurableActions) {
