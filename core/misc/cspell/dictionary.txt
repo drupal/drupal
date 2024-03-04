@@ -1,5 +1,4 @@
 absolutezero
-accesslog
 adamson
 addedline
 addtogroup
@@ -573,8 +572,6 @@ prerender
 prerendered
 presave
 presentationml
-presetid
-presetname
 pretransaction
 preuninstall
 processlist
@@ -804,7 +801,6 @@ titlebar
 tlds
 tmpfs
 toggleable
-togglewrap
 tongatapu
 toolkits
 toolongdomainexampledomainexampledomainexampledomainexampledomain
@@ -817,7 +813,6 @@ transferthick
 translatables
 trayblock
 trgm
-trid
 troopal
 truecolor
 twistie
