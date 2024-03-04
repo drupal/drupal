@@ -1,0 +1,16 @@
+/**
+ * @file
+ * Styles for the announcements feed.
+ */
+
+.announcements {
+  padding-bottom: 1rem;
+}
+.featured-announcements-wrapper .leaf {
+  padding-top: 0;
+}
+.announcements .announcements--view-all {
+  padding-left: 30px;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}

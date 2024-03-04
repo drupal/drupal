@@ -1,0 +1,179 @@
+<?php
+
+/**
+ * @file
+ * Used to create an announcements feed using the JSON data from drupal.org.
+ */
+
+/**
+ * Default maximum age of cached feed data in seconds.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_MAX_AGE', 86400);
+
+/**
+ * Default cron interval for refreshing feed data in seconds.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_CRON_INTERVAL', 21600);
+
+/**
+ * Default limit for number of feed items to fetch.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_LIMIT', 10);
+
+/**
+ * Default URL for the announcements JSON feed.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_JSON_URL', 'https://www.drupal.org/announcements.json');
+
+/**
+ * Default URL for the announcements feed at drupal.org.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_LINK', 'https://www.drupal.org/about/announcements');
+
+/**
+ * Implements hook_help().
+ */
+function announcements_feed_help($path) {
+  if ($path == 'admin/help#announcements_feed') {
+    $output = '';
+    $output .= '<h3>' . t('About') . '</h3>';
+    $output .= '<p>' . t('The Announcements module displays announcements from the Drupal community. For more information, see the <a href="@documentation">online documentation for the Announcements module</a>.', array('@documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed')) . '</p>';
+    $output .= '<h3>' . t('Uses') . '</h3>';
+    $output .= '<dl><dt>' . t('Accessing announcements') . '</dt>';
+    $output .= '<dd>' . t('Users with the "View drupal.org announcements" permission may click on the "Announcements" item in the administration menu, or access <a href="@link">Announcements</a>, to see all announcements relevant to the Drupal version of your site.', array('@link' => url('admin/announcements_feed'))) . '</dd>';
+    $output .= '</dl>';
+
+    return $output;
+  }
+
+}
+
+/**
+ * Implements hook_menu().
+ */
+function announcements_feed_menu() {
+  $items['admin/announcements_feed'] = array(
+    'title' => 'Announcements',
+    'description' => 'Announcements and updates posted by the drupal.org community.',
+    'page callback' => 'announcements_feed_get_announcements',
+    'access arguments' => array('access announcements'),
+    'position' => 'left',
+    'weight' => 2,
+    'file' => 'announcements_feed.inc',
+    'options' => array(
+      'attributes' => array(
+        'class' => array('announcement-menu-class'),
+      ),
+    ),
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function announcements_feed_permission() {
+  return array(
+    'access announcements' => array(
+      'title' => t('View official announcements related to Drupal'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function announcements_feed_theme() {
+  return array(
+    'announcements_feed' => array(
+      'variables' => array(
+        'featured' => NULL,
+        'standard' => NULL,
+        'feed_link' => NULL,
+        'count' => 0,
+      ),
+      'template' => 'announcements-feed',
+      'path' => drupal_get_path('module', 'announcements_feed'),
+    ),
+  );
+}
+
+/**
+ * Processes variables for announcements-feed.tpl.php.
+ *
+ * @see announcements-feed.tpl.php
+ */
+function template_preprocess_announcements_feed(&$variables) {
+  if (!empty($variables['featured'])) {
+    foreach($variables['featured'] as &$announcement) {
+      _announcements_feed_preprocess_item($announcement);
+    }
+  }
+  if (!empty($variables['standard'])) {
+    foreach($variables['standard'] as &$announcement) {
+      _announcements_feed_preprocess_item($announcement);
+    }
+  }
+  if (isset($variables['feed_link'])) {
+    $variables['feed_link'] = check_url($variables['feed_link']);
+  }
+}
+
+/**
+ * Helper to preprocess individual announcement items.
+ */
+function _announcements_feed_preprocess_item(&$item) {
+  $item['title'] = filter_xss($item['title']);
+  $item['teaser'] = filter_xss($item['teaser']);
+  $item['link'] = check_url($item['link']);
+  $item['date_modified'] = check_plain($item['date_modified']);
+  $item['date_published'] = check_plain($item['date_published']);
+  $item['version'] = check_plain($item['version']);
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function announcements_feed_page_alter(&$page) {
+  if (isset($page['page_top']['toolbar'])) {
+    // If the toolbar is available, add a pre-render function to add the class.
+    $page['page_top']['toolbar']['#pre_render'][] = 'announcements_feed_toolbar_pre_render_alter';
+  }
+}
+
+/**
+ * Pre-render function for adding default class to announcement link.
+ */
+function announcements_feed_toolbar_pre_render_alter($toolbar) {
+  $path = drupal_get_path('module', 'announcements_feed');
+  $toolbar['#attached']['css'][] = $path . '/announcements_feed-toolbar.css';
+  module_load_include('inc', 'announcements_feed');
+  foreach ($toolbar['toolbar_menu']['#links'] as &$link) {
+    if ($link['href'] === 'admin/announcements_feed') {
+      $link['attributes']['class'][] = 'announcement-default';
+    }
+  }
+
+  return $toolbar;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function announcements_feed_cron() {
+  module_load_include('inc', 'announcements_feed', 'announcements_feed');
+  $cron_interval = variable_get('announcements_feed_cron_interval', ANNOUNCEMENTS_FEED_DEFAULT_CRON_INTERVAL);
+  $last_check = variable_get('announcements_feed_last_fetch', 0);
+  $time = time();
+  if (($time - $last_check) > $cron_interval) {
+    try {
+      announcements_feed_fetch(TRUE);
+      // Update the last_fetch variable to the current time.
+      variable_set('announcements_feed_last_fetch', $time);
+    }
+    catch (Exception $e) {
+      watchdog('announcements_feed', 'Exception occurred: @message', array('@message' => $e->getMessage()), WATCHDOG_ERROR);
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Drupal Announcements Feed",
+  "home_page_url": "https://www.drupal.org",
+  "feed_url": "https://www.drupal.org/announcements.json",
+  "favicon": "https://www.drupal.org/favicon.ico",
+  "items": [{
+    "id": "3347976",
+    "title": "Contribute to Drupal and the Open Web",
+    "content_html": "<p>Drupal is an open source project. But what does that mean? How can you as a site-owner participate in the project of building a better web?</p>",
+    "url": "https://www.drupal.org/about/announcements/blog/contribute-to-drupal-and-the-open-web",
+    "date_modified": "2023-03-14T19:43:12+00:00",
+    "date_published": "2023-03-14T19:39:44+00:00",
+    "_drupalorg": {
+      "featured": false,
+      "version": ">=7.0"
+    }
+  },
+        {
+    "id": "3343486",
+    "title": "What to expect from the Announcements feed?",
+    "content_html": "<p>Drupal is introducing a new project Announcements feature so that you can see news and updates about the Drupal project and community directly in your Drupal dashboard. Learn what to expect.</p>",
+    "url": "https://www.drupal.org/about/announcements/blog/what-to-expect-from-the-announcements-feed",
+    "date_modified": "2023-02-21T19:45:53+00:00",
+    "date_published": "2023-02-21T19:45:53+00:00",
+    "_drupalorg": {
+      "featured": true,
+      "version": ">=7.0"
+    }
+  },
+        {
+    "id": "3327047",
+    "title": "Drupal 10.0.0 is available",
+    "content_html": "<p>Thanks to 2129 contributors from 616 organizations resolving 4083 issues in the past two and a half years, Drupal 10.0.0 is available today! This new version sets Drupal up for continued stability and security for the longer term. All new features will be added to Drupal 10 going forward.</p>",
+    "url": "https://www.drupal.org/blog/drupal-10-0-0",
+    "date_modified": "2023-03-14T19:47:33+00:00",
+    "date_published": "2022-12-15T17:43:23+00:00",
+    "_drupalorg": {
+      "featured": false,
+      "version": ">=7.0"
+    }
+  },
+        {
+    "id": "3343429",
+    "title": "New community feed available.",
+    "content_html": "<p>Drupal is introducing a new project Announcements feature so that you can see news and updates about the Drupal project and community directly in your Drupal dashboard. Learn what to expect.</p>",
+    "url": "https://www.drupal.org/about/announcements/blog/what-to-expect-from-the-announcements-feed",
+    "date_modified": "2023-03-21T19:45:53+00:00",
+    "date_published": "2023-03-21T19:45:53+00:00",
+    "_drupalorg": {
+      "featured": true,
+      "version": ">=7.0"
+    }
+  },
+        {
+    "id": "3343431",
+    "title": "Any plan to migrate to Drupal 9/10?",
+    "content_html": "<p>Drupal is introducing a new project Announcements feature so that you can see news and updates about the Drupal project and community directly in your Drupal dashboard. Learn what to expect.</p>",
+    "url": "https://www.drupal.org/about/announcements/blog/what-to-expect-from-the-announcements-feed",
+    "date_modified": "2023-02-25T19:45:53+00:00",
+    "date_published": "2023-02-25T19:45:53+00:00",
+    "_drupalorg": {
+      "featured": true,
+      "version": ">=7.0"
+    }
+  },
+  {
+    "id": "3343440",
+    "title": "Only 9 - Drupal 106 is available and this feed is Updated",
+    "content_html": "<p>Drupal is introducing a new project Announcements feature so that you can see news and updates about the Drupal project and community directly in your Drupal dashboard. Learn what to expect.</p>",
+    "url": "https://www.drupal.org/about/announcements/blog/what-to-expect-from-the-announcements-feed",
+    "date_modified": "2023-01-29T19:45:53+00:00",
+    "date_published": "2023-01-29T19:45:53+00:00",
+    "_drupalorg": {
+      "featured": true,
+      "version": ">=7.0"
+    }
+  }]
+}

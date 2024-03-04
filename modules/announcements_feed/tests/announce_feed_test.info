@@ -1,0 +1,5 @@
+name = "Announcements feed test"
+description = "Support module for announcements feed testing."
+package = Testing
+core = 7.x
+hidden = TRUE
