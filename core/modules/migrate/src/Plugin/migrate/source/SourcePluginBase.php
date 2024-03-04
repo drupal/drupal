@@ -343,8 +343,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function current() {
+  public function current(): mixed {
     return $this->currentRow;
   }
 
@@ -356,8 +355,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * serialize to fulfill the requirement, but using getCurrentIds() is
    * preferable.
    */
-  #[\ReturnTypeWillChange]
-  public function key() {
+  public function key(): mixed {
     return serialize($this->currentSourceIds);
   }
 
@@ -367,8 +365,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * Implementation of \Iterator::valid() - called at the top of the loop,
    * returning TRUE to process the loop and FALSE to terminate it.
    */
-  #[\ReturnTypeWillChange]
-  public function valid() {
+  public function valid(): bool {
     return isset($this->currentRow);
   }
 
@@ -379,8 +376,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * should implement initializeIterator() to do any class-specific setup for
    * iterating source records.
    */
-  #[\ReturnTypeWillChange]
-  public function rewind() {
+  public function rewind(): void {
     $this->getIterator()->rewind();
     $this->next();
   }
@@ -388,8 +384,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function next() {
+  public function next(): void {
     $this->currentSourceIds = NULL;
     $this->currentRow = NULL;
 

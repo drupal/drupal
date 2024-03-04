@@ -118,8 +118,7 @@ trait ComputedItemListTrait {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function offsetExists($offset) {
+  public function offsetExists($offset): bool {
     $this->ensureComputedValue();
     return parent::offsetExists($offset);
   }
@@ -127,8 +126,7 @@ trait ComputedItemListTrait {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function getIterator() {
+  public function getIterator(): \ArrayIterator {
     $this->ensureComputedValue();
     return parent::getIterator();
   }
@@ -136,8 +134,7 @@ trait ComputedItemListTrait {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function count() {
+  public function count(): int {
     $this->ensureComputedValue();
     return parent::count();
   }

@@ -43,40 +43,35 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function close() {
+  public function close(): bool {
     return $this->wrappedSessionHandler->close();
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function destroy($session_id) {
+  public function destroy($session_id): bool {
     return $this->wrappedSessionHandler->destroy($session_id);
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function gc($max_lifetime) {
+  public function gc($max_lifetime): int|FALSE {
     return $this->wrappedSessionHandler->gc($max_lifetime);
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function open($save_path, $session_id) {
+  public function open($save_path, $session_id): bool {
     return $this->wrappedSessionHandler->open($save_path, $session_id);
   }
 
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function read($session_id) {
+  public function read($session_id): string|FALSE {
     $value = $this->wrappedSessionHandler->read($session_id);
     $this->readSessions[$session_id] = $value;
     return $value;
@@ -85,8 +80,7 @@ class WriteSafeSessionHandler implements \SessionHandlerInterface, WriteSafeSess
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function write($session_id, $session_data) {
+  public function write($session_id, $session_data): bool {
     // Only write the session when it has been modified.
     if (isset($this->readSessions[$session_id]) && $this->readSessions[$session_id] === $session_data) {
       return TRUE;

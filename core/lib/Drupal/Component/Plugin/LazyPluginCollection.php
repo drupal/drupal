@@ -142,8 +142,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
     $this->remove($instance_id);
   }
 
-  #[\ReturnTypeWillChange]
-  public function getIterator() {
+  public function getIterator(): \ArrayIterator {
     $instances = [];
     foreach ($this->getInstanceIds() as $instance_id) {
       $instances[$instance_id] = $this->get($instance_id);
@@ -154,8 +153,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function count() {
+  public function count(): int {
     return count($this->instanceIds);
   }
 
