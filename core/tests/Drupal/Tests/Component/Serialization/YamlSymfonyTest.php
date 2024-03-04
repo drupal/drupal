@@ -7,6 +7,7 @@ namespace Drupal\Tests\Component\Serialization;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\YamlSymfony;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Yaml\Tag\TaggedValue;
 
 /**
  * Tests the YamlSymfony serialization implementation.
@@ -104,6 +105,74 @@ class YamlSymfonyTest extends YamlTestBase {
     YAML;
 
     YamlSymfony::decode($yaml);
+  }
+
+  /**
+   * Tests that YAML custom tags are supported and parsed.
+   *
+   * @covers ::decode
+   *
+   * @dataProvider taggedValuesProvider
+   */
+  public function testCustomTagSupport($expected, $yaml) {
+    try {
+      $this->assertEquals($expected, YamlSymfony::decode($yaml));
+    }
+    catch (InvalidDataTypeException $e) {
+      $message = 'Custom tag support is not enabled. Enable the `Yaml::PARSE_CUSTOM_TAGS` flag to prevent the %s exception.';
+      $this->fail(sprintf($message, InvalidDataTypeException::class));
+    }
+  }
+
+  /**
+   * Data provider for testCustomTagSupport().
+   *
+   * @return array
+   *   A list of test data.
+   */
+  public function taggedValuesProvider() {
+    return [
+      'sequences' => [
+        [
+          new TaggedValue('foo', ['yaml']),
+          new TaggedValue('quz', ['bar']),
+        ],
+        <<<YAML
+- !foo
+    - yaml
+- !quz [bar]
+YAML
+      ],
+      'mappings' => [
+        new TaggedValue('foo', [
+          'foo' => new TaggedValue('quz', ['bar']),
+          'quz' => new TaggedValue('foo', ['quz' => 'bar']),
+        ]),
+        <<<YAML
+!foo
+foo: !quz [bar]
+quz: !foo
+   quz: bar
+YAML
+      ],
+      'inline' => [
+        [
+          new TaggedValue('foo', [
+            'foo',
+            'bar',
+          ]),
+          new TaggedValue('quz',
+            [
+              'foo' => 'bar',
+              'quz' => new TaggedValue('bar', ['one' => 'bar']),
+            ]),
+        ],
+        <<<YAML
+- !foo [foo, bar]
+- !quz {foo: bar, quz: !bar {one: bar}}
+YAML
+      ],
+    ];
   }
 
 }
