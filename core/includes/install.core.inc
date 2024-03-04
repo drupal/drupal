@@ -2299,7 +2299,7 @@ function install_display_requirements($install_state, $requirements) {
               'description' => $requirement['description'],
             ],
           ];
-          $failures[] = \Drupal::service('renderer')->renderPlain($render_array);
+          $failures[] = \Drupal::service('renderer')->renderInIsolation($render_array);
         }
       }
       if (!empty($failures)) {

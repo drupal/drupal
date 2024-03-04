@@ -251,7 +251,7 @@ class UpdateManagerUpdate extends FormBase {
 
     if ($fetch_failed) {
       $message = ['#theme' => 'update_fetch_error_message'];
-      $this->messenger()->addError(\Drupal::service('renderer')->renderPlain($message));
+      $this->messenger()->addError(\Drupal::service('renderer')->renderInIsolation($message));
     }
 
     if (empty($projects)) {

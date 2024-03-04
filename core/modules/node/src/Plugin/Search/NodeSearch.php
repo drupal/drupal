@@ -368,7 +368,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $build['#pre_render'][] = [$this, 'removeSubmittedInfo'];
 
       // Fetch comments for snippet.
-      $rendered = $this->renderer->renderPlain($build);
+      $rendered = $this->renderer->renderInIsolation($build);
       $this->addCacheableDependency(CacheableMetadata::createFromRenderArray($build));
       $rendered .= ' ' . $this->moduleHandler->invoke('comment', 'node_update_index', [$node]);
 
@@ -400,7 +400,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
       if ($type->displaySubmitted()) {
         $result += [
-          'user' => $this->renderer->renderPlain($username),
+          'user' => $this->renderer->renderInIsolation($username),
           'date' => $node->getChangedTime(),
         ];
       }
@@ -522,7 +522,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         '#suffix' => '</h1>',
         '#weight' => -1000,
       ];
-      $text = $this->renderer->renderPlain($build);
+      $text = $this->renderer->renderInIsolation($build);
 
       // Fetch extra data normally not visible.
       $extra = $this->moduleHandler->invokeAll('node_update_index', [$node]);

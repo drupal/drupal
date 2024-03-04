@@ -287,7 +287,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
     foreach (Element::children($results) as $id) {
       $entity = $results[$id]['#row']->_entity;
       $stripped_results[$entity->bundle()][$id] = ViewsRenderPipelineMarkup::create(
-        Xss::filter($this->renderer->renderPlain($results[$id]), $allowed_tags)
+        Xss::filter($this->renderer->renderInIsolation($results[$id]), $allowed_tags)
       );
     }
 

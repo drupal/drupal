@@ -95,7 +95,7 @@ function update_page_top() {
       // them before using
       // \Drupal\Core\Messenger\MessengerInterface::addStatus().
       if (isset($status[$type]['description']) && is_array($status[$type]['description'])) {
-        $status[$type]['description'] = \Drupal::service('renderer')->renderPlain($status[$type]['description']);
+        $status[$type]['description'] = \Drupal::service('renderer')->renderInIsolation($status[$type]['description']);
       }
       if (!empty($verbose)) {
         if (isset($status[$type]['severity'])) {

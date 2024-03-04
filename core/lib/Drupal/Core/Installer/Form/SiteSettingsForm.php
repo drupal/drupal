@@ -195,7 +195,7 @@ class SiteSettingsForm extends FormBase {
       // These are generic errors, so we do not have any specific key of the
       // database connection array to attach them to; therefore, we just put
       // them in the error array with standard numeric keys.
-      $form_errors[$database['driver'] . '][0'] = $this->renderer->renderPlain($error_message);
+      $form_errors[$database['driver'] . '][0'] = $this->renderer->renderInIsolation($error_message);
     }
 
     return $form_errors;

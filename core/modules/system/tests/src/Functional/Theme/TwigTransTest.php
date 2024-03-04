@@ -114,7 +114,7 @@ class TwigTransTest extends BrowserTestBase {
     $renderer = \Drupal::service('renderer');
 
     try {
-      $renderer->renderPlain($elements);
+      $renderer->renderInIsolation($elements);
 
       $this->fail('{% trans %}{% endtrans %} did not throw an exception.');
     }

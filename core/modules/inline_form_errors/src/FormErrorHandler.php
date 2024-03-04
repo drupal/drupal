@@ -116,7 +116,7 @@ class FormErrorHandler extends CoreFormErrorHandler {
           '#context' => ['list_style' => 'comma-list'],
         ],
       ];
-      $message = $this->renderer->renderPlain($render_array);
+      $message = $this->renderer->renderInIsolation($render_array);
       $this->messenger->addError($message);
     }
   }

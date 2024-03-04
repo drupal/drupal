@@ -137,7 +137,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       );
 
     $this->renderer->expects($this->once())
-      ->method('renderPlain')
+      ->method('renderInIsolation')
       ->willReturnCallback(function ($render_array) {
         $links = [];
         foreach ($render_array[1]['#items'] as $item) {
@@ -192,7 +192,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       );
 
     $this->renderer->expects($this->never())
-      ->method('renderPlain');
+      ->method('renderInIsolation');
 
     $this->testForm['#disable_inline_form_errors'] = TRUE;
 

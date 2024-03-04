@@ -105,7 +105,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
       '#theme' => 'username',
       '#account' => $this->editor,
     ];
-    $editor = \Drupal::service('renderer')->renderPlain($username);
+    $editor = \Drupal::service('renderer')->renderInIsolation($username);
 
     // Get original node.
     $nodes[] = clone $node;

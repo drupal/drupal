@@ -189,7 +189,7 @@ class HelpTopicSection extends HelpSectionPluginBase implements ContainerFactory
           '#markup' => $plugin->getLabel(),
         ],
       ];
-      $topic['title'] = $this->renderer->renderPlain($title_build);
+      $topic['title'] = $this->renderer->renderInIsolation($title_build);
       $cacheable_metadata = CacheableMetadata::createFromRenderArray($title_build);
 
       // Render the body in this language. For this, we need to set up a render
@@ -199,7 +199,7 @@ class HelpTopicSection extends HelpSectionPluginBase implements ContainerFactory
       $build = [
         'body' => $this->renderer->executeInRenderContext($context, [$plugin, 'getBody']),
       ];
-      $topic['text'] = $this->renderer->renderPlain($build);
+      $topic['text'] = $this->renderer->renderInIsolation($build);
       $cacheable_metadata->addCacheableDependency(CacheableMetadata::createFromRenderArray($build));
       $cacheable_metadata->addCacheableDependency($plugin);
       if (!$context->isEmpty()) {

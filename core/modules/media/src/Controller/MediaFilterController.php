@@ -108,7 +108,7 @@ class MediaFilterController implements ContainerInjectionInterface {
       '#text' => $text,
       '#format' => $filter_format->id(),
     ];
-    $html = $this->renderer->renderPlain($build);
+    $html = $this->renderer->renderInIsolation($build);
 
     // Load the media item so we can embed the label in the response, for use
     // in an ARIA label.

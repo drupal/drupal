@@ -59,7 +59,7 @@ class TextProcessed extends TypedData implements CacheableDependencyInterface {
         '#langcode' => $item->getLangcode(),
       ];
       // Capture the cacheability metadata associated with the processed text.
-      $processed_text = $this->getRenderer()->renderPlain($build);
+      $processed_text = $this->getRenderer()->renderInIsolation($build);
       $this->processed = FilterProcessResult::createFromRenderArray($build)->setProcessedText((string) $processed_text);
     }
     return FilteredMarkup::create($this->processed->getProcessedText());

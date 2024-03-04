@@ -354,7 +354,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $content = $response->getContent();
     foreach ($placeholders as $type => $placeholder) {
       if (isset($variables[$type])) {
-        $content = str_replace($placeholder, $this->renderer->renderPlain($variables[$type]), $content);
+        $content = str_replace($placeholder, $this->renderer->renderInIsolation($variables[$type]), $content);
       }
     }
     $response->setContent($content);

@@ -307,7 +307,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
     '#filter_types_to_skip' => $filter_types_to_skip,
     '#langcode' => $langcode,
   ];
-  return \Drupal::service('renderer')->renderPlain($build);
+  return \Drupal::service('renderer')->renderInIsolation($build);
 }
 
 /**

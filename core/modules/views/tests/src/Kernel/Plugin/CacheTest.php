@@ -406,7 +406,7 @@ class CacheTest extends ViewsKernelTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
-    $renderer->renderPlain($output);
+    $renderer->renderInIsolation($output);
     $this->assertEquals(['config:views.view.test_view', 'example_tag'], $output['#cache']['tags']);
   }
 

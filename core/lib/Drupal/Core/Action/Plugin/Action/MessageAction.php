@@ -89,7 +89,7 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
     ];
 
     // @todo Fix in https://www.drupal.org/node/2577827
-    $this->messenger->addStatus($this->renderer->renderPlain($build));
+    $this->messenger->addStatus($this->renderer->renderInIsolation($build));
   }
 
   /**

@@ -163,7 +163,7 @@ class ConfigTranslationController extends ControllerBase {
           '#items' => $items,
         ],
       ];
-      $this->messenger()->addWarning($this->renderer->renderPlain($message));
+      $this->messenger()->addWarning($this->renderer->renderInIsolation($message));
 
       $original_langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
       $operations_access = FALSE;

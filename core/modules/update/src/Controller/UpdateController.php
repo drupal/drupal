@@ -69,7 +69,7 @@ class UpdateController extends ControllerBase {
       }
       if ($fetch_failed) {
         $message = ['#theme' => 'update_fetch_error_message'];
-        $this->messenger()->addError($this->renderer->renderPlain($message));
+        $this->messenger()->addError($this->renderer->renderInIsolation($message));
       }
     }
     return $build;

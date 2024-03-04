@@ -100,7 +100,7 @@ class Actions extends Container {
         // Add this button to the corresponding dropbutton.
         // @todo Change #type 'dropbutton' to be based on item-list.html.twig
         //   instead of links.html.twig to avoid this preemptive rendering.
-        $button = \Drupal::service('renderer')->renderPlain($element[$key]);
+        $button = \Drupal::service('renderer')->renderInIsolation($element[$key]);
         $dropbuttons[$dropbutton]['#links'][$key] = [
           'title' => $button,
         ];

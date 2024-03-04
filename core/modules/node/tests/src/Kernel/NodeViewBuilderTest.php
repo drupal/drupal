@@ -90,11 +90,11 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
     $pending_revision->save();
 
     $build = $this->viewBuilder->view($node, 'teaser');
-    $output = (string) $this->renderer->renderPlain($build);
+    $output = (string) $this->renderer->renderInIsolation($build);
     $this->assertStringContainsString("title=\"$title\"", $output);
 
     $build = $this->viewBuilder->view($pending_revision, 'teaser');
-    $output = (string) $this->renderer->renderPlain($build);
+    $output = (string) $this->renderer->renderInIsolation($build);
     $this->assertStringContainsString("title=\"$draft_title\"", $output);
   }
 

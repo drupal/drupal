@@ -77,7 +77,7 @@ class TipPluginImageLegacy extends TipPluginBase implements ContainerFactoryPlug
 
     return [
       'title' => Html::escape($this->get('label')),
-      'body' => $this->token->replace(\Drupal::service('renderer')->renderPlain($image)),
+      'body' => $this->token->replace(\Drupal::service('renderer')->renderInIsolation($image)),
     ];
   }
 
