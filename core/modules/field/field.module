@@ -392,6 +392,9 @@ function field_field_storage_config_update(FieldStorageConfigInterface $field_st
  * Determine the selection handler plugin ID for an entity reference field.
  */
 function field_field_config_create(FieldConfigInterface $field) {
+  if ($field->isSyncing()) {
+    return;
+  }
   // Act on all sub-types of the entity_reference field type.
   /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
   $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
