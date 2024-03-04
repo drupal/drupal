@@ -39,6 +39,7 @@ use Drupal\workspaces\WorkspaceInterface;
  *       "delete" = "\Drupal\workspaces\Form\WorkspaceDeleteForm",
  *       "activate" = "\Drupal\workspaces\Form\WorkspaceActivateForm",
  *     },
+ *     "workspace" = "\Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler",
  *   },
  *   admin_permission = "administer workspaces",
  *   base_table = "workspace",

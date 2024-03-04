@@ -64,6 +64,13 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
   protected $languageManager;
 
   /**
+   * The workspace information service.
+   *
+   * @var \Drupal\workspaces\WorkspaceInformationInterface
+   */
+  protected WorkspaceInformationInterface $workspaceInfo;
+
+  /**
    * An array of tables adjusted for workspace_association join.
    *
    * @var \WeakMap
@@ -85,14 +92,17 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    *   The views join plugin manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\workspaces\WorkspaceInformationInterface $workspace_information
+   *   The workspace information service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, WorkspaceManagerInterface $workspace_manager, ViewsData $views_data, ViewsHandlerManager $views_join_plugin_manager, LanguageManagerInterface $language_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, WorkspaceManagerInterface $workspace_manager, ViewsData $views_data, ViewsHandlerManager $views_join_plugin_manager, LanguageManagerInterface $language_manager, WorkspaceInformationInterface $workspace_information) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->workspaceManager = $workspace_manager;
     $this->viewsData = $views_data;
     $this->viewsJoinPluginManager = $views_join_plugin_manager;
     $this->languageManager = $language_manager;
+    $this->workspaceInfo = $workspace_information;
     $this->adjustedTables = new \WeakMap();
   }
 
@@ -106,7 +116,8 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
       $container->get('workspaces.manager'),
       $container->get('views.views_data'),
       $container->get('plugin.manager.views.join'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('workspaces.information')
     );
   }
 
@@ -140,7 +151,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
 
     $entity_type_definitions = $this->entityTypeManager->getDefinitions();
     foreach ($entity_type_ids as $entity_type_id) {
-      if ($this->workspaceManager->isEntityTypeSupported($entity_type_definitions[$entity_type_id])) {
+      if ($this->workspaceInfo->isEntityTypeSupported($entity_type_definitions[$entity_type_id])) {
         $this->alterQueryForEntityType($query, $entity_type_definitions[$entity_type_id]);
       }
     }

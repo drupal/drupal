@@ -39,7 +39,7 @@ trait WorkspaceTestTrait {
 
     // Install the entity schema for supported entity types to ensure that the
     // 'workspace' revision metadata field gets created.
-    foreach (array_keys($this->workspaceManager->getSupportedEntityTypes()) as $entity_type_id) {
+    foreach (array_keys(\Drupal::service('workspaces.information')->getSupportedEntityTypes()) as $entity_type_id) {
       $this->installEntitySchema($entity_type_id);
     }
 

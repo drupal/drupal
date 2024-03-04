@@ -13,11 +13,11 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 class Tables extends BaseTables {
 
   /**
-   * The workspace manager.
+   * The workspace information service.
    *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
+   * @var \Drupal\workspaces\WorkspaceInformationInterface
    */
-  protected $workspaceManager;
+  protected $workspaceInfo;
 
   /**
    * Workspace association table array, key is base table name, value is alias.
@@ -42,7 +42,7 @@ class Tables extends BaseTables {
   public function __construct(SelectInterface $sql_query) {
     parent::__construct($sql_query);
 
-    $this->workspaceManager = \Drupal::service('workspaces.manager');
+    $this->workspaceInfo = \Drupal::service('workspaces.information');
 
     // The join between the first 'workspace_association' table and base table
     // of the query is done in
@@ -117,7 +117,7 @@ class Tables extends BaseTables {
     $next_base_table_alias = parent::addNextBaseTable($entity_type, $table, $sql_column, $field_storage);
 
     $active_workspace_id = $this->sqlQuery->getMetaData('active_workspace_id');
-    if ($active_workspace_id && $this->workspaceManager->isEntityTypeSupported($entity_type)) {
+    if ($active_workspace_id && $this->workspaceInfo->isEntityTypeSupported($entity_type)) {
       $this->addWorkspaceAssociationJoin($entity_type->id(), $next_base_table_alias, $active_workspace_id);
     }
 

@@ -34,16 +34,26 @@ class EntityAccess implements ContainerInjectionInterface {
   protected $workspaceManager;
 
   /**
+   * The workspace information service.
+   *
+   * @var \Drupal\workspaces\WorkspaceInformationInterface
+   */
+  protected $workspaceInfo;
+
+  /**
    * Constructs a new EntityAccess instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
    *   The workspace manager service.
+   * @param \Drupal\workspaces\WorkspaceInformationInterface $workspace_information
+   *   The workspace information service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager, WorkspaceInformationInterface $workspace_information) {
     $this->entityTypeManager = $entity_type_manager;
     $this->workspaceManager = $workspace_manager;
+    $this->workspaceInfo = $workspace_information;
   }
 
   /**
@@ -52,7 +62,8 @@ class EntityAccess implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('workspaces.manager')
+      $container->get('workspaces.manager'),
+      $container->get('workspaces.information')
     );
   }
 
@@ -75,7 +86,7 @@ class EntityAccess implements ContainerInjectionInterface {
     // Workspaces themselves are handled by their own access handler and we
     // should not try to do any access checks for entity types that can not
     // belong to a workspace.
-    if ($entity->getEntityTypeId() === 'workspace' || !$this->workspaceManager->isEntityTypeSupported($entity->getEntityType()) || !$this->workspaceManager->hasActiveWorkspace()) {
+    if (!$this->workspaceInfo->isEntitySupported($entity) || !$this->workspaceManager->hasActiveWorkspace()) {
       return AccessResult::neutral();
     }
 
@@ -102,7 +113,7 @@ class EntityAccess implements ContainerInjectionInterface {
     // should not try to do any access checks for entity types that can not
     // belong to a workspace.
     $entity_type = $this->entityTypeManager->getDefinition($context['entity_type_id']);
-    if ($entity_type->id() === 'workspace' || !$this->workspaceManager->isEntityTypeSupported($entity_type) || !$this->workspaceManager->hasActiveWorkspace()) {
+    if (!$this->workspaceInfo->isEntityTypeSupported($entity_type) || !$this->workspaceManager->hasActiveWorkspace()) {
       return AccessResult::neutral();
     }
 
