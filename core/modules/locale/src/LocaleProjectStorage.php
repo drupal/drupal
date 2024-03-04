@@ -28,7 +28,14 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
    *
    * @var bool
    */
-  protected static $all = FALSE;
+  protected bool $all = FALSE;
+
+  /**
+   * Sorted status flag.
+   *
+   * @var bool
+   */
+  protected bool $sorted = FALSE;
 
   /**
    * Constructs a State object.
@@ -98,6 +105,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
       $this->cache[$key] = $value;
     }
     $this->keyValueStore->setMultiple($data);
+    $this->sorted = FALSE;
   }
 
   /**
@@ -122,7 +130,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
    */
   public function resetCache() {
     $this->cache = [];
-    static::$all = FALSE;
+    $this->sorted = $this->all = FALSE;
   }
 
   /**
@@ -159,11 +167,23 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
    * {@inheritdoc}
    */
   public function getAll() {
-    if (!static::$all) {
+    if (!$this->all) {
       $this->cache = $this->keyValueStore->getAll();
-      static::$all = TRUE;
+      $this->all = TRUE;
     }
-    return $this->cache;
+    if (!$this->sorted) {
+      uksort($this->cache, function ($a, $b) {
+        // Sort by weight, if available, and then by key. This allows locale
+        // projects to set a weight, if required, and keeps the order consistent
+        // regardless of whether the list is built from code or retrieved from
+        // the database.
+        $sort = ($this->cache[$a]['weight'] ?? 0) <=> ($this->cache[$b]['weight'] ?? 0);
+        return $sort === 0 ? $a <=> $b : $sort;
+      });
+      $this->sorted = TRUE;
+    }
+    // Remove any NULL values as these are not valid projects.
+    return array_filter($this->cache, fn ($value) => $value !== NULL);
   }
 
 }
