@@ -356,6 +356,9 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface
    *   The field storage definition used by this handler.
+   *
+   * @throws \Exception
+   *   If no field storage definition was found for the given entity type and field name.
    */
   protected function getFieldStorageDefinition() {
     $entity_type_id = $this->definition['entity_type'];
@@ -391,7 +394,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       }
     }
 
-    return NULL;
+    throw new \Exception("No field storage definition found for entity type {$this->definition['entity_type']} and field {$this->definition['field_name']} on view {$this->view->storage->id()}");
   }
 
   /**
