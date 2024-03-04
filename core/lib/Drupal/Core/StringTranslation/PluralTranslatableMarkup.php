@@ -107,28 +107,15 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
     $arguments['@count'] = $this->count;
     $translated_array = explode(PoItem::DELIMITER, $this->translatedString);
 
-    if ($this->count == 1) {
-      return $this->placeholderFormat($translated_array[0], $arguments);
-    }
-
     $index = $this->getPluralIndex();
-    if ($index == 0) {
+    if ($this->count == 1 || $index == 0 || count($translated_array) == 1) {
       // Singular form.
       $return = $translated_array[0];
     }
     else {
-      if (isset($translated_array[$index])) {
-        // N-th plural form.
-        $return = $translated_array[$index];
-      }
-      else {
-        // If the index cannot be computed or there's no translation, use the
-        // second plural form as a fallback (which allows for most flexibility
-        // with the replaceable @count value).
-        $return = $translated_array[1];
-      }
+      // Nth plural form, fallback to second plural form.
+      $return = $translated_array[$index] ?? $translated_array[1];
     }
-
     return $this->placeholderFormat($return, $arguments);
   }
 
