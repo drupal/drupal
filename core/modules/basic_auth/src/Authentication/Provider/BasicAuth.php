@@ -107,10 +107,10 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
         // Don't allow login if the limit for this user has been reached.
         // Default is to allow 5 failed attempts every 6 hours.
         if ($this->flood->isAllowed('basic_auth.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
-          $uid = $this->userAuth->authenticate($username, $password);
+          $uid = $this->userAuth->authenticateAccount($account, $password);
           if ($uid) {
             $this->flood->clear('basic_auth.failed_login_user', $identifier);
-            return $this->entityTypeManager->getStorage('user')->load($uid);
+            return $account;
           }
           else {
             // Register a per-user failed login event.
