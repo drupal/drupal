@@ -928,7 +928,6 @@ versionable
 versionless
 verygreatdrupalmodule
 vfsstream
-viewmode
 viewports
 vocabs
 wcag
