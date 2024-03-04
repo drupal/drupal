@@ -9,7 +9,7 @@
     "jquery/no-attr": 0,
     "jquery/no-bind": 2,
     "jquery/no-class": 0,
-    "jquery/no-clone": 0,
+    "jquery/no-clone": 2,
     "jquery/no-closest": 0,
     "jquery/no-css": 2,
     "jquery/no-data": 0,
