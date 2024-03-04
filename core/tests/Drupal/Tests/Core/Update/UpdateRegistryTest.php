@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Update;
 
-use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Update\RemovedPostUpdateNameException;
@@ -190,33 +188,11 @@ EOS;
     $key_value->get('existing_updates', [])->willReturn([]);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([
-      'theme_d' => [
-        'type' => 'theme_d',
-        'pathname' => 'core/themes/theme_d/theme_d.info.yml',
-      ],
-    ]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-      'module_b' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_b/module_b.info.yml',
-          'filename' => 'module_b.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+      'module_b',
+      'theme_d',
+    ], $key_value, FALSE);
 
     $this->assertEquals([
       'module_a_post_update_a',
@@ -237,27 +213,14 @@ EOS;
     $key_value->get('existing_updates', [])->willReturn([]);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([]);
-    $theme_handler = $theme_handler->reveal();
-
     // Preload modules to ensure that ::getAvailableUpdateFunctions filters out
     // not enabled modules.
     include_once 'vfs://drupal/sites/default/modules/module_a/module_a.post_update.php';
     include_once 'vfs://drupal/sites/default/modules/module_b/module_b.post_update.php';
 
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+    ], $key_value, FALSE);
 
     $this->assertEquals([
       'module_a_post_update_a',
@@ -272,40 +235,14 @@ EOS;
     $this->setupBasicExtensions();
 
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
-    $key_value->get('existing_updates', [])->willReturn([
-      'module_a_post_update_a',
-      'theme_d_post_update_a',
-      'theme_d_post_update_b',
-    ]);
+    $key_value->get('existing_updates', [])->willReturn(['module_a_post_update_a', 'theme_d_post_update_a', 'theme_d_post_update_b']);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([
-      'theme_d' => [
-        'type' => 'theme_d',
-        'pathname' => 'core/themes/theme_d/theme_d.info.yml',
-      ],
-    ]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-      'module_b' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_b/module_b.info.yml',
-          'filename' => 'module_b.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+      'module_b',
+      'theme_d',
+    ], $key_value, FALSE);
 
     $this->assertEquals(array_values([
       'module_a_post_update_b',
@@ -325,33 +262,11 @@ EOS;
     $key_value->get('existing_updates', [])->willReturn([]);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([
-      'theme_d' => [
-        'type' => 'theme_d',
-        'pathname' => 'core/themes/theme_d/theme_d.info.yml',
-      ],
-    ]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-      'module_b' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_b/module_b.info.yml',
-          'filename' => 'module_b.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+      'module_b',
+      'theme_d',
+    ], $key_value, FALSE);
 
     $expected = [];
     $expected['module_a']['pending']['a'] = 'Module A update A.';
@@ -373,40 +288,14 @@ EOS;
     $this->setupBasicExtensions();
 
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
-    $key_value->get('existing_updates', [])->willReturn([
-      'module_a_post_update_a',
-      'theme_d_post_update_a',
-      'theme_d_post_update_b',
-    ]);
+    $key_value->get('existing_updates', [])->willReturn(['module_a_post_update_a', 'theme_d_post_update_a', 'theme_d_post_update_b']);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([
-      'theme_d' => [
-        'type' => 'theme_d',
-        'pathname' => 'core/themes/theme_d/theme_d.info.yml',
-      ],
-    ]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-      'module_b' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_b/module_b.info.yml',
-          'filename' => 'module_b.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+      'module_b',
+      'theme_d',
+    ], $key_value, FALSE);
 
     $expected = [];
     $expected['module_a']['pending']['b'] = 'Module A update B.';
@@ -429,22 +318,9 @@ EOS;
     $key_value->get('existing_updates', [])->willReturn(['module_a_post_update_a']);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_c' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_c/module_c.info.yml',
-          'filename' => 'module_c.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_c',
+    ], $key_value, FALSE);
 
     $this->expectException(RemovedPostUpdateNameException::class);
     $update_registry->getPendingUpdateInformation();
@@ -457,33 +333,11 @@ EOS;
     $this->setupBasicExtensions();
     $key_value = $this->prophesize(KeyValueStoreInterface::class)->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([
-      'theme_d' => [
-        'type' => 'theme_d',
-        'pathname' => 'core/themes/theme_d/theme_d.info.yml',
-      ],
-    ]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-      'module_b' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_b/module_b.info.yml',
-          'filename' => 'module_b.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+      'module_b',
+      'theme_d',
+    ], $key_value, FALSE);
 
     $this->assertEquals(['module_a_post_update_a', 'module_a_post_update_b'], array_values($update_registry->getUpdateFunctions('module_a')));
     $this->assertEquals(['module_b_post_update_a'], array_values($update_registry->getUpdateFunctions('module_b')));
@@ -504,33 +358,11 @@ EOS;
       ->shouldBeCalledTimes(1);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([
-      'theme_d' => [
-        'type' => 'theme_d',
-        'pathname' => 'core/themes/theme_d/theme_d.info.yml',
-      ],
-    ]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-      'module_b' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_b/module_b.info.yml',
-          'filename' => 'module_b.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+      'module_b',
+      'theme_d',
+    ], $key_value, FALSE);
     $update_registry->registerInvokedUpdates(['module_a_post_update_a']);
   }
 
@@ -548,33 +380,11 @@ EOS;
       ->shouldBeCalledTimes(1);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([
-      'theme_d' => [
-        'type' => 'theme_d',
-        'pathname' => 'core/themes/theme_d/theme_d.info.yml',
-      ],
-    ]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-      'module_b' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_b/module_b.info.yml',
-          'filename' => 'module_b.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+      'module_b',
+      'theme_d',
+    ], $key_value, FALSE);
     $update_registry->registerInvokedUpdates(['module_a_post_update_a', 'module_a_post_update_b', 'theme_d_post_update_c']);
   }
 
@@ -592,28 +402,10 @@ EOS;
       ->shouldBeCalledTimes(1);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-      'module_b' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_b/module_b.info.yml',
-          'filename' => 'module_b.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+      'module_b',
+    ], $key_value, FALSE);
     $update_registry->registerInvokedUpdates(['module_a_post_update_a']);
   }
 
@@ -631,33 +423,12 @@ EOS;
       ->shouldBeCalledTimes(1);
     $key_value = $key_value->reveal();
 
-    $key_value_factory = $this->prophesize(KeyValueFactoryInterface::class);
-    $key_value_factory->get('post_update')->willReturn($key_value);
-    $key_value_factory = $key_value_factory->reveal();
-
-    $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
-    $theme_handler->listInfo()->willReturn([
-      'theme_d' => [
-        'type' => 'theme_d',
-        'pathname' => 'core/themes/theme_d/theme_d.info.yml',
-      ],
-    ]);
-    $theme_handler = $theme_handler->reveal();
-
     $update_registry = new UpdateRegistry('vfs://drupal', 'sites/default', [
-      'module_a' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_a/module_a.info.yml',
-          'filename' => 'module_a.module',
-        ],
-      'module_b' =>
-        [
-          'type' => 'module',
-          'pathname' => 'core/modules/module_b/module_b.info.yml',
-          'filename' => 'module_b.module',
-        ],
-    ], $key_value_factory, $theme_handler);
+      'module_a',
+      'module_b',
+      'theme_d',
+    ], $key_value, FALSE);
+
     $update_registry->filterOutInvokedUpdatesByExtension('module_a');
   }
 
