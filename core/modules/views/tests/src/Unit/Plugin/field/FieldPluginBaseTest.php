@@ -548,7 +548,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     ];
 
     $this->renderer->expects($this->once())
-      ->method('renderPlain')
+      ->method('renderInIsolation')
       ->with($build)
       ->willReturn('base:test-path/123');
 
@@ -612,7 +612,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     ];
 
     $this->renderer->expects($this->once())
-      ->method('renderPlain')
+      ->method('renderInIsolation')
       ->with($build)
       ->willReturn($context['context_path']);
 
@@ -846,7 +846,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     // being tested correctly handles tokens when generating the element's class
     // attribute.
     $this->renderer->expects($this->any())
-      ->method('renderPlain')
+      ->method('renderInIsolation')
       ->with($build)
       ->willReturn($expected_result);
 

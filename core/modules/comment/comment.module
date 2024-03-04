@@ -403,7 +403,7 @@ function comment_node_update_index(EntityInterface $node) {
       }
     }
   }
-  return \Drupal::service('renderer')->renderPlain($build);
+  return \Drupal::service('renderer')->renderInIsolation($build);
 }
 
 /**

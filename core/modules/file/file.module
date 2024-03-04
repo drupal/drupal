@@ -549,7 +549,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
           '#items' => $errors_new,
         ],
       ];
-      $error_message = \Drupal::service('renderer')->renderPlain($render_array);
+      $error_message = \Drupal::service('renderer')->renderInIsolation($render_array);
     }
     else {
       $error_message = reset($errors_new);
@@ -679,7 +679,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
         // @todo Add support for render arrays in
         // \Drupal\Core\Messenger\MessengerInterface::addMessage()?
         // @see https://www.drupal.org/node/2505497.
-        \Drupal::messenger()->addError($renderer->renderPlain($message));
+        \Drupal::messenger()->addError($renderer->renderInIsolation($message));
         $files[$i] = FALSE;
         continue;
       }
@@ -1136,7 +1136,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
     // Save the uploading row for last.
     if (empty($widget['#files'])) {
       $widget['#title'] = $element['#file_upload_title'];
-      $widget['#description'] = \Drupal::service('renderer')->renderPlain($element['#file_upload_description']);
+      $widget['#description'] = \Drupal::service('renderer')->renderInIsolation($element['#file_upload_description']);
       continue;
     }
 

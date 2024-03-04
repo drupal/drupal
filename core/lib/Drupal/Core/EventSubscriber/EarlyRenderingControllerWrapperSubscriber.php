@@ -33,7 +33,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * If the render context is empty, then the controller either did not do any
  * rendering at all, or used the RendererInterface::renderRoot() or
- * ::renderPlain() methods. In that case, no bubbleable metadata is lost.
+ * ::renderInIsolation() methods. In that case, no bubbleable metadata is lost.
  *
  * If the render context is not empty, then the controller did use
  * RendererInterface::render(), and bubbleable metadata was collected.

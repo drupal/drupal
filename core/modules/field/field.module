@@ -127,7 +127,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
           '#theme' => 'item_list',
           '#items' => $items,
         ];
-        $output .= \Drupal::service('renderer')->renderPlain($item_list);
+        $output .= \Drupal::service('renderer')->renderInIsolation($item_list);
         $output .= '</dd>';
       }
 

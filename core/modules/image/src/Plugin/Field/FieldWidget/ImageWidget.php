@@ -125,7 +125,7 @@ class ImageWidget extends FileWidget {
       // If there's only one field, return it as delta 0.
       if (empty($elements[0]['#default_value']['fids'])) {
         $file_upload_help['#description'] = $this->getFilteredDescription();
-        $elements[0]['#description'] = \Drupal::service('renderer')->renderPlain($file_upload_help);
+        $elements[0]['#description'] = \Drupal::service('renderer')->renderInIsolation($file_upload_help);
       }
     }
     else {

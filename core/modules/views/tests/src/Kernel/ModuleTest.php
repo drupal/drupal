@@ -251,23 +251,23 @@ class ModuleTest extends ViewsKernelTestBase {
     $renderer = \Drupal::service('renderer');
 
     $result = views_embed_view('test_argument');
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(5, $result['view_build']['#view']->result);
 
     $result = views_embed_view('test_argument', 'default', 1);
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(1, $result['view_build']['#view']->result);
 
     $result = views_embed_view('test_argument', 'default', '1,2');
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(2, $result['view_build']['#view']->result);
 
     $result = views_embed_view('test_argument', 'default', '1,2', 'John');
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(1, $result['view_build']['#view']->result);
 
     $result = views_embed_view('test_argument', 'default', '1,2', 'John,George');
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(2, $result['view_build']['#view']->result);
   }
 

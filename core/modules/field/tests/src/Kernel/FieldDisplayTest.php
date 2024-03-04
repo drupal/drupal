@@ -115,7 +115,7 @@ class FieldDisplayTest extends KernelTestBase {
 
     $build = $this->display->build($entity);
     $renderer = \Drupal::service('renderer');
-    $content = (string) $renderer->renderPlain($build);
+    $content = (string) $renderer->renderInIsolation($build);
     $this->setRawContent($content);
 
     $css_selector_converter = new CssSelectorConverter();

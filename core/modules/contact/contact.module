@@ -144,7 +144,7 @@ function contact_mail($key, &$message, $params) {
       $build = \Drupal::entityTypeManager()
         ->getViewBuilder('contact_message')
         ->view($contact_message, 'mail');
-      $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
+      $message['body'][] = \Drupal::service('renderer')->renderInIsolation($build);
       break;
 
     case 'page_autoreply':
@@ -165,7 +165,7 @@ function contact_mail($key, &$message, $params) {
       $build = \Drupal::entityTypeManager()
         ->getViewBuilder('contact_message')
         ->view($contact_message, 'mail');
-      $message['body'][] = \Drupal::service('renderer')->renderPlain($build);
+      $message['body'][] = \Drupal::service('renderer')->renderInIsolation($build);
       break;
   }
 }

@@ -337,7 +337,7 @@ class ManagedFile extends FormElement {
         if ($element['#multiple']) {
           $element['file_' . $delta]['selected'] = [
             '#type' => 'checkbox',
-            '#title' => \Drupal::service('renderer')->renderPlain($file_link),
+            '#title' => \Drupal::service('renderer')->renderInIsolation($file_link),
           ];
         }
         else {

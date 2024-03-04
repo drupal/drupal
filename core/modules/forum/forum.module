@@ -78,7 +78,7 @@ function forum_help($route_name, RouteMatchInterface $route_match) {
           'class' => ['more-link'],
         ],
       ];
-      $output .= \Drupal::service('renderer')->renderPlain($container);
+      $output .= \Drupal::service('renderer')->renderInIsolation($container);
       return $output;
 
     case 'forum.add_container':

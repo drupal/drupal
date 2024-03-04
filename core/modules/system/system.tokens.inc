@@ -134,7 +134,7 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
             '#markup' => $slogan,
           ];
           // @todo Fix in https://www.drupal.org/node/2577827
-          $replacements[$original] = \Drupal::service('renderer')->renderPlain($build);
+          $replacements[$original] = \Drupal::service('renderer')->renderInIsolation($build);
           break;
 
         case 'mail':

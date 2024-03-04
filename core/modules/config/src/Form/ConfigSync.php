@@ -266,7 +266,7 @@ class ConfigSync extends FormBase {
             '#items' => $change_list,
           ],
         ];
-        $this->messenger()->addWarning($this->renderer->renderPlain($message));
+        $this->messenger()->addWarning($this->renderer->renderInIsolation($message));
       }
     }
 

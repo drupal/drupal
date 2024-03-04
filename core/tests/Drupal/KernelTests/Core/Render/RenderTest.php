@@ -72,4 +72,15 @@ class RenderTest extends KernelTestBase {
     $renderer->renderBarePage($build, '', 'maintenance_page');
   }
 
+  /**
+   * Tests the deprecation of \Drupal\Core\Render\Renderer::renderPlain()
+   *
+   * @group legacy
+   */
+  public function testDeprecateRenderPlain() {
+    $message = ['#markup' => 'Test'];
+    \Drupal::service('renderer')->renderPlain($message);
+    $this->expectDeprecation('Renderer::renderPlain() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Instead, you should use ::renderInIsolation(). See https://www.drupal.org/node/3407994');
+  }
+
 }

@@ -477,7 +477,7 @@ function drupal_verify_profile($install_state) {
       $build['#items'][] = ['#markup' => '<span class="admin-missing">' . Unicode::ucfirst($module) . '</span>'];
     }
 
-    $modules_list = \Drupal::service('renderer')->renderPlain($build);
+    $modules_list = \Drupal::service('renderer')->renderInIsolation($build);
     $requirements['required_modules'] = [
       'title' => t('Required modules'),
       'value' => t('Required modules not found.'),

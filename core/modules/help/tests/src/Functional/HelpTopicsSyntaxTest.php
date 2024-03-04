@@ -344,7 +344,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
       '#type' => 'inline_template',
       '#template' => $content . "\n{# " . rand() . " #}",
     ];
-    return (string) \Drupal::service('renderer')->renderPlain($build);
+    return (string) \Drupal::service('renderer')->renderInIsolation($build);
   }
 
 }

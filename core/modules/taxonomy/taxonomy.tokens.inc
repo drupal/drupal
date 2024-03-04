@@ -198,7 +198,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
         case 'description':
           $build = ['#markup' => $vocabulary->getDescription()];
           // @todo Fix in https://www.drupal.org/node/2577827
-          $replacements[$original] = \Drupal::service('renderer')->renderPlain($build);
+          $replacements[$original] = \Drupal::service('renderer')->renderInIsolation($build);
           break;
 
         case 'term-count':

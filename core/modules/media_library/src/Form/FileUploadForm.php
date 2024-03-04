@@ -184,7 +184,7 @@ class FileUploadForm extends AddFormBase {
     // upload help in the same way, so any theming improvements made to file
     // fields would also be applied to this upload field.
     // @see \Drupal\file\Plugin\Field\FieldWidget\FileWidget::formElement()
-    $form['container']['upload']['#description'] = $this->renderer->renderPlain($file_upload_help);
+    $form['container']['upload']['#description'] = $this->renderer->renderInIsolation($file_upload_help);
 
     return $form;
   }

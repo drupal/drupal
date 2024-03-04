@@ -127,7 +127,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
       '#display_id' => 'default',
     ];
     $renderer = \Drupal::service('renderer');
-    $renderer->renderPlain($build);
+    $renderer->renderInIsolation($build);
     for ($i = 1; $i <= 3; $i++) {
       $view_field = (string) $view->style_plugin->getField($i - 1, 'rendered_entity');
       $search_result = str_contains($view_field, "Test $i");
@@ -150,7 +150,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
       '#display_id' => 'default',
     ];
 
-    $renderer->renderPlain($build);
+    $renderer->renderInIsolation($build);
     for ($i = 1; $i <= 3; $i++) {
       $view_field = (string) $view->style_plugin->getField($i - 1, 'rendered_entity');
       $search_result = str_contains($view_field, "Test $i");

@@ -378,7 +378,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     // We need to render the embedded entity:
     // - without replacing placeholders, so that the placeholders are
     //   only replaced at the last possible moment. Hence we cannot use
-    //   either renderPlain() or renderRoot(), so we must use render().
+    //   either renderInIsolation() or renderRoot(), so we must use render().
     // - without bubbling beyond this filter, because filters must
     //   ensure that the bubbleable metadata for the changes they make
     //   when filtering text makes it onto the FilterProcessResult

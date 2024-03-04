@@ -46,7 +46,7 @@ trait DynamicPluginConfigWithCsrfTokenUrlTrait {
       '#plain_text' => $generated_url->getGeneratedUrl(),
     ];
     $generated_url->applyTo($url_with_csrf_token_placeholder);
-    return (string) \Drupal::service('renderer')->renderPlain($url_with_csrf_token_placeholder);
+    return (string) \Drupal::service('renderer')->renderInIsolation($url_with_csrf_token_placeholder);
   }
 
 }

@@ -24,7 +24,7 @@ function views_test_data_views_form_substitutions() {
   $render = ['#markup' => '<em>unescaped</em>'];
   return [
     '<!--will-be-escaped-->' => '<em>escaped</em>',
-    '<!--will-be-not-escaped-->' => \Drupal::service('renderer')->renderPlain($render),
+    '<!--will-be-not-escaped-->' => \Drupal::service('renderer')->renderInIsolation($render),
   ];
 }
 

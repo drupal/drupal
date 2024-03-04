@@ -43,7 +43,7 @@ class TourViewBuilder extends EntityViewBuilder {
         $location = $tip->getLocation();
 
         $body_render_array = $tip->getBody();
-        $body = (string) \Drupal::service('renderer')->renderPlain($body_render_array);
+        $body = (string) \Drupal::service('renderer')->renderInIsolation($body_render_array);
         $output = [
           'body' => $body,
           'title' => $tip->getLabel(),

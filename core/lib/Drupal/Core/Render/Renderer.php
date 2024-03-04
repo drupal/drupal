@@ -160,10 +160,18 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function renderPlain(&$elements) {
+  public function renderInIsolation(&$elements) {
     return $this->executeInRenderContext(new RenderContext(), function () use (&$elements) {
       return $this->render($elements, TRUE);
     });
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function renderPlain(&$elements) {
+    @trigger_error('Renderer::renderPlain() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Instead, you should use ::renderInIsolation(). See https://www.drupal.org/node/3407994', E_USER_DEPRECATED);
+    return $this->renderInIsolation($elements);
   }
 
   /**
@@ -180,7 +188,7 @@ class Renderer implements RendererInterface {
     $placeholder_element['#create_placeholder'] = FALSE;
 
     // Render the placeholder into markup.
-    $markup = $this->renderPlain($placeholder_element);
+    $markup = $this->renderInIsolation($placeholder_element);
     return $markup;
   }
 
@@ -272,7 +280,7 @@ class Renderer implements RendererInterface {
           // Abort, but bubble new cache metadata from the access result.
           $context = $this->getCurrentRenderContext();
           if (!isset($context)) {
-            throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
+            throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderInIsolation() call. Use renderInIsolation()/renderRoot() or #lazy_builder/#pre_render instead.");
           }
           $context->push(new BubbleableMetadata());
           $context->update($elements);
@@ -292,7 +300,7 @@ class Renderer implements RendererInterface {
 
     $context = $this->getCurrentRenderContext();
     if (!isset($context)) {
-      throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderPlain() call. Use renderPlain()/renderRoot() or #lazy_builder/#pre_render instead.");
+      throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderInIsolation() call. Use renderInIsolation()/renderRoot() or #lazy_builder/#pre_render instead.");
     }
     $context->push(new BubbleableMetadata());
 
