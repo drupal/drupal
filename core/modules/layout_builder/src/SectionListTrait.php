@@ -25,7 +25,8 @@ trait SectionListTrait {
   /**
    * {@inheritdoc}
    */
-  public function count(): int {
+  #[\ReturnTypeWillChange]
+  public function count() {
     if ($this->hasBlankSection()) {
       return 0;
     }

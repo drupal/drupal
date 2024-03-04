@@ -35,14 +35,16 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   /**
    * {@inheritdoc}
    */
-  public function offsetGet($offset): mixed {
+  #[\ReturnTypeWillChange]
+  public function offsetGet($offset) {
     return $this->value[$offset];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($offset, $value): void {
+  #[\ReturnTypeWillChange]
+  public function offsetSet($offset, $value) {
     if (isset($offset)) {
       $this->value[$offset] = $value;
     }
@@ -54,14 +56,16 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($offset): void {
+  #[\ReturnTypeWillChange]
+  public function offsetUnset($offset) {
     unset($this->value[$offset]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($offset): bool {
+  #[\ReturnTypeWillChange]
+  public function offsetExists($offset) {
     return isset($this->value[$offset]);
   }
 
@@ -77,7 +81,8 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   /**
    * {@inheritdoc}
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     return new \ArrayIterator($this->value);
   }
 
