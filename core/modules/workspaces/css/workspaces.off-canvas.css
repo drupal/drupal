@@ -23,6 +23,12 @@
   }
 }
 
+@media (max-width: 47.9375rem) {
+  #drupal-off-canvas-wrapper.workspaces-dialog + .ui-dialog .ui-dialog-content {
+    max-height: unset !important; /* Override the max-height added by JS. */
+  }
+}
+
 /**
    * The Workspace UI hides the titlebar, but we need to show and correctly
    * position the close button that is nested within it.
