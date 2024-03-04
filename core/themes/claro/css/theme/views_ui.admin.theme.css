@@ -520,6 +520,14 @@ td.group-title {
   margin-bottom: 0.9375rem;
 }
 
+.views-edit-view.disabled .views-displays {
+  background-color: var(--color-red-020);
+}
+
+.views-edit-view.disabled .views-display-column {
+  background: var(--color-white);
+}
+
 /* The contents of the popup dialog on the views edit form. */
 
 .views-filterable-options .form-type-checkbox {
