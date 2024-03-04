@@ -35,11 +35,11 @@ function workspaces_module_preinstall($module) {
     return;
   }
 
-  /** @var \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager */
-  $workspace_manager = \Drupal::service('workspaces.manager');
+  /** @var \Drupal\workspaces\WorkspaceInformationInterface $workspace_info */
+  $workspace_info = \Drupal::service('workspaces.information');
   $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type) {
-    if ($workspace_manager->isEntityTypeSupported($entity_type)) {
+    if ($workspace_info->isEntityTypeSupported($entity_type)) {
       $entity_type->setRevisionMetadataKey('workspace', 'workspace');
       $entity_definition_update_manager->updateEntityType($entity_type);
     }

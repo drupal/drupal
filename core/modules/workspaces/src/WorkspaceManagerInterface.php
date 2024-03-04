@@ -17,6 +17,11 @@ interface WorkspaceManagerInterface {
    *
    * @return bool
    *   TRUE if the entity type can belong to a workspace, FALSE otherwise.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\workspaces\WorkspaceInformation::isEntityTypeSupported instead.
+   *
+   * @see https://www.drupal.org/node/3324297
    */
   public function isEntityTypeSupported(EntityTypeInterface $entity_type);
 
@@ -25,6 +30,11 @@ interface WorkspaceManagerInterface {
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface[]
    *   The entity types what can belong to workspaces.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\workspaces\WorkspaceInformation::getSupportedEntityTypes instead.
+   *
+   * @see https://www.drupal.org/node/3324297
    */
   public function getSupportedEntityTypes();
 
@@ -97,6 +107,11 @@ interface WorkspaceManagerInterface {
    * @return bool
    *   TRUE if the entity operations or queries should be altered in the current
    *   request, FALSE otherwise.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3324297
    */
   public function shouldAlterOperations(EntityTypeInterface $entity_type);
 

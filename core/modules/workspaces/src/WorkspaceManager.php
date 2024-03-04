@@ -4,7 +4,6 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -20,15 +19,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class WorkspaceManager implements WorkspaceManagerInterface {
 
   use StringTranslationTrait;
-
-  /**
-   * An array of which entity types are supported.
-   *
-   * @var string[]
-   */
-  protected $supported = [
-    'workspace' => FALSE,
-  ];
 
   /**
    * The request stack.
@@ -87,6 +77,13 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   protected $workspaceAssociation;
 
   /**
+   * The workspace information service.
+   *
+   * @var \Drupal\workspaces\WorkspaceInformationInterface
+   */
+  protected WorkspaceInformationInterface $workspaceInfo;
+
+  /**
    * The workspace negotiator service IDs.
    *
    * @var array
@@ -119,10 +116,12 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    *   The class resolver.
    * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
    *   The workspace association service.
-   * @param array $negotiator_ids
+   * @param \Drupal\workspaces\WorkspaceInformationInterface|null $workspace_information
+   *   The workspace information service.
+   * @param array|null $negotiator_ids
    *   The workspace negotiator service IDs.
    */
-  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, array $negotiator_ids) {
+  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, protected ?WorkspaceInformationInterface $workspace_information = NULL, array $negotiator_ids = NULL) {
     $this->requestStack = $request_stack;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityMemoryCache = $entity_memory_cache;
@@ -131,33 +130,34 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     $this->logger = $logger;
     $this->classResolver = $class_resolver;
     $this->workspaceAssociation = $workspace_association;
-    $this->negotiatorIds = $negotiator_ids;
+
+    if (!$workspace_information instanceof WorkspaceInformationInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $workspace_information argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3324297', E_USER_DEPRECATED);
+      $this->workspaceInfo = \Drupal::service('workspaces.information');
+
+      // The negotiator IDs are always the last constructor argument.
+      $this->negotiatorIds = $workspace_information;
+    }
+    else {
+      $this->workspaceInfo = $workspace_information;
+      $this->negotiatorIds = $negotiator_ids;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function isEntityTypeSupported(EntityTypeInterface $entity_type) {
-    $entity_type_id = $entity_type->id();
-    if (!isset($this->supported[$entity_type_id])) {
-      // Only entity types which are revisionable and publishable can belong
-      // to a workspace.
-      $this->supported[$entity_type_id] = $entity_type->entityClassImplements(EntityPublishedInterface::class) && $entity_type->isRevisionable();
-    }
-    return $this->supported[$entity_type_id];
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\workspaces\WorkspaceInformation::isEntityTypeSupported instead. See https://www.drupal.org/node/3324297', E_USER_DEPRECATED);
+    return $this->workspaceInfo->isEntityTypeSupported($entity_type);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getSupportedEntityTypes() {
-    $entity_types = [];
-    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if ($this->isEntityTypeSupported($entity_type)) {
-        $entity_types[$entity_type_id] = $entity_type;
-      }
-    }
-    return $entity_types;
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\workspaces\WorkspaceInformation::getSupportedEntityTypes instead. See https://www.drupal.org/node/3324297', E_USER_DEPRECATED);
+    return $this->workspaceInfo->getSupportedEntityTypes();
   }
 
   /**
@@ -254,7 +254,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     // Clear the static entity cache for the supported entity types.
     $cache_tags_to_invalidate = array_map(function ($entity_type_id) {
       return 'entity.memory_cache:' . $entity_type_id;
-    }, array_keys($this->getSupportedEntityTypes()));
+    }, array_keys($this->workspaceInfo->getSupportedEntityTypes()));
     $this->entityMemoryCache->invalidateTags($cache_tags_to_invalidate);
 
     // Clear the static cache for path aliases. We can't inject the path alias
@@ -297,7 +297,8 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * {@inheritdoc}
    */
   public function shouldAlterOperations(EntityTypeInterface $entity_type) {
-    return $this->isEntityTypeSupported($entity_type) && $this->hasActiveWorkspace();
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3324297', E_USER_DEPRECATED);
+    return $this->workspaceInfo->isEntityTypeSupported($entity_type) && $this->hasActiveWorkspace();
   }
 
   /**
@@ -318,7 +319,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     $workspace_id = reset($deleted_workspace_ids);
 
     $all_associated_revisions = [];
-    foreach (array_keys($this->getSupportedEntityTypes()) as $entity_type_id) {
+    foreach (array_keys($this->workspaceInfo->getSupportedEntityTypes()) as $entity_type_id) {
       $all_associated_revisions[$entity_type_id] = $this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id);
     }
     $all_associated_revisions = array_filter($all_associated_revisions);
@@ -359,7 +360,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     // request a fresh list of tracked entities. If it is empty, we can go ahead
     // and remove the deleted workspace ID entry from state.
     $has_associated_revisions = FALSE;
-    foreach (array_keys($this->getSupportedEntityTypes()) as $entity_type_id) {
+    foreach (array_keys($this->workspaceInfo->getSupportedEntityTypes()) as $entity_type_id) {
       if (!empty($this->workspaceAssociation->getAssociatedRevisions($workspace_id, $entity_type_id))) {
         $has_associated_revisions = TRUE;
         break;

@@ -4,7 +4,6 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -43,6 +42,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $workspaceAssociation;
 
   /**
+   * The workspace information service.
+   *
+   * @var \Drupal\workspaces\WorkspaceInformationInterface
+   */
+  protected $workspaceInfo;
+
+  /**
    * Constructs a new EntityOperations instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -51,11 +57,14 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The workspace manager service.
    * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
    *   The workspace association service.
+   * @param \Drupal\workspaces\WorkspaceInformationInterface $workspace_information
+   *   The workspace information service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, WorkspaceInformationInterface $workspace_information) {
     $this->entityTypeManager = $entity_type_manager;
     $this->workspaceManager = $workspace_manager;
     $this->workspaceAssociation = $workspace_association;
+    $this->workspaceInfo = $workspace_information;
   }
 
   /**
@@ -65,7 +74,8 @@ class EntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('workspaces.manager'),
-      $container->get('workspaces.association')
+      $container->get('workspaces.association'),
+      $container->get('workspaces.information')
     );
   }
 
@@ -77,9 +87,8 @@ class EntityOperations implements ContainerInjectionInterface {
   public function entityPreload(array $ids, $entity_type_id) {
     $entities = [];
 
-    // Only run if the entity type can belong to a workspace and we are in a
-    // non-default workspace.
-    if (!$this->workspaceManager->shouldAlterOperations($this->entityTypeManager->getDefinition($entity_type_id))) {
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    if (!$this->workspaceInfo->isEntityTypeSupported($entity_type) || !$this->workspaceManager->hasActiveWorkspace()) {
       return $entities;
     }
 
@@ -87,6 +96,11 @@ class EntityOperations implements ContainerInjectionInterface {
     // current active workspace. If an entity has multiple revisions set for a
     // workspace, only the one with the highest ID is returned.
     if ($tracked_entities = $this->workspaceAssociation->getTrackedEntities($this->workspaceManager->getActiveWorkspace()->id(), $entity_type_id, $ids)) {
+      // Bail out early if there are no tracked entities of this type.
+      if (!isset($tracked_entities[$entity_type_id])) {
+        return $entities;
+      }
+
       /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage($entity_type_id);
 
@@ -109,18 +123,13 @@ class EntityOperations implements ContainerInjectionInterface {
    * @see hook_entity_presave()
    */
   public function entityPresave(EntityInterface $entity) {
-    $entity_type = $entity->getEntityType();
-
-    // Only run if we are not dealing with an entity type provided by the
-    // Workspaces module, an internal entity type or if we are in a non-default
-    // workspace.
-    if ($this->shouldSkipPreOperations($entity_type)) {
+    if ($this->shouldSkipOperations($entity)) {
       return;
     }
 
     // Disallow any change to an unsupported entity when we are not in the
     // default workspace.
-    if (!$this->workspaceManager->isEntityTypeSupported($entity_type)) {
+    if (!$this->workspaceInfo->isEntitySupported($entity)) {
       throw new \RuntimeException('This entity can only be saved in the default workspace.');
     }
 
@@ -140,7 +149,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // Track the workspaces in which the new revision was saved.
     if (!$entity->isSyncing()) {
-      $field_name = $entity_type->getRevisionMetadataKey('workspace');
+      $field_name = $entity->getEntityType()->getRevisionMetadataKey('workspace');
       $entity->{$field_name}->target_id = $this->workspaceManager->getActiveWorkspace()->id();
     }
 
@@ -167,10 +176,7 @@ class EntityOperations implements ContainerInjectionInterface {
    * @see hook_entity_insert()
    */
   public function entityInsert(EntityInterface $entity) {
-    /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
-    // Only run if the entity type can belong to a workspace and we are in a
-    // non-default workspace.
-    if (!$this->workspaceManager->shouldAlterOperations($entity->getEntityType())) {
+    if ($this->shouldSkipOperations($entity) || !$this->workspaceInfo->isEntitySupported($entity)) {
       return;
     }
 
@@ -202,9 +208,7 @@ class EntityOperations implements ContainerInjectionInterface {
    * @see hook_entity_update()
    */
   public function entityUpdate(EntityInterface $entity) {
-    // Only run if the entity type can belong to a workspace and we are in a
-    // non-default workspace.
-    if (!$this->workspaceManager->shouldAlterOperations($entity->getEntityType())) {
+    if ($this->shouldSkipOperations($entity) || !$this->workspaceInfo->isEntitySupported($entity)) {
       return;
     }
 
@@ -224,18 +228,13 @@ class EntityOperations implements ContainerInjectionInterface {
    * @see hook_entity_predelete()
    */
   public function entityPredelete(EntityInterface $entity) {
-    $entity_type = $entity->getEntityType();
-
-    // Only run if we are not dealing with an entity type provided by the
-    // Workspaces module, an internal entity type or if we are in a non-default
-    // workspace.
-    if ($this->shouldSkipPreOperations($entity_type)) {
+    if ($this->shouldSkipOperations($entity)) {
       return;
     }
 
     // Disallow any change to an unsupported entity when we are not in the
     // default workspace.
-    if (!$this->workspaceManager->isEntityTypeSupported($entity_type)) {
+    if (!$this->workspaceInfo->isEntitySupported($entity)) {
       throw new \RuntimeException('This entity can only be deleted in the default workspace.');
     }
   }
@@ -253,16 +252,20 @@ class EntityOperations implements ContainerInjectionInterface {
    * @see hook_form_alter()
    */
   public function entityFormAlter(array &$form, FormStateInterface $form_state, $form_id) {
-    /** @var \Drupal\Core\Entity\RevisionableInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
-    if (!$this->workspaceManager->isEntityTypeSupported($entity->getEntityType())) {
+    if (!$this->workspaceInfo->isEntitySupported($entity) && !$this->workspaceInfo->isEntityIgnored($entity)) {
       return;
     }
 
-    // For supported entity types, signal the fact that this form is safe to use
-    // in a non-default workspace.
+    // For supported and ignored entity types, signal the fact that this form is
+    // safe to use in a workspace.
     // @see \Drupal\workspaces\FormOperations::validateForm()
     $form_state->set('workspace_safe', TRUE);
+
+    // There is nothing more to do for ignored entity types.
+    if ($this->workspaceInfo->isEntityIgnored($entity)) {
+      return;
+    }
 
     // Add an entity builder to the form which marks the edited entity object as
     // a pending revision. This is needed so validation constraints like
@@ -295,23 +298,18 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Determines whether we need to react on pre-save or pre-delete operations.
+   * Determines whether we need to react on entity operations.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type to check.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to check.
    *
    * @return bool
-   *   Returns TRUE if the pre-save or pre-delete entity operations should not
-   *   be altered in the current request, FALSE otherwise.
+   *   Returns TRUE if entity operations should not be altered, FALSE otherwise.
    */
-  protected function shouldSkipPreOperations(EntityTypeInterface $entity_type) {
-    // We should not react on pre-save and pre-delete entity operations if one
-    // of the following conditions are met:
-    // - the entity type is provided by the Workspaces module;
-    // - the entity type is internal, which means that it should not affect
-    //   anything in the default (Live) workspace;
-    // - we are in the default workspace.
-    return $entity_type->getProvider() === 'workspaces' || $entity_type->isInternal() || !$this->workspaceManager->hasActiveWorkspace();
+  protected function shouldSkipOperations(EntityInterface $entity) {
+    // We should not react on entity operations when the entity is ignored or
+    // when we're not in a workspace context.
+    return $this->workspaceInfo->isEntityIgnored($entity) || !$this->workspaceManager->hasActiveWorkspace();
   }
 
 }

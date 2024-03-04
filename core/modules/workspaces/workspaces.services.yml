@@ -3,10 +3,14 @@ services:
     autoconfigure: true
   workspaces.manager:
     class: Drupal\workspaces\WorkspaceManager
-    arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association']
+    arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association', '@workspaces.information']
     tags:
       - { name: service_id_collector, tag: workspace_negotiator }
   Drupal\workspaces\WorkspaceManagerInterface: '@workspaces.manager'
+  workspaces.information:
+    class: Drupal\workspaces\WorkspaceInformation
+    arguments: [ '@entity_type.manager' ]
+  Drupal\workspaces\WorkspaceInformationInterface: '@workspaces.information'
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
     arguments: ['@entity_type.manager', '@database', '@workspaces.manager', '@workspaces.association', '@cache_tags.invalidator', '@event_dispatcher', '@logger.channel.workspaces']
@@ -41,7 +45,7 @@ services:
 
   workspaces.entity_schema_listener:
     class: Drupal\workspaces\EventSubscriber\EntitySchemaSubscriber
-    arguments: ['@entity.definition_update_manager', '@entity.last_installed_schema.repository', '@workspaces.manager']
+    arguments: ['@entity.definition_update_manager', '@entity.last_installed_schema.repository', '@workspaces.information']
   workspaces.workspace_subscriber:
     class: Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber
     arguments: ['@path_alias.manager', '@path.current', '@router.route_provider', '@workspaces.manager']
@@ -58,7 +62,7 @@ services:
   workspaces.entity.query.sql:
     decorates: entity.query.sql
     class: Drupal\workspaces\EntityQuery\QueryFactory
-    arguments: ['@database', '@workspaces.manager']
+    arguments: ['@database', '@workspaces.manager', '@workspaces.information']
     public: false
     decoration_priority: 50
     tags:
@@ -66,7 +70,7 @@ services:
   pgsql.workspaces.entity.query.sql:
     decorates: pgsql.entity.query.sql
     class: Drupal\workspaces\EntityQuery\PgsqlQueryFactory
-    arguments: ['@database', '@workspaces.manager']
+    arguments: ['@database', '@workspaces.manager', '@workspaces.information']
     public: false
     decoration_priority: 50
 
