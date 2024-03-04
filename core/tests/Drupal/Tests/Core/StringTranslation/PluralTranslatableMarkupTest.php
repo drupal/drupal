@@ -43,4 +43,12 @@ class PluralTranslatableMarkupTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Tests when the plural translation is missing.
+   */
+  public function testMissingPluralTranslation() {
+    $markup = PluralTranslatableMarkup::createFromTranslatedString(2, 'There is no plural delimiter @count');
+    $this->assertEquals('There is no plural delimiter 2', $markup->render());
+  }
+
 }
