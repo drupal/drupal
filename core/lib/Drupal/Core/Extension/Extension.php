@@ -223,15 +223,6 @@ class Extension {
    *   TRUE if an extension is marked as experimental, FALSE otherwise.
    */
   public function isExperimental(): bool {
-    // Currently, this function checks for both the key/value pairs
-    // 'experimental: true' and 'lifecycle: experimental' to determine if an
-    // extension is marked as experimental.
-    // @todo Remove the deprecation check for 'experimental: true' as part of
-    // https://www.drupal.org/node/3321634
-    if (isset($this->info['experimental']) && $this->info['experimental']) {
-      @trigger_error('The key-value pair "experimental: true" is deprecated in drupal:10.1.0 and will be removed before drupal:11.0.0. Use the key-value pair "lifecycle: experimental" instead. See https://www.drupal.org/node/3263585', E_USER_DEPRECATED);
-      return TRUE;
-    }
     return (isset($this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])
         && $this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL);
   }

@@ -158,14 +158,6 @@ function system_requirements($phase) {
           $obsolete_extensions[$theme] = ['name' => $info['name'], 'lifecycle_link' => $info['lifecycle_link']];
         }
       }
-      // Currently, we check for both the key/value pairs 'experimental: true'
-      // and 'lifecycle: experimental' to determine if an extension is marked as
-      // experimental.
-      // @todo Remove the check for 'experimental: true' as part of
-      // https://www.drupal.org/node/3250342
-      if (isset($data->info['experimental']) && $data->info['experimental']) {
-        $experimental_themes[$theme] = $data->info['name'];
-      }
     }
 
     // Warn if any experimental themes are installed.
