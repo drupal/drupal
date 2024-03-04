@@ -99,8 +99,8 @@ class StorageComparerTest extends UnitTestCase {
         ],
       ],
       // Simple config.
-      'system.performance' => [
-        'stale_file_threshold' => 2592000,
+      'system.logging' => [
+        'error_level' => 'hide',
       ],
 
     ];

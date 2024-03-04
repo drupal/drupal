@@ -13,16 +13,8 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityViewModeInterface;
-use Drupal\Core\Entity\EntityFormModeInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Extension\Extension;
-use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\Exception\InvalidStreamWrapperException;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\Language\LanguageInterface;
@@ -35,7 +27,6 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
-use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
@@ -968,35 +959,6 @@ function system_admin_compact_mode() {
 }
 
 /**
- * Generate a list of tasks offered by a specified module.
- *
- * @param string $module
- *   Module name.
- * @param string|array $module_name
- *   The module's display name. Passing information, as provided by
- *   \Drupal::service('extension.list.module')->getExtensionInfo() is
- *   deprecated in drupal:10.2.0. Pass only $info["name"] instead.
- *
- * @return array
- *   An array of task links.
- *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the
- *   'system.module_admin_links_helper' service with the getModuleAdminLinks() method
- *   and 'user.module_permissions_link_helper' service with the
- *   ::getModulePermissionsLink() method instead.
- *
- * @see https://www.drupal.org/node/3038972
- */
-function system_get_module_admin_tasks($module, string|array $module_name) {
-  @trigger_error("system_get_module_admin_tasks() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the 'system.module_admin_links_helper' service with the getModuleAdminLinks() method and 'user.module_permissions_link_helper' service with the ::getModulePermissionsLink() method instead. See https://www.drupal.org/node/3038972", E_USER_DEPRECATED);
-  $module_admin_links = \Drupal::service('system.module_admin_links_helper')->getModuleAdminLinks($module);
-  if ($module_permissions_link = \Drupal::service('user.module_permissions_link_helper')->getModulePermissionsLink($module, $module_name)) {
-    $module_admin_links["user.admin_permissions.{$module}"] = $module_permissions_link;
-  }
-  return $module_admin_links;
-}
-
-/**
  * Implements hook_cron().
  *
  * Remove older rows from flood, batch cache and expirable keyvalue tables. Also
@@ -1053,111 +1015,6 @@ function system_mail($key, &$message, $params) {
 
   $message['subject'] .= str_replace(["\r", "\n"], '', $subject);
   $message['body'][] = $body;
-}
-
-/**
- * Generate an array of time zones and their local time&date.
- *
- * @param mixed $blank
- *   If evaluates true, prepend an empty time zone option to the array.
- * @param bool $grouped
- *   (optional) Whether the timezones should be grouped by region.
- *
- * @return array
- *   An array or nested array containing time zones, keyed by the system name.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This function
- *   is no longer used in Drupal core. Use
- *   \Drupal\Core\Datetime\TimeZoneFormHelper::getOptionsList() or
- *   \DateTimeZone::listIdentifiers() instead.
- *
- * @see https://www.drupal.org/node/3023528
- */
-function system_time_zones($blank = NULL, $grouped = FALSE) {
-  @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This function is no longer used in Drupal core. Use \Drupal\Core\Datetime\TimeZoneFormHelper::getOptionsList(), \Drupal\Core\Datetime\TimeZoneFormHelper::getOptionsListByRegion() or \DateTimeZone::listIdentifiers() instead. See https://www.drupal.org/node/3023528', E_USER_DEPRECATED);
-  return $grouped ? TimeZoneFormHelper::getOptionsListByRegion((bool) $blank) : TimeZoneFormHelper::getOptionsList((bool) $blank);
-}
-
-/**
- * Attempts to get a file using Guzzle HTTP client and to store it locally.
- *
- * @param string $url
- *   The URL of the file to grab.
- * @param string $destination
- *   Stream wrapper URI specifying where the file should be placed. If a
- *   directory path is provided, the file is saved into that directory under
- *   its original name. If the path contains a filename as well, that one will
- *   be used instead.
- *   If this value is omitted, the site's default files scheme will be used,
- *   usually "public://".
- * @param bool $managed
- *   If this is set to TRUE, the file API hooks will be invoked and the file is
- *   registered in the database.
- * @param int $replace
- *   Replace behavior when the destination file already exists:
- *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file.
- *   - FileSystemInterface::EXISTS_RENAME: Append _{incrementing number} until
- *     the filename is unique.
- *   - FileSystemInterface::EXISTS_ERROR: Do nothing and return FALSE.
- *
- * @return mixed
- *   One of these possibilities:
- *   - If it succeeds and $managed is FALSE, the location where the file was
- *     saved.
- *   - If it succeeds and $managed is TRUE, a \Drupal\file\FileInterface
- *     object which describes the file.
- *   - If it fails, FALSE.
- *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no
- *   replacement.
- *
- * @see https://www.drupal.org/node/3223362
- */
-function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $replace = FileSystemInterface::EXISTS_RENAME) {
-  @trigger_error('system_retrieve_file is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3223362', E_USER_DEPRECATED);
-  $parsed_url = parse_url($url);
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
-  if (!isset($destination)) {
-    $path = $file_system->basename($parsed_url['path']);
-    $path = \Drupal::config('system.file')->get('default_scheme') . '://' . $path;
-    $path = \Drupal::service('stream_wrapper_manager')->normalizeUri($path);
-  }
-  else {
-    if (is_dir($file_system->realpath($destination))) {
-      // Prevent URIs with triple slashes when glueing parts together.
-      $path = str_replace('///', '//', "$destination/") . \Drupal::service('file_system')->basename($parsed_url['path']);
-    }
-    else {
-      $path = $destination;
-    }
-  }
-  try {
-    $data = (string) \Drupal::httpClient()
-      ->get($url)
-      ->getBody();
-    if ($managed) {
-      /** @var \Drupal\file\FileRepositoryInterface $file_repository */
-      $file_repository = \Drupal::service('file.repository');
-      $local = $file_repository->writeData($data, $path, $replace);
-    }
-    else {
-      $local = $file_system->saveData($data, $path, $replace);
-    }
-  }
-  catch (ClientExceptionInterface $exception) {
-    \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
-    return FALSE;
-  }
-  catch (FileException | InvalidStreamWrapperException $e) {
-    \Drupal::messenger()->addError(t('Failed to save file due to error "%error"', ['%error' => $e->getMessage()]));
-    return FALSE;
-  }
-  if (!$local) {
-    \Drupal::messenger()->addError(t('@remote could not be saved to @path.', ['@remote' => $url, '@path' => $path]));
-  }
-
-  return $local;
 }
 
 /**
@@ -1361,64 +1218,5 @@ function system_archiver_info_alter(&$info) {
   if (!class_exists(\ZipArchive::class)) {
     // PHP Zip extension is missing.
     unset($info['Zip']);
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for entity_view_display entities.
- *
- * Provides a BC layer for modules providing old configurations.
- *
- * @see https://www.drupal.org/node/2993639
- *
- * @todo Remove this BC layer in drupal:11.0.0.
- */
-function system_entity_view_display_presave(EntityViewDisplayInterface $entity_view_display): void {
-  /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
-  $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
-
-  foreach ($entity_view_display->getComponents() as $name => $component) {
-    if (empty($component['type'])) {
-      continue;
-    }
-    if (!$plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE)) {
-      continue;
-    }
-
-    // Check also potential plugins that extends TimestampFormatter.
-    if (!is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
-      continue;
-    }
-
-    if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff'])) {
-      @trigger_error("Using the 'timestamp' formatter plugin  without the 'tooltip' and 'time_diff' settings is deprecated in drupal:10.1.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
-      $entity_view_display->setComponent($name, $component);
-    }
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for view mode entities.
- *
- * Sets the description property to an empty string.
- *
- * @todo Remove this BC layer in drupal:11.0.0.
- */
-function system_entity_view_mode_presave(EntityViewModeInterface $entity_view_mode) {
-  if ($entity_view_mode->get('description') === NULL) {
-    $entity_view_mode->set('description', '');
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for form mode entities.
- *
- * Sets the description property to an empty string.
- *
- * @todo Remove this BC layer in drupal:11.0.0.
- */
-function system_entity_form_mode_presave(EntityFormModeInterface $entity_form_mode) {
-  if ($entity_form_mode->get('description') === NULL) {
-    $entity_form_mode->set('description', '');
   }
 }

@@ -143,16 +143,6 @@ system.admin_compact_page:
   requirements:
     _permission: 'access administration pages'
 
-# @todo Deprecate this route once
-#   https://www.drupal.org/i/3159210 is fixed, or remove it in Drupal 11.
-# @see https://www.drupal.org/node/3367037
-system.machine_name_transliterate:
-  path: '/machine_name/transliterate'
-  defaults:
-    _controller: '\Drupal\system\MachineNameController::transliterate'
-  requirements:
-    _permission: 'access content'
-
 system.site_information_settings:
   path: '/admin/config/system/site-information'
   defaults:

@@ -22,15 +22,15 @@ class DateFormatEditForm extends DateFormatFormBase {
    *   The date service.
    * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $date_format_storage
    *   The date format storage.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(DateFormatterInterface $date_formatter, ConfigEntityStorageInterface $date_format_storage, protected ?TimeInterface $time = NULL) {
+  public function __construct(
+    DateFormatterInterface $date_formatter,
+    ConfigEntityStorageInterface $date_format_storage,
+    protected TimeInterface $time,
+  ) {
     parent::__construct($date_formatter, $date_format_storage);
-    if ($this->time === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);
-      $this->time = \Drupal::service('datetime.time');
-    }
   }
 
   /**

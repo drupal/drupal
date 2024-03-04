@@ -15,36 +15,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConfigCacheTag implements EventSubscriberInterface {
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
    * Constructs a ConfigCacheTag object.
-   *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
-   *   The cache tags invalidator.
-   * @param \Drupal\Core\Theme\Registry|null $themeRegistry
-   *   The theme registry.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, CacheTagsInvalidatorInterface $cache_tags_invalidator, protected ?Registry $themeRegistry = NULL) {
-    $this->themeHandler = $theme_handler;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    if ($this->themeRegistry === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $themeRegistry argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3355227', E_USER_DEPRECATED);
-      $this->themeRegistry = \Drupal::service('theme.registry');
-    }
+  public function __construct(
+    protected ThemeHandlerInterface $themeHandler,
+    protected CacheTagsInvalidatorInterface $cacheTagsInvalidator,
+    protected Registry $themeRegistry,
+  ) {
   }
 
   /**

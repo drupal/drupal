@@ -9,7 +9,6 @@ use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
@@ -18,7 +17,6 @@ use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
-use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\Form\DefaultsEntityForm;
 use Drupal\layout_builder\Form\LayoutBuilderEntityViewDisplayForm;
 use Drupal\layout_builder\Form\OverridesEntityForm;
@@ -413,45 +411,4 @@ function layout_builder_theme_suggestions_field_alter(&$suggestions, array $vari
     $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'] . '__' . $element['#third_party_settings']['layout_builder']['view_mode'];
   }
   return $suggestions;
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for entity_view_display entities.
- *
- * Provides a BC layer for modules providing old configurations.
- *
- * @see https://www.drupal.org/node/2993639
- *
- * @todo Remove this BC layer in drupal:11.0.0.
- */
-function layout_builder_entity_view_display_presave(EntityViewDisplayInterface $entity_view_display): void {
-  if (!$entity_view_display instanceof LayoutEntityDisplayInterface || !$entity_view_display->isLayoutBuilderEnabled()) {
-    return;
-  }
-
-  /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
-  $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
-
-  foreach ($entity_view_display->getSections() as $section) {
-    foreach ($section->getComponents() as $component) {
-      if (str_starts_with($component->getPluginId(), 'field_block:')) {
-        $configuration = $component->get('configuration');
-        $formatter =& $configuration['formatter'];
-        if ($formatter && isset($formatter['type'])) {
-          $plugin_definition = $field_formatter_manager->getDefinition($formatter['type'], FALSE);
-          // Check also potential plugins extending TimestampFormatter.
-          if (!$plugin_definition || !is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
-            continue;
-          }
-          if (!isset($formatter['settings']['tooltip']) || !isset($formatter['settings']['time_diff'])) {
-            @trigger_error("Using the 'timestamp' formatter plugin  without the 'tooltip' and 'time_diff' settings is deprecated in drupal:10.1.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/2993639", E_USER_DEPRECATED);
-            $formatter['settings'] += $plugin_definition['class']::defaultSettings();
-            // Existing timestamp formatters don't have tooltip.
-            $formatter['settings']['tooltip']['date_format'] = '';
-            $component->set('configuration', $configuration);
-          }
-        }
-      }
-    }
-  }
 }

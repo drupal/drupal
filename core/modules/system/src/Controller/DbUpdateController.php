@@ -101,7 +101,17 @@ class DbUpdateController extends ControllerBase {
    * @param \Drupal\Core\Asset\AssetQueryStringInterface $assetQueryString
    *   The asset query string.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, protected ?AssetQueryStringInterface $assetQueryString = NULL) {
+  public function __construct(
+    $root,
+    KeyValueExpirableFactoryInterface $key_value_expirable_factory,
+    CacheBackendInterface $cache,
+    StateInterface $state,
+    ModuleHandlerInterface $module_handler,
+    AccountInterface $account,
+    BareHtmlPageRendererInterface $bare_html_page_renderer,
+    UpdateRegistry $post_update_registry,
+    protected AssetQueryStringInterface $assetQueryString,
+  ) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
@@ -110,11 +120,6 @@ class DbUpdateController extends ControllerBase {
     $this->account = $account;
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
     $this->postUpdateRegistry = $post_update_registry;
-    if ($this->assetQueryString === NULL) {
-      $this->assetQueryString = \Drupal::service('asset.query_string');
-      @trigger_error('Calling' . __METHOD__ . '() without the $assetQueryString argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
-    }
-
   }
 
   /**

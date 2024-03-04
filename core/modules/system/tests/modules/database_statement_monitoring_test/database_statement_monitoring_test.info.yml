@@ -1,7 +1,0 @@
-name: 'Database Statement Monitoring Test'
-type: module
-description: 'Support module for Database layer tests that need to monitor executed database statements.'
-package: Testing
-version: VERSION
-lifecycle: deprecated
-lifecycle_link: 'https://www.drupal.org/node/3318162'

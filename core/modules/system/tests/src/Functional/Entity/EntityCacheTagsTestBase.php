@@ -611,32 +611,6 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   }
 
   /**
-   * Creates a cache ID from a list of cache keys and a set of cache contexts.
-   *
-   * @param string[] $keys
-   *   A list of cache keys.
-   * @param string[] $contexts
-   *   A set of cache contexts.
-   *
-   * @return string
-   *   The cache ID string.
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3354596
-   */
-  protected function createCacheId(array $keys, array $contexts) {
-    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3354596', E_USER_DEPRECATED);
-    $cid_parts = $keys;
-
-    $contexts = \Drupal::service('cache_contexts_manager')->convertTokensToKeys($contexts);
-    $cid_parts = array_merge($cid_parts, $contexts->getKeys());
-
-    return implode(':', $cid_parts);
-  }
-
-  /**
    * Verify that a given render cache entry exists, with the correct cache tags.
    *
    * @param string[] $keys
