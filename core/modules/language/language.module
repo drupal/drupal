@@ -418,6 +418,7 @@ function language_entity_field_access($operation, FieldDefinitionInterface $fiel
  * Implements hook_tour_tips_alter().
  */
 function language_tour_tips_alter(array &$tour_tips, EntityInterface $entity) {
+  $module_extension_list = \Drupal::service('extension.list.module');
   foreach ($tour_tips as $tour_tip) {
     if ($tour_tip->get('id') == 'language-overview') {
       $additional_overview = '';
@@ -433,10 +434,10 @@ function language_tour_tips_alter(array &$tour_tips, EntityInterface $entity) {
       $additional_continue = '';
       $additional_modules = [];
       if (!Drupal::service('module_handler')->moduleExists('locale')) {
-        $additional_modules[] = Drupal::service('module_handler')->getName('locale');
+        $additional_modules[] = $module_extension_list->getName('locale');
       }
       if (!Drupal::service('module_handler')->moduleExists('content_translation')) {
-        $additional_modules[] = Drupal::service('module_handler')->getName('content_translation');
+        $additional_modules[] = $module_extension_list->getName('content_translation');
       }
       if (!empty($additional_modules)) {
         $additional_continue = t('Depending on your site features, additional modules that you might want to install are:') . '<ul>';

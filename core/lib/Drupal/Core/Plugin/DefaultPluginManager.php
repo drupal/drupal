@@ -6,6 +6,7 @@ use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
@@ -67,6 +68,13 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
+
+  /**
+   * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
+   */
+  protected ?ModuleExtensionList $moduleExtensionList;
 
   /**
    * A set of defaults to be referenced by $this->processDefinition().

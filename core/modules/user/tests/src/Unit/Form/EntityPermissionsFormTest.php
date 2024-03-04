@@ -10,6 +10,7 @@ use Drupal\Core\Config\Entity\ConfigEntityDependency;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
@@ -57,6 +58,7 @@ class EntityPermissionsFormTest extends UnitTestCase {
     $permission_handler = $prophecy->reveal();
     $role_storage = $this->prophesize(RoleStorageInterface::class)->reveal();
     $module_handler = $this->prophesize(ModuleHandlerInterface::class)->reveal();
+    $module_extension_list = $this->prophesize(ModuleExtensionList::class)->reveal();
     $prophecy = $this->prophesize(ConfigManagerInterface::class);
     $prophecy->getConfigEntitiesToChangeOnDependencyRemoval('config', ['node.type.article'])
       ->willReturn([
@@ -75,7 +77,7 @@ class EntityPermissionsFormTest extends UnitTestCase {
       ->willReturn($entity_type);
     $entity_type_manager = $prophecy->reveal();
 
-    $bundle_form = new EntityPermissionsForm($permission_handler, $role_storage, $module_handler, $config_manager, $entity_type_manager);
+    $bundle_form = new EntityPermissionsForm($permission_handler, $role_storage, $module_handler, $config_manager, $entity_type_manager, $module_extension_list);
 
     // Mock the method parameters.
     $route = new Route('some.path');

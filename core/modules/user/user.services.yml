@@ -48,7 +48,7 @@ services:
   Drupal\user\UserAuthInterface: '@user.auth'
   user.permissions:
     class: Drupal\user\PermissionHandler
-    arguments: ['@module_handler', '@string_translation', '@callable_resolver']
+    arguments: ['@module_handler', '@string_translation', '@callable_resolver', '@extension.list.module']
   Drupal\user\PermissionHandlerInterface: '@user.permissions'
   user.current_user_context:
     class: Drupal\user\ContextProvider\CurrentUserContext

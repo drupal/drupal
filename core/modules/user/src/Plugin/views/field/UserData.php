@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\views\field;
 
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
@@ -38,17 +39,28 @@ class UserData extends FieldPluginBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('user.data'), $container->get('module_handler'));
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('user.data'),
+      $container->get('module_handler'),
+      $container->get('extension.list.module')
+    );
   }
 
   /**
    * Constructs a UserData object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, UserDataInterface $user_data, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, UserDataInterface $user_data, ModuleHandlerInterface $module_handler, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->userData = $user_data;
     $this->moduleHandler = $module_handler;
+    if ($this->moduleExtensionList === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+      $this->moduleExtensionList = \Drupal::service('extension.list.module');
+    }
   }
 
   /**
@@ -72,7 +84,7 @@ class UserData extends FieldPluginBase {
     $modules = $this->moduleHandler->getModuleList();
     $names = [];
     foreach (array_keys($modules) as $name) {
-      $names[$name] = $this->moduleHandler->getName($name);
+      $names[$name] = $this->moduleExtensionList->getName($name);
     }
 
     $form['data_module'] = [

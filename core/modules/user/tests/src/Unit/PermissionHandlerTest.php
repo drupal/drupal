@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -20,6 +21,7 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * @group user
  *
  * @coversDefaultClass \Drupal\user\PermissionHandler
+ * @runTestsInSeparateProcesses
  */
 class PermissionHandlerTest extends UnitTestCase {
 
@@ -130,7 +132,9 @@ EOF
     $this->callableResolver->expects($this->never())
       ->method('getCallableFromDefinition');
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver);
+    $module_extension_list = $this->createMock(ModuleExtensionList::class);
+
+    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -162,7 +166,8 @@ EOF
         'module_b' => vfsStream::url('modules/module_b'),
         'module_c' => vfsStream::url('modules/module_c'),
       ]);
-    $this->moduleHandler->expects($this->exactly(3))
+    $module_extension_list = $this->createMock(ModuleExtensionList::class);
+    $module_extension_list->expects($this->exactly(3))
       ->method('getName')
       ->willReturnMap([
         ['module_a', 'Module a'],
@@ -191,7 +196,7 @@ EOF
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver);
+    $permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
     $actual_permissions = $permissionHandler->getPermissions();
     $this->assertEquals(['access_module_a4', 'access_module_a1', 'access_module_a2', 'access_module_a3'],
       array_keys($actual_permissions));
@@ -254,7 +259,9 @@ EOF
         ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess', [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']],
       ]);
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver);
+    $module_extension_list = $this->createMock(ModuleExtensionList::class);
+
+    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -297,7 +304,9 @@ EOF
       ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
       ->willReturn([new TestPermissionCallbacks(), 'titleDescription']);
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver);
+    $module_extension_list = $this->createMock(ModuleExtensionList::class);
+
+    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
 
