@@ -1,5 +1,4 @@
 absolutezero
-accesslog
 adamson
 addedline
 addtogroup
@@ -167,7 +166,6 @@ csslintrc
 csstools
 curle
 curlopt
-customevent
 customrequest
 cweagans
 dailymotion
@@ -478,7 +476,6 @@ nntp
 noadd
 nocache
 nocase
-nodelist
 nodir
 nofields
 nojs
@@ -540,7 +537,6 @@ phpdocumentor
 phpserialize
 phpspec
 pickable
-picturefill
 pingback
 pjpeg
 placeholdered
@@ -573,8 +569,6 @@ prerender
 prerendered
 presave
 presentationml
-presetid
-presetname
 pretransaction
 preuninstall
 processlist
@@ -657,7 +651,6 @@ schipulcon
 scorewords
 scriptable
 scrollbars
-sebastianbergmann
 seld
 selectbox
 sess
@@ -804,7 +797,6 @@ titlebar
 tlds
 tmpfs
 toggleable
-togglewrap
 tongatapu
 toolkits
 toolongdomainexampledomainexampledomainexampledomainexampledomain
@@ -817,7 +809,6 @@ transferthick
 translatables
 trayblock
 trgm
-trid
 troopal
 truecolor
 twistie
