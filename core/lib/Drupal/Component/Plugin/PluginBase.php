@@ -22,7 +22,7 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
   /**
    * The plugin implementation definition.
    *
-   * @var array
+   * @var \Drupal\Component\Plugin\Definition\PluginDefinitionInterface|array
    */
   protected $pluginDefinition;
 
