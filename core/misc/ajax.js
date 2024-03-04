@@ -1699,21 +1699,12 @@
      *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
      * @param {object} response
      *   The response from the Ajax request.
-     * @param {object[]|string} response.data
+     * @param {object[]} response.data
      *   An array of styles to be added.
      * @param {number} [status]
      *   The XMLHttpRequest status.
      */
     add_css(ajax, response, status) {
-      if (typeof response.data === 'string') {
-        Drupal.deprecationError({
-          message:
-            'Passing a string to the Drupal.ajax.add_css() method is deprecated in 10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3154948.',
-        });
-        $('head').prepend(response.data);
-        return;
-      }
-
       const allUniqueBundleIds = response.data.map(function (style) {
         const uniqueBundleId = style.href + ajax.instanceIndex;
         // Force file to load as a CSS stylesheet using 'css!' flag.

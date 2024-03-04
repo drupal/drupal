@@ -17,21 +17,18 @@ class AddCssCommand implements CommandInterface {
   /**
    * Arrays containing attributes of the stylesheets to be added to the page.
    *
-   * @var string[][]|string
+   * @var string[][]
    */
   protected $styles;
 
   /**
    * Constructs an AddCssCommand.
    *
-   * @param string[][]|string $styles
+   * @param string[][] $styles
    *   Arrays containing attributes of the stylesheets to be added to the page.
    *   i.e. `['href' => 'someURL']` becomes `<link href="someURL">`.
    */
-  public function __construct($styles) {
-    if (is_string($styles)) {
-      @trigger_error('The ' . __NAMESPACE__ . '\AddCssCommand with a string argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See http://www.drupal.org/node/3154948', E_USER_DEPRECATED);
-    }
+  public function __construct(array $styles) {
     $this->styles = $styles;
   }
 

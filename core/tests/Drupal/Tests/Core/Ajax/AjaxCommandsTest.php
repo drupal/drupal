@@ -127,23 +127,6 @@ class AjaxCommandsTest extends UnitTestCase {
   }
 
   /**
-   * @covers \Drupal\Core\Ajax\AddCssCommand
-   * @group legacy
-   */
-  public function testStringAddCssCommand() {
-    $this->expectDeprecation("The Drupal\Core\Ajax\AddCssCommand with a string argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See http://www.drupal.org/node/3154948");
-
-    $command = new AddCssCommand('<style>p{ text-decoration:blink; }</style>');
-
-    $expected = [
-      'command' => 'add_css',
-      'data' => '<style>p{ text-decoration:blink; }</style>',
-    ];
-
-    $this->assertEquals($expected, $command->render());
-  }
-
-  /**
    * @covers \Drupal\Core\Ajax\AfterCommand
    */
   public function testAfterCommand() {
