@@ -4,6 +4,7 @@ namespace Drupal\user;
 
 use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -84,8 +85,10 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   The string translation.
    * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface $callable_resolver
    *   The callable resolver.
+   * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
+   *   The module extension list.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface|CallableResolver $callable_resolver) {
+  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface|CallableResolver $callable_resolver, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
     if ($callable_resolver instanceof ControllerResolverInterface) {
       @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3397954', E_USER_DEPRECATED);
       $callable_resolver = \Drupal::service('callable_resolver');
@@ -96,6 +99,10 @@ class PermissionHandler implements PermissionHandlerInterface {
     //   container.
     $this->moduleHandler = $module_handler;
     $this->stringTranslation = $string_translation;
+    if ($this->moduleExtensionList === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+      $this->moduleExtensionList = \Drupal::service('extension.list.module');
+    }
   }
 
   /**
@@ -233,7 +240,7 @@ class PermissionHandler implements PermissionHandlerInterface {
   protected function getModuleNames() {
     $modules = [];
     foreach (array_keys($this->moduleHandler->getModuleList()) as $module) {
-      $modules[$module] = $this->moduleHandler->getName($module);
+      $modules[$module] = $this->moduleExtensionList->getName($module);
     }
     asort($modules);
     return $modules;

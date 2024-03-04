@@ -717,6 +717,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getName($module) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Extension\ModuleExtensionList::getName($module) instead. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
     return \Drupal::service('extension.list.module')->getName($module);
   }
 

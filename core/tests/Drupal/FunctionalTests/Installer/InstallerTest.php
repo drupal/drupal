@@ -134,6 +134,7 @@ class InstallerTest extends InstallerTestBase {
     $database = Database::getConnection();
     $module = $database->getProvider();
     $module_handler = \Drupal::service('module_handler');
+    $module_extension_list = \Drupal::service('extension.list.module');
 
     // Ensure the update module is not installed.
     $this->assertFalse($module_handler->moduleExists('update'), 'The Update module is not installed.');
@@ -148,7 +149,7 @@ class InstallerTest extends InstallerTestBase {
       $this->fail("Uninstalled $module module.");
     }
     catch (ModuleUninstallValidatorException $e) {
-      $module_name = $module_handler->getName($module);
+      $module_name = $module_extension_list->getName($module);
       $driver = $database->driver();
       $this->assertStringContainsString("The module '$module_name' is providing the database driver '$driver'.", $e->getMessage());
     }

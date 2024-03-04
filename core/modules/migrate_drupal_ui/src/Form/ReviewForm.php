@@ -5,7 +5,9 @@ namespace Drupal\migrate_drupal_ui\Form;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
@@ -33,6 +35,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class ReviewForm extends MigrateUpgradeFormBase {
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * The service properties that should raise a deprecation error.
+   */
+  private array $deprecatedProperties = ['moduleHandler' => 'module_handler'];
 
   /**
    * The migrations.
@@ -49,11 +57,9 @@ class ReviewForm extends MigrateUpgradeFormBase {
   protected $migrationState;
 
   /**
-   * Module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * Module extension list.
    */
-  protected $moduleHandler;
+  protected ModuleExtensionList $moduleExtensionList;
 
   /**
    * Source system data set in buildForm().
@@ -75,8 +81,8 @@ class ReviewForm extends MigrateUpgradeFormBase {
    *   Migration state service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
+   * @param \Drupal\Core\Extension\ModuleExtensionList|\Drupal\Core\Extension\ModuleHandlerInterface $module_extension_list
+   *   The module extension list.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    */
@@ -86,16 +92,20 @@ class ReviewForm extends MigrateUpgradeFormBase {
     PrivateTempStoreFactory $tempstore_private,
     MigrationState $migrationState,
     ConfigFactoryInterface $config_factory,
-    ModuleHandlerInterface $module_handler,
+    ModuleExtensionList|ModuleHandlerInterface $module_extension_list,
     protected ?TimeInterface $time = NULL,
   ) {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
-    $this->moduleHandler = $module_handler;
     if ($this->time === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);
       $this->time = \Drupal::service('datetime.time');
     }
+    if ($module_extension_list instanceof ModuleHandlerInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $module_extension_list argument as ModuleHandlerInterface is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+      $module_extension_list = \Drupal::service('extension.list.module');
+    }
+    $this->moduleExtensionList = $module_extension_list;
   }
 
   /**
@@ -108,7 +118,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $container->get('tempstore.private'),
       $container->get('migrate_drupal.migration_state'),
       $container->get('config.factory'),
-      $container->get('module_handler'),
+      $container->get('extension.list.module'),
       $container->get('datetime.time'),
     );
   }
@@ -311,7 +321,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
           }
           else {
             try {
-              $destination_module_names[] = $this->moduleHandler->getName($destination_module);
+              $destination_module_names[] = $this->moduleExtensionList->getName($destination_module);
             }
             catch (UnknownExtensionException $e) {
               $destination_module_names[] = $destination_module;

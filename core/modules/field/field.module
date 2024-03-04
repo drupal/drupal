@@ -107,11 +107,12 @@ function field_help($route_name, RouteMatchInterface $route_match) {
       }
       $providers = array_unique($providers);
       sort($providers);
+      $module_extension_list = \Drupal::service('extension.list.module');
       foreach ($providers as $provider) {
         // Skip plugins provided by core components as they do not implement
         // hook_help().
         if (isset($modules[$provider])) {
-          $display = \Drupal::moduleHandler()->getName($provider);
+          $display = $module_extension_list->getName($provider);
           if (\Drupal::moduleHandler()->hasImplementations('help', $provider)) {
             $items[] = Link::fromTextAndUrl($display, Url::fromRoute('help.page', ['name' => $provider]))->toRenderable();
           }
