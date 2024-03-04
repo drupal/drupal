@@ -194,6 +194,19 @@ class BlockContentTest extends ResourceTestBase {
               'self' => ['href' => $base_url->toString() . '/relationships/revision_user' . $version_query_string],
             ],
           ],
+          'uid' => [
+            'data' => [
+              'id' => $this->entity->getOwner()->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => $this->entity->getOwnerId(),
+              ],
+              'type' => 'user--user',
+            ],
+            'links' => [
+              'related' => ['href' => $base_url->toString() . '/uid' . $version_query_string],
+              'self' => ['href' => $base_url->toString() . '/relationships/uid' . $version_query_string],
+            ],
+          ],
         ],
       ],
     ];
