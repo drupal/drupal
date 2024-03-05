@@ -108,20 +108,18 @@ class BlockContentForm extends ContentEntityForm {
     if ($block->id()) {
       $form_state->setValue('id', $block->id());
       $form_state->set('id', $block->id());
-      if ($insert) {
-        $theme = $block->getTheme();
-        if ($theme) {
-          $form_state->setRedirect(
-            'block.admin_add',
-            [
-              'plugin_id' => 'block_content:' . $block->uuid(),
-              'theme' => $theme,
-            ]
-          );
-        }
-        else {
-          $form_state->setRedirectUrl($block->toUrl('collection'));
-        }
+      $theme = $block->getTheme();
+      if ($insert && $theme) {
+        $form_state->setRedirect(
+          'block.admin_add',
+          [
+            'plugin_id' => 'block_content:' . $block->uuid(),
+            'theme' => $theme,
+          ]
+        );
+      }
+      else {
+        $form_state->setRedirectUrl($block->toUrl('collection'));
       }
     }
     else {
