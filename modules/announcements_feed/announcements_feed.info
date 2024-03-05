@@ -1,5 +1,6 @@
 name = Announcements
 description =  Displays announcements from the Drupal community.
 package = Core
+version = VERSION
 core = 7.x
 files[] = tests/announce_feed_test.test
