@@ -90,7 +90,8 @@ class Condition implements ConditionInterface, \Countable {
    * size of its conditional array minus one, because one element is the
    * conjunction.
    */
-  public function count(): int {
+  #[\ReturnTypeWillChange]
+  public function count() {
     return count($this->conditions) - 1;
   }
 

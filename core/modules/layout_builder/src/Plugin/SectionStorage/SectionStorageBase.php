@@ -38,7 +38,8 @@ abstract class SectionStorageBase extends PluginBase implements SectionStorageIn
   /**
    * {@inheritdoc}
    */
-  public function count(): int {
+  #[\ReturnTypeWillChange]
+  public function count() {
     return $this->getSectionList()->count();
   }
 

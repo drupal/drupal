@@ -170,7 +170,8 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($offset): bool {
+  #[\ReturnTypeWillChange]
+  public function offsetExists($offset) {
     // We do not want to throw exceptions here, so we do not use get().
     return isset($this->list[$offset]);
   }
@@ -178,21 +179,24 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($offset): void {
+  #[\ReturnTypeWillChange]
+  public function offsetUnset($offset) {
     $this->removeItem($offset);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetGet($offset): mixed {
+  #[\ReturnTypeWillChange]
+  public function offsetGet($offset) {
     return $this->get($offset);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($offset, $value): void {
+  #[\ReturnTypeWillChange]
+  public function offsetSet($offset, $value) {
     if (!isset($offset)) {
       // The [] operator has been used.
       $this->appendItem($value);
@@ -231,14 +235,16 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     return new \ArrayIterator($this->list);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function count(): int {
+  #[\ReturnTypeWillChange]
+  public function count() {
     return count($this->list);
   }
 

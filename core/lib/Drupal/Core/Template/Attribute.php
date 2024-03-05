@@ -90,17 +90,18 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   /**
    * {@inheritdoc}
    */
-  public function offsetGet($name): mixed {
+  #[\ReturnTypeWillChange]
+  public function offsetGet($name) {
     if (isset($this->storage[$name])) {
       return $this->storage[$name];
     }
-    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($name, $value): void {
+  #[\ReturnTypeWillChange]
+  public function offsetSet($name, $value) {
     $this->storage[$name] = $this->createAttributeValue($name, $value);
   }
 
@@ -153,14 +154,16 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($name): void {
+  #[\ReturnTypeWillChange]
+  public function offsetUnset($name) {
     unset($this->storage[$name]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($name): bool {
+  #[\ReturnTypeWillChange]
+  public function offsetExists($name) {
     return isset($this->storage[$name]);
   }
 
@@ -355,7 +358,8 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   /**
    * {@inheritdoc}
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     return new \ArrayIterator($this->storage);
   }
 
@@ -372,7 +376,8 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    * @return string
    *   The safe string content.
    */
-  public function jsonSerialize(): string {
+  #[\ReturnTypeWillChange]
+  public function jsonSerialize() {
     return (string) $this;
   }
 

@@ -47,7 +47,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getName(): string
+    #[\ReturnTypeWillChange]
+    public function getName()
     {
         return $this->staticReflectionParser->getClassName();
     }
@@ -55,7 +56,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getDocComment(): string|FALSE
+    #[\ReturnTypeWillChange]
+    public function getDocComment()
     {
         return $this->staticReflectionParser->getDocComment();
     }
@@ -63,7 +65,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getNamespaceName(): string
+    #[\ReturnTypeWillChange]
+    public function getNamespaceName()
     {
         return $this->staticReflectionParser->getNamespaceName();
     }
@@ -91,7 +94,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getMethod($name): \ReflectionMethod
+    #[\ReturnTypeWillChange]
+    public function getMethod($name)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -99,7 +103,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getProperty($name): \ReflectionProperty
+    #[\ReturnTypeWillChange]
+    public function getProperty($name)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -115,7 +120,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getConstant($name): mixed
+    #[\ReturnTypeWillChange]
+    public function getConstant($name)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -123,7 +129,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getConstructor(): ?\ReflectionMethod
+    #[\ReturnTypeWillChange]
+    public function getConstructor()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -131,7 +138,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getDefaultProperties(): array
+    #[\ReturnTypeWillChange]
+    public function getDefaultProperties()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -139,7 +147,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getEndLine(): int|FALSE
+    #[\ReturnTypeWillChange]
+    public function getEndLine()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -147,7 +156,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getExtension(): ?\ReflectionExtension
+    #[\ReturnTypeWillChange]
+    public function getExtension()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -155,7 +165,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getExtensionName(): string|FALSE
+    #[\ReturnTypeWillChange]
+    public function getExtensionName()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -163,7 +174,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getFileName(): string|FALSE
+    #[\ReturnTypeWillChange]
+    public function getFileName()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -171,7 +183,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getInterfaceNames(): array
+    #[\ReturnTypeWillChange]
+    public function getInterfaceNames()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -179,7 +192,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getInterfaces(): array
+    #[\ReturnTypeWillChange]
+    public function getInterfaces()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -187,7 +201,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getMethods($filter = null): array
+    #[\ReturnTypeWillChange]
+    public function getMethods($filter = null)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -195,7 +210,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getModifiers(): int
+    #[\ReturnTypeWillChange]
+    public function getModifiers()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -203,7 +219,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getParentClass(): \ReflectionClass|FALSE
+    #[\ReturnTypeWillChange]
+    public function getParentClass()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -211,7 +228,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getProperties($filter = null): array
+    #[\ReturnTypeWillChange]
+    public function getProperties($filter = null)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -219,7 +237,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getShortName(): string
+    #[\ReturnTypeWillChange]
+    public function getShortName()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -227,7 +246,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getStartLine(): int|FALSE
+    #[\ReturnTypeWillChange]
+    public function getStartLine()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -235,7 +255,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getStaticProperties(): ?array
+    #[\ReturnTypeWillChange]
+    public function getStaticProperties()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -243,7 +264,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getStaticPropertyValue($name, $default = ''): mixed
+    #[\ReturnTypeWillChange]
+    public function getStaticPropertyValue($name, $default = '')
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -251,7 +273,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getTraitAliases(): array
+    #[\ReturnTypeWillChange]
+    public function getTraitAliases()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -259,7 +282,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getTraitNames(): array
+    #[\ReturnTypeWillChange]
+    public function getTraitNames()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -267,7 +291,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getTraits(): array
+    #[\ReturnTypeWillChange]
+    public function getTraits()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -275,7 +300,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function hasConstant($name): bool
+    #[\ReturnTypeWillChange]
+    public function hasConstant($name)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -283,7 +309,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function hasMethod($name): bool
+    #[\ReturnTypeWillChange]
+    public function hasMethod($name)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -291,7 +318,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function hasProperty($name): bool
+    #[\ReturnTypeWillChange]
+    public function hasProperty($name)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -299,7 +327,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function implementsInterface($interface): bool
+    #[\ReturnTypeWillChange]
+    public function implementsInterface($interface)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -307,7 +336,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function inNamespace(): bool
+    #[\ReturnTypeWillChange]
+    public function inNamespace()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -315,7 +345,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isAbstract(): bool
+    #[\ReturnTypeWillChange]
+    public function isAbstract()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -323,7 +354,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isCloneable(): bool
+    #[\ReturnTypeWillChange]
+    public function isCloneable()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -331,7 +363,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isFinal(): bool
+    #[\ReturnTypeWillChange]
+    public function isFinal()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -339,7 +372,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isInstance($object): bool
+    #[\ReturnTypeWillChange]
+    public function isInstance($object)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -347,7 +381,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isInstantiable(): bool
+    #[\ReturnTypeWillChange]
+    public function isInstantiable()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -355,7 +390,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isInterface(): bool
+    #[\ReturnTypeWillChange]
+    public function isInterface()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -363,7 +399,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isInternal(): bool
+    #[\ReturnTypeWillChange]
+    public function isInternal()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -371,7 +408,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isIterateable(): bool
+    #[\ReturnTypeWillChange]
+    public function isIterateable()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -379,7 +417,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isSubclassOf($class): bool
+    #[\ReturnTypeWillChange]
+    public function isSubclassOf($class)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -387,7 +426,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isTrait(): bool
+    #[\ReturnTypeWillChange]
+    public function isTrait()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -395,7 +435,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function isUserDefined(): bool
+    #[\ReturnTypeWillChange]
+    public function isUserDefined()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -403,7 +444,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function newInstanceArgs(array $args = []): ?object
+    #[\ReturnTypeWillChange]
+    public function newInstanceArgs(array $args = [])
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -411,7 +453,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function newInstanceWithoutConstructor(): object
+    #[\ReturnTypeWillChange]
+    public function newInstanceWithoutConstructor()
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -419,7 +462,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function setStaticPropertyValue($name, $value): void
+    #[\ReturnTypeWillChange]
+    public function setStaticPropertyValue($name, $value)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -427,7 +471,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function getConstants(?int $filter = null): array
+    #[\ReturnTypeWillChange]
+    public function getConstants(?int $filter = null)
     {
         throw new ReflectionException('Method not implemented');
     }
@@ -435,7 +480,8 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
-    public function newInstance(mixed ...$args): object
+    #[\ReturnTypeWillChange]
+    public function newInstance(mixed ...$args)
     {
         throw new ReflectionException('Method not implemented');
     }
