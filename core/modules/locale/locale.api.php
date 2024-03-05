@@ -120,9 +120,6 @@ function hook_locale_translation_projects_alter(&$projects) {
     'info' => [
       'interface translation server pattern' => 'http://example.com/files/translations/%core/%project/%project-%version.%language.po',
     ],
-    // An optional key to change the order in which translation files are
-    // processed. By default, the projects are sorted alphabetically by key.
-    'weight' => 1,
   ];
 }
 
