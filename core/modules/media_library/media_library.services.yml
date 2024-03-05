@@ -9,8 +9,8 @@ services:
     class: Drupal\media_library\Routing\RouteSubscriber
   media_library.opener_resolver:
     class: Drupal\media_library\OpenerResolver
-    calls:
-      - [setContainer, ['@service_container']]
+    tags:
+      - { name: service_collector, tag: media_library.opener, call: addOpener }
   Drupal\media_library\OpenerResolverInterface: '@media_library.opener_resolver'
   media_library.opener.field_widget:
     class: Drupal\media_library\MediaLibraryFieldWidgetOpener

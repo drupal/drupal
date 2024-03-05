@@ -29,6 +29,7 @@ class MediaLibraryAddFormTest extends KernelTestBase {
     'media_library',
     'file',
     'field',
+    'filter',
     'image',
     'system',
     'views',
