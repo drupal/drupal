@@ -52,8 +52,8 @@
 
 /* Ensure that image doesn't overlap layout builder sections when editing layouts. */
 
-.layout-builder .wide-content {
+.layout-builder .wide-content,
+.region--hero .wide-content {
   max-width: 100%;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
+  margin-inline: 0;
 }
