@@ -10,7 +10,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -252,7 +251,17 @@ class NoMethodCallable {
 
 class MockContainerAware implements ContainerAwareInterface {
 
-  use ContainerAwareTrait;
+  /**
+   * The service container.
+   */
+  protected ContainerInterface $container;
+
+  /**
+   * Sets the service container.
+   */
+  public function setContainer(?ContainerInterface $container): void {
+    $this->container = $container;
+  }
 
   public function getResult($suffix) {
     if (empty($this->container)) {

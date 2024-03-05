@@ -1885,22 +1885,6 @@ parameters:
 			path: modules/system/tests/modules/plugin_test/src/Plugin/TestPluginManager.php
 
 		-
-			message: """
-				#^Class Drupal\\\\service_provider_test\\\\TestClass implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/system/tests/modules/service_provider_test/src/TestClass.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\service_provider_test\\\\TestClass\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/system/tests/modules/service_provider_test/src/TestClass.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\TestFileTransfer\\:\\:\\$connection\\.$#"
 			count: 5
 			path: modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php
@@ -2711,14 +2695,6 @@ parameters:
 
 		-
 			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Tests\\\\Core\\\\Controller\\\\MockContainerAware\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/Controller/ControllerResolverTest.php
-
-		-
-			message: """
 				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
 			"""
@@ -2868,14 +2844,6 @@ parameters:
 		-
 			message: """
 				#^Class Drupal\\\\Tests\\\\Core\\\\Utility\\\\MockContainerAware implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Core/Utility/CallableResolverTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Tests\\\\Core\\\\Utility\\\\MockContainerAware\\:
 				since Symfony 6\\.4, use dependency injection instead$#
 			"""
 			count: 1
