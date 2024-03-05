@@ -5,9 +5,9 @@ namespace Drupal\Core\Queue;
 use Drupal\Core\Database\Connection;
 
 /**
- * Defines the key/value store factory for the database backend.
+ * Defines the queue factory for the database backend.
  */
-class QueueDatabaseFactory {
+class QueueDatabaseFactory implements QueueFactoryInterface {
 
   /**
    * The database connection.
@@ -20,20 +20,14 @@ class QueueDatabaseFactory {
    * Constructs this factory object.
    *
    * @param \Drupal\Core\Database\Connection $connection
-   *   The Connection object containing the key-value tables.
+   *   The Connection object containing the queue table.
    */
   public function __construct(Connection $connection) {
     $this->connection = $connection;
   }
 
   /**
-   * Constructs a new queue object for a given name.
-   *
-   * @param string $name
-   *   The name of the collection holding key and value pairs.
-   *
-   * @return \Drupal\Core\Queue\DatabaseQueue
-   *   A key/value store implementation for the given $collection.
+   * {@inheritdoc}
    */
   public function get($name) {
     return new DatabaseQueue($name, $this->connection);

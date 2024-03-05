@@ -58,7 +58,11 @@ class QueueFactory implements ContainerAwareInterface {
       if (empty($service_name)) {
         $service_name = $this->settings->get('queue_service_' . $name, $this->settings->get('queue_default', 'queue.database'));
       }
-      $this->queues[$name] = $this->container->get($service_name)->get($name);
+      $factory = $this->container->get($service_name);
+      if (!$factory instanceof QueueFactoryInterface) {
+        @trigger_error(sprintf('Not implementing %s in %s is deprecated in drupal:10.3.0 and the factory will not be discovered in drupal:11.0.0. Implement the interface in your factory class. See https://www.drupal.org/node/3417034', QueueFactoryInterface::class, $factory::class), E_USER_DEPRECATED);
+      }
+      $this->queues[$name] = $factory->get($name);
     }
     return $this->queues[$name];
   }
