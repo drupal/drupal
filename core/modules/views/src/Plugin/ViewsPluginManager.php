@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin;
 
+use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -21,7 +22,7 @@ class ViewsPluginManager extends DefaultPluginManager {
    *   The plugin type, for example filter.
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
+   *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -29,7 +30,10 @@ class ViewsPluginManager extends DefaultPluginManager {
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($type);
-    parent::__construct("Plugin/views/$type", $namespaces, $module_handler, 'Drupal\views\Plugin\views\ViewsPluginInterface', $plugin_definition_annotation_name);
+    // Special handling until all views plugins have attribute classes.
+    $attribute_name_candidate = 'Drupal\views\Attribute\Views' . Container::camelize($type);
+    $plugin_definition_attribute_name = class_exists($attribute_name_candidate) ? $attribute_name_candidate : Plugin::class;
+    parent::__construct("Plugin/views/$type", $namespaces, $module_handler, 'Drupal\views\Plugin\views\ViewsPluginInterface', $plugin_definition_attribute_name, $plugin_definition_annotation_name);
 
     $this->defaults += [
       'parent' => 'parent',
