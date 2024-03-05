@@ -68,6 +68,8 @@ class Roles extends ManyToOne {
 
   /**
    * Override empty and not empty operator labels to be clearer for user roles.
+   *
+   * @return array[]
    */
   public function operators() {
     $operators = parent::operators();

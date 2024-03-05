@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @ViewsFilter("numeric")
  */
-class NumericFilter extends FilterPluginBase {
+class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface {
 
   protected $alwaysMultiple = TRUE;
 
@@ -89,6 +89,9 @@ class NumericFilter extends FilterPluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function operators() {
     $operators = [
       '<' => [

@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsFilter("string")
  */
-class StringFilter extends FilterPluginBase {
+class StringFilter extends FilterPluginBase implements FilterOperatorsInterface {
 
   /**
    * All words separated by spaces or sentences encapsulated by double quotes.
@@ -97,11 +97,7 @@ class StringFilter extends FilterPluginBase {
   }
 
   /**
-   * Get the operators.
-   *
-   * This kind of construct makes it relatively easy for a child class
-   * to add or remove functionality by overriding this function and
-   * adding/removing items from this array.
+   * {@inheritdoc}
    */
   public function operators() {
     $operators = [
