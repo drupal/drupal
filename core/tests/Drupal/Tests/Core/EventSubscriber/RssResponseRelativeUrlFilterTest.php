@@ -26,7 +26,7 @@ class RssResponseRelativeUrlFilterTest extends UnitTestCase {
 <channel>
   <title>Drupal.org</title>
   <link>https://www.drupal.org</link>
-  <description>Come for the software, stay for the community
+  <description>Come for the software &amp; stay for the community
 Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
   <language>en</language>
   <item>
@@ -45,7 +45,7 @@ RSS;
 <channel>
   <title>Drupal.org</title>
   <link>https://www.drupal.org</link>
-  <description>Come for the software, stay for the community
+  <description>Come for the software &amp; stay for the community
 Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
   <language>en</language>
   <item>
