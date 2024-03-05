@@ -24,7 +24,7 @@ use Drupal\views\ViewExecutable;
  *
  * @ViewsFilter("boolean")
  */
-class BooleanOperator extends FilterPluginBase {
+class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterface {
 
   /**
    * The equal query operator.
@@ -77,11 +77,9 @@ class BooleanOperator extends FilterPluginBase {
   }
 
   /**
-   * Returns an array of operator information.
-   *
-   * @return array
+   * {@inheritdoc}
    */
-  protected function operators() {
+  public function operators() {
     return [
       '=' => [
         'title' => $this->t('Is equal to'),

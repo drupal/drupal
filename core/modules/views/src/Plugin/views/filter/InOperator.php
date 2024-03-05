@@ -20,7 +20,7 @@ use Drupal\Core\Form\OptGroup;
  *
  * @ViewsFilter("in_operator")
  */
-class InOperator extends FilterPluginBase {
+class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
 
   protected $valueFormType = 'checkboxes';
 
@@ -107,11 +107,7 @@ class InOperator extends FilterPluginBase {
   }
 
   /**
-   * Gets the operators.
-   *
-   * This kind of construct makes it relatively easy for a child class
-   * to add or remove functionality by overriding this function and
-   * adding/removing items from this array.
+   * {@inheritdoc}
    */
   public function operators() {
     $operators = [

@@ -55,6 +55,9 @@ class ManyToOne extends InOperator {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function operators() {
     $operators = [
       'or' => [

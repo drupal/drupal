@@ -2178,11 +2178,6 @@ parameters:
 			path: modules/views/src/Plugin/views/filter/Broken.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\FilterPluginBase\\:\\:operators\\(\\)\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/filter/FilterPluginBase.php
-
-		-
 			message: "#^Variable \\$groups might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/filter/FilterPluginBase.php
