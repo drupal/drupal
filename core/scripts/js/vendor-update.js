@@ -3,8 +3,8 @@
  * Copy files for JS vendor dependencies from node_modules to the assets/vendor
  * folder.
  *
- * This script handles all dependencies except CKEditor and Modernizr, which
- * require a custom build step.
+ * This script handles all dependencies except CKEditor, which require a custom
+ * build step.
  */
 
 const path = require('path');

@@ -712,8 +712,6 @@ drupal.touchevents-test:
   header: true
   version: VERSION
   js:
-    # Set weight to -21 so it loads alongside Modernizr, the library previously
-    # responsible for this detection.
     misc/touchevents-test.js: { weight: -21 }
 
 drupal.vertical-tabs:
@@ -773,19 +771,6 @@ drupal.jquery.position:
     misc/position.js: {}
   dependencies:
     - core/jquery
-
-modernizr:
-  # Block the page from being loaded until Modernizr is initialized.
-  header: true
-  remote: https://github.com/Modernizr/Modernizr
-  license:
-    name: MIT
-    url: https://modernizr.com/license/
-    gpl-compatible: true
-  version: "3.11.7"
-  js:
-    assets/vendor/modernizr/modernizr.min.js: { preprocess: 0, weight: -21, minified: true }
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.1.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3333253
 
 normalize:
   remote: https://github.com/necolas/normalize.css
