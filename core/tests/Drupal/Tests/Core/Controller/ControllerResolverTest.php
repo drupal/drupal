@@ -12,7 +12,6 @@ use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -221,9 +220,23 @@ class MockContainerInjection implements ContainerInjectionInterface {
 
 }
 class MockContainerAware implements ContainerAwareInterface {
-  use ContainerAwareTrait;
+
+  /**
+   * The service container.
+   */
+  protected ContainerInterface $container;
+
+  /**
+   * Sets the service container.
+   */
+  public function setContainer(?ContainerInterface $container): void {
+    $this->container = $container;
+  }
 
   public function getResult() {
+    if (empty($this->container)) {
+      throw new \Exception('Container was not injected.');
+    }
     return 'This is container aware.';
   }
 

@@ -5,5 +5,4 @@ services:
     class: Drupal\service_provider_test\TestClass
     tags:
       - { name: needs_destruction }
-    parent: container.trait
     arguments: ['@state']
