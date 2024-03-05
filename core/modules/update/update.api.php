@@ -18,20 +18,20 @@ use Drupal\update\UpdateFetcherInterface;
  * Most modules will never need to implement this hook. It is for advanced
  * interaction with the Update Manager module. The primary use-case for this
  * hook is to add projects to the list; for example, to provide update status
- * data on disabled modules and themes. A contributed module might want to hide
- * projects from the list; for example, if there is a site-specific module that
- * doesn't have any official releases, that module could remove itself from this
- * list to avoid "No available releases found" warnings on the available updates
- * report. In rare cases, a module might want to alter the data associated with
- * a project already in the list.
+ * data on uninstalled modules and themes. A contributed module might want to
+ * hide projects from the list; for example, if there is a site-specific module
+ * that doesn't have any official releases, that module could remove itself from
+ * this list to avoid "No available releases found" warnings on the available
+ * updates report. In rare cases, a module might want to alter the data
+ * associated with a project already in the list.
  *
  * @param $projects
  *   Reference to an array of the projects installed on the system. This
  *   includes all the metadata documented in the comments below for each project
- *   (either module or theme) that is currently enabled. The array is initially
- *   populated inside \Drupal\update\UpdateManager::getProjects() with the help
- *   of \Drupal\Core\Utility\ProjectInfo->processInfoList(), so look there for
- *   examples of how to populate the array with real values.
+ *   (either module or theme) that is currently installed. The array is
+ *   initially populated inside \Drupal\update\UpdateManager::getProjects() with
+ *   the help of \Drupal\Core\Utility\ProjectInfo->processInfoList(), so look
+ *   there for examples of how to populate the array with real values.
  *
  * @see \Drupal\update\UpdateManager::getProjects()
  * @see \Drupal\Core\Utility\ProjectInfo::processInfoList()
@@ -40,38 +40,38 @@ function hook_update_projects_alter(&$projects) {
   // Hide a site-specific module from the list.
   unset($projects['site_specific_module']);
 
-  // Add a disabled module to the list.
+  // Add an uninstalled module to the list.
   // The key for the array should be the machine-readable project "short name".
-  $projects['disabled_project_name'] = [
+  $projects['uninstalled_project_name'] = [
     // Machine-readable project short name (same as the array key above).
-    'name' => 'disabled_project_name',
+    'name' => 'uninstalled_project_name',
     // Array of values from the main .info.yml file for this project.
     'info' => [
-      'name' => 'Some disabled module',
-      'description' => 'A module not enabled on the site that you want to see in the available updates report.',
+      'name' => 'Some uninstalled module',
+      'description' => 'A module not installed on the site that you want to see in the available updates report.',
       'version' => '8.x-1.0',
       'core' => '8.x',
       // The maximum file change time (the "ctime" returned by the filectime()
       // PHP method) for all of the .info.yml files included in this project.
       '_info_file_ctime' => 1243888165,
     ],
-    // The date stamp when the project was released, if known. If the disabled
-    // project was an officially packaged release from drupal.org, this will
-    // be included in the .info.yml file as the 'datestamp' field. This only
-    // really matters for development snapshot releases that are regenerated,
-    // so it can be left undefined or set to 0 in most cases.
+    // The date stamp when the project was released, if known. If the
+    // uninstalled project was an officially packaged release from drupal.org,
+    // this will be included in the .info.yml file as the 'datestamp' field.
+    // This only really matters for development snapshot releases that are
+    // regenerated, so it can be left undefined or set to 0 in most cases.
     'datestamp' => 1243888185,
     // Any modules (or themes) included in this project. Keyed by machine-
     // readable "short name", value is the human-readable project name printed
     // in the UI.
     'includes' => [
-      'disabled_project' => 'Disabled module',
-      'disabled_project_helper' => 'Disabled module helper module',
-      'disabled_project_foo' => 'Disabled module foo add-on module',
+      'uninstalled_project' => 'uninstalled module',
+      'uninstalled_project_helper' => 'uninstalled module helper module',
+      'uninstalled_project_foo' => 'uninstalled module foo add-on module',
     ],
-    // Does this project contain a 'module', 'theme', 'disabled-module', or
-    // 'disabled-theme'?
-    'project_type' => 'disabled-module',
+    // Does this project contain a 'module', 'theme', 'uninstalled-module', or
+    // 'uninstalled-theme'?
+    'project_type' => 'uninstalled-module',
   ];
 }
 

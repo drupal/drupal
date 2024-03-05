@@ -337,14 +337,14 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
-   * Tests that disabled themes are only shown when desired.
+   * Tests that uninstalled themes are only shown when desired.
    *
    * @todo https://www.drupal.org/node/2338175 extensions can not be hidden and
    *   base themes have to be installed.
    */
   public function testUpdateShowDisabledThemes() {
     $update_settings = $this->config('update.settings');
-    // Make sure all the update_test_* themes are disabled.
+    // Make sure all the update_test_* themes are uninstalled.
     $extension_config = $this->config('core.extension');
     foreach ($extension_config->get('theme') as $theme => $weight) {
       if (str_starts_with($theme, 'update_test_')) {

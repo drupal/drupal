@@ -52,7 +52,7 @@ class UpdateReady extends FormBase {
    * @param string $root
    *   The root location under which updated projects will be saved.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The object that manages enabled modules in a Drupal installation.
+   *   The object that manages installed modules in a Drupal installation.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    * @param string $site_path

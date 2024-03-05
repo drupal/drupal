@@ -42,7 +42,7 @@ class UpdateManager implements UpdateManagerInterface {
   protected $updateProcessor;
 
   /**
-   * An array of installed and enabled projects.
+   * An array of installed projects.
    *
    * @var array
    */

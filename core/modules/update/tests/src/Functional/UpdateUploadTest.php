@@ -120,7 +120,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
     $info = $info_parser->parse($installedInfoFilePath);
     $this->assertEquals('8.x-1.0', $info['version']);
 
-    // Enable the module.
+    // Install the module.
     $this->drupalGet('admin/modules');
     $this->submitForm(['modules[update_test_new_module][enable]' => TRUE], 'Install');
 
