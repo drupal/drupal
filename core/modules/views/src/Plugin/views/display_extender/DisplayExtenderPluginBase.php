@@ -18,9 +18,8 @@ use Drupal\views\Plugin\views\PluginBase;
  *
  * Display extender plugins extend
  * \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase.
- * They must be annotated with
- * \Drupal\views\Annotation\ViewsDisplayExtender annotation, and they
- * must be in namespace directory Plugin\views\display_extender.
+ * They must have \Drupal\views\Attribute\ViewsDisplayExtender attributes, and
+ * they must be in namespace directory Plugin\views\display_extender.
  *
  * @ingroup views_plugins
  *
