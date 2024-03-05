@@ -251,8 +251,8 @@ function _update_no_data() {
 /**
  * Tries to get update information and refreshes it when necessary.
  *
- * In addition to checking the lifetime, this function also ensures that
- * there are no .info.yml files for enabled modules or themes that have a newer
+ * In addition to checking the lifetime, this function also ensures that there
+ * are no .info.yml files for installed modules or themes that have a newer
  * modification timestamp than the last time we checked for available update
  * data. If any .info.yml file was modified, it almost certainly means a new
  * version of something was installed. Without fresh available update data, the

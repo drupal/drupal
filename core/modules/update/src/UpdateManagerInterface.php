@@ -33,7 +33,7 @@ interface UpdateManagerInterface {
   const CURRENT = 5;
 
   /**
-   * Fetches an array of installed and enabled projects.
+   * Fetches an array of installed projects.
    *
    * This is only responsible for generating an array of projects (taking into
    * account projects that include more than one module or theme). Other
@@ -51,7 +51,7 @@ interface UpdateManagerInterface {
    * automatically clear this data.
    *
    * @return array
-   *   An associative array of currently enabled projects keyed by the
+   *   An associative array of currently installed projects keyed by the
    *   machine-readable project short name. Each project contains:
    *   - name: The machine-readable project short name.
    *   - info: An array with values from the main .info.yml file for this
@@ -70,8 +70,8 @@ interface UpdateManagerInterface {
    *     human-readable name as value.
    *   - project_type: The type of project. Allowed values are 'module' and
    *     'theme'.
-   *   - project_status: This indicates if the project is enabled and will
-   *     always be TRUE, as the function only returns enabled projects.
+   *   - project_status: This indicates if the project is installed and will
+   *     always be TRUE, as the function only returns installed projects.
    *
    * @see update_process_project_info()
    * @see update_calculate_project_data()
