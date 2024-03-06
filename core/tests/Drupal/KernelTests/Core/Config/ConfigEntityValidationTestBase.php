@@ -16,6 +16,8 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstrai
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
+// cspell:ignore kthxbai
+
 /**
  * Base class for testing validation of config entities.
  *

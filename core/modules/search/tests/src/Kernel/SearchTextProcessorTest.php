@@ -5,6 +5,8 @@ namespace Drupal\Tests\search\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchTextProcessorInterface;
 
+// cspell:ignore verygreatdrupalmodule
+
 /**
  * Test search text preprocessing functionality.
  *

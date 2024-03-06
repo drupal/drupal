@@ -6,6 +6,8 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
 
+// cspell:ignore pastafazoul
+
 /**
  * Tests the media type creation.
  *

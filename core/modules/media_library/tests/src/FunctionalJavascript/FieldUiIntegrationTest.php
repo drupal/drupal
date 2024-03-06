@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
+// cspell:ignore shatner
+
 /**
  * Tests field UI integration for media library widget.
  *

@@ -7,6 +7,8 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore pastafazoul
+
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityDisplayRepository
  *

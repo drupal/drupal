@@ -9,13 +9,11 @@ ahah
 ajaxing
 allwords
 alphadecimal
-alternatif
 ampm
 anyall
 applix
 archiver
 archivers
-arrakis
 arrowrefresh
 arrowreturn
 arrowreturnthick
@@ -145,7 +143,6 @@ colspans
 columnschange
 comida
 commenters
-complote
 compositionend
 compositionstart
 configentity
@@ -168,7 +165,6 @@ curle
 curlopt
 customrequest
 cweagans
-dailymotion
 datelist
 daterange
 datestamp
@@ -197,8 +193,6 @@ dflt
 dialogsave
 diffchange
 differring
-displaymessage
-ditka
 divs
 dnumber
 dockerhub
@@ -219,7 +213,6 @@ drupalelementstyleediting
 drupalelementstyleui
 drupalhtmlbuilder
 drupalimage
-drupalin
 drupalism
 drupalisms
 drupallink
@@ -227,7 +220,6 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
-détruire
 editables
 egulias
 elbonia
@@ -252,7 +244,6 @@ exampleurl
 exitcode
 expirable
 extlink
-extraday
 extrasmall
 extraspace
 failonerror
@@ -311,13 +302,10 @@ groupname
 groupwise
 guzzlehttp
 hande
-harkonnen
 hateoas
 hexcode
 hilited
-hinode
 hmac
-hoglet
 hookname
 hosters
 hrefs
@@ -325,7 +313,6 @@ htmlcorrector
 httpheader
 httplug
 httponly
-hustlin
 hwldf
 icann
 iconwrap
@@ -351,7 +338,6 @@ itok
 ized
 javascripts
 jessebeach
-johansson
 jqueryui
 jsonlint
 jssdk
@@ -362,12 +348,9 @@ keyevent
 keypresses
 keyvalue
 kinberg
-kitt
 kolkata
 kpresenter
-kristiaan
 kspread
-kthxbai
 kword
 lamoids
 languageswitcher
@@ -521,7 +504,6 @@ pagetop
 paramconverter
 parseable
 parsererror
-pastafazoul
 pathauto
 pcre
 pcss
@@ -595,7 +577,6 @@ qvalue
 qvalues
 qwer
 qwerqwer
-ragdoll
 ralouphie
 rasterizable
 rasterizes
@@ -644,10 +625,8 @@ sameorigin
 samesite
 savepoints
 sayre
-scarlett
 schemaapi
 schemeless
-schipulcon
 scorewords
 scriptable
 scrollbars
@@ -655,26 +634,21 @@ seld
 selectbox
 sess
 settingstray
-shatner
 shorterthan
 shortlink
 silverlight
-silvie
 singlebyte
 sirbrillig
 sisko
 sitename
 sitewide
 skiptags
-skynet
 slatkin
 slevomat
-sloopal
 smacss
 smalldatetime
 somecompany
 sortablejs
-sourceediting
 specialchars
 spiffiness
 splitbutton
@@ -773,7 +747,6 @@ testsuite
 testsuites
 textareas
 textboxes
-texte
 textfields
 textformat
 textwithsummary
@@ -785,11 +758,9 @@ theseer
 theseparator
 threecol
 tids
-timecurrent
 timegate
 timemap
 timespan
-timetime
 tinyint
 tinytext
 titlealert
@@ -809,7 +780,6 @@ transferthick
 translatables
 trayblock
 trgm
-troopal
 truecolor
 twistie
 twocol
@@ -858,7 +828,6 @@ vampirize
 varchar
 versionable
 versionless
-verygreatdrupalmodule
 vfsstream
 viewports
 vocabs
@@ -890,7 +859,6 @@ yearless
 yokotsoko
 yottabyte
 yottabytes
-zartan
 zettabyte
 zettabytes
 zipf's

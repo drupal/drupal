@@ -7,6 +7,8 @@ namespace Drupal\Tests\Core\Common;
 use Drupal\Component\Utility\Tags;
 use Drupal\Tests\UnitTestCase;
 
+// cspell:ignore sloopal troopal
+
 /**
  * Tests explosion and implosion of autocomplete tags.
  *
