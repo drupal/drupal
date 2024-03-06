@@ -20,6 +20,14 @@ class ModuleUnitTest extends DrupalWebTestCase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    $GLOBALS['drupal_test_info']['test_class'] = __CLASS__;
+    parent::setUp();
+  }
+
+  /**
    * The basic functionality of module_list().
    */
   function testModuleList() {

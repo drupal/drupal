@@ -429,4 +429,15 @@ function standard_install() {
     ->execute();
   variable_set('admin_theme', 'seven');
   variable_set('node_admin_theme', '1');
+
+  if (isset($GLOBALS['drupal_test_info']['test_class']) && $GLOBALS['drupal_test_info']['test_class'] == 'ModuleUnitTest') {
+    // If we're installing the standard profile for ModuleUnitTest, opt-out of
+    // enabling Announcements by default. This allows testModuleList() to pass,
+    // and also tests the opt-out.
+    variable_set('announcements_feed_enable_by_default_opt_out', TRUE);
+  }
+
+  if (!variable_get('announcements_feed_enable_by_default_opt_out', FALSE)) {
+    module_enable(array('announcements_feed'), FALSE);
+  }
 }
