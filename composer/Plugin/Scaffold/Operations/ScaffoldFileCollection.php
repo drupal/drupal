@@ -115,8 +115,7 @@ class ScaffoldFileCollection implements \IteratorAggregate {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function getIterator() {
+  public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->scaffoldFilesByProject);
   }
 
