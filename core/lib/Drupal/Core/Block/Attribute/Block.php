@@ -20,7 +20,7 @@ class Block extends Plugin {
    *   The administrative label of the block.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $category
    *   (optional) The category in the admin UI where the block will be listed.
-   * @param \Drupal\Core\Annotation\ContextDefinition[] $context_definitions
+   * @param \Drupal\Core\Plugin\Context\ContextDefinitionInterface[] $context_definitions
    *   (optional) An array of context definitions describing the context used by
    *   the plugin. The array is keyed by context names.
    * @param string|null $deriver
