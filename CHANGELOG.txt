@@ -1,5 +1,7 @@
-Drupal 7.xx, xxxx-xx-xx (development version)
------------------------
+Drupal 7.100, 2024-03-06
+------------------------
+- Security improvements
+- Announcements module added
 
 Drupal 7.99, 2023-12-06
 -----------------------
