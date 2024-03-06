@@ -6,6 +6,8 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore displaymessage
+
 /**
  * Tests that the block plugin can work properly without a supporting entity.
  *

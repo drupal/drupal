@@ -1,3 +1,5 @@
+// cspell:ignore sourceediting
+
 module.exports = {
   '@tags': ['core', 'ckeditor5'],
   before(browser) {

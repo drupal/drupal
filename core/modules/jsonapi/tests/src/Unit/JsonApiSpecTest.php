@@ -7,6 +7,8 @@ namespace Drupal\Tests\jsonapi\Unit;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Tests\UnitTestCase;
 
+// cspell:ignore kitt
+
 /**
  * @coversDefaultClass \Drupal\jsonapi\JsonApiSpec
  * @group jsonapi

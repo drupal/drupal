@@ -7,6 +7,8 @@ namespace Drupal\Tests\file\Functional;
 use Drupal\file\Entity\File;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
+// cspell:ignore Scarlett Johansson
+
 /**
  * Uploads files to translated nodes.
  *

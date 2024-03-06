@@ -7,7 +7,7 @@ namespace Drupal\Tests\locale\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 
-// cspell:ignore lundi
+// cspell:ignore extraday lundi
 
 /**
  * Tests for updating the interface translations of projects.

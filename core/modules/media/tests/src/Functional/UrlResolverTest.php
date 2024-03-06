@@ -6,6 +6,8 @@ namespace Drupal\Tests\media\Functional;
 
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
+// cspell:ignore dailymotion
+
 /**
  * Tests the oEmbed URL resolver service.
  *

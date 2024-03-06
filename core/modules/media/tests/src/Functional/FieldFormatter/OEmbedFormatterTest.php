@@ -11,6 +11,8 @@ use Drupal\media_test_oembed\UrlResolver;
 use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
+// cspell:ignore Schipulcon
+
 /**
  * @covers \Drupal\media\Plugin\Field\FieldFormatter\OEmbedFormatter
  *

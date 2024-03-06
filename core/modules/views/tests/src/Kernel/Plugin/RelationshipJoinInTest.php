@@ -6,6 +6,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
 
+// cspell:ignore Kristiaan Silvie
+
 /**
  * Tests the base relationship handler.
  *

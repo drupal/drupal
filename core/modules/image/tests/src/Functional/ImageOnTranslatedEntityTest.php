@@ -8,6 +8,8 @@ use Drupal\file\Entity\File;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
+// cspell:ignore Scarlett Johansson
+
 /**
  * Uploads images to translated nodes.
  *

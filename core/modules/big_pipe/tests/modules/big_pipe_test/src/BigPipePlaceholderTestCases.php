@@ -4,7 +4,7 @@
  * @file
  */
 
-// cspell:ignore divpiggydiv Vxezb yarhar
+// cspell:ignore divpiggydiv yarhar timecurrent timetime
 
 namespace Drupal\big_pipe_test;
 

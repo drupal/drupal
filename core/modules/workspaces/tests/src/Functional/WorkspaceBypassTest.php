@@ -7,6 +7,8 @@ namespace Drupal\Tests\workspaces\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
+// cspell:ignore ditka
+
 /**
  * Tests access bypass permission controls on workspaces.
  *

@@ -13,6 +13,8 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
+// cspell:ignore hoglet
+
 /**
  * Tests media library integration with content moderation.
  *

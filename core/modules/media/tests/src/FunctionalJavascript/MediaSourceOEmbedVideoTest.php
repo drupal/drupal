@@ -14,6 +14,8 @@ use Drupal\Tests\media\Traits\OEmbedTestTrait;
 use Drupal\user\Entity\Role;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore dailymotion Schipulcon
+
 /**
  * Tests the oembed:video media source.
  *
