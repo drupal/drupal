@@ -448,8 +448,7 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->onlyMethods(get_class_methods($class))
       ->getMockForAbstractClass();
     $source->expects($this->once())
-      ->method('rewind')
-      ->willReturn(TRUE);
+      ->method('rewind');
     $source->expects($this->any())
       ->method('initializeIterator')
       ->willReturn([]);
