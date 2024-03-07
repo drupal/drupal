@@ -2386,14 +2386,6 @@ parameters:
 
 		-
 			message: """
-				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 2
-			path: tests/Drupal/Tests/Core/EventSubscriber/RedirectResponseSubscriberTest.php
-
-		-
-			message: """
 				#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
 			"""
