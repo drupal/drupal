@@ -48,7 +48,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
     if (!is_a($this->minkDefaultDriverClass, DrupalSelenium2Driver::class, TRUE)) {
       throw new \UnexpectedValueException(sprintf("%s has to be an instance of %s", $this->minkDefaultDriverClass, DrupalSelenium2Driver::class));
     }
-    $this->minkDefaultDriverArgs = ['chrome', NULL, 'http://localhost:4444'];
+    $this->minkDefaultDriverArgs = ['chrome', ['goog:chromeOptions' => ['w3c' => FALSE]], 'http://localhost:4444'];
 
     try {
       return parent::initMink();
@@ -145,7 +145,22 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    */
   protected function getMinkDriverArgs() {
     if ($this->minkDefaultDriverClass === DrupalSelenium2Driver::class) {
-      return getenv('MINK_DRIVER_ARGS_WEBDRIVER') ?: parent::getMinkDriverArgs();
+      $json = getenv('MINK_DRIVER_ARGS_WEBDRIVER') ?: parent::getMinkDriverArgs();
+      if (!($json === FALSE || $json === '')) {
+        $args = json_decode($json, TRUE);
+        if (isset($args[1]['chromeOptions'])) {
+          @trigger_error('The "chromeOptions" array key is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use "goog:chromeOptions instead. See https://www.drupal.org/node/3422624', E_USER_DEPRECATED);
+          $args[1]['goog:chromeOptions'] = $args[1]['chromeOptions'];
+          unset($args[1]['chromeOptions']);
+        }
+        if (isset($args[0]) && $args[0] === 'chrome' && !isset($args[1]['goog:chromeOptions']['w3c'])) {
+          // @todo https://www.drupal.org/project/drupal/issues/3421202
+          //   Deprecate defaulting behavior and require w3c to be set.
+          $args[1]['goog:chromeOptions']['w3c'] = FALSE;
+        }
+        $json = json_encode($args);
+      }
+      return $json;
     }
     return parent::getMinkDriverArgs();
   }
