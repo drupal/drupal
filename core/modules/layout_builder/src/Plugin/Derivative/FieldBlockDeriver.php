@@ -4,6 +4,8 @@ namespace Drupal\layout_builder\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Field\FieldConfigInterface;
@@ -66,8 +68,19 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
    *   The field type manager.
    * @param \Drupal\Core\Field\FormatterPluginManager $formatter_manager
    *   The formatter manager.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $entityViewDisplayStorage
+   *   The entity view display storage.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The config factory.
    */
-  public function __construct(EntityTypeRepositoryInterface $entity_type_repository, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, FormatterPluginManager $formatter_manager) {
+  public function __construct(
+    EntityTypeRepositoryInterface $entity_type_repository,
+    EntityFieldManagerInterface $entity_field_manager,
+    FieldTypePluginManagerInterface $field_type_manager,
+    FormatterPluginManager $formatter_manager,
+    protected ConfigEntityStorageInterface $entityViewDisplayStorage,
+    protected ConfigFactoryInterface $configFactory,
+  ) {
     $this->entityTypeRepository = $entity_type_repository;
     $this->entityFieldManager = $entity_field_manager;
     $this->fieldTypeManager = $field_type_manager;
@@ -82,7 +95,9 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
       $container->get('entity_type.repository'),
       $container->get('entity_field.manager'),
       $container->get('plugin.manager.field.field_type'),
-      $container->get('plugin.manager.field.formatter')
+      $container->get('plugin.manager.field.formatter'),
+      $container->get('entity_type.manager')->getStorage('entity_view_display'),
+      $container->get('config.factory')
     );
   }
 
@@ -91,7 +106,7 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $entity_type_labels = $this->entityTypeRepository->getEntityTypeLabels();
-    foreach ($this->entityFieldManager->getFieldMap() as $entity_type_id => $entity_field_map) {
+    foreach ($this->getFieldMap() as $entity_type_id => $entity_field_map) {
       foreach ($entity_field_map as $field_name => $field_info) {
         // Skip fields without any formatters.
         $options = $this->formatterManager->getOptions($field_info['type']);
@@ -140,6 +155,52 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
       }
     }
     return $this->derivatives;
+  }
+
+  /**
+   * Returns the entity field map for deriving block definitions.
+   *
+   * @return array
+   *   The entity field map.
+   *
+   * @see \Drupal\Core\Entity\EntityFieldManagerInterface::getFieldMap()
+   */
+  protected function getFieldMap(): array {
+    $field_map = $this->entityFieldManager->getFieldMap();
+
+    // If all fields are exposed as field blocks, just return the field map
+    // without any further processing.
+    if ($this->configFactory->get('layout_builder.settings')->get('expose_all_field_blocks')) {
+      return $field_map;
+    }
+
+    // Load all entity view displays which are using Layout Builder.
+    /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface[] $displays */
+    $displays = $this->entityViewDisplayStorage->loadByProperties([
+      'third_party_settings.layout_builder.enabled' => TRUE,
+    ]);
+    $layout_bundles = [];
+    foreach ($displays as $display) {
+      $bundle = $display->getTargetBundle();
+      $layout_bundles[$display->getTargetEntityTypeId()][$bundle] = $bundle;
+    }
+
+    // Process $field_map, removing any entity types which are not using Layout
+    // Builder.
+    $field_map = array_intersect_key($field_map, $layout_bundles);
+
+    foreach ($field_map as $entity_type_id => $fields) {
+      foreach ($fields as $field_name => $field_info) {
+        $field_map[$entity_type_id][$field_name]['bundles'] = array_intersect($field_info['bundles'], $layout_bundles[$entity_type_id]);
+
+        // If no bundles are using Layout Builder, remove this field from the
+        // field map.
+        if (empty($field_info['bundles'])) {
+          unset($field_map[$entity_type_id][$field_name]);
+        }
+      }
+    }
+    return $field_map;
   }
 
 }

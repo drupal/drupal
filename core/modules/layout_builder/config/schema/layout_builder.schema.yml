@@ -86,3 +86,11 @@ layout_plugin.settings.layout_twocol_section:
 
 layout_plugin.settings.layout_threecol_section:
   type: layout_builder_multi_width
+
+layout_builder.settings:
+  type: config_object
+  label: 'Layout builder settings'
+  mapping:
+    expose_all_field_blocks:
+      type: boolean
+      label: 'Expose all field blocks'

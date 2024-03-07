@@ -40,6 +40,9 @@ class FieldBlockTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    \Drupal::configFactory()->getEditable('layout_builder.settings')
+      ->set('expose_all_field_blocks', TRUE)
+      ->save();
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_date',
       'entity_type' => 'user',

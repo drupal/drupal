@@ -37,6 +37,12 @@ class BlockFilterTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // This test makes assertions on lists of blocks, this includes a derived
+    // block from the user entity.
+    \Drupal::configFactory()->getEditable('layout_builder.settings')
+      ->set('expose_all_field_blocks', TRUE)
+      ->save();
+
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
     ]));

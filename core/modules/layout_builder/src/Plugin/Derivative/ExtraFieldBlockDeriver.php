@@ -4,6 +4,7 @@ namespace Drupal\layout_builder\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -63,8 +64,16 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
    *   The entity type bundle info.
    * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entity_type_repository
    *   The entity type repository.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The config factory.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeRepositoryInterface $entity_type_repository) {
+  public function __construct(
+    EntityFieldManagerInterface $entity_field_manager,
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    EntityTypeRepositoryInterface $entity_type_repository,
+    protected ConfigFactoryInterface $configFactory,
+  ) {
     $this->entityFieldManager = $entity_field_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
@@ -79,7 +88,8 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
       $container->get('entity_field.manager'),
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
-      $container->get('entity_type.repository')
+      $container->get('entity_type.repository'),
+      $container->get('config.factory')
     );
   }
 
@@ -88,14 +98,26 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
     $entity_type_labels = $this->entityTypeRepository->getEntityTypeLabels();
+    $enabled_bundle_ids = $this->bundleIdsWithLayoutBuilderDisplays();
+    $expose_all_fields = $this->configFactory->get('layout_builder.settings')->get('expose_all_field_blocks');
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       // Only process fieldable entity types.
       if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
         continue;
       }
 
+      // If not loading everything, skip entity types that aren't included.
+      if (!$expose_all_fields && !isset($enabled_bundle_ids[$entity_type_id])) {
+        continue;
+      }
+
       $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
       foreach ($bundles as $bundle_id => $bundle) {
+        // If not loading everything, skip bundle types that aren't included.
+        if (!$expose_all_fields && !isset($enabled_bundle_ids[$entity_type_id][$bundle_id])) {
+          continue;
+        }
+
         $extra_fields = $this->entityFieldManager->getExtraFields($entity_type_id, $bundle_id);
         // Skip bundles without any extra fields.
         if (empty($extra_fields['display'])) {
@@ -121,6 +143,25 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
       }
     }
     return $this->derivatives;
+  }
+
+  /**
+   * Gets a list of entity type and bundle tuples that have layout builder enabled.
+   *
+   * @return array
+   *   A structured array with entity type as first key, bundle as second.
+   */
+  protected function bundleIdsWithLayoutBuilderDisplays(): array {
+    /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface[] $displays */
+    $displays = $this->entityTypeManager->getStorage('entity_view_display')->loadByProperties([
+      'third_party_settings.layout_builder.enabled' => TRUE,
+    ]);
+    $layout_bundles = [];
+    foreach ($displays as $display) {
+      $bundle = $display->getTargetBundle();
+      $layout_bundles[$display->getTargetEntityTypeId()][$bundle] = $bundle;
+    }
+    return $layout_bundles;
   }
 
 }
