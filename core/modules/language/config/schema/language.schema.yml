@@ -98,7 +98,7 @@ language.entity.*:
       type: string
       label: 'Direction'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     locked:
       type: boolean

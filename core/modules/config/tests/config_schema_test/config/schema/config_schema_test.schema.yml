@@ -143,7 +143,7 @@ config_schema_test.ignore:
       type: ignore
       label: 'Indescribable'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
 
 config_schema_test.plugin_types:

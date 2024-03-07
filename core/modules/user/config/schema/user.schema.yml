@@ -114,7 +114,7 @@ user.role.*:
       type: required_label
       label: 'Label'
     weight:
-      type: integer
+      type: weight
       label: 'User role weight'
     is_admin:
       type: boolean

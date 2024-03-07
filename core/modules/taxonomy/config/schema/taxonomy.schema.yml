@@ -44,11 +44,8 @@ taxonomy.vocabulary.*:
         NotBlank:
           allowNull: true
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
-      # A weight can be any integer, positive or negative.
-      constraints:
-        NotNull: []
     new_revision:
       type: boolean
       label: 'Whether a new revision should be created by default'

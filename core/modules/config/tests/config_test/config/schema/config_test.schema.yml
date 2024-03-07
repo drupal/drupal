@@ -10,7 +10,7 @@ config_test_dynamic:
       type: label
       label: 'Label'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     style:
       type: string

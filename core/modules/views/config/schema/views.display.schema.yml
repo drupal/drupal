@@ -32,7 +32,7 @@ views.display.page:
           type: text
           label: 'Description'
         weight:
-          type: integer
+          type: weight
           label: 'Weight'
         enabled:
           type: boolean
@@ -63,7 +63,7 @@ views.display.page:
           type: text
           label: 'Description'
         weight:
-          type: integer
+          type: weight
           label: 'Weight'
         menu_name:
           type: string

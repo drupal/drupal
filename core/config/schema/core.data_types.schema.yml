@@ -168,6 +168,17 @@ bytes:
   constraints:
     Callback: ['\Drupal\Component\Utility\Bytes', 'validateConstraint']
 
+weight:
+  type: integer
+  label: 'Weight'
+  constraints:
+    Range:
+      # @see PHP_INT_MIN (32-bit)
+      min: -2147483648
+      # @see PHP_INT_MAX (32-bit)
+      max: 2147483647
+    FullyValidatable: ~
+
 # Complex extended data types:
 
 # Root of a configuration object.
@@ -229,7 +240,7 @@ filter:
       type: boolean
       label: 'Status'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     settings:
       type: filter_settings.[%parent.id]
@@ -483,7 +494,7 @@ display_variant.plugin:
       type: required_label
       label: 'Label'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     uuid:
       type: uuid

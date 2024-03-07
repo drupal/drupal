@@ -23,7 +23,7 @@ image.style.*:
                 manager: plugin.manager.image.effect
                 interface: 'Drupal\image\ImageEffectInterface'
           weight:
-            type: integer
+            type: weight
           data:
             type: image.effect.[%parent.id]
 
