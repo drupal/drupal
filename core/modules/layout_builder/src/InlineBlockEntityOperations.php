@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
+use Drupal\Core\Entity\SynchronizableInterface;
 use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -146,11 +147,13 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    *   The parent entity.
    */
   public function handlePreSave(EntityInterface $entity) {
-    if (!$this->isLayoutCompatibleEntity($entity)) {
+    if (($entity instanceof SynchronizableInterface && $entity->isSyncing())
+      || !$this->isLayoutCompatibleEntity($entity)
+    ) {
       return;
     }
-    $duplicate_blocks = FALSE;
 
+    $duplicate_blocks = FALSE;
     if ($sections = $this->getEntitySections($entity)) {
       if ($this->originalEntityUsesDefaultStorage($entity)) {
         // This is a new override from a default and the blocks need to be
