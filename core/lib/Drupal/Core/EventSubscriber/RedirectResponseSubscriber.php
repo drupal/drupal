@@ -7,23 +7,17 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Allows manipulation of the response object when performing a redirect.
  */
 class RedirectResponseSubscriber implements EventSubscriberInterface {
-
-  /**
-   * The unrouted URL assembler service.
-   *
-   * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface
-   */
-  protected $unroutedUrlAssembler;
 
   /**
    * Whether to ignore the destination query parameter when redirecting.
@@ -33,21 +27,21 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
   protected bool $ignoreDestination = FALSE;
 
   /**
-   * The request context.
-   */
-  protected RequestContext $requestContext;
-
-  /**
    * Constructs a RedirectResponseSubscriber object.
    *
-   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $url_assembler
+   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $unroutedUrlAssembler
    *   The unrouted URL assembler service.
-   * @param \Drupal\Core\Routing\RequestContext $request_context
+   * @param \Drupal\Core\Routing\RequestContext $requestContext
    *   The request context.
+   * @param \Closure $loggerClosure
+   *   A closure that wraps the 'logger.channel.php' service.
    */
-  public function __construct(UnroutedUrlAssemblerInterface $url_assembler, RequestContext $request_context) {
-    $this->unroutedUrlAssembler = $url_assembler;
-    $this->requestContext = $request_context;
+  public function __construct(
+    protected UnroutedUrlAssemblerInterface $unroutedUrlAssembler,
+    protected RequestContext $requestContext,
+    #[AutowireServiceClosure('logger.channel.php')]
+    protected \Closure $loggerClosure,
+  ) {
   }
 
   /**
@@ -87,13 +81,14 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
         }
         catch (\InvalidArgumentException $e) {
           // If the above failed, it's because the redirect target wasn't
-          // local. Do not follow that redirect. Display an error message
-          // instead. We're already catching one exception, so trigger_error()
-          // rather than throw another one.
-          // We don't throw an exception, because this is a client error rather than a
-          // server error.
+          // local. Do not follow that redirect. Log an error message instead,
+          // then return a 400 response to the client with the error message.
+          // We don't throw an exception, because this is a client error rather
+          // than a server error.
           $message = 'Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\TrustedRedirectResponse for it.';
-          trigger_error($message, E_USER_ERROR);
+          /** @var \Psr\Log\LoggerInterface $logger */
+          $logger = ($this->loggerClosure)();
+          $logger->error($message);
           $safe_response = new Response($message, 400);
         }
         $event->setResponse($safe_response);
