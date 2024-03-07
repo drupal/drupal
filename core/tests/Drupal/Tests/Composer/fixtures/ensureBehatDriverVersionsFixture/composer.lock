@@ -5,12 +5,12 @@
     "content-hash": "da9910627bab73a256b39ceda83d7167",
     "packages-dev": [
         {
-            "name": "behat/mink-selenium2-driver",
-            "version": "dev-master",
+            "name": "lullabot/mink-selenium2-driver",
+            "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/minkphp/MinkSelenium2Driver.git",
-                "reference": "0a09c4341621fca937a726827611b20ce3e2c259"
+                "url": "https://github.com/Lullabot/MinkSelenium2Driver.git",
+                "reference": "228004452354c1945fec2d273de2586da8c29213"
             }
         }
     ]
