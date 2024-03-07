@@ -22,7 +22,7 @@
 #     * etc.
 # https://docs.gitlab.com/ee/ci/jobs/job_control.html#specify-when-jobs-run-with-rules
 #
-# Pipelines can also be configured to run on a schedule,though they still must meet the conditions defined in Workflow and Rules. This can be used, for example, to do nightly regression testing: 
+# Pipelines can also be configured to run on a schedule,though they still must meet the conditions defined in Workflow and Rules. This can be used, for example, to do nightly regression testing:
 # https://gitlab.com/help/ci/pipelines/schedules
 ################
 
@@ -60,7 +60,7 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  _TARGET_PHP: "8.2"
+  _TARGET_PHP: "8.3"
 
 #############
 # Stages    #
@@ -139,10 +139,10 @@ default:
       allow_failure: true
 
 # Default configuration.
-'DEFAULT: PHP 8.2 MySQL 8':
+'DEFAULT: PHP 8.3 MySQL 8':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.2"
+    _TARGET_PHP: "8.3"
     _TARGET_DB: "mysql-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OTEL_COLLECTOR: $OTEL_COLLECTOR
@@ -157,7 +157,7 @@ default:
     - if: $PERFORMANCE_TEST == "1"
 
 # Re-run the pipeline, but with Composer updates.
-'DEFAULT: Updated dependencies (PHP 8.2 MySQL 8)':
+'DEFAULT: Updated dependencies (PHP 8.3 MySQL 8)':
   <<: *default-stage
   # Run daily and allow manual runs on MRs.
   rules:
@@ -172,12 +172,12 @@ default:
     include: .gitlab-ci.yml
 
 # Special job for MRs for test-only checks.
-'DEFAULT: Test-only (PHP 8.2 MySQL 8)':
+'DEFAULT: Test-only (PHP 8.3 MySQL 8)':
   <<: [ *default-stage, *with-composer ]
   when: manual
   allow_failure: true
   variables:
-    _TARGET_PHP: "8.2"
+    _TARGET_PHP: "8.3"
     _TARGET_DB: "mysql-8"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -195,6 +195,12 @@ default:
   variables:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-5.7"
+
+'PHP 8.2 MySQL 8':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "mysql-8"
 
 'PHP 8.2 PostgreSQL 14.1':
   <<: [ *default-stage, *run-on-mr ]
@@ -219,12 +225,6 @@ default:
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "sqlite-3"
-
-'PHP 8.3 MySQL 8':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.3"
-    _TARGET_DB: "mysql-8"
 
 'PHP 8.3 PostgreSQL 16':
   <<: [ *default-stage, *run-on-mr ]
@@ -260,7 +260,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.1 MySQL 5.7':
   extends: 'PHP 8.1 MySQL 5.7'
-  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
+  needs: [ 'DEFAULT: PHP 8.3 MySQL 8' ]
   <<: [ *run-on-commit ]
 
 '[Commit] PHP 8.2 PostgreSQL 16':
@@ -277,7 +277,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Daily] PHP 8.2 PostgreSQL 14.1':
   extends: 'PHP 8.2 PostgreSQL 14.1'
-  needs: [ 'DEFAULT: PHP 8.2 MySQL 8' ]
+  needs: [ 'DEFAULT: PHP 8.3 MySQL 8' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.2 PostgreSQL 15':
@@ -285,14 +285,9 @@ default:
   needs: [ '[Daily] PHP 8.2 PostgreSQL 14.1' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.3 MySQL 8':
-  extends: 'PHP 8.3 MySQL 8'
-  needs: [ '[Daily] PHP 8.2 PostgreSQL 15' ]
-  <<: [ *run-daily ]
-
 '[Daily] PHP 8.3 PostgreSQL 16':
   extends: 'PHP 8.3 PostgreSQL 16'
-  needs: [ '[Daily] PHP 8.3 MySQL 8' ]
+  needs: [ '[Daily] PHP 8.2 PostgreSQL 15' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.3 SQLite 3':
