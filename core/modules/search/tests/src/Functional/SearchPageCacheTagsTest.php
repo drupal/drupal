@@ -185,6 +185,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
       'search_index',
       'search_index:node_search',
       'http_response',
+      'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
       'rendered',
       'node_list',
     ];

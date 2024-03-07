@@ -65,7 +65,7 @@ class ActionsTest extends KernelTestBase implements FormInterface {
     $result = \Drupal::formBuilder()->getForm($this);
     \Drupal::service('renderer')->renderRoot($result);
     $this->assertEquals(['system/base', 'core/drupal.dropbutton'], $result['#attached']['library']);
-    $this->assertEquals(['foo'], $result['#cache']['tags']);
+    $this->assertEquals(['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form', 'foo'], $result['#cache']['tags']);
   }
 
 }

@@ -35,7 +35,7 @@ class RendererBubblingTest extends RendererTestBase {
    */
   public function testBubblingWithoutPreRender() {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
@@ -135,7 +135,7 @@ class RendererBubblingTest extends RendererTestBase {
    */
   public function testContextBubblingEdgeCases(array $element, array $expected_top_level_contexts, $expected_cache_item) {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
     $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);
@@ -316,7 +316,7 @@ class RendererBubblingTest extends RendererTestBase {
     $current_user_role = &$this->currentUserRole;
 
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     $test_element = [
       '#cache' => [
@@ -445,7 +445,7 @@ class RendererBubblingTest extends RendererTestBase {
    */
   public function testBubblingWithPrerender($test_element) {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     // Mock the State service.
     $memory_state = new State(new KeyValueMemoryFactory());
@@ -528,7 +528,7 @@ class RendererBubblingTest extends RendererTestBase {
    */
   public function testOverWriteCacheKeys() {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     // Ensure a logic exception
     $data = [
