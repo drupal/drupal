@@ -21,7 +21,7 @@ block.block.*:
       type: string
       label: 'Region'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     provider:
       type: string

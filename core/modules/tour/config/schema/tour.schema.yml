@@ -49,7 +49,7 @@ tour.tip:
       type: required_label
       label: 'Label'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     position:
       type: string

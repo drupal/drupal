@@ -16,7 +16,7 @@ core.menu.static_menu_link_overrides:
             type: string
             label: 'Parent'
           weight:
-            type: integer
+            type: weight
             label: 'Weight'
           expanded:
             type: boolean

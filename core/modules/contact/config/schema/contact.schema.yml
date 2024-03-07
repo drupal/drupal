@@ -25,7 +25,7 @@ contact.form.*:
       type: text
       label: 'Auto-reply'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     message:
       type: text

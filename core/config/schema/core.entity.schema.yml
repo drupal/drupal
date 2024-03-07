@@ -101,7 +101,7 @@ field_formatter.entity_view_display:
   type: field_formatter
   mapping:
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     region:
       type: string
@@ -144,7 +144,7 @@ core.entity_form_display.*.*.*:
                 manager: plugin.manager.field.widget
                 interface: '\Drupal\Core\Field\WidgetInterface'
           weight:
-            type: integer
+            type: weight
             label: 'Weight'
           region:
             type: string

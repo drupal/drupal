@@ -81,7 +81,7 @@ search.page.*:
       type: string
       label: 'Search page path'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     plugin:
       type: string

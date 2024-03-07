@@ -35,7 +35,7 @@ filter.format.*:
         Length:
           max: 255
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     roles:
       type: sequence

@@ -51,7 +51,7 @@ layout_builder.component:
     configuration:
       type: block.settings.[id]
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     additional:
       type: ignore
