@@ -394,9 +394,11 @@ class Renderer implements RendererInterface {
     }
     // If instructed to create a placeholder, and a #lazy_builder callback is
     // present (without such a callback, it would be impossible to replace the
-    // placeholder), replace the current element with a placeholder.
-    // @todo remove the isMethodCacheable() check when
-    //   https://www.drupal.org/node/2367555 lands.
+    // placeholder), replace the current element with a placeholder. On
+    // uncacheable requests, always skip placeholdering - if a form is inside
+    // a placeholder, which is likely, we want to render it as soon as possible,
+    // so that form submission and redirection can take over before any more
+    // content is rendered.
     if (isset($elements['#create_placeholder']) && $elements['#create_placeholder'] === TRUE && $this->requestStack->getCurrentRequest()->isMethodCacheable()) {
       if (!isset($elements['#lazy_builder'])) {
         throw new \LogicException('When #create_placeholder is set, a #lazy_builder callback must be present as well.');

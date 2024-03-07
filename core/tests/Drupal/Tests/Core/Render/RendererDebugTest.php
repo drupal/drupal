@@ -26,7 +26,7 @@ class RendererDebugTest extends RendererTestBase {
    */
   public function testDebugOutput() {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     $element = [
       '#cache' => [

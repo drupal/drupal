@@ -232,7 +232,7 @@ abstract class RendererTestBase extends UnitTestCase {
   /**
    * Sets up a memory-based render cache back-end.
    */
-  protected function setupMemoryCache() {
+  protected function setUpMemoryCache() {
     $this->memoryCache = $this->memoryCache ?: new VariationCache($this->requestStack, new MemoryBackend(new Time($this->requestStack)), $this->cacheContextsManager);
 
     $this->cacheFactory->expects($this->atLeastOnce())

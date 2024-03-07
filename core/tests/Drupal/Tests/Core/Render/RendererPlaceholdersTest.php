@@ -564,7 +564,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    */
   public function testUncacheableParent(array $element, array $args, array $expected_placeholder_render_array, array|false $placeholder_cache_keys, array $bubbled_cache_contexts, array $bubbled_cache_tags, array $placeholder_expected_render_cache_array): void {
     if ($placeholder_cache_keys) {
-      $this->setupMemoryCache();
+      $this->setUpMemoryCache();
     }
     else {
       $this->setUpUnusedCache();
@@ -727,7 +727,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @dataProvider providerPlaceholders
    */
   public function testCacheableParentWithPostRequest(array $test_element, array $args): void {
-    $this->setUpUnusedCache();
+    $this->setUpMemoryCache();
 
     // Verify behavior when handling a non-GET request, e.g. a POST request:
     // also in that case, placeholders must be replaced.
@@ -762,8 +762,13 @@ class RendererPlaceholdersTest extends RendererTestBase {
    *
    * @dataProvider providerPlaceholders
    */
-  public function testPlaceholderingDisabledForPostRequests(array $test_element, array $args): void {
-    $this->setUpUnusedCache();
+  public function testPlaceholderingDisabledForPostRequests(array $test_element, array $args, array $expected_placeholder_render_array, array|false $placeholder_cache_keys): void {
+    if ($placeholder_cache_keys && !empty($test_element['placeholder']['#cache']['keys'])) {
+      $this->setUpMemoryCache();
+    }
+    else {
+      $this->setUpUnusedCache();
+    }
     $this->setUpRequest('POST');
 
     $element = $test_element;
