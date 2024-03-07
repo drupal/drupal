@@ -30,7 +30,7 @@ class Mail extends Plugin {
    *   The label of the plugin.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) A description of the plugin.
-   * @param string|null $deriver
+   * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
   public function __construct(

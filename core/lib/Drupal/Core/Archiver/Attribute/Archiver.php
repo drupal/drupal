@@ -31,7 +31,7 @@ class Archiver extends Plugin {
    *   The description of the archiver plugin.
    * @param array $extensions
    *   An array of valid extensions for this archiver.
-   * @param string|null $deriver
+   * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
   public function __construct(

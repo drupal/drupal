@@ -40,7 +40,7 @@ class HelpSection extends Plugin {
    *   page itself.
    * @param int|null $weight
    *   (optional) The weight of the help page section.
-   * @param string|null $deriver
+   * @param class-string|null $deriver
    *   (optional) The deriver class.
    *
    *   The sections will be ordered by this weight on the help page.

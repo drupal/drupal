@@ -59,7 +59,7 @@ class DataType extends Plugin {
    *   (optional) An array of validation constraints for this type.
    * @param bool $unwrap_for_canonical_representation
    *   Whether the typed object wraps the canonical representation of the data.
-   * @param string|null $deriver
+   * @param class-string|null $deriver
    *   (optional) The deriver class for the data type.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::getConstraints()
