@@ -12,7 +12,7 @@ interface DerivablePluginDefinitionInterface extends PluginDefinitionInterface {
   /**
    * Gets the name of the deriver of this plugin definition, if it exists.
    *
-   * @return string|null
+   * @return class-string|null
    *   Either the deriver class name, or NULL if the plugin is not derived.
    */
   public function getDeriver();
@@ -20,7 +20,7 @@ interface DerivablePluginDefinitionInterface extends PluginDefinitionInterface {
   /**
    * Sets the deriver of this plugin definition.
    *
-   * @param string|null $deriver
+   * @param class-string|null $deriver
    *   Either the name of a class that implements
    *   \Drupal\Component\Plugin\Derivative\DeriverInterface, or NULL.
    *

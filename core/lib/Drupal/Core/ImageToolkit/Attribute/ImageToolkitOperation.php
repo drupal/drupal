@@ -56,7 +56,7 @@ class ImageToolkitOperation extends Plugin {
    *   The human-readable name of the image toolkit operation.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) The description of the image toolkit operation.
-   * @param string|null $deriver
+   * @param class-string|null $deriver
    *   (optional) The deriver class for the image toolkit operation.
    */
   public function __construct(
