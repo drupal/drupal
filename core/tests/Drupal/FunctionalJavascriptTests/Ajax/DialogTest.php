@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\ajax_test\Controller\AjaxTestController;
+use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -128,6 +129,22 @@ class DialogTest extends WebDriverTestBase {
 
     // Use a link to close the panel opened by button 2.
     $this->getSession()->getPage()->clickLink('Link 4 (close non-modal if open)');
+
+    // Test dialogs opened using OpenModalDialogWithUrl.
+    $this->getSession()->getPage()->findButton('Button 3 (modal from url)')->press();
+    // Check that title was fetched properly.
+    // @see \Drupal\ajax_test\Form\AjaxTestDialogForm::dialog.
+    $form_dialog_title = $this->assertSession()->waitForElement('css', "span.ui-dialog-title:contains('Ajax Form contents')");
+    $this->assertNotNull($form_dialog_title, 'Dialog form has the expected title.');
+    $button1_dialog->findButton('Close')->press();
+    // Test external URL.
+    $dialog_obj = new OpenModalDialogWithUrl('http://example.com', []);
+    try {
+      $dialog_obj->render();
+    }
+    catch (\LogicException $e) {
+      $this->assertEquals('External URLs are not allowed.', $e->getMessage());
+    }
 
     // Form modal.
     $this->clickLink('Link 5 (form)');
