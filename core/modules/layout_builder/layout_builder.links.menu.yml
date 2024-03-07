@@ -1,0 +1,5 @@
+layout_builder.settings:
+  title: 'Layout Builder'
+  parent: system.admin_config_content
+  description: 'Configure Layout Builder settings.'
+  route_name: layout_builder.settings

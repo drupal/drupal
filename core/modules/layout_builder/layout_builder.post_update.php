@@ -69,3 +69,12 @@ function layout_builder_post_update_timestamp_formatter(array &$sandbox = NULL):
     return $update;
   });
 }
+
+/**
+ * Configure the default expose all fields setting.
+ */
+function layout_builder_post_update_default_expose_field_block_setting(): void {
+  \Drupal::configFactory()->getEditable('layout_builder.settings')
+    ->set('expose_all_field_blocks', TRUE)
+    ->save(TRUE);
+}

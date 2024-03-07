@@ -160,6 +160,19 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function save(): int {
+    $return = parent::save();
+    if (!\Drupal::config('layout_builder.settings')->get('expose_all_field_blocks')) {
+      // Invalidate the block cache in order to regenerate field block
+      // definitions.
+      \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+    }
+    return $return;
+  }
+
+  /**
    * Removes a layout section field if it is no longer needed.
    *
    * Because the field is shared across all view modes, the field will only be
