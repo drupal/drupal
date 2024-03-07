@@ -7,8 +7,6 @@
 
 use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\Core\Site\Settings;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 
@@ -93,60 +91,4 @@ function block_content_post_update_revision_type(&$sandbox = NULL) {
       $block_content_type->set('revision', (bool) $block_content_type->get('revision'));
       return TRUE;
     });
-}
-
-/**
- * Set a default author for block content entities.
- */
-function block_content_post_update_set_owner(&$sandbox = NULL): TranslatableMarkup {
-  $blockContentStorage = \Drupal::entityTypeManager()
-    ->getStorage('block_content');
-
-  if (!isset($sandbox['total'])) {
-    $sandbox['total'] = $blockContentStorage
-      ->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('uid', NULL, 'IS NULL')
-      ->count()
-      ->execute();
-    $sandbox['progress'] = 0;
-
-    // Handle the case of 0 block to process.
-    if ($sandbox['total'] == 0) {
-      $sandbox['total'] = 1;
-      $sandbox['progress'] = 1;
-    }
-  }
-
-  $ids = $blockContentStorage
-    ->getQuery()
-    ->accessCheck(FALSE)
-    ->condition('uid', NULL, 'IS NULL')
-    ->range(0, (int) Settings::get('entity_update_batch_size', 50))
-    ->execute();
-
-  $database = \Drupal::database();
-  /** @var \Drupal\block_content\BlockContentInterface $blockContent */
-  foreach ($blockContentStorage->loadMultiple($ids) as $blockContent) {
-    // Get the revision_user from the first revision of this block to use
-    // as the author.
-    $query = $database->select('block_content_revision', 'bcr')
-      ->condition('id', $blockContent->id());
-    $query->addExpression('MIN(revision_id)', 'revision_id');
-    $revisionId = $query->execute()->fetchField();
-    /** @var \Drupal\block_content\BlockContentInterface $revision */
-    $revision = $blockContentStorage->loadRevision($revisionId);
-
-    $blockContent->setOwnerId($revision->getRevisionUserId() ?? 0)
-      ->setSyncing(TRUE)
-      ->save();
-    $sandbox['progress'] += 1;
-  }
-
-  $sandbox['#finished'] = empty($sandbox['total']) ? 1 : ($sandbox['progress'] / $sandbox['total']);
-
-  return new TranslatableMarkup('Processed Block Content Entities (@count/@total)', [
-    '@count' => $sandbox['progress'],
-    '@total' => $sandbox['total'],
-  ]);
 }

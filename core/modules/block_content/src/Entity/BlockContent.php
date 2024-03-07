@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\block_content\BlockContentInterface;
-use Drupal\user\EntityOwnerTrait;
 
 /**
  * Defines the content block entity class.
@@ -70,7 +69,6 @@ use Drupal\user\EntityOwnerTrait;
  *     "langcode" = "langcode",
  *     "uuid" = "uuid",
  *     "published" = "status",
- *     "owner" = "uid",
  *   },
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_user",
@@ -90,7 +88,6 @@ use Drupal\user\EntityOwnerTrait;
 class BlockContent extends EditorialContentEntityBase implements BlockContentInterface {
 
   use RefinableDependentAccessTrait;
-  use EntityOwnerTrait;
 
   /**
    * The theme the block is being created in.
@@ -194,7 +191,6 @@ class BlockContent extends EditorialContentEntityBase implements BlockContentInt
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields += static::ownerBaseFieldDefinitions($entity_type);
 
     $fields['id']->setLabel(t('Content block ID'))
       ->setDescription(t('The content block ID.'));

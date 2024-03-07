@@ -9,7 +9,6 @@ use Drupal\block_content\BlockContentStorageSchema;
 use Drupal\Core\Entity\Form\RevisionDeleteForm;
 use Drupal\Core\Entity\Form\RevisionRevertForm;
 use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -63,20 +62,4 @@ function block_content_update_10300(): void {
   $manager->updateEntityType($entity_type);
   $manager->updateFieldStorageDefinition(\Drupal::service('entity_field.manager')
     ->getBaseFieldDefinitions('block_content')['reusable']);
-}
-
-/**
- * Install owner field.
- */
-function block_content_update_10301(): TranslatableMarkup {
-  $entityDefinitionUpdateManager = \Drupal::entityDefinitionUpdateManager();
-  $entityType = $entityDefinitionUpdateManager->getEntityType('block_content');
-
-  $storage_definition = BaseFieldDefinition::create('entity_reference')
-    ->setLabel(new TranslatableMarkup('User ID'))
-    ->setSetting('target_type', 'user')
-    ->setTranslatable($entityType->isTranslatable());
-  $entityDefinitionUpdateManager
-    ->installFieldStorageDefinition('uid', 'block_content', 'block_content', $storage_definition);
-  return \t('Installed uid field for BlockContent entities.');
 }
