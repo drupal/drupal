@@ -6,6 +6,8 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Site\Settings;
 
+// cspell:ignore officedocument openxmlformats wordprocessingml
+
 /**
  * Defines a class containing utility methods for formatting mail messages.
  */

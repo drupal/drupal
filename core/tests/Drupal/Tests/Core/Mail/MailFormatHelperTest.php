@@ -7,6 +7,8 @@ namespace Drupal\Tests\Core\Mail;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Tests\UnitTestCase;
 
+// cspell:ignore officedocument openxmlformats wordprocessingml
+
 /**
  * @coversDefaultClass \Drupal\Core\Mail\MailFormatHelper
  * @group Mail

@@ -11,7 +11,6 @@ allwords
 alphadecimal
 ampm
 anyall
-applix
 archiver
 archivers
 arrowrefresh
@@ -152,7 +151,6 @@ contextuals
 controlgroup
 conv
 corge
-cpio
 createrole
 createuser
 crema
@@ -292,7 +290,6 @@ funic
 gabilondo
 gids
 gloop
-gnumeric
 googleapis
 greeking
 gripsmall
@@ -349,9 +346,6 @@ keypresses
 keyvalue
 kinberg
 kolkata
-kpresenter
-kspread
-kword
 lamoids
 languageswitcher
 libc
@@ -383,13 +377,10 @@ lrdd
 lstitle
 ltitle
 lzma
-lzop
-macbinary
 mainpage
 mank
 maryjane
 matchout
-mathematica
 maximumred
 maxlifetime
 maynot
@@ -423,7 +414,6 @@ montag
 msgctxt
 msgid
 msgstr
-msword
 mucho
 mulrev
 mulrevpub
@@ -478,14 +468,11 @@ nyan
 nyancat
 nyans
 oembed
-officedocument
 omittable
 onecol
 oneplusfourgrid
 onetwo
 onewidgetfield
-opendocument
-openxmlformats
 optgroups
 optin
 orgchart
@@ -550,7 +537,6 @@ preprocessors
 prerender
 prerendered
 presave
-presentationml
 pretransaction
 preuninstall
 processlist
@@ -653,13 +639,11 @@ specialchars
 spiffiness
 splitbutton
 splitbuttons
-spreadsheetml
 squaresmall
 squiz
 squizlabs
 srcset
 ssess
-stardivision
 starterkit
 statuscode
 stdclass
@@ -672,7 +656,6 @@ strikethrough
 striptags
 strs
 sttid
-stuffit
 styleguide
 stylelint
 stylescombo
@@ -727,7 +710,6 @@ tablesorts
 tabset
 tabwidth
 tappable
-tarz
 taskless
 tcomment
 templating
@@ -842,8 +824,6 @@ webmozart
 webroot
 webservers
 widthx
-wmlscript
-wordprocessingml
 wordsafe
 writeln
 wwwrun

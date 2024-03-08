@@ -17,6 +17,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    *   Array of mimetypes correlated to the extensions that relate to them.
    */
   protected $defaultMapping = [
+    // cspell:disable
     'mimetypes' => [
       0 => 'application/andrew-inset',
       1 => 'application/atom',
@@ -867,6 +868,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'json' => 361,
       'avif' => 362,
     ],
+    // cspell:enable
   ];
 
   /**
