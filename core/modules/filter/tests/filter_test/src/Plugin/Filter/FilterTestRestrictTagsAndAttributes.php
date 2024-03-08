@@ -2,20 +2,22 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 use Drupal\Component\Utility\Xss;
 
 /**
  * Provides a test filter to restrict HTML tags and attributes.
- *
- * @Filter(
- *   id = "filter_test_restrict_tags_and_attributes",
- *   title = @Translation("Tag and attribute restricting filter"),
- *   description = @Translation("Used for testing \Drupal\filter\Entity\FilterFormatInterface::getHtmlRestrictions()."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR
- * )
  */
+#[Filter(
+  id: "filter_test_restrict_tags_and_attributes",
+  title: new TranslatableMarkup("Tag and attribute restricting filter"),
+  description: new TranslatableMarkup("Used for testing \Drupal\filter\Entity\FilterFormatInterface::getHtmlRestrictions()."),
+  type: FilterInterface::TYPE_HTML_RESTRICTOR
+)]
 class FilterTestRestrictTagsAndAttributes extends FilterBase {
 
   /**

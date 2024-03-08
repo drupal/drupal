@@ -2,8 +2,11 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a fallback placeholder filter to use for missing filters.
@@ -11,14 +14,13 @@ use Drupal\filter\Plugin\FilterBase;
  * The filter system uses this filter to replace missing filters (for example,
  * if a filter module has been disabled) that are still part of defined text
  * formats. It returns an empty string.
- *
- * @Filter(
- *   id = "filter_null",
- *   title = @Translation("Provides a fallback for missing filters. Do not use."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR,
- *   weight = -10
- * )
  */
+#[Filter(
+  id: "filter_null",
+  title: new TranslatableMarkup("Provides a fallback for missing filters. Do not use."),
+  type: FilterInterface::TYPE_HTML_RESTRICTOR,
+  weight: -10
+)]
 class FilterNull extends FilterBase {
 
   /**

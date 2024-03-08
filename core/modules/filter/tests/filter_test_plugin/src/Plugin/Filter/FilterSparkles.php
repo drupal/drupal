@@ -2,8 +2,11 @@
 
 namespace Drupal\filter_test_plugin\Plugin\Filter;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter to limit allowed HTML tags.
@@ -12,15 +15,14 @@ use Drupal\filter\Plugin\FilterBase;
  * test.
  *
  * @see \Drupal\Tests\filter\Functional\FilterFormTest::testFilterForm()
- *
- * @Filter(
- *   id = "filter_sparkles",
- *   title = @Translation("Sparkles filter"),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR,
- *   settings = {},
- *   weight = -10
- * )
  */
+#[Filter(
+  id: "filter_sparkles",
+  title: new TranslatableMarkup("Sparkles filter"),
+  type: FilterInterface::TYPE_HTML_RESTRICTOR,
+  weight: -10,
+  settings: [],
+)]
 class FilterSparkles extends FilterBase {
 
   /**

@@ -2,19 +2,21 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a test filter to attach assets.
- *
- * @Filter(
- *   id = "filter_test_assets",
- *   title = @Translation("Testing filter"),
- *   description = @Translation("Does not change content; attaches assets."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
- * )
  */
+#[Filter(
+  id: "filter_test_assets",
+  title: new TranslatableMarkup("Testing filter"),
+  description: new TranslatableMarkup("Does not change content; attaches assets."),
+  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+)]
 class FilterTestAssets extends FilterBase {
 
   /**

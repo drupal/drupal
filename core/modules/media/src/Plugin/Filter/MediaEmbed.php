@@ -15,8 +15,11 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -24,21 +27,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a filter to embed media items using a custom tag.
  *
- * @Filter(
- *   id = "media_embed",
- *   title = @Translation("Embed media"),
- *   description = @Translation("Embeds media items using a custom tag, <code>&lt;drupal-media&gt;</code>. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
- *   settings = {
- *     "default_view_mode" = "default",
- *     "allowed_view_modes" = {},
- *     "allowed_media_types" = {},
- *   },
- *   weight = 100,
- * )
- *
  * @internal
  */
+#[Filter(
+  id: "media_embed",
+  title: new TranslatableMarkup("Embed media"),
+  description: new TranslatableMarkup("Embeds media items using a custom tag, <code>&lt;drupal-media&gt;</code>. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
+  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
+  weight: 100,
+  settings: [
+    "default_view_mode" => "default",
+    "allowed_view_modes" => [],
+    "allowed_media_types" => [],
+  ],
+)]
 class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**

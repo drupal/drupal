@@ -5,20 +5,22 @@ declare(strict_types = 1);
 namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter to lazy load tracked images.
- *
- * @Filter(
- *   id = "filter_image_lazy_load",
- *   title = @Translation("Lazy load images"),
- *   description = @Translation("Instruct browsers to lazy load images if dimensions are specified. Use in conjunction with and place after the 'Track images uploaded via a Text Editor' filter that adds image dimensions required for lazy loading. Results can be overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
- *   weight = 15
- * )
  */
+#[Filter(
+  id: "filter_image_lazy_load",
+  title: new TranslatableMarkup("Lazy load images"),
+  description: new TranslatableMarkup("Instruct browsers to lazy load images if dimensions are specified. Use in conjunction with and place after the 'Track images uploaded via a Text Editor' filter that adds image dimensions required for lazy loading. Results can be overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>."),
+  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
+  weight: 15
+)]
 final class FilterImageLazyLoad extends FilterBase {
 
   /**
