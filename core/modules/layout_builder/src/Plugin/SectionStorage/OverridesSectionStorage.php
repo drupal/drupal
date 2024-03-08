@@ -15,7 +15,9 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\layout_builder\Attribute\SectionStorage;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
@@ -31,21 +33,28 @@ use Symfony\Component\Routing\RouteCollection;
  * - The default weight is 0, so custom implementations will not take
  *   precedence unless otherwise specified.
  *
- * @SectionStorage(
- *   id = "overrides",
- *   weight = -20,
- *   handles_permission_check = TRUE,
- *   context_definitions = {
- *     "entity" = @ContextDefinition("entity", constraints = {
- *       "EntityHasField" = \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::FIELD_NAME,
- *     }),
- *     "view_mode" = @ContextDefinition("string", default_value = "default"),
- *   }
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[SectionStorage(
+  id: "overrides",
+  weight: -20,
+  context_definitions: [
+    'entity' => new ContextDefinition(
+      data_type: 'entity',
+      label: new TranslatableMarkup("Entity"),
+      constraints: [
+        "EntityHasField" => OverridesSectionStorage::FIELD_NAME,
+      ],
+    ),
+    'view_mode' => new ContextDefinition(
+      data_type: 'string',
+      label: new TranslatableMarkup("View mode"),
+      default_value: "default",
+    ),
+  ],
+  handles_permission_check: TRUE,
+)]
 class OverridesSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, OverridesSectionStorageInterface, SectionStorageLocalTaskProviderInterface {
 
   /**

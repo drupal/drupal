@@ -11,9 +11,13 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\layout_builder\Attribute\SectionStorage;
 use Drupal\layout_builder\DefaultsSectionStorageInterface;
 use Drupal\layout_builder\Entity\SampleEntityGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,18 +32,20 @@ use Symfony\Component\Routing\RouteCollection;
  * - The default weight is 0, so other custom implementations will also take
  *   precedence unless otherwise specified.
  *
- * @SectionStorage(
- *   id = "defaults",
- *   weight = 20,
- *   context_definitions = {
- *     "display" = @ContextDefinition("entity:entity_view_display"),
- *     "view_mode" = @ContextDefinition("string", default_value = "default"),
- *   },
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[SectionStorage(id: "defaults", weight: 20, context_definitions: [
+  "display" => new EntityContextDefinition(
+    data_type: "entity_view_display",
+    label: new TranslatableMarkup("Entity view display"),
+  ),
+  'view_mode' => new ContextDefinition(
+    data_type: 'string',
+    label: new TranslatableMarkup("View mode"),
+    default_value: "default",
+  ),
+])]
 class DefaultsSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, DefaultsSectionStorageInterface {
 
   /**

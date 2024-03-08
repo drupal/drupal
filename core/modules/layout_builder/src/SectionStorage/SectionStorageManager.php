@@ -8,7 +8,7 @@ use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\layout_builder\Annotation\SectionStorage;
+use Drupal\layout_builder\Attribute\SectionStorage;
 use Drupal\layout_builder\SectionStorageInterface;
 
 /**
@@ -43,7 +43,7 @@ class SectionStorageManager extends DefaultPluginManager implements SectionStora
    *   The context handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ContextHandlerInterface $context_handler) {
-    parent::__construct('Plugin/SectionStorage', $namespaces, $module_handler, SectionStorageInterface::class, SectionStorage::class);
+    parent::__construct('Plugin/SectionStorage', $namespaces, $module_handler, SectionStorageInterface::class, SectionStorage::class, '\Drupal\layout_builder\Annotation\SectionStorage');
 
     $this->contextHandler = $context_handler;
 
