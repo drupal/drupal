@@ -793,14 +793,13 @@ jquery:
 
 internal.jquery.form:
   # Internal library. Do not depend on it outside core nor add new core usage.
-  remote: https://github.com/jquery-form/form
   version: "4.3.0"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/jquery-form/form/master/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/jquery-form/jquery.form.min.js: { minified: true }
+    misc/jquery.form.js: {}
   dependencies:
     - core/jquery
 

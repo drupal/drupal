@@ -16,3 +16,4 @@ modules/sdc/tests/themes/sdc_theme_test/components/bar/bar.component.yml
 # Temporary until they are brought up to standards
 scripts/**/*
 modules/ckeditor5/webpack.config.js
+misc/jquery.form.js
