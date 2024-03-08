@@ -2,19 +2,21 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a test filter to replace all content.
- *
- * @Filter(
- *   id = "filter_test_replace",
- *   title = @Translation("Testing filter"),
- *   description = @Translation("Replaces all content with filter and text format information."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE
- * )
  */
+#[Filter(
+  id: "filter_test_replace",
+  title: new TranslatableMarkup("Testing filter"),
+  description: new TranslatableMarkup("Replaces all content with filter and text format information."),
+  type: FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE
+)]
 class FilterTestReplace extends FilterBase {
 
   /**

@@ -2,20 +2,22 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a test filter to associate cache contexts.
- *
- * @Filter(
- *   id = "filter_test_cache_contexts",
- *   title = @Translation("Testing filter"),
- *   description = @Translation("Does not change content; associates cache contexts."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
- * )
  */
+#[Filter(
+  id: "filter_test_cache_contexts",
+  title: new TranslatableMarkup("Testing filter"),
+  description: new TranslatableMarkup("Does not change content; associates cache contexts."),
+  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+)]
 class FilterTestCacheContexts extends FilterBase {
 
   /**

@@ -162,7 +162,7 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
   }
 
   /**
-   * Applies the `@Filter=media_embed` filter to text, pipes to raw content.
+   * Applies the `media_embed` filter to text, pipes to raw content.
    *
    * @param string $text
    *   The text string to be filtered.

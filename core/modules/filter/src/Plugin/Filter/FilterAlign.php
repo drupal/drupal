@@ -3,19 +3,21 @@
 namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter to align elements.
- *
- * @Filter(
- *   id = "filter_align",
- *   title = @Translation("Align images"),
- *   description = @Translation("Uses a <code>data-align</code> attribute on <code>&lt;img&gt;</code> tags to align images."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
- * )
  */
+#[Filter(
+  id: "filter_align",
+  title: new TranslatableMarkup("Align images"),
+  description: new TranslatableMarkup("Uses a <code>data-align</code> attribute on <code>&lt;img&gt;</code> tags to align images."),
+  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
+)]
 class FilterAlign extends FilterBase {
 
   /**
