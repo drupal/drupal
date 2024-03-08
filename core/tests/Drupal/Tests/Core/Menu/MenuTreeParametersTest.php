@@ -69,13 +69,13 @@ class MenuTreeParametersTest extends UnitTestCase {
 
     // Add additional menu link plugin IDs; they should be merged, not replacing
     // the old ones.
-    $parameters->addExpandedParents(['qux', 'quux']);
-    $this->assertEquals(['foo', 'bar', 'baz', 'qux', 'quux'], $parameters->expandedParents);
+    $parameters->addExpandedParents(['qux', 'foobar']);
+    $this->assertEquals(['foo', 'bar', 'baz', 'qux', 'foobar'], $parameters->expandedParents);
 
     // Add pre-existing menu link plugin IDs; they should not be added again;
     // this is a set.
-    $parameters->addExpandedParents(['bar', 'quux']);
-    $this->assertEquals(['foo', 'bar', 'baz', 'qux', 'quux'], $parameters->expandedParents);
+    $parameters->addExpandedParents(['bar', 'foobar']);
+    $this->assertEquals(['foo', 'bar', 'baz', 'qux', 'foobar'], $parameters->expandedParents);
   }
 
   /**

@@ -384,14 +384,14 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $definitions = [];
     $definitions['array_based_found'] = ['provider' => 'module_found'];
     $definitions['array_based_missing'] = ['provider' => 'module_missing'];
-    $definitions['stdclass_based_found'] = (object) ['provider' => 'module_found'];
-    $definitions['stdclass_based_missing'] = (object) ['provider' => 'module_missing'];
+    $definitions['stdClass_based_found'] = (object) ['provider' => 'module_found'];
+    $definitions['stdClass_based_missing'] = (object) ['provider' => 'module_missing'];
     $definitions['classed_object_found'] = new ObjectDefinition(['provider' => 'module_found']);
     $definitions['classed_object_missing'] = new ObjectDefinition(['provider' => 'module_missing']);
 
     $expected = [];
     $expected['array_based_found'] = $definitions['array_based_found'];
-    $expected['stdclass_based_found'] = $definitions['stdclass_based_found'];
+    $expected['stdClass_based_found'] = $definitions['stdClass_based_found'];
     $expected['classed_object_found'] = $definitions['classed_object_found'];
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);

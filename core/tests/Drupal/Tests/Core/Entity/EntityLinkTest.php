@@ -119,8 +119,8 @@ class EntityLinkTest extends UnitTestCase {
     $data = [];
     $data[] = [
       'some_entity_label',
-      'qwerqwer',
-      'qwerqwer',
+      'link text',
+      'link text',
     ];
     $data[] = [
       'some_entity_label',
@@ -134,20 +134,20 @@ class EntityLinkTest extends UnitTestCase {
     ];
     $data[] = [
       'some_entity_label',
-      'qwerqwer',
-      'qwerqwer',
+      'link text',
+      'link text',
       'edit-form',
     ];
     $data[] = [
       'some_entity_label',
-      'qwerqwer',
-      'qwerqwer',
+      'link text',
+      'link text',
       'edit-form',
     ];
     $data[] = [
       'some_entity_label',
-      'qwerqwer',
-      'qwerqwer',
+      'link text',
+      'link text',
       'edit-form',
       ['foo' => 'qwer'],
     ];

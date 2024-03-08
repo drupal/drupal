@@ -252,7 +252,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     $input_options = [
       'foo' => 'bar',
       'baz' => $this->t('qux'),
-      'quux' => (object) ['option' => ['quux' => 'corge']],
+      'foobar' => (object) ['option' => ['foobar' => 'dog']],
     ];
     $reduced_values = $operator->reduceValueOptions($input_options);
 
