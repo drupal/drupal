@@ -5,17 +5,18 @@ namespace Drupal\taxonomy\Plugin\views\argument_validator;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsArgumentValidator;
 use Drupal\views\Plugin\views\argument_validator\Entity;
 
 /**
  * Validates whether a term name is a valid term argument.
- *
- * @ViewsArgumentValidator(
- *   id = "taxonomy_term_name",
- *   title = @Translation("Taxonomy term name"),
- *   entity_type = "taxonomy_term"
- * )
  */
+#[ViewsArgumentValidator(
+  id: 'taxonomy_term_name',
+  title: new TranslatableMarkup('Taxonomy term name'),
+  entity_type: 'taxonomy_term'
+)]
 class TermName extends Entity {
 
   /**

@@ -2,16 +2,18 @@
 
 namespace Drupal\views\Plugin\views\argument_validator;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsArgumentValidator;
+
 /**
  * Do not validate the argument.
  *
  * @ingroup views_argument_validate_plugins
- *
- * @ViewsArgumentValidator(
- *   id = "none",
- *   title = @Translation(" - Basic validation - ")
- * )
  */
+#[ViewsArgumentValidator(
+  id: 'none',
+  title: new TranslatableMarkup('- Basic validation -')
+)]
 class None extends ArgumentValidatorPluginBase {
 
   public function validateArgument($argument) {

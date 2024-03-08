@@ -2,16 +2,17 @@
 
 namespace Drupal\views_test_data\Plugin\views\argument_validator;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
+use Drupal\views\Attribute\ViewsArgumentValidator;
 
 /**
  * Defines an argument validator test plugin.
- *
- * @ViewsArgumentValidator(
- *   id = "argument_validator_test",
- *   title = @Translation("Argument validator test")
- * )
  */
+#[ViewsArgumentValidator(
+  id: 'argument_validator_test',
+  title: new TranslatableMarkup('Argument validator test')
+)]
 class ArgumentValidatorTest extends ArgumentValidatorPluginBase {
 
   /**

@@ -3,16 +3,17 @@
 namespace Drupal\user\Plugin\views\argument_validator;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsArgumentValidator;
 
 /**
  * Validates whether a user name is valid.
- *
- * @ViewsArgumentValidator(
- *   id = "user_name",
- *   title = @Translation("User name"),
- *   entity_type = "user"
- * )
  */
+#[ViewsArgumentValidator(
+  id: 'user_name',
+  title: new TranslatableMarkup('User name'),
+  entity_type: 'user'
+)]
 class UserName extends User {
 
   /**
