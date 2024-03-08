@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\file;
 
-// cspell:ignore abiword
-
 /**
  * A utility class for working with MIME types.
  */
@@ -48,6 +46,7 @@ final class IconMimeTypes {
    *   The generic icon MIME package expected for this file.
    */
   public static function getGenericMimeType(string $mimeType): string | false {
+    // cspell:disable
     switch ($mimeType) {
       // Word document types.
       case 'application/msword':
@@ -171,6 +170,7 @@ final class IconMimeTypes {
       default:
         return FALSE;
     }
+    // cspell:enable
   }
 
 }

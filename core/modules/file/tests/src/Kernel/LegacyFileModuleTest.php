@@ -6,6 +6,8 @@ namespace Drupal\Tests\file\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore msword
+
 /**
  * Tests file module deprecations.
  *
