@@ -8,6 +8,7 @@
       ".*ignore",
       "composer.lock",
       "assets/vendor/**",
+      "misc/jquery.form.js",
       "lib/Drupal/Component/Diff/**",
       "lib/Drupal/Component/Transliteration/data/**",
       "lib/Drupal/Core/File/MimeType/ExtensionMimeTypeGuesser.php",
