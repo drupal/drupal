@@ -19,7 +19,9 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\NodeInterface;
+use Drupal\search\Attribute\Search;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\SearchIndexInterface;
@@ -28,12 +30,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Handles searching for node entities using the Search module index.
- *
- * @SearchPlugin(
- *   id = "node_search",
- *   title = @Translation("Content")
- * )
  */
+#[Search(
+  id: 'node_search',
+  title: new TranslatableMarkup('Content'),
+)]
 class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInterface, SearchIndexingInterface, TrustedCallbackInterface {
 
   /**

@@ -13,8 +13,10 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\help\HelpSectionManager;
 use Drupal\help\SearchableHelpInterface;
+use Drupal\search\Attribute\Search;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\Plugin\SearchPluginBase;
 use Drupal\search\SearchIndexInterface;
@@ -30,15 +32,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\help\HelpSearchInterface
  * @see \Drupal\help\HelpSectionPluginInterface
  *
- * @SearchPlugin(
- *   id = "help_search",
- *   title = @Translation("Help"),
- *   use_admin_theme = TRUE,
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[Search(
+  id: 'help_search',
+  title: new TranslatableMarkup('Help'),
+  use_admin_theme: TRUE,
+)]
 class HelpSearch extends SearchPluginBase implements AccessibleInterface, SearchIndexingInterface {
 
   /**
