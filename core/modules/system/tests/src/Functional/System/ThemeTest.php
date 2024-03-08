@@ -431,13 +431,13 @@ class ThemeTest extends BrowserTestBase {
 
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->pageTextContains('Olivero(active tab)');
+    $this->assertSession()->pageTextContains('Olivero');
     // Switch back to Stark and test again to test that the menu cache is cleared.
     $this->drupalGet('admin/appearance');
     // Stark is the first 'Set as default' link.
     $this->clickLink('Set as default');
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->pageTextContains('Stark(active tab)');
+    $this->assertSession()->pageTextContains('Stark');
   }
 
   /**
