@@ -4,18 +4,19 @@ namespace Drupal\search_extra_type\Plugin\Search;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\search\Attribute\Search;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 
 /**
  * Executes a dummy keyword search.
- *
- * @SearchPlugin(
- *   id = "search_extra_type_search",
- *   title = @Translation("Dummy search type"),
- *   use_admin_theme = TRUE,
- * )
  */
+#[Search(
+  id: 'search_extra_type_search',
+  title: new TranslatableMarkup('Dummy search type'),
+  use_admin_theme: TRUE,
+)]
 class SearchExtraTypeSearch extends ConfigurableSearchPluginBase {
 
   /**

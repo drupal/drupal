@@ -9,17 +9,18 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\search\Attribute\Search;
 use Drupal\search\Plugin\SearchPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Executes a keyword search for users against the {users} database table.
- *
- * @SearchPlugin(
- *   id = "user_search",
- *   title = @Translation("Users")
- * )
  */
+#[Search(
+  id: 'user_search',
+  title: new TranslatableMarkup('Users'),
+)]
 class UserSearch extends SearchPluginBase implements AccessibleInterface {
 
   /**
