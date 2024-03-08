@@ -8,8 +8,10 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\views\Attribute\ViewsQuery;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\ResultRow;
@@ -21,13 +23,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Views query plugin for an SQL query.
  *
  * @ingroup views_query_plugins
- *
- * @ViewsQuery(
- *   id = "views_query",
- *   title = @Translation("SQL Query"),
- *   help = @Translation("Query will be generated and run using the Drupal database API.")
- * )
  */
+#[ViewsQuery(
+  id: 'views_query',
+  title: new TranslatableMarkup('SQL Query'),
+  help: new TranslatableMarkup('Query will be generated and run using the Drupal database API.')
+)]
 class Sql extends QueryPluginBase {
 
   /**

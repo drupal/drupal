@@ -3,6 +3,8 @@
 namespace Drupal\views_test_data\Plugin\views\query;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsQuery;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\ResultRow;
@@ -10,13 +12,12 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Defines a query test plugin.
- *
- * @ViewsQuery(
- *   id = "query_test",
- *   title = @Translation("Query test"),
- *   help = @Translation("Defines a query test plugin.")
- * )
  */
+#[ViewsQuery(
+  id: 'query_test',
+  title: new TranslatableMarkup('Query test'),
+  help: new TranslatableMarkup('Defines a query test plugin.')
+)]
 class QueryTest extends QueryPluginBase {
   protected $conditions = [];
   protected $fields = [];
