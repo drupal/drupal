@@ -6,8 +6,10 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\RoleInterface;
 use Drupal\user\RoleStorageInterface;
+use Drupal\views\Attribute\ViewsAccess;
 use Drupal\views\Plugin\views\access\AccessPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
@@ -17,13 +19,12 @@ use Drupal\Core\Session\AccountInterface;
  * Access plugin that provides role-based access control.
  *
  * @ingroup views_access_plugins
- *
- * @ViewsAccess(
- *   id = "role",
- *   title = @Translation("Role"),
- *   help = @Translation("Access will be granted to users with any of the specified roles.")
- * )
  */
+#[ViewsAccess(
+  id: 'role',
+  title: new TranslatableMarkup('Role'),
+  help: new TranslatableMarkup('Access will be granted to users with any of the specified roles.'),
+)]
 class Role extends AccessPluginBase implements CacheableDependencyInterface {
 
   /**
