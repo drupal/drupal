@@ -51,11 +51,9 @@ backlinks
 bakeware
 barbar
 barchart
-barqux
 basefield
 basepath
 basetheme
-bazbaz
 beatle
 bebebe
 beforeclose
@@ -99,7 +97,6 @@ buytaert
 bytea
 cachetag
 cachetags
-cafr
 callables
 callout
 camelid
@@ -150,7 +147,6 @@ contentblock
 contextuals
 controlgroup
 conv
-corge
 createrole
 createuser
 crema
@@ -276,8 +272,6 @@ fodg
 fodp
 fods
 fodt
-foobarbaz
-foofoo
 formattable
 fouc
 fourcol
@@ -322,13 +316,11 @@ imagetextalternative
 indexname
 inited
 inno
-instaclick
 instantiator
 interactable
 interruptible
 introspectable
 invalidators
-invalididentifier
 invokable
 isam
 isinstallable
@@ -373,7 +365,6 @@ longblob
 longerthan
 longtext
 loquesea
-lowline
 lrdd
 lstitle
 ltitle
@@ -560,12 +551,9 @@ questionmark
 quicklinks
 quickstart
 quinlan
-quux
-quxqux
 qvalue
 qvalues
 qwer
-qwerqwer
 ralouphie
 rasterizable
 rasterizes
@@ -589,7 +577,6 @@ replyto
 resave
 resaved
 resaving
-restplugin
 restrictor
 restripe
 restriped
@@ -650,7 +637,6 @@ srcset
 ssess
 starterkit
 statuscode
-stdclass
 stddev
 stickied
 stitle
@@ -734,14 +720,11 @@ testsuites
 textareas
 textboxes
 textfields
-textformat
-textwithsummary
 themename
 themer
 themers
 themey
 theseer
-theseparator
 threecol
 tids
 timegate
@@ -807,7 +790,6 @@ uploaders
 uploadprogress
 upscaling
 urandom
-userid
 userinfo
 userref
 vampirize

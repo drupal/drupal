@@ -493,7 +493,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
 
     // Cookie manipulation.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Cookie_manipulation
-    $data[] = ['<META HTTP-EQUIV="Set-Cookie" Content="USERID=<SCRIPT>alert(\'XSS\')</SCRIPT>">', '<META http-equiv="Set-Cookie">alert(\'XSS\')"&gt;'];
+    $data[] = ['<META HTTP-EQUIV="Set-Cookie" Content="UserID=<SCRIPT>alert(\'XSS\')</SCRIPT>">', '<META http-equiv="Set-Cookie">alert(\'XSS\')"&gt;'];
 
     // UTF-7 encoding.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#UTF-7_encoding

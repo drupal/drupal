@@ -477,7 +477,7 @@ class RendererBubblingTest extends RendererTestBase {
     $output = (string) $this->renderer->renderRoot($test_element);
 
     // First, assert the render array is of the expected form.
-    $this->assertEquals('Cache context!Cache tag!Asset!Placeholder!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
+    $this->assertEquals('Cache context!Cache tag!Asset!Placeholder!barstoolNested!Cached nested!', trim($output), 'Expected HTML generated.');
     $this->assertEquals(['child.cache_context'], $test_element['#cache']['contexts'], 'Expected cache contexts found.');
     $this->assertEquals(['child:cache_tag'], $test_element['#cache']['tags'], 'Expected cache tags found.');
     $expected_attached = [
@@ -572,7 +572,7 @@ class BubblingTest implements TrustedCallbackInterface {
       ],
       'child_placeholder' => [
         '#create_placeholder' => TRUE,
-        '#lazy_builder' => [__CLASS__ . '::bubblingPlaceholder', ['bar', 'qux']],
+        '#lazy_builder' => [__CLASS__ . '::bubblingPlaceholder', ['bar', 'stool']],
       ],
       'child_nested_pre_render_uncached' => [
         '#cache' => ['keys' => ['uncached_nested']],

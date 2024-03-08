@@ -207,13 +207,13 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
     // has a different title.
     $document = Json::decode($this->drupalGet('/jsonapi/node/article/' . $uuid));
     $document_ca = Json::decode($this->drupalGet('/ca/jsonapi/node/article/' . $uuid));
-    $document_cafr = Json::decode($this->drupalGet('/ca-fr/jsonapi/node/article/' . $uuid));
+    $document_ca_fr = Json::decode($this->drupalGet('/ca-fr/jsonapi/node/article/' . $uuid));
     $this->assertSame('en', $document['data']['attributes']['langcode']);
     $this->assertSame('ca', $document_ca['data']['attributes']['langcode']);
-    $this->assertSame('ca', $document_cafr['data']['attributes']['langcode']);
+    $this->assertSame('ca', $document_ca_fr['data']['attributes']['langcode']);
     $this->assertSame($node->getTitle(), $document['data']['attributes']['title']);
     $this->assertSame($node->getTitle() . ' (ca)', $document_ca['data']['attributes']['title']);
-    $this->assertSame($node->getTitle() . ' (ca)', $document_cafr['data']['attributes']['title']);
+    $this->assertSame($node->getTitle() . ' (ca)', $document_ca_fr['data']['attributes']['title']);
 
     // PATCH the 'ca-fr' translation.
     $this->grantPermissions(Role::load(RoleInterface::ANONYMOUS_ID), [
@@ -226,7 +226,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
         'type' => 'node--article',
         'id' => $uuid,
         'attributes' => [
-          'title' => $document_cafr['data']['attributes']['title'] . ' UPDATED',
+          'title' => $document_ca_fr['data']['attributes']['title'] . ' UPDATED',
         ],
       ],
     ]);

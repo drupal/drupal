@@ -37,7 +37,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    */
   public function testSerialization($data, $expected_response = FALSE) {
     $request = new Request();
-    $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'restplugin'], ['_format' => 'json']));
+    $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'rest_plugin'], ['_format' => 'json']));
 
     $handler_response = new ResourceResponse($data);
     $resource_response_subscriber = $this->getFunctioningResourceResponseSubscriber($route_match);

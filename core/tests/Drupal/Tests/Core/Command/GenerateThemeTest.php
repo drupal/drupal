@@ -316,12 +316,12 @@ SH;
       '--name="Test custom starterkit theme"',
       '--description="Custom theme generated from a starterkit theme"',
       '--starterkit',
-      'foobarbaz',
+      'foobar',
     ];
     $process = new Process($install_command, NULL);
     $process->setTimeout(60);
     $result = $process->run();
-    $this->assertStringContainsString('Theme source theme foobarbaz cannot be found.', trim($process->getErrorOutput()));
+    $this->assertStringContainsString('Theme source theme foobar cannot be found.', trim($process->getErrorOutput()));
     $this->assertSame(1, $result);
   }
 
