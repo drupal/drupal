@@ -31,13 +31,22 @@ class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
 
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
     $typed_data = $this->container->get('typed_data_manager');
-    $data = $typed_data->create($definition, 'user');
 
+    // `core` provides many plugins without the need to install a module.
+    $data = $typed_data->create($definition, 'core');
+    $violations = $data->validate();
+    $this->assertCount(0, $violations);
+
+    $data->setValue('user');
     $violations = $data->validate();
     $this->assertCount(1, $violations);
     $this->assertSame("Module 'user' is not installed.", (string) $violations->get(0)->getMessage());
 
     $this->enableModules(['user']);
+    $this->assertCount(0, $data->validate());
+
+    // NULL should not trigger a validation error: a value may be nullable.
+    $data->setValue(NULL);
     $this->assertCount(0, $data->validate());
 
     $definition->setConstraints(['ExtensionExists' => 'theme']);
@@ -54,6 +63,17 @@ class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
       ->getContainer()
       ->get('typed_data_manager')
       ->create($definition, 'stark');
+    $this->assertCount(0, $data->validate());
+
+    // `core` provides many plugins without the need to install a module, but it
+    // does not work for themes.
+    $data = $typed_data->create($definition, 'core');
+    $violations = $data->validate();
+    $this->assertCount(1, $violations);
+    $this->assertSame("Theme 'core' is not installed.", (string) $violations->get(0)->getMessage());
+
+    // NULL should not trigger a validation error: a value may be nullable.
+    $data->setValue(NULL);
     $this->assertCount(0, $data->validate());
 
     // Anything but a module or theme should raise an exception.
