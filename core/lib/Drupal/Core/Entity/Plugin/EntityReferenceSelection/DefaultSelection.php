@@ -4,6 +4,7 @@ namespace Drupal\Core\Entity\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
@@ -12,11 +13,13 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Exception\UnsupportedEntityTypeDefinitionException;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Entity\Plugin\Derivative\DefaultSelectionDeriver;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -31,15 +34,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
  * @see \Drupal\Core\Entity\Plugin\Derivative\DefaultSelectionDeriver
  * @see plugin_api
- *
- * @EntityReferenceSelection(
- *   id = "default",
- *   label = @Translation("Default"),
- *   group = "default",
- *   weight = 0,
- *   deriver = "Drupal\Core\Entity\Plugin\Derivative\DefaultSelectionDeriver"
- * )
  */
+#[EntityReferenceSelection(
+  id: "default",
+  label: new TranslatableMarkup("Default"),
+  group: "default",
+  weight: 0,
+  deriver: DefaultSelectionDeriver::class,
+)]
 class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface, SelectionWithAutocreateInterface {
 
   /**

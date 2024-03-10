@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -20,14 +21,13 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Plugin implementation of the 'selection' entity_reference.
- *
- * @EntityReferenceSelection(
- *   id = "views",
- *   label = @Translation("Views: Filter by an entity reference view"),
- *   group = "views",
- *   weight = 0
- * )
  */
+#[EntityReferenceSelection(
+  id: "views",
+  label: new TranslatableMarkup("Views: Filter by an entity reference view"),
+  group: "views",
+  weight: 0
+)]
 class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface {
   use StringTranslationTrait;
 

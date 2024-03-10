@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -12,21 +13,21 @@ use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides specific access control for the user entity type.
- *
- * @EntityReferenceSelection(
- *   id = "default:user",
- *   label = @Translation("User selection"),
- *   entity_types = {"user"},
- *   group = "default",
- *   weight = 1
- * )
  */
+#[EntityReferenceSelection(
+  id: "default:user",
+  label: new TranslatableMarkup("User selection"),
+  entity_types: ["user"],
+  group: "default",
+  weight: 1
+)]
 class UserSelection extends DefaultSelection {
 
   /**

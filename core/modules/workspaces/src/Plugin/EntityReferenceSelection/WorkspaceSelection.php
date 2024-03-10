@@ -3,21 +3,22 @@
 namespace Drupal\workspaces\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides specific access control for the workspace entity type.
- *
- * @EntityReferenceSelection(
- *   id = "default:workspace",
- *   label = @Translation("Workspace selection"),
- *   entity_types = {"workspace"},
- *   group = "default",
- *   weight = 1
- * )
  */
+#[EntityReferenceSelection(
+  id: "default:workspace",
+  label: new TranslatableMarkup("Workspace selection"),
+  entity_types: ["workspace"],
+  group: "default",
+  weight: 1
+)]
 class WorkspaceSelection extends DefaultSelection {
 
   /**
