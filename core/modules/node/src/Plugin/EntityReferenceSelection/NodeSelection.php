@@ -2,20 +2,21 @@
 
 namespace Drupal\node\Plugin\EntityReferenceSelection;
 
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\NodeInterface;
 
 /**
  * Provides specific access control for the node entity type.
- *
- * @EntityReferenceSelection(
- *   id = "default:node",
- *   label = @Translation("Node selection"),
- *   entity_types = {"node"},
- *   group = "default",
- *   weight = 1
- * )
  */
+#[EntityReferenceSelection(
+  id: "default:node",
+  label: new TranslatableMarkup("Node selection"),
+  entity_types: ["node"],
+  group: "default",
+  weight: 1
+)]
 class NodeSelection extends DefaultSelection {
 
   /**

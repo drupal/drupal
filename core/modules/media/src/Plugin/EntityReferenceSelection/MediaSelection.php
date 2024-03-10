@@ -2,19 +2,20 @@
 
 namespace Drupal\media\Plugin\EntityReferenceSelection;
 
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides specific access control for the media entity type.
- *
- * @EntityReferenceSelection(
- *   id = "default:media",
- *   label = @Translation("Media selection"),
- *   entity_types = {"media"},
- *   group = "default",
- *   weight = 1
- * )
  */
+#[EntityReferenceSelection(
+  id: "default:media",
+  label: new TranslatableMarkup("Media selection"),
+  entity_types: ["media"],
+  group: "default",
+  weight: 1
+)]
 class MediaSelection extends DefaultSelection {
 
   /**

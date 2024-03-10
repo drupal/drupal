@@ -4,20 +4,21 @@ namespace Drupal\comment\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\comment\CommentInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides specific access control for the comment entity type.
- *
- * @EntityReferenceSelection(
- *   id = "default:comment",
- *   label = @Translation("Comment selection"),
- *   entity_types = {"comment"},
- *   group = "default",
- *   weight = 1
- * )
  */
+#[EntityReferenceSelection(
+  id: "default:comment",
+  label: new TranslatableMarkup("Comment selection"),
+  entity_types: ["comment"],
+  group: "default",
+  weight: 1
+)]
 class CommentSelection extends DefaultSelection {
 
   /**

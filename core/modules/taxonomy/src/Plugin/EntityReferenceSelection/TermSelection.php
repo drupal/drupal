@@ -3,21 +3,22 @@
 namespace Drupal\taxonomy\Plugin\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Provides specific access control for the taxonomy_term entity type.
- *
- * @EntityReferenceSelection(
- *   id = "default:taxonomy_term",
- *   label = @Translation("Taxonomy Term selection"),
- *   entity_types = {"taxonomy_term"},
- *   group = "default",
- *   weight = 1
- * )
  */
+#[EntityReferenceSelection(
+  id: "default:taxonomy_term",
+  label: new TranslatableMarkup("Taxonomy Term selection"),
+  entity_types: ["taxonomy_term"],
+  group: "default",
+  weight: 1
+)]
 class TermSelection extends DefaultSelection {
 
   /**

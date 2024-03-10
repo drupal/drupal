@@ -2,17 +2,19 @@
 
 namespace Drupal\entity_reference_test\Plugin\EntityReferenceSelection;
 
+use Drupal\Core\Entity\Attribute\EntityReferenceSelection;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Allows access to all entities except for the host entity.
- *
- * @EntityReferenceSelection(
- *   id = "entity_test_all_except_host",
- *   label = @Translation("All except host entity."),
- *   group = "entity_test_all_except_host"
- * )
  */
+#[EntityReferenceSelection(
+  id: "entity_test_all_except_host",
+  label: new TranslatableMarkup("All except host entity."),
+  group: "entity_test_all_except_host",
+  weight: 0
+)]
 class AllExceptHostEntity extends DefaultSelection {
 
   /**
