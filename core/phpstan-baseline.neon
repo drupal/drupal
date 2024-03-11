@@ -2173,14 +2173,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Config/ConfigInstallTest.php
 
 		-
-			message: """
-				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Database/ConnectionTest.php
-
-		-
 			message: "#^Variable \\$expected_driver might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
