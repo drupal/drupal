@@ -54,7 +54,8 @@ class FileVideoFormatter extends FileMediaFormatterBase {
         '#size' => 5,
         '#maxlength' => 5,
         '#field_suffix' => $this->t('pixels'),
-        '#min' => 0,
+        // A width of zero pixels would make this video invisible.
+        '#min' => 1,
       ],
       'height' => [
         '#type' => 'number',
@@ -63,7 +64,8 @@ class FileVideoFormatter extends FileMediaFormatterBase {
         '#size' => 5,
         '#maxlength' => 5,
         '#field_suffix' => $this->t('pixels'),
-        '#min' => 0,
+        // A height of zero pixels would make this video invisible.
+        '#min' => 1,
       ],
     ];
   }

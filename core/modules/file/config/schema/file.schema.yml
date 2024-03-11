@@ -95,6 +95,8 @@ field.field_settings.file:
 file.formatter.media:
   type: mapping
   label: 'Media display format settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     controls:
       type: boolean
@@ -105,9 +107,17 @@ file.formatter.media:
     loop:
       type: boolean
       label: 'Loop'
+    # @see \Drupal\file\Plugin\Field\FieldFormatter\FileMediaFormatterBase::settingsForm
     multiple_file_display_type:
       type: string
       label: 'Display of multiple files'
+      constraints:
+        # @see \Drupal\file\Plugin\Field\FieldFormatter\FileMediaFormatterBase::settingsSummary()
+        Choice:
+          # Multiple file display: Multiple HTML tags
+          - tags
+          # Multiple file display: One HTML tag with multiple sources
+          - sources
 
 field.formatter.settings.file_audio:
   type: file.formatter.media
@@ -116,6 +126,8 @@ field.formatter.settings.file_audio:
 field.formatter.settings.file_video:
   type: file.formatter.media
   label: 'Video file display format settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     muted:
       type: boolean
@@ -123,9 +135,17 @@ field.formatter.settings.file_video:
     width:
       type: integer
       label: 'Width'
+      nullable: true
+      constraints:
+        Range:
+          min: 1
     height:
       type: integer
       label: 'Height'
+      nullable: true
+      constraints:
+        Range:
+          min: 1
 
 field.formatter.settings.file_default:
   type: mapping
