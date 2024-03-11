@@ -24,3 +24,8 @@
 .ck-editor__main > .ck-source-editing-area textarea {
   overflow: auto;
 }
+
+/* Enhance visibility of selected/active buttons on the toolbar. */
+.ck-toolbar__items .ck.ck-button.ck-on {
+  border: 1px solid var(--ck-color-button-on-color);
+}
