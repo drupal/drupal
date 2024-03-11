@@ -8,9 +8,6 @@ use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
  * Base class of layouts with configurable widths.
- *
- * @internal
- *   Plugin classes are internal.
  */
 abstract class MultiWidthLayoutBase extends LayoutDefault implements PluginFormInterface {
 
