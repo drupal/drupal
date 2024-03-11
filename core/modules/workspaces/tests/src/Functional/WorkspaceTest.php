@@ -299,6 +299,16 @@ class WorkspaceTest extends BrowserTestBase {
     // 'Live' is no longer the active workspace, so it's 'Switch to Live'
     // operation should be visible now.
     $assert_session->linkExists('Switch to Live');
+
+    // Delete any of the workspace owners and visit workspaces listing.
+    $this->drupalLogin($this->editor2);
+    user_cancel([], $this->editor1->id(), 'user_cancel_reassign');
+    $user = \Drupal::service('entity_type.manager')->getStorage('user')->load($this->editor1->id());
+    $user->delete();
+    $this->drupalGet('/admin/config/workflow/workspaces');
+    $this->assertSession()->pageTextContains('Summer event');
+    $summer_event_workspace_row = $page->find('css', 'table tbody tr:nth-of-type(3)');
+    $this->assertEquals('N/A', $summer_event_workspace_row->find('css', 'td:nth-of-type(2)')->getText());
   }
 
   /**
