@@ -2218,14 +2218,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Image/ToolkitGdTest.php
 
 		-
-			message: """
-				#^Call to deprecated method expectErrorMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/Element/MachineNameTest.php
-
-		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
