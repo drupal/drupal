@@ -47,27 +47,20 @@ class UserAuth implements UserAuthInterface {
       $account_search = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $username]);
 
       if ($account = reset($account_search)) {
-        if ($this->authenticateAccount($account, $password)) {
+        if ($this->passwordChecker->check($password, $account->getPassword())) {
+          // Successful authentication.
           $uid = $account->id();
+
+          // Update user to new password scheme if needed.
+          if ($this->passwordChecker->needsRehash($account->getPassword())) {
+            $account->setPassword($password);
+            $account->save();
+          }
         }
       }
     }
-    return $uid;
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function authenticateAccount(UserInterface $account, #[\SensitiveParameter] string $password): bool {
-    if ($this->passwordChecker->check($password, $account->getPassword())) {
-      // Update user to new password scheme if needed.
-      if ($this->passwordChecker->needsRehash($account->getPassword())) {
-        $account->setPassword($password);
-        $account->save();
-      }
-      return TRUE;
-    }
-    return FALSE;
+    return $uid;
   }
 
 }
