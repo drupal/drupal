@@ -2,17 +2,19 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsCache;
+
 /**
  * Caching plugin that provides no caching at all.
  *
  * @ingroup views_cache_plugins
- *
- * @ViewsCache(
- *   id = "none",
- *   title = @Translation("None"),
- *   help = @Translation("No caching of Views data.")
- * )
  */
+#[ViewsCache(
+  id: 'none',
+  title: new TranslatableMarkup('None'),
+  help: new TranslatableMarkup('No caching of Views data.'),
+)]
 class None extends CachePluginBase {
 
   public function summaryTitle() {

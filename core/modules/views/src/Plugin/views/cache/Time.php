@@ -6,19 +6,20 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsCache;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Simple caching of query results for Views displays.
  *
  * @ingroup views_cache_plugins
- *
- * @ViewsCache(
- *   id = "time",
- *   title = @Translation("Time-based"),
- *   help = @Translation("Simple time-based caching of data.")
- * )
  */
+#[ViewsCache(
+  id: 'time',
+  title: new TranslatableMarkup('Time-based'),
+  help: new TranslatableMarkup('Simple time-based caching of data.'),
+)]
 class Time extends CachePluginBase {
 
   /**
