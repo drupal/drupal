@@ -9,7 +9,7 @@ services:
   Drupal\workspaces\WorkspaceManagerInterface: '@workspaces.manager'
   workspaces.information:
     class: Drupal\workspaces\WorkspaceInformation
-    arguments: [ '@entity_type.manager' ]
+    arguments: [ '@entity_type.manager', '@workspaces.association' ]
   Drupal\workspaces\WorkspaceInformationInterface: '@workspaces.information'
   workspaces.operation_factory:
     class: Drupal\workspaces\WorkspaceOperationFactory
@@ -82,3 +82,12 @@ services:
     decoration_priority: 50
     tags:
       - { name: backend_overridable }
+
+  workspaces.controller.entity_form:
+    # Decorate the entity form controller to handle entity operations inside a
+    # workspace.
+    decorates: controller.entity_form
+    class: Drupal\workspaces\Controller\WorkspacesHtmlEntityFormController
+    public: false
+    arguments: ['@.inner', '@workspaces.manager', '@workspaces.information']
+  Drupal\workspaces\Controller\WorkspacesHtmlEntityFormController: '@workspaces.controller.entity_form'

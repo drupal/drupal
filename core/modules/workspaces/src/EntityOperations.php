@@ -232,10 +232,12 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    // Disallow any change to an unsupported entity when we are not in the
-    // default workspace.
-    if (!$this->workspaceInfo->isEntitySupported($entity)) {
-      throw new \RuntimeException('This entity can only be deleted in the default workspace.');
+    // Prevent the entity from being deleted if the entity type does not have
+    // support for workspaces, or if the entity has a published default
+    // revision.
+    $active_workspace = $this->workspaceManager->getActiveWorkspace();
+    if (!$this->workspaceInfo->isEntitySupported($entity) || !$this->workspaceInfo->isEntityDeletable($entity, $active_workspace)) {
+      throw new \RuntimeException("This {$entity->getEntityType()->getSingularLabel()} can only be deleted in the Live workspace.");
     }
   }
 

@@ -90,6 +90,16 @@ class EntityAccess implements ContainerInjectionInterface {
       return AccessResult::neutral();
     }
 
+    // Prevent the deletion of entities with a published default revision.
+    if ($operation === 'delete') {
+      $active_workspace = $this->workspaceManager->getActiveWorkspace();
+      $is_deletable = $this->workspaceInfo->isEntityDeletable($entity, $active_workspace);
+
+      return AccessResult::forbiddenIf(!$is_deletable)
+        ->addCacheableDependency($entity)
+        ->addCacheableDependency($active_workspace);
+    }
+
     return $this->bypassAccessResult($account);
   }
 
