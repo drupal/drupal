@@ -62,6 +62,12 @@ class EntityTypeInfo implements ContainerInjectionInterface {
         }
       }
 
+      // The 'file' entity type is allowed to perform CRUD operations inside a
+      // workspace without being tracked.
+      if ($entity_type->id() === 'file') {
+        $entity_type->setHandlerClass('workspace', IgnoredWorkspaceHandler::class);
+      }
+
       // Internal entity types are allowed to perform CRUD operations inside a
       // workspace.
       if ($entity_type->isInternal()) {
