@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
 use Drupal\workspaces\Entity\Workspace;
 
 /**
@@ -138,6 +139,19 @@ trait WorkspaceTestTrait {
     }
 
     return $query->execute();
+  }
+
+  /**
+   * Marks an entity type as ignored in a workspace.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   */
+  protected function ignoreEntityType(string $entity_type_id): void {
+    $entity_type = clone \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+    $entity_type->setHandlerClass('workspace', IgnoredWorkspaceHandler::class);
+    \Drupal::state()->set("$entity_type_id.entity_type", $entity_type);
+    \Drupal::entityTypeManager()->clearCachedDefinitions();
   }
 
 }
