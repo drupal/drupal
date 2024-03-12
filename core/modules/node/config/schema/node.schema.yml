@@ -69,6 +69,14 @@ search.plugin.node_search:
         type: integer
         label: 'Influence'
 
+action.configuration.node_assign_owner_action:
+  type: mapping
+  label: 'Change the author of content configuration'
+  mapping:
+    owner_uid:
+      type: text
+      label: 'Username'
+
 action.configuration.node_unpromote_action:
   type: action_configuration_default
   label: 'Demote selected content from front page configuration'
@@ -84,6 +92,17 @@ action.configuration.node_make_sticky_action:
 action.configuration.node_make_unsticky_action:
   type: action_configuration_default
   label: 'Make selected content unsticky configuration'
+
+action.configuration.node_unpublish_by_keyword_action:
+  type: mapping
+  label: 'Unpublish content containing keyword(s) configuration'
+  mapping:
+    keywords:
+      type: sequence
+      label: 'Keywords'
+      sequence:
+        type: string
+        label: 'Keyword'
 
 block.settings.node_syndicate_block:
   type: block_settings

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\action\Kernel;
+namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
@@ -12,17 +12,17 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\system\Entity\Action;
 
 /**
- * {@inheritdoc}
+ * Tests actions provided by the Comment module.
  *
- * @group action
+ * @group comment
  */
-class UnpublishByKeywordCommentTest extends EntityKernelTestBase {
+class CommentActionsTest extends EntityKernelTestBase {
   use CommentTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['action', 'comment', 'entity_test'];
+  protected static $modules = ['comment', 'entity_test'];
 
   /**
    * Keywords used for testing.
