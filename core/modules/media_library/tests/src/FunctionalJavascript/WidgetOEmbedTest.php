@@ -97,14 +97,15 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     // Load the created media item.
     $media_items = Media::loadMultiple();
     $added_media = array_pop($media_items);
+    $added_media_id = $added_media->id();
 
     // Ensure the media item was saved to the library and automatically
     // selected. The added media items should be in the first position of the
     // add form.
     $assert_session->pageTextContains('Add or select media');
     $assert_session->pageTextContains($youtube_title);
-    $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
-    $assert_session->checkboxChecked('media_library_select_form[0]');
+    $assert_session->fieldValueEquals("media_library_select_form[$added_media_id]", $added_media_id);
+    $assert_session->checkboxChecked("media_library_select_form[$added_media_id]");
 
     // Assert the created oEmbed video is correctly added to the widget.
     $this->pressInsertSelected('Added one media item.');
@@ -158,19 +159,20 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     // Load the created media item.
     $media_items = Media::loadMultiple();
     $added_media = array_pop($media_items);
+    $added_media_id = $added_media->id();
     // Ensure the media item was saved to the library and automatically
     // selected. The added media items should be in the first position of the
     // add form.
     $assert_session->pageTextContains('Add or select media');
     $assert_session->pageTextContains('Custom video title');
-    $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
-    $assert_session->checkboxChecked('media_library_select_form[0]');
+    $assert_session->fieldValueEquals("media_library_select_form[$added_media_id]", $added_media_id);
+    $assert_session->checkboxChecked("media_library_select_form[$added_media_id]");
     // Assert the item that was selected before uploading the file is still
     // selected.
     $assert_session->pageTextContains('2 items selected');
     $assert_session->checkboxChecked("Select Custom video title");
     $assert_session->checkboxChecked("Select $youtube_title");
-    $assert_session->hiddenFieldValueEquals('current_selection', implode(',', [$selected_item_id, $added_media->id()]));
+    $assert_session->hiddenFieldValueEquals('current_selection', implode(',', [$selected_item_id, $added_media_id]));
     $selected_checkboxes = [];
     foreach ($this->getCheckboxes() as $checkbox) {
       if ($checkbox->isChecked()) {
@@ -209,7 +211,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $this->waitForText('The media item has been created but has not yet been saved');
     $page->fillField('Name', 'Another video');
     $this->pressSaveButton();
-    $page->uncheckField('media_library_select_form[1]');
+    $page->uncheckField("media_library_select_form[$selected_item_id]");
     $this->waitForText('1 item selected');
     $this->pressInsertSelected('Added one media item.');
     $this->waitForText('Another video');
@@ -283,14 +285,15 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     // Load the created media item.
     $media_items = Media::loadMultiple();
     $added_media = array_pop($media_items);
+    $added_media_id = $added_media->id();
 
     // Ensure the media item was saved to the library and automatically
     // selected. The added media items should be in the first position of the
     // add form.
     $assert_session->pageTextContains('Add or select media');
     $assert_session->pageTextContains($youtube_title);
-    $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
-    $assert_session->checkboxChecked('media_library_select_form[0]');
+    $assert_session->fieldValueEquals("media_library_select_form[$added_media_id]", $added_media_id);
+    $assert_session->checkboxChecked("media_library_select_form[$added_media_id]");
 
     // Assert the created oEmbed video is correctly added to the widget.
     $this->pressInsertSelected('Added one media item.');
@@ -346,19 +349,20 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     // Load the created media item.
     $media_items = Media::loadMultiple();
     $added_media = array_pop($media_items);
+    $added_media_id = $added_media->id();
     // Ensure the media item was saved to the library and automatically
     // selected. The added media items should be in the first position of the
     // add form.
     $assert_session->pageTextContains('Add or select media');
     $assert_session->pageTextContains('Custom video title');
-    $assert_session->fieldValueEquals('media_library_select_form[0]', $added_media->id());
-    $assert_session->checkboxChecked('media_library_select_form[0]');
+    $assert_session->fieldValueEquals("media_library_select_form[$added_media_id]", $added_media_id);
+    $assert_session->checkboxChecked("media_library_select_form[$added_media_id]");
     // Assert the item that was selected before uploading the file is still
     // selected.
     $assert_session->pageTextContains('2 items selected');
     $assert_session->checkboxChecked("Select Custom video title");
     $assert_session->checkboxChecked("Select $youtube_title");
-    $assert_session->hiddenFieldValueEquals('current_selection', implode(',', [$selected_item_id, $added_media->id()]));
+    $assert_session->hiddenFieldValueEquals('current_selection', implode(',', [$selected_item_id, $added_media_id]));
     $selected_checkboxes = [];
     foreach ($this->getCheckboxes() as $checkbox) {
       if ($checkbox->isChecked()) {
@@ -409,10 +413,11 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
 
     $media_items = Media::loadMultiple();
     $added_media = array_pop($media_items);
+    $added_media_id = $added_media->id();
     $this->waitForText('1 item selected');
     $assert_session->checkboxChecked('Select Another video');
     $assert_session->checkboxNotChecked("Select $vimeo_title");
-    $assert_session->hiddenFieldValueEquals('current_selection', $added_media->id());
+    $assert_session->hiddenFieldValueEquals('current_selection', $added_media_id);
     $this->pressInsertSelected('Added one media item.');
     $this->waitForText('Another video');
 

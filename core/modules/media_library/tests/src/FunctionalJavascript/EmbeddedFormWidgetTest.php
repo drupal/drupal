@@ -7,6 +7,7 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\media\Entity\Media;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -136,10 +137,13 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
       return $wrapper->hasButton('Add media');
     });
     // Test reinserting the same selection.
+    $media_items = Media::loadMultiple();
+    $added_media = array_pop($media_items);
+    $added_media_id = $added_media->id();
     $wrapper->pressButton('Add media');
     $this->assertNotNull($assert_session->waitForText('Add or select media'));
     $assert_session->elementExists('xpath', "(//div[contains(@class, 'media-library-item')])[1]")->click();
-    $assert_session->checkboxChecked('media_library_select_form[0]');
+    $assert_session->checkboxChecked("media_library_select_form[$added_media_id]");
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
     $this->assertNotNull($assert_session->waitForElementVisible('xpath', $first_item_locator));
   }
