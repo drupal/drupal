@@ -112,7 +112,7 @@ TOP_LEVEL=$($GIT rev-parse --show-toplevel)
 # This variable will be set to one when the file core/phpcs.xml.dist is changed.
 PHPCS_XML_DIST_FILE_CHANGED=0
 
-# This variable will be set to one when the files core/phpstan-baseline.neon or
+# This variable will be set to one when the files core/.phpstan-baseline.php or
 # core/phpstan.neon.dist are changed.
 PHPSTAN_DIST_FILE_CHANGED=0
 
@@ -153,7 +153,7 @@ for FILE in $FILES; do
     PHPCS_XML_DIST_FILE_CHANGED=1;
   fi;
 
-  if [[ $FILE == "core/phpstan-baseline.neon" || $FILE == "core/phpstan.neon.dist" ]]; then
+  if [[ $FILE == "core/.phpstan-baseline.php" || $FILE == "core/phpstan.neon.dist" ]]; then
     PHPSTAN_DIST_FILE_CHANGED=1;
   fi;
 
