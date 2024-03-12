@@ -27,6 +27,9 @@ process:
         node_publish_action: entity:publish_action:node
         node_unpublish_action: entity:unpublish_action:node
         node_save_action: entity:save_action:node
+        comment_unpublish_by_keyword_action: 0
+        node_unpublish_by_keyword_action: 0
+        node_assign_owner_action: 0
       bypass: true
     -
       plugin: skip_on_empty

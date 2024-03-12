@@ -8,6 +8,7 @@
 use Drupal\Core\Url;
 use Drupal\action\Form\ActionAddForm;
 use Drupal\action\Form\ActionEditForm;
+use Drupal\system\Plugin\migrate\source\Action;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -51,4 +52,21 @@ function action_entity_type_build(array &$entity_types) {
     ->setLinkTemplate('delete-form', '/admin/config/system/actions/configure/{action}/delete')
     ->setLinkTemplate('edit-form', '/admin/config/system/actions/configure/{action}')
     ->setLinkTemplate('collection', '/admin/config/system/actions');
+}
+
+/**
+ * Implements hook_migration_plugins_alter().
+ */
+function action_migration_plugins_alter(array &$migrations) {
+  foreach ($migrations as $migration_id => $migration) {
+    // Add Actions plugins in actions module.
+    /** @var \Drupal\migrate\Plugin\migrate\source\SqlBase $source_plugin */
+    $source_plugin = \Drupal::service('plugin.manager.migration')
+      ->createStubMigration($migration)
+      ->getSourcePlugin();
+    if (is_a($source_plugin, Action::class) && isset($migration['process']['plugin'])) {
+      $migrations[$migration_id]['process']['plugin'][0]['map']['comment_unpublish_by_keyword_action'] = 'comment_unpublish_by_keyword_action';
+      $migrations[$migration_id]['process']['plugin'][0]['map']['node_unpublish_by_keyword_action'] = 'node_unpublish_by_keyword_action';
+    }
+  }
 }
