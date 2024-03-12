@@ -70,4 +70,17 @@ interface WorkspaceInformationInterface {
    */
   public function isEntityTypeIgnored(EntityTypeInterface $entity_type): bool;
 
+  /**
+   * Determines whether an entity can be deleted in the given workspace.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object which needs to be checked.
+   * @param \Drupal\workspaces\WorkspaceInterface $workspace
+   *   The workspace in which the entity needs to be checked.
+   *
+   * @return bool
+   *   TRUE if the entity can be deleted, FALSE otherwise.
+   */
+  public function isEntityDeletable(EntityInterface $entity, WorkspaceInterface $workspace): bool;
+
 }

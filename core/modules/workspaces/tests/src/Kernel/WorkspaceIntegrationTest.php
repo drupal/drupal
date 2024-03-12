@@ -744,7 +744,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     if (!$allowed) {
       $this->expectException(EntityStorageException::class);
-      $this->expectExceptionMessage('This entity can only be deleted in the default workspace.');
+      $this->expectExceptionMessage("This {$entity->getEntityType()->getSingularLabel()} can only be deleted in the Live workspace.");
     }
     $entity->delete();
   }

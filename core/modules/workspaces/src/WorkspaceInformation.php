@@ -28,7 +28,8 @@ class WorkspaceInformation implements WorkspaceInformationInterface {
   protected array $ignored = [];
 
   public function __construct(
-    protected readonly EntityTypeManagerInterface $entityTypeManager
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly WorkspaceAssociationInterface $workspaceAssociation
   ) {}
 
   /**
@@ -106,6 +107,15 @@ class WorkspaceInformation implements WorkspaceInformationInterface {
     }
 
     return $this->ignored[$entity_type->id()];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEntityDeletable(EntityInterface $entity, WorkspaceInterface $workspace): bool {
+    $initial_revisions = $this->workspaceAssociation->getAssociatedInitialRevisions($workspace->id(), $entity->getEntityTypeId());
+
+    return in_array($entity->id(), $initial_revisions, TRUE);
   }
 
 }
