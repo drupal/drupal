@@ -24,6 +24,17 @@ field.widget.settings.comment_default:
   type: mapping
   label: 'Comment display format settings'
 
+action.configuration.comment_unpublish_by_keyword_action:
+  type: mapping
+  label: 'Unpublish comment containing keyword(s) configuration'
+  mapping:
+    keywords:
+      type: sequence
+      label: 'Keywords'
+      sequence:
+        type: string
+        label: 'Keyword'
+
 comment.type.*:
   type: config_entity
   label: 'Comment type settings'
