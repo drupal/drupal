@@ -23,7 +23,12 @@ class ShortcutsBlock extends BlockBase {
    */
   public function build() {
     return [
-      shortcut_renderable_links(shortcut_current_displayed_set()),
+      '#lazy_builder' => ['shortcut.lazy_builders:lazyLinks', [FALSE]],
+      '#create_placeholder' => TRUE,
+      '#cache' => [
+        'keys' => ['shortcut_set_block_links'],
+        'contexts' => ['user'],
+      ],
     ];
   }
 

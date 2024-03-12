@@ -38,16 +38,19 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
   /**
    * #lazy_builder callback; builds shortcut toolbar links.
    *
+   * @param bool $show_configure_link
+   *   Boolean to indicate whether to include the configure link or not.
+   *
    * @return array
    *   A renderable array of shortcut links.
    */
-  public function lazyLinks() {
+  public function lazyLinks(bool $show_configure_link = TRUE) {
     $shortcut_set = shortcut_current_displayed_set();
 
     $links = shortcut_renderable_links();
 
     $configure_link = NULL;
-    if (shortcut_set_edit_access($shortcut_set)->isAllowed()) {
+    if ($show_configure_link && shortcut_set_edit_access($shortcut_set)->isAllowed()) {
       $configure_link = [
         '#type' => 'link',
         '#title' => t('Edit shortcuts'),
