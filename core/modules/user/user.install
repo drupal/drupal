@@ -94,6 +94,34 @@ function user_install() {
 }
 
 /**
+ * Implements hook_requirements().
+ */
+function user_requirements($phase): array {
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  $result = (bool) \Drupal::entityQuery('user')
+    ->accessCheck(FALSE)
+    ->condition('uid', 0)
+    ->range(0, 1)
+    ->execute();
+
+  if ($result === FALSE) {
+    return [
+      'anonymous user' => [
+        'title' => t('Anonymous user'),
+        'description' => t('The anonymous user does not exist. See the <a href=":url">restore the anonymous (user ID 0) user record</a> for more information', [
+          ':url' => 'https://www.drupal.org/node/1029506',
+        ]),
+        'severity' => REQUIREMENT_WARNING,
+      ],
+    ];
+  }
+  return [];
+}
+
+/**
  * Implements hook_update_last_removed().
  */
 function user_update_last_removed() {
