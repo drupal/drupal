@@ -383,7 +383,7 @@ default:
         php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
         # Generate a new baseline.
         echo "Generating an PHPStan baseline file (available as job artifact)."
-        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/phpstan-baseline.neon || true
+        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/.phpstan-baseline.php || true
         exit $EXIT_CODE
       fi
 
@@ -394,7 +394,7 @@ default:
     # Only store the baseline if the job fails.
     when: on_failure
     paths:
-      - core/phpstan-baseline.neon
+      - core/.phpstan-baseline.php
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer, *default-job-settings-lint ]
