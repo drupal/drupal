@@ -24,6 +24,7 @@ class MigrateSearchSettingsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig(['search']);
     $this->executeMigration('d6_search_settings');
   }
 
