@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh webide
+# cspell:ignore codequality Micheh micheh webide updatedb
 
 ################
 # Drupal GitLabCI template.
@@ -460,3 +460,60 @@ default:
         echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_DIFF_BASE_SHA is ${CI_MERGE_REQUEST_DIFF_BASE_SHA}";
       fi;
     - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
+
+'📔 Validatable config':
+  <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  # Run on MRs if config schema files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - "**/config/schema/*.schema.yml"
+        # Modules may alter config schema using hook_config_schema_info_alter().
+        - "**/*.module"
+    - when: manual
+      allow_failure: true
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'validatable-config'
+    paths:
+      - HEAD.json
+      - MR.json
+  # This job must pass, but must also not disrupt Drupal core's CI if dependencies are not core-compatible.
+  allow_failure:
+    exit_codes:
+      # `composer require …` fails (implies no version available compatible with Drupal core)
+      - 100
+      # `drush pm:install config_inspector …` fails (implies failure during module installation)
+      - 101
+  script:
+    # Revert back to the tip of the branch this MR started from.
+    - git checkout -f $CI_MERGE_REQUEST_DIFF_BASE_SHA
+    # Composer-install Drush & the Config Inspector module.
+    - composer require drush/drush drupal/config_inspector || exit 100
+    # Install Drupal's Standard install profile + all core modules + the config inspector module.
+    - php core/scripts/drupal install standard
+    - ls core/modules | xargs vendor/bin/drush pm:install --yes
+    - vendor/bin/drush pm:install config_inspector --yes --quiet || exit 101
+    # Compute statistics for coverage of validatable config for HEAD.
+    - vendor/bin/drush config:inspect --statistics > HEAD.json
+    # Return to the MR commit being tested, conditionally install updates, always rebuild the container.
+    - git checkout -f $CI_COMMIT_SHA
+    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA --name-only | grep -q '.install$\|.post_update\.php$' && echo '🤖 Installing DB updates…' && vendor/bin/drush updatedb --yes --quiet
+    - vendor/bin/drush cr --quiet
+    # Compute statistics for coverage of validatable config for MR.
+    - vendor/bin/drush config:inspect --statistics > MR.json
+    # Output diff, but never fail the job.
+    - diff -u HEAD.json MR.json || true
+    # Determine if this increased or decreased coverage. Fail the job if it is worse. All the
+    # percentages must be equal or higher, with the exception of `typesInUse`.
+    - |
+      php -r '
+         $head = json_decode(file_get_contents("HEAD.json"), TRUE)["assessment"];
+         $mr = json_decode(file_get_contents("MR.json"), TRUE)["assessment"];
+         unset($head["_description"], $head["typesInUse"], $mr["_description"], $mr["typesInUse"]);
+         $impact = array_map(fn (float $h, float $m) => $m-$h, $head, $mr);
+         exit((int) (min($impact) < 0));
+      '
