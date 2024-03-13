@@ -1,0 +1,30 @@
+# Schema for the configuration files of the Action module.
+action.configuration.comment_unpublish_by_keyword_action:
+  type: mapping
+  label: 'Unpublish comment containing keyword(s) configuration'
+  mapping:
+    keywords:
+      type: sequence
+      label: 'Keywords'
+      sequence:
+        type: string
+        label: 'Keyword'
+
+action.configuration.node_unpublish_by_keyword_action:
+  type: mapping
+  label: 'Unpublish content containing keyword(s) configuration'
+  mapping:
+    keywords:
+      type: sequence
+      label: 'Keywords'
+      sequence:
+        type: string
+        label: 'Keyword'
+
+action.configuration.node_assign_owner_action:
+  type: mapping
+  label: 'Change the author of content configuration'
+  mapping:
+    owner_uid:
+      type: text
+      label: 'Username'
