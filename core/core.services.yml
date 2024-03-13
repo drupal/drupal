@@ -1790,17 +1790,24 @@ services:
   Drupal\Component\Utility\EmailValidatorInterface: '@email.validator'
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
-    factory: ['@update.update_hook_registry_factory', create]
+    arguments: ['%container.modules%', '@keyvalue']
   Drupal\Core\Update\UpdateHookRegistry: '@update.update_hook_registry'
   update.update_hook_registry_factory:
     class: Drupal\Core\Update\UpdateHookRegistryFactory
     parent: container.trait
+    deprecated: The "%service_id%" service is deprecated. You should use the 'update.update_hook_registry' service instead. See https://www.drupal.org/node/3423659
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
-    factory: ['@update.post_update_registry_factory', create]
+    arguments: ['%app.root%', '%site.path%', '%container.modules%', '@update.key_value.post_update', '@theme_handler', 'post_update']
+  update.key_value.post_update:
+    class: Drupal\Core\KeyValueStore\KeyValueStoreInterface
+    factory: ['@keyvalue', 'get']
+    arguments: ['post_update']
+    public: false
   update.post_update_registry_factory:
     class: Drupal\Core\Update\UpdateRegistryFactory
     parent: container.trait
+    deprecated: The "%service_id%" service is deprecated. You should use the 'update.post_update_registry' service instead. See https://www.drupal.org/node/3423659
   uuid:
     class: Drupal\Component\Uuid\Php
   Drupal\Component\Uuid\UuidInterface: '@uuid'
