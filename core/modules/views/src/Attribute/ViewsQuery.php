@@ -22,21 +22,22 @@ class ViewsQuery extends Plugin {
    *
    * @param string $id
    *   The plugin ID.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $title
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $title
    *   The plugin title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $short_title
    *   (optional) The short title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $help
-   *   A short help string; this is displayed in the views UI.
+   *   (optional) A short help string; this is displayed in the views UI.
    * @param bool $no_ui
-   *   Whether or not the plugin is selectable in the UI. If it's set to TRUE,
-   *   you can still use it via the API in config files.
+   *   (optional) Whether the plugin should be not selectable in the UI.
+   *   If set to TRUE, you can still use it via the API in config files.
+   *   Defaults to FALSE.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
-    public readonly ?TranslatableMarkup $title = NULL,
+    public readonly ?TranslatableMarkup $title,
     public readonly ?TranslatableMarkup $short_title = NULL,
     public readonly ?TranslatableMarkup $help = NULL,
     public readonly bool $no_ui = FALSE,
