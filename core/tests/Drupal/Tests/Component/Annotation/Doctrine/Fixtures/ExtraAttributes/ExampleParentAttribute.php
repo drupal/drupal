@@ -3,6 +3,6 @@
 namespace Drupal\Tests\Component\Annotation\Doctrine\Fixtures\ExtraAttributes;
 
 #[\Attribute]
-final class ExampleAttribute extends ExampleParentAttribute
-{
+class ExampleParentAttribute {
+
 }

@@ -205,7 +205,7 @@ class StaticReflectionParser
                     break;
                 case T_CLASS:
                     // Convert the attributes to fully qualified names.
-                    $this->classAttributes = array_map(fn($name) => strtolower($this->fullySpecifyName($name)), $attributeNames);
+                    $this->classAttributes = array_map(fn($name) => $this->fullySpecifyName($name), $attributeNames);
                     if ($last_token !== T_PAAMAYIM_NEKUDOTAYIM && $last_token !== T_NEW) {
                         $this->docComment['class'] = $docComment;
                         $docComment                = '';
@@ -346,7 +346,13 @@ class StaticReflectionParser
     public function hasClassAttribute(string $attribute): bool
     {
         $this->parse();
-        return in_array('\\' . ltrim(strtolower($attribute), '\\'), $this->classAttributes, TRUE);
+        foreach ($this->classAttributes as $classAttribute) {
+            if (is_a($classAttribute, $attribute, TRUE)) {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
     }
 
     /**
