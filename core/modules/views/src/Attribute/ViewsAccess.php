@@ -36,6 +36,7 @@ class ViewsAccess extends Plugin {
    * @param bool $no_ui
    *   (optional) Whether the plugin should be not selectable in the UI.
    *   If set to TRUE, you can still use it via the API in config files.
+   *   Defaults to FALSE.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
    */

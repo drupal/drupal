@@ -31,11 +31,12 @@ class ViewsCache extends Plugin {
    *   For example the Feed display defines the type 'feed', so only rss style
    *   and row plugins can be used in the views UI.
    * @param string[] $base
-   *   The base tables on which this cache plugin can be used.
+   *   (optional) The base tables on which this cache plugin can be used.
    *   If no base table is specified the plugin can be used with all tables.
    * @param bool $no_ui
-   *   Whether the plugin should be not selectable in the UI.
+   *   (optional) Whether the plugin should be not selectable in the UI.
    *   If set to TRUE, you can still use it via the API in config files.
+   *   Defaults to FALSE.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
