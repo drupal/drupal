@@ -62,10 +62,8 @@ field.value.text_long:
       type: string
       label: 'Text format'
 
-field.storage_settings.text_with_summary:
-  label: 'Text (formatted, long, with summary) settings'
-  type: mapping
-
+# This field type has no field storage settings, so no specific config schema type.
+# @see `type: field.storage_settings.*`
 field.field_settings.text_with_summary:
   type: mapping
   label: 'Text (formatted, long, with summary) settings'

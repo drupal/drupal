@@ -1,5 +1,7 @@
 # Schema for the configuration files of the Datetime module.
 
+# This field type has no field instance settings, so no specific config schema type.
+# @see `type: field.field_settings.*`
 field.storage_settings.datetime:
   type: mapping
   label: 'Datetime settings'
@@ -7,10 +9,6 @@ field.storage_settings.datetime:
     datetime_type:
       type: string
       label: 'Date type'
-
-field.field_settings.datetime:
-  type: mapping
-  label: 'Datetime settings'
 
 field.value.datetime:
   type: mapping
