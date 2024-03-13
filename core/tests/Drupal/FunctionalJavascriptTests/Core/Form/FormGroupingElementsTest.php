@@ -165,4 +165,53 @@ class FormGroupingElementsTest extends WebDriverTestBase {
     $this->assertNotNull($assert_session->waitForElementVisible('css', '[name="element_2"].error'));
   }
 
+  /**
+   * Tests form submit with a required field in closed details element.
+   */
+  public function testDetailsContainsRequiredTextfield(): void {
+    $this->drupalGet('form_test/details-contains-required-textfield');
+    $details = $this->assertSession()->elementExists('css', 'details[data-drupal-selector="edit-meta"]');
+
+    // Make sure details element is not open at the beginning.
+    $this->assertFalse($details->hasAttribute('open'));
+
+    $textfield = $this->assertSession()->elementExists('css', 'input[name="required_textfield_in_details"]');
+
+    // The text field inside the details element is not visible too.
+    $this->assertFalse($textfield->isVisible(), 'Text field is not visible');
+
+    // Submit the form with invalid data in the required fields.
+    $this->assertSession()
+      ->elementExists('css', 'input[data-drupal-selector="edit-submit"]')
+      ->click();
+    // Confirm the required field is visible.
+    $this->assertTrue($textfield->isVisible(), 'Text field is visible');
+  }
+
+  /**
+   * Tests required field in closed details element with ajax form.
+   */
+  public function testDetailsContainsRequiredTextfieldAjaxForm(): void {
+    $this->drupalGet('form_test/details-contains-required-textfield/true');
+    $assert_session = $this->assertSession();
+    $textfield = $assert_session->elementExists('css', 'input[name="required_textfield_in_details"]');
+
+    // Submit the ajax form to open the details element at the first time.
+    $assert_session->elementExists('css', 'input[value="Submit Ajax"]')
+      ->click();
+
+    $assert_session->waitForElementVisible('css', 'input[name="required_textfield_in_details"]');
+
+    // Close the details element.
+    $assert_session->elementExists('css', 'form summary')
+      ->click();
+
+    // Submit the form with invalid data in the required fields without ajax.
+    $assert_session->elementExists('css', 'input[data-drupal-selector="edit-submit"]')
+      ->click();
+
+    // Confirm the required field is visible.
+    $this->assertTrue($textfield->isVisible(), 'Text field is visible');
+  }
+
 }

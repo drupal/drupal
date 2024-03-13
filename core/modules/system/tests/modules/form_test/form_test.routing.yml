@@ -433,6 +433,15 @@ form_test.details_form:
   requirements:
     _access: 'TRUE'
 
+form_test.details_contains_required_textfield:
+  path: '/form_test/details-contains-required-textfield/{use_ajax}'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestDetailsContainsRequiredTextfieldForm'
+    _title: 'Form details contains required textfield test'
+    use_ajax: FALSE
+  requirements:
+    _access: 'TRUE'
+
 form_test.description_display:
   path: '/form_test/form-descriptions'
   defaults:
