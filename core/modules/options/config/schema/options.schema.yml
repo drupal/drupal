@@ -1,5 +1,7 @@
 # Schema for the configuration files of the Options module.
 
+# This field type has no field instance settings, so no specific config schema type.
+# @see `type: field.field_settings.*`
 field.storage_settings.list_integer:
   type: mapping
   label: 'List (integer) settings'
@@ -21,10 +23,6 @@ field.storage_settings.list_integer:
       type: string
       label: 'Allowed values function'
 
-field.field_settings.list_integer:
-  label: 'List (integer) settings'
-  type: mapping
-
 field.value.list_integer:
   type: mapping
   label: 'Default value'
@@ -33,6 +31,8 @@ field.value.list_integer:
       type: integer
       label: 'Value'
 
+# This field type has no field instance settings, so no specific config schema type.
+# @see `type: field.field_settings.*`
 field.storage_settings.list_float:
   type: mapping
   label: 'List (float) settings'
@@ -54,10 +54,6 @@ field.storage_settings.list_float:
       type: string
       label: 'Allowed values function'
 
-field.field_settings.list_float:
-  label: 'List (float) settings'
-  type: mapping
-
 field.value.list_float:
   type: mapping
   label: 'Default value'
@@ -66,6 +62,8 @@ field.value.list_float:
       type: string
       label: 'Value'
 
+# This field type has no field instance settings, so no specific config schema type.
+# @see `type: field.field_settings.*`
 field.storage_settings.list_string:
   type: mapping
   label: 'List (text) settings'
@@ -86,10 +84,6 @@ field.storage_settings.list_string:
     allowed_values_function:
       type: string
       label: 'Allowed values function'
-
-field.field_settings.list_string:
-  label: 'List (text) settings'
-  type: mapping
 
 field.value.list_string:
   type: mapping

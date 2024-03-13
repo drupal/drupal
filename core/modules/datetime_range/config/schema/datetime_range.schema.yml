@@ -1,13 +1,10 @@
 # Schema for the configuration files of the Datetime Range module.
 
 # Daterange field type.
-
+# This field type has no field instance settings, so no specific config schema type.
+# @see `type: field.field_settings.*`
 field.storage_settings.daterange:
   type: field.storage_settings.datetime
-  label: 'Date range settings'
-
-field.field_settings.daterange:
-  type: field.field_settings.datetime
   label: 'Date range settings'
 
 field.value.daterange:
