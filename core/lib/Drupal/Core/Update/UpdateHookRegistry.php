@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Update;
 
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 
 /**
@@ -50,16 +51,24 @@ class UpdateHookRegistry {
   protected $allAvailableSchemaVersions = [];
 
   /**
-   * Constructs a new UpdateRegistry.
+   * Constructs a new UpdateHookRegistry.
    *
-   * @param string[] $enabled_modules
-   *   A list of enabled modules.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value
-   *   The key value store.
+   * @param array $module_list
+   *   An associative array whose keys are the names of installed modules.
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The key value factory.
    */
-  public function __construct(array $enabled_modules, KeyValueStoreInterface $key_value) {
-    $this->enabledModules = $enabled_modules;
-    $this->keyValue = $key_value;
+  public function __construct(array $module_list, KeyValueStoreInterface|KeyValueFactoryInterface $key_value_factory) {
+    if ($module_list !== [] && array_is_list($module_list)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $enabled_modules argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use an associative array whose keys are the names of installed modules instead. See https://www.drupal.org/node/3423659', E_USER_DEPRECATED);
+      $module_list = \Drupal::service('module_handler')->getModuleList();
+    }
+    if ($key_value_factory instanceof KeyValueStoreInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $key_value_factory argument as a KeyValueStoreInterface instead of a KeyValueFactoryInterface is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3423659', E_USER_DEPRECATED);
+      $key_value_factory = \Drupal::service('keyvalue');
+    }
+    $this->enabledModules = array_keys($module_list);
+    $this->keyValue = $key_value_factory->get('system.schema');
   }
 
   /**
