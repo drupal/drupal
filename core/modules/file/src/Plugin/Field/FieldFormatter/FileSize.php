@@ -3,30 +3,22 @@
 namespace Drupal\file\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\Attribute\FieldFormatter;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Formatter that shows the file size in a human readable way.
+ * Formatter that shows the file byte size in a human-readable way.
  */
 #[FieldFormatter(
   id: 'file_size',
-  label: new TranslatableMarkup('File size'),
+  label: new TranslatableMarkup('Bytes (KB, MB, ...)'),
   field_types: [
     'integer',
   ],
 )]
 class FileSize extends FormatterBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    return parent::isApplicable($field_definition) && $field_definition->getName() === 'filesize';
-  }
 
   /**
    * {@inheritdoc}
