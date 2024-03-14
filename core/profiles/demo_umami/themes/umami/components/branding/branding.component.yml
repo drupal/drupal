@@ -18,9 +18,20 @@ props:
   type: object
 
   properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Wrapper attributes.
     site_logo:
       type: string
-    site_name:
+      format: iri-reference
+    url:
       type: string
-    site_slogan:
-      type: string
+      title: Branding url
+      format: iri-reference
+
+slots:
+  site_name:
+    type: string
+  site_slogan:
+    type: string

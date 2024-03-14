@@ -19,8 +19,6 @@ props:
       type: Drupal\Core\Template\Attribute
       title: Attributes
       description: Wrapper attributes.
-    label:
-      type: string
 
 # Slots always hold arbitrary markup. We know that beforehand, so no need for
 # a schema for slots.

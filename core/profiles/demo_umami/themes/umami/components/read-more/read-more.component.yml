@@ -11,13 +11,22 @@ status: experimental
 # syntax there.
 props:
   type: object
+  required:
+    - url
   properties:
-    a11y:
-      type: string
-      title: Read More screen reader text
-    text:
-      type: string
-      title: Read More text
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Link attributes.
     url:
       type: string
       title: Read More url
+      format: iri-reference
+
+slots:
+  a11y:
+    type: string
+    title: Read More screen reader text
+  text:
+    type: string
+    title: Read More text

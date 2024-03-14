@@ -13,8 +13,14 @@
 #}
 {% block content %}
   {% embed 'umami:disclaimer' with {
-    disclaimer: content.field_disclaimer,
-    copyright: content.field_copyright,
+    attributes: create_attribute(),
+    content,
   } only %}
+    {% block copyright %}
+      {{ content.field_copyright }}
+    {% endblock %}
+    {% block disclaimer %}
+      {{ content.field_disclaimer }}
+    {% endblock %}
   {% endembed %}
 {% endblock %}
