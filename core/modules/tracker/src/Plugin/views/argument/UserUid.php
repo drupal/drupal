@@ -3,14 +3,16 @@
 namespace Drupal\tracker\Plugin\views\argument;
 
 use Drupal\comment\Plugin\views\argument\UserUid as CommentUserUid;
+use Drupal\views\Attribute\ViewsArgument;
 
 /**
  * UID argument to check for nodes that user posted or commented on.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("tracker_user_uid")
  */
+#[ViewsArgument(
+  id: 'tracker_user_uid',
+)]
 class UserUid extends CommentUserUid {
 
   /**

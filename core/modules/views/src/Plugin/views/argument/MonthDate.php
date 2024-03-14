@@ -2,11 +2,14 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\views\Attribute\ViewsArgument;
+
 /**
  * Argument handler for a month (MM)
- *
- * @ViewsArgument("date_month")
  */
+#[ViewsArgument(
+  id: 'date_month',
+)]
 class MonthDate extends Date {
 
   /**

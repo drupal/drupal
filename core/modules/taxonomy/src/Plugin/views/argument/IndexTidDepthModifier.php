@@ -3,6 +3,7 @@
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 
 /**
@@ -12,9 +13,10 @@ use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
  * because it uses a subquery to find nodes with.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("taxonomy_index_tid_depth_modifier")
  */
+#[ViewsArgument(
+  id: 'taxonomy_index_tid_depth_modifier',
+)]
 class IndexTidDepthModifier extends ArgumentPluginBase {
 
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {}

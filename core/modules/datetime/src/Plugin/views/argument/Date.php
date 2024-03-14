@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\views\argument\Date as NumericDate;
 
@@ -22,9 +23,10 @@ use Drupal\views\Plugin\views\argument\Date as NumericDate;
  * @see \Drupal\views\ManyToOneHelper
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("datetime")
  */
+#[ViewsArgument(
+  id: 'datetime',
+)]
 class Date extends NumericDate {
 
   use FieldAPIHandlerTrait;

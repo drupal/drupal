@@ -2,6 +2,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
+use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Drupal\taxonomy\VocabularyStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -10,9 +11,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Argument handler to accept a vocabulary id.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("vocabulary_vid")
- */
+  */
+#[ViewsArgument(
+  id: 'vocabulary_vid',
+)]
 class VocabularyVid extends NumericArgument {
 
   /**

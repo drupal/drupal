@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin;
 
+use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -48,11 +49,14 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
    */
   public function __construct($handler_type, \Traversable $namespaces, ViewsData $views_data, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($handler_type);
+    // Special handling until all views plugins have attribute classes.
+    $attribute_name_candidate = 'Drupal\views\Attribute\Views' . Container::camelize($handler_type);
+    $plugin_definition_attribute_name = class_exists($attribute_name_candidate) ? $attribute_name_candidate : Plugin::class;
     $plugin_interface = 'Drupal\views\Plugin\views\ViewsHandlerInterface';
     if ($handler_type == 'join') {
       $plugin_interface = 'Drupal\views\Plugin\views\join\JoinPluginInterface';
     }
-    parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_interface, $plugin_definition_annotation_name);
+    parent::__construct("Plugin/views/$handler_type", $namespaces, $module_handler, $plugin_interface, $plugin_definition_attribute_name, $plugin_definition_annotation_name);
 
     $this->setCacheBackend($cache_backend, "views:$handler_type");
     $this->alterInfo('views_plugins_' . $handler_type);

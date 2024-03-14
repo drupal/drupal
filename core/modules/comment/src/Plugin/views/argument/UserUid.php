@@ -3,6 +3,7 @@
 namespace Drupal\comment\Plugin\views\argument;
 
 use Drupal\Core\Database\Connection;
+use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -12,9 +13,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Accepts a user ID to check for nodes that the user posted or commented on.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("argument_comment_user_uid")
- */
+  */
+#[ViewsArgument(
+  id: 'argument_comment_user_uid',
+)]
 class UserUid extends ArgumentPluginBase {
 
   /**

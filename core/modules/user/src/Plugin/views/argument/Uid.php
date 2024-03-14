@@ -3,6 +3,7 @@
 namespace Drupal\user\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -10,9 +11,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Argument handler to accept a user id.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("user_uid")
  */
+#[ViewsArgument(
+  id: 'user_uid'
+)]
 class Uid extends NumericArgument {
 
   /**

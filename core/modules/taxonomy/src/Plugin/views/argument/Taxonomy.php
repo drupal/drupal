@@ -4,6 +4,7 @@ namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -11,9 +12,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Argument handler for basic taxonomy tid.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("taxonomy")
  */
+#[ViewsArgument(
+  id: 'taxonomy',
+)]
 class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterface {
 
   /**

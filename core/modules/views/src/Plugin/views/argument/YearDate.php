@@ -2,11 +2,14 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\views\Attribute\ViewsArgument;
+
 /**
  * Argument handler for a year (CCYY)
- *
- * @ViewsArgument("date_year")
- */
+  */
+#[ViewsArgument(
+  id: 'date_year',
+)]
 class YearDate extends Date {
 
   /**

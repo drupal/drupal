@@ -2,15 +2,17 @@
 
 namespace Drupal\node\Plugin\views\argument;
 
+use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\node\NodeStorageInterface;
 
 /**
  * Argument handler to accept a node revision id.
- *
- * @ViewsArgument("node_vid")
  */
+#[ViewsArgument(
+  id: 'node_vid',
+)]
 class Vid extends NumericArgument {
 
   /**
