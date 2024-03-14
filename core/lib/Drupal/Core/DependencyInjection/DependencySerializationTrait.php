@@ -72,14 +72,19 @@ trait DependencySerializationTrait {
    */
   #[\ReturnTypeWillChange]
   public function __wakeup() {
+    // Avoid trying to wakeup if there's nothing to do.
+    if (empty($this->_serviceIds) && empty($this->_entityStorages)) {
+      return;
+    }
+    $container = \Drupal::getContainer();
     foreach ($this->_serviceIds as $key => $service_id) {
-      $this->$key = \Drupal::service($service_id);
+      $this->$key = $container->get($service_id);
     }
     $this->_serviceIds = [];
 
     if ($this->_entityStorages) {
       /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-      $entity_type_manager = \Drupal::service('entity_type.manager');
+      $entity_type_manager = $container->get('entity_type.manager');
       foreach ($this->_entityStorages as $key => $entity_type_id) {
         $this->$key = $entity_type_manager->getStorage($entity_type_id);
       }
