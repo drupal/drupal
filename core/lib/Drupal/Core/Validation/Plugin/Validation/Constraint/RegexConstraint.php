@@ -17,8 +17,6 @@ use Symfony\Component\Validator\Constraints\Regex;
 )]
 class RegexConstraint extends Regex {
 
-  public $message = 'This value is not valid.';
-
   /**
    * {@inheritdoc}
    */

@@ -20,9 +20,9 @@ class EmailConstraint extends Email {
   /**
    * {@inheritdoc}
    */
-  public function __construct($options = []) {
-    $options += ['mode' => 'strict'];
-    parent::__construct($options);
+  public function __construct(...$args) {
+    $this->mode = static::VALIDATION_MODE_STRICT;
+    parent::__construct(...$args);
   }
 
   /**
