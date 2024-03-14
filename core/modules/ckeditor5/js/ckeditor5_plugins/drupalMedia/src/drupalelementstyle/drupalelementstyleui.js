@@ -9,8 +9,8 @@ import {
   ButtonView,
   createDropdown,
   DropdownButtonView,
-  Model,
   SplitButtonView,
+  ViewModel,
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
 import { isObject } from '../utils';
@@ -428,7 +428,7 @@ export default class DrupalElementStyleUi extends Plugin {
     definedStyles.forEach((style) => {
       const definition = {
         type: 'button',
-        model: new Model({
+        model: new ViewModel({
           group,
           commandValue: style.name,
           label: style.title,
