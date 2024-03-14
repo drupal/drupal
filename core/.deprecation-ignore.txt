@@ -27,10 +27,6 @@
 # testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
 %The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
 
-# Skip deprecations warning for overriding Symfony properties in validation
-# constraints. See https://www.drupal.org/project/drupal/issues/3425150.
-%The "Symfony\\Component\\Validator\\Constraints\\[^"]+::\$[^"]+" property is considered final. You should not override it in "[^"]+"%
-
 # Drupal 11.
 %Drupal\\Core\\Form\\FormBuilder::getForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
 %Drupal\\Core\\Form\\FormBuilder::submitForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
