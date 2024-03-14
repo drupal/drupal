@@ -13,6 +13,7 @@ use Drupal\user\Entity\User;
  * Tests configuration of actions provided by the Node module.
  *
  * @group action
+ * @group legacy
  */
 class NodeActionsConfigurationTest extends BrowserTestBase {
 

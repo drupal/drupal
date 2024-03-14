@@ -8,6 +8,7 @@ use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group action
+ * @group legacy
  */
 class ActionJsonCookieTest extends ActionResourceTestBase {
 

@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests that uninstalling Actions UI does not remove other modules' actions.
  *
  * @group action
+ * @group legacy
  * @see \Drupal\views\Plugin\views\field\BulkForm
  * @see \Drupal\user\Plugin\Action\BlockUser
  */

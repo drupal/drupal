@@ -11,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests complex actions configuration.
  *
  * @group action
+ * @group legacy
  */
 class ConfigurationTest extends BrowserTestBase {
 

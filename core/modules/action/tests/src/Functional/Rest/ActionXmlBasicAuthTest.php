@@ -9,6 +9,7 @@ use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrai
 
 /**
  * @group action
+ * @group legacy
  */
 class ActionXmlBasicAuthTest extends ActionResourceTestBase {
 

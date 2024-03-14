@@ -14,6 +14,7 @@ use Drupal\user\RoleInterface;
  *
  * @group action
  * @group #slow
+ * @group legacy
  */
 class ActionTest extends ConfigEntityResourceTestBase {
 
