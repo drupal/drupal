@@ -48,11 +48,14 @@
 %}
 
 {% embed "umami:badge" with {
-  icon: 'knife',
-  label: label,
+  icon: 'difficulty',
+  label,
   items,
   attributes: attributes.addClass(classes),
 } only %}
+  {% block label %}
+    {{ label }}
+  {% endblock %}
   {% block text %}
     {% for item in items %}
       <div{{ item.attributes.addClass('umami-badge__item') }}>{{ item.content }}</div>

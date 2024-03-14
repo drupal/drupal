@@ -1,12 +1,8 @@
-<div class="disclaimer">
-  {% if disclaimer %}
-    <div class="disclaimer__disclaimer">
-      {{ disclaimer }}
-    </div>
-  {% endif %}
-  {% if copyright %}
-    <div class="disclaimer__copyright">
-      {{ copyright }}
-    </div>
-  {% endif %}
+<div{{ attributes.addClass('disclaimer') }}>
+  <div class="disclaimer__disclaimer">
+    {% block disclaimer %}{% endblock %}
+  </div>
+  <div class="disclaimer__copyright">
+    {% block copyright %}{% endblock %}
+  </div>
 </div>

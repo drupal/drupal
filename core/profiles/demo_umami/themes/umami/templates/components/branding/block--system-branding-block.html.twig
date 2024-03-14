@@ -14,9 +14,18 @@
  */
 #}
 {% block content %}
-  {{ include('umami:branding', {
-    site_logo: site_logo,
-    site_name: site_name,
-    site_slogan: site_slogan
-    }, with_context = false) }}
+  {% embed 'umami:branding' with {
+    attributes: create_attribute(),
+    site_logo,
+    site_name,
+    site_slogan,
+    url: path('<front>'),
+  } only %}
+    {% block site_name %}
+      {{ site_name }}
+    {% endblock %}
+    {% block site_slogan %}
+      {{ site_slogan }}
+    {% endblock %}
+  {% endembed %}
 {% endblock %}

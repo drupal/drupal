@@ -16,6 +16,8 @@ props:
       type: Drupal\Core\Template\Attribute
       title: Attributes
       description: Wrapper attributes.
+    label:
+      type: string
     html_tag:
       type: string
       title: HTML tag for title
@@ -30,9 +32,11 @@ props:
         - span
       # Provide a default value
       default: h2
-    title_prefix:
-      type: object
-      title: Title prefix
-    title_suffix:
-      type: object
-      title: Title suffix
+
+slots:
+  title_prefix:
+    type: object
+    title: Title prefix
+  title_suffix:
+    type: object
+    title: Title suffix

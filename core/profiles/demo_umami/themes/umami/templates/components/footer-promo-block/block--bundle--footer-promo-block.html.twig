@@ -39,12 +39,19 @@
     {{ content.field_media_image }}
   {% endblock %}
   {% block content %}
-    {% include "umami:title" with {
+    {% embed "umami:title" with {
       attributes: title_attributes.addClass('footer-block__title'),
       label: label ? label : content.field_title,
       title_prefix,
       title_suffix,
     } only %}
+      {% block title_prefix %}
+        {{ title_prefix }}
+      {% endblock %}
+      {% block title_suffix %}
+        {{ title_suffix }}
+      {% endblock %}
+    {% endembed %}
     {% if not label %}
       {{ content|without('field_title')|without('field_media_image') }}
     {% else %}

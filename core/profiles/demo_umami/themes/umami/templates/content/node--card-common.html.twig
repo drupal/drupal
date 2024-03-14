@@ -94,18 +94,32 @@
   url,
   } only %}
   {% block content %}
-    {% include "umami:title" with {
+    {% embed "umami:title" with {
       attributes: title_attributes.addClass('umami-card__title'),
-      label,
+      label: label ? label : content.field_title,
       title_prefix,
       title_suffix,
     } only %}
-    {% include "umami:read-more" with {
+      {% block title_prefix %}
+        {{ title_prefix }}
+      {% endblock %}
+      {% block title_suffix %}
+        {{ title_suffix }}
+      {% endblock %}
+    {% endembed %}
+    {% embed "umami:read-more" with {
+      attributes: create_attribute({'class': ['umami-card__read-more']}),
+      read_more,
+      label,
       url,
-      text: read_more,
-      a11y: label,
-      extra_classes: 'umami-card__read-more'
     } only %}
+      {% block a11y %}
+        {{ label }}
+      {% endblock %}
+      {% block text %}
+        {{ read_more }}
+      {% endblock %}
+    {% endembed %}
     <div{{ content_attributes.addClass('umami-card__content') }}>
       {{ content }}
     </div>

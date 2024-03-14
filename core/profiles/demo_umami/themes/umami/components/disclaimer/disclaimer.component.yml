@@ -15,11 +15,17 @@ props:
   type: object
 
   properties:
-    disclaimer:
-      type: string
-      description: Disclaimer text
-    copyright:
-      type: string
-      description: Copyright text of Disclaimer
-      examples:
-        - Terms & Conditions
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Wrapper attributes.
+
+slots:
+  disclaimer:
+    type: string
+    description: Disclaimer text
+  copyright:
+    type: string
+    description: Copyright text of Disclaimer
+    examples:
+      - Terms & Conditions
