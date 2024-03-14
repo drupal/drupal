@@ -4,20 +4,28 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\Breadcrumbs;
 
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\Core\Routing\RequestContext;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
+use Drupal\Core\Utility\RequestGenerator;
 use Drupal\system\PathBasedBreadcrumbBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -31,63 +39,63 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    *
    * @var \Drupal\system\PathBasedBreadcrumbBuilder
    */
-  protected $builder;
+  protected PathBasedBreadcrumbBuilder $builder;
 
   /**
    * The mocked title resolver.
    *
    * @var \Drupal\Core\Controller\TitleResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $titleResolver;
+  protected TitleResolverInterface|MockObject $titleResolver;
 
   /**
    * The mocked access manager.
    *
    * @var \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $accessManager;
+  protected AccessManagerInterface|MockObject $accessManager;
 
   /**
    * The request matching mock object.
    *
    * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $requestMatcher;
+  protected RequestMatcherInterface|MockObject $requestMatcher;
 
   /**
    * The mocked route request context.
    *
    * @var \Drupal\Core\Routing\RequestContext|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $context;
+  protected RequestContext|MockObject $context;
 
   /**
    * The mocked current user.
    *
    * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $currentUser;
+  protected AccountInterface|MockObject $currentUser;
 
   /**
    * The mocked path processor.
    *
    * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $pathProcessor;
-
-  /**
-   * The mocked current path.
-   *
-   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $currentPath;
+  protected InboundPathProcessorInterface|MockObject $pathProcessor;
 
   /**
    * The mocked path matcher service.
    *
    * @var \Drupal\Core\Path\PathMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $pathMatcher;
+  protected PathMatcherInterface|MockObject $pathMatcher;
+
+  /**
+   * The request generator service.
+   *
+   * @var \Drupal\Core\Utility\RequestGenerator|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected RequestGenerator|MockObject $requestGenerator;
 
   /**
    * {@inheritdoc}
@@ -107,22 +115,24 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->accessManager = $this->createMock('\Drupal\Core\Access\AccessManagerInterface');
     $this->titleResolver = $this->createMock('\Drupal\Core\Controller\TitleResolverInterface');
     $this->currentUser = $this->createMock('Drupal\Core\Session\AccountInterface');
-    $this->currentPath = $this->getMockBuilder('Drupal\Core\Path\CurrentPathStack')
-      ->disableOriginalConstructor()
-      ->getMock();
 
     $this->pathMatcher = $this->createMock(PathMatcherInterface::class);
+    $this->requestGenerator = new RequestGenerator(
+      $this->pathProcessor,
+      $this->getMockBuilder('Drupal\Core\Path\CurrentPathStack')
+        ->disableOriginalConstructor()
+        ->getMock(),
+      $this->requestMatcher
+    );
 
     $this->builder = new TestPathBasedBreadcrumbBuilder(
       $this->context,
       $this->accessManager,
-      $this->requestMatcher,
-      $this->pathProcessor,
       $config_factory,
       $this->titleResolver,
       $this->currentUser,
-      $this->currentPath,
-      $this->pathMatcher
+      $this->pathMatcher,
+      $this->requestGenerator,
     );
 
     $this->builder->setStringTranslation($this->getStringTranslationStub());
@@ -174,7 +184,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests the build method with two path elements.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithTwoPathElements() {
     $this->context->expects($this->once())
@@ -213,7 +222,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests the build method with three path elements.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithThreePathElements() {
     $this->context->expects($this->once())
@@ -269,7 +277,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests that exceptions during request matching are caught.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    *
    * @dataProvider providerTestBuildWithException
    */
@@ -312,7 +319,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests the build method with a non processed path.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithNonProcessedPath() {
     $this->context->expects($this->once())
@@ -349,7 +355,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * Tests the breadcrumb for a user path.
    *
    * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithUserPath() {
     $this->context->expects($this->once())

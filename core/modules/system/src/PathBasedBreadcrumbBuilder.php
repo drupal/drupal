@@ -8,9 +8,8 @@ use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\TitleResolverInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Link;
-use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RequestContext;
@@ -19,11 +18,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Drupal\Core\Utility\RequestGenerator;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 /**
@@ -32,7 +27,20 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
  * @see \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface
  */
 class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+
   use StringTranslationTrait;
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * Defines deprecated injected properties.
+   *
+   * @var array
+   */
+  protected array $deprecatedProperties = [
+    'router' => 'router',
+    'pathProcessor' => 'path_processor_manager',
+    'currentPath' => 'path.current',
+  ];
 
   /**
    * The router request context.
@@ -47,20 +55,6 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @var \Drupal\Core\Access\AccessManagerInterface
    */
   protected $accessManager;
-
-  /**
-   * The dynamic router service.
-   *
-   * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface
-   */
-  protected $router;
-
-  /**
-   * The inbound path processor.
-   *
-   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
-   */
-  protected $pathProcessor;
 
   /**
    * Site config object.
@@ -84,18 +78,18 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $currentUser;
 
   /**
-   * The current path service.
-   *
-   * @var \Drupal\Core\Path\CurrentPathStack
-   */
-  protected $currentPath;
-
-  /**
    * The patch matcher service.
    *
    * @var \Drupal\Core\Path\PathMatcherInterface
    */
   protected $pathMatcher;
+
+  /**
+   * The request generator.
+   *
+   * @var \Drupal\Core\Utility\RequestGenerator
+   */
+  protected $requestGenerator;
 
   /**
    * Constructs the PathBasedBreadcrumbBuilder.
@@ -104,31 +98,44 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The router request context.
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access check service.
-   * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
-   *   The dynamic router service.
-   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
-   *   The inbound path processor.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface|\Symfony\Component\Routing\Matcher\RequestMatcherInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
+   * @param \Drupal\Core\Controller\TitleResolverInterface|\Drupal\Core\PathProcessor\InboundPathProcessorInterface $title_resolver
    *   The title resolver service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface|\Drupal\Core\Config\ConfigFactoryInterface $current_user
    *   The current user object.
-   * @param \Drupal\Core\Path\CurrentPathStack $current_path
-   *   The current path.
-   * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher
+   * @param \Drupal\Core\Path\PathMatcherInterface|\Drupal\Core\Controller\TitleResolverInterface $path_matcher
    *   The path matcher service.
+   * @param \Drupal\Core\Utility\RequestGenerator|\Drupal\Core\Session\AccountInterface $request_generator
+   *   The request generator.
    */
-  public function __construct(RequestContext $context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user, CurrentPathStack $current_path, PathMatcherInterface $path_matcher = NULL) {
+  public function __construct(
+    RequestContext $context,
+    AccessManagerInterface $access_manager,
+    ConfigFactoryInterface|RequestMatcherInterface $config_factory,
+    TitleResolverInterface|InboundPathProcessorInterface $title_resolver,
+    AccountInterface|ConfigFactoryInterface $current_user,
+    PathMatcherInterface|TitleResolverInterface $path_matcher,
+    RequestGenerator|AccountInterface $request_generator,
+  ) {
     $this->context = $context;
     $this->accessManager = $access_manager;
-    $this->router = $router;
-    $this->pathProcessor = $path_processor;
+    if ($config_factory instanceof RequestMatcherInterface) {
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() with the $router, $path_processor, $current_path arguments is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3397213', E_USER_DEPRECATED);
+      @trigger_error('Calling PathBasedBreadcrumbBuilder::__construct() without the $request_generator argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3397213', E_USER_DEPRECATED);
+      $config_factory = $current_user;
+      $this->titleResolver = $path_matcher;
+      $this->currentUser = $request_generator;
+      $this->requestGenerator = \Drupal::service('request_generator');
+      $this->pathMatcher = func_get_arg(8) ?: \Drupal::service('path.matcher');
+    }
+    else {
+      $this->titleResolver = $title_resolver;
+      $this->currentUser = $current_user;
+      $this->requestGenerator = $request_generator;
+      $this->pathMatcher = $path_matcher;
+    }
     $this->config = $config_factory->get('system.site');
-    $this->titleResolver = $title_resolver;
-    $this->currentUser = $current_user;
-    $this->currentPath = $current_path;
-    $this->pathMatcher = $path_matcher ?: \Drupal::service('path.matcher');
   }
 
   /**
@@ -169,7 +176,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     while (count($path_elements) > 1) {
       array_pop($path_elements);
       // Copy the path elements for up-casting.
-      $route_request = $this->getRequestForPath('/' . implode('/', $path_elements), $exclude);
+      $route_request = $this->requestGenerator->generateRequestForPath('/' . implode('/', $path_elements), $exclude);
       if ($route_request) {
         $route_match = RouteMatch::createFromRequest($route_request);
         $access = $this->accessManager->check($route_match, $this->currentUser, NULL, TRUE);
@@ -193,42 +200,6 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
 
     return $breadcrumb->setLinks(array_reverse($links));
-  }
-
-  /**
-   * Matches a path in the router.
-   *
-   * @param string $path
-   *   The request path with a leading slash.
-   * @param array $exclude
-   *   An array of paths or system paths to skip.
-   *
-   * @return \Symfony\Component\HttpFoundation\Request
-   *   A populated request object or NULL if the path couldn't be matched.
-   */
-  protected function getRequestForPath($path, array $exclude) {
-    if (!empty($exclude[$path])) {
-      return NULL;
-    }
-    $request = Request::create($path);
-    // Performance optimization: set a short accept header to reduce overhead in
-    // AcceptHeaderMatcher when matching the request.
-    $request->headers->set('Accept', 'text/html');
-    // Find the system path by resolving aliases, language prefix, etc.
-    $processed = $this->pathProcessor->processInbound($path, $request);
-    if (empty($processed) || !empty($exclude[$processed])) {
-      // This resolves to the front page, which we already add.
-      return NULL;
-    }
-    $this->currentPath->setPath($processed, $request);
-    // Attempt to match this path to provide a fully built request.
-    try {
-      $request->attributes->add($this->router->matchRequest($request));
-      return $request;
-    }
-    catch (ParamNotConvertedException | ResourceNotFoundException | MethodNotAllowedException | AccessDeniedHttpException | NotFoundHttpException $e) {
-      return NULL;
-    }
   }
 
 }
