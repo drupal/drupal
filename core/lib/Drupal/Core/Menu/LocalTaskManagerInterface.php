@@ -70,4 +70,15 @@ interface LocalTaskManagerInterface extends PluginManagerInterface {
    */
   public function getLocalTasks($route_name, $level = 0);
 
+  /**
+   * Gets base route names for the given route.
+   *
+   * @param string $route_name
+   *   The route name.
+   *
+   * @return string[]
+   *   The base route names.
+   */
+  public function getBaseRouteNames(string $route_name): array;
+
 }

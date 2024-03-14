@@ -531,10 +531,10 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     // The original node title is available when viewing the node, but the
     // pending title is visible within the Layout Builder UI.
     $this->drupalGet('node/1');
-    $assert_session->pageTextContains('The first node title');
+    $assert_session->elementTextContains('css', 'body', 'The first node title');
     $page->clickLink('Layout');
-    $assert_session->pageTextNotContains('The first node title');
-    $assert_session->pageTextContains('The pending title of the first node');
+    $assert_session->elementTextNotContains('css', 'body', 'The first node title');
+    $assert_session->elementTextContains('css', 'body', 'The pending title of the first node');
   }
 
   /**

@@ -148,7 +148,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->linkByHrefExists('admin/content/block/' . $block->id() . '/delete');
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->titleEquals("Are you sure you want to delete the content block $new_label? | Drupal");
+    $this->assertSession()->titleEquals("Are you sure you want to delete the content block $new_label? | $new_label | Drupal");
     $this->submitForm([], 'Delete');
 
     // Verify that the text of the label and machine name does not appear in
