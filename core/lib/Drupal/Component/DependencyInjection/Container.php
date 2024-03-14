@@ -201,7 +201,7 @@ class Container implements ContainerInterface, ResetInterface {
    * ref-counting. A subsequent call to ContainerInterface::get() will recreate
    * a new instance of the shared service.
    */
-  public function reset() {
+  public function reset(): void {
     $this->services = [];
   }
 
