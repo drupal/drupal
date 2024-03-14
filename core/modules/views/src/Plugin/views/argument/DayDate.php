@@ -2,11 +2,14 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\views\Attribute\ViewsArgument;
+
 /**
  * Argument handler for a day (DD)
- *
- * @ViewsArgument("date_day")
- */
+  */
+#[ViewsArgument(
+  id: 'date_day',
+)]
 class DayDate extends Date {
 
   /**

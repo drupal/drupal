@@ -2,13 +2,16 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\views\Attribute\ViewsArgument;
+
 /**
  * Simple handler for arguments using group by.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("groupby_numeric")
  */
+#[ViewsArgument(
+  id: 'groupby_numeric',
+)]
 class GroupByNumeric extends ArgumentPluginBase {
 
   public function query($group_by = FALSE) {

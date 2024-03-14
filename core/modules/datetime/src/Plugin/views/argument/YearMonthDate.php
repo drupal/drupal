@@ -2,11 +2,14 @@
 
 namespace Drupal\datetime\Plugin\views\argument;
 
+use Drupal\views\Attribute\ViewsArgument;
+
 /**
  * Argument handler for a year plus month (CCYYMM).
- *
- * @ViewsArgument("datetime_year_month")
- */
+  */
+#[ViewsArgument(
+  id: 'datetime_year_month',
+)]
 class YearMonthDate extends Date {
 
   /**

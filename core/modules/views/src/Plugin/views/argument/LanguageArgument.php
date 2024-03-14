@@ -2,13 +2,16 @@
 
 namespace Drupal\views\Plugin\views\argument;
 
+use Drupal\views\Attribute\ViewsArgument;
+
 /**
  * Defines an argument handler to accept a language.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("language")
- */
+  */
+#[ViewsArgument(
+  id: 'language',
+)]
 class LanguageArgument extends ArgumentPluginBase {
 
   /**

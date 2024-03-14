@@ -3,6 +3,7 @@
 namespace Drupal\file\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,9 +12,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Argument handler to accept multiple file ids.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("file_fid")
  */
+#[ViewsArgument(
+  id: 'file_fid',
+)]
 class Fid extends NumericArgument implements ContainerFactoryPluginInterface {
 
   /**
