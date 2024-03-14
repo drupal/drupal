@@ -191,6 +191,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-clipboard/src/clipboardmarkersutils.js
+ *
+ * @typedef {module:clipboard/clipboardmarkersutils} module:clipboard/clipboardmarkersutils~ClipboardMarkersUtils
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-clipboard/src/clipboardobserver.js
  *
  * @typedef {module:clipboard/clipboardobserver} module:clipboard/clipboardobserver~ClipboardObserver
@@ -266,6 +272,12 @@
  * Declared in file @ckeditor/ckeditor5-code-block/src/indentcodeblockcommand.js
  *
  * @typedef {module:code-block/indentcodeblockcommand} module:code-block/indentcodeblockcommand~IndentCodeBlockCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-core/src/accessibility.js
+ *
+ * @typedef {module:core/accessibility} module:core/accessibility~Accessibility
  */
 
 /**
@@ -671,12 +683,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-engine/src/model/utils/insertobject.js
- *
- * @typedef {module:engine/model/utils/insertobject} module:engine/model/utils/insertobject~insertObject
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-engine/src/model/utils/modifyselection.js
  *
  * @typedef {module:engine/model/utils/modifyselection} module:engine/model/utils/modifyselection~modifySelection
@@ -1055,12 +1061,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/documentlist.js
- *
- * @typedef {module:html-support/integrations/documentlist} module:html-support/integrations/documentlist~DocumentListElementSupport
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/heading.js
  *
  * @typedef {module:html-support/integrations/heading} module:html-support/integrations/heading~HeadingElementSupport
@@ -1070,6 +1070,12 @@
  * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/image.js
  *
  * @typedef {module:html-support/integrations/image} module:html-support/integrations/image~ImageElementSupport
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/list.js
+ *
+ * @typedef {module:html-support/integrations/list} module:html-support/integrations/list~ListElementSupport
  */
 
 /**
@@ -1445,63 +1451,63 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/documentlist/documentlistediting.js
- *
- * @typedef {module:list/documentlist/documentlistediting} module:list/documentlist/documentlistediting~DocumentListEditing
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/documentlist/documentlistindentcommand.js
- *
- * @typedef {module:list/documentlist/documentlistindentcommand} module:list/documentlist/documentlistindentcommand~DocumentListIndentCommand
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/documentlist/documentlistmergecommand.js
- *
- * @typedef {module:list/documentlist/documentlistmergecommand} module:list/documentlist/documentlistmergecommand~DocumentListMergeCommand
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/documentlist/utils/listwalker.js
- *
- * @typedef {module:list/documentlist/utils/listwalker} module:list/documentlist/utils/listwalker~ListWalker
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties.js
  *
  * @typedef {module:list/documentlistproperties} module:list/documentlistproperties~DocumentListProperties
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentlistpropertiesediting.js
+ * Declared in file @ckeditor/ckeditor5-list/src/legacylist.js
  *
- * @typedef {module:list/documentlistproperties/documentlistpropertiesediting} module:list/documentlistproperties/documentlistpropertiesediting~DocumentListPropertiesEditing
+ * @typedef {module:list/legacylist} module:list/legacylist~LegacyList
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentlistpropertiesutils.js
+ * Declared in file @ckeditor/ckeditor5-list/src/legacylist/legacylistediting.js
  *
- * @typedef {module:list/documentlistproperties/documentlistpropertiesutils} module:list/documentlistproperties/documentlistpropertiesutils~DocumentListPropertiesUtils
+ * @typedef {module:list/legacylist/legacylistediting} module:list/legacylist/legacylistediting~LegacyListEditing
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentlistreversedcommand.js
+ * Declared in file @ckeditor/ckeditor5-list/src/legacylistproperties.js
  *
- * @typedef {module:list/documentlistproperties/documentlistreversedcommand} module:list/documentlistproperties/documentlistreversedcommand~DocumentListReversedCommand
+ * @typedef {module:list/legacylistproperties} module:list/legacylistproperties~LegacyListProperties
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentliststartcommand.js
+ * Declared in file @ckeditor/ckeditor5-list/src/legacylistproperties/legacylistpropertiesediting.js
  *
- * @typedef {module:list/documentlistproperties/documentliststartcommand} module:list/documentlistproperties/documentliststartcommand~DocumentListStartCommand
+ * @typedef {module:list/legacylistproperties/legacylistpropertiesediting} module:list/legacylistproperties/legacylistpropertiesediting~LegacyListPropertiesEditing
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/documentlistproperties/documentliststylecommand.js
+ * Declared in file @ckeditor/ckeditor5-list/src/legacylistproperties/legacylistreversedcommand.js
  *
- * @typedef {module:list/documentlistproperties/documentliststylecommand} module:list/documentlistproperties/documentliststylecommand~DocumentListStyleCommand
+ * @typedef {module:list/legacylistproperties/legacylistreversedcommand} module:list/legacylistproperties/legacylistreversedcommand~LegacyListReversedCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/legacylistproperties/legacyliststartcommand.js
+ *
+ * @typedef {module:list/legacylistproperties/legacyliststartcommand} module:list/legacylistproperties/legacyliststartcommand~LegacyListStartCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/legacylistproperties/legacyliststylecommand.js
+ *
+ * @typedef {module:list/legacylistproperties/legacyliststylecommand} module:list/legacylistproperties/legacyliststylecommand~LegacyListStyleCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/legacytodolist.js
+ *
+ * @typedef {module:list/legacytodolist} module:list/legacytodolist~LegacyTodoList
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/legacytodolist/legacychecktodolistcommand.js
+ *
+ * @typedef {module:list/legacytodolist/legacychecktodolistcommand} module:list/legacytodolist/legacychecktodolistcommand~LegacyCheckTodoListCommand
  */
 
 /**
@@ -1517,9 +1523,27 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-list/src/list/listindentcommand.js
+ *
+ * @typedef {module:list/list/listindentcommand} module:list/list/listindentcommand~ListIndentCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/list/listmergecommand.js
+ *
+ * @typedef {module:list/list/listmergecommand} module:list/list/listmergecommand~ListMergeCommand
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-list/src/list/listui.js
  *
  * @typedef {module:list/list/listui} module:list/list/listui~ListUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/list/utils/listwalker.js
+ *
+ * @typedef {module:list/list/utils/listwalker} module:list/list/utils/listwalker~ListWalker
  */
 
 /**
@@ -1538,6 +1562,12 @@
  * Declared in file @ckeditor/ckeditor5-list/src/listproperties/listpropertiesui.js
  *
  * @typedef {module:list/listproperties/listpropertiesui} module:list/listproperties/listpropertiesui~ListPropertiesUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/listproperties/listpropertiesutils.js
+ *
+ * @typedef {module:list/listproperties/listpropertiesutils} module:list/listproperties/listpropertiesutils~ListPropertiesUtils
  */
 
 /**
@@ -1565,33 +1595,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-list/src/liststyle.js
- *
- * @typedef {module:list/liststyle} module:list/liststyle~ListStyle
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-list/src/tododocumentlist.js
  *
  * @typedef {module:list/tododocumentlist} module:list/tododocumentlist~TodoDocumentList
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/tododocumentlist/checktododocumentlistcommand.js
- *
- * @typedef {module:list/tododocumentlist/checktododocumentlistcommand} module:list/tododocumentlist/checktododocumentlistcommand~CheckTodoDocumentListCommand
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/tododocumentlist/todocheckboxchangeobserver.js
- *
- * @typedef {module:list/tododocumentlist/todocheckboxchangeobserver} module:list/tododocumentlist/todocheckboxchangeobserver~TodoCheckboxChangeObserver
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-list/src/tododocumentlist/tododocumentlistediting.js
- *
- * @typedef {module:list/tododocumentlist/tododocumentlistediting} module:list/tododocumentlist/tododocumentlistediting~TodoDocumentListEditing
  */
 
 /**
@@ -1604,6 +1610,18 @@
  * Declared in file @ckeditor/ckeditor5-list/src/todolist/checktodolistcommand.js
  *
  * @typedef {module:list/todolist/checktodolistcommand} module:list/todolist/checktodolistcommand~CheckTodoListCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/todolist/todocheckboxchangeobserver.js
+ *
+ * @typedef {module:list/todolist/todocheckboxchangeobserver} module:list/todolist/todocheckboxchangeobserver~TodoCheckboxChangeObserver
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-list/src/todolist/todolistediting.js
+ *
+ * @typedef {module:list/todolist/todolistediting} module:list/todolist/todolistediting~TodoListEditing
  */
 
 /**
@@ -1805,15 +1823,15 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-style/src/integrations/documentlist.js
- *
- * @typedef {module:style/integrations/documentlist} module:style/integrations/documentlist~DocumentListStyleSupport
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-style/src/integrations/link.js
  *
  * @typedef {module:style/integrations/link} module:style/integrations/link~LinkStyleSupport
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-style/src/integrations/list.js
+ *
+ * @typedef {module:style/integrations/list} module:style/integrations/list~ListStyleSupport
  */
 
 /**
@@ -2243,6 +2261,24 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/dialog/dialogactionsview.js
+ *
+ * @typedef {module:ui/dialog/dialogactionsview} module:ui/dialog/dialogactionsview~DialogActionsView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/dialog/dialogcontentview.js
+ *
+ * @typedef {module:ui/dialog/dialogcontentview} module:ui/dialog/dialogcontentview~DialogContentView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/dialog/dialogview.js
+ *
+ * @typedef {module:ui/dialog/dialogview} module:ui/dialog/dialogview~DialogView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/button/dropdownbuttonview.js
  *
  * @typedef {module:ui/dropdown/button/dropdownbuttonview} module:ui/dropdown/button/dropdownbuttonview~DropdownButtonView
@@ -2276,6 +2312,18 @@
  * Declared in file @ckeditor/ckeditor5-ui/src/editableui/inline/inlineeditableuiview.js
  *
  * @typedef {module:ui/editableui/inline/inlineeditableuiview} module:ui/editableui/inline/inlineeditableuiview~InlineEditableUIView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/editorui/accessibilityhelp/accessibilityhelp.js
+ *
+ * @typedef {module:ui/editorui/accessibilityhelp/accessibilityhelp} module:ui/editorui/accessibilityhelp/accessibilityhelp~AccessibilityHelp
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/editorui/accessibilityhelp/accessibilityhelpcontentview.js
+ *
+ * @typedef {module:ui/editorui/accessibilityhelp/accessibilityhelpcontentview} module:ui/editorui/accessibilityhelp/accessibilityhelpcontentview~AccessibilityHelpContentView
  */
 
 /**

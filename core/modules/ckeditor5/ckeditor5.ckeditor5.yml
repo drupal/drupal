@@ -388,8 +388,8 @@ ckeditor5_linkMedia:
 ckeditor5_list:
   ckeditor5:
     plugins:
-      - list.DocumentList
-      - list.DocumentListProperties
+      - list.List
+      - list.ListProperties
     config:
       list:
         properties:
