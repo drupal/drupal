@@ -79,10 +79,10 @@ class ModulesListFormWebTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a");
 
     // Enable a module that defines permissions.
-    $edit = ['modules[action][enable]' => 'action'];
+    $edit = ['modules[filter][enable]' => 'filter'];
     $this->submitForm($edit, 'Install');
-    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Actions UI has been installed.');
-    $this->assertSession()->elementExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a[contains(@href, '/admin/people/permissions/module/action')]");
+    $this->assertSession()->elementTextContains('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]", 'Module Filter has been installed.');
+    $this->assertSession()->elementExists('xpath', "//div[@role='contentinfo' and h2[text()='Status message']]//a[contains(@href, '/admin/people/permissions/module/filter')]");
 
     // Enable a module that has dependencies and both define permissions.
     $edit = ['modules[content_moderation][enable]' => 'content_moderation'];

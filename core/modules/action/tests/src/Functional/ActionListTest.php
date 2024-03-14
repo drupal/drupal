@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * Test behaviors when visiting the action listing page.
  *
  * @group action
+ * @group legacy
  */
 class ActionListTest extends BrowserTestBase {
 

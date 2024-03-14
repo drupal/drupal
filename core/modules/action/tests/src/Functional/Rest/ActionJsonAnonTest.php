@@ -8,6 +8,7 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group action
+ * @group legacy
  */
 class ActionJsonAnonTest extends ActionResourceTestBase {
 

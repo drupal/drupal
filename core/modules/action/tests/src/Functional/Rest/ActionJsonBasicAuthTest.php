@@ -8,6 +8,7 @@ use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group action
+ * @group legacy
  */
 class ActionJsonBasicAuthTest extends ActionResourceTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\system\Entity\Action;
  * Tests action plugins using JavaScript.
  *
  * @group action
+ * @group legacy
  */
 class ActionFormAjaxTest extends WebDriverTestBase {
 

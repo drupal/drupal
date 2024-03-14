@@ -3,4 +3,6 @@ type: module
 description: 'Allows configuration of tasks to be executed in response to events.'
 package: Core
 version: VERSION
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-action
 configure: entity.action.collection
