@@ -15,13 +15,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 class CommentNameConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * Validator 2.5 and upwards compatible execution context.
-   *
-   * @var \Symfony\Component\Validator\Context\ExecutionContextInterface
-   */
-  protected $context;
-
-  /**
    * User storage handler.
    *
    * @var \Drupal\user\UserStorageInterface
