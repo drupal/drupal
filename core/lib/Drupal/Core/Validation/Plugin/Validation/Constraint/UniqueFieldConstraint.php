@@ -18,11 +18,9 @@ class UniqueFieldConstraint extends SymfonyConstraint {
   public $message = 'A @entity_type with @field_name %value already exists.';
 
   /**
-   * Returns the name of the class that validates this constraint.
-   *
-   * @return string
+   * {@inheritdoc}
    */
-  public function validatedBy() {
+  public function validatedBy(): string {
     return '\Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldValueValidator';
   }
 

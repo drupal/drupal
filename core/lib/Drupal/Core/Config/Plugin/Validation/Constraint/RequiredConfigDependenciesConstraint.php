@@ -37,14 +37,14 @@ class RequiredConfigDependenciesConstraint extends SymfonyConstraint {
   /**
    * {@inheritdoc}
    */
-  public function getRequiredOptions() {
+  public function getRequiredOptions(): array {
     return ['entityTypes'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOption() {
+  public function getDefaultOption(): ?string {
     return 'entityTypes';
   }
 

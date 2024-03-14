@@ -47,27 +47,15 @@ class ComplexDataConstraint extends SymfonyConstraint {
 
   /**
    * {@inheritdoc}
-   *
-   * @return ?string
-   *   Name of the default option.
-   *
-   * @todo Add method return type declaration.
-   * @see https://www.drupal.org/project/drupal/issues/3425150
    */
-  public function getDefaultOption() {
+  public function getDefaultOption(): ?string {
     return 'properties';
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @return array
-   *   The names of the required options.
-   *
-   * @todo Add method return type declaration.
-   * @see https://www.drupal.org/project/drupal/issues/3425150
    */
-  public function getRequiredOptions() {
+  public function getRequiredOptions(): array {
     return ['properties'];
   }
 
