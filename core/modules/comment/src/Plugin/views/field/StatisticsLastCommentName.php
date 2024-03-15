@@ -3,6 +3,7 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\user\Entity\User;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -10,9 +11,8 @@ use Drupal\views\ResultRow;
  * Field handler to present the name of the last comment poster.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("comment_ces_last_comment_name")
  */
+#[ViewsField("comment_ces_last_comment_name")]
 class StatisticsLastCommentName extends FieldPluginBase {
 
   /**

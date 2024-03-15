@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\NumericField;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -18,9 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Field handler to display the number of new comments.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("node_new_comments")
  */
+#[ViewsField("node_new_comments")]
 class NodeNewComments extends NumericField {
 
   /**

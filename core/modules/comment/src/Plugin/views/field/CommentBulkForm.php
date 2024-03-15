@@ -2,13 +2,13 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\BulkForm;
 
 /**
  * Defines a comment operations bulk form element.
- *
- * @ViewsField("comment_bulk_form")
  */
+#[ViewsField("comment_bulk_form")]
 class CommentBulkForm extends BulkForm {
 
   /**

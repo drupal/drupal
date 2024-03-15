@@ -2,12 +2,14 @@
 
 namespace Drupal\views_test_data\Plugin\views\field;
 
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * @ViewsField("test_field")
+ * A test field handler.
  */
+#[ViewsField("test_field")]
 class FieldTest extends FieldPluginBase {
 
 

@@ -3,6 +3,7 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\Core\Url;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\LinkBase;
 use Drupal\views\ResultRow;
 
@@ -10,9 +11,8 @@ use Drupal\views\ResultRow;
  * Field handler to present a link to a node revision.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("node_revision_link")
  */
+#[ViewsField("node_revision_link")]
 class RevisionLink extends LinkBase {
 
   /**

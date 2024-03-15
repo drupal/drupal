@@ -5,6 +5,7 @@ namespace Drupal\user\Plugin\views\field;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\user\UserDataInterface;
@@ -16,9 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ingroup views_field_handlers
  *
  * @see \Drupal\user\UserDataInterface
- *
- * @ViewsField("user_data")
  */
+#[ViewsField("user_data")]
 class UserData extends FieldPluginBase {
 
   /**

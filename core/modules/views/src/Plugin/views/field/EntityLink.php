@@ -3,15 +3,15 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to an entity.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("entity_link")
  */
+#[ViewsField("entity_link")]
 class EntityLink extends LinkBase {
 
   /**

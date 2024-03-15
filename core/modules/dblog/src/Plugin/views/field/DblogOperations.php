@@ -2,6 +2,7 @@
 
 namespace Drupal\dblog\Plugin\views\field;
 
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -9,9 +10,8 @@ use Drupal\views\ResultRow;
  * Provides a field handler that renders operation link markup.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("dblog_operations")
  */
+#[ViewsField("dblog_operations")]
 class DblogOperations extends FieldPluginBase {
 
   /**

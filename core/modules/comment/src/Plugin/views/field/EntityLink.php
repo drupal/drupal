@@ -3,6 +3,7 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -10,9 +11,8 @@ use Drupal\views\ResultRow;
  * Handler for showing comment module's entity links.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("comment_entity_link")
  */
+#[ViewsField("comment_entity_link")]
 class EntityLink extends FieldPluginBase {
 
   /**

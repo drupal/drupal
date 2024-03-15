@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
@@ -13,9 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Field handler to provide a list of permissions.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("user_permissions")
  */
+#[ViewsField("user_permissions")]
 class Permissions extends PrerenderList {
 
   /**

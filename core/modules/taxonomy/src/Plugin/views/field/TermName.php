@@ -3,6 +3,7 @@
 namespace Drupal\taxonomy\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\views\ResultRow;
 
@@ -10,9 +11,8 @@ use Drupal\views\ResultRow;
  * Displays taxonomy term names and allows converting spaces to hyphens.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("term_name")
  */
+#[ViewsField("term_name")]
 class TermName extends EntityField {
 
   /**

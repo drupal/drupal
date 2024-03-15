@@ -2,15 +2,15 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to edit an entity.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("entity_link_edit")
  */
+#[ViewsField("entity_link_edit")]
 class EntityLinkEdit extends EntityLink {
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\search\Plugin\views\field;
 
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\NumericField;
 use Drupal\views\ResultRow;
 
@@ -9,9 +10,8 @@ use Drupal\views\ResultRow;
  * Field handler for search score.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("search_score")
  */
+#[ViewsField("search_score")]
 class Score extends NumericField {
 
   /**
