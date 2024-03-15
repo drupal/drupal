@@ -404,7 +404,7 @@ display:
         filter_groups: false
       css_class: view-promoted-items--double
       display_description: ''
-      rendering_language: '***LANGUAGE_language_interface***'
+      rendering_language: '***LANGUAGE_language_content***'
       display_extenders: {  }
       displays:
         block_1: block_1
@@ -568,7 +568,7 @@ display:
         filter_groups: false
       css_class: 'container view-promoted-items--single'
       display_description: ''
-      rendering_language: '***LANGUAGE_language_interface***'
+      rendering_language: '***LANGUAGE_language_content***'
       display_extenders: {  }
     cache_metadata:
       max-age: -1

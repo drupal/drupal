@@ -206,7 +206,7 @@ display:
     display_plugin: block
     position: 1
     display_options:
-      rendering_language: '***LANGUAGE_language_interface***'
+      rendering_language: '***LANGUAGE_language_content***'
       display_extenders: {  }
       block_hide_empty: true
     cache_metadata:
