@@ -210,8 +210,14 @@ class ThemeExtensionList extends ExtensionList {
    * @return array
    *   Returns an array of all of the theme's ancestors; the first element's
    *   value will be NULL if an error occurred.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There
+   *   is no direct replacement.
+   *
+   * @see https://www.drupal.org/node/3413187
    */
   public function getBaseThemes(array $themes, $theme) {
+    @trigger_error("\Drupal\Core\Extension\ThemeExtensionList::getBaseThemes() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3413187", E_USER_DEPRECATED);
     return $this->doGetBaseThemes($themes, $theme);
   }
 
