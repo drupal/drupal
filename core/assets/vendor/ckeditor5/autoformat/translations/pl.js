@@ -1,0 +1,1 @@
+!function(o){const t=o.pl=o.pl||{};t.dictionary=Object.assign(t.dictionary||{},{"Revert autoformatting action":"Cofa automatyczne formatowanie"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

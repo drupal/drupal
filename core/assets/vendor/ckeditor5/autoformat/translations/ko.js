@@ -1,0 +1,1 @@
+!function(o){const i=o.ko=o.ko||{};i.dictionary=Object.assign(i.dictionary||{},{"Revert autoformatting action":"자동 서식 작업 되돌리기"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

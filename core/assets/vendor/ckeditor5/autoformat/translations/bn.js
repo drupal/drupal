@@ -1,0 +1,1 @@
+!function(n){const i=n.bn=n.bn||{};i.dictionary=Object.assign(i.dictionary||{},{"Revert autoformatting action":"অটো ফরম্যাটিংয়ের কাজটি পূর্বাবস্থায় ফিরিয়ে আনুন"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

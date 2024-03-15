@@ -1,0 +1,1 @@
+!function(t){const i=t.th=t.th||{};i.dictionary=Object.assign(i.dictionary||{},{"Revert autoformatting action":"ยกเลิกการดำเนินการจัดรูปแบบอัตโนมัติ"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
