@@ -63,7 +63,7 @@
       if (userButtonMinWidth) {
         const userButtonStyle = document.createElement('style');
         userButtonStyle.textContent = `
-        #toolbar-item-user {min-width: ${userButtonMinWidth}.px;}`;
+        #toolbar-item-user {min-width: ${userButtonMinWidth}px;}`;
         document.querySelector('head').appendChild(userButtonStyle);
       }
     }
