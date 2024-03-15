@@ -116,7 +116,9 @@ class ThemeExtensionListTest extends UnitTestCase {
    * @param array $expected
    *   The expected base themes.
    *
-   * @dataProvider providerTestGetBaseThemes
+   * @dataProvider providerTestDoGetBaseThemes
+   *
+   * @group legacy
    */
   public function testGetBaseThemes(array $themes, $theme, array $expected) {
     // Mocks and stubs.
@@ -126,18 +128,45 @@ class ThemeExtensionListTest extends UnitTestCase {
     $theme_engine_list = $this->prophesize(ThemeEngineExtensionList::class);
     $theme_listing = new ThemeExtensionList($this->root, 'theme', new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, $theme_engine_list->reveal(), 'test');
 
+    $this->expectDeprecation("\Drupal\Core\Extension\ThemeExtensionList::getBaseThemes() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3413187");
     $base_themes = $theme_listing->getBaseThemes($themes, $theme);
 
     $this->assertEquals($expected, $base_themes);
   }
 
   /**
-   * Provides test data for testGetBaseThemes.
+   * Tests getting the base themes for a set of defined themes.
+   *
+   * @param array $themes
+   *   An array of available themes, keyed by the theme name.
+   * @param string $theme
+   *   The theme name to find all its base themes.
+   * @param array $expected
+   *   The expected base themes.
+   *
+   * @dataProvider providerTestDoGetBaseThemes
+   */
+  public function testDoGetBaseThemes(array $themes, $theme, array $expected): void {
+    // Mocks and stubs.
+    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
+    $state = new State(new KeyValueMemoryFactory());
+    $config_factory = $this->getConfigFactoryStub([]);
+    $theme_engine_list = $this->prophesize(ThemeEngineExtensionList::class);
+    $theme_listing = new ThemeExtensionList($this->root, 'theme', new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, $theme_engine_list->reveal(), 'test');
+
+    $method_to_test = (new \ReflectionObject($theme_listing))->getMethod('doGetBaseThemes');
+    $base_themes = $method_to_test->invoke($theme_listing, $themes, $theme);
+
+    $this->assertEquals($expected, $base_themes);
+  }
+
+  /**
+   * Provides test data for testDoGetBaseThemes.
    *
    * @return array
    *   An array of theme test data.
    */
-  public static function providerTestGetBaseThemes() {
+  public static function providerTestDoGetBaseThemes() {
     $data = [];
 
     // Tests a theme without any base theme.
