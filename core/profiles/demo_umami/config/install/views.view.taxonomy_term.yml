@@ -286,7 +286,7 @@ display:
       query:
         type: views_query
         options: {  }
-      rendering_language: '***LANGUAGE_language_interface***'
+      rendering_language: '***LANGUAGE_language_content***'
       display_extenders: {  }
       path: taxonomy/term/%/feed
       displays:
@@ -309,7 +309,7 @@ display:
       query:
         type: views_query
         options: {  }
-      rendering_language: '***LANGUAGE_language_interface***'
+      rendering_language: '***LANGUAGE_language_content***'
       display_extenders: {  }
       path: taxonomy/term/%
     cache_metadata:
