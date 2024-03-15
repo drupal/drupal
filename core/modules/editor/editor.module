@@ -149,11 +149,6 @@ function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_s
     '#weight' => -8,
     '#type' => 'container',
     '#id' => 'editor-settings-wrapper',
-    '#attached' => [
-      'library' => [
-        'editor/drupal.editor.admin',
-      ],
-    ],
   ];
 
   // Add editor-specific validation and submit handlers.
