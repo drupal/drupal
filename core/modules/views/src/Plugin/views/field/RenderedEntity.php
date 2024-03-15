@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,9 +18,8 @@ use Drupal\Core\Cache\Cache;
  * Provides a field handler which renders an entity in a certain view mode.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("rendered_entity")
  */
+#[ViewsField("rendered_entity")]
 class RenderedEntity extends FieldPluginBase implements CacheableDependencyInterface {
 
   use EntityTranslationRenderTrait;

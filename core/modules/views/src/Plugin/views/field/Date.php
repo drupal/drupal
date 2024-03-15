@@ -6,6 +6,7 @@ use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -14,9 +15,8 @@ use Drupal\Core\Datetime\DateFormatterInterface;
  * A handler to provide proper displays for dates.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("date")
  */
+#[ViewsField("date")]
 class Date extends FieldPluginBase {
 
   /**

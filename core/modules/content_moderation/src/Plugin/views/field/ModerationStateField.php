@@ -3,15 +3,15 @@
 namespace Drupal\content_moderation\Plugin\views\field;
 
 use Drupal\content_moderation\Plugin\views\ModerationStateJoinViewsHandlerTrait;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\EntityField;
 
 /**
  * A field handler for the computed moderation_state field.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("moderation_state_field")
  */
+#[ViewsField("moderation_state_field")]
 class ModerationStateField extends EntityField {
 
   use ModerationStateJoinViewsHandlerTrait;

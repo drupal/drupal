@@ -14,6 +14,7 @@ use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Routing\ResettableStackedRouteMatchInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\style\Table;
@@ -23,9 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines an actions-based bulk operation form element.
- *
- * @ViewsField("bulk_form")
  */
+#[ViewsField("bulk_form")]
 class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
 
   use RedirectDestinationTrait;

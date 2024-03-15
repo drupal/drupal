@@ -3,6 +3,7 @@
 namespace Drupal\views_test_data\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\field\UncacheableFieldHandlerTrait;
 use Drupal\views\ResultRow;
@@ -11,9 +12,8 @@ use Drupal\views\ResultRow;
  * A handler to provide a field that is completely custom by the administrator.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("field_form_button_test")
  */
+#[ViewsField("field_form_button_test")]
 class FieldFormButtonTest extends FieldPluginBase {
 
   use UncacheableFieldHandlerTrait;

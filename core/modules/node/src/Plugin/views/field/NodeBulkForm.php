@@ -2,13 +2,13 @@
 
 namespace Drupal\node\Plugin\views\field;
 
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\BulkForm;
 
 /**
  * Defines a node operations bulk form element.
- *
- * @ViewsField("node_bulk_form")
  */
+#[ViewsField("node_bulk_form")]
 class NodeBulkForm extends BulkForm {
 
   /**

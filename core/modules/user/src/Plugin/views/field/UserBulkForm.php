@@ -4,13 +4,13 @@ namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\UserInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\BulkForm;
 
 /**
  * Defines a user operations bulk form element.
- *
- * @ViewsField("user_bulk_form")
  */
+#[ViewsField("user_bulk_form")]
 class UserBulkForm extends BulkForm {
 
   /**

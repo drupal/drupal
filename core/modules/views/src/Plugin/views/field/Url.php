@@ -5,15 +5,15 @@ namespace Drupal\views\Plugin\views\field;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url as CoreUrl;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
  * Field handler to provide simple renderer that turns a URL into a clickable link.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("url")
  */
+#[ViewsField("url")]
 class Url extends FieldPluginBase {
 
   /**

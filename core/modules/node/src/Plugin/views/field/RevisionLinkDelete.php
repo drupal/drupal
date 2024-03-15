@@ -3,15 +3,15 @@
 namespace Drupal\node\Plugin\views\field;
 
 use Drupal\Core\Url;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
  * Field handler to present link to delete a node revision.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("node_revision_link_delete")
  */
+#[ViewsField("node_revision_link_delete")]
 class RevisionLinkDelete extends RevisionLink {
 
   /**

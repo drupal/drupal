@@ -3,15 +3,15 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
  * Defines a field handler to translate a language into its readable form.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("language")
  */
+#[ViewsField("language")]
 class LanguageField extends FieldPluginBase {
 
   /**

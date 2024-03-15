@@ -3,6 +3,7 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Database\Connection;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
@@ -13,9 +14,8 @@ use Drupal\user\Entity\Role;
  * Field handler to provide a list of roles.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("user_roles")
  */
+#[ViewsField("user_roles")]
 class Roles extends PrerenderList {
 
   /**

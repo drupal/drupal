@@ -8,6 +8,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\Url;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
@@ -15,9 +16,8 @@ use Drupal\views\ResultRow;
  * Provides a handler that adds contextual links.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("contextual_links")
  */
+#[ViewsField("contextual_links")]
 class ContextualLinks extends FieldPluginBase {
 
   use RedirectDestinationTrait;

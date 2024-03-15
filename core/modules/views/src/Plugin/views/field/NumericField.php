@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\field;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
@@ -15,9 +16,8 @@ use Drupal\views\ResultRow;
  *          will be assumed to be integer.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("numeric")
  */
+#[ViewsField("numeric")]
 class NumericField extends FieldPluginBase {
 
   /**

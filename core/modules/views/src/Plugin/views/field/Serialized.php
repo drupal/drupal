@@ -3,15 +3,15 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
  * Field handler to show data of serialized fields.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("serialized")
  */
+#[ViewsField("serialized")]
 class Serialized extends FieldPluginBase {
 
   /**

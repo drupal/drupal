@@ -2,15 +2,15 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
  * Provides a handler that renders links as dropbutton.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("dropbutton")
  */
+#[ViewsField("dropbutton")]
 class Dropbutton extends Links {
 
   /**
