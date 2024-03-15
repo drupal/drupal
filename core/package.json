@@ -4,7 +4,7 @@
   "license": "GPL-2.0",
   "private": true,
   "engines": {
-    "yarn": ">= 1.6",
+    "yarn": ">= 4.1.1",
     "node": ">= 18.0"
   },
   "scripts": {
@@ -21,9 +21,9 @@
     "test:nightwatch": "node -r dotenv-safe/config ./node_modules/.bin/nightwatch --config ./tests/Drupal/Nightwatch/nightwatch.conf.js",
     "prettier": "prettier --write \"./**/*.js\"",
     "spellcheck": "cspell -c .cspell.json --cache",
-    "spellcheck:make-dict": "rm -f misc/cspell/dictionary.txt && touch misc/cspell/dictionary.txt && yarn -s spellcheck:core --unique --words-only | perl -Mopen=locale -pe '$_=lc$_' | LC_ALL=en_US.UTF-8 tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt",
+    "spellcheck:make-dict": "rm -f misc/cspell/dictionary.txt && touch misc/cspell/dictionary.txt && yarn spellcheck:core --unique --words-only | perl -Mopen=locale -pe '$_=lc$_' | LC_ALL=en_US.UTF-8 tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt",
     "spellcheck:core": "cspell -c .cspell.json --root .. --cache --cache-location core/.cspellcache \"core/**/*\" \"composer/**/*\" \"composer.json\" \".gitlab-ci/*\" \".gitlab-ci.yml\"",
-    "spellcheck:make-drupal-dict": "rm -f misc/cspell/drupal-dictionary.txt && touch misc/cspell/drupal-dictionary.txt && yarn -s spellcheck:core --unique --words-only | perl -Mopen=locale -pe '$_=lc$_' | LC_ALL=en_US.UTF-8 tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/drupal-dictionary.txt",
+    "spellcheck:make-drupal-dict": "rm -f misc/cspell/drupal-dictionary.txt && touch misc/cspell/drupal-dictionary.txt && yarn spellcheck:core --unique --words-only | perl -Mopen=locale -pe '$_=lc$_' | LC_ALL=en_US.UTF-8 tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/drupal-dictionary.txt",
     "vendor-update": "node ./scripts/js/vendor-update.js",
     "watch:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js --watch",
     "build:ckeditor5": "webpack --config ./modules/ckeditor5/webpack.config.js",
@@ -118,5 +118,5 @@
     "last 1 Samsung version",
     "Firefox ESR"
   ],
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@4.1.1"
 }
