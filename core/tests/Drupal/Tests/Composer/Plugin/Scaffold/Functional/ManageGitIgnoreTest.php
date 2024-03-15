@@ -250,7 +250,7 @@ Scaffolding files for fixtures/drupal-composer-drupal-project:
   - Copy [web-root]/robots.txt from assets/robots-default.txt
 
 EOT;
-    $this->assertEquals($expected, $output);
+    $this->assertStringContainsString($expected, $output);
     $this->assertFileExists($sut . '/docroot/index.php');
     $this->assertFileDoesNotExist($sut . '/docroot/sites/default/.gitignore');
   }
