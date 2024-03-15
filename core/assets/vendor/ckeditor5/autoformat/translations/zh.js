@@ -1,0 +1,1 @@
+!function(i){const n=i.zh=i.zh||{};n.dictionary=Object.assign(n.dictionary||{},{"Revert autoformatting action":"復原自動格式化操作"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(a){const o=a.ro=a.ro||{};o.dictionary=Object.assign(o.dictionary||{},{"Revert autoformatting action":"Anulează acțiunea de formatare automată"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

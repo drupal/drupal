@@ -1,0 +1,1 @@
+!function(t){const i=t.fi=t.fi||{};i.dictionary=Object.assign(i.dictionary||{},{"Revert autoformatting action":"Peruuta automaattimuokkaus"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

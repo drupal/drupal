@@ -1,0 +1,1 @@
+!function(i){const t=i.it=i.it||{};t.dictionary=Object.assign(t.dictionary||{},{"Revert autoformatting action":"Annulla l'azione di formattazione automatica"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

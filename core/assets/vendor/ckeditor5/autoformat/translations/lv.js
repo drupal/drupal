@@ -1,0 +1,1 @@
+!function(t){const a=t.lv=t.lv||{};a.dictionary=Object.assign(a.dictionary||{},{"Revert autoformatting action":"Atjaunot automātiskās formatēšanas darbību"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

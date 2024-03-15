@@ -1,0 +1,1 @@
+!function(n){const i=n["zh-cn"]=n["zh-cn"]||{};i.dictionary=Object.assign(i.dictionary||{},{"Revert autoformatting action":"恢复自动格式化操作"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
