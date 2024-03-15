@@ -117,5 +117,6 @@
     "last 1 ChromeAndroid version",
     "last 1 Samsung version",
     "Firefox ESR"
-  ]
+  ],
+  "packageManager": "yarn@1.22.22"
 }
