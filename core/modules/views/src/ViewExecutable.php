@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
+use Drupal\views\Plugin\ViewsPluginManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -471,14 +472,21 @@ class ViewExecutable {
    *   The views data.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
+   * @param \Drupal\views\Plugin\ViewsPluginManager|null $displayPluginManager
+   *   The plugin manager for display.
    */
-  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data, RouteProviderInterface $route_provider) {
+  public function __construct(ViewEntityInterface $storage, AccountInterface $user, ViewsData $views_data, RouteProviderInterface $route_provider, protected ?ViewsPluginManager $displayPluginManager = NULL) {
     // Reference the storage and the executable to each other.
     $this->storage = $storage;
     $this->storage->set('executable', $this);
     $this->user = $user;
     $this->viewsData = $views_data;
     $this->routeProvider = $route_provider;
+    if ($this->displayPluginManager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $displayPluginManager argument is deprecated in drupal:10.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3410349', E_USER_DEPRECATED);
+      $this->displayPluginManager = \Drupal::service('plugin.manager.views.display');
+    }
+
   }
 
   /**
@@ -738,9 +746,8 @@ class ViewExecutable {
     if (isset($this->current_display)) {
       return TRUE;
     }
-
     // Initialize the display cache array.
-    $this->displayHandlers = new DisplayPluginCollection($this, Views::pluginManager('display'));
+    $this->displayHandlers = new DisplayPluginCollection($this, $this->displayPluginManager);
 
     $this->current_display = 'default';
     $this->display_handler = $this->displayHandlers->get('default');
@@ -2097,6 +2104,7 @@ class ViewExecutable {
       $defaults['user'],
       $defaults['request'],
       $defaults['routeProvider'],
+      $defaults['displayPluginManager'],
       $defaults['viewsData']
     );
 
@@ -2535,6 +2543,7 @@ class ViewExecutable {
       $this->user = \Drupal::currentUser();
       $this->viewsData = \Drupal::service('views.views_data');
       $this->routeProvider = \Drupal::service('router.route_provider');
+      $this->displayPluginManager = \Drupal::service('plugin.manager.views.display');
 
       // Restore the state of this executable.
       if ($request = \Drupal::request()) {
