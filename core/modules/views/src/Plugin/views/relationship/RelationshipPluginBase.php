@@ -15,7 +15,7 @@ use Drupal\views\Views;
  *
  * Relationship handlers extend
  * \Drupal\views\Plugin\views\relationship\RelationshipPluginBase. They must
- * be annotated with \Drupal\views\Annotation\ViewsRelationship annotation,
+ * be attributed with \Drupal\views\Attribute\ViewsRelationship attribute,
  * and they must be in namespace directory Plugin\views\relationship.
  *
  * @ingroup views_plugins
