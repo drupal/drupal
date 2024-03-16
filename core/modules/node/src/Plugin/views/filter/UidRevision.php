@@ -3,14 +3,14 @@
 namespace Drupal\node\Plugin\views\filter;
 
 use Drupal\user\Plugin\views\filter\Name;
+use Drupal\views\Attribute\ViewsFilter;
 
 /**
  * Filter handler to check for revisions a certain user has created.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("node_uid_revision")
  */
+#[ViewsFilter("node_uid_revision")]
 class UidRevision extends Name {
 
   public function query($group_by = FALSE) {

@@ -3,15 +3,15 @@
 namespace Drupal\node\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
  * Filter by published status.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("node_status")
  */
+#[ViewsFilter("node_status")]
 class Status extends FilterPluginBase {
 
   public function adminSummary() {}

@@ -2,6 +2,8 @@
 
 namespace Drupal\views\Plugin\views\filter;
 
+use Drupal\views\Attribute\ViewsFilter;
+
 /**
  * Simple filter to handle matching of boolean values.
  *
@@ -12,9 +14,8 @@ namespace Drupal\views\Plugin\views\filter;
  * - label: (REQUIRED) The label for the checkbox.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("boolean_string")
  */
+#[ViewsFilter("boolean_string")]
 class BooleanOperatorString extends BooleanOperator {
 
   public function query() {

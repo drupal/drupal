@@ -3,15 +3,15 @@
 namespace Drupal\comment\Plugin\views\filter;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * Filter based on comment node status.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("node_comment")
  */
+#[ViewsFilter("node_comment")]
 class NodeComment extends InOperator {
 
   /**

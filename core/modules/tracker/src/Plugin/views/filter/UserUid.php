@@ -3,14 +3,14 @@
 namespace Drupal\tracker\Plugin\views\filter;
 
 use Drupal\user\Plugin\views\filter\Name;
+use Drupal\views\Attribute\ViewsFilter;
 
 /**
  * UID filter to check for nodes that a user posted or commented on.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("tracker_user_uid")
  */
+#[ViewsFilter("tracker_user_uid")]
 class UserUid extends Name {
 
   /**

@@ -3,13 +3,13 @@
 namespace Drupal\dblog\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
  * Exposes log types to views module.
- *
- * @ViewsFilter("dblog_types")
  */
+#[ViewsFilter("dblog_types")]
 class DblogTypes extends InOperator {
 
   /**

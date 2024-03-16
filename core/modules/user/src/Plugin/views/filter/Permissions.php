@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\user\Entity\Role;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\ManyToOne;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -16,9 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Filter handler for user roles.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("user_permissions")
  */
+#[ViewsFilter("user_permissions")]
 class Permissions extends ManyToOne {
   use DeprecatedServicePropertyTrait;
 

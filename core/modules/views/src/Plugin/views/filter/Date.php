@@ -3,14 +3,14 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 
 /**
  * Filter to handle dates stored as a timestamp.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("date")
  */
+#[ViewsFilter("date")]
 class Date extends NumericFilter {
 
   protected function defineOptions() {

@@ -4,6 +4,7 @@ namespace Drupal\taxonomy\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\TaxonomyIndexDepthQueryTrait;
+use Drupal\views\Attribute\ViewsFilter;
 
 /**
  * Filter handler for taxonomy terms with depth.
@@ -12,9 +13,8 @@ use Drupal\taxonomy\TaxonomyIndexDepthQueryTrait;
  * because it uses a subquery to find nodes with.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("taxonomy_index_tid_depth")
  */
+#[ViewsFilter("taxonomy_index_tid_depth")]
 class TaxonomyIndexTidDepth extends TaxonomyIndexTid {
   use TaxonomyIndexDepthQueryTrait;
 
