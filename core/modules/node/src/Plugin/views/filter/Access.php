@@ -3,15 +3,15 @@
 namespace Drupal\node\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
  * Filter by node_access records.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("node_access")
  */
+#[ViewsFilter("node_access")]
 class Access extends FilterPluginBase {
 
   public function adminSummary() {}

@@ -3,15 +3,15 @@
 namespace Drupal\comment\Plugin\views\filter;
 
 use Drupal\Core\Database\Database;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
  * Filter handler, accepts user ID to check for nodes user posted/commented on.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("comment_user_uid")
  */
+#[ViewsFilter("comment_user_uid")]
 class UserUid extends FilterPluginBase {
 
   public function query() {

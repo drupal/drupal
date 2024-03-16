@@ -4,6 +4,7 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -12,9 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Filter class which allows filtering by entity bundles.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("bundle")
  */
+#[ViewsFilter("bundle")]
 class Bundle extends InOperator {
 
   /**

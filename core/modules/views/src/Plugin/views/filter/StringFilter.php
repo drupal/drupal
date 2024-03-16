@@ -4,6 +4,7 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -12,9 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Including equality, like, not like, etc.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("string")
  */
+#[ViewsFilter("string")]
 class StringFilter extends FilterPluginBase implements FilterOperatorsInterface {
 
   /**

@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\user\RoleInterface;
 use Drupal\user\RoleStorageInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\ManyToOne;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -11,9 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Filter handler for user roles.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("user_roles")
  */
+#[ViewsFilter("user_roles")]
 class Roles extends ManyToOne {
 
   /**

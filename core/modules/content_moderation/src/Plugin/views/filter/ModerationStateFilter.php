@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\DependentWithRemovalPluginInterface;
 use Drupal\views\Plugin\views\filter\InOperator;
 use Drupal\views\Views;
@@ -16,9 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a filter for the moderation state of an entity.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("moderation_state_filter")
  */
+#[ViewsFilter("moderation_state_filter")]
 class ModerationStateFilter extends InOperator implements DependentWithRemovalPluginInterface {
 
   use ModerationStateJoinViewsHandlerTrait;

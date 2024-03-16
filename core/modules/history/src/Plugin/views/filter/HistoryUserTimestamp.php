@@ -5,6 +5,7 @@ namespace Drupal\history\Plugin\views\filter;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\UncacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,9 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * table is history.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("history_user_timestamp")
  */
+#[ViewsFilter("history_user_timestamp")]
 class HistoryUserTimestamp extends FilterPluginBase {
 
   use UncacheableDependencyTrait;

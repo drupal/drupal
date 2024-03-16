@@ -3,14 +3,14 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 
 /**
  * Simple filter to handle equal to / not equal to filters.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("equality")
  */
+#[ViewsFilter("equality")]
 class Equality extends FilterPluginBase {
 
   /**

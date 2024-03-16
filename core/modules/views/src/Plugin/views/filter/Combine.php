@@ -3,14 +3,14 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 
 /**
  * Filter handler which allows to search on multiple fields.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsFilter("combine")
  */
+#[ViewsFilter("combine")]
 class Combine extends StringFilter {
 
   /**

@@ -7,6 +7,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\views\filter\Date as NumericDate;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,9 +20,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * because it provides more sensible operators.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("datetime")
  */
+#[ViewsFilter("datetime")]
 class Date extends NumericDate implements ContainerFactoryPluginInterface {
 
   use FieldAPIHandlerTrait;

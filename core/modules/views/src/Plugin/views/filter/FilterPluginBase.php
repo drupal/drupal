@@ -21,8 +21,8 @@ use Drupal\views\ViewExecutable;
  * Plugins that handle views filtering.
  *
  * Filter handler plugins extend
- * \Drupal\views\Plugin\views\filter\FilterPluginBase. They must be annotated
- * with \Drupal\views\Annotation\ViewsFilter annotation, and they must be in
+ * \Drupal\views\Plugin\views\filter\FilterPluginBase. They must be attributed
+ * with \Drupal\views\Attribute\ViewsFilter attribute, and they must be in
  * namespace directory Plugin\views\filter.
  *
  * The following items can go into a hook_views_data() implementation in a

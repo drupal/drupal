@@ -6,6 +6,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\PluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -13,9 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides filtering by language.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("language")
  */
+#[ViewsFilter("language")]
 class LanguageFilter extends InOperator implements ContainerFactoryPluginInterface {
 
   /**
