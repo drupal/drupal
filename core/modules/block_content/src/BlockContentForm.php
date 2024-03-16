@@ -115,6 +115,7 @@ class BlockContentForm extends ContentEntityForm {
           [
             'plugin_id' => 'block_content:' . $block->uuid(),
             'theme' => $theme,
+            'region' => $this->getRequest()->query->getString('region'),
           ]
         );
       }
