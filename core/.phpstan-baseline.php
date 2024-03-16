@@ -608,6 +608,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Form/FormBuilder.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$input in isset\\(\\) always exists and is not nullable\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Form/FormBuilder.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$form in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Form/FormCache.php',
@@ -732,6 +737,11 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$page_top in empty\\(\\) always exists and is always falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/MainContent/HtmlRenderer.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$elements in isset\\(\\) always exists and is not nullable\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
@@ -1381,7 +1391,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/NullDestination.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#',
+	'message' => '#^Call to an undefined static method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\:\\:migrateDumpAlter\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateTestBase.php',
 ];
@@ -1982,7 +1992,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$validate_types might not be defined\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/ArgumentPluginBase.php',
 ];
 $ignoreErrors[] = [
