@@ -5,6 +5,7 @@ namespace Drupal\taxonomy\Plugin\views\relationship;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\VocabularyStorageInterface;
+use Drupal\views\Attribute\ViewsRelationship;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -12,9 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Relationship handler to return the taxonomy terms of nodes.
  *
  * @ingroup views_relationship_handlers
- *
- * @ViewsRelationship("node_term_data")
  */
+#[ViewsRelationship("node_term_data")]
 class NodeTermData extends RelationshipPluginBase {
 
   /**

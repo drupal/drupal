@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\relationship;
 
+use Drupal\views\Attribute\ViewsRelationship;
 use Drupal\views\Plugin\ViewsHandlerManager;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -10,9 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * A relationship handlers which reverse entity references.
  *
  * @ingroup views_relationship_handlers
- *
- * @ViewsRelationship("entity_reverse")
  */
+#[ViewsRelationship("entity_reverse")]
 class EntityReverse extends RelationshipPluginBase {
 
   /**
