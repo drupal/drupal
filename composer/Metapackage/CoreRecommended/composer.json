@@ -43,7 +43,7 @@
         "symfony/http-kernel": "~v6.4.1",
         "symfony/mailer": "~v6.4.0",
         "symfony/mime": "~v6.4.0",
-        "symfony/polyfill-ctype": "~v1.28.0",
+        "symfony/polyfill-ctype": "~v1.29.0",
         "symfony/polyfill-iconv": "~v1.28.0",
         "symfony/polyfill-intl-grapheme": "~v1.28.0",
         "symfony/polyfill-intl-idn": "~v1.28.0",
@@ -60,7 +60,7 @@
         "symfony/validator": "~v6.4.0",
         "symfony/var-dumper": "~v6.4.0",
         "symfony/var-exporter": "~v6.4.1",
-        "symfony/yaml": "~v6.4.0",
+        "symfony/yaml": "~v6.4.3",
         "twig/twig": "~v3.8.0"
     }
 }
