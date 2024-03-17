@@ -33,6 +33,8 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     # Run when called from an upstream pipeline https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html?tab=Multi-project+pipeline#use-rules-to-control-downstream-pipeline-jobs
     - if: $CI_PIPELINE_SOURCE == 'pipeline'
+    # Run when called from a parent pipeline (e.g. updated dependencies job)
+    - if: $CI_PIPELINE_SOURCE == 'parent_pipeline'
     # Run on commits.
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     # The last rule above blocks manual and scheduled pipelines on non-default branch. The rule below allows them:
