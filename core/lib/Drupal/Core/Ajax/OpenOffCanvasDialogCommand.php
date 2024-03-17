@@ -22,7 +22,7 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
    * behaviors. Drupal provides a built-in off-canvas dialog for this purpose,
    * so the selector is hard-coded in the call to the parent constructor.
    *
-   * @param string $title
+   * @param string|\Stringable|null $title
    *   The title of the dialog.
    * @param string|array $content
    *   The content that will be placed in the dialog, either a render array
@@ -37,7 +37,7 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
    * @param string $position
    *   (optional) The position to render the off-canvas dialog.
    */
-  public function __construct($title, $content, array $dialog_options = [], $settings = NULL, $position = 'side') {
+  public function __construct(string|\Stringable|null $title, $content, array $dialog_options = [], $settings = NULL, $position = 'side') {
     parent::__construct('#drupal-off-canvas', $title, $content, $dialog_options, $settings);
     $this->dialogOptions['modal'] = FALSE;
     $this->dialogOptions['autoResize'] = FALSE;

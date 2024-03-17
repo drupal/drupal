@@ -17,7 +17,7 @@ class OpenModalDialogCommand extends OpenDialogCommand {
    * until the modal has been completed. Drupal provides a built-in modal for
    * this purpose, so no selector needs to be provided.
    *
-   * @param string $title
+   * @param string|\Stringable|null $title
    *   The title of the dialog.
    * @param string|array $content
    *   The content that will be placed in the dialog, either a render array
@@ -30,7 +30,7 @@ class OpenModalDialogCommand extends OpenDialogCommand {
    *   on the content of the dialog. If left empty, the settings will be
    *   populated automatically from the current request.
    */
-  public function __construct($title, $content, array $dialog_options = [], $settings = NULL) {
+  public function __construct(string|\Stringable|null $title, $content, array $dialog_options = [], $settings = NULL) {
     $dialog_options['modal'] = TRUE;
     parent::__construct('#drupal-modal', $title, $content, $dialog_options, $settings);
   }

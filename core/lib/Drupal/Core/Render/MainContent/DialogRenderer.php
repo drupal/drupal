@@ -56,9 +56,8 @@ class DialogRenderer implements MainContentRendererInterface {
     $main_content['#attached']['library'][] = 'core/drupal.dialog.ajax';
     $response->setAttachments($main_content['#attached']);
 
-    // Determine the title: use the title provided by the main content if any,
-    // otherwise get it from the routing information.
-    $title = $main_content['#title'] ?? $this->titleResolver->getTitle($request, $route_match->getRouteObject());
+    // Determine the title.
+    $title = $this->getTitleAsStringable($main_content, $request, $route_match);
 
     // Determine the dialog options and the target for the OpenDialogCommand.
     $options = $this->getDialogOptions($request);
@@ -114,6 +113,38 @@ class DialogRenderer implements MainContentRendererInterface {
       return $request->query->all('dialogOptions');
     }
     return $request->request->all('dialogOptions');
+  }
+
+  /**
+   * Gets the title as a string or stringable object.
+   *
+   * Uses the title provided by the main content if any, otherwise gets it from
+   * the routing information.
+   *
+   * @param array $main_content
+   *   The main content array.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   *
+   * @return \Stringable|string|null
+   *   The title as a string or stringable object.
+   */
+  protected function getTitleAsStringable(array $main_content, Request $request, RouteMatchInterface $route_match): \Stringable|string|null {
+    $title = NULL;
+    if (array_key_exists('#title', $main_content)) {
+      if (is_array($main_content['#title'])) {
+        $title = $this->renderer->renderInIsolation($main_content['#title']);
+      }
+      else {
+        $title = $main_content['#title'];
+      }
+    }
+    elseif ($this->titleResolver->getTitle($request, $route_match->getRouteObject())) {
+      $title = $this->titleResolver->getTitle($request, $route_match->getRouteObject())->render();
+    }
+    return $title;
   }
 
 }
