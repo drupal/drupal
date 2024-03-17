@@ -46,6 +46,7 @@ class ClassResolver implements ClassResolverInterface {
     }
 
     if ($instance instanceof ContainerAwareInterface) {
+      @trigger_error('Implementing \Symfony\Component\DependencyInjection\ContainerAwareInterface is deprecated in drupal:10.3.0 and it will be removed in drupal:11.0.0. Implement \Drupal\Core\DependencyInjection\ContainerInjectionInterface and use dependency injection instead. See https://www.drupal.org/node/3428661', E_USER_DEPRECATED);
       $instance->setContainer($this->container);
     }
 
