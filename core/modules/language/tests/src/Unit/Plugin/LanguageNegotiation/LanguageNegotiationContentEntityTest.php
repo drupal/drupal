@@ -12,7 +12,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ServerBag;
 use Symfony\Component\Routing\Route;
@@ -106,7 +106,7 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
     // Case 2: A request is available, but the languageManager is not set and
     // the static::QUERY_PARAMETER is not provided as a named parameter.
     $request = Request::create('/de/foo', 'GET');
-    $request->query = new ParameterBag();
+    $request->query = new InputBag();
     $this->assertEquals(NULL, $languageNegotiationContentEntity->getLangcode($request));
 
     // Case 3: A request is available, the languageManager is set, but the
