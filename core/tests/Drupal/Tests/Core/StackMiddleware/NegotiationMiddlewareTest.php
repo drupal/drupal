@@ -6,7 +6,7 @@ namespace Drupal\Tests\Core\StackMiddleware;
 
 use Drupal\Core\StackMiddleware\NegotiationMiddleware;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -99,11 +99,9 @@ class NegotiationMiddlewareTest extends UnitTestCase {
     $request->setRequestFormat()->shouldNotBeCalled();
 
     // Some getContentType calls we don't really care about but have to mock.
-    $request_data = $this->prophesize(ParameterBag::class);
-    $request_data->get('ajax_iframe_upload', FALSE)->willReturn(FALSE)->shouldBeCalled();
     $request_mock = $request->reveal();
-    $request_mock->query = new ParameterBag([]);
-    $request_mock->request = $request_data->reveal();
+    $request_mock->query = new InputBag();
+    $request_mock->request = new InputBag();
 
     // Calling kernel app with default arguments.
     $this->app->handle($request_mock, HttpKernelInterface::MAIN_REQUEST, TRUE)
@@ -139,11 +137,9 @@ class NegotiationMiddlewareTest extends UnitTestCase {
 
     // Some calls we don't care about.
     $request->setRequestFormat()->shouldNotBeCalled();
-    $request_data = $this->prophesize(ParameterBag::class);
-    $request_data->get('ajax_iframe_upload', FALSE)->willReturn(FALSE)->shouldBeCalled();
     $request_mock = $request->reveal();
-    $request_mock->query = new ParameterBag([]);
-    $request_mock->request = $request_data->reveal();
+    $request_mock->query = new InputBag();
+    $request_mock->request = new InputBag();
 
     // Trigger handle.
     $content_negotiation->registerFormat('david', 'geeky/david');
