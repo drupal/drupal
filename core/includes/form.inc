@@ -612,7 +612,7 @@ function template_preprocess_form_element_label(&$variables) {
  *   // The following keys allow for multi-step operations :
  *   // 'sandbox' (read / write): An array that can be freely used to
  *   //   store persistent data between iterations. It is recommended to
- *   //   use this instead of $_SESSION, which is unsafe if the user
+ *   //   use this instead of the session, which is unsafe if the user
  *   //   continues browsing in a separate window while the batch is processing.
  *   // 'finished' (write): A float number between 0 and 1 informing
  *   //   the processing engine of the completion level for the operation.
@@ -669,11 +669,12 @@ function template_preprocess_form_element_label(&$variables) {
  *     $message = t('Finished with an error.');
  *   }
  *   \Drupal::messenger()->addMessage($message);
- *   // Providing data for the redirected page is done through $_SESSION.
+ *   // Providing data for the redirected page is done through the session.
  *   foreach ($results as $result) {
  *     $items[] = t('Loaded node %title.', array('%title' => $result));
  *   }
- *   $_SESSION['my_batch_results'] = $items;
+ *   $session = \Drupal::getRequest()->getSession();
+ *   $session->set('my_batch_results', $items);
  * }
  * @endcode
  */
@@ -718,7 +719,7 @@ function template_preprocess_form_element_label(&$variables) {
  *   - finished: Name of an implementation of callback_batch_finished(). This is
  *     executed after the batch has completed. This should be used to perform
  *     any result massaging that may be needed, and possibly save data in
- *     $_SESSION for display after final page redirection.
+ *     the session for display after final page redirection.
  *   - file: Path to the file containing the definitions of the 'operations' and
  *     'finished' functions, for instance if they don't reside in the main
  *     .module file. The path should be relative to base_path(), and thus should
@@ -952,7 +953,10 @@ function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = N
       \Drupal::service(BatchStorageInterface::class)->create($batch);
 
       // Set the batch number in the session to guarantee that it will stay alive.
-      $_SESSION['batches'][$batch['id']] = TRUE;
+      $session = \Drupal::request()->getSession();
+      $batches = $session->get('batches', []);
+      $batches[$batch['id']] = TRUE;
+      $session->set('batches', $batches);
 
       // Redirect for processing.
       $query_options = $error_url->getOption('query');

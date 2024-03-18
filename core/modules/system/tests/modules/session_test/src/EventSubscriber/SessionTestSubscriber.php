@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class SessionTestSubscriber implements EventSubscriberInterface {
 
   /**
-   * Stores whether $_SESSION is empty at the beginning of the request.
+   * Stores whether the session is empty at the beginning of the request.
    *
    * @var bool
    */

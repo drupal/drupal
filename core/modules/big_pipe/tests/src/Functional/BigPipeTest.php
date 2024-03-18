@@ -431,8 +431,23 @@ class BigPipeTest extends BrowserTestBase {
    * Ensures CSRF tokens can be generated for the current user's session.
    */
   protected function setCsrfTokenSeedInTestEnvironment() {
+    // Retrieve the CSRF token from the child site from its serialized session
+    // record in the database.
     $session_data = $this->container->get('session_handler.write_safe')->read($this->getSession()->getCookie($this->getSessionName()));
     $csrf_token_seed = unserialize(explode('_sf2_meta|', $session_data)[1])['s'];
+
+    // Ensure that the session is started before accessing a session bag.
+    // Otherwise the value stored in the bag is lost when subsequent session
+    // access triggers a session start automatically.
+
+    /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
+    $request_stack = $this->container->get('request_stack');
+    $session = $request_stack->getSession();
+    if (!$session->isStarted()) {
+      $session->start();
+    }
+
+    // Store the CSRF token in the test runners session metadata bag.
     $this->container->get('session_manager.metadata_bag')->setCsrfTokenSeed($csrf_token_seed);
   }
 

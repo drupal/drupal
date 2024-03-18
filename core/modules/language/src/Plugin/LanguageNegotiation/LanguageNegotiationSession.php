@@ -88,9 +88,7 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
       if ($request->query->has($param)) {
         return $request->query->get($param);
       }
-      // @todo Remove hasSession() from condition in
-      //   https://www.drupal.org/node/2484991
-      if ($request->hasSession() && $request->getSession()->has($param)) {
+      if ($request->getSession()->has($param)) {
         return $request->getSession()->get($param);
       }
     }

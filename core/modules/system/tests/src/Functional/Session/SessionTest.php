@@ -403,7 +403,7 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
-   * Assert whether $_SESSION is empty at the beginning of the request.
+   * Assert whether the session is empty at the beginning of the request.
    *
    * @internal
    */
