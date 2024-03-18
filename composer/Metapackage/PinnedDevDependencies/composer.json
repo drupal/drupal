@@ -51,7 +51,7 @@
         "phpstan/phpdoc-parser": "1.24.4",
         "phpstan/phpstan": "1.10.62",
         "phpstan/phpstan-deprecation-rules": "1.1.4",
-        "phpstan/phpstan-phpunit": "1.3.15",
+        "phpstan/phpstan-phpunit": "1.3.16",
         "phpunit/php-code-coverage": "9.2.29",
         "phpunit/php-file-iterator": "3.0.6",
         "phpunit/php-invoker": "3.1.1",
