@@ -24,6 +24,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\Plugin\PluginManagerPass;
+use Drupal\Core\Queue\QueueFactoryInterface;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
 use Psr\Log\LoggerAwareInterface;
@@ -106,6 +107,8 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->registerForAutoconfiguration(LoggerAwareInterface::class)
       ->addTag('logger_aware');
 
+    $container->registerForAutoconfiguration(QueueFactoryInterface::class)
+      ->addTag('queue_factory');
   }
 
   /**

@@ -556,9 +556,7 @@ services:
   Drupal\Core\State\StateInterface: '@state'
   queue:
     class: Drupal\Core\Queue\QueueFactory
-    arguments: ['@settings']
-    calls:
-      - [setContainer, ['@service_container']]
+    autowire: true
   Drupal\Core\Queue\QueueFactory: '@queue'
   queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
