@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * @coversDefaultClass \Drupal\Core\Form\FormBuilder
@@ -575,6 +577,7 @@ class FormBuilderTest extends FormTestBase {
    */
   public function testExceededFileSize() {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $request_stack = new RequestStack();
     $request_stack->push($request);
     $this->formBuilder = $this->getMockBuilder('\Drupal\Core\Form\FormBuilder')
@@ -598,6 +601,7 @@ class FormBuilderTest extends FormTestBase {
   public function testPostAjaxRequest(): void {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE], ['form_id' => 'different_form_id']);
     $request->setMethod('POST');
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->requestStack->push($request);
 
     $form_state = (new FormState())
