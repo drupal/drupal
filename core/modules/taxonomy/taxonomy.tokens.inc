@@ -112,7 +112,6 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
   $replacements = [];
   if ($type == 'term' && !empty($data['term'])) {
     $term = $data['term'];
-    $term = \Drupal::service('entity.repository')->getTranslationFromContext($term, isset($options['langcode']) ? $options['langcode'] : NULL);
 
     foreach ($tokens as $name => $original) {
       switch ($name) {
@@ -121,7 +120,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'name':
-          $replacements[$original] = $term->label();
+          $replacements[$original] = $term->getName();
           break;
 
         case 'description':
