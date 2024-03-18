@@ -707,6 +707,18 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Queue/Memory.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\Core\\\\Queue\\\\QueueFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
+since Symfony 6\\.4, use dependency injection instead$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Queue/QueueFactory.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Queue\\\\QueueFactory\\:
+since Symfony 6\\.4, use dependency injection instead$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Queue/QueueFactory.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$sort in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/Element/RenderElement.php',

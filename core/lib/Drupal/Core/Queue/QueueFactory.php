@@ -3,13 +3,15 @@
 namespace Drupal\Core\Queue;
 
 use Drupal\Core\Site\Settings;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Defines the queue factory.
  */
-class QueueFactory {
+class QueueFactory implements ContainerAwareInterface {
+
+  use ContainerAwareTrait;
 
   /**
    * Instantiated queues, keyed by name.
@@ -26,18 +28,9 @@ class QueueFactory {
   protected $settings;
 
   /**
-   * Constructs QueueFactory object.
-   *
-   * @param \Drupal\Core\Site\Settings $settings
-   *   The site settings.
-   * @param \Psr\Container\ContainerInterface $container
-   *   A service locator that contains the queue services.
+   * Constructs a queue factory.
    */
-  public function __construct(
-    Settings $settings,
-    #[AutowireLocator('queue_factory')]
-    protected ContainerInterface $container,
-  ) {
+  public function __construct(Settings $settings) {
     $this->settings = $settings;
   }
 
@@ -66,6 +59,9 @@ class QueueFactory {
         $service_name = $this->settings->get('queue_service_' . $name, $this->settings->get('queue_default', 'queue.database'));
       }
       $factory = $this->container->get($service_name);
+      if (!$factory instanceof QueueFactoryInterface) {
+        @trigger_error(sprintf('Not implementing %s in %s is deprecated in drupal:10.3.0 and the factory will not be discovered in drupal:11.0.0. Implement the interface in your factory class. See https://www.drupal.org/node/3417034', QueueFactoryInterface::class, $factory::class), E_USER_DEPRECATED);
+      }
       $this->queues[$name] = $factory->get($name);
     }
     return $this->queues[$name];
