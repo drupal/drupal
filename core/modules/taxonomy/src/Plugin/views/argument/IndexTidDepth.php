@@ -3,7 +3,6 @@
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\taxonomy\TaxonomyIndexDepthQueryTrait;
@@ -27,26 +26,16 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
 
   /**
    * @var \Drupal\Core\Entity\EntityStorageInterface
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3427843
    */
   protected $termStorage;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityStorageInterface|EntityRepositoryInterface $entityRepository) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $termStorage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    if ($entityRepository instanceof EntityStorageInterface) {
-      // @phpstan-ignore-next-line
-      $this->termStorage = $entityRepository;
-      @trigger_error('Calling ' . __CLASS__ . '::__construct() with the $termStorage argument as \Drupal\Core\Entity\EntityStorageInterface is deprecated in drupal:10.3.0 and it will require Drupal\Core\Entity\EntityRepositoryInterface in drupal:11.0.0. See https://www.drupal.org/node/3427843', E_USER_DEPRECATED);
-      $this->entityRepository = \Drupal::service('entity.repository');
-    }
+    $this->termStorage = $termStorage;
   }
 
   /**
@@ -57,7 +46,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.repository')
+      $container->get('entity_type.manager')->getStorage('taxonomy_term')
     );
   }
 
@@ -125,9 +114,9 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   }
 
   public function title() {
-    $term = $this->entityRepository->getCanonical('taxonomy_term', $this->argument);
+    $term = $this->termStorage->load($this->argument);
     if (!empty($term)) {
-      return $term->label();
+      return $term->getName();
     }
     // TODO review text
     return $this->t('No name');
