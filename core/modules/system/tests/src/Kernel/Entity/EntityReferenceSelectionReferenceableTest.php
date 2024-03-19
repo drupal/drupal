@@ -14,6 +14,7 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
  * Tests entity reference selection plugins.
  *
  * @group entity_reference
+ * @group #slow
  */
 class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
 

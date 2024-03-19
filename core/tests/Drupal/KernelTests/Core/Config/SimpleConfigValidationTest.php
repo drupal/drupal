@@ -11,6 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group config
  * @group Validation
+ * @group #slow
  */
 class SimpleConfigValidationTest extends KernelTestBase {
 
