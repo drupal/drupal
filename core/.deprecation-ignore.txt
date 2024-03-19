@@ -23,10 +23,6 @@
 # testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
 %The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
 
-# Drupal 11.
-%Drupal\\Core\\Form\\FormBuilder::getForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
-%Drupal\\Core\\Form\\FormBuilder::submitForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
-
 # PHPUnit 9.
 %"PHPUnit\\Framework\\TestListener".*is deprecated%
 %"PHPUnit\\Framework\\TestListenerDefaultImplementation".*is deprecated%

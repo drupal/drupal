@@ -213,14 +213,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function getForm($form_arg) {
+  public function getForm($form_arg, mixed ...$args) {
     $form_state = new FormState();
-
-    $args = func_get_args();
-    // Remove $form_arg from the arguments.
-    unset($args[0]);
-    $form_state->addBuildInfo('args', array_values($args));
-
+    $form_state->addBuildInfo('args', $args);
     return $this->buildForm($form_arg, $form_state);
   }
 
@@ -474,13 +469,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
-  public function submitForm($form_arg, FormStateInterface &$form_state) {
+  public function submitForm($form_arg, FormStateInterface &$form_state, mixed ...$args) {
     $build_info = $form_state->getBuildInfo();
     if (empty($build_info['args'])) {
-      $args = func_get_args();
-      // Remove $form and $form_state from the arguments.
-      unset($args[0], $args[1]);
-      $form_state->addBuildInfo('args', array_values($args));
+      $form_state->addBuildInfo('args', $args);
     }
 
     // Populate FormState::$input with the submitted values before retrieving
