@@ -24,6 +24,7 @@ use Symfony\Component\Yaml\Yaml;
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator
  * @group ckeditor5
+ * @group #slow
  */
 class ValidatorsTest extends KernelTestBase {
 
