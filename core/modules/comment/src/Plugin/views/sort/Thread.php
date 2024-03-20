@@ -2,15 +2,15 @@
 
 namespace Drupal\comment\Plugin\views\sort;
 
+use Drupal\views\Attribute\ViewsSort;
 use Drupal\views\Plugin\views\sort\SortPluginBase;
 
 /**
  * Sort handler for ordering by thread.
  *
  * @ingroup views_sort_handlers
- *
- * @ViewsSort("comment_thread")
  */
+#[ViewsSort("comment_thread")]
 class Thread extends SortPluginBase {
 
   public function query() {

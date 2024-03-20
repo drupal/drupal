@@ -5,12 +5,12 @@ namespace Drupal\views\Plugin\views\sort;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\UncacheableDependencyTrait;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsSort;
 
 /**
  * Handle a random sort.
- *
- * @ViewsSort("random")
  */
+#[ViewsSort("random")]
 class Random extends SortPluginBase implements CacheableDependencyInterface {
 
   use UncacheableDependencyTrait;

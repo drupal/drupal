@@ -3,6 +3,7 @@
 namespace Drupal\datetime\Plugin\views\sort;
 
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\views\Attribute\ViewsSort;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\views\sort\Date as NumericDate;
 
@@ -11,9 +12,8 @@ use Drupal\views\Plugin\views\sort\Date as NumericDate;
  *
  * This handler enables granularity, which is the ability to make dates
  * equivalent based upon nearness.
- *
- * @ViewsSort("datetime")
  */
+#[ViewsSort("datetime")]
 class Date extends NumericDate {
 
   use FieldAPIHandlerTrait;
