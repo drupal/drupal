@@ -13,8 +13,8 @@ use Drupal\views\Plugin\views\HandlerBase;
  * Plugins that handle sorting for Views.
  *
  * Sort handlers extend \Drupal\views\Plugin\views\sort:SortPluginBase. They
- * must be annotated with \Drupal\views\Annotation\ViewsSort annotation, and
- * they must be in plugin directory Plugin\views\sort.
+ * must be attributed with the \Drupal\views\Attribute\ViewsSort attribute,
+ * and they must be in plugin directory Plugin\views\sort.
  *
  * @ingroup views_plugins
  * @see plugin_api

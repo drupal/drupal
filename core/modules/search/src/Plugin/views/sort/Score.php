@@ -2,15 +2,15 @@
 
 namespace Drupal\search\Plugin\views\sort;
 
+use Drupal\views\Attribute\ViewsSort;
 use Drupal\views\Plugin\views\sort\SortPluginBase;
 
 /**
  * Sort handler for sorting by search score.
  *
  * @ingroup views_sort_handlers
- *
- * @ViewsSort("search_score")
  */
+#[ViewsSort("search_score")]
 class Score extends SortPluginBase {
 
   /**

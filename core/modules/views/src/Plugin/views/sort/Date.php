@@ -3,15 +3,15 @@
 namespace Drupal\views\Plugin\views\sort;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsSort;
 
 /**
  * Basic sort handler for dates.
  *
  * This handler enables granularity, which is the ability to make dates
  * equivalent based upon nearness.
- *
- * @ViewsSort("date")
  */
+#[ViewsSort("date")]
 class Date extends SortPluginBase {
 
   protected function defineOptions() {
