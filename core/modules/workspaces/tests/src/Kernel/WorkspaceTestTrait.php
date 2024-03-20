@@ -72,6 +72,13 @@ trait WorkspaceTestTrait {
   }
 
   /**
+   * Switches the test runner's context to Live.
+   */
+  protected function switchToLive(): void {
+    \Drupal::service('workspaces.manager')->switchToLive();
+  }
+
+  /**
    * Creates a test workspace hierarchy.
    *
    * The full hierarchy including the default workspaces 'live' and 'stage' is:

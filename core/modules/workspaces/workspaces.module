@@ -132,6 +132,15 @@ function workspaces_entity_update(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_entity_translation_insert().
+ */
+function workspaces_entity_translation_insert(EntityInterface $translation): void {
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityTranslationInsert($translation);
+}
+
+/**
  * Implements hook_entity_predelete().
  */
 function workspaces_entity_predelete(EntityInterface $entity) {
