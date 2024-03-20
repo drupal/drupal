@@ -3,23 +3,24 @@
 namespace Drupal\editor_test\Plugin\Editor;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\editor\Entity\Editor;
+use Drupal\editor\Attribute\Editor;
+use Drupal\editor\Entity\Editor as EditorEntity;
 use Drupal\editor\Plugin\EditorBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a Tyrannosaurus-Rex powered text editor for testing purposes.
- *
- * @Editor(
- *   id = "trex",
- *   label = @Translation("TRex Editor"),
- *   supports_content_filtering = TRUE,
- *   supports_inline_editing = TRUE,
- *   is_xss_safe = FALSE,
- *   supported_element_types = {
- *     "textarea",
- *   }
- * )
  */
+#[Editor(
+  id: 'trex',
+  label: new TranslatableMarkup('TRex Editor'),
+  supports_content_filtering: TRUE,
+  supports_inline_editing: TRUE,
+  is_xss_safe: FALSE,
+  supported_element_types: [
+    'textarea',
+  ]
+)]
 class TRexEditor extends EditorBase {
 
   /**
@@ -44,7 +45,7 @@ class TRexEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  public function getJSSettings(Editor $editor) {
+  public function getJSSettings(EditorEntity $editor) {
     $js_settings = [];
     $settings = $editor->getSettings();
     if ($settings['stumpy_arms']) {
@@ -56,7 +57,7 @@ class TRexEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  public function getLibraries(Editor $editor) {
+  public function getLibraries(EditorEntity $editor) {
     return [
       'editor_test/trex',
     ];

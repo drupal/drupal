@@ -3,24 +3,25 @@
 namespace Drupal\editor_test\Plugin\Editor;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\editor\Entity\Editor;
+use Drupal\editor\Attribute\Editor;
+use Drupal\editor\Entity\Editor as EditorEntity;
 use Drupal\editor\Plugin\EditorBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a Unicorn-powered text editor for Drupal (for testing purposes).
- *
- * @Editor(
- *   id = "unicorn",
- *   label = @Translation("Unicorn Editor"),
- *   supports_content_filtering = TRUE,
- *   supports_inline_editing = TRUE,
- *   is_xss_safe = FALSE,
- *   supported_element_types = {
- *     "textarea",
- *     "textfield",
- *   }
- * )
  */
+#[Editor(
+  id: 'unicorn',
+  label: new TranslatableMarkup('Unicorn Editor'),
+  supports_content_filtering: TRUE,
+  supports_inline_editing: TRUE,
+  is_xss_safe: FALSE,
+  supported_element_types: [
+    'textarea',
+    'textfield',
+  ]
+)]
 class UnicornEditor extends EditorBase {
 
   /**
@@ -61,7 +62,7 @@ class UnicornEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  public function getJSSettings(Editor $editor) {
+  public function getJSSettings(EditorEntity $editor) {
     $js_settings = [];
     $settings = $editor->getSettings();
     if ($settings['ponies_too']) {
@@ -73,7 +74,7 @@ class UnicornEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  public function getLibraries(Editor $editor) {
+  public function getLibraries(EditorEntity $editor) {
     return [
       'editor_test/unicorn',
     ];
