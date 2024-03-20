@@ -216,7 +216,7 @@ else
   # Check all files for spelling in one go for better performance. We pipe the
   # list files in so we obey the globs set on the spellcheck:core command in
   # core/package.json.
-    echo "${ABS_FILES}" | tr ' ' '\n' | yarn run spellcheck:core --no-must-find-files --root --file-list $TOP_LEVEL $ABS_FILES >/dev/null stdin
+  echo "${ABS_FILES}" | tr ' ' '\n' | yarn run spellcheck:core --no-must-find-files --file-list stdin
 fi
 
 if [ "$?" -ne "0" ]; then
