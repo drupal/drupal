@@ -220,6 +220,40 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Acts after an entity translation has been added.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $translation
+   *   The translation that was added.
+   *
+   * @see hook_entity_translation_insert()
+   */
+  public function entityTranslationInsert(EntityInterface $translation): void {
+    if ($this->shouldSkipOperations($translation)
+      || !$this->workspaceInfo->isEntitySupported($translation)
+      || $translation->isSyncing()
+    ) {
+      return;
+    }
+
+    // When a new translation is added to an existing entity, we need to add
+    // that translation to the default revision as well, otherwise the new
+    // translation wouldn't show up in entity queries or views which use the
+    // field data table as the base table.
+    $this->workspaceManager->executeOutsideWorkspace(function () use ($translation) {
+      $storage = $this->entityTypeManager->getStorage($translation->getEntityTypeId());
+      $default_revision = $storage->load($translation->id());
+
+      $langcode = $translation->language()->getId();
+      if (!$default_revision->hasTranslation($langcode)) {
+        $default_revision_translation = $default_revision->addTranslation($langcode, $translation->toArray());
+        $default_revision_translation->setUnpublished();
+        $default_revision_translation->setSyncing(TRUE);
+        $default_revision_translation->save();
+      }
+    });
+  }
+
+  /**
    * Acts on an entity before it is deleted.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
