@@ -5,15 +5,20 @@
   width: 110px;
   color: #000;
 }
+
 .ckeditor5-toolbar-button-textPartLanguage::before {
   margin-left: 10px;
+  /* For browsers which don't support alt content, eg FireFox */
   content: "Language";
+  content: "Language" / "";
   font-size: 14px;
 }
+
 [dir="rtl"] .ckeditor5-toolbar-button-textPartLanguage::before {
   margin-right: 10px;
   margin-left: 0;
 }
+
 .ckeditor5-toolbar-button-textPartLanguage::after {
   display: inline-block;
   width: 7px;
@@ -24,6 +29,7 @@
   border-width: 2px 2px 0 0;
   border-style: solid;
 }
+
 [dir="rtl"] .ckeditor5-toolbar-button-textPartLanguage::after {
   margin-right: 0;
   margin-left: 10px;

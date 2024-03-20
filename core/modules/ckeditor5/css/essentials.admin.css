@@ -1,6 +1,7 @@
 .ckeditor5-toolbar-button-divider {
   background-image: url(../icons/divider.svg);
 }
+
 .ckeditor5-toolbar-button-wrapping {
   background-image: url(../icons/separator.svg);
 }
@@ -20,15 +21,20 @@
   width: 100px;
   color: #000;
 }
+
 .ckeditor5-toolbar-button-heading::before {
   margin-left: 10px;
+  /* For browsers which don't support alt content, eg FireFox */
   content: "Heading";
+  content: "Heading" / "";
   font-size: 14px;
 }
+
 [dir="rtl"] .ckeditor5-toolbar-button-heading::before {
   margin-right: 10px;
   margin-left: 0;
 }
+
 .ckeditor5-toolbar-button-heading::after {
   display: inline-block;
   width: 7px;
@@ -39,6 +45,7 @@
   border-width: 2px 2px 0 0;
   border-style: solid;
 }
+
 [dir="rtl"] .ckeditor5-toolbar-button-heading::after {
   margin-right: 0;
   margin-left: 10px;
