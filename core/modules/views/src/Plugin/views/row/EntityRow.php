@@ -7,19 +7,20 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\views\Attribute\ViewsRow;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
+use Drupal\views\Plugin\Derivative\ViewsEntityRow;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Generic entity row plugin to provide a common base for all entity types.
- *
- * @ViewsRow(
- *   id = "entity",
- *   deriver = "Drupal\views\Plugin\Derivative\ViewsEntityRow"
- * )
  */
+#[ViewsRow(
+  id: "entity",
+  deriver: ViewsEntityRow::class
+)]
 class EntityRow extends RowPluginBase {
   use EntityTranslationRenderTrait;
 

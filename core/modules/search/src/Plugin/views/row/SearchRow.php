@@ -3,17 +3,18 @@
 namespace Drupal\search\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsRow;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
  * Row handler plugin for displaying search results.
- *
- * @ViewsRow(
- *   id = "search_view",
- *   title = @Translation("Search results"),
- *   help = @Translation("Provides a row plugin to display search results.")
- * )
  */
+#[ViewsRow(
+  id: "search_view",
+  title: new TranslatableMarkup("Search results"),
+  help: new TranslatableMarkup("Provides a row plugin to display search results.")
+)]
 class SearchRow extends RowPluginBase {
 
   /**

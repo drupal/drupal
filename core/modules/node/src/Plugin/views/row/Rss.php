@@ -2,21 +2,22 @@
 
 namespace Drupal\node\Plugin\views\row;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsRow;
 use Drupal\views\Plugin\views\row\RssPluginBase;
 
 /**
  * Performs a node_view on the resulting object and formats it as an RSS item.
- *
- * @ViewsRow(
- *   id = "node_rss",
- *   title = @Translation("Content"),
- *   help = @Translation("Display the content with standard node view."),
- *   theme = "views_view_row_rss",
- *   register_theme = FALSE,
- *   base = {"node_field_data"},
- *   display_types = {"feed"}
- * )
  */
+#[ViewsRow(
+  id: "node_rss",
+  title: new TranslatableMarkup("Content"),
+  help: new TranslatableMarkup("Display the content with standard node view."),
+  theme: "views_view_row_rss",
+  register_theme: FALSE,
+  base: ["node_field_data"],
+  display_types: ["feed"]
+)]
 class Rss extends RssPluginBase {
 
   /**
