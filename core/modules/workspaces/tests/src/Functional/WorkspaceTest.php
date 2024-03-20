@@ -80,15 +80,16 @@ class WorkspaceTest extends BrowserTestBase {
    */
   public function testSpecialCharacters() {
     $this->drupalLogin($this->editor1);
+    $page = $this->getSession()->getPage();
 
     // Test a valid workspace name.
-    $this->createWorkspaceThroughUi('Workspace 1', 'a0_$()+-/');
+    $this->createAndActivateWorkspaceThroughUi('Workspace 1', 'workspace_1');
+    $this->assertSession()->elementTextContains('css', '.workspaces-toolbar-tab', 'Workspace 1');
 
     // Test and invalid workspace name.
     $this->drupalGet('/admin/config/workflow/workspaces/add');
     $this->assertSession()->statusCodeEquals(200);
 
-    $page = $this->getSession()->getPage();
     $page->fillField('label', 'workspace2');
     $page->fillField('id', 'A!"£%^&*{}#~@?');
     $page->findButton('Save')->click();
@@ -251,11 +252,10 @@ class WorkspaceTest extends BrowserTestBase {
 
     // Login and create a workspace.
     $this->drupalLogin($this->rootUser);
-    $may_4 = $this->createWorkspaceThroughUi('May 4', 'may_4');
-    $this->switchToWorkspace($may_4);
+    $this->createAndActivateWorkspaceThroughUi('May 4', 'may_4');
 
     // Create a node in the workspace.
-    $node = $this->createNodeThroughUi('A mayfly flies / In May or June', 'test');
+    $this->createNodeThroughUi('A mayfly flies / In May or June', 'test');
 
     // Delete the workspace.
     $this->drupalGet('/admin/config/workflow/workspaces/manage/may_4/delete');
