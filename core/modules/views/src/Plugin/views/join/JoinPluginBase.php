@@ -14,7 +14,7 @@ use Drupal\Core\Plugin\PluginBase;
  * handle table joins.
  *
  * Views join handlers extend \Drupal\views\Plugin\views\join\JoinPluginBase.
- * They must be annotated with \Drupal\views\Annotation\ViewsJoin annotation,
+ * They must be attributed with \Drupal\views\Attribute\ViewsJoin attribute,
  * and they must be in namespace directory Plugin\views\join.
  *
  * Here are some examples of configuration for the join plugins.
