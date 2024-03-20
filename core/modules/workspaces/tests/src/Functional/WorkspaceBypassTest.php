@@ -47,8 +47,7 @@ class WorkspaceBypassTest extends BrowserTestBase {
 
     // Login as a limited-access user and create a workspace.
     $this->drupalLogin($coach);
-    $bears = $this->createWorkspaceThroughUi('Bears', 'bears');
-    $this->switchToWorkspace($bears);
+    $bears = $this->createAndActivateWorkspaceThroughUi('Bears', 'bears');
 
     // Now create a node in the Bears workspace, as the owner of that workspace.
     $coach_bears_node = $this->createNodeThroughUi('Ditka Bears node', 'test');
