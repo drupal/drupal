@@ -3,21 +3,22 @@
 namespace Drupal\views\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsRow;
 
 /**
  * EntityReference row plugin.
  *
  * @ingroup views_row_plugins
- *
- * @ViewsRow(
- *   id = "entity_reference",
- *   title = @Translation("Entity Reference inline fields"),
- *   help = @Translation("Displays the fields with an optional template."),
- *   theme = "views_view_fields",
- *   register_theme = FALSE,
- *   display_types = {"entity_reference"}
- * )
  */
+#[ViewsRow(
+  id: "entity_reference",
+  title: new TranslatableMarkup("Entity Reference inline fields"),
+  help: new TranslatableMarkup("Displays the fields with an optional template."),
+  theme: "views_view_fields",
+  register_theme: FALSE,
+  display_types: ["entity_reference"]
+)]
 class EntityReference extends Fields {
 
   /**

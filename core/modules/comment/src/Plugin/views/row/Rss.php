@@ -2,21 +2,22 @@
 
 namespace Drupal\comment\Plugin\views\row;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsRow;
 use Drupal\views\Plugin\views\row\RssPluginBase;
 
 /**
  * Plugin which formats the comments as RSS items.
- *
- * @ViewsRow(
- *   id = "comment_rss",
- *   title = @Translation("Comment"),
- *   help = @Translation("Display the comment as RSS."),
- *   theme = "views_view_row_rss",
- *   register_theme = FALSE,
- *   base = {"comment_field_data"},
- *   display_types = {"feed"}
- * )
  */
+#[ViewsRow(
+  id: "comment_rss",
+  title: new TranslatableMarkup("Comment"),
+  help: new TranslatableMarkup("Display the comment as RSS."),
+  theme: "views_view_row_rss",
+  register_theme: FALSE,
+  base: ["comment_field_data"],
+  display_types: ["feed"]
+)]
 class Rss extends RssPluginBase {
 
   /**

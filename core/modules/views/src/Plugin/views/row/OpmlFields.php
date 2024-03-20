@@ -3,18 +3,19 @@
 namespace Drupal\views\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsRow;
 
 /**
  * Renders an OPML item based on fields.
- *
- * @ViewsRow(
- *   id = "opml_fields",
- *   title = @Translation("OPML fields"),
- *   help = @Translation("Display fields as OPML items."),
- *   theme = "views_view_row_opml",
- *   display_types = {"feed"}
- * )
  */
+#[ViewsRow(
+  id: "opml_fields",
+  title: new TranslatableMarkup("OPML fields"),
+  help: new TranslatableMarkup("Display fields as OPML items."),
+  theme: "views_view_row_opml",
+  display_types: ["feed"]
+)]
 class OpmlFields extends RowPluginBase {
 
   /**

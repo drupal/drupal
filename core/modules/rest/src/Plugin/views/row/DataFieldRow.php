@@ -3,6 +3,8 @@
 namespace Drupal\rest\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\row\RowPluginBase;
@@ -11,14 +13,13 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  * Plugin which displays fields as raw data.
  *
  * @ingroup views_row_plugins
- *
- * @ViewsRow(
- *   id = "data_field",
- *   title = @Translation("Fields"),
- *   help = @Translation("Use fields as row data."),
- *   display_types = {"data"}
- * )
  */
+#[ViewsRow(
+  id: "data_field",
+  title: new TranslatableMarkup("Fields"),
+  help: new TranslatableMarkup("Use fields as row data."),
+  display_types: ["data"]
+)]
 class DataFieldRow extends RowPluginBase {
 
   /**

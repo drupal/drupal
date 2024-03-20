@@ -3,6 +3,8 @@
 namespace Drupal\views\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsRow;
 
 /**
  * The basic 'fields' row plugin.
@@ -11,15 +13,14 @@ use Drupal\Core\Form\FormStateInterface;
  * or not.
  *
  * @ingroup views_row_plugins
- *
- * @ViewsRow(
- *   id = "fields",
- *   title = @Translation("Fields"),
- *   help = @Translation("Displays the fields with an optional template."),
- *   theme = "views_view_fields",
- *   display_types = {"normal"}
- * )
  */
+#[ViewsRow(
+  id: "fields",
+  title: new TranslatableMarkup("Fields"),
+  help: new TranslatableMarkup("Displays the fields with an optional template."),
+  theme: "views_view_fields",
+  display_types: ["normal"]
+)]
 class Fields extends RowPluginBase {
 
   /**

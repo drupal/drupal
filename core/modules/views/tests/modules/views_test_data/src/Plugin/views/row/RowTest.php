@@ -3,21 +3,22 @@
 namespace Drupal\views_test_data\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsRow;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
 /**
  * Provides a general test row plugin.
  *
  * @ingroup views_row_plugins
- *
- * @ViewsRow(
- *   id = "test_row",
- *   title = @Translation("Test row plugin"),
- *   help = @Translation("Provides a generic row test plugin."),
- *   theme = "views_view_row_test",
- *   display_types = {"normal", "test"}
- * )
  */
+#[ViewsRow(
+  id: "test_row",
+  title: new TranslatableMarkup("Test row plugin"),
+  help: new TranslatableMarkup("Provides a generic row test plugin."),
+  theme: "views_view_row_test",
+  display_types: ["normal", "test"]
+)]
 class RowTest extends RowPluginBase {
 
   /**
