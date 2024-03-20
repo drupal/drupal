@@ -10,6 +10,8 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsDisplay;
 use Drupal\views\Plugin\views\display\ResponseDisplayPluginInterface;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
@@ -22,16 +24,15 @@ use Symfony\Component\Routing\RouteCollection;
  * The plugin that handles Data response callbacks for REST resources.
  *
  * @ingroup views_display_plugins
- *
- * @ViewsDisplay(
- *   id = "rest_export",
- *   title = @Translation("REST export"),
- *   help = @Translation("Create a REST export resource."),
- *   uses_route = TRUE,
- *   admin = @Translation("REST export"),
- *   returns_response = TRUE
- * )
  */
+#[ViewsDisplay(
+  id: "rest_export",
+  title: new TranslatableMarkup("REST export"),
+  help: new TranslatableMarkup("Create a REST export resource."),
+  admin: new TranslatableMarkup("REST export"),
+  uses_route: TRUE,
+  returns_response: TRUE
+)]
 class RestExport extends PathPluginBase implements ResponseDisplayPluginInterface {
 
   /**

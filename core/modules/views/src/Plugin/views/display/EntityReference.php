@@ -3,6 +3,8 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -13,18 +15,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * 'Entity Reference' display.
  *
  * @ingroup views_display_plugins
- *
- * @ViewsDisplay(
- *   id = "entity_reference",
- *   title = @Translation("Entity Reference"),
- *   admin = @Translation("Entity Reference Source"),
- *   help = @Translation("Selects referenceable entities for an entity reference field."),
- *   theme = "views_view",
- *   register_theme = FALSE,
- *   uses_menu_links = FALSE,
- *   entity_reference_display = TRUE
- * )
  */
+#[ViewsDisplay(
+  id: "entity_reference",
+  title: new TranslatableMarkup("Entity Reference"),
+  admin: new TranslatableMarkup("Entity Reference Source"),
+  help: new TranslatableMarkup("Selects referenceable entities for an entity reference field."),
+  theme: "views_view",
+  register_theme: FALSE,
+  uses_menu_links: FALSE,
+  entity_reference_display: TRUE
+)]
 class EntityReference extends DisplayPluginBase {
 
   /**

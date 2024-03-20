@@ -9,6 +9,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
@@ -16,18 +18,17 @@ use Symfony\Component\Routing\Route;
  * The plugin that handles a full page.
  *
  * @ingroup views_display_plugins
- *
- * @ViewsDisplay(
- *   id = "page",
- *   title = @Translation("Page"),
- *   help = @Translation("Display the view as a page, with a URL and menu links."),
- *   uses_menu_links = TRUE,
- *   uses_route = TRUE,
- *   contextual_links_locations = {"page"},
- *   theme = "views_view",
- *   admin = @Translation("Page")
- * )
  */
+#[ViewsDisplay(
+  id: "page",
+  title: new TranslatableMarkup("Page"),
+  help: new TranslatableMarkup("Display the view as a page, with a URL and menu links."),
+  uses_menu_links: TRUE,
+  uses_route: TRUE,
+  contextual_links_locations: ["page"],
+  theme: "views_view",
+  admin: new TranslatableMarkup("Page"),
+)]
 class Page extends PathPluginBase {
 
   /**
