@@ -3,6 +3,8 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsDisplay;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -13,15 +15,14 @@ use Drupal\views\ViewExecutable;
  * the same view. They can share some information.
  *
  * @ingroup views_display_plugins
- *
- * @ViewsDisplay(
- *   id = "attachment",
- *   title = @Translation("Attachment"),
- *   help = @Translation("Attachments added to other displays to achieve multiple views in the same view."),
- *   theme = "views_view",
- *   contextual_links_locations = {""}
- * )
  */
+#[ViewsDisplay(
+  id: "attachment",
+  title: new TranslatableMarkup("Attachment"),
+  help: new TranslatableMarkup("Attachments added to other displays to achieve multiple views in the same view."),
+  theme: "views_view",
+  contextual_links_locations: [""]
+)]
 class Attachment extends DisplayPluginBase {
 
   /**

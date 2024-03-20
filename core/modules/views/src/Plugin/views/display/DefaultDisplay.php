@@ -2,19 +2,21 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsDisplay;
+
 /**
  * A plugin to handle defaults on a view.
  *
  * @ingroup views_display_plugins
- *
- * @ViewsDisplay(
- *   id = "default",
- *   title = @Translation("Default"),
- *   help = @Translation("Default settings for this view."),
- *   theme = "views_view",
- *   no_ui = TRUE
- * )
  */
+#[ViewsDisplay(
+  id: "default",
+  title: new TranslatableMarkup("Default"),
+  help: new TranslatableMarkup("Default settings for this view."),
+  theme: "views_view",
+  no_ui: TRUE
+)]
 class DefaultDisplay extends DisplayPluginBase {
 
   /**
