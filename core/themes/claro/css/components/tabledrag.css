@@ -23,6 +23,10 @@ body.drag {
   cursor: move;
 }
 
+body.drag-y {
+  cursor: row-resize;
+}
+
 /* The block region's title row in table. */
 
 .region-title {
@@ -134,6 +138,17 @@ body.drag {
 [dir="rtl"] .tabledrag-handle::after {
   margin-right: calc(var(--space-m) * -1);
   margin-left: 0;
+}
+
+/* Change icon and cursor if only vertical drag is allowed. */
+
+.tabledrag-handle.tabledrag-handle-y {
+  cursor: row-resize;
+}
+
+.tabledrag-handle.tabledrag-handle-y::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 8h12'/%3e%3cpath d='M8 2l2 2 -4 0 2 -2'/%3e%3cpath d='M8 14l2 -2 -4 0 2 2'/%3e%3c/svg%3e");
+  background-size: 1rem 1rem;
 }
 
 @media (forced-colors: active) {

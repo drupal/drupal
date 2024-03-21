@@ -15,6 +15,10 @@
 body.drag {
   cursor: move;
 }
+body.drag-y {
+  cursor: row-resize;
+}
+
 /* The block region's title row in table. */
 .region-title {
   font-weight: bold;
@@ -108,6 +112,16 @@ body.drag {
 [dir="rtl"] .tabledrag-handle::after {
   margin-right: calc(var(--space-m) * -1);
   margin-left: 0;
+}
+
+/* Change icon and cursor if only vertical drag is allowed. */
+.tabledrag-handle.tabledrag-handle-y {
+  cursor: row-resize;
+}
+
+.tabledrag-handle.tabledrag-handle-y::after {
+  background-image: url(../../images/icons/currentColor/tabledrag-handle-y.svg);
+  background-size: 16px 16px;
 }
 
 @media (forced-colors: active) {
