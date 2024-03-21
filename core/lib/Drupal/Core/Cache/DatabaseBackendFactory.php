@@ -42,24 +42,12 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
   public function __construct(
     Connection $connection,
     CacheTagsChecksumInterface $checksum_provider,
-    protected ?Settings $settings = NULL,
-    protected ?ObjectAwareSerializationInterface $serializer = NULL,
-    protected ?TimeInterface $time = NULL,
+    protected Settings $settings,
+    protected ObjectAwareSerializationInterface $serializer,
+    protected TimeInterface $time,
   ) {
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
-    if ($this->settings === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $settings argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
-      $this->settings = Settings::getInstance();
-    }
-    if ($this->serializer === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
-      $this->serializer = \Drupal::service('serialization.phpserialize');
-    }
-    if ($this->time === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      $this->time = \Drupal::service(TimeInterface::class);
-    }
   }
 
   /**

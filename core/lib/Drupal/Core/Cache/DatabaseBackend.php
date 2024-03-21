@@ -89,8 +89,8 @@ class DatabaseBackend implements CacheBackendInterface {
     Connection $connection,
     CacheTagsChecksumInterface $checksum_provider,
     $bin,
-    protected ObjectAwareSerializationInterface|int|string|null $serializer = NULL,
-    protected TimeInterface|int|string|null $time = NULL,
+    protected ObjectAwareSerializationInterface $serializer,
+    protected TimeInterface $time,
     $max_rows = NULL,
   ) {
     // All cache tables should be prefixed with 'cache_'.
@@ -99,22 +99,6 @@ class DatabaseBackend implements CacheBackendInterface {
     $this->bin = $bin;
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
-    if (is_int($this->serializer) || is_string($this->serializer)) {
-      @trigger_error('Calling ' . __METHOD__ . ' with the $max_rows as 3rd argument is deprecated in drupal:10.3.0 and it will be the 4th argument in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
-      $max_rows = $this->serializer;
-      $this->serializer = \Drupal::service('serialization.phpserialize');
-    }
-    elseif ($this->serializer === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $serializer argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3014684', E_USER_DEPRECATED);
-      $this->serializer = \Drupal::service('serialization.phpserialize');
-    }
-    if (!$this->time instanceof TimeInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be the 5th argument in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      if (is_int($time) || is_string($time)) {
-        $max_rows = $time;
-      }
-      $this->time = \Drupal::service(TimeInterface::class);
-    }
     $this->maxRows = $max_rows === NULL ? static::DEFAULT_MAX_ROWS : $max_rows;
   }
 

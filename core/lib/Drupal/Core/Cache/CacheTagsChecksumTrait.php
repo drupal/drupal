@@ -67,14 +67,7 @@ trait CacheTagsChecksumTrait {
     $in_transaction = $this->getDatabaseConnection()->inTransaction();
     if ($in_transaction) {
       if (empty($this->delayedTags)) {
-        // @todo in drupal:11.0.0, remove the conditional and only call the
-        //   TransactionManager().
-        if ($this->getDatabaseConnection()->transactionManager()) {
-          $this->getDatabaseConnection()->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionEndCallback']);
-        }
-        else {
-          $this->getDatabaseConnection()->addRootTransactionEndCallback([$this, 'rootTransactionEndCallback']);
-        }
+        $this->getDatabaseConnection()->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionEndCallback']);
       }
       $this->delayedTags = Cache::mergeTags($this->delayedTags, $tags);
     }

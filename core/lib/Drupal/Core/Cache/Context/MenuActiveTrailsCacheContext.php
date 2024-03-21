@@ -13,14 +13,10 @@ class MenuActiveTrailsCacheContext implements CalculatedCacheContextInterface {
   /**
    * Constructs a MenuActiveTrailsCacheContext object.
    *
-   * @param \Drupal\Core\Menu\MenuActiveTrailInterface|null $menuActiveTrailService
+   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menuActiveTrailService
    *   The menu active trail service.
    */
-  public function __construct(protected ?MenuActiveTrailInterface $menuActiveTrailService = NULL) {
-    if ($this->menuActiveTrailService === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $menuActiveTrailService argument is deprecated in drupal:10.2.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3397515', E_USER_DEPRECATED);
-      $this->menuActiveTrailService = \Drupal::service('menu.active_trail');
-    }
+  public function __construct(protected MenuActiveTrailInterface $menuActiveTrailService) {
   }
 
   /**

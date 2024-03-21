@@ -56,16 +56,12 @@ class ApcuBackend implements CacheBackendInterface {
     $bin,
     $site_prefix,
     CacheTagsChecksumInterface $checksum_provider,
-    protected ?TimeInterface $time = NULL,
+    protected TimeInterface $time,
   ) {
     $this->bin = $bin;
     $this->sitePrefix = $site_prefix;
     $this->checksumProvider = $checksum_provider;
     $this->binPrefix = $this->sitePrefix . '::' . $this->bin . '::';
-    if (!$time) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      $this->time = \Drupal::service(TimeInterface::class);
-    }
   }
 
   /**
