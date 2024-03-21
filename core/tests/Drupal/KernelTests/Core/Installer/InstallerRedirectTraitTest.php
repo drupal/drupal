@@ -27,7 +27,7 @@ class InstallerRedirectTraitTest extends KernelTestBase {
    *   - Exceptions to be handled by shouldRedirectToInstaller()
    *   - Whether or not there is a database connection.
    *   - Whether or not there is database connection info.
-   *   - Whether or not there exists a sessions table in the database.
+   *   - Whether or not there exists a sequences table in the database.
    */
   public static function providerShouldRedirectToInstaller() {
     return [
@@ -67,7 +67,7 @@ class InstallerRedirectTraitTest extends KernelTestBase {
    * @covers ::shouldRedirectToInstaller
    * @dataProvider providerShouldRedirectToInstaller
    */
-  public function testShouldRedirectToInstaller($expected, $exception, $connection, $connection_info, $session_table_exists = TRUE) {
+  public function testShouldRedirectToInstaller($expected, $exception, $connection, $connection_info, $sequences_table_exists = TRUE) {
     try {
       throw new $exception();
     }
@@ -106,8 +106,8 @@ class InstallerRedirectTraitTest extends KernelTestBase {
 
           $schema->expects($this->any())
             ->method('tableExists')
-            ->with('sessions')
-            ->willReturn($session_table_exists);
+            ->with('sequences')
+            ->willReturn($sequences_table_exists);
 
           $connection->expects($this->any())
             ->method('schema')

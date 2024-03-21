@@ -73,7 +73,7 @@ trait InstallerRedirectTrait {
     // Redirect if the database is empty.
     if ($connection) {
       try {
-        return !$connection->schema()->tableExists('sessions');
+        return !$connection->schema()->tableExists('sequences');
       }
       catch (\Exception $e) {
         // If we still have an exception at this point, we need to be careful
