@@ -6,15 +6,15 @@ use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsArea;
 use Drupal\views\Plugin\views\display\PathPluginBase;
 
 /**
  * Views area display_link handler.
  *
  * @ingroup views_area_handlers
- *
- * @ViewsArea("display_link")
  */
+#[ViewsArea("display_link")]
 class DisplayLink extends AreaPluginBase {
 
   /**

@@ -3,14 +3,14 @@
 namespace Drupal\views\Plugin\views\area;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsArea;
 
 /**
  * Views area title override handler.
  *
  * @ingroup views_area_handlers
- *
- * @ViewsArea("title")
  */
+#[ViewsArea("title")]
 class Title extends AreaPluginBase {
 
   /**

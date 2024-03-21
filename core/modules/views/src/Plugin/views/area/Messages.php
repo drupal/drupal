@@ -2,13 +2,14 @@
 
 namespace Drupal\views\Plugin\views\area;
 
+use Drupal\views\Attribute\ViewsArea;
+
 /**
  * Provides an area for messages.
  *
  * @ingroup views_area_handlers
- *
- * @ViewsArea("messages")
  */
+#[ViewsArea("messages")]
 class Messages extends AreaPluginBase {
 
   /**

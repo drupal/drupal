@@ -3,15 +3,15 @@
 namespace Drupal\views\Plugin\views\area;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsArea;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Alter the HTTP response status code used by the view.
  *
  * @ingroup views_area_handlers
- *
- * @ViewsArea("http_status_code")
  */
+#[ViewsArea("http_status_code")]
 class HTTPStatusCode extends AreaPluginBase {
 
   /**
