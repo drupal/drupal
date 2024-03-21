@@ -180,8 +180,6 @@ class ModuleExtensionList extends ExtensionList {
         $active_profile->info['hidden'] = TRUE;
       }
 
-      // The installation profile is required.
-      $active_profile->info['required'] = TRUE;
       // Add a default distribution name if the profile did not provide one.
       // @see install_profile_info()
       // @see drupal_install_profile_distribution_name()

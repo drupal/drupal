@@ -109,8 +109,7 @@ function drupal_install_profile_distribution_name() {
     }
   }
   // At all other times, we load the profile via standard methods.
-  else {
-    $profile = \Drupal::installProfile();
+  elseif ($profile = \Drupal::installProfile()) {
     $info = \Drupal::service('extension.list.profile')->getExtensionInfo($profile);
   }
   return $info['distribution']['name'] ?? 'Drupal';

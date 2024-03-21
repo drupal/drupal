@@ -112,23 +112,29 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     // Get the install profile from the site's configuration.
     $current_core_extension = $config_importer->getStorageComparer()->getTargetStorage()->read('core.extension');
     $install_profile = $current_core_extension['profile'] ?? NULL;
+    $new_install_profile = $core_extension['profile'] ?? NULL;
 
     // Ensure the profile is not changing.
-    if ($install_profile !== $core_extension['profile']) {
+    if ($install_profile !== $new_install_profile) {
       if (InstallerKernel::installationAttempted()) {
         $config_importer->logError($this->t('The selected installation profile %install_profile does not match the profile stored in configuration %config_profile.', [
           '%install_profile' => $install_profile,
-          '%config_profile' => $core_extension['profile'],
+          '%config_profile' => $new_install_profile,
         ]));
         // If this error has occurred the other checks are irrelevant.
         return;
       }
-      else {
+      elseif ($new_install_profile) {
         $config_importer->logError($this->t('Cannot change the install profile from %profile to %new_profile once Drupal is installed.', [
           '%profile' => $install_profile,
-          '%new_profile' => $core_extension['profile'],
+          '%new_profile' => $new_install_profile,
         ]));
       }
+    }
+    elseif ($new_install_profile && !isset($core_extension['module'][$new_install_profile])) {
+      $config_importer->logError($this->t('The install profile %profile is not in the list of installed modules.', [
+        '%profile' => $new_install_profile,
+      ]));
     }
 
     // Get a list of modules with dependency weights as values.
@@ -179,12 +185,6 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
             ['%module' => $module_data[$module]->info['name'], '@reason' => $reason]));
         }
       }
-    }
-
-    // Ensure that the install profile is not being uninstalled.
-    if (in_array($install_profile, $uninstalls, TRUE)) {
-      $profile_name = $module_data[$install_profile]->info['name'];
-      $config_importer->logError($this->t('Unable to uninstall the %profile profile since it is the install profile.', ['%profile' => $profile_name]));
     }
   }
 

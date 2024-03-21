@@ -223,8 +223,10 @@ class Drupal {
   /**
    * Gets the active install profile.
    *
-   * @return string|null
-   *   The name of the active install profile.
+   * @return string|false|null
+   *   The name of the active install profile. FALSE indicates that the site is
+   *   not using an install profile. NULL indicates that the site has not yet
+   *   been installed.
    */
   public static function installProfile() {
     return static::getContainer()->getParameter('install_profile');

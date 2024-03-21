@@ -112,7 +112,7 @@ abstract class ExtensionList {
   /**
    * The install profile used by the site.
    *
-   * @var string
+   * @var string|false|null
    */
   protected $installProfile;
 
