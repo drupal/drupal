@@ -234,9 +234,14 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     if (!$this->writeSafeHandler->isSessionWritable() || $this->isCli()) {
       return;
     }
-    $this->connection->delete('sessions')
-      ->condition('uid', $uid)
-      ->execute();
+    // The sessions table may not have been created yet.
+    try {
+      $this->connection->delete('sessions')
+        ->condition('uid', $uid)
+        ->execute();
+    }
+    catch (\Exception) {
+    }
   }
 
   /**
