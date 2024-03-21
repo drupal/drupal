@@ -3,18 +3,19 @@
 namespace Drupal\display_variant_test\Plugin\DisplayVariant;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Display\Attribute\DisplayVariant;
 use Drupal\Core\Display\VariantBase;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Display\ContextAwareVariantInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a display variant that requires configuration.
- *
- * @DisplayVariant(
- *   id = "display_variant_test",
- *   admin_label = @Translation("Test display variant")
- * )
  */
+#[DisplayVariant(
+  id: 'display_variant_test',
+  admin_label: new TranslatableMarkup('Test display variant')
+)]
 class TestDisplayVariant extends VariantBase implements PageVariantInterface, ContextAwareVariantInterface {
 
   /**

@@ -2,17 +2,18 @@
 
 namespace Drupal\Core\Render\Plugin\DisplayVariant;
 
+use Drupal\Core\Display\Attribute\PageDisplayVariant;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Display\VariantBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a page display variant that simply renders the main content.
- *
- * @PageDisplayVariant(
- *   id = "simple_page",
- *   admin_label = @Translation("Simple page")
- * )
  */
+#[PageDisplayVariant(
+  id: 'simple_page',
+  admin_label: new TranslatableMarkup('Simple page')
+)]
 class SimplePageVariant extends VariantBase implements PageVariantInterface {
 
   /**
