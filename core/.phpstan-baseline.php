@@ -653,18 +653,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Lock/NullLockBackend.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Core\\\\Logger\\\\LoggerChannelFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Logger/LoggerChannelFactory.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Logger\\\\LoggerChannelFactory\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Logger/LoggerChannelFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$parent in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/Form/MenuLinkDefaultForm.php',
