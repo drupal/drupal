@@ -10,12 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * ControllerResolver to enhance controllers beyond Symfony's basic handling.
  *
- * It adds two behaviors:
- *
- *  - When creating a new object-based controller that implements
- *    ContainerAwareInterface, inject the container into it. While not always
- *    necessary, that allows a controller to vary the services it needs at
- *    runtime.
+ * It adds one behavior:
  *
  *  - By default, a controller name follows the class::method notation. This
  *    class adds the possibility to use a service from the container as a

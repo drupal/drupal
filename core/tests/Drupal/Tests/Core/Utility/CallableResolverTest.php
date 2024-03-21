@@ -9,7 +9,6 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -42,12 +41,8 @@ class CallableResolverTest extends UnitTestCase {
   /**
    * @dataProvider callableResolverTestCases
    * @covers ::getCallableFromDefinition
-   * @group legacy
    */
-  public function testCallbackResolver($definition, $result, string $deprecation = NULL) {
-    if ($deprecation) {
-      $this->expectDeprecation($deprecation);
-    }
+  public function testCallbackResolver($definition, $result) {
     $argument = 'bar';
     $this->assertEquals($result . '+' . $argument, $this->resolver->getCallableFromDefinition($definition)($argument));
   }
@@ -98,11 +93,6 @@ class CallableResolverTest extends UnitTestCase {
       'Non-static function, instantiated by class resolver, container injection' => [
         '\Drupal\Tests\Core\Utility\MockContainerInjection::getResult',
         'Drupal\Tests\Core\Utility\MockContainerInjection::getResult-foo',
-      ],
-      'Non-static function, instantiated by class resolver, container aware' => [
-        '\Drupal\Tests\Core\Utility\MockContainerAware::getResult',
-        'Drupal\Tests\Core\Utility\MockContainerAware::getResult',
-        'Implementing \Symfony\Component\DependencyInjection\ContainerAwareInterface is deprecated in drupal:10.3.0 and it will be removed in drupal:11.0.0. Implement \Drupal\Core\DependencyInjection\ContainerInjectionInterface and use dependency injection instead. See https://www.drupal.org/node/3428661',
       ],
       'Service notation' => [
         'test_service:method',
@@ -252,27 +242,4 @@ class NoInstantiationMockStaticCallable {
 }
 
 class NoMethodCallable {
-}
-
-class MockContainerAware implements ContainerAwareInterface {
-
-  /**
-   * The service container.
-   */
-  protected ContainerInterface $container;
-
-  /**
-   * Sets the service container.
-   */
-  public function setContainer(?ContainerInterface $container): void {
-    $this->container = $container;
-  }
-
-  public function getResult($suffix) {
-    if (empty($this->container)) {
-      throw new \Exception('Container was not injected.');
-    }
-    return __METHOD__ . '+' . $suffix;
-  }
-
 }
