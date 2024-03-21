@@ -45,6 +45,9 @@ class BlockDragTest extends WebDriverTestBase {
     $session = $this->getSession();
     $page = $session->getPage();
 
+    // Test if drag orientation on block layout page was applied with success.
+    $this->assertNotEmpty($assertSession->waitForElementVisible('css', '.tabledrag-handle-y'));
+
     // Dragging main-menu and status messages to header region.
     $siteBranding = $this->getDragRow($page, 'edit-blocks-olivero-site-branding');
     $mainMenuRow = $this->getDragRow($page, 'edit-blocks-olivero-main-menu');
