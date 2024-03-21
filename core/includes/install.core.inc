@@ -147,10 +147,7 @@ function install_drupal($class_loader, $settings = [], callable $callback = NULL
   // installations can send output to the browser or redirect the user to the
   // next page.
   if ($state['interactive']) {
-    // If a session has been initiated in this request, make sure to save it.
-    if (\Drupal::request()->hasSession()) {
-      \Drupal::request()->getSession()->save();
-    }
+    \Drupal::request()->getSession()->save();
     if ($state['parameters_changed']) {
       // Redirect to the correct page if the URL parameters have changed.
       install_goto(install_redirect_url($state));
@@ -645,10 +642,7 @@ function install_run_task($task, &$install_state) {
       $url = Url::fromUri('base:install.php', ['query' => $install_state['parameters'], 'script' => '']);
       $response = batch_process($url, clone $url);
       if ($response instanceof Response) {
-        if (\Drupal::request()->hasSession()) {
-          \Drupal::request()->getSession()->save();
-        }
-        // Send the response.
+        \Drupal::request()->getSession()->save();
         $response->send();
         exit;
       }
@@ -663,10 +657,7 @@ function install_run_task($task, &$install_state) {
       // @todo Replace this when we refactor the installer to use a request-
       //   response workflow.
       if ($output instanceof Response) {
-        if (\Drupal::request()->hasSession()) {
-          \Drupal::request()->getSession()->save();
-        }
-        // Send the response.
+        \Drupal::request()->getSession()->save();
         $output->send();
         exit;
       }

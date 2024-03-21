@@ -93,13 +93,4 @@ class SessionCacheContextTest extends UnitTestCase {
     $this->assertStringNotContainsString($session2_id, $context2, 'Session ID not contained in cache context');
   }
 
-  /**
-   * @covers ::getContext
-   */
-  public function testContextWithoutSessionInRequest() {
-    $cache_context = new SessionCacheContext($this->requestStack);
-
-    $this->assertSame('none', $cache_context->getContext());
-  }
-
 }

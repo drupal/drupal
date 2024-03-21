@@ -52,7 +52,7 @@ class Session implements HttpKernelInterface {
 
     $result = $this->httpKernel->handle($request, $type, $catch);
 
-    if ($type === self::MAIN_REQUEST && !$result instanceof ResponseKeepSessionOpenInterface && PHP_SAPI !== 'cli' && $request->hasSession()) {
+    if ($type === self::MAIN_REQUEST && !$result instanceof ResponseKeepSessionOpenInterface && PHP_SAPI !== 'cli') {
       $request->getSession()->save();
     }
 

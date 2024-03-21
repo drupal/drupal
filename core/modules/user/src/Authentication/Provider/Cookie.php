@@ -66,7 +66,7 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
    * {@inheritdoc}
    */
   public function applies(Request $request) {
-    $applies = $request->hasSession() && $this->sessionConfiguration->hasSession($request);
+    $applies = $this->sessionConfiguration->hasSession($request);
     if (!$applies && $request->query->has('check_logged_in')) {
       $domain = ltrim(ini_get('session.cookie_domain'), '.') ?: $request->getHttpHost();
       $this->messenger->addMessage($this->t('To log in to this site, your browser must accept cookies from the domain %domain.', ['%domain' => $domain]), 'error');
@@ -123,7 +123,7 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
    */
   public function addCheckToUrl(ResponseEvent $event) {
     $response = $event->getResponse();
-    if ($response instanceof RedirectResponse && $event->getRequest()->hasSession()) {
+    if ($response instanceof RedirectResponse) {
       if ($event->getRequest()->getSession()->has('check_logged_in')) {
         $event->getRequest()->getSession()->remove('check_logged_in');
         $url = $response->getTargetUrl();

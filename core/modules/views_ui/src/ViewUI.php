@@ -592,6 +592,7 @@ class ViewUI implements ViewEntityInterface {
       foreach ($args as $key => $arg) {
         $request->attributes->set('arg_' . $key, $arg);
       }
+      $request->setSession($request_stack->getSession());
       $request_stack->push($request);
 
       // Suppress contextual links of entities within the result set during a

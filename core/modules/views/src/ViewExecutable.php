@@ -720,7 +720,7 @@ class ViewExecutable {
       }
 
       // If we have no input at all, check for remembered input via session.
-      if (empty($this->exposed_input) && $this->request->hasSession()) {
+      if (empty($this->exposed_input)) {
         $session = $this->request->getSession();
         // If filters are not overridden, store the 'remember' settings on the
         // default display. If they are, store them on this display. This way,

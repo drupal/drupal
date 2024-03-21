@@ -22,11 +22,7 @@ class SessionCacheContext extends RequestStackCacheContextBase {
    * {@inheritdoc}
    */
   public function getContext() {
-    $request = $this->requestStack->getCurrentRequest();
-    if ($request->hasSession()) {
-      return Crypt::hashBase64($request->getSession()->getId());
-    }
-    return 'none';
+    return Crypt::hashBase64($this->requestStack->getSession()->getId());
   }
 
 }

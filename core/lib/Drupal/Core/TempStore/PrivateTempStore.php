@@ -121,12 +121,7 @@ class PrivateTempStore {
    */
   public function set($key, $value) {
     if ($this->currentUser->isAnonymous()) {
-      // Ensure that an anonymous user has a session created for them, as
-      // otherwise subsequent page loads will not be able to retrieve their
-      // tempstore data. Note this has to be done before the key is created as
-      // the owner is used in key creation.
-      $this->startSession();
-      $session = $this->requestStack->getCurrentRequest()->getSession();
+      $session = $this->requestStack->getSession();
       if (!$session->has('core.tempstore.private.owner')) {
         $session->set('core.tempstore.private.owner', Crypt::randomBytesBase64());
       }
@@ -225,8 +220,7 @@ class PrivateTempStore {
     $owner = $this->currentUser->id();
     if ($this->currentUser->isAnonymous()) {
       // Check to see if an owner key exists in the session.
-      $this->startSession();
-      $session = $this->requestStack->getCurrentRequest()->getSession();
+      $session = $this->requestStack->getSession();
       $owner = $session->get('core.tempstore.private.owner');
     }
     return $owner;
@@ -238,11 +232,9 @@ class PrivateTempStore {
    * Ensures that an anonymous user has a session created for them, as
    * otherwise subsequent page loads will not be able to retrieve their
    * tempstore data.
-   *
-   * @todo when https://www.drupal.org/node/2865991 is resolved, use force
-   * start session API.
    */
   protected function startSession() {
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3432359", E_USER_DEPRECATED);
     $has_session = $this->requestStack
       ->getCurrentRequest()
       ->hasSession();

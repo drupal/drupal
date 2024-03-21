@@ -42,7 +42,7 @@ class BigPipeController {
     //   the cookie was already set, yet the user is executing this controller;
     // - there is no session, in which case BigPipe is not enabled anyway, so it
     //   is pointless to set this cookie.
-    if ($request->cookies->has(BigPipeStrategy::NOJS_COOKIE) || !$request->hasSession()) {
+    if ($request->cookies->has(BigPipeStrategy::NOJS_COOKIE)) {
       throw new AccessDeniedHttpException();
     }
 
