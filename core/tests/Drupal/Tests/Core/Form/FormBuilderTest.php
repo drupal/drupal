@@ -626,6 +626,7 @@ class FormBuilderTest extends FormTestBase {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
     $request->query->set('form_id', 'different_form_id');
     $request->setMethod('GET');
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->requestStack->push($request);
 
     $form_state = (new FormState())

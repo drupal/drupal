@@ -121,12 +121,7 @@ class PrivateTempStore {
    */
   public function set($key, $value) {
     if ($this->currentUser->isAnonymous()) {
-      // Ensure that an anonymous user has a session created for them, as
-      // otherwise subsequent page loads will not be able to retrieve their
-      // tempstore data. Note this has to be done before the key is created as
-      // the owner is used in key creation.
-      $this->startSession();
-      $session = $this->requestStack->getCurrentRequest()->getSession();
+      $session = $this->requestStack->getSession();
       if (!$session->has('core.tempstore.private.owner')) {
         $session->set('core.tempstore.private.owner', Crypt::randomBytesBase64());
       }
@@ -225,33 +220,10 @@ class PrivateTempStore {
     $owner = $this->currentUser->id();
     if ($this->currentUser->isAnonymous()) {
       // Check to see if an owner key exists in the session.
-      $this->startSession();
-      $session = $this->requestStack->getCurrentRequest()->getSession();
+      $session = $this->requestStack->getSession();
       $owner = $session->get('core.tempstore.private.owner');
     }
     return $owner;
-  }
-
-  /**
-   * Start session because it is required for a private temp store.
-   *
-   * Ensures that an anonymous user has a session created for them, as
-   * otherwise subsequent page loads will not be able to retrieve their
-   * tempstore data.
-   *
-   * @todo when https://www.drupal.org/node/2865991 is resolved, use force
-   * start session API.
-   */
-  protected function startSession() {
-    $has_session = $this->requestStack
-      ->getCurrentRequest()
-      ->hasSession();
-    if (!$has_session) {
-      /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
-      $session = \Drupal::service('session');
-      $this->requestStack->getCurrentRequest()->setSession($session);
-      $session->start();
-    }
   }
 
 }

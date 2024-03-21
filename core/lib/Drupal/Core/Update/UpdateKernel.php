@@ -139,9 +139,7 @@ class UpdateKernel extends DrupalKernel {
    *   The incoming request.
    */
   protected function shutdownSession(Request $request) {
-    if ($request->hasSession()) {
-      $request->getSession()->save();
-    }
+    $request->getSession()->save();
   }
 
   /**

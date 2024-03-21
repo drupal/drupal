@@ -971,9 +971,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
       if ($request = $request_stack->getMainRequest()) {
         $subrequest = TRUE;
-        if ($request->hasSession()) {
-          $request->setSession($this->container->get('session'));
-        }
+        $request->setSession($this->container->get('session'));
       }
     }
 
@@ -1243,9 +1241,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
       if ($request = $request_stack->getMainRequest()) {
         $subrequest = TRUE;
-        if ($request->hasSession()) {
-          $request->setSession($this->container->get('session'));
-        }
+        $request->setSession($this->container->get('session'));
       }
     }
 
