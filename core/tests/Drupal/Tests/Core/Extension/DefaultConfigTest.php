@@ -29,7 +29,7 @@ class DefaultConfigTest extends UnitTestCase {
     $expected = [
       'module' => [],
       'theme' => [],
-      'profile' => '',
+      'profile' => NULL,
     ];
     $this->assertEquals($expected, $config);
   }

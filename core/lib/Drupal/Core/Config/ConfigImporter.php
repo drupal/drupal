@@ -455,12 +455,18 @@ class ConfigImporter {
 
     $this->extensionChangelist['module']['install'] = array_keys($install_required + $install_non_required);
 
-    // If we're installing the install profile ensure it comes last. This will
-    // occur when installing a site from configuration.
-    $install_profile_key = array_search($new_extensions['profile'], $this->extensionChangelist['module']['install'], TRUE);
-    if ($install_profile_key !== FALSE) {
-      unset($this->extensionChangelist['module']['install'][$install_profile_key]);
-      $this->extensionChangelist['module']['install'][] = $new_extensions['profile'];
+    // If we're installing the install profile ensure it comes last in the
+    // list of modules to be installed. This will occur when installing a site
+    // from configuration.
+    if (isset($new_extensions['profile'])) {
+      $install_profile_key = array_search($new_extensions['profile'], $this->extensionChangelist['module']['install'], TRUE);
+      // If the profile is not in the list of modules to be installed this will
+      // generate a validation error. See
+      // \Drupal\Core\EventSubscriber\ConfigImportSubscriber::validateModules().
+      if ($install_profile_key !== FALSE) {
+        unset($this->extensionChangelist['module']['install'][$install_profile_key]);
+        $this->extensionChangelist['module']['install'][] = $new_extensions['profile'];
+      }
     }
 
     // Get a list of themes with dependency weights as values.

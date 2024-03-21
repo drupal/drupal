@@ -85,7 +85,7 @@ function system_requirements($phase) {
     // Display the currently active installation profile, if the site
     // is not running the default installation profile.
     $profile = \Drupal::installProfile();
-    if ($profile != 'standard') {
+    if ($profile != 'standard' && !empty($profile)) {
       $info = $module_extension_list->getExtensionInfo($profile);
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),

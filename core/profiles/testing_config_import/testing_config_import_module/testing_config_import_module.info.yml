@@ -1,0 +1,5 @@
+name: 'Testing config import module'
+type: module
+description: 'Tests install profiles in the config importer.'
+version: VERSION
+package: Testing

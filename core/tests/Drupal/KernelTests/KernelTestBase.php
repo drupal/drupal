@@ -414,7 +414,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->container->get('config.storage')->write('core.extension', [
       'module' => array_fill_keys($modules, 0),
       'theme' => [],
-      'profile' => '',
     ]);
 
     $settings = Settings::getAll();

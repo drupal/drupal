@@ -201,9 +201,25 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertNotContains($profile, $uninstalled_modules, 'The installation profile is not in the list of uninstalled modules.');
 
     // Try uninstalling the required module.
-    $this->expectException(ModuleUninstallValidatorException::class);
-    $this->expectExceptionMessage('The following reasons prevent the modules from being uninstalled: The Testing install profile dependencies module is required');
-    $this->moduleInstaller()->uninstall([$dependency]);
+    try {
+      $this->moduleInstaller()->uninstall([$dependency]);
+      $this->fail('Expected ModuleUninstallValidatorException not thrown');
+    }
+    catch (ModuleUninstallValidatorException $e) {
+      $this->assertEquals("The following reasons prevent the modules from being uninstalled: The 'Testing install profile dependencies' install profile requires 'Database Logging'", $e->getMessage());
+    }
+
+    // Try uninstalling the install profile.
+    $this->assertSame('testing_install_profile_dependencies', $this->container->getParameter('install_profile'));
+    $result = $this->moduleInstaller()->uninstall([$profile]);
+    $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
+    $this->assertFalse($this->moduleHandler()->moduleExists($profile));
+    $this->assertFalse($this->container->getParameter('install_profile'));
+
+    // Try uninstalling the required module again.
+    $result = $this->moduleInstaller()->uninstall([$dependency]);
+    $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
+    $this->assertFalse($this->moduleHandler()->moduleExists($dependency));
   }
 
   /**
@@ -235,7 +251,7 @@ class ModuleHandlerTest extends KernelTestBase {
 
     // Try uninstalling the dependencies.
     $this->expectException(ModuleUninstallValidatorException::class);
-    $this->expectExceptionMessage('The following reasons prevent the modules from being uninstalled: The Testing install profile all dependencies module is required');
+    $this->expectExceptionMessage("The following reasons prevent the modules from being uninstalled: The 'Testing install profile all dependencies' install profile requires 'Database Logging'; The 'Testing install profile all dependencies' install profile requires 'Ban'");
     $this->moduleInstaller()->uninstall($dependencies);
   }
 

@@ -33,7 +33,7 @@ class LibrariesDirectoryFileFinder {
   /**
    * The install profile.
    *
-   * @var string
+   * @var string|false|null
    */
   protected $installProfile;
 
