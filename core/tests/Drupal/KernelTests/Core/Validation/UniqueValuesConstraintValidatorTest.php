@@ -288,4 +288,42 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
 
   }
 
+  /**
+   * Tests the UniqueField validation constraint validator with regards to case-insensitivity.
+   *
+   * Case 5. Try to create another entity with existing value for unique field with different capitalization.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *
+   * @covers ::validate
+   */
+  public function testValidationCaseInsensitive(): void {
+    // Create entity with two values for the testing field.
+    $definition = [
+      'id' => (int) rand(0, getrandmax()),
+      'user_id' => 0,
+      'field_test_text' => [
+        'text1',
+        'text2',
+      ],
+    ];
+    $entity = EntityTestUniqueConstraint::create($definition);
+    $entity->save();
+
+    // Create another entity with two values for the testing field, one identical
+    // to other value, but with different capitalization which should still trigger a validation error.
+    $definition = [
+      'id' => (int) rand(0, getrandmax()),
+      'user_id' => 0,
+      'field_test_text' => [
+        'Text1',
+        'text3',
+      ],
+    ];
+    $entity = EntityTestUniqueConstraint::create($definition);
+    $violations = $entity->validate();
+    $this->assertCount(1, $violations);
+    $this->assertEquals('field_test_text.0', $violations[0]->getPropertyPath());
+  }
+
 }

@@ -82,7 +82,7 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
       // If our entity duplicates field values in any other entity, the query
       // will return all field values that belong to those entities. Narrow
       // down to only the specific duplicate values.
-      $duplicate_values = array_intersect($item_values, $other_entity_values);
+      $duplicate_values = $this->caseInsensitiveArrayIntersect($item_values, $other_entity_values);
 
       foreach ($duplicate_values as $delta => $dupe) {
         $violation = $this->context
@@ -110,6 +110,26 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
           ->addViolation();
       }
     }
+  }
+
+  /**
+   * Perform a case-insensitive array intersection, but keep original capitalization.
+   *
+   * @param array $orig_values
+   *   The original values to be returned.
+   * @param array $comp_values
+   *   The values to intersect $orig_values with.
+   *
+   * @return array
+   *   Elements of $orig_values contained in $comp_values when ignoring capitalization.
+   */
+  private function caseInsensitiveArrayIntersect(array $orig_values, array $comp_values): array {
+    $lowercase_comp_values = array_map('strtolower', $comp_values);
+    $intersect_map = array_map(fn (string $x) => in_array(strtolower($x), $lowercase_comp_values, TRUE) ? $x : NULL, $orig_values);
+
+    return array_filter($intersect_map, function ($x) {
+      return $x !== NULL;
+    });
   }
 
   /**
