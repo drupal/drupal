@@ -495,7 +495,7 @@ services:
     arguments: ['@serialization.phpserialize', '@database', '@datetime.time']
   logger.factory:
     class: Drupal\Core\Logger\LoggerChannelFactory
-    parent: container.trait
+    arguments: ['@request_stack', '@current_user']
     tags:
       - { name: service_collector, tag: logger, call: addLogger }
   Drupal\Core\Logger\LoggerChannelFactoryInterface: '@logger.factory'
