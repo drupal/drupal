@@ -14,7 +14,7 @@ namespace Drupal\Core\Display;
  * display variant is used by the Block module to control regions and output
  * blocks placed in those regions.
  *
- * @see \Drupal\Core\Display\Annotation\DisplayVariant
+ * @see \Drupal\Core\Display\Attribute\DisplayVariant
  * @see \Drupal\Core\Display\VariantBase
  * @see \Drupal\Core\Display\VariantManager
  * @see plugin_api

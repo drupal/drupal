@@ -455,8 +455,8 @@
  *   ways: no decoration at all (just a page showing the main content) or blocks
  *   (a page with regions, with blocks positioned in regions around the main
  *   content). Modules can provide additional options, by implementing a page
- *   variant, which is a plugin annotated with
- *   \Drupal\Core\Display\Annotation\PageDisplayVariant.
+ *   variant, which is a plugin with the
+ *   \Drupal\Core\Display\Attribute\PageDisplayVariant attribute.
  *
  * Routes whose controllers return a \Symfony\Component\HttpFoundation\Response
  * object are fully handled by the Symfony render pipeline.

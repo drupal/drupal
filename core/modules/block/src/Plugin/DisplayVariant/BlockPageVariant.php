@@ -7,10 +7,12 @@ use Drupal\Core\Block\MainContentBlockPluginInterface;
 use Drupal\Core\Block\TitleBlockPluginInterface;
 use Drupal\Core\Block\MessagesBlockPluginInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Display\Attribute\PageDisplayVariant;
 use Drupal\Core\Display\PageVariantInterface;
 use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Display\VariantBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,12 +25,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\Core\Block\MainContentBlockPluginInterface
  * @see \Drupal\Core\Block\MessagesBlockPluginInterface
- *
- * @PageDisplayVariant(
- *   id = "block_page",
- *   admin_label = @Translation("Page with blocks")
- * )
  */
+#[PageDisplayVariant(
+  id: 'block_page',
+  admin_label: new TranslatableMarkup('Page with blocks')
+)]
 class BlockPageVariant extends VariantBase implements PageVariantInterface, ContainerFactoryPluginInterface {
 
   /**

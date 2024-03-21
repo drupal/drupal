@@ -11,7 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Provides a base class for DisplayVariant plugins.
  *
- * @see \Drupal\Core\Display\Annotation\DisplayVariant
+ * @see \Drupal\Core\Display\Attribute\DisplayVariant
  * @see \Drupal\Core\Display\VariantInterface
  * @see \Drupal\Core\Display\VariantManager
  * @see plugin_api
