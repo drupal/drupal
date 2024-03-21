@@ -4,14 +4,14 @@ namespace Drupal\views\Plugin\views\area;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Xss;
+use Drupal\views\Attribute\ViewsArea;
 
 /**
  * Views area text handler.
  *
  * @ingroup views_area_handlers
- *
- * @ViewsArea("text_custom")
  */
+#[ViewsArea("text_custom")]
 class TextCustom extends TokenizeAreaPluginBase {
 
   /**

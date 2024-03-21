@@ -4,15 +4,15 @@ namespace Drupal\views\Plugin\views\area;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsArea;
 use Drupal\views\Plugin\views\style\DefaultSummary;
 
 /**
  * Views area handler to display some configurable result summary.
  *
  * @ingroup views_area_handlers
- *
- * @ViewsArea("result")
  */
+#[ViewsArea("result")]
 class Result extends AreaPluginBase {
 
   /**

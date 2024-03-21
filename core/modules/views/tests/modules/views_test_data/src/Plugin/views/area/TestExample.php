@@ -4,15 +4,15 @@ namespace Drupal\views_test_data\Plugin\views\area;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\views\Attribute\ViewsArea;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 
 /**
  * Test area plugin.
  *
  * @see \Drupal\views\Tests\Handler\AreaTest
- *
- * @ViewsArea("test_example")
  */
+#[ViewsArea("test_example")]
 class TestExample extends AreaPluginBase {
 
   /**

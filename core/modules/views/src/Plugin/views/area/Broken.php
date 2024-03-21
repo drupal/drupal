@@ -2,15 +2,15 @@
 
 namespace Drupal\views\Plugin\views\area;
 
+use Drupal\views\Attribute\ViewsArea;
 use Drupal\views\Plugin\views\BrokenHandlerTrait;
 
 /**
  * A special handler to take the place of missing or broken handlers.
  *
  * @ingroup views_area_handlers
- *
- * @ViewsArea("broken")
  */
+#[ViewsArea("broken")]
 class Broken extends AreaPluginBase {
   use BrokenHandlerTrait;
 
