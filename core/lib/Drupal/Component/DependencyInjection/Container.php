@@ -379,10 +379,6 @@ class Container implements ContainerInterface, ResetInterface {
       if ($arguments->type !== 'collection') {
         throw new InvalidArgumentException(sprintf('Undefined type "%s" while resolving parameters and services.', $arguments->type));
       }
-      // In case there is nothing to resolve, we are done here.
-      if (!$arguments->resolve) {
-        return $arguments->value;
-      }
       $arguments = $arguments->value;
     }
 
@@ -461,15 +457,7 @@ class Container implements ContainerInterface, ResetInterface {
         }
         // Check for collection.
         elseif ($type == 'collection') {
-          $value = $argument->value;
-
-          // Does this collection need resolving?
-          if ($argument->resolve) {
-            $arguments[$key] = $this->resolveServicesAndParameters($value);
-          }
-          else {
-            $arguments[$key] = $value;
-          }
+          $arguments[$key] = $this->resolveServicesAndParameters($argument->value);
 
           continue;
         }

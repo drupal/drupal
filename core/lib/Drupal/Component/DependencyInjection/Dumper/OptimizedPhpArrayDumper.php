@@ -332,7 +332,6 @@ class OptimizedPhpArrayDumper extends Dumper {
     return (object) [
       'type' => 'collection',
       'value' => $code,
-      'resolve' => $resolve,
     ];
   }
 
