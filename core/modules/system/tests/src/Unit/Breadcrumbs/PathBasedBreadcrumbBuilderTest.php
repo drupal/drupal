@@ -400,7 +400,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   protected function setupStubPathProcessor() {
     $this->pathProcessor->expects($this->any())
       ->method('processInbound')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
   }
 
 }

@@ -251,7 +251,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlAssembler->expects($this->once())
       ->method('assemble')
       ->with('https://www.drupal.org', ['set_active_class' => TRUE, 'external' => TRUE] + $this->defaultOptions)
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')
