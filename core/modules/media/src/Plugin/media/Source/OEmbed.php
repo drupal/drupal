@@ -257,7 +257,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
         return parent::getMetadata($media, 'default_name');
 
       case 'thumbnail_uri':
-        return $this->getLocalThumbnailUri($resource) ?: parent::getMetadata($media, 'thumbnail_uri');
+        return $this->getLocalThumbnailUri($resource, $media) ?: parent::getMetadata($media, 'thumbnail_uri');
 
       case 'type':
         return $resource->getType();
@@ -387,6 +387,8 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    *
    * @param \Drupal\media\OEmbed\Resource $resource
    *   The oEmbed resource.
+   * @param \Drupal\media\MediaInterface|null $media
+   *   The media entity that contains the resource.
    *
    * @return string|null
    *   The local thumbnail URI, or NULL if it could not be downloaded, or if the
@@ -397,7 +399,15 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    * toggle-able. See https://www.drupal.org/project/drupal/issues/2962751 for
    * more information.
    */
-  protected function getLocalThumbnailUri(Resource $resource) {
+  protected function getLocalThumbnailUri(Resource $resource, MediaInterface $media = NULL) {
+    if (is_null($media)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $media argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3432920', E_USER_DEPRECATED);
+      $token_data = [];
+    }
+    else {
+      $token_data = ['date' => $media->getCreatedTime()];
+    }
+
     // If there is no remote thumbnail, there's nothing for us to fetch here.
     $remote_thumbnail_url = $resource->getThumbnailUrl();
     if (!$remote_thumbnail_url) {
@@ -409,7 +419,11 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     // contain HTML, the tags will be removed and XML entities will be decoded.
     $configuration = $this->getConfiguration();
     $directory = $configuration['thumbnails_directory'];
-    $directory = $this->token->replace($directory);
+    // The thumbnail directory might contain a date token, so we pass in the
+    // creation date of the media entity so that the token won't rely on the
+    // current request time, making the current request have a max-age of 0.
+    // @see system_tokens() for $type == 'date'.
+    $directory = $this->token->replace($directory, $token_data);
     $directory = PlainTextOutput::renderFromHtml($directory);
 
     // The local thumbnail doesn't exist yet, so try to download it. First,
