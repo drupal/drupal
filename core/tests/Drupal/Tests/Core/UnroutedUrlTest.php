@@ -53,7 +53,7 @@ class UnroutedUrlTest extends UnitTestCase {
     $this->urlAssembler = $this->createMock('Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
     $this->urlAssembler->expects($this->any())
       ->method('assemble')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $this->router = $this->createMock('Drupal\Tests\Core\Routing\TestRouterInterface');
     $container = new ContainerBuilder();
