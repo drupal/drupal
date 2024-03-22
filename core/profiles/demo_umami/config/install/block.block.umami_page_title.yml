@@ -16,7 +16,6 @@ settings:
   label: 'Page title'
   label_display: '0'
   provider: core
-  base_route_title: false
 visibility:
   request_path:
     id: request_path
