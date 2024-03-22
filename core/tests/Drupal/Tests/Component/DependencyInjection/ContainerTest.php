@@ -698,24 +698,6 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::getServiceIdMappings
-   * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::generateServiceIdHash
-   *
-   * @group legacy
-   */
-  public function testGetServiceIdMappings() {
-    $this->expectDeprecation("Drupal\Component\DependencyInjection\ServiceIdHashTrait::generateServiceIdHash() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
-    $this->expectDeprecation("Drupal\Component\DependencyInjection\ServiceIdHashTrait::getServiceIdMappings() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
-    $this->assertEquals([], $this->container->getServiceIdMappings());
-    $s1 = $this->container->get('other.service');
-    $s2 = $this->container->get('late.service');
-    $this->assertEquals([
-      $this->container->generateServiceIdHash($s1) => 'other.service',
-      $this->container->generateServiceIdHash($s2) => 'late.service',
-    ], $this->container->getServiceIdMappings());
-  }
-
-  /**
    * Tests Container::reset().
    *
    * @covers ::reset

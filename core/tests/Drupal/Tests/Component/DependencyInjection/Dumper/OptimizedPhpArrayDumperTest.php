@@ -609,37 +609,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     }
 
     /**
-     * Tests that the correct RuntimeException is thrown for dumping an object.
-     *
-     * @covers ::dumpValue
-     * @group legacy
-     */
-    public function testGetServiceDefinitionForObjectServiceId() {
-      $service = new \stdClass();
-      $service->_serviceId = 'foo';
-
-      $services['foo'] = new Definition('\stdClass');
-      $services['bar'] = new Definition('\stdClass');
-      $services['bar']->addArgument($service);
-      foreach ($services as $s) {
-        $s->setPublic(TRUE);
-      }
-
-      $this->containerBuilder->getDefinitions()->willReturn($services);
-      $this->containerBuilder->getDefinition('foo')->willReturn($services['foo']);
-      $this->containerBuilder->getDefinition('bar')->willReturn($services['bar']);
-      $this->expectDeprecation('_serviceId is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use \Drupal\Core\DrupalKernelInterface::getServiceIdMapping() instead. See https://www.drupal.org/node/3292540');
-      $a = $this->dumper->getArray();
-      $this->assertEquals(
-        static::serializeDefinition([
-          'class' => '\stdClass',
-          // Legacy code takes care of converting _serviceId into this.
-          'arguments' => static::getCollection([static::getServiceCall('foo')]),
-          'arguments_count' => 1,
-        ]), $a['services']['bar']);
-    }
-
-    /**
      * Tests that the correct RuntimeException is thrown for dumping a resource.
      *
      * @covers ::dumpValue
