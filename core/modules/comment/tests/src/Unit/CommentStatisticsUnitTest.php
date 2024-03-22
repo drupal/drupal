@@ -70,11 +70,11 @@ class CommentStatisticsUnitTest extends UnitTestCase {
 
     $this->select->expects($this->any())
       ->method('fields')
-      ->will($this->returnSelf());
+      ->willReturnSelf();
 
     $this->select->expects($this->any())
       ->method('condition')
-      ->will($this->returnSelf());
+      ->willReturnSelf();
 
     $this->select->expects($this->any())
       ->method('execute')

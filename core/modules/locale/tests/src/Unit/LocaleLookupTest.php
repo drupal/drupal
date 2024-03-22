@@ -255,7 +255,7 @@ class LocaleLookupTest extends UnitTestCase {
     $string = $this->createMock('Drupal\locale\StringInterface');
     $string->expects($this->once())
       ->method('addLocation')
-      ->will($this->returnSelf());
+      ->willReturnSelf();
     $this->storage->expects($this->once())
       ->method('findTranslation')
       ->willReturn(NULL);
