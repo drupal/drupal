@@ -30,8 +30,8 @@ content:
     type: image
     label: hidden
     settings:
-      image_style: medium
       image_link: content
+      image_style: medium
       image_loading:
         attribute: lazy
     third_party_settings: {  }
