@@ -32,8 +32,3 @@
 # PHPUnit 9.6.
 %Expecting E_WARNING and E_USER_WARNING is deprecated and will no longer be possible in PHPUnit 10%
 %Expecting E_ERROR and E_USER_ERROR is deprecated and will no longer be possible in PHPUnit 10%
-
-# Symfony 6.4.
-%Since symfony/dependency-injection 6.4: "Symfony\\Component\\DependencyInjection\\ContainerAwareTrait" is deprecated, use dependency injection instead.%
-%The "Drupal\\Core\\Logger\\LoggerChannelFactory" class implements "Symfony\\Component\\DependencyInjection\\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead.%
-%The "Drupal\\Core\\Logger\\LoggerChannelFactory" class uses "Symfony\\Component\\DependencyInjection\\ContainerAwareTrait" that is deprecated since Symfony 6.4, use dependency injection instead.%
