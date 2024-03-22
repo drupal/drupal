@@ -327,13 +327,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getFromDriverName\\(\\) of class Drupal\\\\Core\\\\Extension\\\\DatabaseDriverList\\:
-in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-  DatabaseDriverList\\:\\:get\\(\\) instead, passing a database driver namespace\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Extension/DatabaseDriverList.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$minor_version might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ExtensionVersion.php',

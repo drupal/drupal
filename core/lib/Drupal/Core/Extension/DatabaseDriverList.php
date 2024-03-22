@@ -3,7 +3,6 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
 
 /**
  * Provides a list of available database drivers.
@@ -132,38 +131,9 @@ class DatabaseDriverList extends ExtensionList {
    */
   public function get($extension_name) {
     if (!str_contains($extension_name, "\\")) {
-      @trigger_error("Passing a database driver name '{$extension_name}' to " . __METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Pass a database driver namespace instead. See https://www.drupal.org/node/3258175', E_USER_DEPRECATED);
-      return $this->getFromDriverName($extension_name);
+      throw new \RuntimeException("Passing a database driver name '{$extension_name}' to " . __METHOD__ . '() is not supported. Pass a database driver namespace instead. See https://www.drupal.org/node/3258175');
     }
     return parent::get($extension_name);
-  }
-
-  /**
-   * Returns the first available driver extension by the driver name.
-   *
-   * @param string $driverName
-   *   The database driver name.
-   *
-   * @return \Drupal\Core\Extension\DatabaseDriver
-   *   The driver extension.
-   *
-   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
-   *   When no matching driver extension can be found.
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   DatabaseDriverList::get() instead, passing a database driver namespace.
-   *
-   * @see https://www.drupal.org/node/3258175
-   */
-  public function getFromDriverName(string $driverName): DatabaseDriver {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::get() instead, passing a database driver namespace. See https://www.drupal.org/node/3258175', E_USER_DEPRECATED);
-    foreach ($this->getList() as $extensionName => $driver) {
-      $namespaceParts = explode('\\', $extensionName);
-      if (end($namespaceParts) === $driverName) {
-        return parent::get($extensionName);
-      }
-    }
-    throw new UnknownExtensionException("Could not find a database driver named '{$driverName}' in any module");
   }
 
   /**

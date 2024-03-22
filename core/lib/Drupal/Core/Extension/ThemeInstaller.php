@@ -105,7 +105,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
    * @param \Drupal\Core\Extension\ThemeExtensionList|null $themeExtensionList
    *   The theme extension list.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state, ModuleExtensionList $module_extension_list, protected ?Registry $themeRegistry = NULL, protected ?ThemeExtensionList $themeExtensionList = NULL) {
+  public function __construct(ThemeHandlerInterface $theme_handler, ConfigFactoryInterface $config_factory, ConfigInstallerInterface $config_installer, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, AssetCollectionOptimizerInterface $css_collection_optimizer, RouteBuilderInterface $route_builder, LoggerInterface $logger, StateInterface $state, ModuleExtensionList $module_extension_list, protected Registry $themeRegistry, protected ThemeExtensionList $themeExtensionList) {
     $this->themeHandler = $theme_handler;
     $this->configFactory = $config_factory;
     $this->configInstaller = $config_installer;
@@ -116,15 +116,6 @@ class ThemeInstaller implements ThemeInstallerInterface {
     $this->logger = $logger;
     $this->state = $state;
     $this->moduleExtensionList = $module_extension_list;
-    if ($this->themeRegistry === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $themeRegistry argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3350906', E_USER_DEPRECATED);
-      $this->themeRegistry = \Drupal::service('theme.registry');
-    }
-    if ($this->themeExtensionList === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $themeExtensionList argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3413308', E_USER_DEPRECATED);
-      $this->themeExtensionList = \Drupal::service('extension.list.theme');
-    }
-
   }
 
   /**

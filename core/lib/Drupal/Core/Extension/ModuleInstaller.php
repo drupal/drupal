@@ -89,16 +89,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection, UpdateHookRegistry $update_registry, protected ?LoggerInterface $logger = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection, UpdateHookRegistry $update_registry, protected LoggerInterface $logger) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
     $this->connection = $connection;
     $this->updateRegistry = $update_registry;
-    if ($this->logger === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
-      $this->logger = \Drupal::service('logger.channel.system');
-    }
   }
 
   /**

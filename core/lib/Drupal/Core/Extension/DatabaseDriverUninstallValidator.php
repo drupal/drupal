@@ -50,8 +50,10 @@ class DatabaseDriverUninstallValidator implements ModuleUninstallValidatorInterf
   public function validate($module) {
     $reasons = [];
 
+    // This is here to allow InstallerNonDefaultDatabaseDriverTest execute,
+    // it needs to get a new connection than the one passed in construction.
     // @todo Remove the next line of code in
-    // https://www.drupal.org/project/drupal/issues/3129043.
+    // https://www.drupal.org/project/drupal/issues/3433034.
     $this->connection = Database::getConnection();
 
     // When the database driver is provided by a module, then that module
