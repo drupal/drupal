@@ -119,7 +119,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
       ->with('definitions', $this->callback(function (array $value) use (&$definitions): bool {
         return array_shift($definitions) === $value;
       }))
-      ->will($this->returnSelf());
+      ->willReturnSelf();
     $config->expects($this->exactly(2))
       ->method('save');
 
@@ -159,7 +159,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
     $config->expects($old_definitions != $new_definitions ? $this->once() : $this->never())
       ->method('set')
       ->with('definitions', $new_definitions)
-      ->will($this->returnSelf());
+      ->willReturnSelf();
     $config->expects($old_definitions != $new_definitions ? $this->once() : $this->never())
       ->method('save');
 
