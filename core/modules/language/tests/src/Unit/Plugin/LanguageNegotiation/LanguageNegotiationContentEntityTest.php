@@ -57,17 +57,17 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
     $language_de = $this->createMock(LanguageInterface::class);
     $language_de->expects($this->any())
       ->method('getId')
-      ->will($this->returnValue('de'));
+      ->willReturn('de');
     $language_de->expects($this->any())
       ->method('getName')
-      ->will($this->returnValue('German'));
+      ->willReturn('German');
     $language_en = $this->createMock(LanguageInterface::class);
     $language_en->expects($this->any())
       ->method('getId')
-      ->will($this->returnValue('en'));
+      ->willReturn('en');
     $language_en->expects($this->any())
       ->method('getName')
-      ->will($this->returnValue('English'));
+      ->willReturn('English');
     $this->languages = [
       'de' => $language_de,
       'en' => $language_en,
@@ -76,10 +76,10 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
     $language_manager = $this->createMock(ConfigurableLanguageManagerInterface::class);
     $language_manager->expects($this->any())
       ->method('getLanguages')
-      ->will($this->returnValue($this->languages));
+      ->willReturn($this->languages);
     $language_manager->expects($this->any())
       ->method('getNativeLanguages')
-      ->will($this->returnValue($this->languages));
+      ->willReturn($this->languages);
     $this->languageManager = $language_manager;
 
     $container = new ContainerBuilder();
@@ -167,10 +167,10 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
       ['hasLowerLanguageNegotiationWeight', 'meetsContentEntityRoutesCondition', 'getLangcode']);
     $languageNegotiationContentEntityMock->expects($this->any())
       ->method('hasLowerLanguageNegotiationWeight')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $languageNegotiationContentEntityMock->expects($this->any())
       ->method('meetsContentEntityRoutesCondition')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $languageNegotiationContentEntityMock->expects($this->exactly(2))
       ->method('getLangcode')
       ->willReturnOnConsecutiveCalls(

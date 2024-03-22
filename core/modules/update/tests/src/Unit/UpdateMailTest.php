@@ -114,10 +114,10 @@ class UpdateMailTest extends UnitTestCase {
     $this->configFactory
       ->expects($this->exactly(2))
       ->method('get')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['system.site', $config_site_name],
         ['update.settings', $config_notification],
-      ]));
+      ]);
 
     // The calls to generateFromRoute differ if authorized.
     $count = 2;
@@ -133,11 +133,11 @@ class UpdateMailTest extends UnitTestCase {
     $this->urlGenerator
       ->expects($this->exactly($count))
       ->method('generateFromRoute')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['update.status', [], ['absolute' => TRUE, 'language' => $langcode], FALSE, $update_settings_url],
         ['update.settings', [], ['absolute' => TRUE], FALSE, $available_updates_url],
         ['update.report_update', [], ['absolute' => TRUE, 'language' => $langcode], FALSE, $available_updates_url],
-      ]));
+      ]);
 
     // Set the container.
     $this->container->set('language_manager', $this->languageManager);

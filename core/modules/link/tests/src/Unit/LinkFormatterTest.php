@@ -49,7 +49,7 @@ class LinkFormatterTest extends UnitTestCase {
     $fieldTypePluginManager = $this->createMock(FieldTypePluginManagerInterface::class);
     $fieldTypePluginManager->expects($this->once())
       ->method('createFieldItem')
-      ->will($this->returnValue($linkItem));
+      ->willReturn($linkItem);
     $urlGenerator = $this->createMock(UrlGenerator::class);
     $urlGenerator->expects($this->once())
       ->method('generateFromRoute')
@@ -91,7 +91,7 @@ class LinkFormatterTest extends UnitTestCase {
     $fieldTypePluginManager = $this->createMock(FieldTypePluginManagerInterface::class);
     $fieldTypePluginManager->expects($this->once())
       ->method('createFieldItem')
-      ->will($this->returnValue($linkItem));
+      ->willReturn($linkItem);
     $container = new ContainerBuilder();
     $container->set('plugin.manager.field.field_type', $fieldTypePluginManager);
     \Drupal::setContainer($container);
@@ -128,7 +128,7 @@ class LinkFormatterTest extends UnitTestCase {
     $fieldTypePluginManager = $this->createMock(FieldTypePluginManagerInterface::class);
     $fieldTypePluginManager->expects($this->once())
       ->method('createFieldItem')
-      ->will($this->returnValue($linkItem));
+      ->willReturn($linkItem);
     $urlGenerator = $this->createMock(UrlGenerator::class);
     $urlGenerator->expects($this->once())
       ->method('generateFromRoute')

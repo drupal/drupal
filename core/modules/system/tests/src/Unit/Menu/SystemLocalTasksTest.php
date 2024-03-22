@@ -54,7 +54,7 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
       ->expects($this->once())
       ->method('hasLinkTemplate')
       ->with('version-history')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
     $entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $entityTypeManager->expects($this->any())
       ->method('getDefinitions')
