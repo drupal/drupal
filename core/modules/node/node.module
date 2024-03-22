@@ -338,62 +338,6 @@ function node_entity_extra_field_info() {
 }
 
 /**
- * Updates all nodes of one type to be of another type.
- *
- * @param string $old_id
- *   The current node type of the nodes.
- * @param string $new_id
- *   The new node type of the nodes.
- *
- * @return int
- *   The number of nodes whose node type field was modified.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Entity\EntityStorageInterface::updateType instead.
- *
- * @see https://www.drupal.org/node/3323340
- */
-function node_type_update_nodes($old_id, $new_id) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\EntityStorageInterface::updateType instead. See https://www.drupal.org/node/3294237', E_USER_DEPRECATED);
-  return \Drupal::entityTypeManager()->getStorage('node')->updateType($old_id, $new_id);
-}
-
-/**
- * Loads a node revision from the database.
- *
- * @param int $vid
- *   The node revision id.
- *
- * @return \Drupal\node\NodeInterface|null
- *   A fully-populated node entity, or NULL if the node is not found.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead.
- *
- * @see https://www.drupal.org/node/3323340
- */
-function node_revision_load($vid = NULL) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead. See https://www.drupal.org/node/3294237', E_USER_DEPRECATED);
-  return \Drupal::entityTypeManager()->getStorage('node')->loadRevision($vid);
-}
-
-/**
- * Deletes a node revision.
- *
- * @param int $revision_id
- *   The revision ID to delete.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead.
- *
- * @see https://www.drupal.org/node/3323340
- */
-function node_revision_delete($revision_id) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3294237', E_USER_DEPRECATED);
-  \Drupal::entityTypeManager()->getStorage('node')->deleteRevision($revision_id);
-}
-
-/**
  * Checks whether the current page is the full page view of the passed-in node.
  *
  * @param \Drupal\node\NodeInterface $node
@@ -706,56 +650,6 @@ function node_user_predelete($account) {
   foreach ($revisions as $revision) {
     $storage_controller->deleteRevision($revision);
   }
-}
-
-/**
- * Finds the most recently changed nodes that are available to the current user.
- *
- * @param $number
- *   (optional) The maximum number of nodes to find. Defaults to 10.
- *
- * @return \Drupal\node\NodeInterface[]
- *   An array of node entities or an empty array if there are no recent nodes
- *   visible to the current user.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   \Drupal::entityQuery() instead.
- *
- * @see https://www.drupal.org/node/3356516
- */
-function node_get_recent($number = 10) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal::entityQuery() instead. See https://www.drupal.org/node/3356516', E_USER_DEPRECATED);
-  $account = \Drupal::currentUser();
-  $query = \Drupal::entityQuery('node');
-
-  if (!$account->hasPermission('bypass node access')) {
-    // If the user is able to view their own unpublished nodes, allow them
-    // to see these in addition to published nodes. Check that they actually
-    // have some unpublished nodes to view before adding the condition.
-    $access_query = \Drupal::entityQuery('node')
-      ->accessCheck(TRUE)
-      ->condition('uid', $account->id())
-      ->condition('status', NodeInterface::NOT_PUBLISHED);
-    if ($account->hasPermission('view own unpublished content') && ($own_unpublished = $access_query->execute())) {
-      $query->orConditionGroup()
-        ->condition('status', NodeInterface::PUBLISHED)
-        ->condition('nid', $own_unpublished, 'IN');
-    }
-    else {
-      // If not, restrict the query to published nodes.
-      $query->condition('status', NodeInterface::PUBLISHED);
-    }
-  }
-  $nids = $query
-    ->accessCheck(TRUE)
-    ->sort('changed', 'DESC')
-    ->range(0, $number)
-    ->addTag('node_access')
-    ->execute();
-
-  $nodes = Node::loadMultiple($nids);
-
-  return $nodes ? $nodes : [];
 }
 
 /**
