@@ -98,12 +98,8 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
    *   - element: the CKEditor 5 element equivalent of the tag + classes
    *
    * @internal
-   *   This method is public only to allow the CKEditor 4 to 5 upgrade path to
-   *   reuse this logic. Mark this private in https://www.drupal.org/i/3239012.
-   *
-   * @see \Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade\Core::mapCKEditor4SettingsToCKEditor5Configuration()
    */
-  public static function parseStylesFormValue(string $form_value): array {
+  private static function parseStylesFormValue(string $form_value): array {
     $invalid_lines = [];
 
     $lines = explode("\n", $form_value);

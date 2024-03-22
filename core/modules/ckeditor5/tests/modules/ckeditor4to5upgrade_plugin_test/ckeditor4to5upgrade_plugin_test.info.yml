@@ -1,6 +1,0 @@
-name: CKEditor 4 to 5 Upgrade plugin Test
-type: module
-description: "Provides test plugins for testing CKEditor 4 to 5 upgrade infrastructure."
-package: Testing
-dependencies:
-  - ckeditor5:ckeditor5

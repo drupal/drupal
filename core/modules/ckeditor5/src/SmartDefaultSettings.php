@@ -4,12 +4,9 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5;
 
-use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Assertion\Inspector;
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -39,13 +36,6 @@ final class SmartDefaultSettings {
   protected $pluginManager;
 
   /**
-   * The CKEditor 4 to 5 upgrade plugin manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $upgradePluginManager;
-
-  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -71,8 +61,6 @@ final class SmartDefaultSettings {
    *
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $plugin_manager
    *   The CKEditor 5 plugin manager.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $upgrade_plugin_manager
-   *   The CKEditor 4 to 5 upgrade plugin manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -80,9 +68,8 @@ final class SmartDefaultSettings {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, LoggerInterface $logger, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, LoggerInterface $logger, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
     $this->pluginManager = $plugin_manager;
-    $this->upgradePluginManager = $upgrade_plugin_manager;
     $this->logger = $logger;
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
@@ -92,8 +79,8 @@ final class SmartDefaultSettings {
    * Computes the closest possible equivalent settings for switching to CKEditor 5.
    *
    * @param \Drupal\editor\EditorInterface|null $text_editor
-   *   The editor being reconfigured for CKEditor 5 to match the CKEditor 4
-   *   settings as closely as possible (if it was using CKEditor 4).
+   *   The editor being reconfigured for CKEditor 5; infer the settings based on
+   *   the HTML restrictions.
    * @param \Drupal\filter\FilterFormatInterface $text_format
    *   The text format for which to compute smart default settings.
    *
@@ -144,26 +131,17 @@ final class SmartDefaultSettings {
     $editor->setEditor('ckeditor5');
 
     $source_editing_additions = HTMLRestrictions::emptySet();
-    // Compute the appropriate settings based on the CKEditor 4 configuration
-    // if it exists.
+    // Compute the appropriate settings based on the HTML restrictions of the
+    // text format.
     $old_editor = $editor->id() ? Editor::load($editor->id()) : NULL;
     $old_editor_restrictions = $old_editor ? HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()) : HTMLRestrictions::emptySet();
     // @todo Remove in https://www.drupal.org/project/drupal/issues/3245351
     if ($old_editor) {
+      // When switching from another text editor, use CKEditor 5's default
+      // settings.
+      // @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::getDefaultSettings()
+      $editor->setSettings(Editor::create(['editor' => 'ckeditor5'])->getSettings());
       $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
-    }
-    if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
-      [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
-      $editor->setSettings($upgraded_settings);
-      // *Before* determining which elements are still needed for this text
-      // format, ensure that all already enabled plugins that are configurable
-      // have valid settings.
-      // For all already enabled plugins, find the ones that are configurable,
-      // and add their default settings. For enabled plugins with element
-      // subsets, compute the appropriate settings to achieve the subset that
-      // matches the original text format restrictions.
-      $this->addDefaultSettingsForEnabledConfigurablePlugins($editor);
-      $this->computeSubsetSettingForEnabledPluginsWithSubsets($editor, $text_format);
     }
 
     // Add toolbar items based on HTML tags and attributes.
@@ -236,28 +214,7 @@ final class SmartDefaultSettings {
     // and add their default settings. For enabled plugins with element subsets,
     // compute the appropriate settings to achieve the subset that matches the
     // original text format restrictions.
-    // Note: if switching from CKEditor 4, this will already have happened for
-    // plugins that were already enabled in CKEditor 4. It's harmless to compute
-    // this again.
     $this->addDefaultSettingsForEnabledConfigurablePlugins($editor);
-    $this->computeSubsetSettingForEnabledPluginsWithSubsets($editor, $text_format);
-
-    // In CKEditor 4, it's possible for settings to exist for plugins that are
-    // not actually enabled. During the upgrade path, these would then be mapped
-    // to equivalent CKEditor 5 configuration. But CKEditor 5 does not allow
-    // configuration to be stored for disabled plugins. Therefore determine
-    // which plugins actually are enabled, and omit the (upgraded) plugin
-    // configuration for disabled plugins.
-    // @see \Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface::mapCKEditor4SettingsToCKEditor5Configuration()
-    if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
-      $enabled_definitions = $this->pluginManager->getEnabledDefinitions($editor);
-      $enabled_configurable_definitions = array_filter($enabled_definitions, function (CKEditor5PluginDefinition $definition): bool {
-        return is_a($definition->getClass(), CKEditor5PluginConfigurableInterface::class, TRUE);
-      });
-      $settings = $editor->getSettings();
-      $settings['plugins'] = array_intersect_key($settings['plugins'], $enabled_configurable_definitions);
-      $editor->setSettings($settings);
-    }
 
     if ($has_html_restrictions) {
       // Determine what tags/attributes are allowed in this text format that were
@@ -401,6 +358,8 @@ final class SmartDefaultSettings {
     $settings = $editor->getSettings();
     if (!isset($settings['toolbar']['items']) || !in_array('sourceEditing', $settings['toolbar']['items'])) {
       $messages[MessengerInterface::TYPE_STATUS][] = $this->t('The <em>Source Editing</em> plugin was enabled to support tags and/or attributes that are not explicitly supported by any available CKEditor 5 plugins.');
+      // Add the "Source Editing" toolbar item in a new group.
+      $settings['toolbar']['items'][] = '|';
       $settings['toolbar']['items'][] = 'sourceEditing';
     }
     $allowed_tags_array = $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] ?? [];
@@ -408,98 +367,6 @@ final class SmartDefaultSettings {
     $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = HTMLRestrictions::fromString($allowed_tags_string)->merge($tags)->toCKEditor5ElementsArray();
     $editor->setSettings($settings);
     return $messages;
-  }
-
-  /**
-   * Creates equivalent CKEditor 5 settings from CKEditor 4 settings.
-   *
-   * @param array $ckeditor4_settings
-   *   The value for "settings" in a Text Editor config entity configured to use
-   *   CKEditor 4.
-   * @param \Drupal\ckeditor5\HTMLRestrictions $text_format_html_restrictions
-   *   The restrictions of the text format, to allow an upgrade plugin to
-   *   inspect the text format's HTML restrictions to make a decision.
-   *
-   * @return array
-   *   An array with two values:
-   *   1. An equivalent value for CKEditor 5.
-   *   2. Messages explaining upgrade path issues.
-   *
-   * @throws \LogicException
-   *   Thrown when an upgrade plugin is attempting to generate plugin settings
-   *   for a CKEditor 4 plugin upgrade path that have already been generated.
-   */
-  private function createSettingsFromCKEditor4(array $ckeditor4_settings, HTMLRestrictions $text_format_html_restrictions): array {
-    $settings = [
-      'toolbar' => [
-        'items' => [],
-      ],
-      'plugins' => [],
-    ];
-    $messages = [];
-
-    // First: toolbar items.
-    // @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
-    foreach ($ckeditor4_settings['toolbar']['rows'] as $row) {
-      foreach ($row as $group) {
-        $some_added = FALSE;
-        foreach ($group['items'] as $cke4_button) {
-          try {
-            $equivalent = $this->upgradePluginManager->mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem($cke4_button, $text_format_html_restrictions);
-          }
-          catch (\OutOfBoundsException $e) {
-            $this->logger->warning('The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.', [
-              '%button' => $cke4_button,
-            ]);
-            $messages[MessengerInterface::TYPE_WARNING][] = $this->t('The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.', [
-              '%button' => $cke4_button,
-            ]);
-            continue;
-          }
-          if ($equivalent) {
-            $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], $equivalent);
-            $some_added = TRUE;
-          }
-        }
-        // Add a CKEditor 5 toolbar group separator for every group.
-        if ($some_added) {
-          $settings['toolbar']['items'][] = '|';
-        }
-      }
-    }
-    // Remove the trailing CKEditor 5 toolbar group separator.
-    array_pop($settings['toolbar']['items']);
-    // Strip the CKEditor 4 buttons without a CKEditor 5 equivalent.
-    $settings['toolbar']['items'] = array_filter($settings['toolbar']['items']);
-
-    // Second: plugin settings.
-    // @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
-    $enabled_ckeditor4_plugins_with_settings = $ckeditor4_settings['plugins'];
-    foreach ($enabled_ckeditor4_plugins_with_settings as $cke4_plugin_id => $cke4_plugin_settings) {
-      try {
-        $cke5_plugin_settings = $this->upgradePluginManager->mapCKEditor4SettingsToCKEditor5Configuration($cke4_plugin_id, $cke4_plugin_settings);
-        if ($cke5_plugin_settings === NULL) {
-          continue;
-        }
-        assert(count($cke5_plugin_settings) === 1);
-        $cke5_plugin_id = array_keys($cke5_plugin_settings)[0];
-        if (isset($settings['plugins'][$cke5_plugin_id])) {
-          throw new \LogicException(sprintf('The %s plugin settings have already been upgraded. Only a single @CKEditor4To5Upgrade is allowed to migrate the settings for a particular CKEditor 4 plugin.', $cke5_plugin_id));
-        }
-        $settings['plugins'] += $cke5_plugin_settings;
-      }
-      catch (\OutOfBoundsException $e) {
-        $this->logger->warning('The %cke4_plugin_id plugin settings do not have a known upgrade path.', [
-          '%cke4_plugin_id' => $cke4_plugin_id,
-        ]);
-        $messages[MessengerInterface::TYPE_WARNING][] = $this->t('The %cke4_plugin_id plugin settings do not have a known upgrade path.', [
-          '%cke4_plugin_id' => $cke4_plugin_id,
-        ]);
-        continue;
-      }
-    }
-
-    return [$settings, $messages];
   }
 
   /**
@@ -614,6 +481,8 @@ final class SmartDefaultSettings {
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition[] $disabled_plugin_definitions
    *   The list of not yet enabled CKEditor 5 plugin definitions, amongst which
    *   candidates must be found.
+   * @param \Drupal\editor\EditorInterface $prospective_editor
+   *   The in-progress prospective editor to be generated by this class.
    *
    * @return array
    *   A nested array with a tree structure covering:
@@ -629,15 +498,52 @@ final class SmartDefaultSettings {
    *   always a leaf, and a selected CKEditor 5 plugin ID is always the parent
    *   of a leaf.
    */
-  private static function getCandidates(HTMLRestrictions $provided, HTMLRestrictions $still_needed, array $disabled_plugin_definitions): array {
+  private function getCandidates(HTMLRestrictions $provided, HTMLRestrictions $still_needed, array $disabled_plugin_definitions, EditorInterface $prospective_editor): array {
     $plugin_candidates = [];
     if (!$still_needed->allowsNothing()) {
       foreach ($disabled_plugin_definitions as $definition) {
         // Only proceed if the plugin has configured elements and the plugin
-        // does not have conditions. In the future we could add support for
-        // automatically enabling filters, but for now we assume that the filter
-        // configuration cannot be modified.
-        if (!$definition->hasConditions() && $definition->hasElements()) {
+        // does not have conditions, or only conditions that are met. In the
+        // future we could add support for automatically enabling filters, but
+        // for now we assume that the filter configuration cannot be modified.
+        if (!$definition->hasElements()) {
+          continue;
+        }
+        if (!$definition->hasConditions()) {
+          // Any plugin that has no conditions is a viable candidate.
+          $is_viable_candidate = TRUE;
+        }
+        else {
+          $is_viable_candidate = TRUE;
+          foreach ($definition->getConditions() as $condition_type => $required_value) {
+            // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::isPluginDisabled()
+            // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateDrupalAspects()
+            $is_viable_candidate = match ($condition_type) {
+              // If this requires a toolbar item that is provided by this
+              // plugin, then this is a viable candidate: placing this plugin's
+              // toolbar item suffices.
+              'toolbarItem' => array_key_exists($definition->getConditions()['toolbarItem'], $definition->getToolbarItems()),
+              // The image upload status is not modified, so if the current
+              // value matches the condition, then this is a viable candidate.
+              'imageUploadStatus' => ($prospective_editor->getImageUploadSettings()['status'] ?? FALSE) === $required_value,
+              // The set of filters is not modified, so if the required filter
+              // is already enabled, then this is a viable candidate.
+              // @todo Simplify in https://www.drupal.org/project/drupal/issues/2385047
+              'filter' => $prospective_editor->getFilterFormat()->filters()->has($required_value) && $prospective_editor->getFilterFormat()->filters()->get($required_value)->status,
+              // The default configuration is used for each plugin that would be
+              // enabled, so if the default configuration contains the required
+              // configuration, then this is a viable candidate.
+              'requiresConfiguration' =>  array_intersect($this->pluginManager->createInstance($definition->id())->defaultConfiguration(), $required_value) === $required_value,
+              // If this requires plugins already in the current prospective
+              // editor, then this is a viable candidate.
+              'plugins' => array_intersect($required_value, array_keys($this->pluginManager->getEnabledDefinitions($prospective_editor))) === $required_value,
+            };
+            if (!$is_viable_candidate) {
+              break;
+            }
+          }
+        }
+        if ($is_viable_candidate) {
           [$net_new, $surplus_additions] = self::computeNetNewElementsForPlugin($provided, $still_needed, $definition);
           if (!$net_new->allowsNothing()) {
             $plugin_id = $definition->id();
@@ -806,7 +712,20 @@ final class SmartDefaultSettings {
   private function addToolbarItemsToMatchHtmlElementsInFormat(FilterFormatInterface $format, EditorInterface $editor): ?array {
     $html_restrictions_needed_elements = $format->getHtmlRestrictions();
     if ($html_restrictions_needed_elements === FALSE) {
-      return NULL;
+      // There are no HTML restrictions, so configure CKEditor 5 to allow
+      // arbitrary markup to be entered.
+      $editor_settings_to_update = $editor->getSettings();
+      // Create new group for all the added toolbar items.
+      $editor_settings_to_update['toolbar']['items'][] = '|';
+      $editor_settings_to_update['toolbar']['items'][] = 'sourceEditing';
+      $editor_settings_to_update['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = [];
+      $editor->setSettings($editor_settings_to_update);
+      return [
+        NULL,
+        NULL,
+        HTMLRestrictions::emptySet(),
+        $this->pluginManager->getDefinition('ckeditor5_sourceEditing'),
+      ];
     }
 
     $all_definitions = $this->pluginManager->getDefinitions();
@@ -835,11 +754,24 @@ final class SmartDefaultSettings {
 
     if (!$still_needed->allowsNothing()) {
       // Select plugins for supporting the still needed plain tags.
-      $plugin_candidates_plain_tags = self::getCandidates($provided_plain_tags, $still_needed_plain_tags, $disabled_definitions);
+      $prospective_editor = clone $editor;
+      $plugin_candidates_plain_tags = self::getCandidates($provided_plain_tags, $still_needed_plain_tags, $disabled_definitions, $prospective_editor);
       $selected_plugins_plain_tags = self::selectCandidate($plugin_candidates_plain_tags, $still_needed_plain_tags, array_keys($provided_plain_tags->getAllowedElements()));
 
       // Select plugins for supporting the still needed attributes.
-      $plugin_candidates_attributes = self::getCandidates($provided, $still_needed_attributes, $disabled_definitions);
+      $prospective_editor_settings = $prospective_editor->getSettings();
+      foreach (array_keys($selected_plugins_plain_tags) as $plugin_id) {
+        $plugin_definition = $this->pluginManager->getDefinition($plugin_id);
+        assert($plugin_definition instanceof CKEditor5PluginDefinition);
+        if ($plugin_definition->hasToolbarItems()) {
+          $prospective_editor_settings['toolbar']['items'] = [...$prospective_editor_settings['toolbar']['items'], ...array_keys($plugin_definition->getToolbarItems())];
+        }
+        if ($plugin_definition->isConfigurable()) {
+          $prospective_editor_settings['plugins'][$plugin_id] = $this->pluginManager->createInstance($plugin_id)->defaultConfiguration();
+        }
+      }
+      $prospective_editor->setSettings($prospective_editor_settings);
+      $plugin_candidates_attributes = self::getCandidates($provided, $still_needed_attributes, array_diff_key($disabled_definitions, $selected_plugins_plain_tags), $prospective_editor);
       $selected_plugins_attributes = self::selectCandidate($plugin_candidates_attributes, $still_needed, array_keys($provided->getAllowedElements()));
 
       // Combine the selection.
@@ -858,8 +790,13 @@ final class SmartDefaultSettings {
           $plugin_definition = $this->pluginManager->getDefinition($plugin_id);
           $label = $plugin_definition->label();
           $plugins_enabled[] = $label;
+          [$net_new] = self::computeNetNewElementsForPlugin($provided, $still_needed, $plugin_definition);
+          // Track remaining elements/attributes that are still needed.
+          $still_needed = $still_needed->diff($net_new);
+
+          // Fulfill the purpose of this method: generate the settings to add
+          // this plugin's toolbar item.
           if ($plugin_definition->hasToolbarItems()) {
-            [$net_new] = self::computeNetNewElementsForPlugin($provided, $still_needed, $plugin_definition);
             $editor_settings_to_update['toolbar']['items'] = array_merge($editor_settings_to_update['toolbar']['items'], array_keys($plugin_definition->getToolbarItems()));
             foreach ($reason_why_enabled as $attribute_name => $attribute_config) {
               // Plugin was selected for tag.
@@ -884,9 +821,6 @@ final class SmartDefaultSettings {
                 }
               }
             }
-
-            // Fewer attributes are still needed.
-            $still_needed = $still_needed->diff($net_new);
           }
         }
         $editor->setSettings($editor_settings_to_update);
@@ -937,52 +871,6 @@ final class SmartDefaultSettings {
       }
       $update_settings = TRUE;
       $settings['plugins'][$plugin_name] = $default_plugin_configuration;
-    }
-
-    if ($update_settings) {
-      $editor->setSettings($settings);
-    }
-  }
-
-  /**
-   * Computes configuration for all enabled CKEditor 5 plugins with subsets.
-   *
-   * @param \Drupal\editor\EditorInterface $editor
-   *   The text editor config entity to update.
-   * @param \Drupal\filter\FilterFormatInterface $text_format
-   *   The text format for which to compute smart default settings.
-   */
-  private function computeSubsetSettingForEnabledPluginsWithSubsets(EditorInterface $editor, FilterFormatInterface $text_format): void {
-    $settings = $editor->getSettings();
-    $update_settings = FALSE;
-    $enabled_definitions = $this->pluginManager->getEnabledDefinitions($editor);
-    $configurable_subset_definitions = array_filter($enabled_definitions, function (CKEditor5PluginDefinition $definition): bool {
-      return is_a($definition->getClass(), CKEditor5PluginElementsSubsetInterface::class, TRUE);
-    });
-
-    foreach ($configurable_subset_definitions as $plugin_name => $definition) {
-      // Skip Source Editing as that has already been configured.
-      if ($plugin_name === 'ckeditor5_sourceEditing') {
-        continue;
-      }
-
-      try {
-        $subset_configuration = $this->upgradePluginManager->computeCKEditor5PluginSubsetConfiguration($plugin_name, $text_format);
-      }
-      catch (\OutOfBoundsException $e) {
-        $messages[MessengerInterface::TYPE_WARNING][] = $this->t('The CKEditor 5 plugin %button has a configurable subset of elements, but does not have a known upgrade path to configure that subset to match your text format. Hence it is now using its default configuration.', [
-          '%plugin' => $plugin_name,
-        ]);
-        continue;
-      }
-      if ($subset_configuration) {
-        $update_settings = TRUE;
-        assert(isset($settings['plugins'][$plugin_name]));
-        $default_configuration = $settings['plugins'][$plugin_name];
-        // The subset configuration's key-value pairs must override those of the
-        // default configuration.
-        $settings['plugins'][$plugin_name] = $subset_configuration + $default_configuration;
-      }
     }
 
     if ($update_settings) {

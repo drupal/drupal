@@ -5,26 +5,14 @@ services:
     class: Drupal\ckeditor5\Plugin\CKEditor5PluginManager
     parent: default_plugin_manager
   Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface: '@plugin.manager.ckeditor5.plugin'
-  # @todo Remove in Drupal 11: https://www.drupal.org/project/ckeditor5/issues/3239012
-  plugin.manager.ckeditor4to5upgrade.plugin:
-    public: false
-    class: Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginManager
-    parent: default_plugin_manager
   ckeditor5.smart_default_settings:
     class: Drupal\ckeditor5\SmartDefaultSettings
     arguments:
       - '@plugin.manager.ckeditor5.plugin'
-      - '@plugin.manager.ckeditor4to5upgrade.plugin'
       - '@logger.channel.ckeditor5'
       - '@module_handler'
       - '@current_user'
   Drupal\ckeditor5\SmartDefaultSettings: '@ckeditor5.smart_default_settings'
-  ckeditor5.stylesheets.message:
-    class: Drupal\ckeditor5\CKEditor5StylesheetsMessage
-    arguments:
-      - '@theme_handler'
-      - '@config.factory'
-  Drupal\ckeditor5\CKEditor5StylesheetsMessage: '@ckeditor5.stylesheets.message'
   ckeditor5.ckeditor5_cache_tag:
     class: Drupal\ckeditor5\EventSubscriber\CKEditor5CacheTag
     arguments: ['@cache_tags.invalidator']
