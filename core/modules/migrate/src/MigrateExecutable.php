@@ -620,24 +620,4 @@ class MigrateExecutable implements MigrateExecutableInterface {
     return memory_get_usage();
   }
 
-  /**
-   * Generates a string representation for the given byte count.
-   *
-   * @param int $size
-   *   A size in bytes.
-   *
-   * @return string
-   *   A translated string representation of the size.
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode)
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/2999981
-   */
-  protected function formatSize($size) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode) instead. See https://www.drupal.org/node/2999981', E_USER_DEPRECATED);
-    return format_size($size);
-  }
-
 }

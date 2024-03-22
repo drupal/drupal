@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -102,51 +101,6 @@ define('DRUPAL_ROOT', dirname(__DIR__, 2));
  */
 function t($string, array $args = [], array $options = []) {
   return new TranslatableMarkup($string, $args, $options);
-}
-
-/**
- * Logs an exception.
- *
- * This is a wrapper logging function which automatically decodes an exception.
- *
- * @param $type
- *   The category to which this message belongs.
- * @param $exception
- *   The exception that is going to be logged.
- * @param $message
- *   The message to store in the log. If empty, a text that contains all useful
- *   information about the passed-in exception is used.
- * @param $variables
- *   Array of variables to replace in the message on display or
- *   NULL if message is already translated or not possible to
- *   translate.
- * @param $severity
- *   The severity of the message, as per RFC 3164.
- * @param $link
- *   A link to associate with the message.
- *
- * @see \Drupal\Core\Utility\Error::decodeException()
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
- *   Use \Drupal\Core\Utility\Error::logException() instead.
- *
- * @see https://www.drupal.org/node/2932520
- */
-function watchdog_exception($type, Exception $exception, $message = NULL, $variables = [], $severity = RfcLogLevel::ERROR, $link = NULL) {
-  @trigger_error('watchdog_exception() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Utility\Error::logException() instead. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
-
-  // Use a default value if $message is not set.
-  if (empty($message)) {
-    $message = Error::DEFAULT_ERROR_MESSAGE;
-  }
-
-  if ($link) {
-    $variables['link'] = $link;
-  }
-
-  $variables += Error::decodeException($exception);
-
-  \Drupal::logger($type)->log($severity, $message, $variables);
 }
 
 /**

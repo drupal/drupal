@@ -147,22 +147,6 @@ class FormAjaxSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Wraps format_size()
-   *
-   * @return string
-   *   The formatted size.
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\StringTranslation\ByteSizeMarkup::create() instead.
-   *
-   * @see https://www.drupal.org/node/2999981
-   */
-  protected function formatSize($size) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\StringTranslation\ByteSizeMarkup::create() instead. See https://www.drupal.org/node/2999981', E_USER_DEPRECATED);
-    return format_size($size);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {

@@ -6,58 +6,6 @@
  */
 
 /**
- * Loads a module include file.
- *
- * Examples:
- * @code
- *   // Load node.admin.inc from the node module.
- *   module_load_include('inc', 'node', 'node.admin');
- *   // Load content_types.inc from the node module.
- *   module_load_include('inc', 'node', 'content_types');
- * @endcode
- *
- * Do not use this function to load an install file, use module_load_install()
- * instead. Do not use this function in a global context since it requires
- * Drupal to be fully bootstrapped, use require_once DRUPAL_ROOT . '/path/file'
- * instead.
- *
- * @param $type
- *   The include file's type (file extension).
- * @param $module
- *   The module to which the include file belongs.
- * @param $name
- *   (optional) The base file name (without the $type extension). If omitted,
- *   $module is used; i.e., resulting in "$module.$type" by default.
- *
- * @return bool|string
- *   The name of the included file, if successful; FALSE otherwise.
- *
- * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0.
- *   Use \Drupal::moduleHandler()->loadInclude($module, $type, $name = NULL).
- *   Note that including code from uninstalled extensions is no longer
- *   supported.
- *
- * @see https://www.drupal.org/node/2948698
- */
-function module_load_include($type, $module, $name = NULL) {
-  @trigger_error("module_load_include() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). Note that including code from uninstalled extensions is no longer supported. See https://www.drupal.org/node/2948698", E_USER_DEPRECATED);
-  if (!isset($name)) {
-    $name = $module;
-  }
-
-  if (\Drupal::hasService('extension.list.module')) {
-    /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
-    $module_list = \Drupal::service('extension.list.module');
-    $file = DRUPAL_ROOT . '/' . $module_list->getPath($module) . "/$name.$type";
-    if (is_file($file)) {
-      require_once $file;
-      return $file;
-    }
-  }
-  return FALSE;
-}
-
-/**
  * Sets weight of a particular module.
  *
  * The weight of uninstalled modules cannot be changed.

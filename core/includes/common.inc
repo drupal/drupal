@@ -11,7 +11,6 @@
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\StringTranslation\ByteSizeMarkup;
 
 /**
  * @defgroup php_wrappers PHP wrapper functions
@@ -113,39 +112,6 @@ const JS_DEFAULT = 0;
  * The default group for theme JavaScript code added to the page.
  */
 const JS_THEME = 100;
-
-/**
- * @defgroup format Formatting
- * @{
- * Functions to format numbers, strings, dates, etc.
- */
-
-/**
- * Generates a string representation for the given byte count.
- *
- * @param $size
- *   A size in bytes.
- * @param $langcode
- *   Optional language code to translate to a language other than what is used
- *   to display the page.
- *
- * @return \Drupal\Core\StringTranslation\TranslatableMarkup
- *   A translated string representation of the size.
- *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode)
- *   instead.
- *
- * @see https://www.drupal.org/node/2999981
- */
-function format_size($size, $langcode = NULL) {
-  @trigger_error('format_size() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode) instead. See https://www.drupal.org/node/2999981', E_USER_DEPRECATED);
-  return ByteSizeMarkup::create($size ?? 0, $langcode);
-}
-
-/**
- * @} End of "defgroup format".
- */
 
 /**
  * Returns the base URL path (i.e., directory) of the Drupal installation.
@@ -491,22 +457,6 @@ function drupal_flush_all_caches($kernel = NULL) {
     \Drupal::theme()->resetActiveTheme();
     drupal_maintenance_theme();
   }
-}
-
-/**
- * Changes the dummy query string added to all CSS and JavaScript files.
- *
- * Changing the dummy query string appended to CSS and JavaScript files forces
- * all browsers to reload fresh files.
- *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
- *   Use \Drupal\Core\Asset\AssetQueryStringInterface::reset() instead.
- *
- * @see https://www.drupal.org/node/3358337
- */
-function _drupal_flush_css_js() {
-  @trigger_error('_drupal_flush_css_js is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Asset\AssetQueryStringInterface::reset() instead. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
-  \Drupal::service('asset.query_string')->reset();
 }
 
 /**
