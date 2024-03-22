@@ -3,6 +3,8 @@
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Render\RenderContext;
 use Drupal\media\Entity\Media;
 use Drupal\media\OEmbed\Resource;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
@@ -170,6 +172,16 @@ class OEmbedSourceTest extends MediaKernelTestBase {
     /** @var \Drupal\Core\Image\Image $image */
     $image = $this->container->get('image.factory')->get($expected_uri);
     $this->assertTrue($image->isValid());
+
+    // Check that the current date token as per the default configuration of the
+    // oEmbed source plugin doesn't make a render context uncacheable.
+    $context = new RenderContext();
+    \Drupal::service('renderer')->executeInRenderContext($context, function () use ($source, $media) {
+      return $source->getMetadata($media, 'thumbnail_uri');
+    });
+    /** @var \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata */
+    $bubbleable_metadata = $context->pop();
+    $this->assertSame(Cache::PERMANENT, $bubbleable_metadata->getCacheMaxAge());
   }
 
 }
