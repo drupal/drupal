@@ -719,11 +719,10 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     /**
      * Helper function to return a machine-optimized collection.
      */
-    protected static function getCollection($collection, $resolve = TRUE) {
+    protected static function getCollection($collection) {
       return (object) [
         'type' => 'collection',
         'value' => $collection,
-        'resolve' => $resolve,
       ];
     }
 
