@@ -56,13 +56,13 @@ class ChainedFastBackendFactoryTest extends UnitTestCase {
 
     $container->expects($this->exactly(2))
       ->method('get')
-      ->will(
-        $this->returnCallback(function ($service) use ($testFastCacheFactory, $testConsistentCacheFactory) {
+      ->willReturnCallback(
+        function ($service) use ($testFastCacheFactory, $testConsistentCacheFactory) {
           return match ($service) {
             'cache.backend.test_consistent' => $testConsistentCacheFactory,
             'cache.backend.test_fast' => $testFastCacheFactory,
           };
-        })
+        }
       );
 
     // The same bin should be retrieved from both backends.
