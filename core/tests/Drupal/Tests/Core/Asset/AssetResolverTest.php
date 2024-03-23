@@ -116,7 +116,7 @@ class AssetResolverTest extends UnitTestCase {
     $this->languageManager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
-      ->will($this->onConsecutiveCalls($english, $english, $japanese, $japanese));
+      ->willReturn($english, $english, $japanese, $japanese);
     $this->cache = new TestMemoryBackend(new Time());
 
     $this->assetResolver = new AssetResolver($this->libraryDiscovery, $this->libraryDependencyResolver, $this->moduleHandler, $this->themeManager, $this->languageManager, $this->cache);
