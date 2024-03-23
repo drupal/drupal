@@ -41,19 +41,19 @@ class UrlResolverTest extends MediaFunctionalTestBase {
     return [
       'match by endpoint: Twitter' => [
         'https://twitter.com/Dries/status/999985431595880448',
-        'https://publish.twitter.com/oembed?url=https://twitter.com/Dries/status/999985431595880448',
+        'https://publish.twitter.com/oembed?url=https%3A//twitter.com/Dries/status/999985431595880448',
       ],
       'match by endpoint: Vimeo' => [
         'https://vimeo.com/14782834',
-        'https://vimeo.com/api/oembed.json?url=https://vimeo.com/14782834',
+        'https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/14782834',
       ],
       'match by endpoint: Dailymotion' => [
         'https://www.dailymotion.com/video/x2vzluh',
-        'https://www.dailymotion.com/services/oembed?url=https://www.dailymotion.com/video/x2vzluh',
+        'https://www.dailymotion.com/services/oembed?url=https%3A//www.dailymotion.com/video/x2vzluh',
       ],
       'match by endpoint: Facebook' => [
         'https://www.facebook.com/facebook/videos/10153231379946729/',
-        'https://www.facebook.com/plugins/video/oembed.json?url=https://www.facebook.com/facebook/videos/10153231379946729/',
+        'https://www.facebook.com/plugins/video/oembed.json?url=https%3A//www.facebook.com/facebook/videos/10153231379946729/',
       ],
     ];
   }
