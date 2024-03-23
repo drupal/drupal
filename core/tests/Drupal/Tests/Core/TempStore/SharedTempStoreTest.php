@@ -246,7 +246,7 @@ class SharedTempStoreTest extends UnitTestCase {
     $this->keyValue->expects($this->exactly(2))
       ->method('get')
       ->with('test')
-      ->will($this->onConsecutiveCalls($this->ownObject, $this->otherObject));
+      ->willReturn($this->ownObject, $this->otherObject);
 
     $this->assertTrue($this->tempStore->setIfOwner('test', 'test_data'));
     $this->assertFalse($this->tempStore->setIfOwner('test', 'test_data'));

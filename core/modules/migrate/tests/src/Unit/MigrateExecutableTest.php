@@ -454,7 +454,7 @@ class MigrateExecutableTest extends MigrateTestCase {
       ->willReturn([]);
     $source->expects($this->any())
       ->method('valid')
-      ->will($this->onConsecutiveCalls(TRUE, FALSE));
+      ->willReturn(TRUE, FALSE);
 
     return $source;
   }
