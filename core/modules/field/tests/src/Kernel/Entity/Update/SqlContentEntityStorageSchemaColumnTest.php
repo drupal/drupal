@@ -112,4 +112,22 @@ class SqlContentEntityStorageSchemaColumnTest extends KernelTestBase {
     $entity_definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
   }
 
+  /**
+   * Tests that schema changes are updated for fields with data with the flag.
+   */
+  public function testColumnUpdateWithFlag() {
+    // Change the field type in the stored schema.
+    $schema = \Drupal::keyValue('entity.storage_schema.sql')->get('entity_test_rev.field_schema_data.test');
+    $schema['entity_test_rev__test']['fields']['test_value']['type'] = 'varchar_ascii';
+    \Drupal::keyValue('entity.storage_schema.sql')->set('entity_test_rev.field_schema_data.test', $schema);
+
+    // Now attempt to run automatic updates. It should succeed if the
+    // column_changes_handled flag is passed.
+    $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+    $field_storage_definition = $entity_definition_update_manager->getFieldStorageDefinition('test', 'entity_test_rev');
+    // Provide the flag to allow schema updates.
+    $field_storage_definition->setSetting('column_changes_handled', TRUE);
+    $entity_definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
+  }
+
 }
