@@ -71,6 +71,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->doSelectTriggerTests();
     $this->doMultipleTriggerTests();
     $this->doNestedTriggerTests();
+    $this->doElementsDisabledStateTests();
   }
 
   /**
@@ -491,6 +492,49 @@ class JavascriptStatesTest extends WebDriverTestBase {
     // Set $radios_opposite1 value to 1, $radios_opposite2 value should be 0.
     $radios_opposite1->setValue('0');
     $this->assertEquals('1', $radios_opposite2->getValue());
+  }
+
+  /**
+   * Tests the submit button, select and textarea disabled states.
+   *
+   * The element should be disabled when visit the form
+   * then they should enable when trigger by a checkbox.
+   */
+  public function doElementsDisabledStateTests(): void {
+    $this->drupalGet('form-test/javascript-states-form');
+    $session = $this->assertSession();
+
+    // The submit button should be disabled when visit the form.
+    $button = $session->elementExists('css', 'input[value="Submit button disabled when checkbox not checked"]');
+    $this->assertTrue($button->hasAttribute('disabled'));
+
+    // The submit button should be enabled when the checkbox is checked.
+    $session->elementExists('css', 'input[name="checkbox_enable_submit_button"]')->check();
+    $this->assertFalse($button->hasAttribute('disabled'));
+
+    // The text field should be disabled when visit the form.
+    $textfield = $session->elementExists('css', 'input[name="input_textfield"]');
+    $this->assertTrue($textfield->hasAttribute('disabled'));
+
+    // The text field should be enabled when the checkbox is checked.
+    $session->elementExists('css', 'input[name="checkbox_enable_input_textfield"]')->check();
+    $this->assertFalse($textfield->hasAttribute('disabled'));
+
+    // The select should be disabled when visit the form.
+    $select = $session->elementExists('css', 'select[name="test_select_disabled"]');
+    $this->assertTrue($select->hasAttribute('disabled'));
+
+    // The select should be enabled when the checkbox is checked.
+    $session->elementExists('css', 'input[name="checkbox_enable_select"]')->check();
+    $this->assertFalse($select->hasAttribute('disabled'));
+
+    // The textarea should be disabled when visit the form.
+    $textarea = $session->elementExists('css', 'textarea[name="test_textarea_disabled"]');
+    $this->assertTrue($textarea->hasAttribute('disabled'));
+
+    // The textarea should be enabled when the checkbox is checked.
+    $session->elementExists('css', 'input[name="checkbox_enable_textarea"]')->check();
+    $this->assertFalse($textarea->hasAttribute('disabled'));
   }
 
 }

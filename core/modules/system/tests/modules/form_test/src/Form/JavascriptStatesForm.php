@@ -557,6 +557,61 @@ class JavascriptStatesForm extends FormBase {
       ],
     ];
 
+    $form['test_button_disabled'] = [
+      '#type' => 'container',
+    ];
+
+    $form['test_button_disabled']['submit_button'] = [
+      '#type' => 'submit',
+      '#value' => 'Submit button disabled when checkbox not checked',
+      '#states' => [
+        'disabled' => [':input[name="checkbox_enable_submit_button"]' => ['checked' => FALSE]],
+      ],
+    ];
+    $form['test_button_disabled']['checkbox_enable_submit_button'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Enable input submit',
+    ];
+
+    $form['test_button_disabled']['input_textfield'] = [
+      '#type' => 'textfield',
+      '#title' => 'Text field disabled when checkbox not checked',
+      '#states' => [
+        'disabled' => [':input[name="checkbox_enable_input_textfield"]' => ['checked' => FALSE]],
+      ],
+    ];
+    $form['test_button_disabled']['checkbox_enable_input_textfield'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Enable text field',
+    ];
+
+    $form['test_button_disabled']['test_select_disabled'] = [
+      '#type' => 'select',
+      '#title' => 'Select disabled when checkbox not checked',
+      '#options' => [
+        0 => 0,
+        1 => 1,
+      ],
+      '#states' => [
+        'disabled' => [':input[name="checkbox_enable_select"]' => ['checked' => FALSE]],
+      ],
+    ];
+    $form['test_button_disabled']['checkbox_enable_select'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Enable select',
+    ];
+    $form['test_button_disabled']['test_textarea_disabled'] = [
+      '#type' => 'textarea',
+      '#title' => 'Textarea disabled when checkbox not checked',
+      '#states' => [
+        'disabled' => [':input[name="checkbox_enable_textarea"]' => ['checked' => FALSE]],
+      ],
+    ];
+    $form['test_button_disabled']['checkbox_enable_textarea'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Enable textarea',
+    ];
+
     return $form;
   }
 
