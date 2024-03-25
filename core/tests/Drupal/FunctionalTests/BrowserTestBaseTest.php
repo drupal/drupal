@@ -601,11 +601,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests the dump() function provided by the var-dumper Symfony component.
    */
   public function testVarDump() {
-    // Append the stream capturer to the STDOUT stream, so that we can test the
+    // Append the stream capturer to the STDERR stream, so that we can test the
     // dump() output and also prevent it from actually outputting in this
     // particular test.
     stream_filter_register("capture", StreamCapturer::class);
-    stream_filter_append(STDOUT, "capture");
+    stream_filter_append(STDERR, "capture");
 
     // Dump some variables to check that dump() in test code produces output
     // on the command line that is running the test.
