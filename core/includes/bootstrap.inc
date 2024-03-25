@@ -62,6 +62,11 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 define('DRUPAL_ROOT', dirname(__DIR__, 2));
 
 /**
+ * Keep backward compatibility for sites with references to TranslationWrapper.
+ */
+class_alias(TranslatableMarkup::class, '\Drupal\Core\StringTranslation\TranslationWrapper', TRUE);
+
+/**
  * Translates a string to the current language or to a given language.
  *
  * In order for strings to be localized, make them available in one of the ways
