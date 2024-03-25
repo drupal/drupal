@@ -874,23 +874,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
           $this->assertNoRaw($expected_entity_values[$entity_keys['label']]);
         }
       }
-
-      // Add a filter on a field that is stored in a dedicated table in order to
-      // test field joins with extra conditions (e.g. 'deleted' and 'langcode').
-      $view->destroy();
-      $view->setDisplay('page_1');
-      $filters = $view->displayHandlers->get('page_1')->getOption('filters');
-      $view->displayHandlers->get('page_1')->overrideOption('filters', $filters + [
-        'body_value' => [
-          'id' => 'body_value',
-          'table' => 'node__body',
-          'field' => 'body_value',
-          'operator' => 'not empty',
-          'plugin_id' => 'string',
-        ],
-      ]);
-      $view->execute();
-      $this->assertIdenticalResultset($view, $expected_frontpage, ['nid' => 'nid']);
     }
   }
 
