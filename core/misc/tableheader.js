@@ -325,7 +325,7 @@
             $stickyCell[0].style.display = 'none';
           }
         }
-        this.$stickyTable[0].style.width = this.$originalTable.outerWidth();
+        this.$stickyTable[0].style.width = `${this.$originalTable.outerWidth()}px`;
       },
     },
   );
