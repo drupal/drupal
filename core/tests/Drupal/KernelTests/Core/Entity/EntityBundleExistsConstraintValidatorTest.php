@@ -64,7 +64,7 @@ class EntityBundleExistsConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests getting the entity type ID from the parent property path.
+   * Tests getting the entity type ID.
    *
    * @param string $constraint_value
    *   The entity type ID to supply to the validation constraint. Must be a
@@ -74,9 +74,9 @@ class EntityBundleExistsConstraintValidatorTest extends KernelTestBase {
    *   a bundle.
    *
    * @testWith ["%parent.entity_type_id", "entity_test_with_bundle"]
-   *   ["%paren.entity_type_id", "%paren.entity_type_id"]
+   *   ["%key", "bundle"]
    */
-  public function testEntityTypeIdFromParent(string $constraint_value, string $resolved_entity_type_id): void {
+  public function testDynamicEntityType(string $constraint_value, string $resolved_entity_type_id): void {
     /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager */
     $typed_data_manager = $this->container->get('typed_data_manager');
 

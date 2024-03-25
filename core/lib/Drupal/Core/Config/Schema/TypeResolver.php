@@ -75,7 +75,8 @@ class TypeResolver {
    *   The value the expression resolves to, or the given expression if it
    *   cannot be resolved.
    *
-   * @todo Validate the expression in https://www.drupal.org/project/drupal/issues/3392903
+   * @throws \LogicException
+   *    Exception thrown if $expression is not a valid dynamic type expression.
    */
   public static function resolveExpression(string $expression, array|TypedDataInterface $data): string {
     if ($data instanceof TypedDataInterface) {
@@ -87,8 +88,16 @@ class TypeResolver {
     }
 
     $parts = explode('.', $expression);
+    $previous_name = NULL;
     // Process each value part, one at a time.
     while ($name = array_shift($parts)) {
+      if (str_starts_with($name, '%') && !in_array($name, ['%parent', '%key', '%type'], TRUE)) {
+        throw new \LogicException('`' . $expression . '` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`');
+      }
+      if ($name === '%type' && $previous_name !== '%parent') {
+        throw new \LogicException('`%type` can only used when immediately preceded by `%parent` in `' . $expression . '`');
+      }
+      $previous_name = $name;
       if (!is_array($data) || !isset($data[$name])) {
         // Key not found, return original value
         return $expression;
