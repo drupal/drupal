@@ -1956,17 +1956,6 @@ class ViewExecutable {
 
     if (!isset($args)) {
       $args = $this->args;
-
-      // Exclude arguments that were computed, not passed on the URL.
-      $position = 0;
-      if (!empty($this->argument)) {
-        foreach ($this->argument as $argument) {
-          if (!empty($argument->is_default)) {
-            unset($args[$position]);
-          }
-          $position++;
-        }
-      }
     }
 
     $path = $this->getPath();

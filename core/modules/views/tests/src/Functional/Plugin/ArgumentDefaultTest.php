@@ -28,6 +28,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     'test_argument_default_current_user',
     'test_argument_default_node',
     'test_argument_default_query_param',
+    'test_argument_default_node_with_page',
   ];
 
   /**
@@ -188,6 +189,35 @@ class ArgumentDefaultTest extends ViewTestBase {
     $view->setRequest($request);
     $view->initHandlers();
     $this->assertEquals('page', $view->argument['type']->getDefaultArgument());
+  }
+
+  /**
+   * Tests the more line generation if a default argument is provided.
+   */
+  public function testArgumentDefaultUrlGeneration() {
+    // Create a user that has permission to place a view block.
+    $permissions = [
+      'administer views',
+      'administer blocks',
+      'bypass node access',
+      'access user profiles',
+      'view all revisions',
+    ];
+    $views_admin = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($views_admin);
+
+    // Create nodes where should show themselves again as view block.
+    $node_type = NodeType::create(['type' => 'page', 'name' => 'Page']);
+    $node_type->save();
+    $node = Node::create(['title' => 'Test node 1', 'type' => 'page']);
+    $node->save();
+
+    // Place the block, visit the page that displays the block, and check that
+    // the more link takes the node ID into account and does not ignore
+    // the default argument.
+    $this->drupalPlaceBlock("views_block:test_argument_default_node_with_page-block_1", ['id' => 'view_block_id']);
+    $this->drupalGet('node/' . $node->id());
+    $this->assertSession()->linkByHrefExists('/test-argument-default/' . $node->id());
   }
 
 }
