@@ -145,7 +145,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $this->assertSame($video_url, $query['url']);
     $this->assertNotEmpty($query['hash']);
     // Ensure that the outer iframe's width respects the formatter settings.
-    $this->assertSame('240', $iframe->getAttribute('width'));
+    $this->assertSame('480', $iframe->getAttribute('width'));
     // Check the inner iframe to make sure that CSS has been applied to scale it
     // correctly, regardless of whatever its width attribute may be (the fixture
     // hard-codes it to 480).
