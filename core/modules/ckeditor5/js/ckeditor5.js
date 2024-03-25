@@ -116,6 +116,10 @@
       });
     }
 
+    if (config === null) {
+      return null;
+    }
+
     return Object.entries(config).reduce((processed, [key, value]) => {
       if (typeof value === 'object') {
         // Check for null values.
