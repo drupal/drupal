@@ -7,8 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Provides a trait for draggable listings of entities.
  *
- * Classes using this trait are expected to set the $formBuilder property in
- * their constructor.
+ * Classes using this trait must implement \Drupal\Core\Form\FormInterface and
+ * are expected to set the $formBuilder property in their constructor.
  */
 trait DraggableListBuilderTrait {
 
