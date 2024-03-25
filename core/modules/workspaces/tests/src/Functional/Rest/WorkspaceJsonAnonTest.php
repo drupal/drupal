@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\workspaces\Functional\EntityResource;
+namespace Drupal\Tests\workspaces\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 

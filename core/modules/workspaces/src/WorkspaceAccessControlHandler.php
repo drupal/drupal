@@ -30,7 +30,20 @@ class WorkspaceAccessControlHandler extends EntityAccessControlHandler {
 
     // @todo Consider adding explicit "publish any|own workspace" permissions in
     //   https://www.drupal.org/project/drupal/issues/3084260.
-    $permission_operation = ($operation === 'update' || $operation === 'publish') ? 'edit' : $operation;
+    switch ($operation) {
+      case 'update':
+      case 'publish':
+        $permission_operation = 'edit';
+        break;
+
+      case 'view all revisions':
+        $permission_operation = 'view';
+        break;
+
+      default:
+        $permission_operation = $operation;
+        break;
+    }
 
     // Check if the user has permission to access all workspaces.
     $access_result = AccessResult::allowedIfHasPermission($account, $permission_operation . ' any workspace');
