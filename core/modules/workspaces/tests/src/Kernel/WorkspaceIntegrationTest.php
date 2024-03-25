@@ -405,9 +405,13 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // revision is tracked in the workspace association data. Note that revision
     // '5' has been created as an unpublished default revision in Live, so it is
     // not tracked.
-    $this->createNode(['title' => 'stage - 4 - r6 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
+    $node = $this->createNode(['title' => 'stage - 4 - r6 - published', 'created' => $this->createdTimestamp++, 'status' => TRUE]);
     $expected_workspace_association = ['stage' => [6]];
     $this->assertWorkspaceAssociation($expected_workspace_association, 'node');
+
+    // Check that the entity object that was saved has been updated to point to
+    // the workspace-specific revision.
+    $this->assertEquals(6, $node->getRevisionId());
 
     // Delete revision '6' and check that the workspace association does not
     // track it anymore.
