@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element\Textfield;
 use Drupal\Core\Site\Settings;
 
@@ -62,9 +63,8 @@ use Drupal\Core\Site\Settings;
  * @endcode
  *
  * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection
- *
- * @FormElement("entity_autocomplete")
  */
+#[FormElement('entity_autocomplete')]
 class EntityAutocomplete extends Textfield {
 
   /**

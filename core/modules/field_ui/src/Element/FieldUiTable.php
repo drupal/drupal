@@ -3,14 +3,14 @@
 namespace Drupal\field_ui\Element;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\Table;
 
 /**
  * Provides a field_ui table element.
- *
- * @RenderElement("field_ui_table")
  */
+#[RenderElement('field_ui_table')]
 class FieldUiTable extends Table {
 
   /**

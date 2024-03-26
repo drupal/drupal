@@ -3,7 +3,9 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 use Drupal\Component\Utility\Html as HtmlUtility;
 
 /**
@@ -106,10 +108,9 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  * ];
  * @endcode
  * @see \Drupal\Core\Render\Element\Tableselect
- *
- * @FormElement("table")
  */
-class Table extends FormElement {
+#[FormElement('table')]
+class Table extends FormElementBase {
 
   /**
    * {@inheritdoc}

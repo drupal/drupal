@@ -8,8 +8,9 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\FormElement;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -19,10 +20,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides an AJAX/progress aware widget for uploading and saving a file.
- *
- * @FormElement("managed_file")
  */
-class ManagedFile extends FormElement {
+#[FormElement('managed_file')]
+class ManagedFile extends FormElementBase {
 
   /**
    * {@inheritdoc}

@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
+
 /**
  * Provides a render element for adding Ajax to a render element.
  *
@@ -9,14 +12,13 @@ namespace Drupal\Core\Render\Element;
  *
  * @ingroup ajax
  *
- * @RenderElement("ajax")
- *
  * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Return an
  *   \Drupal\Core\Ajax\AjaxResponse instead.
  *
  * @see https://www.drupal.org/node/3068104
  */
-class Ajax extends RenderElement {
+#[RenderElement('ajax')]
+class Ajax extends RenderElementBase {
 
   /**
    * {@inheritdoc}

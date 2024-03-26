@@ -2,7 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 
 /**
  * Provides a render element for a details element, similar to a fieldset.
@@ -33,10 +35,9 @@ use Drupal\Core\Render\Element;
  *
  * @see \Drupal\Core\Render\Element\Fieldset
  * @see \Drupal]Core\Render\Element\VerticalTabs
- *
- * @RenderElement("details")
  */
-class Details extends RenderElement {
+#[RenderElement('details')]
+class Details extends RenderElementBase {
 
   /**
    * {@inheritdoc}

@@ -2,7 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for entering a telephone number.
@@ -24,10 +26,9 @@ use Drupal\Core\Render\Element;
  * @endcode
  *
  * @see \Drupal\Core\Render\Element
- *
- * @FormElement("tel")
  */
-class Tel extends FormElement {
+#[FormElement('tel')]
+class Tel extends FormElementBase {
 
   /**
    * {@inheritdoc}

@@ -15,7 +15,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Element\FormElement
- * @see \Drupal\Core\Render\Annotation\FormElement
+ * @see \Drupal\Core\Render\Attribute\FormElement
  * @see plugin_api
  *
  * @ingroup theme_render

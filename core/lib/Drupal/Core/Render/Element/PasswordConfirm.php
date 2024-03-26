@@ -3,6 +3,8 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for double-input of passwords.
@@ -23,10 +25,9 @@ use Drupal\Core\Form\FormStateInterface;
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Password
- *
- * @FormElement("password_confirm")
  */
-class PasswordConfirm extends FormElement {
+#[FormElement('password_confirm')]
+class PasswordConfirm extends FormElementBase {
 
   /**
    * {@inheritdoc}

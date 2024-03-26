@@ -7,14 +7,14 @@ use Drupal\Component\Utility\Variable;
 use Drupal\Core\Datetime\DateHelper;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Security\StaticTrustedCallbackHelper;
 
 /**
  * Provides a datelist element.
- *
- * @FormElement("datelist")
  */
+#[FormElement('datelist')]
 class Datelist extends DateElementBase {
 
   use DoTrustedCallbackTrait;

@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
+
 /**
  * Provides a render element for a group of form elements.
  *
@@ -20,10 +23,9 @@ namespace Drupal\Core\Render\Element;
  *
  * @see \Drupal\Core\Render\Element\Fieldgroup
  * @see \Drupal\Core\Render\Element\Details
- *
- * @RenderElement("fieldset")
  */
-class Fieldset extends RenderElement {
+#[RenderElement('fieldset')]
+class Fieldset extends RenderElementBase {
 
   /**
    * {@inheritdoc}

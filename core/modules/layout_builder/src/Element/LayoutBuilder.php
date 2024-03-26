@@ -5,8 +5,9 @@ namespace Drupal\layout_builder\Element;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Event\PrepareLayoutEvent;
@@ -19,12 +20,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 /**
  * Defines a render element for building the Layout Builder UI.
  *
- * @RenderElement("layout_builder")
- *
  * @internal
  *   Plugin classes are internal.
  */
-class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInterface {
+#[RenderElement('layout_builder')]
+class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginInterface {
 
   use AjaxHelperTrait;
   use LayoutBuilderContextTrait;

@@ -3,7 +3,9 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 use Drupal\Component\Utility\Number as NumberUtility;
 
 /**
@@ -27,10 +29,9 @@ use Drupal\Component\Utility\Number as NumberUtility;
  *
  * @see \Drupal\Core\Render\Element\Range
  * @see \Drupal\Core\Render\Element\Textfield
- *
- * @FormElement("number")
  */
-class Number extends FormElement {
+#[FormElement('number')]
+class Number extends FormElementBase {
 
   /**
    * {@inheritdoc}

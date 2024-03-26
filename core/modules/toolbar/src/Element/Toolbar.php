@@ -3,15 +3,15 @@
 namespace Drupal\toolbar\Element;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 use Drupal\Core\Render\Element;
 
 /**
  * Provides a render element for the default Drupal toolbar.
- *
- * @RenderElement("toolbar")
  */
-class Toolbar extends RenderElement {
+#[RenderElement('toolbar')]
+class Toolbar extends RenderElementBase {
 
   /**
    * {@inheritdoc}

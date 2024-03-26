@@ -2,16 +2,16 @@
 
 namespace Drupal\views\Element;
 
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 use Drupal\views\Exception\ViewRenderElementException;
 use Drupal\views\Views;
 
 /**
  * Provides a render element to display a view.
- *
- * @RenderElement("view")
  */
-class View extends RenderElement {
+#[RenderElement('view')]
+class View extends RenderElementBase {
 
   /**
    * {@inheritdoc}

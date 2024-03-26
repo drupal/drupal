@@ -3,7 +3,9 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 
 /**
  * Provides a render element for vertical tabs in a form.
@@ -44,10 +46,9 @@ use Drupal\Core\Render\Element;
  *   '#title' => $this->t('Publisher'),
  * );
  * @endcode
- *
- * @FormElement("vertical_tabs")
  */
-class VerticalTabs extends RenderElement {
+#[FormElement('vertical_tabs')]
+class VerticalTabs extends RenderElementBase {
 
   /**
    * {@inheritdoc}

@@ -3,7 +3,8 @@
 namespace Drupal\filter\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 
@@ -30,10 +31,9 @@ use Drupal\Core\Url;
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textarea
- *
- * @RenderElement("text_format")
  */
-class TextFormat extends RenderElement {
+#[RenderElement('text_format')]
+class TextFormat extends RenderElementBase {
 
   /**
    * {@inheritdoc}

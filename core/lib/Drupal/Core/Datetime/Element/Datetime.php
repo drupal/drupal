@@ -7,14 +7,14 @@ use Drupal\Component\Utility\Variable;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Security\StaticTrustedCallbackHelper;
 
 /**
  * Provides a datetime element.
- *
- * @FormElement("datetime")
  */
+#[FormElement('datetime')]
 class Datetime extends DateElementBase {
 
   use DoTrustedCallbackTrait;

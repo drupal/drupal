@@ -21,7 +21,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  * render elements process raw user input.
  *
  * @see \Drupal\Core\Render\ElementInfoManager
- * @see \Drupal\Core\Render\Annotation\RenderElement
+ * @see \Drupal\Core\Render\Attribute\RenderElement
  * @see \Drupal\Core\Render\Element\RenderElement
  * @see plugin_api
  *

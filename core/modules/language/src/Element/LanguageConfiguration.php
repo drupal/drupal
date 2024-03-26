@@ -5,14 +5,14 @@ namespace Drupal\language\Element;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Render\Element\FormElement;
+use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Defines an element for language configuration for a single field.
- *
- * @FormElement("language_configuration")
  */
-class LanguageConfiguration extends FormElement {
+#[FormElement('language_configuration')]
+class LanguageConfiguration extends FormElementBase {
 
   /**
    * {@inheritdoc}

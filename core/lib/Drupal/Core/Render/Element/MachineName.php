@@ -5,6 +5,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 
 /**
  * Provides a machine name render element.
@@ -67,9 +68,8 @@ use Drupal\Core\Language\LanguageInterface;
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield
- *
- * @FormElement("machine_name")
  */
+#[FormElement('machine_name')]
 class MachineName extends Textfield {
 
   /**

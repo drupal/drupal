@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
+
 /**
  * Provides a messages element.
  *
@@ -13,10 +16,9 @@ namespace Drupal\Core\Render\Element;
  *   '#type' => 'status_messages',
  * ];
  * @endcode
- *
- * @RenderElement("status_messages")
  */
-class StatusMessages extends RenderElement {
+#[RenderElement('status_messages')]
+class StatusMessages extends RenderElementBase {
 
   /**
    * {@inheritdoc}

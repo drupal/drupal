@@ -117,7 +117,7 @@ use Drupal\Core\Url;
  *   the same weight are rendered in the order they appear in the render
  *   array.
  *
- * @see \Drupal\Core\Render\Annotation\RenderElement
+ * @see \Drupal\Core\Render\Attribute\RenderElement
  * @see \Drupal\Core\Render\ElementInterface
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see plugin_api

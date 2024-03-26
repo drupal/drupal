@@ -2,7 +2,8 @@
 
 namespace Drupal\sdc\Element;
 
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\sdc\Exception\InvalidComponentDataException;
 use Drupal\sdc\Utilities;
@@ -31,10 +32,9 @@ use Drupal\sdc\Utilities;
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textarea
- *
- * @RenderElement("component")
  */
-class ComponentElement extends RenderElement {
+#[RenderElement('component')]
+class ComponentElement extends RenderElementBase {
 
   use DoTrustedCallbackTrait;
 

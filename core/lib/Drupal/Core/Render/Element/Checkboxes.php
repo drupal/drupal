@@ -3,6 +3,8 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for a set of checkboxes.
@@ -31,10 +33,9 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see \Drupal\Core\Render\Element\Radios
  * @see \Drupal\Core\Render\Element\Checkbox
- *
- * @FormElement("checkboxes")
  */
-class Checkboxes extends FormElement {
+#[FormElement('checkboxes')]
+class Checkboxes extends FormElementBase {
 
   use CompositeFormElementTrait;
 

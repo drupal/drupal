@@ -85,7 +85,7 @@ use Drupal\Core\Url;
  *   to transform the raw user input to the element's value. Arguments:
  *   $element, $input, $form_state.
  *
- * @see \Drupal\Core\Render\Annotation\FormElement
+ * @see \Drupal\Core\Render\Attribute\FormElement
  * @see \Drupal\Core\Render\Element\FormElementInterface
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Element\RenderElement

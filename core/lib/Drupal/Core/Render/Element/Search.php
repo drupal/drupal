@@ -2,7 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides an HTML5 input element with type of "search".
@@ -16,10 +18,9 @@ use Drupal\Core\Render\Element;
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield
- *
- * @FormElement("search")
  */
-class Search extends FormElement {
+#[FormElement('search')]
+class Search extends FormElementBase {
 
   /**
    * {@inheritdoc}

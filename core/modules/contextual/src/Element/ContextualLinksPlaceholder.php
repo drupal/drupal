@@ -5,15 +5,15 @@ namespace Drupal\contextual\Element;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Provides a contextual_links_placeholder element.
- *
- * @RenderElement("contextual_links_placeholder")
  */
-class ContextualLinksPlaceholder extends RenderElement {
+#[RenderElement('contextual_links_placeholder')]
+class ContextualLinksPlaceholder extends RenderElementBase {
 
   /**
    * {@inheritdoc}

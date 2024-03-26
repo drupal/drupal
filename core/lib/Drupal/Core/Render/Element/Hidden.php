@@ -2,7 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for an HTML 'hidden' input element.
@@ -21,10 +23,9 @@ use Drupal\Core\Render\Element;
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Value
- *
- * @FormElement("hidden")
  */
-class Hidden extends FormElement {
+#[FormElement('hidden')]
+class Hidden extends FormElementBase {
 
   /**
    * {@inheritdoc}
