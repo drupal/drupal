@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
+use Drupal\Component\Plugin\Discovery\StaticDiscovery;
+use Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -62,9 +64,9 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    */
   public function testGetDefinition($expected, $has_register_definitions, $exception_on_invalid, $definitions, $base_plugin_id) {
     // Mock our StaticDiscoveryDecorator.
-    $mock_decorator = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator')
+    $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecorator::class)
       ->disableOriginalConstructor()
-      ->addMethods(['registeredDefinitionCallback'])
+      ->onlyMethods([])
       ->getMock();
 
     // Set up the ::$registerDefinitions property.
@@ -129,9 +131,9 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    */
   public function testGetDefinitions($has_register_definitions, $definitions) {
     // Mock our StaticDiscoveryDecorator.
-    $mock_decorator = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator')
+    $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecorator::class)
       ->disableOriginalConstructor()
-      ->addMethods(['registeredDefinitionCallback'])
+      ->onlyMethods([])
       ->getMock();
 
     // Set up the ::$registerDefinitions property.
@@ -194,9 +196,9 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    */
   public function testCall($method, $args) {
     // Mock a decorated object.
-    $mock_decorated = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryInterface')
-      ->addMethods([$method])
-      ->getMockForAbstractClass();
+    $mock_decorated = $this->getMockBuilder(StaticDiscoveryTestDecoratedClass::class)
+      ->onlyMethods([$method])
+      ->getMock();
     // Our mocked method will return any arguments sent to it.
     $mock_decorated->expects($this->once())
       ->method($method)
@@ -206,18 +208,13 @@ class StaticDiscoveryDecoratorTest extends TestCase {
         }
       );
 
-    // Create a mock decorator.
-    $mock_decorator = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator')
-      ->disableOriginalConstructor()
-      ->getMock();
-    // Poke the decorated object into our decorator.
-    $ref_decorated = new \ReflectionProperty($mock_decorator, 'decorated');
-    $ref_decorated->setValue($mock_decorator, $mock_decorated);
+    // Create the decorator.
+    $decorator = new StaticDiscoveryDecorator($mock_decorated);
 
-    // Exercise __call.
+    // Exercise __call on the decorator.
     $this->assertEquals(
       $args,
-      \call_user_func_array([$mock_decorated, $method], $args)
+      \call_user_func_array([$decorator, $method], $args)
     );
   }
 
@@ -232,5 +229,24 @@ interface StaticDiscoveryDecoratorTestMockInterface {
    * Function used in the mocking process of this test.
    */
   public function registerDefinitionsCallback();
+
+}
+
+/**
+ * A class extending StaticDiscovery for testing purposes.
+ */
+class StaticDiscoveryTestDecoratedClass extends StaticDiscovery {
+
+  public function getDefinitions(): array {
+    return [];
+  }
+
+  public function complexArguments(mixed ...$args): array {
+    return $args;
+  }
+
+  public function noArguments(): array {
+    return [];
+  }
 
 }
