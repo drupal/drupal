@@ -3,7 +3,9 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides an action button form element.
@@ -27,10 +29,9 @@ use Drupal\Core\Render\Element;
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Submit
- *
- * @FormElement("button")
  */
-class Button extends FormElement {
+#[FormElement('button')]
+class Button extends FormElementBase {
 
   /**
    * {@inheritdoc}

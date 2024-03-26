@@ -2,16 +2,18 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
+
 /**
  * Provides a display-only form element with an optional title and description.
  *
  * Note: since this is a read-only field, setting the #required property will do
  * nothing except theme the form element to look as if it were actually required
  * (i.e. by placing a red star next to the #title).
- *
- * @FormElement("item")
  */
-class Item extends FormElement {
+#[FormElement('item')]
+class Item extends FormElementBase {
 
   /**
    * {@inheritdoc}

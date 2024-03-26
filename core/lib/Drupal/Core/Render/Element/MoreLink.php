@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+
 /**
  * Provides a link render element for a "more" link, like those used in blocks.
  *
@@ -17,9 +19,8 @@ namespace Drupal\Core\Render\Element;
  *   '#url' => Url::fromRoute('examples.more_examples')
  * ]
  * @endcode
- *
- * @RenderElement("more_link")
  */
+#[RenderElement('more_link')]
 class MoreLink extends Link {
 
   /**

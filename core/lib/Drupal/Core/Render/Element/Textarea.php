@@ -3,6 +3,8 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for input of multiple-line text.
@@ -24,10 +26,9 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see \Drupal\Core\Render\Element\Textfield
  * @see \Drupal\filter\Element\TextFormat
- *
- * @FormElement("textarea")
  */
-class Textarea extends FormElement {
+#[FormElement('textarea')]
+class Textarea extends FormElementBase {
 
   /**
    * {@inheritdoc}

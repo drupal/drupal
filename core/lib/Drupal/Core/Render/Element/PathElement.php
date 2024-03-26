@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 
 /**
  * Provides a matched path render element.
@@ -10,9 +11,8 @@ use Drupal\Core\Form\FormStateInterface;
  * Provides a form element to enter a path which can be optionally validated and
  * stored as either a \Drupal\Core\Url value object or an array containing a
  * route name and route parameters pair.
- *
- * @FormElement("path")
  */
+#[FormElement('path')]
 class PathElement extends Textfield {
 
   /**

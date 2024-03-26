@@ -3,7 +3,9 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a one-line text field form element.
@@ -39,10 +41,9 @@ use Drupal\Core\Render\Element;
  * @see \Drupal\Core\Render\Element\Range
  * @see \Drupal\Core\Render\Element\Tel
  * @see \Drupal\Core\Render\Element\Url
- *
- * @FormElement("textfield")
  */
-class Textfield extends FormElement {
+#[FormElement('textfield')]
+class Textfield extends FormElementBase {
 
   /**
    * {@inheritdoc}

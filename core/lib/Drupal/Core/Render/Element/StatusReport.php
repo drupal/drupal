@@ -2,12 +2,14 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
+
 /**
  * Creates status report page element.
- *
- * @RenderElement("status_report")
  */
-class StatusReport extends RenderElement {
+#[RenderElement('status_report')]
+class StatusReport extends RenderElementBase {
 
   /**
    * {@inheritdoc}

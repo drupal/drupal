@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Link as BaseLink;
+use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Url as BaseUrl;
 use Drupal\Component\Utility\NestedArray;
 
@@ -15,9 +16,8 @@ use Drupal\Component\Utility\NestedArray;
  *   '#type' => 'system_compact_link',
  * ];
  * @endcode
- *
- * @RenderElement("system_compact_link")
  */
+#[RenderElement('system_compact_link')]
 class SystemCompactLink extends Link {
 
   /**

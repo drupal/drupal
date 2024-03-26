@@ -313,18 +313,18 @@
  * define a render element is to create a render element plugin. There are
  * two types of render element plugins:
  * - Generic elements: Generic render element plugins implement
- *   \Drupal\Core\Render\Element\ElementInterface, are annotated with
- *   \Drupal\Core\Render\Annotation\RenderElement annotation, go in plugin
+ *   \Drupal\Core\Render\Element\ElementInterface, have the
+ *   \Drupal\Core\Render\Attribute\RenderElement attribute, go in plugin
  *   namespace Element, and generally extend the
  *   \Drupal\Core\Render\Element\RenderElement base class.
  * - Form input elements: Render elements representing form input elements
- *   implement \Drupal\Core\Render\Element\FormElementInterface, are annotated
- *   with \Drupal\Core\Render\Annotation\FormElement annotation, go in plugin
- *   namespace Element, and generally extend the
- *   \Drupal\Core\Render\Element\FormElement base class.
+ *   implement \Drupal\Core\Render\Element\FormElementInterface, have the
+ *   \Drupal\Core\Render\Attribute\FormElement, go in plugin namespace Element,
+ *   and generally extend the \Drupal\Core\Render\Element\FormElement base
+ *   class.
  * See the @link plugin_api Plugin API topic @endlink for general information
  * on plugins. You can search for classes with the RenderElement or FormElement
- * annotation to discover what render elements are available. API reference
+ * attribute to discover what render elements are available. API reference
  * sites (such as https://api.drupal.org) generate lists of all existing
  * elements from these classes. Look for the Elements link in the API Navigation
  * block.

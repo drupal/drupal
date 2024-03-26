@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+
 /**
  * Provides a render element for a group of form elements.
  *
@@ -13,9 +15,8 @@ namespace Drupal\Core\Render\Element;
  *
  * @see \Drupal\Core\Render\Element\Fieldset
  * @see \Drupal\Core\Render\Element\Details
- *
- * @RenderElement("fieldgroup")
  */
+#[RenderElement('fieldgroup')]
 class Fieldgroup extends Fieldset {
 
   public function getInfo() {

@@ -3,7 +3,9 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 use Drupal\Component\Utility\Color as ColorUtility;
 
 /**
@@ -20,10 +22,9 @@ use Drupal\Component\Utility\Color as ColorUtility;
  *   '#default_value' => '#ffffff',
  * );
  * @endcode
- *
- * @FormElement("color")
  */
-class Color extends FormElement {
+#[FormElement('color')]
+class Color extends FormElementBase {
 
   /**
    * {@inheritdoc}

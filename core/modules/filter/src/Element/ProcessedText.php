@@ -5,17 +5,17 @@ namespace Drupal\filter\Element;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\filter\Render\FilteredMarkup;
 
 /**
  * Provides a processed text render element.
- *
- * @RenderElement("processed_text")
  */
-class ProcessedText extends RenderElement {
+#[RenderElement('processed_text')]
+class ProcessedText extends RenderElementBase {
 
   /**
    * {@inheritdoc}

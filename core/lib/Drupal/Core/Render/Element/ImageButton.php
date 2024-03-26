@@ -3,13 +3,13 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 
 /**
  * Provides a form element for a submit button with an image.
- *
- * @FormElement("image_button")
  */
+#[FormElement('image_button')]
 class ImageButton extends Submit {
 
   /**

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 
@@ -21,9 +22,8 @@ use Drupal\Core\Render\Element;
  *   '#value' => $this->t('Save'),
  * );
  * @endcode
- *
- * @RenderElement("actions")
  */
+#[RenderElement('actions')]
 class Actions extends Container {
 
   /**

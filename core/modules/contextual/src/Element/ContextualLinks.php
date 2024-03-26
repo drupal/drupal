@@ -4,15 +4,15 @@ namespace Drupal\contextual\Element;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 use Drupal\Core\Url;
 
 /**
  * Provides a contextual_links element.
- *
- * @RenderElement("contextual_links")
  */
-class ContextualLinks extends RenderElement {
+#[RenderElement('contextual_links')]
+class ContextualLinks extends RenderElementBase {
 
   /**
    * {@inheritdoc}

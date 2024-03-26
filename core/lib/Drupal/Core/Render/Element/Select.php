@@ -3,7 +3,9 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for a drop-down menu or scrolling selection box.
@@ -76,10 +78,9 @@ use Drupal\Core\Render\Element;
  *   ],
  * ];
  * @endcode
- *
- * @FormElement("select")
  */
-class Select extends FormElement {
+#[FormElement('select')]
+class Select extends FormElementBase {
 
   /**
    * {@inheritdoc}

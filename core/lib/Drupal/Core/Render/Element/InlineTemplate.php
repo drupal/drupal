@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
+
 /**
  * Provides a render element where the user supplies an in-line Twig template.
  *
@@ -20,10 +23,9 @@ namespace Drupal\Core\Render\Element;
  *   ]
  * ];
  * @endcode
- *
- * @RenderElement("inline_template")
  */
-class InlineTemplate extends RenderElement {
+#[RenderElement('inline_template')]
+class InlineTemplate extends RenderElementBase {
 
   /**
    * {@inheritdoc}
