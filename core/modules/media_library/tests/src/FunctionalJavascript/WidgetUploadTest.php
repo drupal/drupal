@@ -208,9 +208,12 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Assert we can now only upload one more media item.
     $this->openMediaLibraryForField('field_twin_media');
     $this->switchToMediaType('Four');
-    // Despite the 'One file only' text, we don't limit the number of uploads.
-    $this->assertTrue($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
+    // We set the multiple to FALSE if only one file can be uploaded
+    $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
     $assert_session->pageTextContains('One file only.');
+    $choose_files = $assert_session->elementExists('css', '.form-managed-file');
+    $choose_files->hasButton('Choose file');
+    $this->assertFalse($choose_files->hasButton('Choose files'));
 
     // Assert media type four should only allow jpg files by trying a png file
     // first.
@@ -555,9 +558,13 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Assert we can now only upload one more media item.
     $this->openMediaLibraryForField('field_twin_media');
     $this->switchToMediaType('Four');
-    // Despite the 'One file only' text, we don't limit the number of uploads.
-    $this->assertTrue($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
+
+    // We set the multiple to FALSE if only one file can be uploaded
+    $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
     $assert_session->pageTextContains('One file only.');
+    $choose_files = $assert_session->elementExists('css', '.form-managed-file');
+    $choose_files->hasButton('Choose file');
+    $this->assertFalse($choose_files->hasButton('Choose files'));
 
     // Assert media type four should only allow jpg files by trying a png file
     // first.
