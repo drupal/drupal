@@ -165,7 +165,9 @@ class FileUploadForm extends AddFormBase {
       // @todo Move validation in https://www.drupal.org/node/2988215
       '#process' => array_merge(['::validateUploadElement'], $process, ['::processUploadElement']),
       '#upload_validators' => $item->getUploadValidators(),
-      '#multiple' => TRUE,
+      // Set multiple to true only if available slots is not exactly one
+      // to ensure correct language (singular or plural) in UI
+      '#multiple' => $slots != 1 ? TRUE : FALSE,
       // Do not limit the number uploaded. There is validation based on the
       // number selected in the media library that prevents overages.
       // @see Drupal\media_library\Form\AddFormBase::updateLibrary()
