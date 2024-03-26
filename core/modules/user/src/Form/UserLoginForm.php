@@ -7,7 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Url;
-use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -38,7 +37,7 @@ class UserLoginForm extends FormBase {
   /**
    * The user authentication object.
    *
-   * @var \Drupal\user\UserAuthenticationInterface
+   * @var \Drupal\user\UserAuthInterface
    */
   protected $userAuth;
 
@@ -63,19 +62,16 @@ class UserLoginForm extends FormBase {
    *   The user flood control service.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
-   * @param \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface $user_auth
+   * @param \Drupal\user\UserAuthInterface $user_auth
    *   The user authentication object.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_renderer
    *   The renderer.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface|UserAuthenticationInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer) {
+  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
-    if (!$user_auth instanceof UserAuthenticationInterface) {
-      @trigger_error('The $user_auth parameter not implementing UserAuthenticationInterface is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3411040');
-    }
     $this->userAuth = $user_auth;
     $this->renderer = $renderer;
     $this->bareHtmlPageRenderer = $bare_html_renderer;
@@ -136,6 +132,7 @@ class UserLoginForm extends FormBase {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = ['#type' => 'submit', '#value' => $this->t('Log in')];
 
+    $form['#validate'][] = '::validateName';
     $form['#validate'][] = '::validateAuthentication';
     $form['#validate'][] = '::validateFinal';
 
@@ -148,8 +145,8 @@ class UserLoginForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $uid = $form_state->get('uid');
-    if (!$uid) {
+
+    if (empty($uid = $form_state->get('uid'))) {
       return;
     }
     $account = $this->userStorage->load($uid);
@@ -170,12 +167,8 @@ class UserLoginForm extends FormBase {
 
   /**
    * Sets an error if supplied username has been blocked.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement.
-   * @see https://www.drupal.org/node/3410706
    */
   public function validateName(array &$form, FormStateInterface $form_state) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3410706', E_USER_DEPRECATED);
     if (!$form_state->isValueEmpty('name') && user_is_blocked($form_state->getValue('name'))) {
       // Blocked in user administration.
       $form_state->setErrorByName('name', $this->t('The username %name has not been activated or is blocked.', ['%name' => $form_state->getValue('name')]));
@@ -190,7 +183,6 @@ class UserLoginForm extends FormBase {
   public function validateAuthentication(array &$form, FormStateInterface $form_state) {
     $password = trim($form_state->getValue('pass'));
     $flood_config = $this->config('user.flood');
-    $account = FALSE;
     if (!$form_state->isValueEmpty('name') && strlen($password) > 0) {
       // Do not allow any login from the current user's IP if the limit has been
       // reached. Default is 50 failed attempts allowed in one hour. This is
@@ -201,17 +193,9 @@ class UserLoginForm extends FormBase {
         $form_state->set('flood_control_triggered', 'ip');
         return;
       }
-      if ($this->userAuth instanceof UserAuthenticationInterface) {
-        $account = $this->userAuth->lookupAccount($form_state->getValue('name'));
-      }
-      else {
-        $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name')]);
-        $account = reset($accounts);
-      }
-      if ($account && $account->isBlocked()) {
-        $form_state->setErrorByName('name', $this->t('The username %name has not been activated or is blocked.', ['%name' => $form_state->getValue('name')]));
-      }
-      elseif ($account && $account->isActive()) {
+      $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name'), 'status' => 1]);
+      $account = reset($accounts);
+      if ($account) {
         if ($flood_config->get('uid_only')) {
           // Register flood events based on the uid only, so they apply for any
           // IP address. This is the most secure option.
@@ -242,18 +226,11 @@ class UserLoginForm extends FormBase {
         else {
           $form_state->set('flood_control_skip_clear', 'user');
         }
-        // We are not limited by flood control, so try to authenticate.
-        // Store the user ID in form state as a flag for self::validateFinal().
-        if ($this->userAuth instanceof UserAuthenticationInterface) {
-          if ($this->userAuth->authenticateAccount($account, $password)) {
-            $form_state->set('uid', $account->id());
-          }
-        }
-        else {
-          $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
-          $form_state->set('uid', $uid);
-        }
       }
+      // We are not limited by flood control, so try to authenticate.
+      // Store $uid in form state as a flag for self::validateFinal().
+      $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
+      $form_state->set('uid', $uid);
     }
   }
 
