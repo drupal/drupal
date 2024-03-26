@@ -14,7 +14,7 @@ class DevelopmentSettingsPass implements CompilerPassInterface {
   /**
    * {@inheritdoc}
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     /** @var \Drupal\Core\State\StateInterface $state */
     $state = $container->get('state');
     $twig_debug = $state->get('twig_debug', FALSE);

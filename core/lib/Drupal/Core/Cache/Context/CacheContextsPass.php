@@ -15,7 +15,7 @@ class CacheContextsPass implements CompilerPassInterface {
    *
    * Collects the cache contexts into the cache_contexts parameter.
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $cache_contexts = [];
     foreach (array_keys($container->findTaggedServiceIds('cache.context')) as $id) {
       if (!str_starts_with($id, 'cache_context.')) {

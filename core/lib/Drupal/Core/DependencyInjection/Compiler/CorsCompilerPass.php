@@ -15,7 +15,7 @@ class CorsCompilerPass implements CompilerPassInterface {
   /**
    * {@inheritdoc}
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $enabled = FALSE;
 
     if ($cors_config = $container->getParameter('cors.config')) {

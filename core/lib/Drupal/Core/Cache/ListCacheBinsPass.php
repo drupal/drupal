@@ -15,7 +15,7 @@ class ListCacheBinsPass implements CompilerPassInterface {
    *
    * Collects the cache bins into the cache_bins parameter.
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $cache_info['cache']['bins'] = [];
     $cache_info['cache']['default_bin_backends'] = [];
     $cache_info['memory_cache']['bins'] = [];

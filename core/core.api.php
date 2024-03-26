@@ -2596,7 +2596,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   this class is subscribed to, and which methods on the class should be
  *   called for each one. Example:
  *   @code
- *   public static function getSubscribedEvents() {
+ *   public static function getSubscribedEvents(): array {
  *     // Subscribe to kernel terminate with priority 100.
  *     $events[KernelEvents::TERMINATE][] = array('onTerminate', 100);
  *     // Subscribe to kernel request with default priority of 0.

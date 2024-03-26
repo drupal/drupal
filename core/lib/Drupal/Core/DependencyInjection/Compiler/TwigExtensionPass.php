@@ -17,7 +17,7 @@ class TwigExtensionPass implements CompilerPassInterface {
   /**
    * {@inheritdoc}
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $twig_extension_hash = '';
     foreach (array_keys($container->findTaggedServiceIds('twig.extension')) as $service_id) {
       $class_name = $container->getDefinition($service_id)->getClass();

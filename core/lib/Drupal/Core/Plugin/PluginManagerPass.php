@@ -14,7 +14,7 @@ class PluginManagerPass implements CompilerPassInterface {
   /**
    * {@inheritdoc}
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $cache_clearer_definition = $container->getDefinition('plugin.cache_clearer');
     foreach ($container->getDefinitions() as $service_id => $definition) {
       if (str_starts_with($service_id, 'plugin.manager.') || $definition->hasTag('plugin_manager_cache_clear')) {
