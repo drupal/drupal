@@ -149,6 +149,7 @@
    *
    * @prop {function} RegExp
    * @prop {function} Function
+   * @prop {function} Array
    * @prop {function} Number
    */
   states.Dependent.comparisons = {
@@ -158,6 +159,15 @@
     Function(reference, value) {
       // The "reference" variable is a comparison function.
       return reference(value);
+    },
+    Array(reference, value) {
+      // Make sure value is an array.
+      if (!Array.isArray(value)) {
+        return false;
+      }
+
+      // The arrays values should match.
+      return JSON.stringify(reference.sort()) === JSON.stringify(value.sort());
     },
     Number(reference, value) {
       // If "reference" is a number and "value" is a string, then cast
