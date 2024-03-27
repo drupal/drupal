@@ -53,6 +53,11 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
     $this->createAndActivateWorkspaceThroughUi('Vultures', 'vultures');
     $gravity = $this->createWorkspaceThroughUi('Gravity', 'gravity');
 
+    // Confirm the block shows on the front page.
+    $this->drupalGet('<front>');
+    $page = $this->getSession()->getPage();
+    $this->assertTrue($page->hasContent('Workspace switcher'));
+
     $this->drupalGet('/admin/config/workflow/workspaces/manage/' . $gravity->id() . '/activate');
 
     $this->assertSession()->statusCodeEquals(200);

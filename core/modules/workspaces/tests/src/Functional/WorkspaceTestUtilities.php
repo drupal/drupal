@@ -110,12 +110,8 @@ trait WorkspaceTestUtilities {
       'region' => 'sidebar_first',
       'label' => 'Workspace switcher',
     ]);
-
-    // Confirm the block shows on the front page.
     $this->drupalGet('<front>');
-    $page = $this->getSession()->getPage();
 
-    $this->assertTrue($page->hasContent('Workspace switcher'));
     $this->switcherBlockConfigured = TRUE;
   }
 

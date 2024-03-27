@@ -248,7 +248,6 @@ class WorkspaceTest extends BrowserTestBase {
    */
   public function testDeleteWorkspaceWithExistingContent() {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
-    $this->setupWorkspaceSwitcherBlock();
 
     // Login and create a workspace.
     $this->drupalLogin($this->rootUser);
