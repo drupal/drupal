@@ -116,8 +116,7 @@ class VendorHardeningPluginTest extends TestCase {
       ->method('getAllCleanupPaths')
       ->willReturn(['drupal/package' => ['tests']]);
 
-    $package = $this->getMockBuilder(PackageInterface::class)
-      ->getMockForAbstractClass();
+    $package = $this->createMock(PackageInterface::class);
     $package->expects($this->any())
       ->method('getName')
       ->willReturn('drupal/package');

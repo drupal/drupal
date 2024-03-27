@@ -267,7 +267,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
       ->with('language_content_settings')
       ->willReturn($this->configEntityStorageInterface);
 
-    $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
+    $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->any())
       ->method('getEntityTypeFromClass')
       ->with(ContentLanguageSettings::class)
