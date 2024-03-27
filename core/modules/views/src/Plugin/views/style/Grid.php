@@ -4,20 +4,21 @@ namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
 
 /**
  * Style plugin to render each item in a grid cell.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "grid",
- *   title = @Translation("Grid"),
- *   help = @Translation("Displays rows in a grid."),
- *   theme = "views_view_grid",
- *   display_types = {"normal"}
- * )
  */
+#[ViewsStyle(
+  id: "grid",
+  title: new TranslatableMarkup("Grid"),
+  help: new TranslatableMarkup("Displays rows in a grid."),
+  theme: "views_view_grid",
+  display_types: ["normal"],
+)]
 class Grid extends StylePluginBase {
 
   /**

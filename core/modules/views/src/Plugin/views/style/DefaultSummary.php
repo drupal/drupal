@@ -3,20 +3,21 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
 
 /**
  * The default style plugin for summaries.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "default_summary",
- *   title = @Translation("List"),
- *   help = @Translation("Displays the default summary as a list."),
- *   theme = "views_view_summary",
- *   display_types = {"summary"}
- * )
  */
+#[ViewsStyle(
+  id: "default_summary",
+  title: new TranslatableMarkup("List"),
+  help: new TranslatableMarkup("Displays the default summary as a list."),
+  theme: "views_view_summary",
+  display_types: ["summary"],
+)]
 class DefaultSummary extends StylePluginBase {
 
   protected function defineOptions() {

@@ -6,21 +6,22 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
 
 /**
  * Style plugin to render each item as a row in a table.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "table",
- *   title = @Translation("Table"),
- *   help = @Translation("Displays rows in a table."),
- *   theme = "views_view_table",
- *   display_types = {"normal"}
- * )
  */
+#[ViewsStyle(
+  id: "table",
+  title: new TranslatableMarkup("Table"),
+  help: new TranslatableMarkup("Displays rows in a table."),
+  theme: "views_view_table",
+  display_types: ["normal"],
+)]
 class Table extends StylePluginBase implements CacheableDependencyInterface {
 
   /**

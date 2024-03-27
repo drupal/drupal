@@ -3,22 +3,23 @@
 namespace Drupal\views_test_data\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 
 /**
  * Provides a general test style plugin.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "test_style",
- *   title = @Translation("Test style plugin"),
- *   help = @Translation("Provides a generic style test plugin."),
- *   theme = "views_view_style_test",
- *   register_theme = FALSE,
- *   display_types = {"normal", "test"}
- * )
  */
+#[ViewsStyle(
+  id: "test_style",
+  title: new TranslatableMarkup("Test style plugin"),
+  help: new TranslatableMarkup("Provides a generic style test plugin."),
+  theme: "views_view_style_test",
+  register_theme: FALSE,
+  display_types: ["normal", "test"],
+)]
 class StyleTest extends StylePluginBase {
 
   /**

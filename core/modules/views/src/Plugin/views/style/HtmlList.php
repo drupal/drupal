@@ -3,20 +3,21 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
 
 /**
  * Style plugin to render each item in an ordered or unordered list.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "html_list",
- *   title = @Translation("HTML List"),
- *   help = @Translation("Displays rows as HTML list."),
- *   theme = "views_view_list",
- *   display_types = {"normal"}
- * )
  */
+#[ViewsStyle(
+  id: "html_list",
+  title: new TranslatableMarkup("HTML List"),
+  help: new TranslatableMarkup("Displays rows as HTML list."),
+  theme: "views_view_list",
+  display_types: ["normal"],
+)]
 class HtmlList extends StylePluginBase {
 
   /**
