@@ -73,6 +73,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     $id = $view->addHandler('default', 'argument', 'views_test_data', 'name', $options);
     $view->initHandlers();
     $plugin = $view->argument[$id]->getPlugin('argument_default');
+    $this->assertEquals('Default: Argument default test', $view->argument[$id]->adminSummary());
     $this->assertInstanceOf(ArgumentDefaultTestPlugin::class, $plugin);
 
     // Check that the value of the default argument is as expected.

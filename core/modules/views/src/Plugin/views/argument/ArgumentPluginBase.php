@@ -1392,6 +1392,21 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return $this->getPlugin('argument_validator')->getContextDefinition();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function adminSummary() {
+    // If an argument default has been set, show which argument default has been
+    // set.
+    if ($this->options['default_action'] === 'default') {
+      $plugin = $this->getPlugin();
+      if ($plugin) {
+        return $this->t('Default: @plugin_title', ['@plugin_title' => $plugin->pluginTitle()]);
+      }
+    }
+    return '';
+  }
+
 }
 
 /**
