@@ -2,21 +2,22 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\views\Attribute\ViewsStyle;
 
 /**
  * Default style plugin to render an OPML feed.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "opml",
- *   title = @Translation("OPML Feed"),
- *   help = @Translation("Generates an OPML feed from a view."),
- *   theme = "views_view_opml",
- *   display_types = {"feed"}
- * )
  */
+#[ViewsStyle(
+  id: "opml",
+  title: new TranslatableMarkup("OPML Feed"),
+  help: new TranslatableMarkup("Generates an OPML feed from a view."),
+  theme: "views_view_opml",
+  display_types: ["feed"],
+)]
 class Opml extends StylePluginBase {
 
   /**

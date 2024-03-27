@@ -5,6 +5,8 @@ namespace Drupal\rest\Plugin\views\style;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -13,14 +15,13 @@ use Symfony\Component\Serializer\SerializerInterface;
  * The style plugin for serialized output formats.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "serializer",
- *   title = @Translation("Serializer"),
- *   help = @Translation("Serializes views row data using the Serializer component."),
- *   display_types = {"data"}
- * )
  */
+#[ViewsStyle(
+  id: "serializer",
+  title: new TranslatableMarkup("Serializer"),
+  help: new TranslatableMarkup("Serializes views row data using the Serializer component."),
+  display_types: ["data"],
+)]
 class Serializer extends StylePluginBase implements CacheableDependencyInterface {
 
   /**

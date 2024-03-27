@@ -3,20 +3,21 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
 
 /**
  * Style plugin to render each item in a responsive grid cell.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "grid_responsive",
- *   title = @Translation("Responsive Grid"),
- *   help = @Translation("Displays rows in a responsive grid."),
- *   theme = "views_view_grid_responsive",
- *   display_types = {"normal"}
- * )
  */
+#[ViewsStyle(
+  id: "grid_responsive",
+  title: new TranslatableMarkup("Responsive Grid"),
+  help: new TranslatableMarkup("Displays rows in a responsive grid."),
+  theme: "views_view_grid_responsive",
+  display_types: ["normal"],
+)]
 class GridResponsive extends StylePluginBase {
 
   /**

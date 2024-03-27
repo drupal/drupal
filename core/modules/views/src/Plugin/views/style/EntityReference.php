@@ -4,21 +4,22 @@ namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
 
 /**
  * EntityReference style plugin.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "entity_reference",
- *   title = @Translation("Entity Reference list"),
- *   help = @Translation("Returns results as a PHP array of labels and rendered rows."),
- *   theme = "views_view_unformatted",
- *   register_theme = FALSE,
- *   display_types = {"entity_reference"}
- * )
  */
+#[ViewsStyle(
+  id: "entity_reference",
+  title: new TranslatableMarkup("Entity Reference list"),
+  help: new TranslatableMarkup("Returns results as a PHP array of labels and rendered rows."),
+  theme: "views_view_unformatted",
+  register_theme: FALSE,
+  display_types: ["entity_reference"],
+)]
 class EntityReference extends StylePluginBase {
 
   /**

@@ -3,20 +3,21 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
 
 /**
  * The default style plugin for summaries.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "unformatted_summary",
- *   title = @Translation("Unformatted"),
- *   help = @Translation("Displays the summary unformatted, with option for one after another or inline."),
- *   theme = "views_view_summary_unformatted",
- *   display_types = {"summary"}
- * )
  */
+#[ViewsStyle(
+  id: "unformatted_summary",
+  title: new TranslatableMarkup("Unformatted"),
+  help: new TranslatableMarkup("Displays the summary unformatted, with option for one after another or inline."),
+  theme: "views_view_summary_unformatted",
+  display_types: ["summary"],
+)]
 class UnformattedSummary extends DefaultSummary {
 
   protected function defineOptions() {

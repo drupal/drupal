@@ -2,21 +2,23 @@
 
 namespace Drupal\views\Plugin\views\style;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsStyle;
+
 /**
  * Unformatted style plugin to render rows.
  *
  * Row are rendered one after another with no decorations.
  *
  * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "default",
- *   title = @Translation("Unformatted list"),
- *   help = @Translation("Displays rows one after another."),
- *   theme = "views_view_unformatted",
- *   display_types = {"normal"}
- * )
  */
+#[ViewsStyle(
+  id: "default",
+  title: new TranslatableMarkup("Unformatted list"),
+  help: new TranslatableMarkup("Displays rows one after another."),
+  theme: "views_view_unformatted",
+  display_types: ["normal"],
+)]
 class DefaultStyle extends StylePluginBase {
 
   /**
