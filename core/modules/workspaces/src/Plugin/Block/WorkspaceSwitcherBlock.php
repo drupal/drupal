@@ -2,11 +2,14 @@
 
 namespace Drupal\workspaces\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\workspaces\Form\WorkspaceSwitcherForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -80,6 +83,17 @@ class WorkspaceSwitcherBlock extends BlockBase implements ContainerFactoryPlugin
       ],
     ];
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function blockAccess(AccountInterface $account): AccessResultInterface {
+    return AccessResult::allowedIfHasPermissions($account, [
+      'view own workspace',
+      'view any workspace',
+      'administer workspaces',
+    ], 'OR');
   }
 
 }
