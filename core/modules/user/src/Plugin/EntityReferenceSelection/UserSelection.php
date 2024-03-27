@@ -117,6 +117,9 @@ class UserSelection extends DefaultSelection {
         '_none' => $this->t('- None -'),
         'role' => $this->t('User role'),
       ],
+      // Use a form process callback to build #ajax property properly and also
+      // to avoid code duplication.
+      // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::fieldSettingsAjaxProcess()
       '#ajax' => TRUE,
       '#limit_validation_errors' => [],
       '#default_value' => $configuration['filter']['type'],
