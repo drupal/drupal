@@ -1,5 +1,0 @@
-name: 'Components Test'
-type: module
-dependencies:
-  - sdc:sdc
-package: Testing

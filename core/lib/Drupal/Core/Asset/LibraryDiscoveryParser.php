@@ -14,7 +14,9 @@ use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\Core\Theme\ComponentPluginManager;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\Plugin\Component;
 
 /**
  * Parses library files to get extension data.
@@ -57,6 +59,13 @@ class LibraryDiscoveryParser {
   protected $librariesDirectoryFileFinder;
 
   /**
+   * The component plugin manager.
+   *
+   * @var \Drupal\Core\Theme\ComponentPluginManager
+   */
+  protected $componentPluginManager;
+
+  /**
    * The extension path resolver.
    *
    * @var \Drupal\Core\Extension\ExtensionPathResolver
@@ -85,8 +94,10 @@ class LibraryDiscoveryParser {
    *   The libraries directory file finder.
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
    *   The extension path resolver.
+   * @param \Drupal\Core\Theme\ComponentPluginManager|null $component_plugin_manager
+   *   The component plugin manager.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver, ?ComponentPluginManager $component_plugin_manager = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
@@ -94,6 +105,11 @@ class LibraryDiscoveryParser {
     $this->librariesDirectoryFileFinder = $libraries_directory_file_finder;
     $this->extensionPathResolver = $extension_path_resolver;
     $this->fileCache = FileCacheFactory::get('library_parser');
+    if (!isset($component_plugin_manager)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $component_plugin_manager argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3410260', E_USER_DEPRECATED);
+      $component_plugin_manager = \Drupal::service('plugin.manager.sdc');
+    }
+    $this->componentPluginManager = $component_plugin_manager;
   }
 
   /**
@@ -383,6 +399,13 @@ class LibraryDiscoveryParser {
         }
       }
     }
+    // Core also provides additional libraries that don't come from the YAML,
+    // file nor the hook_library_info_build. They come from single directory
+    // component definitions.
+    $additional_libraries = $extension === 'core'
+      ? $this->librariesForComponents()
+      : [];
+    $libraries = array_merge($additional_libraries, $libraries);
 
     // Allow modules to add dynamic library definitions.
     $hook = 'library_info_build';
@@ -394,6 +417,37 @@ class LibraryDiscoveryParser {
     $this->moduleHandler->alter('library_info', $libraries, $extension);
     $this->themeManager->alter('library_info', $libraries, $extension);
 
+    return $libraries;
+  }
+
+  /**
+   * Builds the dynamic library definitions for single directory components.
+   *
+   * @return array
+   *   The core library definitions for Single Directory Components.
+   */
+  protected function librariesForComponents(): array {
+    // Iterate over all the components to get the CSS and JS files.
+    $components = $this->componentPluginManager->getAllComponents();
+    $libraries = array_reduce(
+      $components,
+      static function (array $libraries, Component $component) {
+        $library = $component->library;
+        if (empty($library)) {
+          return $libraries;
+        }
+        $library_name = $component->getLibraryName();
+        [, $library_id] = explode('/', $library_name);
+        return array_merge($libraries, [$library_id => $library]);
+      },
+      []
+    );
+    $libraries['components.all'] = [
+      'dependencies' => array_map(
+        static fn(Component $component) => $component->getLibraryName(),
+        $components
+      ),
+    ];
     return $libraries;
   }
 

@@ -1,0 +1,12 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Foo
+status: experimental
+replaces: sdc_theme_test:foo
+libraryOverrides:
+  css: {}
+  js: {}
+props:
+  type: object
+  properties:
+    prop1:
+      type: number

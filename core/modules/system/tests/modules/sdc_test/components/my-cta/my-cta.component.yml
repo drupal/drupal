@@ -1,0 +1,28 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Call to Action
+description: Call to action link.
+props:
+  type: object
+  required:
+    - text
+  properties:
+    text:
+      type: string
+      title: Title
+      description: The title for the cta
+      examples:
+        - Press
+        - Submit now
+    href:
+      type: string
+      title: URL
+      format: uri
+    target:
+      type: string
+      title: Target
+      enum:
+        - ''
+        - _blank
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      name: Attributes
