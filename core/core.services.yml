@@ -1576,13 +1576,24 @@ services:
     tags:
       - { name: service_collector, call: addAccessPolicy, tag: access_policy }
   Drupal\Core\Session\AccessPolicyChainInterface: '@access_policy_processor'
+  access_policy.super_user:
+    class: Drupal\Core\Session\SuperUserAccessPolicy
+    tags:
+      - { name: access_policy }
+  Drupal\Core\Session\SuperUserAccessPolicy: '@access_policy.super_user'
+  access_policy.user_roles:
+    class: Drupal\Core\Session\UserRolesAccessPolicy
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: access_policy }
+  Drupal\Core\Session\UserRolesAccessPolicy: '@access_policy.user_roles'
   permission_checker:
     class: Drupal\Core\Session\PermissionChecker
-    arguments: ['@entity_type.manager']
+    arguments: ['@access_policy_processor']
   Drupal\Core\Session\PermissionCheckerInterface: '@permission_checker'
   user_permissions_hash_generator:
     class: Drupal\Core\Session\PermissionsHashGenerator
-    arguments: ['@private_key', '@cache.bootstrap', '@cache.static', '@entity_type.manager']
+    arguments: ['@private_key', '@cache.static', '@access_policy_processor']
   Drupal\Core\Session\PermissionsHashGeneratorInterface: '@user_permissions_hash_generator'
   current_user:
     class: Drupal\Core\Session\AccountProxy
