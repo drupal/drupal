@@ -688,23 +688,16 @@ abstract class EntityDisplayFormBase extends EntityForm {
     $op = $trigger['#op'];
 
     // Pick the elements that need to receive the ajax-new-content effect.
-    switch ($op) {
-      case 'edit':
-        $updated_rows = [$trigger['#field_name']];
-        $updated_columns = ['plugin'];
-        break;
-
-      case 'update':
-      case 'cancel':
-        $updated_rows = [$trigger['#field_name']];
-        $updated_columns = ['plugin', 'settings_summary', 'settings_edit'];
-        break;
-
-      case 'refresh_table':
-        $updated_rows = array_values(explode(' ', $form_state->getValue('refresh_rows')));
-        $updated_columns = ['settings_summary', 'settings_edit'];
-        break;
-    }
+    $updated_rows = match ($op) {
+      'edit' => [$trigger['#field_name']],
+      'update', 'cancel' => [$trigger['#field_name']],
+      'refresh_table' => array_values(explode(' ', $form_state->getValue('refresh_rows')))
+    };
+    $updated_columns = match ($op) {
+      'edit' => ['plugin'],
+      'update', 'cancel' => ['plugin', 'settings_summary', 'settings_edit'],
+      'refresh_table' => ['settings_summary', 'settings_edit'],
+    };
 
     foreach ($updated_rows as $name) {
       foreach ($updated_columns as $key) {

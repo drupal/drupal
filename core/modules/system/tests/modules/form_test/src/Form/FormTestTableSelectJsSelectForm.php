@@ -22,23 +22,12 @@ class FormTestTableSelectJsSelectForm extends FormTestTableSelectFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $test_action = NULL) {
-    switch ($test_action) {
-      case 'multiple-true-default':
-        $options = ['#multiple' => TRUE];
-        break;
-
-      case 'multiple-false-default':
-        $options = ['#multiple' => FALSE];
-        break;
-
-      case 'multiple-true-no-advanced-select':
-        $options = ['#multiple' => TRUE, '#js_select' => FALSE];
-        break;
-
-      case 'multiple-false-advanced-select':
-        $options = ['#multiple' => FALSE, '#js_select' => TRUE];
-        break;
-    }
+    $options = match ($test_action) {
+      'multiple-true-default' => ['#multiple' => TRUE],
+      'multiple-false-default' => ['#multiple' => FALSE],
+      'multiple-true-no-advanced-select' => ['#multiple' => TRUE, '#js_select' => FALSE],
+      'multiple-false-advanced-select' => ['#multiple' => FALSE, '#js_select' => TRUE],
+    };
 
     return $this->tableselectFormBuilder($form, $form_state, $options);
   }
