@@ -49,31 +49,16 @@ class DateTimeDatelistWidget extends DateTimeWidgetBase {
     }
 
     // Set up the date part order array.
-    switch ($date_order) {
-      case 'YMD':
-        $date_part_order = ['year', 'month', 'day'];
-        break;
-
-      case 'MDY':
-        $date_part_order = ['month', 'day', 'year'];
-        break;
-
-      case 'DMY':
-        $date_part_order = ['day', 'month', 'year'];
-        break;
-    }
-    switch ($time_type) {
-      case '24':
-        $date_part_order = array_merge($date_part_order, ['hour', 'minute']);
-        break;
-
-      case '12':
-        $date_part_order = array_merge($date_part_order, ['hour', 'minute', 'ampm']);
-        break;
-
-      case 'none':
-        break;
-    }
+    $date_part_order = match ($date_order) {
+      'YMD' => ['year', 'month', 'day'],
+      'MDY' => ['month', 'day', 'year'],
+      'DMY' => ['day', 'month', 'year'],
+    };
+    $date_part_order = match ($time_type) {
+      '24' => array_merge($date_part_order, ['hour', 'minute']),
+      '12' => array_merge($date_part_order, ['hour', 'minute', 'ampm']),
+      default => $date_part_order,
+    };
 
     $element['value'] = [
       '#type' => 'datelist',

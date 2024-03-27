@@ -157,32 +157,20 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $entity_type = $update_manager->getEntityType($entity_type_id);
 
     /* @see \Drupal\Core\Entity\ContentEntityBase::baseFieldDefinitions() */
-    switch ($field_name) {
-      case 'id':
-        $field = BaseFieldDefinition::create('integer')
-          ->setLabel('ID')
-          ->setReadOnly(TRUE)
-          ->setSetting('unsigned', TRUE);
-        break;
-
-      case 'revision_id':
-        $field = BaseFieldDefinition::create('integer')
-          ->setLabel('Revision ID')
-          ->setReadOnly(TRUE)
-          ->setSetting('unsigned', TRUE);
-        break;
-
-      case 'langcode':
-        $field = BaseFieldDefinition::create('language')
-          ->setLabel('Language');
-        if ($entity_type->isRevisionable()) {
-          $field->setRevisionable(TRUE);
-        }
-        if ($entity_type->isTranslatable()) {
-          $field->setTranslatable(TRUE);
-        }
-        break;
-    }
+    $field = match ($field_name) {
+      'id' => BaseFieldDefinition::create('integer')
+        ->setLabel('ID')
+        ->setReadOnly(TRUE)
+        ->setSetting('unsigned', TRUE),
+      'revision_id' => BaseFieldDefinition::create('integer')
+        ->setLabel('Revision ID')
+        ->setReadOnly(TRUE)
+        ->setSetting('unsigned', TRUE),
+      'langcode' => BaseFieldDefinition::create('language')
+        ->setLabel('Language')
+        ->setRevisionable($entity_type->isRevisionable())
+        ->setTranslatable($entity_type->isTranslatable()),
+    };
 
     $field
       ->setName($field_name)
