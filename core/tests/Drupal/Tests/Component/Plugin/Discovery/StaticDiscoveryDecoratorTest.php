@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
+use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\StaticDiscovery;
 use Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator;
 use PHPUnit\Framework\TestCase;
@@ -26,9 +27,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    *   called once.
    */
   public function getRegisterDefinitionsCallback() {
-    $mock_callable = $this->getMockBuilder(StaticDiscoveryDecoratorTestMockInterface::class)
-      ->onlyMethods(['registerDefinitionsCallback'])
-      ->getMock();
+    $mock_callable = $this->createMock(StaticDiscoveryDecoratorTestMockInterface::class);
     // Set expectations for the callback method.
     $mock_callable->expects($this->once())
       ->method('registerDefinitionsCallback');
@@ -88,9 +87,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
     $ref_definitions->setValue($mock_decorator, []);
 
     // Mock a decorated object.
-    $mock_decorated = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryInterface')
-      ->onlyMethods(['getDefinitions'])
-      ->getMockForAbstractClass();
+    $mock_decorated = $this->createMock(DiscoveryInterface::class);
     // Return our definitions from getDefinitions().
     $mock_decorated->expects($this->once())
       ->method('getDefinitions')
@@ -155,9 +152,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
     $ref_definitions->setValue($mock_decorator, []);
 
     // Mock a decorated object.
-    $mock_decorated = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryInterface')
-      ->onlyMethods(['getDefinitions'])
-      ->getMockForAbstractClass();
+    $mock_decorated = $this->createMock(DiscoveryInterface::class);
     // Our mocked method will return any arguments sent to it.
     $mock_decorated->expects($this->once())
       ->method('getDefinitions')
