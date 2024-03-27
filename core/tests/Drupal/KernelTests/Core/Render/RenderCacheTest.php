@@ -70,16 +70,16 @@ class RenderCacheTest extends KernelTestBase {
       ],
     ];
     $element = $test_element;
-    $element['#markup'] = 'content for user 1';
+    $element['#markup'] = 'content for admin users';
     $output = \Drupal::service('renderer')->renderRoot($element);
-    $this->assertEquals('content for user 1', $output);
+    $this->assertEquals('content for admin users', $output);
 
     // Verify the cache is working by rendering the same element but with
     // different markup passed in; the result should be the same.
     $element = $test_element;
     $element['#markup'] = 'should not be used';
     $output = \Drupal::service('renderer')->renderRoot($element);
-    $this->assertEquals('content for user 1', $output);
+    $this->assertEquals('content for admin users', $output);
     \Drupal::service('account_switcher')->switchBack();
 
     // Verify that the first authenticated user does not see the same content
@@ -100,13 +100,14 @@ class RenderCacheTest extends KernelTestBase {
     $this->assertEquals('content for authenticated users', $output);
     \Drupal::service('account_switcher')->switchBack();
 
-    // Verify that the admin user (who has an admin role without explicit
-    // permissions) does not share the same cache.
+    // The admin user should have the same cache as user 1, as the admin role
+    // has the same permissions hash.
     \Drupal::service('account_switcher')->switchTo($admin_user);
     $element = $test_element;
-    $element['#markup'] = 'content for admin user';
+    $element['#markup'] = 'content that is role specific';
     $output = \Drupal::service('renderer')->renderRoot($element);
-    $this->assertEquals('content for admin user', $output);
+    $expected = in_array('user.roles', $contexts, TRUE) ? 'content that is role specific' : 'content for admin users';
+    $this->assertEquals($expected, $output);
     \Drupal::service('account_switcher')->switchBack();
   }
 
