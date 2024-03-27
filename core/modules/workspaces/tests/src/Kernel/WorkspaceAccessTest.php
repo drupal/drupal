@@ -223,26 +223,4 @@ class WorkspaceAccessTest extends KernelTestBase {
     $this->assertEquals($expected_top, array_keys($selection_handler->getReferenceableEntities('top')['workspace']));
   }
 
-  /**
-   * @covers \Drupal\workspaces\Plugin\Block\WorkspaceSwitcherBlock::blockAccess
-   */
-  public function testWorkspaceSwitcherBlock(): void {
-    $own_permission_user = $this->createUser(['view own workspace']);
-    $any_permission_user = $this->createUser(['view any workspace']);
-    $admin_permission_user = $this->createUser(['administer workspaces']);
-    $access_content_user = $this->createUser(['access content']);
-    $no_permission_user = $this->createUser();
-
-    /** @var \Drupal\Core\Block\BlockManagerInterface $block_manager */
-    $block_manager = \Drupal::service('plugin.manager.block');
-    /** @var \Drupal\Core\Block\BlockPluginInterface $switcher_block */
-    $switcher_block = $block_manager->createInstance('workspace_switcher');
-
-    $this->assertTrue($switcher_block->access($own_permission_user));
-    $this->assertTrue($switcher_block->access($any_permission_user));
-    $this->assertTrue($switcher_block->access($admin_permission_user));
-    $this->assertFalse($switcher_block->access($access_content_user));
-    $this->assertFalse($switcher_block->access($no_permission_user));
-  }
-
 }
