@@ -1,8 +1,0 @@
-$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
-name: Array to Object
-props:
-  type: object
-  properties:
-    testProp:
-      title: 'Needs object'
-      type: object

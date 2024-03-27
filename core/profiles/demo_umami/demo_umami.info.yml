@@ -29,7 +29,6 @@ install:
   - dynamic_page_cache
   - taxonomy
   - dblog
-  - sdc
   - search
   - shortcut
   - toolbar

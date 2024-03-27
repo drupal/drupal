@@ -206,4 +206,34 @@ class Element {
     return \array_diff(\array_keys($elements), ['#cache', '#weight']) === [];
   }
 
+  /**
+   * Checks if a candidate is a render array.
+   *
+   * @param mixed $candidate
+   *   The candidate.
+   *
+   * @return bool
+   *   TRUE if it's a render array. FALSE otherwise.
+   */
+  public static function isRenderArray($candidate): bool {
+    if (!is_array($candidate)) {
+      return FALSE;
+    }
+    if (empty($candidate)) {
+      return FALSE;
+    }
+    foreach ($candidate as $key => $value) {
+      if (!is_int($key) && $key !== '' && $key[0] === '#') {
+        continue;
+      }
+      if (!is_array($value)) {
+        return FALSE;
+      }
+      if (!static::isRenderArray($value)) {
+        return FALSE;
+      }
+    }
+    return TRUE;
+  }
+
 }

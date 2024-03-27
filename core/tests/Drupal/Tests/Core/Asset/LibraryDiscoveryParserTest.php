@@ -13,6 +13,7 @@ use Drupal\Core\Asset\LibraryDiscoveryParser;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Theme\ActiveTheme;
+use Drupal\Core\Theme\ComponentPluginManager;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -86,6 +87,13 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   protected $extensionPathResolver;
 
   /**
+   * The mocked extension path resolver.
+   *
+   * @var \Drupal\Core\Theme\ComponentPluginManager|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $componentPluginManager;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -105,7 +113,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->streamWrapperManager = $this->createMock(StreamWrapperManagerInterface::class);
     $this->librariesDirectoryFileFinder = $this->createMock(LibrariesDirectoryFileFinder::class);
     $this->extensionPathResolver = $this->createMock(ExtensionPathResolver::class);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver);
+    $this->componentPluginManager = $this->createMock(ComponentPluginManager::class);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
   }
 
   /**
@@ -121,7 +130,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     FileCacheFactory::setConfiguration([
       'library_parser' => [],
     ]);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('example_module')
@@ -655,8 +664,9 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->method('getPath')
       ->with('module', 'example_module')
       ->willReturn($path);
+    $this->componentPluginManager = $this->createMock(ComponentPluginManager::class);
 
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
 
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
@@ -709,7 +719,8 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->method('getPath')
       ->with('module', 'deprecated')
       ->willReturn($path);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver);
+    $this->componentPluginManager = $this->createMock(ComponentPluginManager::class);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
 
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')

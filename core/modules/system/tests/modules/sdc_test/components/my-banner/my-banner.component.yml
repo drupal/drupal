@@ -1,0 +1,41 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Banner
+description: Banner with title and a CTA link
+libraryOverrides:
+  dependencies:
+    - core/drupal
+props:
+  type: object
+  properties:
+    heading:
+      title: Heading
+      description: The title for the banner text.
+      examples:
+        - Join us at The Conference
+      type: string
+    ctaText:
+      title: CTA Text
+      type: string
+      examples:
+        - Click me!
+    ctaHref:
+      title: CTA Href
+      type: string
+      examples:
+        - 'https://www.example.org'
+    ctaTarget:
+      title: CTA Target
+      type: string
+      enum:
+        - ''
+        - _blank
+    image:
+      title: Media Image
+      description: Background image for the banner.
+      type: string
+slots:
+  banner_body:
+    title: Body
+    description: The contents of the banner.
+    examples:
+      - <p>Foo is <strong>NOT</strong> bar.</p>

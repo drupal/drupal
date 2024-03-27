@@ -1688,7 +1688,7 @@ services:
       - { name: needs_destruction }
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
-    arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder', '@extension.path.resolver']
+    arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder', '@extension.path.resolver', '@plugin.manager.sdc']
   Drupal\Core\Asset\LibraryDiscoveryParser: '@library.discovery.parser'
   library.libraries_directory_file_finder:
     class: Drupal\Core\Asset\LibrariesDirectoryFileFinder
@@ -1717,6 +1717,10 @@ services:
     arguments: ['@renderer', '@url_generator', '@theme.manager', '@date.formatter', '@file_url_generator']
     tags:
       - { name: twig.extension, priority: 100 }
+  Drupal\Core\Template\ComponentsTwigExtension:
+    arguments: ['@plugin.manager.sdc', '@Drupal\Core\Theme\Component\ComponentValidator']
+    tags:
+      - { name: twig.extension, priority: 101 }
   twig.extension.debug:
     class: Twig\Extension\DebugExtension
     tags:
@@ -1857,3 +1861,32 @@ services:
     class: Drupal\Core\Pager\PagerParameters
     arguments: ['@request_stack']
   Drupal\Core\Pager\PagerParametersInterface: '@pager.parameters'
+  Drupal\Core\Theme\Component\SchemaCompatibilityChecker: {}
+  Drupal\Core\Theme\Component\ComponentValidator:
+    calls:
+      - [setValidator, []]
+  Drupal\Core\Theme\ComponentNegotiator:
+    arguments:
+      - '@theme.manager'
+      - '@extension.list.module'
+  plugin.manager.sdc:
+    public: true
+    class: Drupal\Core\Theme\ComponentPluginManager
+    arguments:
+      - '@module_handler'
+      - '@theme_handler'
+      - '@cache.discovery'
+      - '@config.factory'
+      - '@theme.manager'
+      - '@Drupal\Core\Theme\ComponentNegotiator'
+      - '@file_system'
+      - '@Drupal\Core\Theme\Component\SchemaCompatibilityChecker'
+      - '@Drupal\Core\Theme\Component\ComponentValidator'
+      - '%app.root%'
+  Drupal\Core\Theme\ComponentPluginManager: '@plugin.manager.sdc'
+  Drupal\Core\Template\Loader\ComponentLoader:
+    arguments:
+      - '@plugin.manager.sdc'
+      - '@logger.channel.default'
+    tags:
+      - { name: twig.loader, priority: 5 }

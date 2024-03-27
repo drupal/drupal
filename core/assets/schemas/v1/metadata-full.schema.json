@@ -1,0 +1,159 @@
+{
+  "$id": "https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata-full.schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$defs": {
+    "slotDefinition": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]$": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "title": "Title"
+            },
+            "description": {
+              "type": "string",
+              "title": "Description"
+            },
+            "examples": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "required": [
+    "extension_type",
+    "id",
+    "library",
+    "machineName",
+    "path",
+    "provider",
+    "template"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "documentation": {
+      "type": "string",
+      "title": "Documentation",
+      "description": "The HTML contents of the parsed README.md file.",
+      "examples": [
+        "This component is used in a particular manner."
+      ]
+    },
+    "extension_type": {
+      "type": "string",
+      "title": "Extension Type",
+      "description": "This component was defined either in a module or in a theme",
+      "enum": [
+        "module",
+        "theme"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "title": "ID",
+      "description": "The plugin ID.",
+      "pattern": "^[a-z]([a-zA-Z0-9_-]*[a-zA-Z0-9])*:[a-z]([a-zA-Z0-9_-]*[a-zA-Z0-9])*$"
+    },
+    "library": {
+      "type": ["object", "array"],
+      "additionalProperties": false,
+      "properties": {
+        "css": {
+          "$ref": "metadata.schema.json#/$defs/cssDefinition"
+        },
+        "js": {
+          "$ref": "metadata.schema.json#/$defs/jsAttributes"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "machineName": {
+      "type": "string",
+      "title": "Machine Name",
+      "description": "Used in combination with 'provider' to create the component ID: {provider}:{machineName}. Component ID used for reference on other Twig templates and other parts of the system",
+      "pattern": "^[a-z]([a-zA-Z0-9_-]*[a-zA-Z0-9])*$",
+      "examples": [
+        "button",
+        "module_23F"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "description": "Human readable version of the machineName",
+      "examples": [
+        "Button",
+        "Module 23F"
+      ]
+    },
+    "path": {
+      "type": "string",
+      "title": "Path",
+      "description": "The path to the single directory component",
+      "examples": [
+        "/var/www/html/web/modules/contrib/sdc_examples/components/my-card"
+      ]
+    },
+    "provider": {
+      "type": "string",
+      "title": "Provider",
+      "description": "The name of the module or theme that contains the component.",
+      "examples": [
+        "umami",
+        "sdc_examples"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "description": "Human readable description for the component",
+      "examples": [
+        "Plain button. Only available for use in other components. Do not include directly."
+      ]
+    },
+    "status": {
+      "type": "string",
+      "title": "Development Status",
+      "description": "Use this property to identify if the component can be safely used in production.",
+      "enum": [
+        "experimental",
+        "stable",
+        "deprecated",
+        "obsolete"
+      ]
+    },
+    "props": {
+      "$ref": "http://json-schema.org/draft-04/schema#"
+    },
+    "slots": {
+      "$ref": "metadata.schema.json#/$defs/slotDefinition"
+    },
+    "template": {
+      "type": "string",
+      "title": "Template",
+      "description": "The file name of the Twig template.",
+      "examples": [
+        "my-card.twig"
+      ]
+    },
+    "libraryOverrides": {
+      "$ref": "metadata.schema.json#/$defs/libraryDefinition"
+    }
+  }
+}

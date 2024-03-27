@@ -225,4 +225,26 @@ class ElementTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * @covers ::isRenderArray
+   * @dataProvider dataProviderIsRenderArray
+   */
+  public function testIsRenderArray($build, $expected) {
+    $this->assertSame(
+      $expected,
+      Element::isRenderArray($build)
+    );
+  }
+
+  public function dataProviderIsRenderArray() {
+    return [
+      'valid markup render array' => [['#markup' => 'hello world'], TRUE],
+      'invalid "foo" string' => [['foo', '#markup' => 'hello world'], FALSE],
+      'null is not an array' => [NULL, FALSE],
+      'an empty array is not a render array' => [[], FALSE],
+      'funny enough a key with # is valid' => [['#' => TRUE], TRUE],
+      'nested arrays can be valid too' => [['one' => [2 => ['#three' => 'charm!']]], TRUE],
+    ];
+  }
+
 }

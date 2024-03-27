@@ -10,7 +10,7 @@ The API of Single Directory Components includes:
   - The structure of the component metadata (the my-component.component.yml).
     Note that the metadata of the component is described, and optionally
     validated, by the schema in metadata.schema.json (this file is for internal validation and not part of the API).
-  - The render element and its class \Drupal\sdc\Element\ComponentElement.
+  - The render element and its class \Drupal\Core\Render\Element\ComponentElement.
   - The naming convention for the ID when using Twig's include, embed, and
     extends. This naming convention is [module/theme]:[component machine name].
     See the example below.
