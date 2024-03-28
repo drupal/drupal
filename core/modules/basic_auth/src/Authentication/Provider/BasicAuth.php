@@ -10,6 +10,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Http\Exception\CacheableUnauthorizedHttpException;
+use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserAuthInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -29,7 +30,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
   /**
    * The user auth service.
    *
-   * @var \Drupal\user\UserAuthInterface
+   * @var \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface
    */
   protected $userAuth;
 
@@ -52,15 +53,18 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\user\UserAuthInterface $user_auth
+   * @param \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface $user_auth
    *   The user authentication service.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, UserAuthInterface $user_auth, FloodInterface $flood, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, UserAuthInterface|UserAuthenticationInterface $user_auth, FloodInterface $flood, EntityTypeManagerInterface $entity_type_manager) {
     $this->configFactory = $config_factory;
+    if (!$user_auth instanceof UserAuthenticationInterface) {
+      @trigger_error('The $user_auth parameter implementing UserAuthInterface is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. Implement UserAuthenticationInterface instead. See https://www.drupal.org/node/3411040');
+    }
     $this->userAuth = $user_auth;
     $this->flood = $flood;
     $this->entityTypeManager = $entity_type_manager;
@@ -90,8 +94,17 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
     // in to many different user accounts.  We have a reasonably high limit
     // since there may be only one apparent IP for all users at an institution.
     if ($this->flood->isAllowed('basic_auth.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
-      $accounts = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $username, 'status' => 1]);
-      $account = reset($accounts);
+      $account = FALSE;
+      if ($this->userAuth instanceof UserAuthenticationInterface) {
+        $lookup = $this->userAuth->lookupAccount($username);
+        if ($lookup && !$lookup->isBlocked()) {
+          $account = $lookup;
+        }
+      }
+      else {
+        $accounts = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $username, 'status' => 1]);
+        $account = reset($accounts);
+      }
       if ($account) {
         if ($flood_config->get('uid_only')) {
           // Register flood events based on the uid only, so they apply for any
@@ -107,10 +120,16 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
         // Don't allow login if the limit for this user has been reached.
         // Default is to allow 5 failed attempts every 6 hours.
         if ($this->flood->isAllowed('basic_auth.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
-          $uid = $this->userAuth->authenticate($username, $password);
+          $uid = FALSE;
+          if ($this->userAuth instanceof UserAuthenticationInterface) {
+            $uid = $this->userAuth->authenticateAccount($account, $password) ? $account->id() : FALSE;
+          }
+          else {
+            $uid = $this->userAuth->authenticate($username, $password);
+          }
           if ($uid) {
             $this->flood->clear('basic_auth.failed_login_user', $identifier);
-            return $this->entityTypeManager->getStorage('user')->load($uid);
+            return $account;
           }
           else {
             // Register a per-user failed login event.
