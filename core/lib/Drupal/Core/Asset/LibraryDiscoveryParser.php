@@ -15,6 +15,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Theme\ComponentPluginManager;
+use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Plugin\Component;
 
@@ -421,6 +422,60 @@ class LibraryDiscoveryParser {
   }
 
   /**
+   * Apply overrides to files that have moved.
+   *
+   * @param array $library
+   *   The library definition.
+   * @param string $library_name
+   *   The library name.
+   * @param string $extension
+   *   The extension name.
+   * @param array $overrides
+   *   The library overrides.
+   * @param Drupal\Core\Theme\ActiveTheme $active_theme
+   *   The active theme.
+   *
+   * @return array
+   *   The modified library overrides.
+   */
+  protected function applyLibrariesMovedOverrides(array $library, string $library_name, string $extension, array $overrides, ActiveTheme $active_theme): array {
+    if (!isset($library['moved_files'])) {
+      return $overrides;
+    }
+    foreach ($library['moved_files'] as $old_library_name => $moved_files) {
+      $deprecation_version = $moved_files['deprecation_version'];
+      $removed_version = $moved_files['removed_version'];
+      $deprecation_link = $moved_files['deprecation_link'];
+      if (isset($overrides[$old_library_name]['css']) && isset($moved_files['css'])) {
+        foreach ($overrides[$old_library_name]['css'] as $key => $files) {
+          foreach ($files as $original => $target) {
+            if (isset($moved_files['css'][$key][$original])) {
+              $new_key = array_key_first($moved_files['css'][$key][$original]);
+              $new_file = $moved_files['css'][$key][$original][$new_key];
+              $theme_name = $active_theme->getName();
+              // phpcs:ignore
+              @trigger_error("Targeting $old_library_name $original from $theme_name library_overrides is deprecated in $deprecation_version and will be removed in $removed_version. Target $extension/$library_name $new_file instead. See $deprecation_link", E_USER_DEPRECATED);
+              $overrides[$extension . '/' . $library_name]['css'][$new_key][$new_file] = $target;
+            }
+          }
+        }
+      }
+      if (isset($overrides[$old_library_name]['js']) && isset($moved_files['js'])) {
+        foreach ($overrides[$old_library_name]['js'] as $original => $target) {
+          if (isset($moved_files['js'][$original])) {
+            $new_file = $moved_files['js'][$original];
+            $theme_name = $active_theme->getName();
+            // phpcs:ignore
+            @trigger_error("Targeting $old_library_name $original from $theme_name library_overrides is deprecated in $deprecation_version and will be removed in $removed_version. Target $extension/$library_name $new_file instead. See $deprecation_link", E_USER_DEPRECATED);
+            $overrides[$extension . '/' . $library_name]['js'][$new_file] = $target;
+          }
+        }
+      }
+    }
+    return $overrides;
+  }
+
+  /**
    * Builds the dynamic library definitions for single directory components.
    *
    * @return array
@@ -469,6 +524,8 @@ class LibraryDiscoveryParser {
     $all_libraries_overrides = $active_theme->getLibrariesOverride();
     foreach ($all_libraries_overrides as $theme_path => $libraries_overrides) {
       foreach ($libraries as $library_name => $library) {
+        $libraries_overrides = $this->applyLibrariesMovedOverrides($library, $library_name, $extension, $libraries_overrides, $active_theme);
+
         // Process libraries overrides.
         if (isset($libraries_overrides["$extension/$library_name"])) {
           if (isset($library['deprecated'])) {
