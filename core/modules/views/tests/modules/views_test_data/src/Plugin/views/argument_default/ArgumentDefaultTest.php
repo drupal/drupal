@@ -2,16 +2,17 @@
 
 namespace Drupal\views_test_data\Plugin\views\argument_default;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsArgumentDefault;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
 /**
  * Defines an argument default test plugin.
- *
- * @ViewsArgumentDefault(
- *   id = "argument_default_test",
- *   title = @Translation("Argument default test")
- * )
  */
+#[ViewsArgumentDefault(
+  id: 'argument_default_test',
+  title: new TranslatableMarkup('Argument default test'),
+)]
 class ArgumentDefaultTest extends ArgumentDefaultPluginBase {
 
   /**

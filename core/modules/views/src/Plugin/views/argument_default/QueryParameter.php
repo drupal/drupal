@@ -6,17 +6,18 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsArgumentDefault;
 
 /**
  * A query parameter argument default handler.
  *
  * @ingroup views_argument_default_plugins
- *
- * @ViewsArgumentDefault(
- *   id = "query_parameter",
- *   title = @Translation("Query parameter")
- * )
  */
+#[ViewsArgumentDefault(
+  id: 'query_parameter',
+  title: new TranslatableMarkup('Query parameter'),
+)]
 class QueryParameter extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
   /**

@@ -5,18 +5,19 @@ namespace Drupal\node\Plugin\views\argument_default;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsArgumentDefault;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default argument plugin to extract a node.
- *
- * @ViewsArgumentDefault(
- *   id = "node",
- *   title = @Translation("Content ID from URL")
- * )
  */
+#[ViewsArgumentDefault(
+  id: 'node',
+  title: new TranslatableMarkup('Content ID from URL'),
+)]
 class Node extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
   /**
