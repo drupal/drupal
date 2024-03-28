@@ -21,6 +21,6 @@ class EntityWorkspaceConflictConstraint extends SymfonyConstraint {
    *
    * @var string
    */
-  public $message = 'The content is being edited in the %label workspace. As a result, your changes cannot be saved.';
+  public $message = 'The content is being edited in the @label workspace. As a result, your changes cannot be saved.';
 
 }
