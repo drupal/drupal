@@ -308,7 +308,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $query = $this->database->select(static::TABLE)
       ->fields(static::TABLE, ['workspace'])
       ->condition('target_entity_type_id', $entity->getEntityTypeId())
-      ->condition('target_entity_id', $entity->id());
+      ->condition('target_entity_id', $entity->id())
+      ->orderBy('target_entity_revision_id', 'DESC');
 
     return $query->execute()->fetchCol();
   }
