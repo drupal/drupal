@@ -6,6 +6,31 @@ theme_stylesheets_override_and_remove_test:
       css/sub-override.css: {}
       css/sub-remove.css: {}
 
+moved_to:
+  version: VERSION
+  css:
+    base:
+      css/base-remove.css: {}
+  js:
+    js/foo.js: {}
+  moved_files:
+    theme_test/moved_from:
+      deprecation_version: drupal:X.0.0
+      removed_version: drupal:Y.0.0
+      deprecation_link: https://example.com
+      css:
+        base:
+          css/foo.css:
+            base: 'css/base-remove.css'
+      js:
+        js/bar.js: 'js/foo.js'
+
+moved_from:
+  version: VERSION
+  css:
+    base:
+      css/sub-remove.css: {}
+
 deprecated_library:
   version: VERSION
   css:

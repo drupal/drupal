@@ -247,16 +247,19 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   }
 
   /**
-   * Test deprecated libraries.
+   * Test library deprecation support.
    *
    * @group legacy
    */
   public function testDeprecatedLibrary() {
+    $this->expectDeprecation('Targeting theme_test/moved_from css/foo.css from test_theme_with_deprecated_libraries library_overrides is deprecated in drupal:X.0.0 and will be removed in drupal:Y.0.0. Target theme_test/moved_to css/base-remove.css instead. See https://example.com');
+    $this->expectDeprecation('Targeting theme_test/moved_from js/bar.js from test_theme_with_deprecated_libraries library_overrides is deprecated in drupal:X.0.0 and will be removed in drupal:Y.0.0. Target theme_test/moved_to js/foo.js instead. See https://example.com');
     $this->expectDeprecation('Theme "theme_test" is overriding a deprecated library. The "theme_test/deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->expectDeprecation('Theme "theme_test" is extending a deprecated library. The "theme_test/another_deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->expectDeprecation('The "theme_test/deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->expectDeprecation('The "theme_test/another_deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->activateTheme('test_theme_with_deprecated_libraries');
+    $this->libraryDiscovery->getLibraryByName('theme_test', 'moved_to');
     $this->libraryDiscovery->getLibraryByName('theme_test', 'deprecated_library');
     $this->libraryDiscovery->getLibraryByName('theme_test', 'another_deprecated_library');
   }

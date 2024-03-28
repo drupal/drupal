@@ -10,6 +10,12 @@ libraries-override:
     css:
       base:
         css/foo.css: css/bar.css
+  theme_test/moved_from:
+    css:
+      base:
+        css/foo.css: css/bar.css
+    js:
+      js/bar.js: false
 
 libraries-extend:
   theme_test/another_deprecated_library:
