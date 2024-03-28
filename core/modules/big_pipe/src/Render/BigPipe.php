@@ -700,7 +700,9 @@ EOF;
   /**
    * Gets the BigPipe placeholder order.
    *
-   * Determines the order in which BigPipe placeholders are executed.
+   * Determines the order in which BigPipe placeholders are executed. It is
+   * safe to use a regular expression here as the HTML is statically created in
+   * \Drupal\big_pipe\Render\Placeholder\BigPipeStrategy::createBigPipeJsPlaceholder().
    *
    * @param string $html
    *   HTML markup.
@@ -718,13 +720,10 @@ EOF;
    *   first occurrence.
    */
   protected function getPlaceholderOrder($html, $placeholders) {
-    $placeholder_ids = [];
-    $dom = Html::load($html);
-    $xpath = new \DOMXPath($dom);
-    foreach ($xpath->query('//span[@data-big-pipe-placeholder-id]') as $node) {
-      $placeholder_ids[] = Html::escape($node->getAttribute('data-big-pipe-placeholder-id'));
+    if (preg_match_all('/<span data-big-pipe-placeholder-id="([^"]*)">/', $html, $matches)) {
+      return array_unique($matches[1]);
     }
-    return array_unique($placeholder_ids);
+    return [];
   }
 
   /**
