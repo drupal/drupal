@@ -5,17 +5,19 @@ namespace Drupal\views\Plugin\views\argument_default;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsArgumentDefault;
 
 /**
  * The fixed argument default handler.
  *
  * @ingroup views_argument_default_plugins
- *
- * @ViewsArgumentDefault(
- *   id = "fixed",
- *   title = @Translation("Fixed")
  * )
  */
+#[ViewsArgumentDefault(
+  id: 'fixed',
+  title: new TranslatableMarkup('Fixed'),
+)]
 class Fixed extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
   /**

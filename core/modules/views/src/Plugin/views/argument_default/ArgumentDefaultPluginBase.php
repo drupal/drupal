@@ -17,8 +17,8 @@ use Drupal\views\Plugin\views\PluginBase;
  *
  * Argument default plugins extend
  * \Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase. They
- * must be annotated with \Drupal\views\Annotation\ViewsArgumentDefault
- * annotation, and they must be in namespace directory
+ * must be attributed with \Drupal\views\Attribute\ViewsArgumentDefault
+ * attribute, and they must be in namespace directory
  * Plugin\views\argument_default.
  *
  * @ingroup views_plugins

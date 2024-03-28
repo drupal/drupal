@@ -3,18 +3,19 @@
 namespace Drupal\book\Plugin\views\argument_default;
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\NodeStorageInterface;
 use Drupal\node\Plugin\views\argument_default\Node;
+use Drupal\views\Attribute\ViewsArgumentDefault;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default argument plugin to get the current node's top level book.
- *
- * @ViewsArgumentDefault(
- *   id = "top_level_book",
- *   title = @Translation("Top Level Book from current node")
- * )
  */
+#[ViewsArgumentDefault(
+  id: 'top_level_book',
+  title: new TranslatableMarkup('Top Level Book from current node"'),
+)]
 class TopLevelBook extends Node {
 
   /**
