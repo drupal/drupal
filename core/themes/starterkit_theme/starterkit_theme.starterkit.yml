@@ -1,0 +1,7 @@
+ignore:
+  - '/src/StarterKit.php'
+  - '/starterkit_theme.starterkit.yml'
+no_edit: []
+no_rename: []
+info:
+  version: 1.0.0

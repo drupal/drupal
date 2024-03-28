@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Command;
 
 use Composer\Autoload\ClassLoader;
@@ -8,17 +10,19 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParser;
-use Drupal\Core\File\FileSystem;
 use Drupal\Core\Theme\StarterKitInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Glob;
 use Symfony\Component\Process\Process;
-use Twig\Util\TemplateDirIterator;
+use function Symfony\Component\String\u;
 
 /**
  * Generates a new theme based on latest default markup.
@@ -35,25 +39,34 @@ class GenerateTheme extends Command {
   /**
    * {@inheritdoc}
    */
-  public function __construct(string $name = NULL) {
+  public function __construct(string $name = NULL, ?string $root = NULL) {
     parent::__construct($name);
 
-    $this->root = dirname(__DIR__, 5);
+    $this->root = $root ?? dirname(__DIR__, 5);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function configure() {
+  protected function configure(): void {
     $this->setName('generate-theme')
       ->setDescription('Generates a new theme based on latest default markup.')
       ->addArgument('machine-name', InputArgument::REQUIRED, 'The machine name of the generated theme')
       ->addOption('name', NULL, InputOption::VALUE_OPTIONAL, 'A name for the theme.')
-      ->addOption('description', NULL, InputOption::VALUE_OPTIONAL, 'A description of your theme.')
-      ->addOption('path', NULL, InputOption::VALUE_OPTIONAL, 'The path where your theme will be created. Defaults to: themes')
+      ->addOption('description', NULL, InputOption::VALUE_OPTIONAL, 'A description of your theme.', '')
+      ->addOption('path', NULL, InputOption::VALUE_OPTIONAL, 'The path where your theme will be created. Defaults to: themes', 'themes')
       ->addOption('starterkit', NULL, InputOption::VALUE_OPTIONAL, 'The theme to use as the starterkit', 'starterkit_theme')
       ->addUsage('custom_theme --name "Custom Theme" --description "Custom theme generated from a starterkit theme" --path themes')
       ->addUsage('custom_theme --name "Custom Theme" --starterkit mystarterkit');
+  }
+
+  protected function initialize(InputInterface $input, OutputInterface $output): void {
+    if ($input->getOption('name') === NULL) {
+      $input->setOption('name', $input->getArgument('machine-name'));
+    }
+
+    // Change the directory to the Drupal root.
+    chdir($this->root);
   }
 
   /**
@@ -61,278 +74,127 @@ class GenerateTheme extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $io = new SymfonyStyle($input, $output);
+    $filesystem = new Filesystem();
+    $tmpDir = $this->getUniqueTmpDirPath();
 
-    // Change the directory to the Drupal root.
-    chdir($this->root);
-
-    // Path where the generated theme should be placed.
     $destination_theme = $input->getArgument('machine-name');
-    $default_destination = 'themes';
-    $destination = trim($input->getOption('path') ?: $default_destination, '/') . '/' . $destination_theme;
+    $starterkit_id = $input->getOption('starterkit');
+    $theme_label = $input->getOption('name');
 
+    $io->writeln("<info>Generating theme $theme_label ($destination_theme) from $starterkit_id starterkit.</info>");
+
+    $destination = trim($input->getOption('path'), '/') . '/' . $destination_theme;
     if (is_dir($destination)) {
       $io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
       return 1;
     }
 
-    // Source directory for the theme.
-    $source_theme_name = $input->getOption('starterkit');
-    if (!$source_theme = $this->getThemeInfo($source_theme_name)) {
-      $io->getErrorStyle()->error("Theme source theme $source_theme_name cannot be found.");
+    $starterkit = $this->getThemeInfo($starterkit_id);
+    if ($starterkit === NULL) {
+      $io->getErrorStyle()->error("Theme source theme $starterkit_id cannot be found.");
       return 1;
     }
 
-    if (!$this->isStarterkitTheme($source_theme)) {
-      $io->getErrorStyle()->error("Theme source theme $source_theme_name is not a valid starter kit.");
+    $io->writeln("Trying to parse version for $starterkit_id starterkit.", OutputInterface::VERBOSITY_DEBUG);
+    try {
+      $starterkit_version = self::getStarterKitVersion(
+        $starterkit,
+        $io
+      );
+    }
+    catch (\Exception $e) {
+      $io->getErrorStyle()->error($e->getMessage());
+      return 1;
+    }
+    $io->writeln("Using version $starterkit_version for $starterkit_id starterkit.", OutputInterface::VERBOSITY_DEBUG);
+
+    $io->writeln("Loading starterkit config from $starterkit_id.starterkit.yml.", OutputInterface::VERBOSITY_DEBUG);
+    try {
+      $starterkit_config = self::loadStarterKitConfig(
+        $starterkit,
+        $starterkit_version,
+        $theme_label,
+        $input->getOption('description')
+      );
+    }
+    catch (\Exception $e) {
+      $io->getErrorStyle()->error($e->getMessage());
       return 1;
     }
 
-    $source = $source_theme->getPath();
+    $filesystem->mkdir($tmpDir);
 
-    if (!is_dir($source)) {
-      $io->getErrorStyle()->error("Theme could not be generated because the source directory $source does not exist.");
-      return 1;
+    $io->writeln("Copying starterkit to temporary directory for processing.", OutputInterface::VERBOSITY_DEBUG);
+    $mirror_iterator = (new Finder)
+      ->in($starterkit->getPath())
+      ->files()
+      ->notName($starterkit_config['ignore'])
+      ->notPath($starterkit_config['ignore']);
+
+    $filesystem->mirror($starterkit->getPath(), $tmpDir, $mirror_iterator);
+
+    $io->writeln("Modifying and renaming files from starterkit.", OutputInterface::VERBOSITY_DEBUG);
+    $patterns = [
+      'old' => self::namePatterns($starterkit->getName(), $starterkit->info['name']),
+      'new' => self::namePatterns($destination_theme, $theme_label),
+    ];
+    $filesToEdit = self::createFilesFinder($tmpDir)
+      ->contains(array_values($patterns['old']))
+      ->notPath($starterkit_config['no_edit']);
+    foreach ($filesToEdit as $file) {
+      $contents = file_get_contents($file->getRealPath());
+      $contents = str_replace($patterns['old'], $patterns['new'], $contents);
+      file_put_contents($file->getRealPath(), $contents);
     }
 
-    $tmp_dir = $this->getUniqueTmpDirPath();
-    $this->copyRecursive($source, $tmp_dir);
-
-    // Readme is specific to Starterkit, so remove it from the generated theme.
-    $readme_file = "$tmp_dir/README.md";
-    if (!file_put_contents($readme_file, "$destination_theme theme, generated from $source_theme_name. Additional information on generating themes can be found in the [Starterkit documentation](https://www.drupal.org/docs/core-modules-and-themes/core-themes/starterkit-theme).")) {
-      $io->getErrorStyle()->error("The readme could not be rewritten.");
-      return 1;
+    $filesToRename = self::createFilesFinder($tmpDir)
+      ->name(array_map(static fn (string $pattern) => "*$pattern*", array_values($patterns['old'])))
+      ->notPath($starterkit_config['no_rename']);
+    foreach ($filesToRename as $file) {
+      $filepath_segments = explode('/', $file->getRealPath());
+      $filename = array_pop($filepath_segments);
+      $filename = str_replace($patterns['old'], $patterns['new'], $filename);
+      $filepath_segments[] = $filename;
+      $filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
     }
 
-    // Rename files based on the theme machine name.
-    $file_pattern = "/$source_theme_name\.(theme|[^.]+\.yml)/";
-    if ($files = @scandir($tmp_dir)) {
-      foreach ($files as $file) {
-        $location = $tmp_dir . '/' . $file;
-        if (is_dir($location)) {
-          continue;
-        }
-
-        if (preg_match($file_pattern, $file, $matches)) {
-          if (!rename($location, $tmp_dir . '/' . $destination_theme . '.' . $matches[1])) {
-            $io->getErrorStyle()->error("The file $location could not be moved.");
-            return 1;
-          }
-        }
-      }
-    }
-    else {
-      $io->getErrorStyle()->error("Temporary directory $tmp_dir cannot be opened.");
-      return 1;
-    }
-
-    // Info file.
-    $info_file = "$tmp_dir/$destination_theme.info.yml";
-    if (!file_exists($info_file)) {
-      $io->getErrorStyle()->error("The theme info file $info_file could not be read.");
-      return 1;
-    }
-
+    $io->writeln("Updating $destination_theme.info.yml.", OutputInterface::VERBOSITY_DEBUG);
+    $info_file = "$tmpDir/$destination_theme.info.yml";
     $info = Yaml::decode(file_get_contents($info_file));
-    $info['name'] = $input->getOption('name') ?: $destination_theme;
-
-    $info['core_version_requirement'] = '^' . $this->getVersion();
-
-    if (!array_key_exists('version', $info)) {
-      $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme->getName()));
-      if (!$io->askQuestion($confirm_versionless_source_theme)) {
-        return 0;
-      }
-    }
-
-    $source_version = $info['version'] ?? 'unknown-version';
-    if ($source_version === 'VERSION') {
-      $source_version = \Drupal::VERSION;
-    }
-    // A version in the generator string like "9.4.0-dev" is not very helpful.
-    // When this occurs, generate a version string that points to a commit.
-    if (VersionParser::parseStability($source_version) === 'dev') {
-      $git_check = Process::fromShellCommandline('git --help');
-      $git_check->run();
-      if ($git_check->getExitCode()) {
-        $io->error(sprintf('The source theme %s has a development version number (%s). Determining a specific commit is not possible because git is not installed. Either install git or use a tagged release to generate a theme.', $source_theme->getName(), $source_version));
-        return 1;
-      }
-
-      // Get the git commit for the source theme.
-      $git_get_commit = Process::fromShellCommandline("git rev-list --max-count=1 --abbrev-commit HEAD -C $source");
-      $git_get_commit->run();
-      if ($git_get_commit->getOutput() === '') {
-        $confirm_packaged_dev_release = new ConfirmationQuestion(sprintf('The source theme %s has a development version number (%s). Because it is not a git checkout, a specific commit could not be identified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme->getName(), $source_version));
-        if (!$io->askQuestion($confirm_packaged_dev_release)) {
-          return 0;
-        }
-        $source_version .= '#unknown-commit';
-      }
-      else {
-        $source_version .= '#' . trim($git_get_commit->getOutput());
-      }
-    }
-    $info['generator'] = "$source_theme_name:$source_version";
-
-    if ($description = $input->getOption('description')) {
-      $info['description'] = $description;
-    }
-    else {
-      unset($info['description']);
-    }
-
-    // Replace references to libraries.
-    if (isset($info['libraries'])) {
-      $info['libraries'] = preg_replace("/$source_theme_name(\/.*)/", "$destination_theme$1", $info['libraries']);
-    }
-    if (isset($info['libraries-extend'])) {
-      foreach ($info['libraries-extend'] as $key => $value) {
-        $info['libraries-extend'][$key] = preg_replace("/$source_theme_name(\/.*)/", "$destination_theme$1", $info['libraries-extend'][$key]);
-      }
-    }
-    if (isset($info['libraries-override'])) {
-      foreach ($info['libraries-override'] as $key => $value) {
-        if (isset($info['libraries-override'][$key]['dependencies'])) {
-          $info['libraries-override'][$key]['dependencies'] = preg_replace("/$source_theme_name(\/.*)/", "$destination_theme$1", $info['libraries-override'][$key]['dependencies']);
-        }
-      }
-    }
-
-    if (!file_put_contents($info_file, Yaml::encode($info))) {
-      $io->getErrorStyle()->error("The theme info file $info_file could not be written.");
-      return 1;
-    }
-
-    // Replace references to libraries in libraries.yml file.
-    $libraries_file = "$tmp_dir/$destination_theme.libraries.yml";
-    if (file_exists($libraries_file)) {
-      $libraries = Yaml::decode(file_get_contents($libraries_file));
-      foreach ($libraries as $key => $value) {
-        if (isset($libraries[$key]['dependencies'])) {
-          $libraries[$key]['dependencies'] = preg_replace("/$source_theme_name(\/.*)/", "$destination_theme$1", $libraries[$key]['dependencies']);
-        }
-      }
-
-      if (!file_put_contents($libraries_file, Yaml::encode($libraries))) {
-        $io->getErrorStyle()->error("The libraries file $libraries_file could not be written.");
-        return 1;
-      }
-    }
-
-    // Rename hooks.
-    $theme_file = "$tmp_dir/$destination_theme.theme";
-    if (file_exists($theme_file)) {
-      if (!file_put_contents($theme_file, preg_replace("/(function )($source_theme_name)(_.*)/", "$1$destination_theme$3", file_get_contents($theme_file)))) {
-        $io->getErrorStyle()->error("The theme file $theme_file could not be written.");
-        return 1;
-      }
-    }
-
-    // Rename references to libraries in templates.
-    $iterator = new TemplateDirIterator(new \RegexIterator(
-      new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator($tmp_dir), \RecursiveIteratorIterator::LEAVES_ONLY
-      ), '/' . preg_quote('.html.twig') . '$/'
-    ));
-
-    foreach ($iterator as $template_file => $contents) {
-      $new_template_content = preg_replace("/(attach_library\(['\")])$source_theme_name(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
-      if (!file_put_contents($template_file, $new_template_content)) {
-        $io->getErrorStyle()->error("The template file $template_file could not be written.");
-        return 1;
-      }
-    }
+    $info = array_filter(
+      array_merge($info, $starterkit_config['info']),
+      static fn (mixed $value) => $value !== NULL,
+    );
+    // Ensure the generated theme is not hidden.
+    unset($info['hidden']);
+    file_put_contents($info_file, Yaml::encode($info));
 
     $loader = new ClassLoader();
-    $loader->addPsr4("Drupal\\$source_theme_name\\", "$source/src");
+    $loader->addPsr4("Drupal\\{$starterkit->getName()}\\", "{$starterkit->getPath()}/src");
     $loader->register();
 
-    $generator_classname = "Drupal\\$source_theme_name\\StarterKit";
+    $generator_classname = "Drupal\\{$starterkit->getName()}\\StarterKit";
     if (class_exists($generator_classname)) {
       if (is_a($generator_classname, StarterKitInterface::class, TRUE)) {
-        $generator_classname::postProcess($tmp_dir, $destination_theme, $info['name']);
+        $io->writeln("Running post processing.", OutputInterface::VERBOSITY_DEBUG);
+        $generator_classname::postProcess($tmpDir, $destination_theme, $theme_label);
       }
       else {
         $io->getErrorStyle()->error("The $generator_classname does not implement \Drupal\Core\Theme\StarterKitInterface and cannot perform post-processing.");
         return 1;
       }
     }
-
-    if (!@rename($tmp_dir, $destination)) {
-      // If rename fails, copy the files to the destination directory. This is
-      // expected to happen when the tmp directory is on a different file
-      // system.
-      $this->copyRecursive($tmp_dir, $destination);
-
-      // Renaming would not have left anything behind. Ensure that is still the
-      // case.
-      $this->rmRecursive($tmp_dir);
+    else {
+      $io->writeln("Skipping post processing, $generator_classname not defined.", OutputInterface::VERBOSITY_DEBUG);
     }
 
-    $output->writeln(sprintf('Theme generated successfully to %s', $destination));
+    // Move altered theme to final destination.
+    $io->writeln("Copying $destination_theme to $destination.", OutputInterface::VERBOSITY_DEBUG);
+    $filesystem->mirror($tmpDir, $destination);
+
+    $io->writeln(sprintf('Theme generated successfully to %s', $destination));
 
     return 0;
-  }
-
-  /**
-   * Removes a directory recursively.
-   *
-   * @param string $dir
-   *   A directory to be removed.
-   */
-  private function rmRecursive(string $dir): void {
-    $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
-    foreach ($files as $file) {
-      is_dir($file) ? rmdir($file) : unlink($file);
-    }
-  }
-
-  /**
-   * Copies files recursively.
-   *
-   * @param string $src
-   *   A file or directory to be copied.
-   * @param string $dest
-   *   Destination directory where the directory or file should be copied.
-   *
-   * @throws \RuntimeException
-   *   Exception thrown if copying failed.
-   */
-  private function copyRecursive($src, $dest): void {
-    // Copy all subdirectories and files.
-    if (is_dir($src)) {
-      if (!mkdir($dest, FileSystem::CHMOD_DIRECTORY, FALSE)) {
-        throw new \RuntimeException("Directory $dest could not be created");
-      }
-      $handle = opendir($src);
-      while ($file = readdir($handle)) {
-        if ($file != "." && $file != "..") {
-          $this->copyRecursive("$src/$file", "$dest/$file");
-        }
-      }
-      closedir($handle);
-    }
-    elseif (is_link($src)) {
-      symlink(readlink($src), $dest);
-    }
-    elseif (!copy($src, $dest)) {
-      throw new \RuntimeException("File $src could not be copied to $dest");
-    }
-
-    // Set permissions for the directory or file.
-    if (!is_link($dest)) {
-      if (is_dir($dest)) {
-        $mode = FileSystem::CHMOD_DIRECTORY;
-      }
-      else {
-        $mode = FileSystem::CHMOD_FILE;
-      }
-
-      if (!chmod($dest, $mode)) {
-        throw new \RuntimeException("The file permissions could not be set on $src");
-      }
-    }
   }
 
   /**
@@ -347,44 +209,151 @@ class GenerateTheme extends Command {
   /**
    * Gets theme info using the theme name.
    *
-   * @param string $theme
+   * @param string $theme_name
    *   The machine name of the theme.
    *
    * @return \Drupal\Core\Extension\Extension|null
    */
-  private function getThemeInfo(string $theme): ? Extension {
+  private function getThemeInfo(string $theme_name): ? Extension {
     $extension_discovery = new ExtensionDiscovery($this->root, FALSE, []);
     $themes = $extension_discovery->scan('theme');
 
-    if (!isset($themes[$theme])) {
-      return NULL;
+    $theme = $themes[$theme_name] ?? NULL;
+    if ($theme !== NULL) {
+      $theme->info = (new InfoParser($this->root))->parse($theme->getPathname());
     }
 
-    return $themes[$theme];
+    return $theme;
   }
 
-  /**
-   * Checks if the theme is a starterkit theme.
-   *
-   * @param \Drupal\Core\Extension\Extension $theme
-   *   The theme extension.
-   *
-   * @return bool
-   */
-  private function isStarterkitTheme(Extension $theme): bool {
-    $info_parser = new InfoParser($this->root);
-    $info = $info_parser->parse($theme->getPathname());
-
-    return $info['starterkit'] ?? FALSE === TRUE;
+  private static function createFilesFinder(string $dir): Finder {
+    return (new Finder)->in($dir)->files();
   }
 
-  /**
-   * Gets the current Drupal major version.
-   *
-   * @return string
-   */
-  private function getVersion(): string {
-    return explode('.', \Drupal::VERSION)[0];
+  private static function loadStarterKitConfig(
+    Extension $theme,
+    string $version,
+    string $name,
+    string $description
+  ): array {
+    $starterkit_config_file = $theme->getPath() . '/' . $theme->getName() . '.starterkit.yml';
+    if (!file_exists($starterkit_config_file)) {
+      throw new \RuntimeException("Theme source theme {$theme->getName()} is not a valid starter kit.");
+    }
+    $starterkit_config_defaults = [
+      'info' => [
+        'name' => $name,
+        'description' => $description,
+        'core_version_requirement' => '^' . explode('.', \Drupal::VERSION)[0],
+        'version' => '1.0.0',
+        'generator' => "{$theme->getName()}:$version",
+      ],
+      'ignore' => [
+        '/src/StarterKit.php',
+        '/*.starterkit.yml',
+      ],
+      'no_edit' => [],
+      'no_rename' => [],
+    ];
+    $starterkit_config = Yaml::decode(file_get_contents($starterkit_config_file));
+    if (!is_array($starterkit_config)) {
+      throw new \RuntimeException('Starterkit config is was not able to be parsed.');
+    }
+    if (!isset($starterkit_config['info'])) {
+      $starterkit_config['info'] = [];
+    }
+    $starterkit_config['info'] = array_merge($starterkit_config_defaults['info'], $starterkit_config['info']);
+
+    foreach (['ignore', 'no_edit', 'no_rename'] as $key) {
+      if (!isset($starterkit_config[$key])) {
+        $starterkit_config[$key] = $starterkit_config_defaults[$key];
+      }
+      if (!is_array($starterkit_config[$key])) {
+        throw new \RuntimeException("$key in starterkit.yml must be an array");
+      }
+      $starterkit_config[$key] = array_map(
+        static fn (string $path) => Glob::toRegex(trim($path, '/')),
+        $starterkit_config[$key]
+      );
+
+      if (count($starterkit_config[$key]) > 0) {
+        $files = self::createFilesFinder($theme->getPath())->path($starterkit_config[$key]);
+        $starterkit_config[$key] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
+        if (count($starterkit_config[$key]) === 0) {
+          throw new \RuntimeException("Paths were defined `$key` but no files found.");
+        }
+      }
+    }
+
+    return $starterkit_config;
+  }
+
+  private static function getStarterKitVersion(
+    Extension $theme,
+    SymfonyStyle $io
+  ): string {
+    $source_version = $theme->info['version'] ?? '';
+    if ($source_version === '') {
+      $confirm = new ConfirmationQuestion(sprintf(
+        'The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?',
+        $theme->getName()
+      ));
+      if (!$io->askQuestion($confirm)) {
+        throw new \RuntimeException('source version could not be determined');
+      }
+      $source_version = 'unknown-version';
+    }
+    if ($source_version === 'VERSION') {
+      $source_version = \Drupal::VERSION;
+    }
+
+    // A version in the generator string like "9.4.0-dev" is not very helpful.
+    // When this occurs, generate a version string that points to a commit.
+    if (VersionParser::parseStability($source_version) === 'dev') {
+      $git_check = Process::fromShellCommandline('git --help');
+      $git_check->run();
+      if ($git_check->getExitCode()) {
+        throw new \RuntimeException(
+          sprintf(
+            'The source theme %s has a development version number (%s). Determining a specific commit is not possible because git is not installed. Either install git or use a tagged release to generate a theme.',
+            $theme->getName(),
+            $source_version
+          )
+        );
+      }
+
+      // Get the git commit for the source theme.
+      $git_get_commit = Process::fromShellCommandline("git rev-list --max-count=1 --abbrev-commit HEAD -C {$theme->getPath()}");
+      $git_get_commit->run();
+      if (!$git_get_commit->isSuccessful() || $git_get_commit->getOutput() === '') {
+        $confirm = new ConfirmationQuestion(sprintf(
+          'The source theme %s has a development version number (%s). Because it is not a git checkout, a specific commit could not be identified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?',
+          $theme->getName(),
+          $source_version
+        ));
+        if (!$io->askQuestion($confirm)) {
+          throw new \RuntimeException('source version could not be determined');
+        }
+        $source_version .= '#unknown-commit';
+      }
+      else {
+        $source_version .= '#' . trim($git_get_commit->getOutput());
+      }
+    }
+    return $source_version;
+  }
+
+  private static function namePatterns(string $machine_name, string $label): array {
+    return [
+      'machine_name' => $machine_name,
+      'machine_name_camel' => u($machine_name)->camel(),
+      'machine_name_pascal' => u($machine_name)->camel()->title(),
+      'machine_name_title' => u($machine_name)->title(),
+      'label' => $label,
+      'label_camel' => u($label)->camel(),
+      'label_pascal' => u($label)->camel()->title(),
+      'label_title' => u($label)->title(),
+    ];
   }
 
 }
