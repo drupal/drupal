@@ -3,10 +3,16 @@
 text.settings:
   type: config_object
   label: 'Text settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     default_summary_length:
       type: integer
       label: 'Default summary length'
+      constraints:
+        NotNull: [ ]
+        Range:
+          min: 1
 
 field.storage_settings.text:
   type: mapping
