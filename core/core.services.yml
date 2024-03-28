@@ -622,6 +622,8 @@ services:
   module_handler:
     class: Drupal\Core\Extension\ModuleHandler
     arguments: ['%app.root%', '%container.modules%', '@cache.bootstrap']
+    tags:
+      - { name: needs_destruction }
   Drupal\Core\Extension\ModuleHandlerInterface: '@module_handler'
   module_installer:
     class: Drupal\Core\Extension\ModuleInstaller
@@ -1393,9 +1395,6 @@ services:
     autowire: true
   redirect_leading_slashes_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectLeadingSlashesSubscriber
-  request_close_subscriber:
-    class: Drupal\Core\EventSubscriber\RequestCloseSubscriber
-    arguments: ['@module_handler']
   config_import_subscriber:
     class: Drupal\Core\EventSubscriber\ConfigImportSubscriber
     tags:
