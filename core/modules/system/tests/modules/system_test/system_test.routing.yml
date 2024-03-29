@@ -223,6 +223,30 @@ system_test.copy_field_value:
   requirements:
     _access: 'TRUE'
 
+router_test.cacheable_redirect:
+  path: '/system-test/redirect/cacheable/{status_code}'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithCacheableRedirectResponse'
+  requirements:
+    _access: 'TRUE'
+    status_code: 201|301|302|303|307|308
+
+router_test.local_redirect:
+  path: '/system-test/redirect/local/{status_code}'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithLocalRedirectResponse'
+  requirements:
+    _access: 'TRUE'
+    status_code: 201|301|302|303|307|308
+
+router_test.trusted_redirect:
+  path: '/system-test/redirect/trusted/{status_code}'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithTrustedRedirectResponse'
+  requirements:
+    _access: 'TRUE'
+    status_code: 201|301|302|303|307|308
+
 system_test.install_profile:
   path: '/system-test/get-install-profile'
   defaults:

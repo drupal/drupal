@@ -34,11 +34,8 @@ class SecuredRedirectResponseTest extends TestCase {
     $this->assertEquals('/magic_redirect_url', $secureRedirect->getTargetUrl());
     $this->assertEquals(301, $secureRedirect->getStatusCode());
     // We pull the headers from the original redirect because there are default headers applied.
-    $headers1 = $redirect->headers->allPreserveCase();
-    $headers2 = $secureRedirect->headers->allPreserveCase();
-    // We unset cache headers so we don't test arcane Symfony weirdness.
-    // https://github.com/symfony/symfony/issues/16171
-    unset($headers1['Cache-Control'], $headers2['Cache-Control']);
+    $headers1 = $redirect->headers->all();
+    $headers2 = $secureRedirect->headers->all();
     $this->assertEquals($headers1, $headers2);
     $this->assertEquals('2.0', $secureRedirect->getProtocolVersion());
     $this->assertEquals('ibm-943_P14A-2000', $secureRedirect->getCharset());
