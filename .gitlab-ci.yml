@@ -225,7 +225,7 @@ default:
 'PHP 8.3 SQLite 3':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.2"
+    _TARGET_PHP: "8.3"
     _TARGET_DB: "sqlite-3"
 
 # Jobs running on commits.
