@@ -25,6 +25,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  * synchronizations.
  *
  * @group EventDispatcher
+ * @group legacy
  */
 class ContainerAwareEventDispatcherTest extends TestCase {
 
