@@ -411,4 +411,12 @@ class CacheCollectorTest extends UnitTestCase {
     $this->assertEquals(2, $this->collector->getCacheMisses());
   }
 
+  /**
+   * @group legacy
+   */
+  public function testDeprecatedNormalizeLockName() {
+    $this->expectDeprecation('Drupal\Core\Cache\CacheCollector::normalizeLockName is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. The lock service is responsible for normalizing the lock name. See https://www.drupal.org/node/3436961');
+    $this->collector->normalizeLockName('lock');
+  }
+
 }

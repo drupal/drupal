@@ -66,4 +66,11 @@ class CacheCollectorHelper extends CacheCollector {
     return $this->cacheMisses;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function normalizeLockName($cid) {
+    return parent::normalizeLockName($cid);
+  }
+
 }

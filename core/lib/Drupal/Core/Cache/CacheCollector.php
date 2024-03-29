@@ -229,7 +229,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
 
     // Lock cache writes to help avoid stampedes.
     $cid = $this->getCid();
-    $lock_name = $this->normalizeLockName($cid . ':' . __CLASS__);
+    $lock_name = $cid . ':' . __CLASS__;
     if (!$lock || $this->lock->acquire($lock_name)) {
       // Set and delete operations invalidate the cache item. Try to also load
       // an eventually invalidated cache entry, only update an invalidated cache
@@ -283,6 +283,8 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    *   An ASCII-encoded cache ID that is at most 255 characters long.
    */
   protected function normalizeLockName($cid) {
+    @trigger_error(sprintf('%s is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. The lock service is responsible for normalizing the lock name. See https://www.drupal.org/node/3436961', __METHOD__), E_USER_DEPRECATED);
+
     // Nothing to do if the ID is a US ASCII string of 255 characters or less.
     $cid_is_ascii = mb_check_encoding($cid, 'ASCII');
     if (strlen($cid) <= 255 && $cid_is_ascii) {
