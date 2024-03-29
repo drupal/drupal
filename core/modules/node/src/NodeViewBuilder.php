@@ -119,7 +119,9 @@ class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterf
    *   A view mode identifier.
    *
    * @return array
-   *   An array that can be processed by drupal_pre_render_links().
+   *   An array that can be processed by Link::preRenderLinks().
+   *
+   * @see \Drupal\Core\Render\Element\Link::preRenderLinks()
    */
   protected static function buildLinks(NodeInterface $entity, $view_mode) {
     $links = [];
