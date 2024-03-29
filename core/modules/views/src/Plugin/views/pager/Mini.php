@@ -2,19 +2,21 @@
 
 namespace Drupal\views\Plugin\views\pager;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsPager;
+
 /**
  * The plugin to handle mini pager.
  *
  * @ingroup views_pager_plugins
- *
- * @ViewsPager(
- *   id = "mini",
- *   title = @Translation("Paged output, mini pager"),
- *   short_title = @Translation("Mini"),
- *   help = @Translation("A simple pager containing previous and next links."),
- *   theme = "views_mini_pager"
- * )
  */
+#[ViewsPager(
+  id: "mini",
+  title: new TranslatableMarkup("Paged output, mini pager"),
+  short_title: new TranslatableMarkup("Mini"),
+  help: new TranslatableMarkup("A simple pager containing previous and next links."),
+  theme: "views_mini_pager",
+)]
 class Mini extends SqlBase {
 
   /**
@@ -47,7 +49,7 @@ class Mini extends SqlBase {
   public function query() {
     parent::query();
 
-    // Only modify the query if we don't want to do a total row count
+    // Only modify the query if we don't want to do a total row count.
     if (!$this->view->get_total_rows) {
       // Don't query for the next page if we have a pager that has a limited
       // amount of pages.
@@ -72,7 +74,7 @@ class Mini extends SqlBase {
    * {@inheritdoc}
    */
   public function postExecute(&$result) {
-    // Only modify the result if we didn't do a total row count
+    // Only modify the result if we didn't do a total row count.
     if (!$this->view->get_total_rows) {
       $this->total_items = $this->getCurrentPage() * $this->getItemsPerPage() + count($result);
       // query() checks if we need a next link by setting limit 1 record past

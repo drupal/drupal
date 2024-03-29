@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\PluginBase;
  * and setting up the pager.
  *
  * Pager plugins extend \Drupal\views\Plugin\views\pager\PagerPluginBase. They
- * must be annotated with \Drupal\views\Annotation\ViewsPager annotation,
+ * must be attributed with \Drupal\views\Annotation\ViewsPager attribute,
  * and they must be in namespace directory Plugin\views\pager.
  *
  * @ingroup views_plugins
