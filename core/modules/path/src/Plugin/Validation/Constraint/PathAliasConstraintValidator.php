@@ -42,7 +42,7 @@ class PathAliasConstraintValidator extends ConstraintValidator implements Contai
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     $entity = !empty($value->getParent()) ? $value->getEntity() : NULL;
 
     if ($entity && !$entity->isNew() && !$entity->isDefaultRevision()) {

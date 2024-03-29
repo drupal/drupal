@@ -13,7 +13,7 @@ class FieldWidgetConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($field_item, Constraint $constraint) {
+  public function validate($field_item, Constraint $constraint): void {
     $this->context->addViolation($constraint->message);
   }
 

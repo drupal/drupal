@@ -43,7 +43,7 @@ class TaxonomyTermHierarchyConstraintValidator extends ConstraintValidator imple
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($entity, Constraint $constraint): void {
     $term_storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
     assert($term_storage instanceof TermStorageInterface);
 

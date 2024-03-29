@@ -17,7 +17,7 @@ class PluginExistsConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $plugin_id, Constraint $constraint) {
+  public function validate(mixed $plugin_id, Constraint $constraint): void {
     assert($constraint instanceof PluginExistsConstraint);
 
     if ($plugin_id === NULL) {

@@ -37,7 +37,7 @@ class EntityBundleExistsConstraintValidator extends ConstraintValidator implemen
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     assert($constraint instanceof EntityBundleExistsConstraint);
 
     if (!is_string($value)) {

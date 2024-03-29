@@ -67,7 +67,7 @@ class CKEditor5MediaAndFilterSettingsInSyncConstraintValidator extends Constrain
    * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
    *   Thrown when the given constraint is not supported by this validator.
    */
-  public function validate($toolbar_item, Constraint $constraint) {
+  public function validate($toolbar_item, Constraint $constraint): void {
     if (!$constraint instanceof CKEditor5MediaAndFilterSettingsInSyncConstraint) {
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\CKEditor5MediaAndFilterSettingsInSync');
     }

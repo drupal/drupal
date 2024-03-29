@@ -40,7 +40,7 @@ class EntityWorkspaceConflictConstraintValidator extends ConstraintValidator imp
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($entity, Constraint $constraint): void {
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     if (isset($entity) && !$entity->isNew()) {
       $active_workspace = $this->workspaceManager->getActiveWorkspace();

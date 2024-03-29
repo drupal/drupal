@@ -41,7 +41,7 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($entity, Constraint $constraint): void {
     $author_name = $entity->name->value;
     $owner_id = (int) $entity->uid->target_id;
 

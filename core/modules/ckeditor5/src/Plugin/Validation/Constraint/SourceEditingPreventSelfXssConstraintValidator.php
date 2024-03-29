@@ -24,7 +24,7 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
    * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
    *   Thrown when the given constraint is not supported by this validator.
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if (!$constraint instanceof SourceEditingPreventSelfXssConstraint) {
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\SourceEditingPreventSelfXssConstraint');
     }

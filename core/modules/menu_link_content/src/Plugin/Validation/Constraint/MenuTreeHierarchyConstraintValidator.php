@@ -42,7 +42,7 @@ class MenuTreeHierarchyConstraintValidator extends ConstraintValidator implement
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($entity, Constraint $constraint): void {
     if ($entity && !$entity->isNew() && !$entity->isDefaultRevision()) {
       $original = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
 

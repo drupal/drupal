@@ -42,7 +42,7 @@ class BookOutlineConstraintValidator extends ConstraintValidator implements Cont
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($entity, Constraint $constraint): void {
     if (isset($entity) && !$entity->isNew() && !$entity->isDefaultRevision()) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $original */
       $original = $this->bookManager->loadBookLink($entity->id(), FALSE) ?: [

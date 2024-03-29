@@ -13,7 +13,7 @@ class MenuSettingsConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($entity, Constraint $constraint): void {
     if (isset($entity) && !$entity->isNew() && !$entity->isDefaultRevision()) {
       $defaults = menu_ui_get_menu_link_defaults($entity);
 

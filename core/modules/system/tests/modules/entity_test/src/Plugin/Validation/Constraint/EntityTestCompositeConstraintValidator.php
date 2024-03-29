@@ -13,7 +13,7 @@ class EntityTestCompositeConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($entity, Constraint $constraint): void {
 
     if ($entity->name->value === 'test' && $entity->type->value === 'test2') {
       $this->context->buildViolation($constraint->message)

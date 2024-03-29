@@ -42,7 +42,7 @@ class DeletedWorkspaceConstraintValidator extends ConstraintValidator implements
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     /** @var \Drupal\Core\Field\FieldItemListInterface $value */
     // This constraint applies only to newly created workspace entities.
     if (!isset($value) || !$value->getEntity()->isNew()) {

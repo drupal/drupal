@@ -56,7 +56,7 @@ class ExtensionExistsConstraintValidator extends ConstraintValidator implements 
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $extension_name, Constraint $constraint) {
+  public function validate(mixed $extension_name, Constraint $constraint): void {
     $variables = ['@name' => $extension_name];
 
     switch ($constraint->type) {

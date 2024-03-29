@@ -14,7 +14,7 @@ class RestTestConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if ($value instanceof FieldItemListInterface) {
       $value = $value->getValue();
       if (!empty($value[0]['value']) && $value[0]['value'] === 'ALWAYS_FAIL') {

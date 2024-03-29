@@ -55,7 +55,7 @@ class ValidReferenceConstraintValidator extends ConstraintValidator implements C
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     /** @var \Drupal\Core\Field\FieldItemListInterface $value */
     /** @var ValidReferenceConstraint $constraint */
     if (!isset($value)) {

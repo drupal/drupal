@@ -67,7 +67,7 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
    * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
    *   Thrown when the given constraint is not supported by this validator.
    */
-  public function validate($element, Constraint $constraint) {
+  public function validate($element, Constraint $constraint): void {
     if (!$constraint instanceof StyleSensibleElementConstraint) {
       throw new UnexpectedTypeException($constraint, StyleSensibleElementConstraint::class);
     }

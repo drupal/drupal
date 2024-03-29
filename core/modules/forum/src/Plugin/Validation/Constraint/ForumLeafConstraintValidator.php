@@ -13,10 +13,10 @@ class ForumLeafConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($items, Constraint $constraint) {
+  public function validate($items, Constraint $constraint): void {
     $item = $items->first();
     if (!isset($item)) {
-      return NULL;
+      return;
     }
 
     // Verify that a term has been selected.

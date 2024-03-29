@@ -21,7 +21,7 @@ class CKEditor5ElementConstraintValidator extends ConstraintValidator {
    * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
    *   Thrown when the given constraint is not supported by this validator.
    */
-  public function validate($element, $constraint) {
+  public function validate($element, $constraint): void {
     if (!$constraint instanceof CKEditor5ElementConstraint) {
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\CKEditor5Element');
     }

@@ -19,7 +19,7 @@ class ComplexDataConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($data, Constraint $constraint) {
+  public function validate($data, Constraint $constraint): void {
 
     // If un-wrapped data has been passed, fetch the typed data object first.
     if (!$data instanceof TypedDataInterface) {

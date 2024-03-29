@@ -14,7 +14,7 @@ class UserNameConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($items, Constraint $constraint) {
+  public function validate($items, Constraint $constraint): void {
     if (!isset($items) || !$items->value) {
       $this->context->addViolation($constraint->emptyMessage);
       return;

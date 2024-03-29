@@ -14,7 +14,7 @@ class BlockContentEntityChangedConstraintValidator extends EntityChangedConstrai
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint) {
+  public function validate($entity, Constraint $constraint): void {
     // This prevents saving an update to the block via a host entity's form if
     // the host entity has had other changes made via the API instead of the
     // entity form, such as a revision revert. This is safe, for example, in the

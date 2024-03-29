@@ -73,7 +73,7 @@ class OEmbedResourceConstraintValidator extends ConstraintValidator implements C
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     /** @var \Drupal\media\MediaInterface $media */
     $media = $value->getEntity();
     /** @var \Drupal\media\Plugin\media\Source\OEmbedInterface $source */
