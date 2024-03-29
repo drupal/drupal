@@ -4,6 +4,7 @@ namespace Drupal\Tests\block_content\Kernel;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\block_content\Plugin\Derivative\BlockContent as DerivativeBlockContent;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -20,12 +21,41 @@ class BlockContentDeriverTest extends KernelTestBase {
   protected static $modules = ['block', 'block_content', 'system', 'user'];
 
   /**
+   * The definition array of the base plugin.
+   *
+   * @var array
+   */
+  protected $baseDefinition = [
+    'id' => 'block_content',
+    'provider' => 'block_content',
+    'class' => '\Drupal\block_content\Plugin\Block\BlockContentBlock',
+    'deriver' => '\Drupal\block_content\Plugin\Derivative\BlockContent',
+  ];
+
+  /**
+   * The block content storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $blockContentStorage;
+
+  /**
+   * The tested block content derivative class.
+   *
+   * @var \Drupal\block_content\Plugin\Derivative\BlockContent
+   */
+  protected $blockContentDerivative;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('block_content');
+
+    $this->blockContentStorage = \Drupal::entityTypeManager()->getStorage('block_content');
+    $this->blockContentDerivative = new DerivativeBlockContent($this->blockContentStorage);
   }
 
   /**
@@ -60,6 +90,33 @@ class BlockContentDeriverTest extends KernelTestBase {
     // Ensure the non-reusable block content is not provided a derivative block
     // plugin.
     $this->assertFalse($block_manager->hasDefinition($plugin_id));
+  }
+
+  /**
+   * Tests the admin labels of derivative definitions.
+   */
+  public function testGetDerivativeDefinitionsAdminLabels(): void {
+    $blockContentType = BlockContentType::create([
+      'id' => 'basic',
+      'label' => 'Basic Block',
+    ]);
+    $blockContentType->save();
+    $blockContentWithLabel = BlockContent::create([
+      'info' => 'Basic prototype',
+      'type' => 'basic',
+    ]);
+    $blockContentWithLabel->save();
+    $blockContentNoLabel = BlockContent::create([
+      'type' => 'basic',
+    ]);
+    $blockContentNoLabel->save();
+
+    $blockPluginManager = \Drupal::service('plugin.manager.block');
+    $plugin = $blockPluginManager->createInstance('block_content:' . $blockContentWithLabel->uuid());
+    $this->assertEquals('Basic prototype', $plugin->getPluginDefinition()['admin_label']);
+
+    $plugin = $blockPluginManager->createInstance('block_content:' . $blockContentNoLabel->uuid());
+    $this->assertEquals('Basic Block: ' . $blockContentNoLabel->id(), $plugin->getPluginDefinition()['admin_label']);
   }
 
 }
