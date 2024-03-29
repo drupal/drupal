@@ -12,13 +12,6 @@ namespace Drupal\Tests\update\Functional;
 class FileTransferAuthorizeFormTest extends UpdateUploaderTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['update', 'update_test'];
-
-  /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
