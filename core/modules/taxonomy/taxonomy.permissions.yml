@@ -14,5 +14,8 @@ delete all taxonomy revisions:
 view all taxonomy revisions:
   title: 'View all term revisions'
 
+view vocabulary labels:
+  title: 'View vocabulary labels'
+
 permission_callbacks:
   - Drupal\taxonomy\TaxonomyPermissions::permissions
