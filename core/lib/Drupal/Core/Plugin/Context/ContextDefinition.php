@@ -11,10 +11,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
  */
 class ContextDefinition implements ContextDefinitionInterface {
 
-  use DependencySerializationTrait {
-    __sleep as traitSleep;
-  }
-
+  use DependencySerializationTrait;
   use TypedDataTrait;
 
   /**
