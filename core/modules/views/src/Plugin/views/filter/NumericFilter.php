@@ -420,15 +420,18 @@ class NumericFilter extends FilterPluginBase {
       return TRUE;
     }
 
-    // rewrite the input value so that it's in the correct format so that
+    // Rewrite the input value so that it's in the correct format so that
     // the parent gets the right data.
-    if (!empty($this->options['expose']['identifier'])) {
-      $value = &$input[$this->options['expose']['identifier']];
-      if (!is_array($value)) {
-        $value = [
-          'value' => $value,
-        ];
-      }
+    $key = $this->isAGroup() ? 'group_info' : 'expose';
+    if (empty($this->options[$key]['identifier'])) {
+      // Invalid identifier configuration. Value can't be resolved.
+      return FALSE;
+    }
+    $value = &$input[$this->options[$key]['identifier']];
+    if (!is_array($value)) {
+      $value = [
+        'value' => $value,
+      ];
     }
 
     $rc = parent::acceptExposedInput($input);
