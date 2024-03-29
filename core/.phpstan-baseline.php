@@ -2054,11 +2054,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/filter/NumericFilter.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$value might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/src/Plugin/views/filter/NumericFilter.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$source might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/filter/StringFilter.php',
