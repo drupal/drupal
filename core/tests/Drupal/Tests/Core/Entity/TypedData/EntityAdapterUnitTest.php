@@ -12,8 +12,10 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\Exception\MissingDataException;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
+use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Language\Language;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\Plugin\DataType\EntityAdapter
@@ -31,10 +33,8 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * The content entity used for testing.
-   *
-   * @var \Drupal\Core\Entity\ContentEntityBase|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $entity;
+  protected ContentEntityBaseMockableClass&MockObject $entity;
 
   /**
    * The content entity adapter under test.
@@ -215,7 +215,10 @@ class EntityAdapterUnitTest extends UnitTestCase {
       ->with($this->entityTypeId, $this->bundle)
       ->willReturn($this->fieldDefinitions);
 
-    $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Entity\ContentEntityBase', [$values, $this->entityTypeId, $this->bundle]);
+    $this->entity = $this->getMockBuilder(ContentEntityBaseMockableClass::class)
+      ->setConstructorArgs([$values, $this->entityTypeId, $this->bundle])
+      ->onlyMethods([])
+      ->getMock();
 
     $this->entityAdapter = EntityAdapter::createFromEntity($this->entity);
   }

@@ -10,6 +10,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 
@@ -81,7 +82,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
 
     // Set the mock entity. We need to use ContentEntityBase for mocking due to
     // issues with phpunit and multiple interfaces.
-    $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
+    $entity = $this->getMockBuilder(ContentEntityBaseMockableClass::class)
       ->disableOriginalConstructor()
       ->getMock();
     $entity->expects($this->once())

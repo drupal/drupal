@@ -16,6 +16,7 @@ use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\Language;
+use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
@@ -1071,10 +1072,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->willReturn($language);
 
-    $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
+    $entity = $this->getMockBuilder(ContentEntityBaseMockableClass::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['id'])
-      ->getMockForAbstractClass();
+      ->getMock();
 
     $this->entityType->expects($this->atLeastOnce())
       ->method('id')
