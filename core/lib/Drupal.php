@@ -113,7 +113,7 @@ class Drupal {
    * - Once in the error message printed to the user immediately after.
    * Remember to update both whenever this constant is updated.
    */
-  const MINIMUM_PHP = '8.1.0';
+  const MINIMUM_PHP = '8.3.0';
 
   /**
    * Minimum recommended value of PHP memory_limit.
@@ -131,7 +131,7 @@ class Drupal {
    * message, but Drupal can still be installed. Used for (e.g.) PHP versions
    * that have reached their EOL or will in the near future.
    */
-  const RECOMMENDED_PHP = '8.2.0';
+  const RECOMMENDED_PHP = '8.3.0';
 
   /**
    * The currently active container object, or NULL if not initialized yet.

@@ -85,7 +85,6 @@
         "symfony/dom-crawler": "v6.4.0",
         "symfony/lock": "v6.4.0",
         "symfony/phpunit-bridge": "v6.4.1",
-        "symfony/polyfill-php82": "v1.28.0",
         "theseer/tokenizer": "1.2.2",
         "webflo/drupal-finder": "1.2.2",
         "webmozart/assert": "1.11.0"
