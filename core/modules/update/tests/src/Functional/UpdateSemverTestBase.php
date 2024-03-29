@@ -24,7 +24,7 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
    *
    * @var array
    */
-  protected static $modules = ['update_test', 'update', 'language', 'block'];
+  protected static $modules = ['language', 'block'];
 
   /**
    * {@inheritdoc}
