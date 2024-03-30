@@ -64,13 +64,21 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
       'field_string_with_default' => 'It is ok to be different',
       'field_string_with_callback' => 'Not from a callback',
       'field_string_late_default' => 'I am way ahead of you.',
-      'field_image_with_default' => [
-        'target_id' => 2,
-        'alt' => 'My different alt text',
-      ],
-      'field_image_no_default' => [
+      'field_image_storage_default' => [
         'target_id' => 3,
         'alt' => 'My third alt text',
+      ],
+      'field_image_instance_default' => [
+        'target_id' => 4,
+        'alt' => 'My fourth alt text',
+      ],
+      'field_image_both_defaults' => [
+        'target_id' => 5,
+        'alt' => 'My fifth alt text',
+      ],
+      'field_image_no_default' => [
+        'target_id' => 6,
+        'alt' => 'My sixth alt text',
       ],
     ]);
 
@@ -125,16 +133,31 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     $assert_session->pageTextContains('field_string_late_default');
     $assert_session->pageTextNotContains('Too late!');
     $assert_session->pageTextContains('I am way ahead of you');
-    // Image field with default should render non-default value.
-    $assert_session->pageTextContains('field_image_with_default');
-    $assert_session->responseNotContains('My default alt text');
+    // Image field with storage default should render non-default value.
+    $assert_session->pageTextContains('field_image_storage_default');
+    $assert_session->responseNotContains('My storage default alt text');
     $assert_session->responseNotContains('test-file-1');
-    $assert_session->responseContains('My different alt text');
-    $assert_session->responseContains('test-file-2');
-    // Image field with no default should render a value.
-    $assert_session->pageTextContains('field_image_no_default');
     $assert_session->responseContains('My third alt text');
     $assert_session->responseContains('test-file-3');
+    // Image field with instance default should render non-default value.
+    $assert_session->pageTextContains('field_image_instance_default');
+    $assert_session->responseNotContains('My instance default alt text');
+    $assert_session->responseNotContains('test-file-1');
+    $assert_session->responseContains('My fourth alt text');
+    $assert_session->responseContains('test-file-4');
+    // Image field with both storage and instance defaults should render
+    // non-default value.
+    $assert_session->pageTextContains('field_image_both_defaults');
+    $assert_session->responseNotContains('My storage default alt text');
+    $assert_session->responseNotContains('My instance default alt text');
+    $assert_session->responseNotContains('test-file-1');
+    $assert_session->responseNotContains('test-file-2');
+    $assert_session->responseContains('My fifth alt text');
+    $assert_session->responseContains('test-file-5');
+    // Image field with no default should render a value.
+    $assert_session->pageTextContains('field_image_no_default');
+    $assert_session->responseContains('My sixth alt text');
+    $assert_session->responseContains('test-file-6');
   }
 
   /**
@@ -164,9 +187,15 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     $assert_session->pageTextNotContains('field_string_late_default');
     $assert_session->pageTextNotContains('Too late!');
     // Image field with default should render default value.
-    $assert_session->pageTextContains('field_image_with_default');
-    $assert_session->responseContains('My default alt text');
+    $assert_session->pageTextContains('field_image_storage_default');
+    $assert_session->responseContains('My storage default alt text');
     $assert_session->responseContains('test-file-1');
+    $assert_session->pageTextContains('field_image_instance_default');
+    $assert_session->responseContains('My instance default alt text');
+    $assert_session->responseContains('test-file-1');
+    $assert_session->pageTextContains('field_image_both_defaults');
+    $assert_session->responseContains('My instance default alt text');
+    $assert_session->responseContains('test-file-2');
     // Image field with no default should not render.
     $assert_session->pageTextNotContains('field_image_no_default');
     // Confirm that there is no DOM element for the field_image_with_no_default
@@ -257,7 +286,7 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     // Create files to use as the default images.
     $files = $this->drupalGetTestFiles('image');
     $images = [];
-    for ($i = 1; $i <= 3; $i++) {
+    for ($i = 1; $i <= 6; $i++) {
       $filename = "test-file-$i";
       $desired_filepath = 'public://' . $filename;
       \Drupal::service('file_system')->copy($files[0]->uri, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
@@ -270,17 +299,57 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
       $images[] = $file;
     }
 
-    $field_name = 'field_image_with_default';
+    $field_name = 'field_image_storage_default';
     $storage_settings['default_image'] = [
       'uuid' => $images[0]->uuid(),
-      'alt' => 'My default alt text',
+      'alt' => 'My storage default alt text',
       'title' => '',
       'width' => 0,
       'height' => 0,
     ];
     $field_settings['default_image'] = [
+      'uuid' => NULL,
+      'alt' => '',
+      'title' => '',
+      'width' => NULL,
+      'height' => NULL,
+    ];
+    $widget_settings = [
+      'preview_image_style' => 'medium',
+    ];
+    $this->createImageField($field_name, 'test_node_type', $storage_settings, $field_settings, $widget_settings);
+
+    $field_name = 'field_image_instance_default';
+    $storage_settings['default_image'] = [
+      'uuid' => NULL,
+      'alt' => '',
+      'title' => '',
+      'width' => NULL,
+      'height' => NULL,
+    ];
+    $field_settings['default_image'] = [
       'uuid' => $images[0]->uuid(),
-      'alt' => 'My default alt text',
+      'alt' => 'My instance default alt text',
+      'title' => '',
+      'width' => 0,
+      'height' => 0,
+    ];
+    $widget_settings = [
+      'preview_image_style' => 'medium',
+    ];
+    $this->createImageField($field_name, 'test_node_type', $storage_settings, $field_settings, $widget_settings);
+
+    $field_name = 'field_image_both_defaults';
+    $storage_settings['default_image'] = [
+      'uuid' => $images[0]->uuid(),
+      'alt' => 'My storage default alt text',
+      'title' => '',
+      'width' => 0,
+      'height' => 0,
+    ];
+    $field_settings['default_image'] = [
+      'uuid' => $images[1]->uuid(),
+      'alt' => 'My instance default alt text',
       'title' => '',
       'width' => 0,
       'height' => 0,
