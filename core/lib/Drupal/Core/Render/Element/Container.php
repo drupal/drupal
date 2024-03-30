@@ -6,7 +6,6 @@ use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 
 /**
  * Provides a render element that wraps child elements in a container.

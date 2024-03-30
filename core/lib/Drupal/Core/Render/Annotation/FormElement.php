@@ -14,7 +14,7 @@ namespace Drupal\Core\Render\Annotation;
  *
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Element\FormElementInterface
- * @see \Drupal\Core\Render\Element\FormElement
+ * @see \Drupal\Core\Render\Element\FormElementBase
  * @see \Drupal\Core\Render\Annotation\RenderElement
  * @see plugin_api
  *

@@ -18,7 +18,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  *
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Element\ElementInterface
- * @see \Drupal\Core\Render\Element\RenderElement
+ * @see \Drupal\Core\Render\Element\RenderElementBase
  * @see \Drupal\Core\Render\Attribute\FormElement
  * @see plugin_api
  *

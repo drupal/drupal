@@ -5,13 +5,12 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\FormElement as FormElementBase;
 use Drupal\Component\Utility\Html as HtmlUtility;
 
 /**
  * Provides a render element for a table.
  *
- * Note: Although this extends FormElement, it can be used outside the
+ * Note: Although this extends FormElementBase, it can be used outside the
  * context of a form.
  *
  * Properties:

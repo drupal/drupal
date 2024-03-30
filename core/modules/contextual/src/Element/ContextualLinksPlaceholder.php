@@ -6,7 +6,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Render\Attribute\RenderElement;
-use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
+use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Component\Render\FormattableMarkup;
 
 /**

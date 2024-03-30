@@ -709,7 +709,7 @@ since Symfony 6\\.4, use dependency injection instead$#',
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$sort in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Render/Element/RenderElement.php',
+	'path' => __DIR__ . '/lib/Drupal/Core/Render/Element/RenderElementBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$output in empty\\(\\) always exists and is not falsy\\.$#',

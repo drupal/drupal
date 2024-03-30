@@ -5,7 +5,7 @@ namespace Drupal\contextual\Element;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Render\Attribute\RenderElement;
-use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
+use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Url;
 
 /**

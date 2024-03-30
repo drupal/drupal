@@ -4,12 +4,12 @@ namespace Drupal\Core\Datetime\Element;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Render\Element\FormElement;
+use Drupal\Core\Render\Element\FormElementBase;
 
 /**
  * Provides a base class for date elements.
  */
-abstract class DateElementBase extends FormElement {
+abstract class DateElementBase extends FormElementBase {
 
   /**
    * Specifies the start and end year to use as a date range.

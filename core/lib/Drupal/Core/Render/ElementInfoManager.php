@@ -17,8 +17,8 @@ use Drupal\Core\Theme\ThemeManagerInterface;
  *
  * @see \Drupal\Core\Render\Attribute\RenderElement
  * @see \Drupal\Core\Render\Attribute\FormElement
- * @see \Drupal\Core\Render\Element\RenderElement
- * @see \Drupal\Core\Render\Element\FormElement
+ * @see \Drupal\Core\Render\Element\RenderElementBase
+ * @see \Drupal\Core\Render\Element\FormElementBase
  * @see \Drupal\Core\Render\Element\ElementInterface
  * @see \Drupal\Core\Render\Element\FormElementInterface
  * @see plugin_api

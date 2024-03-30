@@ -6,7 +6,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Attribute\FormElement;
-use Drupal\Core\Render\Element\FormElement as FormElementBase;
+use Drupal\Core\Render\Element\FormElementBase;
 
 /**
  * Defines an element for language configuration for a single field.

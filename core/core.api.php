@@ -2465,7 +2465,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * @section sec_query Query parameters in Ajax requests
  * If a form uses an Ajax field, all the query parameters in the current request
  * will be also added to the Ajax POST requests along with an additional
- * 'ajax_form=1' parameter (See \Drupal\Core\Render\Element\RenderElement).
+ * 'ajax_form=1' parameter (See \Drupal\Core\Render\Element\RenderElementBase).
  * @code
  * $settings['options']['query'] += \Drupal::request()->query->all();
  * $settings['options']['query'][FormBuilderInterface::AJAX_FORM_REQUEST] = TRUE;

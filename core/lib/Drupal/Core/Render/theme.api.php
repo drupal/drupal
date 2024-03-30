@@ -316,11 +316,11 @@
  *   \Drupal\Core\Render\Element\ElementInterface, have the
  *   \Drupal\Core\Render\Attribute\RenderElement attribute, go in plugin
  *   namespace Element, and generally extend the
- *   \Drupal\Core\Render\Element\RenderElement base class.
+ *   \Drupal\Core\Render\Element\RenderElementBase base class.
  * - Form input elements: Render elements representing form input elements
  *   implement \Drupal\Core\Render\Element\FormElementInterface, have the
  *   \Drupal\Core\Render\Attribute\FormElement, go in plugin namespace Element,
- *   and generally extend the \Drupal\Core\Render\Element\FormElement base
+ *   and generally extend the \Drupal\Core\Render\Element\FormElementBase base
  *   class.
  * See the @link plugin_api Plugin API topic @endlink for general information
  * on plugins. You can search for classes with the RenderElement or FormElement
@@ -494,16 +494,16 @@
  * processing, and form arrays.
  *
  * Each form and render element type corresponds to an element plugin class;
- * each of them either extends \Drupal\Core\Render\Element\RenderElement
- * (render elements) or \Drupal\Core\Render\Element\FormElement (form
+ * each of them either extends \Drupal\Core\Render\Element\RenderElementBase
+ * (render elements) or \Drupal\Core\Render\Element\FormElementBase (form
  * elements). Usage and properties are documented on the individual classes,
  * and the two base classes list common properties shared by all render
  * elements and the form element subset, respectively.
  *
  * @see theme_render
  * @see form_api
- * @see \Drupal\Core\Render\Element\RenderElement
- * @see \Drupal\Core\Render\Element\FormElement
+ * @see \Drupal\Core\Render\Element\RenderElementBase
+ * @see \Drupal\Core\Render\Element\FormElementBase
  *
  * @}
  */

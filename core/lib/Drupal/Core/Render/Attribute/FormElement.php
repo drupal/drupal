@@ -16,7 +16,7 @@ namespace Drupal\Core\Render\Attribute;
  *
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Element\FormElementInterface
- * @see \Drupal\Core\Render\Element\FormElement
+ * @see \Drupal\Core\Render\Element\FormElementBase
  * @see \Drupal\Core\Render\Attribute\RenderElement
  * @see plugin_api
  *

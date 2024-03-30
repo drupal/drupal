@@ -134,7 +134,7 @@ function language_element_info_alter(&$type) {
     $type['language_select']['#process'] = array_merge($type['language_select']['#process'], [
       'language_process_language_select',
       ['Drupal\Core\Render\Element\Select', 'processSelect'],
-      ['Drupal\Core\Render\Element\RenderElement', 'processAjaxForm'],
+      ['Drupal\Core\Render\Element\RenderElementBase', 'processAjaxForm'],
     ]);
     $type['language_select']['#theme'] = 'select';
     $type['language_select']['#theme_wrappers'] = array_merge($type['language_select']['#theme_wrappers'], ['form_element']);
