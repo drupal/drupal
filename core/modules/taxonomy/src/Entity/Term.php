@@ -210,12 +210,6 @@ class Term extends EditorialContentEntityBase implements TermInterface {
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE);
 
-    // @todo Keep this field hidden until we have a revision UI for terms.
-    // @see https://www.drupal.org/project/drupal/issues/2936995
-    $fields['revision_log_message']->setDisplayOptions('form', [
-      'region' => 'hidden',
-    ]);
-
     return $fields;
   }
 
