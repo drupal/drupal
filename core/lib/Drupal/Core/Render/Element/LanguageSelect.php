@@ -4,7 +4,6 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Attribute\FormElement;
-use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for selecting a language.

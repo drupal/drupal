@@ -342,7 +342,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @param $form_state
    *   The current state of the form for the form this element belongs to.
    *
-   * @see \Drupal\Core\Render\Element\FormElement::processPattern()
+   * @see \Drupal\Core\Render\Element\FormElementBase::processPattern()
    */
   public static function validateAllowedValues($element, FormStateInterface $form_state) {
     $items = array_filter(array_map(function ($item) use ($element) {

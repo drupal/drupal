@@ -22,7 +22,7 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  *
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Attribute\RenderElement
- * @see \Drupal\Core\Render\Element\RenderElement
+ * @see \Drupal\Core\Render\Element\RenderElementBase
  * @see plugin_api
  *
  * @ingroup theme_render

@@ -79,7 +79,7 @@ class FormAjaxResponseBuilder implements FormAjaxResponseBuilderInterface {
       // At this point we know callback returned a render element. If the
       // element is part of the group (#group is set on it) it won't be rendered
       // unless we remove #group from it. This is caused by
-      // \Drupal\Core\Render\Element\RenderElement::preRenderGroup(), which
+      // \Drupal\Core\Render\Element\RenderElementBase::preRenderGroup(), which
       // prevents all members of groups from being rendered directly.
       if (!empty($result['#group'])) {
         unset($result['#group']);

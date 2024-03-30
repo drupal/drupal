@@ -3,7 +3,7 @@
 namespace Drupal\element_info_test\Element;
 
 use Drupal\Core\Render\Attribute\RenderElement;
-use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
+use Drupal\Core\Render\Element\RenderElementBase;
 
 /**
  * Provides deprecated render element for testing.

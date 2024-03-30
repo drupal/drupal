@@ -4,7 +4,6 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\RenderElement as RenderElementBase;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
 

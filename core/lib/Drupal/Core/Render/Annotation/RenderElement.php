@@ -16,7 +16,7 @@ use Drupal\Component\Annotation\PluginID;
  *
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Element\ElementInterface
- * @see \Drupal\Core\Render\Element\RenderElement
+ * @see \Drupal\Core\Render\Element\RenderElementBase
  * @see \Drupal\Core\Render\Annotation\FormElement
  * @see plugin_api
  *
