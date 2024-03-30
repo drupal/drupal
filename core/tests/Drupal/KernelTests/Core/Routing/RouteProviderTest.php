@@ -7,6 +7,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Database\Database;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\MatcherDumper;
 use Drupal\Core\Routing\RouteProvider;
@@ -96,9 +97,10 @@ class RouteProviderTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->fixtures = new RoutingFixtures();
-    $this->state = new State(new KeyValueMemoryFactory());
+    $time = \Drupal::service(TimeInterface::class);
+    $this->state = new State(new KeyValueMemoryFactory(), new MemoryBackend($time), new NullLockBackend());
     $this->currentPath = new CurrentPathStack(new RequestStack());
-    $this->cache = new MemoryBackend(\Drupal::service(TimeInterface::class));
+    $this->cache = new MemoryBackend($time);
     $this->pathProcessor = \Drupal::service('path_processor_manager');
     $this->cacheTagsInvalidator = \Drupal::service('cache_tags.invalidator');
     $this->installEntitySchema('path_alias');

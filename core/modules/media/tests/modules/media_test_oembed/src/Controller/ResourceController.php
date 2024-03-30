@@ -23,15 +23,15 @@ class ResourceController {
   public function get(Request $request) {
     $asset_url = $request->query->get('url');
 
-    $resources = \Drupal::state()->get(static::class, []);
+    $resource = \Drupal::keyValue('media_test_oembed')->get($asset_url);
 
-    if ($resources[$asset_url] === 404) {
+    if ($resource === 404) {
       $response = new Response('Not Found', 404);
     }
     else {
-      $content = file_get_contents($resources[$asset_url]);
+      $content = file_get_contents($resource);
       $response = new Response($content);
-      $response->headers->set('Content-Type', 'application/' . pathinfo($resources[$asset_url], PATHINFO_EXTENSION));
+      $response->headers->set('Content-Type', 'application/' . pathinfo($resource, PATHINFO_EXTENSION));
     }
 
     return $response;
@@ -58,9 +58,7 @@ class ResourceController {
    *   The path of the oEmbed resource representing the asset.
    */
   public static function setResourceUrl($asset_url, $resource_path) {
-    $resources = \Drupal::state()->get(static::class, []);
-    $resources[$asset_url] = $resource_path;
-    \Drupal::state()->set(static::class, $resources);
+    \Drupal::keyValue('media_test_oembed')->set($asset_url, $resource_path);
   }
 
   /**
@@ -70,9 +68,7 @@ class ResourceController {
    *   The asset URL.
    */
   public static function setResource404($asset_url) {
-    $resources = \Drupal::state()->get(static::class, []);
-    $resources[$asset_url] = 404;
-    \Drupal::state()->set(static::class, $resources);
+    \Drupal::keyValue('media_test_oembed')->set($asset_url, 404);
   }
 
 }

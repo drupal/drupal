@@ -72,7 +72,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
   public function testDefaultConfiguration() {
     $translation = $this->entity;
     $this->drupalGet($translation->toUrl());
-    $last = $this->container->get('state')->get('language_test.language_negotiation_last');
+    $last = \Drupal::keyValue('language_test')->get('language_negotiation_last');
     $last_content_language = $last[LanguageInterface::TYPE_CONTENT];
     $last_interface_language = $last[LanguageInterface::TYPE_INTERFACE];
     $this->assertSame($last_content_language, $last_interface_language);
@@ -80,7 +80,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
 
     $translation = $this->entity->getTranslation('es');
     $this->drupalGet($translation->toUrl());
-    $last = $this->container->get('state')->get('language_test.language_negotiation_last');
+    $last = \Drupal::keyValue('language_test')->get('language_negotiation_last');
     $last_content_language = $last[LanguageInterface::TYPE_CONTENT];
     $last_interface_language = $last[LanguageInterface::TYPE_INTERFACE];
     $this->assertSame($last_content_language, $last_interface_language);
@@ -88,7 +88,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
 
     $translation = $this->entity->getTranslation('fr');
     $this->drupalGet($translation->toUrl());
-    $last = $this->container->get('state')->get('language_test.language_negotiation_last');
+    $last = \Drupal::keyValue('language_test')->get('language_negotiation_last');
     $last_content_language = $last[LanguageInterface::TYPE_CONTENT];
     $last_interface_language = $last[LanguageInterface::TYPE_INTERFACE];
     $this->assertSame($last_content_language, $last_interface_language);
@@ -140,7 +140,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
 
     $translation = $this->entity;
     $this->drupalGet($translation->toUrl());
-    $last = $this->container->get('state')->get('language_test.language_negotiation_last');
+    $last = \Drupal::keyValue('language_test')->get('language_negotiation_last');
     $last_content_language = $last[LanguageInterface::TYPE_CONTENT];
     $last_interface_language = $last[LanguageInterface::TYPE_INTERFACE];
     // Check that interface language and content language are the same as the
@@ -151,7 +151,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
 
     $translation = $this->entity->getTranslation('es');
     $this->drupalGet($translation->toUrl());
-    $last = $this->container->get('state')->get('language_test.language_negotiation_last');
+    $last = \Drupal::keyValue('language_test')->get('language_negotiation_last');
     $last_content_language = $last[LanguageInterface::TYPE_CONTENT];
     $last_interface_language = $last[LanguageInterface::TYPE_INTERFACE];
     $this->assertSame($last_interface_language, $default_site_langcode, 'Interface language did not change from the default site language.');
@@ -159,7 +159,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
 
     $translation = $this->entity->getTranslation('fr');
     $this->drupalGet($translation->toUrl());
-    $last = $this->container->get('state')->get('language_test.language_negotiation_last');
+    $last = \Drupal::keyValue('language_test')->get('language_negotiation_last');
     $last_content_language = $last[LanguageInterface::TYPE_CONTENT];
     $last_interface_language = $last[LanguageInterface::TYPE_INTERFACE];
     $this->assertSame($last_interface_language, $default_site_langcode, 'Interface language did not change from the default site language.');

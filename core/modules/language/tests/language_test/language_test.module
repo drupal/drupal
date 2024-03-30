@@ -72,7 +72,7 @@ function language_test_store_language_negotiation() {
   foreach (\Drupal::languageManager()->getDefinedLanguageTypes() as $type) {
     $last[$type] = \Drupal::languageManager()->getCurrentLanguage($type)->getId();
   }
-  \Drupal::state()->set('language_test.language_negotiation_last', $last);
+  \Drupal::keyValue('language_test')->set('language_negotiation_last', $last);
 }
 
 /**

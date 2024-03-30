@@ -15,8 +15,10 @@ class DevelopmentSettingsPass implements CompilerPassInterface {
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container) {
-    /** @var \Drupal\Core\State\StateInterface $state */
-    $state = $container->get('state');
+    // This does access the state key value store directly to avoid edge-cases
+    // with lazy ghost objects during early bootstrap.
+    /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state */
+    $state = $container->get('keyvalue')->get('state');
     $twig_debug = $state->get('twig_debug', FALSE);
     $twig_cache_disable = $state->get('twig_cache_disable', FALSE);
     if ($twig_debug || $twig_cache_disable) {

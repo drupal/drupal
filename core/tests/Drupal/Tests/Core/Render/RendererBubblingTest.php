@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Datetime\Time;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cache\VariationCache;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\State\State;
 use Drupal\Core\Cache\Cache;
 
@@ -448,7 +450,8 @@ class RendererBubblingTest extends RendererTestBase {
     $this->setUpMemoryCache();
 
     // Mock the State service.
-    $memory_state = new State(new KeyValueMemoryFactory());
+    $time = $this->prophesize(TimeInterface::class)->reveal();
+    $memory_state = new State(new KeyValueMemoryFactory(), new MemoryBackend($time), new NullLockBackend());
     \Drupal::getContainer()->set('state', $memory_state);
 
     // Simulate the theme system/Twig: a recursive call to Renderer::render(),

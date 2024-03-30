@@ -39,13 +39,6 @@ class RoutePreloaderTest extends UnitTestCase {
   protected $preloader;
 
   /**
-   * The mocked cache.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $cache;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -53,8 +46,7 @@ class RoutePreloaderTest extends UnitTestCase {
 
     $this->routeProvider = $this->createMock('Drupal\Core\Routing\PreloadableRouteProviderInterface');
     $this->state = $this->createMock('\Drupal\Core\State\StateInterface');
-    $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->preloader = new RoutePreloader($this->routeProvider, $this->state, $this->cache);
+    $this->preloader = new RoutePreloader($this->routeProvider, $this->state);
   }
 
   /**
@@ -182,6 +174,14 @@ class RoutePreloaderTest extends UnitTestCase {
       ->willReturn(['test2']);
 
     $this->preloader->onRequest($event);
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testConstructorDeprecation() {
+    $this->expectDeprecation('Passing a cache bin to Drupal\Core\Routing\RoutePreloader::__construct is deprecated in drupal:10.3.0 and will be removed before drupal:11.0.0. Caching is now managed by the state service. See https://www.drupal.org/node/3177901');
+    new RoutePreloader($this->routeProvider, $this->state, $this->createMock('Drupal\Core\Cache\CacheBackendInterface'));
   }
 
 }
