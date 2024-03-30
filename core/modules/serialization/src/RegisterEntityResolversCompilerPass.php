@@ -17,7 +17,7 @@ class RegisterEntityResolversCompilerPass implements CompilerPassInterface {
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   The container to process.
    */
-  public function process(ContainerBuilder $container) {
+  public function process(ContainerBuilder $container): void {
     $definition = $container->getDefinition('serializer.entity_resolver');
     $resolvers = [];
 
