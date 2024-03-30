@@ -303,8 +303,16 @@ function install_begin_request($class_loader, &$install_state) {
   }
 
   // Validate certain core settings that are used throughout the installation.
-  if (!empty($install_state['parameters']['profile'])) {
+  if (array_key_exists('profile', $install_state['parameters'])) {
     $install_state['parameters']['profile'] = preg_replace('/[^a-zA-Z_0-9]/', '', $install_state['parameters']['profile']);
+    // If the site is not using an install profile then profile will be set to
+    // an empty string in the query parameters. Convert this to a FALSE value so
+    // that \Drupal\Core\Installer\InstallerKernel::getInstallProfile() returns
+    // the same value as \Drupal\Core\DrupalKernel::getInstallProfile() when the
+    // site does not have an install profile.
+    if ($install_state['parameters']['profile'] === '') {
+      $install_state['parameters']['profile'] = FALSE;
+    }
   }
   if (!empty($install_state['parameters']['langcode'])) {
     $install_state['parameters']['langcode'] = preg_replace('/[^a-zA-Z_0-9\-]/', '', $install_state['parameters']['langcode']);
@@ -451,7 +459,8 @@ function install_begin_request($class_loader, &$install_state) {
     $module_list->setPathname($name, $profile->getPathname());
   }
 
-  if ($profile = _install_select_profile($install_state)) {
+  $profile = _install_select_profile($install_state);
+  if ($profile !== NULL) {
     $install_state['parameters']['profile'] = $profile;
     install_load_profile($install_state);
     if (isset($install_state['profile_info']['distribution']['install']['theme'])) {
@@ -835,15 +844,17 @@ function install_tasks($install_state) {
     // Load the profile install file, because it is not always loaded when
     // hook_install_tasks() is invoked (e.g. batch processing).
     $profile = $install_state['parameters']['profile'];
-    $profile_install_file = $install_state['profiles'][$profile]->getPath() . '/' . $profile . '.install';
-    if (file_exists($profile_install_file)) {
-      include_once \Drupal::root() . '/' . $profile_install_file;
-    }
-    $function = $install_state['parameters']['profile'] . '_install_tasks';
-    if (function_exists($function)) {
-      $result = $function($install_state);
-      if (is_array($result)) {
-        $tasks += $result;
+    if ($profile !== FALSE) {
+      $profile_install_file = $install_state['profiles'][$profile]->getPath() . '/' . $profile . '.install';
+      if (file_exists($profile_install_file)) {
+        include_once \Drupal::root() . '/' . $profile_install_file;
+      }
+      $function = $install_state['parameters']['profile'] . '_install_tasks';
+      if (function_exists($function)) {
+        $result = $function($install_state);
+        if (is_array($result)) {
+          $tasks += $result;
+        }
       }
     }
   }
@@ -1202,7 +1213,7 @@ function install_database_errors($database, $settings_file) {
  *   thrown if a profile cannot be chosen automatically.
  */
 function install_select_profile(&$install_state) {
-  if (empty($install_state['parameters']['profile'])) {
+  if (!array_key_exists('profile', $install_state['parameters'])) {
     // If there are no profiles at all, installation cannot proceed.
     if (empty($install_state['profiles'])) {
       throw new NoProfilesException(\Drupal::service('string_translation'));
@@ -1245,9 +1256,9 @@ function install_select_profile(&$install_state) {
  *   The current installer state, containing a 'profiles' key, which is an
  *   associative array of profiles with the machine-readable names as keys.
  *
- * @return string|null
+ * @return string|null|false
  *   The machine-readable name of the selected profile or NULL if no profile was
- *   selected.
+ *   selected or FALSE if the site has no profile.
  *
  *  @see install_select_profile()
  */
@@ -1257,9 +1268,9 @@ function _install_select_profile(&$install_state) {
     return key($install_state['profiles']);
   }
   // If a valid profile has already been selected, return the selection.
-  if (!empty($install_state['parameters']['profile'])) {
+  if (array_key_exists('profile', $install_state['parameters'])) {
     $profile = $install_state['parameters']['profile'];
-    if (isset($install_state['profiles'][$profile])) {
+    if ($profile === FALSE || isset($install_state['profiles'][$profile])) {
       return $profile;
     }
   }
@@ -1497,8 +1508,10 @@ function _install_get_version_info($version) {
  */
 function install_load_profile(&$install_state) {
   $profile = $install_state['parameters']['profile'];
-  $install_state['profiles'][$profile]->load();
-  $install_state['profile_info'] = install_profile_info($profile, $install_state['parameters']['langcode'] ?? 'en');
+  if ($profile !== FALSE) {
+    $install_state['profiles'][$profile]->load();
+    $install_state['profile_info'] = install_profile_info($profile, $install_state['parameters']['langcode'] ?? 'en');
+  }
 
   $sync_directory = Settings::get('config_sync_directory');
   if (!empty($install_state['parameters']['existing_config']) && !empty($sync_directory)) {
@@ -2047,10 +2060,13 @@ function install_check_translations($langcode, $server_pattern) {
  * Checks installation requirements and reports any errors.
  */
 function install_check_requirements($install_state) {
+  $requirements = [];
   $profile = $install_state['parameters']['profile'];
 
-  // Check the profile requirements.
-  $requirements = drupal_check_profile($profile);
+  if ($profile !== FALSE) {
+    // Check the profile requirements.
+    $requirements = drupal_check_profile($profile);
+  }
 
   if ($install_state['settings_verified']) {
     return $requirements;

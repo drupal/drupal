@@ -16,6 +16,8 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
 
   /**
    * This is set by the profile in the core.extension extracted.
+   *
+   * If set to FALSE, then the install will proceed without an install profile.
    */
   protected $profile = NULL;
 
@@ -36,16 +38,30 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       $this->profile = $core_extension['profile'];
     }
 
-    // Create a profile for testing. We set core_version_requirement to '*' for
-    // the test so that it does not need to be updated between major versions.
-    $info = [
-      'type' => 'profile',
-      'core_version_requirement' => '*',
-      'name' => 'Configuration installation test profile (' . $this->profile . ')',
-    ];
+    if ($this->profile !== FALSE) {
+      // Create a profile for testing. We set core_version_requirement to '*' for
+      // the test so that it does not need to be updated between major versions.
+      $info = [
+        'type' => 'profile',
+        'core_version_requirement' => '*',
+        'name' => 'Configuration installation test profile (' . $this->profile . ')',
+      ];
 
-    // File API functions are not available yet.
-    $path = $this->siteDirectory . '/profiles/' . $this->profile;
+      // File API functions are not available yet.
+      $path = $this->siteDirectory . '/profiles/' . $this->profile;
+
+      // Put the sync directory inside the profile.
+      $config_sync_directory = $path . '/config/sync';
+
+      mkdir($path, 0777, TRUE);
+      file_put_contents("$path/{$this->profile}.info.yml", Yaml::encode($info));
+    }
+    else {
+      // If we have no profile we must use an existing sync directory.
+      $this->existingSyncDirectory = TRUE;
+      $config_sync_directory = $this->siteDirectory . '/config/sync';
+    }
+
     if ($this->existingSyncDirectory) {
       $config_sync_directory = $this->siteDirectory . '/config/sync';
       $this->settings['settings']['config_sync_directory'] = (object) [
@@ -53,13 +69,6 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
         'required' => TRUE,
       ];
     }
-    else {
-      // Put the sync directory inside the profile.
-      $config_sync_directory = $path . '/config/sync';
-    }
-
-    mkdir($path, 0777, TRUE);
-    file_put_contents("$path/{$this->profile}.info.yml", Yaml::encode($info));
 
     // Create config/sync directory and extract tarball contents to it.
     mkdir($config_sync_directory, 0777, TRUE);
@@ -81,8 +90,17 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       if ($module !== 'core') {
         $core_extension['module'][$module] = 0;
         $core_extension['module'] = module_config_sort($core_extension['module']);
-        file_put_contents($config_sync_directory . '/core.extension.yml', Yaml::encode($core_extension));
       }
+      if ($this->profile === FALSE && array_key_exists('profile', $core_extension)) {
+        // Remove the profile.
+        unset($core_extension['module'][$core_extension['profile']]);
+        unset($core_extension['profile']);
+
+        // Set a default theme to the first theme that will be installed as this
+        // can not be retrieved from the profile.
+        $this->defaultTheme = array_key_first($core_extension['theme']);
+      }
+      file_put_contents($config_sync_directory . '/core.extension.yml', Yaml::encode($core_extension));
     }
   }
 
