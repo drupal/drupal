@@ -5,6 +5,7 @@ administer site configuration:
   restrict access: true
 administer themes:
   title: 'Administer themes'
+  restrict access: true
 administer software updates:
   title: 'Administer software updates'
   restrict access: true
