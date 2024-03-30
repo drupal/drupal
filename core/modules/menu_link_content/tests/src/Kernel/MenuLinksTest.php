@@ -459,4 +459,20 @@ class MenuLinksTest extends KernelTestBase {
     $this->assertEquals($menu_link->id(), $tree_element->link->getEntity()->id());
   }
 
+  /**
+   * Tests that the form doesn't break for links with arbitrary menu names.
+   */
+  public function testMenuLinkContentFormInvalidParentMenu(): void {
+    $menu_link = MenuLinkContent::create([
+      'title' => 'Menu link test',
+      'provider' => 'menu_link_content',
+      'menu_name' => 'non-existent',
+      'link' => ['uri' => 'internal:/user/login'],
+    ]);
+    // Get the form for a new link, assert that building it doesn't break if
+    // the links menu name doesn't exist.
+    $build = \Drupal::service('entity.form_builder')->getForm($menu_link);
+    static::assertIsArray($build);
+  }
+
 }

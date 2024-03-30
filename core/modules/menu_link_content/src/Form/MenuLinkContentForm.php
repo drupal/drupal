@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\Core\Path\PathValidatorInterface;
+use Drupal\system\MenuInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -92,9 +93,9 @@ class MenuLinkContentForm extends ContentEntityForm {
     $parent_id = $this->entity->getParentId() ?: $this->getRequest()->query->get('parent');
     $default = $this->entity->getMenuName() . ':' . $parent_id;
     $id = $this->entity->isNew() ? '' : $this->entity->getPluginId();
-    if ($this->entity->isNew()) {
-      $menu_id = $this->entity->getMenuName();
-      $menu = $this->entityTypeManager->getStorage('menu')->load($menu_id);
+    $menu_id = $this->entity->getMenuName();
+    $menu = $this->entityTypeManager->getStorage('menu')->load($menu_id);
+    if ($menu instanceof MenuInterface && $this->entity->isNew()) {
       $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
         $menu_id => $menu->label(),
       ]);
