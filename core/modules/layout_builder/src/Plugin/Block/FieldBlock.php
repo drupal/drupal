@@ -22,6 +22,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\field\FieldConfigInterface;
 use Drupal\layout_builder\Plugin\Derivative\FieldBlockDeriver;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -212,13 +213,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     }
 
     // Check to see if the field has any values or a default value.
-    if ($field->isEmpty() && !$field->getFieldDefinition()->getDefaultValue($entity)) {
-      // @todo Remove special handling of image fields after
-      //   https://www.drupal.org/project/drupal/issues/3005528.
-      if ($field->getFieldDefinition()->getType() === 'image' && !empty($field->getFieldDefinition()->getSetting('default_image')['uuid'])) {
-        return $access;
-      }
-
+    if ($field->isEmpty() && !$this->entityFieldHasDefaultValue()) {
       return $access->andIf(AccessResult::forbidden());
     }
     return $access;
@@ -412,6 +407,35 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
       'view_mode' => EntityDisplayBase::CUSTOM_MODE,
       'prepare' => TRUE,
     ]);
+  }
+
+  /**
+   * Checks whether there is a default value set on the field.
+   *
+   * @return bool
+   *   TRUE if default value set, FALSE otherwise.
+   */
+  protected function entityFieldHasDefaultValue(): bool {
+    $entity = $this->getEntity();
+    $field = $entity->get($this->fieldName);
+    $definition = $field->getFieldDefinition();
+    if ($definition->getDefaultValue($entity)) {
+      return TRUE;
+    }
+
+    // @todo Remove special handling of image fields after
+    // https://www.drupal.org/project/drupal/issues/3005528.
+    if ($definition->getType() !== 'image') {
+      return FALSE;
+    }
+
+    $default_image = $definition->getSetting('default_image');
+    // If we are dealing with a configurable field, look in both instance-level
+    // and field-level settings.
+    if (empty($default_image['uuid']) && ($definition instanceof FieldConfigInterface)) {
+      $default_image = $definition->getFieldStorageDefinition()->getSetting('default_image');
+    }
+    return !empty($default_image['uuid']);
   }
 
 }
