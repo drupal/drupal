@@ -177,7 +177,6 @@ abstract class ExtensionList {
       // early installer.
     }
 
-    $this->cache->delete($this->getPathNamesCacheId());
     // @todo In the long run it would be great to add the reset, but the early
     //   installer fails due to that. https://www.drupal.org/node/2719315 could
     //   help to resolve with that.
@@ -416,18 +415,14 @@ abstract class ExtensionList {
   public function getPathNames() {
     if ($this->pathNames === NULL) {
       $cache_id = $this->getPathNamesCacheId();
-      if ($cache = $this->cache->get($cache_id)) {
-        $path_names = $cache->data;
-      }
-      // We use $file_names below.
-      elseif (!$path_names = $this->state->get($cache_id)) {
-        $path_names = $this->recalculatePathNames();
+      $this->pathNames = $this->state->get($cache_id);
+
+      if ($this->pathNames === NULL) {
+        $this->pathNames = $this->recalculatePathNames();
         // Store filenames to allow static::getPathname() to retrieve them
         // without having to rebuild or scan the filesystem.
-        $this->state->set($cache_id, $path_names);
-        $this->cache->set($cache_id, $path_names);
+        $this->state->set($cache_id, $this->pathNames);
       }
-      $this->pathNames = $path_names;
     }
     return $this->pathNames;
   }

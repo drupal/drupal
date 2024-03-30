@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
@@ -41,26 +39,19 @@ class RoutePreloader implements EventSubscriberInterface {
   protected $nonAdminRoutesOnRebuild = [];
 
   /**
-   * The cache backend used to skip the state loading.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
    * Constructs a new RoutePreloader.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache backend.
    */
-  public function __construct(RouteProviderInterface $route_provider, StateInterface $state, CacheBackendInterface $cache) {
+  public function __construct(RouteProviderInterface $route_provider, StateInterface $state) {
     $this->routeProvider = $route_provider;
     $this->state = $state;
-    $this->cache = $cache;
+    if (func_num_args() > 2) {
+      @trigger_error(sprintf('Passing a cache bin to %s is deprecated in drupal:10.3.0 and will be removed before drupal:11.0.0. Caching is now managed by the state service. See https://www.drupal.org/node/3177901', __METHOD__), E_USER_DEPRECATED);
+    }
   }
 
   /**
@@ -73,17 +64,7 @@ class RoutePreloader implements EventSubscriberInterface {
     // Only preload on normal HTML pages, as they will display menu links.
     if ($this->routeProvider instanceof PreloadableRouteProviderInterface && $event->getRequest()->getRequestFormat() == 'html') {
 
-      // Ensure that the state query is cached to skip the database query, if
-      // possible.
-      $key = 'routing.non_admin_routes';
-      if ($cache = $this->cache->get($key)) {
-        $routes = $cache->data;
-      }
-      else {
-        $routes = $this->state->get($key, []);
-        $this->cache->set($key, $routes, Cache::PERMANENT, ['routes']);
-      }
-
+      $routes = $this->state->get('routing.non_admin_routes', []);
       if ($routes) {
         // Preload all the non-admin routes at once.
         $this->routeProvider->preLoadRoutes($routes);

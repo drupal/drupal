@@ -13,6 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeEngineExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\State\State;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
@@ -65,7 +66,7 @@ class ThemeExtensionListTest extends UnitTestCase {
       ->alter('system_info', Argument::type('array'), Argument::type(Extension::class), Argument::any())
       ->shouldBeCalled();
 
-    $state = new State(new KeyValueMemoryFactory());
+    $state = new State(new KeyValueMemoryFactory(), new NullBackend('bin'), new NullLockBackend());
 
     $config_factory = $this->getConfigFactoryStub([
       'core.extension' => [
@@ -123,7 +124,7 @@ class ThemeExtensionListTest extends UnitTestCase {
   public function testGetBaseThemes(array $themes, $theme, array $expected) {
     // Mocks and stubs.
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $state = new State(new KeyValueMemoryFactory());
+    $state = new State(new KeyValueMemoryFactory(), new NullBackend('bin'), new NullLockBackend());
     $config_factory = $this->getConfigFactoryStub([]);
     $theme_engine_list = $this->prophesize(ThemeEngineExtensionList::class);
     $theme_listing = new ThemeExtensionList($this->root, 'theme', new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, $theme_engine_list->reveal(), 'test');
@@ -149,7 +150,7 @@ class ThemeExtensionListTest extends UnitTestCase {
   public function testDoGetBaseThemes(array $themes, $theme, array $expected): void {
     // Mocks and stubs.
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $state = new State(new KeyValueMemoryFactory());
+    $state = new State(new KeyValueMemoryFactory(), new NullBackend('bin'), new NullLockBackend());
     $config_factory = $this->getConfigFactoryStub([]);
     $theme_engine_list = $this->prophesize(ThemeEngineExtensionList::class);
     $theme_listing = new ThemeExtensionList($this->root, 'theme', new NullBackend('test'), new InfoParser($this->root), $module_handler->reveal(), $state, $config_factory, $theme_engine_list->reveal(), 'test');

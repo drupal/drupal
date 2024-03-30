@@ -37,7 +37,7 @@ trait RefreshVariablesTrait {
     }
 
     \Drupal::service('config.factory')->reset();
-    \Drupal::service('state')->resetCache();
+    \Drupal::service('state')->reset();
   }
 
 }

@@ -3,10 +3,13 @@
 namespace Drupal\KernelTests\Core\Routing;
 
 use ColinODell\PsrTestLogger\TestLogger;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Routing\MatcherDumper;
 use Drupal\Core\Routing\RouteCompiler;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\State\State;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Routing\RoutingFixtures;
@@ -46,7 +49,8 @@ class MatcherDumperTest extends KernelTestBase {
     parent::setUp();
 
     $this->fixtures = new RoutingFixtures();
-    $this->state = new State(new KeyValueMemoryFactory());
+    $time = $this->prophesize(TimeInterface::class)->reveal();
+    $this->state = new State(new KeyValueMemoryFactory(), new MemoryBackend($time), new NullLockBackend());
     $this->logger = new TestLogger();
   }
 
