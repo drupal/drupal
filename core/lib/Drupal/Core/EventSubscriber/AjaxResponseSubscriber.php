@@ -4,7 +4,8 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Render\AttachmentsResponseProcessorInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -15,22 +16,25 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class AjaxResponseSubscriber implements EventSubscriberInterface {
 
+  use DeprecatedServicePropertyTrait;
+
   /**
-   * The AJAX response attachments processor service.
-   *
-   * @var \Drupal\Core\Render\AttachmentsResponseProcessorInterface
+   * {@inheritdoc}
    */
-  protected $ajaxResponseAttachmentsProcessor;
+  protected array $deprecatedProperties = [
+    'ajaxResponseAttachmentsProcessor' => 'ajax_response.attachments_processor',
+  ];
 
   /**
    * Constructs an AjaxResponseSubscriber object.
    *
-   * @param \Drupal\Core\Render\AttachmentsResponseProcessorInterface $ajax_response_attachments_processor
-   *   The AJAX response attachments processor service.
+   * @param \Closure $processorClosure
+   *   The AJAX response attachments processor service, wrapped in a closure.
    */
-  public function __construct(AttachmentsResponseProcessorInterface $ajax_response_attachments_processor) {
-    $this->ajaxResponseAttachmentsProcessor = $ajax_response_attachments_processor;
-  }
+  public function __construct(
+    #[AutowireServiceClosure('ajax_response.attachments_processor')]
+    protected \Closure $processorClosure
+  ) {}
 
   /**
    * Request parameter to indicate that a request is a Drupal Ajax request.
@@ -59,7 +63,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
   public function onResponse(ResponseEvent $event) {
     $response = $event->getResponse();
     if ($response instanceof AjaxResponse) {
-      $this->ajaxResponseAttachmentsProcessor->processAttachments($response);
+      ($this->processorClosure)()->processAttachments($response);
 
       // IE 9 does not support XHR 2 (http://caniuse.com/#feat=xhr2), so
       // for that browser, jquery.form submits requests containing a file upload

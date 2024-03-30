@@ -86,7 +86,7 @@ class AjaxResponseTest extends UnitTestCase {
     $response->headers->set('Content-Type', 'application/json; charset=utf-8');
 
     $ajax_response_attachments_processor = $this->createMock('\Drupal\Core\Render\AttachmentsResponseProcessorInterface');
-    $subscriber = new AjaxResponseSubscriber($ajax_response_attachments_processor);
+    $subscriber = new AjaxResponseSubscriber(fn() => $ajax_response_attachments_processor);
     $event = new ResponseEvent(
       $this->createMock('\Symfony\Component\HttpKernel\HttpKernelInterface'),
       $request,
