@@ -369,7 +369,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     // Never serialize the typed data manager.
     $vars = get_object_vars($this);
     unset($vars['typedDataManager']);

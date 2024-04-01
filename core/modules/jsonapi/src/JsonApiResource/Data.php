@@ -69,8 +69,7 @@ abstract class Data implements \IteratorAggregate, \Countable {
    * @return \ArrayIterator
    *   An \ArrayIterator instance
    */
-  #[\ReturnTypeWillChange]
-  public function getIterator() {
+  public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->data);
   }
 
@@ -80,8 +79,7 @@ abstract class Data implements \IteratorAggregate, \Countable {
    * @return int
    *   The number of parameters
    */
-  #[\ReturnTypeWillChange]
-  public function count() {
+  public function count(): int {
     return count($this->data);
   }
 

@@ -1916,7 +1916,7 @@ abstract class Connection {
   /**
    * Prevents the database connection from being serialized.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     throw new \LogicException('The database connection is not serializable. This probably means you are serializing an object that has an indirect reference to the database connection. Adjust your code so that is not necessary. Alternatively, look at DependencySerializationTrait as a temporary solution.');
   }
 

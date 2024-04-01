@@ -462,7 +462,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     $keys = parent::__sleep();
     unset($keys[array_search('executable', $keys)]);
     return $keys;

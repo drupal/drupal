@@ -113,8 +113,7 @@ class EmbeddedDataSource extends SourcePluginBase {
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function count($refresh = FALSE) {
+  public function count($refresh = FALSE): int {
     // We do not want this source plugin to have a cacheable count.
     // @see \Drupal\migrate_cache_counts_test\Plugin\migrate\source\CacheableEmbeddedDataSource
     return count($this->dataRows);

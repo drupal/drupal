@@ -469,7 +469,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return array_diff(parent::__sleep(), ['database']);
   }
 

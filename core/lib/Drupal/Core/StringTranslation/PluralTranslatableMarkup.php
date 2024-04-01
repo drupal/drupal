@@ -140,7 +140,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return array_merge(parent::__sleep(), ['count']);
   }
 

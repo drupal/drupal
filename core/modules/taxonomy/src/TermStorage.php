@@ -448,7 +448,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     /** @var string[] $vars */
     $vars = parent::__sleep();
     // Do not serialize static cache.
@@ -459,7 +459,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function __wakeup() {
+  public function __wakeup(): void {
     parent::__wakeup();
     // Initialize static caches.
     $this->ancestors = [];
