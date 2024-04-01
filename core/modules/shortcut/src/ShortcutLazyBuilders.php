@@ -25,21 +25,13 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entityTypeManager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Session\AccountInterface|null $currentUser
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(RendererInterface $renderer, protected ?EntityTypeManagerInterface $entityTypeManager, protected ?AccountInterface $currentUser) {
+  public function __construct(RendererInterface $renderer, protected EntityTypeManagerInterface $entityTypeManager, protected AccountInterface $currentUser) {
     $this->renderer = $renderer;
-    if (!isset($this->entityTypeManager)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $entityTypeManager argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3427050', E_USER_DEPRECATED);
-      $this->entityTypeManager = \Drupal::entityTypeManager();
-    }
-    if (!isset($this->currentUser)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $currentUser argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3427050', E_USER_DEPRECATED);
-      $this->currentUser = \Drupal::currentUser();
-    }
   }
 
   /**

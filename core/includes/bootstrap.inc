@@ -442,11 +442,6 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  *   unit tests with a clean environment.
  */
 function drupal_static_reset($name = NULL) {
-  switch ($name) {
-    case 'shortcut_current_displayed_set':
-      @trigger_error("Calling " . __FUNCTION__ . "() with 'shortcut_current_displayed_set' as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement for this usage. See https://www.drupal.org/node/3427050", E_USER_DEPRECATED);
-      break;
-  }
   drupal_static($name, NULL, TRUE);
 }
 
