@@ -68,6 +68,20 @@ menu_test.child3_test_block:
   requirements:
     _access: 'TRUE'
 
+menu_test.child4_test:
+  path: '/parent_test/child4_test'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _permission: 'access child4 test page'
+
+menu_test.grand_child4_test:
+  path: '/parent_test/child4_test/grand_child4_test'
+  defaults:
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _permission: 'access grand child4 test page'
+
 menu_test.child4_test_overview:
   path: '/parent_test/child4_test'
   defaults:
