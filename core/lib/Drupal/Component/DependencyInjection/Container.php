@@ -2,6 +2,7 @@
 
 namespace Drupal\Component\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
@@ -452,6 +453,16 @@ class Container implements ContainerInterface, ResetInterface {
           $arguments[$key] = function () use ($argument) {
             return $this->get($argument->id, $argument->invalidBehavior);
           };
+
+          continue;
+        }
+        elseif ($type == 'iterator') {
+          $services = $argument->value;
+          $arguments[$key] = new RewindableGenerator(function () use ($services) {
+            foreach ($services as $key => $service) {
+              yield $key => $this->resolveServicesAndParameters([$service])[0];
+            }
+          }, count($services));
 
           continue;
         }

@@ -306,9 +306,6 @@ class OptimizedPhpArrayDumper extends Dumper {
     $code = [];
 
     foreach ($collection as $key => $value) {
-      if ($value instanceof IteratorArgument) {
-        $value = $value->getValues();
-      }
       if (is_array($value)) {
         $resolve_collection = FALSE;
         $code[$key] = $this->dumpCollection($value, $resolve_collection);
@@ -438,6 +435,9 @@ class OptimizedPhpArrayDumper extends Dumper {
 
       return $this->getServiceClosureCall((string) $reference, $reference->getInvalidBehavior());
     }
+    elseif ($value instanceof IteratorArgument) {
+      return $this->getIterator($value);
+    }
     elseif (is_object($value)) {
       throw new RuntimeException('Unable to dump a service container if a parameter is an object.');
     }
@@ -547,6 +547,22 @@ class OptimizedPhpArrayDumper extends Dumper {
       'type' => 'service_closure',
       'id' => $id,
       'invalidBehavior' => $invalid_behavior,
+    ];
+  }
+
+  /**
+   * Gets a service iterator in a suitable PHP array format.
+   *
+   * @param \Symfony\Component\DependencyInjection\Argument\IteratorArgument $iterator
+   *   The iterator.
+   *
+   * @return object
+   *   The PHP array representation of the iterator.
+   */
+  protected function getIterator(IteratorArgument $iterator) {
+    return (object) [
+      'type' => 'iterator',
+      'value' => array_map($this->dumpValue(...), $iterator->getValues()),
     ];
   }
 

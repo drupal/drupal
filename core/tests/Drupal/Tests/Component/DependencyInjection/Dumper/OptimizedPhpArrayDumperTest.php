@@ -354,7 +354,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $service_definitions[] = [
         'arguments' => [new IteratorArgument([new Reference('bar')])],
         'arguments_count' => 1,
-        'arguments_expected' => static::getCollection([static::getCollection([static::getServiceCall('bar')])]),
+        'arguments_expected' => static::getCollection([static::getIterator([static::getServiceCall('bar')])]),
       ] + $base_service_definition;
 
       // Test a collection with a variable to resolve.
@@ -691,6 +691,16 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     protected static function getCollection($collection) {
       return (object) [
         'type' => 'collection',
+        'value' => $collection,
+      ];
+    }
+
+    /**
+     * Helper function to return a machine-optimized iterator.
+     */
+    protected static function getIterator($collection) {
+      return (object) [
+        'type' => 'iterator',
         'value' => $collection,
       ];
     }
