@@ -15,7 +15,7 @@ class FileExtensionConstraintValidator extends BaseFileConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint) {
+  public function validate(mixed $value, Constraint $constraint): void {
     $file = $this->assertValueIsFile($value);
     if (!$constraint instanceof FileExtensionConstraint) {
       throw new UnexpectedTypeException($constraint, FileExtensionConstraint::class);

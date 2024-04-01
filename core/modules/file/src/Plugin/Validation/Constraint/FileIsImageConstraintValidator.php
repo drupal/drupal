@@ -35,7 +35,7 @@ class FileIsImageConstraintValidator extends BaseFileConstraintValidator impleme
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint) {
+  public function validate(mixed $value, Constraint $constraint): void {
     $file = $this->assertValueIsFile($value);
     if (!$constraint instanceof FileIsImageConstraint) {
       throw new UnexpectedTypeException($constraint, FileIsImageConstraint::class);

@@ -13,7 +13,7 @@ class FileNameLengthConstraintValidator extends BaseFileConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint) {
+  public function validate(mixed $value, Constraint $constraint): void {
     $file = $this->assertValueIsFile($value);
     if (!$constraint instanceof FileNameLengthConstraint) {
       throw new UnexpectedTypeException($constraint, FileNameLengthConstraint::class);
