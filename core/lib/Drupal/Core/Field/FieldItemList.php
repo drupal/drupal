@@ -220,14 +220,19 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    *
    * @param string $method
    *   The name of the method to be invoked.
-   * @param mixed ...$args
-   *   Any arguments to be forwarded to the invoked method.
    *
    * @return array
    *   An array of results keyed by delta.
    */
-  protected function delegateMethod($method, ...$args) {
-    return array_map(fn($item) => $item->{$method}(...$args), $this->list);
+  protected function delegateMethod($method) {
+    $result = [];
+    $args = array_slice(func_get_args(), 1);
+    foreach ($this->list as $delta => $item) {
+      // call_user_func_array() is way slower than a direct call so we avoid
+      // using it if have no parameters.
+      $result[$delta] = $args ? call_user_func_array([$item, $method], $args) : $item->{$method}();
+    }
+    return $result;
   }
 
   /**
