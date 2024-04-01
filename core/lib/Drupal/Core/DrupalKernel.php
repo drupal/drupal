@@ -1629,7 +1629,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // TrustedHostsRequestFactory makes sure to pass in the server variables
       // from the main request.
       $request_factory = new TrustedHostsRequestFactory($host);
-      Request::setFactory([$request_factory, 'createRequest']);
+      Request::setFactory([$request_factory, 'createRequest'](...));
 
     }
     catch (\UnexpectedValueException $e) {

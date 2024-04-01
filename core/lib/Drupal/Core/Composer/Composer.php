@@ -60,7 +60,6 @@ class Composer {
     }
     if ($repository->findPackage('symfony/dependency-injection', $constraint)) {
       $autoload['classmap'] = array_merge($autoload['classmap'], [
-        $vendor_dir . '/symfony/dependency-injection/ContainerAwareInterface.php',
         $vendor_dir . '/symfony/dependency-injection/ContainerInterface.php',
       ]);
     }
