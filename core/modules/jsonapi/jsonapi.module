@@ -275,8 +275,8 @@ function jsonapi_jsonapi_node_filter_access(EntityTypeInterface $entity_type, Ac
 function jsonapi_jsonapi_shortcut_filter_access(EntityTypeInterface $entity_type, AccountInterface $account) {
   // @see \Drupal\shortcut\ShortcutAccessControlHandler::checkAccess()
   // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
-  // (shortcut_set = shortcut_current_displayed_set()), so this does not have
-  // to.
+  // (shortcut_set = $shortcut_set_storage->getDisplayedToUser($current_user)),
+  // so this does not have to.
   return ([
     JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'administer shortcuts')
       ->orIf(AccessResult::allowedIfHasPermissions($account, ['access shortcuts', 'customize shortcut links'])),

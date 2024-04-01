@@ -3,6 +3,7 @@
 namespace Drupal\shortcut;
 
 use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
@@ -88,20 +89,27 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    * {@inheritdoc}
    */
   public function assignUser(ShortcutSetInterface $shortcut_set, $account) {
+    $current_shortcut_set = $this->getDisplayedToUser($account);
     $this->connection->merge('shortcut_set_users')
       ->key('uid', $account->id())
       ->fields(['set_name' => $shortcut_set->id()])
       ->execute();
-    drupal_static_reset('shortcut_current_displayed_set');
+    if ($current_shortcut_set instanceof ShortcutSetInterface) {
+      Cache::invalidateTags($current_shortcut_set->getCacheTagsToInvalidate());
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function unassignUser($account) {
+    $current_shortcut_set = $this->getDisplayedToUser($account);
     $deleted = $this->connection->delete('shortcut_set_users')
       ->condition('uid', $account->id())
       ->execute();
+    if ($current_shortcut_set instanceof ShortcutSetInterface) {
+      Cache::invalidateTags($current_shortcut_set->getCacheTagsToInvalidate());
+    }
     return (bool) $deleted;
   }
 
@@ -113,6 +121,17 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
     $query->fields('ssu', ['set_name']);
     $query->condition('ssu.uid', $account->id());
     return $query->execute()->fetchField();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDisplayedToUser(AccountInterface $account): ShortcutSetInterface {
+    if ($set_name = $this->getAssignedToUser($account)) {
+      return $this->load($set_name);
+    }
+
+    return $this->getDefaultSet($account);
   }
 
   /**

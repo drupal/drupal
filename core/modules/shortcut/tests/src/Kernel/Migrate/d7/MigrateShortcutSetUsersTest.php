@@ -45,7 +45,8 @@ class MigrateShortcutSetUsersTest extends MigrateDrupal7TestBase {
   public function testShortcutSetUsersMigration() {
     // Check if migrated user has correct migrated shortcut set assigned.
     $account = User::load(2);
-    $shortcut_set = shortcut_current_displayed_set($account);
+    $shortcut_set_storage = \Drupal::entityTypeManager()->getStorage('shortcut_set');
+    $shortcut_set = $shortcut_set_storage->getDisplayedToUser($account);
     /** @var \Drupal\shortcut\ShortcutSetInterface $shortcut_set */
     $this->assertSame('shortcut-set-2', $shortcut_set->id());
   }

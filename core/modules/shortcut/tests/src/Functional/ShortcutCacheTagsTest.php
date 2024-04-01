@@ -7,6 +7,7 @@ namespace Drupal\Tests\shortcut\Functional;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\Shortcut;
+use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
 use Drupal\user\Entity\Role;
@@ -203,6 +204,62 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
     $this->assertSession()->linkExists('Cron');
     $this->assertSession()->linkNotExists('Alpaca');
+
+    // Add a new Shortcut Set with a single link.
+    $new_set = ShortcutSet::create([
+      'id' => 'llama-set',
+      'label' => 'Llama Set',
+    ]);
+    $new_set->save();
+    $new_shortcut = Shortcut::create([
+      'shortcut_set' => 'llama-set',
+      'title' => 'New Llama',
+      'weight' => 0,
+      'link' => [['uri' => 'internal:/admin/config']],
+    ]);
+    $new_shortcut->save();
+
+    // Assign the new shortcut set to user 2 and confirm that links are
+    // changed automatically.
+    \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->assignUser($new_set, $site_configuration_user2);
+
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkExists('New Llama');
+
+    // Confirm that links for user 1 have not been affected.
+    $this->drupalLogin($site_configuration_user1);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkNotExists('New Llama');
+
+    // Confirm that removing assignment automatically changes the links too.
+    $this->drupalLogin($site_configuration_user2);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkExists('New Llama');
+    \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->unassignUser($site_configuration_user2);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkNotExists('New Llama');
+
+    // Confirm that deleting a shortcut set automatically changes the links too.
+    \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->assignUser($new_set, $site_configuration_user2);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkExists('New Llama');
+    \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->delete([$new_set]);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkNotExists('New Llama');
   }
 
   /**
