@@ -36,6 +36,9 @@ export default class DrupalHtmlBuilder {
       'track',
       'wbr',
     ];
+
+    // @see https://html.spec.whatwg.org/multipage/syntax.html#raw-text-elements
+    this.rawTags = ['script', 'style'];
   }
 
   /**
@@ -141,7 +144,14 @@ export default class DrupalHtmlBuilder {
     const container = doc.createElement('p');
     container.textContent = node.textContent;
 
-    this._append(container.innerHTML);
+    if (
+      node.parentElement &&
+      this.rawTags.includes(node.parentElement.tagName.toLowerCase())
+    ) {
+      this._append(container.textContent);
+    } else {
+      this._append(container.innerHTML);
+    }
   }
 
   /**
