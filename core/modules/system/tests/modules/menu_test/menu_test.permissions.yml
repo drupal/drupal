@@ -19,3 +19,9 @@ access grand child3 test page:
 access great grand child1 test page:
   title: 'Access great grand child1 test page'
   restrict access: true
+access child4 test page:
+  title: 'Access child4 test page'
+  restrict access: true
+access grand child4 test page:
+  title: 'Access grand child4 test page'
+  restrict access: true

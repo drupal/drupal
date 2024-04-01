@@ -38,6 +38,11 @@ menu_test.parent_test.child3_test:
 menu_test.parent_test.child4_test:
   title: 'Menu child4'
   description: 'Menu item description child4'
+  route_name: menu_test.child4_test
+  parent: menu_test.parent_test
+menu_test.parent_test.child4_test_overview:
+  title: 'Menu child4 overview'
+  description: 'Menu item description child4 overview'
   route_name: menu_test.child4_test_overview
   parent: menu_test.parent_test
 menu_test.parent_test.child_test.grand_child1_test:
@@ -55,6 +60,11 @@ menu_test.parent_test.child_test.grand_child3_test:
   description: 'Menu item description grand child3'
   route_name: menu_test.grand_child3_test
   parent: menu_test.parent_test.child2_test
+menu_test.parent_test.child_test.grand_child4_test:
+  title: 'Menu grand child4'
+  description: 'Menu item description grand child4'
+  route_name: menu_test.grand_child4_test
+  parent: menu_test.parent_test.child4_test
 menu_test.parent_test.child_test.great_grand_child1_test:
   title: 'Menu great grand child1'
   description: 'Menu great grand child1: grand parent uses SystemController::overview'
