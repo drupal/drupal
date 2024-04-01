@@ -502,7 +502,7 @@ class ForumManager implements ForumManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function __sleep(): array {
+  public function __sleep() {
     $vars = $this->defaultSleep();
     // Do not serialize static cache.
     unset($vars['history'], $vars['index'], $vars['lastPostData'], $vars['forumChildren'], $vars['forumStatistics']);
@@ -512,7 +512,7 @@ class ForumManager implements ForumManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function __wakeup(): void {
+  public function __wakeup() {
     $this->defaultWakeup();
     // Initialize static cache.
     $this->history = [];

@@ -192,7 +192,7 @@ class Extension {
    * @return array
    *   The names of all variables that should be serialized.
    */
-  public function __sleep(): array {
+  public function __sleep() {
     // @todo \Drupal\Core\Extension\ThemeExtensionList is adding custom
     //   properties to the Extension object.
     $properties = get_object_vars($this);
@@ -205,7 +205,7 @@ class Extension {
   /**
    * Magic method implementation to unserialize the extension object.
    */
-  public function __wakeup(): void {
+  public function __wakeup() {
     // Get the app root from the container. While compiling the container we
     // have to discover all the extension service files in
     // \Drupal\Core\DrupalKernel::initializeServiceProviders(). This results in

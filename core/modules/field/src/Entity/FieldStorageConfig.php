@@ -751,7 +751,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * breaks entity forms in PHP 5.4.
    * @todo Investigate in https://www.drupal.org/node/1977206.
    */
-  public function __sleep(): array {
+  public function __sleep() {
     // Only serialize necessary properties, excluding those that can be
     // recalculated.
     $properties = get_object_vars($this);

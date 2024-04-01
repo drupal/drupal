@@ -30,7 +30,7 @@ trait DependencySerializationTrait {
   /**
    * {@inheritdoc}
    */
-  public function __sleep(): array {
+  public function __sleep() {
     $vars = get_object_vars($this);
     try {
       $container = \Drupal::getContainer();
@@ -70,7 +70,8 @@ trait DependencySerializationTrait {
   /**
    * {@inheritdoc}
    */
-  public function __wakeup(): void {
+  #[\ReturnTypeWillChange]
+  public function __wakeup() {
     // Avoid trying to wakeup if there's nothing to do.
     if (empty($this->_serviceIds) && empty($this->_entityStorages)) {
       return;

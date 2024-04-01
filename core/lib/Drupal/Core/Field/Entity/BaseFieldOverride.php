@@ -259,7 +259,7 @@ class BaseFieldOverride extends FieldConfigBase {
   /**
    * Implements the magic __sleep() method.
    */
-  public function __sleep(): array {
+  public function __sleep() {
     // Only serialize necessary properties, excluding those that can be
     // recalculated.
     unset($this->baseFieldDefinition);

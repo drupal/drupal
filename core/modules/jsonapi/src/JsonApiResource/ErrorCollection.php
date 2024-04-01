@@ -47,7 +47,8 @@ class ErrorCollection implements \IteratorAggregate {
    * @return \ArrayIterator
    *   An \ArrayIterator instance
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     return new \ArrayIterator($this->errors);
   }
 

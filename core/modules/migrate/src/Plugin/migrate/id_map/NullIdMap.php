@@ -181,33 +181,40 @@ class NullIdMap extends PluginBase implements MigrateIdMapInterface {
   /**
    * {@inheritdoc}
    */
-  public function rewind(): void {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function current(): mixed {
+  #[\ReturnTypeWillChange]
+  public function rewind() {
     return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function key(): mixed {
+  #[\ReturnTypeWillChange]
+  public function current() {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  #[\ReturnTypeWillChange]
+  public function key() {
     return '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function next(): void {
+  #[\ReturnTypeWillChange]
+  public function next() {
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function valid(): bool {
+  #[\ReturnTypeWillChange]
+  public function valid() {
     return FALSE;
   }
 

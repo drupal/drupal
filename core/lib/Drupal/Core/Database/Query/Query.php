@@ -83,7 +83,7 @@ abstract class Query implements PlaceholderInterface {
   /**
    * Implements the magic __sleep function to disconnect from the database.
    */
-  public function __sleep(): array {
+  public function __sleep() {
     $keys = get_object_vars($this);
     unset($keys['connection']);
     return array_keys($keys);
@@ -92,7 +92,7 @@ abstract class Query implements PlaceholderInterface {
   /**
    * Implements the magic __wakeup function to reconnect to the database.
    */
-  public function __wakeup(): void {
+  public function __wakeup() {
     $this->connection = Database::getConnection($this->connectionTarget, $this->connectionKey);
   }
 

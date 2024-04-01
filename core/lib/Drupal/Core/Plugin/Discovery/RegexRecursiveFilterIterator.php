@@ -23,7 +23,8 @@ class RegexRecursiveFilterIterator extends \RecursiveFilterIterator {
   /**
    * {@inheritdoc}
    */
-  public function accept(): bool {
+  #[\ReturnTypeWillChange]
+  public function accept() {
     /** @var \SplFileInfo $file_info */
     $file_info = $this->getInnerIterator()->current();
     if ($file_info->isDir()) {
@@ -37,7 +38,8 @@ class RegexRecursiveFilterIterator extends \RecursiveFilterIterator {
   /**
    * {@inheritdoc}
    */
-  public function getChildren(): ?\RecursiveFilterIterator {
+  #[\ReturnTypeWillChange]
+  public function getChildren() {
     $children = parent::getChildren();
     if ($children instanceof self && empty($children->regex)) {
       $children->regex = $this->regex;

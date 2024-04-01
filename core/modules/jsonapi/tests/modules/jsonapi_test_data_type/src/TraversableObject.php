@@ -12,7 +12,8 @@ class TraversableObject implements \IteratorAggregate {
   /**
    * {@inheritdoc}
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     return new \ArrayIterator();
   }
 

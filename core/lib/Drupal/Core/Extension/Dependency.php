@@ -141,7 +141,7 @@ class Dependency {
    * @return array
    *   The properties to serialize.
    */
-  public function __sleep(): array {
+  public function __sleep() {
     return ['name', 'project', 'constraintString'];
   }
 

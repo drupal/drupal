@@ -58,7 +58,8 @@ trait MarkupTrait {
    * @return int
    *   The length of the string.
    */
-  public function count(): int {
+  #[\ReturnTypeWillChange]
+  public function count() {
     return mb_strlen($this->string);
   }
 
@@ -68,7 +69,8 @@ trait MarkupTrait {
    * @return string
    *   The safe string content.
    */
-  public function jsonSerialize(): string {
+  #[\ReturnTypeWillChange]
+  public function jsonSerialize() {
     return $this->__toString();
   }
 
