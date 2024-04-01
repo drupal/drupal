@@ -86,7 +86,6 @@ class CredentialForm extends MigrateUpgradeFormBase {
     if ($this->store->get('step') != 'credential') {
       return $this->restartUpgradeForm();
     }
-
     $form = parent::buildForm($form, $form_state);
     $form['actions']['submit']['#value'] = $this->t('Review upgrade');
 
@@ -260,6 +259,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $connection = NULL;
     $source_connection = $form_state->getValue('source_connection');
     if ($source_connection) {
       $info = Database::getConnectionInfo($source_connection);
@@ -280,7 +280,6 @@ class CredentialForm extends MigrateUpgradeFormBase {
       $database['driver'] = $driver;
 
       // Validate the driver settings and just end here if we have any issues.
-      $connection = NULL;
       if ($errors = $drivers[$driver]->validateDatabaseSettings($database)) {
         foreach ($errors as $name => $message) {
           $this->errors[$name] = $message;
@@ -288,7 +287,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
       }
     }
 
-    // Get the Drupal version of the source database so it can be validated.
+    // Check the connection with the source database.
     $error_key = $database['driver'] . '][database';
     if (!$this->errors) {
       try {
@@ -300,6 +299,23 @@ class CredentialForm extends MigrateUpgradeFormBase {
       }
     }
 
+    // Check that the source database is not the site database.
+    if (!$this->errors) {
+      $options = array_flip(['database', 'host', 'port', 'prefix', 'namespace']);
+      $source = array_map('strval', array_intersect_key(
+        $connection->getConnectionOptions(),
+        $options,
+      ));
+      $destination = array_map('strval', array_intersect_key(
+        Database::getConnection()->getConnectionOptions(),
+        $options,
+      ));
+      ksort($source);
+      ksort($destination);
+      if ($source === $destination) {
+        $this->errors[$error_key] = $this->t('Enter credentials for the database of the Drupal site you want to upgrade, not the new site.');
+      }
+    }
     // Get the Drupal version of the source database so it can be validated.
     if (!$this->errors) {
       $version = (string) $this->getLegacyDrupalVersion($connection);
