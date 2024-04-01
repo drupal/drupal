@@ -105,8 +105,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @return int
    *   The length of the string.
    */
-  #[\ReturnTypeWillChange]
-  public function count() {
+  public function count(): int {
     return mb_strlen($this->string);
   }
 
@@ -116,8 +115,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @return string
    *   The safe string content.
    */
-  #[\ReturnTypeWillChange]
-  public function jsonSerialize() {
+  public function jsonSerialize(): string {
     return $this->__toString();
   }
 

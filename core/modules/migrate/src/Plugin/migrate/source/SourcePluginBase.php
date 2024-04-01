@@ -487,8 +487,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * @return int
    *   The count.
    */
-  #[\ReturnTypeWillChange]
-  public function count($refresh = FALSE) {
+  public function count($refresh = FALSE): int {
     if ($this->skipCount) {
       return MigrateSourceInterface::NOT_COUNTABLE;
     }

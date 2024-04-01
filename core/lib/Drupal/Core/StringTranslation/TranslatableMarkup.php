@@ -200,7 +200,7 @@ class TranslatableMarkup extends FormattableMarkup {
   /**
    * Magic __sleep() method to avoid serializing the string translator.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return ['string', 'arguments', 'options'];
   }
 
@@ -224,8 +224,7 @@ class TranslatableMarkup extends FormattableMarkup {
    * @return int
    *   The length of the string.
    */
-  #[\ReturnTypeWillChange]
-  public function count() {
+  public function count(): int {
     return mb_strlen($this->render());
   }
 

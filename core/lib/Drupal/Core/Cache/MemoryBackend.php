@@ -208,7 +208,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   /**
    * Prevents data stored in memory backends from being serialized.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return ['time'];
   }
 

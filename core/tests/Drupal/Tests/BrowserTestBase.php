@@ -603,7 +603,7 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @see vendor/phpunit/phpunit/src/Util/PHP/Template/TestCaseMethod.tpl.dist
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return [];
   }
 

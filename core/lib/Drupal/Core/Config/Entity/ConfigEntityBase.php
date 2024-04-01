@@ -340,7 +340,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     $keys_to_unset = [];
     if ($this instanceof EntityWithPluginCollectionInterface) {
       // Get the plugin collections first, so that the properties are

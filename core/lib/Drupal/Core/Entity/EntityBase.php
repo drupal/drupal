@@ -637,7 +637,7 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     $this->typedData = NULL;
     return $this->traitSleep();
   }
