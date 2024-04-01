@@ -5,8 +5,13 @@
  * Field hooks to implement a datetime field that stores a start and end date.
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\datetime_range\DateTimeRangeConstantsInterface;
+use Drupal\datetime_range\Plugin\Field\FieldFormatter\DateRangeCustomFormatter;
+use Drupal\datetime_range\Plugin\Field\FieldFormatter\DateRangeDefaultFormatter;
+use Drupal\datetime_range\Plugin\Field\FieldFormatter\DateRangePlainFormatter;
 
 /**
  * Implements hook_help().
@@ -25,5 +30,38 @@ function datetime_range_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('Dates can be displayed using the <em>Plain</em> or the <em>Default</em> formatter. The <em>Plain</em> formatter displays the date in the <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format. If you choose the <em>Default</em> formatter, you can choose a format from a predefined list that can be managed on the <a href=":date_format_list">Date and time formats</a> page.', [':date_format_list' => Url::fromRoute('entity.date_format.collection')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for entity_view_display entities.
+ *
+ * @todo Remove this when datetime_range_post_update_from_to_configuration is removed.
+ */
+function datetime_range_entity_view_display_presave(EntityViewDisplayInterface $entity_view_display): void {
+  /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
+  $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
+
+  foreach ($entity_view_display->getComponents() as $name => $component) {
+    if (empty($component['type'])) {
+      continue;
+    }
+
+    $plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE);
+    $daterange_formatter_classes = [
+      DateRangeCustomFormatter::class,
+      DateRangeDefaultFormatter::class,
+      DateRangePlainFormatter::class,
+    ];
+
+    if (!in_array($plugin_definition['class'], $daterange_formatter_classes, FALSE)) {
+      continue;
+    }
+
+    if (!isset($component['settings']['from_to'])) {
+      // Existing daterange formatters don't have 'from_to'.
+      $component['settings']['from_to'] = DateTimeRangeConstantsInterface::BOTH;
+      $entity_view_display->setComponent($name, $component);
+    }
   }
 }
