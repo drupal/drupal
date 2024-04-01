@@ -2,8 +2,10 @@
 
 namespace Drupal\shortcut;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 
 /**
@@ -23,9 +25,21 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entityTypeManager
+   *   The entity type manager.
+   * @param \Drupal\Core\Session\AccountInterface|null $currentUser
+   *   The current user.
    */
-  public function __construct(RendererInterface $renderer) {
+  public function __construct(RendererInterface $renderer, protected ?EntityTypeManagerInterface $entityTypeManager, protected ?AccountInterface $currentUser) {
     $this->renderer = $renderer;
+    if (!isset($this->entityTypeManager)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entityTypeManager argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3427050', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
+    if (!isset($this->currentUser)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $currentUser argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3427050', E_USER_DEPRECATED);
+      $this->currentUser = \Drupal::currentUser();
+    }
   }
 
   /**
@@ -45,7 +59,8 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
    *   A renderable array of shortcut links.
    */
   public function lazyLinks(bool $show_configure_link = TRUE) {
-    $shortcut_set = shortcut_current_displayed_set();
+    $shortcut_set = $this->entityTypeManager->getStorage('shortcut_set')
+      ->getDisplayedToUser($this->currentUser);
 
     $links = shortcut_renderable_links();
 
@@ -63,6 +78,7 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
       'shortcuts' => $links,
       'configure' => $configure_link,
     ];
+
     $this->renderer->addCacheableDependency($build, $shortcut_set);
 
     return $build;

@@ -12,7 +12,6 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetInterface;
 
 /**
@@ -66,7 +65,13 @@ function shortcut_set_edit_access(ShortcutSetInterface $shortcut_set = NULL) {
 
   // Sufficiently-privileged users can edit their currently displayed shortcut
   // set, but not other sets. They must also be able to access shortcuts.
-  $may_edit_current_shortcut_set = $account->hasPermission('customize shortcut links') && (!isset($shortcut_set) || $shortcut_set == shortcut_current_displayed_set()) && $account->hasPermission('access shortcuts');
+  $may_edit_current_shortcut_set = $account->hasPermission('customize shortcut links') && $account->hasPermission('access shortcuts');
+  if ($may_edit_current_shortcut_set && isset($shortcut_set)) {
+    $displayed_shortcut_set = \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->getDisplayedToUser($account);
+    $may_edit_current_shortcut_set = ($shortcut_set == $displayed_shortcut_set);
+  }
   $result = AccessResult::allowedIf($may_edit_current_shortcut_set)->cachePerPermissions();
   if (!$result->isAllowed()) {
     $result->setReason("The shortcut set must be the currently displayed set for the user and the user must have 'access shortcuts' AND 'customize shortcut links' permissions.");
@@ -127,8 +132,15 @@ function shortcut_set_switch_access($account = NULL) {
  *   An object representing the shortcut set that should be displayed to the
  *   current user. If the user does not have an explicit shortcut set defined,
  *   the default set is returned.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ * \Drupal\shortcut\ShortcutSetStorageInterface::getDisplayedToUser()
+ * instead.
+ *
+ * @see https://www.drupal.org/node/3427050
  */
 function shortcut_current_displayed_set($account = NULL) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\shortcut\ShortcutSetStorageInterface::getDisplayedToUser() instead. See https://www.drupal.org/node/3427050', E_USER_DEPRECATED);
   $shortcut_sets = &drupal_static(__FUNCTION__, []);
   $user = \Drupal::currentUser();
   if (!isset($account)) {
@@ -140,16 +152,9 @@ function shortcut_current_displayed_set($account = NULL) {
   }
   // If none was found, try to find a shortcut set that is explicitly assigned
   // to this user.
-  $shortcut_set_name = \Drupal::entityTypeManager()
+  $shortcut_set = \Drupal::entityTypeManager()
     ->getStorage('shortcut_set')
-    ->getAssignedToUser($account);
-  if ($shortcut_set_name) {
-    $shortcut_set = ShortcutSet::load($shortcut_set_name);
-  }
-  // Otherwise, use the default set.
-  else {
-    $shortcut_set = shortcut_default_set($account);
-  }
+    ->getDisplayedToUser($account);
 
   $shortcut_sets[$account->id()] = $shortcut_set;
   return $shortcut_set;
@@ -165,26 +170,22 @@ function shortcut_current_displayed_set($account = NULL) {
  *
  * @return \Drupal\shortcut\ShortcutSetInterface|null
  *   An object representing the default shortcut set.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\shortcut\ShortcutSetStorageInterface::getDefaultSet() instead.
+ *
+ * @see https://www.drupal.org/node/3427050
  */
 function shortcut_default_set($account = NULL) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\shortcut\ShortcutSetStorageInterface::getDefaultSet() instead. See https://www.drupal.org/node/3427050', E_USER_DEPRECATED);
   $user = \Drupal::currentUser();
   if (!isset($account)) {
     $account = $user;
   }
 
-  // Allow modules to return a default shortcut set name. Since we can only
-  // have one, we allow the last module which returns a valid result to take
-  // precedence. If no module returns a valid set, fall back on the site-wide
-  // default, which is the lowest-numbered shortcut set.
-  $suggestions = array_reverse(\Drupal::moduleHandler()->invokeAll('shortcut_default_set', [$account]));
-  $suggestions[] = 'default';
-  foreach ($suggestions as $name) {
-    if ($shortcut_set = ShortcutSet::load($name)) {
-      break;
-    }
-  }
-
-  return $shortcut_set;
+  return \Drupal::entityTypeManager()
+    ->getStorage('shortcut_set')
+    ->getDefaultSet($account);
 }
 
 /**
@@ -201,7 +202,10 @@ function shortcut_renderable_links($shortcut_set = NULL) {
   $shortcut_links = [];
 
   if (!isset($shortcut_set)) {
-    $shortcut_set = shortcut_current_displayed_set();
+    $account = \Drupal::currentUser();
+    $shortcut_set = \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->getDisplayedToUser($account);
   }
 
   $cache_tags = [];
@@ -266,7 +270,9 @@ function shortcut_preprocess_page_title(&$variables) {
       'name' => trim(strip_tags($name)),
     ];
 
-    $shortcut_set = shortcut_current_displayed_set();
+    $shortcut_set = \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->getDisplayedToUser(\Drupal::currentUser());
 
     // Pages with the add or remove shortcut button need cache invalidation when
     // a shortcut is added, edited, or removed.
@@ -334,7 +340,9 @@ function shortcut_toolbar() {
   ];
 
   if ($user->hasPermission('access shortcuts')) {
-    $shortcut_set = shortcut_current_displayed_set();
+    $shortcut_set = \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->getDisplayedToUser($user);
 
     $items['shortcuts'] += [
       '#type' => 'toolbar_item',

@@ -70,7 +70,7 @@ class SwitchShortcutSet extends FormBase {
       return $set->label();
     }, $this->shortcutSetStorage->loadMultiple());
 
-    $current_set = shortcut_current_displayed_set($this->user);
+    $current_set = $this->shortcutSetStorage->getDisplayedToUser($this->user);
 
     // Only administrators can add shortcut sets.
     $add_access = $account->hasPermission('administer shortcuts');
