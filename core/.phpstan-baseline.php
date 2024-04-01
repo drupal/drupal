@@ -1429,11 +1429,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/MigrationConfigurationTraitTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$connection might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/CredentialForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$version might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/CredentialForm.php',

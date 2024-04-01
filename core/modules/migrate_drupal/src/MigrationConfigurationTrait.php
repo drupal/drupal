@@ -206,45 +206,27 @@ trait MigrationConfigurationTrait {
     // we're querying. Catch exceptions and report that the source database is
     // not Drupal.
     // Drupal 5/6/7 can be detected by the schema_version in the system table.
+    $version_string = FALSE;
     if ($connection->schema()->tableExists('system')) {
       try {
-        $version_string = $connection
+        $legacy_version_string = $connection
           ->query('SELECT [schema_version] FROM {system} WHERE [name] = :module', [':module' => 'system'])
           ->fetchField();
-        if ($version_string && $version_string[0] == '1') {
-          if ((int) $version_string >= 1000) {
+        if ($legacy_version_string && $legacy_version_string[0] == '1') {
+          if ((int) $legacy_version_string >= 1000) {
             $version_string = '5';
           }
-          else {
-            $version_string = FALSE;
-          }
+        }
+        else {
+          $version_string = substr($legacy_version_string, 0, 1);
         }
       }
       catch (DatabaseExceptionWrapper $e) {
-        $version_string = FALSE;
+        // All database errors return FALSE.
       }
-    }
-    // For Drupal 8 (and we're predicting beyond) the schema version is in the
-    // key_value store.
-    elseif ($connection->schema()->tableExists('key_value')) {
-      try {
-        $result = $connection
-          ->query("SELECT [value] FROM {key_value} WHERE [collection] = :system_schema AND [name] = :module", [
-            ':system_schema' => 'system.schema',
-            ':module' => 'system',
-          ])
-          ->fetchField();
-        $version_string = unserialize($result);
-      }
-      catch (DatabaseExceptionWrapper $e) {
-        $version_string = FALSE;
-      }
-    }
-    else {
-      $version_string = FALSE;
     }
 
-    return $version_string ? substr($version_string, 0, 1) : FALSE;
+    return $version_string;
   }
 
   /**
