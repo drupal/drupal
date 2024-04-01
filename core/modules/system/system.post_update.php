@@ -212,3 +212,14 @@ function system_post_update_mail_notification_setting() {
     $config->set('mail_notification', NULL)->save();
   }
 }
+
+/**
+ * Fix system.cron:logging values to boolean.
+ */
+function system_post_update_set_cron_logging_setting_to_boolean(): void {
+  $config = \Drupal::configFactory()->getEditable('system.cron');
+  $logging = $config->get('logging');
+  if (!is_bool($logging)) {
+    $config->set('logging', (bool) $logging)->save();
+  }
+}

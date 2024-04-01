@@ -924,8 +924,8 @@ class ConfigImporterTest extends KernelTestBase {
 
     $cronName = 'system.cron';
     $cron = $sync->read($cronName);
-    $this->assertEquals(1, $cron['logging']);
-    $cron['logging'] = 0;
+    $this->assertTrue($cron['logging']);
+    $cron['logging'] = FALSE;
     $sync->write($cronName, $cron);
 
     // Uninstall the theme in sync.
