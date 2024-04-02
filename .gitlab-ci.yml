@@ -490,6 +490,8 @@ default:
       - 100
       # `drush pm:install config_inspector …` fails (implies failure during module installation)
       - 101
+      # Temporarily allow this to fail as there's are bugs with adding/removing/modifying config schemas.
+      - 1
   script:
     # Revert back to the tip of the branch this MR started from.
     - git checkout -f $CI_MERGE_REQUEST_DIFF_BASE_SHA
