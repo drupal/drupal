@@ -96,12 +96,15 @@ interface WorkspaceAssociationInterface {
    *
    * @param \Drupal\Core\Entity\RevisionableInterface $entity
    *   An entity object.
+   * @param bool $latest_revision
+   *   (optional) Whether to return only the workspaces in which the latest
+   *   revision of the entity is tracked. Defaults to FALSE.
    *
    * @return string[]
    *   An array of workspace IDs where the given entity is tracked, or an empty
    *   array if it is not tracked anywhere.
    */
-  public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity);
+  public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity, bool $latest_revision = FALSE);
 
   /**
    * Triggers clean-up operations after publishing a workspace.
