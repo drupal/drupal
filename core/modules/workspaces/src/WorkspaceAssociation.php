@@ -304,13 +304,33 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
-  public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity) {
-    $query = $this->database->select(static::TABLE)
-      ->fields(static::TABLE, ['workspace'])
-      ->condition('target_entity_type_id', $entity->getEntityTypeId())
-      ->condition('target_entity_id', $entity->id());
+  public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity, bool $latest_revision = FALSE) {
+    $query = $this->database->select(static::TABLE, 'wa')
+      ->fields('wa', ['workspace'])
+      ->condition('[wa].[target_entity_type_id]', $entity->getEntityTypeId())
+      ->condition('[wa].[target_entity_id]', $entity->id());
 
-    return $query->execute()->fetchCol();
+    // Use a self-join to get only the workspaces in which the latest revision
+    // of the entity is tracked.
+    if ($latest_revision) {
+      $inner_select = $this->database->select(static::TABLE, 'wai')
+        ->condition('[wai].[target_entity_type_id]', $entity->getEntityTypeId())
+        ->condition('[wai].[target_entity_id]', $entity->id());
+      $inner_select->addExpression('MAX([wai].[target_entity_revision_id])', 'max_revision_id');
+
+      $query->join($inner_select, 'waj', '[wa].[target_entity_revision_id] = [waj].[max_revision_id]');
+    }
+
+    $result = $query->execute()->fetchCol();
+
+    // Return early if the entity is not tracked in any workspace.
+    if (empty($result)) {
+      return [];
+    }
+
+    // Return workspace IDs sorted in tree order.
+    $tree = $this->workspaceRepository->loadTree();
+    return array_keys(array_intersect_key($tree, array_flip($result)));
   }
 
   /**
