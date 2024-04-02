@@ -698,6 +698,19 @@ class ContainerTest extends TestCase {
   }
 
   /**
+   * Tests that service iterators are lazily instantiated.
+   */
+  public function testIterator() {
+    $iterator = $this->container->get('service_iterator')->getArguments()[0];
+    $this->assertIsIterable($iterator);
+    $this->assertFalse($this->container->initialized('other.service'));
+    foreach ($iterator as $service) {
+      $this->assertIsObject($service);
+    }
+    $this->assertTrue($this->container->initialized('other.service'));
+  }
+
+  /**
    * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::getServiceIdMappings
    * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::generateServiceIdHash
    *
@@ -993,6 +1006,16 @@ class ContainerTest extends TestCase {
       'arguments' => $this->getCollection([$this->getRaw('ccc')]),
     ];
 
+    // Iterator argument.
+    $services['service_iterator'] = [
+      'class' => '\Drupal\Tests\Component\DependencyInjection\MockInstantiationService',
+      'arguments' => $this->getCollection([
+        $this->getIterator([
+          $this->getServiceCall('other.service'),
+        ]),
+      ]),
+    ];
+
     $aliases = [];
     $aliases['service.provider_alias'] = 'service.provider';
     $aliases['late.service_alias'] = 'late.service';
@@ -1025,6 +1048,16 @@ class ContainerTest extends TestCase {
       'type' => 'service_closure',
       'id' => $id,
       'invalidBehavior' => $invalid_behavior,
+    ];
+  }
+
+  /**
+   * Helper function to return a service iterator.
+   */
+  protected function getIterator($iterator) {
+    return (object) [
+      'type' => 'iterator',
+      'value' => $iterator,
     ];
   }
 

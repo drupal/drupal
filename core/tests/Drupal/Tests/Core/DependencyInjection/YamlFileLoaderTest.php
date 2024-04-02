@@ -9,6 +9,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 
 /**
  * @coversDefaultClass \Drupal\Core\DependencyInjection\YamlFileLoader
@@ -35,6 +36,9 @@ services:
     class: \Drupal\Core\ExampleClass
     public: false
   Drupal\Core\ExampleClass: ~
+  example_tagged_iterator:
+    class: \Drupal\Core\ExampleClass
+    arguments: [!tagged_iterator foo.bar]"
 YAML;
 
     vfsStream::setup('drupal', NULL, [
@@ -58,6 +62,7 @@ YAML;
     $this->assertFalse($builder->has('example_private_service'));
     $this->assertTrue($builder->has('Drupal\Core\ExampleClass'));
     $this->assertSame('Drupal\Core\ExampleClass', $builder->getDefinition('Drupal\Core\ExampleClass')->getClass());
+    $this->assertInstanceOf(TaggedIteratorArgument::class, $builder->getDefinition('example_tagged_iterator')->getArgument(0));
   }
 
   /**
