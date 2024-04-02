@@ -27,8 +27,8 @@
  *   '#type' => 'file',
  *   '#title' => $this->t('Upload file'),
  *   '#upload_validators' => [
- *     'FileExtension' => [
- *       'extensions' => 'png gif jpg',
+ *     'file_validate_extensions' => [
+ *       'png gif jpg',
  *     ],
  *   ],
  * ];
