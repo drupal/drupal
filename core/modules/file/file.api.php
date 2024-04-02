@@ -15,7 +15,7 @@
  * Using \Drupal\file\Element\ManagedFile field with a defined list of allowed
  * extensions is best way to provide a file upload field. It will ensure that:
  * - File names are sanitized by the FileUploadSanitizeNameEvent event.
- * - Files are validated by hook implementations of hook_file_validate().
+ * - Files are validated by \Drupal\file\Validation\FileValidatorInterface().
  * - Files with insecure extensions will be blocked by default even if they are
  *   listed. If .txt is an allowed extension such files will be renamed.
  *
@@ -27,14 +27,15 @@
  *   '#type' => 'file',
  *   '#title' => $this->t('Upload file'),
  *   '#upload_validators' => [
- *     'file_validate_extensions' => [
- *       'png gif jpg',
+ *     'FileExtension' => [
+ *        'extensions' => 'png gif jpg',
+ *       ],
  *     ],
  *   ],
  * ];
  * @endcode
  * - Use file_save_upload() to trigger the FileUploadSanitizeNameEvent event and
- *   hook_file_validate().
+ *   \Drupal\file\Validation\FileValidatorInterface::validate().
  *
  * Important considerations, regardless of the form element used:
  * - Always use and validate against a list of allowed extensions.
@@ -43,7 +44,7 @@
  *   recommended.
  *
  * @see https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html
- * @see \hook_file_validate()
+ * @see \Drupal\file\Validation\FileValidatorInterface
  * @see file_save_upload()
  * @see \Drupal\Core\File\Event\FileUploadSanitizeNameEvent
  * @see \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber
@@ -71,7 +72,11 @@
  *   An array of error messages. If there are no problems with the file return
  *   an empty array.
  *
- * @see file_validate()
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the
+ *    'file.validator' service instead.
+ *
+ * @see https://www.drupal.org/node/3363700
+ * @see \Drupal\file\Validation\FileValidatorInterface
  */
 function hook_file_validate(\Drupal\file\FileInterface $file) {
   $errors = [];
