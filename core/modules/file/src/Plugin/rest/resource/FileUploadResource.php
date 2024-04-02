@@ -64,32 +64,6 @@ class FileUploadResource extends ResourceBase {
   }
 
   /**
-   * The regex used to extract the filename from the content disposition header.
-   *
-   * @var string
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\file\Upload\ContentDispositionFilenameParser::REQUEST_HEADER_FILENAME_REGEX
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3380380
-   */
-  const REQUEST_HEADER_FILENAME_REGEX = '@\bfilename(?<star>\*?)=\"(?<filename>.+)\"@';
-
-  /**
-   * The amount of bytes to read in each iteration when streaming file data.
-   *
-   * @var int
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   * \Drupal\file\Upload\InputStreamFileWriterInterface::DEFAULT_BYTES_TO_READ
-   * instead.
-   *
-   * @see https://www.drupal.org/node/3380607
-   */
-  const BYTES_TO_READ = 8192;
-
-  /**
    * The file system service.
    *
    * @var \Drupal\Core\File\FileSystem
@@ -193,12 +167,12 @@ class FileUploadResource extends ResourceBase {
    *   The system file configuration.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
-   * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
+   * @param \Drupal\file\Validation\FileValidatorInterface $file_validator
    *   The file validator service.
-   * @param \Drupal\file\Upload\InputStreamFileWriterInterface|null $input_stream_file_writer
+   * @param \Drupal\file\Upload\InputStreamFileWriterInterface $input_stream_file_writer
    *   The input stream file writer.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher, FileValidatorInterface $file_validator = NULL, InputStreamFileWriterInterface $input_stream_file_writer = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher, FileValidatorInterface $file_validator, InputStreamFileWriterInterface $input_stream_file_writer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
@@ -209,15 +183,7 @@ class FileUploadResource extends ResourceBase {
     $this->lock = $lock;
     $this->systemFileConfig = $system_file_config;
     $this->eventDispatcher = $event_dispatcher;
-    if (!$file_validator) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $file_validator argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
-      $file_validator = \Drupal::service('file.validator');
-    }
     $this->fileValidator = $file_validator;
-    if (!$input_stream_file_writer) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $input_stream_file_writer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3380607', E_USER_DEPRECATED);
-      $input_stream_file_writer = \Drupal::service('file.input_stream_file_writer');
-    }
     $this->inputStreamFileWriter = $input_stream_file_writer;
   }
 
@@ -394,29 +360,6 @@ class FileUploadResource extends ResourceBase {
       throw new HttpException(500, 'Temporary file could not be opened', $e);
     }
     return $temp_file_path;
-  }
-
-  /**
-   * Validates and extracts the filename from the Content-Disposition header.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return string
-   *   The filename extracted from the header.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-   *   Thrown when the 'Content-Disposition' request header is invalid.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\file\Upload\ContentDispositionFilenameParser::parseFilename()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3380380
-   */
-  protected function validateAndParseContentDispositionHeader(Request $request) {
-    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\ContentDispositionFilenameParser::parseFilename() instead. See https://www.drupal.org/node/3380380', E_USER_DEPRECATED);
-    return ContentDispositionFilenameParser::parseFilename($request);
   }
 
   /**
