@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\id_map;
 
+use Drupal\Component\Plugin\Attribute\PluginID;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -12,9 +13,8 @@ use Drupal\migrate\Row;
  * Defines the null ID map implementation.
  *
  * This serves as a dummy in order to not store anything.
- *
- * @PluginID("null")
  */
+#[PluginID('null')]
 class NullIdMap extends PluginBase implements MigrateIdMapInterface {
 
   /**

@@ -4,8 +4,10 @@ namespace Drupal\migrate\Plugin;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\migrate\Plugin\Discovery\AnnotatedClassDiscoveryAutomatedProviders;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
+use Drupal\migrate\Plugin\Discovery\AnnotatedClassDiscoveryAutomatedProviders;
+use Drupal\migrate\Plugin\Discovery\AttributeClassDiscoveryAutomatedProviders;
+use Drupal\migrate\Plugin\Discovery\AttributeDiscoveryWithAnnotationsAutomatedProviders;
 use Drupal\migrate\Plugin\Discovery\ProviderFilterDecorator;
 
 /**
@@ -13,7 +15,7 @@ use Drupal\migrate\Plugin\Discovery\ProviderFilterDecorator;
  *
  * @see \Drupal\migrate\Plugin\MigrateSourceInterface
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- * @see \Drupal\migrate\Annotation\MigrateSource
+ * @see \Drupal\migrate\Attribute\MigrateSource
  * @see plugin_api
  *
  * @ingroup migration
@@ -35,7 +37,7 @@ class MigrateSourcePluginManager extends MigratePluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct($type, $namespaces, $cache_backend, $module_handler, 'Drupal\migrate\Annotation\MigrateSource');
+    parent::__construct($type, $namespaces, $cache_backend, $module_handler, 'Drupal\migrate\Attribute\MigrateSource', 'Drupal\migrate\Annotation\MigrateSource');
   }
 
   /**
@@ -43,7 +45,30 @@ class MigrateSourcePluginManager extends MigratePluginManager {
    */
   protected function getDiscovery() {
     if (!$this->discovery) {
-      $discovery = new AnnotatedClassDiscoveryAutomatedProviders($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
+      if (isset($this->pluginDefinitionAttributeName) && isset($this->pluginDefinitionAnnotationName)) {
+        $discovery = new AttributeDiscoveryWithAnnotationsAutomatedProviders(
+          $this->subdir,
+          $this->namespaces,
+          $this->pluginDefinitionAttributeName,
+          $this->pluginDefinitionAnnotationName,
+          $this->additionalAnnotationNamespaces,
+        );
+      }
+      elseif (isset($this->pluginDefinitionAttributeName)) {
+        $discovery = new AttributeClassDiscoveryAutomatedProviders(
+          $this->subdir,
+          $this->namespaces,
+          $this->pluginDefinitionAttributeName,
+        );
+      }
+      else {
+        $discovery = new AnnotatedClassDiscoveryAutomatedProviders(
+          $this->subdir,
+          $this->namespaces,
+          $this->pluginDefinitionAnnotationName,
+          $this->additionalAnnotationNamespaces,
+        );
+      }
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
     }
     return $this->discovery;

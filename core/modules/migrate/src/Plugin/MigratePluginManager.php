@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin;
 
+use Drupal\Component\Plugin\Attribute\AttributeInterface;
+use Drupal\Component\Plugin\Attribute\PluginID;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -11,10 +13,10 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * Manages migrate plugins.
  *
  * @see hook_migrate_info_alter()
- * @see \Drupal\migrate\Annotation\MigrateSource
+ * @see \Drupal\migrate\Attribute\MigrateSource
  * @see \Drupal\migrate\Plugin\MigrateSourceInterface
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- * @see \Drupal\migrate\Annotation\MigrateProcessPlugin
+ * @see \Drupal\migrate\Attribute\MigrateProcess
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  * @see \Drupal\migrate\Plugin\migrate\process\ProcessPluginBase
  * @see plugin_api
@@ -36,12 +38,20 @@ class MigratePluginManager extends DefaultPluginManager implements MigratePlugin
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
+   * @param string $attribute
+   *   (optional) The attribute class name. Defaults to
+   *   'Drupal\Component\Plugin\Attribute\PluginID'.
    * @param string $annotation
    *   (optional) The annotation class name. Defaults to
    *   'Drupal\Component\Annotation\PluginID'.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
-    parent::__construct("Plugin/migrate/$type", $namespaces, $module_handler, NULL, $annotation);
+  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, $attribute = PluginID::class, $annotation = 'Drupal\Component\Annotation\PluginID') {
+    if (!is_subclass_of($attribute, AttributeInterface::class)) {
+      // Backward compatibility.
+      $annotation = $attribute;
+      $attribute = PluginID::class;
+    }
+    parent::__construct("Plugin/migrate/$type", $namespaces, $module_handler, NULL, $attribute, $annotation);
     $this->alterInfo('migrate_' . $type . '_info');
     $this->setCacheBackend($cache_backend, 'migrate_plugins_' . $type);
   }

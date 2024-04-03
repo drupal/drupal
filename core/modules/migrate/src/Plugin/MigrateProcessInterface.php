@@ -15,7 +15,7 @@ use Drupal\migrate\Row;
  *
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\ProcessPluginBase
- * @see \Drupal\migrate\Annotation\MigrateProcessPlugin
+ * @see \Drupal\migrate\Attribute\MigrateProcess
  * @see plugin_api
  *
  * @ingroup migration

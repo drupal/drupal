@@ -9,7 +9,7 @@ use Drupal\migrate\Row;
  * Defines an interface for migrate sources.
  *
  * @see \Drupal\migrate\Plugin\MigratePluginManager
- * @see \Drupal\migrate\Annotation\MigrateSource
+ * @see \Drupal\migrate\Attribute\MigrateSource
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  * @see plugin_api
  *

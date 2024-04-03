@@ -13,7 +13,7 @@ use Drupal\migrate\Row;
  *
  * @see \Drupal\migrate\Plugin\migrate\destination\DestinationBase
  * @see \Drupal\migrate\Plugin\MigrateDestinationPluginManager
- * @see \Drupal\migrate\Annotation\MigrateDestination
+ * @see \Drupal\migrate\Attribute\MigrateDestination
  * @see plugin_api
  *
  * @ingroup migration
