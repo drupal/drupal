@@ -5,12 +5,14 @@ namespace Drupal\KernelTests\Config;
 use Drupal\Core\Config\Schema\Sequence;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\Config\Schema\TypedConfigInterface;
+use Drupal\Core\Config\Schema\Undefined;
+use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
 use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Error\Error;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
@@ -45,15 +47,6 @@ class TypedConfigTest extends KernelTestBase {
   public function testTypedDataAPI() {
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
     $typed_config_manager = \Drupal::service('config.typed');
-
-    // Test non-existent data.
-    try {
-      $typed_config_manager->get('config_test.non_existent');
-      $this->fail('Expected error when trying to get non-existent typed config.');
-    }
-    catch (Error $e) {
-      $this->assertEquals('Missing required data for typed configuration: config_test.non_existent', $e->getMessage());
-    }
 
     /** @var \Drupal\Core\Config\Schema\TypedConfigInterface $typed_config */
     $typed_config = $typed_config_manager->get('config_test.validation');
@@ -110,6 +103,33 @@ class TypedConfigTest extends KernelTestBase {
     $typed_config = $typed_config_manager->createFromNameAndData($config_test_entity->getConfigDependencyName(), $config_test_entity->toArray());
     $this->assertInstanceOf(TypedConfigInterface::class, $typed_config);
     $this->assertEquals(['uuid', 'langcode', 'status', 'dependencies', 'id', 'label', 'weight', 'style', 'size', 'size_value', 'protected_property'], array_keys($typed_config->getElements()));
+  }
+
+  /**
+   * Tests non-existent data.
+   */
+  public function testNonExistingTypedData(): void {
+    $loggerClosure = function (): LoggerInterface {
+      $logger = $this->prophesize(LoggerInterface::class);
+      $logger->error("Missing required data for typed configuration: %config", [
+        "%config" => "config_test.non_existent",
+      ])->shouldBeCalledOnce();
+      return $logger->reveal();
+    };
+
+    // Create a typed config manager with the logger prophecy.
+    $typedConfigManager = new TypedConfigManager(
+      \Drupal::service('config.storage'),
+      \Drupal::service('config.storage.schema'),
+      \Drupal::service('cache.discovery'),
+      \Drupal::service('module_handler'),
+      \Drupal::service('class_resolver'),
+      $loggerClosure,
+    );
+
+    /** @var \Drupal\Core\Config\Schema\Undefined $typedConfig */
+    $typedConfig = $typedConfigManager->get('config_test.non_existent');
+    $this->assertInstanceOf(Undefined::class, $typedConfig);
   }
 
   /**

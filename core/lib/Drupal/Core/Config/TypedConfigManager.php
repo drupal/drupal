@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
@@ -16,25 +15,13 @@ use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstraint;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 
 /**
  * Manages config schema type plugins.
  */
 class TypedConfigManager extends TypedDataManager implements TypedConfigManagerInterface {
-
-  /**
-   * A storage instance for reading configuration data.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $configStorage;
-
-  /**
-   * A storage instance for reading configuration schema data.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $schemaStorage;
 
   /**
    * The array of plugin definitions, keyed by plugin id.
@@ -43,27 +30,22 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    */
   protected $definitions;
 
-  /**
-   * Creates a new typed configuration manager.
-   *
-   * @param \Drupal\Core\Config\StorageInterface $configStorage
-   *   The storage object to use for reading schema data
-   * @param \Drupal\Core\Config\StorageInterface $schemaStorage
-   *   The storage object to use for reading schema data
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache backend to use for caching the definitions.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
-   *   (optional) The class resolver.
-   */
-  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ClassResolverInterface $class_resolver = NULL) {
-    $this->configStorage = $configStorage;
-    $this->schemaStorage = $schemaStorage;
+  public function __construct(
+    #[Autowire(service: 'config.storage')]
+    protected StorageInterface $configStorage,
+    #[Autowire(service: 'config.storage.schema')]
+    protected StorageInterface $schemaStorage,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache,
+    ModuleHandlerInterface $module_handler,
+    ClassResolverInterface $class_resolver,
+    #[AutowireServiceClosure('logger.channel.php')]
+    protected \Closure $loggerClosure,
+  ) {
     $this->setCacheBackend($cache, 'typed_config_definitions');
     $this->alterInfo('config_schema_info');
     $this->moduleHandler = $module_handler;
-    $this->classResolver = $class_resolver ?: \Drupal::service('class_resolver');
+    $this->classResolver = $class_resolver;
   }
 
   /**
@@ -84,9 +66,11 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     if ($data === FALSE) {
       // For a typed config the data MUST exist.
       $data = [];
-      trigger_error(new FormattableMarkup('Missing required data for typed configuration: @config', [
-        '@config' => $name,
-      ]), E_USER_ERROR);
+      /** @var \Psr\Log\LoggerInterface $logger */
+      $logger = ($this->loggerClosure)();
+      $logger->error('Missing required data for typed configuration: %config', [
+        '%config' => $name,
+      ]);
     }
     return $this->createFromNameAndData($name, $data);
   }
