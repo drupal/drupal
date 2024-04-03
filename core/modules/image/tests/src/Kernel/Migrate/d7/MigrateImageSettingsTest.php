@@ -29,7 +29,7 @@ class MigrateImageSettingsTest extends MigrateDrupal7TestBase {
     // These settings are not recommended...
     $this->assertTrue($config->get('allow_insecure_derivatives'));
     $this->assertTrue($config->get('suppress_itok_output'));
-    $this->assertSame("core/modules/image/testsample.png", $config->get('preview_image'));
+    $this->assertSame("core/misc/druplicon.png", $config->get('preview_image'));
   }
 
 }
