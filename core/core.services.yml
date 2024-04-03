@@ -409,7 +409,7 @@ services:
     arguments: ['@config.storage', 'config/schema', '', true, '%install_profile%']
   config.typed:
     class: Drupal\Core\Config\TypedConfigManager
-    autowire: true
+    arguments: ['@config.storage', '@config.storage.schema', '@cache.discovery', '@module_handler', '@class_resolver']
     tags:
       - { name: plugin_manager_cache_clear }
     calls:

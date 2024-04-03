@@ -13,7 +13,6 @@ use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\TypedConfigManager;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\views\Tests\ViewTestData;
-use Psr\Log\LoggerInterface;
 
 /**
  * Tests that test views provided by all modules match schema.
@@ -200,10 +199,6 @@ class TestViewsTest extends KernelTestBase {
    * Tests default configuration data type.
    */
   public function testDefaultConfig() {
-    $loggerClosure = function (): LoggerInterface {
-      return $this->prophesize(LoggerInterface::class)->reveal();
-    };
-
     // Create a typed config manager with access to configuration schema in
     // every module, profile and theme.
     $typed_config = new TypedConfigManager(
@@ -211,8 +206,7 @@ class TestViewsTest extends KernelTestBase {
       new TestInstallStorage(InstallStorage::CONFIG_SCHEMA_DIRECTORY),
       \Drupal::service('cache.discovery'),
       \Drupal::service('module_handler'),
-      \Drupal::service('class_resolver'),
-      $loggerClosure,
+      \Drupal::service('class_resolver')
     );
     $typed_config->setValidationConstraintManager(\Drupal::service('validation.constraint'));
     // Avoid restricting to the config schemas discovered.
