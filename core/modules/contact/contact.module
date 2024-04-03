@@ -161,7 +161,13 @@ function contact_mail($key, &$message, $params) {
       $message['subject'] .= t('[@site-name] @subject', $variables, $options);
       $message['body'][] = t('Hello @recipient-name,', $variables, $options);
       $message['body'][] = t("@sender-name (@sender-url) has sent you a message via your contact form at @site-name.", $variables, $options);
-      $message['body'][] = t("If you don't want to receive such emails, you can change your settings at @recipient-edit-url.", $variables, $options);
+      // Only include the opt-out line in the original email and not in the
+      // copy to the sender. Also exclude this if the email was sent from a
+      // user administrator because they can always send emails even if the
+      // contacted user has disabled their contact form.
+      if ($key === 'user_mail' && !$params['sender']->hasPermission('administer users')) {
+        $message['body'][] = t("If you don't want to receive such messages, you can change your settings at @recipient-edit-url.", $variables, $options);
+      }
       $build = \Drupal::entityTypeManager()
         ->getViewBuilder('contact_message')
         ->view($contact_message, 'mail');
