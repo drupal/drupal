@@ -191,3 +191,9 @@ tr .form-item,
     margin-top: var(--sp1-5);
   }
 }
+
+.layout-builder-form {
+  & .form-actions {
+    align-items: center;
+  }
+}
