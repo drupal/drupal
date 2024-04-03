@@ -21,7 +21,7 @@ use Drupal\migrate\Plugin\MigrateProcessInterface;
  * @see https://www.drupal.org/node/2129651
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- * @see \Drupal\migrate\Annotation\MigrateProcessPlugin
+ * @see \Drupal\migrate\Attribute\MigrateProcess
  * @see \Drupal\migrate\Plugin\migrate\process\SkipOnEmpty
  * @see d7_field_formatter_settings.yml
  * @see plugin_api
