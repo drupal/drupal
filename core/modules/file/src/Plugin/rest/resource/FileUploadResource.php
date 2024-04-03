@@ -76,7 +76,7 @@ class FileUploadResource extends ResourceBase {
   /**
    * The file system service.
    *
-   * @var \Drupal\Core\File\FileSystem
+   * @var \Drupal\Core\File\FileSystemInterface
    */
   protected $fileSystem;
 
