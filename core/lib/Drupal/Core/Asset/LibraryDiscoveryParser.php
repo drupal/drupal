@@ -95,10 +95,10 @@ class LibraryDiscoveryParser {
    *   The libraries directory file finder.
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
    *   The extension path resolver.
-   * @param \Drupal\Core\Theme\ComponentPluginManager|null $component_plugin_manager
+   * @param \Drupal\Core\Theme\ComponentPluginManager $component_plugin_manager
    *   The component plugin manager.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver, ?ComponentPluginManager $component_plugin_manager = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver, ComponentPluginManager $component_plugin_manager) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
@@ -106,10 +106,6 @@ class LibraryDiscoveryParser {
     $this->librariesDirectoryFileFinder = $libraries_directory_file_finder;
     $this->extensionPathResolver = $extension_path_resolver;
     $this->fileCache = FileCacheFactory::get('library_parser');
-    if (!isset($component_plugin_manager)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $component_plugin_manager argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3410260', E_USER_DEPRECATED);
-      $component_plugin_manager = \Drupal::service('plugin.manager.sdc');
-    }
     $this->componentPluginManager = $component_plugin_manager;
   }
 

@@ -44,12 +44,6 @@ final class ComponentsTwigExtension extends AbstractExtension {
     return [
       new TwigFunction('add_component_context', [$this, 'addAdditionalContext'], ['needs_context' => TRUE]),
       new TwigFunction('validate_component_props', [$this, 'validateProps'], ['needs_context' => TRUE]),
-      // @todo remove in drupal:11.0.0.
-      // @see https://www.drupal.org/project/drupal/issues/3409456.
-      // Start of BC layer.
-      new TwigFunction('sdc_additional_context', [$this, 'addAdditionalContext'], ['needs_context' => TRUE, 'deprecated' => '10.3.0', 'alternative' => 'add_component_context']),
-      new TwigFunction('sdc_validate_props', [$this, 'validateProps'], ['needs_context' => TRUE, 'deprecated' => '10.3.0', 'alternative' => 'validate_component_props']),
-      // End of BC layer.
     ];
   }
 

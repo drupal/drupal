@@ -223,3 +223,12 @@ function system_post_update_set_cron_logging_setting_to_boolean(): void {
     $config->set('logging', (bool) $logging)->save();
   }
 }
+
+/**
+ * Uninstall the sdc module if installed.
+ */
+function system_post_update_sdc_uninstall() {
+  if (\Drupal::moduleHandler()->moduleExists('sdc')) {
+    \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
+  }
+}
