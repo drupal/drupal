@@ -210,3 +210,7 @@ tr .form-item,
 .form--inline .form-actions {
   margin-top: var(--sp1-5);
 }
+
+.layout-builder-form .form-actions {
+  align-items: center;
+}
