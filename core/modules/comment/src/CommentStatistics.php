@@ -60,7 +60,7 @@ class CommentStatistics implements CommentStatisticsInterface {
    *   The entity type manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
-   * @param \Drupal\Component\Datetime\TimeInterface|null|\Drupal\Core\Database\Connection $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param \Drupal\Core\Database\Connection|null $database_replica
    *   (Optional) the replica database connection.
@@ -70,20 +70,13 @@ class CommentStatistics implements CommentStatisticsInterface {
     AccountInterface $current_user,
     EntityTypeManagerInterface $entity_type_manager,
     StateInterface $state,
-    protected TimeInterface|Connection|null $time = NULL,
+    protected TimeInterface $time,
     Connection $database_replica = NULL,
   ) {
     $this->database = $database;
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->state = $state;
-    if (!$time || $time instanceof Connection) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be the 4th argument in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      if ($time instanceof Connection) {
-        $database_replica = $time;
-      }
-      $this->time = \Drupal::service(TimeInterface::class);
-    }
     $this->databaseReplica = $database_replica ?: $database;
   }
 
