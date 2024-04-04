@@ -12,6 +12,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\book\BookManager
  * @group book
+ * @group legacy
  */
 class BookManagerTest extends UnitTestCase {
 

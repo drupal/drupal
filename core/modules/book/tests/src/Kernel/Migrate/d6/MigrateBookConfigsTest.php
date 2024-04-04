@@ -9,6 +9,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * Upgrade variables to book.settings.yml.
  *
  * @group book
+ * @group legacy
  */
 class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
 

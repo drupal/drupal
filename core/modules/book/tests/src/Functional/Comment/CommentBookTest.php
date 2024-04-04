@@ -14,6 +14,7 @@ use Drupal\comment\Entity\Comment;
  * Tests visibility of comments on book pages.
  *
  * @group book
+ * @group legacy
  */
 class CommentBookTest extends BrowserTestBase {
 

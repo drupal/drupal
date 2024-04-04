@@ -10,6 +10,7 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 /**
  * @covers \Drupal\book\Form\BookSettingsForm
  * @group book
+ * @group legacy
  */
 class BookSettingsFormTest extends KernelTestBase {
 

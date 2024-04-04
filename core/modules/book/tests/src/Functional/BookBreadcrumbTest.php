@@ -10,6 +10,7 @@ use Drupal\Tests\BrowserTestBase;
  * Create a book, add pages, and test book interface.
  *
  * @group book
+ * @group legacy
  */
 class BookBreadcrumbTest extends BrowserTestBase {
 

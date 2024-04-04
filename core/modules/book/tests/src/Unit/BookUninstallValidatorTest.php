@@ -9,6 +9,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\book\BookUninstallValidator
  * @group book
+ * @group legacy
  */
 class BookUninstallValidatorTest extends UnitTestCase {
 

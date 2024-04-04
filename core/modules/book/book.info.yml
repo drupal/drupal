@@ -3,6 +3,8 @@ type: module
 description: 'Allows users to create and organize related content in an outline.'
 package: Core
 version: VERSION
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-book
 dependencies:
   - drupal:node
 configure: book.settings

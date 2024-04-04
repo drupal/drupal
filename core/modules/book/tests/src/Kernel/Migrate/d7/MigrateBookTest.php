@@ -9,6 +9,7 @@ use Drupal\node\Entity\Node;
  * Tests migration of book structures from Drupal 7.
  *
  * @group book
+ * @group legacy
  */
 class MigrateBookTest extends MigrateDrupal7TestBase {
 

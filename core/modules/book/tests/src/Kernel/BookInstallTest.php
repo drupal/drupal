@@ -9,6 +9,7 @@ use Drupal\node\Entity\NodeType;
  * Test installation of Book module.
  *
  * @group book
+ * @group legacy
  */
 class BookInstallTest extends KernelTestBase {
 
