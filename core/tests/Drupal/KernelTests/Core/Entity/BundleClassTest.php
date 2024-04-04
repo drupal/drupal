@@ -10,6 +10,8 @@ use Drupal\entity_test_bundle_class\Entity\EntityTestAmbiguousBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestUserClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestVariant;
+use Drupal\entity_test_bundle_class\Entity\SharedEntityTestBundleClassA;
+use Drupal\entity_test_bundle_class\Entity\SharedEntityTestBundleClassB;
 use Drupal\user\Entity\User;
 
 /**
@@ -55,6 +57,10 @@ class BundleClassTest extends EntityKernelTestBase {
     // Verify statically created entity with bundle class returns correct class.
     $entity = EntityTestBundleClass::create();
     $this->assertInstanceOf(EntityTestBundleClass::class, $entity);
+
+    // Verify that bundle returns bundle_class when create is called without
+    // passing a bundle.
+    $this->assertSame($entity->bundle(), 'bundle_class');
 
     // Check that both preCreate() and postCreate() were called once.
     $this->assertEquals(1, EntityTestBundleClass::$preCreateCount);
@@ -237,6 +243,18 @@ class BundleClassTest extends EntityKernelTestBase {
     // different entity types, we expect an exception to be thrown.
     $this->expectException(AmbiguousBundleClassException::class);
     $entity_type = $this->container->get('entity_type.repository')->getEntityTypeFromClass(EntityTestAmbiguousBundleClass::class);
+  }
+
+  /**
+   * Checks that no exception is thrown when two bundles share an entity class.
+   *
+   * @covers Drupal\Core\Entity\EntityTypeRepository::getEntityTypeFromClass
+   */
+  public function testNoAmbiguousBundleClassExceptionSharingEntityClass(): void {
+    $shared_type_a = $this->container->get('entity_type.repository')->getEntityTypeFromClass(SharedEntityTestBundleClassA::class);
+    $shared_type_b = $this->container->get('entity_type.repository')->getEntityTypeFromClass(SharedEntityTestBundleClassB::class);
+    $this->assertSame('shared_type', $shared_type_a);
+    $this->assertSame('shared_type', $shared_type_b);
   }
 
   /**
