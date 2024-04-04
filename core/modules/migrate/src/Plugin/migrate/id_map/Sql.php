@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate\Plugin\migrate\id_map;
 
-use Drupal\Component\Plugin\Attribute\PluginID;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
@@ -31,8 +30,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *
  * It creates one map and one message table per migration entity to store the
  * relevant information.
+ *
+ * @PluginID("sql")
  */
-#[PluginID('sql')]
 class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryPluginInterface, HighestIdInterface {
 
   /**

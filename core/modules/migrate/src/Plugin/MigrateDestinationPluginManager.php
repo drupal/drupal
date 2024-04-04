@@ -5,14 +5,13 @@ namespace Drupal\migrate\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\migrate\Attribute\MigrateDestination;
 
 /**
  * Plugin manager for migrate destination plugins.
  *
  * @see \Drupal\migrate\Plugin\MigrateDestinationInterface
  * @see \Drupal\migrate\Plugin\migrate\destination\DestinationBase
- * @see \Drupal\migrate\Attribute\MigrateDestination
+ * @see \Drupal\migrate\Annotation\MigrateDestination
  * @see plugin_api
  *
  * @ingroup migration
@@ -41,15 +40,12 @@ class MigrateDestinationPluginManager extends MigratePluginManager {
    *   The module handler to invoke the alter hook with.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param string $attribute
-   *   (optional) The attribute class name. Defaults to
-   *   'Drupal\migrate\Attribute\MigrateDestination'.
    * @param string $annotation
    *   (optional) The annotation class name. Defaults to
    *   'Drupal\migrate\Annotation\MigrateDestination'.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, $attribute = MigrateDestination::class, $annotation = 'Drupal\migrate\Annotation\MigrateDestination') {
-    parent::__construct($type, $namespaces, $cache_backend, $module_handler, $attribute, $annotation);
+  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager, $annotation = 'Drupal\migrate\Annotation\MigrateDestination') {
+    parent::__construct($type, $namespaces, $cache_backend, $module_handler, $annotation);
     $this->entityTypeManager = $entity_type_manager;
   }
 

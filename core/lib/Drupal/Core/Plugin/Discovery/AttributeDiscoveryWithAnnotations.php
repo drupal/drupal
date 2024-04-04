@@ -117,7 +117,7 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
    * @see \Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery::prepareAnnotationDefinition()
    * @see \Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery::prepareAnnotationDefinition()
    */
-  protected function prepareAnnotationDefinition(AnnotationInterface $annotation, string $class): void {
+  private function prepareAnnotationDefinition(AnnotationInterface $annotation, string $class): void {
     $annotation->setClass($class);
     if (!$annotation->getProvider()) {
       $annotation->setProvider($this->getProviderFromNamespace($class));
@@ -136,7 +136,7 @@ class AttributeDiscoveryWithAnnotations extends AttributeClassDiscovery {
    * @see \Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery::getAnnotationReader()
    * @see \Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery::getAnnotationReader()
    */
-  protected function getAnnotationReader() : SimpleAnnotationReader {
+  private function getAnnotationReader() : SimpleAnnotationReader {
     if (!isset($this->annotationReader)) {
       $this->annotationReader = new SimpleAnnotationReader();
 

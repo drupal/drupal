@@ -3,15 +3,15 @@
 namespace Drupal\file\Plugin\migrate\destination;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\UriItem;
-use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Row;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 
 /**
- * Provides migrate destination plugin for File entities.
+ * @MigrateDestination(
+ *   id = "entity:file"
+ * )
  */
-#[MigrateDestination('entity:file')]
 class EntityFile extends EntityContentBase {
 
   /**
