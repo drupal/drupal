@@ -47,8 +47,8 @@ use Drupal\migrate\Row;
  * @section sec_source Migrate API source plugins
  * Migrate API source plugins implement
  * \Drupal\migrate\Plugin\MigrateSourceInterface and usually extend
- * \Drupal\migrate\Plugin\migrate\source\SourcePluginBase. They have the
- * \Drupal\migrate\Attribute\MigrateSource attribute and must be in
+ * \Drupal\migrate\Plugin\migrate\source\SourcePluginBase. They are annotated
+ * with \Drupal\migrate\Annotation\MigrateSource annotation and must be in
  * namespace subdirectory 'Plugin\migrate\source' under the namespace of the
  * module that defines them. Migrate API source plugins are managed by the
  * \Drupal\migrate\Plugin\MigrateSourcePluginManager class.
@@ -59,8 +59,8 @@ use Drupal\migrate\Row;
  * @section sec_process Migrate API process plugins
  * Migrate API process plugins implement
  * \Drupal\migrate\Plugin\MigrateProcessInterface and usually extend
- * \Drupal\migrate\ProcessPluginBase. They have the
- * \Drupal\migrate\Attribute\MigrateProcess attribute and must be in
+ * \Drupal\migrate\ProcessPluginBase. They are annotated with
+ * \Drupal\migrate\Annotation\MigrateProcessPlugin annotation and must be in
  * namespace subdirectory 'Plugin\migrate\process' under the namespace of the
  * module that defines them. Migrate API process plugins are managed by the
  * \Drupal\migrate\Plugin\MigratePluginManager class.
@@ -70,11 +70,12 @@ use Drupal\migrate\Row;
  * @section sec_destination Migrate API destination plugins
  * Migrate API destination plugins implement
  * \Drupal\migrate\Plugin\MigrateDestinationInterface and usually extend
- * \Drupal\migrate\Plugin\migrate\destination\DestinationBase. They have the
- * \Drupal\migrate\Attribute\MigrateDestination attribute and must be in
- * namespace subdirectory 'Plugin\migrate\destination' under the namespace of
- * the module that defines them. Migrate API destination plugins are managed by
- * the \Drupal\migrate\Plugin\MigrateDestinationPluginManager class.
+ * \Drupal\migrate\Plugin\migrate\destination\DestinationBase. They are
+ * annotated with \Drupal\migrate\Annotation\MigrateDestination annotation and
+ * must be in namespace subdirectory 'Plugin\migrate\destination' under the
+ * namespace of the module that defines them. Migrate API destination plugins
+ * are managed by the \Drupal\migrate\Plugin\MigrateDestinationPluginManager
+ * class.
  *
  * @link https://api.drupal.org/api/drupal/namespace/Drupal!migrate!Plugin!migrate!destination List of destination plugins for Drupal configuration and content entities provided by the core Migrate module. @endlink
  *

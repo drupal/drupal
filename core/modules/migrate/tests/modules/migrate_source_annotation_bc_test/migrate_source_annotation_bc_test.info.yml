@@ -1,5 +1,0 @@
-name: 'Migrate module source annotation bc tests'
-type: module
-description: 'Support module for source plugin annotation discovery backwards compatibility tests'
-package: Testing
-version: VERSION

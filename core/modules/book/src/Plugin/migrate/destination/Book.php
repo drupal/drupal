@@ -3,14 +3,15 @@
 namespace Drupal\book\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Row;
 
 /**
- * Provides migrate destination plugin for Book content.
+ * @MigrateDestination(
+ *   id = "book",
+ *   provider = "book"
+ * )
  */
-#[MigrateDestination('book')]
 class Book extends EntityContentBase {
 
   /**

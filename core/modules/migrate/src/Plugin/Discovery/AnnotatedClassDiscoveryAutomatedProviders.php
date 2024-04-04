@@ -3,10 +3,12 @@
 namespace Drupal\migrate\Plugin\Discovery;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Drupal\Component\Annotation\AnnotationInterface;
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser as BaseStaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\ClassFinder\ClassFinder;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
+use Drupal\migrate\Annotation\MultipleProviderAnnotationInterface;
 
 /**
  * Determines providers based on a class's and its parent's namespaces.
@@ -18,7 +20,12 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
  */
 class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery {
 
-  use AnnotatedDiscoveryAutomatedProvidersTrait;
+  /**
+   * A utility object that can use active autoloaders to find files for classes.
+   *
+   * @var \Drupal\Component\ClassFinder\ClassFinderInterface
+   */
+  protected $finder;
 
   /**
    * Constructs an AnnotatedClassDiscoveryAutomatedProviders object.
@@ -39,6 +46,26 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
   public function __construct($subdir, \Traversable $root_namespaces, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin', array $annotation_namespaces = []) {
     parent::__construct($subdir, $root_namespaces, $plugin_definition_annotation_name, $annotation_namespaces);
     $this->finder = new ClassFinder();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function prepareAnnotationDefinition(AnnotationInterface $annotation, $class, BaseStaticReflectionParser $parser = NULL) {
+    if (!($annotation instanceof MultipleProviderAnnotationInterface)) {
+      throw new \LogicException('AnnotatedClassDiscoveryAutomatedProviders annotations must implement \Drupal\migrate\Annotation\MultipleProviderAnnotationInterface');
+    }
+    $annotation->setClass($class);
+    $providers = $annotation->getProviders();
+    // Loop through all the parent classes and add their providers (which we
+    // infer by parsing their namespaces) to the $providers array.
+    do {
+      $providers[] = $this->getProviderFromNamespace($parser->getNamespaceName());
+    } while ($parser = StaticReflectionParser::getParentParser($parser, $this->finder));
+    $providers = array_unique(array_filter($providers, function ($provider) {
+      return $provider && $provider !== 'component';
+    }));
+    $annotation->setProviders($providers);
   }
 
   /**
