@@ -2,6 +2,8 @@
 
 namespace Drupal\user\Plugin\views\wizard;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsWizard;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
@@ -10,13 +12,12 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
  * Tests creating user views with the wizard.
- *
- * @ViewsWizard(
- *   id = "users",
- *   base_table = "users_field_data",
- *   title = @Translation("Users")
- * )
  */
+#[ViewsWizard(
+  id: 'users',
+  title: new TranslatableMarkup('Users'),
+  base_table: 'users_field_data'
+)]
 class Users extends WizardPluginBase {
 
   /**
