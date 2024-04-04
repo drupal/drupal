@@ -708,7 +708,7 @@ services:
   Drupal\Core\Entity\EntityTypeManagerInterface: '@entity_type.manager'
   entity_type.repository:
     class: Drupal\Core\Entity\EntityTypeRepository
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info']
   Drupal\Core\Entity\EntityTypeRepositoryInterface: '@entity_type.repository'
   entity_type.bundle.info:
     class: Drupal\Core\Entity\EntityTypeBundleInfo
