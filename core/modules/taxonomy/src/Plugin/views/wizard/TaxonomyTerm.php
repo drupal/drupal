@@ -2,17 +2,18 @@
 
 namespace Drupal\taxonomy\Plugin\views\wizard;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsWizard;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
  * Tests creating taxonomy views with the wizard.
- *
- * @ViewsWizard(
- *   id = "taxonomy_term",
- *   base_table = "taxonomy_term_field_data",
- *   title = @Translation("Taxonomy terms")
- * )
  */
+#[ViewsWizard(
+  id: 'taxonomy_term',
+  title: new TranslatableMarkup('Taxonomy terms'),
+  base_table: 'taxonomy_term_field_data'
+)]
 class TaxonomyTerm extends WizardPluginBase {
 
   /**
