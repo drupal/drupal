@@ -10,6 +10,7 @@ use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
  * Tests existence of book local tasks.
  *
  * @group book
+ * @group legacy
  */
 class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
 

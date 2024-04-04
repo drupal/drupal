@@ -9,6 +9,7 @@ use Drupal\node\Entity\Node;
  * Upgrade book structure.
  *
  * @group book
+ * @group legacy
  */
 class MigrateBookTest extends MigrateDrupal6TestBase {
 

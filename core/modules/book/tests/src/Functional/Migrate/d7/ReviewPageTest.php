@@ -10,6 +10,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
  * Tests Review page.
  *
  * @group book
+ * @group legacy
  */
 class ReviewPageTest extends NoMultilingualReviewPageTestBase {
 

@@ -9,6 +9,7 @@ use Drupal\Tests\SchemaCheckTestTrait;
  * Tests the migration of Book settings.
  *
  * @group book
+ * @group legacy
  */
 class MigrateBookConfigsTest extends MigrateDrupal7TestBase {
 

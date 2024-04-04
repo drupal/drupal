@@ -10,5 +10,6 @@ use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
  * Generic module test for book.
  *
  * @group book
+ * @group legacy
  */
 class GenericTest extends GenericModuleTestBase {}

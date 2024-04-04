@@ -22,6 +22,7 @@ use Symfony\Component\Routing\Route;
  * Tests multilingual books.
  *
  * @group book
+ * @group legacy
  */
 class BookMultilingualTest extends KernelTestBase {
 
