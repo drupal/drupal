@@ -113,23 +113,54 @@ trait UpdateSemverTestBaselineTrait {
   }
 
   /**
-   * Tests the Update Manager module when a major update is available.
+   * Tests the Update Manager module when major updates are available.
+   *
+   * This includes testing when the next major is available as well as when both
+   * the current major version and the next major version are supported. There
+   * are two release history files to support this.
+   * - drupal.9.xml and semver_test.9.xml: These declare one major release
+   *   supported, 9.
+   * - drupal.current.xml and semver_test.current.xml: These declare major
+   *   releases supported, 8 and 9.
    */
   public function testMajorUpdateAvailable() {
-    foreach ([0, 1] as $minor_version) {
-      foreach ([0, 1] as $patch_version) {
-        foreach (['-alpha1', '-beta1', ''] as $extra_version) {
-          $this->setProjectInstalledVersion("8.$minor_version.$patch_version" . $extra_version);
-          $this->refreshUpdateStatus([$this->updateProject => '9']);
-          $this->standardTests();
-          $this->assertUpdateTableTextNotContains('Security update required!');
-          $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('9.0.0', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
-          $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('Release notes', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
-          $this->assertUpdateTableTextNotContains('Up to date');
-          $this->assertUpdateTableTextContains('Not supported!');
-          $this->assertUpdateTableTextContains('Recommended version:');
-          $this->assertUpdateTableTextNotContains('Latest version:');
-          $this->assertUpdateTableElementContains('error.svg');
+    foreach (['9', '8.0.0-9.0.0'] as $release_history) {
+      foreach ([0, 1] as $minor_version) {
+        foreach ([0, 1] as $patch_version) {
+          foreach (['-alpha1', '-beta1', ''] as $extra_version) {
+            $installed_version = "8.$minor_version.$patch_version$extra_version";
+            $this->setProjectInstalledVersion($installed_version);
+            $this->refreshUpdateStatus([$this->updateProject => $release_history]);
+            $this->standardTests();
+            $this->drupalGet('admin/reports/updates');
+            $this->clickLink('Check manually');
+            $this->checkForMetaRefresh();
+            $this->assertUpdateTableTextNotContains('Security update required!');
+            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('9.0.0', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))
+              ->toString());
+            $this->assertUpdateTableElementContains((string) Link::fromTextAndUrl('Release notes', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))
+              ->toString());
+            $this->assertUpdateTableTextNotContains('Latest version:');
+
+            if ($release_history === '9') {
+              $this->assertUpdateTableTextNotContains('Up to date');
+              $this->assertUpdateTableTextContains('Not supported!');
+              $this->assertVersionUpdateLinks('Recommended version:', '9.0.0');
+              $this->assertUpdateTableElementContains('error.svg');
+            }
+            else {
+              if ($installed_version === '8.1.1') {
+                $this->assertUpdateTableTextContains('Up to date');
+              }
+              else {
+                $this->assertUpdateTableTextNotContains('Up to date');
+                $this->assertVersionUpdateLinks('Recommended version:', '8.1.1');
+              }
+              $this->assertUpdateTableTextNotContains('Not supported!');
+              $this->assertVersionUpdateLinks('Also available:', '9.0.0');
+              $this->assertUpdateTableElementNotContains('error.svg');
+            }
+          }
         }
       }
     }
