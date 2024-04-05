@@ -8,8 +8,9 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\user\UserStorageInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\UserStorageInterface;
+use Drupal\user\UserNameValidator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -67,13 +68,26 @@ class SiteConfigureForm extends ConfigFormBase {
    *   The module installer.
    * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
    *   The country manager.
+   * @param \Drupal\user\UserNameValidator|null $userNameValidator
+   *   The user validator.
    */
-  public function __construct($root, $site_path, UserStorageInterface $user_storage, ModuleInstallerInterface $module_installer, CountryManagerInterface $country_manager) {
+  public function __construct(
+    $root,
+    $site_path,
+    UserStorageInterface $user_storage,
+    ModuleInstallerInterface $module_installer,
+    CountryManagerInterface $country_manager,
+    protected ?UserNameValidator $userNameValidator = NULL,
+  ) {
     $this->root = $root;
     $this->sitePath = $site_path;
     $this->userStorage = $user_storage;
     $this->moduleInstaller = $module_installer;
     $this->countryManager = $country_manager;
+    if (!$userNameValidator) {
+      @\trigger_error('Calling ' . __METHOD__ . ' without the $userNameValidator argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3431205', E_USER_DEPRECATED);
+      $this->userNameValidator = \Drupal::service('user.name_validator');
+    }
   }
 
   /**
@@ -85,7 +99,8 @@ class SiteConfigureForm extends ConfigFormBase {
       $container->getParameter('site.path'),
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('module_installer'),
-      $container->get('country_manager')
+      $container->get('country_manager'),
+      $container->get('user.name_validator'),
     );
   }
 
@@ -253,8 +268,9 @@ class SiteConfigureForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if ($error = user_validate_name($form_state->getValue(['account', 'name']))) {
-      $form_state->setErrorByName('account][name', $error);
+    $violations = $this->userNameValidator->validateName($form_state->getValue(['account', 'name']));
+    if ($violations->count() > 0) {
+      $form_state->setErrorByName('account][name', $violations[0]->getMessage());
     }
   }
 
