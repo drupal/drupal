@@ -39,21 +39,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   const CONNECTION_REFUSED = 2002;
 
   /**
-   * Error code for "Can't initialize character set" error.
-   */
-  const UNSUPPORTED_CHARSET = 2019;
-
-  /**
-   * Driver-specific error code for "Unknown character set" error.
-   */
-  const UNKNOWN_CHARSET = 1115;
-
-  /**
-   * SQLSTATE error code for "Syntax error or access rule violation".
-   */
-  const SQLSTATE_SYNTAX_ERROR = 42000;
-
-  /**
    * {@inheritdoc}
    */
   protected $statementWrapperClass = StatementWrapperIterator::class;
@@ -130,13 +115,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * {@inheritdoc}
    */
   public static function open(array &$connection_options = []) {
-    if (isset($connection_options['_dsn_utf8_fallback']) && $connection_options['_dsn_utf8_fallback'] === TRUE) {
-      // Only used during the installer version check, as a fallback from utf8mb4.
-      $charset = 'utf8';
-    }
-    else {
-      $charset = 'utf8mb4';
-    }
     // The DSN should use either a socket or a host/port.
     if (isset($connection_options['unix_socket'])) {
       $dsn = 'mysql:unix_socket=' . $connection_options['unix_socket'];
@@ -148,7 +126,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // Character set is added to dsn to ensure PDO uses the proper character
     // set when escaping. This has security implications. See
     // https://www.drupal.org/node/1201452 for further discussion.
-    $dsn .= ';charset=' . $charset;
+    $dsn .= ';charset=utf8mb4';
     if (!empty($connection_options['database'])) {
       $dsn .= ';dbname=' . $connection_options['database'];
     }
@@ -216,10 +194,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // 'utf8mb4_general_ci' (MySQL 5) or 'utf8mb4_0900_ai_ci' (MySQL 8) for
     // utf8mb4.
     if (!empty($connection_options['collation'])) {
-      $pdo->exec('SET NAMES ' . $charset . ' COLLATE ' . $connection_options['collation']);
+      $pdo->exec('SET NAMES utf8mb4 COLLATE ' . $connection_options['collation']);
     }
     else {
-      $pdo->exec('SET NAMES ' . $charset);
+      $pdo->exec('SET NAMES utf8mb4');
     }
 
     // Set MySQL init_commands if not already defined.  Default Drupal's MySQL
