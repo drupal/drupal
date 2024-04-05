@@ -73,3 +73,7 @@ services:
   user.module_permissions_link_helper:
     class: Drupal\user\ModulePermissionsLinkHelper
     arguments: ['@user.permissions', '@access_manager', '@extension.list.module']
+  user.name_validator:
+    class: Drupal\user\UserNameValidator
+    arguments: ['@validation.basic_recursive_validator_factory', '@validation.constraint']
+  Drupal\user\UserNameValidator: '@user.name_validator'

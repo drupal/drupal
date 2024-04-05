@@ -4,7 +4,7 @@ namespace Drupal\user\Form;
 
 use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -13,6 +13,7 @@ use Drupal\Core\Render\Element\Email;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
+use Drupal\user\UserNameValidator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,6 +24,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class UserPasswordForm extends FormBase {
+
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * The deprecated properties.
+   */
+  protected array $deprecatedProperties = [
+    'typedDataManager' => 'typed_data_manager',
+  ];
 
   /**
    * The user storage.
@@ -46,13 +56,6 @@ class UserPasswordForm extends FormBase {
   protected $flood;
 
   /**
-   * The typed data manager.
-   *
-   * @var \Drupal\Core\TypedData\TypedDataManagerInterface
-   */
-  protected $typedDataManager;
-
-  /**
    * The email validator service.
    *
    * @var \Drupal\Component\Utility\EmailValidatorInterface
@@ -70,18 +73,28 @@ class UserPasswordForm extends FormBase {
    *   The config factory.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
-   *   The typed data manager.
+   * @param \Drupal\user\UserNameValidator|\Drupal\Core\TypedData\TypedDataManagerInterface $userNameValidator
+   *   The user validator service.
    * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
    *   The email validator service.
    */
-  public function __construct(UserStorageInterface $user_storage, LanguageManagerInterface $language_manager, ConfigFactory $config_factory, FloodInterface $flood, TypedDataManagerInterface $typed_data_manager, EmailValidatorInterface $email_validator) {
+  public function __construct(
+    UserStorageInterface $user_storage,
+    LanguageManagerInterface $language_manager,
+    ConfigFactory $config_factory,
+    FloodInterface $flood,
+    protected UserNameValidator|TypedDataManagerInterface $userNameValidator,
+    EmailValidatorInterface $email_validator,
+  ) {
     $this->userStorage = $user_storage;
     $this->languageManager = $language_manager;
     $this->configFactory = $config_factory;
     $this->flood = $flood;
-    $this->typedDataManager = $typed_data_manager;
     $this->emailValidator = $email_validator;
+    if (!$userNameValidator instanceof UserNameValidator) {
+      @\trigger_error('Passing $userNameValidator as \Drupal\Core\TypedData\TypedDataManagerInterface to ' . __METHOD__ . ' () is deprecated in drupal:10.3.0 and is removed in drupal:10.0.0. Pass a Drupal\user\UserValidator instead. See https://www.drupal.org/node/3431205', E_USER_DEPRECATED);
+      $this->userNameValidator = \Drupal::service('user.name_validator');
+    }
   }
 
   /**
@@ -93,8 +106,8 @@ class UserPasswordForm extends FormBase {
       $container->get('language_manager'),
       $container->get('config.factory'),
       $container->get('flood'),
-      $container->get('typed_data_manager'),
-      $container->get('email.validator')
+      $container->get('user.name_validator'),
+      $container->get('email.validator'),
     );
   }
 
@@ -161,11 +174,7 @@ class UserPasswordForm extends FormBase {
     $this->flood->register('user.password_request_ip', $flood_config->get('ip_window'));
     // First, see if the input is possibly valid as a username.
     $name = trim($form_state->getValue('name'));
-    $definition = BaseFieldDefinition::create('string')
-      ->addConstraint('UserName', []);
-    $data = $this->typedDataManager->create($definition);
-    $data->setValue($name);
-    $violations = $data->validate();
+    $violations = $this->userNameValidator->validateName($name);
     // Usernames have a maximum length shorter than email addresses. Only print
     // this error if the input is not valid as a username or email address.
     if ($violations->count() > 0 && !$this->emailValidator->isValid($name)) {
