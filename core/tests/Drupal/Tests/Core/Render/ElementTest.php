@@ -108,8 +108,8 @@ class ElementTest extends UnitTestCase {
     $element = [
       'foo' => 'bar',
     ];
-    $this->expectError();
-    $this->expectErrorMessage('"foo" is an invalid render array key. Value should be an array but got a string');
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('"foo" is an invalid render array key. Value should be an array but got a string.');
     Element::children($element);
   }
 
