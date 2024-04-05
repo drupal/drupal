@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResultInterface;
 
 /**
@@ -92,16 +91,10 @@ class Element {
           // the insertion order.
           $child_weights[$key] = floor($weight * 1000) + $i / $count;
         }
-        // Only trigger an error if the value is not null.
+        // Only trigger an exception if the value is not null.
         // @see https://www.drupal.org/node/1283892
         elseif (isset($value)) {
-          trigger_error(new FormattableMarkup(
-            '"@key" is an invalid render array key. Value should be an array but got a @type',
-            [
-              '@key' => $key,
-              '@type' => gettype($value),
-            ]
-          ), E_USER_ERROR);
+          throw new \InvalidArgumentException(sprintf('"%s" is an invalid render array key. Value should be an array but got a %s.', $key, gettype($value)));
         }
       }
       $i++;
