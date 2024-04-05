@@ -11,7 +11,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  * Plugin manager for migrate field plugins.
  *
  * @see \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
- * @see \Drupal\migrate\Annotation\MigrateField
+ * @see \Drupal\migrate\Attribute\MigrateField
  * @see plugin_api
  *
  * @ingroup migration
@@ -48,7 +48,7 @@ class MigrateFieldPluginManager extends MigratePluginManager implements MigrateF
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *   If the plugin cannot be determined, such as if the field type is invalid.
    *
-   * @see \Drupal\migrate_drupal\Annotation\MigrateField
+   * @see \Drupal\migrate_drupal\Attribute\MigrateField
    */
   public function getPluginIdFromFieldType($field_type, array $configuration = [], MigrationInterface $migration = NULL) {
     $core = static::DEFAULT_CORE_VERSION;

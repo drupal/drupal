@@ -6,25 +6,25 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 // cspell:ignore todate
 
 /**
  * Provides a field plugin for date and time fields.
- *
- * @MigrateField(
- *   id = "datetime",
- *   type_map = {
- *     "date" = "datetime",
- *     "datestamp" =  "timestamp",
- *     "datetime" =  "datetime",
- *   },
- *   core = {6,7},
- *   source_module = "date",
- *   destination_module = "datetime"
- * )
  */
+#[MigrateField(
+  id: 'datetime',
+  core: [6, 7],
+  type_map: [
+    'date' => 'datetime',
+    'datestamp' => 'timestamp',
+    'datetime' => 'datetime',
+  ],
+  source_module: 'date',
+  destination_module: 'datetime',
+)]
 class DateField extends FieldPluginBase {
 
   /**

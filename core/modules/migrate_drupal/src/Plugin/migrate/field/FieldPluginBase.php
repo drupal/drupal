@@ -11,7 +11,7 @@ use Drupal\migrate_drupal\Plugin\MigrateFieldInterface;
  * The base class for all field plugins.
  *
  * @see \Drupal\migrate\Plugin\MigratePluginManager
- * @see \Drupal\migrate_drupal\Annotation\MigrateField
+ * @see \Drupal\migrate_drupal\Attribute\MigrateField
  * @see \Drupal\migrate_drupal\Plugin\MigrateFieldInterface
  * @see plugin_api
  *
