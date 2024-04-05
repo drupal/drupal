@@ -7,8 +7,6 @@
 
 # Skip some dependencies' DebugClassLoader forward compatibility warnings.
 %Method "Behat\\[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Composer\\EventDispatcher\\EventSubscriberInterface::getSubscribedEvents\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
-%Method "Composer\\Plugin\\PluginInterface::(activate|deactivate|uninstall)\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Doctrine\\Common\\Annotations\\Reader::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\Extension\\ExtensionInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\Loader\\FilesystemLoader::findTemplate\(\)" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
