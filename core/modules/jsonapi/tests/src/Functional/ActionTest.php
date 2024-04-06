@@ -2,26 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\action\Functional\Jsonapi;
+namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
-use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
 use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
 
 /**
  * JSON:API integration test for the "Action" config entity type.
  *
- * @group action
+ * @group Action
  * @group #slow
- * @group legacy
  */
 class ActionTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['action'];
+  protected static $modules = [];
 
   /**
    * {@inheritdoc}

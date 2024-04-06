@@ -29,3 +29,6 @@ link to any page:
   description: 'This allows to bypass access checking when linking to internal paths.'
 administer menu:
   title: 'Administer menus and menu links'
+administer actions:
+  title: 'Administer actions'
+  restrict access: true
