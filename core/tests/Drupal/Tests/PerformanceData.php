@@ -22,6 +22,16 @@ class PerformanceData {
   protected int $scriptCount = 0;
 
   /**
+   * The total stylesheet bytes requested.
+   */
+  protected int $stylesheetBytes = 0;
+
+  /**
+   * The total script bytes requested.
+   */
+  protected int $scriptBytes = 0;
+
+  /**
    * The number of database queries recorded.
    */
   protected int $queryCount = 0;
@@ -77,6 +87,16 @@ class PerformanceData {
   }
 
   /**
+   * Sets the stylesheet bytes.
+   *
+   * @param int $bytes
+   *   The stylesheet bytes recorded.
+   */
+  public function setStylesheetBytes(int $bytes): void {
+    $this->stylesheetBytes = $bytes;
+  }
+
+  /**
    * Gets the stylesheet request count.
    *
    * @return int
@@ -84,6 +104,16 @@ class PerformanceData {
    */
   public function getStylesheetCount(): int {
     return $this->stylesheetCount;
+  }
+
+  /**
+   * Gets the stylesheet bytes count.
+   *
+   * @return int
+   *   The stylesheet bytes recorded.
+   */
+  public function getStylesheetBytes(): int {
+    return $this->stylesheetBytes;
   }
 
   /**
@@ -97,6 +127,16 @@ class PerformanceData {
   }
 
   /**
+   * Sets the script bytes.
+   *
+   * @param int $bytes
+   *   The script bytes recorded.
+   */
+  public function setScriptBytes(int $bytes): void {
+    $this->scriptBytes = $bytes;
+  }
+
+  /**
    * Gets the script request count.
    *
    * @return int
@@ -104,6 +144,16 @@ class PerformanceData {
    */
   public function getScriptCount(): int {
     return $this->scriptCount;
+  }
+
+  /**
+   * Gets the script bytes count.
+   *
+   * @return int
+   *   The script bytes recorded.
+   */
+  public function getScriptBytes(): int {
+    return $this->scriptBytes;
   }
 
   /**

@@ -348,18 +348,62 @@ trait PerformanceTestTrait {
   private function collectNetworkData(array $messages, PerformanceData $performance_data): void {
     $stylesheet_count = 0;
     $script_count = 0;
+    $stylesheet_bytes = 0;
+    $script_bytes = 0;
+    $stylesheet_urls = [];
+    $script_urls = [];
+    // Collect the CSS and JavaScript responses from the network log build an
+    // associative array so that if multiple page or AJAX requests have
+    // requested styles and scripts, only unique files will be counted.
     foreach ($messages as $message) {
       if ($message['method'] === 'Network.responseReceived') {
         if ($message['params']['type'] === 'Stylesheet') {
-          $stylesheet_count++;
+          $url = $message['params']['response']['url'];
+          $stylesheet_urls[$url] = $url;
+
         }
         if ($message['params']['type'] === 'Script') {
-          $script_count++;
+          $url = $message['params']['response']['url'];
+          $script_urls[$url] = $url;
         }
       }
     }
+    // Get the actual files from disk when calculating filesize, to ensure
+    // consistency between testing environments. The performance log has
+    // 'encodedDataLength' for network requests, however in the case that the
+    // file has already been requested by the browser, this will be the length
+    // of a HEAD response for 304 not modified or similar. Additionally, core's
+    // aggregation adds the basepath to CSS aggregates, resulting in slightly
+    // different file sizes depending on whether tests run in a subdirectory or
+    // not.
+    foreach ($stylesheet_urls as $url) {
+      $stylesheet_count++;
+      if ($GLOBALS['base_path'] === '/') {
+        $filename = ltrim(parse_url($url, PHP_URL_PATH), '/');
+        $stylesheet_bytes += strlen(file_get_contents($filename));
+      }
+      else {
+        $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
+        // Strip the basepath from the contents of the file so that tests
+        // running in a subdirectory get the same results.
+        $stylesheet_bytes += strlen(str_replace($GLOBALS['base_path'], '/', file_get_contents($filename)));
+      }
+    }
+    foreach ($script_urls as $url) {
+      $script_count++;
+      if ($GLOBALS['base_path'] === '/') {
+        $filename = ltrim(parse_url($url, PHP_URL_PATH), '/');
+      }
+      else {
+        $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
+      }
+      $script_bytes += strlen(file_get_contents($filename));
+    }
+
     $performance_data->setStylesheetCount($stylesheet_count);
+    $performance_data->setStylesheetBytes($stylesheet_bytes);
     $performance_data->setScriptCount($script_count);
+    $performance_data->setScriptBytes($script_bytes);
   }
 
   /**

@@ -54,6 +54,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('');
     }, 'standardFrontPage');
     $this->assertNoJavaScript($performance_data);
+    $this->assertSame(1, $performance_data->getStylesheetCount());
+    $this->assertSame(7434, $performance_data->getStylesheetBytes());
 
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
@@ -97,6 +99,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/1');
     }, 'standardNodePage');
     $this->assertNoJavaScript($performance_data);
+    $this->assertSame(1, $performance_data->getStylesheetCount());
+    $this->assertSame(7159, $performance_data->getStylesheetBytes());
 
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node/1" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
@@ -124,6 +128,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('user/' . $user->id());
     }, 'standardUserPage');
     $this->assertNoJavaScript($performance_data);
+    $this->assertSame(1, $performance_data->getStylesheetCount());
+    $this->assertSame(7159, $performance_data->getStylesheetBytes());
 
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/user/2" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
