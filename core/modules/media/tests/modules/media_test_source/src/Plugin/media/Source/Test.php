@@ -4,19 +4,20 @@ namespace Drupal\media_test_source\Plugin\media\Source;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\media\Attribute\MediaSource;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaSourceBase;
 
 /**
  * Provides test media source.
- *
- * @MediaSource(
- *   id = "test",
- *   label = @Translation("Test source"),
- *   description = @Translation("Test media source."),
- *   allowed_field_types = {"string"},
- * )
  */
+#[MediaSource(
+  id: "test",
+  label: new TranslatableMarkup("Test source"),
+  description: new TranslatableMarkup("Test media source."),
+  allowed_field_types: ["string"]
+)]
 class Test extends MediaSourceBase {
 
   /**
