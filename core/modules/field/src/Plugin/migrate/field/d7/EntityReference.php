@@ -2,23 +2,23 @@
 
 namespace Drupal\field\Plugin\migrate\field\d7;
 
+use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 // cspell:ignore entityreference
 
 /**
  * MigrateField plugin for Drupal 7 entity_reference fields.
- *
- * @MigrateField(
- *   id = "entityreference",
- *   type_map = {
- *     "entityreference" = "entity_reference",
- *   },
- *   core = {7},
- *   source_module = "entityreference",
- *   destination_module = "core"
- * )
  */
+#[MigrateField(
+  id: 'entityreference',
+  core: [7],
+  type_map: [
+    'entityreference' => 'entity_reference',
+  ],
+  source_module: 'entityreference',
+  destination_module: 'core',
+)]
 class EntityReference extends FieldPluginBase {
 
   /**

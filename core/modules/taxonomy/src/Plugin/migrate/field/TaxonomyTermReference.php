@@ -3,21 +3,22 @@
 namespace Drupal\taxonomy\Plugin\migrate\field;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 // cspeLL:ignore entityreference
-
 /**
- * @MigrateField(
- *   id = "taxonomy_term_reference",
- *   type_map = {
- *     "taxonomy_term_reference" = "entity_reference"
- *   },
- *   core = {6,7},
- *   source_module = "taxonomy",
- *   destination_module = "core",
- * )
+ * MigrateField Plugin for Drupal 6 & Drupal 7 taxonomy term reference fields.
  */
+#[MigrateField(
+  id: 'taxonomy_term_reference',
+  core: [6, 7],
+  type_map: [
+    'taxonomy_term_reference' => 'entity_reference',
+  ],
+  source_module: 'taxonomy',
+  destination_module: 'core',
+)]
 class TaxonomyTermReference extends FieldPluginBase {
 
   /**

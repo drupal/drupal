@@ -3,21 +3,21 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\field\d7;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 
 /**
  * MigrateField plugin for Drupal 7 user_reference fields.
- *
- * @MigrateField(
- *   id = "user_reference",
- *   type_map = {
- *     "user_reference" = "entity_reference",
- *   },
- *   core = {7},
- *   source_module = "user_reference",
- *   destination_module = "core"
- * )
  */
+#[MigrateField(
+  id: 'user_reference',
+  core: [7],
+  type_map: [
+    'user_reference' => 'entity_reference',
+  ],
+  source_module: 'user_reference',
+  destination_module: 'core',
+)]
 class UserReference extends ReferenceBase {
 
   /**

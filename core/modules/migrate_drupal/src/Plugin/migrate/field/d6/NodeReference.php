@@ -4,23 +4,23 @@ namespace Drupal\migrate_drupal\Plugin\migrate\field\d6;
 
 // cspell:ignore nodereference
 
+use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 
 /**
  * MigrateField Plugin for Drupal 6 node reference fields.
  *
- * @MigrateField(
- *   id = "nodereference",
- *   core = {6},
- *   type_map = {
- *     "nodereference" = "entity_reference",
- *   },
- *   source_module = "nodereference",
- *   destination_module = "core",
- * )
- *
  * @internal
  */
+#[MigrateField(
+  id: 'nodereference',
+  core: [6],
+  type_map: [
+    'nodereference' => 'entity_reference',
+  ],
+  source_module: 'nodereference',
+  destination_module: 'core',
+)]
 class NodeReference extends ReferenceBase {
 
   /**
