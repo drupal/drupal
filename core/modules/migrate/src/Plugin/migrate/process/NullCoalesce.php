@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -29,11 +30,8 @@ use Drupal\migrate\Row;
  *     - baz
  * @endcode
  * This plugin will return the equivalent of `foo ?? bar ?? baz`
- *
- * @MigrateProcessPlugin(
- *   id = "null_coalesce"
- * )
  */
+#[MigrateProcess('null_coalesce')]
 class NullCoalesce extends ProcessPluginBase {
 
   /**

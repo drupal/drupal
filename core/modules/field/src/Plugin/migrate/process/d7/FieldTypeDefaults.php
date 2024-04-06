@@ -2,17 +2,15 @@
 
 namespace Drupal\field\Plugin\migrate\process\d7;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 
 /**
  * Gives us a chance to set per field defaults.
- *
- * @MigrateProcessPlugin(
- *   id = "d7_field_type_defaults"
- * )
  */
+#[MigrateProcess('d7_field_type_defaults')]
 class FieldTypeDefaults extends ProcessPluginBase {
 
   /**

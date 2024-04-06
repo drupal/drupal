@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
@@ -36,12 +37,11 @@ use Drupal\migrate\MigrateSkipRowException;
  * message table.
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "skip_row_if_not_set",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "skip_row_if_not_set",
+  handle_multiples: TRUE,
+)]
 class SkipRowIfNotSet extends ProcessPluginBase {
 
   /**

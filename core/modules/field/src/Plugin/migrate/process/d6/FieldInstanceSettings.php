@@ -2,6 +2,7 @@
 
 namespace Drupal\field\Plugin\migrate\process\d6;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -9,10 +10,9 @@ use Drupal\migrate\Row;
 // cspell:ignore filefield imagefield
 
 /**
- * @MigrateProcessPlugin(
- *   id = "d6_field_field_settings"
- * )
+ * Determines the field instance settings.
  */
+#[MigrateProcess('d6_field_field_settings')]
 class FieldInstanceSettings extends ProcessPluginBase {
 
   /**

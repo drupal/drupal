@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\ProcessPluginBase;
@@ -166,12 +167,11 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Plugin\migrate\process\MigrationLookup
  * @see \Drupal\migrate\Plugin\migrate\process\StaticMap
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "sub_process",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "sub_process",
+  handle_multiples: TRUE,
+)]
 class SubProcess extends ProcessPluginBase {
 
   /**

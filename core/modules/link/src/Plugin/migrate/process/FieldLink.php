@@ -2,6 +2,7 @@
 
 namespace Drupal\link\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -32,11 +33,8 @@ use Drupal\migrate\Row;
  *     uri_scheme: 'https://'
  *     source: field_link
  * @endcode
- *
- * @MigrateProcessPlugin(
- *   id = "field_link"
- * )
  */
+#[MigrateProcess('field_link')]
 class FieldLink extends ProcessPluginBase {
 
   /**

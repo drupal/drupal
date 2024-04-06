@@ -4,6 +4,7 @@ namespace Drupal\field\Plugin\migrate\process;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -36,11 +37,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  * @see \Drupal\migrate_drupal\Plugin\MigrateFieldInterface;
- *
- * @MigrateProcessPlugin(
- *   id = "process_field"
- * )
  */
+#[MigrateProcess('process_field')]
 class ProcessField extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

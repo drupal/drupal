@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\migrate\process;
 
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -11,11 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a process plugin for the user langcode.
- *
- * @MigrateProcessPlugin(
- *   id = "user_langcode"
- * )
  */
+#[MigrateProcess('user_langcode')]
 class UserLangcode extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

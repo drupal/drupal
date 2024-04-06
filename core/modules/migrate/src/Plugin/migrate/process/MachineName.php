@@ -5,6 +5,7 @@ namespace Drupal\migrate\Plugin\migrate\process;
 use Drupal\Component\Transliteration\TransliterationInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateException;
@@ -57,11 +58,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * is 'áéí!.jpg' then the destination value of bar will be 'aei_.jpg'.
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "machine_name"
- * )
  */
+#[MigrateProcess('machine_name')]
 class MachineName extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

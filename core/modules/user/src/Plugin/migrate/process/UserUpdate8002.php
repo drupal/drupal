@@ -2,17 +2,15 @@
 
 namespace Drupal\user\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
  * Keep the predefined roles for rid 1 and 2.
- *
- * @MigrateProcessPlugin(
- *   id = "user_update_8002"
- * )
  */
+#[MigrateProcess('user_update_8002')]
 class UserUpdate8002 extends ProcessPluginBase {
 
   /**

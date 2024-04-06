@@ -2,17 +2,15 @@
 
 namespace Drupal\file\Plugin\migrate\process\d6;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
  * Process the file URL into a D8 compatible URL.
- *
- * @MigrateProcessPlugin(
- *   id = "file_uri"
- * )
  */
+#[MigrateProcess('file_uri')]
 class FileUri extends ProcessPluginBase {
 
   /**

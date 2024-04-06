@@ -2,6 +2,7 @@
 
 namespace Drupal\language\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -9,12 +10,11 @@ use Drupal\migrate\Row;
 
 /**
  * Processes the arrays for the language types' negotiation methods and weights.
- *
- * @MigrateProcessPlugin(
- *   id = "language_negotiation",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "language_negotiation",
+  handle_multiples: TRUE,
+)]
 class LanguageNegotiation extends ProcessPluginBase {
 
   /**

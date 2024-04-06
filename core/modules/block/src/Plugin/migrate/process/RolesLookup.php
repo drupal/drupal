@@ -3,6 +3,7 @@
 namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -30,11 +31,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * the source row.
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "roles_lookup"
- * )
  */
+#[MigrateProcess('roles_lookup')]
 class RolesLookup extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

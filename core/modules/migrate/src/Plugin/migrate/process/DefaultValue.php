@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
@@ -40,12 +41,11 @@ use Drupal\migrate\Row;
  * not found, set the destination property uid to 44.
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "default_value",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "default_value",
+  handle_multiples: TRUE,
+)]
 class DefaultValue extends ProcessPluginBase {
 
   /**

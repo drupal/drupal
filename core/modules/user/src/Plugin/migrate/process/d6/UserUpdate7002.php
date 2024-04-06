@@ -3,6 +3,7 @@
 namespace Drupal\user\Plugin\migrate\process\d6;
 
 use Drupal\Core\Datetime\TimeZoneFormHelper;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -12,11 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Converts user time zones from time zone offsets to time zone names.
- *
- * @MigrateProcessPlugin(
- *   id = "user_update_7002"
- * )
  */
+#[MigrateProcess('user_update_7002')]
 class UserUpdate7002 extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

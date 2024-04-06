@@ -2,17 +2,15 @@
 
 namespace Drupal\search\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 
 /**
  * Generate configuration rankings.
- *
- * @MigrateProcessPlugin(
- *   id = "search_configuration_rankings"
- * )
  */
+#[MigrateProcess('search_configuration_rankings')]
 class SearchConfigurationRankings extends ProcessPluginBase {
 
   /**

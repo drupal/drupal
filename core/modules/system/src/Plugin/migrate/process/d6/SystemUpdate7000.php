@@ -2,17 +2,15 @@
 
 namespace Drupal\system\Plugin\migrate\process\d6;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
  * Rename blog and forum permissions to be consistent with other content types.
- *
- * @MigrateProcessPlugin(
- *   id = "system_update_7000"
- * )
  */
+#[MigrateProcess('system_update_7000')]
 class SystemUpdate7000 extends ProcessPluginBase {
 
   /**

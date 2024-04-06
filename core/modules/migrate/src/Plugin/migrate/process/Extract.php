@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Variable;
 use Drupal\migrate\ProcessPluginBase;
@@ -56,12 +57,11 @@ use Drupal\migrate\Row;
  * return "Default title".
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "extract",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "extract",
+  handle_multiples: TRUE,
+)]
 class Extract extends ProcessPluginBase {
 
   /**

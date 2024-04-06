@@ -2,6 +2,7 @@
 
 namespace Drupal\field\Plugin\migrate\process\d7;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -9,10 +10,11 @@ use Drupal\migrate\Row;
 // cspell:ignore entityreference
 
 /**
- * @MigrateProcessPlugin(
- *   id = "d7_field_instance_settings"
- * )
+ * Determines the field instance settings.
  */
+#[MigrateProcess(
+ id: "d7_field_instance_settings"
+)]
 class FieldInstanceSettings extends ProcessPluginBase {
 
   /**

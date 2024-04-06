@@ -3,6 +3,7 @@
 namespace Drupal\field\Plugin\migrate\process\d7;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -50,11 +51,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see core/modules/comment/migrations/d7_comment_type.yml
  * @see core/modules/field/migrations/d7_field_instance.yml
- *
- * * @MigrateProcessPlugin(
- *   id = "field_bundle"
- * )
  */
+#[MigrateProcess('field_bundle')]
 class FieldBundle extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
