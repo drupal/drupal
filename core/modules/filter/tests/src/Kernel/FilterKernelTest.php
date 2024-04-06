@@ -437,6 +437,20 @@ class FilterKernelTest extends KernelTestBase {
         '<!-- comment -->' => TRUE,
         "<!--\nThree.\n-->" => TRUE,
       ],
+      // Do not add paragraph tags around Twig theme debugging.
+      "<p>Text here\n<!-- THEME DEBUG -->\n<!-- THEME HOOK: 'html' -->\n<!-- FILE NAME SUGGESTIONS:\n* html--node.html.twig\nx html.html.twig\n-->\n<!-- BEGIN OUTPUT from 'core/themes/olivero/templates/layout/html.html.twig' -->\n<span>Test</span></p>" => [
+        "<p>Text here" => TRUE,
+        "<p>Text here</p>" => FALSE,
+        "<span>Test</span></p>" => TRUE,
+        "<p><span>Test</span></p>" => FALSE,
+      ],
+      // Do not add paragraph tags around custom template Twig theme debugging.
+      "<p>Text here\n<!-- THEME DEBUG -->\n<!-- THEME HOOK: 'html' -->\n<!-- FILE NAME SUGGESTIONS:\n* html--node.html.twig\nx html.html.twig\n-->\n<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'custom/themes/custom-theme/templates/layout/html.html.twig' -->\n<span>Test</span></p>" => [
+        "<p>Text here" => TRUE,
+        "<p>Text here</p>" => FALSE,
+        "<span>Test</span></p>" => TRUE,
+        "<p><span>Test</span></p>" => FALSE,
+      ],
       // Resulting HTML should produce matching paragraph tags.
       '<p><div>  </div></p>' => [
         "<p>\n<div>  </div>\n</p>" => TRUE,
@@ -479,6 +493,44 @@ class FilterKernelTest extends KernelTestBase {
     $source = $this->randomMachineName($limit);
     $result = _filter_autop($source);
     $this->assertEquals($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
+  }
+
+  /**
+   * Tests that the line break filter does not apply to twig debug.
+   */
+  public function testLineBreakFilterTwigDebug(): void {
+
+    // Enable twig theme debug to ensure that any
+    // changes to theme debugging format force checking
+    // that the auto paragraph filter continues to be applied
+    // correctly.
+    $twig = \Drupal::service('twig');
+    $twig->enableDebug();
+
+    // Manually render a template in its simplest form.
+    $variables = [
+      'theme_hook_original' => 'container',
+      'directory' => '',
+      'children' => 'Test two',
+    ];
+    include_once $this->root . '/core/themes/engines/twig/twig.engine';
+    $render = twig_render_template('container.html.twig', $variables);
+    $render = trim($render);
+
+    // Render text before applying the auto paragraph filter.
+    $this->assertSame("<!-- THEME DEBUG -->
+<!-- THEME HOOK: 'container' -->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'container.html.twig' -->
+<div>Test two</div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'container.html.twig' -->", $render);
+    $result = _filter_autop($render);
+
+    // After auto-p is applied, the theme debug should no longer have
+    // line breaks but the true line breaks should still.
+    $this->assertSame("<!-- THEME DEBUG --><!-- THEME HOOK: 'container' --><!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'container.html.twig' --><div>Test two</div>
+
+<!-- END CUSTOM TEMPLATE OUTPUT from 'container.html.twig' -->", $result);
   }
 
   /**
