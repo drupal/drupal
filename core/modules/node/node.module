@@ -56,7 +56,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.node':
       $output = '';
       $output .= '<h2>' . t('About') . '</h2>';
-      $output .= '<p>' . t('The Node module manages the creation, editing, deletion, settings, and display of the main site content. Content items managed by the Node module are typically displayed as pages on your site, and include a title, some meta-data (author, creation time, content type, etc.), and optional fields containing text or other data (fields are managed by the <a href=":field">Field module</a>). For more information, see the <a href=":node">online documentation for the Node module</a>.', [':node' => 'https://www.drupal.org/documentation/modules/node', ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</p>';
+      $output .= '<p>' . t('The Node module manages the creation, editing, deletion, settings, and display of the main site content. Content items managed by the Node module are typically displayed as pages on your site, and include a title, some meta-data (author, creation time, content type, etc.), and optional fields containing text or other data (fields are managed by the <a href=":field">Field module</a>). For more information, see the <a href=":node">online documentation for the Node module</a>.', [':node' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/node-module', ':field' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</p>';
       $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Creating content') . '</dt>';
