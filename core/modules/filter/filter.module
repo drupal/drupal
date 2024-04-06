@@ -734,6 +734,27 @@ function _filter_autop($text) {
       }
     }
     elseif (!$ignore) {
+      // Skip if the next chunk starts with Twig theme debug.
+      // @see twig_render_template()
+      if (isset($chunks[$i + 1]) && $chunks[$i + 1] === '<!-- THEME DEBUG -->') {
+        $chunk = rtrim($chunk, "\n");
+        $output .= $chunk;
+        continue;
+      }
+
+      // Skip if the preceding chunk was the end of a Twig theme debug.
+      // @see twig_render_template()
+      if (isset($chunks[$i - 1])) {
+        if (
+          str_starts_with($chunks[$i - 1], '<!-- BEGIN OUTPUT from ')
+          || str_starts_with($chunks[$i - 1], '<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from ')
+        ) {
+          $chunk = ltrim($chunk, "\n");
+          $output .= $chunk;
+          continue;
+        }
+      }
+
       // just to make things a little easier, pad the end
       $chunk = preg_replace('|\n*$|', '', $chunk) . "\n\n";
       $chunk = preg_replace('|<br />\s*<br />|', "\n\n", $chunk);
