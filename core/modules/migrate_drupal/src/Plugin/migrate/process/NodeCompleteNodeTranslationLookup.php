@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -18,11 +19,8 @@ use Drupal\migrate\Row;
  * migration.
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "node_complete_node_translation_lookup"
- * )
  */
+#[MigrateProcess('node_complete_node_translation_lookup')]
 class NodeCompleteNodeTranslationLookup extends ProcessPluginBase {
 
   /**

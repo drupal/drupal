@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -21,11 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     source: tid
  *     entity_type: taxonomy_term
  * @endcode
- *
- * @MigrateProcessPlugin(
- *  id = "entity_exists"
- * )
- */
+*/
+#[MigrateProcess('entity_exists')]
 class EntityExists extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

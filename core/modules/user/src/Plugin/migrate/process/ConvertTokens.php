@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -9,12 +10,11 @@ use Drupal\migrate\Row;
 
 /**
  * Plugin to replace !tokens with [tokens].
- *
- * @MigrateProcessPlugin(
- *   id = "convert_tokens",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "convert_tokens",
+  handle_multiples: TRUE,
+)]
 class ConvertTokens extends ProcessPluginBase {
 
   /**

@@ -2,17 +2,15 @@
 
 namespace Drupal\system\Plugin\migrate\process\d6;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
  * Process the D6 Timezone offset into a D8 compatible timezone name.
- *
- * @MigrateProcessPlugin(
- *   id = "timezone"
- * )
  */
+#[MigrateProcess('timezone')]
 class TimeZone extends ProcessPluginBase {
 
   /**

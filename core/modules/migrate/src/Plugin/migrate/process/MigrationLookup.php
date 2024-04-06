@@ -4,6 +4,7 @@ namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\MigrateSkipRowException;
@@ -120,11 +121,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see https://www.drupal.org/project/drupal/issues/3246666
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "migration_lookup"
- * )
  */
+#[MigrateProcess('migration_lookup')]
 class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

@@ -5,16 +5,13 @@ namespace Drupal\file\Plugin\migrate\process\d6;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @MigrateProcessPlugin(
- *   id = "d6_field_file"
- * )
- */
+#[MigrateProcess('d6_field_file')]
 class FieldFile extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

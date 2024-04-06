@@ -2,6 +2,7 @@
 
 namespace Drupal\field\Plugin\migrate\process\d6;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -10,11 +11,8 @@ use Drupal\migrate\Row;
 
 /**
  * Get the field instance widget settings.
- *
- * @MigrateProcessPlugin(
- *   id = "field_instance_widget_settings"
- * )
  */
+#[MigrateProcess('field_instance_widget_settings')]
 class FieldInstanceWidgetSettings extends ProcessPluginBase {
 
   /**

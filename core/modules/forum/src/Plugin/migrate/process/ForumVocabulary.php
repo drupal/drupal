@@ -2,6 +2,7 @@
 
 namespace Drupal\forum\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -26,11 +27,8 @@ use Drupal\migrate\Row;
  *     plugin: forum_vocabulary
  *     machine_name: taxonomy_forums
  * @endcode
- *
- * @MigrateProcessPlugin(
- *   id = "forum_vocabulary"
- * )
  */
+#[MigrateProcess('forum_vocabulary')]
 class ForumVocabulary extends ProcessPluginBase {
 
   /**

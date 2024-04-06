@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -50,12 +51,11 @@ use Drupal\migrate\Row;
  * property is "Rosa", new_text_field will be "Rosa/Parks".
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "concat",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "concat",
+  handle_multiples: TRUE,
+)]
 class Concat extends ProcessPluginBase {
 
   /**

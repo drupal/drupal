@@ -2,6 +2,7 @@
 
 namespace Drupal\image\Plugin\migrate\process\d6;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -9,10 +10,9 @@ use Drupal\migrate\Row;
 // cspell:ignore imagecache
 
 /**
- * @MigrateProcessPlugin(
- *   id = "d6_imagecache_actions"
- * )
+ * Defines the image cache actions migrate process plugin.
  */
+#[MigrateProcess('d6_imagecache_actions')]
 class ImageCacheActions extends ProcessPluginBase {
 
   /**

@@ -2,17 +2,15 @@
 
 namespace Drupal\node\Plugin\migrate\process\d6;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
  * Split the 'administer nodes' permission from 'access content overview'.
- *
- * @MigrateProcessPlugin(
- *   id = "node_update_7008"
- * )
  */
+#[MigrateProcess('node_update_7008')]
 class NodeUpdate7008 extends ProcessPluginBase {
 
   /**

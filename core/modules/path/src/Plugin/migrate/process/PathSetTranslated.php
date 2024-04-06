@@ -2,6 +2,7 @@
 
 namespace Drupal\path\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -49,11 +50,8 @@ use Drupal\migrate\Row;
  * In the example above, if the node_translation lookup succeeds and the
  * original path is of the format '/node/<original node nid>', then the new path
  * will be set to '/node/<translated node nid>'
- *
- * @MigrateProcessPlugin(
- *   id = "path_set_translated"
- * )
  */
+#[MigrateProcess('path_set_translated')]
 class PathSetTranslated extends ProcessPluginBase {
 
   /**

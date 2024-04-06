@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\MigrateSkipRowException;
@@ -53,11 +54,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see https://www.drupal.org/docs/8/api/menu-api
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "menu_link_parent"
- * )
  */
+#[MigrateProcess('menu_link_parent')]
 class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**

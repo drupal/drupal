@@ -2,6 +2,7 @@
 
 namespace Drupal\menu_link_content\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -19,12 +20,11 @@ use Drupal\migrate\Row;
  * @endcode
  *
  * This will convert the query options of the link.
- *
- * @MigrateProcessPlugin(
- *   id = "link_options",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "link_options",
+  handle_multiples: TRUE,
+)]
 class LinkOptions extends ProcessPluginBase {
 
   /**

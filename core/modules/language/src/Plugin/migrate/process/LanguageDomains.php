@@ -2,18 +2,18 @@
 
 namespace Drupal\language\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\migrate\process\ArrayBuild;
 use Drupal\migrate\Row;
 
 /**
  * This plugin makes sure that no domain is empty if domain negotiation is used.
- *
- * @MigrateProcessPlugin(
- *   id = "language_domains",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "language_domains",
+  handle_multiples: TRUE,
+)]
 class LanguageDomains extends ArrayBuild {
 
   /**

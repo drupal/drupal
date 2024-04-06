@@ -4,6 +4,7 @@ namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Variable;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -140,11 +141,8 @@ use Drupal\migrate\MigrateSkipRowException;
  *
  * @see https://www.drupal.org/project/drupal/issues/2827897
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "static_map"
- * )
  */
+#[MigrateProcess('static_map')]
 class StaticMap extends ProcessPluginBase {
 
   /**
