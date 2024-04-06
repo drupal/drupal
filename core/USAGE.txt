@@ -15,8 +15,6 @@ More about configuration:
    See INSTALL.txt and UPDATE.txt in the "core" directory.
  * Learn about how to use Drupal to create your site:
    https://www.drupal.org/documentation
- * Follow best practices:
-   https://www.drupal.org/best-practices
  * Download contributed modules to /modules to extend Drupal's functionality:
    https://www.drupal.org/project/project_module
  * See also: "Developing for Drupal" for writing your own modules, below.

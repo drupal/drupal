@@ -22,7 +22,7 @@ function shortcut_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.shortcut':
       $output = '<h2>' . t('About') . '</h2>';
-      $output .= '<p>' . t('The Shortcut module allows users to create sets of <em>shortcut</em> links to commonly-visited pages of the site. Shortcuts are contained within <em>sets</em>. Each user with <em>Select any shortcut set</em> permission can select a shortcut set created by anyone at the site. For more information, see the <a href=":shortcut">online documentation for the Shortcut module</a>.', [':shortcut' => 'https://www.drupal.org/documentation/modules/shortcut']) . '</p>';
+      $output .= '<p>' . t('The Shortcut module allows users to create sets of <em>shortcut</em> links to commonly-visited pages of the site. Shortcuts are contained within <em>sets</em>. Each user with <em>Select any shortcut set</em> permission can select a shortcut set created by anyone at the site. For more information, see the <a href=":shortcut">online documentation for the Shortcut module</a>.', [':shortcut' => 'https://www.drupal.org/docs/8/core/modules/shortcut']) . '</p>';
       $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl><dt>' . t('Administering shortcuts') . '</dt>';
       $output .= '<dd>' . t('Users with the <em>Administer shortcuts</em> permission can manage shortcut sets and edit the shortcuts within sets from the <a href=":shortcuts">Shortcuts administration page</a>.', [':shortcuts' => Url::fromRoute('entity.shortcut_set.collection')->toString()]) . '</dd>';
