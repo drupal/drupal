@@ -14,8 +14,10 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Token;
+use Drupal\media\Attribute\OEmbedMediaSource;
 use Drupal\media\IFrameUrlHelper;
 use Drupal\media\OEmbed\Resource;
 use Drupal\media\OEmbed\ResourceException;
@@ -65,17 +67,15 @@ use Symfony\Component\Mime\MimeTypes;
  * define a new class which extends it. With the code above, you will able to
  * create media types which use the "Artwork" source plugin, and use those media
  * types to link to assets on Deviantart and Flickr.
- *
- * @MediaSource(
- *   id = "oembed",
- *   label = @Translation("oEmbed source"),
- *   description = @Translation("Use oEmbed URL for reusable media."),
- *   allowed_field_types = {"string"},
- *   default_thumbnail_filename = "no-thumbnail.png",
- *   deriver = "Drupal\media\Plugin\media\Source\OEmbedDeriver",
- *   providers = {},
- * )
  */
+#[OEmbedMediaSource(
+  id: "oembed",
+  label: new TranslatableMarkup("oEmbed source"),
+  description: new TranslatableMarkup("Use oEmbed URL for reusable media."),
+  allowed_field_types: ["string"],
+  default_thumbnail_filename: "no-thumbnail.png",
+  deriver: OEmbedDeriver::class,
+)]
 class OEmbed extends MediaSourceBase implements OEmbedInterface {
 
   /**

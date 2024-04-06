@@ -2,19 +2,20 @@
 
 namespace Drupal\media_test_source\Plugin\media\Source;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\media\Attribute\MediaSource;
 use Drupal\media\MediaInterface;
 
 /**
  * Provides test media source.
- *
- * @MediaSource(
- *   id = "test_translation",
- *   label = @Translation("Test source with translations"),
- *   description = @Translation("Test media source with translations."),
- *   allowed_field_types = {"string"},
- *   thumbnail_alt_metadata_attribute = "test_thumbnail_alt",
- * )
  */
+#[MediaSource(
+  id: "test_translation",
+  label: new TranslatableMarkup("Test source with translations"),
+  description: new TranslatableMarkup("Test media source with translations."),
+  allowed_field_types: ["string"],
+  thumbnail_alt_metadata_attribute: "test_thumbnail_alt"
+)]
 class TestTranslation extends Test {
 
   /**

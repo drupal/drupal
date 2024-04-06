@@ -2,7 +2,9 @@
 
 namespace Drupal\media\Plugin\media\Source;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\FileInterface;
+use Drupal\media\Attribute\MediaSource;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media\MediaSourceBase;
@@ -11,15 +13,13 @@ use Drupal\media\MediaSourceBase;
  * File entity media source.
  *
  * @see \Drupal\file\FileInterface
- *
- * @MediaSource(
- *   id = "file",
- *   label = @Translation("File"),
- *   description = @Translation("Use local files for reusable media."),
- *   allowed_field_types = {"file"},
- *   default_thumbnail_filename = "generic.png"
- * )
  */
+#[MediaSource(
+  id: "file",
+  label: new TranslatableMarkup("File"),
+  description: new TranslatableMarkup("Use local files for reusable media."),
+  allowed_field_types: ["file"],
+)]
 class File extends MediaSourceBase {
 
   /**

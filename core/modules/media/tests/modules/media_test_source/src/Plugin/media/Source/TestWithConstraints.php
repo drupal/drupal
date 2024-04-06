@@ -2,19 +2,20 @@
 
 namespace Drupal\media_test_source\Plugin\media\Source;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\media\Attribute\MediaSource;
 use Drupal\media\MediaSourceEntityConstraintsInterface;
 use Drupal\media\MediaSourceFieldConstraintsInterface;
 
 /**
  * Provides generic media type.
- *
- * @MediaSource(
- *   id = "test_constraints",
- *   label = @Translation("Test source with constraints"),
- *   description = @Translation("Test media source that provides constraints."),
- *   allowed_field_types = {"string_long"},
- * )
  */
+#[MediaSource(
+  id: "test_constraints",
+  label: new TranslatableMarkup("Test source with constraints"),
+  description: new TranslatableMarkup("Test media source that provides constraints."),
+  allowed_field_types: ["string_long"],
+)]
 class TestWithConstraints extends Test implements MediaSourceEntityConstraintsInterface, MediaSourceFieldConstraintsInterface {
 
   /**
