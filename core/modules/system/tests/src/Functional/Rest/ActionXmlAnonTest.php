@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\action\Functional\Rest;
+namespace Drupal\Tests\system\Functional\Rest;
 
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 
 /**
- * @group action
- * @group legacy
+ * @group Action
  */
-class ActionXmlCookieTest extends ActionResourceTestBase {
+class ActionXmlAnonTest extends ActionResourceTestBase {
 
-  use CookieResourceTestTrait;
+  use AnonResourceTestTrait;
   use XmlEntityNormalizationQuirksTrait;
 
   /**
@@ -25,11 +24,6 @@ class ActionXmlCookieTest extends ActionResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'text/xml; charset=UTF-8';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $auth = 'cookie';
 
   /**
    * {@inheritdoc}

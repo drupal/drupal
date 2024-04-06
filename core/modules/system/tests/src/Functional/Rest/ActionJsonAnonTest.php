@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\action\Functional\Rest;
+namespace Drupal\Tests\system\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
- * @group action
- * @group legacy
+ * @group Action
  */
 class ActionJsonAnonTest extends ActionResourceTestBase {
 
