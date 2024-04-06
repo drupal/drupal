@@ -2,14 +2,14 @@
 
 namespace Drupal\node\Plugin\migrate\destination;
 
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Row;
 
 /**
- * @MigrateDestination(
- *   id = "entity:node_type"
- * )
+ * Migration destination for node type entity.
  */
+#[MigrateDestination('entity:node_type')]
 class EntityNodeType extends EntityConfigBase {
 
   /**

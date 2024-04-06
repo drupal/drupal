@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Row;
 
 /**
@@ -41,11 +42,8 @@ use Drupal\migrate\Row;
  *   required:
  *     - d6_node_type
  * @endcode
- *
- * @MigrateDestination(
- *   id = "entity:base_field_override"
- * )
  */
+#[MigrateDestination('entity:base_field_override')]
 class EntityBaseFieldOverride extends EntityConfigBase {
 
   /**

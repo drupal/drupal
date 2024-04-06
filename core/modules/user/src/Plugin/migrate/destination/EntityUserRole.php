@@ -5,6 +5,7 @@ namespace Drupal\user\Plugin\migrate\destination;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
@@ -12,11 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a destination plugin for migrating user role entities.
- *
- * @MigrateDestination(
- *   id = "entity:user_role"
- * )
  */
+#[MigrateDestination('entity:user_role')]
 class EntityUserRole extends EntityConfigBase {
 
   /**

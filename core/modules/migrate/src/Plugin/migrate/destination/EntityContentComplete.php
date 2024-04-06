@@ -5,18 +5,19 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\EntityFieldDefinitionTrait;
+use Drupal\migrate\Plugin\Derivative\MigrateEntityComplete;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 
 /**
  * Provides a destination for migrating the entire entity revision table.
- *
- * @MigrateDestination(
- *   id = "entity_complete",
- *   deriver = "Drupal\migrate\Plugin\Derivative\MigrateEntityComplete"
- * )
  */
+#[MigrateDestination(
+  id: 'entity_complete',
+  deriver: MigrateEntityComplete::class
+)]
 class EntityContentComplete extends EntityContentBase {
 
   use EntityFieldDefinitionTrait;

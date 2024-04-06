@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\migrate\Attribute\MigrateDestination;
+
 /**
  * This class imports one component of an entity form display.
  *
@@ -36,11 +38,8 @@ namespace Drupal\migrate\Plugin\migrate\destination;
  *
  * This will add a "comment" field on the "default" form mode of the "node"
  * entity type with options defined by the "options" constant.
- *
- * @MigrateDestination(
- *   id = "component_entity_form_display"
- * )
  */
+#[MigrateDestination('component_entity_form_display')]
 class PerComponentEntityFormDisplay extends ComponentEntityDisplayBase {
 
   const MODE_NAME = 'form_mode';

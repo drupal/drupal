@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EmailItem;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Row;
@@ -61,11 +62,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * on different password hash types and a list of other user properties, refer
  * to the handbook documentation:
  * @see https://www.drupal.org/docs/8/api/migrate-api/migrate-destination-plugins-examples/migrating-users
- *
- * @MigrateDestination(
- *   id = "entity:user"
- * )
  */
+#[MigrateDestination('entity:user')]
 class EntityUser extends EntityContentBase {
 
   /**
