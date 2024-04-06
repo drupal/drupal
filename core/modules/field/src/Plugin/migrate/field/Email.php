@@ -3,23 +3,22 @@
 namespace Drupal\field\Plugin\migrate\field;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 // cspell:ignore spamspan
-
 /**
  * MigrateField Plugin for Drupal 6 and 7 email fields.
- *
- * @MigrateField(
- *   id = "email",
- *   core = {6,7},
- *   type_map = {
- *     "email" = "email"
- *   },
- *   source_module = "email",
- *   destination_module = "core"
- * )
  */
+#[MigrateField(
+  id: 'email',
+  core: [6, 7],
+  type_map: [
+    'email' => 'email',
+  ],
+  source_module: 'email',
+  destination_module: 'core',
+)]
 class Email extends FieldPluginBase {
 
   /**

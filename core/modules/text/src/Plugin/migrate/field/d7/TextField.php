@@ -4,21 +4,20 @@ namespace Drupal\text\Plugin\migrate\field\d7;
 
 use Drupal\migrate\Row;
 use Drupal\migrate\MigrateSkipRowException;
+use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
-/**
- * @MigrateField(
- *   id = "d7_text",
- *   type_map = {
- *     "text" = "text",
- *     "text_long" = "text_long",
- *     "text_with_summary" = "text_with_summary"
- *   },
- *   core = {7},
- *   source_module = "text",
- *   destination_module = "text",
- * )
- */
+#[MigrateField(
+  id: 'd7_text',
+  core: [7],
+  type_map: [
+    'text' => 'text',
+    'text_long' => 'text_long',
+    'text_with_summary' => 'text_with_summary',
+  ],
+  source_module: 'text',
+  destination_module: 'text',
+)]
 class TextField extends FieldPluginBase {
 
   /**

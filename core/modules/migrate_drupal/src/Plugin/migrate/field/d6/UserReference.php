@@ -5,23 +5,22 @@ namespace Drupal\migrate_drupal\Plugin\migrate\field\d6;
 // cspell:ignore userreference
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 
 /**
  * MigrateField Plugin for Drupal 6 user reference fields.
- *
- * @MigrateField(
- *   id = "userreference",
- *   core = {6},
- *   type_map = {
- *     "userreference" = "entity_reference",
- *   },
- *   source_module = "userreference",
- *   destination_module = "core",
- * )
- *
  * @internal
  */
+#[MigrateField(
+  id: 'userreference',
+  core: [6],
+  type_map: [
+    'userreference' => 'entity_reference',
+  ],
+  source_module: 'userreference',
+  destination_module: 'core',
+)]
 class UserReference extends ReferenceBase {
 
   /**

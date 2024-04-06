@@ -4,17 +4,18 @@ namespace Drupal\file\Plugin\migrate\field\d7;
 
 use Drupal\file\Plugin\migrate\field\d6\FileField as D6FileField;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate_drupal\Attribute\MigrateField;
 
 // cspell:ignore filefield
-
 /**
- * @MigrateField(
- *   id = "file",
- *   core = {7},
- *   source_module = "file",
- *   destination_module = "file"
- * )
+ * MigrateField Plugin for Drupal 7 file fields.
  */
+#[MigrateField(
+  id: 'file',
+  core: [7],
+  source_module: 'file',
+  destination_module: 'file',
+)]
 class FileField extends D6FileField {
 
   /**
