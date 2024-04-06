@@ -53,5 +53,5 @@
  *
  * @see default.settings.php
  * @see \Drupal\Core\DrupalKernel::getSitePath()
- * @see https://www.drupal.org/documentation/install/multi-site
+ * @see https://www.drupal.org/docs/getting-started/multisite-drupal
  */

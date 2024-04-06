@@ -63,7 +63,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * For a complete example on migrating data from an SQL source, refer to
  * https://www.drupal.org/docs/8/api/migrate-api/migrating-data-from-sql-source
  *
- * @see https://www.drupal.org/docs/8/api/database-api
+ * @see https://www.drupal.org/docs/drupal-apis/database-api
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
  */
 abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface {

@@ -1555,9 +1555,7 @@
  * Ideally, all code that is included in Drupal Core and contributed modules,
  * themes, and distributions will be secure, internationalized, maintainable,
  * and efficient. In order to facilitate this, the Drupal community has
- * developed a set of guidelines and standards for developers to follow. Most of
- * these standards can be found under
- * @link https://www.drupal.org/developing/best-practices Best practices on Drupal.org @endlink
+ * developed a set of guidelines and standards for developers to follow.
  *
  * Standards and best practices that developers should be aware of include:
  * - Security: https://www.drupal.org/writing-secure-code and the

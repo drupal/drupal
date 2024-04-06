@@ -29,7 +29,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * mysqli or oci8.
  *
  * For more detailed information on the database abstraction layer, see
- * https://www.drupal.org/docs/8/api/database-api/database-api-overview.
+ * https://www.drupal.org/docs/drupal-apis/database-api/database-api-overview.
  *
  * @section sec_entity Querying entities
  * Any query on Drupal entities or fields should use the Entity Query API. See
@@ -119,7 +119,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * There are also methods to join to other tables, add fields with aliases,
  * isNull() to query for NULL values, etc. See
- * https://www.drupal.org/developing/api/database for many more details.
+ * https://www.drupal.org/docs/drupal-apis/database-api for many more details.
  *
  * One note on chaining: It is common in the dynamic database API to chain
  * method calls (as illustrated here), because most of the query methods modify
@@ -240,7 +240,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * if you had a connection object variable $connection available to use. See
  * also the @link container Services and Dependency Injection topic. @endlink
  *
- * @see https://www.drupal.org/developing/api/database
+ * @see https://www.drupal.org/docs/drupal-apis/database-api
  * @see entity_api
  * @see schemaapi
  *
