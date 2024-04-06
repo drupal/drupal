@@ -4,6 +4,7 @@ namespace Drupal\ban\Plugin\migrate\destination;
 
 use Drupal\ban\BanIpManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\DestinationBase;
 use Drupal\migrate\Row;
@@ -11,11 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Destination for blocked IP addresses.
- *
- * @MigrateDestination(
- *   id = "blocked_ip"
- * )
  */
+#[MigrateDestination('blocked_ip')]
 class BlockedIp extends DestinationBase implements ContainerFactoryPluginInterface {
 
   /**

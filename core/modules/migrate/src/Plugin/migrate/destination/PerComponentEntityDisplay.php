@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\migrate\Attribute\MigrateDestination;
+
 /**
  * This class imports one component of an entity display.
  *
@@ -43,11 +45,8 @@ namespace Drupal\migrate\Plugin\migrate\destination;
  * This will add the "user_picture" image field to the "default" view mode of
  * the "user" bundle of the "user" entity type with options as defined by the
  * "options" constant, for example the label will be hidden.
- *
- * @MigrateDestination(
- *   id = "component_entity_display"
- * )
  */
+#[MigrateDestination('component_entity_display')]
 class PerComponentEntityDisplay extends ComponentEntityDisplayBase {
 
   const MODE_NAME = 'view_mode';

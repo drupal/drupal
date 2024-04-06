@@ -4,6 +4,7 @@ namespace Drupal\system\Plugin\migrate\destination\d7;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate\Plugin\migrate\destination\DestinationBase;
@@ -11,11 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Persist theme settings to the config system.
- *
- * @MigrateDestination(
- *   id = "d7_theme_settings"
- * )
  */
+#[MigrateDestination('d7_theme_settings')]
 class ThemeSettings extends DestinationBase implements ContainerFactoryPluginInterface {
 
   /**

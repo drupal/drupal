@@ -8,7 +8,9 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\Plugin\Derivative\MigrateEntityRevision;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 
@@ -104,12 +106,11 @@ use Drupal\migrate\Row;
  *   required:
  *     - custom_article_migration
  * @endcode
- *
- * @MigrateDestination(
- *   id = "entity_revision",
- *   deriver = "Drupal\migrate\Plugin\Derivative\MigrateEntityRevision"
- * )
  */
+#[MigrateDestination(
+  id: 'entity_revision',
+  deriver: MigrateEntityRevision::class
+)]
 class EntityRevision extends EntityContentBase {
 
   /**

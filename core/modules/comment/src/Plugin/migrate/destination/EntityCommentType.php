@@ -2,14 +2,14 @@
 
 namespace Drupal\comment\Plugin\migrate\destination;
 
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Row;
 
 /**
- * @MigrateDestination(
- *   id = "entity:comment_type"
- * )
+ * Comment type destination.
  */
+#[MigrateDestination('entity:comment_type')]
 class EntityCommentType extends EntityConfigBase {
 
   /**

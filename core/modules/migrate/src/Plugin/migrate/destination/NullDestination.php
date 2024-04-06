@@ -2,16 +2,16 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Row;
 
 /**
  * Provides null destination plugin.
- *
- * @MigrateDestination(
- *   id = "null",
- *   requirements_met = false
- * )
  */
+#[MigrateDestination(
+  id: 'null',
+  requirements_met: FALSE
+)]
 class NullDestination extends DestinationBase {
 
   /**

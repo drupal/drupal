@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\taxonomy\Plugin\migrate\destination;
 
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Row;
 
 /**
- * @MigrateDestination(
- *   id = "entity:taxonomy_vocabulary"
- * )
+ * Migration destination for taxonomy vocabulary.
  */
+#[MigrateDestination('entity:taxonomy_vocabulary')]
 class EntityTaxonomyVocabulary extends EntityConfigBase {
 
   /**

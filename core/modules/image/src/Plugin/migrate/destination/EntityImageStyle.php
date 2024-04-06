@@ -3,6 +3,7 @@
 namespace Drupal\image\Plugin\migrate\destination;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 use Drupal\migrate\Row;
@@ -12,11 +13,8 @@ use Drupal\migrate\Row;
  *
  * Every migration that uses this destination must have an optional
  * dependency on the d6_file migration to ensure it runs first.
- *
- * @MigrateDestination(
- *   id = "entity:image_style"
- * )
  */
+#[MigrateDestination('entity:image_style')]
 class EntityImageStyle extends EntityConfigBase {
 
   /**

@@ -2,14 +2,14 @@
 
 namespace Drupal\shortcut\Plugin\migrate\destination;
 
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Row;
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 
 /**
- * @MigrateDestination(
- *   id = "entity:shortcut_set"
- * )
+ * Migration destination for shortcut set entity.
  */
+#[MigrateDestination('entity:shortcut_set')]
 class EntityShortcutSet extends EntityConfigBase {
 
   /**

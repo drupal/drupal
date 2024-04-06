@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\migrate\Attribute\MigrateDestination;
+
 /**
  * Provides destination plugin for field_storage_config configuration entities.
  *
@@ -45,11 +47,8 @@ namespace Drupal\migrate\Plugin\migrate\destination;
  *
  * For an example on how to migrate a Field instance of this FieldStorage,
  * refer to \Drupal\migrate\Plugin\migrate\destination\EntityFieldInstance.
- *
- * @MigrateDestination(
- *   id = "entity:field_storage_config"
- * )
  */
+#[MigrateDestination('entity:field_storage_config')]
 class EntityFieldStorageConfig extends EntityConfigBase {
 
   /**
