@@ -38,7 +38,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     $this->assertSame(2, $performance_data->getStylesheetCount());
     $this->assertSame(47552, $performance_data->getStylesheetBytes());
     $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertSame(132038, $performance_data->getScriptBytes());
+    $this->assertSame(132083, $performance_data->getScriptBytes());
 
     $expected_queries = [
       'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
