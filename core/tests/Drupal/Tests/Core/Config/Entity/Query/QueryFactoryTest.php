@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Config\Entity\Query;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\Entity\Query\QueryFactory;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\Entity\Query\QueryFactory
@@ -20,7 +21,11 @@ class QueryFactoryTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetKeys
    */
-  public function testGetKeys(array $expected, $key, Config $config) {
+  public function testGetKeys(array $expected, string $key, array $sets): void {
+    $config = $this->getConfigObject('test');
+    foreach ($sets as $set) {
+      $config->set(...$set);
+    }
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $key_value_factory = $this->createMock('Drupal\Core\KeyValueStore\KeyValueFactoryInterface');
     $config_manager = $this->createMock('Drupal\Core\Config\ConfigManagerInterface');
@@ -32,68 +37,68 @@ class QueryFactoryTest extends UnitTestCase {
     $this->assertEquals($expected, $actual);
   }
 
-  public function providerTestGetKeys() {
-    $tests = [];
-
-    $tests[] = [
+  public static function providerTestGetKeys(): \Generator {
+    yield [
       ['uuid:abc'],
       'uuid',
-      $this->getConfigObject('test')->set('uuid', 'abc'),
+      [['uuid', 'abc']],
     ];
 
     // Tests a lookup being set to a top level key when sub-keys exist.
-    $tests[] = [
+    yield [
       [],
       'uuid',
-      $this->getConfigObject('test')->set('uuid.blah', 'abc'),
+      [['uuid.blah', 'abc']],
     ];
 
     // Tests a non existent key.
-    $tests[] = [
+    yield [
       [],
       'uuid',
-      $this->getConfigObject('test'),
+      [],
     ];
 
     // Tests a non existent sub key.
-    $tests[] = [
+    yield [
       [],
       'uuid.blah',
-      $this->getConfigObject('test')->set('uuid', 'abc'),
+      [['uuid', 'abc']],
     ];
 
     // Tests an existent sub key.
-    $tests[] = [
+    yield [
       ['uuid.blah:abc'],
       'uuid.blah',
-      $this->getConfigObject('test')->set('uuid.blah', 'abc'),
+      [['uuid.blah', 'abc']],
     ];
 
     // One wildcard.
-    $tests[] = [
+    yield [
       ['test.*.value:a', 'test.*.value:b'],
       'test.*.value',
-      $this->getConfigObject('test')->set('test.a.value', 'a')->set('test.b.value', 'b'),
+      [['test.a.value', 'a'], ['test.b.value', 'b']],
     ];
 
     // Three wildcards.
-    $tests[] = [
+    yield [
       ['test.*.sub2.*.sub4.*.value:aaa', 'test.*.sub2.*.sub4.*.value:aab', 'test.*.sub2.*.sub4.*.value:bab'],
       'test.*.sub2.*.sub4.*.value',
-      $this->getConfigObject('test')
-        ->set('test.a.sub2.a.sub4.a.value', 'aaa')
-        ->set('test.a.sub2.a.sub4.b.value', 'aab')
-        ->set('test.b.sub2.a.sub4.b.value', 'bab'),
+      [
+        ['test.a.sub2.a.sub4.a.value', 'aaa'],
+        ['test.a.sub2.a.sub4.b.value', 'aab'],
+        ['test.b.sub2.a.sub4.b.value', 'bab'],
+      ],
     ];
 
     // Three wildcards in a row.
-    $tests[] = [
+    yield [
       ['test.*.*.*.value:abc', 'test.*.*.*.value:abd'],
       'test.*.*.*.value',
-      $this->getConfigObject('test')->set('test.a.b.c.value', 'abc')->set('test.a.b.d.value', 'abd'),
+      [
+        ['test.a.b.c.value', 'abc'],
+        ['test.a.b.d.value', 'abd'],
+      ],
     ];
-
-    return $tests;
   }
 
   /**
@@ -122,11 +127,11 @@ class QueryFactoryTest extends UnitTestCase {
    * @param string $name
    *   The config name.
    *
-   * @return \Drupal\Core\Config\Config|\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\Core\Config\Config&\PHPUnit\Framework\MockObject\MockObject
    *   The test configuration object.
    */
-  protected function getConfigObject($name) {
-    $config = $this->getMockBuilder('Drupal\Core\Config\Config')
+  protected function getConfigObject(string $name): Config&MockObject {
+    $config = $this->getMockBuilder(Config::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['save', 'delete'])
       ->getMock();
