@@ -1549,8 +1549,9 @@ function system_requirements($phase) {
 
   // Add warning when twig debug option is enabled.
   if ($phase === 'runtime') {
-    $twig_debug = \Drupal::state()->get('twig_debug', FALSE);
-    $twig_cache_disable = \Drupal::state()->get('twig_cache_disable', FALSE);
+    $development_settings = \Drupal::keyValue('development_settings');
+    $twig_debug = $development_settings->get('twig_debug', FALSE);
+    $twig_cache_disable = $development_settings->get('twig_cache_disable', FALSE);
     if ($twig_debug || $twig_cache_disable) {
       $requirements['twig_debug_enabled'] = [
         'title' => t('Twig development mode'),
@@ -1563,7 +1564,7 @@ function system_requirements($phase) {
         'severity' => REQUIREMENT_WARNING,
       ];
     }
-    $render_cache_disabled = \Drupal::state()->get('disable_rendered_output_cache_bins', FALSE);
+    $render_cache_disabled = $development_settings->get('disable_rendered_output_cache_bins', FALSE);
     if ($render_cache_disabled) {
       $requirements['render_cache_disabled'] = [
         'title' => t('Markup caching disabled'),
