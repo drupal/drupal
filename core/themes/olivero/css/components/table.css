@@ -78,6 +78,11 @@
   margin-top: 0;
 }
 
+.text-content table td,
+.text-content table th {
+  vertical-align: middle;
+}
+
 .tablesort {
   vertical-align: middle;
 }
