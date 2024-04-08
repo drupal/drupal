@@ -22,15 +22,27 @@ libraries:
   - core/normalize
   - claro/global-styling
 libraries-override:
+  core/drupal.tabledrag:
+    css:
+      component:
+        misc/components/tabledrag.module.css: css/components/tabledrag.css
+
+  core/drupal.ajax:
+    css:
+      component:
+        misc/components/ajax-progress.module.css: css/components/ajax-progress.module.css
+
+  core/drupal.autocomplete:
+    css:
+      component:
+        misc/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
+
   system/base:
     css:
       component:
-        css/components/ajax-progress.module.css: css/components/ajax-progress.module.css
-        css/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
         css/components/system-status-counter.css: css/components/system-status-counter.css
         css/components/system-status-report-counters.css: css/components/system-status-report-counters.css
         css/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
-        css/components/tabledrag.module.css: css/components/tabledrag.css
 
   system/admin:
     css:
