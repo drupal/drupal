@@ -225,15 +225,6 @@ function system_post_update_set_cron_logging_setting_to_boolean(): void {
 }
 
 /**
- * Uninstall the sdc module if installed.
- */
-function system_post_update_sdc_uninstall() {
-  if (\Drupal::moduleHandler()->moduleExists('sdc')) {
-    \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
-  }
-}
-
-/**
  * Move development settings from state to raw key-value storage.
  */
 function system_post_update_move_development_settings_to_keyvalue(): void {
