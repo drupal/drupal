@@ -446,6 +446,7 @@ system.prepare_modules_entity_uninstall:
     _title_callback: '\Drupal\system\Form\PrepareModulesEntityUninstallForm::formTitle'
   requirements:
     _permission: 'administer modules'
+    _custom_access: '\Drupal\system\Form\PrepareModulesEntityUninstallForm::checkAccess'
 
 system.timezone:
   path: '/system/timezone/{abbreviation}/{offset}/{is_daylight_saving_time}'

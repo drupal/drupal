@@ -2,6 +2,8 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -89,6 +91,36 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
    */
   public function getCancelUrl() {
     return Url::fromRoute('system.modules_uninstall');
+  }
+
+  /**
+   * Gets the form title.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The form title.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   *   Thrown when the entity-type does not exist.
+   */
+  public function formTitle(string $entity_type_id): TranslatableMarkup {
+    $this->entityTypeId = $entity_type_id;
+    return $this->getQuestion();
+  }
+
+  /**
+   * Checks access based on the validity of the entity type ID.
+   *
+   * @param string $entity_type_id
+   *   Entity type ID.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   */
+  public static function checkAccess(string $entity_type_id): AccessResultInterface {
+    return AccessResult::allowedIf(\Drupal::entityTypeManager()->hasDefinition($entity_type_id));
   }
 
   /**
