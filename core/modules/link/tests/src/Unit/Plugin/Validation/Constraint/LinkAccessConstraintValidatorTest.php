@@ -20,19 +20,39 @@ class LinkAccessConstraintValidatorTest extends UnitTestCase {
   /**
    * Tests the access validation constraint for links.
    *
-   * @param \Drupal\link\LinkItemInterface $value
-   *   The link item.
-   * @param \Drupal\Core\Session\AccountProxyInterface $user
-   *   The user account.
-   * @param bool $valid
-   *   A boolean indicating if the combination is expected to be valid.
-   *
    * @covers ::validate
    * @dataProvider providerValidate
    */
-  public function testValidate($value, $user, $valid) {
-    $context = $this->createMock(ExecutionContextInterface::class);
+  public function testValidate(bool $mayLinkAnyPage, bool $urlAccess, bool $valid): void {
+    // Mock a Url object that returns a boolean indicating user access.
+    $url = $this->getMockBuilder('Drupal\Core\Url')
+      ->disableOriginalConstructor()
+      ->getMock();
+    if ($mayLinkAnyPage) {
+      $url->expects($this->never())
+        ->method('access');
+    }
+    else {
+      $url->expects($this->once())
+        ->method('access')
+        ->willReturn($urlAccess);
+    }
 
+    // Mock a link object that returns the URL object.
+    $link = $this->createMock('Drupal\link\LinkItemInterface');
+    $link->expects($this->any())
+      ->method('getUrl')
+      ->willReturn($url);
+
+    // Mock a user object that returns a boolean indicating user access to all
+    // links.
+    $user = $this->createMock('Drupal\Core\Session\AccountProxyInterface');
+    $user->expects($this->any())
+      ->method('hasPermission')
+      ->with($this->equalTo('link to any page'))
+      ->willReturn($mayLinkAnyPage);
+
+    $context = $this->createMock(ExecutionContextInterface::class);
     if ($valid) {
       $context->expects($this->never())
         ->method('addViolation');
@@ -43,10 +63,9 @@ class LinkAccessConstraintValidatorTest extends UnitTestCase {
     }
 
     $constraint = new LinkAccessConstraint();
-
     $validate = new LinkAccessConstraintValidator($user);
     $validate->initialize($context);
-    $validate->validate($value, $constraint);
+    $validate->validate($link, $constraint);
   }
 
   /**
@@ -57,41 +76,11 @@ class LinkAccessConstraintValidatorTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\link\LinkAccessConstraintValidatorTest::validate()
    */
-  public function providerValidate() {
-    $data = [];
-
-    $cases = [
-      ['may_link_any_page' => TRUE, 'url_access' => TRUE, 'valid' => TRUE],
-      ['may_link_any_page' => TRUE, 'url_access' => FALSE, 'valid' => TRUE],
-      ['may_link_any_page' => FALSE, 'url_access' => TRUE, 'valid' => TRUE],
-      ['may_link_any_page' => FALSE, 'url_access' => FALSE, 'valid' => FALSE],
-    ];
-
-    foreach ($cases as $case) {
-      // Mock a Url object that returns a boolean indicating user access.
-      $url = $this->getMockBuilder('Drupal\Core\Url')
-        ->disableOriginalConstructor()
-        ->getMock();
-      $url->expects($this->once())
-        ->method('access')
-        ->willReturn($case['url_access']);
-      // Mock a link object that returns the URL object.
-      $link = $this->createMock('Drupal\link\LinkItemInterface');
-      $link->expects($this->any())
-        ->method('getUrl')
-        ->willReturn($url);
-      // Mock a user object that returns a boolean indicating user access to all
-      // links.
-      $user = $this->createMock('Drupal\Core\Session\AccountProxyInterface');
-      $user->expects($this->any())
-        ->method('hasPermission')
-        ->with($this->equalTo('link to any page'))
-        ->willReturn($case['may_link_any_page']);
-
-      $data[] = [$link, $user, $case['valid']];
-    }
-
-    return $data;
+  public static function providerValidate(): \Generator {
+    yield [TRUE, TRUE, TRUE];
+    yield [TRUE, FALSE, TRUE];
+    yield [FALSE, TRUE, TRUE];
+    yield [FALSE, FALSE, FALSE];
   }
 
 }
