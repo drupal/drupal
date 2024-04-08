@@ -193,7 +193,7 @@ class ClaroPreRender implements TrustedCallbackInterface {
    * Prerender callback for table elements.
    */
   public static function tablePositionSticky(array $element) {
-    if (isset($element['#attributes']['class']) && in_array('sticky-enabled', $element['#attributes']['class'])) {
+    if (isset($element['#attributes']['class']) && is_array($element['#attributes']['class']) && in_array('sticky-enabled', $element['#attributes']['class'], TRUE)) {
       unset($element['#attributes']['class'][array_search('sticky-enabled', $element['#attributes']['class'])]);
       $element['#attributes']['class'][] = 'position-sticky';
     }
