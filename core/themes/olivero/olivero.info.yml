@@ -34,15 +34,18 @@ regions:
   footer_top: Footer Top
   footer_bottom: Footer Bottom
 libraries-override:
+  core/drupal.ajax:
+    css:
+      component:
+        core/components/ajax-progress.module.css: css/components/ajax-progress.module.css
+  core/drupal.autocomplete:
+    css:
+      component:
+        core/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
   system/admin:
     css:
       theme:
         css/system.admin.css: false
-  system/base:
-    css:
-      component:
-        css/components/ajax-progress.module.css: css/components/ajax-progress.module.css
-        css/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
   core/drupal.checkbox: false
   core/drupal.dropbutton:
     css:
@@ -65,6 +68,8 @@ libraries-extend:
     - olivero/drupal.dialog
   core/drupal.progress:
     - olivero/progress
+  core/drupal.tabledrag:
+    - olivero/tabledrag
   layout_discovery/onecol:
     - olivero/layout_discovery_section
   layout_discovery/twocol_bricks:

@@ -3,9 +3,7 @@ base:
   css:
     # Adjust the weights to load these early.
     component:
-      css/components/ajax-progress.module.css: { weight: -10 }
       css/components/align.module.css: { weight: -10 }
-      css/components/autocomplete-loading.module.css: { weight: -10 }
       css/components/fieldgroup.module.css: { weight: -10 }
       css/components/container-inline.module.css: { weight: -10 }
       css/components/clearfix.module.css: { weight: -10 }
@@ -15,16 +13,13 @@ base:
       css/components/js.module.css: { weight: -10 }
       css/components/nowrap.module.css: { weight: -10 }
       css/components/position-container.module.css: { weight: -10 }
-      css/components/progress.module.css: { weight: -10 }
       css/components/reset-appearance.module.css: { weight: -10 }
       css/components/resize.module.css: { weight: -10 }
       css/components/sticky-header.module.css: { weight: -10 }
       css/components/system-status-counter.css: { weight: -10 }
       css/components/system-status-report-counters.css: { weight: -10 }
       css/components/system-status-report-general-info.css: { weight: -10 }
-      css/components/tabledrag.module.css: { weight: -10 }
       css/components/tablesort.module.css: { weight: -10 }
-      css/components/tree-child.module.css: { weight: -10 }
 
 admin:
   version: VERSION

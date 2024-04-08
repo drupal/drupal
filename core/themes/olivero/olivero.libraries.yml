@@ -47,7 +47,6 @@ global-styling:
       css/components/pager.css: {}
       css/components/table.css: {}
       css/components/text-content.css: {}
-      css/components/tabledrag.css: {}
       css/components/wide-content.css: {}
 
   js:
@@ -289,6 +288,12 @@ tabs:
       css/components/tabs.css: {}
   js:
     js/tabs.js: {}
+
+tabledrag:
+  version: VERSION
+  css:
+    component:
+      css/components/tabledrag.css: {}
 
 tags:
   version: VERSION

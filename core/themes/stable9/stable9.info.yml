@@ -53,6 +53,16 @@ libraries-override:
       component:
         css/contextual.toolbar.css: css/contextual/contextual.toolbar.css
 
+  core/drupal.ajax:
+    css:
+      component:
+        misc/components/ajax-progress.module.css: css/core/components/ajax-progress.module.css
+
+  core/drupal.autocomplete:
+    css:
+      component:
+        misc/components/autocomplete-loading.module.css: css/core/components/autocomplete-loading.module.css
+
   core/drupal.dialog.off_canvas:
     css:
       base:
@@ -74,6 +84,18 @@ libraries-override:
     css:
       component:
         misc/dropbutton/dropbutton.css: css/core/dropbutton/dropbutton.css
+
+  core/drupal.progress:
+    css:
+      component:
+        misc/components/progress.module.css: css/core/components/progress.module.css
+
+  core/drupal.tabledrag:
+    css:
+      component:
+        misc/components/tabledrag.module.css: css/core/components/tabledrag.module.css
+        misc/components/tree-child.module.css: css/core/components/tree-child.module.css
+
   core/drupal.vertical-tabs:
     css:
       component:
@@ -209,9 +231,7 @@ libraries-override:
   system/base:
     css:
       component:
-        css/components/ajax-progress.module.css: css/system/components/ajax-progress.module.css
         css/components/align.module.css: css/system/components/align.module.css
-        css/components/autocomplete-loading.module.css: css/system/components/autocomplete-loading.module.css
         css/components/fieldgroup.module.css: css/system/components/fieldgroup.module.css
         css/components/container-inline.module.css: css/system/components/container-inline.module.css
         css/components/clearfix.module.css: css/system/components/clearfix.module.css
@@ -221,16 +241,13 @@ libraries-override:
         css/components/js.module.css: css/system/components/js.module.css
         css/components/nowrap.module.css: css/system/components/nowrap.module.css
         css/components/position-container.module.css: css/system/components/position-container.module.css
-        css/components/progress.module.css: css/system/components/progress.module.css
         css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
         css/components/resize.module.css: css/system/components/resize.module.css
         css/components/sticky-header.module.css: css/system/components/sticky-header.module.css
         css/components/system-status-counter.css: css/system/components/system-status-counter.css
         css/components/system-status-report-counters.css: css/system/components/system-status-report-counters.css
         css/components/system-status-report-general-info.css: css/system/components/system-status-report-general-info.css
-        css/components/tabledrag.module.css: css/system/components/tabledrag.module.css
         css/components/tablesort.module.css: css/system/components/tablesort.module.css
-        css/components/tree-child.module.css: css/system/components/tree-child.module.css
   system/admin:
     css:
       theme:

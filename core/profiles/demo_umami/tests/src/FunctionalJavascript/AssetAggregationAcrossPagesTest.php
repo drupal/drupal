@@ -25,7 +25,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   public function testFrontAndRecipesPages() {
     $performance_data = $this->doRequests();
     $this->assertSame(4, $performance_data->getStylesheetCount());
-    $this->assertSame(90241, $performance_data->getStylesheetBytes());
+    $this->assertSame(82363, $performance_data->getStylesheetBytes());
     $this->assertSame(2, $performance_data->getScriptCount());
     $this->assertSame(14150, $performance_data->getScriptBytes());
   }
@@ -39,7 +39,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     $this->rebuildAll();
     $performance_data = $this->doRequests();
     $this->assertSame(4, $performance_data->getStylesheetCount());
-    $this->assertSame(94355, $performance_data->getStylesheetBytes());
+    $this->assertSame(89183, $performance_data->getStylesheetBytes());
     $this->assertSame(2, $performance_data->getScriptCount());
     $this->assertSame(264702, $performance_data->getScriptBytes());
   }
