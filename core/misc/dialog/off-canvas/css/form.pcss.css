@@ -69,8 +69,7 @@
     font-weight: bold;
   }
 
-  /* Bartik uses the .field-multiple-table CSS class on its tabledrag tables. */
-  & :is(.fieldset, fieldset, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
+  & :is(.fieldset, fieldset, .draggable-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
     width: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
   }
 
