@@ -513,7 +513,7 @@ class FilterKernelTest extends KernelTestBase {
       'children' => 'Test two',
     ];
     include_once $this->root . '/core/themes/engines/twig/twig.engine';
-    $render = twig_render_template('container.html.twig', $variables);
+    $render = (string) twig_render_template('container.html.twig', $variables);
     $render = trim($render);
 
     // Render text before applying the auto paragraph filter.
