@@ -98,7 +98,7 @@ class RowPluginTest extends ViewsKernelTestBase {
 
     // Test with view_mode full.
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     foreach ($this->nodes as $node) {
       $this->assertStringNotContainsString($node->body->summary, $output, 'Make sure the teaser appears in the output of the view.');
       $this->assertStringContainsString($node->body->value, $output, 'Make sure the full text appears in the output of the view.');
@@ -107,7 +107,7 @@ class RowPluginTest extends ViewsKernelTestBase {
     // Test with teasers.
     $view->rowPlugin->options['view_mode'] = 'teaser';
     $output = $view->preview();
-    $output = $renderer->renderRoot($output);
+    $output = (string) $renderer->renderRoot($output);
     foreach ($this->nodes as $node) {
       $this->assertStringContainsString($node->body->summary, $output, 'Make sure the teaser appears in the output of the view.');
       $this->assertStringNotContainsString($node->body->value, $output);
