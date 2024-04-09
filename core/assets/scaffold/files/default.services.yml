@@ -1,4 +1,8 @@
 parameters:
+  # Toggles the super user access policy. If your website has at least one user
+  # with the Administrator role, it is advised to set this to false. This allows
+  # you to make user 1 a regular user, strengthening the security of your site.
+  security.enable_super_user: true
   session.storage.options:
     # Default ini options for sessions.
     #

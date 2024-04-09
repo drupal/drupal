@@ -8,6 +8,7 @@ parameters:
   # function properly before that runs.
   cache_default_bin_backends: []
   memory_cache_default_bin_backends: []
+  security.enable_super_user: true
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
