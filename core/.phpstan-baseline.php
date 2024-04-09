@@ -2193,18 +2193,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityUrlTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarningMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
 Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'count' => 1,
