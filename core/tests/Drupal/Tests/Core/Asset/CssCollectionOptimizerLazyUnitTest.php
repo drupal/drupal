@@ -54,7 +54,7 @@ class CssCollectionOptimizerLazyUnitTest extends UnitTestCase {
     $mock_language = $this->createMock(LanguageManagerInterface::class);
     $optimizer = new CssCollectionOptimizerLazy($mock_grouper, $mock_optimizer, $mock_theme_manager, $mock_dependency_resolver, new RequestStack(), $mock_file_system, $mock_config_factory, $mock_file_url_generator, $mock_time, $mock_language);
     $gpl_license = [
-      'name' => 'GNU-GPL-2.0-or-later',
+      'name' => 'GPL-2.0-or-later',
       'url' => 'https://www.drupal.org/licensing/faq',
       'gpl-compatible' => TRUE,
     ];
@@ -113,7 +113,7 @@ class CssCollectionOptimizerLazyUnitTest extends UnitTestCase {
     $mock_language = $this->createMock(LanguageManagerInterface::class);
     $optimizer = new CssCollectionOptimizerLazy($mock_grouper, $mock_optimizer, $mock_theme_manager, $mock_dependency_resolver, new RequestStack(), $mock_file_system, $mock_config_factory, $mock_file_url_generator, $mock_time, $mock_language);
     $gpl_license = [
-      'name' => 'GNU-GPL-2.0-or-later',
+      'name' => 'GPL-2.0-or-later',
       'url' => 'https://www.drupal.org/licensing/faq',
       'gpl-compatible' => TRUE,
     ];

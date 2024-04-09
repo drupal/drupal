@@ -21,7 +21,7 @@ ckeditor5:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -38,7 +38,7 @@ ckeditor5.editorClassic:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -50,7 +50,7 @@ ckeditor5.editorDecoupled:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -63,7 +63,7 @@ ckeditor5.essentials:
   remote: https://github.com/ckeditor/ckeditor5
   version: "35.1.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://github.com/ckeditor/ckeditor5/blob/v35.1.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -76,7 +76,7 @@ ckeditor5.heading:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -89,7 +89,7 @@ ckeditor5.basic:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -102,7 +102,7 @@ ckeditor5.specialCharacters:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -115,7 +115,7 @@ ckeditor5.blockquote:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -128,7 +128,7 @@ ckeditor5.image:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -141,7 +141,7 @@ ckeditor5.link:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -154,7 +154,7 @@ ckeditor5.list:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -167,7 +167,7 @@ ckeditor5.horizontalLine:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -180,7 +180,7 @@ ckeditor5.htmlSupport:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -193,7 +193,7 @@ ckeditor5.alignment:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -206,7 +206,7 @@ ckeditor5.removeFormat:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -219,7 +219,7 @@ ckeditor5.pasteFromOffice:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -231,7 +231,7 @@ ckeditor5.indent:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -244,7 +244,7 @@ ckeditor5.sourceEditing:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -257,7 +257,7 @@ ckeditor5.table:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -270,7 +270,7 @@ ckeditor5.language:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -283,7 +283,7 @@ ckeditor5.codeBlock:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -296,7 +296,7 @@ ckeditor5.showBlocks:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v37.1.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -308,7 +308,7 @@ ckeditor5.style:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -330,7 +330,7 @@ ckeditor5.autoformat:
   remote: https://github.com/ckeditor/ckeditor5
   version: "41.2.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v41.2.0/LICENSE.md
     gpl-compatible: true
   js:
@@ -788,7 +788,7 @@ internal.jquery.form:
   # Internal library. Do not depend on it outside core nor add new core usage.
   version: "4.3.0"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://raw.githubusercontent.com/jquery-form/form/master/LICENSE
     gpl-compatible: true
   js:
@@ -831,7 +831,7 @@ once:
   remote: https://git.drupalcode.org/project/once
   version: "1.0.1"
   license:
-    name: GNU-GPL-2.0-or-later
+    name: GPL-2.0-or-later
     url: https://git.drupalcode.org/project/once/-/raw/v1.0.1/LICENSE.md
     gpl-compatible: true
   js:
