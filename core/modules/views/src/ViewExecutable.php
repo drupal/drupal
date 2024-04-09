@@ -1921,12 +1921,11 @@ class ViewExecutable {
       return FALSE;
     }
 
-    // Look up the route name to make sure it exists.  The name may exist, but
+    // Look up the route name to make sure it exists. The name may exist, but
     // not be available yet in some instances when editing a view and doing
     // a live preview.
-    $provider = \Drupal::service('router.route_provider');
     try {
-      $provider->getRouteByName($display_handler->getRouteName());
+      $this->routeProvider->getRouteByName($display_handler->getRouteName());
     }
     catch (RouteNotFoundException $e) {
       return FALSE;
