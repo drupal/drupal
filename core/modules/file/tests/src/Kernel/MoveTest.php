@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\Exception\FileExistsException;
@@ -57,7 +56,7 @@ class MoveTest extends FileManagedUnitTestBase {
     $this->assertFileHooksCalled(['move', 'load', 'update']);
 
     // Make sure we got the same file back.
-    $this->assertEquals($source->id(), $result->id(), new FormattableMarkup("Source file id's' %fid is unchanged after move.", ['%fid' => $source->id()]));
+    $this->assertEquals($source->id(), $result->id(), "Source file ID {$source->id()} should be unchanged after move.");
 
     // Reload the file from the database and check that the changes were
     // actually saved.
