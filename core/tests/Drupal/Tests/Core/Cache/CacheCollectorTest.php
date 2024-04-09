@@ -261,9 +261,46 @@ class CacheCollectorTest extends UnitTestCase {
   }
 
   /**
-   * Tests updating the cache when a different request.
+   * Tests a cache hit, then item updated by a different request.
    */
   public function testUpdateCacheMerge() {
+    $key = $this->randomMachineName();
+    $value = $this->randomMachineName();
+
+    $this->collector->setCacheMissData($key, $value);
+    $this->collector->get($key);
+
+    // Set up mock objects for the expected calls, first a lock acquire, then
+    // cache get to look for existing cache entries, which does find
+    // and then it merges them.
+    $this->lock->expects($this->once())
+      ->method('acquire')
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector')
+      ->willReturn(TRUE);
+    $cache = (object) [
+      'data' => ['other key' => 'other value'],
+      'created' => (int) $_SERVER['REQUEST_TIME'] + 1,
+    ];
+    $this->collector->setCacheCreated($cache->created);
+    $this->cacheBackend->expects($this->once())
+      ->method('get')
+      ->with($this->cid)
+      ->willReturn($cache);
+    $this->cacheBackend->expects($this->once())
+      ->method('set')
+      ->with($this->cid, ['other key' => 'other value', $key => $value], Cache::PERMANENT, []);
+    $this->lock->expects($this->once())
+      ->method('release')
+      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector');
+
+    // Destruct the object to trigger the update data process.
+    $this->collector->destruct();
+  }
+
+  /**
+   * Tests a cache miss, then item created by another request.
+   */
+  public function testUpdateCacheRace() {
     $key = $this->randomMachineName();
     $value = $this->randomMachineName();
 
@@ -285,12 +322,6 @@ class CacheCollectorTest extends UnitTestCase {
       ->method('get')
       ->with($this->cid)
       ->willReturn($cache);
-    $this->cacheBackend->expects($this->once())
-      ->method('set')
-      ->with($this->cid, ['other key' => 'other value', $key => $value], Cache::PERMANENT, []);
-    $this->lock->expects($this->once())
-      ->method('release')
-      ->with($this->cid . ':Drupal\Core\Cache\CacheCollector');
 
     // Destruct the object to trigger the update data process.
     $this->collector->destruct();
