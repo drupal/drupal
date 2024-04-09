@@ -284,9 +284,9 @@ default:
       - vendor/
   script:
       - composer validate
-      - composer install
+      - composer install --optimize-autoloader
       - if [ -n "$COMPOSER_UPDATE" ]; then
-          composer update;
+          composer update --optimize-autoloader;
           composer outdated;
         fi
 
