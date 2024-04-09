@@ -1,7 +1,7 @@
 {
   "name": "Drupal",
   "description": "Drupal is an open source content management platform powering millions of websites and applications.",
-  "license": "GPL-2.0",
+  "license": "GPL-2.0-or-later",
   "private": true,
   "engines": {
     "yarn": ">= 1.6",

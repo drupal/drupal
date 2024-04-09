@@ -186,7 +186,7 @@ class LibraryDiscoveryParser {
       // Assign Drupal's license to libraries that don't have license info.
       if (!isset($library['license'])) {
         $library['license'] = [
-          'name' => 'GNU-GPL-2.0-or-later',
+          'name' => 'GPL-2.0-or-later',
           'url' => 'https://www.drupal.org/licensing/faq',
           'gpl-compatible' => TRUE,
         ];
@@ -362,7 +362,9 @@ class LibraryDiscoveryParser {
    *   repository URL for reference.
    * - license: If the remote property is set, the license information is
    *   required. It has 3 properties:
-   *   - name: The human-readable name of the license.
+   *   - name: A System Package Data Exchange (SPDX) license identifier such as
+   *     "GPL-2.0-or-later" (see https://spdx.org/licenses/), or if not
+   *     applicable, the human-readable name of the license.
    *   - url: The URL of the license file/information for the version of the
    *     library used.
    *   - gpl-compatible: A Boolean for whether this library is GPL compatible.

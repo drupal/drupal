@@ -65,7 +65,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
     $mock_file_system = $this->createMock(FileSystemInterface::class);
     $this->optimizer = new CssCollectionOptimizer($mock_grouper, $mock_optimizer, $mock_dumper, $mock_state, $mock_file_system);
     $gpl_license = [
-      'name' => 'GNU-GPL-2.0-or-later',
+      'name' => 'GPL-2.0-or-later',
       'url' => 'https://www.drupal.org/licensing/faq',
       'gpl-compatible' => TRUE,
     ];
@@ -123,7 +123,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
     $mock_file_system = $this->createMock(FileSystemInterface::class);
     $this->optimizer = new CssCollectionOptimizer($mock_grouper, $mock_optimizer, $mock_dumper, $mock_state, $mock_file_system);
     $gpl_license = [
-      'name' => 'GNU-GPL-2.0-or-later',
+      'name' => 'GPL-2.0-or-later',
       'url' => 'https://www.drupal.org/licensing/faq',
       'gpl-compatible' => TRUE,
     ];
