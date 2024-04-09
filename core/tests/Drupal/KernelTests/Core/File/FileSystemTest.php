@@ -6,7 +6,7 @@ use Drupal\Core\File\Exception\DirectoryNotReadyException;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileExistsException;
 use Drupal\Core\File\Exception\FileNotExistsException;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -67,7 +67,7 @@ class FileSystemTest extends KernelTestBase {
     $this->expectExceptionMessage("File 'public://test.txt' could not be copied because a file by that name already exists in the destination directory ('')");
     $uri = 'public://test.txt';
     touch($uri);
-    $this->fileSystem->copy($uri, $uri, FileSystemInterface::EXISTS_ERROR);
+    $this->fileSystem->copy($uri, $uri, FileExists::Error);
   }
 
   /**
@@ -78,7 +78,7 @@ class FileSystemTest extends KernelTestBase {
     $this->expectExceptionMessage("'public://test.txt' could not be copied because it would overwrite itself");
     $uri = 'public://test.txt';
     touch($uri);
-    $this->fileSystem->copy($uri, $uri, FileSystemInterface::EXISTS_REPLACE);
+    $this->fileSystem->copy($uri, $uri, FileExists::Replace);
   }
 
   /**

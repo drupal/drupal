@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\Exception\FileExistsException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\file\Entity\File;
 use Drupal\file\FileRepository;
 
@@ -45,7 +45,7 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = $this->fileRepository->copy(clone $source, $desired_uri, FileSystemInterface::EXISTS_ERROR);
+    $result = $this->fileRepository->copy(clone $source, $desired_uri, FileExists::Error);
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File copied successfully.');
@@ -78,7 +78,7 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = $this->fileRepository->copy(clone $source, $target->getFileUri(), FileSystemInterface::EXISTS_RENAME);
+    $result = $this->fileRepository->copy(clone $source, $target->getFileUri(), FileExists::Rename);
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File copied successfully.');
@@ -120,7 +120,7 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
-    $result = $this->fileRepository->copy(clone $source, $target->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
+    $result = $this->fileRepository->copy(clone $source, $target->getFileUri(), FileExists::Replace);
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File copied successfully.');
@@ -160,7 +160,7 @@ class CopyTest extends FileManagedUnitTestBase {
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
     try {
-      $result = $this->fileRepository->copy(clone $source, $target->getFileUri(), FileSystemInterface::EXISTS_ERROR);
+      $result = $this->fileRepository->copy(clone $source, $target->getFileUri(), FileExists::Error);
       $this->fail('expected FileExistsException');
     }
     // FileExistsException is a subclass of FileException.
@@ -213,7 +213,7 @@ class CopyTest extends FileManagedUnitTestBase {
     $this->expectException(EntityStorageException::class);
     $source = $this->createFile();
     $target = $this->createFile();
-    $fileRepository->copy($source, $target->getFileUri(), FileSystemInterface::EXISTS_REPLACE);
+    $fileRepository->copy($source, $target->getFileUri(), FileExists::Replace);
   }
 
 }

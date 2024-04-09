@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -219,7 +220,7 @@ class TemporaryJsonapiFileFieldUploader {
 
     $temp_file_path = $this->streamUploadData();
 
-    $file_uri = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_RENAME);
+    $file_uri = $this->fileSystem->getDestinationFilename($file_uri, FileExists::Rename);
 
     // Lock based on the prepared file URI.
     $lock_id = $this->generateLockIdFromFileUri($file_uri);
@@ -259,10 +260,10 @@ class TemporaryJsonapiFileFieldUploader {
     $file->setFilename($this->fileSystem->basename($file->getFileUri()));
 
     // Move the file to the correct location after validation. Use
-    // FileSystemInterface::EXISTS_ERROR as the file location has already been
+    // FileExists::Error as the file location has already been
     // determined above in FileSystem::getDestinationFilename().
     try {
-      $this->fileSystem->move($temp_file_path, $file_uri, FileSystemInterface::EXISTS_ERROR);
+      $this->fileSystem->move($temp_file_path, $file_uri, FileExists::Error);
     }
     catch (FileException $e) {
       throw new HttpException(500, 'Temporary file could not be moved to file location');

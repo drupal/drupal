@@ -2,7 +2,7 @@
 
 namespace Drupal\file;
 
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 
 /**
  * Performs file system operations and updates database records accordingly.
@@ -17,17 +17,8 @@ interface FileRepositoryInterface {
    * @param string $destination
    *   A string containing the destination URI. This must be a stream
    *   wrapper URI.
-   * @param int $replace
+   * @param \Drupal\Core\File\FileExists|int $fileExists
    *   (optional) The replace behavior when the destination file already exists.
-   *   Possible values include:
-   *   - FileSystemInterface::EXISTS_RENAME: (default) Append
-   *     _{incrementing number} until the filename is unique.
-   *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file. If a
-   *     managed file with the destination name exists, then its database entry
-   *     will be updated. If no database entry is found, then a new one will be
-   *     created.
-   *   - FileSystemInterface::EXISTS_ERROR: Do nothing and throw a
-   *     \Drupal\Core\File\Exception\FileExistsException.
    *
    * @return \Drupal\file\FileInterface
    *   The file entity.
@@ -36,7 +27,7 @@ interface FileRepositoryInterface {
    *   Thrown when there is an error writing to the file system.
    * @throws \Drupal\Core\File\Exception\FileExistsException
    *   Thrown when the destination exists and $replace is set to
-   *   FileSystemInterface::EXISTS_ERROR.
+   *   FileExists::Error.
    * @throws \Drupal\Core\File\Exception\InvalidStreamWrapperException
    *   Thrown when the destination is an invalid stream wrapper.
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -44,7 +35,7 @@ interface FileRepositoryInterface {
    *
    * @see \Drupal\Core\File\FileSystemInterface::saveData()
    */
-  public function writeData(string $data, string $destination, int $replace = FileSystemInterface::EXISTS_RENAME): FileInterface;
+  public function writeData(string $data, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface;
 
   /**
    * Copies a file to a new location and adds a file record to the database.
@@ -56,8 +47,8 @@ interface FileRepositoryInterface {
    * - If file already exists in $destination either the call will error out,
    *   replace the file or rename the file based on the $replace parameter.
    * - If the $source and $destination are equal, the behavior depends on the
-   *   $replace parameter. FileSystemInterface::EXISTS_REPLACE will error out.
-   *   FileSystemInterface::EXISTS_RENAME will rename the file until the
+   *   $replace parameter. FileExists::Replace will error out.
+   *   FileExists::Rename will rename the file until the
    *   $destination is unique.
    * - Adds the new file to the files database. If the source file is a
    *   temporary file, the resulting file will also be a temporary file. See
@@ -68,17 +59,8 @@ interface FileRepositoryInterface {
    * @param string $destination
    *   A string containing the destination that $source should be
    *   copied to. This must be a stream wrapper URI.
-   * @param int $replace
+   * @param \Drupal\Core\File\FileExists|int $fileExists
    *   (optional) Replace behavior when the destination file already exists.
-   *   Possible values include:
-   *   - FileSystemInterface::EXISTS_RENAME: (default) Append
-   *     _{incrementing number} until the filename is unique.
-   *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file. If a
-   *     managed file with the destination name exists, then its database entry
-   *     will be updated. If no database entry is found, then a new one will be
-   *     created.
-   *   - FileSystemInterface::EXISTS_ERROR: Do nothing and throw a
-   *     \Drupal\Core\File\Exception\FileExistsException.
    *
    * @return \Drupal\file\FileInterface
    *   The file entity.
@@ -87,7 +69,7 @@ interface FileRepositoryInterface {
    *   Thrown when there is an error writing to the file system.
    * @throws \Drupal\Core\File\Exception\FileExistsException
    *   Thrown when the destination exists and $replace is set to
-   *   FileSystemInterface::EXISTS_ERROR.
+   *   FileExists::Error.
    * @throws \Drupal\Core\File\Exception\InvalidStreamWrapperException
    *   Thrown when the destination is an invalid stream wrapper.
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -96,7 +78,7 @@ interface FileRepositoryInterface {
    * @see \Drupal\Core\File\FileSystemInterface::copy()
    * @see hook_file_copy()
    */
-  public function copy(FileInterface $source, string $destination, int $replace = FileSystemInterface::EXISTS_RENAME): FileInterface;
+  public function copy(FileInterface $source, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface;
 
   /**
    * Moves a file to a new location and update the file's database entry.
@@ -112,18 +94,8 @@ interface FileRepositoryInterface {
    * @param string $destination
    *   A string containing the destination that $source should be moved
    *   to. This must be a stream wrapper URI.
-   * @param int $replace
+   * @param \Drupal\Core\File\FileExists|int $fileExists
    *   (optional) The replace behavior when the destination file already exists.
-   *   Possible values include:
-   *   - FileSystemInterface::EXISTS_RENAME: (default) Append
-   *     _{incrementing number} until the filename is unique.
-   *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file. If a
-   *     managed file with the destination name exists then its database entry
-   *     will be updated and $source->delete() called after invoking
-   *     hook_file_move(). If no database entry is found, then the source files
-   *     record will be updated.
-   *   - FileSystemInterface::EXISTS_ERROR: Do nothing and throw a
-   *     \Drupal\Core\File\Exception\FileExistsException.
    *
    * @return \Drupal\file\FileInterface
    *   The file entity.
@@ -132,7 +104,7 @@ interface FileRepositoryInterface {
    *   Thrown when there is an error writing to the file system.
    * @throws \Drupal\Core\File\Exception\FileExistsException
    *   Thrown when the destination exists and $replace is set to
-   *   FileSystemInterface::EXISTS_ERROR.
+   *   FileExists::Error.
    * @throws \Drupal\Core\File\Exception\InvalidStreamWrapperException
    *   Thrown when the destination is an invalid stream wrapper.
    * @throws \Drupal\Core\Entity\EntityStorageException
@@ -141,7 +113,7 @@ interface FileRepositoryInterface {
    * @see \Drupal\Core\File\FileSystemInterface::move()
    * @see hook_file_move()
    */
-  public function move(FileInterface $source, string $destination, int $replace = FileSystemInterface::EXISTS_RENAME): FileInterface;
+  public function move(FileInterface $source, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface;
 
   /**
    * Loads the first File entity found with the specified URI.

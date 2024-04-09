@@ -2,7 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\migrate\ProcessPluginBase;
 
 /**
@@ -32,18 +32,18 @@ abstract class FileProcessBase extends ProcessPluginBase {
     if (array_key_exists('file_exists', $configuration)) {
       switch ($configuration['file_exists']) {
         case 'use existing':
-          $configuration['file_exists'] = FileSystemInterface::EXISTS_ERROR;
+          $configuration['file_exists'] = FileExists::Error;
           break;
 
         case 'rename':
-          $configuration['file_exists'] = FileSystemInterface::EXISTS_RENAME;
+          $configuration['file_exists'] = FileExists::Rename;
           break;
 
         default:
-          $configuration['file_exists'] = FileSystemInterface::EXISTS_REPLACE;
+          $configuration['file_exists'] = FileExists::Replace;
       }
     }
-    $configuration += ['file_exists' => FileSystemInterface::EXISTS_REPLACE];
+    $configuration += ['file_exists' => FileExists::Replace];
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 

@@ -8,6 +8,7 @@ use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileExistsException;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockAcquiringException;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -170,12 +171,8 @@ class FileUploadHandler {
    *   The validators to run against the uploaded file.
    * @param string $destination
    *   The destination directory.
-   * @param int $replace
-   *   Replace behavior when the destination file already exists:
-   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
-   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
-   *     until the filename is unique.
-   *   - FileSystemInterface::EXISTS_ERROR - Throw an exception.
+   * @param \Drupal\Core\File\FileExists|int $fileExists
+   *   The behavior when the destination file already exists.
    * @param bool $throw
    *   (optional) Whether to throw an exception if the file is invalid.
    *
@@ -192,8 +189,14 @@ class FileUploadHandler {
    *    Thrown when file validation fails and $throws is TRUE.
    * @throws \Drupal\Core\Lock\LockAcquiringException
    *   Thrown when a lock cannot be acquired.
+   * @throws \ValueError
+   *   Thrown if $fileExists is a legacy int and not a valid value.
    */
-  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', int $replace = FileSystemInterface::EXISTS_REPLACE, bool $throw = TRUE): FileUploadResult {
+  public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', /*FileExists*/$fileExists = FileExists::Replace, bool $throw = TRUE): FileUploadResult {
+    if (!$fileExists instanceof FileExists) {
+      // @phpstan-ignore-next-line
+      $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
+    }
     $originalName = $uploadedFile->getClientOriginalName();
     // @phpstan-ignore-next-line
     if ($throw && !$uploadedFile->isValid()) {
@@ -253,7 +256,7 @@ class FileUploadHandler {
     $filename = $event->getFilename();
 
     $mimeType = $this->mimeTypeGuesser->guessMimeType($filename);
-    $destinationFilename = $this->fileSystem->getDestinationFilename($destination . $filename, $replace);
+    $destinationFilename = $this->fileSystem->getDestinationFilename($destination . $filename, $fileExists);
     if ($destinationFilename === FALSE) {
       throw new FileExistsException(sprintf('Destination file "%s" exists', $destinationFilename));
     }
@@ -321,7 +324,7 @@ class FileUploadHandler {
       // renaming due to an existing file.
       $file->setFilename($this->fileSystem->basename($file->getFileUri()));
 
-      if ($replace === FileSystemInterface::EXISTS_REPLACE) {
+      if ($fileExists === FileExists::Replace) {
         $existingFile = $this->fileRepository->loadByUri($file->getFileUri());
         if ($existingFile) {
           $file->fid = $existingFile->id();

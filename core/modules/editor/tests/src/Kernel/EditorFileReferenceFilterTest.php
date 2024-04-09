@@ -3,7 +3,7 @@
 namespace Drupal\Tests\editor\Kernel;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\file\Entity\File;
 use Drupal\filter\FilterPluginCollection;
 use Drupal\KernelTests\KernelTestBase;
@@ -134,7 +134,7 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     /** @var array stdClass */
     $files = $this->getTestFiles('image');
     $image = reset($files);
-    \Drupal::service('file_system')->copy($image->uri, 'public://llama.jpg', FileSystemInterface::EXISTS_REPLACE);
+    \Drupal::service('file_system')->copy($image->uri, 'public://llama.jpg', FileExists::Replace);
     [$width, $height] = getimagesize('public://llama.jpg');
     $dimensions = 'width="' . $width . '" height="' . $height . '"';
 

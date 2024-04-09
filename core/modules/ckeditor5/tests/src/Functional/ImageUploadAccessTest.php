@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Functional;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 
 /**
  * Test image upload access.
@@ -48,7 +48,7 @@ class ImageUploadAccessTest extends ImageUploadTest {
 
     // Ensure lock failures are reported correctly.
     $d = 'public://inline-images/test.jpg';
-    $f = $this->container->get('file_system')->getDestinationFilename($d, FileSystemInterface::EXISTS_RENAME);
+    $f = $this->container->get('file_system')->getDestinationFilename($d, FileExists::Rename);
     $this->container->get('lock')
       ->acquire('file:ckeditor5:' . Crypt::hashBase64($f));
     $response = $this->uploadRequest($url, $test_image, 'test.jpg');
