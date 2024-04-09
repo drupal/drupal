@@ -64,7 +64,7 @@ class ClaroTableTest extends KernelTestBase {
       ],
     ];
 
-    $renderedTable = \Drupal::service('renderer')->renderRoot($table);
+    $renderedTable = (string) \Drupal::service('renderer')->renderRoot($table);
 
     // Confirm that table is rendered.
     $this->assertStringContainsString('class="class"', $renderedTable);
