@@ -120,6 +120,22 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
   }
 
   /**
+   * Test an image style URL with a private file that also gets converted.
+   */
+  public function testImageStylePrivateWithConversion(): void {
+    // Add the "convert" image style effect to our style.
+    $this->style->addImageEffect([
+      'uuid' => '',
+      'id' => 'image_convert',
+      'weight' => 1,
+      'data' => [
+        'extension' => 'jpeg',
+      ],
+    ]);
+    $this->doImageStyleUrlAndPathTests('private');
+  }
+
+  /**
    * Tests that an invalid source image returns a 404.
    */
   public function testImageStyleUrlForMissingSourceImage() {
