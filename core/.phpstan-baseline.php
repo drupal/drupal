@@ -1715,6 +1715,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/system.install',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Fetching deprecated class constant EXISTS_RENAME of class Drupal\\\\Core\\\\File\\\\FileSystemInterface\\:
+in drupal\\:10\\.3\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use
+\\\\Drupal\\\\Core\\\\File\\\\FileExists\\:\\:Rename instead\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/system.module',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$messages might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
