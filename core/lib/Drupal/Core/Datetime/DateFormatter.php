@@ -53,7 +53,6 @@ class DateFormatter implements DateFormatterInterface {
    */
   protected $requestStack;
 
-  protected $country = NULL;
   protected $dateFormats = [];
 
   /**
@@ -339,24 +338,6 @@ class DateFormatter implements DateFormatterInterface {
       $this->languageManager->setConfigOverrideLanguage($original_language);
     }
     return $this->dateFormats[$type][$langcode];
-  }
-
-  /**
-   * Returns the default country from config.
-   *
-   * @return string
-   *   The config setting for country.default.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There will be a contrib replacement. See https://www.drupal.org/node/3439484
-   *
-   * @see https://www.drupal.org/node/3439484
-   */
-  protected function country() {
-    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3439484', E_USER_DEPRECATED);
-    if ($this->country === NULL) {
-      $this->country = \Drupal::config('system.date')->get('country.default');
-    }
-    return $this->country;
   }
 
 }
