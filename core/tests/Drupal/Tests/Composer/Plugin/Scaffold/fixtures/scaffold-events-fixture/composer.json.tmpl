@@ -1,0 +1,44 @@
+{
+  "name": "fixtures/drupal-drupal",
+  "type": "project",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "repositories": {
+    "packagist.org": false,
+    "composer-scaffold": {
+      "type": "path",
+      "url": "__PROJECT_ROOT__",
+      "options": {
+        "symlink": true
+      }
+    },
+    "fixtures/composer-plugin-implements-scaffold-events": {
+      "type": "path",
+      "url": "../composer-plugin-implements-scaffold-events",
+      "options": {
+        "symlink": true
+      }
+    }
+  },
+  "require": {
+    "drupal/core-composer-scaffold": "*",
+    "fixtures/composer-plugin-implements-scaffold-events": "*"
+  },
+  "extra": {
+    "drupal-scaffold": {
+      "allowed-packages": [
+        "fixtures/composer-plugin-implements-scaffold-events"
+      ],
+      "locations": {
+        "web-root": "./"
+      },
+      "symlink": __SYMLINK__
+    }
+  },
+  "config": {
+     "allow-plugins": {
+       "drupal/core-composer-scaffold": true,
+       "fixtures/composer-plugin-implements-scaffold-events": true
+     }
+  }
+}

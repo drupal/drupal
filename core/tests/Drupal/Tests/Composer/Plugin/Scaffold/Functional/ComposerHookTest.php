@@ -148,4 +148,15 @@ class ComposerHookTest extends BuildTestBase {
     $this->assertStringNotContainsString('- Copy [web-root]/update.php from assets/update.php', $stdout);
   }
 
+  /**
+   * Tests to see if scaffold events are dispatched and picked up by the plugin.
+   */
+  public function testScaffoldEvents(): void {
+    $topLevelProjectDir = 'scaffold-events-fixture';
+    $sut = $this->fixturesDir . '/' . $topLevelProjectDir;
+    $output = $this->mustExec("composer install --no-ansi", $sut);
+    $this->assertStringContainsString('Hello preDrupalScaffoldCmd', $output);
+    $this->assertStringContainsString('Hello postDrupalScaffoldCmd', $output);
+  }
+
 }
