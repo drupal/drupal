@@ -6,6 +6,7 @@ use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 
 /**
@@ -143,9 +144,9 @@ class DirectoryTest extends FileTestBase {
    *
    * If a file exists, ::getDestinationFilename($destination, $replace) will
    * either return:
-   * - the existing filepath, if $replace is FileSystemInterface::EXISTS_REPLACE
-   * - a new filepath if FileSystemInterface::EXISTS_RENAME
-   * - an error (returning FALSE) if FileSystemInterface::EXISTS_ERROR.
+   * - the existing filepath, if $replace is FileExists::Replace
+   * - a new filepath if FileExists::Rename
+   * - an error (returning FALSE) if FileExists::Error.
    * If the file doesn't currently exist, then it will simply return the
    * filepath.
    */
@@ -154,25 +155,25 @@ class DirectoryTest extends FileTestBase {
     $destination = 'core/misc/xyz.txt';
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_REPLACE);
-    $this->assertEquals($destination, $path, 'Non-existing filepath destination is correct with FileSystemInterface::EXISTS_REPLACE.');
-    $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_RENAME);
-    $this->assertEquals($destination, $path, 'Non-existing filepath destination is correct with FileSystemInterface::EXISTS_RENAME.');
-    $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_ERROR);
-    $this->assertEquals($destination, $path, 'Non-existing filepath destination is correct with FileSystemInterface::EXISTS_ERROR.');
+    $path = $file_system->getDestinationFilename($destination, FileExists::Replace);
+    $this->assertEquals($destination, $path, 'Non-existing filepath destination is correct with FileExists::Replace.');
+    $path = $file_system->getDestinationFilename($destination, FileExists::Rename);
+    $this->assertEquals($destination, $path, 'Non-existing filepath destination is correct with FileExists::Rename.');
+    $path = $file_system->getDestinationFilename($destination, FileExists::Error);
+    $this->assertEquals($destination, $path, 'Non-existing filepath destination is correct with FileExists::Error.');
 
     $destination = 'core/misc/druplicon.png';
-    $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_REPLACE);
-    $this->assertEquals($destination, $path, 'Existing filepath destination remains the same with FileSystemInterface::EXISTS_REPLACE.');
-    $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_RENAME);
-    $this->assertNotEquals($destination, $path, 'A new filepath destination is created when filepath destination already exists with FileSystemInterface::EXISTS_RENAME.');
-    $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_ERROR);
-    $this->assertFalse($path, 'An error is returned when filepath destination already exists with FileSystemInterface::EXISTS_ERROR.');
+    $path = $file_system->getDestinationFilename($destination, FileExists::Replace);
+    $this->assertEquals($destination, $path, 'Existing filepath destination remains the same with FileExists::Replace.');
+    $path = $file_system->getDestinationFilename($destination, FileExists::Rename);
+    $this->assertNotEquals($destination, $path, 'A new filepath destination is created when filepath destination already exists with FileExists::Rename.');
+    $path = $file_system->getDestinationFilename($destination, FileExists::Error);
+    $this->assertFalse($path, 'An error is returned when filepath destination already exists with FileExists::Error.');
 
     // Invalid UTF-8 causes an exception.
     $this->expectException(FileException::class);
     $this->expectExceptionMessage("Invalid filename 'a\xFFtest\x80€.txt'");
-    $file_system->getDestinationFilename("core/misc/a\xFFtest\x80€.txt", FileSystemInterface::EXISTS_REPLACE);
+    $file_system->getDestinationFilename("core/misc/a\xFFtest\x80€.txt", FileExists::Replace);
   }
 
   /**

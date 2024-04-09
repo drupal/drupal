@@ -9,16 +9,31 @@ interface FileSystemInterface {
 
   /**
    * Flag for dealing with existing files: Appends number until name is unique.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\File\FileExists::Rename instead.
+   *
+   * @see https://www.drupal.org/node/3426517
    */
   const EXISTS_RENAME = 0;
 
   /**
    * Flag for dealing with existing files: Replace the existing file.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\File\FileExists::Replace instead.
+   *
+   * @see https://www.drupal.org/node/3426517
    */
   const EXISTS_REPLACE = 1;
 
   /**
    * Flag for dealing with existing files: Do nothing and return FALSE.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   *  \Drupal\Core\File\FileExists::Error instead.
+   *
+   * @see https://www.drupal.org/node/3426517
    */
   const EXISTS_ERROR = 2;
 
@@ -253,12 +268,9 @@ interface FileSystemInterface {
    * version of copy().
    * - Checks if $source and $destination are valid and readable/writable.
    * - If file already exists in $destination either the call will error out,
-   *   replace the file or rename the file based on the $replace parameter.
+   *   replace the file or rename the file based on the $fileExists parameter.
    * - If the $source and $destination are equal, the behavior depends on the
-   *   $replace parameter. FileSystemInterface::EXISTS_REPLACE will replace the
-   *   existing file. FileSystemInterface::EXISTS_ERROR will error out.
-   *   FileSystemInterface::EXISTS_RENAME will rename the file until the
-   *   $destination is unique.
+   *   $fileExists parameter.
    * - Provides a fallback using realpaths if the move fails using stream
    *   wrappers. This can occur because PHP's copy() function does not properly
    *   support streams if open_basedir is enabled. See
@@ -269,20 +281,18 @@ interface FileSystemInterface {
    * @param string $destination
    *   A URI containing the destination that $source should be copied to. The
    *   URI may be a bare filepath (without a scheme).
-   * @param int $replace
-   *   Replace behavior when the destination file already exists:
-   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
-   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
-   *     until the filename is unique.
-   *   - FileSystemInterface::EXISTS_ERROR - Throw an exception.
+   * @param \Drupal\Core\File\FileExists|int $fileExists
+   *   The behavior when the destination file already exists.
    *
    * @return string
    *   The path to the new file.
    *
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
+   * @throws \ValueError
+   *   Thrown if $fileExists is a legacy int and not a valid value.
    */
-  public function copy($source, $destination, $replace = self::EXISTS_RENAME);
+  public function copy($source, $destination, /* FileExists */$fileExists = FileExists::Rename);
 
   /**
    * Deletes a file without database changes or hook invocations.
@@ -331,7 +341,7 @@ interface FileSystemInterface {
    * - Checks that $source is not equal to $destination; if they are an error
    *   is reported.
    * - If file already exists in $destination either the call will error out,
-   *   replace the file or rename the file based on the $replace parameter.
+   *   replace the file or rename the file based on the $fileExists parameter.
    * - Works around a PHP bug where rename() does not properly support streams
    *   if safe_mode or open_basedir are enabled.
    *
@@ -341,22 +351,20 @@ interface FileSystemInterface {
    *   A URI containing the destination that $source should be moved to. The
    *   URI may be a bare filepath (without a scheme) and in that case the
    *   default scheme (public://) will be used.
-   * @param int $replace
-   *   Replace behavior when the destination file already exists:
-   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
-   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
-   *     until the filename is unique.
-   *   - FileSystemInterface::EXISTS_ERROR - Do nothing and return FALSE.
+   * @param \Drupal\Core\File\FileExists|int $fileExists
+   *   Replace behavior when the destination file already exists.
    *
    * @return string
    *   The path to the new file.
    *
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
+   * @throws \ValueError
+   *   Thrown if $fileExists is a legacy int and not a valid value.
    *
    * @see https://bugs.php.net/bug.php?id=60456
    */
-  public function move($source, $destination, $replace = self::EXISTS_RENAME);
+  public function move($source, $destination, /* FileExists */$fileExists = FileExists::Rename);
 
   /**
    * Saves a file to the specified destination without invoking file API.
@@ -370,22 +378,20 @@ interface FileSystemInterface {
    * @param string $destination
    *   A string containing the destination location. This must be a stream
    *   wrapper URI.
-   * @param int $replace
-   *   Replace behavior when the destination file already exists:
-   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
-   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
-   *     until the filename is unique.
-   *   - FileSystemInterface::EXISTS_ERROR - Do nothing and return FALSE.
+   * @param \Drupal\Core\File\FileExists|int $fileExists
+   *   Replace behavior when the destination file already exists.
    *
    * @return string
    *   A string with the path of the resulting file, or FALSE on error.
    *
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
+   * @throws \ValueError
+   *   Thrown if $fileExists is a legacy int and not a valid value.
    *
    * @see \Drupal\file\FileRepositoryInterface::writeData()
    */
-  public function saveData($data, $destination, $replace = self::EXISTS_RENAME);
+  public function saveData($data, $destination, /* FileExists */$fileExists = FileExists::Rename);
 
   /**
    * Checks that the directory exists and is writable.
@@ -432,21 +438,19 @@ interface FileSystemInterface {
    *
    * @param string $destination
    *   The desired final URI or filepath.
-   * @param int $replace
+   * @param \Drupal\Core\File\FileExists|int $fileExists
    *   Replace behavior when the destination file already exists.
-   *   - FileSystemInterface::EXISTS_REPLACE - Replace the existing file.
-   *   - FileSystemInterface::EXISTS_RENAME - Append _{incrementing number}
-   *     until the filename is unique.
-   *   - FileSystemInterface::EXISTS_ERROR - Do nothing and return FALSE.
    *
    * @return string|bool
    *   The destination filepath, or FALSE if the file already exists
-   *   and FileSystemInterface::EXISTS_ERROR is specified.
+   *   and FileExists::Error is specified.
    *
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
+   * @throws \ValueError
+   *   Thrown if $fileExists is a legacy int and not a valid value.
    */
-  public function getDestinationFilename($destination, $replace);
+  public function getDestinationFilename($destination, /* FileExists */$fileExists);
 
   /**
    * Gets the path of the configured temporary directory.

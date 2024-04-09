@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\image\Entity\ImageStyle;
@@ -158,7 +159,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $file = array_shift($files);
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $original_uri = $file_system->copy($file->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
+    $original_uri = $file_system->copy($file->uri, $scheme . '://', FileExists::Rename);
     // Let the image_module_test module know about this file, so it can claim
     // ownership in hook_file_download().
     \Drupal::state()->set('image.test_file_download', $original_uri);
@@ -243,7 +244,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       // Repeat this with a different file that we do not have access to and
       // make sure that access is denied.
       $file_no_access = array_shift($files);
-      $original_uri_no_access = $file_system->copy($file_no_access->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
+      $original_uri_no_access = $file_system->copy($file_no_access->uri, $scheme . '://', FileExists::Rename);
       $generated_uri_no_access = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $file_system->basename($original_uri_no_access);
       $this->assertFileDoesNotExist($generated_uri_no_access);
       $generate_url_no_access = $this->style->buildUrl($original_uri_no_access);
@@ -283,7 +284,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // Create another working copy of the file.
     $files = $this->drupalGetTestFiles('image');
     $file = array_shift($files);
-    $original_uri = $file_system->copy($file->uri, $scheme . '://', FileSystemInterface::EXISTS_RENAME);
+    $original_uri = $file_system->copy($file->uri, $scheme . '://', FileExists::Rename);
     // Let the image_module_test module know about this file, so it can claim
     // ownership in hook_file_download().
     \Drupal::state()->set('image.test_file_download', $original_uri);

@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -863,7 +864,7 @@ class InstallHelper implements ContainerInjectionInterface {
   protected function createFileEntity($path) {
     $filename = basename($path);
     try {
-      $uri = $this->fileSystem->copy($path, 'public://' . $filename, FileSystemInterface::EXISTS_REPLACE);
+      $uri = $this->fileSystem->copy($path, 'public://' . $filename, FileExists::Replace);
     }
     catch (FileException $e) {
       $uri = FALSE;

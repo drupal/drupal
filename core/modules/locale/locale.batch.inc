@@ -7,7 +7,7 @@
 
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\Url;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -345,7 +345,7 @@ function locale_translation_download_source($source_file, $directory = 'temporar
     /** @var \Drupal\Core\File\FileSystemInterface $fileSystem */
     $fileSystem = \Drupal::service('file_system');
     $filename = $fileSystem->basename($source_file->uri);
-    if ($uri = $fileSystem->saveData($data, $directory . $filename, FileSystemInterface::EXISTS_REPLACE)) {
+    if ($uri = $fileSystem->saveData($data, $directory . $filename, FileExists::Replace)) {
       $file = clone($source_file);
       $file->type = LOCALE_TRANSLATION_LOCAL;
       $file->uri = $uri;

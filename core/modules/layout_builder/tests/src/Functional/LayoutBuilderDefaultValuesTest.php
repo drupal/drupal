@@ -6,7 +6,7 @@ namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
@@ -291,7 +291,7 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     for ($i = 1; $i <= 6; $i++) {
       $filename = "test-file-$i";
       $desired_filepath = 'public://' . $filename;
-      \Drupal::service('file_system')->copy($files[0]->uri, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
+      \Drupal::service('file_system')->copy($files[0]->uri, $desired_filepath, FileExists::Error);
       $file = File::create([
         'uri' => $desired_filepath,
         'filename' => $filename,

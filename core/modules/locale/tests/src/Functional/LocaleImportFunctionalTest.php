@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
+use Drupal\Tests\BrowserTestBase;
 
 // cspell:ignore chien chiens deutsch januari lundi moutons műveletek svibanj
 
@@ -54,8 +54,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     // Copy test po files to the translations directory.
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $file_system->copy(__DIR__ . '/../../../tests/test.de.po', 'translations://', FileSystemInterface::EXISTS_REPLACE);
-    $file_system->copy(__DIR__ . '/../../../tests/test.xx.po', 'translations://', FileSystemInterface::EXISTS_REPLACE);
+    $file_system->copy(__DIR__ . '/../../../tests/test.de.po', 'translations://', FileExists::Replace);
+    $file_system->copy(__DIR__ . '/../../../tests/test.xx.po', 'translations://', FileExists::Replace);
 
     $this->adminUser = $this->drupalCreateUser([
       'administer languages',

@@ -4,7 +4,7 @@ namespace Drupal\update\Form;
 
 use Drupal\Core\Archiver\ArchiverManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\FileTransfer\Local;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -168,7 +168,7 @@ class UpdateManagerInstall extends FormBase {
     }
     elseif (!empty($all_files['project_upload']) && $this->moduleHandler->moduleExists('file')) {
       $validators = ['FileExtension' => ['extensions' => $this->archiverManager->getExtensions()]];
-      if (!($finfo = file_save_upload('project_upload', $validators, NULL, 0, FileSystemInterface::EXISTS_REPLACE))) {
+      if (!($finfo = file_save_upload('project_upload', $validators, NULL, 0, FileExists::Replace))) {
         // Failed to upload the file. file_save_upload() calls
         // \Drupal\Core\Messenger\MessengerInterface::addError() on failure.
         return;

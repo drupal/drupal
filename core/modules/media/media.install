@@ -6,14 +6,15 @@
  */
 
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\user\RoleInterface;
-use Drupal\image\Plugin\Field\FieldType\ImageItem;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Implements hook_install().
@@ -35,7 +36,7 @@ function media_install() {
     // possible to copy the files is also confusing, we silently do nothing.
     if (!file_exists($destination . DIRECTORY_SEPARATOR . $file->filename)) {
       try {
-        $file_system->copy($file->uri, $destination, FileSystemInterface::EXISTS_ERROR);
+        $file_system->copy($file->uri, $destination, FileExists::Error);
       }
       catch (FileException $e) {
         // Ignore and continue.
