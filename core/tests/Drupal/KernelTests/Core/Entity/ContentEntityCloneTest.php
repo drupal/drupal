@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -61,14 +60,12 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
       $translation = $clone->getTranslation($langcode);
       foreach ($translation->getFields() as $field_name => $field) {
         if ($field->getFieldDefinition()->isTranslatable()) {
-          $args = ['%field_name' => $field_name, '%langcode' => $langcode];
-          $this->assertEquals($langcode, $field->getEntity()->language()->getId(), new FormattableMarkup('Translatable field %field_name on translation %langcode has correct entity reference in translation %langcode after cloning.', $args));
-          $this->assertSame($translation, $field->getEntity(), new FormattableMarkup('Translatable field %field_name on translation %langcode has correct reference to the cloned entity object.', $args));
+          $this->assertEquals($langcode, $field->getEntity()->language()->getId(), "Translatable field $field_name on translation $langcode has correct entity reference in translation $langcode after cloning.");
+          $this->assertSame($translation, $field->getEntity(), "Translatable field $field_name on translation $langcode has correct reference to the cloned entity object.");
         }
         else {
-          $args = ['%field_name' => $field_name, '%langcode' => $langcode, '%default_langcode' => $default_langcode];
-          $this->assertEquals($default_langcode, $field->getEntity()->language()->getId(), new FormattableMarkup('Non translatable field %field_name on translation %langcode has correct entity reference in the default translation %default_langcode after cloning.', $args));
-          $this->assertSame($translation->getUntranslated(), $field->getEntity(), new FormattableMarkup('Non translatable field %field_name on translation %langcode has correct reference to the cloned entity object in the default translation %default_langcode.', $args));
+          $this->assertEquals($default_langcode, $field->getEntity()->language()->getId(), "Non translatable field $field_name on translation $langcode has correct entity reference in the default translation $default_langcode after cloning.");
+          $this->assertSame($translation->getUntranslated(), $field->getEntity(), "Non translatable field $field_name on translation $langcode has correct reference to the cloned entity object in the default translation $default_langcode.");
         }
       }
     }
@@ -300,6 +297,8 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     $translation_unique_properties = ['activeLangcode', 'translationInitialize', 'fieldDefinitions', 'languages', 'langcodeKey', 'defaultLangcode', 'defaultLangcodeKey', 'revisionTranslationAffectedKey', 'validated', 'validationRequired', 'entityTypeId', 'typedData', 'cacheContexts', 'cacheTags', 'cacheMaxAge', '_serviceIds', '_entityStorages', 'enforceDefaultTranslation'];
 
     foreach ($properties as $property) {
+      $property_name = $property->getName();
+
       // Modify each entity property on the clone and assert that the change is
       // not propagated to the original entity.
       $property->setValue($entity, 'default-value');
@@ -307,14 +306,14 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
       $property->setValue($clone, 'test-entity-cloning');
       // Static properties remain the same across all instances of the class.
       if ($property->isStatic()) {
-        $this->assertEquals('test-entity-cloning', $property->getValue($entity), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
-        $this->assertEquals('test-entity-cloning', $property->getValue($translation), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
-        $this->assertEquals('test-entity-cloning', $property->getValue($clone), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
+        $this->assertEquals('test-entity-cloning', $property->getValue($entity), "Entity property $property_name is not cloned properly.");
+        $this->assertEquals('test-entity-cloning', $property->getValue($translation), "Entity property $property_name is not cloned properly.");
+        $this->assertEquals('test-entity-cloning', $property->getValue($clone), "Entity property $property_name is not cloned properly.");
       }
       else {
-        $this->assertEquals('default-value', $property->getValue($entity), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
-        $this->assertEquals('default-value', $property->getValue($translation), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
-        $this->assertEquals('test-entity-cloning', $property->getValue($clone), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
+        $this->assertEquals('default-value', $property->getValue($entity), "Entity property $property_name is not cloned properly.");
+        $this->assertEquals('default-value', $property->getValue($translation), "Entity property $property_name is not cloned properly.");
+        $this->assertEquals('test-entity-cloning', $property->getValue($clone), "Entity property $property_name is not cloned properly.");
       }
 
       // Modify each entity property on the translation entity object and assert
@@ -330,12 +329,12 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
       // not be able to properly access all properties and this will cause
       // exceptions without a proper backtrace.
       if (in_array($property->getName(), $translation_unique_properties)) {
-        $this->assertEquals('default-value', $property->getValue($entity), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
-        $this->assertEquals('test-translation-cloning', $property->getValue($translation), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
+        $this->assertEquals('default-value', $property->getValue($entity), "Entity property $property_name is not cloned properly.");
+        $this->assertEquals('test-translation-cloning', $property->getValue($translation), "Entity property $property_name is not cloned properly.");
       }
       else {
-        $this->assertEquals('test-translation-cloning', $property->getValue($entity), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
-        $this->assertEquals('test-translation-cloning', $property->getValue($translation), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
+        $this->assertEquals('test-translation-cloning', $property->getValue($entity), "Entity property $property_name is not cloned properly.");
+        $this->assertEquals('test-translation-cloning', $property->getValue($translation), "Entity property $property_name is not cloned properly.");
       }
     }
   }
