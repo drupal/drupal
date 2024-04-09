@@ -1647,7 +1647,7 @@ function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInter
       foreach (['views-left-30', 'views-left-40'] as $left_class) {
         if (str_contains($form['options']['operator']['#prefix'], $left_class)) {
           $form['options']['operator']['#prefix'] = '<div class="views-config-group-region">' . str_replace($left_class, 'views-group-box--operator', $form['options']['operator']['#prefix']);
-          $form['options']['value']['#suffix'] = $form['options']['value']['#suffix'] . '</div>';
+          $form['options']['value']['#suffix'] = ($form['options']['value']['#suffix'] ?? '') . '</div>';
         }
       }
     }
