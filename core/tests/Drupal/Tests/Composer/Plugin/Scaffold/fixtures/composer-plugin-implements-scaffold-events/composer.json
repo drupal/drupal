@@ -1,0 +1,17 @@
+{
+  "name": "fixtures/composer-plugin-implements-scaffold-events",
+  "type": "composer-plugin",
+  "require": {
+    "php": ">=8.2",
+    "composer-plugin-api": "^2",
+    "drupal/core-composer-scaffold": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\Tests\\fixture\\Composer\\Plugin\\": "src"
+    }
+  },
+  "extra": {
+    "class": "Drupal\\Tests\\fixture\\Composer\\Plugin\\ComposerPluginImplementsScaffoldEvents"
+  }
+}
