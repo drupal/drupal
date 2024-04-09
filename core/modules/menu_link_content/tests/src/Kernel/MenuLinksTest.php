@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\menu_link_content\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\entity_test\Entity\EntityTestExternal;
 use Drupal\KernelTests\KernelTestBase;
@@ -129,7 +128,8 @@ class MenuLinksTest extends KernelTestBase {
       $menu_link_plugin = $this->menuLinkManager->createInstance($links[$id]);
       $expected_parent = $links[$parent] ?? '';
 
-      $this->assertEquals($expected_parent, $menu_link_plugin->getParent(), new FormattableMarkup('Menu link %id has parent of %parent, expected %expected_parent.', ['%id' => $id, '%parent' => $menu_link_plugin->getParent(), '%expected_parent' => $expected_parent]));
+      $link_parent = $menu_link_plugin->getParent();
+      $this->assertEquals($expected_parent, $link_parent, "Menu link $id has parent of $link_parent, expected $expected_parent.");
     }
   }
 

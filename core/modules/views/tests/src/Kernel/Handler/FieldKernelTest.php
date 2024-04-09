@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
@@ -102,9 +101,8 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   The value to search for.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
-   *   variables in the message text, not t(). If left blank, a default message
-   *   will be displayed.
+   *   messages: use string interpolation to embed variables in the message
+   *   text, not t(). If left blank, a default message will be displayed.
    *
    * @internal
    */
@@ -121,9 +119,8 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   The value to search for.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
-   *   variables in the message text, not t(). If left blank, a default message
-   *   will be displayed.
+   *   messages: use string interpolation to embed variables in the message
+   *   text, not t(). If left blank, a default message will be displayed.
    *
    * @internal
    */
@@ -288,17 +285,17 @@ class FieldKernelTest extends ViewsKernelTestBase {
       $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_0, $row) {
         return $name_field_0->advancedRender($row);
       });
-      $this->assertEquals($expected_output_0, $output, new FormattableMarkup('Test token replacement: "@token" gave "@output"', ['@token' => $name_field_0->options['alter']['text'], '@output' => $output]));
+      $this->assertEquals($expected_output_0, $output, sprintf('Test token replacement: "%s" gave "%s"', $name_field_0->options['alter']['text'], $output));
 
       $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_1, $row) {
         return $name_field_1->advancedRender($row);
       });
-      $this->assertEquals($expected_output_1, $output, new FormattableMarkup('Test token replacement: "@token" gave "@output"', ['@token' => $name_field_1->options['alter']['text'], '@output' => $output]));
+      $this->assertEquals($expected_output_1, $output, sprintf('Test token replacement: "%s" gave "%s"', $name_field_1->options['alter']['text'], $output));
 
       $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_2, $row) {
         return $name_field_2->advancedRender($row);
       });
-      $this->assertEquals($expected_output_2, $output, new FormattableMarkup('Test token replacement: "@token" gave "@output"', ['@token' => $name_field_2->options['alter']['text'], '@output' => $output]));
+      $this->assertEquals($expected_output_2, $output, sprintf('Test token replacement: "%s" gave %s"', $name_field_2->options['alter']['text'], $output));
     }
 
     $job_field = $view->field['job'];
@@ -310,11 +307,11 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertSubString($output, $random_text, new FormattableMarkup('Make sure the self token (@token => @value) appears in the output (@output)', [
-      '@value' => $random_text,
-      '@output' => $output,
-      '@token' => $job_field->options['alter']['text'],
-    ]));
+    $this->assertSubString($output, $random_text, sprintf('Make sure the self token (%s => %s) appears in the output (%s)',
+      $job_field->options['alter']['text'],
+      $random_text,
+      $output,
+    ));
 
     // Verify the token format used in D7 and earlier does not get substituted.
     $old_token = '[job]';
@@ -324,7 +321,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertEquals($old_token, $output, new FormattableMarkup('Make sure the old token style (@token => @value) is not changed in the output (@output)', ['@value' => $random_text, '@output' => $output, '@token' => $job_field->options['alter']['text']]));
+    $this->assertEquals($old_token, $output, sprintf('Make sure the old token style (%s => %s) is not changed in the output (%s)', $job_field->options['alter']['text'], $random_text, $output));
 
     // Verify HTML tags are allowed in rewrite templates while token
     // replacements are escaped.
@@ -353,7 +350,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertEquals($random_text, $output, new FormattableMarkup('Make sure a script tag in the template (@template) is removed, leaving only the replaced token in the output (@output)', ['@output' => $output, '@template' => $rewrite_template]));
+    $this->assertEquals($random_text, $output, "Make sure a script tag in the template ($rewrite_template) is removed, leaving only the replaced token in the output ($output)");
   }
 
   /**
