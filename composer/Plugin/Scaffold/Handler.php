@@ -3,7 +3,6 @@
 namespace Drupal\Composer\Plugin\Scaffold;
 
 use Composer\Composer;
-use Composer\EventDispatcher\EventDispatcher;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
@@ -143,7 +142,7 @@ class Handler {
     }
 
     // Call any pre-scaffold scripts that may be defined.
-    $dispatcher = new EventDispatcher($this->composer, $this->io);
+    $dispatcher = $this->composer->getEventDispatcher();
     $dispatcher->dispatch(self::PRE_DRUPAL_SCAFFOLD_CMD);
 
     // Fetch the list of file mappings from each allowed package and normalize
