@@ -112,8 +112,15 @@ class State extends CacheCollector implements StateInterface {
       $key = self::$deprecatedState[$key]['replacement'];
     }
     $this->keyValueStore->set($key, $value);
+    // If another request had a cache miss before this request, and also hasn't
+    // written to cache yet, then it may already have read this value from the
+    // database and could write that value to the cache to the end of the
+    // request. To avoid this race condition, write to the cache immediately
+    // after calling parent::set(). This allows the race condition detection in
+    // CacheCollector::set() to work.
     parent::set($key, $value);
     $this->persist($key);
+    static::updateCache();
   }
 
   /**
