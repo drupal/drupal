@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\forum\Breadcrumb\ForumListingBreadcrumbBuilder;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -46,12 +47,21 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
    * @dataProvider providerTestApplies
    * @covers ::applies
    */
-  public function testApplies($expected, $route_name = NULL, $parameter_map = []) {
+  public function testApplies(bool $expected, ?string $route_name = NULL, array $parameter_map = []): void {
     // Make some test doubles.
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $config_factory = $this->getConfigFactoryStub([]);
     $forum_manager = $this->createMock('Drupal\forum\ForumManagerInterface');
     $translation_manager = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
+    $map = [];
+    if ($parameter_map) {
+      foreach ($parameter_map as $parameter) {
+        $map[] = [
+          $parameter[0],
+          $parameter[1] === TRUE ? $this->getMockBuilder(Term::class)->disableOriginalConstructor()->getMock() : $parameter[1],
+        ];
+      }
+    }
 
     // Make an object to test.
     $builder = new ForumListingBreadcrumbBuilder($entity_type_manager, $config_factory, $forum_manager, $translation_manager);
@@ -62,7 +72,7 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
       ->willReturn($route_name);
     $route_match->expects($this->any())
       ->method('getParameter')
-      ->willReturnMap($parameter_map);
+      ->willReturnMap($map);
 
     $this->assertEquals($expected, $builder->applies($route_match));
   }
@@ -70,40 +80,17 @@ class ForumListingBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * Provides test data for testApplies().
    *
-   * @return array
-   *   Array of datasets for testApplies(). Structured as such:
+   * @return \Generator
+   *   Datasets for testApplies(). Structured as such:
    *   - ForumListBreadcrumbBuilder::applies() expected result.
    *   - ForumListBreadcrumbBuilder::applies() $attributes input array.
    */
-  public function providerTestApplies() {
-    // Send a Node mock, because NodeInterface cannot be mocked.
-    $mock_term = $this->getMockBuilder('Drupal\taxonomy\Entity\Term')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    return [
-      [
-        FALSE,
-      ],
-      [
-        FALSE,
-        'NOT.forum.page',
-      ],
-      [
-        FALSE,
-        'forum.page',
-      ],
-      [
-        TRUE,
-        'forum.page',
-        [['taxonomy_term', 'anything']],
-      ],
-      [
-        TRUE,
-        'forum.page',
-        [['taxonomy_term', $mock_term]],
-      ],
-    ];
+  public static function providerTestApplies(): \Generator {
+    yield [FALSE];
+    yield [FALSE, 'NOT.forum.page'];
+    yield [FALSE, 'forum.page'];
+    yield [TRUE, 'forum.page', [['taxonomy_term', 'anything']]];
+    yield [TRUE, 'forum.page', [['taxonomy_term', TRUE]]];
   }
 
   /**
