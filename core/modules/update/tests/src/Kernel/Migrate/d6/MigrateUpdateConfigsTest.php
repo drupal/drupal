@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Kernel\Migrate\d6;
 
 use Drupal\Tests\SchemaCheckTestTrait;

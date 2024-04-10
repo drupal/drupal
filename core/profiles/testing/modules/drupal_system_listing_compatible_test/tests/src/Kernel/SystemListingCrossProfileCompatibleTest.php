@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\drupal_system_listing_compatible_test\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;

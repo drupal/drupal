@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\contact\Kernel\Migrate;
 
 use Drupal\contact\Entity\ContactForm;

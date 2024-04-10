@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\block\Kernel\Plugin\migrate\source\BlockTest;

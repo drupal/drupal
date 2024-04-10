@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config\Kernel;
 
 use Drupal\Core\Entity\EntityStorageInterface;

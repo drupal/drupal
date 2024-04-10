@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\forum\Kernel\Migrate\d7;
 
 use Drupal\Tests\taxonomy\Kernel\Migrate\d7\MigrateTaxonomyTermTranslationTest as TaxonomyTermTranslationTest;

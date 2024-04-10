@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate;
 
 use Drupal\ban\Plugin\migrate\destination\BlockedIp;

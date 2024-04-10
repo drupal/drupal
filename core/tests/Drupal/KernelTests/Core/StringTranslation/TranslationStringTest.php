@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\StringTranslation;
 
 use Drupal\Core\Site\Settings;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\responsive_image\Kernel\Migrate\d7;
 
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;

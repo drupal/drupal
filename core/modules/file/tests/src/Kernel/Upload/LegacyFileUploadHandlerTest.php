@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Kernel\Upload;
 
 use Drupal\file\Upload\UploadedFileInterface;

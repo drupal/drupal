@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Entity\EntityReferenceSelection;
 
 use Drupal\comment\Tests\CommentTestTrait;
