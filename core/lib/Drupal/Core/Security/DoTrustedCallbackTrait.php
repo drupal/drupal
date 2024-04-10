@@ -37,7 +37,6 @@ trait DoTrustedCallbackTrait {
    * @param string $error_type
    *   (optional) The type of error to trigger. One of:
    *   - TrustedCallbackInterface::THROW_EXCEPTION
-   *   - TrustedCallbackInterface::TRIGGER_WARNING
    *   - TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION
    *   Defaults to TrustedCallbackInterface::THROW_EXCEPTION.
    * @param string $extra_trusted_interface
@@ -98,9 +97,6 @@ trait DoTrustedCallbackTrait {
       $message = sprintf($message, $description);
       if ($error_type === TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION) {
         @trigger_error($message, E_USER_DEPRECATED);
-      }
-      elseif ($error_type === TrustedCallbackInterface::TRIGGER_WARNING) {
-        trigger_error($message, E_USER_WARNING);
       }
       else {
         throw new UntrustedCallbackException($message);

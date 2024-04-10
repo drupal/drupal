@@ -15,11 +15,6 @@ interface TrustedCallbackInterface {
   const THROW_EXCEPTION = 'exception';
 
   /**
-   * Untrusted callbacks trigger E_USER_WARNING errors.
-   */
-  const TRIGGER_WARNING = 'warning';
-
-  /**
    * Untrusted callbacks trigger silenced E_USER_DEPRECATION errors.
    */
   const TRIGGER_SILENCED_DEPRECATION = 'silenced_deprecation';

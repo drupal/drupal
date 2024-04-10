@@ -88,15 +88,6 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider errorTypeProvider
-   */
-  public function testWarning($callback) {
-    $this->expectWarning();
-    $this->expectWarningMessage('Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
-    $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::TRIGGER_WARNING);
-  }
-
-  /**
    * Data provider for tests of ::doTrustedCallback $error_type argument.
    */
   public static function errorTypeProvider() {
