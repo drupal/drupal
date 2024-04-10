@@ -37,14 +37,6 @@ class WorkspaceTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -178,15 +170,20 @@ class WorkspaceTest extends BrowserTestBase {
 
   /**
    * Tests the manage workspace page.
-   *
-   * @group failing
    */
   public function testWorkspaceManagePage() {
-    $this->drupalLogin($this->rootUser);
+    $this->drupalCreateContentType(['type' => 'test', 'label' => 'Test']);
+
+    $permissions = [
+      'administer taxonomy',
+      'administer workspaces',
+      'create test content',
+      'delete any test content',
+    ];
+    $this->drupalLogin($this->drupalCreateUser($permissions));
     $this->setupWorkspaceSwitcherBlock();
     $assert_session = $this->assertSession();
 
-    $this->drupalCreateContentType(['type' => 'test', 'label' => 'Test']);
     $vocabulary = $this->createVocabulary();
 
     $test_1 = $this->createWorkspaceThroughUi('Test 1', 'test_1');
@@ -258,7 +255,12 @@ class WorkspaceTest extends BrowserTestBase {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
 
     // Login and create a workspace.
-    $this->drupalLogin($this->rootUser);
+    $permissions = [
+      'administer workspaces',
+      'create test content',
+      'delete any test content',
+    ];
+    $this->drupalLogin($this->drupalCreateUser($permissions));
     $this->createAndActivateWorkspaceThroughUi('May 4', 'may_4');
 
     // Create a node in the workspace.
@@ -323,7 +325,11 @@ class WorkspaceTest extends BrowserTestBase {
    */
   public function testPublishWorkspace() {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
-    $this->drupalLogin($this->rootUser);
+    $permissions = [
+      'administer workspaces',
+      'create test content',
+    ];
+    $this->drupalLogin($this->drupalCreateUser($permissions));
 
     $this->drupalGet('/admin/config/workflow/workspaces/add');
     $this->submitForm([
@@ -340,7 +346,7 @@ class WorkspaceTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('There are no changes that can be published from Test workspace to Live.');
 
     // Create a node in the workspace.
-    $node = $this->createNodeThroughUi('Test node', 'test');
+    $this->createNodeThroughUi('Test node', 'test');
 
     $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace/publish');
     $this->assertSession()->statusCodeEquals(200);
