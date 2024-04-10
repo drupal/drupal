@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Controller;
 
 use Drupal\KernelTests\KernelTestBase;

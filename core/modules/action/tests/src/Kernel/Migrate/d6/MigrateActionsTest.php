@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\action\Kernel\Migrate\d6;
 
 use Drupal\system\Entity\Action;

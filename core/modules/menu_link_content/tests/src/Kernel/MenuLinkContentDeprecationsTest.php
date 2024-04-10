@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\menu_link_content\Kernel;
 
 use Drupal\Component\Datetime\TimeInterface;

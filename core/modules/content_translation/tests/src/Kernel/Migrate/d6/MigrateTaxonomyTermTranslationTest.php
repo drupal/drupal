@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Kernel\Migrate\d6;
 
 use Drupal\taxonomy\Entity\Term;

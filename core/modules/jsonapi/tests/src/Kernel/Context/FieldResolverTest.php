@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Kernel\Context;
 
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel\d7;
 
 use Drupal\Tests\migrate_drupal\Traits\ValidateMigrationStateTestTrait;

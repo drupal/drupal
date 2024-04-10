@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\menu_link_content\Kernel\Migrate\d7;
 
 use Drupal\Core\Menu\MenuTreeParameters;

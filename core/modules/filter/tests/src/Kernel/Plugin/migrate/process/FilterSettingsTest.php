@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\filter\Kernel\Plugin\migrate\process;
 
 use Drupal\filter\Plugin\migrate\process\FilterSettings;

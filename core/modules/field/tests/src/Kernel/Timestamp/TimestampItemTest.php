@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel\Timestamp;
 
 use Drupal\Core\Field\FieldItemInterface;

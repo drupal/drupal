@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Test\Comparator;
 
 use Drupal\Component\Render\FormattableMarkup;

@@ -276,17 +276,14 @@
     </properties>
     <!-- @todo Broaden this in https://www.drupal.org/project/drupal/issues/3400434 -->
     <!-- <include-pattern>*/tests/*</include-pattern> -->
-    <include-pattern>*/tests/src/Functional/*</include-pattern>
-    <include-pattern>*/tests/src/FunctionalJavascript/*</include-pattern>
-    <include-pattern>*/tests/src/Traits/*</include-pattern>
-    <include-pattern>*/tests/src/Unit/*</include-pattern>
+    <include-pattern>*/tests/src/*</include-pattern>
     <include-pattern>./tests/Drupal/*</include-pattern>
     <include-pattern>./tests/TestSuites/*</include-pattern>
     <include-pattern>./modules/system/src/Tests/Routing/*</include-pattern>
     <exclude-pattern>./tests/Drupal/Tests/*/Fixture/*</exclude-pattern>
     <exclude-pattern>./tests/Drupal/Tests/*/fixtures/*</exclude-pattern>
-    <!-- @todo remove after https://www.drupal.org/node/3399388 -->
-    <exclude-pattern>./tests/Drupal/KernelTests/*</exclude-pattern>
+    <!-- @todo remove this in https://www.drupal.org/project/drupal/issues/3402707 -->
+    <exclude-pattern>./tests/Drupal/KernelTests/AssertContentTrait.php</exclude-pattern>
   </rule>
 
   <!-- Squiz sniffs -->

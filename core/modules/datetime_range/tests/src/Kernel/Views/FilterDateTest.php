@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\datetime_range\Kernel\Views;
 
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;

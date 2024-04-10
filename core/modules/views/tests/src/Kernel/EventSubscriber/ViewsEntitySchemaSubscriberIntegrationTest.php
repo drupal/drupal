@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\EventSubscriber;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;

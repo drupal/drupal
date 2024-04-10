@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Config;
 
 use Drupal\Core\Config\Schema\Sequence;

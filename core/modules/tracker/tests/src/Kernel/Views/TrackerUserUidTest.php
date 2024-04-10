@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\tracker\Kernel\Views;
 
 use Drupal\KernelTests\KernelTestBase;

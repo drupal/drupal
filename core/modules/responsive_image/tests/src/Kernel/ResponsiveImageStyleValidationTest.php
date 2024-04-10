@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\responsive_image\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;

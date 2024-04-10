@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\telephone\Kernel;
 
 use Drupal\Core\Field\FieldItemListInterface;

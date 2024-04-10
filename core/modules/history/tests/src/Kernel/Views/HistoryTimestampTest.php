@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\history\Kernel\Views;
 
 use Drupal\Core\Database\Database;

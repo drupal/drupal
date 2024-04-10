@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Components;
 
 use Drupal\Tests\Core\Theme\Component\ComponentKernelTestBase;
