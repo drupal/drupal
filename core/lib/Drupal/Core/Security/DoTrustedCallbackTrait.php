@@ -37,7 +37,7 @@ trait DoTrustedCallbackTrait {
    * @param string $error_type
    *   (optional) The type of error to trigger. One of:
    *   - TrustedCallbackInterface::THROW_EXCEPTION
-   *   - TrustedCallbackInterface::TRIGGER_WARNING
+   *   - (deprecated) TrustedCallbackInterface::TRIGGER_WARNING
    *   - TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION
    *   Defaults to TrustedCallbackInterface::THROW_EXCEPTION.
    * @param string $extra_trusted_interface
@@ -99,7 +99,9 @@ trait DoTrustedCallbackTrait {
       if ($error_type === TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION) {
         @trigger_error($message, E_USER_DEPRECATED);
       }
+      // @phpstan-ignore-next-line
       elseif ($error_type === TrustedCallbackInterface::TRIGGER_WARNING) {
+        @trigger_error('Passing E_USER_WARNING for $error_type in ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and will be removed from drupal:11.0.0. Use TrustedCallbackInterface::THROW_EXCEPTION or TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION instead. See https://www.drupal.org/node/3427367', E_USER_DEPRECATED);
         trigger_error($message, E_USER_WARNING);
       }
       else {

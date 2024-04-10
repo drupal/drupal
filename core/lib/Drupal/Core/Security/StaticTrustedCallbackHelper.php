@@ -23,7 +23,7 @@ class StaticTrustedCallbackHelper {
    * @param string $error_type
    *   (optional) The type of error to trigger. One of:
    *   - TrustedCallbackInterface::THROW_EXCEPTION
-   *   - TrustedCallbackInterface::TRIGGER_WARNING
+   *   - (deprecated) TrustedCallbackInterface::TRIGGER_WARNING
    *   - TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION
    *   Defaults to TrustedCallbackInterface::THROW_EXCEPTION.
    * @param string $extra_trusted_interface

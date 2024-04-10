@@ -16,6 +16,12 @@ interface TrustedCallbackInterface {
 
   /**
    * Untrusted callbacks trigger E_USER_WARNING errors.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   TrustedCallbackInterface::THROW_EXCEPTION or
+   *   TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION instead.
+   *
+   * @see https://www.drupal.org/node/3427367
    */
   const TRIGGER_WARNING = 'warning';
 

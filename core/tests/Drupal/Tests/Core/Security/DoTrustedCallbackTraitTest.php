@@ -89,8 +89,10 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
 
   /**
    * @dataProvider errorTypeProvider
+   * @group legacy
    */
   public function testWarning($callback) {
+    $this->expectDeprecation('Passing E_USER_WARNING for $error_type in Drupal\Core\Security\DoTrustedCallbackTrait::doTrustedCallback() is deprecated in drupal:10.3.0 and will be removed from drupal:11.0.0. Use TrustedCallbackInterface::THROW_EXCEPTION or TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION instead. See https://www.drupal.org/node/3427367');
     $this->expectWarning();
     $this->expectWarningMessage('Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
     $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::TRIGGER_WARNING);
