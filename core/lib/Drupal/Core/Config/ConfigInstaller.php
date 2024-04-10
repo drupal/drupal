@@ -388,7 +388,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         if ($entity->isInstallable()) {
           $entity->trustData()->save();
           if ($id !== $entity->id()) {
-            trigger_error(sprintf('The configuration name "%s" does not match the ID "%s"', $name, $entity->id()), E_USER_WARNING);
+            throw new \LogicException(sprintf('The configuration name "%s" does not match the ID "%s"', $name, $entity->id()));
           }
         }
       }
