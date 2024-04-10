@@ -204,6 +204,12 @@ default:
     _TARGET_PHP: "8.3"
     _TARGET_DB: "mariadb-10.3.22"
 
+'PHP 8.3 MariaDB 10.6':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.3"
+    _TARGET_DB: "mariadb-10.6"
+
 'PHP 8.3 PostgreSQL 14.1':
   <<: [ *default-stage, *run-on-mr ]
   variables:
