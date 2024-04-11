@@ -5,29 +5,23 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Kernel\Validation;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\file\Validation\UploadedFileValidator;
+use Drupal\file\Upload\FormUploadedFile;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Tests the uploaded file validator.
  *
- * @coversDefaultClass \Drupal\file\Validation\UploadedFileValidator
+ * @coversDefaultClass \Drupal\file\Validation\Constraint\UploadedFileConstraintValidator
  * @group file
  */
-class UploadedFileValidatorTest extends KernelTestBase {
+class UploadedFileConstraintValidatorTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['file'];
-
-  /**
-   * The validator under test.
-   *
-   * @var \Drupal\file\Validation\UploadedFileValidator
-   */
-  protected UploadedFileValidator $validator;
 
   /**
    * The file name.
@@ -51,15 +45,19 @@ class UploadedFileValidatorTest extends KernelTestBase {
   protected int $maxSize = 4194304;
 
   /**
+   * A validator.
+   *
+   * @var \Symfony\Component\Validator\Validator\ValidatorInterface
+   */
+  private ValidatorInterface $validator;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $fileSystem = $this->container->get('file_system');
-    /** @var \Drupal\file\Validation\UploadedFileValidator $validator */
-    $this->validator = new UploadedFileValidator(
-      $this->container->get('validation.basic_recursive_validator_factory'),
-    );
+    $this->validator = $this->container->get('validation.basic_recursive_validator_factory')->createValidator();
     $this->filename = $this->randomMachineName() . '.txt';
     $this->path = 'temporary://' . $this->filename;
 
@@ -70,12 +68,12 @@ class UploadedFileValidatorTest extends KernelTestBase {
    * @covers ::validate
    */
   public function testValidateSuccess(): void {
-    $uploadedFile = new UploadedFile(
+    $uploadedFile = new FormUploadedFile(new UploadedFile(
       path: $this->path,
       originalName: $this->filename,
       test: TRUE,
-    );
-    $violations = $this->validator->validate($uploadedFile);
+    ));
+    $violations = $uploadedFile->validate($this->validator);
     $this->assertCount(0, $violations);
   }
 
@@ -84,13 +82,13 @@ class UploadedFileValidatorTest extends KernelTestBase {
    * @dataProvider validateProvider
    */
   public function testValidateFail(int $errorCode, string $message): void {
-    $uploadedFile = new UploadedFile(
+    $uploadedFile = new FormUploadedFile(new UploadedFile(
       path: $this->path,
       originalName: $this->filename,
       error: $errorCode,
       test: TRUE,
-    );
-    $violations = $this->validator->validate($uploadedFile, [
+    ));
+    $violations = $uploadedFile->validate($this->validator, [
       'maxSize' => $this->maxSize,
     ]);
     $this->assertCount(1, $violations);

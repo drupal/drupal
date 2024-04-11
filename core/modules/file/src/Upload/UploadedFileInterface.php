@@ -2,6 +2,9 @@
 
 namespace Drupal\file\Upload;
 
+use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 /**
  * Provides an interface for uploaded files.
  */
@@ -101,5 +104,18 @@ interface UploadedFileInterface {
    * @see https://php.net/manual/en/splfileinfo.getfilename.php
    */
   public function getFilename(): string;
+
+  /**
+   * Validates the uploaded file information.
+   *
+   * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
+   *   A validator object.
+   * @param array $options
+   *   Options to pass to a constraint.
+   *
+   * @return \Symfony\Component\Validator\ConstraintViolationListInterface
+   *   The list of violations.
+   */
+  public function validate(ValidatorInterface $validator, array $options = []): ConstraintViolationListInterface;
 
 }

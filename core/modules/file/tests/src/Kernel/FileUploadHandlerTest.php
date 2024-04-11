@@ -10,6 +10,7 @@ use Drupal\file\Upload\FileUploadHandler;
 use Drupal\file\Upload\UploadedFileInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
  * Tests the file upload handler.
@@ -92,12 +93,14 @@ class FileUploadHandlerTest extends KernelTestBase {
       $this->container->get('request_stack'),
       $this->container->get('file.repository'),
       $this->container->get('file.validator'),
-      $lock
+      $lock,
+      $this->container->get('validation.basic_recursive_validator_factory'),
     );
 
     $file_name = $this->randomMachineName();
     $file_info = $this->createMock(UploadedFileInterface::class);
     $file_info->expects($this->once())->method('getClientOriginalName')->willReturn($file_name);
+    $file_info->expects($this->once())->method('validate')->willReturn(new ConstraintViolationList());
 
     $this->expectException(LockAcquiringException::class);
     $this->expectExceptionMessage(sprintf('File "temporary://%s" is already locked for writing.', $file_name));
