@@ -393,7 +393,8 @@ class MenuAccessTest extends BrowserTestBase {
     $actualInaccessibleRoutes = [];
     foreach ($allRoutes as $route) {
       $this->drupalGet(Url::fromRoute($route));
-      switch ($this->getSession()->getStatusCode()) {
+      $requestStatus = $this->getSession()->getStatusCode();
+      switch ($requestStatus) {
         case 200:
           $actualAccessibleRoutes[] = $route;
           break;
@@ -403,7 +404,7 @@ class MenuAccessTest extends BrowserTestBase {
           break;
 
         default:
-          throw new \UnexpectedValueException("Unexpected status code {$this->getStatus()} for route $route");
+          throw new \UnexpectedValueException("Unexpected status code {$requestStatus} for route {$route}");
 
       }
     }
