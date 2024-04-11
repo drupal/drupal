@@ -32,6 +32,7 @@ class ConfigureSectionForm extends FormBase {
   use LayoutBuilderContextTrait;
   use LayoutBuilderHighlightTrait;
   use LayoutRebuildTrait;
+  use WorkspaceSafeFormTrait;
 
   /**
    * The layout tempstore repository.
@@ -127,6 +128,7 @@ class ConfigureSectionForm extends FormBase {
     $this->delta = $delta;
     $this->isUpdate = is_null($plugin_id);
     $this->pluginId = $plugin_id;
+    $this->markWorkspaceSafe($form_state);
 
     $section = $this->getCurrentSection();
 

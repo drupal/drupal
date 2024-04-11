@@ -35,6 +35,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
   use ContextAwarePluginAssignmentTrait;
   use LayoutBuilderContextTrait;
   use LayoutRebuildTrait;
+  use WorkspaceSafeFormTrait;
 
   /**
    * The plugin being configured.
@@ -163,6 +164,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
     $this->delta = $delta;
     $this->uuid = $component->getUuid();
     $this->block = $component->getPlugin();
+    $this->markWorkspaceSafe($form_state);
 
     $form_state->setTemporaryValue('gathered_contexts', $this->getPopulatedContexts($section_storage));
 
