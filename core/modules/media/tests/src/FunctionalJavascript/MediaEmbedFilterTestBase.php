@@ -54,7 +54,7 @@ class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
   /**
    * Data provider for testing validation when adding and editing media embeds.
    */
-  public function providerTestValidations() {
+  public static function providerTestValidations(): array {
     return [
       'Tests that no filter_html occurs when filter_html not enabled.' => [
         'filters[filter_html][status]' => FALSE,
