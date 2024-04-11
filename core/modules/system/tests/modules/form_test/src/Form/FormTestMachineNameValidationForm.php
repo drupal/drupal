@@ -77,7 +77,7 @@ class FormTestMachineNameValidationForm extends FormBase {
       '#ajax' => [
         'callback' => '::buildAjaxSnackConfigureForm',
         'wrapper' => 'snack-config-form',
-        'method' => 'replace',
+        'method' => 'replaceWith',
         'effect' => 'fade',
       ],
     ];
