@@ -112,18 +112,23 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
   /**
    * Removes an entity block from the layout but does not save the layout.
    */
-  protected function removeInlineBlockFromLayout() {
+  protected function removeInlineBlockFromLayout($selector = NULL) {
+    $selector = $selector ?? static::INLINE_BLOCK_LOCATOR;
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $block_text = $page->find('css', static::INLINE_BLOCK_LOCATOR)->getText();
+    $block_text = $page->find('css', $selector)->getText();
     $this->assertNotEmpty($block_text);
     $assert_session->pageTextContains($block_text);
-    $this->clickContextualLink(static::INLINE_BLOCK_LOCATOR, 'Remove block');
+    $this->clickContextualLink($selector, 'Remove block');
     $assert_session->waitForElement('css', "#drupal-off-canvas input[value='Remove']");
     $assert_session->assertWaitOnAjaxRequest();
+
+    // Output the new HTML.
+    $this->htmlOutput($page->getHtml());
+
     $page->find('css', '#drupal-off-canvas')->pressButton('Remove');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
-    $assert_session->assertNoElementAfterWait('css', static::INLINE_BLOCK_LOCATOR);
+    $assert_session->assertNoElementAfterWait('css', $selector);
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains($block_text);
   }

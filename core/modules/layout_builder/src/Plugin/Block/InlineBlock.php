@@ -115,6 +115,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
   public function defaultConfiguration() {
     return [
       'view_mode' => 'full',
+      'block_id' => NULL,
       'block_revision_id' => NULL,
       'block_serialized' => NULL,
     ];
@@ -289,6 +290,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
         $block->setNewRevision();
       }
       $block->save();
+      $this->configuration['block_id'] = $block->id();
       $this->configuration['block_revision_id'] = $block->getRevisionId();
       $this->configuration['block_serialized'] = NULL;
     }

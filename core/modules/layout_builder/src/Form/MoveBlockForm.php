@@ -24,6 +24,7 @@ class MoveBlockForm extends FormBase {
   use LayoutBuilderContextTrait;
   use LayoutBuilderHighlightTrait;
   use LayoutRebuildTrait;
+  use WorkspaceSafeFormTrait;
 
   /**
    * The section storage.
@@ -117,6 +118,7 @@ class MoveBlockForm extends FormBase {
     $this->delta = $delta;
     $this->uuid = $uuid;
     $this->region = $region;
+    $this->markWorkspaceSafe($form_state);
 
     $form['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockUpdateHighlightId($uuid);
 

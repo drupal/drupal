@@ -18,6 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class RevertOverridesForm extends ConfirmFormBase {
 
+  use WorkspaceSafeFormTrait;
+
   /**
    * The layout tempstore repository.
    *
@@ -99,6 +101,7 @@ class RevertOverridesForm extends ConfirmFormBase {
     }
 
     $this->sectionStorage = $section_storage;
+    $this->markWorkspaceSafe($form_state);
     // Mark this as an administrative page for JavaScript ("Back to site" link).
     $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     return parent::buildForm($form, $form_state);

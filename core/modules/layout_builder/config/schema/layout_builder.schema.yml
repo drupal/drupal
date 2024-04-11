@@ -64,6 +64,9 @@ inline_block:
     view_mode:
       type: string
       label: 'View mode'
+    block_id:
+      type: integer
+      label: 'Block ID'
     block_revision_id:
       type: integer
       label: 'Block revision ID'
