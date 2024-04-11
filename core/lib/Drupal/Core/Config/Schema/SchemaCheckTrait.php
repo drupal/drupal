@@ -52,6 +52,13 @@ trait SchemaCheckTrait {
         'This value should not be blank.',
       ],
     ],
+    'contact.settings' => [
+      // @todo Simple config cannot have dependencies on any other config.
+      //   Remove this in https://www.drupal.org/project/drupal/issues/3425992.
+      'default_form' => [
+        "The 'contact.form.feedback' config does not exist.",
+      ],
+    ],
     'editor.editor.*' => [
       // @todo Fix stream wrappers not being available early enough in
       //   https://www.drupal.org/project/drupal/issues/3416735
