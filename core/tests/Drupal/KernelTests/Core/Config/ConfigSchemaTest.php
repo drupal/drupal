@@ -452,7 +452,7 @@ class ConfigSchemaTest extends KernelTestBase {
     // Ensure that configuration objects with keys marked as ignored are not
     // changed when saved. The 'config_schema_test.ignore' will have been saved
     // during the installation of configuration in the setUp method.
-    $extension_path = __DIR__ . '/../../../../../modules/config/tests/config_schema_test/';
+    $extension_path = __DIR__ . '/../../../../../modules/config/tests/modules/config_schema_test/';
     $install_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY);
     $original_data = $install_storage->read('config_schema_test.ignore');
     $installed_data = $this->config('config_schema_test.ignore')->get();
