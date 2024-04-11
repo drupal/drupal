@@ -32,9 +32,9 @@ Framework managers
 
   Frontend
   - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
-  - (provisional) Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
-  - (provisional) Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
-  - (provisional) Sally Young 'justafish' https://www.drupal.org/u/justafish
+  - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+  - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
+  - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
 Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
