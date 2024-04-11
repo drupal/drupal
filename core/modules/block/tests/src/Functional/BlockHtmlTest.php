@@ -22,14 +22,6 @@ class BlockHtmlTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -39,7 +31,10 @@ class BlockHtmlTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'access administration pages',
+    ]));
 
     // Enable the test_html block, to test HTML ID and attributes.
     \Drupal::state()->set('block_test.attributes', ['data-custom-attribute' => 'foo']);
