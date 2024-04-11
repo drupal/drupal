@@ -214,6 +214,8 @@ function media_library_views_post_render(ViewExecutable $view, &$output, CachePl
         $ajax_path = &$output['#attached']['drupalSettings']['views']['ajax_path'];
         $parsed_url = UrlHelper::parse($ajax_path);
         $query = array_merge($query, $parsed_url['query']);
+        // Reset the pager so that the user starts on the first page.
+        unset($query['page']);
         $ajax_path = $parsed_url['path'] . '?' . UrlHelper::buildQuery($query);
       }
     }
