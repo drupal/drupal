@@ -24,7 +24,7 @@ class TemporaryQueryTest extends TemporaryQueryTestBase {
     $table_name_test = $connection->queryTemporary('SELECT [name] FROM {test}', []);
 
     // Assert that the table is indeed a temporary one.
-    $this->stringContains("temp.", $table_name_test);
+    $this->assertStringContainsString("temp.", $table_name_test);
 
     // Assert that both have the same field names.
     $normal_table_fields = $connection->query("SELECT * FROM {test}")->fetch();
