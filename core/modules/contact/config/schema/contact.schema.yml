@@ -37,20 +37,35 @@ contact.form.*:
 contact.settings:
   type: config_object
   label: 'Contact settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     default_form:
       type: string
       label: 'Default form identifier'
+      # It is possible to not configure a default form.
+      # @see \Drupal\contact\ContactFormEditForm::save()
+      nullable: true
+      constraints:
+        ConfigExists:
+          prefix: contact.form.
     flood:
+      # @see \Drupal\Core\Flood\FloodInterface::isAllowed()
       type: mapping
       label: 'Flood control'
       mapping:
         limit:
           type: integer
-          label: 'Limit'
+          label: 'Limit (messages per interval)'
+          constraints:
+            Range:
+              min: 1
         interval:
           type: integer
-          label: 'Interval'
+          label: 'Interval (seconds)'
+          constraints:
+            Range:
+              min: 1
     user_default_enabled:
       type: boolean
       label: 'Personal contact form enabled by default'

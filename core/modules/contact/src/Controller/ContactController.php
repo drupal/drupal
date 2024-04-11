@@ -50,9 +50,13 @@ class ContactController extends ControllerBase {
 
     // Use the default form if no form has been passed.
     if (empty($contact_form)) {
-      $contact_form = $this->entityTypeManager()
-        ->getStorage('contact_form')
-        ->load($config->get('default_form'));
+      $default_form = $config->get('default_form');
+      // Load the default form, if configured.
+      if (!is_null($default_form)) {
+        $contact_form = $this->entityTypeManager()
+          ->getStorage('contact_form')
+          ->load($default_form);
+      }
       // If there are no forms, do not display the form.
       if (empty($contact_form)) {
         if ($this->currentUser()->hasPermission('administer contact forms')) {
