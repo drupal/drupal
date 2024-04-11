@@ -14,6 +14,7 @@ use Drupal\Core\Lock\LockAcquiringException;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Drupal\Core\Validation\BasicRecursiveValidatorFactory;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\FileRepositoryInterface;
@@ -103,30 +104,6 @@ class FileUploadHandler {
    */
   protected FileValidatorInterface $fileValidator;
 
-  /**
-   * Constructs a FileUploadHandler object.
-   *
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   The file system service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager.
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
-   *   The stream wrapper manager.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
-   *   The event dispatcher.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mimeTypeGuesser
-   *   The MIME type guesser.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
-   * @param \Drupal\file\FileRepositoryInterface|null $fileRepository
-   *   The file repository.
-   * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
-   *   The file validator.
-   * @param \Drupal\Core\Lock\LockBackendInterface|null $lock
-   *   The lock.
-   */
   public function __construct(
     FileSystemInterface $fileSystem,
     EntityTypeManagerInterface $entityTypeManager,
@@ -138,6 +115,7 @@ class FileUploadHandler {
     FileRepositoryInterface $fileRepository = NULL,
     FileValidatorInterface $file_validator = NULL,
     protected ?LockBackendInterface $lock = NULL,
+    protected ?BasicRecursiveValidatorFactory $validatorFactory = NULL,
   ) {
     $this->fileSystem = $fileSystem;
     $this->entityTypeManager = $entityTypeManager;
@@ -159,6 +137,10 @@ class FileUploadHandler {
     if (!$this->lock) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $lock argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3389017', E_USER_DEPRECATED);
       $this->lock = \Drupal::service('lock');
+    }
+    if (!$validatorFactory) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $validatorFactory argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3375456', E_USER_DEPRECATED);
+      $this->validatorFactory = \Drupal::service('validation.basic_recursive_validator_factory');
     }
   }
 
@@ -197,45 +179,56 @@ class FileUploadHandler {
       // @phpstan-ignore-next-line
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
-    $originalName = $uploadedFile->getClientOriginalName();
-    // @phpstan-ignore-next-line
-    if ($throw && !$uploadedFile->isValid()) {
+    $result = new FileUploadResult();
+
+    if ($throw) {
       @trigger_error('Calling ' . __METHOD__ . '() with the $throw argument as TRUE is deprecated in drupal:10.3.0 and will be removed in drupal:11.0.0. Use \Drupal\file\Upload\FileUploadResult::getViolations() instead. See https://www.drupal.org/node/3375456', E_USER_DEPRECATED);
       // @phpstan-ignore-next-line
-      switch ($uploadedFile->getError()) {
-        case \UPLOAD_ERR_INI_SIZE:
-          // @phpstan-ignore-next-line
-          throw new IniSizeFileException($uploadedFile->getErrorMessage());
+      if (!$uploadedFile->isValid()) {
+        // @phpstan-ignore-next-line
+        switch ($uploadedFile->getError()) {
+          case \UPLOAD_ERR_INI_SIZE:
+            // @phpstan-ignore-next-line
+            throw new IniSizeFileException($uploadedFile->getErrorMessage());
 
-        case \UPLOAD_ERR_FORM_SIZE:
-          // @phpstan-ignore-next-line
-          throw new FormSizeFileException($uploadedFile->getErrorMessage());
+          case \UPLOAD_ERR_FORM_SIZE:
+            // @phpstan-ignore-next-line
+            throw new FormSizeFileException($uploadedFile->getErrorMessage());
 
-        case \UPLOAD_ERR_PARTIAL:
-          // @phpstan-ignore-next-line
-          throw new PartialFileException($uploadedFile->getErrorMessage());
+          case \UPLOAD_ERR_PARTIAL:
+            // @phpstan-ignore-next-line
+            throw new PartialFileException($uploadedFile->getErrorMessage());
 
-        case \UPLOAD_ERR_NO_FILE:
-          // @phpstan-ignore-next-line
-          throw new NoFileException($uploadedFile->getErrorMessage());
+          case \UPLOAD_ERR_NO_FILE:
+            // @phpstan-ignore-next-line
+            throw new NoFileException($uploadedFile->getErrorMessage());
 
-        case \UPLOAD_ERR_CANT_WRITE:
-          // @phpstan-ignore-next-line
-          throw new CannotWriteFileException($uploadedFile->getErrorMessage());
+          case \UPLOAD_ERR_CANT_WRITE:
+            // @phpstan-ignore-next-line
+            throw new CannotWriteFileException($uploadedFile->getErrorMessage());
 
-        case \UPLOAD_ERR_NO_TMP_DIR:
-          // @phpstan-ignore-next-line
-          throw new NoTmpDirFileException($uploadedFile->getErrorMessage());
+          case \UPLOAD_ERR_NO_TMP_DIR:
+            // @phpstan-ignore-next-line
+            throw new NoTmpDirFileException($uploadedFile->getErrorMessage());
 
-        case \UPLOAD_ERR_EXTENSION:
-          // @phpstan-ignore-next-line
-          throw new ExtensionFileException($uploadedFile->getErrorMessage());
+          case \UPLOAD_ERR_EXTENSION:
+            // @phpstan-ignore-next-line
+            throw new ExtensionFileException($uploadedFile->getErrorMessage());
 
+        }
+        // @phpstan-ignore-next-line
+        throw new FileException($uploadedFile->getErrorMessage());
       }
-      // @phpstan-ignore-next-line
-      throw new FileException($uploadedFile->getErrorMessage());
+    }
+    else {
+      $violations = $uploadedFile->validate($this->validatorFactory->createValidator());
+      if (count($violations) > 0) {
+        $result->addViolations($violations);
+        return $result;
+      }
     }
 
+    $originalName = $uploadedFile->getClientOriginalName();
     $extensions = $this->handleExtensionValidation($validators);
 
     // Assert that the destination contains a valid stream.
@@ -287,8 +280,6 @@ class FileUploadHandler {
 
       // Add in our check of the file name length.
       $validators['FileNameLength'] = [];
-
-      $result = new FileUploadResult();
 
       // Call the validation functions specified by this function's caller.
       $violations = $this->fileValidator->validate($file, $validators);

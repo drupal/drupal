@@ -653,18 +653,9 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
   /** @var \Drupal\Core\Render\RendererInterface $renderer */
   $renderer = \Drupal::service('renderer');
   $files = [];
-  /** @var \Drupal\file\Validation\UploadedFileValidatorInterface $uploaded_file_validator */
-  $uploaded_file_validator = \Drupal::service('file.uploaded_file_validator');
   /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploaded_file */
   foreach ($uploaded_files as $i => $uploaded_file) {
     try {
-      $violations = $uploaded_file_validator->validate($uploaded_file);
-      if (count($violations) > 0) {
-        // We only get one violation for uploaded files.
-        \Drupal::messenger()->addError($violations->get(0)->getMessage());
-        $files[$i] = FALSE;
-        continue;
-      }
       $form_uploaded_file = new FormUploadedFile($uploaded_file);
       $result = $file_upload_handler->handleFileUpload($form_uploaded_file, $validators, $destination, $fileExists, FALSE);
       if ($result->hasViolations()) {

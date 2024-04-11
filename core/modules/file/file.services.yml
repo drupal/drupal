@@ -11,7 +11,7 @@ services:
       - { name: backend_overridable }
   file.upload_handler:
     class: Drupal\file\Upload\FileUploadHandler
-    arguments: ['@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository', '@file.validator', '@lock']
+    arguments: ['@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository', '@file.validator', '@lock', '@validation.basic_recursive_validator_factory']
   Drupal\file\Upload\FileUploadHandler: '@file.upload_handler'
   file.repository:
     class: Drupal\file\FileRepository
@@ -28,10 +28,6 @@ services:
     class: Drupal\file\Validation\FileValidator
     arguments: ['@file.recursive_validator', '@validation.constraint', '@event_dispatcher', '@module_handler']
   Drupal\file\Validation\FileValidatorInterface: '@file.validator'
-  file.uploaded_file_validator:
-    class: Drupal\file\Validation\UploadedFileValidator
-    arguments: ['@validation.basic_recursive_validator_factory']
-  Drupal\file\Validation\UploadedFileValidatorInterface: '@file.uploaded_file_validator'
   file.input_stream_file_writer:
     class: Drupal\file\Upload\InputStreamFileWriter
     arguments: ['@file_system']
