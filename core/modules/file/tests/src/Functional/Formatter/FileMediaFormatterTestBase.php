@@ -84,7 +84,7 @@ abstract class FileMediaFormatterTestBase extends BrowserTestBase {
    *     - The number of expected HTML tags.
    *     - An array of settings for the field formatter.
    */
-  public function dataProvider() {
+  public static function dataProvider(): array {
     return [
       [2, []],
       [1, ['multiple_file_display_type' => 'sources']],
