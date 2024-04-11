@@ -11,7 +11,7 @@ namespace Drupal\performance_test\Cache;
  * @see \Drupal\Core\Cache\CacheTagsInvalidatorInterface
  */
 enum CacheTagOperation {
-  case getCurrentChecksum;
-  case invalidateTags;
-  case isValid;
+  case GetCurrentChecksum;
+  case InvalidateTags;
+  case IsValid;
 }

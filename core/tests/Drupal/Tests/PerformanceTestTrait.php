@@ -159,9 +159,9 @@ trait PerformanceTestTrait {
       }
       foreach ($performance_test_data['cache_tag_operations'] as $operation) {
         match($operation['operation']) {
-          CacheTagOperation::getCurrentChecksum => $cache_tag_checksum_count++,
-          CacheTagOperation::isValid => $cache_tag_is_valid_count++,
-          CacheTagOperation::invalidateTags => $cache_tag_invalidation_count++,
+          CacheTagOperation::GetCurrentChecksum => $cache_tag_checksum_count++,
+          CacheTagOperation::IsValid => $cache_tag_is_valid_count++,
+          CacheTagOperation::InvalidateTags => $cache_tag_invalidation_count++,
         };
       }
       $performance_data->setCacheGetCount($cache_get_count);
