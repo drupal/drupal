@@ -36,9 +36,9 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('<front>');
     }, 'authenticatedFrontPage');
     $this->assertSame(2, $performance_data->getStylesheetCount());
-    $this->assertSame(44966, $performance_data->getStylesheetBytes());
+    $this->assertSame(44958, $performance_data->getStylesheetBytes());
     $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertSame(132351, $performance_data->getScriptBytes());
+    $this->assertSame(132335, $performance_data->getScriptBytes());
 
     $expected_queries = [
       'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
