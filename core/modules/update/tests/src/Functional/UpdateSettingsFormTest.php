@@ -9,7 +9,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the the update_settings form.
+ * Tests the update_settings form.
  *
  * @group update
  * @group Form
