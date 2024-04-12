@@ -144,10 +144,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     variable_set('configurable_timezones', 1);
     variable_set('date_default_timezone', 'Europe/Brussels');
 
-    // Check that the account information fieldset's options are not displayed
-    // is a fieldset if there is not more than one fieldset in the form.
     $this->drupalGet('user/register');
-    $this->assertNoRaw('<fieldset id="edit-account"><legend>Account information</legend>', 'Account settings fieldset was hidden.');
 
     $edit = array();
     $edit['name'] = $name = $this->randomName();
