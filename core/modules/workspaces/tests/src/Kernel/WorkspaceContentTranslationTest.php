@@ -33,7 +33,6 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
     'content_translation',
     'entity_test',
     'language',
-    'path_alias',
     'user',
     'workspaces',
   ];

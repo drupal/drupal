@@ -16,7 +16,7 @@ class WorkspaceAssociationDeprecationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['path_alias', 'user', 'workspaces'];
+  protected static $modules = ['user', 'workspaces'];
 
   /**
    * {@inheritdoc}

@@ -49,7 +49,6 @@ class WorkspaceInformationTest extends KernelTestBase {
    */
   protected static $modules = [
     'entity_test',
-    'path_alias',
     'user',
     'workspaces',
     'workspaces_test',

@@ -25,7 +25,15 @@ class WorkspaceEntityDeleteTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'filter', 'node', 'path_alias', 'user', 'text', 'system', 'workspaces'];
+  protected static $modules = [
+    'field',
+    'filter',
+    'node',
+    'system',
+    'text',
+    'user',
+    'workspaces',
+  ];
 
   /**
    * The entity type manager.

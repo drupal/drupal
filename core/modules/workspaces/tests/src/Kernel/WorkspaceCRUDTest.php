@@ -55,7 +55,6 @@ class WorkspaceCRUDTest extends KernelTestBase {
     'filter',
     'node',
     'text',
-    'path_alias',
   ];
 
   /**
@@ -71,7 +70,6 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $this->installEntitySchema('workspace');
     $this->installSchema('workspaces', ['workspace_association']);
     $this->installEntitySchema('node');
-    $this->installEntitySchema('path_alias');
 
     $this->installConfig(['filter', 'node', 'system']);
 

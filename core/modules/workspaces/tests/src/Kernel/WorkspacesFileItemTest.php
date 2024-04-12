@@ -29,7 +29,6 @@ class WorkspacesFileItemTest extends FileItemTest {
    */
   protected static $modules = [
     'file',
-    'path_alias',
     'workspaces',
     'workspaces_test',
   ];
