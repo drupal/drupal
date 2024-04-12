@@ -43,7 +43,6 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
     'node',
     'language',
     'text',
-    'path_alias',
     'views_ui',
     'workspaces',
   ];

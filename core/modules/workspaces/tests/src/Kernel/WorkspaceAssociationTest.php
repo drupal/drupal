@@ -41,7 +41,6 @@ class WorkspaceAssociationTest extends KernelTestBase {
     'text',
     'user',
     'system',
-    'path_alias',
     'workspaces',
   ];
 

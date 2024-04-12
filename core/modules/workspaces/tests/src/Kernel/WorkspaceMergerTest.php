@@ -47,7 +47,6 @@ class WorkspaceMergerTest extends KernelTestBase {
     'text',
     'user',
     'system',
-    'path_alias',
   ];
 
   /**
