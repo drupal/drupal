@@ -10,23 +10,35 @@
 ################
 
 ################
-# Includes
+# Workflow
 #
-# Additional configuration can be provided through includes.
-# One advantage of include files is that if they are updated upstream, the
-# changes affect all pipelines using that include.
+# Define conditions for when the pipeline will run.
+#   For example:
+#     * On commit
+#     * On merge request
+#     * On manual trigger
+#     * etc.
+# https://docs.gitlab.com/ee/ci/jobs/job_control.html#specify-when-jobs-run-with-rules
 #
-# Includes can be overriden by re-declaring anything provided in an include,
-# here in gitlab-ci.yml
-# https://docs.gitlab.com/ee/ci/yaml/includes.html#override-included-configuration-values
+# Pipelines can also be configured to run on a schedule,though they still must meet the conditions defined in Workflow and Rules. This can be used, for example, to do nightly regression testing:
+# https://gitlab.com/help/ci/pipelines/schedules
 ################
 
-include:
-  - project: $_GITLAB_TEMPLATES_REPO
-    ref: $_GITLAB_TEMPLATES_REF
-    file:
-      - '/includes/include.drupalci.variables.yml'
-      - '/includes/include.drupalci.workflows.yml'
+workflow:
+  rules:
+  # These 3 rules from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
+    # Run on merge requests
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    # Run when called from an upstream pipeline https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html?tab=Multi-project+pipeline#use-rules-to-control-downstream-pipeline-jobs
+    - if: $CI_PIPELINE_SOURCE == 'pipeline'
+    # Run on commits.
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    # The last rule above blocks manual and scheduled pipelines on non-default branch. The rule below allows them:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    # Run if triggered from Web using 'Run Pipelines'
+    - if: $CI_PIPELINE_SOURCE == "web"
+     # Run if triggered from WebIDE
+    - if: $CI_PIPELINE_SOURCE == "webide"
 
 ################
 # Variables
@@ -42,6 +54,7 @@ include:
 ################
 
 variables:
+  _CONFIG_DOCKERHUB_ROOT: "drupalci"
   _TARGET_PHP: "8.1"
   CONCURRENCY: 15
   GIT_DEPTH: "3"
