@@ -216,7 +216,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     if ($fatal) {
       // When called from CLI, simply output a plain text message.
       print html_entity_decode(strip_tags(t('%type: !message in %function (line %line of %file).', $error))). "\n";
-      exit;
+      exit(1);
     }
   }
 
