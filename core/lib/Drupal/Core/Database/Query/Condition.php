@@ -255,14 +255,7 @@ class Condition implements ConditionInterface, \Countable {
             // Provide a string which will result into an empty query result.
             $this->stringVersion = '( AND 1 = 0 )';
 
-            // Conceptually throwing an exception caused by user input is bad
-            // as you result into a 'white screen of death', which depending on
-            // your webserver configuration can result into the assumption that
-            // your site is broken.
-            // On top of that the database API relies on __toString() which
-            // does not allow to throw exceptions.
-            trigger_error('Invalid characters in query operator: ' . $condition['operator'], E_USER_ERROR);
-            return;
+            throw new InvalidQueryException('Invalid characters in query operator: ' . $condition['operator']);
           }
 
           // For simplicity, we convert all operators to a data structure to
