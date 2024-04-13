@@ -45,6 +45,7 @@ variables:
   COMPOSER: composer.json
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
+  COMPOSER_ALLOW_SUPERUSER: 1
   CONCURRENCY: 32
   GIT_DEPTH: "3"
 
