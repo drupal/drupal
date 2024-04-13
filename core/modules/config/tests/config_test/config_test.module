@@ -7,6 +7,8 @@
 
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 
+use Drupal\Core\Entity\Query\QueryInterface;
+
 /**
  * Implements hook_cache_flush().
  */
@@ -40,4 +42,16 @@ function config_test_entity_type_alter(array &$entity_types) {
   if (\Drupal::service('state')->get('config_test.lookup_keys', FALSE)) {
     $entity_types['config_test']->set('lookup_keys', ['uuid', 'style']);
   }
+}
+
+/**
+ * Implements hook_entity_query_tag__ENTITY_TYPE__TAG_alter().
+ *
+ * Entity type is 'config_query_test' and tag is
+ * 'config_entity_query_alter_hook_test'.
+ *
+ * @see Drupal\KernelTests\Core\Entity\ConfigEntityQueryTest::testAlterHook
+ */
+function config_test_entity_query_tag__config_query_test__config_entity_query_alter_hook_test_alter(QueryInterface $query): void {
+  $query->condition('id', '7', '<>');
 }

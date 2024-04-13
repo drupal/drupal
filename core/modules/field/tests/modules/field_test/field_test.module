@@ -13,6 +13,7 @@
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -230,4 +231,47 @@ function field_test_entity_reference_selection_alter(array &$definitions): void 
   if (\Drupal::state()->get('field_test_disable_broken_entity_reference_handler')) {
     unset($definitions['broken']);
   }
+}
+
+/**
+ * Implements hook_entity_query_alter().
+ *
+ * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
+ */
+function field_test_entity_query_alter(QueryInterface $query): void {
+  if ($query->hasTag('entity_query_alter_hook_test')) {
+    $query->condition('id', '5', '<>');
+  }
+}
+
+/**
+ * Implements hook_entity_query_ENTITY_TYPE_alter() for 'entity_test_mulrev'.
+ *
+ * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
+ */
+function field_test_entity_query_entity_test_mulrev_alter(QueryInterface $query): void {
+  if ($query->hasTag('entity_query_entity_test_mulrev_alter_hook_test')) {
+    $query->condition('id', '7', '<>');
+  }
+}
+
+/**
+ * Implements hook_entity_query_tag__TAG_alter() for 'entity_query_alter_tag_test'.
+ *
+ * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
+ */
+function field_test_entity_query_tag__entity_query_alter_tag_test_alter(QueryInterface $query): void {
+  $query->condition('id', '13', '<>');
+}
+
+/**
+ * Implements hook_entity_query_tag__ENTITY_TYPE__TAG_alter().
+ *
+ * Entity type is 'entity_test_mulrev' and tag is
+ * 'entity_query_entity_test_mulrev_alter_tag_test'.
+ *
+ * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
+ */
+function field_test_entity_query_tag__entity_test_mulrev__entity_query_entity_test_mulrev_alter_tag_test_alter(QueryInterface $query): void {
+  $query->condition('id', '15', '<>');
 }

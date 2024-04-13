@@ -78,6 +78,9 @@ class Query extends QueryBase implements QueryInterface {
    * {@inheritdoc}
    */
   public function execute() {
+    // Invoke entity query alter hooks.
+    $this->alter();
+
     // Load the relevant config records.
     $configs = $this->loadRecords();
 
