@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\Views;
 
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
+use Prophecy\Argument;
+use Psr\Log\LoggerInterface;
 
 /**
  * Tests the roles filter handler.
@@ -101,6 +104,11 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
    * Tests that a warning is triggered if the filter references a missing role.
    */
   public function testMissingRole() {
+    $logger = $this->prophesize(LoggerInterface::class);
+    $this->container->get('logger.factory')
+      ->get('system')
+      ->addLogger($logger->reveal());
+
     $role = Role::create(['id' => 'test_user_role', 'label' => 'Test user role']);
     $role->save();
     /** @var \Drupal\views\Entity\View $view */
@@ -116,8 +124,16 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
     // Ensure no warning is triggered before the role is deleted.
     $view->calculateDependencies();
     $role->delete();
-    $this->expectWarning();
-    $this->expectWarningMessage('The test_user_role role does not exist. You should review and fix the configuration of the test_user_name view.');
+
+    // Recalculate after role deletion.
+    $logger->log(
+      RfcLogLevel::WARNING,
+      'View %view depends on role %role, but the role does not exist.',
+      Argument::allOf(
+        Argument::withEntry('%view', 'test_user_name'),
+        Argument::withEntry('%role', 'test_user_role'),
+      )
+    )->shouldBeCalled();
     $view->calculateDependencies();
   }
 
