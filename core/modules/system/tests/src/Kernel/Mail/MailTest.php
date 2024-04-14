@@ -44,6 +44,7 @@ class MailTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
+    $this->installConfig(['system']);
 
     // Set required site configuration.
     $this->config('system.site')

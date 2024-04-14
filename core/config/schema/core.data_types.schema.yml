@@ -207,7 +207,15 @@ config_object:
       requiredKey: false
       type: _core_config_info
     langcode:
+      requiredKey: false
       type: langcode
+  constraints:
+    # The `langcode` key:
+    # - MUST be specified when there are translatable values
+    # - MUST NOT be specified when there are no translatable values.
+    # Translatable values are specified for this config schema type (a subtype of `type: config_object`) if the
+    # `translatable` flag is present and set to `true` for *any* element in that config schema type.
+    LangcodeRequiredIfTranslatableValues: ~
 
 # Mail text with subject and body parts.
 mail:
