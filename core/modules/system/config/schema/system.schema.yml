@@ -313,18 +313,31 @@ system.file:
 system.image:
   type: config_object
   label: 'Image settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     toolkit:
       type: string
       label: 'Toolkit'
+      constraints:
+        PluginExists:
+          manager: 'image.toolkit.manager'
+          interface: '\Drupal\Core\ImageToolkit\ImageToolkitInterface'
 
 system.image.gd:
   type: config_object
   label: 'Image settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     jpeg_quality:
       type: integer
       label: 'JPEG quality'
+      constraints:
+        # @see \Drupal\system\Plugin\ImageToolkit\GDToolkit::buildConfigurationForm()
+        Range:
+          min: 0
+          max: 100
 
 system.mail:
   type: config_object
