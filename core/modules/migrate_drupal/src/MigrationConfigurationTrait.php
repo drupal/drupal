@@ -206,27 +206,23 @@ trait MigrationConfigurationTrait {
     // we're querying. Catch exceptions and report that the source database is
     // not Drupal.
     // Drupal 5/6/7 can be detected by the schema_version in the system table.
-    $version_string = FALSE;
     if ($connection->schema()->tableExists('system')) {
       try {
-        $legacy_version_string = $connection
+        $version_string = $connection
           ->query('SELECT [schema_version] FROM {system} WHERE [name] = :module', [':module' => 'system'])
           ->fetchField();
-        if ($legacy_version_string && $legacy_version_string[0] == '1') {
-          if ((int) $legacy_version_string >= 1000) {
-            $version_string = '5';
-          }
-        }
-        else {
-          $version_string = substr($legacy_version_string, 0, 1);
-        }
       }
       catch (DatabaseExceptionWrapper $e) {
         // All database errors return FALSE.
       }
     }
 
-    return $version_string;
+    return match (TRUE) {
+      !isset($version_string) => FALSE,
+      (int) $version_string >= 6000 => substr($version_string, 0, 1),
+      (int) $version_string >= 1000 => '5',
+      default => FALSE,
+    };
   }
 
   /**
