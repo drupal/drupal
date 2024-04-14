@@ -1899,18 +1899,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserRegistrationRestTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarningMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php',
