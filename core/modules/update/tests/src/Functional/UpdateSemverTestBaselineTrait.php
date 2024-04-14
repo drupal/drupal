@@ -18,7 +18,7 @@ trait UpdateSemverTestBaselineTrait {
   /**
    * Tests the Update Manager module when no updates are available.
    *
-   * The XML fixture file 'drupal.1.0.xml' which is one of the XML files this
+   * The XML fixture file 'drupal.8.1.0.xml' which is one of the XML files this
    * test uses also contains 2 extra releases that are newer than '8.0.1'. These
    * releases will not show as available updates because of the following
    * reasons:
@@ -30,7 +30,7 @@ trait UpdateSemverTestBaselineTrait {
       foreach ([0, 1] as $patch_version) {
         foreach (['-alpha1', '-beta1', ''] as $extra_version) {
           $this->setProjectInstalledVersion("8.$minor_version.$patch_version" . $extra_version);
-          $this->refreshUpdateStatus([$this->updateProject => "$minor_version.$patch_version" . $extra_version]);
+          $this->refreshUpdateStatus([$this->updateProject => "8.$minor_version.$patch_version" . $extra_version]);
           $this->standardTests();
           // The XML test fixtures for this method all contain the '8.2.0'
           // release but because '8.2.0' is not in a supported branch it will
@@ -58,7 +58,7 @@ trait UpdateSemverTestBaselineTrait {
     foreach ([0, 1] as $minor_version) {
       foreach (['-alpha1', '-beta1', ''] as $extra_version) {
         $full_version = "8.$minor_version.1$extra_version";
-        $this->refreshUpdateStatus([$this->updateProject => "$minor_version.1" . $extra_version]);
+        $this->refreshUpdateStatus([$this->updateProject => "8.$minor_version.1" . $extra_version]);
         $this->standardTests();
         $this->assertUpdateTableTextNotContains('Security update required!');
         // The XML test fixtures for this method all contain the '8.2.0' release
@@ -124,7 +124,7 @@ trait UpdateSemverTestBaselineTrait {
    *   releases supported, 8 and 9.
    */
   public function testMajorUpdateAvailable() {
-    foreach (['9', '8.0.0-9.0.0'] as $release_history) {
+    foreach (['9.0.0', '8.0.0-9.0.0'] as $release_history) {
       foreach ([0, 1] as $minor_version) {
         foreach ([0, 1] as $patch_version) {
           foreach (['-alpha1', '-beta1', ''] as $extra_version) {
@@ -142,7 +142,7 @@ trait UpdateSemverTestBaselineTrait {
               ->toString());
             $this->assertUpdateTableTextNotContains('Latest version:');
 
-            if ($release_history === '9') {
+            if ($release_history === '9.0.0') {
               $this->assertUpdateTableTextNotContains('Up to date');
               $this->assertUpdateTableTextContains('Not supported!');
               $this->assertVersionUpdateLinks('Recommended version:', '9.0.0');
@@ -173,15 +173,15 @@ trait UpdateSemverTestBaselineTrait {
    * whether the installed version is in a supported branch or not. This test
    * relies on 2 test XML fixtures that are identical except for the
    * 'supported_branches' value:
-   * - [::$updateProject].1.0.xml
+   * - [::$updateProject].8.1.0.xml
    *    'supported_branches' is '8.0.,8.1.'.
-   * - [::$updateProject].1.0-unsupported.xml
+   * - [::$updateProject].8.1.0-unsupported.xml
    *    'supported_branches' is '8.1.'.
    * They both have an '8.0.2' release that is unpublished and an '8.1.0'
    * release that is published and is the expected update.
    */
   public function testRevokedRelease() {
-    foreach (['1.0', '1.0-unsupported'] as $fixture) {
+    foreach (['8.1.0', '8.1.0-unsupported'] as $fixture) {
       $this->setProjectInstalledVersion('8.0.2');
       $this->refreshUpdateStatus([$this->updateProject => $fixture]);
       $this->standardTests();
@@ -196,16 +196,16 @@ trait UpdateSemverTestBaselineTrait {
    * the installed version is in a supported branch or not. This test relies on
    * 2 test XML fixtures that are identical except for the 'supported_branches'
    * value:
-   * - [::$updateProject].1.0.xml
+   * - [::$updateProject].8.1.0.xml
    *    'supported_branches' is '8.0.,8.1.'.
-   * - [::$updateProject].1.0-unsupported.xml
+   * - [::$updateProject].8.1.0-unsupported.xml
    *    'supported_branches' is '8.1.'.
    * They both have an '8.0.3' release that has the 'Release type' value of
    * 'unsupported' and an '8.1.0' release that has the 'Release type' value of
    * 'supported' and is the expected update.
    */
   public function testUnsupportedRelease() {
-    foreach (['1.0', '1.0-unsupported'] as $fixture) {
+    foreach (['8.1.0', '8.1.0-unsupported'] as $fixture) {
       $this->setProjectInstalledVersion('8.0.3');
       $this->refreshUpdateStatus([$this->updateProject => $fixture]);
       $this->standardTests();
