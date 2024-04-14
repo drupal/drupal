@@ -135,7 +135,6 @@
                 "[web-root]/README.md": "assets/scaffold/files/drupal.README.md",
                 "[web-root]/robots.txt": "assets/scaffold/files/robots.txt",
                 "[web-root]/update.php": "assets/scaffold/files/update.php",
-                "[web-root]/web.config": "assets/scaffold/files/web.config",
                 "[web-root]/sites/README.txt": "assets/scaffold/files/sites.README.txt",
                 "[web-root]/sites/development.services.yml": "assets/scaffold/files/development.services.yml",
                 "[web-root]/sites/example.settings.local.php": "assets/scaffold/files/example.settings.local.php",

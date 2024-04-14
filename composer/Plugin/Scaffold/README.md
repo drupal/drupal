@@ -450,7 +450,6 @@ Sample composer.json for composer-scaffold files in drupal/assets:
         "[web-root]/index.php": "assets/index.php",
         "[web-root]/robots.txt": "assets/robots.txt",
         "[web-root]/update.php": "assets/update.php",
-        "[web-root]/web.config": "assets/web.config"
       }
     }
   }

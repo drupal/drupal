@@ -166,12 +166,10 @@ class VendorHardeningPluginTest extends TestCase {
     $this->assertDirectoryExists($dir);
 
     $this->assertFileDoesNotExist($dir . '/.htaccess');
-    $this->assertFileDoesNotExist($dir . '/web.config');
 
     $plugin->writeAccessRestrictionFiles($dir);
 
     $this->assertFileExists($dir . '/.htaccess');
-    $this->assertFileExists($dir . '/web.config');
   }
 
   public static function providerFindBinOverlap() {

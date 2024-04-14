@@ -16,8 +16,7 @@
         "[web-root]/sites/example.sites.php": "assets/example.sites.php",
         "[web-root]/index.php": "assets/index.php",
         "[web-root]/robots.txt": "assets/robots.txt",
-        "[web-root]/update.php": "assets/update.php",
-        "[web-root]/web.config": "assets/web.config"
+        "[web-root]/update.php": "assets/update.php"
       }
     }
   }

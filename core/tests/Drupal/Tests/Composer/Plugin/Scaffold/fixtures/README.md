@@ -30,7 +30,6 @@ Scaffolding files for fixtures/drupal-assets-fixture:
   - Link [web-root]/index.php from assets/index.php
   - Skip [web-root]/robots.txt: overridden in my/project
   - Link [web-root]/update.php from assets/update.php
-  - Link [web-root]/web.config from assets/web.config
 Scaffolding files for fixtures/scaffold-override-fixture:
   - Link [web-root]/sites/default/default.settings.php from assets/override-settings.php
 Scaffolding files for my/project:

@@ -370,18 +370,15 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
   }
 
   /**
-   * Place .htaccess and web.config files into the vendor directory.
+   * Place .htaccess file into the vendor directory.
    *
    * @param string $vendor_dir
    *   Path to vendor directory.
    */
   public function writeAccessRestrictionFiles(string $vendor_dir): void {
-    $this->io->writeError('<info>Hardening vendor directory with .htaccess and web.config files.</info>');
+    $this->io->writeError('<info>Hardening vendor directory with .htaccess file.</info>');
     // Prevent access to vendor directory on Apache servers.
     FileSecurity::writeHtaccess($vendor_dir, TRUE);
-
-    // Prevent access to vendor directory on IIS servers.
-    FileSecurity::writeWebConfig($vendor_dir);
   }
 
 }
