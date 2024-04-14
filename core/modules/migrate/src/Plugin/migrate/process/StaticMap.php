@@ -29,6 +29,13 @@ use Drupal\migrate\MigrateSkipRowException;
  * - default_value: (optional) The value to return if the source is not found in
  *   the map array.
  *
+ * While this plugin supports map key values which contain a dot (.), Drupal
+ * configuration export does not export keys which contain a dot. Be careful
+ * when using this feature with migrations that are stored as configuration
+ * entities. These entities cannot contain keys with a dot. In this case,
+ * additional manipulation with either custom or contrib process plugins is
+ * needed.
+ *
  * Examples:
  *
  * If the value of the source property 'foo' is 'from' then the value of the
@@ -133,11 +140,6 @@ use Drupal\migrate\MigrateSkipRowException;
  *       0: foo
  *       1: bar
  * @endcode
- *
- * Mapping from a string which contains a period is not supported. A custom
- * process plugin can be written to handle this kind of a transformation.
- * Another option which may be feasible in certain use cases is to first pass
- * the value through the machine_name process plugin.
  *
  * @see https://www.drupal.org/project/drupal/issues/2827897
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
