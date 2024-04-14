@@ -137,7 +137,7 @@ class UpdateMiscTest extends UpdateTestBase {
         ->toString())
       ->save();
     $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.0'])
+      ->set('xml_map', ['drupal' => '8.0.0'])
       ->save();
 
     $this->drupalGet('admin/reports/updates');
@@ -163,7 +163,7 @@ class UpdateMiscTest extends UpdateTestBase {
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
     $this->config('update_test.settings')
-      ->set('xml_map', ['drupal' => '0.1'])
+      ->set('xml_map', ['drupal' => '8.0.1'])
       ->save();
 
     $this->drupalGet('admin/reports/updates');
@@ -199,7 +199,7 @@ class UpdateMiscTest extends UpdateTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->mockReleaseHistory(['drupal' => 'sec.0.2']);
+    $this->mockReleaseHistory(['drupal' => 'sec.8.0.2']);
 
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
@@ -232,7 +232,7 @@ class UpdateMiscTest extends UpdateTestBase {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
       ->save();
-    $this->mockReleaseHistory(['drupal' => '0.0']);
+    $this->mockReleaseHistory(['drupal' => '8.0.0']);
 
     $this->cronRun();
     $this->drupalGet('admin/modules');
