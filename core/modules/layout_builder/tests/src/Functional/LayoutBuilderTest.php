@@ -703,6 +703,10 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     // Prepare an object with a pre-existing section.
     $this->container->get('config.factory')->getEditable('layout_builder_test.test_simple_config.existing')
       ->set('sections', [(new Section('layout_twocol'))->toArray()])
+      // `layout_builder_test.test_simple_config.existing.sections.0.layout_settings.label`
+      // contains a translatable label, so a `langcode` is required.
+      // @see \Drupal\Core\Config\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
+      ->set('langcode', 'en')
       ->save();
 
     // The pre-existing section is found.

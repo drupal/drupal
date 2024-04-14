@@ -5,12 +5,17 @@
  * Post update functions for System.
  */
 
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Config\Schema\Mapping;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Implements hook_removed_post_updates().
@@ -231,6 +236,70 @@ function system_post_update_sdc_uninstall() {
   if (\Drupal::moduleHandler()->moduleExists('sdc')) {
     \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
   }
+}
+
+/**
+ * Adds a langcode to all simple config which needs it.
+ */
+function system_post_update_add_langcode_to_all_translatable_config(&$sandbox = NULL): TranslatableMarkup {
+  $config_factory = \Drupal::configFactory();
+
+  // If this is the first run, populate the sandbox with the names of all
+  // config objects.
+  if (!isset($sandbox['names'])) {
+    $sandbox['names'] = $config_factory->listAll();
+    $sandbox['max'] = count($sandbox['names']);
+  }
+
+  /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
+  $typed_config_manager = \Drupal::service(TypedConfigManagerInterface::class);
+  /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
+  $config_manager = \Drupal::service(ConfigManagerInterface::class);
+  $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+
+  $names = array_splice($sandbox['names'], 0, Settings::get('entity_update_batch_size', 50));
+  foreach ($names as $name) {
+    // We're only dealing with simple config, which won't map to an entity type.
+    // But if this is a simple config object that has no schema, we can't do
+    // anything here and we don't need to, because config must have schema in
+    // order to be translatable.
+    if ($config_manager->getEntityTypeIdByName($name) || !$typed_config_manager->hasConfigSchema($name)) {
+      continue;
+    }
+
+    $config = \Drupal::configFactory()->getEditable($name);
+    $typed_config = $typed_config_manager->createFromNameAndData($name, $config->getRawData());
+    // Simple config is always a mapping.
+    assert($typed_config instanceof Mapping);
+
+    // If this config contains any elements (at any level of nesting) which
+    // are translatable, but the config hasn't got a langcode, assign one. But
+    // if nothing in the config structure is translatable, the config shouldn't
+    // have a langcode at all.
+    if ($typed_config->hasTranslatableElements()) {
+      if ($config->get('langcode')) {
+        continue;
+      }
+      $config->set('langcode', $default_langcode);
+    }
+    else {
+      if (!array_key_exists('langcode', $config->get())) {
+        continue;
+      }
+      $config->clear('langcode');
+    }
+    $config->save();
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) || empty($sandbox['names']) ? 1 : ($sandbox['max'] - count($sandbox['names'])) / $sandbox['max'];
+  if ($sandbox['#finished'] === 1) {
+    return new TranslatableMarkup('Finished updating simple config langcodes.');
+  }
+  return new PluralTranslatableMarkup($sandbox['max'] - count($sandbox['names']),
+    'Processed @count items of @total.',
+    'Processed @count items of @total.',
+    ['@total' => $sandbox['max']],
+  );
 }
 
 /**

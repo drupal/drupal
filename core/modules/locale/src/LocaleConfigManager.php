@@ -668,8 +668,12 @@ class LocaleConfigManager {
         // Should only update if still exists in active configuration. If locale
         // module is enabled later, then some configuration may not exist anymore.
         if (!$config->isNew()) {
+          $typed_config = $this->typedConfigManager->createFromNameAndData($config->getName(), $config->getRawData());
           $langcode = $config->get('langcode');
-          if (empty($langcode) || $langcode == 'en') {
+          // Only set a `langcode` if this config actually contains translatable
+          // data.
+          // @see \Drupal\Core\Config\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
+          if (!empty($this->getTranslatableData($typed_config)) && (empty($langcode) || $langcode == 'en')) {
             $config->set('langcode', $default_langcode)->save();
           }
         }

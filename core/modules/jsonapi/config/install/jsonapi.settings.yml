@@ -1,4 +1,3 @@
-langcode: en
 read_only: true
 maintenance_header_retry_seconds:
   min: 5

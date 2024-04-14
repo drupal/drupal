@@ -93,13 +93,6 @@ trait SchemaCheckTrait {
    *   valid.
    */
   public function checkConfigSchema(TypedConfigManagerInterface $typed_config, $config_name, $config_data, bool $validate_constraints = FALSE) {
-    // We'd like to verify that the top-level type is either config_base,
-    // config_entity, or a derivative. The only thing we can really test though
-    // is that the schema supports having langcode in it. So add 'langcode' to
-    // the data if it doesn't already exist.
-    if (!isset($config_data['langcode'])) {
-      $config_data['langcode'] = 'en';
-    }
     $this->configName = $config_name;
     if (!$typed_config->hasConfigSchema($config_name)) {
       return FALSE;

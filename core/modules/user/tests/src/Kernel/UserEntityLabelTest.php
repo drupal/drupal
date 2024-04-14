@@ -31,6 +31,7 @@ class UserEntityLabelTest extends KernelTestBase {
    */
   public function testLabelCallback() {
     $this->installEntitySchema('user');
+    $this->installConfig(['user']);
 
     $account = $this->createUser();
     $anonymous = User::create(['uid' => 0]);
