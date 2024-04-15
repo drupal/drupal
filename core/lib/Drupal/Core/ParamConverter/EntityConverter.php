@@ -167,7 +167,7 @@ class EntityConverter implements ParamConverterInterface {
    * {@inheritdoc}
    */
   public function applies($definition, $name, Route $route) {
-    if (!empty($definition['type']) && strpos($definition['type'], 'entity:') === 0) {
+    if (!empty($definition['type']) && str_starts_with($definition['type'], 'entity:')) {
       $entity_type_id = substr($definition['type'], strlen('entity:'));
       if (str_contains($definition['type'], '{')) {
         $entity_type_slug = substr($entity_type_id, 1, -1);
