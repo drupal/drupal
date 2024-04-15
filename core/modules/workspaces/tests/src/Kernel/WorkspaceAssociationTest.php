@@ -132,8 +132,29 @@ class WorkspaceAssociationTest extends KernelTestBase {
       'dev' => [3, 4, 5, 6, 7, 8, 9],
     ];
     $expected_initial_revisions += [
-      'stage' => [7, 8],
+      'dev' => [7, 8],
     ];
+    $this->assertWorkspaceAssociations('node', $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
+
+    // Merge 'dev' into 'stage' and check the workspace associations.
+    /** @var \Drupal\workspaces\WorkspaceMergerInterface $workspace_merger */
+    $workspace_merger = \Drupal::service('workspaces.operation_factory')->getMerger($this->workspaces['dev'], $this->workspaces['stage']);
+    $workspace_merger->merge();
+
+    // The latest revisions from 'dev' are now tracked in 'stage'.
+    $expected_latest_revisions['stage'] = $expected_latest_revisions['dev'];
+
+    // Two revisions (8 and 9) were created for 'Test article 6', but only the
+    // latest one (9) is being merged into 'stage'.
+    $expected_all_revisions['stage'] = [3, 4, 5, 6, 7, 9];
+
+    // Revision 7 was both an initial and latest revision in 'dev', so it is now
+    // considered an initial revision in 'stage'.
+    $expected_initial_revisions['stage'] = [4, 5, 7];
+
+    // Which leaves revision 8 as the only remaining initial revision in 'dev'.
+    $expected_initial_revisions['dev'] = [8];
+
     $this->assertWorkspaceAssociations('node', $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
   }
 
