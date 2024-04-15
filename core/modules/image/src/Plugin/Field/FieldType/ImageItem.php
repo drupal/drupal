@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
@@ -51,6 +52,8 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  * )
  */
 class ImageItem extends FileItem {
+
+  use LoggerChannelTrait;
 
   /**
    * {@inheritdoc}
@@ -332,7 +335,7 @@ class ImageItem extends FileItem {
       }
     }
     else {
-      trigger_error(sprintf("Missing file with ID %s.", $this->target_id), E_USER_WARNING);
+      $this->getLogger('image')->warning("Missing file with ID %id.", ['%id' => $this->target_id]);
     }
   }
 
