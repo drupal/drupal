@@ -16,6 +16,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\TypedData\DataReferenceTargetDefinition;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
@@ -41,6 +42,8 @@ use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
  * @see \Drupal\jsonapi\ResourceType\ResourceType
  */
 class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
+
+  use LoggerChannelTrait;
 
   /**
    * The entity type manager.
@@ -467,16 +470,15 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
         // is not guaranteed during this period and may cause confusing and
         // unnecessary warnings.
         if (!InstallerKernel::installationAttempted()) {
-          trigger_error(
-            sprintf(
-              'The "%s" at "%s:%s" references the "%s:%s" entity type that does not exist.',
-              $field_definition->getName(),
-              $field_definition->getTargetEntityTypeId(),
-              $field_definition->getTargetBundle(),
-              $entity_type_id,
-              $target_bundle
-            ),
-            E_USER_WARNING
+          $this->getLogger('jsonapi')->warning(
+            'The "@name" at "@target_entity_type_id:@target_bundle" references the "@entity_type_id:@bundle" entity type that does not exist.',
+            [
+              '@name' => $field_definition->getName(),
+              '@target_entity_type_id' => $field_definition->getTargetEntityTypeId(),
+              '@target_bundle' => $field_definition->getTargetBundle(),
+              '@entity_type_id' => $entity_type_id,
+              '@bundle' => $target_bundle,
+            ],
           );
         }
       }
