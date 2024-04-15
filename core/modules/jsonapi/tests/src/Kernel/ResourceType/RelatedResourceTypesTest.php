@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\ResourceType;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\node\Entity\NodeType;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * @coversDefaultClass \Drupal\jsonapi\ResourceType\ResourceType
@@ -28,6 +28,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
     'system',
     'user',
     'field',
+    'dblog',
   ];
 
   /**
@@ -63,6 +64,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
     // Add the additional table schemas.
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
+    $this->installSchema('dblog', ['watchdog']);
 
     NodeType::create([
       'type' => 'foo',
@@ -202,17 +204,22 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
     ]);
     $fields = $field_config_storage->loadByProperties(['field_name' => 'field_ref_with_missing_bundle']);
     static::assertSame(['missing_bundle'], $fields['node.foo.field_ref_with_missing_bundle']->getItemDefinition()->getSetting('handler_settings')['target_bundles']);
-
-    try {
-      $this->resourceTypeRepository->get('node', 'foo')->getRelatableResourceTypesByField('field_ref_with_missing_bundle');
-      static::fail('The above code must produce a warning since the "missing_bundle" does not exist.');
-    }
-    catch (Warning $e) {
-      static::assertSame(
-        'The "field_ref_with_missing_bundle" at "node:foo" references the "node:missing_bundle" entity type that does not exist.',
-        $e->getMessage()
-      );
-    }
+    $a = $this->resourceTypeRepository->get('node', 'foo')->getRelatableResourceTypesByField('field_ref_with_missing_bundle');
+    static::assertSame(['missing_bundle'], $fields['node.foo.field_ref_with_missing_bundle']->getItemDefinition()->getSetting('handler_settings')['target_bundles']);
+    $arguments = [
+      '@name' => 'field_ref_with_missing_bundle',
+      '@target_entity_type_id' => 'node',
+      '@target_bundle' => 'foo',
+      '@entity_type_id' => 'node',
+      '@bundle' => 'missing_bundle',
+    ];
+    $logged = Database::getConnection()->select('watchdog')
+      ->fields('watchdog', ['variables'])
+      ->condition('type', 'jsonapi')
+      ->condition('message', 'The "@name" at "@target_entity_type_id:@target_bundle" references the "@entity_type_id:@bundle" entity type that does not exist.')
+      ->execute()
+      ->fetchField();
+    $this->assertEquals(serialize($arguments), $logged);
   }
 
   /**
