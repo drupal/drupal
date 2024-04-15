@@ -229,10 +229,10 @@ default:
     _TARGET_PHP: "8.3"
     _TARGET_DB: "pgsql-16"
 
-'PHP 8.3 SQLite 3':
+'PHP 8.3 SQLite 3.45':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "sqlite-3"
 
 # Jobs running on commits.
@@ -247,8 +247,8 @@ default:
   needs: [ '[Commit] PHP 8.3 MySQL 5.7' ]
   <<: [ *run-on-commit ]
 
-'[Commit] PHP 8.3 SQLite 3':
-  extends: 'PHP 8.3 SQLite 3'
+'[Commit] PHP 8.3 SQLite 3.45':
+  extends: 'PHP 8.3 SQLite 3.45'
   needs: [ '[Commit] PHP 8.3 PostgreSQL 16' ]
   <<: [ *run-on-commit ]
 
@@ -259,14 +259,14 @@ default:
   needs: [ 'DEFAULT: PHP 8.3 MySQL 8' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.3 SQLite 3':
-  extends: 'PHP 8.3 SQLite 3'
+'[Daily] PHP 8.3 SQLite 3.45':
+  extends: 'PHP 8.3 SQLite 3.45'
   needs: [ '[Daily] PHP 8.3 PostgreSQL 16' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.3 MariaDB 10.3.22':
   extends: 'PHP 8.3 MariaDB 10.3.22'
-  needs: [ '[Daily] PHP 8.3 SQLite 3' ]
+  needs: [ '[Daily] PHP 8.3 SQLite 3.45' ]
   <<: [ *run-daily ]
 
 ################
