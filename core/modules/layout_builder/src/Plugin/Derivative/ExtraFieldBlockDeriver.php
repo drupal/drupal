@@ -4,11 +4,11 @@ namespace Drupal\layout_builder\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -64,15 +64,15 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
    *   The entity type bundle info.
    * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entity_type_repository
    *   The entity type repository.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
    */
   public function __construct(
     EntityFieldManagerInterface $entity_field_manager,
     EntityTypeManagerInterface $entity_type_manager,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     EntityTypeRepositoryInterface $entity_type_repository,
-    protected ConfigFactoryInterface $configFactory,
+    protected ModuleHandlerInterface $moduleHandler,
   ) {
     $this->entityFieldManager = $entity_field_manager;
     $this->entityTypeManager = $entity_type_manager;
@@ -89,7 +89,7 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
       $container->get('entity_type.manager'),
       $container->get('entity_type.bundle.info'),
       $container->get('entity_type.repository'),
-      $container->get('config.factory')
+      $container->get('module_handler')
     );
   }
 
@@ -99,7 +99,7 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
   public function getDerivativeDefinitions($base_plugin_definition) {
     $entity_type_labels = $this->entityTypeRepository->getEntityTypeLabels();
     $enabled_bundle_ids = $this->bundleIdsWithLayoutBuilderDisplays();
-    $expose_all_fields = $this->configFactory->get('layout_builder.settings')->get('expose_all_field_blocks');
+    $expose_all_fields = $this->moduleHandler->moduleExists('layout_builder_expose_all_field_blocks');
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
       // Only process fieldable entity types.
       if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {

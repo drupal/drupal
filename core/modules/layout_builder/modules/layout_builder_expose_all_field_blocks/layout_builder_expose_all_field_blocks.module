@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Module implementation file.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function layout_builder_expose_all_field_blocks_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.layout_builder_expose_all_field_blocks':
+      $output = '<h2>' . t('About') . '</h2>';
+      $output .= '<p>' . t('The Layout Builder Expose All Field Blocks module is a Feature Flag module which, when enabled, exposes all fields on all bundles as field blocks for use in Layout Builder.') . '</p>';
+      $output .= '<p>' . t('Leaving this module enabled can significantly affect the performance of medium to large sites due to the number of Field Block plugins that will be created. It is recommended to turn it off if possible.') . '</p>';
+      $output .= '<p>' . t('While it is recommended to turn this module off, note that this may remove blocks that are already being used in existing site configurations.') . '</p>';
+      $output .= '<p>' . t("For example, if you have Layout Builder enabled on a Node bundle (Content type), and that bundle's display is using field blocks from the User entity (e.g the Author's name), but Layout Builder is not enabled for the User bundle, then that field block would no longer exist after disabling this module.") . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":href">online documentation for the Layout Builder Expose All Field Blocks module</a>.', [':href' => 'https://www.drupal.org/node/3223395#s-layout-builder-expose-all-field-blocks']) . '</p>';
+      return $output;
+  }
+  return NULL;
+}

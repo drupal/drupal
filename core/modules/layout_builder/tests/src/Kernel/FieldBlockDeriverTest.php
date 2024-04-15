@@ -11,6 +11,7 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
  * Tests field block plugin derivatives.
  *
  * @group layout_builder
+ * @group legacy
  */
 class FieldBlockDeriverTest extends EntityKernelTestBase {
 
@@ -57,9 +58,7 @@ class FieldBlockDeriverTest extends EntityKernelTestBase {
     $this->assertNotContains('extra_field_block:user:user:member_for', $plugins);
 
     // Exposing all field blocks adds them for the user entity type.
-    \Drupal::configFactory()->getEditable('layout_builder.settings')
-      ->set('expose_all_field_blocks', TRUE)
-      ->save();
+    \Drupal::service('module_installer')->install(['layout_builder_expose_all_field_blocks']);
     $plugins = $this->getBlockPluginIds();
     $this->assertContains('field_block:user:user:name', $plugins);
     $this->assertContains('extra_field_block:user:user:member_for', $plugins);
