@@ -1,7 +1,6 @@
 name: 'Layout Builder'
 type: module
 description: 'Allows users to add and arrange blocks and content fields directly on the content.'
-configure: layout_builder.settings
 package: Core
 version: VERSION
 dependencies:

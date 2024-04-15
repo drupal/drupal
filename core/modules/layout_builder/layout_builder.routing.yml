@@ -1,11 +1,3 @@
-layout_builder.settings:
-  path: '/admin/config/content/layout-builder'
-  defaults:
-    _form: '\Drupal\layout_builder\Form\LayoutBuilderSettingsForm'
-    _title: 'Layout Builder'
-  requirements:
-    _permission: 'administer layout builder'
-
 layout_builder.choose_section:
   path: '/layout_builder/choose/section/{section_storage_type}/{section_storage}/{delta}'
   defaults:

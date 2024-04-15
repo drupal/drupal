@@ -1,0 +1,9 @@
+name: 'Layout Builder Expose All Field Blocks'
+type: module
+description: 'When enabled, this module exposes all fields for all entity view displays. When disabled, only entity type bundles that have layout builder enabled will have their fields exposed. Enabling this module could significantly decrease performance on sites with a large number of entity types and bundles.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:layout_builder
+lifecycle: deprecated
+lifecycle_link: "https://www.drupal.org/node/3223395#s-layout-builder-expose-all-field-blocks"

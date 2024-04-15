@@ -4,10 +4,10 @@ namespace Drupal\layout_builder\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\FormatterPluginManager;
@@ -70,8 +70,8 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
    *   The formatter manager.
    * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $entityViewDisplayStorage
    *   The entity view display storage.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
    */
   public function __construct(
     EntityTypeRepositoryInterface $entity_type_repository,
@@ -79,7 +79,7 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
     FieldTypePluginManagerInterface $field_type_manager,
     FormatterPluginManager $formatter_manager,
     protected ConfigEntityStorageInterface $entityViewDisplayStorage,
-    protected ConfigFactoryInterface $configFactory,
+    protected ModuleHandlerInterface $moduleHandler,
   ) {
     $this->entityTypeRepository = $entity_type_repository;
     $this->entityFieldManager = $entity_field_manager;
@@ -97,7 +97,7 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
       $container->get('plugin.manager.field.field_type'),
       $container->get('plugin.manager.field.formatter'),
       $container->get('entity_type.manager')->getStorage('entity_view_display'),
-      $container->get('config.factory')
+      $container->get('module_handler')
     );
   }
 
@@ -170,7 +170,7 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
 
     // If all fields are exposed as field blocks, just return the field map
     // without any further processing.
-    if ($this->configFactory->get('layout_builder.settings')->get('expose_all_field_blocks')) {
+    if ($this->moduleHandler->moduleExists('layout_builder_expose_all_field_blocks')) {
       return $field_map;
     }
 

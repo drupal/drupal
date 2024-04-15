@@ -71,10 +71,8 @@ function layout_builder_post_update_timestamp_formatter(array &$sandbox = NULL):
 }
 
 /**
- * Configure the default expose all fields setting.
+ * Enable the expose all fields feature flag module.
  */
-function layout_builder_post_update_default_expose_field_block_setting(): void {
-  \Drupal::configFactory()->getEditable('layout_builder.settings')
-    ->set('expose_all_field_blocks', TRUE)
-    ->save(TRUE);
+function layout_builder_post_update_enable_expose_field_block_feature_flag(): void {
+  \Drupal::service('module_installer')->install(['layout_builder_expose_all_field_blocks']);
 }

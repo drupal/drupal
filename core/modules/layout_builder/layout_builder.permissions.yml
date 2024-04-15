@@ -1,6 +1,3 @@
-administer layout builder:
-  title: 'Administer layout builder'
-  restrict access: true
 configure any layout:
   title: 'Configure any layout'
   restrict access: true

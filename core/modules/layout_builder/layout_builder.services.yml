@@ -68,6 +68,3 @@ services:
   layout_builder.element.prepare_layout:
     class: Drupal\layout_builder\EventSubscriber\PrepareLayout
     arguments: ['@layout_builder.tempstore_repository', '@messenger']
-  layout_builder.config_subscriber:
-    class: Drupal\layout_builder\EventSubscriber\LayoutBuilderConfigSubscriber
-    arguments: ['@plugin.manager.block']
