@@ -116,13 +116,13 @@ class PhpSelection extends DefaultSelection {
         return array_search($label, $match) === FALSE;
 
       case 'STARTS_WITH':
-        return strpos($label, $match) === 0;
+        return str_starts_with($label, $match);
 
       case 'CONTAINS':
         return str_contains($label, $match);
 
       case 'ENDS_WITH':
-        return mb_substr($label, -mb_strlen($match)) === (string) $match;
+        return str_ends_with($label, $match);
 
       case 'IS NOT NULL':
         return TRUE;

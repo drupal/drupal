@@ -200,13 +200,13 @@ class Condition extends ConditionBase {
           return array_search($value, $condition['value']) === FALSE;
 
         case 'STARTS_WITH':
-          return strpos($value, $condition['value']) === 0;
+          return str_starts_with($value, $condition['value']);
 
         case 'CONTAINS':
           return str_contains($value, $condition['value']);
 
         case 'ENDS_WITH':
-          return substr($value, -strlen($condition['value'])) === (string) $condition['value'];
+          return str_ends_with($value, $condition['value']);
 
         default:
           throw new QueryException('Invalid condition operator.');

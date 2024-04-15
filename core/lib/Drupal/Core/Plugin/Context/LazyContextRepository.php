@@ -58,7 +58,7 @@ class LazyContextRepository implements ContextRepositoryInterface {
         $contexts[$id] = $this->contexts[$id];
         continue;
       }
-      assert($id[0] === '@' && strpos($id, ':'), 'You must provide the context IDs in the @{service_id}:{unqualified_context_id} format.');
+      assert($id[0] === '@' && str_contains($id, ':'), 'You must provide the context IDs in the @{service_id}:{unqualified_context_id} format.');
       list($service_id, $unqualified_context_id) = explode(':', $id, 2);
       // Remove the leading '@'.
       $service_id = substr($service_id, 1);
