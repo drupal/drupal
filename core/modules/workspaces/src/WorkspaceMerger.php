@@ -2,7 +2,6 @@
 
 namespace Drupal\workspaces;
 
-use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Utility\Error;
@@ -51,13 +50,6 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
   protected $workspaceAssociation;
 
   /**
-   * The cache tag invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
    * Constructs a new WorkspaceMerger.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -66,8 +58,6 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
    *   Database connection.
    * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
    *   The workspace association service.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
-   *   The cache tags invalidator service.
    * @param \Drupal\workspaces\WorkspaceInterface $source
    *   The source workspace.
    * @param \Drupal\workspaces\WorkspaceInterface $target
@@ -75,11 +65,10 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceAssociationInterface $workspace_association, CacheTagsInvalidatorInterface $cache_tags_invalidator, WorkspaceInterface $source, WorkspaceInterface $target, protected ?LoggerInterface $logger = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceAssociationInterface $workspace_association, WorkspaceInterface $source, WorkspaceInterface $target, protected ?LoggerInterface $logger = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->workspaceAssociation = $workspace_association;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
     $this->sourceWorkspace = $source;
     $this->targetWorkspace = $target;
     if ($this->logger === NULL) {
@@ -103,21 +92,23 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
     try {
       $transaction = $this->database->startTransaction();
       foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
+        $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         $revisions_on_source = $this->entityTypeManager->getStorage($entity_type_id)
           ->loadMultipleRevisions(array_keys($revision_difference));
 
-        /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+        /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
         foreach ($revisions_on_source as $revision) {
           // Track all the differing revisions from the source workspace in
           // the context of the target workspace. This will automatically
           // update all the descendants of the target workspace as well.
           $this->workspaceAssociation->trackEntity($revision, $this->targetWorkspace);
-        }
 
-        // Since we're not saving entity objects, we need to invalidate the list
-        // cache tags manually.
-        $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-        $this->cacheTagsInvalidator->invalidateTags($entity_type->getListCacheTags());
+          // Set the workspace in which the revision was merged.
+          $field_name = $entity_type->getRevisionMetadataKey('workspace');
+          $revision->{$field_name}->target_id = $this->targetWorkspace->id();
+          $revision->setSyncing(TRUE);
+          $revision->save();
+        }
       }
     }
     catch (\Exception $e) {
