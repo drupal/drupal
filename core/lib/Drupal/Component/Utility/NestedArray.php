@@ -138,7 +138,7 @@ class NestedArray {
    * @param bool $force
    *   (optional) If TRUE, the value is forced into the structure even if it
    *   requires the deletion of an already existing non-array parent value. If
-   *   FALSE, PHP throws an error if trying to add into a value that is not an
+   *   FALSE, throws an exception if trying to add into a value that is not an
    *   array. Defaults to FALSE.
    *
    * @see NestedArray::unsetValue()
@@ -149,7 +149,10 @@ class NestedArray {
     foreach ($parents as $parent) {
       // PHP auto-creates container arrays and NULL entries without error if $ref
       // is NULL, but throws an error if $ref is set, but not an array.
-      if ($force && isset($ref) && !is_array($ref)) {
+      if (isset($ref) && !is_array($ref)) {
+        if (!$force) {
+          throw new \LogicException('Cannot create key "' . $parent . '" on non-array value.');
+        }
         $ref = [];
       }
       $ref = &$ref[$parent];
