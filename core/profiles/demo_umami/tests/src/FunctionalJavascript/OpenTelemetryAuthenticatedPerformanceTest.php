@@ -11,6 +11,7 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  *
  * @group OpenTelemetry
  * @group #slow
+ * @requires extension apcu
  */
 class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
 

@@ -68,10 +68,10 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
     // any overhead up until this point.
     $lock = \Drupal::lock();
 
-    // This loop should be safe because we know a very finite number of requests
-    // will be trying to acquire a lock at any one time.
-    while (!$lock->acquire('performance_test')) {
-      $lock->wait();
+    // There are a finite number of requests, so if we don't get the lock just
+    // wait for up to ten seconds then record the data anyway.
+    if (!$lock->acquire('performance_test')) {
+      $lock->wait('performance_test', 10);
     }
     $collection = \Drupal::keyValue('performance_test');
     $existing_data = $collection->get('performance_test_data') ?? [
