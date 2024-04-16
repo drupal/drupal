@@ -17,6 +17,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Token;
 use Drupal\file\Entity\File;
 use Drupal\file\Upload\ContentDispositionFilenameParser;
+use Drupal\file\Upload\FileUploadLocationTrait;
 use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\file\Validation\FileValidatorSettingsTrait;
@@ -62,6 +63,9 @@ class FileUploadResource extends ResourceBase {
   use FileValidatorSettingsTrait;
   use EntityResourceValidationTrait {
     validate as resourceValidate;
+  }
+  use FileUploadLocationTrait {
+    getUploadLocation as getUploadDestination;
   }
 
   /**
@@ -282,7 +286,7 @@ class FileUploadResource extends ResourceBase {
 
     $field_definition = $this->validateAndLoadFieldDefinition($entity_type_id, $bundle, $field_name);
 
-    $destination = $this->getUploadLocation($field_definition->getSettings());
+    $destination = $this->getUploadDestination($field_definition);
 
     // Check the destination file path is writable.
     if (!$this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
@@ -491,8 +495,14 @@ class FileUploadResource extends ResourceBase {
    * @return string
    *   An un-sanitized file directory URI with tokens replaced. The result of
    *   the token replacement is then converted to plain text and returned.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   * \Drupal\file\Upload\FileUploadLocationTrait::getUploadLocation() instead.
+   *
+   * @see https://www.drupal.org/node/3406099
    */
   protected function getUploadLocation(array $settings) {
+    @\trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileUploadLocationTrait::getUploadLocation() instead. See https://www.drupal.org/node/3406099', E_USER_DEPRECATED);
     $destination = trim($settings['file_directory'], '/');
 
     // Replace tokens. As the tokens might contain HTML we convert it to plain
