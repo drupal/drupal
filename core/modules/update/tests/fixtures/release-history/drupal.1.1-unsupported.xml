@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-This XML file is the exact same as the file drupal.1.0.xml except
-'supported_branches' in this file does not contain the '8.0.' branch. Therefore,
-all the releases that start with '8.0.' are in an unsupported branch.
+This file contains release history for '8.0' and '8.1'. Only '8.0' is
+supported.
 -->
 <project xmlns:dc="http://purl.org/dc/elements/1.1/">
 <title>Drupal</title>
 <short_name>drupal</short_name>
 <dc:creator>Drupal</dc:creator>
-<supported_branches>8.1.</supported_branches>
+<supported_branches>8.0.</supported_branches>
 <project_status>published</project_status>
 <link>http://example.com/project/drupal</link>
   <terms>
@@ -61,7 +60,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
    <terms>
      <term><name>Release type</name><value>New features</value></term>
      <term><name>Release type</name><value>Bug fixes</value></term>
-     <term><name>Release type</name><value>Unsupported</value></term>
    </terms>
  </release>
  <release>

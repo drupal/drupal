@@ -198,8 +198,12 @@ trait UpdateSemverTestBaselineTrait {
    * value:
    * - [::$updateProject].8.1.0.xml
    *    'supported_branches' is '8.0.,8.1.'.
+   * - [::$updateProject].8.1.0-supported.xml
+   *     'supported_branches' is '8.1.,9.0.,10.0.'
    * - [::$updateProject].8.1.0-unsupported.xml
-   *    'supported_branches' is '8.1.'.
+   *    'supported_branches' is '8.0.'.
+   * - [::$updateProject].8.1.0-unsupported.xml
+   *     'supported_branches' is '8.1.'.
    * They both have an '8.0.3' release that has the 'Release type' value of
    * 'unsupported' and an '8.1.0' release that has the 'Release type' value of
    * 'supported' and is the expected update.
@@ -211,6 +215,22 @@ trait UpdateSemverTestBaselineTrait {
       $this->standardTests();
       $this->confirmUnsupportedStatus('8.0.3', '8.1.0', 'Recommended version:');
     }
+
+    // Test when the newest branch is unsupported and no update is available.
+    foreach (['8.1.0', '8.1.0-beta1'] as $version) {
+      $this->setProjectInstalledVersion($version);
+      $this->refreshUpdateStatus([$this->updateProject => '1.1-unsupported']);
+      $this->standardTests();
+      $this->confirmUnsupportedStatus($version);
+    }
+
+    // Test when the newest branch is supported.
+    $this->setProjectInstalledVersion('8.0.3');
+    $this->refreshUpdateStatus([$this->updateProject => '1.0-supported']);
+    $this->standardTests();
+    $this->confirmUnsupportedStatus('8.0.3', '8.1.0', 'Recommended version:');
+    $this->assertVersionUpdateLinks('Also available', '10.0.0');
+    $this->assertVersionUpdateLinks('Also available', '9.0.0', 1);
   }
 
 }
