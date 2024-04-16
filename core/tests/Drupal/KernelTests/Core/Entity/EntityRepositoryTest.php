@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -320,11 +317,7 @@ class EntityRepositoryTest extends KernelTestBase {
    *   An array of contexts.
    */
   protected function getLanguageContexts($langcode) {
-    $prefix = '@language.current_language_context:';
-    return [
-      $prefix . LanguageInterface::TYPE_INTERFACE => new Context(new ContextDefinition('language'), $langcode),
-      $prefix . LanguageInterface::TYPE_CONTENT => new Context(new ContextDefinition('language'), $langcode),
-    ];
+    return ['langcode' => $langcode];
   }
 
 }
