@@ -42,10 +42,6 @@
     {{ title_suffix }}
   {% endif %}
 
-  {% if comment_form_position %}
-    {{ comments }}
-  {% endif %}
-
   {% if comment_form %}
     <div class="add-comment">
       {% if user_picture %}
@@ -61,8 +57,6 @@
     </div>
   {% endif %}
 
-  {% if not comment_form_position %}
-    {{ comments }}
-  {% endif %}
+  {{ comments }}
 
 </section>
