@@ -160,4 +160,24 @@ class ImageTest extends ImageTestBase {
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-image"]');
   }
 
+  /**
+   * Tests that it's possible to upload SVG image, with the test module enabled.
+   */
+  public function testCanUploadSvg(): void {
+    $this->container->get('module_installer')
+      ->install(['ckeditor5_test_module_allowed_image']);
+
+    $page = $this->getSession()->getPage();
+
+    $src = 'core/modules/ckeditor5/tests/fixtures/test-svg-upload.svg';
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+
+    $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
+    $image_upload_field->attachFile($this->container->get('file_system')->realpath($src));
+    // Wait for the image to be uploaded and rendered by CKEditor 5.
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.ck-widget.image-inline > img[src$="test-svg-upload.svg"]'));
+  }
+
 }

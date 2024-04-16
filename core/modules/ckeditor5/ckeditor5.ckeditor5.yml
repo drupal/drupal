@@ -588,6 +588,8 @@ ckeditor5_imageUpload:
     config:
       image:
         upload:
+          # The strings in this array should be IANA media type Names, without the "image/" prefix. So: image subtypes.
+          # https://www.iana.org/assignments/media-types/media-types.xhtml#image
           types: ["jpeg", "png", "gif"]
   drupal:
     label: Image Upload

@@ -242,6 +242,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager
  */
 function hook_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
+  // Add a link decorator to the link plugin.
   assert($plugin_definitions['ckeditor5_link'] instanceof CKEditor5PluginDefinition);
   $link_plugin_definition = $plugin_definitions['ckeditor5_link']->toArray();
   $link_plugin_definition['ckeditor5']['config']['link']['decorators'][] = [
@@ -252,6 +253,16 @@ function hook_ckeditor5_plugin_info_alter(array &$plugin_definitions): void {
     ],
   ];
   $plugin_definitions['ckeditor5_link'] = new CKEditor5PluginDefinition($link_plugin_definition);
+
+  // Add a custom file type to the image upload plugin. Note that 'tiff' below
+  // should be an IANA image media type Name, with the "image/" prefix omitted.
+  // In other words: a subtype of type image.
+  // @see https://www.iana.org/assignments/media-types/media-types.xhtml#image
+  // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_image_imageconfig-ImageUploadConfig.html#member-types
+  assert($plugin_definitions['ckeditor5_imageUpload'] instanceof CKEditor5PluginDefinition);
+  $image_upload_plugin_definition = $plugin_definitions['ckeditor5_imageUpload']->toArray();
+  $image_upload_plugin_definition['ckeditor5']['config']['image']['upload']['types'][] = 'tiff';
+  $plugin_definitions['ckeditor5_imageUpload'] = new CKEditor5PluginDefinition($image_upload_plugin_definition);
 }
 
 /**
