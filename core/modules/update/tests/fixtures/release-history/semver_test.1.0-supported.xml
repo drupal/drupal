@@ -1,24 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-This XML file is the exact same as the file semver_test.1.0.xml except
-'supported_branches' in this file does not contain the '8.0.' branch. Therefore,
-all the releases that start with '8.0.' are in an unsupported branch.
+This file contains release history for '8.0','8.1', '9.0' and '10.0'. All
+releases except '8.0.' are supported.
 -->
 <project xmlns:dc="http://purl.org/dc/elements/1.1/">
 <title>Semver Test</title>
 <short_name>semver_test</short_name>
 <dc:creator>Drupal</dc:creator>
-<supported_branches>8.1.</supported_branches>
+<supported_branches>8.1.,9.0.,10.0.</supported_branches>
 <project_status>published</project_status>
 <link>http://example.com/project/semver_test</link>
   <terms>
    <term><name>Projects</name><value>Semver Test project</value></term>
   </terms>
 <releases>
+  <release>
+    <name>Semver Test 10.0.0</name>
+    <version>10.0.0</version>
+    <status>published</status>
+    <release_link>http://example.com/semver_test-10-0-0-release</release_link>
+    <download_link>http://example.com/semver_test-10-0-0.tar.gz</download_link>
+    <date>1584195300</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+  <release>
+    <name>Semver Test 9.0.0</name>
+    <version>9.0.0</version>
+    <status>published</status>
+    <release_link>http://example.com/semver_test-9-0-0-release</release_link>
+    <download_link>http://example.com/semver_test-9-0-0.tar.gz</download_link>
+    <date>1584195300</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
  <release>
    <name>Semver Test 8.1.0</name>
    <version>8.1.0</version>
-   <tag>8.1.0</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-1-0-release</release_link>
    <download_link>http://example.com/semver_test-8-1-0.tar.gz</download_link>
@@ -31,7 +53,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.1.0-beta1</name>
    <version>8.1.0-beta1</version>
-   <tag>8.1.0-beta1</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-1-0-beta1-release</release_link>
    <download_link>http://example.com/semver_test-8-1-0-beta1.tar.gz</download_link>
@@ -44,7 +65,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.1.0-alpha1</name>
    <version>8.1.0-alpha1</version>
-   <tag>8.1.0-alpha1</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-1-0-alpha1-release</release_link>
    <download_link>http://example.com/semver_test-8-1-0-alpha1.tar.gz</download_link>
@@ -57,7 +77,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.0.3</name>
    <version>8.0.3</version>
-   <tag>8.0.3</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-0-3-release</release_link>
    <download_link>http://example.com/semver_test-8-0-3.tar.gz</download_link>
@@ -71,7 +90,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.0.2</name>
    <version>8.0.2</version>
-   <tag>8.0.2</tag>
    <status>unpublished</status>
    <release_link>http://example.com/semver_test-8-0-2-release</release_link>
    <download_link>http://example.com/semver_test-8-0-2.tar.gz</download_link>
@@ -84,7 +102,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.0.1</name>
    <version>8.0.1</version>
-   <tag>8.0.1</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-0-1-release</release_link>
    <download_link>http://example.com/semver_test-8-0-1.tar.gz</download_link>
@@ -97,7 +114,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.0.1-beta1</name>
    <version>8.0.1-beta1</version>
-   <tag>8.0.1-beta1</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-0-1-beta1-release</release_link>
    <download_link>http://example.com/semver_test-8-0-1-beta1.tar.gz</download_link>
@@ -110,7 +126,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.0.1-alpha1</name>
    <version>8.0.1-alpha1</version>
-   <tag>8.0.1-alpha1</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-0-1-alpha1-release</release_link>
    <download_link>http://example.com/semver_test-8-0-1-alpha1.tar.gz</download_link>
@@ -123,7 +138,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.0.0</name>
    <version>8.0.0</version>
-   <tag>8.0.0</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-0-0-release</release_link>
    <download_link>http://example.com/semver_test-8-0-0.tar.gz</download_link>
@@ -136,7 +150,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.0.0-beta1</name>
    <version>8.0.0-beta1</version>
-   <tag>8.0.0-beta1</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-0-0-beta1-release</release_link>
    <download_link>http://example.com/semver_test-8-0-0-beta1.tar.gz</download_link>
@@ -149,7 +162,6 @@ all the releases that start with '8.0.' are in an unsupported branch.
  <release>
    <name>Semver Test 8.0.0-alpha1</name>
    <version>8.0.0-alpha1</version>
-   <tag>8.0.0-alpha1</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-8-0-0-alpha1-release</release_link>
    <download_link>http://example.com/semver_test-8-0-0-alpha1.tar.gz</download_link>
