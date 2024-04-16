@@ -56,7 +56,6 @@ global-styling:
       css/components/system-status-counter.css: {}
       css/components/tableselect.css: {}
       css/components/tabs.css: {}
-      css/components/views-ui.css: {}
     theme:
       css/theme/colors.css: {}
     layout:
@@ -230,6 +229,18 @@ views:
   css:
     component:
       css/components/views-exposed-form.css: {}
+
+views_ui:
+  css:
+    component:
+      css/components/views-ui.css: {}
+  moved_files:
+    claro/global-styling:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component: 'css/components/views-ui.css'
 
 messages:
   js:
