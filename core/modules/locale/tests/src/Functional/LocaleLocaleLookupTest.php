@@ -25,13 +25,6 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
    */
   protected static $modules = ['locale', 'locale_test'];
 
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -53,7 +46,9 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $this->config('system.site')->set('default_langcode', 'fr')->save();
 
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer modules',
+    ]));
   }
 
   /**
