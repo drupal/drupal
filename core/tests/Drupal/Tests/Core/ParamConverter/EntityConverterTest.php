@@ -12,9 +12,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
@@ -108,11 +105,6 @@ class EntityConverterTest extends UnitTestCase {
       ->with('entity_test')
       ->willReturn($entity_type);
 
-    $context_repository = $this->createMock(ContextRepositoryInterface::class);
-    $context_repository->expects($this->any())
-      ->method('getAvailableContexts')
-      ->willReturn([]);
-
     $context_definition = $this->createMock(DataDefinition::class);
     foreach (['setLabel', 'setDescription', 'setRequired', 'setConstraints'] as $method) {
       $context_definition->expects($this->any())
@@ -132,7 +124,6 @@ class EntityConverterTest extends UnitTestCase {
       ->willReturn($context_definition);
 
     $service_map += [
-      'context.repository' => $context_repository,
       'typed_data_manager' => $typed_data_manager,
     ];
 
@@ -221,11 +212,8 @@ class EntityConverterTest extends UnitTestCase {
   public function testConvertWithInvalidEntityType() {
     $this->setUpMocks();
 
-    $contexts = [
-      EntityRepositoryInterface::CONTEXT_ID_LEGACY_CONTEXT_OPERATION => new Context(new ContextDefinition('string'), 'entity_upcast'),
-    ];
-
     $plugin_id = 'invalid_id';
+    $contexts = ['operation' => 'entity_upcast'];
     $this->entityRepository->expects($this->once())
       ->method('getCanonical')
       ->with($plugin_id, 'id', $contexts)
