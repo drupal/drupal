@@ -45,14 +45,6 @@ class MenuUiNodeTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -439,7 +431,10 @@ class MenuUiNodeTest extends BrowserTestBase {
    * @see menu_ui_get_menu_link_defaults()
    */
   public function testMainMenuIsPrioritized(): void {
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer menu',
+      'edit any page content',
+    ]));
     $menu_name = $this->randomMachineName();
     $mainLinkTitle = $this->randomMachineName();
     $nonMainLinkTitle = $this->randomMachineName();
