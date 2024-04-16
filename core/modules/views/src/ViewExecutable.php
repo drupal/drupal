@@ -2,9 +2,9 @@
 
 namespace Drupal\views;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Tags;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\display\DisplayRouterInterface;
@@ -27,6 +27,8 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  */
 #[\AllowDynamicProperties]
 class ViewExecutable {
+
+  use LoggerChannelTrait;
 
   /**
    * The config entity in which the view is stored.
@@ -821,7 +823,12 @@ class ViewExecutable {
 
     // Ensure the requested display exists.
     if (!$this->displayHandlers->has($display_id)) {
-      trigger_error(new FormattableMarkup('setDisplay() called with invalid display ID "@display".', ['@display' => $display_id]), E_USER_WARNING);
+      $this->getLogger('views')->warning(
+        'setDisplay() called with invalid display ID "@display_id".',
+        [
+          '@display_id' => $display_id,
+        ],
+      );
       return FALSE;
     }
 

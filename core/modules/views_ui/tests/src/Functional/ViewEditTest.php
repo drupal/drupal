@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Entity\View;
 
@@ -50,6 +51,7 @@ class ViewEditTest extends UITestBase {
    * Tests the machine name and administrative comment forms.
    */
   public function testOtherOptions() {
+    \Drupal::service('module_installer')->install(['dblog']);
     $this->drupalGet('admin/structure/views/view/test_view');
     // Add a new attachment display.
     $this->submitForm([], 'Add Attachment');
@@ -85,13 +87,17 @@ class ViewEditTest extends UITestBase {
     $error_text = 'Display machine name must contain only lowercase letters, numbers, or underscores.';
 
     // Test that potential invalid display ID requests are detected
-    try {
-      $this->drupalGet('admin/structure/views/ajax/handler/test_view/fake_display_name/filter/title');
-      $this->fail('Expected error, when setDisplay() called with invalid display ID');
-    }
-    catch (\Exception $e) {
-      $this->assertStringContainsString('setDisplay() called with invalid display ID "fake_display_name".', $e->getMessage());
-    }
+    $this->drupalGet('admin/structure/views/ajax/handler/test_view/fake_display_name/filter/title');
+    $arguments = [
+      '@display_id' => 'fake_display_name',
+    ];
+    $logged = Database::getConnection()->select('watchdog')
+      ->fields('watchdog', ['variables'])
+      ->condition('type', 'views')
+      ->condition('message', 'setDisplay() called with invalid display ID "@display_id".')
+      ->execute()
+      ->fetchField();
+    $this->assertEquals(serialize($arguments), $logged);
 
     $edit = ['display_id' => 'test 1'];
     $this->drupalGet($machine_name_edit_url);
