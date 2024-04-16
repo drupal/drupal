@@ -19,6 +19,7 @@ use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Upload\ContentDispositionFilenameParser;
+use Drupal\file\Upload\FileUploadLocationTrait;
 use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\file\Validation\FileValidatorSettingsTrait;
@@ -46,6 +47,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class TemporaryJsonapiFileFieldUploader {
 
   use FileValidatorSettingsTrait;
+  use FileUploadLocationTrait {
+    getUploadLocation as getUploadDestination;
+  }
 
   /**
    * The regex used to extract the filename from the content disposition header.
@@ -201,7 +205,7 @@ class TemporaryJsonapiFileFieldUploader {
   public function handleFileUploadForField(FieldDefinitionInterface $field_definition, $filename, AccountInterface $owner) {
     assert(is_a($field_definition->getClass(), FileFieldItemList::class, TRUE));
     $settings = $field_definition->getSettings();
-    $destination = $this->getUploadLocation($settings);
+    $destination = $this->getUploadDestination($field_definition);
 
     // Check the destination file path is writable.
     if (!$this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
@@ -428,8 +432,14 @@ class TemporaryJsonapiFileFieldUploader {
    * @return string
    *   An un-sanitized file directory URI with tokens replaced. The result of
    *   the token replacement is then converted to plain text and returned.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\file\Upload\FileUploadLocationTrait::getUploadLocation() instead.
+   *
+   * @see https://www.drupal.org/node/3406099
    */
   protected function getUploadLocation(array $settings) {
+    @\trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileUploadLocationTrait::getUploadLocation() instead. See https://www.drupal.org/node/3406099', E_USER_DEPRECATED);
     $destination = trim($settings['file_directory'], '/');
 
     // Replace tokens. As the tokens might contain HTML we convert it to plain
