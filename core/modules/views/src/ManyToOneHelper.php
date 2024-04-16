@@ -181,9 +181,12 @@ class ManyToOneHelper {
           // query optimization, INNER joins are slightly faster, so use them
           // when we know we can.
           $join = $this->getJoin();
-          if (isset($join)) {
+          $group = $this->handler->options['group'] ?? FALSE;
+          // Only if there is no group with OR operator.
+          if (isset($join) && !($group && $this->handler->query->where[$group]['type'] === 'OR')) {
             $join->type = 'INNER';
           }
+
           $this->handler->tableAlias = $this->handler->query->ensureTable($this->handler->table, $this->handler->relationship, $join);
           $this->handler->view->many_to_one_tables[$field] = $this->handler->value;
         }
