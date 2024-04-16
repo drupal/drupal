@@ -540,8 +540,6 @@ function olivero_preprocess_field__comment(&$variables) {
 
     $variables['#cache']['contexts'][] = 'user';
   }
-
-  $variables['comment_form_position'] = theme_get_setting('comment_form_position');
 }
 
 /**
