@@ -441,6 +441,8 @@ Views
 Workflows
 - Sam Becker 'Sam152' https://www.drupal.org/u/sam152
 
+Workspaces
+- Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 
 Topic maintainers
 -----------------
