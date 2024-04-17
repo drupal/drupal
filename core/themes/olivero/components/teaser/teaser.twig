@@ -1,0 +1,15 @@
+<article{{ attributes.addClass('teaser') }}>
+  <header>
+    {% block prefix %}{% endblock %}
+    <div class="teaser__meta">
+      {% block meta %}{% endblock %}
+    </div>
+    <div class="teaser__top">
+      <div class="teaser__image">{% block image %}{% endblock %}</div>
+      {% block title %}{% endblock %}
+    </div>
+  </header>
+  <div class="teaser__content">
+    {% block content %}{% endblock %}
+  </div>
+</article>

@@ -14,20 +14,6 @@
   margin-block-end: var(--sp2);
 }
 
-.node--view-mode-teaser .field {
-  margin-block-end: var(--sp);
-}
-
-.node--view-mode-teaser .field:last-child {
-  margin-block-end: 0;
-}
-
-@media (min-width: 62.5rem) {
-  .node--view-mode-teaser .field {
-    margin-block-end: var(--sp2);
-  }
-}
-
 .field__label {
   font-weight: bold;
 }

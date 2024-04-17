@@ -78,10 +78,27 @@
   ]
 %}
 
-<article{{ attributes.addClass(classes) }}>
-  <header>
+
+{% embed "olivero:teaser" with {
+  attributes: attributes.addClass(classes),
+  author_attributes,
+  author_name,
+  content,
+  date,
+  display_submitted,
+  label,
+  metadata,
+  title_attributes,
+  title_prefix,
+  title_suffix,
+  read_more,
+  url,
+  } only %}
+  {% block prefix %}
     {{ title_prefix }}
     {{ title_suffix }}
+  {% endblock %}
+  {% block meta %}
     {% if display_submitted %}
       <div class="node__meta">
         <span{{ author_attributes }}>
@@ -90,16 +107,16 @@
         {{ metadata }}
       </div>
     {% endif %}
+  {% endblock %}
+  {% block image %}{{~ content.field_image ~}}{% endblock %}
+  {% block title %}
     {% if label and not page %}
-      <div class="node__top-wrapper">
-        {{ content.field_image }}
-        <h2{{ title_attributes.addClass('node__title') }}>
-          <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-        </h2>
-      </div>
+      <h2{{ title_attributes.addClass('node__title', 'teaser__title') }}>
+        <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+      </h2>
     {% endif %}
-  </header>
-  <div{{ content_attributes.addClass('node__content') }}>
+  {% endblock %}
+  {% block content %}
     {{ content|without('field_image', 'links') }}
-  </div>
-</article>
+  {% endblock %}
+{% endembed %}

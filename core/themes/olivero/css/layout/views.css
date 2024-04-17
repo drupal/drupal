@@ -10,16 +10,16 @@
  * Styles for views.
  */
 
-.view > * {
-  margin-block-end: var(--sp2);
-}
-
-.view > *:last-child {
-  margin-block-end: 0;
+.view,
+.view-content {
+  display: grid;
+  gap: var(--sp2);
+  grid-template-rows: max-content;
 }
 
 @media (min-width: 43.75rem) {
-  .view > * {
-    margin-block-end: var(--sp3);
+  .view,
+  .view-content {
+    gap: var(--sp3);
   }
 }
