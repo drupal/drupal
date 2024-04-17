@@ -945,6 +945,7 @@ tabbable.jquery.shim:
     - core/drupal
     - core/tabbable
     - core/jquery
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.3.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3441616
 
 internal.underscore:
   # Internal library. Do not depend on it outside core nor add new core usage.

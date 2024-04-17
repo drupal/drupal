@@ -30,6 +30,7 @@
 # Drupal 11.
 %Drupal\\Core\\Form\\FormBuilder::getForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
 %Drupal\\Core\\Form\\FormBuilder::submitForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
+%The core/tabbable.jquery.shim asset library is deprecated in Drupal 10.3.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3441616%
 
 # PHPUnit 9.
 %"PHPUnit\\Framework\\TestListener".*is deprecated%
