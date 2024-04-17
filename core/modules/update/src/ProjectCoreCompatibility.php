@@ -54,15 +54,17 @@ final class ProjectCoreCompatibility {
    *   update_calculate_project_update_status().
    * @param array $core_releases
    *   The Drupal core available releases.
+   * @param array $supported_branches
+   *   An array for supported branches as returned by drupal.org update XML.
    *
    * @see \Drupal\update\UpdateManagerInterface::getProjects()
    * @see update_process_project_info()
    * @see update_calculate_project_update_status()
    */
-  public function __construct(array $core_data, array $core_releases) {
+  public function __construct(array $core_data, array $core_releases, array $supported_branches) {
     if (isset($core_data['existing_version'])) {
       $this->existingCoreVersion = $core_data['existing_version'];
-      $this->possibleCoreUpdateVersions = $this->getPossibleCoreUpdateVersions($core_releases);
+      $this->possibleCoreUpdateVersions = $this->getPossibleCoreUpdateVersions($core_releases, $supported_branches);
     }
   }
 
@@ -71,19 +73,28 @@ final class ProjectCoreCompatibility {
    *
    * @param array $core_releases
    *   The Drupal core available releases.
+   * @param array $supported_branches
+   *   An array for supported branches as returned by drupal.org update XML.
    *
    * @return string[]
    *   The core version numbers that are possible to update the site to.
    */
-  protected function getPossibleCoreUpdateVersions(array $core_releases) {
+  protected function getPossibleCoreUpdateVersions(array $core_releases, array $supported_branches) {
     if (!isset($core_releases[$this->existingCoreVersion])) {
       // If we can't determine the existing version of core then we can't
       // calculate the core compatibility of a given release based on core
       // versions after the existing version.
       return [];
     }
-    $core_release_versions = array_keys($core_releases);
-    $possible_core_update_versions = Semver::satisfiedBy($core_release_versions, '>= ' . $this->existingCoreVersion);
+    $supported_versions = array_filter(array_keys($core_releases), function ($version) use ($supported_branches) {
+      foreach ($supported_branches as $supported_branch) {
+        if (strpos($version, $supported_branch) === 0) {
+          return TRUE;
+        }
+      }
+      return FALSE;
+    });
+    $possible_core_update_versions = Semver::satisfiedBy($supported_versions, '>= ' . $this->existingCoreVersion);
     $possible_core_update_versions = Semver::sort($possible_core_update_versions);
     $possible_core_update_versions = array_filter($possible_core_update_versions, function ($version) {
       return VersionParser::parseStability($version) === 'stable';
