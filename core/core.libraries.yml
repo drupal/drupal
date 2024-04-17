@@ -484,8 +484,8 @@ drupal.autocomplete:
     - core/drupal
     - core/drupalSettings
     - core/drupal.ajax
-    - core/tabbable.jquery.shim
     - core/drupal.jquery.position
+    - core/tabbable
 
 drupal.batch:
   version: VERSION
@@ -561,8 +561,8 @@ drupal.dialog:
     - core/drupalSettings
     - core/drupal.debounce
     - core/drupal.displace
-    - core/tabbable.jquery.shim
     - core/drupal.jquery.position
+    - core/tabbable
 
 drupal.dialog.ajax:
   version: VERSION
@@ -866,15 +866,6 @@ transliteration:
     gpl-compatible: true
   js:
     assets/vendor/transliteration/bundle.umd.min.js: { minified: true }
-
-tabbable.jquery.shim:
-  version: VERSION
-  js:
-    misc/jquery.tabbable.shim.js: {}
-  dependencies:
-    - core/drupal
-    - core/tabbable
-    - core/jquery
 
 internal.underscore:
   # Internal library. Do not depend on it outside core nor add new core usage.
