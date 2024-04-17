@@ -13,7 +13,6 @@
  <release>
    <name>Semver Test 9.0.0</name>
    <version>9.0.0</version>
-   <tag>9.0.0</tag>
    <status>published</status>
    <release_link>http://example.com/semver_test-9-0-0-release</release_link>
    <download_link>http://example.com/semver_test-9-0-0.tar.gz</download_link>
