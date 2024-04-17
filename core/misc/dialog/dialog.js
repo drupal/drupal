@@ -12,14 +12,12 @@
    * @type {object}
    *
    * @prop {boolean} [autoOpen=true]
-   * @prop {string} [dialogClass='']
    * @prop {string} [buttonClass='button']
    * @prop {string} [buttonPrimaryClass='button--primary']
    * @prop {function} close
    */
   drupalSettings.dialog = {
     autoOpen: true,
-    dialogClass: '',
     // Drupal-specific extensions: see dialog.jquery-ui.js.
     buttonClass: 'button',
     buttonPrimaryClass: 'button--primary',

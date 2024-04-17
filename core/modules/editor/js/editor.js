@@ -137,7 +137,9 @@
       );
       const confirmationDialog = Drupal.dialog(`<div>${message}</div>`, {
         title: Drupal.t('Change text format?'),
-        dialogClass: 'editor-change-text-format-modal',
+        classes: {
+          'ui-dialog': 'editor-change-text-format-modal',
+        },
         resizable: false,
         buttons: [
           {

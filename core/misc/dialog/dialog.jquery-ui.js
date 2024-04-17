@@ -30,6 +30,82 @@
         $buttons.eq(index).addClass(opts.buttonPrimaryClass);
       }
     },
+    _createWrapper() {
+      this.uiDialog = $('<div>')
+        .hide()
+        .attr({
+          // Setting tabIndex makes the div focusable
+          tabIndex: -1,
+          role: 'dialog',
+        })
+        .appendTo(this._appendTo());
+
+      this._addClass(
+        this.uiDialog,
+        'ui-dialog',
+        'ui-widget ui-widget-content ui-front',
+      );
+      this._on(this.uiDialog, {
+        keydown(event) {
+          if (
+            this.options.closeOnEscape &&
+            !event.isDefaultPrevented() &&
+            event.keyCode &&
+            event.keyCode === $.ui.keyCode.ESCAPE
+          ) {
+            event.preventDefault();
+            this.close(event);
+            return;
+          }
+
+          // Prevent tabbing out of dialogs
+          if (
+            event.keyCode !== $.ui.keyCode.TAB ||
+            event.isDefaultPrevented()
+          ) {
+            return;
+          }
+
+          const tabbableElements = tabbable(this.uiDialog[0]);
+          if (tabbableElements.length) {
+            const first = tabbableElements[0];
+            const last = tabbableElements[tabbableElements.length - 1];
+
+            if (
+              (event.target === last || event.target === this.uiDialog[0]) &&
+              !event.shiftKey
+            ) {
+              this._delay(function () {
+                $(first).trigger('focus');
+              });
+              event.preventDefault();
+            } else if (
+              (event.target === first || event.target === this.uiDialog[0]) &&
+              event.shiftKey
+            ) {
+              this._delay(function () {
+                $(last).trigger('focus');
+              });
+              event.preventDefault();
+            }
+          }
+        },
+        mousedown(event) {
+          if (this._moveToTop(event)) {
+            this._focusTabbable();
+          }
+        },
+      });
+
+      // We assume that any existing aria-describedby attribute means
+      // that the dialog content is marked up properly
+      // otherwise we brute force the content as the description
+      if (!this.element.find('[aria-describedby]').length) {
+        this.uiDialog.attr({
+          'aria-describedby': this.element.uniqueId().attr('id'),
+        });
+      }
+    },
     // Override jQuery UI's `_focusTabbable()` so finding tabbable elements uses
     // the core/tabbable library instead of jQuery UI's `:tabbable` selector.
     _focusTabbable() {

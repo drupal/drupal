@@ -38,6 +38,21 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
    *   (optional) The position to render the off-canvas dialog.
    */
   public function __construct(string|\Stringable|null $title, $content, array $dialog_options = [], $settings = NULL, $position = 'side') {
+    $dialog_class = FALSE;
+    if (isset($dialog_options['classes']['ui-dialog'])) {
+      $dialog_class = $dialog_options['classes']['ui-dialog'];
+    }
+    elseif (isset($dialog_options['dialogClass'])) {
+      @trigger_error('Passing $dialog_options[\'dialogClass\'] to OpenOffCanvasDialogCommand::__construct() is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. Use $dialog_options[\'classes\'] instead. See https://www.drupal.org/node/3440844', E_USER_DEPRECATED);
+      $dialog_class = $dialog_options['dialogClass'];
+      unset($dialog_options['dialogClass']);
+    }
+    if ($dialog_class) {
+      $dialog_options['classes']['ui-dialog'] = $dialog_class . ' ' . "ui-dialog-off-canvas ui-dialog-position-$position";
+    }
+    else {
+      $dialog_options['classes']['ui-dialog'] = "ui-dialog-off-canvas ui-dialog-position-$position";
+    }
     parent::__construct('#drupal-off-canvas', $title, $content, $dialog_options, $settings);
     $this->dialogOptions['modal'] = FALSE;
     $this->dialogOptions['autoResize'] = FALSE;
@@ -45,9 +60,7 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     $this->dialogOptions['draggable'] = FALSE;
     $this->dialogOptions['drupalAutoButtons'] = FALSE;
     $this->dialogOptions['drupalOffCanvasPosition'] = $position;
-    if (empty($dialog_options['dialogClass'])) {
-      $this->dialogOptions['dialogClass'] = "ui-dialog-off-canvas ui-dialog-position-$position";
-    }
+
     // Add CSS class to #drupal-off-canvas element. This enables developers to
     // select previous versions of off-canvas styles by using custom selector:
     // #drupal-off-canvas:not(.drupal-off-canvas-reset).

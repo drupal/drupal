@@ -126,7 +126,9 @@ class TestController {
           'class' => ['use-ajax'],
           'data-dialog-type' => 'modal',
           'data-dialog-options' => Json::encode([
-            'dialogClass' => 'no-close',
+            'classes' => [
+              'ui-dialog' => 'no-close',
+            ],
           ]),
         ],
         '#attached' => [
