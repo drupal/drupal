@@ -10,21 +10,6 @@
  * Node Teaser specific styles.
  */
 
-.node--view-mode-teaser {
-  position: relative; /* Anchor after pseudo-element. */
-  margin-block-end: var(--sp1-5);
-}
-
-.node--view-mode-teaser::after {
-  position: absolute;
-  inset-block-end: 0;
-  width: var(--sp3);
-  height: 0;
-  content: "";
-  /* Intentionally not using CSS logical properties. */
-  border-top: solid 2px var(--color--gray-95);
-}
-
 .node--view-mode-teaser .node__meta {
   margin-block-end: var(--sp);
 }
@@ -32,80 +17,6 @@
 .node--view-mode-teaser .node__meta a {
   color: var(--color-text-primary-medium);
   font-weight: bold;
-}
-
-.node--view-mode-teaser .node__top-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 0;
-}
-
-@media (min-width: 62.5rem) {
-  .node--view-mode-teaser .node__top-wrapper {
-    position: relative; /* Anchor the image */
-  }
-}
-
-.node--view-mode-teaser .primary-image {
-  flex-shrink: 0;
-  margin: 0;
-  margin-block-end: var(--sp1);
-  margin-inline-end: var(--sp1);
-
-  /* Ensure title does not wrap under image until necessary. */
-}
-
-:is(.node--view-mode-teaser .primary-image) + .node__title {
-  flex-basis: calc(100% - var(--sp4-5));
-}
-
-@media (min-width: 62.5rem) {
-  :is(.node--view-mode-teaser .primary-image) + .node__title {
-    flex-basis: auto;
-  }
-}
-
-.node--view-mode-teaser .primary-image a {
-  display: block;
-}
-
-.node--view-mode-teaser .primary-image img {
-  width: var(--sp3-5);
-  height: var(--sp3-5);
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-@media (min-width: 62.5rem) {
-  .node--view-mode-teaser .primary-image img {
-    width: var(--grid-col-width);
-    height: var(--grid-col-width);
-  }
-}
-
-@media (min-width: 62.5rem) {
-  .node--view-mode-teaser .primary-image {
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
-    margin: 0;
-  }
-}
-
-.node--view-mode-teaser .node__title {
-  margin: 0;
-  margin-block-end: var(--sp1);
-  color: var(--color-text-neutral-loud);
-  font-size: 1.5rem;
-  line-height: var(--line-height-base);
-}
-
-@media (min-width: 62.5rem) {
-  .node--view-mode-teaser .node__title {
-    font-size: var(--sp2);
-    line-height: var(--sp3);
-  }
 }
 
 .node--view-mode-teaser .field--tag-ref {
@@ -123,14 +34,4 @@
   .node--view-mode-teaser .field--tag-ref {
     margin-block-start: var(--sp2);
   }
-}
-
-@media (min-width: 62.5rem) {
-  .node--view-mode-teaser {
-    margin-block-end: var(--sp3);
-  }
-}
-
-.views-row:last-child .node--view-mode-teaser {
-  margin-block-end: 0;
 }
