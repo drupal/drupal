@@ -51,17 +51,4 @@ class Yaml implements SerializationInterface {
     return 'yml';
   }
 
-  /**
-   * Determines which implementation to use for parsing YAML.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
-   *  replacement.
-   *
-   * @see https://www.drupal.org/node/3415489
-   */
-  protected static function getSerializer() {
-    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3415489', E_USER_DEPRECATED);
-    return YamlSymfony::class;
-  }
-
 }
