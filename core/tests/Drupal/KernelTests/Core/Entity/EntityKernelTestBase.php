@@ -109,27 +109,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    *   The created user entity.
    */
   protected function createUser(array $permissions = [], $name = NULL, bool $admin = FALSE, array $values = []) {
-    // Allow for the old signature of this method:
-    // createUser($values = [], $permissions = [])
-    if (!array_is_list($permissions)) {
-      // An array with keys is assumed to be entity values rather than
-      // permissions, since there is no point in an array of permissions having
-      // keys.
-      @trigger_error('Calling createUser() with $values as the first parameter is deprecated in drupal:10.1.0 and will be removed from drupal:11.0.0. Use createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []) instead. See https://www.drupal.org/node/3330762', E_USER_DEPRECATED);
-
-      $values = $permissions;
-      $permissions = [];
-    }
-
-    if (is_array($name)) {
-      // If $name is an array rather than a string, then the caller is intending
-      // to pass in $permissions.
-      @trigger_error('Calling createUser() with $permissions as the second parameter is deprecated in drupal:10.1.0 and will be removed from drupal:11.0.0. Use createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []) instead. See https://www.drupal.org/node/3330762', E_USER_DEPRECATED);
-
-      $permissions = $name;
-      $name = NULL;
-    }
-
     return $this->drupalCreateUser($permissions, $name, $admin, $values);
   }
 

@@ -39,7 +39,6 @@ use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 
 /**
  * Base class for functional integration tests.
@@ -268,17 +267,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __get(string $name) {
-    if ($name === 'randomGenerator') {
-      @trigger_error('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445', E_USER_DEPRECATED);
-
-      return $this->getRandomGenerator();
-    }
   }
 
   /**
@@ -687,15 +675,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected function tearDown(): void {
     if ($this->container) {
       // Clean up mock session started in DrupalKernel::preHandle().
-      try {
-        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-        $session = $this->container->get('request_stack')->getSession();
-        $session->clear();
-        $session->save();
-      }
-      catch (SessionNotFoundException) {
-        @trigger_error('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193', E_USER_DEPRECATED);
-      }
+      /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+      $session = $this->container->get('request_stack')->getSession();
+      $session->clear();
+      $session->save();
     }
 
     // Destroy the testing kernel.

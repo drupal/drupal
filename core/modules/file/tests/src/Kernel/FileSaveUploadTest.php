@@ -9,6 +9,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests file_save_upload().
@@ -45,7 +47,7 @@ class FileSaveUploadTest extends KernelTestBase {
         test: TRUE
       ),
     ]);
-
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $requestStack = new RequestStack();
     $requestStack->push($request);
 
