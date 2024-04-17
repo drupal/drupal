@@ -52,16 +52,6 @@ class FileStorageTest extends PhpStorageTestBase {
   }
 
   /**
-   * @covers ::writeable
-   * @group legacy
-   */
-  public function testWritable() {
-    $this->expectDeprecation('Drupal\Component\PhpStorage\FileStorage::writeable() is deprecated in drupal:10.1.0 and will be removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3155413');
-    $php = new FileStorage($this->standardSettings);
-    $this->assertTrue($php->writeable());
-  }
-
-  /**
    * @covers ::deleteAll
    */
   public function testDeleteAll() {

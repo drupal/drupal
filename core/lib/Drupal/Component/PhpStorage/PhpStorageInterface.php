@@ -52,19 +52,6 @@ interface PhpStorageInterface {
   public function save($name, $code);
 
   /**
-   * Whether this is a writable storage.
-   *
-   * @return bool
-   *   TRUE if writable, otherwise FALSE.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3155413
-   */
-  public function writeable();
-
-  /**
    * Deletes PHP code from storage.
    *
    * @param string $name
