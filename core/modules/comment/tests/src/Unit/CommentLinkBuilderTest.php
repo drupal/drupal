@@ -8,7 +8,6 @@ use Drupal\comment\CommentLinkBuilder;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
-use Drupal\node\NodeInterface;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\Tests\UnitTestCase;
 
@@ -96,8 +95,8 @@ class CommentLinkBuilderTest extends UnitTestCase {
   /**
    * Tests the buildCommentedEntityLinks method.
    *
-   * @param \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject $node
-   *   Mock node.
+   * @param array $node_args
+   *   Arguments for the mock node.
    * @param array $context
    *   Context for the links.
    * @param bool $has_access_comments
@@ -116,7 +115,8 @@ class CommentLinkBuilderTest extends UnitTestCase {
    *
    * @covers ::buildCommentedEntityLinks
    */
-  public function testCommentLinkBuilder(NodeInterface $node, $context, $has_access_comments, $history_exists, $has_post_comments, $is_anonymous, $expected) {
+  public function testCommentLinkBuilder(array $node_args, $context, $has_access_comments, $history_exists, $has_post_comments, $is_anonymous, $expected) {
+    $node = $this->getMockNode(...$node_args);
     $this->moduleHandler->expects($this->any())
       ->method('moduleExists')
       ->with('history')
@@ -161,11 +161,11 @@ class CommentLinkBuilderTest extends UnitTestCase {
   /**
    * Data provider for ::testCommentLinkBuilder.
    */
-  public function getLinkCombinations() {
+  public static function getLinkCombinations() {
     $cases = [];
     // No links should be created if the entity doesn't have the field.
     $cases[] = [
-      $this->getMockNode(FALSE, CommentItemInterface::OPEN, CommentItemInterface::FORM_BELOW, 1),
+      [FALSE, CommentItemInterface::OPEN, CommentItemInterface::FORM_BELOW, 1],
       ['view_mode' => 'teaser'],
       TRUE,
       TRUE,
@@ -176,7 +176,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
     foreach (['search_result', 'search_index', 'print'] as $view_mode) {
       // Nothing should be output in these view modes.
       $cases[] = [
-        $this->getMockNode(TRUE, CommentItemInterface::OPEN, CommentItemInterface::FORM_BELOW, 1),
+        [TRUE, CommentItemInterface::OPEN, CommentItemInterface::FORM_BELOW, 1],
         ['view_mode' => $view_mode],
         TRUE,
         TRUE,
@@ -202,10 +202,10 @@ class CommentLinkBuilderTest extends UnitTestCase {
         'teaser', 'rss', 'full',
       ],
     ];
-    $permutations = $this->generatePermutations($combinations);
+    $permutations = static::generatePermutations($combinations);
     foreach ($permutations as $combination) {
       $case = [
-        $this->getMockNode(TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count']),
+        [TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count']],
         ['view_mode' => $combination['view_mode']],
         $combination['has_access_comments'],
         $combination['history_exists'],
