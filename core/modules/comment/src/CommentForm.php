@@ -16,6 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -379,6 +380,7 @@ class CommentForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state) {
     $comment = $this->entity;
     $entity = $comment->getCommentedEntity();
+    $is_new = $this->entity->isNew();
     $field_name = $comment->getFieldName();
     $uri = $entity->toUrl();
     $logger = $this->logger('comment');
@@ -392,16 +394,8 @@ class CommentForm extends ContentEntityForm {
         '%subject' => $comment->getSubject(),
         'link' => Link::fromTextAndUrl(t('View'), $comment->toUrl()->setOption('fragment', 'comment-' . $comment->id()))->toString(),
       ]);
-
-      // Explain the approval queue if necessary.
-      if (!$comment->isPublished()) {
-        if (!$this->currentUser->hasPermission('administer comments')) {
-          $this->messenger()->addStatus($this->t('Your comment has been queued for review by site administrators and will be published after approval.'));
-        }
-      }
-      else {
-        $this->messenger()->addStatus($this->t('Your comment has been posted.'));
-      }
+      // Add an appropriate message upon submitting the comment form.
+      $this->messenger()->addStatus($this->getStatusMessage($comment, $is_new));
       $query = [];
       // Find the current display page for this comment.
       $field_definition = $this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$field_name];
@@ -419,6 +413,30 @@ class CommentForm extends ContentEntityForm {
       // Redirect the user to the entity they are commenting on.
     }
     $form_state->setRedirectUrl($uri);
+  }
+
+  /**
+   * Gets an appropriate status message when a comment is saved.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   The comment being saved.
+   * @param bool $is_new
+   *   TRUE if a new comment is created. $comment->isNew() cannot be used here
+   *   because the comment has already been saved by the time the message is
+   *   rendered.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   A translatable string containing the appropriate status message.
+   */
+  protected function getStatusMessage(CommentInterface $comment, bool $is_new): TranslatableMarkup {
+    if (!$comment->isPublished() && !$this->currentUser->hasPermission('administer comments')) {
+      return $this->t('Your comment has been queued for review by site administrators and will be published after approval.');
+    }
+    // Check whether the comment is new or not.
+    if ($is_new) {
+      return $this->t('Your comment has been posted.');
+    }
+    return $this->t('Your comment has been updated.');
   }
 
 }
