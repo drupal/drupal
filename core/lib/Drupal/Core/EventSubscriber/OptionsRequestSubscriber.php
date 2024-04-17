@@ -12,8 +12,9 @@ use Symfony\Component\Routing\Route;
 /**
  * Handles options requests.
  *
- * Therefore it sends an options response using all methods on all possible
- * routes.
+ * Listens to KernelEvents::REQUEST and responds to OPTIONS requests by
+ * providing an Allow header listing all the HTTP methods allowed for the
+ * requested routes.
  */
 class OptionsRequestSubscriber implements EventSubscriberInterface {
 
