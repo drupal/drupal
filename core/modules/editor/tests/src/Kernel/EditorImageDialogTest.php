@@ -104,7 +104,9 @@ class EditorImageDialogTest extends EntityKernelTestBase {
       ],
       'dialogOptions' => [
         'title' => 'Edit Image',
-        'dialogClass' => 'editor-image-dialog',
+        'classes' => [
+          'ui-dialog' => 'editor-image-dialog',
+        ],
         'autoResize' => 'true',
       ],
       '_drupal_ajax' => '1',

@@ -820,8 +820,9 @@ media_library_mediaLibrary:
             name: Drupal.ckeditor5.openDialog
             invoke: false
         dialogSettings:
+          classes:
+            ui-dialog: media-library-widget-modal
           height: 75%
-          dialogClass: media-library-widget-modal
   drupal:
     label: Media Library
     elements: false

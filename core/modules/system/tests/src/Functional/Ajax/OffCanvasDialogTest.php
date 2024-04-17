@@ -40,6 +40,7 @@ class OffCanvasDialogTest extends BrowserTestBase {
     // Set up variables for this test.
     $dialog_renderable = AjaxTestController::dialogContents();
     $dialog_contents = \Drupal::service('renderer')->renderRoot($dialog_renderable);
+    $dialog_class = 'ui-dialog-off-canvas ui-dialog-position-' . ($position ?: 'side');
     $off_canvas_expected_response = [
       'command' => 'openDialog',
       'selector' => '#drupal-off-canvas',
@@ -47,6 +48,7 @@ class OffCanvasDialogTest extends BrowserTestBase {
       'data' => (string) $dialog_contents,
       'dialogOptions' =>
         [
+          'classes' => ['ui-dialog' => $dialog_class, 'ui-dialog-content' => 'drupal-off-canvas-reset'],
           'title' => 'AJAX Dialog & contents',
           'modal' => FALSE,
           'autoResize' => FALSE,
@@ -54,8 +56,6 @@ class OffCanvasDialogTest extends BrowserTestBase {
           'draggable' => FALSE,
           'drupalAutoButtons' => FALSE,
           'drupalOffCanvasPosition' => $position ?: 'side',
-          'dialogClass' => 'ui-dialog-off-canvas ui-dialog-position-' . ($position ?: 'side'),
-          'classes' => ['ui-dialog-content' => 'drupal-off-canvas-reset'],
           'width' => 300,
         ],
       'effect' => 'fade',
