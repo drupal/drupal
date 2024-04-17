@@ -17,21 +17,6 @@ class InspectorTest extends TestCase {
   use ExpectDeprecationTrait;
 
   /**
-   * Tests asserting argument is an array or traversable object.
-   *
-   * @covers ::assertTraversable
-   *
-   * @group legacy
-   */
-  public function testAssertTraversable() {
-    $this->expectDeprecation('Drupal\Component\Assertion\Inspector::assertTraversable() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use is_iterable() instead. See https://www.drupal.org/node/3422775');
-    $this->assertTrue(Inspector::assertTraversable([]));
-    $this->assertTrue(Inspector::assertTraversable(new \ArrayObject()));
-    $this->assertFalse(Inspector::assertTraversable(new \stdClass()));
-    $this->assertFalse(Inspector::assertTraversable('foo'));
-  }
-
-  /**
    * Tests asserting all members are strings.
    *
    * @covers ::assertAllStrings
