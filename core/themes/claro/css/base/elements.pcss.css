@@ -10,6 +10,8 @@ html {
   line-height: var(--line-height);
 }
 body {
+  word-wrap: break-word;
+  hyphens: auto;
   color: var(--color-fg);
   background: var(--color-bg);
 }

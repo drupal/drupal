@@ -41,8 +41,6 @@
 
 .form-managed-file .file {
   word-break: break-all;
-  -webkit-hyphens: auto;
-  hyphens: auto;
 }
 
 .form-managed-file .file__size {

@@ -84,8 +84,6 @@
   list-style: none;
   cursor: pointer;
   transition: background-color var(--details-bg-color-transition-duration) ease-in-out;
-  word-wrap: break-word;
-  hyphens: auto;
   color: var(--color-gray-800);
   border-radius: var(--size-summary-border-radius);
   background-color: transparent;

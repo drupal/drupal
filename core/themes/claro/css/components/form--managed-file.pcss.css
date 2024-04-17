@@ -33,7 +33,6 @@
    */
   & .file {
     word-break: break-all;
-    hyphens: auto;
   }
   & .file__size {
     word-break: normal;

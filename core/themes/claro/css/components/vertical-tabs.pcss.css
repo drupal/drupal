@@ -103,8 +103,6 @@
   margin-block-start: calc(var(--vertical-tabs-border-size) * -1);
   padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size));
   text-decoration: none;
-  word-wrap: break-word;
-  hyphens: auto;
   color: var(--color-text);
   border: var(--vertical-tabs-border-size) solid transparent;
   border-block-width: var(--vertical-tabs-border-size);
