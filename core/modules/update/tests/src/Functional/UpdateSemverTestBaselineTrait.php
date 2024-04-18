@@ -70,11 +70,7 @@ trait UpdateSemverTestBaselineTrait {
             // Both stable and unstable releases are available.
             // A stable release is the latest.
             if ($extra_version == '') {
-              $this->assertUpdateTableTextNotContains('Up to date');
-              $this->assertUpdateTableTextContains('Update available');
-              $this->assertVersionUpdateLinks('Recommended version:', $full_version);
-              $this->assertUpdateTableTextNotContains('Latest version:');
-              $this->assertUpdateTableElementContains('warning.svg');
+              $this->assertNoExtraVersion($full_version);
             }
             // Only unstable releases are available.
             // An unstable release is the latest.
@@ -91,11 +87,7 @@ trait UpdateSemverTestBaselineTrait {
             // Both stable and unstable releases are available.
             // A stable release is the latest.
             if ($extra_version == '') {
-              $this->assertUpdateTableTextNotContains('Up to date');
-              $this->assertUpdateTableTextContains('Update available');
-              $this->assertVersionUpdateLinks('Recommended version:', $full_version);
-              $this->assertUpdateTableTextNotContains('Latest version:');
-              $this->assertUpdateTableElementContains('warning.svg');
+              $this->assertNoExtraVersion($full_version);
             }
             // Both stable and unstable releases are available.
             // An unstable release is the latest.
@@ -110,6 +102,22 @@ trait UpdateSemverTestBaselineTrait {
         }
       }
     }
+  }
+
+  /**
+   * Asserts update table when there is no extra version.
+   *
+   * @param string $full_version
+   *   The recommended version.
+   *
+   * @return void
+   */
+  protected function assertNoExtraVersion(string $full_version): void {
+    $this->assertUpdateTableTextNotContains('Up to date');
+    $this->assertUpdateTableTextContains('Update available');
+    $this->assertVersionUpdateLinks('Recommended version:', $full_version);
+    $this->assertUpdateTableTextNotContains('Latest version:');
+    $this->assertUpdateTableElementContains('warning.svg');
   }
 
   /**
