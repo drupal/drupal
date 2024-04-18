@@ -765,6 +765,10 @@ DOCBLOCK;
             PHP_EOL
         );
         $provider[] = array(
+            '@AnnotationWithConstants(\SimpleXMLElement::class)',
+            \SimpleXMLElement::class
+        );
+        $provider[] = array(
             '@AnnotationWithConstants(AnnotationWithConstants::INTEGER)',
             AnnotationWithConstants::INTEGER
         );
