@@ -9,7 +9,7 @@ use Twig\Node\PrintNode;
 use Twig\Node\SetNode;
 use Twig\Node\TextNode;
 use Twig\Node\Expression\AbstractExpression;
-use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * Defines a Twig node visitor for testing help topics.
@@ -17,7 +17,7 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  * See static::setStateValue() for information on the special processing
  * this class can do.
  */
-class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
+class HelpTestTwigNodeVisitor implements NodeVisitorInterface {
 
   /**
    * Delimiter placed around single translated chunks.
@@ -32,14 +32,14 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
   /**
    * {@inheritdoc}
    */
-  protected function doEnterNode(Node $node, Environment $env) {
+  public function enterNode(Node $node, Environment $env): Node {
     return $node;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doLeaveNode(Node $node, Environment $env) {
+  public function leaveNode(Node $node, Environment $env): ?Node {
     $processing = static::getState();
     if (!$processing['manner']) {
       return $node;
