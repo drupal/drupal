@@ -31,7 +31,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'first_day' => 4,
       // country is not handled by the migration.
       'country' => [
-        'default' => '',
+        'default' => NULL,
       ],
       // timezone is not handled by the migration.
       'timezone' => [

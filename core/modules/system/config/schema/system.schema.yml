@@ -86,17 +86,28 @@ system.cron:
 system.date:
   type: config_object
   label: 'Date settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     first_day:
       type: integer
       label: 'First day of week'
+      constraints:
+        Range:
+          # @see \Drupal\system\Form\RegionalForm::buildForm()
+          min: 0
+          max: 6
     country:
       type: mapping
       label: 'Country'
       mapping:
         default:
+          nullable: true
           type: string
           label: 'Default country'
+          constraints:
+            # @see \Drupal\system\Form\RegionalForm::buildForm()
+            CountryCode: []
     timezone:
       type: mapping
       label: 'Time zone settings'
@@ -104,6 +115,11 @@ system.date:
         default:
           type: string
           label: 'Default time zone'
+          nullable: true
+          constraints:
+            # @see \Drupal\system\Form\RegionalForm::buildForm()
+            Choice:
+              callback: 'DateTimeZone::listIdentifiers'
         user:
           type: mapping
           label: 'User'
@@ -114,6 +130,14 @@ system.date:
             default:
               type: integer
               label: 'Time zone for new users'
+              constraints:
+                # Time zone for new users can have one of the following values:
+                # - UserInterface::TIMEZONE_DEFAULT
+                # - UserInterface::TIMEZONE_EMPTY
+                # - UserInterface::TIMEZONE_SELECT
+                # @see \Drupal\user\UserInterface::TIMEZONE_*
+                # @todo Update this to use enum in https://www.drupal.org/project/drupal/issues/3402178
+                Choice: [0, 1, 2]
             warn:
               type: boolean
               label: 'Remind users at login if their time zone is not set'
