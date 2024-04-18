@@ -776,10 +776,10 @@ drupal.vertical-tabs:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "3.7.1"
+  version: "4.0.0-beta"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/3.7.1/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/4.0.0-beta/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
