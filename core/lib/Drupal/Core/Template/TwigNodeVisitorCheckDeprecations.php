@@ -7,7 +7,7 @@ use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * Provides a Node Visitor to trigger errors if deprecated variables are used.
@@ -18,7 +18,7 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  *
  * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
  */
-class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
+class TwigNodeVisitorCheckDeprecations implements NodeVisitorInterface {
 
   /**
    * The named variables used in the template from the context.
@@ -33,7 +33,7 @@ class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
   /**
    * {@inheritdoc}
    */
-  protected function doEnterNode(Node $node, Environment $env) {
+  public function enterNode(Node $node, Environment $env): Node {
     if ($node instanceof ModuleNode) {
       $this->usedNames = [];
       $this->assignedNames = [];
@@ -55,7 +55,7 @@ class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
   /**
    * {@inheritdoc}
    */
-  protected function doLeaveNode(Node $node, Environment $env) {
+  public function leaveNode(Node $node, Environment $env): ?Node {
     // At the end of the template, check the used variables are not deprecated.
     if ($node instanceof ModuleNode) {
       if (!empty($this->usedNames)) {
