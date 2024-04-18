@@ -3,7 +3,23 @@
 field_ui.settings:
   type: config_object
   label: 'Field UI settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     field_prefix:
       type: string
       label: 'The prefix for new fields created via Field UI'
+      constraints:
+        Regex:
+          # @see \Drupal\field\Entity\FieldStorageConfig::__construct()
+          pattern: '/^[_a-z]+[_a-z0-9]*$/'
+          message: "The %value prefix is not valid."
+        Length:
+          # The maximum length of the field name is 32 characters. This maximum
+          # length also encompasses the length of the field_prefix, which is
+          # capped at 30 characters here. By setting the field_ui.settings:field_prefix config
+          # to its maximum length, only two characters will remain available
+          # for the actual field name based on the above specified pattern.
+          # @see \Drupal\field\Entity\FieldStorageConfig::NAME_MAX_LENGTH
+          # @see \Drupal\field\Entity\FieldStorageConfig::preSaveNew()
+          max: 30
