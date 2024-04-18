@@ -1852,9 +1852,13 @@
       while ($(scrollTarget).scrollTop() === 0 && $(scrollTarget).parent()) {
         scrollTarget = $(scrollTarget).parent();
       }
+
       // Only scroll upward.
       if (offset.top - 10 < $(scrollTarget).scrollTop()) {
-        $(scrollTarget).animate({ scrollTop: offset.top - 10 }, 500);
+        scrollTarget.get(0).scrollTo({
+          top: offset.top - 10,
+          behavior: 'smooth',
+        });
       }
     },
   };
