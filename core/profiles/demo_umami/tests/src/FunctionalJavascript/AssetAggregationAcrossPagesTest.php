@@ -41,7 +41,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     $this->assertSame(4, $performance_data->getStylesheetCount());
     $this->assertSame(89167, $performance_data->getStylesheetBytes());
     $this->assertSame(2, $performance_data->getScriptCount());
-    $this->assertSame(264670, $performance_data->getScriptBytes());
+    $this->assertSame(264696, $performance_data->getScriptBytes());
   }
 
   /**

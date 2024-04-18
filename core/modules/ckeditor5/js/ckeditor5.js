@@ -651,12 +651,18 @@
 
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
   $(window).on('dialog:beforecreate', () => {
-    $('.ckeditor5-dialog-loading').animate(
-      { top: '-40px' },
-      function removeDialogLoading() {
-        $(this).remove();
-      },
-    );
+    const dialogLoading = document.querySelector('.ckeditor5-dialog-loading');
+
+    if (dialogLoading) {
+      dialogLoading.addEventListener(
+        'transitionend',
+        function removeDialogLoading() {
+          dialogLoading.remove();
+        },
+      );
+      dialogLoading.style.transition = 'top 0.5s ease';
+      dialogLoading.style.top = '-40px';
+    }
   });
 
   // Respond to dialogs that are saved, sending data back to CKEditor.
