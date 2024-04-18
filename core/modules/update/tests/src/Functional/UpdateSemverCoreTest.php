@@ -243,6 +243,11 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
 
   /**
    * Checks that Drupal recovers after problems connecting to update server.
+   *
+   * This test uses the following XML fixtures.
+   *  - drupal.broken.xml
+   *  - drupal.sec.8.0.2.xml
+   *     'supported_branches' is '8.0.,8.1.'.
    */
   public function testBrokenThenFixedUpdates() {
     $this->drupalLogin($this->drupalCreateUser([
