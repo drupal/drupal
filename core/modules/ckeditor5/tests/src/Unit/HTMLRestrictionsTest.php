@@ -909,441 +909,441 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield 'any set + empty set' => [
       'a' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
       'b' => HTMLRestrictions::emptySet(),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'empty set + any set' => [
       'a' => HTMLRestrictions::emptySet(),
       'b' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
 
     // Basic cases: tags.
     yield 'union of two very restricted tags' => [
       'a' => new HTMLRestrictions(['a' => FALSE]),
       'b' => new HTMLRestrictions(['a' => FALSE]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'a',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'a',
     ];
     yield 'union of two very unrestricted tags' => [
       'a' => new HTMLRestrictions(['a' => TRUE]),
       'b' => new HTMLRestrictions(['a' => TRUE]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'a',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'a',
     ];
     yield 'union of one very unrestricted tag with one very restricted tag' => [
       'a' => new HTMLRestrictions(['a' => TRUE]),
       'b' => new HTMLRestrictions(['a' => FALSE]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'union of one very unrestricted tag with one very restricted tag — vice versa' => [
       'a' => new HTMLRestrictions(['a' => FALSE]),
       'b' => new HTMLRestrictions(['a' => TRUE]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
 
     // Basic cases: attributes..
     yield 'set + set with empty intersection' => [
       'a' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
       'b' => new HTMLRestrictions(['b' => ['href' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['a' => ['href' => TRUE], 'b' => ['href' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['a' => ['href' => TRUE], 'b' => ['href' => TRUE]]),
     ];
     yield 'set + identical set' => [
       'a' => new HTMLRestrictions(['b' => ['href' => TRUE]]),
       'b' => new HTMLRestrictions(['b' => ['href' => TRUE]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'b',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'b',
+      'expected_union' => 'b',
     ];
     yield 'set + superset' => [
       'a' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
       'b' => new HTMLRestrictions(['b' => ['href' => TRUE], 'a' => ['href' => TRUE]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
 
     // Tag restrictions.
     yield 'tag restrictions are different: <a> vs <b c>' => [
       'a' => new HTMLRestrictions(['a' => FALSE]),
       'b' => new HTMLRestrictions(['b' => ['c' => TRUE]]),
-      'diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['a' => FALSE, 'b' => ['c' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['a' => FALSE, 'b' => ['c' => TRUE]]),
     ];
     yield 'tag restrictions are different: <a> vs <b c> — vice versa' => [
       'a' => new HTMLRestrictions(['b' => ['c' => TRUE]]),
       'b' => new HTMLRestrictions(['a' => FALSE]),
-      'diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['a' => FALSE, 'b' => ['c' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['a' => FALSE, 'b' => ['c' => TRUE]]),
     ];
     yield 'tag restrictions are different: <a *> vs <b c>' => [
       'a' => new HTMLRestrictions(['a' => TRUE]),
       'b' => new HTMLRestrictions(['b' => ['c' => TRUE]]),
-      'diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['a' => TRUE, 'b' => ['c' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['a' => TRUE, 'b' => ['c' => TRUE]]),
     ];
     yield 'tag restrictions are different: <a *> vs <b c> — vice versa' => [
       'a' => new HTMLRestrictions(['b' => ['c' => TRUE]]),
       'b' => new HTMLRestrictions(['a' => TRUE]),
-      'diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['a' => TRUE, 'b' => ['c' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['a' => TRUE, 'b' => ['c' => TRUE]]),
     ];
 
     // Attribute restrictions.
     yield 'attribute restrictions are less permissive: <a *> vs <a>' => [
       'a' => new HTMLRestrictions(['a' => TRUE]),
       'b' => new HTMLRestrictions(['a' => FALSE]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'attribute restrictions are more permissive: <a> vs <a *>' => [
       'a' => new HTMLRestrictions(['a' => FALSE]),
       'b' => new HTMLRestrictions(['a' => TRUE]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
 
     yield 'attribute restrictions are more permissive: <a href> vs <a *>' => [
       'a' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
       'b' => new HTMLRestrictions(['a' => TRUE]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
     yield 'attribute restrictions are more permissive: <a> vs <a href>' => [
       'a' => new HTMLRestrictions(['a' => FALSE]),
       'b' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
     yield 'attribute restrictions are more restrictive: <a href> vs <a>' => [
       'a' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
       'b' => new HTMLRestrictions(['a' => FALSE]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'attribute restrictions are more restrictive: <a *> vs <a href>' => [
       'a' => new HTMLRestrictions(['a' => TRUE]),
       'b' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'attribute restrictions are different: <a href> vs <a hreflang>' => [
       'a' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => new HTMLRestrictions(['a' => FALSE]),
-      'union' => new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => new HTMLRestrictions(['a' => FALSE]),
+      'expected_union' => new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => TRUE]]),
     ];
     yield 'attribute restrictions are different: <a href> vs <a hreflang> — vice versa' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
       'b' => new HTMLRestrictions(['a' => ['href' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => new HTMLRestrictions(['a' => FALSE]),
-      'union' => new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => new HTMLRestrictions(['a' => FALSE]),
+      'expected_union' => new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => TRUE]]),
     ];
 
     // Attribute value restriction.
     yield 'attribute restrictions are different: <a hreflang="en"> vs <a hreflang="fr">' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => ['fr' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => new HTMLRestrictions(['a' => FALSE]),
-      'union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE, 'fr' => TRUE]]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => new HTMLRestrictions(['a' => FALSE]),
+      'expected_union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE, 'fr' => TRUE]]]),
     ];
     yield 'attribute restrictions are different: <a hreflang="en"> vs <a hreflang="fr"> — vice versa' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['fr' => TRUE]]]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => new HTMLRestrictions(['a' => FALSE]),
-      'union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE, 'fr' => TRUE]]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => new HTMLRestrictions(['a' => FALSE]),
+      'expected_union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE, 'fr' => TRUE]]]),
     ];
     yield 'attribute restrictions are different: <a hreflang=*> vs <a hreflang="en">' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'attribute restrictions are different: <a hreflang=*> vs <a hreflang="en"> — vice versa' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
     yield 'attribute restrictions are different: <ol type=*> vs <ol type="A">' => [
       'a' => new HTMLRestrictions(['ol' => ['type' => TRUE]]),
       'b' => new HTMLRestrictions(['ol' => ['type' => ['A' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'attribute restrictions are different: <ol type=*> vs <ol type="A"> — vice versa' => [
       'b' => new HTMLRestrictions(['ol' => ['type' => ['A' => TRUE]]]),
       'a' => new HTMLRestrictions(['ol' => ['type' => TRUE]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
     yield 'attribute restrictions are different: <ol type=*> vs <ol type="1">' => [
       'a' => new HTMLRestrictions(['ol' => ['type' => TRUE]]),
       'b' => new HTMLRestrictions(['ol' => ['type' => ['1' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'attribute restrictions are different: <ol type=*> vs <ol type="1"> — vice versa' => [
       'b' => new HTMLRestrictions(['ol' => ['type' => ['1' => TRUE]]]),
       'a' => new HTMLRestrictions(['ol' => ['type' => TRUE]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
     yield 'attribute restrictions are the same: <ol type="1"> vs <ol type="1">' => [
       'a' => new HTMLRestrictions(['ol' => ['type' => ['1' => TRUE]]]),
       'b' => new HTMLRestrictions(['ol' => ['type' => ['1' => TRUE]]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'a',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'a',
     ];
 
     // Complex cases.
     yield 'attribute restrictions are different: <a hreflang="en"> vs <strong>' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'b' => new HTMLRestrictions(['strong' => TRUE]),
-      'diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]], 'strong' => TRUE]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]], 'strong' => TRUE]),
     ];
     yield 'attribute restrictions are different: <a hreflang="en"> vs <strong> — vice versa' => [
       'a' => new HTMLRestrictions(['strong' => TRUE]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
-      'diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]], 'strong' => TRUE]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]], 'strong' => TRUE]),
     ];
     yield 'very restricted tag + slightly restricted tag' => [
       'a' => new HTMLRestrictions(['a' => FALSE]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
     yield 'very restricted tag + slightly restricted tag — vice versa' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'b' => new HTMLRestrictions(['a' => FALSE]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'very unrestricted tag + slightly restricted tag' => [
       'a' => new HTMLRestrictions(['a' => TRUE]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => 'a',
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'very unrestricted tag + slightly restricted tag — vice versa' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'b' => new HTMLRestrictions(['a' => TRUE]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
 
     // Wildcard tag + matching tag cases.
     yield 'wildcard + matching tag: attribute intersection — without possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'wildcard + matching tag: attribute intersection — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'wildcard + matching tag: attribute intersection — WITH possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'p' => FALSE]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'wildcard + matching tag: attribute intersection — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'p' => FALSE]),
       'b' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
-      'diff' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
-      'intersection' => 'b',
-      'union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
+      'expected_intersection' => 'b',
+      'expected_union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'wildcard + matching tag: attribute value intersection — without possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
     ];
     yield 'wildcard + matching tag: attribute value intersection — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
       'b' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
     ];
     yield 'wildcard + matching tag: attribute value intersection — WITH possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]], 'p' => FALSE]),
-      'diff' => new HTMLRestrictions(['p' => ['class' => ['text-align-justify' => TRUE]]]),
-      'intersection' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
-      'union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_diff' => new HTMLRestrictions(['p' => ['class' => ['text-align-justify' => TRUE]]]),
+      'expected_intersection' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
     ];
     yield 'wildcard + matching tag: attribute value intersection — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]], 'p' => FALSE]),
       'b' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
-      'diff' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
-      'intersection' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
-      'union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_diff' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_intersection' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
+      'expected_union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
     ];
     yield 'wildcard + matching tag: on both sides' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE, 'foo' => TRUE], 'p' => FALSE]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'p' => FALSE]),
-      'diff' => new HTMLRestrictions(['$text-container' => ['foo' => TRUE], 'p' => ['foo' => TRUE]]),
-      'intersection' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'p' => ['class' => TRUE]]),
-      'union' => 'a',
+      'expected_diff' => new HTMLRestrictions(['$text-container' => ['foo' => TRUE], 'p' => ['foo' => TRUE]]),
+      'expected_intersection' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'p' => ['class' => TRUE]]),
+      'expected_union' => 'a',
     ];
     yield 'wildcard + matching tag: on both sides — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'p' => FALSE]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE, 'foo' => TRUE], 'p' => FALSE]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'p' => ['class' => TRUE]]),
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'p' => ['class' => TRUE]]),
+      'expected_union' => 'b',
     ];
     yield 'wildcard + matching tag: wildcard resolves into matching tag, but matching tag already supports all attributes' => [
       'a' => new HTMLRestrictions(['p' => TRUE]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['p' => TRUE, '$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['p' => TRUE, '$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
     ];
     yield 'wildcard + matching tag: wildcard resolves into matching tag, but matching tag already supports all attributes — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
       'b' => new HTMLRestrictions(['p' => TRUE]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['p' => TRUE, '$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['p' => TRUE, '$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
     ];
 
     // Wildcard tag + non-matching tag cases.
     yield 'wildcard + non-matching tag: attribute diff — without possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'wildcard + non-matching tag: attribute diff — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'wildcard + non-matching tag: attribute diff — WITH possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'span' => FALSE]),
-      'diff' => 'a',
-      'intersection' => new HTMLRestrictions(['span' => FALSE]),
-      'union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => new HTMLRestrictions(['span' => FALSE]),
+      'expected_union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'wildcard + non-matching tag: attribute diff — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE], 'span' => FALSE]),
       'b' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
-      'diff' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
-      'intersection' => new HTMLRestrictions(['span' => FALSE]),
-      'union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
+      'expected_intersection' => new HTMLRestrictions(['span' => FALSE]),
+      'expected_union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'wildcard + non-matching tag: attribute value diff — without possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
     ];
     yield 'wildcard + non-matching tag: attribute value diff — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
       'b' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
     ];
     yield 'wildcard + non-matching tag: attribute value diff — WITH possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]], 'span' => FALSE]),
-      'diff' => 'a',
-      'intersection' => new HTMLRestrictions(['span' => FALSE]),
-      'union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => new HTMLRestrictions(['span' => FALSE]),
+      'expected_union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
     ];
     yield 'wildcard + non-matching tag: attribute value diff — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]], 'span' => FALSE]),
       'b' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
-      'diff' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
-      'intersection' => new HTMLRestrictions(['span' => FALSE]),
-      'union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
+      'expected_diff' => new HTMLRestrictions(['$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
+      'expected_intersection' => new HTMLRestrictions(['span' => FALSE]),
+      'expected_union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$text-container' => ['class' => ['vertical-align-top' => TRUE]]]),
     ];
 
     // Wildcard tag + wildcard tag cases.
     yield 'wildcard + wildcard tag: attributes' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE, 'foo' => TRUE]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
-      'diff' => new HTMLRestrictions(['$text-container' => ['foo' => TRUE]]),
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => new HTMLRestrictions(['$text-container' => ['foo' => TRUE]]),
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'wildcard + wildcard tag: attributes — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE, 'foo' => TRUE]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
     yield 'wildcard + wildcard tag: attribute values' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
-      'diff' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-justify' => TRUE]]]),
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-justify' => TRUE]]]),
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'wildcard + wildcard tag: attribute values — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
 
     // Concrete attributes + wildcard attribute cases for all 3 possible
@@ -1358,44 +1358,44 @@ class HTMLRestrictionsTest extends UnitTestCase {
       yield "concrete attrs + wildcard $wildcard_location attr that covers a superset" => [
         'a' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
         'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
-        'diff' => HTMLRestrictions::emptySet(),
-        'intersection' => 'a',
-        'union' => 'b',
+        'expected_diff' => HTMLRestrictions::emptySet(),
+        'expected_intersection' => 'a',
+        'expected_union' => 'b',
       ];
       yield "concrete attrs + wildcard $wildcard_location attr that covers a superset — vice versa" => [
         'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
         'b' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
-        'diff' => 'a',
-        'intersection' => 'b',
-        'union' => 'a',
+        'expected_diff' => 'a',
+        'expected_intersection' => 'b',
+        'expected_union' => 'a',
       ];
       yield "concrete attrs + wildcard $wildcard_location attr that covers a subset" => [
         'a' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
         'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
-        'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
-        'intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
-        'union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+        'expected_diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
+        'expected_intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'expected_union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
       ];
       yield "concrete attrs + wildcard $wildcard_location attr that covers a subset — vice versa" => [
         'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
         'b' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
-        'diff' => 'a',
-        'intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
-        'union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+        'expected_diff' => 'a',
+        'expected_intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'expected_union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
       ];
       yield "wildcard $wildcard_location attr + wildcard $wildcard_location attr" => [
         'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
         'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
-        'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
-        'intersection' => 'b',
-        'union' => 'a',
+        'expected_diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
+        'expected_intersection' => 'b',
+        'expected_union' => 'a',
       ];
       yield "wildcard $wildcard_location attr + wildcard $wildcard_location attr — vice versa" => [
         'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
         'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
-        'diff' => HTMLRestrictions::emptySet(),
-        'intersection' => 'a',
-        'union' => 'b',
+        'expected_diff' => HTMLRestrictions::emptySet(),
+        'expected_intersection' => 'a',
+        'expected_union' => 'b',
       ];
     }
 
@@ -1403,90 +1403,90 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield 'global attribute tag + global attribute tag: no overlap in attributes' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'b' => new HTMLRestrictions(['*' => ['baz' => FALSE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'baz' => FALSE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'baz' => FALSE]]),
     ];
     yield 'global attribute tag + global attribute tag: no overlap in attributes — vice versa' => [
       'a' => new HTMLRestrictions(['*' => ['baz' => FALSE]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'baz' => FALSE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'baz' => FALSE]]),
     ];
     yield 'global attribute tag + global attribute tag: overlap in attributes, same attribute value restrictions' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'b' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
-      'diff' => new HTMLRestrictions(['*' => ['foo' => TRUE]]),
-      'intersection' => 'b',
-      'union' => 'a',
+      'expected_diff' => new HTMLRestrictions(['*' => ['foo' => TRUE]]),
+      'expected_intersection' => 'b',
+      'expected_union' => 'a',
     ];
     yield 'global attribute tag + global attribute tag: overlap in attributes, same attribute value restrictions — vice versa' => [
       'a' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+      'expected_diff' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => 'a',
+      'expected_union' => 'b',
     ];
     yield 'global attribute tag + global attribute tag: overlap in attributes, different attribute value restrictions' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'b' => new HTMLRestrictions(['*' => ['bar' => TRUE, 'dir' => TRUE, 'foo' => FALSE]]),
-      'diff' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
-      'intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
+      'expected_diff' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
+      'expected_intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
     ];
     yield 'global attribute tag + global attribute tag: overlap in attributes, different attribute value restrictions — vice versa' => [
       'a' => new HTMLRestrictions(['*' => ['bar' => TRUE, 'dir' => TRUE, 'foo' => FALSE]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
-      'diff' => 'a',
-      'intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
     ];
 
     // Global attribute `*` HTML tag + concrete tag.
     yield 'global attribute tag + concrete tag' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'b' => new HTMLRestrictions(['p' => FALSE]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => FALSE]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => FALSE]),
     ];
     yield 'global attribute tag + concrete tag — vice versa' => [
       'a' => new HTMLRestrictions(['p' => FALSE]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => FALSE]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => FALSE]),
     ];
     yield 'global attribute tag + concrete tag with allowed attribute' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'b' => new HTMLRestrictions(['p' => ['baz' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => ['baz' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => ['baz' => TRUE]]),
     ];
     yield 'global attribute tag + concrete tag with allowed attribute — vice versa' => [
       'a' => new HTMLRestrictions(['p' => ['baz' => TRUE]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => ['baz' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => ['baz' => TRUE]]),
     ];
 
     // Global attribute `*` HTML tag + wildcard tag.
     yield 'global attribute tag + wildcard tag' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], '$text-container' => ['class' => TRUE]]),
     ];
     yield 'global attribute tag + wildcard tag — vice versa' => [
       'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
-      'diff' => 'a',
-      'intersection' => HTMLRestrictions::emptySet(),
-      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], '$text-container' => ['class' => TRUE]]),
+      'expected_diff' => 'a',
+      'expected_intersection' => HTMLRestrictions::emptySet(),
+      'expected_union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], '$text-container' => ['class' => TRUE]]),
     ];
   }
 

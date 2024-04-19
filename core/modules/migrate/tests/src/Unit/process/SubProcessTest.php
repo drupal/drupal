@@ -89,7 +89,7 @@ class SubProcessTest extends MigrateProcessTestCase {
   public static function providerTestSubProcess() {
     return [
       'no source context' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
             'id' => 'source_id',
@@ -98,7 +98,7 @@ class SubProcessTest extends MigrateProcessTestCase {
         ],
       ],
       'default source key' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
             'id' => 'source_id',
@@ -107,12 +107,12 @@ class SubProcessTest extends MigrateProcessTestCase {
           'key' => '@id',
           'include_source' => TRUE,
         ],
-        'source values' => [
+        'source_values' => [
           'baf' => 'source_baz',
         ],
       ],
       'renamed source key' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
             'id' => 'source_id',
@@ -122,7 +122,7 @@ class SubProcessTest extends MigrateProcessTestCase {
           'include_source' => TRUE,
           'source_key' => 'my_source',
         ],
-        'source values' => [
+        'source_values' => [
           'baf' => 'source_baz',
         ],
       ],
@@ -176,7 +176,7 @@ class SubProcessTest extends MigrateProcessTestCase {
   public static function providerTestNotFoundSubProcess() {
     return [
       'no key' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
           ],
@@ -184,7 +184,7 @@ class SubProcessTest extends MigrateProcessTestCase {
         ],
       ],
       'lookup returns NULL' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
             'id' => 'source_id',

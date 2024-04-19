@@ -17,29 +17,33 @@ abstract class YamlTestBase extends TestCase {
   public function providerEncodeDecodeTests() {
     return [
       [
-        'foo' => 'bar',
-        'id' => 'schnitzel',
-        'ponies' => ['nope', 'thanks'],
-        'how' => [
-          'about' => 'if',
-          'i' => 'ask',
-          'nicely',
-        ],
-        'the' => [
-          'answer' => [
-            'still' => 'would',
-            'be' => 'Y',
+        'data' => [
+          'foo' => 'bar',
+          'id' => 'schnitzel',
+          'ponies' => ['nope', 'thanks'],
+          'how' => [
+            'about' => 'if',
+            'i' => 'ask',
+            'nicely',
           ],
+          'the' => [
+            'answer' => [
+              'still' => 'would',
+              'be' => 'Y',
+            ],
+          ],
+          'how_many_times' => 123,
+          'should_i_ask' => FALSE,
+          1,
+          FALSE,
+          [1, FALSE],
+          [10],
+          [0 => '123456'],
         ],
-        'how_many_times' => 123,
-        'should_i_ask' => FALSE,
-        1,
-        FALSE,
-        [1, FALSE],
-        [10],
-        [0 => '123456'],
       ],
-      [NULL],
+      [
+        'data' => [NULL],
+      ],
     ];
   }
 

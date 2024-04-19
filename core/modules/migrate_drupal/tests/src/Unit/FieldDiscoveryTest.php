@@ -246,23 +246,23 @@ class FieldDiscoveryTest extends UnitTestCase {
     return [
       'Drupal 7' => [
         'tags' => ['Drupal 7'],
-        'result' => '7',
+        'expected_result' => '7',
       ],
       'Drupal 6' => [
         'tags' => ['Drupal 6'],
-        'result' => '6',
+        'expected_result' => '6',
       ],
       'D7 with others' => [
         'tags' => ['Drupal 7', 'Translation', 'Other Tag'],
-        'result' => '7',
+        'expected_result' => '7',
       ],
       'Both (d7 has priority)' => [
         'tags' => ['Drupal 6', 'Drupal 7'],
-        'result' => '7',
+        'expected_result' => '7',
       ],
       'Neither' => [
         'tags' => ['drupal 6', 'Drupal_6', 'This contains Drupal 7 but is not'],
-        'result' => FALSE,
+        'expected_result' => FALSE,
       ],
     ];
   }

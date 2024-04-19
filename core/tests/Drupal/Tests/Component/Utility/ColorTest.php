@@ -119,14 +119,14 @@ class ColorTest extends TestCase {
     // And some valid values.
     $valid = [
       // Shorthands without alpha.
-      ['hex' => '#000', 'rgb' => ['red' => 0, 'green' => 0, 'blue' => 0]],
-      ['hex' => '#fff', 'rgb' => ['red' => 255, 'green' => 255, 'blue' => 255]],
-      ['hex' => '#abc', 'rgb' => ['red' => 170, 'green' => 187, 'blue' => 204]],
-      ['hex' => 'cba', 'rgb' => ['red' => 204, 'green' => 187, 'blue' => 170]],
+      ['value' => '#000', 'expected' => ['red' => 0, 'green' => 0, 'blue' => 0]],
+      ['value' => '#fff', 'expected' => ['red' => 255, 'green' => 255, 'blue' => 255]],
+      ['value' => '#abc', 'expected' => ['red' => 170, 'green' => 187, 'blue' => 204]],
+      ['value' => 'cba', 'expected' => ['red' => 204, 'green' => 187, 'blue' => 170]],
       // Full without alpha.
-      ['hex' => '#000000', 'rgb' => ['red' => 0, 'green' => 0, 'blue' => 0]],
-      ['hex' => '#ffffff', 'rgb' => ['red' => 255, 'green' => 255, 'blue' => 255]],
-      ['hex' => '#010203', 'rgb' => ['red' => 1, 'green' => 2, 'blue' => 3]],
+      ['value' => '#000000', 'expected' => ['red' => 0, 'green' => 0, 'blue' => 0]],
+      ['value' => '#ffffff', 'expected' => ['red' => 255, 'green' => 255, 'blue' => 255]],
+      ['value' => '#010203', 'expected' => ['red' => 1, 'green' => 2, 'blue' => 3]],
     ];
     return array_merge($invalid, $valid);
   }
