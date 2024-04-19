@@ -77,7 +77,7 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
 
     // Update the installed version of system and then assert that now,
     // the test module is shown instead.
-    $update_registry->setInstalledVersion('user', 9301);
+    $update_registry->setInstalledVersion('user', 10000);
     $this->drupalGet($this->updateUrl);
 
     $assert_session->pageTextNotContains('The version of Drupal you are trying to update from is too old');

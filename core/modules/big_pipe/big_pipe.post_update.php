@@ -6,8 +6,10 @@
  */
 
 /**
- * Clear the render cache.
+ * Implements hook_removed_post_updates().
  */
-function big_pipe_post_update_html5_placeholders() {
-  // Empty post_update hook.
+function big_pipe_removed_post_updates() {
+  return [
+    'big_pipe_post_update_html5_placeholders' => '11.0.0',
+  ];
 }

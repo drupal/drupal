@@ -5,61 +5,9 @@
  * Install, update and uninstall functions for the block_content module.
  */
 
-use Drupal\block_content\BlockContentStorageSchema;
-use Drupal\Core\Entity\Form\RevisionDeleteForm;
-use Drupal\Core\Entity\Form\RevisionRevertForm;
-use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
 /**
  * Implements hook_update_last_removed().
  */
 function block_content_update_last_removed() {
-  return 8600;
-}
-
-/**
- * Update entity definition to handle revision routes.
- */
-function block_content_update_10100(&$sandbox = NULL): TranslatableMarkup {
-  $entityDefinitionUpdateManager = \Drupal::entityDefinitionUpdateManager();
-  $definition = $entityDefinitionUpdateManager->getEntityType('block_content');
-  $routeProviders = $definition->get('route_provider');
-  $routeProviders['revision'] = RevisionHtmlRouteProvider::class;
-  $definition
-    ->setFormClass('revision-delete', RevisionDeleteForm::class)
-    ->setFormClass('revision-revert', RevisionRevertForm::class)
-    ->set('route_provider', $routeProviders)
-    ->setLinkTemplate('revision-delete-form', '/admin/content/block/{block_content}/revision/{block_content_revision}/delete')
-    ->setLinkTemplate('revision-revert-form', '/admin/content/block/{block_content}/revision/{block_content_revision}/revert')
-    ->setLinkTemplate('version-history', '/admin/content/block/{block_content}/revisions');
-  $entityDefinitionUpdateManager->updateEntityType($definition);
-  return \t('Added revision routes to Content block entity type.');
-}
-
-/**
- * Remove the unique values constraint from block content info fields.
- */
-function block_content_update_10200() {
-  $constraint = 'UniqueField';
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-  $field_storage_definition = $definition_update_manager->getFieldStorageDefinition('info', 'block_content');
-  $constraints = $field_storage_definition->getConstraints();
-  if (isset($constraints[$constraint])) {
-    unset($constraints[$constraint]);
-    $field_storage_definition->setConstraints($constraints);
-    $definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
-  }
-}
-
-/**
- * Apply index to reusable column.
- */
-function block_content_update_10300(): void {
-  $manager = \Drupal::entityDefinitionUpdateManager();
-  $entity_type = $manager->getEntityType('block_content')
-    ->setHandlerClass('storage_schema', BlockContentStorageSchema::class);
-  $manager->updateEntityType($entity_type);
-  $manager->updateFieldStorageDefinition(\Drupal::service('entity_field.manager')
-    ->getBaseFieldDefinitions('block_content')['reusable']);
+  return 10300;
 }

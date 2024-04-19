@@ -5,10 +5,6 @@
  * Post update functions for Views.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\views\ViewEntityInterface;
-use Drupal\views\ViewsConfigUpdater;
-
 /**
  * Implements hook_removed_post_updates().
  */
@@ -39,123 +35,16 @@ function views_removed_post_updates() {
     'views_post_update_sort_identifier' => '10.0.0',
     'views_post_update_provide_revision_table_relationship' => '10.0.0',
     'views_post_update_image_lazy_load' => '10.0.0',
+    'views_post_update_boolean_custom_titles' => '11.0.0',
+    'views_post_update_oembed_eager_load' => '11.0.0',
+    'views_post_update_responsive_image_lazy_load' => '11.0.0',
+    'views_post_update_timestamp_formatter' => '11.0.0',
+    'views_post_update_fix_revision_id_part' => '11.0.0',
+    'views_post_update_add_missing_labels' => '11.0.0',
+    'views_post_update_remove_skip_cache_setting' => '11.0.0',
+    'views_post_update_remove_default_argument_skip_url' => '11.0.0',
+    'views_post_update_taxonomy_filter_user_context' => '11.0.0',
+    'views_post_update_pager_heading' => '11.0.0',
+    'views_post_update_rendered_entity_field_cache_metadata' => '11.0.0',
   ];
-}
-
-/**
- * Update Views config schema to make boolean custom titles translatable.
- */
-function views_post_update_boolean_custom_titles(?array &$sandbox = NULL): void {
-  // Empty update to rebuild Views config schema.
-}
-
-/**
- * Add eager load option to all oembed type field configurations.
- */
-function views_post_update_oembed_eager_load(?array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsOembedEagerLoadFieldUpdate($view);
-  });
-}
-
-/**
- * Add lazy load options to all responsive image type field configurations.
- */
-function views_post_update_responsive_image_lazy_load(?array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsResponsiveImageLazyLoadFieldUpdate($view);
-  });
-}
-
-/**
- * Update timestamp formatter settings for views.
- */
-function views_post_update_timestamp_formatter(array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsTimestampFormatterTimeDiffUpdate($view);
-  });
-}
-
-/**
- * Fix '-revision_id' replacement token syntax.
- */
-function views_post_update_fix_revision_id_part(&$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  $view_config_updater->setDeprecationsEnabled(FALSE);
-  \Drupal::classResolver(ConfigEntityUpdater::class)
-    ->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater) {
-      return $view_config_updater->needsRevisionFieldHyphenFix($view);
-    });
-}
-
-/**
- * Add labels to views which don't have one.
- */
-function views_post_update_add_missing_labels(&$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->addLabelIfMissing($view);
-  });
-}
-
-/**
- * Remove the skip_cache settings.
- */
-function views_post_update_remove_skip_cache_setting(): void {
-  \Drupal::configFactory()
-    ->getEditable('views.settings')
-    ->clear('skip_cache')
-    ->save(TRUE);
-}
-
-/**
- * Remove default_argument_skip_url setting.
- */
-function views_post_update_remove_default_argument_skip_url(array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsDefaultArgumentSkipUrlUpdate($view);
-  });
-}
-
-/**
- * Removes User context from views with taxonomy filters.
- */
-function views_post_update_taxonomy_filter_user_context(?array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsTaxonomyTermFilterUpdate($view);
-  });
-}
-
-/**
- * Adds a default pager heading.
- */
-function views_post_update_pager_heading(?array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsPagerHeadingUpdate($view);
-  });
-}
-
-/**
- * Removes entity display cache metadata from views with rendered entity fields.
- */
-function views_post_update_rendered_entity_field_cache_metadata(?array &$sandbox = NULL): void {
-  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
-  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
-    return $view_config_updater->needsRenderedEntityFieldUpdate($view);
-  });
 }

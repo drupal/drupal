@@ -97,39 +97,5 @@ function dblog_schema() {
  * Implements hook_update_last_removed().
  */
 function dblog_update_last_removed() {
-  return 8600;
-}
-
-/**
- * Remove the year 2038 date limitation.
- */
-function dblog_update_10100(&$sandbox = NULL) {
-  $connection = \Drupal::database();
-  if ($connection->schema()->tableExists('watchdog') && $connection->databaseType() != 'sqlite') {
-    $new = [
-      'type' => 'int',
-      'not null' => TRUE,
-      'default' => 0,
-      'description' => 'Unix timestamp of when event occurred.',
-      'size' => 'big',
-    ];
-    $connection->schema()->changeField('watchdog', 'timestamp', 'timestamp', $new);
-  }
-}
-
-/**
- * Converts the 'wid' of the 'watchdog' table to a big integer.
- */
-function dblog_update_10101(&$sandbox = NULL) {
-  $connection = \Drupal::database();
-  if ($connection->databaseType() != 'sqlite') {
-    // Increase the size of the field.
-    $new_specification = [
-      'size' => 'big',
-      'type' => 'serial',
-      'not null' => TRUE,
-      'description' => 'Primary Key: Unique watchdog event ID.',
-    ];
-    $connection->schema()->changeField('watchdog', 'wid', 'wid', $new_specification);
-  }
+  return 10101;
 }
