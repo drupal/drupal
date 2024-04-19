@@ -27,7 +27,6 @@
       "modules/statistics/tests/fixtures/drupal6.php",
       "modules/statistics/tests/fixtures/drupal7.php",
       "modules/system/tests/logo.svgz",
-      "modules/tracker/tests/fixtures/drupal7.php",
       "node_modules/*",
       "profiles/demo_umami/modules/demo_umami_content/default_content/languages/es/**/*",
       "tests/fixtures/files/*",

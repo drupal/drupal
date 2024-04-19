@@ -110,9 +110,6 @@ class TestViewsTest extends KernelTestBase {
     // `rest_test_views` is a module dependency.
     // @see core/modules/rest/tests/modules/rest_test_views/test_views/views.view.test_serializer_node_display_field.yml
     'rest_test_views',
-    // `tracker` is a module dependency.
-    // @see core/modules/tracker/tests/modules/tracker_test_views/test_views/views.view.test_tracker_user_uid.yml
-    'tracker',
     // `search` is a module dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_argument_dependency.yml
     'search',
