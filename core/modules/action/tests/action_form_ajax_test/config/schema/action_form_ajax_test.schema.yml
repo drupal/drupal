@@ -1,7 +1,0 @@
-action.configuration.action_form_ajax_test:
-  type: action_configuration_default
-  label: 'action_form_ajax_test action'
-  mapping:
-    party_time:
-      type: string
-      label: 'The time of the party.'

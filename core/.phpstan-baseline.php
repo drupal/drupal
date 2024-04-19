@@ -582,11 +582,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Updater/Module.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\action\\\\Form\\\\ActionFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/src/Form/ActionFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$position might not be defined\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/BlockRenderOrderTest.php',

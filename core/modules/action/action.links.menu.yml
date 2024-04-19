@@ -1,5 +1,0 @@
-action.admin:
-  title: Actions
-  description: 'Create tasks that the system can execute.'
-  route_name: entity.action.collection
-  parent: system.admin_config_system

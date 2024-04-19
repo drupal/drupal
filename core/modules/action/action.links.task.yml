@@ -1,4 +1,0 @@
-action.admin:
-  route_name: entity.action.collection
-  title: 'Manage actions'
-  base_route: entity.action.collection

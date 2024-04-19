@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\node\Entity\Node;
+use Drupal\system\Entity\Action;
 use Drupal\user\Entity\User;
 
 // cspell:ignore hola usuario
@@ -297,6 +298,10 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
     $this->submitForm(['string' => 'Full comment'], 'Filter');
     // cSpell:disable-next-line
     $this->assertSession()->pageTextContains('Comentario completo');
+
+    // Make sure our custom action is still there.
+    $action = Action::load('test_action');
+    $this->assertEquals('Test action', $action->label());
 
     // Make sure our ban still exists.
     $this->drupalGet('admin/config/people/ban');
