@@ -56,11 +56,11 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * The file path(s) to the dumped database(s) to load into the child site.
    *
-   * The file system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz is
+   * The file system/tests/fixtures/update/drupal-10.3.0.bare.standard.php.gz is
    * normally included first -- this sets up the base database from a bare
    * standard Drupal installation.
    *
-   * The file system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz
+   * The file system/tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz
    * can also be used in case we want to test with a database filled with
    * content, and with all core modules enabled.
    *
@@ -253,7 +253,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
-    foreach (['user' => 9301, 'node' => 8700, 'system' => 8901, 'update_test_schema' => 8000] as $module => $schema) {
+    foreach (['user' => 10000, 'node' => 8700, 'system' => 10201, 'update_test_schema' => 8000] as $module => $schema) {
       $this->assertEquals($schema, $update_registry->getInstalledVersion($module), "Module $module schema is $schema");
     }
 
