@@ -381,7 +381,7 @@ class RowTest extends UnitTestCase {
     return [
       'Single Key' => [
         'keys' => ['source_key_1'],
-        'values' => ['source_value_1'],
+        'expected_values' => ['source_value_1'],
       ],
       'All Source Keys' => [
         'keys' => [
@@ -389,7 +389,7 @@ class RowTest extends UnitTestCase {
           'source_key_2',
           '@@source_key_3',
         ],
-        'values' => [
+        'expected_values' => [
           'source_value_1',
           'source_value_2',
           'source_value_3',
@@ -401,7 +401,7 @@ class RowTest extends UnitTestCase {
           '@destination_key_2',
           '@@@destination_key_3',
         ],
-        'values' => [
+        'expected_values' => [
           'destination_value_1',
           'destination_value_2',
           'destination_value_3',
@@ -417,7 +417,7 @@ class RowTest extends UnitTestCase {
           'non_existent_source_key',
           '@non_existent_destination_key',
         ],
-        'values' => [
+        'expected_values' => [
           'source_shared_value_1',
           'destination_shared_value_1',
           'source_shared_value_2',

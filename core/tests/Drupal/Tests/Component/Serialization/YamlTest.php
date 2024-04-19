@@ -23,7 +23,7 @@ class YamlTest extends YamlTestBase {
    * @covers ::decode
    * @dataProvider providerEncodeDecodeTests
    */
-  public function testEncodeDecode($data) {
+  public function testEncodeDecode(array $data): void {
     $this->assertSame($data, Yaml::decode(Yaml::encode($data)));
   }
 

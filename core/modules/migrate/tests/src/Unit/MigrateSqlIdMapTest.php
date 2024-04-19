@@ -1135,7 +1135,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   public static function getHighestIdDataProvider() {
     return [
       'Destination ID type integer' => [
-        'dest_ids' => [
+        'destination_ids' => [
           'nid' => [
             'type' => 'integer',
           ],
@@ -1149,7 +1149,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
         'expected' => 5,
       ],
       'Destination ID types integer and string' => [
-        'dest_ids' => [
+        'destination_ids' => [
           'nid' => [
             'type' => 'integer',
           ],
@@ -1200,14 +1200,14 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   public static function getHighestIdInvalidDataProvider() {
     return [
       'Destination ID type string' => [
-        'ids' => [
+        'destination_ids' => [
           'language' => [
             'type' => 'string',
           ],
         ],
       ],
       'Destination ID types int (not integer) and string' => [
-        'ids' => [
+        'destination_ids' => [
           'nid' => [
             'type' => 'int',
           ],

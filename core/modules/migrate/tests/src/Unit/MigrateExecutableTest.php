@@ -512,7 +512,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   public static function providerTestRollback() {
     return [
       'Rollback delete' => [
-        'ID map records' => [
+        'id_map_records' => [
           [
             'source' => '1',
             'destination' => '1',
@@ -521,17 +521,17 @@ class MigrateExecutableTest extends MigrateTestCase {
         ],
       ],
       'Rollback preserve' => [
-        'ID map records' => [
+        'id_map_records' => [
           [
             'source' => '1',
             'destination' => '1',
             'rollback_action' => MigrateIdMapInterface::ROLLBACK_PRESERVE,
           ],
         ],
-        'Rollback called' => FALSE,
+        'rollback_called' => FALSE,
       ],
       'Rolling back a failed row' => [
-        'ID map records' => [
+        'id_map_records' => [
           [
             'source' => '1',
             'destination' => NULL,
@@ -539,10 +539,10 @@ class MigrateExecutableTest extends MigrateTestCase {
             'rollback_action' => MigrateIdMapInterface::ROLLBACK_DELETE,
           ],
         ],
-        'Rollback called' => FALSE,
+        'rollback_called' => FALSE,
       ],
       'Rolling back with ID map having records with duplicated destination ID' => [
-        'ID map records' => [
+        'id_map_records' => [
           [
             'source_1' => '1',
             'source_2' => '1',
@@ -562,11 +562,11 @@ class MigrateExecutableTest extends MigrateTestCase {
             'rollback_action' => MigrateIdMapInterface::ROLLBACK_DELETE,
           ],
         ],
-        'Rollback called' => TRUE,
-        'Source ID keys' => ['source_1', 'source_2'],
+        'rollback_called' => TRUE,
+        'source_id_keys' => ['source_1', 'source_2'],
       ],
       'Rollback NULL' => [
-        'ID map records' => [
+        'id_map_records' => [
           [
             'source' => '1',
             'destination' => '1',
@@ -575,7 +575,7 @@ class MigrateExecutableTest extends MigrateTestCase {
         ],
       ],
       'Rollback missing' => [
-        'ID map records' => [
+        'id_map_records' => [
           [
             'source' => '1',
             'destination' => '1',
