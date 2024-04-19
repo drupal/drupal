@@ -12,6 +12,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Tests the Shortcut entity's cache tags.
@@ -32,12 +33,11 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * User with permission to administer shortcuts.
    *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
+   * @var \Drupal\user\UserInterface
    */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
+  protected UserInterface $adminUser;
 
   /**
    * {@inheritdoc}
@@ -49,6 +49,14 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->adminUser = $this->drupalCreateUser([
+      'access toolbar',
+      'access shortcuts',
+      'administer site configuration',
+      'administer shortcuts',
+      'administer themes',
+    ]);
 
     // Give anonymous users permission to customize shortcut links, so that we
     // can verify the cache tags of cached versions of shortcuts.
@@ -109,7 +117,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
 
     // Ensure that without enabling the shortcuts-in-page-title-link feature
     // in the theme, the shortcut_list cache tag is not added to the page.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/system/cron');
     $expected_cache_tags = [
       'block_view',
@@ -286,7 +294,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
 
     // Ensure that without enabling the shortcuts-in-page-title-link feature
     // in the theme, the shortcut_list cache tag is not added to the page.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/system/cron');
     $expected_cache_tags = [
       'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
