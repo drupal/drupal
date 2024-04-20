@@ -1878,6 +1878,23 @@ function hook_entity_form_mode_alter(&$form_mode, \Drupal\Core\Entity\EntityInte
 }
 
 /**
+ * Change the form mode of a specific entity type currently being displayed.
+ *
+ * @param string $form_mode
+ *   The form_mode currently displaying the entity.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity that is being viewed.
+ *
+ * @ingroup entity_crud
+ */
+function hook_ENTITY_TYPE_form_mode_alter(string &$form_mode, \Drupal\Core\Entity\EntityInterface $entity): void {
+  // Change the form mode for nodes with 'article' bundle.
+  if ($entity->bundle() == 'article') {
+    $form_mode = 'custom_article_form_mode';
+  }
+}
+
+/**
  * Alter the settings used for displaying an entity form.
  *
  * @param \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display
