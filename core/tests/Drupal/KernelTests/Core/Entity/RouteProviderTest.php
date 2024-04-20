@@ -29,19 +29,15 @@ class RouteProviderTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
 
-    $this->setUpCurrentUser(['uid' => 1]);
+    $permissions = [
+      'administer entity_test content',
+      'view test entity',
+    ];
+    $this->setUpCurrentUser(['uid' => 2], $permissions);
 
     $this->installEntitySchema('entity_test_mul');
     $this->installEntitySchema('entity_test_admin_routes');
