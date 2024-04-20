@@ -14,6 +14,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\statistics\Plugin\migrate\source\NodeCounter
  *
  * @group statistics
+ * @group legacy
  */
 class NodeCounterTest extends MigrateSqlSourceTestBase {
 

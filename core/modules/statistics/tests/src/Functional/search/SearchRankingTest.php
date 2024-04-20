@@ -15,6 +15,7 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
  * Indexes content and tests ranking factors.
  *
  * @group statistics
+ * @group legacy
  */
 class SearchRankingTest extends BrowserTestBase {
 

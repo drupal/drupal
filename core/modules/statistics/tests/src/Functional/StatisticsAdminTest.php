@@ -14,6 +14,7 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
  * Tests the statistics admin.
  *
  * @group statistics
+ * @group legacy
  */
 class StatisticsAdminTest extends BrowserTestBase {
 

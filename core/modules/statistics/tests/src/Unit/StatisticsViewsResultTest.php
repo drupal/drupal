@@ -10,6 +10,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\statistics\StatisticsViewsResult
  * @group statistics
+ * @group legacy
  */
 class StatisticsViewsResultTest extends UnitTestCase {
 

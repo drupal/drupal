@@ -10,7 +10,8 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 /**
  * Upgrade variables to statistics.settings.yml.
  *
- * @group migrate_drupal_7
+ * @group statistics
+ * @group legacy
  */
 class MigrateStatisticsConfigsTest extends MigrateDrupal7TestBase {
 

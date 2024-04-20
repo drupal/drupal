@@ -10,6 +10,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
  * Tests migrate upgrade review page.
  *
  * @group statistics
+ * @group legacy
  */
 class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 

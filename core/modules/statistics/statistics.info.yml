@@ -3,6 +3,8 @@ type: module
 description: 'Logs how many times content is viewed.'
 package: Core
 version: VERSION
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-statistics
 configure: statistics.settings
 dependencies:
   - drupal:node

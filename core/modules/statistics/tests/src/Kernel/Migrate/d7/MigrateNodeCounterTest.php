@@ -10,6 +10,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Tests the migration of node counter data to Drupal 8.
  *
  * @group statistics
+ * @group legacy
  */
 class MigrateNodeCounterTest extends MigrateDrupal7TestBase {
 
