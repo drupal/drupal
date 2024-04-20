@@ -28,14 +28,6 @@ class ClaroTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'claro';
 
@@ -55,7 +47,10 @@ class ClaroTest extends BrowserTestBase {
    * Tests Claro's configuration schema.
    */
   public function testConfigSchema() {
-    $this->drupalLogin($this->rootUser);
+    $permissions = [
+      'administer modules',
+    ];
+    $this->drupalLogin($this->drupalCreateUser($permissions));
     $this->drupalGet('admin/modules');
     $this->assertSession()->elementNotExists('css', '#block-claro-help');
 

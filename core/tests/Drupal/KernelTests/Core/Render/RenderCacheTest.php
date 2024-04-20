@@ -10,6 +10,8 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 /**
  * Tests the caching of render items via functional tests.
  *
+ * @todo Remove or updated in https://www.drupal.org/project/drupal/issues/3436395.
+ *
  * @group Render
  */
 class RenderCacheTest extends KernelTestBase {
