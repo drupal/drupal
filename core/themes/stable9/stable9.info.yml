@@ -278,11 +278,6 @@ libraries-override:
       state:
         css/toolbar.menu.css: css/toolbar/toolbar.menu.css
 
-  tour/tour-styling:
-    css:
-      component:
-        css/tour.module.css: css/tour/tour.module.css
-
   update/drupal.update.admin:
     css:
       theme:
@@ -317,7 +312,3 @@ libraries-override:
     css:
       theme:
         css/field_ui_display_mode_table.css: css/field_ui/field_ui_display_mode_table.css
-
-libraries-extend:
-  tour/tour:
-    - stable9/tour

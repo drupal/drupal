@@ -401,9 +401,6 @@ Token
 Toolbar
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
 
-Tour
-- Nick Schuch 'nick_schuch' https://www.drupal.org/u/nick_schuch
-
 Transliteration
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 

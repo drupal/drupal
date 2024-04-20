@@ -138,12 +138,6 @@ drupal.node.preview:
     theme:
       css/components/node-preview.css: {}
 
-tour-styling:
-  version: VERSION
-  css:
-    theme:
-      css/theme/tour.theme.css: {}
-
 media-form:
   version: VERSION
   css:

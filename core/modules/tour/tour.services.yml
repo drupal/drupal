@@ -1,4 +1,0 @@
-services:
-  plugin.manager.tour.tip:
-    class: Drupal\tour\TipPluginManager
-    parent: default_plugin_manager

@@ -1564,16 +1564,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\tour\\\\TipPluginBase\\:\\:get\\(\\) should return string but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/tour/src/TipPluginBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$location on left side of \\?\\? always exists and is not nullable\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/tour/src/TipPluginBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$violation_messages might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/src/ProjectRelease.php',
