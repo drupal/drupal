@@ -12,6 +12,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group statistics
+ * @group legacy
  */
 class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 

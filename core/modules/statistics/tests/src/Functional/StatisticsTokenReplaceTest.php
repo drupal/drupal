@@ -8,6 +8,7 @@ namespace Drupal\Tests\statistics\Functional;
  * Tests statistics token replacement.
  *
  * @group statistics
+ * @group legacy
  */
 class StatisticsTokenReplaceTest extends StatisticsTestBase {
 

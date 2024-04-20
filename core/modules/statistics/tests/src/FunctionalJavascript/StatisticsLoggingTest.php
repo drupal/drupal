@@ -12,7 +12,8 @@ use Drupal\user\Entity\Role;
 /**
  * Tests that statistics works.
  *
- * @group system
+ * @group statistics
+ * @group legacy
  */
 class StatisticsLoggingTest extends WebDriverTestBase {
 

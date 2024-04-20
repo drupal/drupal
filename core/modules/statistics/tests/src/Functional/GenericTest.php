@@ -10,5 +10,6 @@ use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
  * Generic module test for statistics.
  *
  * @group statistics
+ * @group legacy
  */
 class GenericTest extends GenericModuleTestBase {}

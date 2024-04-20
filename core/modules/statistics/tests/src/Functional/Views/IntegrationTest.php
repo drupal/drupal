@@ -11,6 +11,7 @@ use Drupal\user\Entity\User;
  * Tests basic integration of views data from the statistics module.
  *
  * @group statistics
+ * @group legacy
  * @see
  */
 class IntegrationTest extends ViewTestBase {
