@@ -819,3 +819,12 @@ function entity_test_query_entity_test_access_alter(AlterableInterface $query) {
     $query->condition('entity_test_query_access.name', 'published entity');
   }
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_form_mode_alter().
+ */
+function entity_test_entity_test_form_mode_alter(&$form_mode, EntityInterface $entity): void {
+  if ($entity->getEntityTypeId() === 'entity_test' && $entity->get('name')->value === 'test_entity_type_form_mode_alter') {
+    $form_mode = 'compact';
+  }
+}

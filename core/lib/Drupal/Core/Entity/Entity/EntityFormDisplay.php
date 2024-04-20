@@ -87,7 +87,11 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     $bundle = $entity->bundle();
 
     // Allow modules to change the form mode.
-    \Drupal::moduleHandler()->alter('entity_form_mode', $form_mode, $entity);
+    \Drupal::moduleHandler()->alter(
+      [$entity_type . '_form_mode', 'entity_form_mode'],
+      $form_mode,
+      $entity
+    );
 
     // Check the existence and status of:
     // - the display for the form mode,
