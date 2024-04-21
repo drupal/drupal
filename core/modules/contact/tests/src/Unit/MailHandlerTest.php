@@ -6,10 +6,8 @@ namespace Drupal\Tests\contact\Unit;
 
 use Drupal\contact\MailHandler;
 use Drupal\contact\MailHandlerException;
-use Drupal\contact\MessageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 
@@ -135,19 +133,37 @@ class MailHandlerTest extends UnitTestCase {
    *
    * @covers ::sendMailMessages
    */
-  public function testSendMailMessages(MessageInterface $message, AccountInterface $sender, $results) {
+  public function testSendMailMessages(bool $anonymous, ?bool $auto_reply, bool $copy_sender, array $results) {
+    if ($anonymous) {
+      $message = $this->getAnonymousMockMessage(explode(', ', $results[0]['to']), $auto_reply, $copy_sender);
+      $sender = $this->getMockSender();
+    }
+    else {
+      $message = $this->getAuthenticatedMockMessage($copy_sender);
+      $sender = $this->getMockSender(FALSE, 'user@drupal.org');
+    }
+
+    $expected_params['contact_message'] = $message;
+    $expected_params['sender'] = $sender;
+    if ($anonymous) {
+      $expected_params['contact_form'] = $message->getContactForm();
+    }
+    else {
+      $expected_params['recipient'] = $message->getPersonalRecipient();
+    }
+
     $this->logger->expects($this->once())
       ->method('info');
     $this->mailManager->expects($this->any())
       ->method('mail')
       ->willReturnCallback(
-        function ($module, $key, $to, $langcode, $params, $from) use (&$results) {
+        function ($module, $key, $to, $langcode, $params, $from) use (&$results, $expected_params) {
           $result = array_shift($results);
           $this->assertEquals($module, $result['module']);
           $this->assertEquals($key, $result['key']);
           $this->assertEquals($to, $result['to']);
           $this->assertEquals($langcode, $result['langcode']);
-          $this->assertEquals($params, $result['params']);
+          $this->assertEquals($params, $expected_params);
           $this->assertEquals($from, $result['from']);
         });
     $this->userStorage->expects($this->any())
@@ -159,128 +175,48 @@ class MailHandlerTest extends UnitTestCase {
   /**
    * Data provider for ::testSendMailMessages.
    */
-  public function getSendMailMessages() {
-    $data = [];
-    $recipients = ['admin@drupal.org', 'user@drupal.org'];
+  public static function getSendMailMessages() {
     $default_result = [
       'module' => 'contact',
-      'key' => '',
-      'to' => implode(', ', $recipients),
+      'key' => 'page_mail',
+      'to' => 'admin@drupal.org, user@drupal.org',
       'langcode' => 'en',
       'params' => [],
       'from' => 'anonymous@drupal.org',
     ];
-    $results = [];
-    $message = $this->getAnonymousMockMessage($recipients, '');
-    $sender = $this->getMockSender();
-    $result = [
-      'key' => 'page_mail',
-      'params' => [
-        'contact_message' => $message,
-        'sender' => $sender,
-        'contact_form' => $message->getContactForm(),
-      ],
-    ];
-    $results[] = $result + $default_result;
-    $data[] = [$message, $sender, $results];
 
-    $results = [];
-    $message = $this->getAnonymousMockMessage($recipients, 'reply');
-    $sender = $this->getMockSender();
-    $result = [
-      'key' => 'page_mail',
-      'params' => [
-        'contact_message' => $message,
-        'sender' => $sender,
-        'contact_form' => $message->getContactForm(),
-      ],
-    ];
-    $results[] = $result + $default_result;
-    $result['key'] = 'page_autoreply';
-    $result['to'] = 'anonymous@drupal.org';
-    $result['from'] = NULL;
-    $results[] = $result + $default_result;
-    $data[] = [$message, $sender, $results];
+    $autoreply_result = [
+      'key' => 'page_autoreply',
+      'to' => 'anonymous@drupal.org',
+      'from' => NULL,
+    ] + $default_result;
 
-    $results = [];
-    $message = $this->getAnonymousMockMessage($recipients, '', TRUE);
-    $sender = $this->getMockSender();
-    $result = [
-      'key' => 'page_mail',
-      'params' => [
-        'contact_message' => $message,
-        'sender' => $sender,
-        'contact_form' => $message->getContactForm(),
-      ],
-    ];
-    $results[] = $result + $default_result;
-    $result['key'] = 'page_copy';
-    $result['to'] = 'anonymous@drupal.org';
-    $results[] = $result + $default_result;
-    $data[] = [$message, $sender, $results];
+    $copy_result = [
+      'key' => 'page_copy',
+      'to' => 'anonymous@drupal.org',
+    ] + $default_result;
 
-    $results = [];
-    $message = $this->getAnonymousMockMessage($recipients, 'reply', TRUE);
-    $sender = $this->getMockSender();
-    $result = [
-      'key' => 'page_mail',
-      'params' => [
-        'contact_message' => $message,
-        'sender' => $sender,
-        'contact_form' => $message->getContactForm(),
-      ],
-    ];
-    $results[] = $result + $default_result;
-    $result['key'] = 'page_copy';
-    $result['to'] = 'anonymous@drupal.org';
-    $results[] = $result + $default_result;
-    $result['key'] = 'page_autoreply';
-    $result['from'] = NULL;
-    $results[] = $result + $default_result;
-    $data[] = [$message, $sender, $results];
+    yield 'anonymous, no auto reply, no copy sender' => [TRUE, FALSE, FALSE, [$default_result]];
+    yield 'anonymous, auto reply, no copy sender' => [TRUE, TRUE, FALSE, [$default_result, $autoreply_result]];
+    yield 'anonymous, no auto reply, copy sender' => [TRUE, FALSE, TRUE, [$default_result, $copy_result]];
+    yield 'anonymous, auto reply, copy sender' => [TRUE, TRUE, TRUE, [$default_result, $copy_result, $autoreply_result]];
 
     // For authenticated user.
-    $results = [];
-    $message = $this->getAuthenticatedMockMessage();
-    $sender = $this->getMockSender(FALSE, 'user@drupal.org');
-    $result = [
+    $default_result = [
       'module' => 'contact',
       'key' => 'user_mail',
       'to' => 'user2@drupal.org',
       'langcode' => 'en',
-      'params' => [
-        'contact_message' => $message,
-        'sender' => $sender,
-        'recipient' => $message->getPersonalRecipient(),
-      ],
       'from' => 'user@drupal.org',
     ];
-    $results[] = $result;
-    $data[] = [$message, $sender, $results];
 
-    $results = [];
-    $message = $this->getAuthenticatedMockMessage(TRUE);
-    $sender = $this->getMockSender(FALSE, 'user@drupal.org');
-    $result = [
-      'module' => 'contact',
-      'key' => 'user_mail',
-      'to' => 'user2@drupal.org',
-      'langcode' => 'en',
-      'params' => [
-        'contact_message' => $message,
-        'sender' => $sender,
-        'recipient' => $message->getPersonalRecipient(),
-      ],
-      'from' => 'user@drupal.org',
-    ];
-    $results[] = $result;
+    $copy_result = [
+      'key' => 'user_copy',
+      'to' => 'user@drupal.org',
+    ] + $default_result;
 
-    $result['key'] = 'user_copy';
-    $result['to'] = $result['from'];
-    $results[] = $result;
-    $data[] = [$message, $sender, $results];
-
-    return $data;
+    yield 'authenticated, no copy sender' => [FALSE, NULL, FALSE, [$default_result]];
+    yield 'authenticated, copy sender' => [FALSE, NULL, TRUE, [$default_result, $copy_result]];
   }
 
   /**
@@ -347,7 +283,7 @@ class MailHandlerTest extends UnitTestCase {
       ->willReturn($copy_sender);
     $message->expects($this->any())
       ->method('getContactForm')
-      ->willReturn($this->getMockContactForm($recipients, $auto_reply));
+      ->willReturn($this->getMockContactForm($recipients, $auto_reply ? 'reply' : ''));
     return $message;
   }
 
@@ -381,9 +317,6 @@ class MailHandlerTest extends UnitTestCase {
     $message->expects($this->any())
       ->method('getPersonalRecipient')
       ->willReturn($recipient);
-    $message->expects($this->any())
-      ->method('getContactForm')
-      ->willReturn($this->getMockContactForm('user2@drupal.org', FALSE));
     return $message;
   }
 
