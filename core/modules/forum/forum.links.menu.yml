@@ -1,9 +1,0 @@
-forum.index:
-  title: Forums
-  route_name: forum.index
-  menu_name: tools
-forum.overview:
-  title: Forums
-  parent: system.admin_structure
-  description: 'Control forum hierarchy settings.'
-  route_name: forum.overview

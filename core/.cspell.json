@@ -18,8 +18,6 @@
       "modules/book/tests/fixtures/drupal6.php",
       "modules/book/tests/fixtures/drupal7.php",
       "modules/ckeditor5/js/build/*",
-      "modules/forum/tests/fixtures/drupal6.php",
-      "modules/forum/tests/fixtures/drupal7.php",
       "modules/media/tests/fixtures/oembed/*",
       "modules/migrate_drupal/tests/fixtures/drupal6.php",
       "modules/migrate_drupal/tests/fixtures/drupal7.php",

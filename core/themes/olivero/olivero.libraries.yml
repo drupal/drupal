@@ -145,12 +145,6 @@ filter.theme:
     component:
       css/theme/filter.theme.css: {}
 
-forum:
-  version: VERSION
-  css:
-    component:
-      css/components/forum.css: {}
-
 layout_builder_fourcol_section:
   version: VERSION
   css:

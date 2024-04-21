@@ -10,7 +10,6 @@
  * User generated tables.
  */
 
-.forum table,
 .text-content table,
 .views-table,
 .draggable-table {
@@ -25,7 +24,7 @@
   line-height: var(--sp1-5);
 }
 
-:is(.forum table, .text-content table, .views-table, .draggable-table) caption {
+:is(.text-content table, .views-table, .draggable-table) caption {
   margin-block-end: var(--sp1);
   text-align: start;
   color: var(--color-text-neutral-medium);
@@ -35,19 +34,19 @@
   line-height: var(--sp);
 }
 
-:is(.forum table, .text-content table, .views-table, .draggable-table) tr:last-child td {
+:is(.text-content table, .views-table, .draggable-table) tr:last-child td {
   border-block-end: 0;
 }
 
-:is(.forum table, .text-content table, .views-table, .draggable-table) td,
-:is(.forum table, .text-content table, .views-table, .draggable-table) th {
+:is(.text-content table, .views-table, .draggable-table) td,
+:is(.text-content table, .views-table, .draggable-table) th {
   padding-block: var(--sp1);
   padding-inline-start: 0;
   padding-inline-end: var(--sp1);
   vertical-align: top;
 }
 
-:is(.forum table, .text-content table, .views-table, .draggable-table) th {
+:is(.text-content table, .views-table, .draggable-table) th {
   margin-block: 0;
   margin-inline-start: 0;
   margin-inline-end: 0;
@@ -60,13 +59,13 @@
   line-height: var(--sp);
 }
 
-:is(.forum table, .text-content table, .views-table, .draggable-table) td {
+:is(.text-content table, .views-table, .draggable-table) td {
   white-space: normal;
   border-block-end: 2px solid var(--color--gray-65);
 }
 
-:is(.forum table, .text-content table, .views-table, .draggable-table) th.checkbox,
-:is(.forum table, .text-content table, .views-table, .draggable-table) td.checkbox {
+:is(.text-content table, .views-table, .draggable-table) th.checkbox,
+:is(.text-content table, .views-table, .draggable-table) td.checkbox {
   text-align: center;
 }
 

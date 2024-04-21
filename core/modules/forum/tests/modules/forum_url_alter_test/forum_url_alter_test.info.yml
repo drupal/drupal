@@ -1,5 +1,0 @@
-name: 'forum_Url_alter tests'
-type: module
-description: 'A support module to test altering the inbound and outbound path.'
-package: Testing
-version: VERSION

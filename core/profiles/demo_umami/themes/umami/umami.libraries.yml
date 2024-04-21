@@ -135,12 +135,6 @@ classy.file:
     component:
       css/classy/components/file.css: { weight: -10 }
 
-classy.forum:
-  version: VERSION
-  css:
-    component:
-      css/classy/components/forum.css: { weight: -10 }
-
 classy.indented:
   version: VERSION
   css:
