@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\StreamCapturer;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @group #slow
  */
 class BrowserTestBaseTest extends BrowserTestBase {
-
+  use PathAliasTestTrait;
   use CronRunTrait;
 
   /**
@@ -123,6 +124,19 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalGet('/test-page/');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('/test-page/');
+    // Test alias handling.
+    $this->createPathAlias('/test-page', '/test-alias');
+    $this->rebuildAll();
+    $this->drupalGet('test-page');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('test-alias');
+    $this->drupalGet('/test-page');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('test-alias');
+    $this->drupalGet('/test-page/');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('/test-page/');
+
   }
 
   /**
