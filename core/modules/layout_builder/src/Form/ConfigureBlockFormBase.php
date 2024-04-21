@@ -11,6 +11,7 @@ use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
 use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
@@ -29,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   Form classes are internal.
  */
-abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInterface {
+abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInterface, WorkspaceDynamicSafeFormInterface {
 
   use AjaxFormHelperTrait;
   use ContextAwarePluginAssignmentTrait;
@@ -164,7 +165,6 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
     $this->delta = $delta;
     $this->uuid = $component->getUuid();
     $this->block = $component->getPlugin();
-    $this->markWorkspaceSafe($form_state);
 
     $form_state->setTemporaryValue('gathered_contexts', $this->getPopulatedContexts($section_storage));
 

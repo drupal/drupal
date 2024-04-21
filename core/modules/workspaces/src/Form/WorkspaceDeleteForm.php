@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class WorkspaceDeleteForm extends ContentEntityDeleteForm implements WorkspaceFormInterface {
+class WorkspaceDeleteForm extends ContentEntityDeleteForm {
 
   /**
    * The workspace entity.

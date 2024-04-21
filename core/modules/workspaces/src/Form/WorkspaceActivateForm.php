@@ -5,6 +5,7 @@ namespace Drupal\workspaces\Form;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\workspaces\WorkspaceAccessException;
@@ -14,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Handle activation of a workspace on administrative pages.
  */
-class WorkspaceActivateForm extends EntityConfirmFormBase implements WorkspaceFormInterface {
+class WorkspaceActivateForm extends EntityConfirmFormBase implements WorkspaceSafeFormInterface {
 
   /**
    * The workspace entity.

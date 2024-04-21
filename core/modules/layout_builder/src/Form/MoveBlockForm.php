@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Form;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   Form classes are internal.
  */
-class MoveBlockForm extends FormBase {
+class MoveBlockForm extends FormBase implements WorkspaceDynamicSafeFormInterface {
 
   use AjaxFormHelperTrait;
   use LayoutBuilderContextTrait;
@@ -118,7 +119,6 @@ class MoveBlockForm extends FormBase {
     $this->delta = $delta;
     $this->uuid = $uuid;
     $this->region = $region;
-    $this->markWorkspaceSafe($form_state);
 
     $form['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockUpdateHighlightId($uuid);
 

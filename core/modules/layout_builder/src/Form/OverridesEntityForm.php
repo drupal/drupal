@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
@@ -21,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   Form classes are internal.
  */
-class OverridesEntityForm extends ContentEntityForm {
+class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicSafeFormInterface {
 
   use PreviewToggleTrait;
   use LayoutBuilderEntityFormTrait;
@@ -91,7 +92,6 @@ class OverridesEntityForm extends ContentEntityForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
     $this->sectionStorage = $section_storage;
-    $this->markWorkspaceSafe($form_state);
     $form = parent::buildForm($form, $form_state);
     $form['#attributes']['class'][] = 'layout-builder-form';
 
