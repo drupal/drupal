@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Url;
 use Drupal\workspaces\WorkspaceInterface;
 use Drupal\workspaces\WorkspaceOperationFactory;
@@ -14,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form that merges the contents for a workspace into another one.
  */
-class WorkspaceMergeForm extends ConfirmFormBase implements WorkspaceFormInterface, ContainerInjectionInterface {
+class WorkspaceMergeForm extends ConfirmFormBase implements ContainerInjectionInterface, WorkspaceSafeFormInterface {
 
   /**
    * The source workspace entity.

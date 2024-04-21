@@ -19,16 +19,17 @@ trait WorkspaceSafeFormTrait {
   protected ?WorkspaceInformationInterface $workspaceInfo = NULL;
 
   /**
-   * Marks a form as workspace-safe, if possible.
+   * Determines whether the current form is safe to be submitted in a workspace.
    *
+   * @param array $form
+   *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state object.
+   *   The current state of the form.
+   *
+   * @return bool
+   *   TRUE if the form is workspace-safe, FALSE otherwise.
    */
-  protected function markWorkspaceSafe(FormStateInterface $form_state): void {
-    if (!\Drupal::hasService('workspaces.information')) {
-      return;
-    }
-
+  public function isWorkspaceSafeForm(array $form, FormStateInterface $form_state): bool {
     $section_storage = $this->sectionStorage ?: $this->getSectionStorageFromFormState($form_state);
     if ($section_storage) {
       $context_definitions = $section_storage->getContextDefinitions();
@@ -39,10 +40,12 @@ trait WorkspaceSafeFormTrait {
         $ignored = $entity && $this->getWorkspaceInfo()->isEntityIgnored($entity);
 
         if ($supported || $ignored) {
-          $form_state->set('workspace_safe', TRUE);
+          return TRUE;
         }
       }
     }
+
+    return FALSE;
   }
 
   /**
