@@ -1,5 +1,0 @@
-name: 'Statistics test attached theme'
-type: theme
-base theme: stable9
-description: 'Theme for testing attached library'
-version: VERSION

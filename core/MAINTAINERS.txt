@@ -367,9 +367,6 @@ Shortcut
 Stark
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
 
-Statistics
-- ?
-
 Syslog
 - Mariano D'Agostino 'dagmar' https://www.drupal.org/u/dagmar
 

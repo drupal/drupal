@@ -1,8 +1,0 @@
-drupal.statistics:
-  version: VERSION
-  js:
-    statistics.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupalSettings
