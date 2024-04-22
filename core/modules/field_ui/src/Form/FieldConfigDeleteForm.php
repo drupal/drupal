@@ -18,28 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class FieldConfigDeleteForm extends EntityDeleteForm {
 
-  /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
-   * Constructs a new FieldConfigDeleteForm object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
-   *   The entity type bundle info service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entity_type_manager
-   *   The entity type manager service.
-   */
-  public function __construct(EntityTypeBundleInfoInterface $entity_type_bundle_info, ?EntityTypeManagerInterface $entity_type_manager = NULL) {
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
-    if (!$entity_type_manager) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $entity_type_manager argument is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3396525', E_USER_DEPRECATED);
-      $entity_type_manager = \Drupal::service('entity_type.manager');
-    }
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected EntityTypeBundleInfoInterface $entityTypeBundleInfo, EntityTypeManagerInterface $entityTypeManager) {
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**

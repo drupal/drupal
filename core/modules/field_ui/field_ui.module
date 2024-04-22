@@ -7,12 +7,10 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\SubformState;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityViewModeInterface;
 use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Url;
-use Drupal\field\FieldConfigInterface;
 use Drupal\field_ui\FieldUI;
 use Drupal\field_ui\Form\FieldConfigEditForm;
 use Drupal\field_ui\Form\FieldStorageConfigEditForm;
@@ -282,22 +280,4 @@ function field_ui_form_manage_field_form_submit($form, FormStateInterface $form_
   if ($form_state->getTriggeringElement()['#parents'][0] === 'save_continue' && $route_info = FieldUI::getOverviewRouteInfo($provider, $id)) {
     $form_state->setRedirectUrl($route_info);
   }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for field_config_edit_form.
- */
-function field_ui_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
-  $field_config = $form_state->getFormObject()->getEntity();
-  assert($field_config instanceof FieldConfigInterface);
-
-  $form_id = 'field_storage_config_edit_form';
-  $hook = 'form_' . $form_id;
-
-  $field_storage_form = \Drupal::entityTypeManager()->getFormObject('field_storage_config', $form_state->getFormObject()->getOperation());
-  $field_storage_form->setEntity($field_config->getFieldStorageDefinition());
-  $subform_state = SubformState::createForSubform($form['field_storage']['subform'], $form, $form_state, $field_storage_form);
-
-  \Drupal::moduleHandler()->alterDeprecated('Use hook_form_field_config_edit_form_alter() instead. See https://www.drupal.org/node/3386675.', $hook, $form['field_storage']['subform'], $subform_state, $form_id);
-  \Drupal::theme()->alter($hook, $form['field_storage']['subform'], $subform_state, $form_id);
 }

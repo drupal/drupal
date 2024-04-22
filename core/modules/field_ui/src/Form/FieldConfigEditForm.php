@@ -39,13 +39,6 @@ class FieldConfigEditForm extends EntityForm {
   protected $entity;
 
   /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
    * The name of the entity type.
    *
    * @var string
@@ -59,41 +52,13 @@ class FieldConfigEditForm extends EntityForm {
    */
   protected string $bundle;
 
-  /**
-   * Constructs a new FieldConfigDeleteForm object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
-   *   The entity type bundle info service.
-   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
-   *   The type data manger.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface|null $entityDisplayRepository
-   *   The entity display repository.
-   * @param \Drupal\Core\TempStore\PrivateTempStore|null $tempStore
-   *   The private tempstore.
-   * @param \Drupal\Core\Render\ElementInfoManagerInterface|null $elementInfo
-   *   The element info manager.
-   */
   public function __construct(
-    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
     protected TypedDataManagerInterface $typedDataManager,
-    protected ?EntityDisplayRepositoryInterface $entityDisplayRepository = NULL,
-    protected ?PrivateTempStore $tempStore = NULL,
-    protected ?ElementInfoManagerInterface $elementInfo = NULL,
-  ) {
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
-    if ($this->entityDisplayRepository === NULL) {
-      @trigger_error('Calling FieldConfigEditForm::__construct() without the $entityDisplayRepository argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
-      $this->entityDisplayRepository = \Drupal::service('entity_display.repository');
-    }
-    if ($this->tempStore === NULL) {
-      @trigger_error('Calling FieldConfigEditForm::__construct() without the $tempStore argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
-      $this->tempStore = \Drupal::service('tempstore.private')->get('field_ui');
-    }
-    if ($this->elementInfo === NULL) {
-      @trigger_error('Calling FieldConfigEditForm::__construct() without the $elementInfo argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3383771', E_USER_DEPRECATED);
-      $this->elementInfo = \Drupal::service('plugin.manager.element_info');
-    }
-  }
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
+    protected PrivateTempStore $tempStore,
+    protected ElementInfoManagerInterface $elementInfo,
+  ) {}
 
   /**
    * {@inheritdoc}
