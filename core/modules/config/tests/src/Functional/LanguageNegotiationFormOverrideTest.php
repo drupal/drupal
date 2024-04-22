@@ -14,15 +14,10 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
 
-  protected static $modules = ['language', 'locale', 'locale_test'];
-
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
    */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
+  protected static $modules = ['language', 'locale', 'locale_test'];
 
   /**
    * {@inheritdoc}
@@ -33,7 +28,12 @@ class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
    * Tests that overrides do not affect language-negotiation form values.
    */
   public function testFormWithOverride() {
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'access administration pages',
+      'administer site configuration',
+      'administer languages',
+      'view the administration theme',
+    ]));
     $overridden_value_en = 'whatever';
     $overridden_value_es = 'loquesea';
 
