@@ -36,8 +36,6 @@ JavaScript
 
   LoadJS - Copyright (c) 2015 Andres Morey
 
-  Shepherd - Copyright (c) 2021
-
   Sortable - Copyright (c) 2019 All contributors to Sortable
 
   Tabbable - Copyright (c) 2015 David Clark

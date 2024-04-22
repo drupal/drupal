@@ -106,15 +106,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         { from: 'dist/once.min.js.map', to: 'once.min.js.map' },
       ],
     },
-    {
-      pack: 'shepherd.js',
-      folder: 'shepherd',
-      library: 'internal.shepherd',
-      files: [
-        { from: 'dist/js/shepherd.min.js', to: 'shepherd.min.js' },
-        { from: 'dist/js/shepherd.min.js.map', to: 'shepherd.min.js.map' },
-      ],
-    },
     { pack: 'sortablejs', folder: 'sortable', files: ['Sortable.min.js'] },
     {
       pack: 'tabbable',

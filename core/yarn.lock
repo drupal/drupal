@@ -1503,13 +1503,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.11.5":
-  version: 2.11.8
-  resolution: "@popperjs/core@npm:2.11.8"
-  checksum: 10c0/4681e682abc006d25eb380d0cf3efc7557043f53b6aea7a5057d0d1e7df849a00e281cd8ea79c902a35a414d7919621fc2ba293ecec05f413598e0b23d5a1e63
-  languageName: node
-  linkType: hard
-
 "@types/eslint-scope@npm:^3.7.3":
   version: 3.7.7
   resolution: "@types/eslint-scope@npm:3.7.7"
@@ -1844,7 +1837,6 @@ __metadata:
     postcss-pxtorem: "npm:^6.0.0"
     postcss-url: "npm:^10.1.3"
     prettier: "npm:^3.0.3"
-    shepherd.js: "npm:~10.0.1"
     sortablejs: "npm:1.15.x"
     stylelint: "npm:^15.10.1"
     stylelint-checkstyle-formatter: "npm:^0.1.2"
@@ -3095,13 +3087,6 @@ __metadata:
   version: 0.1.4
   resolution: "deep-is@npm:0.1.4"
   checksum: 10c0/7f0ee496e0dff14a573dc6127f14c95061b448b87b995fc96c017ce0a1e66af1675e73f1d6064407975bc4ea6ab679497a29fff7b5b9c4e99cb10797c1ad0b4c
-  languageName: node
-  linkType: hard
-
-"deepmerge@npm:^4.2.2":
-  version: 4.3.1
-  resolution: "deepmerge@npm:4.3.1"
-  checksum: 10c0/e53481aaf1aa2c4082b5342be6b6d8ad9dfe387bc92ce197a66dea08bd4265904a087e75e464f14d1347cf2ac8afe1e4c16b266e0561cc5df29382d3c5f80044
   languageName: node
   linkType: hard
 
@@ -7303,17 +7288,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shepherd.js@npm:~10.0.1":
-  version: 10.0.1
-  resolution: "shepherd.js@npm:10.0.1"
-  dependencies:
-    "@popperjs/core": "npm:^2.11.5"
-    deepmerge: "npm:^4.2.2"
-    smoothscroll-polyfill: "npm:^0.4.4"
-  checksum: 10c0/c1b127fe109a1f0276c223f3d20275d56ecd81d5caaafedd9c89ce2f610641338030dc5711a306f02b174d02e6cb41fe996068339a0696bfbb507f62dd95b50a
-  languageName: node
-  linkType: hard
-
 "side-channel@npm:^1.0.4":
   version: 1.0.4
   resolution: "side-channel@npm:1.0.4"
@@ -7361,13 +7335,6 @@ __metadata:
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
   checksum: 10c0/a16775323e1404dd43fabafe7460be13a471e021637bc7889468eb45ce6a6b207261f454e4e530a19500cc962c4cc5348583520843b363f4193cee5c00e1e539
-  languageName: node
-  linkType: hard
-
-"smoothscroll-polyfill@npm:^0.4.4":
-  version: 0.4.4
-  resolution: "smoothscroll-polyfill@npm:0.4.4"
-  checksum: 10c0/33a1167f40c7ede76d6cdf1686a1f003afaf21557863cbd90fb8880f40f02eb28bc600147c3340db62f96275448106054aa8c53a8f61f7b6acdc6a5f21557e10
   languageName: node
   linkType: hard
 

@@ -125,7 +125,3 @@
 [dir="rtl"] .button--icon-back::before {
   transform: rotate(-45deg);
 }
-
-.shepherd-cancel-icon {
-  font-size: 1.5em;
-}
