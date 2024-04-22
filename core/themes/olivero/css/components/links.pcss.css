@@ -20,9 +20,3 @@
     }
   }
 }
-
-.node--type-book .links.inline {
-  @media (--md) {
-    text-align: end;
-  }
-}

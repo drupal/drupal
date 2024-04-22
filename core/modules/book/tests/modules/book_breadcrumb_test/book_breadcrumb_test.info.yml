@@ -1,5 +1,0 @@
-name: 'Book module breadcrumb tests'
-type: module
-description: 'Support module for book module breadcrumb testing.'
-package: Testing
-version: VERSION

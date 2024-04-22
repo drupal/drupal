@@ -1,9 +1,0 @@
-# Schema for the configuration files of the book_breadcrumb_test module.
-
-book_breadcrumb_test.settings:
-  type: config_object
-  label: 'Book Breadcrumb Test module settings'
-  mapping:
-    hide:
-      type: boolean
-      label: 'Setting for hiding content'

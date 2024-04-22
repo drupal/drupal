@@ -612,26 +612,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block_content/tests/src/Functional/BlockContentRevisionsTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$callable in empty\\(\\) always exists and is not falsy\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/src/BookExport.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\book\\\\BookOutline\\:\\:nextLink\\(\\) should return array but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/src/BookOutline.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\book\\\\BookOutline\\:\\:prevLink\\(\\) should return array but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/src/BookOutline.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\book\\\\Form\\\\BookOutlineForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/src/Form/BookOutlineForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$ghs_config_classes in empty\\(\\) always exists and is always falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/src/Plugin/Validation/Constraint/StyleSensibleElementConstraintValidator.php',

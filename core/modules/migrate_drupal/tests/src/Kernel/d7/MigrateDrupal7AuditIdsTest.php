@@ -35,8 +35,6 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
     $this->installEntitySchemas();
 
     // Install required schemas.
-    // @todo Remove book in https://www.drupal.org/project/drupal/issues/3376101
-    $this->installSchema('book', ['book']);
     $this->installSchema('dblog', ['watchdog']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('search', ['search_dataset']);

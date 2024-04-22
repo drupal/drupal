@@ -98,9 +98,6 @@ Block Content
 - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 - Stephen Mustgrave 'smustgrave' https://www.drupal.org/u/smustgrave
 
-Book
-- Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
-
 Bootstrap
 - ?
 

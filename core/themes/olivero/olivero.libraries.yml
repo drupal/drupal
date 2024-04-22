@@ -58,12 +58,6 @@ global-styling:
     - core/tabbable
     - olivero/navigation-base
 
-book:
-  version: VERSION
-  css:
-    theme:
-      css/components/book.css: {}
-
 cke-dialog:
   version: VERSION
   css:

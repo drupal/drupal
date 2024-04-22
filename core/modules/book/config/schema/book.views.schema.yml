@@ -1,8 +1,0 @@
-# Schema for the views plugins of the Book module.
-
-views.argument_default.top_level_book:
-  type: sequence
-  label: 'Top Level Book from current node'
-  sequence:
-    type: string
-    label: 'Nid'

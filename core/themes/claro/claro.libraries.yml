@@ -309,12 +309,6 @@ tableselect:
     - core/tabbable
     - core/once
 
-classy.book-navigation:
-  version: VERSION
-  css:
-    component:
-      css/classy/components/book-navigation.css: {}
-
 classy.file:
   version: VERSION
   css:
