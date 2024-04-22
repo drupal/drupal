@@ -38,12 +38,12 @@ class DrupalComponentTest extends TestCase {
   /**
    * Tests LICENSE.txt is present and has the correct content.
    *
-   * @param $component_path
+   * @param string $component_path
    *   The path to the component.
    *
-   * @dataProvider \Drupal\Tests\Component\DrupalComponentTest::getComponents
+   * @dataProvider getComponents
    */
-  public function testComponentLicense($component_path) {
+  public function testComponentLicense(string $component_path): void {
     $this->assertFileExists($component_path . DIRECTORY_SEPARATOR . 'LICENSE.txt');
     $this->assertSame('e84dac1d9fbb5a4a69e38654ce644cea769aa76b', hash_file('sha1', $component_path . DIRECTORY_SEPARATOR . 'LICENSE.txt'));
   }
@@ -53,7 +53,7 @@ class DrupalComponentTest extends TestCase {
    *
    * @return array
    */
-  public function getComponents() {
+  public static function getComponents(): array {
     $root_component_path = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))) . '/lib/Drupal/Component';
     $component_paths = [];
     foreach (new \DirectoryIterator($root_component_path) as $file) {
