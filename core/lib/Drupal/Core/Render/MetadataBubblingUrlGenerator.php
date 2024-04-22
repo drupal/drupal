@@ -64,7 +64,7 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPathFromRoute($name, $parameters = []) {
+  public function getPathFromRoute(string $name, array $parameters = []) {
     return $this->urlGenerator->getPathFromRoute($name, $parameters);
   }
 
@@ -91,7 +91,7 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string {
+  public function generate(string $name, array $parameters = [], bool|int $referenceType = self::ABSOLUTE_PATH): string {
     $options['absolute'] = is_bool($referenceType) ? $referenceType : $referenceType === self::ABSOLUTE_URL;
     $generated_url = $this->generateFromRoute($name, $parameters, $options, TRUE);
     $this->bubble($generated_url);
@@ -101,52 +101,12 @@ class MetadataBubblingUrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromRoute($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
+  public function generateFromRoute(string $name, array $parameters = [], array $options = [], bool $collect_bubbleable_metadata = FALSE) {
     $generated_url = $this->urlGenerator->generateFromRoute($name, $parameters, $options, TRUE);
     if (!$collect_bubbleable_metadata) {
       $this->bubble($generated_url, $options);
     }
     return $collect_bubbleable_metadata ? $generated_url : $generated_url->getGeneratedUrl();
-  }
-
-  /**
-   * Checks if route name is a string or route object.
-   *
-   * @param string|\Symfony\Component\Routing\Route $name
-   *   The route "name" which may also be an object or anything.
-   *
-   * @return bool
-   *   TRUE if the passed in value a valid route, FALSE otherwise.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only string
-   *   route names are supported.
-   *
-   * @see https://www.drupal.org/node/3172303
-   */
-  public function supports($name) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only string route names are supported. See https://www.drupal.org/node/3172303', E_USER_DEPRECATED);
-    return $this->urlGenerator->supports($name);
-  }
-
-  /**
-   * Gets either the route name or a string based on the route object.
-   *
-   * @param string|\Symfony\Component\Routing\Route $name
-   *   The route "name" which may also be an object or anything.
-   * @param array $parameters
-   *   Route parameters array.
-   *
-   * @return string
-   *   Either the route name, or a string that uniquely identifies the route.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
-   *   the route name instead.
-   *
-   * @see https://www.drupal.org/node/3172303
-   */
-  public function getRouteDebugMessage($name, array $parameters = []) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the route name instead. See https://www.drupal.org/node/3172303', E_USER_DEPRECATED);
-    return $this->urlGenerator->getRouteDebugMessage($name, $parameters);
   }
 
 }

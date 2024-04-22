@@ -293,20 +293,6 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Tests URL generation deprecations.
-   *
-   * @group legacy
-   */
-  public function testRouteObjectDeprecation() {
-    $this->expectDeprecation('Passing a route object to Drupal\Core\Routing\UrlGenerator::getPathFromRoute() is deprecated in drupal:10.1.0 and will not be supported in drupal:11.0.0. Pass the route name instead. See https://www.drupal.org/node/3172280');
-    $path = $this->generator->getPathFromRoute(new Route('/test/one'));
-    $this->assertSame($this->generator->getPathFromRoute('test_1'), $path);
-    $this->expectDeprecation('Passing a route object to Drupal\Core\Routing\UrlGenerator::generateFromRoute() is deprecated in drupal:10.1.0 and will not be supported in drupal:11.0.0. Pass the route name instead. See https://www.drupal.org/node/3172280');
-    $url = $this->generator->generateFromRoute(new Route('/test/one'));
-    $this->assertSame($this->generator->generateFromRoute('test_1'), $url);
-  }
-
-  /**
    * Tests URL generation in a subdirectory.
    */
   public function testGetPathFromRouteWithSubdirectory() {
@@ -466,18 +452,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $options = ['base_url' => 'http://www.example.com:8888', 'fragment' => 'top'];
     // Extra parameters should appear in the query string.
     $this->assertGenerateFromRoute('test_1', ['zoo' => 5], $options, 'http://www.example.com:8888/hello/world?zoo=5#top', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
-  }
-
-  /**
-   * Tests deprecated methods.
-   *
-   * @group legacy
-   */
-  public function testDeprecatedMethods() {
-    $this->expectDeprecation('Drupal\Core\Routing\UrlGenerator::getRouteDebugMessage() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the route name instead. See https://www.drupal.org/node/3172303');
-    $this->assertSame('test', $this->generator->getRouteDebugMessage('test'));
-    $this->expectDeprecation('Drupal\Core\Routing\UrlGenerator::supports() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only string route names are supported. See https://www.drupal.org/node/3172303');
-    $this->assertTrue($this->generator->supports('test'));
   }
 
   /**
