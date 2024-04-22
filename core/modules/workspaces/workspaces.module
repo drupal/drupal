@@ -39,11 +39,19 @@ function workspaces_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_module_implements_alter().
  */
 function workspaces_module_implements_alter(&$implementations, $hook): void {
+  // Move our 'hook_entity_presave' implementation at the beginning to ensure
+  // that other presave implementations are aware of the changes done in
+  // \Drupal\workspaces\EntityOperations::entityPresave().
+  if ($hook === 'entity_presave') {
+    $implementation = $implementations['workspaces'];
+    $implementations = ['workspaces' => $implementation] + $implementations;
+  }
+
+  // Move our 'hook_entity_insert' implementation at the end to ensure that
+  // the second (pending) revision created for published entities is not used
+  // by other 'hook_entity_insert' implementations.
+  // @see \Drupal\workspaces\EntityOperations::entityInsert()
   if ($hook === 'entity_insert') {
-    // Move our 'hook_entity_insert' implementation at the end to ensure that
-    // the second (pending) revision created for published entities is not used
-    // by other 'hook_entity_insert' implementations.
-    // @see \Drupal\workspaces\EntityOperations::entityInsert()
     $group = $implementations['workspaces'];
     unset($implementations['workspaces']);
     $implementations['workspaces'] = $group;

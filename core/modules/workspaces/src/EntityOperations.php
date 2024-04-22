@@ -147,6 +147,16 @@ class EntityOperations implements ContainerInjectionInterface {
       $entity->isDefaultRevision(FALSE);
     }
 
+    // In ::entityFormEntityBuild() we mark the entity as a non-default revision
+    // so that validation constraints can rely on $entity->isDefaultRevision()
+    // always returning FALSE when an entity form is submitted in a workspace.
+    // However, after validation has run, we need to revert that flag so the
+    // first revision of a new entity is correctly seen by the system as the
+    // default revision.
+    if ($entity->isNew()) {
+      $entity->isDefaultRevision(TRUE);
+    }
+
     // Track the workspaces in which the new revision was saved.
     if (!$entity->isSyncing()) {
       $field_name = $entity->getEntityType()->getRevisionMetadataKey('workspace');
@@ -326,6 +336,10 @@ class EntityOperations implements ContainerInjectionInterface {
    * Entity builder that marks all supported entities as pending revisions.
    */
   public static function entityFormEntityBuild($entity_type_id, RevisionableInterface $entity, &$form, FormStateInterface &$form_state) {
+    // Ensure that all entity forms are signaling that a new revision will be
+    // created.
+    $entity->setNewRevision(TRUE);
+
     // Set the non-default revision flag so that validation constraints are also
     // aware that a pending revision is about to be created.
     $entity->isDefaultRevision(FALSE);
