@@ -857,6 +857,7 @@ internal.shepherd:
     gpl-compatible: true
   js:
     assets/vendor/shepherd/shepherd.min.js: { minified: true }
+  deprecated: The %library_id% asset library is deprecated in Drupal 10.3.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3442299
 
 drupal.jquery.position:
   # This is a modified version of jQuery UI position for that does not require
