@@ -5,7 +5,6 @@
  * Provides full-site preview functionality for content staging.
  */
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -266,28 +265,19 @@ function workspaces_toolbar() {
   $items['workspace'] += [
     '#type' => 'toolbar_item',
     'tab' => [
-      '#type' => 'link',
-      '#title' => $active_workspace ? $active_workspace->label() : t('Live'),
-      '#url' => Url::fromRoute('entity.workspace.collection', [], ['query' => \Drupal::destination()->getAsArray()]),
-      '#attributes' => [
-        'title' => t('Switch workspace'),
-        'class' => ['use-ajax', 'toolbar-icon', 'toolbar-icon-workspace'],
-        'data-dialog-type' => 'dialog',
-        'data-dialog-renderer' => 'off_canvas_top',
-        'data-dialog-options' => Json::encode([
-          'height' => 161,
-          'classes' => [
-            'ui-dialog' => 'workspaces-dialog',
-          ],
-        ]),
+      '#lazy_builder' => ['workspaces.lazy_builders:renderToolbarTab', []],
+      '#create_placeholder' => TRUE,
+      '#lazy_builder_preview' => [
+        '#type' => 'link',
+        '#title' => $active_workspace ? $active_workspace->label() : t('Live'),
+        '#url' => Url::fromRoute('entity.workspace.collection'),
+        '#attributes' => [
+          'class' => ['toolbar-tray-lazy-placeholder-link'],
+        ],
       ],
-      '#cache' => ['tags' => $active_workspace ? $active_workspace->getCacheTags() : []],
     ],
     '#wrapper_attributes' => [
       'class' => ['workspaces-toolbar-tab'],
-    ],
-    '#attached' => [
-      'library' => ['workspaces/drupal.workspaces.toolbar'],
     ],
     '#weight' => 500,
   ];
@@ -297,6 +287,14 @@ function workspaces_toolbar() {
   if (!$active_workspace) {
     $items['workspace']['#wrapper_attributes']['class'][] = 'workspaces-toolbar-tab--is-default';
   }
+
+  // \Drupal\toolbar\Element\ToolbarItem::preRenderToolbarItem adds an
+  // #attributes property to each toolbar item's tab child automatically.
+  // Lazy builders don't support an #attributes property so we need to
+  // add another render callback to remove the #attributes property. We start by
+  // adding the defaults, and then we append our own pre render callback.
+  $items['workspace'] += \Drupal::service('plugin.manager.element_info')->getInfo('toolbar_item');
+  $items['workspace']['#pre_render'][] = 'workspaces.lazy_builders:removeTabAttributes';
 
   return $items;
 }

@@ -59,6 +59,11 @@ services:
     parent: logger.channel_base
     arguments: ['workspaces']
 
+  workspaces.lazy_builders:
+    class: Drupal\workspaces\WorkspacesLazyBuilders
+    arguments: [ '@workspaces.manager', '@plugin.manager.element_info' ]
+  Drupal\workspaces\WorkspacesLazyBuilders: '@workspaces.lazy_builders'
+
   workspaces.entity.query.sql:
     decorates: entity.query.sql
     class: Drupal\workspaces\EntityQuery\QueryFactory
