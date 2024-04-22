@@ -14,67 +14,7 @@ use Psr\Log\LoggerInterface;
  */
 class WorkspaceMerger implements WorkspaceMergerInterface {
 
-  /**
-   * The source workspace entity.
-   *
-   * @var \Drupal\workspaces\WorkspaceInterface
-   */
-  protected $sourceWorkspace;
-
-  /**
-   * The target workspace entity.
-   *
-   * @var \Drupal\workspaces\WorkspaceInterface
-   */
-  protected $targetWorkspace;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
-   * The workspace association service.
-   *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
-   */
-  protected $workspaceAssociation;
-
-  /**
-   * Constructs a new WorkspaceMerger.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Database\Connection $database
-   *   Database connection.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
-   *   The workspace association service.
-   * @param \Drupal\workspaces\WorkspaceInterface $source
-   *   The source workspace.
-   * @param \Drupal\workspaces\WorkspaceInterface $target
-   *   The target workspace.
-   * @param \Psr\Log\LoggerInterface|null $logger
-   *   The logger.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceAssociationInterface $workspace_association, WorkspaceInterface $source, WorkspaceInterface $target, protected ?LoggerInterface $logger = NULL) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->database = $database;
-    $this->workspaceAssociation = $workspace_association;
-    $this->sourceWorkspace = $source;
-    $this->targetWorkspace = $target;
-    if ($this->logger === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
-      $this->logger = \Drupal::service('logger.channel.workspaces');
-    }
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected Connection $database, protected WorkspaceAssociationInterface $workspaceAssociation, protected WorkspaceInterface $sourceWorkspace, protected WorkspaceInterface $targetWorkspace, protected LoggerInterface $logger) {
   }
 
   /**

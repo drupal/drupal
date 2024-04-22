@@ -4,7 +4,6 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Site\Settings;
@@ -21,143 +20,13 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   use StringTranslationTrait;
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity memory cache service.
-   *
-   * @var \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
-   */
-  protected $entityMemoryCache;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The class resolver.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
-   * The workspace association service.
-   *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
-   */
-  protected $workspaceAssociation;
-
-  /**
-   * The workspace information service.
-   *
-   * @var \Drupal\workspaces\WorkspaceInformationInterface
-   */
-  protected WorkspaceInformationInterface $workspaceInfo;
-
-  /**
-   * The workspace negotiator service IDs.
-   *
-   * @var array
-   */
-  protected $negotiatorIds;
-
-  /**
    * The current active workspace or FALSE if there is no active workspace.
    *
    * @var \Drupal\workspaces\WorkspaceInterface|false
    */
   protected $activeWorkspace;
 
-  /**
-   * Constructs a new WorkspaceManager.
-   *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $entity_memory_cache
-   *   The entity memory cache service.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current user.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state service.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
-   *   The class resolver.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
-   *   The workspace association service.
-   * @param \Drupal\workspaces\WorkspaceInformationInterface|null $workspace_information
-   *   The workspace information service.
-   * @param array|null $negotiator_ids
-   *   The workspace negotiator service IDs.
-   */
-  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, protected ?WorkspaceInformationInterface $workspace_information = NULL, array $negotiator_ids = NULL) {
-    $this->requestStack = $request_stack;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityMemoryCache = $entity_memory_cache;
-    $this->currentUser = $current_user;
-    $this->state = $state;
-    $this->logger = $logger;
-    $this->classResolver = $class_resolver;
-    $this->workspaceAssociation = $workspace_association;
-
-    if (!$workspace_information instanceof WorkspaceInformationInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $workspace_information argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3324297', E_USER_DEPRECATED);
-      $this->workspaceInfo = \Drupal::service('workspaces.information');
-
-      // The negotiator IDs are always the last constructor argument.
-      $this->negotiatorIds = $workspace_information;
-    }
-    else {
-      $this->workspaceInfo = $workspace_information;
-      $this->negotiatorIds = $negotiator_ids;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isEntityTypeSupported(EntityTypeInterface $entity_type) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\workspaces\WorkspaceInformation::isEntityTypeSupported instead. See https://www.drupal.org/node/3324297', E_USER_DEPRECATED);
-    return $this->workspaceInfo->isEntityTypeSupported($entity_type);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSupportedEntityTypes() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\workspaces\WorkspaceInformation::getSupportedEntityTypes instead. See https://www.drupal.org/node/3324297', E_USER_DEPRECATED);
-    return $this->workspaceInfo->getSupportedEntityTypes();
+  public function __construct(protected RequestStack $requestStack, protected EntityTypeManagerInterface $entityTypeManager, protected MemoryCacheInterface $entityMemoryCache, protected AccountProxyInterface $currentUser, protected StateInterface $state, protected LoggerInterface $logger, protected ClassResolverInterface $classResolver, protected WorkspaceAssociationInterface $workspaceAssociation, protected WorkspaceInformationInterface $workspaceInfo, protected array $negotiatorIds = []) {
   }
 
   /**
@@ -293,14 +162,6 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     $this->doSwitchWorkspace($previous_active_workspace);
 
     return $result;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function shouldAlterOperations(EntityTypeInterface $entity_type) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3324297', E_USER_DEPRECATED);
-    return $this->workspaceInfo->isEntityTypeSupported($entity_type) && $this->hasActiveWorkspace();
   }
 
   /**

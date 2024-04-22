@@ -23,27 +23,6 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   const TABLE = 'workspace_association';
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The workspace repository service.
-   *
-   * @var \Drupal\workspaces\WorkspaceRepositoryInterface
-   */
-  protected $workspaceRepository;
-
-  /**
    * A multidimensional array of entity IDs that are associated to a workspace.
    *
    * The first level keys are workspace IDs, the second level keys are entity
@@ -63,26 +42,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    */
   protected array $associatedInitialRevisions = [];
 
-  /**
-   * Constructs a WorkspaceAssociation object.
-   *
-   * @param \Drupal\Core\Database\Connection $connection
-   *   A database connection for reading and writing path aliases.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager for querying revisions.
-   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspace_repository
-   *   The Workspace repository service.
-   * @param \Psr\Log\LoggerInterface|null $logger
-   *   The logger.
-   */
-  public function __construct(Connection $connection, EntityTypeManagerInterface $entity_type_manager, WorkspaceRepositoryInterface $workspace_repository, protected ?LoggerInterface $logger = NULL) {
-    $this->database = $connection;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->workspaceRepository = $workspace_repository;
-    if ($this->logger === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
-      $this->logger = \Drupal::service('logger.channel.workspaces');
-    }
+  public function __construct(protected Connection $database, protected EntityTypeManagerInterface $entityTypeManager, protected WorkspaceRepositoryInterface $workspaceRepository, protected LoggerInterface $logger) {
   }
 
   /**
@@ -331,14 +291,6 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     // Return workspace IDs sorted in tree order.
     $tree = $this->workspaceRepository->loadTree();
     return array_keys(array_intersect_key($tree, array_flip($result)));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postPublish(WorkspaceInterface $workspace) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the \Drupal\workspaces\Event\WorkspacePostPublishEvent event instead. See https://www.drupal.org/node/3242573', E_USER_DEPRECATED);
-    $this->deleteAssociations($workspace->id());
   }
 
   /**
