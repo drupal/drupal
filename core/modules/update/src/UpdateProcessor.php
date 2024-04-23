@@ -101,7 +101,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
    *   The key/value factory.
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
    *   The expirable key/value factory.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
   public function __construct(
@@ -112,7 +112,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
     PrivateKey $private_key,
     KeyValueFactoryInterface $key_value_factory,
     KeyValueExpirableFactoryInterface $key_value_expirable_factory,
-    protected ?TimeInterface $time = NULL,
+    protected TimeInterface $time,
   ) {
     $this->updateFetcher = $update_fetcher;
     $this->updateSettings = $config_factory->get('update.settings');
@@ -122,10 +122,6 @@ class UpdateProcessor implements UpdateProcessorInterface {
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
     $this->stateStore = $state_store;
     $this->privateKey = $private_key;
-    if (!$time) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      $this->time = \Drupal::service(TimeInterface::class);
-    }
     $this->fetchTasks = [];
     $this->failed = [];
   }

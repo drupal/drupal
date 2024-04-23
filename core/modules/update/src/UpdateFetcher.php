@@ -59,18 +59,14 @@ class UpdateFetcher implements UpdateFetcherInterface {
    *   A Guzzle client object.
    * @param \Drupal\Core\Site\Settings $settings
    *   The settings instance.
-   * @param \Psr\Log\LoggerInterface|null $logger
+   * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $http_client, Settings $settings, protected ?LoggerInterface $logger = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, ClientInterface $http_client, Settings $settings, protected LoggerInterface $logger) {
     $this->fetchUrl = $config_factory->get('update.settings')->get('fetch.url');
     $this->httpClient = $http_client;
     $this->updateSettings = $config_factory->get('update.settings');
     $this->withHttpFallback = $settings->get('update_fetch_with_http_fallback', FALSE);
-    if ($this->logger === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
-      $this->logger = \Drupal::service('logger.channel.update');
-    }
   }
 
   /**
