@@ -50,7 +50,7 @@ interface AccountInterface {
    * @return bool
    *   TRUE if the user has the permission, FALSE otherwise.
    */
-  public function hasPermission(/* string */$permission);
+  public function hasPermission(string $permission);
 
   /**
    * Returns TRUE if the account is authenticated.

@@ -220,63 +220,6 @@ function user_validate_name($name) {
 }
 
 /**
- * Determine the permissions for one or more roles.
- *
- * @param array $roles
- *   An array of role IDs.
- *
- * @return array
- *   An array indexed by role ID. Each value is an array of permission strings
- *   for the given role.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
- *   replacement beyond loading the roles and calling
- *   \Drupal\user\Entity\Role::getPermissions().
- *
- * @see https://www.drupal.org/node/3348138
- */
-function user_role_permissions(array $roles) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement beyond loading the roles and calling \Drupal\user\Entity\Role::getPermissions(). See https://www.drupal.org/node/3348138', E_USER_DEPRECATED);
-  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
-    return _user_role_permissions_update($roles);
-  }
-  $entities = Role::loadMultiple($roles);
-  $role_permissions = [];
-  foreach ($roles as $rid) {
-    $role_permissions[$rid] = isset($entities[$rid]) ? $entities[$rid]->getPermissions() : [];
-  }
-  return $role_permissions;
-}
-
-/**
- * Determine the permissions for one or more roles during update.
- *
- * A separate version is needed because during update the entity system can't
- * be used and in non-update situations the entity system is preferred because
- * of the hook system.
- *
- * @param array $roles
- *   An array of role IDs.
- *
- * @return array
- *   An array indexed by role ID. Each value is an array of permission strings
- *   for the given role.
- *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
- *   replacement.
- *
- * @see https://www.drupal.org/node/3348138
- */
-function _user_role_permissions_update($roles) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3348138', E_USER_DEPRECATED);
-  $role_permissions = [];
-  foreach ($roles as $rid) {
-    $role_permissions[$rid] = \Drupal::config("user.role.$rid")->get('permissions') ?: [];
-  }
-  return $role_permissions;
-}
-
-/**
  * Checks for usernames blocked by user administration.
  *
  * @param string $name
@@ -822,34 +765,6 @@ function user_mail_tokens(&$replacements, $data, $options) {
 }
 
 /**
- * Retrieves the names of roles matching specified conditions.
- *
- * @param bool $members_only
- *   (optional) Set this to TRUE to exclude the 'anonymous' role. Defaults to
- *   FALSE.
- * @param string|null $permission
- *   (optional) A string containing a permission. If set, only roles
- *    containing that permission are returned. Defaults to NULL, which
- *    returns all roles.
- *
- * @return array
- *   An associative array with the role id as the key and the role name as
- *   value.
- *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\user\Entity\Role::loadMultiple() and, if necessary, an inline
- *   implementation instead.
- *
- * @see https://www.drupal.org/node/3349759
- */
-function user_role_names($members_only = FALSE, $permission = NULL) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\user\Entity\Role::loadMultiple() and, if necessary, an inline implementation instead. See https://www.drupal.org/node/3349759', E_USER_DEPRECATED);
-  return array_map(function ($item) {
-    return $item->label();
-  }, user_roles($members_only, $permission));
-}
-
-/**
  * Implements hook_ENTITY_TYPE_insert() for user_role entities.
  */
 function user_user_role_insert(RoleInterface $role) {
@@ -908,43 +823,6 @@ function user_user_role_delete(RoleInterface $role) {
   foreach ($actions as $action) {
     $action->delete();
   }
-}
-
-/**
- * Retrieve an array of roles matching specified conditions.
- *
- * @param bool $members_only
- *   (optional) Set this to TRUE to exclude the 'anonymous' role. Defaults to
- *   FALSE.
- * @param string|null $permission
- *   (optional) A string containing a permission. If set, only roles
- *   containing that permission are returned. Defaults to NULL, which
- *   returns all roles.
- *
- * @return \Drupal\user\RoleInterface[]
- *   An associative array with the role id as the key and the role object as
- *   value.
- *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\user\Entity\Role::loadMultiple() and, if necessary, an inline
- *   implementation instead.
- *
- * @see https://www.drupal.org/node/3349759
- */
-function user_roles($members_only = FALSE, $permission = NULL) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\user\Entity\Role::loadMultiple() and, if necessary, an inline implementation instead. See https://www.drupal.org/node/3349759', E_USER_DEPRECATED);
-  $roles = Role::loadMultiple();
-  if ($members_only) {
-    unset($roles[RoleInterface::ANONYMOUS_ID]);
-  }
-
-  if (!empty($permission)) {
-    $roles = array_filter($roles, function ($role) use ($permission) {
-      return $role->hasPermission($permission);
-    });
-  }
-
-  return $roles;
 }
 
 /**

@@ -168,20 +168,6 @@ class UserLoginForm extends FormBase {
   }
 
   /**
-   * Sets an error if supplied username has been blocked.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement.
-   * @see https://www.drupal.org/node/3410706
-   */
-  public function validateName(array &$form, FormStateInterface $form_state) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3410706', E_USER_DEPRECATED);
-    if (!$form_state->isValueEmpty('name') && user_is_blocked($form_state->getValue('name'))) {
-      // Blocked in user administration.
-      $form_state->setErrorByName('name', $this->t('The username %name has not been activated or is blocked.', ['%name' => $form_state->getValue('name')]));
-    }
-  }
-
-  /**
    * Checks supplied username/password against local users table.
    *
    * If successful, $form_state->get('uid') is set to the matching user ID.

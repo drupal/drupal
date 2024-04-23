@@ -36,16 +36,12 @@ class UserRequestSubscriber implements EventSubscriberInterface {
    *   The current user.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(AccountInterface $account, EntityTypeManagerInterface $entity_type_manager, protected ?TimeInterface $time = NULL) {
+  public function __construct(AccountInterface $account, EntityTypeManagerInterface $entity_type_manager, protected TimeInterface $time) {
     $this->account = $account;
     $this->entityTypeManager = $entity_type_manager;
-    if (!$time) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      $this->time = \Drupal::service(TimeInterface::class);
-    }
   }
 
   /**

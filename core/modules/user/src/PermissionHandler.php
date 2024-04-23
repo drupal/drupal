@@ -3,7 +3,6 @@
 namespace Drupal\user;
 
 use Drupal\Core\Discovery\YamlDiscovery;
-use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -83,26 +82,18 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   The module handler.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
-   * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface $callable_resolver
+   * @param \Drupal\Core\Utility\CallableResolver $callable_resolver
    *   The callable resolver.
-   * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface|CallableResolver $callable_resolver, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
-    if ($callable_resolver instanceof ControllerResolverInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3397954', E_USER_DEPRECATED);
-      $callable_resolver = \Drupal::service('callable_resolver');
-    }
+  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, CallableResolver $callable_resolver, protected ModuleExtensionList $moduleExtensionList) {
     $this->callableResolver = $callable_resolver;
 
     // @todo It would be nice if you could pull all module directories from the
     //   container.
     $this->moduleHandler = $module_handler;
     $this->stringTranslation = $string_translation;
-    if ($this->moduleExtensionList === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
-      $this->moduleExtensionList = \Drupal::service('extension.list.module');
-    }
   }
 
   /**

@@ -36,13 +36,9 @@ class Roles extends ManyToOne {
     $plugin_id,
     $plugin_definition,
     protected readonly RoleStorageInterface $roleStorage,
-    protected ?LoggerInterface $logger,
+    protected LoggerInterface $logger,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if (!$logger) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3427368', E_USER_DEPRECATED);
-      $this->logger = \Drupal::service('logger.channel.default');
-    }
   }
 
   /**
