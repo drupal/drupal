@@ -12,6 +12,8 @@ use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore äöüßαβγδεζηθικλμνξοσὠ
+
 /**
  * Tests DIC compilation to disk.
  *
@@ -293,6 +295,19 @@ class DrupalKernelTest extends KernelTestBase {
 
     // Ensure persisted services are persisted.
     $this->assertSame($request_stack, $container->get('request_stack'));
+  }
+
+  /**
+   * Tests system locale.
+   */
+  public function testLocale(): void {
+    $utf8_string = 'äöüßαβγδεζηθικλμνξοσὠ';
+    // Test environment locale should be UTF-8.
+    $this->assertSame($utf8_string, escapeshellcmd($utf8_string));
+    $request = Request::createFromGlobals();
+    $kernel = $this->getTestKernel($request);
+    // Kernel environment locale should be UTF-8.
+    $this->assertSame($utf8_string, escapeshellcmd($utf8_string));
   }
 
 }
