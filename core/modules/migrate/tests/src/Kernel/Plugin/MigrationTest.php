@@ -154,7 +154,7 @@ class MigrationTest extends KernelTestBase {
       ],
     ];
     $migration = $plugin_manager->createStubMigration($plugin_definition);
-    $this->assertSame(['required' => [], 'optional' => ['m1', 'm2', 'm3', 'm4', 'm5']], $migration->getMigrationDependencies(TRUE));
+    $this->assertSame(['required' => [], 'optional' => ['m1', 'm2', 'm3', 'm4', 'm5']], $migration->getMigrationDependencies());
   }
 
   /**
@@ -167,24 +167,6 @@ class MigrationTest extends KernelTestBase {
     $destination_ids = $migration->getDestinationIds();
     $this->assertNotEmpty($destination_ids, 'Destination ids are not empty');
     $this->assertEquals(['foo' => 'bar'], $destination_ids, 'Destination ids match the expected values.');
-  }
-
-  /**
-   * Tests Migration::getTrackLastImported()
-   *
-   * @covers ::getTrackLastImported
-   * @covers ::isTrackLastImported
-   *
-   * @group legacy
-   */
-  public function testGetTrackLastImported() {
-    $this->expectDeprecation('Drupal\migrate\Plugin\Migration::setTrackLastImported() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894');
-    $this->expectDeprecation('Drupal\migrate\Plugin\Migration::getTrackLastImported() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894');
-    $this->expectDeprecation('Drupal\migrate\Plugin\Migration::isTrackLastImported() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894');
-    $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
-    $migration->setTrackLastImported(TRUE);
-    $this->assertEquals(TRUE, $migration->getTrackLastImported());
-    $this->assertEquals(TRUE, $migration->isTrackLastImported());
   }
 
   /**

@@ -93,11 +93,4 @@ class TestSqlIdMap extends Sql implements \Iterator {
     parent::ensureTables();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getMigrationPluginManager() {
-    return parent::getMigrationPluginManager();
-  }
-
 }

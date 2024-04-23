@@ -187,11 +187,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $this->mapTableName = mb_substr($this->mapTableName, 0, 63 - $prefix_length);
     $this->messageTableName = 'migrate_message_' . mb_strtolower($machine_name);
     $this->messageTableName = mb_substr($this->messageTableName, 0, 63 - $prefix_length);
-
-    if (!$migration_plugin_manager) {
-      @trigger_error('Calling Sql::__construct() without the $migration_manager argument is deprecated in drupal:9.5.0 and the $migration_manager argument will be required in drupal:11.0.0. See https://www.drupal.org/node/3277306', E_USER_DEPRECATED);
-      $migration_plugin_manager = \Drupal::service('plugin.manager.migration');
-    }
     $this->migrationPluginManager = $migration_plugin_manager;
   }
 
@@ -1009,22 +1004,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    */
   public function valid(): bool {
     return $this->currentRow !== FALSE;
-  }
-
-  /**
-   * Returns the migration plugin manager.
-   *
-   * @return \Drupal\migrate\Plugin\MigrationPluginManagerInterface
-   *   The migration plugin manager.
-   *
-   * @deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use
-   *   $this->migrationPluginManager instead.
-   *
-   * @see https://www.drupal.org/node/3277306
-   */
-  protected function getMigrationPluginManager() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use $this->migrationPluginManager instead. See https://www.drupal.org/node/3277306', E_USER_DEPRECATED);
-    return $this->migrationPluginManager;
   }
 
   /**
