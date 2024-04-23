@@ -22,50 +22,6 @@ interface UploadedFileInterface {
   public function getClientOriginalName(): string;
 
   /**
-   * Returns whether the file was uploaded successfully.
-   *
-   * @return bool
-   *   TRUE if the file has been uploaded with HTTP and no error occurred.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\file\Validation\UploadedFileValidatorInterface::validate()
-   *   instead.
-   * @see https://www.drupal.org/node/3375456
-   */
-  public function isValid(): bool;
-
-  /**
-   * Returns an informative upload error message.
-   *
-   * @return string
-   *   The error message regarding a failed upload.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\file\Validation\UploadedFileValidatorInterface::validate()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3375456
-   */
-  public function getErrorMessage(): string;
-
-  /**
-   * Returns the upload error code.
-   *
-   * If the upload was successful, the constant UPLOAD_ERR_OK is returned.
-   * Otherwise, one of the other UPLOAD_ERR_XXX constants is returned.
-   *
-   * @return int
-   *   The upload error code.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\file\Validation\UploadedFileValidatorInterface::validate()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3375456
-   */
-  public function getError(): int;
-
-  /**
    * Gets file size.
    *
    * @return int

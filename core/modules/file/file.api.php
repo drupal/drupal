@@ -60,38 +60,6 @@
  */
 
 /**
- * Check that files meet a given criteria.
- *
- * This hook lets modules perform additional validation on files. They're able
- * to report a failure by returning one or more error messages.
- *
- * @param \Drupal\file\FileInterface $file
- *   The file entity being validated.
- *
- * @return array
- *   An array of error messages. If there are no problems with the file return
- *   an empty array.
- *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the
- *    'file.validator' service instead.
- *
- * @see https://www.drupal.org/node/3363700
- * @see \Drupal\file\Validation\FileValidatorInterface
- */
-function hook_file_validate(\Drupal\file\FileInterface $file) {
-  $errors = [];
-
-  if (!$file->getFilename()) {
-    $errors[] = t("The file's name is empty. Give a name to the file.");
-  }
-  if (strlen($file->getFilename()) > 255) {
-    $errors[] = t("The file's name exceeds the 255 characters limit. Rename the file and try again.");
-  }
-
-  return $errors;
-}
-
-/**
  * Respond to a file that has been copied.
  *
  * @param \Drupal\file\FileInterface $file

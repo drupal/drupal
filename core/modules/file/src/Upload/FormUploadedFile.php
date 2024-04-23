@@ -39,30 +39,6 @@ class FormUploadedFile implements UploadedFileInterface {
   /**
    * {@inheritdoc}
    */
-  public function isValid(): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\Validation\UploadedFileValidatorInterface::validate() instead. See https://www.drupal.org/node/3375456', E_USER_DEPRECATED);
-    return $this->uploadedFile->isValid();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getErrorMessage(): string {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\Validation\UploadedFileValidatorInterface::validate() instead. See https://www.drupal.org/node/3375456', E_USER_DEPRECATED);
-    return $this->uploadedFile->getErrorMessage();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getError(): int {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\Validation\UploadedFileValidatorInterface::validate() instead. See https://www.drupal.org/node/3375456', E_USER_DEPRECATED);
-    return $this->uploadedFile->getError();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getSize(): int {
     return $this->uploadedFile->getSize();
   }

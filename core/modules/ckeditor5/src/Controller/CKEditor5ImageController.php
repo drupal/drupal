@@ -171,7 +171,7 @@ class CKEditor5ImageController extends ControllerBase {
 
     try {
       $uploadedFile = new FormUploadedFile($upload);
-      $uploadResult = $this->fileUploadHandler->handleFileUpload($uploadedFile, $validators, $destination, FileExists::Rename, FALSE);
+      $uploadResult = $this->fileUploadHandler->handleFileUpload($uploadedFile, $validators, $destination, FileExists::Rename);
       if ($uploadResult->hasViolations()) {
         throw new UnprocessableEntityHttpException((string) $uploadResult->getViolations());
       }
