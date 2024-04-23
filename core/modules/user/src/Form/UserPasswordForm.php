@@ -92,7 +92,7 @@ class UserPasswordForm extends FormBase {
     $this->flood = $flood;
     $this->emailValidator = $email_validator;
     if (!$userNameValidator instanceof UserNameValidator) {
-      @\trigger_error('Passing $userNameValidator as \Drupal\Core\TypedData\TypedDataManagerInterface to ' . __METHOD__ . ' () is deprecated in drupal:10.3.0 and is removed in drupal:10.0.0. Pass a Drupal\user\UserValidator instead. See https://www.drupal.org/node/3431205', E_USER_DEPRECATED);
+      @\trigger_error('Passing $userNameValidator as \Drupal\Core\TypedData\TypedDataManagerInterface to ' . __METHOD__ . ' () is deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. Pass a Drupal\user\UserValidator instead. See https://www.drupal.org/node/3431205', E_USER_DEPRECATED);
       $this->userNameValidator = \Drupal::service('user.name_validator');
     }
   }
