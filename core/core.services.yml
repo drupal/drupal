@@ -1879,3 +1879,4 @@ services:
       - '@logger.channel.default'
     tags:
       - { name: twig.loader, priority: 5 }
+  Drupal\Core\EventSubscriber\CsrfExceptionSubscriber: ~

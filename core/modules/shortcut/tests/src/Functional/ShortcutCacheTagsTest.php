@@ -183,13 +183,13 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
     $this->drupalLogin($site_configuration_user1);
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    $this->assertCacheContexts(['user', 'url.query_args:_wrapper_format']);
+    $this->assertCacheContexts(['session', 'user', 'url.query_args:_wrapper_format']);
     $this->assertSession()->linkExists('Shortcuts');
     $this->assertSession()->linkExists('Cron');
 
     $this->drupalLogin($site_configuration_user2);
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    $this->assertCacheContexts(['user', 'url.query_args:_wrapper_format']);
+    $this->assertCacheContexts(['session', 'user', 'url.query_args:_wrapper_format']);
     $this->assertSession()->linkExists('Shortcuts');
     $this->assertSession()->linkExists('Cron');
 

@@ -12,6 +12,16 @@ user.logout:
     _controller: '\Drupal\user\Controller\UserController::logout'
   requirements:
     _user_is_logged_in: 'TRUE'
+    _csrf_token: 'TRUE'
+  options:
+    _csrf_confirm_form_route: 'user.logout.confirm'
+
+user.logout.confirm:
+  path: '/user/logout/confirm'
+  defaults:
+    _form: '\Drupal\user\Form\UserLogoutConfirm'
+  requirements:
+    _user_is_logged_in: 'TRUE'
 
 user.admin_index:
   path: '/admin/config/people'
