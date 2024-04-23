@@ -5,7 +5,6 @@
  * Provide structure for the administrative interface to Views.
  */
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -334,19 +333,4 @@ function views_ui_views_analyze(ViewExecutable $view) {
   }
 
   return $ret;
-}
-
-/**
- * Truncate strings to a set length and provide a '...' if they truncated.
- *
- * This is often used in the UI to ensure long strings fit.
- *
- * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0.
- *   Use \Drupal\Component\Utility\Unicode::truncate().
- *
- * @see https://www.drupal.org/node/3408283
- */
-function views_ui_truncate($string, $length) {
-  @trigger_error('views_ui_truncate() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Component\Utility\Unicode::truncate(). See https://www.drupal.org/node/3408283', E_USER_DEPRECATED);
-  return Unicode::truncate($string, $length, FALSE, TRUE);
 }

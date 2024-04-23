@@ -35,15 +35,6 @@ class ViewValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * @group legacy
-   */
-  public function testLabelsAreRequired(): void {
-    $this->entity->set('label', NULL);
-    $this->expectDeprecation('Saving a view without an explicit label is deprecated in drupal:10.2.0 and will raise an error in drupal:11.0.0. See https://www.drupal.org/node/3381669');
-    $this->assertSame($this->entity->id(), $this->entity->label());
-  }
-
-  /**
    * Tests that the various plugin IDs making up a view display are validated.
    *
    * @param string ...$parents

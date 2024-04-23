@@ -61,28 +61,6 @@ trait EntityTranslationRenderTrait {
    *   The entity object the field value being processed is attached to.
    * @param \Drupal\views\ResultRow $row
    *   The result row the field value being processed belongs to.
-   *
-   * @return \Drupal\Core\Entity\FieldableEntityInterface
-   *   The entity translation object for the specified row.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\views\Entity\Render\EntityTranslationRenderTrait::getEntityTranslationByRelationship
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3311862
-   */
-  public function getEntityTranslation(EntityInterface $entity, ResultRow $row) {
-    @trigger_error('\Drupal\views\Entity\Render\EntityTranslationRenderTrait::getEntityTranslation is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\views\Entity\Render\EntityTranslationRenderTrait::getEntityTranslationByRelationship instead. See https://www.drupal.org/node/3311862', E_USER_DEPRECATED);
-    return $this->getEntityTranslationByRelationship($entity, $row);
-  }
-
-  /**
-   * Returns the entity translation matching the configured row language.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object the field value being processed is attached to.
-   * @param \Drupal\views\ResultRow $row
-   *   The result row the field value being processed belongs to.
    * @param string $relationship
    *   The relationship to be used, or 'none' by default.
    *
