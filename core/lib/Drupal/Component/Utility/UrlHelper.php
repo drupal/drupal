@@ -99,16 +99,23 @@ class UrlHelper {
    *   A string as compressed by
    *   \Drupal\Component\Utility\UrlHelper::compressQueryParameter().
    *
-   * @return string|bool
-   *   The uncompressed data or FALSE on failure.
+   * @return string
+   *   The uncompressed data, or the original string if it cannot be
+   *   uncompressed.
    */
-  public static function uncompressQueryParameter(string $compressed): string|bool {
+  public static function uncompressQueryParameter(string $compressed): string {
     if (!\extension_loaded('zlib')) {
       return $compressed;
     }
     // Because this comes from user data, suppress the PHP warning that
     // gzcompress() throws if the base64-encoded string is invalid.
-    return @gzuncompress(base64_decode(str_replace(['-', '_'], ['+', '/'], $compressed)));
+    $return = @gzuncompress(base64_decode(str_replace(['-', '_'], ['+', '/'], $compressed)));
+
+    // If we failed to uncompress the query parameter, it may be a stale link
+    // from before compression was implemented with the URL parameter
+    // uncompressed already, or it may be an incorrectly formatted URL.
+    // In either case, pass back the original string to the caller.
+    return $return === FALSE ? $compressed : $return;
   }
 
   /**

@@ -160,19 +160,22 @@ abstract class AssetControllerBase extends FileDownloadController {
     $this->themeManager->setActiveTheme($active_theme);
 
     $attached_assets = new AttachedAssets();
-    $include_string = UrlHelper::uncompressQueryParameter($request->query->get('include'));
+    $include_libraries = explode(',', UrlHelper::uncompressQueryParameter($request->query->get('include')));
 
-    if (!$include_string) {
-      throw new BadRequestHttpException('The libraries to include are encoded incorrectly.');
-    }
-    $attached_assets->setLibraries(explode(',', $include_string));
+    $validate = function ($libraries_to_check) {
+      foreach ($libraries_to_check as $library) {
+        if (substr_count($library, '/') !== 1) {
+          throw new BadRequestHttpException('The libraries to include are encoded incorrectly.');
+        }
+      }
+    };
+    $validate($include_libraries);
+    $attached_assets->setLibraries($include_libraries);
 
     if ($request->query->has('exclude')) {
-      $exclude_string = UrlHelper::uncompressQueryParameter($request->query->get('exclude'));
-      if (!$exclude_string) {
-        throw new BadRequestHttpException('The libraries to exclude are encoded incorrectly.');
-      }
-      $attached_assets->setAlreadyLoadedLibraries(explode(',', $exclude_string));
+      $exclude_libraries = explode(',', UrlHelper::uncompressQueryParameter($request->query->get('exclude')));
+      $validate($exclude_libraries);
+      $attached_assets->setAlreadyLoadedLibraries($exclude_libraries);
     }
     $groups = $this->getGroups($attached_assets, $request);
 
