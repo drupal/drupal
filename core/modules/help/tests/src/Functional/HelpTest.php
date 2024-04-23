@@ -35,14 +35,6 @@ class HelpTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'claro';
 
@@ -77,7 +69,10 @@ class HelpTest extends BrowserTestBase {
   public function testHelp() {
     // Log in the root user to ensure as many admin links appear as possible on
     // the module overview pages.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'access help pages',
+      'access administration pages',
+    ]));
     $this->verifyHelp();
 
     // Log in the regular user.
