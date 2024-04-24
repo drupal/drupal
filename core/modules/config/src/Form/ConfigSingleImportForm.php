@@ -36,90 +36,6 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class ConfigSingleImportForm extends ConfirmFormBase {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The config storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $configStorage;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The configuration manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The database lock object.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The typed config manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfigManager;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
-   * The theme extension list.
-   *
-   * @var \Drupal\Core\Extension\ThemeExtensionList
-   */
-  protected $themeExtensionList;
-
-  /**
-   * The module installer.
-   *
-   * @var \Drupal\Core\Extension\ModuleInstallerInterface
-   */
-  protected $moduleInstaller;
-
-  /**
    * If the config exists, this is that object. Otherwise, FALSE.
    *
    * @var \Drupal\Core\Config\Config|\Drupal\Core\Config\Entity\ConfigEntityInterface|bool
@@ -136,50 +52,45 @@ class ConfigSingleImportForm extends ConfirmFormBase {
   /**
    * Constructs a new ConfigSingleImportForm.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
+   * @param \Drupal\Core\Config\StorageInterface $configStorage
    *   The config storage.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher used to notify subscribers of config import events.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The configuration manager.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend to ensure multiple imports do not occur at the same time.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed configuration manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
+   * @param \Drupal\Core\Extension\ModuleInstallerInterface $moduleInstaller
    *   The module installer.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
-   * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
+   * @param \Drupal\Core\Extension\ThemeExtensionList $themeExtensionList
    *   The theme extension list.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage, RendererInterface $renderer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->configStorage = $config_storage;
-    $this->renderer = $renderer;
-
-    // Services necessary for \Drupal\Core\Config\ConfigImporter.
-    $this->eventDispatcher = $event_dispatcher;
-    $this->configManager = $config_manager;
-    $this->lock = $lock;
-    $this->typedConfigManager = $typed_config;
-    $this->moduleHandler = $module_handler;
-    $this->moduleInstaller = $module_installer;
-    $this->themeHandler = $theme_handler;
-    $this->moduleExtensionList = $extension_list_module;
-    if ($extension_list_theme === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $extension_list_theme argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3284397', E_USER_DEPRECATED);
-      $extension_list_theme = \Drupal::service('extension.list.theme');
-    }
-    $this->themeExtensionList = $extension_list_theme;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected StorageInterface $configStorage,
+    protected RendererInterface $renderer,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected ConfigManagerInterface $configManager,
+    protected LockBackendInterface $lock,
+    protected TypedConfigManagerInterface $typedConfigManager,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected ModuleInstallerInterface $moduleInstaller,
+    protected ThemeHandlerInterface $themeHandler,
+    protected ModuleExtensionList $moduleExtensionList,
+    protected ThemeExtensionList $themeExtensionList
+  ) {
   }
 
   /**
