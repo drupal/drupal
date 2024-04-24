@@ -87,13 +87,6 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
   protected $language_manager;
 
   /**
-   * The typed config manager service.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected TypedConfigManagerInterface $typedConfigManager;
-
-  /**
    * Constructs a Config destination object.
    *
    * @param array $configuration
@@ -108,21 +101,24 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
    *   The configuration factory.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager, TypedConfigManagerInterface $typed_config_manager = NULL) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    MigrationInterface $migration,
+    ConfigFactoryInterface $config_factory,
+    LanguageManagerInterface $language_manager,
+    protected TypedConfigManagerInterface $typedConfigManager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->config = $config_factory->getEditable($configuration['config_name']);
     $this->language_manager = $language_manager;
     if ($this->isTranslationDestination()) {
       $this->supportsRollback = TRUE;
     }
-    if ($typed_config_manager === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $typed_config_manager argument is deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3440502', E_USER_DEPRECATED);
-      $typed_config_manager = \Drupal::service(TypedConfigManagerInterface::class);
-    }
-    $this->typedConfigManager = $typed_config_manager;
   }
 
   /**
