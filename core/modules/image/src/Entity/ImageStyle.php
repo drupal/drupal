@@ -298,10 +298,12 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     $module_handler = \Drupal::moduleHandler();
     $module_handler->invokeAll('image_style_flush', [$this, $path]);
 
-    // Clear caches so that formatters may be added for this style.
-    \Drupal::service('theme.registry')->reset();
-
-    Cache::invalidateTags($this->getCacheTagsToInvalidate());
+    // Clear caches when the complete image style is flushed,
+    // so that field formatters may be added for this style.
+    if (!isset($path)) {
+      \Drupal::service('theme.registry')->reset();
+      Cache::invalidateTags($this->getCacheTagsToInvalidate());
+    }
 
     return $this;
   }

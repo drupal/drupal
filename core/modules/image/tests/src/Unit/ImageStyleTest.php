@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\image\Unit;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -196,6 +197,62 @@ class ImageStyleTest extends UnitTestCase {
     $this->assertNotEquals($image_style->getPathToken('public://test.jpeg.png'), $image_style->getPathToken('public://test.jpeg'));
     $this->assertNotEquals(substr(Crypt::hmacBase64($image_style->id() . ':' . 'public://test.jpeg.png', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
     $this->assertEquals(substr(Crypt::hmacBase64($image_style->id() . ':' . 'public://test.jpeg', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
+  }
+
+  /**
+   * @covers ::flush
+   */
+  public function testFlush() {
+    $cache_tag_invalidator = $this->createMock('\Drupal\Core\Cache\CacheTagsInvalidator');
+    $file_system = $this->createMock('\Drupal\Core\File\FileSystemInterface');
+    $module_handler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
+    $stream_wrapper_manager = $this->createMock('\Drupal\Core\StreamWrapper\StreamWrapperManagerInterface');
+    $stream_wrapper_manager->expects($this->any())
+      ->method('getWrappers')
+      ->will($this->returnValue([]));
+    $theme_registry = $this->createMock('\Drupal\Core\Theme\Registry');
+
+    $container = new ContainerBuilder();
+    $container->set('cache_tags.invalidator', $cache_tag_invalidator);
+    $container->set('file_system', $file_system);
+    $container->set('module_handler', $module_handler);
+    $container->set('stream_wrapper_manager', $stream_wrapper_manager);
+    $container->set('theme.registry', $theme_registry);
+    \Drupal::setContainer($container);
+
+    $image_effect_id = $this->randomMachineName();
+    $image_effect = $this->getMockBuilder('\Drupal\image\ImageEffectBase');
+
+    $image_style = $this->getImageStyleMock($image_effect_id, $image_effect, ['buildUri', 'getCacheTagsToInvalidate']);
+    $image_style->expects($this->any())
+      ->method('buildUri')
+      ->willReturn('test.jpg');
+    $image_style->expects($this->any())
+      ->method('getCacheTagsToInvalidate')
+      ->willReturn([]);
+
+    // Assert the theme registry is reset.
+    $theme_registry
+      ->expects($this->once())
+      ->method('reset');
+    // Assert the cache tags are invalidated.
+    $cache_tag_invalidator
+      ->expects($this->once())
+      ->method('invalidateTags');
+
+    $image_style->flush();
+
+    // Assert the theme registry is not reset a path is flushed.
+    $theme_registry
+      ->expects($this->never())
+      ->method('reset');
+    // Assert the cache tags are not reset a path is flushed.
+    $cache_tag_invalidator
+      ->expects($this->never())
+      ->method('invalidateTags');
+
+    $image_style->flush('test.jpg');
+
   }
 
   /**
