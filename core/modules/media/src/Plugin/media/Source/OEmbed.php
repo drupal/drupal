@@ -388,7 +388,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    *
    * @param \Drupal\media\OEmbed\Resource $resource
    *   The oEmbed resource.
-   * @param \Drupal\media\MediaInterface|null $media
+   * @param \Drupal\media\MediaInterface $media
    *   The media entity that contains the resource.
    *
    * @return string|null
@@ -400,14 +400,8 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    * toggle-able. See https://www.drupal.org/project/drupal/issues/2962751 for
    * more information.
    */
-  protected function getLocalThumbnailUri(Resource $resource, MediaInterface $media = NULL) {
-    if (is_null($media)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $media argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3432920', E_USER_DEPRECATED);
-      $token_data = [];
-    }
-    else {
-      $token_data = ['date' => $media->getCreatedTime()];
-    }
+  protected function getLocalThumbnailUri(Resource $resource, MediaInterface $media) {
+    $token_data = ['date' => $media->getCreatedTime()];
 
     // If there is no remote thumbnail, there's nothing for us to fetch here.
     $remote_thumbnail_url = $resource->getThumbnailUrl();
