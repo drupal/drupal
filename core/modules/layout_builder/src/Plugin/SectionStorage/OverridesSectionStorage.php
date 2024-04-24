@@ -241,6 +241,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       // Ensure that upcasting is run in the correct order.
       $options['parameters']['section_storage'] = [];
       $options['parameters'][$entity_type_id]['type'] = 'entity:' . $entity_type_id;
+      $options['_admin_route'] = FALSE;
 
       $template = $entity_type->getLinkTemplate('canonical') . '/layout';
       $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), $template, $defaults, $requirements, $options, $entity_type_id, $entity_type_id);
