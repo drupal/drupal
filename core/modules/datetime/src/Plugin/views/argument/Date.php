@@ -47,12 +47,8 @@ class Date extends NumericDate {
     $plugin_definition,
     RouteMatchInterface $route_match,
     DateFormatterInterface $date_formatter,
-    ?TimeInterface $time = NULL,
+    TimeInterface $time,
   ) {
-    if (!$time) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3395991', E_USER_DEPRECATED);
-      $time = \Drupal::service('datetime.time');
-    }
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_match, $date_formatter, $time);
 
     $definition = $this->getFieldStorageDefinition();
