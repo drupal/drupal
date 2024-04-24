@@ -14,11 +14,9 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Upload\FileUploadHandler;
 use Drupal\file\Upload\FormUploadedFile;
-use Drupal\file\Validation\FileValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,8 +25,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Lock\Exception\LockAcquiringException;
 use Symfony\Component\Mime\MimeTypes;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Returns response for CKEditor 5 Simple image upload adapter.
@@ -39,80 +35,23 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class CKEditor5ImageController extends ControllerBase {
 
   /**
-   * The default allowed image extensions.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0 without replacement.
-   *
-   * @see https://www.drupal.org/node/3384728
-   */
-  const DEFAULT_IMAGE_EXTENSIONS = 'gif png jpg jpeg';
-
-  /**
-   * The file system service.
-   */
-  protected FileSystemInterface $fileSystem;
-
-  /**
-   * The lock.
-   */
-  protected LockBackendInterface $lock;
-
-  /**
-   * The file upload handler.
-   */
-  protected FileUploadHandler $fileUploadHandler;
-
-  /**
-   * The CKEditor 5 plugin manager.
-   */
-  protected CKEditor5PluginManagerInterface $pluginManager;
-
-  /**
    * Constructs a new CKEditor5ImageController.
    *
    * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
-   * @param \Drupal\Core\Session\AccountInterface|\Drupal\file\Upload\FileUploadHandler $fileUploadHandler
+   * @param \Drupal\file\Upload\FileUploadHandler $fileUploadHandler
    *   The file upload handler.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface|\Drupal\Core\Lock\LockBackendInterface $mime_type_guesser
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
-   * @param \Drupal\Core\Lock\LockBackendInterface|\Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $pluginManager
+   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $pluginManager
    *   The CKEditor 5 plugin manager.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|null $event_dispatcher
-   *   The event dispatcher.
-   * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
-   *   The file validator.
    */
   public function __construct(
-    FileSystemInterface $fileSystem,
-    AccountInterface | FileUploadHandler $fileUploadHandler,
-    MimeTypeGuesserInterface | LockBackendInterface $mime_type_guesser,
-    LockBackendInterface | CKEditor5PluginManagerInterface $pluginManager,
-    EventDispatcherInterface $event_dispatcher = NULL,
-    FileValidatorInterface $file_validator = NULL
+    protected FileSystemInterface $fileSystem,
+    protected FileUploadHandler $fileUploadHandler,
+    protected LockBackendInterface $lock,
+    protected CKEditor5PluginManagerInterface $pluginManager,
   ) {
-    $this->fileSystem = $fileSystem;
-    if ($fileUploadHandler instanceof AccountInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $current_user argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3388990', E_USER_DEPRECATED);
-      $fileUploadHandler = \Drupal::service('file.upload_handler');
-    }
-    $this->fileUploadHandler = $fileUploadHandler;
-    if ($mime_type_guesser instanceof MimeTypeGuesserInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $mime_type_guesser argument is deprecated in drupal:10.3.0 and is replaced with $lock from drupal:11.0.0. See https://www.drupal.org/node/3388990', E_USER_DEPRECATED);
-      $mime_type_guesser = \Drupal::service('lock');
-    }
-    $this->lock = $mime_type_guesser;
-    if ($pluginManager instanceof LockBackendInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $lock argument in position 4 is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3384728', E_USER_DEPRECATED);
-      $pluginManager = \Drupal::service('plugin.manager.ckeditor5.plugin');
-    }
-    $this->pluginManager = $pluginManager;
-    if ($event_dispatcher) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $event_dispatcher argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3388990', E_USER_DEPRECATED);
-    }
-    if ($file_validator) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $file_validator argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3388990', E_USER_DEPRECATED);
-    }
   }
 
   /**
