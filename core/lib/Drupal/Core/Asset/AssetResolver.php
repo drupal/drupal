@@ -122,6 +122,9 @@ class AssetResolver implements AssetResolverInterface {
    * {@inheritdoc}
    */
   public function getCssAssets(AttachedAssetsInterface $assets, $optimize, LanguageInterface $language = NULL) {
+    if (!$assets->getLibraries()) {
+      return [];
+    }
     if (!isset($language)) {
       $language = $this->languageManager->getCurrentLanguage();
     }
@@ -214,6 +217,9 @@ class AssetResolver implements AssetResolverInterface {
    * {@inheritdoc}
    */
   public function getJsAssets(AttachedAssetsInterface $assets, $optimize, LanguageInterface $language = NULL) {
+    if (!$assets->getLibraries() && !$assets->getSettings()) {
+      return [[], []];
+    }
     if (!isset($language)) {
       $language = $this->languageManager->getCurrentLanguage();
     }
