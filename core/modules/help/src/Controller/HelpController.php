@@ -19,69 +19,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class HelpController extends ControllerBase {
 
   /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The help section plugin manager.
-   *
-   * @var \Drupal\help\HelpSectionManager
-   */
-  protected $helpManager;
-
-  /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
-   * The module admin links service.
-   *
-   * @var \Drupal\system\ModuleAdminLinksHelper
-   */
-  protected $moduleAdminLinks;
-
-  /**
-   * The module permissions link service.
-   *
-   * @var \Drupal\user\ModulePermissionsLinkHelper
-   */
-  protected $modulePermissionsLinks;
-
-  /**
    * Creates a new HelpController.
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The current route match.
-   * @param \Drupal\help\HelpSectionManager $help_manager
+   * @param \Drupal\help\HelpSectionManager $helpManager
    *   The help section manager.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
-   * @param \Drupal\system\ModuleAdminLinksHelper|null $module_admin_links
+   * @param \Drupal\system\ModuleAdminLinksHelper $moduleAdminLinks
    *   The module admin links.
-   * @param \Drupal\user\ModulePermissionsLinkHelper|null $module_permissions_link
+   * @param \Drupal\user\ModulePermissionsLinkHelper $modulePermissionsLinks
    *   The module permissions link.
    */
-  public function __construct(RouteMatchInterface $route_match, HelpSectionManager $help_manager, ModuleExtensionList $module_extension_list, ModuleAdminLinksHelper $module_admin_links = NULL, ModulePermissionsLinkHelper $module_permissions_link = NULL) {
-    $this->routeMatch = $route_match;
-    $this->helpManager = $help_manager;
-    $this->moduleExtensionList = $module_extension_list;
-
-    if (!isset($module_admin_links)) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $module_admin_tasks_helper argument is deprecated in drupal:10.2.0 and the $module_admin_tasks_helper argument will be required in drupal:11.0.0. See https://www.drupal.org/node/3038972', E_USER_DEPRECATED);
-      $module_admin_links = \Drupal::service('system.module_admin_links_helper');
-    }
-    $this->moduleAdminLinks = $module_admin_links;
-    if (!isset($module_permissions_link)) {
-      @trigger_error('Calling HelpController::__construct() without the $module_permissions_link argument is deprecated in drupal:9.3.0 and the $module_permissions_link argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3038972', E_USER_DEPRECATED);
-      $module_permissions_link = \Drupal::service('user.module_permissions_link_helper');
-    }
-    $this->modulePermissionsLinks = $module_permissions_link;
+  public function __construct(
+    protected RouteMatchInterface $routeMatch,
+    protected HelpSectionManager $helpManager,
+    protected ModuleExtensionList $moduleExtensionList,
+    protected ModuleAdminLinksHelper $moduleAdminLinks,
+    protected ModulePermissionsLinkHelper $modulePermissionsLinks,
+  ) {
   }
 
   /**
