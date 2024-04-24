@@ -389,7 +389,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   /**
    * Extracts the allowed values array from the allowed_values element.
    *
-   * @param string|array $list
+   * @param array $list
    *   The raw string or array to extract values from.
    * @param bool $has_data
    *   The current field already has data inserted or not.
@@ -399,15 +399,8 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    *
    * @see \Drupal\options\Plugin\Field\FieldType\ListItemBase::allowedValuesString()
    */
-  protected static function extractAllowedValues($list, $has_data) {
+  protected static function extractAllowedValues(array $list, bool $has_data) {
     $values = [];
-
-    if (is_string($list)) {
-      trigger_error('Passing a string to ' . __METHOD__ . '() is deprecated in drupal:10.2.0 and will cause an error from drupal:11.0.0. Use an array instead. See https://www.drupal.org/node/3376368', E_USER_DEPRECATED);
-      $list = explode("\n", $list);
-      $list = array_map('trim', $list);
-      $list = array_filter($list, 'strlen');
-    }
 
     $generated_keys = $explicit_keys = FALSE;
     foreach ($list as $position => $text) {
