@@ -3,9 +3,11 @@
 namespace Drupal\Core\Installer\Form;
 
 use Drupal\Core\Datetime\TimeZoneFormHelper;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -18,6 +20,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class SiteConfigureForm extends ConfigFormBase {
+
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * Defines deprecated injected properties.
+   *
+   * @var array
+   */
+  protected array $deprecatedProperties = [
+    'countryManager' => 'country_manager',
+  ];
 
   /**
    * The site path.
@@ -58,7 +71,7 @@ class SiteConfigureForm extends ConfigFormBase {
    *   The user storage.
    * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
    *   The module installer.
-   * @param \Drupal\user\UserNameValidator $userNameValidator
+   * @param \Drupal\Core\Locale\CountryManagerInterface|\Drupal\user\UserNameValidator $userNameValidator
    *   The user validator.
    */
   public function __construct(
@@ -66,12 +79,17 @@ class SiteConfigureForm extends ConfigFormBase {
     $site_path,
     UserStorageInterface $user_storage,
     ModuleInstallerInterface $module_installer,
-    protected UserNameValidator $userNameValidator,
+    protected CountryManagerInterface|UserNameValidator $userNameValidator,
   ) {
     $this->root = $root;
     $this->sitePath = $site_path;
     $this->userStorage = $user_storage;
     $this->moduleInstaller = $module_installer;
+    if ($userNameValidator instanceof CountryManagerInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $userNameValidator argument as CountryManagerInterface is deprecated in drupal:10.3.0 and must be UserNameValidator in drupal:11.0.0. See https://www.drupal.org/node/3431205', E_USER_DEPRECATED);
+      $userNameValidator = \Drupal::service('user.name_validator');
+    }
+    $this->userNameValidator = $userNameValidator;
   }
 
   /**
