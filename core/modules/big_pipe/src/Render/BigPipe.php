@@ -165,59 +165,15 @@ class BigPipe {
    */
   const STOP_SIGNAL = '<script type="application/vnd.drupal-ajax" data-big-pipe-event="stop"></script>';
 
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The session.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-   */
-  protected $session;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The HTTP kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  public function __construct(RendererInterface $renderer, SessionInterface $session, RequestStack $request_stack, HttpKernelInterface $http_kernel, EventDispatcherInterface $event_dispatcher, ConfigFactoryInterface $config_factory, protected ?MessengerInterface $messenger = NULL) {
-    $this->renderer = $renderer;
-    $this->session = $session;
-    $this->requestStack = $request_stack;
-    $this->httpKernel = $http_kernel;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->configFactory = $config_factory;
-    if (!isset($this->messenger)) {
-      @trigger_error('Calling ' . __CLASS__ . '::_construct() without the $messenger argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3343754', E_USER_DEPRECATED);
-      $this->messenger = \Drupal::messenger();
-    }
+  public function __construct(
+    protected RendererInterface $renderer,
+    protected SessionInterface $session,
+    protected RequestStack $requestStack,
+    protected HttpKernelInterface $httpKernel,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected ConfigFactoryInterface $configFactory,
+    protected MessengerInterface $messenger,
+  ) {
   }
 
   /**
