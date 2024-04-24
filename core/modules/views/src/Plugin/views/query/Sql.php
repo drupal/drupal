@@ -353,10 +353,10 @@ class Sql extends QueryPluginBase {
    * relationship.
    *
    * An example of a relationship would be a node reference table.
-   * If you have a node reference named 'book_parent' which links to a
-   * parent node, you could set up a relationship 'node_book_parent'
+   * If you have a node reference named 'content_parent' which links to a
+   * parent node, you could set up a relationship 'node_content_parent'
    * to 'node'. Then, anything that links to 'node' can link to
-   * 'node_book_parent' instead, thus allowing all properties of
+   * 'node_content_parent' instead, thus allowing all properties of
    * both nodes to be available in the query.
    *
    * @param $alias

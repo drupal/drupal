@@ -24,9 +24,9 @@ interface EntityFormBuilderInterface {
    *   (optional) The operation identifying the form variation to be returned.
    *   Defaults to 'default'. This is typically used in routing:
    *   @code
-   *   _entity_form: node.book_outline
+   *   _entity_form: node.edit
    *   @endcode
-   *   where "book_outline" is the value of $operation. The class name for the
+   *   where "edit" is the value of $operation. The class name for the
    *   form for each operation (edit, delete, etc.) can be found in the form
    *   section of the handlers entity annotation. For example:
    *   @code
