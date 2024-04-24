@@ -18,20 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class TranslationStatusForm extends FormBase {
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The Drupal state storage service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -45,20 +31,18 @@ class TranslationStatusForm extends FormBase {
   /**
    * Constructs a TranslationStatusForm object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   A module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, StateInterface $state, protected ?TimeInterface $time = NULL) {
-    $this->moduleHandler = $module_handler;
-    $this->state = $state;
-    if ($this->time === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);
-      $this->time = \Drupal::service('datetime.time');
-    }
+  public function __construct(
+    protected ModuleHandlerInterface $moduleHandler,
+    protected StateInterface $state,
+    protected TimeInterface $time,
+  ) {
   }
 
   /**

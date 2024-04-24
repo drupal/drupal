@@ -46,41 +46,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected $entityTypeId;
 
   /**
-   * Information about the entity type.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $entityType;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $manager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Installed field storage definitions for the entity type.
    *
    * Keyed by field name.
@@ -90,72 +55,43 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected $fieldStorageDefinitions;
 
   /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * Initializes an instance of the content translation controller.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entityType
    *   The info array of the given entity type.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
    *   The content translation manager service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
    * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
    *   The installed entity definition repository service.
-   * @param \Drupal\Core\Routing\RedirectDestinationInterface|null $redirectDestination
+   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirectDestination
    *   The request stack.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
   public function __construct(
-    EntityTypeInterface $entity_type,
-    LanguageManagerInterface $language_manager,
-    ContentTranslationManagerInterface $manager,
-    EntityTypeManagerInterface $entity_type_manager,
-    AccountInterface $current_user,
-    MessengerInterface $messenger,
-    DateFormatterInterface $date_formatter,
-    EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository,
-    protected ?RedirectDestinationInterface $redirectDestination = NULL,
-    protected ?TimeInterface $time = NULL,
+    protected EntityTypeInterface $entityType,
+    protected LanguageManagerInterface $languageManager,
+    protected ContentTranslationManagerInterface $manager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected AccountInterface $currentUser,
+    protected MessengerInterface $messenger,
+    protected DateFormatterInterface $dateFormatter,
+    protected EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository,
+    protected RedirectDestinationInterface $redirectDestination,
+    protected TimeInterface $time,
   ) {
-    $this->entityTypeId = $entity_type->id();
-    $this->entityType = $entity_type;
-    $this->languageManager = $language_manager;
-    $this->manager = $manager;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->currentUser = $current_user;
+    $this->entityTypeId = $entityType->id();
     $this->fieldStorageDefinitions = $entity_last_installed_schema_repository->getLastInstalledFieldStorageDefinitions($this->entityTypeId);
-    $this->messenger = $messenger;
-    $this->dateFormatter = $date_formatter;
-    if ($this->redirectDestination === NULL) {
-      @trigger_error('Calling ContentTranslationHandler::__construct() without the $redirectDestination argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375487', E_USER_DEPRECATED);
-      $this->redirectDestination = \Drupal::service('redirect.destination');
-    }
-    if ($this->time === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);
-      $this->time = \Drupal::service('datetime.time');
-    }
   }
 
   /**
@@ -827,30 +763,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $entity_type_id => $entity->id(),
       'language' => $form_langcode,
     ], $options);
-  }
-
-  /**
-   * Form submission handler for ContentTranslationHandler::entityFormAlter().
-   *
-   * Takes care of content translation deletion.
-   */
-  public function entityFormDeleteTranslation($form, FormStateInterface $form_state) {
-    @trigger_error('Calling ContentTranslationHandler::entityFormDeleteTranslation() is deprecated in drupal:10.2.0 and will be removed in drupal:11.0.0. See https://www.drupal.org/node/3375492', E_USER_DEPRECATED);
-
-    /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
-    $form_object = $form_state->getFormObject();
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    $entity = $form_object->getEntity();
-    $entity_type_id = $entity->getEntityTypeId();
-    if ($entity->access('delete') && $this->entityType->hasLinkTemplate('delete-form')) {
-      $form_state->setRedirectUrl($entity->toUrl('delete-form'));
-    }
-    else {
-      $form_state->setRedirect("entity.$entity_type_id.content_translation_delete", [
-        $entity_type_id => $entity->id(),
-        'language' => $form_object->getFormLangcode($form_state),
-      ]);
-    }
   }
 
   /**
