@@ -4,6 +4,7 @@ namespace Drupal\Core\Installer\Form;
 
 use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -67,29 +68,39 @@ class SiteConfigureForm extends ConfigFormBase {
    *   The app root.
    * @param string $site_path
    *   The site path.
-   * @param \Drupal\user\UserStorageInterface $user_storage
-   *   The user storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|\Drupal\user\UserStorageInterface $entityTypeManager
+   *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
    *   The module installer.
    * @param \Drupal\Core\Locale\CountryManagerInterface|\Drupal\user\UserNameValidator $userNameValidator
    *   The user validator.
+   * @param bool|null $superUserAccessPolicy
+   *   The value of the 'security.enable_super_user' container parameter.
    */
   public function __construct(
     $root,
     $site_path,
-    UserStorageInterface $user_storage,
+    protected EntityTypeManagerInterface|UserStorageInterface $entityTypeManager,
     ModuleInstallerInterface $module_installer,
     protected CountryManagerInterface|UserNameValidator $userNameValidator,
+    protected ?bool $superUserAccessPolicy = NULL,
   ) {
     $this->root = $root;
     $this->sitePath = $site_path;
-    $this->userStorage = $user_storage;
+    if ($this->entityTypeManager instanceof UserStorageInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $entityTypeManager argument as UserStorageInterface is deprecated in drupal:10.3.0 and must be EntityTypeManagerInterface in drupal:11.0.0. See https://www.drupal.org/node/3443172', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
+    $this->userStorage = $this->entityTypeManager->getStorage('user');
     $this->moduleInstaller = $module_installer;
     if ($userNameValidator instanceof CountryManagerInterface) {
       @trigger_error('Calling ' . __METHOD__ . '() with the $userNameValidator argument as CountryManagerInterface is deprecated in drupal:10.3.0 and must be UserNameValidator in drupal:11.0.0. See https://www.drupal.org/node/3431205', E_USER_DEPRECATED);
-      $userNameValidator = \Drupal::service('user.name_validator');
+      $this->userNameValidator = \Drupal::service('user.name_validator');
     }
-    $this->userNameValidator = $userNameValidator;
+    if ($this->superUserAccessPolicy === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $superUserAccessPolicy argument is deprecated in drupal:10.3.0 and must be passed in drupal:11.0.0. See https://www.drupal.org/node/3443172', E_USER_DEPRECATED);
+      $this->superUserAccessPolicy = \Drupal::getContainer()->getParameter('security.enable_super_user') ?? TRUE;
+    }
   }
 
   /**
@@ -99,9 +110,13 @@ class SiteConfigureForm extends ConfigFormBase {
     return new static(
       $container->getParameter('app.root'),
       $container->getParameter('site.path'),
-      $container->get('entity_type.manager')->getStorage('user'),
+      $container->get('entity_type.manager'),
       $container->get('module_installer'),
       $container->get('user.name_validator'),
+      // In order to disable the super user policy this must be set to FALSE. If
+      // the container parameter is missing then the policy is enabled. See
+      // \Drupal\Core\DependencyInjection\Compiler\SuperUserAccessPolicyPass.
+      $container->getParameter('security.enable_super_user') ?? TRUE,
     );
   }
 
@@ -177,9 +192,16 @@ class SiteConfigureForm extends ConfigFormBase {
       '#access' => empty($install_state['config_install_path']),
     ];
 
+    if (count($this->getAdminRoles()) === 0 && $this->superUserAccessPolicy === FALSE) {
+      $account_label = $this->t('Site account');
+    }
+    else {
+      $account_label = $this->t('Site maintenance account');
+    }
+
     $form['admin_account'] = [
       '#type' => 'fieldgroup',
-      '#title' => $this->t('Site maintenance account'),
+      '#title' => $account_label,
     ];
     $form['admin_account']['account']['name'] = [
       '#type' => 'textfield',
@@ -300,6 +322,7 @@ class SiteConfigureForm extends ConfigFormBase {
     }
 
     // We created user 1 with placeholder values. Let's save the real values.
+    /** @var \Drupal\user\UserInterface $account */
     $account = $this->userStorage->load(1);
     $account->init = $account->mail = $account_values['mail'];
     $account->roles = $account->getRoles();
@@ -307,7 +330,38 @@ class SiteConfigureForm extends ConfigFormBase {
     $account->timezone = $form_state->getValue('date_default_timezone');
     $account->pass = $account_values['pass'];
     $account->name = $account_values['name'];
+
+    // Ensure user 1 has an administrator role if one exists.
+    /** @var \Drupal\user\RoleInterface[] $admin_roles */
+    $admin_roles = $this->getAdminRoles();
+    if (count(array_intersect($account->getRoles(), array_keys($admin_roles))) === 0) {
+      if (count($admin_roles) > 0) {
+        foreach ($admin_roles as $role) {
+          $account->addRole($role->id());
+        }
+      }
+      elseif ($this->superUserAccessPolicy === FALSE) {
+        $this->messenger()->addWarning($this->t(
+          'The user %username does not have administrator access. For more information, see the documentation on <a href="@secure-user-1-docs">securing the admin super user</a>.',
+          [
+            '%username' => $account->getDisplayName(),
+            '@secure-user-1-docs' => 'https://www.drupal.org/docs/administering-a-drupal-site/security-in-drupal/securing-the-admin-super-user-1#s-disable-the-super-user-access-policy',
+          ]
+        ));
+      }
+    }
+
     $account->save();
+  }
+
+  /**
+   * Returns the list of admin roles.
+   *
+   * @return \Drupal\user\RoleInterface[]
+   *   The list of admin roles.
+   */
+  protected function getAdminRoles(): array {
+    return $this->entityTypeManager->getStorage('user_role')->loadByProperties(['is_admin' => TRUE]);
   }
 
 }
