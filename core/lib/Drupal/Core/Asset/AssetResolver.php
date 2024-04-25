@@ -146,27 +146,30 @@ class AssetResolver implements AssetResolverInterface {
       'preprocess' => TRUE,
     ];
 
-    foreach ($libraries_to_load as $library) {
+    foreach ($libraries_to_load as $key => $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-      if (isset($definition['css'])) {
-        foreach ($definition['css'] as $options) {
-          $options += $default_options;
-          // Copy the asset library license information to each file.
-          $options['license'] = $definition['license'];
+      if (empty($definition['css'])) {
+        unset($libraries_to_load[$key]);
+        continue;
+      }
 
-          // Files with a query string cannot be preprocessed.
-          if ($options['type'] === 'file' && $options['preprocess'] && str_contains($options['data'], '?')) {
-            $options['preprocess'] = FALSE;
-          }
+      foreach ($definition['css'] as $options) {
+        $options += $default_options;
+        // Copy the asset library license information to each file.
+        $options['license'] = $definition['license'];
 
-          // Always add a tiny value to the weight, to conserve the insertion
-          // order.
-          $options['weight'] += count($css) / 30000;
-
-          // CSS files are being keyed by the full path.
-          $css[$options['data']] = $options;
+        // Files with a query string cannot be preprocessed.
+        if ($options['type'] === 'file' && $options['preprocess'] && str_contains($options['data'], '?')) {
+          $options['preprocess'] = FALSE;
         }
+
+        // Always add a tiny value to the weight, to conserve the insertion
+        // order.
+        $options['weight'] += count($css) / 30000;
+
+        // CSS files are being keyed by the full path.
+        $css[$options['data']] = $options;
       }
     }
 
@@ -179,7 +182,7 @@ class AssetResolver implements AssetResolverInterface {
       uasort($css, [static::class, 'sort']);
 
       if ($optimize) {
-        $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css, $libraries_to_load, $language);
+        $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css, array_values($libraries_to_load), $language);
       }
     }
     $this->cache->set($cid, $css, CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
@@ -246,14 +249,21 @@ class AssetResolver implements AssetResolverInterface {
       ];
 
       // Collect all libraries that contain JS assets and are in the header.
+      // Also remove any libraries with no JavaScript from the libraries to
+      // load.
       $header_js_libraries = [];
-      foreach ($libraries_to_load as $library) {
+      foreach ($libraries_to_load as $key => $library) {
         [$extension, $name] = explode('/', $library, 2);
         $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-        if (isset($definition['js']) && !empty($definition['header'])) {
+        if (empty($definition['js'])) {
+          unset($libraries_to_load[$key]);
+          continue;
+        }
+        if (!empty($definition['header'])) {
           $header_js_libraries[] = $library;
         }
       }
+      $libraries_to_load = array_values($libraries_to_load);
       // The current list of header JS libraries are only those libraries that
       // are in the header, but their dependencies must also be loaded for them
       // to function correctly, so update the list with those.
@@ -262,28 +272,26 @@ class AssetResolver implements AssetResolverInterface {
       foreach ($libraries_to_load as $library) {
         [$extension, $name] = explode('/', $library, 2);
         $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-        if (isset($definition['js'])) {
-          foreach ($definition['js'] as $options) {
-            $options += $default_options;
-            // Copy the asset library license information to each file.
-            $options['license'] = $definition['license'];
+        foreach ($definition['js'] as $options) {
+          $options += $default_options;
+          // Copy the asset library license information to each file.
+          $options['license'] = $definition['license'];
 
-            // 'scope' is a calculated option, based on which libraries are
-            // marked to be loaded from the header (see above).
-            $options['scope'] = in_array($library, $header_js_libraries) ? 'header' : 'footer';
+          // 'scope' is a calculated option, based on which libraries are
+          // marked to be loaded from the header (see above).
+          $options['scope'] = in_array($library, $header_js_libraries) ? 'header' : 'footer';
 
-            // Preprocess can only be set if caching is enabled and no
-            // attributes are set.
-            $options['preprocess'] = $options['cache'] && empty($options['attributes']) ? $options['preprocess'] : FALSE;
+          // Preprocess can only be set if caching is enabled and no
+          // attributes are set.
+          $options['preprocess'] = $options['cache'] && empty($options['attributes']) ? $options['preprocess'] : FALSE;
 
-            // Always add a tiny value to the weight, to conserve the insertion
-            // order.
-            $options['weight'] += count($javascript) / 30000;
+          // Always add a tiny value to the weight, to conserve the insertion
+          // order.
+          $options['weight'] += count($javascript) / 30000;
 
-            // Local and external files must keep their name as the associative
-            // key so the same JavaScript file is not added twice.
-            $javascript[$options['data']] = $options;
-          }
+          // Local and external files must keep their name as the associative
+          // key so the same JavaScript file is not added twice.
+          $javascript[$options['data']] = $options;
         }
       }
 
