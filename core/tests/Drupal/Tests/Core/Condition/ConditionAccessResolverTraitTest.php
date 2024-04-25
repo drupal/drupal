@@ -21,80 +21,58 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
    * @dataProvider providerTestResolveConditions
    */
   public function testResolveConditions($conditions, $logic, $expected) {
+    $mocks['true'] = $this->createMock('Drupal\Core\Condition\ConditionInterface');
+    $mocks['true']->expects($this->any())
+      ->method('execute')
+      ->willReturn(TRUE);
+    $mocks['false'] = $this->createMock('Drupal\Core\Condition\ConditionInterface');
+    $mocks['false']->expects($this->any())
+      ->method('execute')
+      ->willReturn(FALSE);
+    $mocks['exception'] = $this->createMock('Drupal\Core\Condition\ConditionInterface');
+    $mocks['exception']->expects($this->any())
+      ->method('execute')
+      ->will($this->throwException(new ContextException()));
+    $mocks['exception']->expects($this->any())
+      ->method('isNegated')
+      ->willReturn(FALSE);
+    $mocks['negated'] = $this->createMock('Drupal\Core\Condition\ConditionInterface');
+    $mocks['negated']->expects($this->any())
+      ->method('execute')
+      ->will($this->throwException(new ContextException()));
+    $mocks['negated']->expects($this->any())
+      ->method('isNegated')
+      ->willReturn(TRUE);
+
+    $conditions = array_map(fn($id) => $mocks[$id], $conditions);
+
     $trait_object = new TestConditionAccessResolverTrait();
     $this->assertEquals($expected, $trait_object->resolveConditions($conditions, $logic));
   }
 
-  public function providerTestResolveConditions() {
-    $data = [];
-
-    $condition_true = $this->createMock('Drupal\Core\Condition\ConditionInterface');
-    $condition_true->expects($this->any())
-      ->method('execute')
-      ->willReturn(TRUE);
-    $condition_false = $this->createMock('Drupal\Core\Condition\ConditionInterface');
-    $condition_false->expects($this->any())
-      ->method('execute')
-      ->willReturn(FALSE);
-    $condition_exception = $this->createMock('Drupal\Core\Condition\ConditionInterface');
-    $condition_exception->expects($this->any())
-      ->method('execute')
-      ->will($this->throwException(new ContextException()));
-    $condition_exception->expects($this->atLeastOnce())
-      ->method('isNegated')
-      ->willReturn(FALSE);
-    $condition_negated = $this->createMock('Drupal\Core\Condition\ConditionInterface');
-    $condition_negated->expects($this->any())
-      ->method('execute')
-      ->will($this->throwException(new ContextException()));
-    $condition_negated->expects($this->atLeastOnce())
-      ->method('isNegated')
-      ->willReturn(TRUE);
-
-    $conditions = [];
-    $data[] = [$conditions, 'and', TRUE];
-    $data[] = [$conditions, 'or', FALSE];
-
-    $conditions = [$condition_false];
-    $data[] = [$conditions, 'or', FALSE];
-    $data[] = [$conditions, 'and', FALSE];
-
-    $conditions = [$condition_true];
-    $data[] = [$conditions, 'or', TRUE];
-    $data[] = [$conditions, 'and', TRUE];
-
-    $conditions = [$condition_true, $condition_false];
-    $data[] = [$conditions, 'or', TRUE];
-    $data[] = [$conditions, 'and', FALSE];
-
-    $conditions = [$condition_exception];
-    $data[] = [$conditions, 'or', FALSE];
-    $data[] = [$conditions, 'and', FALSE];
-
-    $conditions = [$condition_true, $condition_exception];
-    $data[] = [$conditions, 'or', TRUE];
-    $data[] = [$conditions, 'and', FALSE];
-
-    $conditions = [$condition_exception, $condition_true];
-    $data[] = [$conditions, 'or', TRUE];
-    $data[] = [$conditions, 'and', FALSE];
-
-    $conditions = [$condition_false, $condition_exception];
-    $data[] = [$conditions, 'or', FALSE];
-    $data[] = [$conditions, 'and', FALSE];
-
-    $conditions = [$condition_exception, $condition_false];
-    $data[] = [$conditions, 'or', FALSE];
-    $data[] = [$conditions, 'and', FALSE];
-
-    $conditions = [$condition_negated];
-    $data[] = [$conditions, 'or', TRUE];
-    $data[] = [$conditions, 'and', TRUE];
-
-    $conditions = [$condition_negated, $condition_negated];
-    $data[] = [$conditions, 'or', TRUE];
-    $data[] = [$conditions, 'and', TRUE];
-    return $data;
+  public static function providerTestResolveConditions() {
+    yield [[], 'and', TRUE];
+    yield [[], 'or', FALSE];
+    yield [['false'], 'or', FALSE];
+    yield [['false'], 'and', FALSE];
+    yield [['true'], 'or', TRUE];
+    yield [['true'], 'and', TRUE];
+    yield [['true', 'false'], 'or', TRUE];
+    yield [['true', 'false'], 'and', FALSE];
+    yield [['exception'], 'or', FALSE];
+    yield [['exception'], 'and', FALSE];
+    yield [['true', 'exception'], 'or', TRUE];
+    yield [['true', 'exception'], 'and', FALSE];
+    yield [['exception', 'true'], 'or', TRUE];
+    yield [['exception', 'true'], 'and', FALSE];
+    yield [['false', 'exception'], 'or', FALSE];
+    yield [['false', 'exception'], 'and', FALSE];
+    yield [['exception', 'false'], 'or', FALSE];
+    yield [['exception', 'false'], 'and', FALSE];
+    yield [['negated'], 'or', TRUE];
+    yield [['negated'], 'and', TRUE];
+    yield [['negated', 'negated'], 'or', TRUE];
+    yield [['negated', 'negated'], 'and', TRUE];
   }
 
 }
