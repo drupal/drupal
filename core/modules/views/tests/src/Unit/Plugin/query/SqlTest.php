@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Unit\Plugin\query;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -219,8 +219,8 @@ class SqlTest extends UnitTestCase {
 
     // Setup the loading of entities and entity revisions.
     $entity_storages = [
-      'first' => $this->prophesize(EntityStorageInterface::class),
-      'second' => $this->prophesize(EntityStorageInterface::class),
+      'first' => $this->prophesize(RevisionableStorageInterface::class),
+      'second' => $this->prophesize(RevisionableStorageInterface::class),
     ];
 
     foreach ($entities_by_type as $entity_type_id => $entities) {

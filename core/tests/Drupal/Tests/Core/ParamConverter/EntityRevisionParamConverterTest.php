@@ -6,7 +6,7 @@ namespace Drupal\Tests\Core\ParamConverter;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\ParamConverter\EntityRevisionParamConverter;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
@@ -72,7 +72,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
    * @covers ::convert
    */
   public function testConvert($value, array $definition, array $defaults, $expected_result) {
-    $storage = $this->prophesize(EntityStorageInterface::class);
+    $storage = $this->prophesize(RevisionableStorageInterface::class);
     $storage->loadRevision('valid_id')->willReturn((object) ['revision_id' => 'valid_id']);
     $storage->loadRevision('invalid_id')->willReturn(NULL);
 

@@ -90,17 +90,13 @@ class EntityController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, RendererInterface $renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, RouteMatchInterface $route_match = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, RendererInterface $renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, RouteMatchInterface $route_match) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->entityRepository = $entity_repository;
     $this->renderer = $renderer;
     $this->stringTranslation = $string_translation;
     $this->urlGenerator = $url_generator;
-    if ($route_match === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $route_match argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3337782', E_USER_DEPRECATED);
-      $route_match = \Drupal::service('current_route_match');
-    }
     $this->routeMatch = $route_match;
   }
 

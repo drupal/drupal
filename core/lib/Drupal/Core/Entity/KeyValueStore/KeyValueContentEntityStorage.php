@@ -60,4 +60,18 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
     return NULL;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function loadRevision($revision_id) {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteRevision($revision_id) {
+    return NULL;
+  }
+
 }

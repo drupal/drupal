@@ -171,28 +171,4 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
     return ['buildTitle'];
   }
 
-  /**
-   * Provides a page to render a single entity revision.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $_entity_revision
-   *   The Entity to be rendered. Note this variable is named $_entity_revision
-   *   rather than $entity to prevent collisions with other named placeholders
-   *   in the route.
-   * @param string $view_mode
-   *   (optional) The view mode that should be used to display the entity.
-   *   Defaults to 'full'.
-   *
-   * @return array
-   *   A render array.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\Entity\Controller\EntityRevisionViewController instead.
-   *
-   * @see https://www.drupal.org/node/3314346
-   */
-  public function viewRevision(EntityInterface $_entity_revision, $view_mode = 'full') {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\Controller\EntityRevisionViewController instead. See https://www.drupal.org/node/3314346', E_USER_DEPRECATED);
-    return $this->view($_entity_revision, $view_mode);
-  }
-
 }

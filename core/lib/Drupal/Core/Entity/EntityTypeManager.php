@@ -78,10 +78,10 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    *   The class resolver.
    * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
    *   The entity last installed schema repository.
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $container
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container.
    */
-  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, TranslationInterface $string_translation, ClassResolverInterface $class_resolver, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository, protected ?ContainerInterface $container = NULL) {
+  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, TranslationInterface $string_translation, ClassResolverInterface $class_resolver, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository, protected ContainerInterface $container) {
     parent::__construct('Entity', $namespaces, $module_handler, 'Drupal\Core\Entity\EntityInterface');
 
     $this->setCacheBackend($cache, 'entity_type', ['entity_types']);
@@ -91,10 +91,6 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
     $this->stringTranslation = $string_translation;
     $this->classResolver = $class_resolver;
     $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
-    if ($this->container === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3419963', E_USER_DEPRECATED);
-      $this->container = \Drupal::getContainer();
-    }
   }
 
   /**
@@ -290,20 +286,6 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
     }
 
     return $handler;
-  }
-
-  /**
-   * Sets the service container.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
-   *    Instead, you should pass the container as an argument in the
-   *    __construct() method.
-   *
-   * @see https://www.drupal.org/node/3419963
-   */
-  public function setContainer(?ContainerInterface $container): void {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass the container as an argument in the __construct() method. See https://www.drupal.org/node/3419963', E_USER_DEPRECATED);
-    $this->container = $container;
   }
 
 }

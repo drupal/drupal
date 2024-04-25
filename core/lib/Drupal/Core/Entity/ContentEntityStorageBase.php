@@ -951,12 +951,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         // what is going to be deleted - the whole entity or a particular
         // translation.
         if ($translation->isDefaultTranslation()) {
-          if (method_exists($translation, 'setDefaultTranslationEnforced')) {
-            $translation->setDefaultTranslationEnforced(FALSE);
-          }
-          else {
-            @trigger_error('Not providing a setDefaultTranslationEnforced() method when implementing \Drupal\Core\TypedData\TranslatableInterface is deprecated in drupal:10.2.0 and is required from drupal:11.0.0. See https://www.drupal.org/node/3376146', E_USER_DEPRECATED);
-          }
+          $translation->setDefaultTranslationEnforced(FALSE);
         }
 
         $fields = $translation->getTranslatableFields();
