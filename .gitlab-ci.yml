@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh webide updatedb
+# cspell:ignore codequality Micheh micheh webide updatedb stylelintrc
 
 ################
 # Drupal GitLabCI template.
@@ -374,6 +374,8 @@ default:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
+        - core/.eslint*
+        - core/.prettier*
         - core/package.json
         - core/yarn.lock
         - "**/*.js"
@@ -399,6 +401,7 @@ default:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
+        - core/.stylelintrc.json
         - core/package.json
         - core/yarn.lock
         - "**/*.css"
