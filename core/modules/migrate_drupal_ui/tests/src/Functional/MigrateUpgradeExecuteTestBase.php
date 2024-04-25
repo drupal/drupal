@@ -53,7 +53,6 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
   protected function tearDown(): void {
     if ($this->outputLogs) {
       $this->outputLogs($this->migratedAdminUserName);
-      $this->assertLogError();
     }
     parent::tearDown();
   }
