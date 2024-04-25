@@ -111,12 +111,6 @@ classy.base:
       css/classy/components/textarea.css: { weight: -10 }
       css/classy/components/ui-dialog.css: { weight: -10 }
 
-classy.book-navigation:
-  version: VERSION
-  css:
-    component:
-      css/classy/components/book-navigation.css: {}
-
 classy.dialog:
   version: VERSION
   css:
