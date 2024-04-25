@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the demo_umami installation profile.
  */
 
-use Drupal\user\Entity\User;
 use Drupal\shortcut\Entity\Shortcut;
 
 /**
@@ -34,12 +33,6 @@ function demo_umami_requirements($phase) {
  * @see system_install()
  */
 function demo_umami_install() {
-  // Assign user 1 the "administrator" role.
-  /** @var \Drupal\user\Entity\User $user */
-  $user = User::load(1);
-  $user->addRole('administrator');
-  $user->save();
-
   // We install some menu links, so we have to rebuild the router, to ensure the
   // menu links are valid.
   \Drupal::service('router.builder')->rebuildIfNeeded();

@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the standard installation profile.
  */
 
-use Drupal\user\Entity\User;
 use Drupal\shortcut\Entity\Shortcut;
 
 /**
@@ -16,12 +15,6 @@ use Drupal\shortcut\Entity\Shortcut;
  * @see system_install()
  */
 function standard_install() {
-  // Assign user 1 the "administrator" role.
-  /** @var \Drupal\user\Entity\User $user */
-  $user = User::load(1);
-  $user->addRole('administrator');
-  $user->save();
-
   // Populate the default shortcut set.
   $shortcut = Shortcut::create([
     'shortcut_set' => 'default',
