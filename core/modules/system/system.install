@@ -1570,17 +1570,6 @@ function system_requirements($phase) {
     }
   }
 
-  // Add warning if state caching is not explicitly set.
-  if ($phase === 'runtime') {
-    if (Settings::get('state_cache') === NULL) {
-      $requirements['state_cache_not_set'] = [
-        'title' => t('State cache flag not set'),
-        'value' => t("State cache flag \$settings['state_cache'] is not set. It is recommended to be set to TRUE in settings.php unless there are too many state keys. Drupal 11 will default to having state cache enabled."),
-        'severity' => REQUIREMENT_WARNING,
-      ];
-    }
-  }
-
   return $requirements;
 }
 

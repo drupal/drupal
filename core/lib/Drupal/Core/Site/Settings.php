@@ -46,6 +46,10 @@ final class Settings {
       'replacement' => '',
       'message' => 'The "yaml_parser_class" setting is deprecated in drupal:10.3.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3415489.',
     ],
+    'state_cache' => [
+      'replacement' => '',
+      'message' => 'The "state_cache" setting is deprecated in drupal:11.0.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3177901.',
+    ],
   ];
 
   /**
