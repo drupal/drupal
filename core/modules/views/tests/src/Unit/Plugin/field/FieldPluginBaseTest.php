@@ -337,7 +337,7 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestRenderAsLinkWithPathAndOptions() {
+  public static function providerTestRenderAsLinkWithPathAndOptions() {
     $data = [];
     // Simple path with default options.
     $data[] = ['test-path', [], '<a href="/test-path">value</a>'];
@@ -363,8 +363,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     // executed for paths which aren't routed.
 
     // Entity flag.
-    $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');
-    $data[] = ['test-path', ['entity' => $entity], '<a href="/test-path">value</a>'];
+    $data[] = ['test-path', ['entity' => new \stdClass()], '<a href="/test-path">value</a>'];
     // entity_type flag.
     $entity_type_id = 'node';
     $data[] = ['test-path', ['entity_type' => $entity_type_id], '<a href="/test-path">value</a>'];
