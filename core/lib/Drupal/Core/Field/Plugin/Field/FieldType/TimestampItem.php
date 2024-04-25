@@ -2,37 +2,38 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'timestamp' entity field type.
- *
- * @FieldType(
- *   id = "timestamp",
- *   label = @Translation("Timestamp"),
- *   description = {
- *     @Translation("Ideal for using date and time calculations or comparisons"),
- *     @Translation("Date and time stored in the form of seconds since January 1, 1970 (UTC)"),
- *     @Translation("Compact and efficient for storage, sorting and calculations"),
- *   },
- *   category = "date_time",
- *   default_widget = "datetime_timestamp",
- *   default_formatter = "timestamp",
- *   constraints = {
- *     "ComplexData" = {
- *       "value" = {
- *         "Range" = {
- *           "min" = "-2147483648",
- *           "max" = "2147483648",
- *         }
- *       }
- *     }
- *   }
- * )
  */
+#[FieldType(
+  id: "timestamp",
+  label: new TranslatableMarkup("Timestamp"),
+  description: [
+    new TranslatableMarkup("Ideal for using date and time calculations or comparisons"),
+    new TranslatableMarkup("Date and time stored in the form of seconds since January 1, 1970 (UTC)"),
+    new TranslatableMarkup("Compact and efficient for storage, sorting and calculations"),
+  ],
+  category: "date_time",
+  default_widget: "datetime_timestamp",
+  default_formatter: "timestamp",
+  constraints: [
+    "ComplexData" => [
+      "value" => [
+        "Range" => [
+          "min" => "-2147483648",
+          "max" => "2147483648",
+        ],
+      ],
+    ],
+  ]
+)]
 class TimestampItem extends FieldItemBase {
 
   /**

@@ -2,21 +2,21 @@
 
 namespace Drupal\field_test\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the 'test_field_with_preconfigured_options' entity field item.
- *
- * @FieldType(
- *   id = "test_field_with_preconfigured_options",
- *   label = @Translation("Test field with preconfigured options"),
- *   description = @Translation("Dummy field type used for tests."),
- *   default_widget = "test_field_widget",
- *   default_formatter = "field_test_default"
- * )
  */
+#[FieldType(
+  id: "test_field_with_preconfigured_options",
+  label: new TranslatableMarkup("Test field with preconfigured options"),
+  description: new TranslatableMarkup("Dummy field type used for tests."),
+  default_widget: "test_field_widget",
+  default_formatter: "field_test_default"
+)]
 class TestItemWithPreconfiguredOptions extends TestItem implements PreconfiguredFieldUiOptionsInterface {
 
   /**

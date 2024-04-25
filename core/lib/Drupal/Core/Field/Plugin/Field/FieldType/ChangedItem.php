@@ -2,24 +2,27 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
+use Drupal\Core\Field\ChangedFieldItemList;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Defines the 'changed' entity field type.
  *
  * Based on a field of this type, entity types can easily implement the
  * EntityChangedInterface.
  *
- * @FieldType(
- *   id = "changed",
- *   label = @Translation("Last changed"),
- *   description = @Translation("An entity field containing a UNIX timestamp of when the entity has been last updated."),
- *   no_ui = TRUE,
- *   default_widget = "datetime_timestamp",
- *   default_formatter = "timestamp",
- *   list_class = "\Drupal\Core\Field\ChangedFieldItemList"
- * )
- *
  * @see \Drupal\Core\Entity\EntityChangedInterface
  */
+#[FieldType(
+  id: "changed",
+  label: new TranslatableMarkup("Last changed"),
+  description: new TranslatableMarkup("An entity field containing a UNIX timestamp of when the entity has been last updated."),
+  default_widget: "datetime_timestamp",
+  default_formatter: "timestamp",
+  no_ui: TRUE,
+  list_class: ChangedFieldItemList::class,
+)]
 class ChangedItem extends CreatedItem {
 
   /**

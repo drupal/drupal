@@ -3,28 +3,33 @@
 namespace Drupal\link\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\Core\Url;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\link\LinkItemInterface;
 
 /**
  * Plugin implementation of the 'link' field type.
- *
- * @FieldType(
- *   id = "link",
- *   label = @Translation("Link"),
- *   description = @Translation("Stores a URL string, optional varchar link text, and optional blob of attributes to assemble a link."),
- *   default_widget = "link_default",
- *   default_formatter = "link",
- *   constraints = {"LinkType" = {}, "LinkAccess" = {}, "LinkExternalProtocols" = {}, "LinkNotExistingInternal" = {}}
- * )
  */
+#[FieldType(
+  id: "link",
+  label: new TranslatableMarkup("Link"),
+  description: new TranslatableMarkup("Stores a URL string, optional varchar link text, and optional blob of attributes to assemble a link."),
+  default_widget: "link_default",
+  default_formatter: "link",
+  constraints: [
+    "LinkType" => [],
+    "LinkAccess" => [],
+    "LinkExternalProtocols" => [],
+    "LinkNotExistingInternal" => [],
+  ]
+)]
 class LinkItem extends FieldItemBase implements LinkItemInterface {
 
   /**

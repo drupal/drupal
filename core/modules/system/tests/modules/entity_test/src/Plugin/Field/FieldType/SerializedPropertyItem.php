@@ -2,6 +2,7 @@
 
 namespace Drupal\entity_test\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -9,16 +10,13 @@ use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'serialized_property_item_test' entity field type.
- *
- * @FieldType(
- *   id = "serialized_property_item_test",
- *   label = @Translation("Test serialized property field item"),
- *   description = @Translation("A field containing a string representing serialized data."),
- *   serialized_property_names = {
- *     "value"
- *   }
- * )
  */
+#[FieldType(
+  id: "serialized_property_item_test",
+  label: new TranslatableMarkup("Test serialized property field item"),
+  description: new TranslatableMarkup("A field containing a string representing serialized data."),
+  serialized_property_names: ["value"]
+)]
 class SerializedPropertyItem extends FieldItemBase {
 
   /**

@@ -2,19 +2,20 @@
 
 namespace Drupal\entity_test_update\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'multi_value_test' field type.
- *
- * @FieldType(
- *   id = "multi_value_test",
- *   label = @Translation("Multiple values test"),
- *   description = @Translation("Another dummy field type."),
- * )
  */
+#[FieldType(
+  id: "multi_value_test",
+  label: new TranslatableMarkup("Multiple values test"),
+  description: new TranslatableMarkup("Another dummy field type."),
+)]
 class MultiValueTestItem extends FieldItemBase {
 
   /**

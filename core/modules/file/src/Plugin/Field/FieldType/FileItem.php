@@ -6,6 +6,7 @@ use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
@@ -20,21 +21,20 @@ use Drupal\file\Validation\FileValidatorSettingsTrait;
 
 /**
  * Plugin implementation of the 'file' field type.
- *
- * @FieldType(
- *   id = "file",
- *   label = @Translation("File"),
- *   description = {
- *     @Translation("For uploading files"),
- *     @Translation("Can be configured with options such as allowed file extensions and maximum upload size"),
- *   },
- *   category = "file_upload",
- *   default_widget = "file_generic",
- *   default_formatter = "file_default",
- *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
- *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}}
- * )
  */
+#[FieldType(
+  id: "file",
+  label: new TranslatableMarkup("File"),
+  description: [
+    new TranslatableMarkup("For uploading files"),
+    new TranslatableMarkup("Can be configured with options such as allowed file extensions and maximum upload size"),
+  ],
+  category: "file_upload",
+  default_widget: "file_generic",
+  default_formatter: "file_default",
+  list_class: FileFieldItemList::class,
+  constraints: ["ReferenceAccess" => [], "FileValidation" => []]
+)]
 class FileItem extends EntityReferenceItem {
 
   use FileValidatorSettingsTrait;

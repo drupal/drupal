@@ -2,29 +2,29 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'decimal' field type.
- *
- * @FieldType(
- *   id = "decimal",
- *   label = @Translation("Number (decimal)"),
- *   description = {
- *     @Translation("Ideal for exact counts and measures (prices, temperatures, distances, volumes, etc.)"),
- *     @Translation("Stores a number in the database in a fixed decimal format"),
- *     @Translation("For example, 12.34 km or € when used for further detailed calculations (such as summing many of these)"),
- *   },
- *   category = "number",
- *   weight = -30,
- *   default_widget = "number",
- *   default_formatter = "number_decimal"
- * )
  */
+#[FieldType(
+  id: "decimal",
+  label: new TranslatableMarkup("Number (decimal)"),
+  description: [
+    new TranslatableMarkup("Ideal for exact counts and measures (prices, temperatures, distances, volumes, etc.)"),
+    new TranslatableMarkup("Stores a number in the database in a fixed decimal format"),
+    new TranslatableMarkup("For example, 12.34 km or € when used for further detailed calculations (such as summing many of these)"),
+  ],
+  category: "number",
+  weight: -30,
+  default_widget: "number",
+  default_formatter: "number_decimal"
+)]
 class DecimalItem extends NumericItemBase {
 
   /**

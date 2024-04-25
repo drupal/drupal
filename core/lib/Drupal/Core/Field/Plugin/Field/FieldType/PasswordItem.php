@@ -3,20 +3,20 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Entity\EntityMalformedException;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'password' entity field type.
- *
- * @FieldType(
- *   id = "password",
- *   label = @Translation("Password"),
- *   description = @Translation("An entity field containing a password value."),
- *   no_ui = TRUE,
- * )
  */
+#[FieldType(
+  id: "password",
+  label: new TranslatableMarkup("Password"),
+  description: new TranslatableMarkup("An entity field containing a password value."),
+  no_ui: TRUE,
+)]
 class PasswordItem extends StringItem {
 
   /**

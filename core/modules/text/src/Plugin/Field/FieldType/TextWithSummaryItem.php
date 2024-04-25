@@ -2,29 +2,29 @@
 
 namespace Drupal\text\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Plugin implementation of the 'text_with_summary' field type.
- *
- * @FieldType(
- *   id = "text_with_summary",
- *   label = @Translation("Text (formatted, long, with summary)"),
- *   description = {
- *     @Translation("Ideal for longer texts, like body or description with a summary"),
- *     @Translation("Allows specifying a summary for the text"),
- *     @Translation("Supports long text without specifying a maximum length"),
- *     @Translation("May use more storage and be slower for searching and sorting"),
- *   },
- *   category = "formatted_text",
- *   default_widget = "text_textarea_with_summary",
- *   default_formatter = "text_default",
- *   list_class = "\Drupal\text\Plugin\Field\FieldType\TextFieldItemList"
- * )
  */
+#[FieldType(
+  id: "text_with_summary",
+  label: new TranslatableMarkup("Text (formatted, long, with summary)"),
+  description: [
+    new TranslatableMarkup("Ideal for longer texts, like body or description with a summary"),
+    new TranslatableMarkup("Allows specifying a summary for the text"),
+    new TranslatableMarkup("Supports long text without specifying a maximum length"),
+    new TranslatableMarkup("May use more storage and be slower for searching and sorting"),
+  ],
+  category: "formatted_text",
+  default_widget: "text_textarea_with_summary",
+  default_formatter: "text_default",
+  list_class: TextFieldItemList::class,
+)]
 class TextWithSummaryItem extends TextItemBase {
 
   /**

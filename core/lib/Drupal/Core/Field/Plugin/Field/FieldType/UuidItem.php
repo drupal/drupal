@@ -2,22 +2,23 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the 'uuid' entity field type.
  *
  * The field uses a newly generated UUID as default value.
- *
- * @FieldType(
- *   id = "uuid",
- *   label = @Translation("UUID"),
- *   description = @Translation("An entity field containing a UUID."),
- *   no_ui = TRUE,
- *   default_formatter = "string"
- * )
  */
+#[FieldType(
+  id: "uuid",
+  label: new TranslatableMarkup("UUID"),
+  description: new TranslatableMarkup("An entity field containing a UUID."),
+  default_formatter: "string",
+  no_ui: TRUE
+)]
 class UuidItem extends StringItem {
 
   /**

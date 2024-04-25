@@ -4,6 +4,7 @@ namespace Drupal\image\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\File\Exception\FileException;
@@ -14,43 +15,47 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Entity\File;
+use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 
 /**
  * Plugin implementation of the 'image' field type.
- *
- * @FieldType(
- *   id = "image",
- *   label = @Translation("Image"),
- *   description = {
- *     @Translation("For uploading images"),
- *     @Translation("Allows a user to upload an image with configurable extensions, image dimensions, upload size"),
- *     @Translation("Can be configured with options such as allowed file extensions, maximum upload size and image dimensions minimums/maximums"),
- *   },
- *   category = "file_upload",
- *   default_widget = "image_image",
- *   default_formatter = "image",
- *   column_groups = {
- *     "file" = {
- *       "label" = @Translation("File"),
- *       "columns" = {
- *         "target_id", "width", "height"
- *       },
- *       "require_all_groups_for_translation" = TRUE
- *     },
- *     "alt" = {
- *       "label" = @Translation("Alt"),
- *       "translatable" = TRUE
- *     },
- *     "title" = {
- *       "label" = @Translation("Title"),
- *       "translatable" = TRUE
- *     },
- *   },
- *   list_class = "\Drupal\file\Plugin\Field\FieldType\FileFieldItemList",
- *   constraints = {"ReferenceAccess" = {}, "FileValidation" = {}}
- * )
  */
+#[FieldType(
+  id: "image",
+  label: new TranslatableMarkup("Image"),
+  description: [
+    new TranslatableMarkup("For uploading images"),
+    new TranslatableMarkup("Allows a user to upload an image with configurable extensions, image dimensions, upload size"),
+    new TranslatableMarkup(
+      "Can be configured with options such as allowed file extensions, maximum upload size and image dimensions minimums/maximums"
+    ),
+  ],
+  category: "file_upload",
+  default_widget: "image_image",
+  default_formatter: "image",
+  list_class: FileFieldItemList::class,
+  constraints: ["ReferenceAccess" => [], "FileValidation" => []],
+  column_groups: [
+    "file" => [
+      "label" => new TranslatableMarkup("File"),
+      "columns" => [
+        "target_id",
+        "width",
+        "height",
+      ],
+      "require_all_groups_for_translation" => TRUE,
+    ],
+    "alt" => [
+      "label" => new TranslatableMarkup("Alt"),
+      "translatable" => TRUE,
+    ],
+    "title" => [
+      "label" => new TranslatableMarkup("Title"),
+      "translatable" => TRUE,
+    ],
+  ]
+)]
 class ImageItem extends FileItem {
 
   use LoggerChannelTrait;
