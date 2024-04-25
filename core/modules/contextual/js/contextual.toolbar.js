@@ -79,7 +79,7 @@
      *
      * @type {?Drupal.contextualToolbar.StateModel}
      *
-     * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is
+     * @deprecated in drupal:9.4.0 and is removed from drupal:12.0.0. There is
      * no replacement.
      */
     model: null,
