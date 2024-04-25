@@ -2,20 +2,22 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\MapFieldItemList;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the 'map' entity field type.
- *
- * @FieldType(
- *   id = "map",
- *   label = @Translation("Map"),
- *   description = @Translation("An entity field for storing a serialized array of values."),
- *   no_ui = TRUE,
- *   list_class = "\Drupal\Core\Field\MapFieldItemList",
- * )
  */
+#[FieldType(
+  id: "map",
+  label: new TranslatableMarkup("Map"),
+  description: new TranslatableMarkup("An entity field for storing a serialized array of values."),
+  no_ui: TRUE,
+  list_class: MapFieldItemList::class,
+)]
 class MapItem extends FieldItemBase {
 
   /**

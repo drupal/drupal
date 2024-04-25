@@ -2,28 +2,29 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'float' field type.
- *
- * @FieldType(
- *   id = "float",
- *   label = @Translation("Number (float)"),
- *   description = {
- *     @Translation("In most instances, it is best to use Number (decimal) instead, as decimal numbers stored as floats may contain errors in precision"),
- *     @Translation("This type of field offers faster processing and more compact storage, but the differences are typically negligible on modern sites"),
- *     @Translation("For example, 123.4 km when used in imprecise contexts such as a walking trail distance"),
- *   },
- *   category = "number",
- *   weight = -10,
- *   default_widget = "number",
- *   default_formatter = "number_decimal"
- * )
  */
+#[FieldType(
+  id: "float",
+  label: new TranslatableMarkup("Number (float)"),
+  description: [
+    new TranslatableMarkup("In most instances, it is best to use Number (decimal) instead, as decimal numbers stored as floats may contain errors in precision"),
+    new TranslatableMarkup("This type of field offers faster processing and more compact storage, but the differences are typically negligible on modern sites"),
+    new TranslatableMarkup("For example, 123.4 km when used in imprecise contexts such as a walking trail distance"),
+  ],
+  category: "number",
+  weight: -10,
+  default_widget: "number",
+  default_formatter: "number_decimal"
+)]
 class FloatItem extends NumericItemBase {
 
   /**

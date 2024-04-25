@@ -20,8 +20,8 @@
  * and so on. The data type(s) accepted by a field are defined in the class
  * implementing \Drupal\Core\Field\FieldItemInterface::schema() method.
  *
- * Field types are plugins annotated with class
- * \Drupal\Core\Field\Annotation\FieldType, and implement plugin interface
+ * Field types are plugins with \Drupal\Core\Field\Attribute\FieldType
+ * attributes and implement plugin interface
  * \Drupal\Core\Field\FieldItemInterface. Field Type plugins are managed by the
  * \Drupal\Core\Field\FieldTypePluginManager class. Field type classes usually
  * extend base class \Drupal\Core\Field\FieldItemBase. Field-type plugins need

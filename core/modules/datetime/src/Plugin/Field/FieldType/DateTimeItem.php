@@ -2,31 +2,31 @@
 
 namespace Drupal\datetime\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Plugin implementation of the 'datetime' field type.
- *
- * @FieldType(
- *   id = "datetime",
- *   label = @Translation("Date"),
- *   description = {
- *     @Translation("Ideal when date and time needs to be input by users, like event dates and times"),
- *     @Translation("Date or date and time stored in a readable string format"),
- *     @Translation("Easy to read and understand for humans"),
- *   },
- *   category = "date_time",
- *   default_widget = "datetime_default",
- *   default_formatter = "datetime_default",
- *   list_class = "\Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList",
- *   constraints = {"DateTimeFormat" = {}}
- * )
  */
+#[FieldType(
+  id: "datetime",
+  label: new TranslatableMarkup("Date"),
+  description: [
+    new TranslatableMarkup("Ideal when date and time needs to be input by users, like event dates and times"),
+    new TranslatableMarkup("Date or date and time stored in a readable string format"),
+    new TranslatableMarkup("Easy to read and understand for humans"),
+  ],
+  category: "date_time",
+  default_widget: "datetime_default",
+  default_formatter: "datetime_default",
+  list_class: DateTimeFieldItemList::class,
+  constraints: ["DateTimeFormat" => []]
+)]
 class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
 
   /**

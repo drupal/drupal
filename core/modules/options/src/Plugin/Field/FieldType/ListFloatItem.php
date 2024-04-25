@@ -2,6 +2,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -11,20 +12,19 @@ use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Plugin implementation of the 'list_float' field type.
- *
- * @FieldType(
- *   id = "list_float",
- *   label = @Translation("List (float)"),
- *   description = {
- *     @Translation("Values stored are floating-point numbers"),
- *     @Translation("For example, 'Fraction': 0 => 0, .25 => 1/4, .75 => 3/4, 1 => 1"),
- *   },
- *   category = "selection_list",
- *   weight = -10,
- *   default_widget = "options_select",
- *   default_formatter = "list_default",
- * )
  */
+#[FieldType(
+  id: "list_float",
+  label: new TranslatableMarkup("List (float)"),
+  description: [
+    new TranslatableMarkup("Values stored are floating-point numbers"),
+    new TranslatableMarkup("For example, 'Fraction': 0 => 0, .25 => 1/4, .75 => 3/4, 1 => 1"),
+  ],
+  category: "selection_list",
+  weight: -10,
+  default_widget: "options_select",
+  default_formatter: "list_default",
+)]
 class ListFloatItem extends ListItemBase {
 
   /**

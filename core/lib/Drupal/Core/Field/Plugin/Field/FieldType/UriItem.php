@@ -3,8 +3,10 @@
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -13,16 +15,15 @@ use Drupal\Core\TypedData\DataDefinition;
  * URIs are not length limited by RFC 2616, but we need to provide a sensible
  * default. There is a de-facto limit of 2000 characters in browsers and other
  * implementors, so we go with 2048.
- *
- * @FieldType(
- *   id = "uri",
- *   label = @Translation("URI"),
- *   description = @Translation("An entity field containing a URI."),
- *   no_ui = TRUE,
- *   default_formatter = "uri_link",
- *   default_widget = "uri",
- * )
  */
+#[FieldType(
+  id: "uri",
+  label: new TranslatableMarkup("URI"),
+  description: new TranslatableMarkup("An entity field containing a URI."),
+  default_widget: "uri",
+  default_formatter: "uri_link",
+  no_ui: TRUE,
+)]
 class UriItem extends StringItem {
 
   /**

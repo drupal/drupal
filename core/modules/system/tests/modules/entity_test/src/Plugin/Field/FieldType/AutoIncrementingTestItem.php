@@ -2,18 +2,19 @@
 
 namespace Drupal\entity_test\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\Plugin\Field\FieldType\IntegerItem;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the 'field_method_invocation_order_test' entity field type.
- *
- * @FieldType(
- *   id = "auto_incrementing_test",
- *   label = @Translation("Auto incrementing test field item"),
- *   description = @Translation("An entity field designed to test the field method invocation order."),
- *   no_ui = TRUE,
- * )
  */
+#[FieldType(
+  id: "auto_incrementing_test",
+  label: new TranslatableMarkup("Auto incrementing test field item"),
+  description: new TranslatableMarkup("An entity field designed to test the field method invocation order."),
+  no_ui: TRUE,
+)]
 class AutoIncrementingTestItem extends IntegerItem {
 
   /**

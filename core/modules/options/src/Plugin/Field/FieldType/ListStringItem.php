@@ -2,6 +2,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -11,20 +12,19 @@ use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Plugin implementation of the 'list_string' field type.
- *
- * @FieldType(
- *   id = "list_string",
- *   label = @Translation("List (text)"),
- *   description = {
- *     @Translation("Values stored are text values"),
- *     @Translation("For example, 'US States': IL => Illinois, IA => Iowa, IN => Indiana"),
- *   },
- *   category = "selection_list",
- *   weight = -50,
- *   default_widget = "options_select",
- *   default_formatter = "list_default",
- * )
  */
+#[FieldType(
+  id: "list_string",
+  label: new TranslatableMarkup("List (text)"),
+  description: [
+    new TranslatableMarkup("Values stored are text values"),
+    new TranslatableMarkup("For example, 'US States': IL => Illinois, IA => Iowa, IN => Indiana"),
+  ],
+  category: "selection_list",
+  weight: -50,
+  default_widget: "options_select",
+  default_formatter: "list_default",
+)]
 class ListStringItem extends ListItemBase {
 
   /**

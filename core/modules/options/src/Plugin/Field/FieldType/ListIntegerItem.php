@@ -2,6 +2,7 @@
 
 namespace Drupal\options\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -11,20 +12,19 @@ use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Plugin implementation of the 'list_integer' field type.
- *
- * @FieldType(
- *   id = "list_integer",
- *   label = @Translation("List (integer)"),
- *   description = {
- *     @Translation("Values stored are numbers without decimals"),
- *     @Translation("For example, 'Lifetime in days': 1 => 1 day, 7 => 1 week, 31 => 1 month"),
- *   },
- *   category = "selection_list",
- *   weight = -30,
- *   default_widget = "options_select",
- *   default_formatter = "list_default",
- * )
  */
+#[FieldType(
+  id: "list_integer",
+  label: new TranslatableMarkup("List (integer)"),
+  description: [
+    new TranslatableMarkup("Values stored are numbers without decimals"),
+    new TranslatableMarkup("For example, 'Lifetime in days': 1 => 1 day, 7 => 1 week, 31 => 1 month"),
+  ],
+  category: "selection_list",
+  weight: -30,
+  default_widget: "options_select",
+  default_formatter: "list_default",
+)]
 class ListIntegerItem extends ListItemBase {
 
   /**

@@ -2,9 +2,11 @@
 
 namespace Drupal\datetime_range\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\datetime\DateTimeComputed;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
@@ -12,21 +14,20 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
  * Plugin implementation of the 'daterange' field type.
- *
- * @FieldType(
- *   id = "daterange",
- *   label = @Translation("Date range"),
- *   category = "date_time",
- *   description = {
- *     @Translation("Ideal for storing durations that consist of start and end dates (and times)"),
- *     @Translation("Choose between setting both date and time, or date only, for each duration"),
- *     @Translation("The system automatically validates that the end date (and time) is later than the start, and both fields are completed"),
- *   },
- *   default_widget = "daterange_default",
- *   default_formatter = "daterange_default",
- *   list_class = "\Drupal\datetime_range\Plugin\Field\FieldType\DateRangeFieldItemList"
- * )
  */
+#[FieldType(
+  id: "daterange",
+  label: new TranslatableMarkup("Date range"),
+  description: [
+    new TranslatableMarkup("Ideal for storing durations that consist of start and end dates (and times)"),
+    new TranslatableMarkup("Choose between setting both date and time, or date only, for each duration"),
+    new TranslatableMarkup("The system automatically validates that the end date (and time) is later than the start, and both fields are completed"),
+  ],
+  category: "date_time",
+  default_widget: "daterange_default",
+  default_formatter: "daterange_default",
+  list_class: DateRangeFieldItemList::class,
+)]
 class DateRangeItem extends DateTimeItem {
 
   /**

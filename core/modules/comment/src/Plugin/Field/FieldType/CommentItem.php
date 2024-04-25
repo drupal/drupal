@@ -2,31 +2,32 @@
 
 namespace Drupal\comment\Plugin\Field\FieldType;
 
+use Drupal\comment\CommentFieldItemList;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\CommentType;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Session\AnonymousUserSession;
-use Drupal\Core\Url;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the 'comment' field type.
- *
- * @FieldType(
- *   id = "comment",
- *   label = @Translation("Comments"),
- *   description = @Translation("This field manages configuration and presentation of comments on an entity."),
- *   list_class = "\Drupal\comment\CommentFieldItemList",
- *   default_widget = "comment_default",
- *   default_formatter = "comment_default",
- *   cardinality = 1,
- * )
  */
+#[FieldType(
+  id: "comment",
+  label: new TranslatableMarkup("Comments"),
+  description: new TranslatableMarkup("This field manages configuration and presentation of comments on an entity."),
+  default_widget: "comment_default",
+  default_formatter: "comment_default",
+  list_class: CommentFieldItemList::class,
+  cardinality: 1,
+)]
 class CommentItem extends FieldItemBase implements CommentItemInterface {
 
   /**

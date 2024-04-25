@@ -2,6 +2,7 @@
 
 namespace Drupal\entity_test\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -10,15 +11,14 @@ use Drupal\entity_test\TypedData\ComputedString;
 
 /**
  * Defines the 'Internal Property' entity test field type.
- *
- * @FieldType(
- *   id = "internal_property_test",
- *   label = @Translation("Internal Property (test)"),
- *   description = @Translation("A field containing one string, from which two strings are computed (one internal, one not)."),
- *   default_widget = "string_textfield",
- *   default_formatter = "string"
- * )
  */
+#[FieldType(
+  id: "internal_property_test",
+  label: new TranslatableMarkup("Internal Property (test)"),
+  description: new TranslatableMarkup("A field containing one string, from which two strings are computed (one internal, one not)."),
+  default_widget: "string_textfield",
+  default_formatter: "string"
+)]
 class InternalPropertyTestFieldItem extends StringItem {
 
   /**

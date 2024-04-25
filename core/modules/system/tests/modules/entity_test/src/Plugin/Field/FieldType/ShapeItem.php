@@ -2,19 +2,20 @@
 
 namespace Drupal\entity_test\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'shape' field type.
- *
- * @FieldType(
- *   id = "shape",
- *   label = @Translation("Shape"),
- *   description = @Translation("Another dummy field type."),
- * )
  */
+#[FieldType(
+  id: "shape",
+  label: new TranslatableMarkup("Shape"),
+  description: new TranslatableMarkup("Another dummy field type."),
+)]
 class ShapeItem extends FieldItemBase {
 
   /**

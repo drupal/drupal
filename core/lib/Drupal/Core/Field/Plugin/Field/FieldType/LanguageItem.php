@@ -2,34 +2,35 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\DataReferenceDefinition;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 
 /**
  * Defines the 'language' entity field item.
- *
- * @FieldType(
- *   id = "language",
- *   label = @Translation("Language"),
- *   description = @Translation("An entity field referencing a language."),
- *   default_widget = "language_select",
- *   default_formatter = "language",
- *   no_ui = TRUE,
- *   constraints = {
- *     "ComplexData" = {
- *       "value" = {
- *         "Length" = {"max" = 12}
- *       }
- *     }
- *   }
- * )
  */
+#[FieldType(
+  id: "language",
+  label: new TranslatableMarkup("Language"),
+  description: new TranslatableMarkup("An entity field referencing a language."),
+  default_widget: "language_select",
+  default_formatter: "language",
+  no_ui: TRUE,
+  constraints: [
+    "ComplexData" => [
+      "value" => [
+        "Length" => ["max" => 12],
+      ],
+    ],
+  ]
+)]
 class LanguageItem extends FieldItemBase implements OptionsProviderInterface {
 
   /**
