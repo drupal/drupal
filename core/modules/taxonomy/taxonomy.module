@@ -11,7 +11,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\VocabularyInterface;
 
 /**
  * Implements hook_help().
@@ -295,15 +294,3 @@ function taxonomy_taxonomy_term_delete(Term $term) {
 /**
  * @} End of "defgroup taxonomy_index".
  */
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function taxonomy_taxonomy_vocabulary_presave(VocabularyInterface $vocabulary) {
-  // Vocabularies' `description` field must be stored as NULL at the config
-  // level if it is empty.
-  // @see taxonomy_post_update_set_vocabulary_description_to_null()
-  if (trim($vocabulary->getDescription()) === '') {
-    $vocabulary->set('description', NULL);
-  }
-}

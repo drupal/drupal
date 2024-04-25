@@ -1216,18 +1216,3 @@ function node_comment_delete($comment) {
 function node_config_translation_info_alter(&$info) {
   $info['node_type']['class'] = 'Drupal\node\ConfigTranslation\NodeTypeMapper';
 }
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function node_node_type_presave(NodeTypeInterface $node_type) {
-  // Content types' `help` and `description` fields must be stored as NULL
-  // at the config level if they are empty.
-  // @see node_post_update_set_node_type_description_and_help_to_null()
-  if (trim($node_type->getDescription()) === '') {
-    $node_type->set('description', NULL);
-  }
-  if (trim($node_type->getHelp()) === '') {
-    $node_type->set('help', NULL);
-  }
-}

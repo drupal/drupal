@@ -3,9 +3,7 @@
 namespace Drupal\responsive_image\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\image\Entity\ImageStyle;
-use Drupal\responsive_image\ResponsiveImageConfigUpdater;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 
 /**
@@ -110,15 +108,6 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
    */
   public function __construct(array $values, $entity_type_id = 'responsive_image_style') {
     parent::__construct($values, $entity_type_id);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function preSave(EntityStorageInterface $storage) {
-    parent::preSave($storage);
-    $config_updater = \Drupal::classResolver(ResponsiveImageConfigUpdater::class);
-    $config_updater->orderMultipliersNumerically($this);
   }
 
   /**
