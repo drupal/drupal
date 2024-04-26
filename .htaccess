@@ -149,6 +149,13 @@ DirectoryIndex index.php index.html index.htm
 
 # Various header fixes.
 <IfModule mod_headers.c>
+  # Disable content sniffing for all responses, since it's an attack vector.
+  # This header is also set in drupal_deliver_html_page(), which depending on
+  # Apache configuration might get placed in the 'onsuccess' table. To prevent
+  # header duplication, unset that one prior to setting in the 'always' table.
+  # See "To circumvent this limitation..." in
+  # https://httpd.apache.org/docs/current/mod/mod_headers.html.
+  Header onsuccess unset X-Content-Type-Options
   # Disable content sniffing, since it's an attack vector.
   Header always set X-Content-Type-Options nosniff
   # Disable Proxy header, since it's an attack vector.
