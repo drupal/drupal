@@ -1,0 +1,39 @@
+<div class="admin-toolbar__item">
+  <h4 id="{{ menu_heading_id }}" class="toolbar-block__title visually-hidden focusable">{{ title }}</h4>
+  <ul class="toolbar-block__list">
+    {% if help %}
+      <li class="toolbar-block__list-item">
+        {% include '@navigation/toolbar-button.html.twig' with {
+          attributes: create_attribute({ 'href': path('help.main'), 'data-drupal-tooltip': 'Help'|t, 'data-drupal-tooltip-class': 'admin-toolbar__tooltip' }),
+          icon: 'help',
+          html_tag: 'a',
+          text: 'Help'|t,
+          extra_classes: 'toolbar-button--collapsible',
+        } only %}
+      </li>
+    {% endif %}
+    <li id="admin-toolbar-user-menu" class="toolbar-block__list-item toolbar-block__list-item--user toolbar-popover" data-toolbar-popover>
+      {% include '@navigation/toolbar-button.html.twig' with {
+        action: true,
+        attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar-user-menu', 'data-toolbar-popover-control': true}),
+        icon:  menu_name|clean_class,
+        text: title,
+        extra_classes: 'toolbar-button--expand--side toolbar-button--collapsible toolbar-popover__control',
+        has_safe_triangle: TRUE,
+      } only %}
+      <div class="toolbar-popover__wrapper" data-toolbar-popover-wrapper>
+        <span class="toolbar-popover__header toolbar-button toolbar-button--large toolbar-button--non-interactive">{{ title }}</span>
+        <ul class="toolbar-menu toolbar-popover__menu">
+          {% for item in items %}
+            <li class="toolbar-menu__item toolbar-menu__item--level-1">
+              <a
+                href="{{ item.url }}"
+                class="toolbar-button"
+              >{{ item.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>

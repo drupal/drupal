@@ -57,6 +57,7 @@
     "@ckeditor/ckeditor5-style": "~41.2.0",
     "@ckeditor/ckeditor5-table": "~41.2.0",
     "@drupal/once": "1.0.x",
+    "@floating-ui/dom": "^1.6.3",
     "backbone": "^1.5.0",
     "chokidar": "^3.3.1",
     "ckeditor5": "~41.2.0",

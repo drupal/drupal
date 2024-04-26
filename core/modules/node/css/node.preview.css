@@ -8,7 +8,14 @@
   z-index: 499;
   box-sizing: border-box;
   width: 100%;
-  padding: 10px;
+  padding-inline-start: var(--drupal-displace-offset-left, 10px);
+  padding-inline-end: var(--drupal-displace-offset-right, 10px);
+  padding-block: 10px;
+}
+
+[dir="rtl"] .node-preview-container {
+  padding-inline-start: var(--drupal-displace-offset-right, 10px);
+  padding-inline-end: var(--drupal-displace-offset-left, 10px);
 }
 
 @media only screen and (min-width: 36em) {

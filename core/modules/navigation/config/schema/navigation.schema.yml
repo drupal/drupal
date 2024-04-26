@@ -1,0 +1,38 @@
+# Schema for the configuration files of the Navigation module.
+
+navigation.settings:
+  type: config_object
+  label: 'Navigation settings'
+  mapping:
+    logo_provider:
+      type: string
+      label: 'Select Navigation logo handling'
+      constraints:
+        NotNull: []
+    logo_managed:
+      type: sequence
+      label: 'Custom logo'
+      sequence:
+        type: integer
+    logo_max_filesize:
+      type: integer
+      label: 'Maximum file sizes (bytes)'
+
+navigation.block_layout:
+  type: config_object
+  mapping:
+    sections:
+      type: sequence
+      sequence:
+        type: layout_builder.section
+
+block.settings.navigation_menu:*:
+  type: block_settings
+  label: 'Menu block'
+  mapping:
+    level:
+      type: integer
+      label: 'Starting level'
+    depth:
+      type: integer
+      label: 'Maximum number of levels'

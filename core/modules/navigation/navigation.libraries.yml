@@ -1,0 +1,92 @@
+navigation:
+  version: VERSION
+  js:
+    js/toolbar-menu.js: {}
+    js/tooltip.js: {}
+    js/sidebar.js: {}
+    js/admin-toolbar-wrapper.js: {}
+    js/arrow-navigation.js: {}
+  css:
+    theme:
+      css/base/fonts.css: {}
+      css/base/variables.css: {}
+      css/components/toolbar-button.css: {}
+      css/components/admin-toolbar.css: {}
+      css/components/top-bar.css: {}
+      css/components/admin-toolbar-control-bar.css: {}
+      css/components/toolbar-menu.css: {}
+      css/components/toolbar-block.css: {}
+  dependencies:
+    - core/drupal.displace
+    - core/once
+    - core/tabbable
+    - navigation/admin-reset-styles
+    - navigation/body-scroll-lock
+    - navigation/dropdown
+    - navigation/tooltip
+    - navigation/popover
+
+admin-reset-styles:
+  css:
+    base:
+      css/base/admin-reset-styles.css: {}
+
+navigation.escapeAdmin:
+  version: VERSION
+  js:
+    js/escapeAdmin.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+    - core/drupal.displace
+
+navigation.layout:
+  dependencies:
+    - navigation/navigation
+    - navigation/navigation.escapeAdmin
+
+body-scroll-lock:
+  version: VERSION
+  css:
+    base:
+      css/components/body-scroll-lock.css: {}
+
+floating-ui:
+  js:
+    assets/vendor/floating-ui/floating-ui.core.umd.js: { minified: true }
+    assets/vendor/floating-ui/floating-ui.dom.umd.js: { minified: true }
+
+popover:
+  js:
+    js/toolbar-popover.js: {}
+  css:
+    base:
+      css/components/toolbar-popover.css: {}
+  dependencies:
+    - core/once
+
+tooltip:
+  js:
+    js/tooltip.js: {}
+  css:
+    base:
+      css/components/tooltip.css: {}
+  dependencies:
+    - core/once
+    - core/internal.floating-ui
+
+dropdown:
+  js:
+    js/toolbar-dropdown.js: {}
+  css:
+    base:
+      css/components/toolbar-dropdown.css: {}
+  dependencies:
+    - core/once
+    - core/internal.floating-ui
+
+navigation.layoutBuilder:
+  css:
+    base:
+      css/base/layout-builder.css: {}

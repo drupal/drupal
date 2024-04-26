@@ -19,6 +19,7 @@
       "modules/media/tests/fixtures/oembed/*",
       "modules/migrate_drupal/tests/fixtures/drupal6.php",
       "modules/migrate_drupal/tests/fixtures/drupal7.php",
+      "modules/navigation/assets/**",
       "modules/search/tests/UnicodeTest.txt",
       "modules/system/tests/logo.svgz",
       "node_modules/*",

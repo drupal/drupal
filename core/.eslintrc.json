@@ -28,7 +28,8 @@
     "CKEditor5": true,
     "tabbable": true,
     "slugify": true,
-    "bodyScrollLock" : true
+    "bodyScrollLock" : true,
+    "FloatingUIDOM": true
   },
   "rules": {
     "prettier/prettier": "error",

@@ -774,6 +774,17 @@ drupal.vertical-tabs:
     - core/drupalSettings
     - core/drupal.form
 
+internal.floating-ui:
+  remote: https://github.com/floating-ui/floating-ui
+  version: "1.1.1"
+  license:
+    name: MIT
+    url: https://github.com/floating-ui/floating-ui/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/floating-ui/floating-ui.core.umd.min.js: { minified: true }
+    assets/vendor/floating-ui/floating-ui.dom.umd.min.js: { minified: true }
+
 jquery:
   remote: https://github.com/jquery/jquery
   version: "4.0.0-beta"

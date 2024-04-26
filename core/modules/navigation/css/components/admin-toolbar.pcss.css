@@ -1,0 +1,361 @@
+/* cspell:ignore csvg cpath */
+/**
+ * @file
+ * Admin Toolbar styles.
+ */
+
+@import "../base/media-queries.pcss.css";
+
+/**
+ * Sidebar width is attached to the <body> element because it's used as a
+ * fallback value to the margin-inline-start property of the layout container.
+ */
+body {
+  --admin-toolbar-sidebar-width: calc(4.5 * var(--admin-toolbar-rem));
+  --admin-toolbar-sidebar-header: calc(3.5 * var(--admin-toolbar-rem));
+
+  [data-admin-toolbar='expanded'] & {
+    --admin-toolbar-sidebar-width: 80vw;
+
+    @media (--admin-toolbar-tablet) {
+      --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
+    }
+  }
+}
+
+/* We apply transitions after page load to avoid shifts. */
+[data-admin-toolbar-transitions] {
+  .admin-toolbar {
+    transition: transform var(--admin-toolbar-transition);
+
+    @media (--admin-toolbar-desktop) {
+      transition: width var(--admin-toolbar-transition);
+
+      ~ .dialog-off-canvas-main-canvas {
+        transition: margin-inline-start var(--admin-toolbar-transition);
+      }
+    }
+  }
+}
+
+/**
+ * This zero height div has the [data-offset-left] attribute for
+ * Drupal.displace() to measure. It purposefully does not have any transitions
+ * because we want Drupal.displace() to measure the width immediately
+ */
+.admin-toolbar__displace-placeholder {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: var(--admin-toolbar-sidebar-width);
+}
+
+/**
+ * The Admin toolbar component.
+ */
+.admin-toolbar {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: var(--admin-toolbar-z-index);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  transform: translateX(-100%);
+  background-color: var(--admin-toolbar-color-white);
+  font-family: var(--admin-toolbar-font-family);
+  inline-size: calc(var(--admin-toolbar-sidebar-width) + 1px);
+
+  &::after {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    content: "";
+    border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
+    inset-inline-end: 0;
+  }
+
+  [dir="rtl"] & {
+    right: 0;
+    transform: translateX(100%);
+
+    @media (--admin-toolbar-desktop) {
+      transform: none;
+    }
+  }
+
+  & ~ .dialog-off-canvas-main-canvas {
+    @media (--admin-toolbar-desktop) {
+      margin-inline-start: var(--drupal-displace-offset-left, var(--admin-toolbar-sidebar-width));
+
+      [dir="rtl"] & {
+        margin-inline-start: var(--drupal-displace-offset-right, var(--admin-toolbar-sidebar-width));
+      }
+    }
+  }
+
+  [data-admin-toolbar='expanded'] & {
+    transform: none;
+  }
+
+  @media (--admin-toolbar-desktop) {
+    transform: none;
+  }
+
+  @media only screen and (max-height: 300px)  {
+    min-height: 20rem;
+  }
+}
+
+.admin-toolbar__back-button {
+  display: none;
+  flex-grow: 0;
+}
+
+.admin-toolbar:has([data-toolbar-popover-control][aria-expanded='true']) {
+  .admin-toolbar__back-button {
+    display: flex;
+
+    @media (--admin-toolbar-desktop) {
+      display: none;
+    }
+  }
+
+  .admin-toolbar__logo {
+    display: none;
+
+    @media (--admin-toolbar-desktop) {
+      display: inline-flex;
+    }
+  }
+}
+
+.admin-toolbar__close-button {
+  flex-grow: 0;
+  justify-self: end;
+  margin-inline-start: auto;
+
+  @media (--admin-toolbar-desktop) {
+    display: none;
+  }
+}
+
+.admin-toolbar__expand-button {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: calc(2.25 * var(--admin-toolbar-rem));
+  height: calc(2.25 * var(--admin-toolbar-rem));
+  margin-inline-start: calc(0.125 * var(--admin-toolbar-rem));
+  cursor: pointer;
+  color: var(--admin-toolbar-color-gray-500);
+  border: 1px solid var(--admin-toolbar-color-gray-300);
+  border-radius: 50%;
+  background-color: transparent;
+
+  &:hover {
+    color: var(--admin-toolbar-color-blue-700);
+  }
+
+  &::before {
+    display: block;
+    flex-shrink: 0;
+    width: calc(1 * var(--admin-toolbar-rem));
+    height: calc(1 * var(--admin-toolbar-rem));
+    content: '';
+    transition: transform var(--admin-toolbar-transition);
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: 100% auto;
+    mask-image: url(../../assets/icons/chevron.svg);
+
+    [dir='rtl'] & {
+      transform: rotate(180deg);
+    }
+
+    @media (--forced-colors) {
+      background: canvastext;
+    }
+  }
+
+  &[aria-expanded='true'] {
+    &::before {
+      transform: rotate(180deg);
+
+      [dir='rtl'] & {
+        transform: none;
+      }
+    }
+  }
+
+  @media (--admin-toolbar-desktop) {
+    display: flex;
+  }
+}
+
+.admin-toolbar__header {
+  position: sticky;
+  z-index: var(--admin-toolbar-z-index-header);
+  inset-block-start: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-start: calc(var(--admin-toolbar-sidebar-header) * -1);
+  padding-block-start: var(--admin-toolbar-space-16);
+  background-color: var(--admin-toolbar-color-white);
+
+  & + .toolbar-block {
+    margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
+
+    @media (--admin-toolbar-desktop) {
+      margin-block-start: 0;
+    }
+  }
+
+  &:not(:has(.admin-toolbar__logo)) {
+    @media (--admin-toolbar-desktop) {
+      display: none;
+    }
+  }
+
+  @media (--admin-toolbar-desktop) {
+    position: static;
+    align-items: start;
+    margin-block-start: revert;
+    padding-block-start: revert;
+    padding-block-end: 0;
+  }
+}
+
+.admin-toolbar__item {
+  flex: 1 0 100%;
+}
+
+.admin-toolbar__logo {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: var(--admin-toolbar-space-8);
+
+  &:hover {
+    background-color: transparent;
+  }
+
+
+  & img {
+    display: block;
+  }
+}
+
+/**
+ * Scroll wrapper for Mobile.
+ */
+.admin-toolbar__scroll-wrapper {
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: auto;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)),
+              radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0));
+  background-color: var(--admin-toolbar-color-white);
+  background-repeat: no-repeat;
+  background-attachment: local, scroll;
+  background-position-y: 48px;
+  background-size: 100% 40px, 100% 16px;
+
+  @media (--admin-toolbar-desktop) {
+    display: contents;
+    background: none;
+  }
+}
+
+/**
+ * Content region.
+ * Region where most of the content will be printed.
+ */
+.admin-toolbar__content {
+  display: grid;
+  gap: var(--admin-toolbar-space-12);
+  padding-block: var(--admin-toolbar-sidebar-header) var(--admin-toolbar-space-16);
+  padding-inline: var(--admin-toolbar-space-16);
+
+  @media (--admin-toolbar-desktop) {
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex-direction: column;
+    flex-grow: 1;
+    padding-block-start: var(--admin-toolbar-space-16);
+    background: linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)),
+                linear-gradient(var(--admin-toolbar-color-white), var(--admin-toolbar-color-white) 80%) 0 100%,
+                radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)),
+                radial-gradient(farthest-side at 50% 100%, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)) 0 100%;
+    background-color: var(--admin-toolbar-color-white);
+    background-repeat: no-repeat;
+    background-attachment: local, local, scroll, scroll;
+    background-size: 100% 40px, 100% 40px, 100% 16px, 100% 16px;
+  }
+}
+
+/**
+ * Sticky bottom region.
+ * Region with less used items and button for collapse.
+ */
+.admin-toolbar__footer {
+  z-index: var(--admin-toolbar-z-index-footer);
+  display: grid;
+  gap: var(--admin-toolbar-space-16);
+  margin-block-start: auto;
+  padding: var(--admin-toolbar-space-16);
+  border-block-start: 1px solid var(--admin-toolbar-color-gray-200);
+
+  @media (--admin-toolbar-desktop) {
+    --admin-toolbar-z-index-footer: -1;
+
+    position: sticky;
+    bottom: 0;
+    background-color: var(--admin-toolbar-color-white);
+  }
+}
+
+/**
+ * Sidebar toggle.
+ */
+.admin-toolbar__toggle {
+  display: none;
+
+  @media (--admin-toolbar-desktop) {
+    display: flex;
+  }
+}
+
+[data-drupal-tooltip]:hover +.admin-toolbar__tooltip,
+[data-drupal-tooltip]:focus +.admin-toolbar__tooltip {
+  [data-admin-toolbar='expanded'] & {
+    display: none;
+  }
+}
+
+/**
+ * Element is used to overlay the content when Toolbar is expanded in smaller devices.
+ * It is created in the template templates/navigation.html.twig.
+ */
+.admin-toolbar-overlay {
+  position: fixed;
+  z-index: var(--admin-toolbar-z-index-overlay);
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.14);
+
+  :where([data-admin-toolbar='expanded']) & {
+    display: block;
+  }
+
+  @media (--admin-toolbar-desktop) {
+    display: none;
+  }
+}

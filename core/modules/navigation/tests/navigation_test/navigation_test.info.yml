@@ -1,0 +1,7 @@
+name: Navigation test
+description: 'Provides test functionality for navigation module'
+package: Testing
+version: VERSION
+type: module
+dependencies:
+  - drupal:navigation

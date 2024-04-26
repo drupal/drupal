@@ -1,0 +1,7 @@
+navigation.settings:
+  path: '/admin/config/user-interface/navigation/settings'
+  defaults:
+    _title: 'Navigation Settings'
+    _form: 'Drupal\navigation\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
