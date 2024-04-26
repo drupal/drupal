@@ -365,12 +365,4 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
     $this->assertEquals(AccessResult::neutral(), $tree[5]->subtree[6]->access);
   }
 
-  /**
-   * @group legacy
-   */
-  public function testDeprecation(): void {
-    $this->expectDeprecation('Calling DefaultMenuLinkTreeManipulators::__construct() without the $module_handler argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3336973');
-    new DefaultMenuLinkTreeManipulators($this->accessManager, $this->currentUser, $this->entityTypeManager);
-  }
-
 }

@@ -12,16 +12,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class LoggerChannelFactory implements LoggerChannelFactoryInterface {
 
   /**
-   * The request stack.
-   */
-  protected ?RequestStack $requestStack = NULL;
-
-  /**
-   * The current user.
-   */
-  protected ?AccountInterface $currentUser = NULL;
-
-  /**
    * Array of all instantiated logger channels keyed by channel name.
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface[]
@@ -38,37 +28,21 @@ class LoggerChannelFactory implements LoggerChannelFactoryInterface {
   /**
    * Constructs a LoggerChannelFactory.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   (optional) The request stack.
-   * @param \Drupal\Core\Session\AccountInterface|null $currentUser
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   (optional) The current user.
    */
   public function __construct(
-    ?RequestStack $requestStack = NULL,
-    ?AccountInterface $currentUser = NULL,
+    protected RequestStack $requestStack,
+    protected AccountInterface $currentUser,
   ) {
-    $this->requestStack = $requestStack;
-    $this->currentUser = $currentUser;
-    if (!$requestStack) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $requestStack argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3416354', E_USER_DEPRECATED);
-      $this->requestStack = \Drupal::service('request_stack');
-    }
-    if (!$currentUser) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $currentUser argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3416354', E_USER_DEPRECATED);
-      $this->currentUser = \Drupal::service('current_user');
-    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function get($channel) {
-    if (!$this->requestStack || !$this->currentUser) {
-      @trigger_error('Calling ' . __METHOD__ . ' without calling the constructor is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3416354', E_USER_DEPRECATED);
-      $this->requestStack = \Drupal::service('request_stack');
-      $this->currentUser = \Drupal::service('current_user');
-    }
-
     if (!isset($this->channels[$channel])) {
       $instance = new LoggerChannel($channel);
 
@@ -94,28 +68,6 @@ class LoggerChannelFactory implements LoggerChannelFactoryInterface {
     // Add the logger to already instantiated channels.
     foreach ($this->channels as $channel) {
       $channel->addLogger($logger, $priority);
-    }
-  }
-
-  /**
-   * Sets the service container.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *    dependency injection instead.
-   *
-   * @see https://www.drupal.org/node/3416354
-   */
-  public function setContainer() {
-    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use dependency injection instead. See https://www.drupal.org/node/3416354', E_USER_DEPRECATED);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __get(string $name) {
-    if ($name === 'container') {
-      @trigger_error('Accessing the container property in ' . __CLASS__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use dependency injection instead. See https://www.drupal.org/node/3416354', E_USER_DEPRECATED);
-      return \Drupal::getContainer();
     }
   }
 

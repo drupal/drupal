@@ -21,54 +21,23 @@ use Drupal\node\NodeInterface;
 class DefaultMenuLinkTreeManipulators {
 
   /**
-   * The access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators object.
    *
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    */
-  public function __construct(AccessManagerInterface $access_manager, AccountInterface $account, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler = NULL) {
-    $this->accessManager = $access_manager;
-    $this->account = $account;
-    $this->entityTypeManager = $entity_type_manager;
-    if ($module_handler === NULL) {
-      @trigger_error('Calling DefaultMenuLinkTreeManipulators::__construct() without the $module_handler argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3336973', E_USER_DEPRECATED);
-      $module_handler = \Drupal::moduleHandler();
-    }
-    $this->moduleHandler = $module_handler;
+  public function __construct(
+    protected AccessManagerInterface $accessManager,
+    protected AccountInterface $account,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {
   }
 
   /**

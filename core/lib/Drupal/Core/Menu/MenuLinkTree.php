@@ -5,7 +5,6 @@ namespace Drupal\Core\Menu;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Routing\PreloadableRouteProviderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Template\Attribute;
@@ -17,64 +16,26 @@ use Drupal\Core\Utility\CallableResolver;
 class MenuLinkTree implements MenuLinkTreeInterface {
 
   /**
-   * The menu link tree storage.
-   *
-   * @var \Drupal\Core\Menu\MenuTreeStorageInterface
-   */
-  protected $treeStorage;
-
-  /**
-   * The menu link plugin manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
-   * The route provider to load routes by name.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The active menu trail service.
-   *
-   * @var \Drupal\Core\Menu\MenuActiveTrailInterface
-   */
-  protected $menuActiveTrail;
-
-  /**
-   * The callable resolver.
-   *
-   * @var \Drupal\Core\Utility\CallableResolver
-   */
-  protected CallableResolver $callableResolver;
-
-  /**
    * Constructs a \Drupal\Core\Menu\MenuLinkTree object.
    *
-   * @param \Drupal\Core\Menu\MenuTreeStorageInterface $tree_storage
+   * @param \Drupal\Core\Menu\MenuTreeStorageInterface $treeStorage
    *   The menu link tree storage.
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link plugin manager.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider to load routes by name.
-   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menu_active_trail
+   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menuActiveTrail
    *   The active menu trail service.
-   * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface $callable_resolver
+   * @param \Drupal\Core\Utility\CallableResolver $callableResolver
    *   The callable resolver.
    */
-  public function __construct(MenuTreeStorageInterface $tree_storage, MenuLinkManagerInterface $menu_link_manager, RouteProviderInterface $route_provider, MenuActiveTrailInterface $menu_active_trail, ControllerResolverInterface|CallableResolver $callable_resolver) {
-    $this->treeStorage = $tree_storage;
-    $this->menuLinkManager = $menu_link_manager;
-    $this->routeProvider = $route_provider;
-    $this->menuActiveTrail = $menu_active_trail;
-    if ($callable_resolver instanceof ControllerResolverInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3395294', E_USER_DEPRECATED);
-      $callable_resolver = \Drupal::service('callable_resolver');
-    }
-    $this->callableResolver = $callable_resolver;
+  public function __construct(
+    protected MenuTreeStorageInterface $treeStorage,
+    protected MenuLinkManagerInterface $menuLinkManager,
+    protected RouteProviderInterface $routeProvider,
+    protected MenuActiveTrailInterface $menuActiveTrail,
+    protected CallableResolver $callableResolver,
+  ) {
   }
 
   /**
