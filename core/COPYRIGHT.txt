@@ -26,7 +26,7 @@ JavaScript
 
   CKEditor5 - Copyright (c) 2003 CKSource Holding sp. z o.o.
 
-  JavaScript Cookie - Copyright (c) 2006 Klaus Hartl & Fagner Brack
+  JavaScript Cookie - Copyright (c) 2018 Copyright 2018 Klaus Hartl, Fagner Brack, GitHub Contributors
 
   jQuery - Copyright (c) OpenJS Foundation and other contributors
 
