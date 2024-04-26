@@ -72,7 +72,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
 
     $this->rebuildContainer();
 
-    $this->createImageField('field_image_field', 'article');
+    $this->createImageField('field_image_field', 'node', 'article');
   }
 
   /**

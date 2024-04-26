@@ -15,11 +15,13 @@ trait ImageFieldCreationTrait {
   /**
    * Create a new image field.
    *
-   * @param string $name
+   * @param string $field_name
    *   The name of the new field (all lowercase). The Field UI 'field_' prefix
    *   is not added to the field name.
-   * @param string $type_name
-   *   The node type that this field will be added to.
+   * @param string $entity_type
+   *   The entity type that this field will be added to.
+   * @param string $bundle
+   *   The bundle this field will be added to.
    * @param array $storage_settings
    *   (optional) A list of field storage settings that will be added to the
    *   defaults.
@@ -33,20 +35,20 @@ trait ImageFieldCreationTrait {
    * @param string $description
    *   (optional) A description for the field. Defaults to ''.
    */
-  protected function createImageField($name, $type_name, $storage_settings = [], $field_settings = [], $widget_settings = [], $formatter_settings = [], $description = '') {
+  protected function createImageField($field_name, $entity_type, $bundle, $storage_settings = [], $field_settings = [], $widget_settings = [], $formatter_settings = [], $description = '') {
     FieldStorageConfig::create([
-      'field_name' => $name,
-      'entity_type' => 'node',
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
       'type' => 'image',
       'settings' => $storage_settings,
       'cardinality' => !empty($storage_settings['cardinality']) ? $storage_settings['cardinality'] : 1,
     ])->save();
 
     $field_config = FieldConfig::create([
-      'field_name' => $name,
-      'label' => $name,
-      'entity_type' => 'node',
-      'bundle' => $type_name,
+      'field_name' => $field_name,
+      'label' => $field_name,
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
       'required' => !empty($field_settings['required']),
       'settings' => $field_settings,
       'description' => $description,
@@ -55,15 +57,14 @@ trait ImageFieldCreationTrait {
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
-    $display_repository->getFormDisplay('node', $type_name)
-      ->setComponent($name, [
+    $display_repository->getFormDisplay($entity_type, $bundle)
+      ->setComponent($field_name, [
         'type' => 'image_image',
         'settings' => $widget_settings,
       ])
       ->save();
-
-    $display_repository->getViewDisplay('node', $type_name)
-      ->setComponent($name, [
+    $display_repository->getViewDisplay($entity_type, $bundle)
+      ->setComponent($field_name, [
         'type' => 'image',
         'settings' => $formatter_settings,
       ])

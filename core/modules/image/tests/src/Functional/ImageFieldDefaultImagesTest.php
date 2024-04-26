@@ -81,7 +81,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $widget_settings = [
       'preview_image_style' => 'medium',
     ];
-    $field = $this->createImageField($field_name, 'article', $storage_settings, $field_settings, $widget_settings);
+    $field = $this->createImageField($field_name, 'node', 'article', $storage_settings, $field_settings, $widget_settings);
 
     // The field default image id should be 2.
     $this->assertEquals($default_images['field']->uuid(), $field->getSetting('default_image')['uuid']);

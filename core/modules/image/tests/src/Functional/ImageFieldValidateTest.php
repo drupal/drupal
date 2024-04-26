@@ -33,7 +33,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $image_files = $this->drupalGetTestFiles('image');
 
     $field_name = $this->randomMachineName();
-    $this->createImageField($field_name, 'article', [], ['file_directory' => 'test-upload']);
+    $this->createImageField($field_name, 'node', 'article', [], ['file_directory' => 'test-upload']);
     $expected_path = 'public://test-upload';
 
     // Create alt text for the image.
@@ -125,9 +125,9 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       1 => $this->getFieldSettings($no_height_min_resolution, $no_height_max_resolution),
       2 => $this->getFieldSettings($no_width_min_resolution, $no_width_max_resolution),
     ];
-    $this->createImageField($field_names[0], 'article', [], $field_settings[0]);
-    $this->createImageField($field_names[1], 'article', [], $field_settings[1]);
-    $this->createImageField($field_names[2], 'article', [], $field_settings[2]);
+    $this->createImageField($field_names[0], 'node', 'article', [], $field_settings[0]);
+    $this->createImageField($field_names[1], 'node', 'article', [], $field_settings[1]);
+    $this->createImageField($field_names[2], 'node', 'article', [], $field_settings[2]);
 
     // We want a test image that is too small, and a test image that is too
     // big, so cycle through test image files until we have what we need.
@@ -174,7 +174,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       'title_field_required' => 1,
       'required' => 1,
     ];
-    $instance = $this->createImageField($field_name, 'article', [], $field_settings);
+    $instance = $this->createImageField($field_name, 'node', 'article', [], $field_settings);
     $images = $this->drupalGetTestFiles('image');
     // Let's just use the first image.
     $image = $images[0];
@@ -223,7 +223,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    * @dataProvider providerTestEmpty
    */
   public function testEmpty($field_name, $required, $cardinality, $form_element_name, $expected_page_text_when_edit_access_allowed, $expected_page_text_when_edit_access_forbidden) {
-    $this->createImageField($field_name, 'article', ['cardinality' => $cardinality], ['required' => $required]);
+    $this->createImageField($field_name, 'node', 'article', ['cardinality' => $cardinality], ['required' => $required]);
 
     // Test with field edit access allowed.
     $this->drupalGet('node/add/article');

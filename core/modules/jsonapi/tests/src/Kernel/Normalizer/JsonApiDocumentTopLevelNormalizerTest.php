@@ -158,7 +158,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     );
     $this->createTextField('node', 'article', 'body', 'Body');
 
-    $this->createImageField('field_image', 'article');
+    $this->createImageField('field_image', 'node', 'article');
 
     $this->user = User::create([
       'name' => 'user1',

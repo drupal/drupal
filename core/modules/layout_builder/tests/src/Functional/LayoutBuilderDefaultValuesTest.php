@@ -319,7 +319,7 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     $widget_settings = [
       'preview_image_style' => 'medium',
     ];
-    $this->createImageField($field_name, 'test_node_type', $storage_settings, $field_settings, $widget_settings);
+    $this->createImageField($field_name, 'node', 'test_node_type', $storage_settings, $field_settings, $widget_settings);
 
     $field_name = 'field_image_instance_default';
     $storage_settings['default_image'] = [
@@ -339,7 +339,7 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     $widget_settings = [
       'preview_image_style' => 'medium',
     ];
-    $this->createImageField($field_name, 'test_node_type', $storage_settings, $field_settings, $widget_settings);
+    $this->createImageField($field_name, 'node', 'test_node_type', $storage_settings, $field_settings, $widget_settings);
 
     $field_name = 'field_image_both_defaults';
     $storage_settings['default_image'] = [
@@ -359,7 +359,7 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     $widget_settings = [
       'preview_image_style' => 'medium',
     ];
-    $this->createImageField($field_name, 'test_node_type', $storage_settings, $field_settings, $widget_settings);
+    $this->createImageField($field_name, 'node', 'test_node_type', $storage_settings, $field_settings, $widget_settings);
 
     $field_name = 'field_image_no_default';
     $storage_settings = [];
@@ -367,7 +367,7 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     $widget_settings = [
       'preview_image_style' => 'medium',
     ];
-    $this->createImageField($field_name, 'test_node_type', $storage_settings, $field_settings, $widget_settings);
+    $this->createImageField($field_name, 'node', 'test_node_type', $storage_settings, $field_settings, $widget_settings);
   }
 
   /**

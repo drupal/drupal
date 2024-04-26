@@ -193,7 +193,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
-    $this->createImageField($field_name, 'article', ['uri_scheme' => $scheme]);
+    $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => $scheme]);
     // Create a new node with an image attached. Make sure we use a large image
     // so the scale effects of the image styles always have an effect.
     $test_image = current($this->getTestFiles('image', 39325));
@@ -389,7 +389,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       ->save();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
-    $this->createImageField($field_name, 'article', ['uri_scheme' => 'public']);
+    $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => 'public']);
     // Create a new node with an image attached.
     $test_image = current($this->getTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
@@ -464,7 +464,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       ->save();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
-    $this->createImageField($field_name, 'article', ['uri_scheme' => 'public']);
+    $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => 'public']);
     // Create a new node with an image attached.
     $test_image = current($this->getTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
@@ -520,7 +520,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   private function assertResponsiveImageFieldFormattersLink(string $link_type): void {
     $field_name = $this->randomMachineName();
     $field_settings = ['alt_field_required' => 0];
-    $this->createImageField($field_name, 'article', ['uri_scheme' => 'public'], $field_settings);
+    $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => 'public'], $field_settings);
     // Create a new node with an image attached.
     $test_image = current($this->getTestFiles('image'));
 
