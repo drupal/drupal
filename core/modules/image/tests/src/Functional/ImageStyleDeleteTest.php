@@ -26,7 +26,7 @@ class ImageStyleDeleteTest extends ImageFieldTestBase {
     parent::setUp();
     // Create an image field 'foo' having the image style 'medium' as widget
     // preview and as formatter.
-    $this->createImageField('foo', 'page', [], [], ['preview_image_style' => 'medium'], ['image_style' => 'medium']);
+    $this->createImageField('foo', 'node', 'page', [], [], ['preview_image_style' => 'medium'], ['image_style' => 'medium']);
   }
 
   /**

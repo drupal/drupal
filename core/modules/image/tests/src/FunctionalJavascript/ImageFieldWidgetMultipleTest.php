@@ -42,7 +42,7 @@ class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
     $field_name = 'images';
     $storage_settings = ['cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED];
     $field_settings = ['alt_field_required' => 0];
-    $this->createImageField($field_name, 'article', $storage_settings, $field_settings);
+    $this->createImageField($field_name, 'node', 'article', $storage_settings, $field_settings);
     $this->drupalLogin($this->drupalCreateUser(['access content', 'create article content']));
     $this->drupalGet('node/add/article');
     $this->assertSession()->fieldExists('title[0][value]')->setValue('Test');

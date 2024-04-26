@@ -24,7 +24,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    */
   public function testAJAXValidationMessage() {
     $field_name = $this->randomMachineName();
-    $this->createImageField($field_name, 'article', ['cardinality' => -1]);
+    $this->createImageField($field_name, 'node', 'article', ['cardinality' => -1]);
 
     $this->drupalGet('node/add/article');
     /** @var \Drupal\file\FileInterface[] $text_files */
@@ -73,7 +73,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       ->save();
 
     // Then, add an image field.
-    $this->createImageField('field_dummy_image', 'article');
+    $this->createImageField('field_dummy_image', 'node', 'article');
 
     // Open an article and trigger the AJAX handler.
     $this->drupalGet('node/add/article');

@@ -64,7 +64,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
     $field_settings = ['alt_field_required' => 0];
-    $instance = $this->createImageField($field_name, 'article', ['uri_scheme' => $scheme], $field_settings);
+    $instance = $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => $scheme], $field_settings);
 
     // Go to manage display page.
     $this->drupalGet("admin/structure/types/manage/article/display");
@@ -261,7 +261,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $widget_settings = [
       'preview_image_style' => 'medium',
     ];
-    $field = $this->createImageField($field_name, 'article', [], $field_settings, $widget_settings);
+    $field = $this->createImageField($field_name, 'node', 'article', [], $field_settings, $widget_settings);
 
     // Verify that the min/max dimensions set on the field are properly
     // extracted, and displayed, on the image field's configuration form.
@@ -369,7 +369,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
     $field_settings = ['alt_field_required' => 0];
-    $instance = $this->createImageField($field_name, 'article', [], $field_settings);
+    $instance = $this->createImageField($field_name, 'node', 'article', [], $field_settings);
 
     // Go to manage display page.
     $this->drupalGet("admin/structure/types/manage/article/display");
@@ -484,7 +484,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Create a new image field.
     $field_name = $this->randomMachineName();
-    $this->createImageField($field_name, 'article');
+    $this->createImageField($field_name, 'node', 'article');
 
     // Create a new node, with no images and verify that no images are
     // displayed.
@@ -573,7 +573,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Create an image field that uses the private:// scheme and test that the
     // default image works as expected.
     $private_field_name = $this->randomMachineName();
-    $this->createImageField($private_field_name, 'article', ['uri_scheme' => 'private']);
+    $this->createImageField($private_field_name, 'node', 'article', ['uri_scheme' => 'private']);
     // Add a default image to the new field.
     $edit = [
       // Get the path of the 'image-test.gif' file.

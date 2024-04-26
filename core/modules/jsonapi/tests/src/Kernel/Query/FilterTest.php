@@ -297,7 +297,7 @@ class FilterTest extends JsonapiKernelTestBase {
       'shapes', 'Shapes',
       FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
     );
-    $this->createImageField('photo', 'painting');
+    $this->createImageField('photo', 'node', 'painting');
   }
 
   /**
