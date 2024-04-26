@@ -35,19 +35,14 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface|null $typedConfigManager
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
-    protected $typedConfigManager = NULL,
+    protected TypedConfigManagerInterface $typedConfigManager,
   ) {
     $this->setConfigFactory($config_factory);
-
-    if (!$typedConfigManager instanceof TypedConfigManagerInterface) {
-      $type = get_debug_type($typedConfigManager);
-      @trigger_error("Passing $type to the \$typedConfigManager parameter of ConfigFormBase::__construct() is deprecated in drupal:10.2.0 and must be an instance of \Drupal\Core\Config\TypedConfigManagerInterface in drupal:11.0.0. See https://www.drupal.org/node/3404140", E_USER_DEPRECATED);
-    }
   }
 
   /**

@@ -15,44 +15,20 @@ use Drupal\Core\Routing\UrlGeneratorInterface;
 class FormSubmitter implements FormSubmitterInterface {
 
   /**
-   * The URL generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The redirect response subscriber.
-   *
-   * @var \Drupal\Core\EventSubscriber\RedirectResponseSubscriber
-   */
-  protected RedirectResponseSubscriber $redirectResponseSubscriber;
-
-  /**
    * Constructs a new FormSubmitter.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $urlGenerator
    *   The URL generator.
-   * @param \Drupal\Core\EventSubscriber\RedirectResponseSubscriber|null $redirect_response_subscriber
+   * @param \Drupal\Core\EventSubscriber\RedirectResponseSubscriber $redirectResponseSubscriber
    *   The redirect response subscriber.
    */
-  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator, ?RedirectResponseSubscriber $redirect_response_subscriber = NULL) {
-    $this->requestStack = $request_stack;
-    $this->urlGenerator = $url_generator;
-    if (is_null($redirect_response_subscriber)) {
-      @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $redirect_response_subscriber argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3377297', E_USER_DEPRECATED);
-      $redirect_response_subscriber = \Drupal::service('redirect_response_subscriber');
-    }
-    $this->redirectResponseSubscriber = $redirect_response_subscriber;
+  public function __construct(
+    protected RequestStack $requestStack,
+    protected UrlGeneratorInterface $urlGenerator,
+    protected RedirectResponseSubscriber $redirectResponseSubscriber,
+  ) {
   }
 
   /**
