@@ -425,6 +425,8 @@ system.theme.global:
 system.advisories:
   type: config_object
   label: 'Security advisory settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     enabled:
       type: boolean
@@ -432,6 +434,11 @@ system.advisories:
     interval_hours:
       type: integer
       label: 'How often to check for security advisories, in hours'
+      # Minimum can be set to 0 as it just means the advisories will be retrieved on every call.
+      # @see \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher::getSecurityAdvisories
+      constraints:
+        Range:
+          min: 0
 
 block.settings.system_branding_block:
   type: block_settings
