@@ -288,12 +288,7 @@ class Token {
    * @return array
    *   An associative array of discovered tokens, grouped by type.
    */
-  public function scan($text) {
-    if (!is_string($text)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with a $text parameter of type other than string is deprecated in drupal:10.1.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3334317', E_USER_DEPRECATED);
-      $text = (string) $text;
-    }
-
+  public function scan(string $text) {
     // Matches tokens with the following pattern: [$type:$name]
     // $type and $name may not contain [ ] characters.
     // $type may not contain : or whitespace characters, but $name may.
