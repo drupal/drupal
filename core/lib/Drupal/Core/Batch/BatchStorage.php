@@ -16,52 +16,23 @@ class BatchStorage implements BatchStorageInterface {
   const TABLE_NAME = 'batch';
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The session.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-   */
-  protected $session;
-
-  /**
-   * The CSRF token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
-   * The time service.
-   */
-  protected readonly TimeInterface $time;
-
-  /**
    * Constructs the database batch storage service.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The session.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
    *   The CSRF token generator.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(Connection $connection, SessionInterface $session, CsrfTokenGenerator $csrf_token, TimeInterface $time = NULL) {
-    $this->connection = $connection;
-    $this->session = $session;
-    $this->csrfToken = $csrf_token;
-    if (!$time) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3220378', E_USER_DEPRECATED);
-      $time = \Drupal::service('datetime.time');
-    }
-    $this->time = $time;
+  public function __construct(
+    protected Connection $connection,
+    protected SessionInterface $session,
+    protected CsrfTokenGenerator $csrfToken,
+    protected TimeInterface $time,
+  ) {
   }
 
   /**

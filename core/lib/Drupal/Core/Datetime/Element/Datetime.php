@@ -376,29 +376,6 @@ class Datetime extends DateElementBase {
   }
 
   /**
-   * Creates an example for a date format.
-   *
-   * This is centralized for a consistent method of creating these examples.
-   *
-   * @param string $format
-   *   The date format.
-   *
-   * @return string
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
-   *   There is no replacement.
-   *
-   * @see https://www.drupal.org/node/3385058
-   */
-  public static function formatExample($format) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3385058', E_USER_DEPRECATED);
-    if (!static::$dateExample) {
-      static::$dateExample = new DrupalDateTime();
-    }
-    return static::$dateExample->format($format);
-  }
-
-  /**
    * Retrieves the right format for an HTML5 date element.
    *
    * The format is important because these elements will not work with any other
