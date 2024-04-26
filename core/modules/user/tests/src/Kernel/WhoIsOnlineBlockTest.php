@@ -6,6 +6,7 @@ namespace Drupal\Tests\user\Kernel;
 
 use Drupal\block\Entity\Block;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -14,19 +15,12 @@ use Drupal\user\Entity\User;
  * @group user
  */
 class WhoIsOnlineBlockTest extends KernelTestBase {
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'block', 'views'];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * The block being tested.
@@ -86,8 +80,8 @@ class WhoIsOnlineBlockTest extends KernelTestBase {
     $user1 = User::create([
       'name' => 'user1',
       'mail' => 'user1@example.com',
+      'roles' => [$this->createRole(['access user profiles'])],
     ]);
-    $user1->addRole('administrator');
     $user1->activate();
     $requestTime = \Drupal::time()->getRequestTime();
     $user1->setLastAccessTime($requestTime);
