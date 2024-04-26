@@ -27,13 +27,6 @@ class FieldEntityLinkBaseTest extends ViewTestBase {
    */
   protected static $modules = ['node', 'language'];
 
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -67,7 +60,10 @@ class FieldEntityLinkBaseTest extends ViewTestBase {
       $translation->save();
     }
 
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->createUser([
+      'delete any article content',
+      'edit any article content',
+    ]));
 
   }
 

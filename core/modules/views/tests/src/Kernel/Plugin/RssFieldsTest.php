@@ -27,14 +27,6 @@ class RssFieldsTest extends ViewsKernelTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   public static $testViews = ['test_display_feed'];
 
@@ -58,9 +50,7 @@ class RssFieldsTest extends ViewsKernelTestBase {
    * subdirectory.
    */
   public function testRssFields() {
-    // Set up the current user as uid 1 so the test doesn't need to deal with
-    // permission.
-    $this->setUpCurrentUser(['uid' => 1]);
+    $this->setUpCurrentUser([], ['access content']);
 
     $date = '1975-05-18';
 

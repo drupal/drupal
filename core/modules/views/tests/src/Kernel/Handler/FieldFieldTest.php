@@ -9,6 +9,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -24,6 +25,8 @@ use Drupal\views\Views;
  */
 class FieldFieldTest extends ViewsKernelTestBase {
 
+  use UserCreationTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -34,14 +37,6 @@ class FieldFieldTest extends ViewsKernelTestBase {
     'views_test_formatter',
     'views_entity_test',
   ];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -90,8 +85,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     ViewTestData::createTestViews(static::class, ['views_test_config']);
 
     // Bypass any field access.
-    $this->adminUser = User::create(['name' => $this->randomString()]);
-    $this->adminUser->save();
+    $this->adminUser = $this->createUser(['administer users'], $this->randomString());
     $this->container->get('current_user')->setAccount($this->adminUser);
 
     $this->testUsers = [];

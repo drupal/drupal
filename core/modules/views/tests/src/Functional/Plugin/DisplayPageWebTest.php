@@ -33,14 +33,6 @@ class DisplayPageWebTest extends ViewTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'starterkit_theme';
 
@@ -151,7 +143,7 @@ class DisplayPageWebTest extends ViewTestBase {
    * Tests the views page path functionality.
    */
   public function testPagePaths() {
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->createUser(['administer views']));
     $this->assertPagePath('0');
     $this->assertPagePath('9999');
     $this->assertPagePath('☺');
