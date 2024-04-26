@@ -2,51 +2,25 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\File\FileUrlGeneratorInterface;
-use Drupal\Core\State\StateInterface;
 
 /**
  * Renders CSS assets.
  */
 class CssCollectionRenderer implements AssetCollectionRendererInterface {
 
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected array $deprecatedProperties = ['state' => 'state'];
-
-  /**
-   * The asset query string.
-   *
-   * @var \Drupal\Core\Asset\AssetQueryStringInterface
-   */
-  protected AssetQueryStringInterface $assetQueryString;
-
-  /**
-   * The file URL generator.
-   *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface
-   */
-  protected $fileUrlGenerator;
-
   /**
    * Constructs a CssCollectionRenderer.
    *
-   * @param \Drupal\Core\Asset\AssetQueryStringInterface|\Drupal\Core\State\StateInterface $asset_query_string
+   * @param \Drupal\Core\Asset\AssetQueryStringInterface $assetQueryString
    *   The asset query string.
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
    *   The file URL generator.
    */
-  public function __construct(AssetQueryStringInterface|StateInterface $asset_query_string, FileUrlGeneratorInterface $file_url_generator) {
-    if ($asset_query_string instanceof StateInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an $asset_query_string argument as \Drupal\Core\State\StateInterface instead of \Drupal\Core\Asset\AssetQueryStringInterface is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
-      $asset_query_string = \Drupal::service('asset.query_string');
-    }
-    $this->assetQueryString = $asset_query_string;
-    $this->fileUrlGenerator = $file_url_generator;
+  public function __construct(
+    protected AssetQueryStringInterface $assetQueryString,
+    protected FileUrlGeneratorInterface $fileUrlGenerator,
+  ) {
   }
 
   /**

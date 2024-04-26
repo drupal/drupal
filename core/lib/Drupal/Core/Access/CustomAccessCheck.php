@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Access;
 
-use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -23,34 +22,17 @@ use Symfony\Component\Routing\Route;
 class CustomAccessCheck implements RoutingAccessInterface {
 
   /**
-   * The callable resolver.
-   *
-   * @var \Drupal\Core\Utility\CallableResolver
-   */
-  protected CallableResolver $callableResolver;
-
-  /**
-   * The arguments resolver.
-   *
-   * @var \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface
-   */
-  protected $argumentsResolverFactory;
-
-  /**
    * Constructs a CustomAccessCheck instance.
    *
-   * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface $callable_resolver
+   * @param \Drupal\Core\Utility\CallableResolver $callableResolver
    *   The callable resolver.
-   * @param \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface $arguments_resolver_factory
+   * @param \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface $argumentsResolverFactory
    *   The arguments resolver factory.
    */
-  public function __construct(ControllerResolverInterface|CallableResolver $callable_resolver, AccessArgumentsResolverFactoryInterface $arguments_resolver_factory) {
-    if ($callable_resolver instanceof ControllerResolverInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3397706', E_USER_DEPRECATED);
-      $callable_resolver = \Drupal::service('callable_resolver');
-    }
-    $this->callableResolver = $callable_resolver;
-    $this->argumentsResolverFactory = $arguments_resolver_factory;
+  public function __construct(
+    protected CallableResolver $callableResolver,
+    protected AccessArgumentsResolverFactoryInterface $argumentsResolverFactory,
+  ) {
   }
 
   /**

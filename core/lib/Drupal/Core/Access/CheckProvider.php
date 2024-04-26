@@ -55,24 +55,16 @@ class CheckProvider implements CheckProviderInterface {
   /**
    * Constructs a CheckProvider object.
    *
-   * @param array|null $dynamic_requirements_map
+   * @param array $dynamic_requirements_map
    *   An array to map dynamic requirement keys to service IDs.
-   * @param \Psr\Container\ContainerInterface|null $container
+   * @param \Psr\Container\ContainerInterface $container
    *   The check provider service locator.
    */
   public function __construct(
-    array $dynamic_requirements_map = NULL,
-    protected ?ContainerInterface $container = NULL,
+    array $dynamic_requirements_map,
+    protected ContainerInterface $container,
   ) {
     $this->dynamicRequirementMap = $dynamic_requirements_map;
-    if (is_null($this->dynamicRequirementMap)) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $dynamic_requirements_map argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3416353', E_USER_DEPRECATED);
-      $this->dynamicRequirementMap = \Drupal::getContainer()->getParameter('dynamic_access_check_services');
-    }
-    if (!$this->container) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3416353', E_USER_DEPRECATED);
-      $this->container = \Drupal::getContainer();
-    }
   }
 
   /**
