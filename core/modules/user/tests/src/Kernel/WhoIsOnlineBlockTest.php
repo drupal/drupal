@@ -17,6 +17,7 @@ use Drupal\user\Entity\User;
 class WhoIsOnlineBlockTest extends KernelTestBase {
   use UserCreationTrait;
 
+  use UserCreationTrait;
   /**
    * {@inheritdoc}
    */
