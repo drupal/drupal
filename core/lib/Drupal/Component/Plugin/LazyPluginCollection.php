@@ -47,7 +47,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    *
    * @return $this
    */
-  abstract public function setConfiguration($configuration);
+  abstract public function setConfiguration(array $configuration);
 
   /**
    * Clears all instantiated plugins.

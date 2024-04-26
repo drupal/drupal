@@ -127,12 +127,7 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
   /**
    * {@inheritdoc}
    */
-  public function setConfiguration($configuration) {
-    if (!is_array($configuration)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with a non-array argument is deprecated in drupal:10.3.0 and will fail in drupal:11.0.0. See https://www.drupal.org/node/3406191', E_USER_DEPRECATED);
-      $configuration = [];
-    }
-
+  public function setConfiguration(array $configuration) {
     // Track each instance ID as it is updated.
     $unprocessed_instance_ids = $this->getInstanceIds();
 
