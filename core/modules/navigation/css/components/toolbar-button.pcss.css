@@ -1,0 +1,301 @@
+/* cspell:ignore csvg cpath wght */
+/**
+ * @file
+ * Toolbar button styles.
+ */
+
+@import "../base/media-queries.pcss.css";
+
+:root {
+  --toolbar-button-outline-offset: 0;
+}
+
+/* In top bar mobile we need small outline offset. */
+:where(.top-bar) {
+  --toolbar-button-outline-offset: calc(-1 * var(--admin-toolbar-space-4));
+
+  @media (--admin-toolbar-desktop) {
+    --toolbar-button-outline-offset: 0px;
+  }
+}
+
+.toolbar-button {
+  z-index: 1;
+  align-items: center;
+  padding-inline: var(--admin-toolbar-space-16) var(--admin-toolbar-space-12);
+  padding-block: calc(0.625 * var(--admin-toolbar-rem));
+  cursor: pointer;
+  text-align: start;
+  text-decoration: none;
+  word-break: break-word;
+  color: var(--admin-toolbar-color-gray-800);
+  border: 0;
+  border-radius: var(--admin-toolbar-space-8);
+  background-color: transparent;
+  font-size: var(--admin-toolbar-font-size-info-sm);
+  font-variation-settings: "wght" 700;
+  line-height: var(--admin-toolbar-line-height-info-sm);
+  gap: calc(0.5 * var(--admin-toolbar-rem));
+
+  &:has(+ .toolbar-popover__wrapper .is-active) {
+    color: var(--admin-toolbar-color-gray-950);
+    background-color: var(--admin-toolbar-color-gray-050);
+  }
+
+  &:hover {
+    z-index: 20;
+    color: var(--admin-toolbar-color-gray-990);
+    outline: 2px solid var(--admin-toolbar-color-blue-200);
+    outline-offset: var(--toolbar-button-outline-offset);
+    background-color: var(--admin-toolbar-color-gray-050);
+  }
+
+  &:focus {
+    z-index: 10;
+    color: var(--admin-toolbar-color-blue-700);
+    outline: 2px solid var(--admin-toolbar-color-focus);
+    outline-offset: var(--toolbar-button-outline-offset);
+    background-color: transparent;
+  }
+
+  &:hover:focus {
+    background-color: var(--admin-toolbar-color-gray-050);
+  }
+
+  &.current {
+    color: var(--admin-toolbar-color-blue-700);
+    background-color: var(--admin-toolbar-color-gray-050);
+  }
+}
+
+.toolbar-button--large {
+  padding: var(--admin-toolbar-space-8) var(--admin-toolbar-space-16);
+  font-size: var(--admin-toolbar-font-size-info-lg);
+  line-height: var(--admin-toolbar-line-height-info-lg);
+}
+
+.toolbar-button--non-interactive {
+  &:hover,
+  &:focus,
+  &:hover:focus {
+    z-index: 1;
+    cursor: auto;
+    color: var(--admin-toolbar-color-gray-800);
+    outline: 0;
+    background-color: transparent;
+  }
+}
+
+/* Class starts with `toolbar-button--icon`  */
+[class*='toolbar-button--icon'] {
+  --icon: url(../../assets/icons/basic.svg); /* Default icon, aka --basic */
+
+  padding-inline: calc(0.625 * var(--admin-toolbar-rem));
+
+  &::before {
+    display: block;
+    flex-shrink: 0;
+    inline-size: var(--admin-toolbar-space-20);
+    block-size: var(--admin-toolbar-space-20);
+    content: '';
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: 100% auto;
+    mask-image: var(--icon);
+  }
+
+  &:hover::before {
+    background-color: var(--admin-toolbar-color-blue-600);
+  }
+
+  @media (--forced-colors) {
+    &::before,
+    &:hover::before {
+      background: canvastext;
+    }
+
+    &a {
+      &::before,
+      &:hover::before {
+        background: linktext;
+      }
+    }
+  }
+}
+
+.toolbar-button--primary {
+  color: white;
+  background-color: var(--admin-toolbar-color-blue-450);
+
+  &:hover,
+  &:focus {
+    color: white;
+    background-color: var(--admin-toolbar-color-blue-650);
+  }
+}
+
+.toolbar-button--secondary--expanded[aria-expanded='true'] {
+  color: white;
+  background-color: var(--admin-toolbar-color-gray-900);
+}
+
+.toolbar-button--tertiary--expanded[aria-expanded='true'] {
+  background-color: var(--admin-toolbar-color-gray-050);
+}
+
+.toolbar-button--weight--400 {
+  font-variation-settings: "wght" 400;
+}
+
+/* Set 0 specificity */
+:where(.toolbar-button) {
+  display: flex;
+  flex-grow: 1;
+}
+
+[class*='toolbar-button--expand'] {
+  &::after {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    content: '';
+    transition: transform var(--admin-toolbar-transition);
+    background-color: currentColor;
+    block-size: var(--admin-toolbar-space-16);
+    inline-size: var(--admin-toolbar-space-16);
+    mask-size: var(--admin-toolbar-space-16);
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-image: url(../../assets/icons/chevron.svg);
+
+    [dir="rtl"] & {
+      transform: rotate(180deg);
+    }
+
+    @media (--forced-colors) {
+      background: canvastext;
+    }
+  }
+}
+
+.toolbar-button--expand--down,
+[dir="rtl"] .toolbar-button--expand--down {
+  &::after {
+    transform: rotate(90deg);
+
+    @media (--forced-colors) {
+      background: canvastext;
+    }
+  }
+
+  &[aria-expanded='true'] {
+    &::after {
+      transform: rotate(-90deg);
+    }
+  }
+}
+
+.toolbar-button--arrow-first {
+  &::after {
+    order: -1;
+  }
+}
+
+.toolbar-button--icon--back {
+  --icon: url(../../assets/icons/arrow-left.svg);
+}
+
+.toolbar-button--icon--burger {
+  --icon: url(../../assets/icons/burger.svg);
+}
+
+.toolbar-button--icon--cross {
+  --icon: url(../../assets/icons/cross.svg);
+}
+
+.toolbar-button--icon--system-themes-page {
+  --icon: url(../../assets/icons/appearance.svg);
+}
+
+.toolbar-button--icon--navigation-blocks {
+  --icon: url(../../assets/icons/blocks.svg);
+}
+
+.toolbar-button--icon--shortcuts {
+  --icon: url(../../assets/icons/shortcuts.svg);
+}
+
+.toolbar-button--icon--system-admin-config {
+  --icon: url(../../assets/icons/config.svg);
+}
+
+.toolbar-button--icon--navigation-content {
+  --icon: url(../../assets/icons/content.svg);
+}
+
+.toolbar-button--icon--navigation-create {
+  --icon: url(../../assets/icons/create.svg);
+}
+
+.toolbar-button--icon--system-modules-list {
+  --icon: url(../../assets/icons/extend.svg);
+}
+
+.toolbar-button--icon--navigation-files {
+  --icon: url(../../assets/icons/files.svg);
+}
+
+.toolbar-button--icon--help {
+  --icon: url(../../assets/icons/help.svg);
+}
+
+.toolbar-button--icon--navigation-media {
+  --icon: url(../../assets/icons/media.svg);
+}
+
+.toolbar-button--icon--pencil {
+  --icon: url(../../assets/icons/pencil.svg);
+}
+
+.toolbar-button--icon--preview {
+  --icon: url(../../assets/icons/eye.svg);
+}
+
+.toolbar-button--icon--entity-user-collection {
+  --icon: url(../../assets/icons/people.svg);
+}
+
+.toolbar-button--icon--system-admin-reports {
+  --icon: url(../../assets/icons/reports.svg);
+}
+
+.toolbar-button--icon--system-admin-structure {
+  --icon: url(../../assets/icons/structure.svg);
+}
+
+.toolbar-button--icon--user {
+  --icon: url(../../assets/icons/user.svg);
+}
+
+html:not([data-admin-toolbar='expanded']) {
+  .toolbar-button--collapsible::after {
+    display: none;
+  }
+
+  /* Visually-hidden labels when collapsed. */
+  .toolbar-button--collapsible .toolbar-button__label {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    white-space: nowrap;
+    clip-path: inset(50%);
+    opacity: 0;
+  }
+}
+
+/* Hides button's label while transitioning. */
+html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] .toolbar-button--collapsible .toolbar-button__label {
+  display: none;
+}

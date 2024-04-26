@@ -1,0 +1,173 @@
+@import "../base/media-queries.pcss.css";
+
+/* This is a universal size that helps in the case of themes with a size of 10 pixels.
+We need it root to calculate the size of the displace in .dialog-off-canvas-main-canvas */
+:root {
+  --admin-toolbar-rem: max(1rem, 16PX); /* Workaround until postcss-px-to-rem is removed so this is not converted to rems. */
+}
+
+[data-drupal-admin-styles] {
+  /*
+   * Color Palette.
+   */
+  --admin-toolbar-color-focus: var(--drupal-admin-color-focus, var(--admin-toolbar-color-green-300));
+  --admin-toolbar-size-focus: var(--drupal-admin-size-focus, 2px);
+  /* Blue variations. */
+  --admin-toolbar-color-blue-070: var(--drupal-admin-color-blue-070, #dbe8ff);
+  --admin-toolbar-color-blue-100: var(--drupal-admin-color-blue-100, #ccdfff);
+  --admin-toolbar-color-blue-200: var(--drupal-admin-color-blue-200, #94bbff);
+  --admin-toolbar-color-blue-300: var(--drupal-admin-color-blue-300, #669eff);
+  --admin-toolbar-color-blue-400: var(--drupal-admin-color-blue-400, #347efe);
+  --admin-toolbar-color-blue-450: var(--drupal-admin-color-blue-450, #015efe);
+  --admin-toolbar-color-blue-500: var(--drupal-admin-color-blue-500, #004bcc);
+  --admin-toolbar-color-blue-600: var(--drupal-admin-color-blue-600, #0041b1);
+  --admin-toolbar-color-blue-650: var(--drupal-admin-color-blue-650, #00389a);
+  --admin-toolbar-color-blue-700: var(--drupal-admin-color-blue-700, #002566);
+  --admin-toolbar-color-blue-800: var(--drupal-admin-color-blue-800, #001333);
+  /* Gray variations. */
+  --admin-toolbar-color-gray-020: var(--drupal-admin-color-gray-020, #f8f9fc);
+  --admin-toolbar-color-gray-050: var(--drupal-admin-color-gray-050, #f3f5f9);
+  --admin-toolbar-color-gray-070: var(--drupal-admin-color-gray-070, #e3e9f2);
+  --admin-toolbar-color-gray-100: var(--drupal-admin-color-gray-100, #d8dfea);
+  --admin-toolbar-color-gray-200: var(--drupal-admin-color-gray-200, #cfd4dd);
+  --admin-toolbar-color-gray-300: var(--drupal-admin-color-gray-300, #b8c1d0);
+  --admin-toolbar-color-gray-400: var(--drupal-admin-color-gray-400, #a2acbe);
+  --admin-toolbar-color-gray-500: var(--drupal-admin-color-gray-500, #8590a3);
+  --admin-toolbar-color-gray-600: var(--drupal-admin-color-gray-600, #798291);
+  --admin-toolbar-color-gray-700: var(--drupal-admin-color-gray-700, #6d7583);
+  --admin-toolbar-color-gray-800: var(--drupal-admin-color-gray-800, #4f5661);
+  --admin-toolbar-color-gray-900: var(--drupal-admin-color-gray-900, #323946);
+  --admin-toolbar-color-gray-950: var(--drupal-admin-color-gray-950, #1f242d);
+  --admin-toolbar-color-gray-990: var(--drupal-admin-color-gray-990, #13161a);
+  /* Orange. */
+  --admin-toolbar-color-orange-020: var(--drupal-admin-color-orange-020, #fff7e0);
+  --admin-toolbar-color-orange-050: var(--drupal-admin-color-orange-050, #ffefc2);
+  --admin-toolbar-color-orange-070: var(--drupal-admin-color-orange-070, #ffe499);
+  --admin-toolbar-color-orange-100: var(--drupal-admin-color-orange-100, #fdd568);
+  --admin-toolbar-color-orange-200: var(--drupal-admin-color-orange-200, #ffc629);
+  --admin-toolbar-color-orange-300: var(--drupal-admin-color-orange-300, #f5b400);
+  /* Red. */
+  --admin-toolbar-color-red-020: var(--drupal-admin-color-red-020, #ffe5e0);
+  --admin-toolbar-color-red-050: var(--drupal-admin-color-red-050, #ffccc2);
+  --admin-toolbar-color-red-070: var(--drupal-admin-color-red-070, #fa9);
+  --admin-toolbar-color-red-100: var(--drupal-admin-color-red-100, #fd8168);
+  --admin-toolbar-color-red-200: var(--drupal-admin-color-red-200, #ff4d29);
+  --admin-toolbar-color-red-300: var(--drupal-admin-color-red-300, #ff2b00);
+  --admin-toolbar-color-red-400: var(--drupal-admin-color-red-400, #e52600);
+  --admin-toolbar-color-red-500: var(--drupal-admin-color-red-500, #c22000);
+  --admin-toolbar-color-red-600: var(--drupal-admin-color-red-600, #991a00);
+  /* Green. */
+  --admin-toolbar-color-green-020: var(--drupal-admin-color-green-020, #ccffe7);
+  --admin-toolbar-color-green-050: var(--drupal-admin-color-green-050, #9cfccf);
+  --admin-toolbar-color-green-070: var(--drupal-admin-color-green-070, #3df59f);
+  --admin-toolbar-color-green-100: var(--drupal-admin-color-green-100, #2ce890);
+  --admin-toolbar-color-green-200: var(--drupal-admin-color-green-200, #18dc81);
+  --admin-toolbar-color-green-300: var(--drupal-admin-color-green-300, #00cc6d);
+  --admin-toolbar-color-green-400: var(--drupal-admin-color-green-400, #009952);
+  --admin-toolbar-color-green-500: var(--drupal-admin-color-green-500, #008044);
+  --admin-toolbar-color-green-600: var(--drupal-admin-color-green-600, #005c31);
+  /* White. */
+  --admin-toolbar-color-white: var(--drupal-admin-color-white, #fff);
+  /* Expanded background color. */
+  --admin-toolbar-color-expanded: rgba(231, 234, 243, 0.5); /* --admin-toolbar-color-gray-050 */
+  /* Fonts. */
+  --admin-toolbar-font-family: inter, sans-serif;
+  /* Shadows. */
+  --admin-toolbar-color-shadow-0: rgba(0, 0, 0, 0);
+  --admin-toolbar-color-shadow-6: rgba(0, 0, 0, 0.06);
+  --admin-toolbar-color-shadow-8: rgba(0, 0, 0, 0.08);
+  --admin-toolbar-color-shadow-15: rgba(0, 0, 0, 0.15);
+
+  /**
+   * Spaces.
+   */
+  --admin-toolbar-space-4: var(--drupal-admin-space-4, calc(0.25 * var(--admin-toolbar-rem))); /* 0.25 * 16px = 4px */
+  --admin-toolbar-space-8: var(--drupal-admin-space-8, calc(0.5 * var(--admin-toolbar-rem))); /* 0.5 * 16px = 8px */
+  --admin-toolbar-space-12: var(--drupal-admin-space-12, calc(0.75 * var(--admin-toolbar-rem))); /* 0.75 * 16px = 12px */
+  --admin-toolbar-space-16: var(--drupal-admin-space-16, var(--admin-toolbar-rem)); /* 16px = 16px */
+  --admin-toolbar-space-20: var(--drupal-admin-space-20, calc(1.25 * var(--admin-toolbar-rem))); /* 1.25 * 16px = 20px */
+  --admin-toolbar-space-24: var(--drupal-admin-space-24, calc(1.5 * var(--admin-toolbar-rem))); /* 1.5 * 16px = 24px */
+  --admin-toolbar-space-32: var(--drupal-admin-space-32, calc(2 * var(--admin-toolbar-rem))); /* 2 * 16px = 32px */
+  --admin-toolbar-space-40: var(--drupal-admin-space-40, calc(2.5 * var(--admin-toolbar-rem))); /* 2.5 * 16px = 40px */
+  --admin-toolbar-space-48: var(--drupal-admin-space-48, calc(3 * var(--admin-toolbar-rem))); /* 3 * 16px = 48px */
+  --admin-toolbar-space-56: var(--drupal-admin-space-56, calc(3.5 * var(--admin-toolbar-rem))); /* 3.5 * 16px = 56px */
+  --admin-toolbar-space-64: var(--drupal-admin-space-64, calc(4 * var(--admin-toolbar-rem))); /* 4 * 16px = 64px */
+  --admin-toolbar-space-72: var(--drupal-admin-space-72, calc(4.5 * var(--admin-toolbar-rem))); /* 4.5 * 16px = 72px */
+  --admin-toolbar-space-80: var(--drupal-admin-space-80, calc(5 * var(--admin-toolbar-rem))); /* 5 * 16px = 80px */
+  --admin-toolbar-space-96: var(--drupal-admin-space-96, calc(6 * var(--admin-toolbar-rem))); /* 6 * 16px = 96px */
+  --admin-toolbar-popover-width: calc(16 * var(--admin-toolbar-rem));
+
+  /**
+   * Font sizes and line heights.
+   * 1rem = 16px if font root is 100% and browser defaults are used.
+   */
+  /* Heading styles. */
+  --admin-toolbar-font-size-heading-xs: var(--drupal-admin-font-size-heading-xs, calc(0.875 * var(--admin-toolbar-rem))); /* 14px */
+  --admin-toolbar-line-height-heading-xs: var(--drupal-admin-line-height-heading-xs, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-font-size-heading-sm: var(--drupal-admin-font-size-heading-sm, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-line-height-heading-sm: var(--drupal-admin-line-height-heading-sm, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-font-size-heading-md: var(--drupal-admin-font-size-heading-md, calc(1.125 * var(--admin-toolbar-rem))); /* 18px */
+  --admin-toolbar-line-height-heading-md: var(--drupal-admin-line-height-heading-md, calc(1.5 * var(--admin-toolbar-rem))); /* 24px */
+  --admin-toolbar-font-size-heading-lg: var(--drupal-admin-font-size-heading-lg, calc(1.25 * var(--admin-toolbar-rem))); /* 20px */
+  --admin-toolbar-line-height-heading-lg: var(--drupal-admin-line-height-heading-lg, calc(1.5 * var(--admin-toolbar-rem))); /* 24px */
+  --admin-toolbar-font-size-heading-xl: var(--drupal-admin-font-size-heading-xl, calc(1.5 * var(--admin-toolbar-rem))); /* 24px */
+  --admin-toolbar-line-height-heading-xl: var(--drupal-admin-line-height-heading-xl, calc(2 * var(--admin-toolbar-rem))); /* 32px */
+  --admin-toolbar-font-size-heading-2xl: var(--drupal-admin-font-size-heading-2xl, calc(1.875 * var(--admin-toolbar-rem))); /* 30px */
+  --admin-toolbar-line-height-heading-2xl: var(--drupal-admin-line-height-heading-2xl, calc(1.5 * var(--admin-toolbar-rem))); /* 40px */
+  --admin-toolbar-font-size-heading-3xl: var(--drupal-admin-font-size-heading-3xl, calc(2.25 * var(--admin-toolbar-rem))); /* 36px */
+  --admin-toolbar-line-height-heading-3xl: var(--drupal-admin-line-height-heading-3xl, calc(3 * var(--admin-toolbar-rem))); /* 48px */
+  /* Label styles. */
+  --admin-toolbar-font-size-label-xs: var(--drupal-admin-font-size-label-xs, calc(0.625 * var(--admin-toolbar-rem))); /* 10px */
+  --admin-toolbar-line-height-label-xs: var(--drupal-admin-line-height-label-xs, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-font-size-label-sm: var(--drupal-admin-font-size-label-sm, calc(0.75 * var(--admin-toolbar-rem))); /* 12px */
+  --admin-toolbar-line-height-label-sm: var(--drupal-admin-line-height-label-sm, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-font-size-label-md: var(--drupal-admin-font-size-label-md, calc(0.875 * var(--admin-toolbar-rem))); /* 14px */
+  --admin-toolbar-line-height-label-md: var(--drupal-admin-line-height-label-md, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-font-size-label-lg: var(--drupal-admin-font-size-label-lg, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-line-height-label-lg: var(--drupal-admin-line-height-label-lg, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-font-size-label-xl: var(--drupal-admin-font-size-label-xl, calc(1.125 * var(--admin-toolbar-rem))); /* 18px */
+  --admin-toolbar-line-height-label-xl: var(--drupal-admin-line-height-label-xl, calc(1.5 * var(--admin-toolbar-rem))); /* 24px */
+  /* Other styles. */
+  --admin-toolbar-font-size-info-xs: var(--drupal-admin-font-size-info-xs, calc(0.75 * var(--admin-toolbar-rem))); /* 12px */
+  --admin-toolbar-line-height-info-xs: var(--drupal-admin-line-height-info-xs, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-font-size-info-sm: var(--drupal-admin-font-size-info-sm, calc(0.875 * var(--admin-toolbar-rem))); /* 14px */
+  --admin-toolbar-line-height-info-sm: var(--drupal-admin-line-height-info-sm, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-font-size-info-md: var(--drupal-admin-font-size-info-md, var(--admin-toolbar-rem)); /* 16px */
+  --admin-toolbar-line-height-info-md: var(--drupal-admin-line-height-info-md, calc(1.5 * var(--admin-toolbar-rem))); /* 24px */
+  --admin-toolbar-font-size-info-lg: var(--drupal-admin-font-size-info-lg, calc(1.125 * var(--admin-toolbar-rem))); /* 18px */
+  --admin-toolbar-line-height-info-lg: var(--drupal-admin-line-height-info-lg,  calc(1.5 * var(--admin-toolbar-rem))); /* 24px */
+  --admin-toolbar-font-size-info-xl: var(--drupal-admin-font-size-info-xl, calc(1.25 * var(--admin-toolbar-rem))); /* 20px */
+  --admin-toolbar-line-height-info-xl: var(--drupal-admin-line-height-info-xl, calc(1.5 * var(--admin-toolbar-rem))); /* 24px */
+
+  /**
+   * Letter spacings.
+   */
+  --admin-toolbar-letter-spacing-0-8: var(--drupal-admin-letter-spacing-0-8, calc(0.05 * var(--admin-toolbar-rem))); /* 0.8px */
+  --admin-toolbar-letter-spacing-0-06: var(--drupal-admin-letter-spacing-0-06, calc(0.00375 * var(--admin-toolbar-rem))); /* 0.06px */
+
+  /**
+   * Transitions.
+   */
+   --admin-toolbar-transition: 150ms ease-out;
+
+  /**
+   * Z-index.
+   *
+   * @see https://www.drupal.org/docs/theming-drupal/z-indexes-in-drupal-8
+   */
+  --admin-toolbar-z-index-admin-footer: var(--drupal-admin-z-index-footer, 40);
+  --admin-toolbar-z-index-header: var(--drupal-admin-z-index-header, 99);
+  --admin-toolbar-z-index-top-bar: var(--drupal-admin-z-index-top-bar, 490);
+  --admin-toolbar-z-index-admin-toolbar-control-bar: var(--drupal-admin-z-index-admin-toolbar-control-bar, 499);
+  --admin-toolbar-z-index-overlay: var(--drupal-admin-z-index-overlay, 500);
+  --admin-toolbar-z-index: var(--drupal-admin-z-index, 501);
+  --admin-toolbar-z-index-popover: var(--drupal-admin-z-index-popover, 601);
+  --admin-toolbar-z-index-footer: var(--drupal-admin-z-index-footer, 701);
+  --admin-toolbar-z-index-tooltip: var(--drupal-admin-z-index-tooltip, 801);
+}
+
+@media (--admin-toolbar-reduced-motion) {
+  [data-drupal-admin-styles] {
+    --admin-toolbar-transition: 0s linear;
+  }
+}

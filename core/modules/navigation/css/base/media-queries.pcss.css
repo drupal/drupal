@@ -1,0 +1,9 @@
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+@custom-media --admin-toolbar-tablet (min-width: 560px);
+@custom-media --admin-toolbar-desktop (min-width: 1024px);
+@custom-media --admin-toolbar-reduced-motion (prefers-reduced-motion);
+@custom-media --forced-colors (forced-colors: active);

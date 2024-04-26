@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the navigation top bar.
+ *
+ * Available variables:
+ * - local_tasks: The local tasks for the current route.
+ *
+ * @ingroup themeable
+ */
+#}
+{% set attributes = create_attribute() %}
+{% if local_tasks %}
+  {% set attributes = attributes.setAttribute('data-offset-top', '') %}
+  <div {{ attributes.addClass('top-bar').setAttribute('data-drupal-admin-styles', '') }}>
+    <div class="top-bar__content">
+      {{ local_tasks }}
+    </div>
+  </div>
+{% endif %}

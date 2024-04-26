@@ -1,0 +1,28 @@
+/**
+ * @file
+ * Reset styles from parent theme.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/all
+ */
+
+[data-drupal-admin-styles] {
+  box-sizing: border-box;
+
+  *:focus {
+    outline: var(--admin-toolbar-size-focus) solid var(--admin-toolbar-color-focus);
+  }
+}
+
+:where([data-drupal-admin-styles] :not(svg *)) {
+  all: revert;
+  box-sizing: border-box;
+
+  button {
+    font-family: inherit;
+  }
+
+  &::after,
+  &::before {
+    all: revert;
+    box-sizing: border-box;
+  }
+}

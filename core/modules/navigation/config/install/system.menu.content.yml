@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - navigation
+id: content
+label: Content
+description: 'Content task links'
+locked: true

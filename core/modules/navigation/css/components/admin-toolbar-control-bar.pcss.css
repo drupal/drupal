@@ -1,0 +1,36 @@
+@import "../base/media-queries.pcss.css";
+
+:root {
+  --admin-toolbar-top-bar-height: var(-admin-toolbar-space-64);
+}
+
+.admin-toolbar-control-bar {
+  position: relative;
+  z-index: var(--admin-toolbar-z-index-admin-toolbar-control-bar);
+  display: flex;
+  padding: var(--admin-toolbar-space-4);
+  border-bottom: 1px solid var(--admin-toolbar-color-gray-100);
+  background-color: white;
+  font-family: var(--admin-toolbar-font-family);
+
+  @media (--admin-toolbar-desktop) {
+    display: none;
+  }
+}
+
+.admin-toolbar-control-bar__burger {
+  align-self: start;
+
+  @media (--admin-toolbar-desktop) {
+    display: none;
+  }
+}
+
+.admin-toolbar-control-bar__content {
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--admin-toolbar-space-16);
+  width: 100%;
+}

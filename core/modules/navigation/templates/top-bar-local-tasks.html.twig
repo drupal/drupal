@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Default theme implementation for navigation top bar local tasks.
+ *
+ * Available variables:
+ * - local_tasks: Array of local tasks for the current route.
+ */
+#}
+{% set dropdown_id = 'admin-local-tasks'|clean_unique_id %}
+{% include '@navigation/toolbar-button.html.twig' with {
+  attributes: create_attribute(
+    {
+      'aria-expanded': 'false',
+      'aria-controls': dropdown_id,
+      'data-drupal-dropdown': 'true'
+    }
+  ),
+  text: 'More actions'|t,
+  extra_classes: 'toolbar-button--expand--down toolbar-button--weight--400 toolbar-button--tertiary--expanded toolbar-button--actions',
+} only %}
+<div class="toolbar-dropdown__menu" id={{ dropdown_id }}>
+  <ul class="toolbar-dropdown__list">
+    {% for local_task in local_tasks %}
+      {{ local_task }}
+    {% endfor %}
+  </ul>
+</div>

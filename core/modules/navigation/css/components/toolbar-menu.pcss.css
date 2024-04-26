@@ -1,0 +1,169 @@
+/* cspell:ignore csvg cpath wght */
+/**
+ * @file
+ * Admin Toolbar menus styles.
+ */
+
+@import "../base/media-queries.pcss.css";
+
+.toolbar-menu {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  gap: var(--admin-toolbar-space-4)
+}
+
+[class*="toolbar-menu--level-"] {
+  display: none;
+}
+
+[data-toolbar-menu-trigger][aria-expanded='true'] + [class*="toolbar-menu--level-"] {
+  display: grid;
+}
+
+.toolbar-menu__item {
+  display: grid;
+}
+
+.toolbar-menu__item--level-1 {
+  border-radius: var(--admin-toolbar-space-8);
+
+  &:has(> [data-toolbar-menu-trigger][aria-expanded='true']) {
+    background: var(--admin-toolbar-color-gray-050);
+  }
+}
+
+.toolbar-menu--level-2 {
+  padding-block-end: var(--admin-toolbar-space-12);
+  box-shadow: inset var(--admin-toolbar-space-4) 0 0 0 var(--admin-toolbar-color-gray-100);
+
+  [dir='rtl'] & {
+    box-shadow: inset calc(-1 * var(--admin-toolbar-space-4)) 0 0 0 var(--admin-toolbar-color-gray-100);
+  }
+}
+
+.toolbar-menu__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding-inline: var(--admin-toolbar-space-20) var(--admin-toolbar-space-12);
+  padding-block: var(--admin-toolbar-space-8);
+  cursor: pointer;
+  text-align: start;
+  text-decoration: none;
+  letter-spacing: var(--admin-toolbar-letter-spacing-0-06);
+  word-break: break-word;
+  color: var(--admin-toolbar-color-gray-800);
+  border: none;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: var(--admin-toolbar-font-size-info-xs);
+  line-height: var(--admin-toolbar-line-height-info-xs);
+  font-variation-settings: "wght" 600;
+  inline-size: 100%;
+  gap: var(--admin-toolbar-space-8);
+
+  &:has(+ .toolbar-menu .is-active) {
+    color: var(--admin-toolbar-color-gray-950);
+  }
+
+  &.current {
+    color: var(--admin-toolbar-color-gray-990);
+
+    &::after {
+      position: absolute;
+      z-index: 1;
+      inset-block-start: calc(50% - var(--admin-toolbar-space-8) / 2);
+      inset-inline-start: calc(var(--admin-toolbar-space-4) * -0.5);
+      content: '';
+      border-radius: 50%;
+      background-color: currentColor;
+      inline-size: var(--admin-toolbar-space-8);
+      block-size: var(--admin-toolbar-space-8);
+    }
+  }
+
+  &:focus {
+    color: var(--admin-toolbar-color-gray-990);
+    outline-offset: -2px;
+    background-color: transparent;
+  }
+
+  &:hover {
+    color: var(--admin-toolbar-color-blue-700);
+    background-color: transparent;
+
+    &::before {
+      position: absolute;
+      z-index: 1;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      content: "";
+      background-color: currentColor;
+      inline-size: var(--admin-toolbar-space-8);
+      block-size: 100%;
+    }
+  }
+
+  &[aria-expanded] {
+    &::after {
+      flex-shrink: 0;
+      margin-inline-start: auto;
+      content: '';
+      transition: transform var(--admin-toolbar-transition);
+      transform: rotate(90deg);
+      background-color: currentColor;
+      block-size: var(--admin-toolbar-space-16);
+      inline-size: var(--admin-toolbar-space-16);
+      mask-size: var(--admin-toolbar-space-16);
+      mask-repeat: no-repeat;
+      mask-position: center center;
+      mask-image: url(../../assets/icons/chevron.svg);
+
+      [dir='rtl'] & {
+        transform: rotate(90deg);
+      }
+
+      @media (--forced-colors) {
+        background: canvastext;
+      }
+    }
+  }
+
+  &[aria-expanded='true'] {
+    &::after {
+      transform: rotate(-90deg);
+
+      [dir='rtl'] & {
+        transform: rotate(-90deg);
+      }
+    }
+  }
+}
+
+.toolbar-menu__link--3 {
+  padding-inline-start: var(--admin-toolbar-space-32);
+  font-size: var(--admin-toolbar-font-size-info-xs);
+  line-height: var(--admin-toolbar-line-height-info-xs);
+  font-variation-settings: "wght" 500;
+
+  &::after {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: 50%;
+    inset-inline-start: 0;
+    content: "";
+    background-color: var(--admin-toolbar-color-gray-100);
+    inline-size: var(--admin-toolbar-space-20);
+    block-size: 1px;
+  }
+
+  &:hover {
+    &::after {
+      background-color: currentColor;
+    }
+  }
+}

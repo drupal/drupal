@@ -1,0 +1,29 @@
+{# Extra classes variable added to be sure that modifiers will
+appear after main classes #}
+{%
+  set classes = [
+    'toolbar-button',
+    icon ? 'toolbar-button--icon--' ~ icon : '',
+    extra_classes,
+  ]
+%}
+<{{html_tag|default('button')}}{{ attributes.addClass(classes) }} data-index-text="{{ text|first|lower }}">
+  {% if avatar %}
+    <span class="toolbar-button__avatar">{{~ avatar ~}}</span>
+  {% endif %}
+  {% if action %}
+    <span data-toolbar-action class="visually-hidden">{{ 'Extend'|t }}</span>
+  {% endif %}
+  {% block content %}
+    {% if text %}
+      <span class="toolbar-button__label {{ label_classes }}" data-text>{{~ text ~}}</span>
+    {% endif %}
+  {% endblock %}
+
+  {# Element that improves sub-menu UX by implementing the Safe Triangle strategy.
+More info at https://www.smashingmagazine.com/2023/08/better-context-menus-safe-triangles #}
+  {% if has_safe_triangle %}
+    <div data-toolbar-popover-safe-triangle></div>
+  {% endif %}
+
+</{{html_tag|default('button')}}>

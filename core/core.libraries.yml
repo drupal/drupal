@@ -826,6 +826,17 @@ es6-promise:
   drupalSettings: {}
   deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
+internal.floating-ui:
+  remote: https://github.com/floating-ui/floating-ui
+  version: "1.1.1"
+  license:
+    name: MIT
+    url: https://github.com/floating-ui/floating-ui/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/floating-ui/floating-ui.core.umd.min.js: { minified: true }
+    assets/vendor/floating-ui/floating-ui.dom.umd.min.js: { minified: true }
+
 jquery:
   remote: https://github.com/jquery/jquery
   version: "3.7.1"

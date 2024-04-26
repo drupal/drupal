@@ -1,0 +1,32 @@
+services:
+  navigation.renderer:
+    class: Drupal\navigation\NavigationRenderer
+    arguments:
+      [
+        '@config.factory',
+        '@module_handler',
+        '@current_route_match',
+        '@plugin.manager.menu.local_task',
+        '@current_user',
+        '@entity_type.manager',
+        '@image.factory',
+        '@file_url_generator',
+        '@plugin.manager.layout_builder.section_storage',
+      ]
+  Drupal\navigation\NavigationRenderer: '@navigation.renderer'
+
+  navigation.menu_tree:
+    class: Drupal\navigation\Menu\NavigationMenuLinkTree
+    arguments:
+      [
+        '@menu.tree_storage',
+        '@plugin.manager.menu.link',
+        '@router.route_provider',
+        '@menu.active_trail',
+        '@callable_resolver',
+      ]
+
+  navigation.user_lazy_builder:
+    class: Drupal\navigation\UserLazyBuilder
+    arguments: ['@module_handler', '@current_user']
+  Drupal\navigation\UserLazyBuilders: '@navigation.user_lazy_builder'

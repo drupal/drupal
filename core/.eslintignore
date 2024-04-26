@@ -17,3 +17,6 @@ modules/system/tests/themes/sdc_theme_test/components/bar/bar.component.yml
 scripts/**/*
 modules/ckeditor5/webpack.config.js
 misc/jquery.form.js
+
+# Temporary until they are moved into assets/vendor
+modules/navigation/assets/vendor/**/*

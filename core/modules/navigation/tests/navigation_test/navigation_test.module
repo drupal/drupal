@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Contains main module functions.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Component\Utility\Html;
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function navigation_test_preprocess_block__navigation(&$variables) {
+  // Add some additional classes so we can target the correct contextual link
+  // in tests.
+  $variables['attributes']['class'][] = Html::cleanCssIdentifier('block-' . $variables['elements']['#plugin_id']);
+}
