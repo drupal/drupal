@@ -23,7 +23,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    *   The serialization class to use.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection to use.
-   * @param \Drupal\Component\Datetime\TimeInterface|string|null $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param string $table
    *   The name of the SQL table to use, defaults to key_value_expire.
@@ -32,18 +32,9 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     $collection,
     SerializationInterface $serializer,
     Connection $connection,
-    protected TimeInterface|string|null $time = NULL,
+    protected TimeInterface $time,
     $table = 'key_value_expire',
   ) {
-    if (is_null($time)) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      $this->time = \Drupal::time();
-    }
-    elseif (is_string($time)) {
-      @trigger_error('Calling ' . __METHOD__ . ' with the $table as 4th argument is deprecated in drupal:10.3.0 and it will be the 5th argument in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      $table = $time;
-      $this->time = \Drupal::time();
-    }
     parent::__construct($collection, $serializer, $connection, $table);
   }
 

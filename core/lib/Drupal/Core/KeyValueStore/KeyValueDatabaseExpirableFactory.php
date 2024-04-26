@@ -19,40 +19,20 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
   protected $storages = [];
 
   /**
-   * The serialization class to use.
-   *
-   * @var \Drupal\Component\Serialization\SerializationInterface
-   */
-  protected $serializer;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs this factory object.
    *
    * @param \Drupal\Component\Serialization\SerializationInterface $serializer
    *   The serialization class to use.
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
   public function __construct(
-    SerializationInterface $serializer,
-    Connection $connection,
-    protected ?TimeInterface $time = NULL,
+    protected SerializationInterface $serializer,
+    protected Connection $connection,
+    protected TimeInterface $time,
   ) {
-    $this->serializer = $serializer;
-    $this->connection = $connection;
-    if (!$time) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      $this->time = \Drupal::service(TimeInterface::class);
-    }
   }
 
   /**
