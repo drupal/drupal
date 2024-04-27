@@ -39,8 +39,8 @@
       }
     };
 
-    const toggleCollapsed = () => {
-      if (window.matchMedia('(min-width: 48em)').matches) {
+    const toggleCollapsed = ({ matches }) => {
+      if (matches) {
         if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
           let width = 0;
 
@@ -68,10 +68,9 @@
     });
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
-    $(window)
-      // @todo use a media query event listener https://www.drupal.org/project/drupal/issues/3225621
-      .on('resize.tabs', Drupal.debounce(toggleCollapsed, 150))
-      .trigger('resize.tabs');
+    const mql = window.matchMedia('(min-width: 48em)');
+    mql.addEventListener('change', toggleCollapsed);
+    toggleCollapsed(mql);
   }
   /**
    * Initialize the tabs JS.
