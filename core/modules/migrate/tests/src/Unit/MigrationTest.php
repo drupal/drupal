@@ -30,8 +30,6 @@ class MigrationTest extends UnitTestCase {
    * @covers ::__construct
    *
    * @dataProvider getInvalidMigrationDependenciesProvider
-   *
-   * @group legacy
    */
   public function testMigrationDependenciesInConstructor(array $dependencies) {
 
@@ -43,6 +41,8 @@ class MigrationTest extends UnitTestCase {
     $destination_plugin_manager = $this->createMock('\Drupal\migrate\Plugin\MigrateDestinationPluginManager');
     $id_map_plugin_manager = $this->createMock('\Drupal\migrate\Plugin\MigratePluginManagerInterface');
 
+    $this->expectException(InvalidPluginDefinitionException::class);
+    $this->expectExceptionMessage("Invalid migration dependencies configuration for migration test_migration");
     new Migration($configuration, $plugin_id, [], $migration_plugin_manager, $source_plugin_manager, $process_plugin_manager, $destination_plugin_manager, $id_map_plugin_manager);
   }
 
