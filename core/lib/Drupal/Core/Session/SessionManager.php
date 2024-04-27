@@ -7,7 +7,6 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
-use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
 
 /**
  * Manages user sessions.
@@ -31,27 +30,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   use DependencySerializationTrait;
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The database connection to use.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The session configuration.
-   *
-   * @var \Drupal\Core\Session\SessionConfigurationInterface
-   */
-  protected $sessionConfiguration;
-
-  /**
    * Whether a lazy session has been started.
    *
    * @var bool
@@ -71,15 +49,15 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * Constructs a new session manager instance.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    * @param \Drupal\Core\Session\MetadataBag $metadata_bag
    *   The session metadata bag.
-   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
+   * @param \Drupal\Core\Session\SessionConfigurationInterface $sessionConfiguration
    *   The session configuration interface.
-   * @param \Drupal\Component\Datetime\TimeInterface|null|\Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy|\SessionHandlerInterface $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param \Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy|\SessionHandlerInterface|null $handler
    *   The object to register as a PHP session handler.
@@ -87,26 +65,14 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    * @see \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage::setSaveHandler()
    */
   public function __construct(
-    RequestStack $request_stack,
-    Connection $connection,
-    MetadataBag $metadata_bag,
-    SessionConfigurationInterface $session_configuration,
-    protected TimeInterface|AbstractProxy|\SessionHandlerInterface|null $time = NULL,
+    protected RequestStack $requestStack,
+    protected Connection $connection,
+    protected MetadataBag $metadata_bag,
+    protected SessionConfigurationInterface $sessionConfiguration,
+    protected TimeInterface $time,
     $handler = NULL,
   ) {
-    $options = [];
-    $this->sessionConfiguration = $session_configuration;
-    $this->requestStack = $request_stack;
-    $this->connection = $connection;
-    if (!$time || $time instanceof AbstractProxy || $time instanceof \SessionHandlerInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be the 5th argument in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      if ($time instanceof AbstractProxy || $time instanceof \SessionHandlerInterface) {
-        $handler = $time;
-      }
-      $this->time = \Drupal::service(TimeInterface::class);
-    }
-
-    parent::__construct($options, $handler, $metadata_bag);
+    parent::__construct([], $handler, $metadata_bag);
   }
 
   /**
