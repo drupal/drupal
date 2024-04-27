@@ -13,7 +13,6 @@ use Drupal\Core\Database\Transaction\TransactionManagerBase;
 use Drupal\Core\Database\TransactionExplicitCommitNotAllowedException;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests the transaction abstraction system.
@@ -434,15 +433,13 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->insertRow('row');
       $this->executeDDLStatement();
 
-      try {
-        // Rollback the outer transaction.
-        $transaction->rollBack();
-        // @see \Drupal\mysql\Driver\Database\mysql\TransactionManager::rollbackClientTransaction()
-        $this->fail('Rolling back a transaction containing DDL should produce a warning.');
-      }
-      catch (Warning $warning) {
-        $this->assertSame('Rollback attempted when there is no active transaction. This can cause data integrity issues.', $warning->getMessage());
-      }
+      // Try to rollback the outer transaction. It should fail and void
+      // the transaction stack.
+      $transaction->rollBack();
+      $manager = $this->connection->transactionManager();
+      $reflectedTransactionState = new \ReflectionMethod($manager, 'getConnectionTransactionState');
+      $this->assertSame(ClientConnectionTransactionState::Voided, $reflectedTransactionState->invoke($manager));
+
       unset($transaction);
       $this->assertRowPresent('row');
     }

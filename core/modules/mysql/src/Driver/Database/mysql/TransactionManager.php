@@ -74,7 +74,6 @@ class TransactionManager extends TransactionManagerBase {
    */
   protected function rollbackClientTransaction(): bool {
     if (!$this->connection->getClientConnection()->inTransaction()) {
-      trigger_error('Rollback attempted when there is no active transaction. This can cause data integrity issues.', E_USER_WARNING);
       $this->voidClientTransaction();
       return FALSE;
     }
