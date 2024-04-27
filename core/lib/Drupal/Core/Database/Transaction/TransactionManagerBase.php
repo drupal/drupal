@@ -328,9 +328,11 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
         // If this was the root Drupal transaction, we can rollback the client
         // transaction. The transaction is closed.
         $this->processRootRollback();
-        // The Transaction object remains open, and when it will get destructed
-        // no commit should happen. Void the stack item.
-        $this->voidStackItem($id);
+        if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::RolledBack) {
+          // The Transaction object remains open, and when it will get destructed
+          // no commit should happen. Void the stack item.
+          $this->voidStackItem($id);
+        }
       }
       else {
         // The stack got corrupted.
