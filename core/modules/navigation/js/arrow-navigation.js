@@ -1,4 +1,17 @@
+/**
+ * @file
+ * Keyboard navigation component.
+ */
+
 ((Drupal, once, { focusable }) => {
+  /**
+   * Attaches the keyboard navigation functionality.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attaches the behavior to the `.admin-toolbar` element.
+   */
   Drupal.behaviors.keyboardNavigation = {
     attach: (context) => {
       once('keyboard-processed', '.admin-toolbar', context).forEach(
