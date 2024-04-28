@@ -1,3 +1,22 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a navigation layout.
+ *
+ * Available variables:
+ * - content: The content for this layout.
+ * - attributes: HTML attributes for the layout <div>.
+ * - hide_logo: Whether to hide the logo.
+ * - logo_path: The path to the logo image if logo_managed in
+ *   navigation.settings configuration has been set.
+ * - logo_width: The width of the logo image. Available if
+ *   logo_path points to a valid image file.
+ * - logo_height: The height of the logo image. Available if
+ *   logo_path points to a valid image file.
+ *
+ * @ingroup themeable
+ */
+#}
 {% set control_bar_attributes = create_attribute() %}
 
 <div {{ control_bar_attributes.addClass('admin-toolbar-control-bar').setAttribute('data-drupal-admin-styles', '').setAttribute('data-offset-top', '') }}>
