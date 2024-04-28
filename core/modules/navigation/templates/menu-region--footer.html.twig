@@ -1,3 +1,4 @@
+{% set menu_heading_id = 'menu--' ~ menu_name|clean_unique_id %}
 <div class="admin-toolbar__item">
   <h4 id="{{ menu_heading_id }}" class="toolbar-block__title visually-hidden focusable">{{ title }}</h4>
   <ul class="toolbar-block__list">
