@@ -18,20 +18,36 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   use DependencySerializationTrait;
 
   /**
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
    * Constructs a new SessionHandler instance.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
+   * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    */
-  public function __construct(
-    protected RequestStack $requestStack,
-    protected Connection $connection,
-    protected TimeInterface $time,
-  ) {
+  public function __construct(RequestStack $request_stack, Connection $connection, protected ?TimeInterface $time = NULL) {
+    $this->requestStack = $request_stack;
+    $this->connection = $connection;
+    if (!$time) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
+      $this->time = \Drupal::service(TimeInterface::class);
+    }
   }
 
   /**
