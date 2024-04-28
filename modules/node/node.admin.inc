@@ -165,12 +165,7 @@ function node_filter_form() {
   );
   foreach ($session as $filter) {
     list($type, $value) = $filter;
-    if ($type == 'term') {
-      // Load term name from DB rather than search and parse options array.
-      $value = module_invoke('taxonomy', 'term_load', $value);
-      $value = $value->name;
-    }
-    elseif ($type == 'language') {
+    if ($type == 'language') {
       $value = $value == LANGUAGE_NONE ? t('Language neutral') : module_invoke('locale', 'language_name', $value);
     }
     else {
