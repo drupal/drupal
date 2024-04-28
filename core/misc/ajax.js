@@ -1423,7 +1423,7 @@
      *   The JSON response object from the Ajax request.
      * @param {string} response.selector
      *   A jQuery selector string.
-     * @param {boolean} [response.asterisk]
+     * @param {string} [response.asterisk]
      *   An optional CSS selector. If specified, an asterisk will be
      *   appended to the HTML inside the provided selector.
      * @param {number} [status]
