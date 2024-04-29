@@ -868,7 +868,7 @@ function _batch_append_set(&$batch, $batch_set) {
  *   redirect response was returned by the 'finished' callback, the user will
  *   be redirected to the page that started the batch. Any query arguments will
  *   be automatically persisted.
- * @param \Drupal\Core\Url $url
+ * @param \Drupal\Core\Url|null $url
  *   (optional) URL of the batch processing page. Should only be used for
  *   separate scripts like update.php.
  * @param $redirect_callback
@@ -878,7 +878,7 @@ function _batch_append_set(&$batch, $batch_set) {
  * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
  *   A redirect response if the batch is progressive. No return value otherwise.
  */
-function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = NULL) {
+function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = NULL) {
   $batch =& batch_get();
 
   if (isset($batch)) {
