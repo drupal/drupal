@@ -72,7 +72,7 @@ class ProfileFieldTranslationTest extends MigrateSqlSourceTestBase {
         ],
       ],
     ];
-    $test[0]['expected_results'] = [
+    $test[0]['expected_data'] = [
       [
         'property' => 'title',
         'translation' => "fr - I love migration.",

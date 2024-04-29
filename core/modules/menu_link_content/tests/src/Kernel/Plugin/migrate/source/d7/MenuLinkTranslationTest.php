@@ -105,7 +105,7 @@ class MenuLinkTranslationTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
-    $test[0]['expected_results'] = [
+    $test[0]['expected_data'] = [
       [
         'menu_name' => 'menu-test-menu',
         'mlid' => 130,

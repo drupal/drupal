@@ -115,7 +115,7 @@ class SubProcessWithSkipTest extends KernelTestBase {
     return [
       'skip row' => [
         'method' => 'row',
-        'expected' => [
+        'expected_data' => [
           'first' => 'something outside of sub_process',
           'second' => [
             [
@@ -127,7 +127,7 @@ class SubProcessWithSkipTest extends KernelTestBase {
       ],
       'skip process' => [
         'method' => 'process',
-        'expected' => [
+        'expected_data' => [
           'first' => 'something outside of sub_process',
           'second' => [
             [

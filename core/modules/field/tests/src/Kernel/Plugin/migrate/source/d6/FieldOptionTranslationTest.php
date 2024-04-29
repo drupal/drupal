@@ -158,7 +158,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
-    $test[0]['expected_results'] = [
+    $test[0]['expected_data'] = [
       [
         'field_name' => 'field_test_text_single_checkbox',
         'type' => 'text',
