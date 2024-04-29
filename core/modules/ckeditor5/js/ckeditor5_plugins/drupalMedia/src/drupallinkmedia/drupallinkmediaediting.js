@@ -53,7 +53,7 @@ function upcastMediaLink() {
         const linkHref = viewLink.getAttribute('href');
 
         // Missing the `href` attribute.
-        if (!linkHref) {
+        if (linkHref === null) {
           return;
         }
 
