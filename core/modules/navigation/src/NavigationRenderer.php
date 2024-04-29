@@ -2,6 +2,7 @@
 
 namespace Drupal\navigation;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -9,6 +10,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Image\ImageFactory;
@@ -19,6 +21,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Handle rendering for different pieces of the navigation.
@@ -69,6 +72,8 @@ final class NavigationRenderer {
     private ImageFactory $imageFactory,
     private FileUrlGeneratorInterface $fileUrlGenerator,
     private SectionStorageManagerInterface $sectionStorageManager,
+    private RequestStack $requestStack,
+    private ModuleExtensionList $moduleExtensionList,
   ) {}
 
   /**
@@ -118,10 +123,26 @@ final class NavigationRenderer {
       ->addCacheableDependency($this->configFactory->get('navigation.block_layout'));
     $cacheability->applyTo($build);
 
-    $build[0] += [
+    $module_path = $this->requestStack->getCurrentRequest()->getBasePath() . '/' . $this->moduleExtensionList->getPath('navigation');
+    $asset_url = $module_path . '/assets/fonts/inter-var.woff2';
+
+    $defaults = [
       '#hide_logo' => $logo_provider === self::LOGO_PROVIDER_HIDE,
       '#access' => $this->currentUser->hasPermission('access navigation'),
+      '#attached' => [
+        'html_head_link' => [
+          [
+            [
+              'rel' => 'preload',
+              'href' => $asset_url,
+              'as' => 'font',
+              'crossorigin' => 'anonymous',
+            ],
+          ],
+        ],
+      ],
     ];
+    $build[0] = NestedArray::mergeDeepArray([$build[0], $defaults]);
     $page_top['navigation'] = $build;
 
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {
@@ -148,7 +169,7 @@ final class NavigationRenderer {
    * @param array $page_top
    *   A renderable array representing the top of the page.
    *
-   * @see toolbar_page_top()
+   * @see navigation_page_top()
    * @see hook_page_top()
    */
   public function buildTopBar(array &$page_top): void {

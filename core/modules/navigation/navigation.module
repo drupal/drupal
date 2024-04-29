@@ -149,22 +149,6 @@ function navigation_block_build_local_tasks_block_alter(array &$build, BlockPlug
 }
 
 /**
- * Implements hook_preprocess_html().
- */
-function navigation_preprocess_html(&$variables) {
-  $module_path = \Drupal::request()->getBasePath() . '/' . \Drupal::service('extension.list.module')->getPath('navigation');
-  $asset_url = $module_path . '/assets/fonts/inter-var.woff2';
-  $variables['#attached']['html_head_link'][] = [
-    [
-      'rel' => 'preload',
-      'href' => $asset_url,
-      'as' => 'font',
-      'crossorigin' => 'anonymous',
-    ],
-  ];
-}
-
-/**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  *
  * Curate the blocks available in the Layout Builder "Add Block" UI.
