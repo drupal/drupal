@@ -124,6 +124,19 @@ config_schema_test.schema_data_types:
       type: sequence
       sequence:
         - type: boolean
+    sequence_bc_root:
+      type: sequence
+      sequence:
+        - type: mapping
+          mapping:
+            id:
+              type: string
+            value:
+              type: config_schema_test.sequence_bc_root.[%parent.id]
+
+config_schema_test.sequence_bc_root.*:
+  type: boolean
+  label: 'Value'
 
 config_schema_test_integer:
   type: integer

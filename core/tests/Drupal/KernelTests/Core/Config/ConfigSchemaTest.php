@@ -425,6 +425,7 @@ class ConfigSchemaTest extends KernelTestBase {
       ],
       'sequence' => [1, 0, 1],
       'sequence_bc' => [1, 0, 1],
+      'sequence_bc_root' => [['id' => 'foo', 'value' => 0], ['id' => 'bar', 'value' => 1]],
       // Not in schema and therefore should be left untouched.
       'not_present_in_schema' => TRUE,
     ];
@@ -447,6 +448,7 @@ class ConfigSchemaTest extends KernelTestBase {
       ],
       'sequence' => [TRUE, FALSE, TRUE],
       'sequence_bc' => [TRUE, FALSE, TRUE],
+      'sequence_bc_root' => [['id' => 'foo', 'value' => FALSE], ['id' => 'bar', 'value' => TRUE]],
       'not_present_in_schema' => TRUE,
     ];
 
