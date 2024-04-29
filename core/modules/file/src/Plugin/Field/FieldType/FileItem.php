@@ -33,7 +33,21 @@ use Drupal\file\Validation\FileValidatorSettingsTrait;
   default_widget: "file_generic",
   default_formatter: "file_default",
   list_class: FileFieldItemList::class,
-  constraints: ["ReferenceAccess" => [], "FileValidation" => []]
+  constraints: ["ReferenceAccess" => [], "FileValidation" => []],
+  column_groups: [
+    'target_id' => [
+      'label' => new TranslatableMarkup('File'),
+      'translatable' => TRUE,
+    ],
+    'display' => [
+      'label' => new TranslatableMarkup('Display'),
+      'translatable' => TRUE,
+    ],
+    'description' => [
+      'label' => new TranslatableMarkup('Description'),
+      'translatable' => TRUE,
+    ],
+  ],
 )]
 class FileItem extends EntityReferenceItem {
 
