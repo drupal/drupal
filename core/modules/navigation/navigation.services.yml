@@ -12,6 +12,8 @@ services:
         '@image.factory',
         '@file_url_generator',
         '@plugin.manager.layout_builder.section_storage',
+        '@request_stack',
+        '@extension.list.module'
       ]
   Drupal\navigation\NavigationRenderer: '@navigation.renderer'
 
