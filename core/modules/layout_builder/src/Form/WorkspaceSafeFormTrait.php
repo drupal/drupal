@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\layout_builder\Form;
 
+use Drupal\Core\Entity\Form\WorkspaceSafeFormTrait as EntityWorkspaceSafeFormTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\layout_builder\SectionStorageInterface;
-use Drupal\workspaces\WorkspaceInformationInterface;
 
 /**
  * Provides a trait that marks Layout Builder forms as workspace-safe.
  */
 trait WorkspaceSafeFormTrait {
 
-  /**
-   * The workspace information service.
-   */
-  protected ?WorkspaceInformationInterface $workspaceInfo = NULL;
+  use EntityWorkspaceSafeFormTrait;
 
   /**
    * Determines whether the current form is safe to be submitted in a workspace.
@@ -35,13 +32,9 @@ trait WorkspaceSafeFormTrait {
       $context_definitions = $section_storage->getContextDefinitions();
       if (!empty($context_definitions['entity'])) {
         /** @var \Drupal\Core\Entity\EntityInterface $entity */
-        $entity = $section_storage->getContext('entity')->getContextValue();
-        $supported = $entity && $this->getWorkspaceInfo()->isEntitySupported($entity);
-        $ignored = $entity && $this->getWorkspaceInfo()->isEntityIgnored($entity);
+        $entity = $section_storage->getContextValue('entity');
 
-        if ($supported || $ignored) {
-          return TRUE;
-        }
+        return $this->isWorkspaceSafeEntity($entity);
       }
     }
 
@@ -65,20 +58,6 @@ trait WorkspaceSafeFormTrait {
     }
 
     return NULL;
-  }
-
-  /**
-   * Retrieves the workspace information service.
-   *
-   * @return \Drupal\workspaces\WorkspaceInformationInterface
-   *   The workspace information service.
-   */
-  protected function getWorkspaceInfo(): WorkspaceInformationInterface {
-    if (!$this->workspaceInfo) {
-      $this->workspaceInfo = \Drupal::service('workspaces.information');
-    }
-
-    return $this->workspaceInfo;
   }
 
 }

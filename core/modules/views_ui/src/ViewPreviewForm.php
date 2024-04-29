@@ -3,6 +3,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Url;
 
 /**
@@ -10,7 +11,7 @@ use Drupal\Core\Url;
  *
  * @internal
  */
-class ViewPreviewForm extends ViewFormBase {
+class ViewPreviewForm extends ViewFormBase implements WorkspaceSafeFormInterface {
 
   /**
    * {@inheritdoc}

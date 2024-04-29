@@ -6,6 +6,8 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
@@ -109,6 +111,13 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
       $has_form = FALSE;
       if (method_exists($field, 'viewsForm')) {
         $field->viewsForm($form, $form_state);
+
+        // Allow the views form to determine whether it's safe to be submitted
+        // in a workspace.
+        $workspace_safe = $field instanceof WorkspaceSafeFormInterface
+          || ($field instanceof WorkspaceDynamicSafeFormInterface && $field->isWorkspaceSafeForm($form, $form_state));
+        $form_state->set('workspace_safe', $workspace_safe);
+
         $has_form = TRUE;
       }
 
