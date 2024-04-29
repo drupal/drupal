@@ -436,6 +436,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+    _TARGET_PHP: "8.3-ubuntu"
   # Run on MRs if config schema files have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -465,9 +466,9 @@ default:
     - git checkout -f $CI_MERGE_REQUEST_DIFF_BASE_SHA
     # Composer-install Drush & the Config Inspector module.
     - composer require drush/drush drupal/config_inspector || exit 100
-    # Install Drupal's Standard install profile + all core modules + the config inspector module.
+    # Install Drupal's Standard install profile + all core modules (except obsolete ones) + the config inspector module.
     - php core/scripts/drupal install standard
-    - ls core/modules | grep -v help_topics | xargs vendor/bin/drush pm:install --yes
+    - ls core/modules | grep -v sdc | xargs vendor/bin/drush pm:install --yes
     - vendor/bin/drush pm:install config_inspector --yes --quiet || exit 101
     # Compute statistics for coverage of validatable config for HEAD.
     - vendor/bin/drush config:inspect --statistics > HEAD.json

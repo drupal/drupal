@@ -674,7 +674,7 @@ field.value.string:
       type: label
       label: 'Value'
 
-# Schema for the configuration of the  String (long) field type.
+# Schema for the configuration of the String (long) field type.
 
 field.storage_settings.string_long:
   type: mapping
