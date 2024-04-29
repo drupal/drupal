@@ -989,13 +989,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   }
 
   /**
-   * Stops test execution.
-   */
-  protected function stop() {
-    $this->getTestResultObject()->stop();
-  }
-
-  /**
    * Dumps the current state of the virtual filesystem to STDOUT.
    */
   protected function vfsDump() {
