@@ -4,7 +4,7 @@
  * Toolbar button styles.
  */
 
-@import "../base/media-queries.pcss.css";
+@import '../base/media-queries.pcss.css';
 
 :root {
   --toolbar-button-outline-offset: 0;
@@ -33,7 +33,7 @@
   border-radius: var(--admin-toolbar-space-8);
   background-color: transparent;
   font-size: var(--admin-toolbar-font-size-info-sm);
-  font-variation-settings: "wght" 700;
+  font-variation-settings: 'wght' 700;
   line-height: var(--admin-toolbar-line-height-info-sm);
   gap: calc(0.5 * var(--admin-toolbar-rem));
 
@@ -145,7 +145,7 @@
 }
 
 .toolbar-button--weight--400 {
-  font-variation-settings: "wght" 400;
+  font-variation-settings: 'wght' 400;
 }
 
 /* Set 0 specificity */
@@ -168,7 +168,7 @@
     mask-position: center center;
     mask-image: url(../../assets/icons/chevron.svg);
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
       transform: rotate(180deg);
     }
 
@@ -179,7 +179,7 @@
 }
 
 .toolbar-button--expand--down,
-[dir="rtl"] .toolbar-button--expand--down {
+[dir='rtl'] .toolbar-button--expand--down {
   &::after {
     transform: rotate(90deg);
 
@@ -191,6 +191,11 @@
   &[aria-expanded='true'] {
     &::after {
       transform: rotate(-90deg);
+    }
+    &:focus,
+    &:hover {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
     }
   }
 }
@@ -296,6 +301,8 @@ html:not([data-admin-toolbar='expanded']) {
 }
 
 /* Hides button's label while transitioning. */
-html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] .toolbar-button--collapsible .toolbar-button__label {
+html[data-admin-toolbar-animating][data-admin-toolbar='expanded']
+  .toolbar-button--collapsible
+  .toolbar-button__label {
   display: none;
 }
