@@ -1,8 +1,6 @@
 core.menu.static_menu_link_overrides:
   type: config_object
   label: 'Static menu link overrides'
-  constraints:
-    FullyValidatable: ~
   mapping:
     definitions:
       type: sequence
@@ -14,22 +12,9 @@ core.menu.static_menu_link_overrides:
           menu_name:
             type: string
             label: 'Menu name'
-            # This is the id of system.menu.* config.
-            # @see core/modules/system/config/schema/system.schema.yml
-            ConfigExists:
-              prefix: 'system.menu.'
           parent:
             type: string
             label: 'Parent'
-            # Menu link plugins specify the empty string if there is no parent. But the empty string is not a valid menu
-            # link plugin ID. In this config representation, "no parent" is therefore represented as `null`, not `''`.
-            # @see \Drupal\Core\Menu\MenuLinkInterface::getParent()
-            # @see \Drupal\Core\Menu\StaticMenuLinkOverrides::saveOverride()
-            nullable: true
-            constraints:
-              PluginExists:
-                manager: plugin.manager.menu.link
-                interface: 'Drupal\Core\Menu\MenuLinkInterface'
           weight:
             type: weight
             label: 'Weight'
