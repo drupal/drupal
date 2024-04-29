@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\State;
 
-use Drupal\Core\Asset\AssetQueryString;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
@@ -22,12 +21,7 @@ class State extends CacheCollector implements StateInterface {
    *
    * @var array
    */
-  private static array $deprecatedState = [
-    'system.css_js_query_string' => [
-      'replacement' => AssetQueryString::STATE_KEY,
-      'message' => 'The \'system.css_js_query_string\' state is deprecated in drupal:10.2.0. Use \Drupal\Core\Asset\AssetQueryStringInterface::get() and ::reset() instead. See https://www.drupal.org/node/3358337.',
-    ],
-  ];
+  private static array $deprecatedState = [];
 
   /**
    * The key value store to use.

@@ -14,46 +14,20 @@ use Drupal\Core\Site\Settings;
 class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
 
   /**
-   * The private key service.
-   *
-   * @var \Drupal\Core\PrivateKey
-   */
-  protected $privateKey;
-
-  /**
-   * The cache backend interface to use for the static cache.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $static;
-
-  /**
-   * The access policy processor.
-   *
-   * @var \Drupal\Core\Session\AccessPolicyProcessorInterface
-   */
-  protected $processor;
-
-  /**
    * Constructs a PermissionsHashGenerator object.
    *
-   * @param \Drupal\Core\PrivateKey $private_key
+   * @param \Drupal\Core\PrivateKey $privateKey
    *   The private key service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $static
    *   The cache backend interface to use for the static cache.
-   * @param \Drupal\Core\Session\AccessPolicyProcessorInterface|\Drupal\Core\Cache\CacheBackendInterface $processor
+   * @param \Drupal\Core\Session\AccessPolicyProcessorInterface $processor
    *   The access policy processor.
    */
-  public function __construct(PrivateKey $private_key, CacheBackendInterface $static, AccessPolicyProcessorInterface|CacheBackendInterface $processor) {
-    $this->privateKey = $private_key;
-    if ($processor instanceof CacheBackendInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $processor argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3402110', E_USER_DEPRECATED);
-      $this->static = $processor;
-      $this->processor = \Drupal::service('access_policy_processor');
-      return;
-    }
-    $this->static = $static;
-    $this->processor = $processor;
+  public function __construct(
+    protected PrivateKey $privateKey,
+    protected CacheBackendInterface $static,
+    protected AccessPolicyProcessorInterface $processor,
+  ) {
   }
 
   /**
@@ -98,25 +72,6 @@ class PermissionsHashGenerator implements PermissionsHashGeneratorInterface {
 
     $this->static->set($cid, $hash, Cache::PERMANENT, $calculated_permissions->getCacheTags());
     return $hash;
-  }
-
-  /**
-   * Generates a hash that uniquely identifies the user's permissions.
-   *
-   * @param string[] $roles
-   *   The user's roles.
-   *
-   * @return string
-   *   The permissions hash.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/3435842
-   */
-  protected function doGenerate(array $roles) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3435842', E_USER_DEPRECATED);
-    return '';
   }
 
   /**
