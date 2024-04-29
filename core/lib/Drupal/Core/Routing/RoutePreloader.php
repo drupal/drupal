@@ -18,20 +18,6 @@ use Symfony\Component\Routing\Route;
 class RoutePreloader implements EventSubscriberInterface {
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface|\Drupal\Core\Routing\PreloadableRouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The state key value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Contains the non-admin routes while rebuilding the routes.
    *
    * @var array
@@ -41,17 +27,15 @@ class RoutePreloader implements EventSubscriberInterface {
   /**
    * Constructs a new RoutePreloader.
    *
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(RouteProviderInterface $route_provider, StateInterface $state) {
-    $this->routeProvider = $route_provider;
-    $this->state = $state;
-    if (func_num_args() > 2) {
-      @trigger_error(sprintf('Passing a cache bin to %s is deprecated in drupal:10.3.0 and will be removed before drupal:11.0.0. Caching is now managed by the state service. See https://www.drupal.org/node/3177901', __METHOD__), E_USER_DEPRECATED);
-    }
+  public function __construct(
+    protected RouteProviderInterface $routeProvider,
+    protected StateInterface $state,
+  ) {
   }
 
   /**

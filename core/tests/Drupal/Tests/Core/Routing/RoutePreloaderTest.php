@@ -176,12 +176,4 @@ class RoutePreloaderTest extends UnitTestCase {
     $this->preloader->onRequest($event);
   }
 
-  /**
-   * @group legacy
-   */
-  public function testConstructorDeprecation() {
-    $this->expectDeprecation('Passing a cache bin to Drupal\Core\Routing\RoutePreloader::__construct is deprecated in drupal:10.3.0 and will be removed before drupal:11.0.0. Caching is now managed by the state service. See https://www.drupal.org/node/3177901');
-    new RoutePreloader($this->routeProvider, $this->state, $this->createMock('Drupal\Core\Cache\CacheBackendInterface'));
-  }
-
 }
