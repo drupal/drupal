@@ -350,6 +350,34 @@ details.fieldset-no-legend {
   background: none repeat scroll 0 0 transparent;
   font-weight: normal;
 }
+
+/* JS moves Views action buttons under a secondary tabs container, which causes
+a large layout shift. We mitigate this by using animations to temporarily hide
+the buttons, but they will appear after a set amount of time just in case the JS
+is loaded but does not properly run. */
+@media (scripting: enabled) {
+  .views-tabs__action-list-button:not(.views-tabs--secondary *) {
+    animation-name: appear;
+    animation-duration: 0.1s;
+    /* Buttons will be hidden for the amount of time in the animation-delay if
+    not moved. Note this is the approximate time to download the views
+    aggregate CSS with slow 3G. */
+    animation-delay: 5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: backwards;
+  }
+}
+
+@keyframes appear {
+  from {
+    display: none;
+  }
+
+  to {
+    display: unset;
+  }
+}
+
 /* RTL required for precedence over core's styles. */
 [dir="rtl"] .views-tabs__action-list-button {
   margin: 0;
