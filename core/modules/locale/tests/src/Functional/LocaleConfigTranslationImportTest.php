@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\locale\Locale;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests translation update's effects on configuration translations.
@@ -233,7 +232,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $string = $locale_storage->findString(['source' => 'Locale can translate']);
     \Drupal::service('locale.storage')->delete($string);
     // Force a rebuild of config translations.
-    $count = Locale::config()->updateConfigTranslations(['locale_test_translate.settings'], ['af']);
+    $count = \Drupal::service('locale.config_manager')->updateConfigTranslations(['locale_test_translate.settings'], ['af']);
     $this->assertEquals(1, $count, 'Correct count of updated translations');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
