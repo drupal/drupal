@@ -4,16 +4,16 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin;
 
-use Drupal\ckeditor5\Annotation\CKEditor5Plugin;
+use Drupal\ckeditor5\Attribute\CKEditor5Plugin;
 use Drupal\ckeditor5\HTMLRestrictions;
-use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
 use Drupal\Component\Assertion\Inspector;
+use Drupal\Component\Plugin\Discovery\AttributeBridgeDecorator;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
+use Drupal\Core\Plugin\Discovery\AttributeDiscoveryWithAnnotations;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
 use Drupal\editor\EditorInterface;
@@ -46,7 +46,14 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/CKEditor5Plugin', $namespaces, $module_handler, CKEditor5PluginInterface::class, CKEditor5Plugin::class);
+    parent::__construct(
+      'Plugin/CKEditor5Plugin',
+      $namespaces,
+      $module_handler,
+      CKEditor5PluginInterface::class,
+      CKEditor5Plugin::class,
+      '\Drupal\ckeditor5\Annotation\CKEditor5Plugin',
+    );
 
     $this->alterInfo('ckeditor5_plugin_info');
     $this->setCacheBackend($cache_backend, 'ckeditor5_plugins');
@@ -57,12 +64,12 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
    */
   protected function getDiscovery() {
     if (!$this->discovery) {
-      $discovery = new AnnotatedClassDiscovery($this->subdir, $this->namespaces, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
+      $discovery = new AttributeDiscoveryWithAnnotations($this->subdir, $this->namespaces, $this->pluginDefinitionAttributeName, $this->pluginDefinitionAnnotationName, $this->additionalAnnotationNamespaces);
       $discovery = new YamlDiscoveryDecorator($discovery, 'ckeditor5', $this->moduleHandler->getModuleDirectories());
       // Note: adding translatable properties here is impossible because it only
       // supports top-level properties.
       // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::label()
-      $discovery = new AnnotationBridgeDecorator($discovery, $this->pluginDefinitionAnnotationName);
+      $discovery = new AttributeBridgeDecorator($discovery, $this->pluginDefinitionAttributeName);
       $discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
       $this->discovery = $discovery;
     }
