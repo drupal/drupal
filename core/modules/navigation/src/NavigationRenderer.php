@@ -18,7 +18,6 @@ use Drupal\Core\Menu\LocalTaskManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -67,7 +66,6 @@ final class NavigationRenderer {
     private ModuleHandlerInterface $moduleHandler,
     private RouteMatchInterface $routeMatch,
     private LocalTaskManagerInterface $localTaskManager,
-    private AccountInterface $currentUser,
     private EntityTypeManagerInterface $entityTypeManager,
     private ImageFactory $imageFactory,
     private FileUrlGeneratorInterface $fileUrlGenerator,
@@ -128,7 +126,6 @@ final class NavigationRenderer {
 
     $defaults = [
       '#hide_logo' => $logo_provider === self::LOGO_PROVIDER_HIDE,
-      '#access' => $this->currentUser->hasPermission('access navigation'),
       '#attached' => [
         'html_head_link' => [
           [
@@ -173,6 +170,10 @@ final class NavigationRenderer {
    * @see hook_page_top()
    */
   public function buildTopBar(array &$page_top): void {
+    if (!$this->moduleHandler->moduleExists('navigation_top_bar')) {
+      return;
+    }
+
     $page_top['top_bar'] = [
       '#theme' => 'top_bar',
       '#attached' => [
@@ -186,12 +187,7 @@ final class NavigationRenderer {
           'user.permissions',
         ],
       ],
-      '#access' => $this->currentUser->hasPermission('access navigation'),
     ];
-
-    if (!$this->moduleHandler->moduleExists('navigation_top_bar')) {
-      return;
-    }
 
     // Local tasks for content entities.
     if ($this->hasLocalTasks()) {

@@ -7,7 +7,6 @@ services:
         '@module_handler',
         '@current_route_match',
         '@plugin.manager.menu.local_task',
-        '@current_user',
         '@entity_type.manager',
         '@image.factory',
         '@file_url_generator',

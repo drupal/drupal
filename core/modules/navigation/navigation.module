@@ -42,6 +42,10 @@ function navigation_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_page_top().
  */
 function navigation_page_top(array &$page_top) {
+  if (!\Drupal::currentUser()->hasPermission('access navigation')) {
+    return;
+  }
+
   $navigation_renderer = \Drupal::service('navigation.renderer');
   assert($navigation_renderer instanceof NavigationRenderer);
   $navigation_renderer->removeToolbar($page_top);
