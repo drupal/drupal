@@ -38,23 +38,6 @@ const ERROR_REPORTING_DISPLAY_VERBOSE = 'verbose';
 const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
 
 /**
- * Time of the current request in seconds elapsed since the Unix Epoch.
- *
- * This differs from $_SERVER['REQUEST_TIME'], which is stored as a float
- * since PHP 5.4.0. Float timestamps confuse most PHP functions
- * (including date_create()).
- *
- * @see http://php.net/manual/reserved.variables.server.php
- * @see http://php.net/manual/function.time.php
- *
- * @deprecated in drupal:8.3.0 and is removed from drupal:11.0.0.
- *   Use \Drupal::time()->getRequestTime();
- *
- * @see https://www.drupal.org/node/2785211
- */
-define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
-
-/**
  * Defines the root directory of the Drupal installation.
  *
  * This strips two levels of directories off the current directory.

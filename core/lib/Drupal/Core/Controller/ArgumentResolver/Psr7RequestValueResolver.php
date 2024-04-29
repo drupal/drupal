@@ -32,19 +32,6 @@ final class Psr7RequestValueResolver implements ValueResolverInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0.
-   *    There is no replacement.
-   *
-   * @see https://www.drupal.org/node/3383585
-   */
-  public function supports(Request $request, ArgumentMetadata $argument): bool {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3383585', E_USER_DEPRECATED);
-    return $argument->getType() == ServerRequestInterface::class;
-  }
-
-  /**
-   * {@inheritdoc}
    */
   public function resolve(Request $request, ArgumentMetadata $argument): array {
     return $argument->getType() === ServerRequestInterface::class ? [$this->httpMessageFactory->createRequest($request)] : [];

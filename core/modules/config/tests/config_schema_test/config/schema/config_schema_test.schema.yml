@@ -119,11 +119,6 @@ config_schema_test.schema_data_types:
       type: sequence
       sequence:
         type: boolean
-    # @see \Drupal\Core\Config\Schema\Sequence::getElementDefinition()
-    sequence_bc:
-      type: sequence
-      sequence:
-        - type: boolean
 
 config_schema_test_integer:
   type: integer

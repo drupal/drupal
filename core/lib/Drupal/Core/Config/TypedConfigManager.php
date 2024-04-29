@@ -390,51 +390,6 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   }
 
   /**
-   * Replaces dynamic type expressions in configuration type.
-   *
-   * @param string $name
-   *   Configuration type, potentially with expressions in square brackets.f
-   * @param array $data
-   *   Configuration data for the element.
-   *
-   * @return string
-   *   Configuration type name with all expressions resolved.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\Config\Schema\TypeResolver::resolveDynamicTypeName::resolveDynamicTypeName()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3408266
-   */
-  protected function replaceName($name, $data) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::resolveDynamicTypeName() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
-    return TypeResolver::resolveDynamicTypeName($name, $data);
-  }
-
-  /**
-   * Resolves a dynamic type expression using configuration data.
-   *
-   * @param string $value
-   *   Expression to be resolved.
-   * @param array $data
-   *   Configuration data for the element.
-   *
-   * @return string
-   *   The value the expression resolves to, or the given expression if it
-   *   cannot be resolved.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\Config\Schema\TypeResolver::resolveDynamicTypeName::resolveExpression()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3408266
-   */
-  protected function replaceVariable($value, $data) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::resolveExpression() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
-    return TypeResolver::resolveExpression($value, $data);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function hasConfigSchema($name) {
@@ -473,50 +428,6 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     $definition = $this->getDefinition($config_name);
     $data_definition = $this->buildDataDefinition($definition, $config_data);
     return $this->create($data_definition, $config_data, $config_name);
-  }
-
-  /**
-   * Resolves a dynamic type name.
-   *
-   * @param string $type
-   *   Configuration type, potentially with expressions in square brackets.
-   * @param array $data
-   *   Configuration data for the element.
-   *
-   * @return string
-   *   Configuration type name with all expressions resolved.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\Config\Schema\TypeResolver::resolveDynamicTypeName()
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/3413264
-   */
-  protected function resolveDynamicTypeName(string $type, array $data): string {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::' . __FUNCTION__ . '() instead. See https://www.drupal.org/node/3413264', E_USER_DEPRECATED);
-    return TypeResolver::resolveDynamicTypeName($type, $data);
-  }
-
-  /**
-   * Resolves a dynamic expression.
-   *
-   * @param string $expression
-   *   Expression to be resolved.
-   * @param array|\Drupal\Core\TypedData\TypedDataInterface $data
-   *   Configuration data for the element.
-   *
-   * @return string
-   *   The value the expression resolves to, or the given expression if it
-   *   cannot be resolved.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\Config\Schema\TypeResolver::resolveExpression() instead.
-   *
-   * @see https://www.drupal.org/node/3413264
-   */
-  protected function resolveExpression(string $expression, array $data): string {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::' . __FUNCTION__ . '() instead. See https://www.drupal.org/node/3413264', E_USER_DEPRECATED);
-    return TypeResolver::resolveExpression($expression, $data);
   }
 
 }

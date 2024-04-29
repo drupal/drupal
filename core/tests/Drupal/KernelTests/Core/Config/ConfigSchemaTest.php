@@ -402,8 +402,6 @@ class ConfigSchemaTest extends KernelTestBase {
 
   /**
    * Tests configuration value data type enforcement using schemas.
-   *
-   * @group legacy
    */
   public function testConfigSaveWithSchema() {
     $untyped_values = [
@@ -424,10 +422,10 @@ class ConfigSchemaTest extends KernelTestBase {
         'string' => 1,
       ],
       'sequence' => [1, 0, 1],
-      'sequence_bc' => [1, 0, 1],
       // Not in schema and therefore should be left untouched.
       'not_present_in_schema' => TRUE,
     ];
+
     $untyped_to_typed = $untyped_values;
 
     $typed_values = [
@@ -446,12 +444,10 @@ class ConfigSchemaTest extends KernelTestBase {
         'string' => '1',
       ],
       'sequence' => [TRUE, FALSE, TRUE],
-      'sequence_bc' => [TRUE, FALSE, TRUE],
       'not_present_in_schema' => TRUE,
     ];
 
     // Save config which has a schema that enforces types.
-    $this->expectDeprecation("The definition for the 'config_schema_test.schema_data_types.sequence_bc' sequence declares the type of its items in a way that is deprecated in drupal:8.0.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/2442603");
     $this->config('config_schema_test.schema_data_types')
       ->setData($untyped_to_typed)
       ->save();

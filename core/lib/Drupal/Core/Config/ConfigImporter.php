@@ -201,7 +201,7 @@ class ConfigImporter {
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme) {
     $this->moduleExtensionList = $extension_list_module;
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;
@@ -212,10 +212,6 @@ class ConfigImporter {
     $this->moduleInstaller = $module_installer;
     $this->themeHandler = $theme_handler;
     $this->stringTranslation = $string_translation;
-    if ($extension_list_theme === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $extension_list_theme argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3284397', E_USER_DEPRECATED);
-      $extension_list_theme = \Drupal::service('extension.list.theme');
-    }
     $this->themeExtensionList = $extension_list_theme;
     foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
       $this->processedConfiguration[$collection] = $this->storageComparer->getEmptyChangelist();

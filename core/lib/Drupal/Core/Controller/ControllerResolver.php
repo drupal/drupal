@@ -2,9 +2,7 @@
 
 namespace Drupal\Core\Controller;
 
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Utility\CallableResolver;
-use Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,19 +20,10 @@ class ControllerResolver implements ControllerResolverInterface {
   /**
    * Constructs a new ControllerResolver.
    *
-   * @param \Drupal\Core\Utility\CallableResolver|\Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface $callableResolver
+   * @param \Drupal\Core\Utility\CallableResolver $callableResolver
    *   The callable resolver.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface|null $class_resolver
-   *   The class resolver.
    */
-  public function __construct(protected CallableResolver|HttpMessageFactoryInterface $callableResolver, ClassResolverInterface $class_resolver = NULL) {
-    if ($callableResolver instanceof HttpMessageFactoryInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $http_message_factory argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3353869', E_USER_DEPRECATED);
-      $this->callableResolver = \Drupal::service("callable_resolver");
-    }
-    if ($class_resolver !== NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $class_resolver argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3353869', E_USER_DEPRECATED);
-    }
+  public function __construct(protected CallableResolver $callableResolver) {
   }
 
   /**
