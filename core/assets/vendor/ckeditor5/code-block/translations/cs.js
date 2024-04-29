@@ -1,1 +1,1 @@
-!function(o){const t=o.cs=o.cs||{};t.dictionary=Object.assign(t.dictionary||{},{"Insert code block":"Vložit blok zdrojového kódu","Plain text":"Prostý text"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(o){const t=o.cs=o.cs||{};t.dictionary=Object.assign(t.dictionary||{},{"Code block":"Blok kódu","Insert code block":"Vložit blok zdrojového kódu","Plain text":"Prostý text"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

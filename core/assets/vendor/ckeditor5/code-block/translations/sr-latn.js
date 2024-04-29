@@ -1,1 +1,1 @@
-!function(n){const t=n["sr-latn"]=n["sr-latn"]||{};t.dictionary=Object.assign(t.dictionary||{},{"Insert code block":"Dodaj blok koda","Plain text":"Običan tekst"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const o=n["sr-latn"]=n["sr-latn"]||{};o.dictionary=Object.assign(o.dictionary||{},{"Code block":"","Insert code block":"Dodaj blok koda","Plain text":"Običan tekst"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,1 +1,1 @@
-!function(n){const c=n.ca=n.ca||{};c.dictionary=Object.assign(c.dictionary||{},{Source:"Font"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(o){const n=o.ca=o.ca||{};n.dictionary=Object.assign(n.dictionary||{},{"Show source":"Mostrar la font",Source:"Font"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

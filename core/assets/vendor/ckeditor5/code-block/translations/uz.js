@@ -1,1 +1,1 @@
-!function(i){const n=i.uz=i.uz||{};n.dictionary=Object.assign(n.dictionary||{},{"Insert code block":"Kodni kiritish","Plain text":"Oddiy matn"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(i){const n=i.uz=i.uz||{};n.dictionary=Object.assign(n.dictionary||{},{"Code block":"","Insert code block":"Kodni kiritish","Plain text":"Oddiy matn"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

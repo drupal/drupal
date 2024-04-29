@@ -1,1 +1,1 @@
-!function(n){const i=n.hu=n.hu||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"Kód blokk beszúrása","Plain text":"Egyszerű szöveg"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(o){const n=o.hu=o.hu||{};n.dictionary=Object.assign(n.dictionary||{},{"Code block":"Kódblokk","Insert code block":"Kód blokk beszúrása","Plain text":"Egyszerű szöveg"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

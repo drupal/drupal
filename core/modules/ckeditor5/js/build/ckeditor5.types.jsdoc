@@ -1313,6 +1313,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-image/src/imageupload/imageuploadui.js
+ *
+ * @typedef {module:image/imageupload/imageuploadui} module:image/imageupload/imageuploadui~ImageUploadUI
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-image/src/imageupload/uploadimagecommand.js
  *
  * @typedef {module:image/imageupload/uploadimagecommand} module:image/imageupload/uploadimagecommand~UploadImageCommand
@@ -2213,6 +2219,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/button/filedialogbuttonview.js
+ *
+ * @typedef {module:ui/button/filedialogbuttonview} module:ui/button/filedialogbuttonview~FileDialogButtonView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/button/switchbuttonview.js
  *
  * @typedef {module:ui/button/switchbuttonview} module:ui/button/switchbuttonview~SwitchButtonView
@@ -2441,6 +2453,24 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/menubar/menubarmenubuttonview.js
+ *
+ * @typedef {module:ui/menubar/menubarmenubuttonview} module:ui/menubar/menubarmenubuttonview~MenuBarMenuButtonView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/menubar/menubarmenuview.js
+ *
+ * @typedef {module:ui/menubar/menubarmenuview} module:ui/menubar/menubarmenuview~MenuBarMenuView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/menubar/menubarview.js
+ *
+ * @typedef {module:ui/menubar/menubarview} module:ui/menubar/menubarview~MenuBarView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/model.js
  *
  * @typedef {module:ui/model} module:ui/model~Model
@@ -2624,12 +2654,6 @@
  * Declared in file @ckeditor/ckeditor5-upload/src/filerepository.js
  *
  * @typedef {module:upload/filerepository} module:upload/filerepository~FileRepository
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-upload/src/ui/filedialogbuttonview.js
- *
- * @typedef {module:upload/ui/filedialogbuttonview} module:upload/ui/filedialogbuttonview~FileDialogButtonView
  */
 
 /**

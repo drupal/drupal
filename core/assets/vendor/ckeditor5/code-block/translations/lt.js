@@ -1,1 +1,1 @@
-!function(t){const i=t.lt=t.lt||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"Įterpti codų bloką","Plain text":"Paprastasis tekstas"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(t){const o=t.lt=t.lt||{};o.dictionary=Object.assign(o.dictionary||{},{"Code block":"Kodų blokas","Insert code block":"Įterpti codų bloką","Plain text":"Paprastasis tekstas"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

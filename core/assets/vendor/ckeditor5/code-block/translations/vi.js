@@ -1,1 +1,1 @@
-!function(n){const i=n.vi=n.vi||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"Chèn khối mã","Plain text":"Văn bản thuần"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const i=n.vi=n.vi||{};i.dictionary=Object.assign(i.dictionary||{},{"Code block":"Khối mã","Insert code block":"Chèn khối mã","Plain text":"Văn bản thuần"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

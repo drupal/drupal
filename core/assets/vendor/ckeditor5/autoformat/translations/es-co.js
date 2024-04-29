@@ -1,0 +1,1 @@
+!function(o){const t=o["es-co"]=o["es-co"]||{};t.dictionary=Object.assign(t.dictionary||{},{"Revert autoformatting action":"Revertir la acción de formato automático"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
