@@ -31,7 +31,8 @@ class WebDriverTestBaseTest extends UnitTestCase {
     $this->putEnv("MINK_DRIVER_ARGS_WEBDRIVER", $mink_driver_args_webdriver);
     $this->putEnv("MINK_DRIVER_ARGS", $mink_driver_args);
 
-    $object = $this->getMockForAbstractClass(WebDriverTestBase::class);
+    $object = new class('test') extends WebDriverTestBase {
+    };
     $method = new \ReflectionMethod($object, 'getMinkDriverArgs');
     $this->assertSame($expected, $method->invoke($object));
   }
@@ -67,7 +68,8 @@ class WebDriverTestBaseTest extends UnitTestCase {
     $this->expectDeprecation('The "chromeOptions" array key is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use "goog:chromeOptions instead. See https://www.drupal.org/node/3422624');
     putenv('MINK_DRIVER_ARGS_WEBDRIVER=["chrome",{"browserName":"chrome","chromeOptions":{"args":["--headless"]}},"http://localhost:4444"]');
 
-    $object = $this->getMockForAbstractClass(WebDriverTestBase::class);
+    $object = new class('test') extends WebDriverTestBase {
+    };
     $method = new \ReflectionMethod($object, 'getMinkDriverArgs');
     $this->assertSame('["chrome",{"browserName":"chrome","goog:chromeOptions":{"args":["--headless"],"w3c":false}},"http:\\/\\/localhost:4444"]', $method->invoke($object));
   }

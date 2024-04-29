@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Config\Entity;
 
+use Drupal\Core\Entity\EntityDisplayBase;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityDisplayBase
@@ -14,53 +16,79 @@ use Drupal\Tests\UnitTestCase;
 class EntityDisplayBaseTest extends UnitTestCase {
 
   /**
+   * The mocked EntityDisplay object for testing.
+   */
+  protected EntityDisplayBaseMockableClass&MockObject $entityDisplay;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->entityDisplay = $this->getMockBuilder(EntityDisplayBaseMockableClass::class)
+      ->disableOriginalConstructor()
+      ->onlyMethods([])
+      ->getMock();
+  }
+
+  /**
    * @covers ::getTargetEntityTypeId
    */
   public function testGetTargetEntityTypeId() {
-    $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
-    $reflection = new \ReflectionProperty($mock, 'targetEntityType');
-    $reflection->setValue($mock, 'test');
-    $this->assertEquals('test', $mock->getTargetEntityTypeId());
+    $reflection = new \ReflectionProperty($this->entityDisplay, 'targetEntityType');
+    $reflection->setValue($this->entityDisplay, 'test');
+    $this->assertEquals('test', $this->entityDisplay->getTargetEntityTypeId());
   }
 
   /**
    * @covers ::getMode
    */
   public function testGetMode() {
-    $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
-    $reflection = new \ReflectionProperty($mock, 'mode');
-    $reflection->setValue($mock, 'test');
-    $this->assertEquals('test', $mock->getMode());
+    $reflection = new \ReflectionProperty($this->entityDisplay, 'mode');
+    $reflection->setValue($this->entityDisplay, 'test');
+    $this->assertEquals('test', $this->entityDisplay->getMode());
   }
 
   /**
    * @covers ::getOriginalMode
    */
   public function testGetOriginalMode() {
-    $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
-    $reflection = new \ReflectionProperty($mock, 'originalMode');
-    $reflection->setValue($mock, 'test');
-    $this->assertEquals('test', $mock->getOriginalMode());
+    $reflection = new \ReflectionProperty($this->entityDisplay, 'originalMode');
+    $reflection->setValue($this->entityDisplay, 'test');
+    $this->assertEquals('test', $this->entityDisplay->getOriginalMode());
   }
 
   /**
    * @covers ::getTargetBundle
    */
   public function testGetTargetBundle() {
-    $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
-    $reflection = new \ReflectionProperty($mock, 'bundle');
-    $reflection->setValue($mock, 'test');
-    $this->assertEquals('test', $mock->getTargetBundle());
+    $reflection = new \ReflectionProperty($this->entityDisplay, 'bundle');
+    $reflection->setValue($this->entityDisplay, 'test');
+    $this->assertEquals('test', $this->entityDisplay->getTargetBundle());
   }
 
   /**
    * @covers ::setTargetBundle
    */
   public function testSetTargetBundle() {
-    $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
-    $reflection = new \ReflectionProperty($mock, 'bundle');
-    $mock->setTargetBundle('test');
-    $this->assertEquals('test', $reflection->getValue($mock));
+    $reflection = new \ReflectionProperty($this->entityDisplay, 'bundle');
+    $this->entityDisplay->setTargetBundle('test');
+    $this->assertEquals('test', $reflection->getValue($this->entityDisplay));
+  }
+
+}
+
+/**
+ * A class extending EntityDisplayBase for testing purposes.
+ */
+class EntityDisplayBaseMockableClass extends EntityDisplayBase {
+
+  public function getPluginCollections() {
+    return [];
+  }
+
+  public function getRenderer($field_name) {
+    return NULL;
   }
 
 }
