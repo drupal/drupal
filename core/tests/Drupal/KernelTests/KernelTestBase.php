@@ -1007,8 +1007,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
   /**
    * Stops test execution.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3444223
    */
   protected function stop() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3444223', E_USER_DEPRECATED);
     $this->getTestResultObject()->stop();
   }
 
