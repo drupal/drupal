@@ -36,6 +36,7 @@ class Search extends ArgumentPluginBase {
   /**
    * The search score.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public string $search_score;
 
   /**

@@ -22,6 +22,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $allowed_methods;
 
   /**
@@ -31,6 +32,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $allowed_prefixes;
 
   /**
@@ -38,6 +40,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $allowed_classes;
 
   /**

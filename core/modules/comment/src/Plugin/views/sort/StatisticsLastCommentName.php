@@ -16,11 +16,13 @@ class StatisticsLastCommentName extends SortPluginBase {
   /**
    * The users table.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected ?string $user_table;
 
   /**
    * The user name field.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected string $user_field;
 
   public function query() {

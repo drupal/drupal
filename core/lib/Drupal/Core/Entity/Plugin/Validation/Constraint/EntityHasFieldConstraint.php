@@ -35,6 +35,7 @@ class EntityHasFieldConstraint extends SymfonyConstraint {
    *
    * @var string
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $field_name;
 
   /**

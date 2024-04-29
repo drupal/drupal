@@ -16,11 +16,13 @@ class StatisticsLastUpdated extends Date {
   /**
    * The node table.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected ?string $node_table;
 
   /**
    * The field alias.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected string $field_alias;
 
   public function query() {
