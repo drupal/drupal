@@ -23,7 +23,7 @@ class EmailValidator extends EmailValidatorUtility implements EmailValidatorInte
    * @return bool
    *   TRUE if the address is valid.
    */
-  public function isValid($email, EmailValidation $email_validation = NULL) {
+  public function isValid($email, ?EmailValidation $email_validation = NULL) {
     if ($email_validation) {
       throw new \BadMethodCallException('Calling \Drupal\Component\Utility\EmailValidator::isValid() with the second argument is not supported. See https://www.drupal.org/node/2997196');
     }

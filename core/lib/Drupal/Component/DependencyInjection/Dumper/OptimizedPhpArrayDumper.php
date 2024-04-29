@@ -464,7 +464,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    * @return string|object
    *   A suitable representation of the service reference.
    */
-  protected function getReferenceCall($id, Reference $reference = NULL) {
+  protected function getReferenceCall($id, ?Reference $reference = NULL) {
     $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE;
 
     if ($reference !== NULL) {
