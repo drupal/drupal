@@ -376,6 +376,84 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
   }
 
   /**
+   * Checks that file field synchronization works as expected.
+   */
+  public function testFileFieldSynchronization(): void {
+    $entity_type_id = 'entity_test_mulrev';
+    $file_field_name = 'file_field';
+
+    foreach ($this->getTestFiles('text') as $file) {
+      $entity = File::create((array) $file + ['status' => 1]);
+      $entity->save();
+    }
+
+    /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
+    $field_storage_config = FieldStorageConfig::create([
+      'field_name' => $file_field_name,
+      'type' => 'file',
+      'entity_type' => $entity_type_id,
+      'cardinality' => 1,
+      'translatable' => 1,
+    ]);
+    $field_storage_config->save();
+
+    $field_config = FieldConfig::create([
+      'entity_type' => $entity_type_id,
+      'field_name' => $file_field_name,
+      'bundle' => $entity_type_id,
+      'label' => 'Synchronized file field',
+      'translatable' => 1,
+    ]);
+    $field_config->save();
+
+    $property_settings = [
+      'display' => 'display',
+      'description' => 'description',
+      'target_id' => 0,
+    ];
+    $field_config->setThirdPartySetting('content_translation', 'translation_sync', $property_settings);
+    $field_config->save();
+
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = EntityTestMulRev::create([
+      'uid' => 1,
+      'langcode' => 'en',
+      $file_field_name => [
+        'target_id' => 1,
+        'description' => 'Description EN',
+        'display' => 1,
+      ],
+    ]);
+    $entity->save();
+
+    $this->assertEquals(1, $entity->get($file_field_name)->target_id);
+    $this->assertEquals('Description EN', $entity->get($file_field_name)->description);
+    $this->assertEquals(1, $entity->get($file_field_name)->display);
+
+    // Create a translation with a different file, description and display
+    // values.
+    $it_translation = $entity->addTranslation('it', $entity->toArray());
+    $it_translation->get($file_field_name)->target_id = 2;
+    $it_translation->get($file_field_name)->description = 'Description IT';
+    $it_translation->get($file_field_name)->display = 0;
+    $metadata = $this->contentTranslationManager->getTranslationMetadata($it_translation);
+    $metadata->setSource('en');
+    $it_translation->save();
+
+    $it_entity = $entity->getTranslation('it');
+    $this->assertEquals(2, $it_entity->get($file_field_name)->target_id);
+    $this->assertEquals('Description IT', $it_entity->get($file_field_name)->description);
+    $this->assertEquals(0, $it_entity->get($file_field_name)->display);
+
+    // In the english entity the file should have changed, but the description
+    // and display should have remained the same.
+    $en_entity = $entity->getTranslation('en');
+    $this->assertEquals(2, $en_entity->get($file_field_name)->target_id);
+    $this->assertEquals('Description EN', $en_entity->get($file_field_name)->description);
+    $this->assertEquals(1, $en_entity->get($file_field_name)->display);
+  }
+
+  /**
    * Tests changing the default language of an entity.
    */
   public function testChangeDefaultLanguageNonTranslatableFieldsHidden() {
