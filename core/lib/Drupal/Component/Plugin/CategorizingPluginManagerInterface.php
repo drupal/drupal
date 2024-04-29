@@ -25,7 +25,7 @@ interface CategorizingPluginManagerInterface extends PluginManagerInterface {
    * @return array[]
    *   An array of plugin definitions, sorted by category and label.
    */
-  public function getSortedDefinitions(array $definitions = NULL);
+  public function getSortedDefinitions(?array $definitions = NULL);
 
   /**
    * Gets sorted plugin definitions grouped by category.
@@ -41,6 +41,6 @@ interface CategorizingPluginManagerInterface extends PluginManagerInterface {
    *   Keys are category names, and values are arrays of which the keys are
    *   plugin IDs and the values are plugin definitions.
    */
-  public function getGroupedDefinitions(array $definitions = NULL);
+  public function getGroupedDefinitions(?array $definitions = NULL);
 
 }
