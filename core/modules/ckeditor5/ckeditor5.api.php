@@ -44,8 +44,8 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  * @see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/architecture/editing-engine.html#element-types-and-custom-data
  *
  * @section plugins CKEditor 5 Plugins
- * CKEditor 5 plugins may use either YAML or a PHP annotation for their
- * definitions. A PHP class does not need an annotation if it is defined in yml.
+ * CKEditor 5 plugins may use either YAML or a PHP attribute for their
+ * definitions. A PHP class does not need an attribute if it is defined in yml.
  *
  * To be discovered, YAML definition files must be named
  * {module_name}.ckeditor5.yml.
@@ -71,22 +71,24 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *       - <marquee behavior>
  * @endcode
  *
- * Declared as an Annotation:
+ * Declared as an Attribute:
  * @code
- * # In a scr/Plugin/CKEditor5Plugin/Marquee.php file.
- * /**
- *  * @CKEditor5Plugin(
- *  *   id = "MODULE_NAME_marquee",
- *  *   ckeditor5 = @CKEditor5AspectsOfCKEditor5Plugin(
- *  *     plugins = { "PACKAGE.CLASS" },
- *  *   ),
- *  *   drupal = @DrupalAspectsOfCKEditor5Plugin(
- *  *     label = @Translation("Marquee"),
- *  *     library = "MODULE_NAME/ckeditor5.marquee"
- *  *     elements = { "<marquee>", "<marquee behavior>" },
- *  *   )
- *  * )
- *  * /
+ * use Drupal\ckeditor5\Attribute\CKEditor5AspectsOfCKEditor5Plugin;
+ * use Drupal\ckeditor5\Attribute\CKEditor5Plugin;
+ * use Drupal\ckeditor5\Attribute\DrupalAspectsOfCKEditor5Plugin;
+ * use Drupal\Core\StringTranslation\TranslatableMarkup;
+ *
+ * #[CKEditor5Plugin(
+ *   id: 'MODULE_NAME_marquee',
+ *   ckeditor5: new CKEditor5AspectsOfCKEditor5Plugin(
+ *     plugins: ['PACKAGE.CLASS'],
+ *   ),
+ *   drupal: new DrupalAspectsOfCKEditor5Plugin(
+ *     label: new TranslatableMarkup('Marquee'),
+ *     library: 'MODULE_NAME/ckeditor5.marquee',
+ *     elements: ['<marquee>', '<marquee behavior>'],
+ *   ),
+ * )]
  * @endcode
  *
  * The metadata relating strictly to the CKEditor 5 plugin's JS code is stored
@@ -95,7 +97,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  * If the plugin has a dependency on another module, adding the 'provider' key
  * will prevent the plugin from being loaded if that module is not installed.
  *
- * All of these can be defined in YAML or annotations. A given plugin should
+ * All of these can be defined in YAML or attributes. A given plugin should
  * choose one or the other, as a definition can't parse both at once.
  *
  * Overview of all available plugin definition properties:
@@ -158,7 +160,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *   need arises, see
  *   https://www.drupal.org/docs/drupal-apis/ckeditor-5-api/overview#conditions.
  *
- * All of these can be defined in YAML or annotations. A given plugin should
+ * All of these can be defined in YAML or attributes. A given plugin should
  * choose one or the other, as a definition can't parse both at once.
  *
  * If the CKEditor 5 plugin contains translation they can be automatically
@@ -181,14 +183,14 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  * assets/ckeditor5/marquee/translations/* in this example.
  *
  *
- * @see \Drupal\ckeditor5\Annotation\CKEditor5Plugin
- * @see \Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin
- * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin
+ * @see \Drupal\ckeditor5\Attribute\CKEditor5Plugin
+ * @see \Drupal\ckeditor5\Attribute\CKEditor5AspectsOfCKEditor5Plugin
+ * @see \Drupal\ckeditor5\Attribute\DrupalAspectsOfCKEditor5Plugin
  *
  * @section public_api Public API
  *
  * The CKEditor 5 module provides no public API, other than:
- * - the annotations and interfaces mentioned above;
+ * - the attributes and interfaces mentioned above;
  * - to help implement CKEditor 5 plugins:
  *   \Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait and
  *   \Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
