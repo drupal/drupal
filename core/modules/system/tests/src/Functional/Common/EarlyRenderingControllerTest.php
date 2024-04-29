@@ -73,8 +73,9 @@ class EarlyRenderingControllerTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Hello world!');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'foo');
     $this->drupalGet(Url::fromRoute('early_rendering_controller_test.cacheable-response.early'));
-    $this->assertSession()->statusCodeEquals(500);
-    $this->assertSession()->pageTextContains('The controller result claims to be providing relevant cache metadata, but leaked metadata was detected. Ensure you are not rendering content too early. Returned object class: Drupal\early_rendering_controller_test\CacheableTestResponse.');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Hello world!');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'foo');
 
     // Basic domain object: non-early & early.
     $this->drupalGet(Url::fromRoute('early_rendering_controller_test.domain-object'));
