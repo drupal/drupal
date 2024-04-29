@@ -1,1 +1,1 @@
-!function(i){const n=i.gl=i.gl||{};n.dictionary=Object.assign(n.dictionary||{},{Source:"Orixe"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(i){const o=i.gl=i.gl||{};o.dictionary=Object.assign(o.dictionary||{},{"Show source":"",Source:"Orixe"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

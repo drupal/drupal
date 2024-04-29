@@ -1,1 +1,1 @@
-!function(n){const o=n.ko=n.ko||{};o.dictionary=Object.assign(o.dictionary||{},{"Insert code block":"코드 블럭 삽입","Plain text":"평문"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(o){const n=o.ko=o.ko||{};n.dictionary=Object.assign(n.dictionary||{},{"Code block":"코드 블록","Insert code block":"코드 블럭 삽입","Plain text":"평문"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

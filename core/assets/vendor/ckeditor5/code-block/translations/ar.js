@@ -1,1 +1,1 @@
-!function(n){const i=n.ar=n.ar||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"إدراج كتلة تعليمات برمجية","Plain text":"نص عادي"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const o=n.ar=n.ar||{};o.dictionary=Object.assign(o.dictionary||{},{"Code block":"كتلة تعليمات برمجية","Insert code block":"إدراج كتلة تعليمات برمجية","Plain text":"نص عادي"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

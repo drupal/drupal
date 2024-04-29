@@ -1,1 +1,1 @@
-!function(o){const n=o["es-co"]=o["es-co"]||{};n.dictionary=Object.assign(n.dictionary||{},{"Insert code block":"Insertar bloque de código","Plain text":"Texto plano"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(o){const n=o["es-co"]=o["es-co"]||{};n.dictionary=Object.assign(n.dictionary||{},{"Code block":"","Insert code block":"Insertar bloque de código","Plain text":"Texto plano"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

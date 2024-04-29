@@ -1,1 +1,1 @@
-!function(n){const i=n.hr=n.hr||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"Umetni blok koda","Plain text":"Običan tekst"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const o=n.hr=n.hr||{};o.dictionary=Object.assign(o.dictionary||{},{"Code block":"","Insert code block":"Umetni blok koda","Plain text":"Običan tekst"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
