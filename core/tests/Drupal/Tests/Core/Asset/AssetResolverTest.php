@@ -76,6 +76,10 @@ class AssetResolverTest extends UnitTestCase {
    * A mocked Japanese language object.
    */
   protected LanguageInterface $japanese;
+  /**
+   * An array of library definitions.
+   */
+  protected $libraries = [];
 
   /**
    * {@inheritdoc}
@@ -86,6 +90,44 @@ class AssetResolverTest extends UnitTestCase {
     $this->libraryDiscovery = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscovery')
       ->disableOriginalConstructor()
       ->getMock();
+    $this->libraries = [
+      'drupal' => [
+        'version' => '1.0.0',
+        'css' => [],
+        'js' =>
+        [
+          'core/misc/drupal.js' => ['data' => 'core/misc/drupal.js', 'preprocess' => TRUE],
+        ],
+        'license' => '',
+      ],
+      'jquery' => [
+        'version' => '1.0.0',
+        'css' => [],
+        'js' =>
+        [
+          'core/misc/jquery.js' => ['data' => 'core/misc/jquery.js', 'minified' => TRUE],
+        ],
+        'license' => '',
+      ],
+      'llama' => [
+        'version' => '1.0.0',
+        'css' =>
+        [
+          'core/misc/llama.css' => ['data' => 'core/misc/llama.css'],
+        ],
+        'js' => [],
+        'license' => '',
+      ],
+      'piggy' => [
+        'version' => '1.0.0',
+        'css' =>
+        [
+          'core/misc/piggy.css' => ['data' => 'core/misc/piggy.css'],
+        ],
+        'js' => [],
+        'license' => '',
+      ],
+    ];
     $this->libraryDependencyResolver = $this->createMock('\Drupal\Core\Asset\LibraryDependencyResolverInterface');
     $this->libraryDependencyResolver->expects($this->any())
       ->method('getLibrariesWithDependencies')
@@ -124,40 +166,77 @@ class AssetResolverTest extends UnitTestCase {
 
   /**
    * @covers ::getCssAssets
-   * @dataProvider providerAttachedAssets
+   * @dataProvider providerAttachedCssAssets
    */
-  public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_cache_item_count) {
+  public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_css_cache_item_count) {
+    $this->libraryDiscovery->expects($this->any())
+      ->method('getLibraryByName')
+      ->willReturnOnConsecutiveCalls(
+        $this->libraries['drupal'],
+        $this->libraries['llama'],
+        $this->libraries['llama'],
+        $this->libraries['piggy'],
+        $this->libraries['piggy'],
+      );
     $this->assetResolver->getCssAssets($assets_a, FALSE, $this->english);
     $this->assetResolver->getCssAssets($assets_b, FALSE, $this->english);
-    $this->assertCount($expected_cache_item_count, $this->cache->getAllCids());
+    $this->assertCount($expected_css_cache_item_count, $this->cache->getAllCids());
+  }
+
+  public static function providerAttachedCssAssets() {
+    $time = time();
+    return [
+      'one js only library and one css only library' => [
+        (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal']),
+        (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['llama/css']),
+        1,
+      ],
+      'two different css libraries' => [
+        (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal', 'llama/css']),
+        (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['piggy/css']),
+        2,
+      ],
+    ];
   }
 
   /**
    * @covers ::getJsAssets
-   * @dataProvider providerAttachedAssets
+   * @dataProvider providerAttachedJsAssets
    */
-  public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_cache_item_count) {
+  public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_js_cache_item_count, $expected_multilingual_js_cache_item_count) {
+    $this->libraryDiscovery->expects($this->any())
+      ->method('getLibraryByName')
+      ->willReturnOnConsecutiveCalls(
+        $this->libraries['drupal'],
+        $this->libraries['drupal'],
+        $this->libraries['jquery'],
+        $this->libraries['drupal'],
+        $this->libraries['drupal'],
+        $this->libraries['jquery'],
+      );
     $this->assetResolver->getJsAssets($assets_a, FALSE, $this->english);
     $this->assetResolver->getJsAssets($assets_b, FALSE, $this->english);
-    $this->assertCount($expected_cache_item_count, $this->cache->getAllCids());
+    $this->assertCount($expected_js_cache_item_count, $this->cache->getAllCids());
 
     $this->assetResolver->getJsAssets($assets_a, FALSE, $this->japanese);
     $this->assetResolver->getJsAssets($assets_b, FALSE, $this->japanese);
-    $this->assertCount($expected_cache_item_count * 2, $this->cache->getAllCids());
+    $this->assertCount($expected_multilingual_js_cache_item_count, $this->cache->getAllCids());
   }
 
-  public static function providerAttachedAssets() {
+  public static function providerAttachedJsAssets() {
     $time = time();
     return [
       'same libraries, different timestamps' => [
         (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal'])->setSettings(['currentTime' => $time]),
         (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal'])->setSettings(['currentTime' => $time + 100]),
         1,
+        2,
       ],
       'different libraries, same timestamps' => [
         (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal'])->setSettings(['currentTime' => $time]),
         (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal', 'core/jquery'])->setSettings(['currentTime' => $time]),
         2,
+        3,
       ],
     ];
   }
