@@ -27,7 +27,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Component\Utility\Crypt;
-use Drupal\locale\Locale;
 use Drupal\locale\LocaleEvent;
 use Drupal\locale\LocaleEvents;
 
@@ -238,7 +237,7 @@ function locale_configurable_language_delete(ConfigurableLanguageInterface $lang
   locale_translate_delete_translation_files([], [$language->id()]);
 
   // Remove translated configuration objects.
-  Locale::config()->deleteLanguageTranslations($language->id());
+  \Drupal::service('locale.config_manager')->deleteLanguageTranslations($language->id());
 
   // Changing the language settings impacts the interface:
   _locale_invalidate_js($language->id());
@@ -367,7 +366,7 @@ function locale_cron() {
  * Updates default configuration when new modules or themes are installed.
  */
 function locale_system_set_config_langcodes() {
-  Locale::config()->updateDefaultConfigLangcodes();
+  \Drupal::service('locale.config_manager')->updateDefaultConfigLangcodes();
 }
 
 /**
@@ -1053,8 +1052,9 @@ function _locale_refresh_translations($langcodes, $lids = []) {
  *   List of string identifiers that have been updated / created.
  */
 function _locale_refresh_configuration(array $langcodes, array $lids) {
-  if ($lids && $langcodes && $names = Locale::config()->getStringNames($lids)) {
-    Locale::config()->updateConfigTranslations($names, $langcodes);
+  $locale_config_manager = \Drupal::service('locale.config_manager');
+  if ($lids && $langcodes && $names = $locale_config_manager->getStringNames($lids)) {
+    $locale_config_manager->updateConfigTranslations($names, $langcodes);
   }
 }
 
