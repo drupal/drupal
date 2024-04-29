@@ -12,4 +12,4 @@ namespace Drupal\Core\Form;
  *
  * @see \Drupal\Core\Form\WorkspaceDynamicSafeFormInterface
  */
-interface WorkspaceSafeFormInterface extends FormInterface {}
+interface WorkspaceSafeFormInterface {}

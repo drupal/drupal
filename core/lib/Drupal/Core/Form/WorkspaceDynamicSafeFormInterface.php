@@ -12,7 +12,7 @@ namespace Drupal\Core\Form;
  *
  * @see \Drupal\Core\Form\WorkspaceSafeFormInterface
  */
-interface WorkspaceDynamicSafeFormInterface extends FormInterface {
+interface WorkspaceDynamicSafeFormInterface {
 
   /**
    * Determines whether the form is safe to be submitted in a workspace.

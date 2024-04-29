@@ -31,6 +31,23 @@ class BulkFormTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Log in as a user with 'administer nodes' permission to have access to the
+    // bulk operation.
+    $this->drupalCreateContentType(['type' => 'page']);
+    $admin_user = $this->drupalCreateUser([
+      'administer nodes',
+      'edit any page content',
+      'delete any page content',
+    ]);
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
    * Tests the bulk form.
    */
   public function testBulkForm() {
@@ -67,16 +84,6 @@ class BulkFormTest extends BrowserTestBase {
       $this->assertSession()->fieldExists('edit-node-bulk-form-' . $i);
       $edit["node_bulk_form[$i]"] = TRUE;
     }
-
-    // Log in as a user with 'administer nodes' permission to have access to the
-    // bulk operation.
-    $this->drupalCreateContentType(['type' => 'page']);
-    $admin_user = $this->drupalCreateUser([
-      'administer nodes',
-      'edit any page content',
-      'delete any page content',
-    ]);
-    $this->drupalLogin($admin_user);
 
     $this->drupalGet('test_bulk_form');
 
@@ -162,6 +169,11 @@ class BulkFormTest extends BrowserTestBase {
     $edit = [];
     for ($i = 0; $i < 5; $i++) {
       $edit["node_bulk_form[$i]"] = TRUE;
+
+      // $nodes[0] was unpublished above, so the bulk form displays only
+      // $nodes[1] - $nodes[9]. Remove deleted items from $nodes to prevent
+      // deleting them twice at the end of this test method.
+      unset($nodes[$i + 1]);
     }
     $edit += ['action' => 'node_delete_action'];
     $this->submitForm($edit, 'Apply to selected items');
@@ -185,6 +197,11 @@ class BulkFormTest extends BrowserTestBase {
       'action' => 'node_delete_action',
     ];
     $this->submitForm($edit, 'Apply to selected items');
+
+    // Remove deleted items from $nodes to prevent deleting them twice at the
+    // end of this test method.
+    unset($nodes[6]);
+
     // Make sure we just return to the bulk view with no warnings.
     $this->assertSession()->addressEquals('test_bulk_form');
     $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "messages--status")]');
@@ -201,6 +218,11 @@ class BulkFormTest extends BrowserTestBase {
       'action' => 'node_delete_action',
     ];
     $this->submitForm($edit, 'Apply to selected items');
+
+    // Remove deleted items from $nodes to prevent deleting them twice at the
+    // end of this test method.
+    unset($nodes[7], $nodes[8]);
+
     // Make sure we don't show an action message while we are still on the
     // confirmation page.
     $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "messages--status")]');

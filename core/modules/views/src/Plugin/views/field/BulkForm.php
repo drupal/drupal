@@ -6,8 +6,10 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\Form\WorkspaceSafeFormTrait;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RedirectDestinationTrait;
@@ -26,11 +28,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Defines an actions-based bulk operation form element.
  */
 #[ViewsField("bulk_form")]
-class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
+class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, WorkspaceDynamicSafeFormInterface {
 
   use RedirectDestinationTrait;
   use UncacheableFieldHandlerTrait;
   use EntityTranslationRenderTrait;
+  use WorkspaceSafeFormTrait;
 
   /**
    * The entity type manager.
@@ -582,6 +585,14 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
     }
 
     return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isWorkspaceSafeForm(array $form, FormStateInterface $form_state): bool {
+    $entity_type = $this->entityTypeManager->getDefinition($this->getEntityTypeId());
+    return $this->isWorkspaceSafeEntityType($entity_type);
   }
 
 }
