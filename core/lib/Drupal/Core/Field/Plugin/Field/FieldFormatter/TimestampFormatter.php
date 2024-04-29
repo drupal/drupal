@@ -38,27 +38,6 @@ class TimestampFormatter extends FormatterBase {
   protected const CUSTOM_DATE_FORMAT = 'custom';
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The date format entity storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $dateFormatStorage;
-
-  /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
    * Constructs a new TimestampFormatter.
    *
    * @param string $plugin_id
@@ -75,9 +54,9 @@ class TimestampFormatter extends FormatterBase {
    *   The view mode.
    * @param array $third_party_settings
    *   Third party settings.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $date_format_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $dateFormatStorage
    *   The date format storage.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
@@ -90,19 +69,11 @@ class TimestampFormatter extends FormatterBase {
     $label,
     $view_mode,
     array $third_party_settings,
-    DateFormatterInterface $date_formatter,
-    EntityStorageInterface $date_format_storage,
-    ?TimeInterface $time = NULL,
+    protected DateFormatterInterface $dateFormatter,
+    protected EntityStorageInterface $dateFormatStorage,
+    protected TimeInterface $time,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-
-    $this->dateFormatter = $date_formatter;
-    $this->dateFormatStorage = $date_format_storage;
-    if (!$time) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3395991', E_USER_DEPRECATED);
-      $time = \Drupal::service('datetime.time');
-    }
-    $this->time = $time;
   }
 
   /**

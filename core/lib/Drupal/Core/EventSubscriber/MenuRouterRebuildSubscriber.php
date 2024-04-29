@@ -18,54 +18,26 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
 
   /**
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The menu link plugin manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
-   * The replica kill switch.
-   *
-   * @var \Drupal\Core\Database\ReplicaKillSwitch
-   */
-  protected $replicaKillSwitch;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs the MenuRouterRebuildSubscriber object.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link plugin manager.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Drupal\Core\Database\ReplicaKillSwitch $replica_kill_switch
+   * @param \Drupal\Core\Database\ReplicaKillSwitch $replicaKillSwitch
    *   The replica kill switch.
-   * @param \Psr\Log\LoggerInterface|null $logger
+   * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
    */
-  public function __construct(LockBackendInterface $lock, MenuLinkManagerInterface $menu_link_manager, Connection $connection, ReplicaKillSwitch $replica_kill_switch, protected ?LoggerInterface $logger = NULL) {
-    $this->lock = $lock;
-    $this->menuLinkManager = $menu_link_manager;
-    $this->connection = $connection;
-    $this->replicaKillSwitch = $replica_kill_switch;
-    if ($this->logger === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
-      $this->logger = \Drupal::service('logger.channel.menu');
-    }
+  public function __construct(
+    protected LockBackendInterface $lock,
+    protected MenuLinkManagerInterface $menuLinkManager,
+    protected Connection $connection,
+    protected ReplicaKillSwitch $replicaKillSwitch,
+    protected LoggerInterface $logger,
+  ) {
   }
 
   /**

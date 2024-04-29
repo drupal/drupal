@@ -23,13 +23,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class FinishResponseSubscriber implements EventSubscriberInterface {
 
   /**
-   * The language manager object for retrieving the correct language code.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * A config object for the system performance configuration.
    *
    * @var \Drupal\Core\Config\Config
@@ -37,71 +30,33 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   protected $config;
 
   /**
-   * A policy rule determining the cacheability of a request.
-   *
-   * @var \Drupal\Core\PageCache\RequestPolicyInterface
-   */
-  protected $requestPolicy;
-
-  /**
-   * A policy rule determining the cacheability of the response.
-   *
-   * @var \Drupal\Core\PageCache\ResponsePolicyInterface
-   */
-  protected $responsePolicy;
-
-  /**
-   * The cache contexts manager service.
-   */
-  protected CacheContextsManager $cacheContextsManager;
-
-  /**
-   * Whether to send cacheability headers for debugging purposes.
-   *
-   * @var bool
-   */
-  protected $debugCacheabilityHeaders = FALSE;
-
-  /**
    * Constructs a FinishResponseSubscriber object.
    *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager object for retrieving the correct language code.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   A config factory for retrieving required config objects.
-   * @param \Drupal\Core\PageCache\RequestPolicyInterface $request_policy
+   * @param \Drupal\Core\PageCache\RequestPolicyInterface $requestPolicy
    *   A policy rule determining the cacheability of a request.
-   * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
+   * @param \Drupal\Core\PageCache\ResponsePolicyInterface $responsePolicy
    *   A policy rule determining the cacheability of a response.
-   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
+   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cacheContextsManager
    *   The cache contexts manager service.
-   * @param \Drupal\Component\Datetime\TimeInterface|null|bool $time
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param bool $http_response_debug_cacheability_headers
+   * @param bool $debugCacheabilityHeaders
    *   (optional) Whether to send cacheability headers for debugging purposes.
    */
   public function __construct(
-    LanguageManagerInterface $language_manager,
+    protected LanguageManagerInterface $languageManager,
     ConfigFactoryInterface $config_factory,
-    RequestPolicyInterface $request_policy,
-    ResponsePolicyInterface $response_policy,
-    CacheContextsManager $cache_contexts_manager,
-    protected TimeInterface|bool|null $time = NULL,
-    $http_response_debug_cacheability_headers = FALSE,
+    protected RequestPolicyInterface $requestPolicy,
+    protected ResponsePolicyInterface $responsePolicy,
+    protected CacheContextsManager $cacheContextsManager,
+    protected TimeInterface $time,
+    protected bool $debugCacheabilityHeaders = FALSE,
   ) {
-    $this->languageManager = $language_manager;
     $this->config = $config_factory->get('system.performance');
-    $this->requestPolicy = $request_policy;
-    $this->responsePolicy = $response_policy;
-    $this->cacheContextsManager = $cache_contexts_manager;
-    if (!$time || is_bool($time)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be the 5th argument in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-      if (is_bool($time)) {
-        $http_response_debug_cacheability_headers = $time;
-      }
-      $this->time = \Drupal::service(TimeInterface::class);
-    }
-    $this->debugCacheabilityHeaders = $http_response_debug_cacheability_headers;
   }
 
   /**
