@@ -77,38 +77,6 @@ class Module extends Updater implements UpdaterInterface {
   }
 
   /**
-   * Returns available database schema updates once a new version is installed.
-   *
-   * @return array
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   * \Drupal\Core\Update\UpdateHookRegistry::getAvailableUpdates() instead.
-   *
-   * @see https://www.drupal.org/node/3359445
-   */
-  public function getSchemaUpdates() {
-    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Update\UpdateHookRegistry::getAvailableUpdates() instead. See https://www.drupal.org/node/3359445", E_USER_DEPRECATED);
-    require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    require_once DRUPAL_ROOT . '/core/includes/update.inc';
-
-    if (!self::canUpdate($this->name)) {
-      return [];
-    }
-    \Drupal::moduleHandler()->loadInclude($this->name, 'install');
-
-    if (!\Drupal::service('update.update_hook_registry')->getAvailableUpdates($this->name)) {
-      return [];
-    }
-    $modules_with_updates = update_get_update_list();
-    if ($updates = $modules_with_updates[$this->name]) {
-      if ($updates['start']) {
-        return $updates['pending'];
-      }
-    }
-    return [];
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function postInstallTasks() {

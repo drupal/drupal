@@ -24,20 +24,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class UpdateRegistry implements EventSubscriberInterface {
 
   /**
-   * The used update name.
-   *
-   * @var string
-   */
-  protected $updateType = 'post_update';
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * The filename of the log file.
    *
    * @var string
@@ -48,20 +34,6 @@ class UpdateRegistry implements EventSubscriberInterface {
    * @var string[]
    */
   protected $enabledExtensions;
-
-  /**
-   * The key value storage.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected $keyValue;
-
-  /**
-   * The site path.
-   *
-   * @var string
-   */
-  protected $sitePath;
 
   /**
    * A static cache of all the extension updates scanned for.
@@ -78,38 +50,26 @@ class UpdateRegistry implements EventSubscriberInterface {
    *
    * @param string $root
    *   The app root.
-   * @param string $site_path
+   * @param string $sitePath
    *   The site path.
    * @param array $module_list
    *   An associative array whose keys are the names of installed modules.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue
    *   The key value store.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface|bool|null $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param string $update_type
+   * @param string $updateType
    *   The used update name.
    */
   public function __construct(
-    $root,
-    $site_path,
-    $module_list,
-    KeyValueStoreInterface $key_value,
-    ThemeHandlerInterface|bool $theme_handler = NULL,
-    string $update_type = 'post_update',
+    protected $root,
+    protected $sitePath,
+    array $module_list,
+    protected KeyValueStoreInterface $keyValue,
+    ThemeHandlerInterface $theme_handler,
+    protected string $updateType = 'post_update',
   ) {
-    $this->root = $root;
-    $this->sitePath = $site_path;
-    if ($module_list !== [] && array_is_list($module_list)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $enabled_extensions argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use an associative array whose keys are the names of installed modules instead. See https://www.drupal.org/node/3423659', E_USER_DEPRECATED);
-      $module_list = \Drupal::service('module_handler')->getModuleList();
-    }
-    if ($theme_handler === NULL || is_bool($theme_handler)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $include_tests argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3423659', E_USER_DEPRECATED);
-      $theme_handler = \Drupal::service('theme_handler');
-    }
     $this->enabledExtensions = array_merge(array_keys($module_list), array_keys($theme_handler->listInfo()));
-    $this->keyValue = $key_value;
-    $this->updateType = $update_type;
   }
 
   /**

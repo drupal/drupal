@@ -71,10 +71,7 @@ class ConstraintViolationBuilder implements ConstraintViolationBuilderInterface 
   /**
    * {@inheritdoc}
    */
-  public function atPath(mixed $path): static {
-    if (!is_string($path)) {
-      @\trigger_error('Passing the $path parameter as a non-string value to ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3396238', E_USER_DEPRECATED);
-    }
+  public function atPath(string $path): static {
     $this->propertyPath = PropertyPath::append($this->propertyPath, (string) $path);
 
     return $this;
