@@ -53,7 +53,7 @@ class MigrationTest extends KernelTestBase {
    *
    * @dataProvider getProcessPluginsExceptionMessageProvider
    */
-  public function testGetProcessPluginsExceptionMessage(array $process) {
+  public function testGetProcessPluginsExceptionMessage(array $process): void {
     // Test with an invalid process pipeline.
     $plugin_definition = [
       'id' => 'foo',
@@ -71,33 +71,11 @@ class MigrationTest extends KernelTestBase {
   /**
    * Provides data for testing invalid process pipeline.
    */
-  public static function getProcessPluginsExceptionMessageProvider() {
-    return [
-      [
-        'Null' =>
-          [
-            'dest' => NULL,
-          ],
-      ],
-      [
-        'boolean' =>
-          [
-            'dest' => TRUE,
-          ],
-      ],
-      [
-        'integer' =>
-          [
-            'dest' => 2370,
-          ],
-      ],
-      [
-        'float' =>
-          [
-            'dest' => 1.61,
-          ],
-      ],
-    ];
+  public static function getProcessPluginsExceptionMessageProvider(): \Generator {
+    yield 'null' => ['process' => ['dest' => NULL]];
+    yield 'boolean' => ['process' => ['dest' => TRUE]];
+    yield 'integer' => ['process' => ['dest' => 2370]];
+    yield 'float' => ['process' => ['dest' => 1.61]];
   }
 
   /**

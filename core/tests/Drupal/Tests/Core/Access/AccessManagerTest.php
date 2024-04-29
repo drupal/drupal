@@ -264,7 +264,7 @@ class AccessManagerTest extends UnitTestCase {
       'name' => 'test_route_5',
       'condition_one' => 'TRUE',
       'condition_two' => 'NULL',
-      'expected' => $access_deny,
+      'expected_access' => $access_deny,
     ];
     $access_configurations[] = [
       'name' => 'test_route_6',

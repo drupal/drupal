@@ -119,7 +119,7 @@ class VocabularyTranslationTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
-    $tests[0]['expected_results'] = [
+    $tests[0]['expected_data'] = [
       [
         'vid' => 1,
         'name' => 'vocabulary 1',
