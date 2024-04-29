@@ -3,6 +3,8 @@
 update.settings:
   type: config_object
   label: 'Update settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     check:
       type: mapping
@@ -14,6 +16,10 @@ update.settings:
         interval_days:
           type: integer
           label: 'Days since last check'
+          constraints:
+            # @see \Drupal\update\UpdateSettingsForm::buildForm()
+            # The options are daily and weekly.
+            Choice: [1, 7]
     fetch:
       type: mapping
       label: 'Fetch settings'
@@ -25,9 +31,15 @@ update.settings:
         max_attempts:
           type: integer
           label: 'Maximum attempts'
+          constraints:
+            Range:
+              min: 1
         timeout:
           type: integer
           label: 'Timeout in seconds'
+          constraints:
+            Range:
+              min: 1
     notification:
       type: mapping
       label: 'Notification settings'
@@ -41,3 +53,6 @@ update.settings:
         threshold:
           type: string
           label: 'Email notification threshold'
+          constraints:
+            # @see \Drupal\update\UpdateSettingsForm::buildForm()
+            Choice: [all, security]

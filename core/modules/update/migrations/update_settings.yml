@@ -19,6 +19,12 @@ process:
   'notification/threshold': update_notification_threshold
   'notification/emails': update_notify_emails
   'check/interval_days': update_check_frequency
+  'check/disabled_extensions':
+    plugin: default_value
+    default_value: false
+  'fetch/timeout':
+    plugin: default_value
+    default_value: 30
 destination:
   plugin: config
   config_name: update.settings
