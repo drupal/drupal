@@ -59,16 +59,21 @@ class AppendOp extends AbstractOperation {
   /**
    * Constructs an AppendOp.
    *
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $prepend_path
-   *   The relative path to the prepend file.
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $append_path
-   *   The relative path to the append file.
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath|null $prepend_path
+   *   (optional) The relative path to the prepend file.
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath|null $append_path
+   *   (optional) The relative path to the append file.
    * @param bool $force_append
-   *   TRUE if is okay to append to a file that was not scaffolded.
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $default_path
-   *   The relative path to the default data.
+   *   (optional) TRUE if is okay to append to a file that was not scaffolded.
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath|null $default_path
+   *   (optional) The relative path to the default data.
    */
-  public function __construct(ScaffoldFilePath $prepend_path = NULL, ScaffoldFilePath $append_path = NULL, $force_append = FALSE, ScaffoldFilePath $default_path = NULL) {
+  public function __construct(
+    ?ScaffoldFilePath $prepend_path = NULL,
+    ?ScaffoldFilePath $append_path = NULL,
+    $force_append = FALSE,
+    ?ScaffoldFilePath $default_path = NULL,
+  ) {
     $this->forceAppend = $force_append;
     $this->prepend = $prepend_path;
     $this->append = $append_path;

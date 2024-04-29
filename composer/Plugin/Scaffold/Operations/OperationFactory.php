@@ -122,13 +122,13 @@ class OperationFactory {
   /**
    * Checks to see if the specified scaffold file exists and has content.
    *
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $file
-   *   Scaffold file to check.
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath|null $file
+   *   (optional) Scaffold file to check.
    *
    * @return bool
    *   True if the file exists and has content.
    */
-  protected function hasContent(ScaffoldFilePath $file = NULL) {
+  protected function hasContent(?ScaffoldFilePath $file = NULL) {
     if (!$file) {
       return FALSE;
     }
