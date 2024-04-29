@@ -125,13 +125,24 @@ class AssetResolver implements AssetResolverInterface {
     if (!$assets->getLibraries()) {
       return [];
     }
+    $libraries_to_load = $this->getLibrariesToLoad($assets);
+    foreach ($libraries_to_load as $key => $library) {
+      [$extension, $name] = explode('/', $library, 2);
+      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
+      if (empty($definition['css'])) {
+        unset($libraries_to_load[$key]);
+      }
+    }
+    $libraries_to_load = array_values($libraries_to_load);
+    if (!$libraries_to_load) {
+      return [];
+    }
     if (!isset($language)) {
       $language = $this->languageManager->getCurrentLanguage();
     }
     $theme_info = $this->themeManager->getActiveTheme();
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter().
-    $libraries_to_load = $this->getLibrariesToLoad($assets);
     $cid = 'css:' . $theme_info->getName() . ':' . $language->getId() . Crypt::hashBase64(serialize($libraries_to_load)) . (int) $optimize;
     if ($cached = $this->cache->get($cid)) {
       return $cached->data;
@@ -149,11 +160,6 @@ class AssetResolver implements AssetResolverInterface {
     foreach ($libraries_to_load as $key => $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-      if (empty($definition['css'])) {
-        unset($libraries_to_load[$key]);
-        continue;
-      }
-
       foreach ($definition['css'] as $options) {
         $options += $default_options;
         // Copy the asset library license information to each file.
@@ -227,10 +233,34 @@ class AssetResolver implements AssetResolverInterface {
       $language = $this->languageManager->getCurrentLanguage();
     }
     $theme_info = $this->themeManager->getActiveTheme();
+    $libraries_to_load = $this->getLibrariesToLoad($assets);
+
+    // Collect all libraries that contain JS assets and are in the header.
+    // Also remove any libraries with no JavaScript from the libraries to
+    // load.
+    $header_js_libraries = [];
+    foreach ($libraries_to_load as $key => $library) {
+      [$extension, $name] = explode('/', $library, 2);
+      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
+      if (empty($definition['js'])) {
+        unset($libraries_to_load[$key]);
+        continue;
+      }
+      if (!empty($definition['header'])) {
+        $header_js_libraries[] = $library;
+      }
+    }
+    $libraries_to_load = array_values($libraries_to_load);
+
+    // If all the libraries to load contained only CSS, there is nothing further
+    // to do here, so return early.
+    if (!$libraries_to_load && !$assets->getSettings()) {
+      return [[], []];
+    }
+
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter(). Additionally add the current language to
     // support translation of JavaScript files via hook_js_alter().
-    $libraries_to_load = $this->getLibrariesToLoad($assets);
     $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . (int) (count($assets->getSettings()) > 0) . (int) $optimize;
 
     if ($cached = $this->cache->get($cid)) {
@@ -248,22 +278,6 @@ class AssetResolver implements AssetResolverInterface {
         'version' => NULL,
       ];
 
-      // Collect all libraries that contain JS assets and are in the header.
-      // Also remove any libraries with no JavaScript from the libraries to
-      // load.
-      $header_js_libraries = [];
-      foreach ($libraries_to_load as $key => $library) {
-        [$extension, $name] = explode('/', $library, 2);
-        $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-        if (empty($definition['js'])) {
-          unset($libraries_to_load[$key]);
-          continue;
-        }
-        if (!empty($definition['header'])) {
-          $header_js_libraries[] = $library;
-        }
-      }
-      $libraries_to_load = array_values($libraries_to_load);
       // The current list of header JS libraries are only those libraries that
       // are in the header, but their dependencies must also be loaded for them
       // to function correctly, so update the list with those.
