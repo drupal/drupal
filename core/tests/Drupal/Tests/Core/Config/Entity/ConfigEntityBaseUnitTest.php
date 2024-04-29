@@ -160,7 +160,10 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $container->set('theme_handler', $this->themeHandler->reveal());
     \Drupal::setContainer($container);
 
-    $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', [$values, $this->entityTypeId]);
+    $this->entity = $this->getMockBuilder(ConfigEntityBaseMockableClass::class)
+      ->setConstructorArgs([$values, $this->entityTypeId])
+      ->onlyMethods([])
+      ->getMock();
   }
 
   /**
@@ -332,7 +335,10 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::onDependencyRemoval
    */
   public function testCalculateDependenciesWithThirdPartySettings() {
-    $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', [[], $this->entityTypeId]);
+    $this->entity = $this->getMockBuilder(ConfigEntityBaseMockableClass::class)
+      ->setConstructorArgs([[], $this->entityTypeId])
+      ->onlyMethods([])
+      ->getMock();
     $this->entity->setThirdPartySetting('test_provider', 'test', 'test');
     $this->entity->setThirdPartySetting('test_provider2', 'test', 'test');
     $this->entity->setThirdPartySetting(static::PROVIDER, 'test', 'test');
@@ -564,7 +570,10 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::toArray
    */
   public function testToArrayIdKey() {
-    $entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', [[], $this->entityTypeId], '', TRUE, TRUE, TRUE, ['id', 'get']);
+    $entity = $this->getMockBuilder(ConfigEntityBaseMockableClass::class)
+      ->setConstructorArgs([[], $this->entityTypeId])
+      ->onlyMethods(['id', 'get'])
+      ->getMock();
     $entity->expects($this->atLeastOnce())
       ->method('id')
       ->willReturn($this->id);
@@ -737,5 +746,12 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
     }
     return ['the_plugin_collection_config' => $this->pluginCollection];
   }
+
+}
+
+/**
+ * A class extending ConfigEntityBase for testing purposes.
+ */
+class ConfigEntityBaseMockableClass extends ConfigEntityBase {
 
 }
