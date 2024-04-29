@@ -21,7 +21,6 @@
   background: var(--input-bg-color);
   font-size: var(--input-font-size);
   line-height: var(--input-line-height);
-  -webkit-appearance: none;
   appearance: none; /* Being able to control inner box shadow on iOS. */
 }
 
@@ -38,7 +37,6 @@
  */
 
 .form-element--type-search[type="search"] {
-  -webkit-appearance: none;
   appearance: none;
   box-sizing: border-box;
 }

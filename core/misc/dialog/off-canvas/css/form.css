@@ -108,12 +108,10 @@
 }
 
 #drupal-off-canvas-wrapper input[type="search"] {
-  -webkit-appearance: none;
   appearance: none; /* Necessary for Safari. */
 }
 
 #drupal-off-canvas-wrapper select {
-  -webkit-appearance: none;
   appearance: none;
   padding-inline-end: 1.25rem;
   border: var(--drupal-off-canvas-input-border);
@@ -130,7 +128,6 @@
 
 @media (forced-colors: active) {
   #drupal-off-canvas-wrapper select {
-    -webkit-appearance: revert;
     appearance: revert;
     padding-inline-end: 0;
     background: revert;
