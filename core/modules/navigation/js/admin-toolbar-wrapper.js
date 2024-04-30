@@ -46,7 +46,9 @@
 
             // This is special attribute which added to apply css
             // with animations and avoid layout shift.
-            doc.setAttribute('data-admin-toolbar-transitions', true);
+            setTimeout(() => {
+              doc.setAttribute('data-admin-toolbar-transitions', true);
+            }, 200);
 
             doc.addEventListener(HTML_TRIGGER_EVENT, (e) => {
               // Prevents multiple triggering while transitioning.
