@@ -109,7 +109,7 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
         new FormattableMarkup('GoldFinger', []),
         ['GoldFinger'],
         FALSE,
-        FALSE,
+        \InvalidArgumentException::class,
       ],
       'stdClass vs TranslatableMarkup' => [
         (object) ['GoldFinger'],
