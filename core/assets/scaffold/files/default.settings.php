@@ -725,15 +725,6 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
 # $settings['container_base_class'] = '\Drupal\Core\DependencyInjection\Container';
 
 /**
- * Override the default yaml parser class.
- *
- * Provide a fully qualified class name here if you would like to provide an
- * alternate implementation YAML parser. The class must implement the
- * \Drupal\Component\Serialization\SerializationInterface interface.
- */
-# $settings['yaml_parser_class'] = NULL;
-
-/**
  * Trusted host configuration.
  *
  * Drupal core can use the Symfony trusted host mechanism to prevent HTTP Host

@@ -309,8 +309,8 @@ class SettingsTest extends UnitTestCase {
   public static function providerTestRealDeprecatedSettings(): array {
     return [
       [
-        'block_interest_cohort',
-        'The "block_interest_cohort" setting is deprecated in drupal:9.5.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3320787.',
+        'state_cache',
+        'The "state_cache" setting is deprecated in drupal:11.0.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3177901.',
       ],
     ];
   }

@@ -325,11 +325,6 @@ system.file:
     path:
       type: mapping
       label: 'Path settings'
-      mapping:
-        temporary:
-          deprecated: "The 'system.file:path.temporary' config property path is deprecated in drupal:8.8.0 and is removed from drupal 11.0.0. Use settings.php instead. See https://www.drupal.org/node/3039255."
-          type: string
-          label: 'Temporary directory'
     temporary_maximum_age:
       type: integer
       label: 'Maximum age for temporary files'
