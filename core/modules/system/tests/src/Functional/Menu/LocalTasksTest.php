@@ -26,14 +26,6 @@ class LocalTasksTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'starterkit_theme';
 
@@ -268,11 +260,16 @@ class LocalTasksTest extends BrowserTestBase {
    * Tests that local tasks blocks cache is invalidated correctly.
    */
   public function testLocalTaskBlockCache() {
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer content types',
+      'administer permissions',
+    ]));
     $this->drupalCreateContentType(['type' => 'page']);
 
     // Only the Edit task. The block avoids showing a single tab.
     $this->drupalGet('/admin/config/people/accounts');
+    // @@todo Add assertion here to check the page was actually visited.
+    // https://www.drupal.org/project/drupal/issues/3443748
     $this->assertNoLocalTasks();
 
     // Only the Edit and Manage permission tabs.
@@ -284,6 +281,17 @@ class LocalTasksTest extends BrowserTestBase {
 
     // Field UI adds the usual Manage fields etc tabs.
     \Drupal::service('module_installer')->install(['field_ui']);
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer content types',
+      'administer permissions',
+      'administer account settings',
+      'administer display modes',
+      'administer node display',
+      'administer node fields',
+      'administer node form display',
+    ]));
+
     $this->drupalGet('/admin/structure/types/manage/page');
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],

@@ -21,14 +21,6 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -45,7 +37,8 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
     /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccess */
     $htaccess = \Drupal::service('file.htaccess_writer');
     $this->assertFalse($htaccess->write($private, TRUE));
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser(['access site reports']));
+
     $this->drupalGet('admin/reports/dblog');
     $this->clickLink("Security warning: Couldn't write .htaccess file.");
 

@@ -25,14 +25,6 @@ class EntityReferenceFieldCreationTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -40,8 +32,12 @@ class EntityReferenceFieldCreationTest extends BrowserTestBase {
    * Tests that entity reference fields cannot target entity types without IDs.
    */
   public function testAddReferenceFieldTargetingEntityTypeWithoutId() {
-    $this->drupalLogin($this->rootUser);
+
     $node_type = $this->drupalCreateContentType()->id();
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer content types',
+      'administer node fields',
+    ]));
 
     // Entity types without an ID key should not be presented as options when
     // creating an entity reference field in the UI.

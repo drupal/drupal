@@ -52,14 +52,6 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
@@ -82,10 +74,13 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
       'name' => '',
     ]);
     $anonymous_user->save();
+
+    // Create role for administrator.
     $admin_user = User::create([
       'uid' => 1,
       'name' => 'admin',
       'status' => 1,
+      'roles' => [$this->createRole(['administer users'])],
     ]);
     $admin_user->save();
   }
