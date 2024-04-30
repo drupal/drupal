@@ -30,6 +30,9 @@ class MarkupInterfaceComparator extends Comparator {
     if (is_scalar($expected) && is_scalar($actual)) {
       throw new \LogicException(__METHOD__ . '() should not be called directly. Use TestCase::assertEquals() instead');
     }
+    if (is_array($expected) || is_array($actual)) {
+      throw new \InvalidArgumentException('Expected and actual arguments passed to ' . __METHOD__ . '() must not be arrays');
+    }
     $expected_safe = (string) $expected;
     $actual_safe = (string) $actual;
     $expected_safe_stripped = strip_tags($expected_safe);
