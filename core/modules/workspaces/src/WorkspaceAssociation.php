@@ -3,6 +3,7 @@
 namespace Drupal\workspaces;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
@@ -47,7 +48,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * A multidimensional array of entity IDs that are associated to a workspace.
    *
    * The first level keys are workspace IDs, the second level keys are entity
-   * * type IDs, and the third level array are entity IDs, keyed by revision IDs.
+   * type IDs, and the third level array are entity IDs, keyed by revision IDs.
    *
    * @var array
    */
@@ -179,6 +180,31 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
         $query->condition('target_entity_id', $entity_ids, 'IN');
       }
     }
+
+    $tracked_revisions = [];
+    foreach ($query->execute() as $record) {
+      $tracked_revisions[$record->target_entity_type_id][$record->target_entity_revision_id] = $record->target_entity_id;
+    }
+
+    return $tracked_revisions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTrackedEntitiesForListing($workspace_id, int $pager_id = NULL, int|false $limit = 50): array {
+    $query = $this->database->select(static::TABLE)
+      ->extend(PagerSelectExtender::class)
+      ->limit($limit);
+    if ($pager_id) {
+      $query->element($pager_id);
+    }
+
+    $query
+      ->fields(static::TABLE, ['target_entity_type_id', 'target_entity_id', 'target_entity_revision_id'])
+      ->orderBy('target_entity_type_id', 'ASC')
+      ->orderBy('target_entity_revision_id', 'DESC')
+      ->condition('workspace', $workspace_id);
 
     $tracked_revisions = [];
     foreach ($query->execute() as $record) {
