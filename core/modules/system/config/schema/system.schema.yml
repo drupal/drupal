@@ -366,8 +366,6 @@ system.image.gd:
 system.mail:
   type: config_object
   label: 'Mail system'
-  constraints:
-    FullyValidatable: ~
   mapping:
     interface:
       type: sequence
@@ -399,16 +397,10 @@ system.mail:
           type: string
           nullable: true
           label: 'User'
-          constraints:
-            NotBlank:
-              allowNull: true
         password:
           type: string
           nullable: true
           label: 'Password'
-          constraints:
-            NotBlank:
-              allowNull: true
         port:
           type: integer
           nullable: true
