@@ -215,6 +215,23 @@ class WorkspaceTest extends BrowserTestBase {
     $assert_session->linkExists('Node 1');
     $assert_session->linkExists('Node 2');
     $assert_session->linkExists('Term 1');
+
+    // Create 50 more nodes to test the pagination.
+    for ($i = 3; $i < 53; $i++) {
+      $this->createNodeThroughUi('Node ' . $i, 'test');
+    }
+
+    $this->drupalGet($test_1->toUrl()->toString());
+    $assert_session->pageTextContains('52 content items');
+    $assert_session->pageTextContains('1 taxonomy term');
+    $assert_session->linkExists('Node 52');
+    $assert_session->linkExists('Node 3');
+    $assert_session->linkNotExists('Term 1');
+
+    $this->drupalGet($test_1->toUrl()->toString(), ['query' => ['page' => '1']]);
+    $assert_session->linkExists('Node 1');
+    $assert_session->linkExists('Node 2');
+    $assert_session->linkExists('Term 1');
   }
 
   /**

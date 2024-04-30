@@ -54,6 +54,24 @@ interface WorkspaceAssociationInterface {
   public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL);
 
   /**
+   * Retrieves a paged list of entities tracked by a given workspace.
+   *
+   * @param string $workspace_id
+   *   The ID of the workspace.
+   * @param int|null $pager_id
+   *   (optional) A pager ID. Defaults to NULL.
+   * @param int|false $limit
+   *   (optional) An integer specifying the number of elements per page. If
+   *   passed a false value (FALSE, 0, NULL), the pager is disabled. Defaults to
+   *   50.
+   *
+   * @return array
+   *   Returns a multidimensional array where the first level keys are entity
+   *   type IDs and the values are an array of entity IDs keyed by revision IDs.
+   */
+  public function getTrackedEntitiesForListing($workspace_id, int $pager_id = NULL, int|false $limit = 50): array;
+
+  /**
    * Retrieves all content revisions tracked by a given workspace.
    *
    * Since the 'workspace_association' index table only tracks the latest
