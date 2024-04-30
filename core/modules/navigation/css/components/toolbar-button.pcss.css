@@ -73,6 +73,10 @@
   font-size: var(--admin-toolbar-font-size-info-lg);
   line-height: var(--admin-toolbar-line-height-info-lg);
 }
+/* Dark color modifier for submenus title */
+.toolbar-button--dark {
+  color: var(--admin-toolbar-color-gray-990);
+}
 
 .toolbar-button--non-interactive {
   &:hover,
