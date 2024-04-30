@@ -33,9 +33,9 @@
           } only %}
           <div class="toolbar-popover__wrapper" data-toolbar-popover-wrapper inert>
             {% if item.url %}
-              {{ link(item.title, item.url, create_attribute({'class': ['toolbar-popover__header', 'toolbar-button', 'toolbar-button--large']})) }}
+              {{ link(item.title, item.url, create_attribute({'class': ['toolbar-popover__header', 'toolbar-button', 'toolbar-button--large', 'toolbar-button--dark']})) }}
             {% else %}
-              <span class="toolbar-popover__header toolbar-button toolbar-button--large toolbar-button--non-interactive">{{ item.title }}</span>
+              <span class="toolbar-popover__header toolbar-button toolbar-button--large toolbar-button--dark toolbar-button--non-interactive">{{ item.title }}</span>
             {% endif %}
             <ul class="toolbar-menu toolbar-popover__menu">
               {{ menus.menu_items(item.below, attributes, 1) }}
