@@ -19,12 +19,12 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspaceAssociation
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface|null $workspaceAssociation
    *   The workspace association service.
    */
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
-    protected readonly WorkspaceAssociationInterface $workspaceAssociation
+    protected readonly ?WorkspaceAssociationInterface $workspaceAssociation
   ) {}
 
   /**
