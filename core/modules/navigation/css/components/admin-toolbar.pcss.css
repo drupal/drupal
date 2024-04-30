@@ -163,12 +163,17 @@ body {
     width: calc(1 * var(--admin-toolbar-rem));
     height: calc(1 * var(--admin-toolbar-rem));
     content: '';
-    transition: transform var(--admin-toolbar-transition);
+    transition: opacity var(--admin-toolbar-transition), transform var(--admin-toolbar-transition);
+    opacity: 0;
     background-color: currentColor;
     mask-repeat: no-repeat;
     mask-position: center center;
     mask-size: 100% auto;
     mask-image: url(../../assets/icons/chevron.svg);
+
+    [data-admin-toolbar-transitions] & {
+      opacity: 1;
+    }
 
     [dir='rtl'] & {
       transform: rotate(180deg);
