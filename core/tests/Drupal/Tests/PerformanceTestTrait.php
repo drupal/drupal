@@ -243,6 +243,10 @@ trait PerformanceTestTrait {
         $args[':db_condition_placeholder_1'] = 'CSS_FILE';
       }
     }
+    elseif (str_starts_with($query, 'SELECT "name", "value" FROM "key_value_expire" WHERE "expire" >')) {
+      $args[':now'] = 'NOW';
+      $args[':keys__0'] = 'KEY';
+    }
 
     // Inline query arguments and log the query.
     $query = str_replace(array_keys($args), array_values(static::quoteQueryArgs($args)), $query);
