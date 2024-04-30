@@ -2,7 +2,9 @@
 
 namespace Drupal\performance_test;
 
+use Drupal\Core\Database\Event\DatabaseEvent;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\DestructableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -11,7 +13,7 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
   /**
    * Database events collected during the request.
    *
-   * @var Drupal\Core\Database\Event\StatementExecutionEndEvent[]
+   * @var \Drupal\Core\Database\Event\DatabaseEvent[]
    */
   protected array $databaseEvents = [];
 
@@ -30,14 +32,15 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
    */
   public static function getSubscribedEvents(): array {
     return [
-      StatementExecutionEndEvent::class => 'onStatementExecutionEnd',
+      StatementExecutionEndEvent::class => 'onDatabaseEvent',
+      StatementExecutionFailureEvent::class => 'onDatabaseEvent',
     ];
   }
 
   /**
    * Logs database statements.
    */
-  public function onStatementExecutionEnd(StatementExecutionEndEvent $event): void {
+  public function onDatabaseEvent(DatabaseEvent $event): void {
     // Use the event object as a value object.
     $this->databaseEvents[] = $event;
   }
