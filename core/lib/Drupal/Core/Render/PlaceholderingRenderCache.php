@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\Render;
 
-use Drupal\Core\Cache\CacheFactoryInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\Cache\VariationCacheFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -40,13 +40,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class PlaceholderingRenderCache extends RenderCache {
 
   /**
-   * The placeholder generator.
-   *
-   * @var \Drupal\Core\Render\PlaceholderGeneratorInterface
-   */
-  protected $placeholderGenerator;
-
-  /**
    * Stores rendered results for automatically placeholdered elements.
    *
    * This allows us to avoid talking to the cache twice per auto-placeholdered
@@ -74,22 +67,22 @@ class PlaceholderingRenderCache extends RenderCache {
   /**
    * Constructs a new PlaceholderingRenderCache object.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Cache\VariationCacheFactoryInterface $cache_factory
+   * @param \Drupal\Core\Cache\VariationCacheFactoryInterface $cacheFactory
    *   The variation cache factory.
-   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
+   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cacheContextsManager
    *   The cache contexts manager.
-   * @param \Drupal\Core\Render\PlaceholderGeneratorInterface $placeholder_generator
+   * @param \Drupal\Core\Render\PlaceholderGeneratorInterface $placeholderGenerator
    *   The placeholder generator.
    */
-  public function __construct(RequestStack $request_stack, $cache_factory, CacheContextsManager $cache_contexts_manager, PlaceholderGeneratorInterface $placeholder_generator) {
-    if ($cache_factory instanceof CacheFactoryInterface) {
-      @trigger_error('Injecting ' . __CLASS__ . ' with the "cache_factory" service is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use "variation_cache_factory" instead. See https://www.drupal.org/node/3365546', E_USER_DEPRECATED);
-      $cache_factory = \Drupal::service('variation_cache_factory');
-    }
-    parent::__construct($request_stack, $cache_factory, $cache_contexts_manager);
-    $this->placeholderGenerator = $placeholder_generator;
+  public function __construct(
+    RequestStack $requestStack,
+    VariationCacheFactoryInterface $cacheFactory,
+    CacheContextsManager $cacheContextsManager,
+    protected PlaceholderGeneratorInterface $placeholderGenerator,
+  ) {
+    parent::__construct($requestStack, $cacheFactory, $cacheContextsManager);
   }
 
   /**

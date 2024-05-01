@@ -372,12 +372,6 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
         $settings['options']['query'][FormBuilderInterface::AJAX_FORM_REQUEST] = TRUE;
       }
 
-      // @todo Legacy support. Remove in Drupal 8.
-      if (isset($settings['method']) && $settings['method'] == 'replace') {
-        @trigger_error('Using "replace" as the method in #ajax property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use "replaceWith" instead. See https://www.drupal.org/project/drupal/issues/3303557', E_USER_DEPRECATED);
-        $settings['method'] = 'replaceWith';
-      }
-
       // Convert \Drupal\Core\Url object to string.
       if (isset($settings['url']) && $settings['url'] instanceof Url) {
         $url = $settings['url']->setOptions($settings['options'])->toString(TRUE);
