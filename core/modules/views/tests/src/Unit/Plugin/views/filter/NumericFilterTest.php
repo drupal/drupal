@@ -44,7 +44,7 @@ class NumericFilterTest extends UnitTestCase {
    * @return array[]
    *   The test cases.
    */
-  public function provideAcceptExposedInput(): array {
+  public static function provideAcceptExposedInput(): array {
     // [$options, $value, $expected]
     return [
       // Not exposed by default. Bypass parsing and return true.

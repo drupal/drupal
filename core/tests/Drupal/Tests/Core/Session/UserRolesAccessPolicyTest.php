@@ -124,7 +124,7 @@ class UserRolesAccessPolicyTest extends UnitTestCase {
    * @return array
    *   A list of test scenarios.
    */
-  public function calculatePermissionsProvider(): array {
+  public static function calculatePermissionsProvider(): array {
     $cases['no-roles'] = [
       'roles' => [],
       'expect_admin_rights' => FALSE,
