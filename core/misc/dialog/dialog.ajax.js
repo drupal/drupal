@@ -270,7 +270,9 @@
    * @param {object} [settings]
    *   Dialog settings.
    */
-  $(window).on('dialog:aftercreate', (e, dialog, $element, settings) => {
+  window.addEventListener('dialog:aftercreate', (event) => {
+    const $element = $(event.target);
+    const dialog = event.dialog;
     $element.on('click.dialog', '.dialog-cancel', (e) => {
       dialog.close('cancel');
       e.preventDefault();
@@ -288,7 +290,8 @@
    * @param {jQuery} $element
    *   jQuery collection of the dialog element.
    */
-  $(window).on('dialog:beforeclose', (e, dialog, $element) => {
+  window.addEventListener('dialog:beforeclose', (e) => {
+    const $element = $(e.target);
     $element.off('.dialog');
   });
 

@@ -237,24 +237,22 @@
   };
 
   // Manage Active editable class on opening and closing of the dialog.
-  $(window).on({
-    'dialog:beforecreate': (event, dialog, $element, settings) => {
-      if ($element[0].id === 'drupal-off-canvas') {
-        $('body .settings-tray-active-editable').removeClass(
-          'settings-tray-active-editable',
-        );
-        const $activeElement = $(`#${settings.settingsTrayActiveEditableId}`);
-        if ($activeElement.length) {
-          $activeElement.addClass('settings-tray-active-editable');
-        }
+  window.addEventListener('dialog:beforecreate', (e) => {
+    if (e.target.id === 'drupal-off-canvas') {
+      $('body .settings-tray-active-editable').removeClass(
+        'settings-tray-active-editable',
+      );
+      const $activeElement = $(`#${e.settings.settingsTrayActiveEditableId}`);
+      if ($activeElement.length) {
+        $activeElement.addClass('settings-tray-active-editable');
       }
-    },
-    'dialog:beforeclose': (event, dialog, $element) => {
-      if ($element[0].id === 'drupal-off-canvas') {
-        $('body .settings-tray-active-editable').removeClass(
-          'settings-tray-active-editable',
-        );
-      }
-    },
+    }
+  });
+  window.addEventListener('dialog:beforeclose', (e) => {
+    if (e.target.id === 'drupal-off-canvas') {
+      $('body .settings-tray-active-editable').removeClass(
+        'settings-tray-active-editable',
+      );
+    }
   });
 })(jQuery, Drupal);
