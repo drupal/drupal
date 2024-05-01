@@ -12,6 +12,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\system\Entity\Menu;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\block\Entity\Block;
 
 /**
@@ -315,4 +316,23 @@ function block_configurable_language_delete(ConfigurableLanguageInterface $langu
       $block->save();
     }
   }
+}
+
+/**
+ * Implements hook_block_build_BASE_BLOCK_ID_alter().
+ */
+function block_block_build_local_actions_block_alter(array &$build, BlockPluginInterface $block) {
+  $build['#lazy_builder_preview'] = [
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => ['invisible'],
+    ],
+    'actions' => [
+      '#theme' => 'menu_local_action',
+      '#link' => [
+        'title' => t('Add'),
+        'url' => Url::fromUserInput('#'),
+      ],
+    ],
+  ];
 }
