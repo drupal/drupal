@@ -23,7 +23,8 @@
   box-shadow: var(--jui-dialog--focus-box-shadow);
 }
 
-@media all and (max-width: 48em) { /* 768px */
+@media all and (max-width: 48em) {
+  /* 768px */
   .ui-dialog:not(.ui-dialog-off-canvas) {
     min-width: 92%;
     max-width: 92%;
@@ -111,7 +112,7 @@
 
 .ui-dialog-buttonpane .ui-dialog-buttonset {
   display: flex;
-  gap:  var(--space-s);
+  gap: var(--space-s);
   justify-content: flex-end;
   margin-block: var(--space-m);
   margin-inline-end: var(--space-l);

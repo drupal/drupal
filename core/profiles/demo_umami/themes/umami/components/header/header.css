@@ -7,14 +7,16 @@
 }
 
 /* Medium */
-@media screen and (min-width: 48rem) { /* 768px */
+@media screen and (min-width: 48rem) {
+  /* 768px */
   .umami-header {
     padding-top: 0;
   }
 }
 
 /* Extra large + side margins */
-@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+@media screen and (min-width: 80rem) {
+  /* 1200px (large) + 80px (side margins) = 1280px */
   .umami-header {
     padding: 0;
   }

@@ -173,7 +173,10 @@
     inset-inline-start: 0;
     display: block;
     width: 100%;
-    transition: transform var(--tabs-transition-duration), opacity var(--tabs-transition-duration), top var(--tabs-transition-duration);
+    transition:
+      transform var(--tabs-transition-duration),
+      opacity var(--tabs-transition-duration),
+      top var(--tabs-transition-duration);
     border-block-start: solid 2px var(--tabs-highlight-color);
 
     &:nth-child(1) {

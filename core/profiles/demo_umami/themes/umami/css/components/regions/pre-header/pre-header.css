@@ -15,14 +15,16 @@
   border-bottom: 1px solid #e6eee0;
 }
 /* Medium */
-@media screen and (min-width: 48rem) { /* 768px */
+@media screen and (min-width: 48rem) {
+  /* 768px */
   .region-pre-header {
     padding-top: 0;
     padding-bottom: 0;
   }
 }
 /* Extra large + side margins */
-@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+@media screen and (min-width: 80rem) {
+  /* 1200px (large) + 80px (side margins) = 1280px */
   .region-pre-header {
     padding: 0;
   }

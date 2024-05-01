@@ -7,7 +7,8 @@
   margin-bottom: 28px;
 }
 /* Small */
-@media screen and (min-width: 30em) { /* 480px */
+@media screen and (min-width: 30em) {
+  /* 480px */
   .grid--4 {
     overflow-x: hidden;
   }
@@ -26,7 +27,8 @@
   }
 }
 /* Large */
-@media screen and (min-width: 60em) { /* 960px */
+@media screen and (min-width: 60em) {
+  /* 960px */
   .grid--4 .views-row {
     flex-basis: calc(25% - 28px);
     flex-grow: 0;

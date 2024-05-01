@@ -87,7 +87,7 @@
     list-style: none;
 
     & li {
-      margin: calc(var(--off-canvas-vertical-spacing-unit) /2) 0;
+      margin: calc(var(--off-canvas-vertical-spacing-unit) / 2) 0;
     }
   }
 }

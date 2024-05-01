@@ -5,7 +5,7 @@
 
 @import "../base/media-queries.pcss.css";
 
-[data-admin-toolbar-body-scroll='locked'] {
+[data-admin-toolbar-body-scroll="locked"] {
   overflow: clip;
 
   body {

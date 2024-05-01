@@ -228,7 +228,9 @@
         border: none;
         border-radius: var(--tabs-border-radius-size) var(--tabs-border-radius-size) 0 0;
         outline: 2px dotted transparent;
-        box-shadow: 0 0 0 2px var(--color-white), 0 0 0 calc(var(--tabs--focus-height) + 2px) var(--color-focus);
+        box-shadow:
+          0 0 0 2px var(--color-white),
+          0 0 0 calc(var(--tabs--focus-height) + 2px) var(--color-focus);
       }
       &:hover {
         color: var(--color-absolutezero-hover);
@@ -254,7 +256,9 @@
     & .tabs--primary {
       & .tabs__link {
         &:focus {
-          box-shadow: 0 0 0 2px var(--color-gray-050), 0 0 0 calc(var(--tabs--focus-height) + 2px) var(--color-focus);
+          box-shadow:
+            0 0 0 2px var(--color-gray-050),
+            0 0 0 calc(var(--tabs--focus-height) + 2px) var(--color-focus);
         }
       }
     }

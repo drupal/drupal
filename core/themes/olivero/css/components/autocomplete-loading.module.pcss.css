@@ -10,7 +10,7 @@
   background-color: var(--color--white);
   background-image: url("../../images/magnifying-glass.svg");
   background-repeat: no-repeat;
-  background-position: right var(--sp1) center;  /* LTR */
+  background-position: right var(--sp1) center; /* LTR */
 
   &:disabled {
     background-color: var(--color--gray-100);

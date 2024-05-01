@@ -402,6 +402,7 @@ default:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/.stylelintrc.json
+        - core/.prettier*
         - core/package.json
         - core/yarn.lock
         - "**/*.css"

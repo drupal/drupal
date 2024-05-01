@@ -111,9 +111,9 @@
   /**
    * Remove the extra padding of container-inline wrapper if it's used inside a fieldset
    */
-   & > .container-inline{
+  & > .container-inline {
     padding: 0;
-   }
+  }
 }
 
 @media screen and (min-width: 48em) {

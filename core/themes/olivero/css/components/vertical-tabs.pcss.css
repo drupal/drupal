@@ -58,7 +58,7 @@
   display: none;
 }
 
-.vertical-tabs__menu-item:nth-child(n+2) {
+.vertical-tabs__menu-item:nth-child(n + 2) {
   border-block-start: var(--vertical-tabs-menu-border-width) solid var(--color--gray-95);
 }
 

@@ -68,7 +68,10 @@
  */
 html.js body:not(.is-always-mobile-nav) .site-header__inner {
   @media (--nav) {
-    transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
+    transition:
+      opacity 0.3s,
+      transform 0.3s,
+      box-shadow 0.3s;
   }
 }
 

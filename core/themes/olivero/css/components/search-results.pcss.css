@@ -27,7 +27,9 @@
 
   & a {
     padding-block-end: 3px;
-    transition: background-size 0.2s, color 0.2s;
+    transition:
+      background-size 0.2s,
+      color 0.2s;
     text-decoration: none;
     background-color: transparent;
     background-image: linear-gradient(var(--color--primary-50), var(--color--primary-50)); /* Two values are needed for IE11 support. */
