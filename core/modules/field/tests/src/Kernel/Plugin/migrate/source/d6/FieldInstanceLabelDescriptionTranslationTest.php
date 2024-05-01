@@ -67,7 +67,7 @@ class FieldInstanceLabelDescriptionTranslationTest extends MigrateSqlSourceTestB
       ],
     ];
 
-    $test[0]['expected_results'] = [
+    $test[0]['expected_data'] = [
       [
         'property' => 'widget_label',
         'translation' => "fr - Integer Field",
