@@ -144,22 +144,22 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
     return [
       'node' => [
         'entity_type' => 'node',
-        'article' => [
+        'bundle1' => [
           'id' => 'article',
           'path' => 'admin/structure/types/manage/article',
         ],
-        'page' => [
+        'bundle2' => [
           'id' => 'page',
           'path' => 'admin/structure/types/manage/page',
         ],
       ],
       'taxonomy' => [
         'entity_type' => 'taxonomy_term',
-        'tags' => [
+        'bundle1' => [
           'id' => 'tags',
           'path' => 'admin/structure/taxonomy/manage/tags/overview',
         ],
-        'kittens' => [
+        'bundle2' => [
           'id' => 'kittens',
           'path' => 'admin/structure/taxonomy/manage/kittens/overview',
         ],

@@ -104,7 +104,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
       // is marked as insecure.
       '0.2, 0.2' => [
         'site_patch_version' => '0.2',
-        'expected_security_release' => ['1.2', '2.0-rc2'],
+        'expected_security_releases' => ['1.2', '2.0-rc2'],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.2.0-rc2',
       ],
@@ -162,13 +162,13 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
       // Security release available for next minor.
       '0.0, 1.2, secure' => [
         'site_patch_version' => '0.0',
-        'expected_security_release' => ['1.2'],
+        'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.1.2',
       ],
       '0.2, 1.2, secure' => [
         'site_patch_version' => '0.2',
-        'expected_security_release' => ['1.2'],
+        'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.1.2',
       ],

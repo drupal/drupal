@@ -82,7 +82,7 @@ class MenuTranslationTest extends MigrateSqlSourceTestBase {
         'i18n_status' => 0,
       ],
     ];
-    $tests[0]['expected_results'] = [
+    $tests[0]['expected_data'] = [
       [
         'menu_name' => 'navigation',
         'type' => 'menu',

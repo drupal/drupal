@@ -73,7 +73,7 @@ class SuperUserAccessInstallTest extends InstallerTestBase {
    *
    * @dataProvider getInstallTests
    */
-  public function testInstalled(bool $expected_runtime_has_permission, bool $expected_no_access_message, array $expected_roles): void {
+  public function testInstalled(bool $expected_runtime_has_permission, bool $expected_no_access_message, array $expected_roles, string $install_code, bool $super_user_policy): void {
     $user = User::load(1);
     $this->assertSame($expected_runtime_has_permission, $user->hasPermission('administer software updates'));
     $this->assertTrue(\Drupal::state()->get('admin_permission_in_installer'));

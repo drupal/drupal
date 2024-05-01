@@ -647,7 +647,7 @@ class UpdateContribTest extends UpdateTestBase {
       // Security releases available for module major release 1.
       // No releases for next major.
       '8.x-1.0, 8.x-1.2' => [
-        'module_patch_version' => '8.x-1.0',
+        'module_version' => '8.x-1.0',
         'expected_security_releases' => ['8.x-1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2',
@@ -656,7 +656,7 @@ class UpdateContribTest extends UpdateTestBase {
       // 8.x-1.1 security release marked as insecure.
       // No releases for next major.
       '8.x-1.0, 8.x-1.1 8.x-1.2' => [
-        'module_patch_version' => '8.x-1.0',
+        'module_version' => '8.x-1.0',
         'expected_security_releases' => ['8.x-1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.1_8.x-1.2',
@@ -664,13 +664,13 @@ class UpdateContribTest extends UpdateTestBase {
       // Security release available for module major release 2.
       // No releases for next major.
       '8.x-2.0, 8.x-2.2' => [
-        'module_patch_version' => '8.x-2.0',
+        'module_version' => '8.x-2.0',
         'expected_security_releases' => ['8.x-2.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-2.2_1.x_secure',
       ],
       '8.x-2.2, 8.x-1.2 8.x-2.2' => [
-        'module_patch_version' => '8.x-2.2',
+        'module_version' => '8.x-2.2',
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
@@ -678,7 +678,7 @@ class UpdateContribTest extends UpdateTestBase {
       // Security release available for module major release 1.
       // Security release also available for next major.
       '8.x-1.0, 8.x-1.2 8.x-2.2' => [
-        'module_patch_version' => '8.x-1.0',
+        'module_version' => '8.x-1.0',
         'expected_security_releases' => ['8.x-1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
@@ -687,7 +687,7 @@ class UpdateContribTest extends UpdateTestBase {
       // releases are not marked as insecure.
       // Security release available for next major.
       '8.x-1.0, 8.x-2.2, not insecure' => [
-        'module_patch_version' => '8.x-1.0',
+        'module_version' => '8.x-1.0',
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.x-2.2_1.x_secure',
@@ -695,13 +695,13 @@ class UpdateContribTest extends UpdateTestBase {
       // On latest security release for module major release 1.
       // Security release also available for next major.
       '8.x-1.2, 8.x-1.2 8.x-2.2' => [
-        'module_patch_version' => '8.x-1.2',
-        'expected_security_release' => [],
+        'module_version' => '8.x-1.2',
+        'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
       ],
       '8.x-2.0, 8.x-1.2 8.x-2.2' => [
-        'module_patch_version' => '8.x-2.0',
+        'module_version' => '8.x-2.0',
         'expected_security_releases' => ['8.x-2.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
