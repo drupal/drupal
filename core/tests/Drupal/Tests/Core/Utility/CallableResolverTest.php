@@ -40,23 +40,11 @@ class CallableResolverTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider callableResolverTestCases
    * @covers ::getCallableFromDefinition
    * @group legacy
    */
-  public function testCallbackResolver($definition, $result, string $deprecation = NULL) {
-    if ($deprecation) {
-      $this->expectDeprecation($deprecation);
-    }
-    $argument = 'bar';
-    $this->assertEquals($result . '+' . $argument, $this->resolver->getCallableFromDefinition($definition)($argument));
-  }
-
-  /**
-   * Test cases for ::testCallbackResolver.
-   */
-  public function callableResolverTestCases() {
-    return [
+  public function testCallbackResolver() {
+    $cases = [
       'Inline function' => [
         function ($suffix) {
           return __METHOD__ . '+' . $suffix;
@@ -117,6 +105,15 @@ class CallableResolverTest extends UnitTestCase {
         __CLASS__ . '::__invoke',
       ],
     ];
+
+    $argument = 'bar';
+    foreach ($cases as $label => [$definition, $result]) {
+      if (isset($cases[$label][2])) {
+        $this->expectDeprecation($cases[$label][2]);
+      }
+
+      $this->assertEquals($result . '+' . $argument, $this->resolver->getCallableFromDefinition($definition)($argument), $label);
+    }
   }
 
   /**
