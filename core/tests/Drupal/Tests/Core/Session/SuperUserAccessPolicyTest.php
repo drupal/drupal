@@ -86,7 +86,7 @@ class SuperUserAccessPolicyTest extends UnitTestCase {
    * @return array
    *   A list of test scenarios.
    */
-  public function calculatePermissionsProvider(): array {
+  public static function calculatePermissionsProvider(): array {
     $cases['is-super-user'] = [1, TRUE];
     $cases['is-normal-user'] = [2, FALSE];
     return $cases;
@@ -122,7 +122,7 @@ class SuperUserAccessPolicyTest extends UnitTestCase {
    * @return array
    *   A list of test scenarios.
    */
-  public function alterPermissionsProvider(): array {
+  public static function alterPermissionsProvider(): array {
     $cases['is-super-user'] = [1];
     $cases['is-normal-user'] = [2];
     return $cases;

@@ -44,7 +44,7 @@ class RendererTest extends RendererTestBase {
   public function testRenderBasic($build, $expected, callable $setup_code = NULL) {
     if (isset($setup_code)) {
       $setup_code = $setup_code->bindTo($this);
-      $setup_code();
+      $setup_code($this->themeManager);
     }
 
     if (isset($build['#markup'])) {
@@ -63,7 +63,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerTestRenderBasic() {
+  public static function providerTestRenderBasic() {
     $data = [];
 
     // Part 1: the most simplistic render arrays possible, none using #theme.
@@ -266,10 +266,10 @@ class RendererTest extends RendererTestBase {
       '#theme_wrappers' => ['container'],
       '#attributes' => ['class' => ['baz']],
     ];
-    $setup_code_type_link = function () {
-      $this->themeManager->expects($this->exactly(2))
+    $setup_code_type_link = function ($themeManager) {
+      $themeManager->expects(static::exactly(2))
         ->method('render')
-        ->with($this->logicalOr('common_test_foo', 'container'))
+        ->with(static::logicalOr('common_test_foo', 'container'))
         ->willReturnCallback(function ($theme, $vars) {
           if ($theme == 'container') {
             return '<div' . (string) (new Attribute($vars['#attributes'])) . '>' . $vars['#children'] . "</div>\n";
@@ -293,10 +293,10 @@ class RendererTest extends RendererTestBase {
       '#url' => 'https://www.drupal.org',
       '#title' => 'bar',
     ];
-    $setup_code_type_link = function () {
-      $this->themeManager->expects($this->exactly(2))
+    $setup_code_type_link = function ($themeManager) {
+      $themeManager->expects(static::exactly(2))
         ->method('render')
-        ->with($this->logicalOr('link', 'container'))
+        ->with(static::logicalOr('link', 'container'))
         ->willReturnCallback(function ($theme, $vars) {
           if ($theme == 'container') {
             return '<div' . (string) (new Attribute($vars['#attributes'])) . '>' . $vars['#children'] . "</div>\n";
@@ -332,8 +332,8 @@ class RendererTest extends RendererTestBase {
         'container',
       ],
     ];
-    $setup_code = function () {
-      $this->themeManager->expects($this->exactly(2))
+    $setup_code = function ($themeManager) {
+      $themeManager->expects(static::exactly(2))
         ->method('render')
         ->with('container')
         ->willReturnCallback(function ($theme, $vars) {
@@ -347,8 +347,8 @@ class RendererTest extends RendererTestBase {
       '#theme_wrappers' => [['container']],
       '#attributes' => ['class' => ['foo']],
     ];
-    $setup_code = function () {
-      $this->themeManager->expects($this->once())
+    $setup_code = function ($themeManager) {
+      $themeManager->expects(static::once())
         ->method('render')
         ->with(['container'])
         ->willReturnCallback(function ($theme, $vars) {
@@ -364,10 +364,10 @@ class RendererTest extends RendererTestBase {
       '#theme' => ['suggestion_not_implemented'],
       '#markup' => 'foo',
     ];
-    $setup_code = function () {
-      $this->themeManager->expects($this->once())
+    $setup_code = function ($themeManager) {
+      $themeManager->expects(static::once())
         ->method('render')
-        ->with(['suggestion_not_implemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], static::anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];
@@ -379,10 +379,10 @@ class RendererTest extends RendererTestBase {
         '#markup' => 'foo',
       ],
     ];
-    $setup_code = function () {
-      $this->themeManager->expects($this->once())
+    $setup_code = function ($themeManager) {
+      $themeManager->expects(static::once())
         ->method('render')
-        ->with(['suggestion_not_implemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], static::anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];
@@ -392,11 +392,11 @@ class RendererTest extends RendererTestBase {
       '#theme' => ['common_test_empty'],
       '#markup' => 'foo',
     ];
-    $theme_function_output = $this->randomContextValue();
-    $setup_code = function () use ($theme_function_output) {
-      $this->themeManager->expects($this->once())
+    $theme_function_output = static::randomContextValue();
+    $setup_code = function ($themeManager) use ($theme_function_output) {
+      $themeManager->expects(static::once())
         ->method('render')
-        ->with(['common_test_empty'], $this->anything())
+        ->with(['common_test_empty'], static::anything())
         ->willReturn($theme_function_output);
     };
     $data[] = [$build, $theme_function_output, $setup_code];
@@ -420,10 +420,10 @@ class RendererTest extends RendererTestBase {
       '#children' => 'baz',
       'child' => ['#markup' => 'boo'],
     ];
-    $setup_code = function () {
-      $this->themeManager->expects($this->once())
+    $setup_code = function ($themeManager) {
+      $themeManager->expects(static::once())
         ->method('render')
-        ->with('common_test_foo', $this->anything())
+        ->with('common_test_foo', static::anything())
         ->willReturn('foobar');
     };
     $data[] = [$build, 'foobar', $setup_code];
@@ -439,8 +439,8 @@ class RendererTest extends RendererTestBase {
         '#markup' => 'boo',
       ],
     ];
-    $setup_code = function () {
-      $this->themeManager->expects($this->never())
+    $setup_code = function ($themeManager) {
+      $themeManager->expects(static::never())
         ->method('render');
     };
     $data[] = [$build, 'boo', $setup_code];
@@ -455,8 +455,8 @@ class RendererTest extends RendererTestBase {
         '#markup' => 'boo',
       ],
     ];
-    $setup_code = function () {
-      $this->themeManager->expects($this->never())
+    $setup_code = function ($themeManager) {
+      $themeManager->expects(static::never())
         ->method('render');
     };
     $data[] = [$build, 'baz', $setup_code];
@@ -474,8 +474,8 @@ class RendererTest extends RendererTestBase {
         '#markup' => 'kitten',
       ],
     ];
-    $setup_code = function () {
-      $this->themeManager->expects($this->never())
+    $setup_code = function ($themeManager) {
+      $themeManager->expects(static::never())
         ->method('render');
     };
     $data[] = [$build, 'kitten', $setup_code];
