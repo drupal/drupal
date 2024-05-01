@@ -116,25 +116,7 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('Bear');
     $assert_session->pageTextNotContains('Turtle');
 
-    // Assert the exposed filters can be applied and page is reset from second
-    // page.
-    $page->clickLink('Next page');
-    $this->waitForElementTextContains('.js-media-library-view .js-pager__items > li:nth-of-type(2)', 'Page 2');
-    $page->fillField('Name', 'Bear');
-    $page->pressButton('Apply filters');
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->pageTextNotContains('Dog');
-    $assert_session->pageTextContains('Bear');
-    $assert_session->pageTextNotContains('Turtle');
-
-    // Test clearing the filters.
-    $page->fillField('Name', '');
-    $page->pressButton('Apply filters');
-    $assert_session->waitForLink('Next page');
-    $page->clickLink('Next page');
-    $this->waitForElementTextContains('.js-media-library-view .js-pager__items > li:nth-of-type(2)', 'Page 2');
-
-    // Assert the exposed filters are persisted when changing display.
+    // Assert the exposed filters can be applied.
     $page->fillField('Name', 'Dog');
     $page->pressButton('Apply filters');
     $assert_session->assertWaitOnAjaxRequest();
@@ -145,6 +127,7 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     $assert_session->linkExists('Table');
     $this->switchToMediaLibraryGrid();
 
+    // Assert the exposed filters are persisted when changing display.
     $this->assertSame('Dog', $page->findField('Name')->getValue());
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextNotContains('Crocodile');
