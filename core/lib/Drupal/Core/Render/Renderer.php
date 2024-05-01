@@ -310,6 +310,7 @@ class Renderer implements RendererInterface {
     $pre_bubbling_elements = array_intersect_key($elements, [
       '#cache' => TRUE,
       '#lazy_builder' => TRUE,
+      '#lazy_builder_preview' => TRUE,
       '#create_placeholder' => TRUE,
     ]);
 
