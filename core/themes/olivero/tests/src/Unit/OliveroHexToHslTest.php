@@ -41,7 +41,7 @@ final class OliveroHexToHslTest extends UnitTestCase {
    * @return array[]
    *   The test data.
    */
-  public function hexCodes(): array {
+  public static function hexCodes(): array {
     return [
       'Blue Lagoon' => ['#1b9ae4', [202, 79, 50]],
       'Firehouse' => ['#a30f0f', [0, 83, 35]],

@@ -87,7 +87,7 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
    * @return array[]
    *   Test data.
    */
-  public function providerProjectStatus(): array {
+  public static function providerProjectStatus(): array {
     return [
       'revoked' => [
         'fixture' => '/../../fixtures/release-history/drupal.project_status.revoked.0.2.xml',

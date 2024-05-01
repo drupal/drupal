@@ -166,7 +166,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    */
   public function getBlockTests() {
     $blocks = [];
-    foreach ($this->getTestThemes() as $theme) {
+    foreach (static::getTestThemes() as $theme) {
       $blocks += [
         "$theme: block-powered" => [
           'theme' => $theme,
@@ -233,7 +233,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    */
   public function testEditModeEnableDisable() {
     $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3317520");
-    foreach ($this->getTestThemes() as $theme) {
+    foreach (static::getTestThemes() as $theme) {
       $this->enableTheme($theme);
       $block = $this->placeBlock('system_powered_by_block');
       foreach (['contextual_link', 'toolbar_link'] as $enable_option) {
@@ -270,7 +270,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
   public function testValidationMessages() {
     $page = $this->getSession()->getPage();
     $web_assert = $this->assertSession();
-    foreach ($this->getTestThemes() as $theme) {
+    foreach (static::getTestThemes() as $theme) {
       $this->enableTheme($theme);
       $block = $this->placeBlock('settings_tray_test_validation');
       $this->drupalGet('user');
