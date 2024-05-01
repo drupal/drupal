@@ -650,7 +650,7 @@
   );
 
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
-  $(window).on('dialog:beforecreate', () => {
+  window.addEventListener('dialog:beforecreate', () => {
     const dialogLoading = document.querySelector('.ckeditor5-dialog-loading');
 
     if (dialogLoading) {
@@ -673,7 +673,7 @@
   });
 
   // Respond to dialogs that are closed, removing the current save handler.
-  $(window).on('dialog:afterclose', () => {
+  window.addEventListener('dialog:afterclose', () => {
     if (Drupal.ckeditor5.saveCallback) {
       Drupal.ckeditor5.saveCallback = null;
     }

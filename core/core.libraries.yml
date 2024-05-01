@@ -549,6 +549,7 @@ drupal.debounce:
 drupal.dialog:
   version: VERSION
   js:
+    misc/dialog/dialog-deprecation.js: {}
     misc/dialog/dialog.js: {}
     misc/dialog/dialog.position.js: {}
     misc/dialog/dialog.jquery-ui.js: {}
@@ -582,6 +583,7 @@ drupal.dialog:
     - core/drupal.debounce
     - core/drupal.displace
     - core/tabbable.jquery.shim
+    - core/once
     - core/drupal.jquery.position
 
 drupal.dialog.ajax:
