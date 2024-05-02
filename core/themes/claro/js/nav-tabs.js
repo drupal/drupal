@@ -13,6 +13,7 @@
 
     const openMenu = () => {
       $target.toggleClass('is-open');
+      $target.find('button').attr('aria-expanded', $target.hasClass('is-open'));
     };
 
     const toggleOrder = (reset) => {
@@ -54,9 +55,11 @@
         // the width of the parent container.
         const isHorizontal = $tab.attr('data-width') <= $tab.outerWidth();
         $tab.toggleClass('is-horizontal', isHorizontal);
+        $tab.find('button').attr('aria-expanded', null);
         toggleOrder(isHorizontal);
       } else {
         toggleOrder(false);
+        $tab.find('button').attr('aria-expanded', 'false');
       }
     };
 
