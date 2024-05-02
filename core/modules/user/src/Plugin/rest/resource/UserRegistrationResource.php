@@ -3,6 +3,7 @@
 namespace Drupal\user\Plugin\rest\resource;
 
 use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Password\PasswordGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\rest\Attribute\RestResource;
@@ -49,6 +50,13 @@ class UserRegistrationResource extends ResourceBase {
   protected $currentUser;
 
   /**
+   * The password generator.
+   *
+   * @var \Drupal\Core\Password\PasswordGeneratorInterface
+   */
+  protected $passwordGenerator;
+
+  /**
    * Constructs a new UserRegistrationResource instance.
    *
    * @param array $configuration
@@ -65,11 +73,19 @@ class UserRegistrationResource extends ResourceBase {
    *   A user settings config instance.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\Password\PasswordGeneratorInterface|null $password_generator
+   *   The password generator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, ImmutableConfig $user_settings, AccountInterface $current_user) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, ImmutableConfig $user_settings, AccountInterface $current_user, PasswordGeneratorInterface $password_generator = NULL) {
+    if (is_null($password_generator)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $password_generator argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3405799', E_USER_DEPRECATED);
+      $password_generator = \Drupal::service('password_generator');
+    }
+
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->userSettings = $user_settings;
     $this->currentUser = $current_user;
+    $this->passwordGenerator = $password_generator;
   }
 
   /**
@@ -83,7 +99,8 @@ class UserRegistrationResource extends ResourceBase {
       $container->getParameter('serializer.formats'),
       $container->get('logger.factory')->get('rest'),
       $container->get('config.factory')->get('user.settings'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('password_generator')
     );
   }
 
@@ -102,13 +119,17 @@ class UserRegistrationResource extends ResourceBase {
   public function post(UserInterface $account = NULL) {
     $this->ensureAccountCanRegister($account);
 
-    // Only activate new users if visitors are allowed to register and no email
-    // verification required.
-    if ($this->userSettings->get('register') == UserInterface::REGISTER_VISITORS && !$this->userSettings->get('verify_mail')) {
+    // Only activate new users if visitors are allowed to register.
+    if ($this->userSettings->get('register') == UserInterface::REGISTER_VISITORS) {
       $account->activate();
     }
     else {
       $account->block();
+    }
+
+    // Generate password if email verification required.
+    if ($this->userSettings->get('verify_mail')) {
+      $account->setPassword($this->passwordGenerator->generate());
     }
 
     $this->checkEditFieldAccess($account);
