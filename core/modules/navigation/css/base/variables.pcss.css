@@ -2,8 +2,9 @@
 
 /* This is a universal size that helps in the case of themes with a size of 10 pixels.
 We need it root to calculate the size of the displace in .dialog-off-canvas-main-canvas */
+/* prettier-ignore */
 :root {
-  /* stylelint-disable-next-line prettier/prettier */
+  /* stylelint-disable-next-line */
   --admin-toolbar-rem: max(1rem, 16PX); /* Workaround until postcss-px-to-rem is removed so this is not converted to rems. */
 }
 
