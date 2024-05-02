@@ -19,7 +19,7 @@
     "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js",
     "lint:yaml": "node ./node_modules/eslint/bin/eslint.js --ext .yml .",
     "test:nightwatch": "node -r dotenv-safe/config ./node_modules/.bin/nightwatch --config ./tests/Drupal/Nightwatch/nightwatch.conf.js",
-    "prettier": "prettier --write \"./**/*.js\"",
+    "prettier": "prettier --write \"./**/*.css\" \"./**/*.js\"",
     "spellcheck": "cspell -c .cspell.json --cache",
     "spellcheck:make-dict": "rm -f misc/cspell/dictionary.txt && touch misc/cspell/dictionary.txt && yarn -s spellcheck:core --unique --words-only | perl -Mopen=locale -pe '$_=lc$_' | LC_ALL=en_US.UTF-8 tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt",
     "spellcheck:core": "cspell -c .cspell.json --root .. --cache --cache-location core/.cspellcache \"core/**/*\" \"composer/**/*\" \"composer.json\" \".gitlab-ci/*\" \".gitlab-ci.yml\"",
