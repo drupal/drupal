@@ -48,8 +48,7 @@
   vertical-align: -0.0625rem;
   background: transparent url(../../images/shortcut/favstar.svg) left top / calc(var(--shortcut-icon-size) * 4) var(--shortcut-icon-size) no-repeat;
 
-  @nest .shortcut-action--add:hover &,
-  .shortcut-action--add:focus & {
+  @nest .shortcut-action--add:hover &, .shortcut-action--add:focus & {
     background-position: calc(-1 * var(--shortcut-icon-size)) top;
   }
 
@@ -57,8 +56,7 @@
     background-position: calc(-2 * var(--shortcut-icon-size)) top;
   }
 
-  @nest .shortcut-action--remove:focus &,
-  .shortcut-action--remove:hover & {
+  @nest .shortcut-action--remove:focus &, .shortcut-action--remove:hover & {
     background-position: calc(-3 * var(--shortcut-icon-size)) top;
   }
 

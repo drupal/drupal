@@ -13,7 +13,7 @@
   outline: 1px dotted gray;
 }
 .ck-content [lang]::after {
-  content: " ("attr(lang)")";
+  content: " (" attr(lang) ")";
   color: #666;
   font-size: 10px;
 }

@@ -8,7 +8,8 @@
 .hero__content {
   grid-column: 1 / 7;
 
-  @media (--grid-md) { /* 700px */
+  @media (--grid-md) {
+    /* 700px */
     grid-column: 3 / 13;
   }
 

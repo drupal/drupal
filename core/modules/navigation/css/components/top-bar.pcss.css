@@ -22,7 +22,9 @@
     width: 100vw;
     padding-block: var(--admin-toolbar-space-12);
     padding-inline: calc(var(--drupal-displace-offset-left, var(--admin-toolbar-sidebar-width)) + var(--admin-toolbar-space-32)) var(--admin-toolbar-space-32);
-    box-shadow: 0 0 40px 0 var(--admin-toolbar-color-shadow-6), 0 4px 4px 0 var(--admin-toolbar-color-shadow-8);
+    box-shadow:
+      0 0 40px 0 var(--admin-toolbar-color-shadow-6),
+      0 4px 4px 0 var(--admin-toolbar-color-shadow-8);
 
     [dir="rtl"] & {
       padding-inline: calc(var(--drupal-displace-offset-right, var(--admin-toolbar-sidebar-width)) + var(--admin-toolbar-space-32)) var(--admin-toolbar-space-32);

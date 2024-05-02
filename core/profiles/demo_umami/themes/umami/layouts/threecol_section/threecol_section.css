@@ -12,7 +12,8 @@
   flex: 0 1 100%;
 }
 /* Medium */
-@media screen and (min-width: 48em) { /* 768px */
+@media screen and (min-width: 48em) {
+  /* 768px */
   .layout--threecol-section {
     margin-right: -1.5%;
     margin-left: -1.5%;

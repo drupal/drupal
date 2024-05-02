@@ -8,13 +8,15 @@
   margin: auto auto 1rem;
 }
 
-@media screen and (min-width: 30rem) { /* 480px */
+@media screen and (min-width: 30rem) {
+  /* 480px */
   .contact-form {
     margin-bottom: 2rem;
   }
 }
 
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   .contact-form {
     margin-bottom: 3rem;
   }

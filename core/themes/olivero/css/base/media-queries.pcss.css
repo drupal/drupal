@@ -14,5 +14,5 @@
 @custom-media --max-nav (max-width: 1200px);
 
 /* Grid related breakpoints */
-@custom-media --grid-md (min-width: 700px);   /* Grid shifts from 6 to 14 columns. */
+@custom-media --grid-md (min-width: 700px); /* Grid shifts from 6 to 14 columns. */
 @custom-media --grid-max (min-width: 1440px); /* Width of the entire grid maxes out. */

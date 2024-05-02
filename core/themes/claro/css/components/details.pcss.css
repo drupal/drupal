@@ -157,7 +157,9 @@
   .claro-details__summary::before {
     width: 0.5625rem;
     height: 0.5625rem;
-    transition: transform var(--details-transform-transition-duration) ease-in 0s, margin var(--details-transform-transition-duration) ease-in 0s;
+    transition:
+      transform var(--details-transform-transition-duration) ease-in 0s,
+      margin var(--details-transform-transition-duration) ease-in 0s;
     transform: rotate(135deg); /* LTR */
     border-block-start: 0.125rem solid;
     border-inline-end: 0.125rem solid;

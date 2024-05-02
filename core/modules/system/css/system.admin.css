@@ -20,7 +20,7 @@
     margin: 0 2.5em;
   }
   .layout-column {
-    float: left;  /* LTR */
+    float: left; /* LTR */
     box-sizing: border-box;
   }
   [dir="rtl"] .layout-column {
@@ -371,7 +371,7 @@ small .admin-link::after {
   margin: 0;
   padding: 0 0.7em;
   list-style-type: none;
-  border-right: 1px solid #cdcdcd;  /* LTR */
+  border-right: 1px solid #cdcdcd; /* LTR */
 }
 [dir="rtl"] .theme-selector .operations li {
   float: right;

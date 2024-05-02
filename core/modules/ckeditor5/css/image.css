@@ -28,12 +28,7 @@
   right: 10px;
   bottom: 10px;
   overflow: hidden;
-  max-width:
-    calc(
-      (var(--is-small) * 0)
-      + (var(--is-medium) * 33)
-      + (var(--is-wide) * 999999)
-    );
+  max-width: calc((var(--is-small) * 0) + (var(--is-medium) * 33) + (var(--is-wide) * 999999));
   border-left: calc((var(--is-small) * 0) + (var(--is-medium) * 3) + (var(--is-wide) * 3)) solid #ffd23f;
   border-radius: 2px;
   background: #232429;

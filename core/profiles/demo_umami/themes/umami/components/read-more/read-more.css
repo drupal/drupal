@@ -13,7 +13,7 @@
   border-bottom: 1px solid transparent;
   background-color: inherit;
 }
-[dir=rtl] .read-more {
+[dir="rtl"] .read-more {
   padding-right: unset;
   padding-left: 20px;
 }
@@ -32,7 +32,7 @@
   height: 14px;
   margin-top: -7px;
 }
-[dir=rtl] .read-more__icon {
+[dir="rtl"] .read-more__icon {
   right: unset;
   left: 0;
   transform: rotate(180deg);

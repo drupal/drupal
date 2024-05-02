@@ -17,7 +17,8 @@
 }
 
 /* Medium */
-@media screen and (min-width: 48rem) { /* 768px */
+@media screen and (min-width: 48rem) {
+  /* 768px */
   .banner {
     position: relative; /* Anchor absolutely positioned background image. */
     background-color: #464646;
@@ -51,7 +52,8 @@
   }
 }
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   .banner__content {
     max-width: 41%;
   }
@@ -60,7 +62,8 @@
   }
 }
 /* Extra large + side margins */
-@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+@media screen and (min-width: 80rem) {
+  /* 1200px (large) + 80px (side margins) = 1280px */
   .banner__inner {
     padding: 0;
   }

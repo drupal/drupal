@@ -76,7 +76,7 @@
 .breadcrumb__item {
   display: inline-block;
 
-  &:nth-child(n+2)::before {
+  &:nth-child(n + 2)::before {
     display: inline-block;
     width: 8px;
     height: 8px;
@@ -96,7 +96,7 @@
   }
 }
 
-[dir="rtl"] .breadcrumb__item:nth-child(n+2)::before {
+[dir="rtl"] .breadcrumb__item:nth-child(n + 2)::before {
   transform: rotate(-45deg);
 }
 

@@ -59,7 +59,7 @@
   border-top-left-radius: 3px; /* LTR */
   border-bottom-right-radius: 3px; /* LTR */
 }
-[dir=rtl] .search-block-form .form-type-search {
+[dir="rtl"] .search-block-form .form-type-search {
   border-top-left-radius: 0;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
@@ -86,10 +86,10 @@
 
 .search-block-form .form-search:focus {
   border: 2px solid #008068;
-  border-top-left-radius: 2px;  /* LTR */
+  border-top-left-radius: 2px; /* LTR */
   border-bottom-left-radius: 2px; /* LTR */
 }
-[dir=rtl] .search-block-form .form-search:focus {
+[dir="rtl"] .search-block-form .form-search:focus {
   border-top-left-radius: 0;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
@@ -114,7 +114,7 @@
   border-top-right-radius: 3px; /* LTR */
   border-bottom-right-radius: 3px; /* LTR */
 }
-[dir=rtl] .search-block-form .form-actions {
+[dir="rtl"] .search-block-form .form-actions {
   border-right: none;
   border-left: 1px solid #dbdbdb;
   border-top-left-radius: 3px;
@@ -128,7 +128,9 @@
 .search-block-form .form-submit {
   margin: 0;
   padding: 0.6em 1.25em 0.4em;
-  transition: background-color 0.5s ease, border 0.5s ease;
+  transition:
+    background-color 0.5s ease,
+    border 0.5s ease;
   color: #000;
   border: 2px solid #fff;
   background-color: #fff;
@@ -140,7 +142,7 @@
     border-top-left-radius: 0; /* LTR */
     border-bottom-left-radius: 0; /* LTR */
   }
-  [dir=rtl] .search-block-form .form-submit {
+  [dir="rtl"] .search-block-form .form-submit {
     border-top-left-radius: 3px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;

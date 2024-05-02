@@ -2,5 +2,15 @@
   "printWidth": 80,
   "semi": true,
   "singleQuote": true,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": ["*.css"],
+      "options": {
+        "parser": "css",
+        "printWidth": 10000,
+        "singleQuote": false
+      }
+    }
+  ]
 }

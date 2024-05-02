@@ -109,19 +109,19 @@
   background: #fff;
 }
 
-.shepherd-element[data-popper-placement^=top] > .shepherd-arrow {
+.shepherd-element[data-popper-placement^="top"] > .shepherd-arrow {
   bottom: -8px;
 }
 
-.shepherd-element[data-popper-placement^=bottom] > .shepherd-arrow {
+.shepherd-element[data-popper-placement^="bottom"] > .shepherd-arrow {
   top: -8px;
 }
 
-.shepherd-element[data-popper-placement^=left] > .shepherd-arrow {
+.shepherd-element[data-popper-placement^="left"] > .shepherd-arrow {
   right: -8px;
 }
 
-.shepherd-element[data-popper-placement^=right] > .shepherd-arrow {
+.shepherd-element[data-popper-placement^="right"] > .shepherd-arrow {
   left: -8px;
 }
 

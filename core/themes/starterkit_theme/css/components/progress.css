@@ -23,9 +23,7 @@
   border: 1px #07629a solid;
   border-radius: 10em;
   background: #057ec9;
-  background-image:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)),
-    linear-gradient(to right bottom, #0094f0 0%, #0094f0 25%, #007ecc 25%, #007ecc 50%, #0094f0 50%, #0094f0 75%, #0094f0 100%);
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15)), linear-gradient(to right bottom, #0094f0 0%, #0094f0 25%, #007ecc 25%, #007ecc 50%, #0094f0 50%, #0094f0 75%, #0094f0 100%);
   background-size: 40px 40px;
 }
 [dir="rtl"] .progress__bar {
@@ -47,6 +45,14 @@
  * Progress bar animations.
  */
 @keyframes animate-stripes {
-  0% { background-position: 0 0, 0 0; }
-  100% { background-position: 0 0, -80px 0; }
+  0% {
+    background-position:
+      0 0,
+      0 0;
+  }
+  100% {
+    background-position:
+      0 0,
+      -80px 0;
+  }
 }
