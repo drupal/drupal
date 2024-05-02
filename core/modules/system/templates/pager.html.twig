@@ -69,7 +69,7 @@
           {% endif %}
           <a href="{{ item.href }}" title="{{ title }}"{{ item.attributes|without('href', 'title') }}>
             <span class="visually-hidden">
-              {{ current == key ? 'Current page'|t : 'Page'|t }}
+              {{ 'Page'|t }}
             </span>
             {{- key -}}
           </a>
