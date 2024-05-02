@@ -373,7 +373,10 @@ class PagerTest extends ViewTestBase {
     $view->display_handler->setOption('pager', $pager);
     $view->save();
     $this->drupalGet('test_pager_full', ['query' => ['page' => 2]]);
-    $this->assertEquals('Current page 3', $this->assertSession()->elementExists('css', '.pager__items li.is-active')->getText());
+    $this->assertEquals('Page 3', $this->assertSession()->elementExists('css', '.pager__items li.is-active')->getText());
+    $link = $this->assertSession()->elementExists('css', '.pager__items li.is-active a');
+    $this->assertSame('page', $link->getAttribute('aria-current'));
+    $this->assertSame('Current page', $link->getAttribute('title'));
   }
 
   /**

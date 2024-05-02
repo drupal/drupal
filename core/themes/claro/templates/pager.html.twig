@@ -83,7 +83,7 @@
           {% endif %}
           <a href="{{ item.href }}" title="{{ title }}"{{ item.attributes|without('href', 'title').addClass(['pager__link', current == key ? ' is-active']) }}>
             <span class="visually-hidden">
-              {{ current == key ? 'Current page'|t : 'Page'|t }}
+              {{ 'Page'|t }}
             </span>
             {{ key }}
           </a>
