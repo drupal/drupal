@@ -9,7 +9,7 @@
   gap: var(--admin-toolbar-space-4);
 
   .admin-toolbar__content & {
-    &:nth-last-child(n+2) {
+    &:nth-last-child(n + 2) {
       &::after {
         margin-top: var(--admin-toolbar-space-8);
         content: "";
@@ -43,10 +43,10 @@
   font-family: inherit;
   font-size: var(--admin-toolbar-font-size-label-xs);
   line-height: var(--admin-toolbar-line-height-label-xs);
-  font-variation-settings: 'wght' 500;
+  font-variation-settings: "wght" 500;
 
-  html:not([data-admin-toolbar='expanded']) &,
-  html[data-admin-toolbar-animating][data-admin-toolbar='expanded'] & {
+  html:not([data-admin-toolbar="expanded"]) &,
+  html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] & {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -61,7 +61,7 @@
       display: block;
       width: var(--admin-toolbar-space-4);
       height: var(--admin-toolbar-space-4);
-      content: '';
+      content: "";
       border-radius: 50%;
       background-color: currentColor;
     }

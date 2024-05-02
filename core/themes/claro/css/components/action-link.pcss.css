@@ -98,7 +98,6 @@
 }
 
 .no-touchevents {
-
   /* Small variant. */
   & .action-link--small {
     padding: calc(var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) var(--space-s);
@@ -145,7 +144,6 @@
 }
 
 .action-link--icon-plus {
-
   /* Plus */
   &::before {
     content: "";
@@ -167,7 +165,6 @@
   }
 
   &.action-link--danger {
-
     /* Plus — danger */
     &::before {
       background-image: url(../../images/icons/d72222/plus.svg);
@@ -184,7 +181,6 @@
 }
 
 .action-link--icon-trash {
-
   /* Trash */
   &::before {
     content: "";
@@ -206,7 +202,6 @@
   }
 
   &.action-link--danger {
-
     /* Trash — danger */
     &::before {
       background-image: url(../../images/icons/d72222/trash.svg);
@@ -223,7 +218,6 @@
 }
 
 .action-link--icon-ex {
-
   /* Ex */
   &::before {
     content: "";
@@ -245,7 +239,6 @@
   }
 
   &.action-link--danger {
-
     /* Ex — danger */
     &::before {
       background-image: url(../../images/icons/d72222/ex.svg);
@@ -262,7 +255,6 @@
 }
 
 .action-link--icon-checkmark {
-
   /* Checkmark */
   &::before {
     content: "";
@@ -284,7 +276,6 @@
   }
 
   &.action-link--danger {
-
     /* Checkmark — danger */
     &::before {
       background-image: url(../../images/icons/d72222/checkmark.svg);
@@ -301,7 +292,6 @@
 }
 
 .action-link--icon-cog {
-
   /* Cog */
   &::before {
     content: "";
@@ -323,7 +313,6 @@
   }
 
   &.action-link--danger {
-
     /* Cog — danger */
     &::before {
       background-image: url(../../images/icons/d72222/cog.svg);
@@ -340,7 +329,6 @@
 }
 
 .action-link--icon-show {
-
   /* Show */
   &::before {
     content: "";
@@ -362,7 +350,6 @@
   }
 
   &.action-link--danger {
-
     /* Show - danger */
     &::before {
       background-image: url(../../images/icons/d72222/show.svg);
@@ -379,7 +366,6 @@
 }
 
 .action-link--icon-hide {
-
   /* Hide */
   &::before {
     content: "";
@@ -401,7 +387,6 @@
   }
 
   &.action-link--danger {
-
     /* Hide - danger */
     &::before {
       background-image: url(../../images/icons/d72222/hide.svg);
@@ -418,7 +403,6 @@
 }
 
 .action-link--icon-key {
-
   /* Key */
   &::before {
     content: "";
@@ -440,7 +424,6 @@
   }
 
   &.action-link--danger {
-
     /* Key — danger */
     &::before {
       background-image: url("../../images/icons/d72222/key.svg");
@@ -457,7 +440,6 @@
 }
 
 .action-link--icon-questionmark {
-
   /* Question Mark */
   &::before {
     content: "";
@@ -479,7 +461,6 @@
   }
 
   &.action-link--danger {
-
     /* Question Mark - danger */
     &::before {
       background-image: url("../../images/icons/d72222/questionmark.svg");

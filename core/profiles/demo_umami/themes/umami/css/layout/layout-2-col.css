@@ -3,7 +3,8 @@
  * This file is used to create the layout when the theme has 2 columns.
  */
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   .two-columns .main {
     display: flex;
     flex-wrap: wrap;

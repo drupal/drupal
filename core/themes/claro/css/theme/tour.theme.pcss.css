@@ -13,7 +13,9 @@
 
 .shepherd-element:focus {
   outline: 2px dotted transparent;
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 5px var(--color-focus);
 }
 
 /* Mobile */
@@ -32,28 +34,28 @@
   border: solid 14px rgba(0, 0, 0, 0.8);
 }
 
-.shepherd-element[data-popper-placement^=top] > .shepherd-arrow {
+.shepherd-element[data-popper-placement^="top"] > .shepherd-arrow {
   bottom: -28px;
   border-right-color: transparent;
   border-bottom-color: transparent;
   border-left-color: transparent;
 }
 
-.shepherd-element[data-popper-placement^=bottom] > .shepherd-arrow {
+.shepherd-element[data-popper-placement^="bottom"] > .shepherd-arrow {
   top: -28px;
   border-top-color: transparent;
   border-right-color: transparent;
   border-left-color: transparent;
 }
 
-.shepherd-element[data-popper-placement^=left] > .shepherd-arrow {
+.shepherd-element[data-popper-placement^="left"] > .shepherd-arrow {
   right: -28px;
   border-top-color: transparent;
   border-right-color: transparent; /* LTR */
   border-bottom-color: transparent;
 }
 
-.shepherd-element[data-popper-placement^=right] > .shepherd-arrow {
+.shepherd-element[data-popper-placement^="right"] > .shepherd-arrow {
   left: -28px;
   border-top-color: transparent;
   border-bottom-color: transparent;
@@ -84,5 +86,7 @@
 
 .shepherd-content *:focus {
   outline: 2px dotted transparent;
-  box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 5px var(--color-focus);
 }

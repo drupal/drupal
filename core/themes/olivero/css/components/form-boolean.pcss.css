@@ -85,12 +85,16 @@ input[type="radio"] {
     border-width: 2px;
     border-color: var(--color--primary-50);
     outline-color: transparent;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color--primary-50);
+    box-shadow:
+      0 0 0 2px white,
+      0 0 0 4px var(--color--primary-50);
   }
 
   &.error:focus {
     outline-color: transparent;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color--red);
+    box-shadow:
+      0 0 0 2px white,
+      0 0 0 4px var(--color--red);
   }
 }
 

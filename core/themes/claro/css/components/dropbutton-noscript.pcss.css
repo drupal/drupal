@@ -9,7 +9,7 @@ html {
     height: auto;
   }
 
-  .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type~.dropbutton__item {
+  .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
     visibility: visible;
   }
 }

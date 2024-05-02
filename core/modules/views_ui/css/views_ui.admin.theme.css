@@ -36,7 +36,9 @@
 .views-admin a.icon {
   border: 1px solid #ddd;
   border-radius: 4px;
-  background: linear-gradient(-90deg, #fff 0, #e8e8e8 100%) no-repeat, repeat-y;
+  background:
+    linear-gradient(-90deg, #fff 0, #e8e8e8 100%) no-repeat,
+    repeat-y;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.3333) inset;
 }
 .views-admin a.icon:hover {
@@ -78,28 +80,40 @@
   background-position: center 3px;
 }
 .views-admin a.icon.add {
-  background-position: center 3px, left top; /* LTR */
+  background-position:
+    center 3px,
+    left top; /* LTR */
 }
 [dir="rtl"] .views-admin a.icon.add {
-  background-position: center 3px, right top;
+  background-position:
+    center 3px,
+    right top;
 }
 .views-admin .icon.delete {
   background-position: center -52px;
 }
 .views-admin a.icon.delete {
-  background-position: center -52px, left top; /* LTR */
+  background-position:
+    center -52px,
+    left top; /* LTR */
 }
 [dir="rtl"] .views-admin a.icon.delete {
-  background-position: center -52px, right top;
+  background-position:
+    center -52px,
+    right top;
 }
 .views-admin .icon.rearrange {
   background-position: center -111px;
 }
 .views-admin a.icon.rearrange {
-  background-position: center -111px, left top; /* LTR */
+  background-position:
+    center -111px,
+    left top; /* LTR */
 }
 [dir="rtl"] .views-admin a.icon.rearrange {
-  background-position: center -111px, right top;
+  background-position:
+    center -111px,
+    right top;
 }
 .views-displays .tabs a:hover > .icon.add {
   background-position: center -25px;
@@ -484,7 +498,8 @@ td.group-title {
   vertical-align: top;
 }
 
-@media screen and (min-width: 45em) { /* 720px */
+@media screen and (min-width: 45em) {
+  /* 720px */
   .view-preview-form .form-type-textfield .description {
     white-space: nowrap;
   }

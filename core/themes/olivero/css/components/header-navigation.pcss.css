@@ -65,7 +65,9 @@
  * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
  */
 html.js .header-nav {
-  transition: visibility 0.2s, transform 0.2s;
+  transition:
+    visibility 0.2s,
+    transform 0.2s;
 }
 
 body:not(.is-always-mobile-nav) .header-nav {
@@ -96,7 +98,9 @@ body.is-always-mobile-nav {
       overflow: auto;
       max-width: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
       padding-inline-end: var(--sp);
-      transition: transform 0.2s, visibility 0.2s;
+      transition:
+        transform 0.2s,
+        visibility 0.2s;
       border-top-width: calc(var(--drupal-displace-offset-top, 0px) + var(--sp11));
     }
 

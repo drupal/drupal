@@ -157,7 +157,6 @@
   }
 }
 
-
 .dropbutton-wrapper.open .dropbutton__toggle::before {
   transform: translate(50%, -50%) rotate(180deg);
   [dir="rtl"] & {
@@ -267,7 +266,9 @@
 
   & > *:focus:hover,
   & > .button:focus:hover {
-    box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
+    box-shadow:
+      0 0 0 2px var(--color-white),
+      0 0 0 5px var(--color-focus);
   }
 
   & > *:focus {
@@ -377,7 +378,7 @@
 }
 
 /* States. */
-.dropbutton__item{
+.dropbutton__item {
   & > *:focus {
     position: relative;
     z-index: 3;
@@ -394,6 +395,8 @@
 
   &:first-of-type ~ & > *:focus {
     border-color: var(--color-focus) !important; /* 1 */
-    box-shadow: inset 0 0 0 1px var(--color-focus), 0 0 0 1px var(--color-focus);
+    box-shadow:
+      inset 0 0 0 1px var(--color-focus),
+      0 0 0 1px var(--color-focus);
   }
 }

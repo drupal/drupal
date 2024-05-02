@@ -103,14 +103,16 @@ blockquote p:last-child {
   margin-bottom: 0;
 }
 /* Small */
-@media screen and (min-width: 30rem) { /* 480px */
+@media screen and (min-width: 30rem) {
+  /* 480px */
   blockquote {
     margin: 0 1.5rem 1.28rem;
     padding: 1.5rem;
   }
 }
 /* Medium */
-@media screen and (min-width: 40rem) { /* 640px */
+@media screen and (min-width: 40rem) {
+  /* 640px */
   blockquote {
     margin: 0 2.5rem 1.28rem;
     padding: 3rem;
@@ -138,7 +140,8 @@ h1 {
   line-height: 1.2;
 }
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   h1 {
     font-size: 2.369rem;
   }
@@ -147,11 +150,12 @@ h1 {
 h2 {
   margin: 0 0 0.7rem 0;
   font-family: "Scope One", Georgia, serif;
-  font-size: 1.266rem;  /* +2 based on 1.125 modular scale (major second) */
+  font-size: 1.266rem; /* +2 based on 1.125 modular scale (major second) */
   line-height: 1.2;
 }
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   h2 {
     font-size: 1.77rem;
   }
@@ -161,10 +165,11 @@ h3 {
   margin: 0 0 0.96rem 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.125rem;
-  line-height: 1.2;/* +1 based on 1.125 modular scale (major second) */
+  line-height: 1.2; /* +1 based on 1.125 modular scale (major second) */
 }
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   h3 {
     font-size: 1.5rem;
   }
@@ -177,7 +182,8 @@ h4 {
   line-height: 1.2;
 }
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   h4 {
     font-size: 1.33rem;
   }
@@ -190,7 +196,8 @@ h5 {
   line-height: 1.2;
 }
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   h5 {
     font-size: 1.25rem;
   }
@@ -203,7 +210,8 @@ h6 {
   line-height: 1.2;
 }
 /* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+@media screen and (min-width: 60rem) {
+  /* 960px */
   h6 {
     font-size: 1rem;
   }

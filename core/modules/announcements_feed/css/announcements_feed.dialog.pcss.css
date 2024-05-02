@@ -5,7 +5,6 @@
  */
 
 #drupal-off-canvas-wrapper {
-
   & .ui-dialog-titlebar.announce-titlebar::before {
     -webkit-mask-image: url("../images/announcement-bell.svg");
     mask-image: url("../images/announcement-bell.svg");

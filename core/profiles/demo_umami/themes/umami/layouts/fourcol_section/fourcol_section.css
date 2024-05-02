@@ -12,7 +12,8 @@
   flex: 0 1 100%;
 }
 /* Medium */
-@media screen and (min-width: 48em) { /* 768px */
+@media screen and (min-width: 48em) {
+  /* 768px */
   .layout--fourcol-section {
     margin-right: -1.5%;
     margin-left: -1.5%;
@@ -24,7 +25,8 @@
   }
 }
 /* Large */
-@media screen and (min-width: 60em) { /* 768px */
+@media screen and (min-width: 60em) {
+  /* 768px */
   .layout--fourcol-section > .layout__region {
     flex: 0 1 22%;
   }

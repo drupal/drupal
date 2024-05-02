@@ -14,7 +14,7 @@ body {
   --admin-toolbar-sidebar-width: calc(4.5 * var(--admin-toolbar-rem));
   --admin-toolbar-sidebar-header: calc(3.5 * var(--admin-toolbar-rem));
 
-  [data-admin-toolbar='expanded'] & {
+  [data-admin-toolbar="expanded"] & {
     --admin-toolbar-sidebar-width: 80vw;
 
     @media (--admin-toolbar-tablet) {
@@ -94,7 +94,7 @@ body {
     }
   }
 
-  [data-admin-toolbar='expanded'] & {
+  [data-admin-toolbar="expanded"] & {
     transform: none;
   }
 
@@ -102,7 +102,7 @@ body {
     transform: none;
   }
 
-  @media only screen and (max-height: 300px)  {
+  @media only screen and (max-height: 300px) {
     min-height: 20rem;
   }
 }
@@ -112,7 +112,7 @@ body {
   flex-grow: 0;
 }
 
-.admin-toolbar:has([data-toolbar-popover-control][aria-expanded='true']) {
+.admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) {
   .admin-toolbar__back-button {
     display: flex;
 
@@ -162,8 +162,10 @@ body {
     flex-shrink: 0;
     width: calc(1 * var(--admin-toolbar-rem));
     height: calc(1 * var(--admin-toolbar-rem));
-    content: '';
-    transition: opacity var(--admin-toolbar-transition), transform var(--admin-toolbar-transition);
+    content: "";
+    transition:
+      opacity var(--admin-toolbar-transition),
+      transform var(--admin-toolbar-transition);
     opacity: 0;
     background-color: currentColor;
     mask-repeat: no-repeat;
@@ -175,7 +177,7 @@ body {
       opacity: 1;
     }
 
-    [dir='rtl'] & {
+    [dir="rtl"] & {
       transform: rotate(180deg);
     }
 
@@ -184,11 +186,11 @@ body {
     }
   }
 
-  &[aria-expanded='true'] {
+  &[aria-expanded="true"] {
     &::before {
       transform: rotate(180deg);
 
-      [dir='rtl'] & {
+      [dir="rtl"] & {
         transform: none;
       }
     }
@@ -246,7 +248,6 @@ body {
     background-color: transparent;
   }
 
-
   & img {
     display: block;
   }
@@ -261,13 +262,14 @@ body {
   overflow-y: auto;
   flex-direction: column;
   height: 100%;
-  background: linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)),
-              radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0));
+  background: linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)), radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0));
   background-color: var(--admin-toolbar-color-white);
   background-repeat: no-repeat;
   background-attachment: local, scroll;
   background-position-y: 48px;
-  background-size: 100% 40px, 100% 16px;
+  background-size:
+    100% 40px,
+    100% 16px;
 
   @media (--admin-toolbar-desktop) {
     display: contents;
@@ -292,14 +294,19 @@ body {
     flex-direction: column;
     flex-grow: 1;
     padding-block-start: var(--admin-toolbar-space-16);
-    background: linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)),
-                linear-gradient(var(--admin-toolbar-color-white), var(--admin-toolbar-color-white) 80%) 0 100%,
-                radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)),
-                radial-gradient(farthest-side at 50% 100%, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)) 0 100%;
+    background:
+      linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)),
+      linear-gradient(var(--admin-toolbar-color-white), var(--admin-toolbar-color-white) 80%) 0 100%,
+      radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)),
+      radial-gradient(farthest-side at 50% 100%, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)) 0 100%;
     background-color: var(--admin-toolbar-color-white);
     background-repeat: no-repeat;
     background-attachment: local, local, scroll, scroll;
-    background-size: 100% 40px, 100% 40px, 100% 16px, 100% 16px;
+    background-size:
+      100% 40px,
+      100% 40px,
+      100% 16px,
+      100% 16px;
   }
 }
 
@@ -335,9 +342,9 @@ body {
   }
 }
 
-[data-drupal-tooltip]:hover +.admin-toolbar__tooltip,
-[data-drupal-tooltip]:focus +.admin-toolbar__tooltip {
-  [data-admin-toolbar='expanded'] & {
+[data-drupal-tooltip]:hover + .admin-toolbar__tooltip,
+[data-drupal-tooltip]:focus + .admin-toolbar__tooltip {
+  [data-admin-toolbar="expanded"] & {
     display: none;
   }
 }
@@ -356,7 +363,7 @@ body {
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.14);
 
-  :where([data-admin-toolbar='expanded']) & {
+  :where([data-admin-toolbar="expanded"]) & {
     display: block;
   }
 

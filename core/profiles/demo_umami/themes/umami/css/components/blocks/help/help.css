@@ -19,7 +19,7 @@
   background-repeat: no-repeat;
   background-position: left 4px; /* LTR */
 }
-[dir=rtl] .block-help__container {
+[dir="rtl"] .block-help__container {
   padding-right: 24px;
   padding-left: 0;
   background-position: right 4px;

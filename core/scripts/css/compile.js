@@ -68,10 +68,10 @@ module.exports = (filePath, callback) => {
       })
     ])
     .process(css, { from: filePath })
-    .then(result => prettier.format(result.css, {
-      parser: 'css',
-      printWidth: 10000,
-    }))
+    .then(async result => {
+      const config = await prettier.resolveConfig(filePath);
+      return await prettier.format(result.css, config);
+    })
     .then(callback)
     .catch(error => {
       log(error);

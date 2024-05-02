@@ -9,7 +9,7 @@
   z-index: var(--admin-toolbar-z-index-tooltip);
   display: none;
   padding-inline: var(--admin-toolbar-space-12);
-  padding-block: var(--admin-toolbar-space-8) ;
+  padding-block: var(--admin-toolbar-space-8);
   color: var(--admin-toolbar-color-white);
   border-radius: var(--admin-toolbar-space-8);
   background-color: var(--admin-toolbar-color-gray-990);
@@ -23,6 +23,6 @@
   display: block;
 }
 
-[data-admin-toolbar='expanded'] [data-drupal-tooltip]:hover + .toolbar-block__title-tooltip {
+[data-admin-toolbar="expanded"] [data-drupal-tooltip]:hover + .toolbar-block__title-tooltip {
   display: none;
 }

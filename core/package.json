@@ -95,6 +95,7 @@
     "stylelint-config-standard": "^34.0.0",
     "stylelint-formatter-gitlab": "^1.0.2",
     "stylelint-order": "^6.0.3",
+    "stylelint-prettier": "^4.1.0",
     "tabbable": "^6.1.2",
     "terser": "^5.19.0",
     "terser-webpack-plugin": "^5.3.9",
