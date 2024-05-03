@@ -3,25 +3,26 @@
 namespace Drupal\layout_test\Plugin\Layout;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Layout\Attribute\Layout;
 use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * The plugin that handles the default layout template.
- *
- * @Layout(
- *   id = "layout_test_plugin",
- *   label = @Translation("Layout plugin (with settings)"),
- *   category = @Translation("Layout test"),
- *   description = @Translation("Test layout"),
- *   template = "templates/layout-test-plugin",
- *   regions = {
- *     "main" = {
- *       "label" = @Translation("Main Region")
- *     }
- *   }
- * )
  */
+#[Layout(
+  id: 'layout_test_plugin',
+  label: new TranslatableMarkup('Layout plugin (with settings)'),
+  category: new TranslatableMarkup('Layout test'),
+  description: new TranslatableMarkup('Test layout'),
+  template: "templates/layout-test-plugin",
+  regions: [
+    "main" => [
+      "label" => new TranslatableMarkup("Main Region"),
+    ],
+  ],
+)]
 class LayoutTestPlugin extends LayoutDefault implements PluginFormInterface {
 
   /**
