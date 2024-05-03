@@ -11,44 +11,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 /**
  * Defines the session workspace negotiator.
  */
-class SessionWorkspaceNegotiator implements WorkspaceNegotiatorInterface {
+class SessionWorkspaceNegotiator implements WorkspaceNegotiatorInterface, WorkspaceIdNegotiatorInterface {
 
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The session.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\Session
-   */
-  protected $session;
-
-  /**
-   * The workspace storage handler.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $workspaceStorage;
-
-  /**
-   * Constructor.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
-   * @param \Symfony\Component\HttpFoundation\Session\Session $session
-   *   The session.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   */
-  public function __construct(AccountInterface $current_user, Session $session, EntityTypeManagerInterface $entity_type_manager) {
-    $this->currentUser = $current_user;
-    $this->session = $session;
-    $this->workspaceStorage = $entity_type_manager->getStorage('workspace');
-  }
+  public function __construct(
+    protected readonly AccountInterface $currentUser,
+    protected readonly Session $session,
+    protected readonly EntityTypeManagerInterface $entityTypeManager
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -61,10 +30,17 @@ class SessionWorkspaceNegotiator implements WorkspaceNegotiatorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getActiveWorkspace(Request $request) {
-    $workspace_id = $this->session->get('active_workspace_id');
+  public function getActiveWorkspaceId(Request $request): ?string {
+    return $this->session->get('active_workspace_id');
+  }
 
-    if ($workspace_id && ($workspace = $this->workspaceStorage->load($workspace_id))) {
+  /**
+   * {@inheritdoc}
+   */
+  public function getActiveWorkspace(Request $request) {
+    $workspace_id = $this->getActiveWorkspaceId($request);
+
+    if ($workspace_id && ($workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id))) {
       return $workspace;
     }
 

@@ -173,21 +173,34 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   public function getActiveWorkspace() {
     if (!isset($this->activeWorkspace)) {
       $request = $this->requestStack->getCurrentRequest();
+
       foreach ($this->negotiatorIds as $negotiator_id) {
+        /** @var \Drupal\workspaces\Negotiator\WorkspaceIdNegotiatorInterface $negotiator */
         $negotiator = $this->classResolver->getInstanceFromDefinition($negotiator_id);
+
         if ($negotiator->applies($request)) {
+          if ($workspace_id = $negotiator->getActiveWorkspaceId($request)) {
+            /** @var \Drupal\workspaces\WorkspaceInterface $negotiated_workspace */
+            $negotiated_workspace = $this->entityTypeManager
+              ->getStorage('workspace')
+              ->load($workspace_id);
+          }
+
           // By default, 'view' access is checked when a workspace is activated,
           // but it should also be checked when retrieving the currently active
           // workspace.
-          if (($negotiated_workspace = $negotiator->getActiveWorkspace($request)) && $negotiated_workspace->access('view')) {
+          if (isset($negotiated_workspace) && $negotiated_workspace->access('view')) {
+            // Notify the negotiator that its workspace has been selected.
+            $negotiator->setActiveWorkspace($negotiated_workspace);
+
             $active_workspace = $negotiated_workspace;
             break;
           }
         }
       }
 
-      // If no negotiator was able to determine the active workspace, default to
-      // the live version of the site.
+      // If no negotiator was able to provide a valid workspace, default to the
+      // live version of the site.
       $this->activeWorkspace = $active_workspace ?? FALSE;
     }
 
