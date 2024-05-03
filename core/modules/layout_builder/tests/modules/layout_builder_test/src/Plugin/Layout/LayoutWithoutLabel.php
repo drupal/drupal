@@ -3,21 +3,22 @@
 namespace Drupal\layout_builder_test\Plugin\Layout;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Layout\Attribute\Layout;
 use Drupal\Core\Layout\LayoutDefault;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Layout plugin without a label configuration.
- *
- * @Layout(
- *   id = "layout_without_label",
- *   label = @Translation("Layout Without Label"),
- *   regions = {
- *     "main" = {
- *       "label" = @Translation("Main Region")
- *     }
- *   },
- * )
  */
+#[Layout(
+  id: 'layout_without_label',
+  label: new TranslatableMarkup('Layout Without Label'),
+  regions: [
+    "main" => [
+      "label" => new TranslatableMarkup("Main Region"),
+    ],
+  ],
+)]
 class LayoutWithoutLabel extends LayoutDefault {
 
   /**
