@@ -1,4 +1,6 @@
-navigation:
+internal.navigation:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
   version: VERSION
   js:
     js/toolbar-menu.js: {}
@@ -22,16 +24,18 @@ navigation:
     - core/tabbable
     - navigation/admin-reset-styles
     - navigation/body-scroll-lock
-    - navigation/dropdown
-    - navigation/tooltip
-    - navigation/popover
+    - navigation/internal.dropdown
+    - navigation/internal.tooltip
+    - navigation/internal.popover
 
 admin-reset-styles:
   css:
     base:
       css/base/admin-reset-styles.css: {}
 
-navigation.escapeAdmin:
+internal.navigation.escapeAdmin:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
   version: VERSION
   js:
     js/escapeAdmin.js: {}
@@ -43,8 +47,8 @@ navigation.escapeAdmin:
 
 navigation.layout:
   dependencies:
-    - navigation/navigation
-    - navigation/navigation.escapeAdmin
+    - navigation/internal.navigation
+    - navigation/internal.navigation.escapeAdmin
 
 body-scroll-lock:
   version: VERSION
@@ -52,7 +56,9 @@ body-scroll-lock:
     base:
       css/components/body-scroll-lock.css: {}
 
-popover:
+internal.popover:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
   js:
     js/toolbar-popover.js: {}
   css:
@@ -61,7 +67,9 @@ popover:
   dependencies:
     - core/once
 
-tooltip:
+internal.tooltip:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
   js:
     js/tooltip.js: {}
   css:
@@ -71,7 +79,9 @@ tooltip:
     - core/once
     - core/internal.floating-ui
 
-dropdown:
+internal.dropdown:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
   js:
     js/toolbar-dropdown.js: {}
   css:
