@@ -10,6 +10,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\jsonapi\Traits\GetDocumentFromResponseTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
@@ -22,6 +23,8 @@ use GuzzleHttp\RequestOptions;
  * @group jsonapi
  */
 class ExternalNormalizersTest extends BrowserTestBase {
+
+  use GetDocumentFromResponseTrait;
 
   /**
    * {@inheritdoc}
@@ -152,7 +155,7 @@ class ExternalNormalizersTest extends BrowserTestBase {
     // $url = $this->entity->toUrl('jsonapi');
     $client = $this->getSession()->getDriver()->getClient()->getClient();
     $response = $client->request('GET', $url->setAbsolute(TRUE)->toString());
-    $document = Json::decode((string) $response->getBody());
+    $document = $this->getDocumentFromResponse($response);
     $this->assertSame($expected_value_jsonapi_normalization, $document['data']['attributes']['field_test']);
 
     // Asserts the expected JSON:API denormalization.
@@ -167,7 +170,7 @@ class ExternalNormalizersTest extends BrowserTestBase {
     ]);
     $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
     $response = $client->request('POST', Url::fromRoute('jsonapi.entity_test--entity_test.collection.post')->setAbsolute(TRUE)->toString(), $request_options);
-    $document = Json::decode((string) $response->getBody());
+    $document = $this->getDocumentFromResponse($response);
     $this->assertSame(static::VALUE_OVERRIDDEN, $document['data']['attributes']['field_test']);
     $entity_type_manager = $this->container->get('entity_type.manager');
     $uuid_key = $entity_type_manager->getDefinition('entity_test')->getKey('uuid');

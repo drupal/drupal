@@ -43,6 +43,7 @@ use Drupal\jsonapi\ResourceResponse;
 use Drupal\path\Plugin\Field\FieldType\PathItem;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use Drupal\Tests\jsonapi\Traits\GetDocumentFromResponseTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\RoleInterface;
@@ -58,6 +59,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
   use ResourceResponseTestTrait;
   use ContentModerationTestTrait;
+  use GetDocumentFromResponseTrait;
   use JsonApiRequestTestTrait;
 
   /**
@@ -728,7 +730,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     else {
       $this->assertSame(['application/vnd.api+json'], $response->getHeader('Content-Type'));
       if ($expected_document !== FALSE) {
-        $response_document = Json::decode((string) $response->getBody());
+        $response_document = $this->getDocumentFromResponse($response, FALSE);
         if ($expected_document === NULL) {
           $this->assertNull($response_document);
         }
@@ -1627,7 +1629,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $resource->set($relationship_field_name, [$target_resource]);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
 
       // Test DELETE: one existing relationship, removed.
       $request_options[RequestOptions::BODY] = Json::encode(['data' => [$target_identifier]]);
@@ -1636,7 +1639,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertResourceResponse(204, NULL, $response);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
 
       // Test DELETE: no existing relationships, no op, success.
       $request_options[RequestOptions::BODY] = Json::encode(['data' => [$target_identifier]]);
@@ -1644,7 +1648,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertResourceResponse(204, NULL, $response);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
 
       // Test PATCH: success, new value is different than existing value.
       $request_options[RequestOptions::BODY] = Json::encode([
@@ -1672,7 +1677,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $resource->set($relationship_field_name, []);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
     }
     else {
       $request_options[RequestOptions::BODY] = Json::encode(['data' => [$target_identifier]]);
@@ -2106,7 +2112,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       // Assert that the entity was indeed created, and that the response body
       // contains the serialized created entity.
       $created_entity_document = $this->normalize($created_entity, $url);
-      $decoded_response_body = Json::decode((string) $response->getBody());
+      $decoded_response_body = $this->getDocumentFromResponse($response);
       $this->assertEquals($created_entity_document, $decoded_response_body);
       // Assert that the entity was indeed created using the POSTed values.
       foreach ($this->getPostDocument()['data']['attributes'] as $field_name => $field_normalization) {
@@ -2370,7 +2376,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       }
     }
     $updated_entity_document = $this->normalize($updated_entity, $url);
-    $this->assertSame($updated_entity_document, Json::decode((string) $response->getBody()));
+    $document = $this->getDocumentFromResponse($response);
+    $this->assertSame($updated_entity_document, $document);
     $prior_revision_id = (int) $updated_entity->getRevisionId();
     // Assert that the entity was indeed created using the PATCHed values.
     foreach ($this->getPatchDocument()['data']['attributes'] as $field_name => $field_normalization) {
