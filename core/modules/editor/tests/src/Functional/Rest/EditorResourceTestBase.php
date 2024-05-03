@@ -63,16 +63,19 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
     $camelids = Editor::create([
       'format' => 'llama',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $camelids
       ->setImageUploadSettings([
         'status' => TRUE,
         'scheme' => 'public',
         'directory' => 'inline-images',
-        'max_size' => '',
+        'max_size' => NULL,
         'max_dimensions' => [
-          'width' => '',
-          'height' => '',
+          'width' => NULL,
+          'height' => NULL,
         ],
       ])
       ->save();

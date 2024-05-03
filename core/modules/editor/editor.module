@@ -8,7 +8,6 @@
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\SubformState;
-use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -182,6 +181,9 @@ function editor_form_filter_admin_format_editor_configure($form, FormStateInterf
       $editor = Editor::create([
         'format' => $format->isNew() ? NULL : $format->id(),
         'editor' => $editor_value,
+        'image_upload' => [
+          'status' => FALSE,
+        ],
       ]);
       $form_state->set('editor', $editor);
     }
@@ -624,6 +626,8 @@ function _editor_parse_file_uuids($text) {
  * Implements hook_ENTITY_TYPE_presave().
  *
  * Synchronizes the editor status to its paired text format status.
+ *
+ * @todo remove in https://www.drupal.org/project/drupal/issues/3231354.
  */
 function editor_filter_format_presave(FilterFormatInterface $format) {
   // The text format being created cannot have a text editor yet.
@@ -644,43 +648,5 @@ function editor_filter_format_presave(FilterFormatInterface $format) {
   /** @var \Drupal\editor\EditorInterface $editor */
   if ($editor = Editor::load($format->id())) {
     $editor->setStatus($status)->save();
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave().
- */
-function editor_editor_presave(EditorInterface $editor) {
-  // @see editor_post_update_sanitize_image_upload_settings()
-  $image_upload_settings = $editor->getImageUploadSettings();
-  // When image uploads are disabled, then none of the other key-value pairs
-  // make sense.
-  // TRICKY: the configuration system has historically stored `type: boolean`
-  // not as `true` and `false`, but as `1` and `0`, so use `==`, not `===`.
-  // @see editor_post_update_sanitize_image_upload_settings()
-  if (!array_key_exists('status', $image_upload_settings) || $image_upload_settings['status'] == FALSE) {
-    $editor->setImageUploadSettings(['status' => FALSE]);
-  }
-  else {
-    // When image uploads are enabled, then some of the key-value pairs need
-    // some conversions to comply with the config schema. Note that all these
-    // keys SHOULD exist, but because validation has historically been absent,
-    // err on the side of caution.
-    // @see editor_post_update_sanitize_image_upload_settings()
-    if (array_key_exists('directory', $image_upload_settings) && $image_upload_settings['directory'] === '') {
-      $image_upload_settings['directory'] = NULL;
-    }
-    if (array_key_exists('max_size', $image_upload_settings) && $image_upload_settings['max_size'] === '') {
-      $image_upload_settings['max_size'] = NULL;
-    }
-    if (array_key_exists('max_dimensions', $image_upload_settings)) {
-      if (!array_key_exists('width', $image_upload_settings['max_dimensions']) || $image_upload_settings['max_dimensions']['width'] === 0) {
-        $image_upload_settings['max_dimensions']['width'] = NULL;
-      }
-      if (!array_key_exists('height', $image_upload_settings['max_dimensions']) || $image_upload_settings['max_dimensions']['height'] === 0) {
-        $image_upload_settings['max_dimensions']['height'] = NULL;
-      }
-    }
-    $editor->setImageUploadSettings($image_upload_settings);
   }
 }

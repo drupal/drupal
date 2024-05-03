@@ -22,9 +22,6 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\editor\EditorInterface;
-
-// cspell:ignore multiblock
 
 /**
  * Implements hook_help().
@@ -623,80 +620,4 @@ function _ckeditor5_theme_css($theme = NULL): array {
     }
   }
   return $css;
-}
-
-/**
- * Implements hook_ENTITY_TYPE_presave() for editor entities.
- */
-function ckeditor5_editor_presave(EditorInterface $editor) {
-  if ($editor->getEditor() === 'ckeditor5') {
-    $settings = $editor->getSettings();
-    // @see ckeditor5_post_update_code_block()
-    if (in_array('codeBlock', $settings['toolbar']['items'], TRUE) && !isset($settings['plugins']['ckeditor5_codeBlock'])) {
-      // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock::defaultConfiguration()
-      $settings['plugins']['ckeditor5_codeBlock'] = [
-        'languages' => [
-          ['label' => 'Plain text', 'language' => 'plaintext'],
-          ['label' => 'C', 'language' => 'c'],
-          ['label' => 'C#', 'language' => 'cs'],
-          ['label' => 'C++', 'language' => 'cpp'],
-          ['label' => 'CSS', 'language' => 'css'],
-          ['label' => 'Diff', 'language' => 'diff'],
-          ['label' => 'HTML', 'language' => 'html'],
-          ['label' => 'Java', 'language' => 'java'],
-          ['label' => 'JavaScript', 'language' => 'javascript'],
-          ['label' => 'PHP', 'language' => 'php'],
-          ['label' => 'Python', 'language' => 'python'],
-          ['label' => 'Ruby', 'language' => 'ruby'],
-          ['label' => 'TypeScript', 'language' => 'typescript'],
-          ['label' => 'XML', 'language' => 'xml'],
-        ],
-      ];
-    }
-
-    // @see ckeditor5_post_update_list_multiblock()
-    if (array_key_exists('ckeditor5_list', $settings['plugins']) && !array_key_exists('properties', $settings['plugins']['ckeditor5_list'])) {
-      // Update to the new config structure.
-      $settings['plugins']['ckeditor5_list'] = [
-        'properties' => $settings['plugins']['ckeditor5_list'],
-        'multiBlock' => TRUE,
-      ];
-    }
-
-    // @see ckeditor5_post_update_list_start_reversed()
-    if (in_array('numberedList', $settings['toolbar']['items'], TRUE) && array_key_exists('ckeditor5_sourceEditing', $settings['plugins'])) {
-      $source_edited = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
-      $format_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
-
-      // If <ol start> is not allowed through Source Editing (the only way it
-      // could possibly be supported until now), and it is not an unrestricted
-      // text format (such as "Full HTML"), then set the new "startIndex"
-      // setting for the List plugin to false.
-      // Except … that this update path was added too late, and many sites have
-      // in the meantime edited their text editor configuration through the UI,
-      // in which case they may already have set it. If that is the case: do not
-      // override it.
-      $ol_start = HTMLRestrictions::fromString('<ol start>');
-      if (!array_key_exists('ckeditor5_list', $settings['plugins']) || !array_key_exists('startIndex', $settings['plugins']['ckeditor5_list']['properties'])) {
-        $settings['plugins']['ckeditor5_list']['properties']['startIndex'] = $ol_start->diff($source_edited)
-          ->allowsNothing() || $format_restrictions->isUnrestricted();
-      }
-      // Same for <ol reversed> and "reversed".
-      $ol_reversed = HTMLRestrictions::fromString('<ol reversed>');
-      if (!array_key_exists('ckeditor5_list', $settings['plugins']) || !array_key_exists('reversed', $settings['plugins']['ckeditor5_list']['properties'])) {
-        $settings['plugins']['ckeditor5_list']['properties']['reversed'] = $ol_reversed->diff($source_edited)
-          ->allowsNothing() || $format_restrictions->isUnrestricted();
-      }
-      // Match the sort order in ListPlugin::defaultConfiguration().
-      ksort($settings['plugins']['ckeditor5_list']['properties']);
-
-      // Update the Source Editing configuration too.
-      $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited
-        ->diff($ol_start)
-        ->diff($ol_reversed)
-        ->toCKEditor5ElementsArray();
-    }
-
-    $editor->setSettings($settings);
-  }
 }

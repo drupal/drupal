@@ -62,6 +62,9 @@ class AddedStylesheetsTest extends BrowserTestBase {
     $this->editor = Editor::create([
       'format' => 'llama',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [
         'toolbar' => [
           'items' => [],

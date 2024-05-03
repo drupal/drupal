@@ -83,6 +83,9 @@ class EditorManagerTest extends KernelTestBase {
     $editor = Editor::create([
       'format' => 'full_html',
       'editor' => 'unicorn',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $editor->save();
     $this->assertSame([], $this->editorManager->getAttachments([]), 'No attachments when one text editor is enabled and retrieving attachments for zero text formats.');

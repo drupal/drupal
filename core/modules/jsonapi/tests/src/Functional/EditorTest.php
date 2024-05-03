@@ -78,16 +78,19 @@ class EditorTest extends ConfigEntityResourceTestBase {
     $camelids = Editor::create([
       'format' => 'llama',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $camelids
       ->setImageUploadSettings([
         'status' => TRUE,
         'scheme' => 'public',
         'directory' => 'inline-images',
-        'max_size' => '',
+        'max_size' => NULL,
         'max_dimensions' => [
-          'width' => '',
-          'height' => '',
+          'width' => NULL,
+          'height' => NULL,
         ],
       ])
       ->save();
@@ -190,16 +193,19 @@ class EditorTest extends ConfigEntityResourceTestBase {
     $entity = Editor::create([
       'format' => 'pachyderm',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
 
     $entity->setImageUploadSettings([
       'status' => TRUE,
       'scheme' => 'public',
       'directory' => 'inline-images',
-      'max_size' => '',
+      'max_size' => NULL,
       'max_dimensions' => [
-        'width' => '',
-        'height' => '',
+        'width' => NULL,
+        'height' => NULL,
       ],
     ])->save();
 

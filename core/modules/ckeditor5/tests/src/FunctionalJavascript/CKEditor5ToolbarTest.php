@@ -54,6 +54,9 @@ class CKEditor5ToolbarTest extends WebDriverTestBase {
     Editor::create([
       'editor' => 'ckeditor5',
       'format' => 'test_format',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [],
     ])->save();
     $this->assertSame([], array_map(

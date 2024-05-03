@@ -1628,6 +1628,9 @@ class ValidatorsTest extends KernelTestBase {
     $text_editor = Editor::create([
       'format' => 'very_restricted',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [
         'toolbar' => [
           'items' => [],

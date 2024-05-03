@@ -139,10 +139,6 @@ class EditorLoadingTest extends BrowserTestBase {
       'editor' => 'unicorn',
       'image_upload' => [
         'status' => FALSE,
-        'scheme' => 'public',
-        'directory' => 'inline-images',
-        'max_size' => '',
-        'max_dimensions' => ['width' => '', 'height' => ''],
       ],
     ]);
     $editor->save();
@@ -190,6 +186,9 @@ class EditorLoadingTest extends BrowserTestBase {
     $editor = Editor::create([
       'format' => 'plain_text',
       'editor' => 'unicorn',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     $editor->save();
 
@@ -255,10 +254,6 @@ class EditorLoadingTest extends BrowserTestBase {
       'editor' => 'unicorn',
       'image_upload' => [
         'status' => FALSE,
-        'scheme' => 'public',
-        'directory' => 'inline-images',
-        'max_size' => '',
-        'max_dimensions' => ['width' => '', 'height' => ''],
       ],
     ]);
     $editor->save();
@@ -290,6 +285,9 @@ class EditorLoadingTest extends BrowserTestBase {
     Editor::create([
       'format' => 'full_html',
       'editor' => 'trex',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
 
     $this->drupalGet('node/1/edit');

@@ -10,8 +10,8 @@ editor: unicorn
 image_upload:
   status: true
   scheme: private
-  directory: ''
-  max_size: ''
+  directory: null
+  max_size: null
   max_dimensions:
     width: null
     height: null

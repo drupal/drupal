@@ -32,7 +32,13 @@ class EditorFilterIntegrationTest extends KernelTestBase {
     $format->save();
 
     // Create a paired editor.
-    Editor::create(['format' => $format->id(), 'editor' => 'unicorn'])->save();
+    Editor::create([
+      'format' => $format->id(),
+      'editor' => 'unicorn',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+    ])->save();
 
     // Disable the text format.
     $format->disable()->save();
