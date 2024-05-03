@@ -223,7 +223,7 @@ class MenuLinkContentTest extends ResourceTestBase {
     unset($document['data']['attributes']['link']['options']);
     $request_options[RequestOptions::BODY] = Json::encode($document);
     $response = $this->request('POST', $url, $request_options);
-    $document = Json::decode((string) $response->getBody());
+    $document = $this->getDocumentFromResponse($response);
     $internal_id = $document['data']['attributes']['drupal_internal__id'];
 
     // Load the created menu item and add link options to it.
