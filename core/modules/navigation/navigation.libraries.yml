@@ -52,11 +52,6 @@ body-scroll-lock:
     base:
       css/components/body-scroll-lock.css: {}
 
-floating-ui:
-  js:
-    assets/vendor/floating-ui/floating-ui.core.umd.js: { minified: true }
-    assets/vendor/floating-ui/floating-ui.dom.umd.js: { minified: true }
-
 popover:
   js:
     js/toolbar-popover.js: {}
