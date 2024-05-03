@@ -94,5 +94,5 @@ services:
     decorates: controller.entity_form
     class: Drupal\workspaces\Controller\WorkspacesHtmlEntityFormController
     public: false
-    arguments: ['@.inner', '@workspaces.manager', '@workspaces.information']
+    arguments: ['@.inner', '@workspaces.manager', '@workspaces.information', '@typed_data_manager']
   Drupal\workspaces\Controller\WorkspacesHtmlEntityFormController: '@workspaces.controller.entity_form'
