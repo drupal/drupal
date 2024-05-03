@@ -13,6 +13,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 use Drupal\rest\RestResourceConfigInterface;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
@@ -28,7 +29,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['rest_test', 'entity_test', 'file'];
+  protected static $modules = ['rest_test', 'entity_test', 'file', 'user'];
 
   /**
    * {@inheritdoc}
@@ -354,7 +355,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
 
     // Make the same request again. The upload should fail validation.
     $response = $this->fileRequest($uri, $this->testFileData);
-    $this->assertResourceErrorResponse(422, PlainTextOutput::renderFromHtml("Unprocessable Entity: validation failed.\nuri: The file public://foobar/example.txt already exists. Enter a unique file URI.\n"), $response);
+    $this->assertResourceErrorResponse(422, PlainTextOutput::renderFromHtml("Unprocessable Entity: file validation failed.\nThe file public://foobar/example.txt already exists. Enter a unique file URI."), $response);
   }
 
   /**
@@ -683,6 +684,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
   protected function getExpectedNormalizedEntity($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE) {
     $author = User::load(static::$auth ? $this->account->id() : 0);
     $file = File::load($fid);
+    $this->assertInstanceOf(FileInterface::class, $file);
 
     $expected_normalization = [
       'fid' => [

@@ -376,9 +376,6 @@ class FileUploadHandler {
   /**
    * Move the uploaded file from the temporary path to the destination.
    *
-   * @todo Allows a sub-class to override this method in order to handle
-   * raw file uploads in https://www.drupal.org/project/drupal/issues/2940383.
-   *
    * @param \Drupal\file\Upload\UploadedFileInterface $uploadedFile
    *   The uploaded file.
    * @param string $uri
@@ -389,8 +386,13 @@ class FileUploadHandler {
    *
    * @see https://www.drupal.org/project/drupal/issues/2940383
    */
-  protected function moveUploadedFile(UploadedFileInterface $uploadedFile, string $uri) {
-    return $this->fileSystem->moveUploadedFile($uploadedFile->getRealPath(), $uri);
+  protected function moveUploadedFile(UploadedFileInterface $uploadedFile, string $uri): bool {
+    if ($uploadedFile instanceof FormUploadedFile) {
+      return $this->fileSystem->moveUploadedFile($uploadedFile->getRealPath(), $uri);
+    }
+    // We use FileExists::Error) as the file location has already
+    // been determined above in FileSystem::getDestinationFilename().
+    return $this->fileSystem->move($uploadedFile->getRealPath(), $uri, FileExists::Error);
   }
 
   /**
