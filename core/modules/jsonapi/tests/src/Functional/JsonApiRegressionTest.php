@@ -260,6 +260,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ];
     $issue_node->delete();
     $response = $this->request('GET', $url, $request_options);
+    $document = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
 
     // Entity reference field allowing a single bundle: dangling reference's
@@ -279,7 +280,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
           ],
         ],
       ],
-    ], Json::decode((string) $response->getBody())['data']['relationships']['field_issue']['data']);
+    ], $document['data']['relationships']['field_issue']['data']);
 
     // Entity reference field allowing multiple bundles: dangling reference's
     // resource type is NOT deduced.
@@ -305,7 +306,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
           'drupal_internal__target_id' => (int) $conference_node->id(),
         ],
       ],
-    ], Json::decode((string) $response->getBody())['data']['relationships']['field_mentioned_in']['data']);
+    ], $document['data']['relationships']['field_mentioned_in']['data']);
   }
 
   /**
@@ -513,8 +514,8 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
         $user->pass_raw,
       ],
     ]);
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
-    $doc = Json::decode((string) $response->getBody());
     $this->assertSame('2018-09-16T22:00:00+10:00', $doc['data']['attributes']['when']);
   }
 
@@ -549,8 +550,8 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       ],
     ];
     $response = $this->request('POST', $url, $request_options);
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertSame(201, $response->getStatusCode());
-    $doc = Json::decode((string) $response->getBody());
     $this->assertArrayHasKey('included', $doc);
     $this->assertSame($user->label(), $doc['included'][0]['attributes']['name']);
   }
@@ -586,8 +587,8 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
     ];
     $response = $this->request('GET', $url, $request_options);
+    $data = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
-    $data = Json::decode((string) $response->getBody());
     $this->assertSame([
       'foo' => 'bar',
       'baz' => 'qux',
@@ -597,8 +598,8 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'foo' => 'bar',
     ])->save();
     $response = $this->request('GET', $url, $request_options);
+    $data = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
-    $data = Json::decode((string) $response->getBody());
     $this->assertSame(['foo' => 'bar'], $data['data'][0]['attributes']['data']);
   }
 
@@ -633,7 +634,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $response = $this->request('POST', $url, $request_options);
 
     // Assert that the response has a body.
-    $data = Json::decode((string) $response->getBody());
+    $data = $this->getDocumentFromResponse($response, FALSE);
     $this->assertSame(422, $response->getStatusCode());
     $this->assertNotNull($data);
     $this->assertSame(sprintf('title: This value should not be null.'), $data['errors'][0]['detail']);
@@ -644,7 +645,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $response = $this->request('POST', $url, $request_options);
 
     // Assert that the response has a body.
-    $data = Json::decode((string) $response->getBody());
+    $data = $this->getDocumentFromResponse($response, FALSE);
     $this->assertSame(422, $response->getStatusCode());
     $this->assertNotNull($data);
     $this->assertSame(sprintf('title: This value should not be null.'), $data['errors'][0]['detail']);
@@ -707,8 +708,8 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ];
     // Retrieve the current representation of the entity.
     $response = $this->request('GET', $url, $request_options);
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
-    $doc = Json::decode((string) $response->getBody());
     // Modify the title. The @FieldType=map normalization is not changed. (The
     // name of this field is confusingly also 'data'.)
     $doc['data']['attributes']['name'] = 'bar';
@@ -718,8 +719,9 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ];
     $request_options[RequestOptions::BODY] = Json::encode($doc);
     $response = $this->request('PATCH', $url, $request_options);
+    $patched_document = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame($doc['data']['attributes']['data'], Json::decode((string) $response->getBody())['data']['attributes']['data']);
+    $this->assertSame($doc['data']['attributes']['data'], $patched_document['data']['attributes']['data']);
   }
 
   /**
@@ -759,12 +761,12 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'query' => ['include' => 'field_tags'],
     ]);
     $response = $this->request('GET', $url, $request_options);
+    $document = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
 
-    $response = Json::decode((string) $response->getBody());
-    $this->assertArrayNotHasKey('included', $response, 'JSON API response does not contain "included" taxonomy term as the latter is not published, i.e not accessible.');
+    $this->assertArrayNotHasKey('included', $document, 'JSON API response does not contain "included" taxonomy term as the latter is not published, i.e not accessible.');
 
-    $omitted = $response['meta']['omitted']['links'];
+    $omitted = $document['meta']['omitted']['links'];
     unset($omitted['help']);
     $omitted = reset($omitted);
     $expected_url = Url::fromUri('internal:/jsonapi/' . $term->getEntityTypeId() . '/' . $term->bundle() . '/' . $term->uuid());
@@ -774,8 +776,9 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $term->setPublished();
     $term->save();
     $response = $this->request('GET', $url, $request_options);
+    $document = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
-    $this->assertEquals($term->uuid(), Json::decode((string) $response->getBody())['included'][0]['id'], 'JSON API response contains "included" taxonomy term as it became published, i.e accessible.');
+    $this->assertEquals($term->uuid(), $document['included'][0]['id'], 'JSON API response contains "included" taxonomy term as it became published, i.e accessible.');
   }
 
   /**

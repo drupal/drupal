@@ -14,6 +14,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
+use Drupal\Tests\jsonapi\Traits\GetDocumentFromResponseTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\Exception\ClientException;
@@ -27,6 +28,7 @@ use GuzzleHttp\Exception\ServerException;
 abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;
+  use GetDocumentFromResponseTrait;
   use ImageFieldCreationTrait;
 
   const IS_MULTILINGUAL = TRUE;

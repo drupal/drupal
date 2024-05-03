@@ -377,8 +377,9 @@ class CommentTest extends ResourceTestBase {
 
     // Status should be FALSE when posting as anonymous.
     $response = $this->request('POST', $url, $request_options);
+    $document = $this->getDocumentFromResponse($response);
     $this->assertResourceResponse(201, FALSE, $response);
-    $this->assertFalse(Json::decode((string) $response->getBody())['data']['attributes']['status']);
+    $this->assertFalse($document['data']['attributes']['status']);
     $this->assertFalse($this->entityStorage->loadUnchanged(2)->isPublished());
 
     // Grant anonymous permission to skip comment approval.
@@ -386,8 +387,9 @@ class CommentTest extends ResourceTestBase {
 
     // Status must be TRUE when posting as anonymous and skip comment approval.
     $response = $this->request('POST', $url, $request_options);
+    $document = $this->getDocumentFromResponse($response);
     $this->assertResourceResponse(201, FALSE, $response);
-    $this->assertTrue(Json::decode((string) $response->getBody())['data']['attributes']['status']);
+    $this->assertTrue($document['data']['attributes']['status']);
     $this->assertTrue($this->entityStorage->loadUnchanged(3)->isPublished());
   }
 
@@ -441,14 +443,14 @@ class CommentTest extends ResourceTestBase {
     // ::doTestCollectionFilterAccessForPublishableEntities().
     $collection_filter_url = $collection_url->setOption('query', ["filter[spotlight.subject]" => $this->entity->label()]);
     $response = $this->request('GET', $collection_filter_url, $request_options);
-    $doc = Json::decode((string) $response->getBody());
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertCount(1, $doc['data']);
     // Mark the commented entity as inaccessible.
     \Drupal::state()->set('jsonapi__entity_test_filter_access_blacklist', [$this->entity->getCommentedEntityId()]);
     Cache::invalidateTags(['state:jsonapi__entity_test_filter_access_blacklist']);
     // ?filter[spotlight.LABEL]: 0 results.
     $response = $this->request('GET', $collection_filter_url, $request_options);
-    $doc = Json::decode((string) $response->getBody());
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertCount(0, $doc['data']);
   }
 
