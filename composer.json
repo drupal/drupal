@@ -105,6 +105,11 @@
             "Drupal\\Composer\\": "composer"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Drupal\\PHPStan\\Rules\\": "core/tests/PHPStan/Rules"
+        }
+    },
     "scripts": {
         "pre-install-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",
         "pre-update-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",

@@ -1,4 +1,4 @@
-# cspell:ignore drupaltestbot drupaltestbotpw
+# cspell:ignore cobertura drupaltestbot drupaltestbotpw
 
 stages:
   - 🗜️ Test
@@ -172,6 +172,35 @@ variables:
   variables:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "16"
+
+'✅️ PHPStan Tests':
+  <<: [ *default-job-settings ]
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  # Run if PHPStan files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
+      changes:
+        - core/tests/PHPStan/*
+        - composer/Metapackage/PinnedDevDependencies/composer.json
+    - when: manual
+      allow_failure: true
+  # Default job settings runs a script that expects vendor to exist.
+  before_script: []
+  script:
+    - docker-php-ext-enable pcov
+    - cd core/tests/PHPStan
+    - composer install
+    - vendor/bin/phpunit tests --coverage-text --colors=never --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
+  # Default job settings runs a script that junit files in a specific location..
+  after_script: []
+  artifacts:
+    when: always
+    reports:
+      junit: core/tests/PHPStan/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: core/tests/PHPStan/coverage.cobertura.xml
 
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *default-job-settings ]

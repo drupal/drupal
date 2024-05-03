@@ -1,0 +1,4 @@
+composer.lock
+coverage.cobertura.xml
+junit.xml
+vendor/

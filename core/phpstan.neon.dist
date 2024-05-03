@@ -26,6 +26,8 @@ parameters:
     - ../*/node_modules/*
     - */tests/fixtures/*.php
     - */tests/fixtures/*.php.gz
+    # Skip Drupal's own PHPStan rules test fixtures.
+    - tests/PHPStan/fixtures/*
     # Skip Drupal 6 & 7 code.
     - scripts/dump-database-d?.sh
     - scripts/generate-d?-content.sh
@@ -44,3 +46,6 @@ parameters:
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
     - "#^Plugin definitions cannot be altered.#"
     - "#^Class .* extends @internal class#"
+
+rules:
+  - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
