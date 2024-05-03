@@ -15,7 +15,7 @@
  *
  * By default, the Layout Builder access check requires the 'configure any
  * layout' permission. Individual section storage plugins may override this by
- * setting the 'handles_permission_check' annotation key to TRUE. Any section
+ * setting the 'handles_permission_check' attribute key to TRUE. Any section
  * storage plugin that uses 'handles_permission_check' must provide its own
  * complete routing access checking to avoid any access bypasses.
  *
