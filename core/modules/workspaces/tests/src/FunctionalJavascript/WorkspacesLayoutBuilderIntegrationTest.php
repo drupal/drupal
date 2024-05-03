@@ -123,6 +123,10 @@ class WorkspacesLayoutBuilderIntegrationTest extends InlineBlockTestBase {
     $assert_session->pageTextNotContains($second_block_body);
     $assert_session->pageTextContains('The DEFAULT block body');
 
+    // Check the concurrent editing protection on the Layout Builder form.
+    $this->drupalGet('/node/1/layout');
+    $assert_session->pageTextContains('The content is being edited in the Stage workspace. As a result, your changes cannot be saved.');
+
     $stage->publish();
     $this->drupalGet('node/1');
     $assert_session->pageTextNotContains('The DEFAULT block body');

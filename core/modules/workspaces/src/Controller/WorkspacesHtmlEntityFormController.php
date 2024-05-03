@@ -9,6 +9,8 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
+use Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraint;
 use Drupal\workspaces\WorkspaceInformationInterface;
 use Drupal\workspaces\WorkspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +26,8 @@ class WorkspacesHtmlEntityFormController extends FormController {
   public function __construct(
     protected readonly FormController $entityFormController,
     protected readonly WorkspaceManagerInterface $workspaceManager,
-    protected readonly WorkspaceInformationInterface $workspaceInfo
+    protected readonly WorkspaceInformationInterface $workspaceInfo,
+    protected readonly TypedDataManagerInterface $typedDataManager
   ) {}
 
   /**
@@ -34,9 +37,34 @@ class WorkspacesHtmlEntityFormController extends FormController {
     $form_arg = $this->getFormArgument($route_match);
     $form_object = $this->getFormObject($route_match, $form_arg);
 
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $form_object->getEntity();
     if ($this->workspaceInfo->isEntitySupported($entity)) {
       $active_workspace = $this->workspaceManager->getActiveWorkspace();
+
+      // Prepare a minimal render array in case we need to return it.
+      $build['#cache']['contexts'] = $entity->getCacheContexts();
+      $build['#cache']['tags'] = $entity->getCacheTags();
+      $build['#cache']['max-age'] = $entity->getCacheMaxAge();
+
+      // Prevent entities from being edited if they're tracked in workspace.
+      if ($form_object->getOperation() !== 'delete') {
+        $constraints = array_values(array_filter($entity->getTypedData()->getConstraints(), function ($constraint) {
+          return $constraint instanceof EntityWorkspaceConflictConstraint;
+        }));
+
+        if (!empty($constraints)) {
+          $violations = $this->typedDataManager->getValidator()->validate(
+            $entity->getTypedData(),
+            $constraints[0]
+          );
+          if (count($violations)) {
+            $build['#markup'] = $violations->get(0)->getMessage();
+
+            return $build;
+          }
+        }
+      }
 
       // Prevent entities from being deleted in a workspace if they have a
       // published default revision.
@@ -44,6 +72,7 @@ class WorkspacesHtmlEntityFormController extends FormController {
         $build['#markup'] = $this->t('This @entity_type_label can only be deleted in the Live workspace.', [
           '@entity_type_label' => $entity->getEntityType()->getSingularLabel(),
         ]);
+
         return $build;
       }
     }

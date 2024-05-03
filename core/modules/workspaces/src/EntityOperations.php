@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -318,17 +317,6 @@ class EntityOperations implements ContainerInjectionInterface {
     // be a pending one.
     if ($this->workspaceManager->hasActiveWorkspace()) {
       $form['#entity_builders'][] = [static::class, 'entityFormEntityBuild'];
-    }
-
-    // Run the workspace conflict validation constraint when the entity form is
-    // being built so we can "disable" it early and display a message to the
-    // user, instead of allowing them to enter data that can never be saved.
-    foreach ($entity->validate()->getEntityViolations() as $violation) {
-      if ($violation->getConstraint() instanceof EntityWorkspaceConflictConstraint) {
-        $form['#markup'] = $violation->getMessage();
-        $form['#access'] = FALSE;
-        continue;
-      }
     }
   }
 
