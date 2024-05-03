@@ -178,7 +178,7 @@ final class NavigationRenderer {
       '#theme' => 'top_bar',
       '#attached' => [
         'library' => [
-          'navigation/navigation',
+          'navigation/internal.navigation',
         ],
       ],
       '#cache' => [
