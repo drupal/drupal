@@ -4,21 +4,20 @@ namespace Drupal\file\Plugin\rest\resource;
 
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\Exception\FileExistsException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Lock\LockAcquiringException;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Utility\Token;
 use Drupal\file\Entity\File;
 use Drupal\file\Upload\ContentDispositionFilenameParser;
+use Drupal\file\Upload\FileUploadHandler;
 use Drupal\file\Upload\FileUploadLocationTrait;
 use Drupal\file\Upload\InputStreamFileWriterInterface;
+use Drupal\file\Upload\InputStreamUploadedFile;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\file\Validation\FileValidatorSettingsTrait;
 use Drupal\rest\Attribute\RestResource;
@@ -37,7 +36,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Route;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * File upload resource.
@@ -68,128 +66,20 @@ class FileUploadResource extends ResourceBase {
     getUploadLocation as getUploadDestination;
   }
 
-  /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The currently authenticated user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The MIME type guesser.
-   *
-   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
-   */
-  protected $mimeTypeGuesser;
-
-  /**
-   * The token replacement instance.
-   *
-   * @var \Drupal\Core\Utility\Token
-   */
-  protected $token;
-
-  /**
-   * The lock service.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * @var \Drupal\Core\Config\ImmutableConfig
-   */
-  protected $systemFileConfig;
-
-  /**
-   * The event dispatcher to dispatch the filename sanitize event.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The file validator.
-   *
-   * @var \Drupal\file\Validation\FileValidatorInterface
-   */
-  protected FileValidatorInterface $fileValidator;
-
-  /**
-   * The input stream file writer.
-   */
-  protected InputStreamFileWriterInterface $inputStreamFileWriter;
-
-  /**
-   * Constructs a FileUploadResource instance.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param array $serializer_formats
-   *   The available serialization formats.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   The file system service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The currently authenticated user.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
-   *   The MIME type guesser.
-   * @param \Drupal\Core\Utility\Token $token
-   *   The token replacement instance.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock service.
-   * @param \Drupal\Core\Config\Config $system_file_config
-   *   The system file configuration.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher service.
-   * @param \Drupal\file\Validation\FileValidatorInterface $file_validator
-   *   The file validator service.
-   * @param \Drupal\file\Upload\InputStreamFileWriterInterface $input_stream_file_writer
-   *   The input stream file writer.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher, FileValidatorInterface $file_validator, InputStreamFileWriterInterface $input_stream_file_writer) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    $serializer_formats,
+    LoggerInterface $logger,
+    protected FileSystemInterface $fileSystem,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected FileValidatorInterface $fileValidator,
+    protected InputStreamFileWriterInterface $inputStreamFileWriter,
+    protected FileUploadHandler $fileUploadHandler,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
-    $this->fileSystem = $file_system;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->currentUser = $current_user;
-    $this->mimeTypeGuesser = $mime_type_guesser;
-    $this->token = $token;
-    $this->lock = $lock;
-    $this->systemFileConfig = $system_file_config;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->fileValidator = $file_validator;
-    $this->inputStreamFileWriter = $input_stream_file_writer;
   }
 
   /**
@@ -205,14 +95,9 @@ class FileUploadResource extends ResourceBase {
       $container->get('file_system'),
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
-      $container->get('current_user'),
-      $container->get('file.mime_type.guesser'),
-      $container->get('token'),
-      $container->get('lock'),
-      $container->get('config.factory')->get('system.file'),
-      $container->get('event_dispatcher'),
       $container->get('file.validator'),
-      $container->get('file.input_stream_file_writer')
+      $container->get('file.input_stream_file_writer'),
+      $container->get('file.upload_handler'),
     );
   }
 
@@ -248,10 +133,7 @@ class FileUploadResource extends ResourceBase {
    *   or when temporary files cannot be moved to their new location.
    */
   public function post(Request $request, $entity_type_id, $bundle, $field_name) {
-    $filename = ContentDispositionFilenameParser::parseFilename($request);
-
     $field_definition = $this->validateAndLoadFieldDefinition($entity_type_id, $bundle, $field_name);
-
     $destination = $this->getUploadDestination($field_definition);
 
     // Check the destination file path is writable.
@@ -259,98 +141,25 @@ class FileUploadResource extends ResourceBase {
       throw new HttpException(500, 'Destination file path is not writable');
     }
 
-    $validators = $this->getFileUploadValidators($field_definition->getSettings());
-
-    $prepared_filename = $this->prepareFilename($filename, $validators);
-
-    // Create the file.
-    $file_uri = "{$destination}/{$prepared_filename}";
-
-    $temp_file_path = $this->streamUploadData();
-
-    $file_uri = $this->fileSystem->getDestinationFilename($file_uri, FileExists::Rename);
-
-    // Lock based on the prepared file URI.
-    $lock_id = $this->generateLockIdFromFileUri($file_uri);
-
-    if (!$this->lock->acquire($lock_id)) {
-      throw new HttpException(503, sprintf('File "%s" is already locked for writing', $file_uri), NULL, ['Retry-After' => 1]);
+    $settings = $field_definition->getSettings();
+    $validators = $this->getFileUploadValidators($settings);
+    if (!array_key_exists('FileExtension', $validators) && $settings['file_extensions'] === '') {
+      // An empty string means 'all file extensions' but the FileUploadHandler
+      // needs the FileExtension entry to be present and empty in order for this
+      // to be respected. An empty array means 'all file extensions'.
+      // @see \Drupal\file\Upload\FileUploadHandler::handleExtensionValidation
+      $validators['FileExtension'] = [];
     }
 
-    // Begin building file entity.
-    $file = File::create([]);
-    $file->setOwnerId($this->currentUser->id());
-    $file->setFilename($prepared_filename);
-    $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
-    $file->setFileUri($temp_file_path);
-    // Set the size. This is done in File::preSave() but we validate the file
-    // before it is saved.
-    $file->setSize(@filesize($temp_file_path));
-
-    // Validate the file against field-level validators first while the file is
-    // still a temporary file. Validation is split up in 2 steps to be the same
-    // as in \Drupal\file\Upload\FileUploadHandler::handleFileUpload().
-    // For backwards compatibility this part is copied from ::validate() to
-    // leave that method behavior unchanged.
-    // @todo Improve this with a file uploader service in
-    //   https://www.drupal.org/project/drupal/issues/2940383
-    $violations = $this->fileValidator->validate($file, $validators);
-
-    if (count($violations) > 0) {
-      $message = "Unprocessable Entity: file validation failed.\n";
-      $errors = [];
-      foreach ($violations as $violation) {
-        $errors[] = PlainTextOutput::renderFromHtml($violation->getMessage());
-      }
-      $message .= implode("\n", $errors);
-
-      throw new UnprocessableEntityHttpException($message);
-    }
-
-    $file->setFileUri($file_uri);
-    // Update the filename with any changes as a result of security or renaming
-    // due to an existing file.
-    // @todo Remove this duplication by replacing with FileUploadHandler. See
-    // https://www.drupal.org/project/drupal/issues/3401734
-    $file->setFilename($this->fileSystem->basename($file->getFileUri()));
-
-    // Move the file to the correct location after validation. Use
-    // FileExists::Error as the file location has already been
-    // determined above in FileSystem::getDestinationFilename().
     try {
-      $this->fileSystem->move($temp_file_path, $file_uri, FileExists::Error);
+      $filename = ContentDispositionFilenameParser::parseFilename($request);
+      $tempPath = $this->inputStreamFileWriter->writeStreamToFile();
+      $uploadedFile = new InputStreamUploadedFile($filename, $filename, $tempPath, @filesize($tempPath));
+
+      $result = $this->fileUploadHandler->handleFileUpload($uploadedFile, $validators, $destination, FileExists::Rename, FALSE);
     }
-    catch (FileException $e) {
-      throw new HttpException(500, 'Temporary file could not be moved to file location');
-    }
-
-    // Second step of the validation on the file object itself now.
-    $this->resourceValidate($file);
-
-    $file->save();
-
-    $this->lock->release($lock_id);
-
-    // 201 Created responses return the newly created entity in the response
-    // body. These responses are not cacheable, so we add no cacheability
-    // metadata here.
-    return new ModifiedResourceResponse($file, 201);
-  }
-
-  /**
-   * Streams file upload data to temporary file and moves to file destination.
-   *
-   * @return string
-   *   The temp file path.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\HttpException
-   *   Thrown when input data cannot be read, the temporary file cannot be
-   *   opened, or the temporary file cannot be written.
-   */
-  protected function streamUploadData(): string {
-    // Catch and throw the exceptions that REST expects.
-    try {
-      $temp_file_path = $this->inputStreamFileWriter->writeStreamToFile();
+    catch (LockAcquiringException $e) {
+      throw new HttpException(503, $e->getMessage(), NULL, ['Retry-After' => 1]);
     }
     catch (UploadException $e) {
       $this->logger->error('Input data could not be read');
@@ -364,7 +173,27 @@ class FileUploadResource extends ResourceBase {
       $this->logger->error('Temporary file could not be opened for file upload');
       throw new HttpException(500, 'Temporary file could not be opened', $e);
     }
-    return $temp_file_path;
+    catch (FileExistsException $e) {
+      throw new HttpException(statusCode: 500, message: $e->getMessage(), previous: $e);
+    }
+    catch (FileException $e) {
+      throw new HttpException(500, 'Temporary file could not be moved to file location');
+    }
+
+    if ($result->hasViolations()) {
+      $message = "Unprocessable Entity: file validation failed.\n";
+      $errors = [];
+      foreach ($result->getViolations() as $violation) {
+        $errors[] = PlainTextOutput::renderFromHtml($violation->getMessage());
+      }
+      $message .= implode("\n", $errors);
+
+      throw new UnprocessableEntityHttpException($message);
+    }
+    // 201 Created responses return the newly created entity in the response
+    // body. These responses are not cacheable, so we add no cacheability
+    // metadata here.
+    return new ModifiedResourceResponse($result->getFile(), 201);
   }
 
   /**
@@ -407,26 +236,6 @@ class FileUploadResource extends ResourceBase {
     }
 
     return $field_definition;
-  }
-
-  /**
-   * Prepares the filename to strip out any malicious extensions.
-   *
-   * @param string $filename
-   *   The file name.
-   * @param array $validators
-   *   The array of upload validators.
-   *
-   * @return string
-   *   The prepared/munged filename.
-   */
-  protected function prepareFilename($filename, array &$validators) {
-    // The actual extension validation occurs in
-    // \Drupal\file\Plugin\rest\resource\FileUploadResource::validate().
-    $extensions = $validators['FileExtension']['extensions'] ?? '';
-    $event = new FileUploadSanitizeNameEvent($filename, $extensions);
-    $this->eventDispatcher->dispatch($event);
-    return $event->getFilename();
   }
 
   /**
