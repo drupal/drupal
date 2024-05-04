@@ -193,35 +193,11 @@ default:
 # Main listing of jobs.
 # All of these are available on Merge Requests and also work as base jobs for
 # on-commit and daily jobs to extend from.
-'PHP 8.3 MySQL 5.7':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.3"
-    _TARGET_DB: "mysql-5.7"
-
-'PHP 8.3 MariaDB 10.3.22':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.3"
-    _TARGET_DB: "mariadb-10.3.22"
-
 'PHP 8.3 MariaDB 10.6':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.3"
     _TARGET_DB: "mariadb-10.6"
-
-'PHP 8.3 PostgreSQL 14.1':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.3"
-    _TARGET_DB: "pgsql-14.1"
-
-'PHP 8.3 PostgreSQL 15':
-  <<: [ *default-stage, *run-on-mr ]
-  variables:
-    _TARGET_PHP: "8.3"
-    _TARGET_DB: "pgsql-15"
 
 'PHP 8.3 PostgreSQL 16':
   <<: [ *default-stage, *run-on-mr ]
@@ -237,14 +213,9 @@ default:
 
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
-'[Commit] PHP 8.3 MySQL 5.7':
-  extends: 'PHP 8.3 MySQL 5.7'
-  needs: [ 'DEFAULT: PHP 8.3 MySQL 8' ]
-  <<: [ *run-on-commit ]
-
 '[Commit] PHP 8.3 PostgreSQL 16':
   extends: 'PHP 8.3 PostgreSQL 16'
-  needs: [ '[Commit] PHP 8.3 MySQL 5.7' ]
+  needs: [ 'DEFAULT: PHP 8.3 MySQL 8' ]
   <<: [ *run-on-commit ]
 
 '[Commit] PHP 8.3 SQLite 3.45':
@@ -264,8 +235,8 @@ default:
   needs: [ '[Daily] PHP 8.3 PostgreSQL 16' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.3 MariaDB 10.3.22':
-  extends: 'PHP 8.3 MariaDB 10.3.22'
+'[Daily] PHP 8.3 MariaDB 10.6':
+  extends: 'PHP 8.3 MariaDB 10.6'
   needs: [ '[Daily] PHP 8.3 SQLite 3.45' ]
   <<: [ *run-daily ]
 
