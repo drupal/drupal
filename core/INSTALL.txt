@@ -50,13 +50,13 @@ Drupal requires:
   - Nginx 1.1 (or greater) (http://nginx.com/).
 - PHP 8.3.0 (or greater) (http://php.net/).
 - One of the following databases:
-  - MySQL 5.7.8 (or greater) (http://www.mysql.com/).
-  - MariaDB 10.3.7 (or greater) (https://mariadb.org/). MariaDB is a fully
+  - MySQL 8.0.0 (or greater) (http://www.mysql.com/).
+  - MariaDB 10.6.0 (or greater) (https://mariadb.org/). MariaDB is a fully
     compatible drop-in replacement for MySQL.
-  - Percona Server 5.7.8 (or greater) (http://www.percona.com/). Percona
+  - Percona Server 8.0.0 (or greater) (http://www.percona.com/). Percona
     Server is a backwards-compatible replacement for MySQL.
-  - PostgreSQL 10 (or greater) (http://www.postgresql.org/).
-  - SQLite 3.26 (or greater) (http://www.sqlite.org/).
+  - PostgreSQL 16 (or greater) (http://www.postgresql.org/).
+  - SQLite 3.45 (or greater) (http://www.sqlite.org/).
 
 For more detailed information about Drupal requirements, including a list of
 PHP extensions and configurations that are required, see "System requirements"

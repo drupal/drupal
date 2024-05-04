@@ -15,19 +15,13 @@ class Tasks extends InstallTasks {
 
   /**
    * Minimum required MySQL version.
-   *
-   * 5.7.8 is the minimum version that supports the JSON datatype.
-   * @see https://dev.mysql.com/doc/refman/5.7/en/json.html
    */
-  const MYSQL_MINIMUM_VERSION = '5.7.8';
+  const MYSQL_MINIMUM_VERSION = '8.0';
 
   /**
    * Minimum required MariaDB version.
-   *
-   * 10.3.7 is the first stable (GA) release in the 10.3 series.
-   * @see https://mariadb.com/kb/en/changes-improvements-in-mariadb-103/#list-of-all-mariadb-103-releases
    */
-  const MARIADB_MINIMUM_VERSION = '10.3.7';
+  const MARIADB_MINIMUM_VERSION = '10.6';
 
   /**
    * The PDO driver name for MySQL and equivalent databases.

@@ -333,7 +333,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       }
       // If the query has a group by, our added fields need it too, to keep the
       // query valid.
-      // @see https://dev.mysql.com/doc/refman/5.7/en/group-by-handling.html
+      // @see https://dev.mysql.com/doc/refman/8.0/en/group-by-handling.html
       $group_by = $this->query->getGroupBy();
       if ($group_by && $added_fields) {
         foreach ($added_fields as $added_field) {
