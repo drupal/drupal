@@ -8,7 +8,6 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -34,14 +33,6 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     'text',
     'filter',
   ];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * Views used by this test.
@@ -83,11 +74,7 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     $vocabulary2 = $this->createVocabulary(['vid' => 'bbb']);
     $term = $this->createTerm($vocabulary2);
     $this->terms[$term->id()] = $term;
-
-    // Create user 1 and set is as the logged in user, so that the logged in
-    // user has the correct permissions to view the vocabulary name.
-    $this->adminUser = User::create(['name' => $this->randomString()]);
-    $this->adminUser->save();
+    $this->adminUser = $this->createUser(['administer taxonomy']);
     $this->container->get('current_user')->setAccount($this->adminUser);
 
     ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);
