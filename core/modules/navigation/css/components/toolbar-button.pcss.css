@@ -22,8 +22,8 @@
 .toolbar-button {
   z-index: 1;
   align-items: center;
-  padding-inline: var(--admin-toolbar-space-16) var(--admin-toolbar-space-12);
-  padding-block: calc(0.625 * var(--admin-toolbar-rem));
+  padding-inline: var(--admin-toolbar-space-16);
+  padding-block: calc(0.75 * var(--admin-toolbar-rem));
   cursor: pointer;
   text-align: start;
   text-decoration: none;
@@ -94,7 +94,7 @@
 [class*="toolbar-button--icon"] {
   --icon: url(../../assets/icons/basic.svg); /* Default icon, aka --basic */
 
-  padding-inline: calc(0.625 * var(--admin-toolbar-rem));
+  padding-inline: calc(0.75 * var(--admin-toolbar-rem));
 
   &::before {
     display: block;
