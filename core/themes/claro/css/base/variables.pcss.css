@@ -132,7 +132,7 @@
   --input--error-color: var(--color-maximumred);
   --input--error-border-color: var(--color-maximumred);
   --input--disabled-color: rgba(84, 85, 96, 0.6); /* Davy's gray with 0.6 opacity. */
-  --input--disabled-fg-color: var(--color-gray-600);
+  --input--disabled-fg-color: var(--color-gray-800);
   --input--disabled-bg-color: #f2f2f3; /* Light gray with 0.3 opacity on white bg. */
   --input--disabled-border-color: #bababf; /* Old silver with 0.5 opacity on white bg. */
   --input--disabled-border-opacity: 0.5;
