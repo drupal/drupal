@@ -88,6 +88,7 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @var array|null
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $rendered_fields;
 
   /**
@@ -114,6 +115,7 @@ abstract class StylePluginBase extends PluginBase {
    *
    * @var string[]
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public array $render_tokens = [];
 
   /**

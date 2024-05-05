@@ -29,6 +29,7 @@ class EntityRow extends RowPluginBase {
    *
    * @var string
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $base_table;
 
   /**

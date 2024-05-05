@@ -16,6 +16,7 @@ class StatisticsLastUpdated extends Date {
   /**
    * The node table.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected ?string $node_table;
 
   public function query() {

@@ -21,6 +21,7 @@ class Name extends InOperator {
   /**
    * The validated exposed input.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected array $validated_exposed_input;
 
   protected function valueForm(&$form, FormStateInterface $form_state) {

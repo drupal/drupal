@@ -52,11 +52,13 @@ class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterfa
    *
    * @var bool
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $accept_null = FALSE;
 
   /**
    * The value title.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public string $value_value;
 
   /**

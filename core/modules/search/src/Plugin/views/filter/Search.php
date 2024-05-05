@@ -49,6 +49,7 @@ class Search extends FilterPluginBase {
   /**
    * The search score.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public string $search_score;
 
   /**

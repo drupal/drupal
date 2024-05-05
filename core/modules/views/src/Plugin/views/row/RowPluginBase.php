@@ -52,11 +52,13 @@ abstract class RowPluginBase extends PluginBase {
   /**
    * The actual field used.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public string $base_field;
 
   /**
    * The field alias.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public string $field_alias;
 
   /**

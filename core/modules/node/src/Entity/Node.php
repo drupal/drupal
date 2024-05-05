@@ -95,6 +95,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
    * @var true|null
    *   TRUE if the node is being previewed and NULL if it is not.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $in_preview = NULL;
 
   /**
