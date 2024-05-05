@@ -8,6 +8,8 @@
  * used for navigation.
  */
 
+use Drupal\block\BlockInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -465,4 +467,26 @@ function menu_ui_theme(): array {
       'render element' => 'form',
     ],
   ];
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function menu_ui_entity_operation(EntityInterface $entity): array {
+  $operations = [];
+  if ($entity instanceof BlockInterface) {
+    $plugin = $entity->getPlugin();
+    if ($plugin->getBaseId() === 'system_menu_block') {
+      $menu = Menu::load($plugin->getDerivativeId());
+      if ($menu && $menu->access('edit')) {
+        $operations['menu-edit'] = [
+          'title' => t('Edit menu'),
+          'url' => $menu->toUrl('edit-form'),
+          'weight' => 50,
+        ];
+      }
+    }
+  }
+
+  return $operations;
 }
