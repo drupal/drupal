@@ -209,6 +209,14 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->assertSame($response->getView(), $executable);
 
     $this->assertViewResultCommand($response);
+
+    // Test that the ajax controller for Views contains the
+    // Drupal Settings.
+    $this->assertEquals([
+      'drupalSettings' => [
+        'testSetting' => ['Setting'],
+      ],
+    ], $response->getAttachments());
   }
 
   /**
@@ -389,7 +397,14 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->willReturn(TRUE);
     $executable->expects($this->atMost(1))
       ->method('preview')
-      ->willReturn(['#markup' => 'View result']);
+      ->willReturn([
+        '#markup' => 'View result',
+        '#attached' => [
+          'drupalSettings' => [
+            'testSetting' => ['Setting'],
+          ],
+        ],
+      ]);
 
     $this->executableFactory->expects($this->once())
       ->method('get')
