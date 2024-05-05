@@ -214,6 +214,10 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
         $request->query->set('ajax_page_state', $existing_page_state);
 
+        if (!empty($preview['#attached'])) {
+          $response->setAttachments($preview['#attached']);
+        }
+
         return $response;
       }
       else {
