@@ -84,6 +84,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $language_manager;
 
   /**

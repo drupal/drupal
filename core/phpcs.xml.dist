@@ -115,10 +115,7 @@
   <rule ref="Drupal.NamingConventions.ValidClassName"/>
   <rule ref="Drupal.NamingConventions.ValidGlobal"/>
   <rule ref="Drupal.NamingConventions.ValidVariableName"/>
-  <rule ref="Drupal.NamingConventions.ValidVariableName.LowerCamelName">
-    <!-- Views plugins do not conform to this sniff. -->
-    <include-pattern>**/tests/*</include-pattern>
-  </rule>
+  <rule ref="Drupal.NamingConventions.ValidVariableName.LowerCamelName"/>
   <rule ref="Drupal.Scope.MethodScope"/>
   <rule ref="Drupal.Semantics.EmptyInstall"/>
   <rule ref="Drupal.Semantics.FunctionAlias"/>

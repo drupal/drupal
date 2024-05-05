@@ -139,6 +139,7 @@ class Sql extends QueryPluginBase {
   /**
    * The count field definition.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public array $count_field;
 
   /**

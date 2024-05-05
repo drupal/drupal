@@ -48,6 +48,7 @@ class Bundle extends InOperator {
   /**
    * The bundle key.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public string $real_field;
 
   /**

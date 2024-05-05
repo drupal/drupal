@@ -22,6 +22,7 @@ class ContentEntityType extends EntityType {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $entity_type_class = 'Drupal\Core\Entity\ContentEntityType';
 
   /**

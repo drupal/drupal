@@ -73,6 +73,7 @@ class FieldType extends DataType {
    *
    * @var string
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $default_widget;
 
   /**
@@ -84,6 +85,7 @@ class FieldType extends DataType {
    *
    * @var string
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $default_formatter;
 
   /**
@@ -91,11 +93,13 @@ class FieldType extends DataType {
    *
    * @var bool
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $no_ui = FALSE;
 
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $list_class;
 
   /**

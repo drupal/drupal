@@ -14,6 +14,7 @@ trait DependentPluginDefinitionTrait {
    *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $config_dependencies = [];
 
   /**
