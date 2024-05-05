@@ -5,10 +5,13 @@
  * Provide structure for the administrative interface to Views.
  */
 
+use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Analyzer;
 
@@ -349,4 +352,32 @@ function views_ui_views_analyze(ViewExecutable $view) {
 function views_ui_truncate($string, $length) {
   @trigger_error('views_ui_truncate() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Component\Utility\Unicode::truncate(). See https://www.drupal.org/node/3408283', E_USER_DEPRECATED);
   return Unicode::truncate($string, $length, FALSE, TRUE);
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function views_ui_entity_operation(EntityInterface $entity): array {
+  $operations = [];
+  if ($entity instanceof BlockInterface) {
+    $plugin = $entity->getPlugin();
+    if ($plugin->getBaseId() === 'views_block') {
+      $view_id_parts = explode('-', $plugin->getDerivativeId());
+      $view_id = $view_id_parts[0] ?? '';
+      $display_id = $view_id_parts[1] ?? '';
+      $view = View::load($view_id);
+      if ($view && $view->access('edit')) {
+        $operations['view-edit'] = [
+          'title' => t('Edit view'),
+          'url' => Url::fromRoute('entity.view.edit_display_form', [
+            'view' => $view_id,
+            'display_id' => $display_id,
+          ]),
+          'weight' => 50,
+        ];
+      }
+    }
+  }
+
+  return $operations;
 }
