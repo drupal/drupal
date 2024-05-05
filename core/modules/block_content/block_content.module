@@ -5,7 +5,9 @@
  * Allows the creation of content blocks through the user interface.
  */
 
+use Drupal\block\BlockInterface;
 use Drupal\block_content\BlockContentInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -213,4 +215,29 @@ function block_content_theme_suggestions_block_alter(array &$suggestions, array 
   }
 
   return $suggestions;
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function block_content_entity_operation(EntityInterface $entity): array {
+  $operations = [];
+  if ($entity instanceof BlockInterface) {
+    $plugin = $entity->getPlugin();
+    if ($plugin->getBaseId() === 'block_content') {
+      $custom_block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+        'uuid' => $plugin->getDerivativeId(),
+      ]);
+      $custom_block = reset($custom_block);
+      if ($custom_block && $custom_block->access('update')) {
+        $operations['block-edit'] = [
+          'title' => t('Edit block'),
+          'url' => $custom_block->toUrl('edit-form')->setOptions([]),
+          'weight' => 50,
+        ];
+      }
+    }
+  }
+
+  return $operations;
 }
