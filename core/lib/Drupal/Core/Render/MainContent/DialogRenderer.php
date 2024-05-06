@@ -132,17 +132,9 @@ class DialogRenderer implements MainContentRendererInterface {
    *   The title as a string or stringable object.
    */
   protected function getTitleAsStringable(array $main_content, Request $request, RouteMatchInterface $route_match): \Stringable|string|null {
-    $title = NULL;
-    if (array_key_exists('#title', $main_content)) {
-      if (is_array($main_content['#title'])) {
-        $title = $this->renderer->renderInIsolation($main_content['#title']);
-      }
-      else {
-        $title = $main_content['#title'];
-      }
-    }
-    elseif ($this->titleResolver->getTitle($request, $route_match->getRouteObject())) {
-      $title = $this->titleResolver->getTitle($request, $route_match->getRouteObject())->render();
+    $title = $main_content['#title'] ?? $this->titleResolver->getTitle($request, $route_match->getRouteObject());
+    if (is_array($title)) {
+      $title = $this->renderer->renderInIsolation($title);
     }
     return $title;
   }
