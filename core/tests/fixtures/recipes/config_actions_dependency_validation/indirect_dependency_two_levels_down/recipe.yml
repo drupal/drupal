@@ -1,0 +1,9 @@
+name: Recipe with second level indirect dependency
+type: 'Testing'
+recipes:
+  - level_1
+config:
+  actions:
+    node.settings:
+      simple_config_update:
+        use_admin_theme: true

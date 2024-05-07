@@ -1,0 +1,9 @@
+{
+  "name": "drupal_recipe/example",
+  "description": "An example Drupal recipe description",
+  "type": "drupal-recipe",
+  "require": {
+    "drupal/core": "^10.0.x-dev"
+  },
+  "license": "GPL-2.0-or-later"
+}

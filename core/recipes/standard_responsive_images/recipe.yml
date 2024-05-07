@@ -1,0 +1,8 @@
+name: 'Standard Responsive Images'
+description: 'Provides basic responsive images and accompanying image styles.'
+type: 'Media'
+install:
+  - responsive_image
+config:
+  import:
+    image: '*'

@@ -1,0 +1,7 @@
+name: 'Recommended Performance'
+description: 'Sets up modules for improved site performance.'
+type: 'Performance'
+install:
+  - page_cache
+  - dynamic_page_cache
+  - big_pipe

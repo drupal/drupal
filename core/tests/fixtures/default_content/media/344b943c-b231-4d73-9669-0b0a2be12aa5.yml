@@ -1,0 +1,38 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: 344b943c-b231-4d73-9669-0b0a2be12aa5
+  bundle: image
+  default_langcode: en
+  depends:
+    d8404562-efcc-40e3-869e-40132d53fe0b: file
+default:
+  revision_user:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: druplicon.png
+  created:
+    -
+      value: 1711121695
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+  field_media_image:
+    -
+      entity: d8404562-efcc-40e3-869e-40132d53fe0b
+      alt: 'A Druplicon on a transparent background.'
+      title: ''
+      width: 88
+      height: 100

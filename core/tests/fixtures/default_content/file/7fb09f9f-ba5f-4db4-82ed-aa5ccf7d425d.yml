@@ -1,0 +1,27 @@
+_meta:
+  version: '1.0'
+  entity_type: file
+  uuid: 7fb09f9f-ba5f-4db4-82ed-aa5ccf7d425d
+  default_langcode: en
+default:
+  uid:
+    -
+      target_id: 1
+  filename:
+    -
+      value: druplicon_copy.png
+  uri:
+    -
+      value: 'public://druplicon_copy.png'
+  filemime:
+    -
+      value: image/png
+  filesize:
+    -
+      value: 3905
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1711121742

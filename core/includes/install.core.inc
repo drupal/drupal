@@ -26,6 +26,8 @@ use Drupal\Core\Installer\Form\SiteSettingsForm;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Recipe\Recipe;
+use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
@@ -836,6 +838,27 @@ function install_tasks($install_state) {
     ];
     $tasks = array_slice($tasks, 0, $key, TRUE) +
       $config_tasks +
+      array_slice($tasks, $key, NULL, TRUE);
+  }
+
+  if (!empty($install_state['parameters']['recipe'])) {
+    // The install state indicates that we are installing from a recipe.
+    $key = array_search('install_profile_modules', array_keys($tasks), TRUE);
+    unset($tasks['install_profile_modules']);
+    unset($tasks['install_profile_themes']);
+    unset($tasks['install_install_profile']);
+    $recipe_tasks = [
+      'install_recipe_required_modules' => [
+        'display_name' => t('Install required modules'),
+        'type' => 'batch',
+      ],
+      'install_recipe_batch' => [
+        'display_name' => t('Install recipe'),
+        'type' => 'batch',
+      ],
+    ];
+    $tasks = array_slice($tasks, 0, $key, TRUE) +
+      $recipe_tasks +
       array_slice($tasks, $key, NULL, TRUE);
   }
 
@@ -2547,4 +2570,72 @@ function _install_config_locale_overrides_process_batch(array $names, array $lan
     }
   }
   $context['finished'] = 1;
+}
+
+/**
+ * Installs required modules prior to applying a recipe via the installer.
+ *
+ * @see install_tasks()
+ *
+ * @internal
+ *   All installer code is internal.
+ */
+function install_recipe_required_modules() {
+  // We need to manually trigger the installation of core-provided entity types,
+  // as those will not be handled by the module installer.
+  // @see install_profile_modules()
+  install_core_entity_type_definitions();
+
+  $batch_builder = new BatchBuilder();
+  $batch_builder
+    ->setFinishCallback([ConfigImporterBatch::class, 'finish'])
+    ->setTitle(t('Installing required modules'))
+    ->setInitMessage(t('Starting required module installation.'))
+    ->setErrorMessage(t('Required module installation has encountered an error.'));
+
+  $files = \Drupal::service('extension.list.module')->getList();
+
+  // Always install required modules first.
+  $required = [];
+
+  foreach ($files as $module => $extension) {
+    if (!empty($extension->info['required'])) {
+      $required[$module] = $extension->sort;
+    }
+  }
+  arsort($required);
+
+  // The system module is already installed. See install_base_system().
+  unset($required['system']);
+
+  foreach ($required as $module => $weight) {
+    $batch_builder->addOperation(
+      '_install_module_batch',
+      [$module, $files[$module]->info['name']],
+    );
+  }
+  return $batch_builder->toArray();
+}
+
+/**
+ * Creates a batch for the recipe system to process.
+ *
+ * @see install_tasks()
+ *
+ * @internal
+ *   This API is experimental.
+ */
+function install_recipe_batch(&$install_state) {
+  $batch_builder = new BatchBuilder();
+  $batch_builder
+    ->setTitle(t('Installing recipe'))
+    ->setInitMessage(t('Starting recipe installation.'))
+    ->setErrorMessage(t('Recipe installation has encountered an error.'));
+
+  $recipe = Recipe::createFromDirectory($install_state['parameters']['recipe']);
+  foreach (RecipeRunner::toBatchOperations($recipe) as $step) {
+    $batch_builder->addOperation(...$step);
+  }
+
+  return $batch_builder->toArray();
 }

@@ -1,0 +1,12 @@
+name: 'Editorial workflow'
+description: 'Provides an editorial workflow for moderating content.'
+type: 'Workflow'
+install:
+  - content_moderation
+  # The moderated_content view depends on Node.
+  - node
+  - views
+config:
+  import:
+    content_moderation:
+      - views.view.moderated_content

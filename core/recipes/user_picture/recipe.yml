@@ -1,0 +1,8 @@
+name: User pictures
+description: 'Adds the ability for user accounts to have pictures (avatars).'
+type: Users
+install:
+  - field
+  - file
+  - image
+  - user

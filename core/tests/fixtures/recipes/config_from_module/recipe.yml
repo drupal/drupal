@@ -1,0 +1,9 @@
+name: 'Config from module'
+type: 'Testing'
+install:
+  - config_test
+config:
+  import:
+    config_test:
+      - config_test.dynamic.dotted.default
+      - config_test.dynamic.override

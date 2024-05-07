@@ -1,0 +1,6 @@
+id: dotted.default
+label: 'Provided by recipe'
+weight: 0
+protected_property: Default
+# Intentionally commented out to verify default status behavior.
+# status: 1

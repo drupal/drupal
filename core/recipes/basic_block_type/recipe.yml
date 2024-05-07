@@ -1,0 +1,12 @@
+name: 'Basic block'
+description: 'Provides "Basic block" custom block type and related configuration. A basic block contains a title and a body.'
+type: 'Block type'
+install:
+  - block_content
+  - views
+config:
+  import:
+    block_content:
+      - field.storage.block_content.body
+      - core.entity_view_mode.block_content.full
+      - views.view.block_content
