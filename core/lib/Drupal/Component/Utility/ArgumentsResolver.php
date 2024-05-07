@@ -123,7 +123,7 @@ class ArgumentsResolver implements ArgumentsResolverInterface {
       return new \ReflectionMethod($callable[0], $callable[1]);
     }
     if (is_string($callable) && str_contains($callable, "::")) {
-      return new \ReflectionMethod($callable);
+      return \ReflectionMethod::createFromMethodName($callable);
     }
     return new \ReflectionFunction($callable);
   }
