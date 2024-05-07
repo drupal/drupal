@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    # Depend on the valid date format in order to ensure it is imported first,
+    # which means we can ensure it was rolled back when this date format raises
+    # a validation error.
+    - core.date_format.valid
+id: invalid
+# Null isn't a valid value for the label, so this should raise a validation
+# error.
+label: null
+locked: false
+pattern: 'F j, Y'

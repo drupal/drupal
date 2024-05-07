@@ -1,0 +1,5 @@
+name: 'Full HTML editor'
+description: 'Provides "Full HTML" text format along with WYSIWYG editor and related configuration.'
+type: 'Text format editor'
+install:
+  - ckeditor5

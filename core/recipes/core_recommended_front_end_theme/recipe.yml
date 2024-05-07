@@ -1,0 +1,29 @@
+name: 'Front end theme'
+description: 'Sets up Olivero as the front-end theme.'
+type: 'Themes'
+install:
+  - olivero
+  - block
+config:
+  import:
+    system:
+      - system.menu.account
+      - system.menu.main
+      - system.theme
+    olivero:
+      - block.block.olivero_account_menu
+      - block.block.olivero_breadcrumbs
+      - block.block.olivero_content
+      - block.block.olivero_main_menu
+      - block.block.olivero_messages
+      - block.block.olivero_page_title
+      - block.block.olivero_powered
+      - block.block.olivero_primary_admin_actions
+      - block.block.olivero_primary_local_tasks
+      - block.block.olivero_secondary_local_tasks
+      - block.block.olivero_site_branding
+      - core.date_format.olivero_medium
+  actions:
+    system.theme:
+      simple_config_update:
+        default: olivero

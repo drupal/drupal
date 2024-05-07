@@ -24,6 +24,9 @@ config_test_dynamic:
     protected_property:
       type: string
       label: 'Protected property'
+    array_property:
+      type: ignore
+      label: 'Array property'
 
 config_test.dynamic.*:
   type: config_test_dynamic

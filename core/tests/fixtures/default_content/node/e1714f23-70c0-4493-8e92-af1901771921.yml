@@ -1,0 +1,46 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: e1714f23-70c0-4493-8e92-af1901771921
+  bundle: article
+  default_langcode: en
+  depends:
+    94503467-be7f-406c-9795-fc25baa22203: user
+    550f86ad-aa11-4047-953f-636d42889f85: taxonomy_term
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      entity: 94503467-be7f-406c-9795-fc25baa22203
+  title:
+    -
+      value: 'Test Article'
+  created:
+    -
+      value: 1711476803
+  promote:
+    -
+      value: true
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: /test-article
+      langcode: en
+  body:
+    -
+      value: 'Crikey it works!'
+      format: plain_text
+      summary: ''
+  field_tags:
+    -
+      entity: 550f86ad-aa11-4047-953f-636d42889f85

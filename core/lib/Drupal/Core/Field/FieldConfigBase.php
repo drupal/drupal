@@ -2,10 +2,12 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Base class for configurable field definitions.
@@ -327,6 +329,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Change field label'))]
   public function setLabel($label) {
     $this->label = $label;
     return $this;

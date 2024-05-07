@@ -1,0 +1,44 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 7f1dd75a-0be2-4d3b-be5d-9d1a868b9267
+  bundle: page
+  default_langcode: en
+  depends:
+    # This user does not actually exist; this lets us test that the node
+    # will be assigned to user 1 during the import.
+    e2b1b3fb-27ea-41ec-b70f-dbf2907fb658: user
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      entity: e2b1b3fb-27ea-41ec-b70f-dbf2907fb658
+  title:
+    -
+      value: 'No Owner'
+  created:
+    -
+      value: 1711638565
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  path:
+    -
+      alias: ''
+      langcode: en
+  body:
+    -
+      value: 'This page was authored by a non-existent user.'
+      format: plain_text
+      summary: ''

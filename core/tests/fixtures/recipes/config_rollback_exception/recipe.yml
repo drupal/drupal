@@ -1,0 +1,19 @@
+name: Config rollback exception
+install:
+  - filter
+  - media
+config:
+  import:
+    filter: '*'
+    media: '*'
+  actions:
+    filter.format.plain_text:
+      setFilterConfig:
+        instance_id: media_embed
+        configuration: []
+    system.image:
+      # This will cause a validation error, which will trigger a rollback.
+      # The rollback should fail, since the Media module can't be uninstalled
+      # now that the plain_text format is using one of its filters.
+      simple_config_update:
+        non_existent_key: whatever!

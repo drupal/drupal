@@ -1,0 +1,5 @@
+name: 'Install two modules'
+type: 'Content type'
+install:
+  - node
+  - text

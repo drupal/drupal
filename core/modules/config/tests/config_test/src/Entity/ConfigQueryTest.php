@@ -46,4 +46,13 @@ class ConfigQueryTest extends ConfigTest {
    */
   public $array = [];
 
+  /**
+   * {@inheritdoc}
+   */
+  public function concatProtectedProperty(string $value1, string $value2): static {
+    // This method intentionally does not have the config action attribute to
+    // ensure it is still discovered.
+    return parent::concatProtectedProperty($value1, $value2);
+  }
+
 }

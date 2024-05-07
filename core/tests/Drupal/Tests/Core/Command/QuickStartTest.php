@@ -235,7 +235,7 @@ class QuickStartTest extends TestCase {
     ];
     $process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
     $process->run();
-    $this->assertStringContainsString('\'umami\' is not a valid install profile. Did you mean \'demo_umami\'?', $process->getErrorOutput());
+    $this->assertMatchesRegularExpression("/'umami' is not a valid install profile or recipe\. Did you mean \W*'demo_umami'?/", $process->getErrorOutput());
   }
 
   /**
