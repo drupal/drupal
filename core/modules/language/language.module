@@ -298,10 +298,10 @@ function language_modules_installed($modules, $is_syncing) {
   }
 
   if (!in_array('language', $modules)) {
-    if (InstallerKernel::installationAttempted()) {
+    if (InstallerKernel::installationAttempted() && $profile = \Drupal::installProfile()) {
       // If the install profile provides its own language.types configuration do
       // not overwrite it.
-      $profile_directory = \Drupal::service('extension.list.profile')->getPath(\Drupal::installProfile());
+      $profile_directory = \Drupal::service('extension.list.profile')->getPath($profile);
       $profile_storages = [
         new FileStorage($profile_directory . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY),
         new FileStorage($profile_directory . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY),
