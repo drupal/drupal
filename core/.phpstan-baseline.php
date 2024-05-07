@@ -183,6 +183,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Component/Gettext/PoStreamReader.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to an undefined static method ReflectionMethod\\:\\:createFromMethodName\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Component/Utility/ArgumentsResolver.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$permission might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Access/AccessResult.php',
