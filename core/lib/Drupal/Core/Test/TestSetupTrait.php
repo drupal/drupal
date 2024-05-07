@@ -170,6 +170,7 @@ trait TestSetupTrait {
         // prefixes of the test runner leak into the test.
         $connection_info[$target]['prefix'] = $value['prefix'] . $this->databasePrefix;
       }
+      Database::removeConnection('default');
       Database::addConnectionInfo('default', 'default', $connection_info['default']);
     }
   }

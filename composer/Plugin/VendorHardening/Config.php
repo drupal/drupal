@@ -70,7 +70,6 @@ class Config {
     'symfony/event-dispatcher' => ['Tests'],
     'symfony/http-foundation' => ['Tests'],
     'symfony/http-kernel' => ['Tests'],
-    'symfony/phpunit-bridge' => ['Tests'],
     'symfony/process' => ['Tests'],
     'symfony/psr-http-message-bridge' => ['Tests'],
     'symfony/routing' => ['Tests'],

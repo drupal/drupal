@@ -29,18 +29,4 @@ class PhpUnitBridgeTest extends UnitTestCase {
     $this->assertEquals('known_return_value', \deprecation_test_function());
   }
 
-  /**
-   * Tests the @requires annotation in conjunction with DrupalListener.
-   *
-   * This test method will be skipped and should not cause the test suite to
-   * fail.
-   *
-   * @requires extension will_hopefully_never_exist
-   * @see \Drupal\Tests\Listeners\DrupalListener
-   */
-  public function testWillNeverRun(): void {
-    $deprecated = new FixtureDeprecatedClass();
-    $this->assertEquals('test', $deprecated->testFunction());
-  }
-
 }

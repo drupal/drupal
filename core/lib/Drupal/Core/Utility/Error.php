@@ -206,4 +206,16 @@ class Error {
     return $return;
   }
 
+  /**
+   * Returns the current PHP error handler as a callable.
+   *
+   * @return callable|null
+   *   The current error handler as a callable, or NULL if none is set.
+   */
+  public static function currentErrorHandler(): ?callable {
+    $currentHandler = set_error_handler('var_dump');
+    restore_error_handler();
+    return $currentHandler;
+  }
+
 }

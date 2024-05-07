@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Tests the TranslatableMarkup class.

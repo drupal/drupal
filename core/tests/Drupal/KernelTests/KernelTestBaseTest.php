@@ -75,9 +75,6 @@ class KernelTestBaseTest extends KernelTestBase {
 
     $this->assertEquals($this, $GLOBALS['conf']['container_service_providers']['test']);
 
-    $GLOBALS['destroy-me'] = TRUE;
-    $this->assertArrayHasKey('destroy-me', $GLOBALS);
-
     $database = $this->container->get('database');
     $database->schema()->createTable('foo', [
       'fields' => [
@@ -98,8 +95,6 @@ class KernelTestBaseTest extends KernelTestBase {
    * @depends testSetUp
    */
   public function testSetUpDoesNotLeak() {
-    $this->assertArrayNotHasKey('destroy-me', $GLOBALS);
-
     // Ensure that we have a different database prefix.
     $schema = $this->container->get('database')->schema();
     $this->assertFalse($schema->tableExists('foo'));

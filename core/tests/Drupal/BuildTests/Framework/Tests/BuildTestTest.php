@@ -92,6 +92,7 @@ class BuildTestTest extends BuildTestBase {
     /** @var \PHPUnit\Framework\MockObject\MockBuilder|\Drupal\BuildTests\Framework\BuildTestBase $base */
     $base = $this->getMockBuilder(BuildTestBase::class)
       ->onlyMethods(['getDrupalRoot', 'getComposerRoot'])
+      ->setConstructorArgs(['test'])
       ->getMockForAbstractClass();
     $base->expects($this->exactly(1))
       ->method('getDrupalRoot')
@@ -170,6 +171,7 @@ class BuildTestTest extends BuildTestBase {
     /** @var \PHPUnit\Framework\MockObject\MockBuilder|\Drupal\BuildTests\Framework\BuildTestBase $base */
     $base = $this->getMockBuilder(BuildTestBase::class)
       ->onlyMethods(['getDrupalRoot', 'getComposerRoot'])
+      ->setConstructorArgs(['test'])
       ->getMockForAbstractClass();
     $base->expects($this->exactly(3))
       ->method('getDrupalRoot')

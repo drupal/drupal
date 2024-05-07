@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- For how to customize PHPUnit configuration, see core/tests/README.md. -->
 <!-- TODO set checkForUnintentionallyCoveredCode="true" once https://www.drupal.org/node/2626832 is resolved. -->
 <!-- PHPUnit expects functional tests to be run with either a privileged user
@@ -7,14 +6,18 @@
  https://www.drupal.org/node/2116263 for details.
 -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         bootstrap="tests/bootstrap.php" colors="true"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
          failOnWarning="true"
-         printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
          cacheResult="false"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         cacheDirectory=".phpunit.cache">
   <php>
     <!-- Set error reporting to E_ALL. -->
     <ini name="error_reporting" value="32767"/>
@@ -26,6 +29,13 @@
     <env name="SIMPLETEST_DB" value=""/>
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value=""/>
+    <!-- To avoid overcrowding the output in CI environments, browser tests
+     will not print the individual links in the test run report by default.
+     The output in Drupal testing environment is saved as an artifact that
+     can be browsed or downloaded from Gitlab. However, if you need to
+     print the individual links locally you can set the
+     BROWSERTEST_OUTPUT_VERBOSE environment variable to "true". -->
+    <!-- <env name="BROWSERTEST_OUTPUT_VERBOSE" value="true"/> -->
     <!-- By default, browser tests will output links that use the base URL set
      in SIMPLETEST_BASE_URL. However, if your SIMPLETEST_BASE_URL is an internal
      path (such as may be the case in a virtual or Docker-based environment),
@@ -33,11 +43,8 @@
      reachable from your host machine here. This will allow you to follow them
      directly and view the output. -->
     <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
-
-    <!-- Deprecation testing is managed through Symfony's PHPUnit Bridge.
-      The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
+    <!-- The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
       the behavior of the deprecation tests.
-      See https://symfony.com/doc/current/components/phpunit_bridge.html#configuration
       Drupal core's testing framework is setting this variable to its defaults.
       Projects with their own requirements need to manage this variable
       explicitly.
@@ -46,43 +53,61 @@
     <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
     <!-- Deprecation errors can be selectively ignored by specifying a file of
       regular expression patterns for exclusion.
-      See https://symfony.com/doc/current/components/phpunit_bridge.html#ignoring-deprecations
       Uncomment the line below to specify a custom deprecations ignore file.
       NOTE: it may be required to specify the full path to the file to run tests
       correctly.
     -->
     <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="ignoreFile=.deprecation-ignore.txt"/> -->
-
     <!-- Example for changing the driver class for mink tests MINK_DRIVER_CLASS value: 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver' -->
-    <env name="MINK_DRIVER_CLASS" value=''/>
+    <env name="MINK_DRIVER_CLASS" value=""/>
     <!-- Example for changing the driver args to mink tests MINK_DRIVER_ARGS value: '["http://127.0.0.1:8510"]' -->
-    <env name="MINK_DRIVER_ARGS" value=''/>
+    <env name="MINK_DRIVER_ARGS" value=""/>
     <!-- Example for changing the driver args to webdriver tests MINK_DRIVER_ARGS_WEBDRIVER value: '["chrome", { "goog:chromeOptions": { "w3c": false } }, "http://localhost:4444/wd/hub"]' For using the Firefox browser, replace "chrome" with "firefox" -->
-    <env name="MINK_DRIVER_ARGS_WEBDRIVER" value=''/>
+    <env name="MINK_DRIVER_ARGS_WEBDRIVER" value=""/>
   </php>
   <testsuites>
     <testsuite name="unit">
-      <file>./tests/TestSuites/UnitTestSuite.php</file>
+      <directory>tests/Drupal/Tests</directory>
+      <directory>modules/**/tests/src/Unit</directory>
+      <directory>profiles/**/tests/src/Unit</directory>
+      <directory>themes/**/tests/src/Unit</directory>
+      <directory>../modules/**/tests/src/Unit</directory>
+      <directory>../profiles/**/tests/src/Unit</directory>
+      <directory>../themes/**/tests/src/Unit</directory>
     </testsuite>
     <testsuite name="kernel">
-      <file>./tests/TestSuites/KernelTestSuite.php</file>
+      <directory>tests/Drupal/KernelTests</directory>
+      <directory>modules/**/tests/src/Kernel</directory>
+      <directory>profiles/**/tests/src/Kernel</directory>
+      <directory>themes/**/tests/src/Kernel</directory>
+      <directory>../modules/**/tests/src/Kernel</directory>
+      <directory>../profiles/**/tests/src/Kernel</directory>
+      <directory>../themes/**/tests/src/Kernel</directory>
     </testsuite>
     <testsuite name="functional">
-      <file>./tests/TestSuites/FunctionalTestSuite.php</file>
+      <directory>tests/Drupal/FunctionalTests</directory>
+      <directory>modules/**/tests/src/Functional</directory>
+      <directory>profiles/**/tests/src/Functional</directory>
+      <directory>themes/**/tests/src/Functional</directory>
+      <directory>../modules/**/tests/src/Functional</directory>
+      <directory>../profiles/**/tests/src/Functional</directory>
+      <directory>../themes/**/tests/src/Functional</directory>
     </testsuite>
     <testsuite name="functional-javascript">
-      <file>./tests/TestSuites/FunctionalJavascriptTestSuite.php</file>
+      <directory>tests/Drupal/FunctionalJavascriptTests</directory>
+      <directory>modules/**/tests/src/FunctionalJavascript</directory>
+      <directory>profiles/**/tests/src/FunctionalJavascript</directory>
+      <directory>themes/**/tests/src/FunctionalJavascript</directory>
+      <directory>../modules/**/tests/src/FunctionalJavascript</directory>
+      <directory>../profiles/**/tests/src/FunctionalJavascript</directory>
+      <directory>../themes/**/tests/src/FunctionalJavascript</directory>
     </testsuite>
     <testsuite name="build">
-      <file>./tests/TestSuites/BuildTestSuite.php</file>
+      <directory>tests/Drupal/BuildTests</directory>
     </testsuite>
   </testsuites>
-  <listeners>
-    <listener class="\Drupal\Tests\Listeners\DrupalListener">
-    </listener>
-  </listeners>
   <!-- Settings for coverage reports. -->
-  <coverage>
+  <source ignoreSuppressionOfDeprecations="true">
     <include>
       <directory>./includes</directory>
       <directory>./lib</directory>
@@ -101,5 +126,5 @@
       <directory suffix=".api.php">./modules/**</directory>
       <directory suffix=".api.php">../modules/**</directory>
     </exclude>
-  </coverage>
+  </source>
 </phpunit>

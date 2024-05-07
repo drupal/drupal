@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\DrupalKernel;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\DrupalKernelInterface;
+use Drupal\Core\Utility\Error;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
@@ -21,6 +22,17 @@ use Symfony\Component\HttpFoundation\Request;
  * @coversDefaultClass \Drupal\Core\DrupalKernel
  */
 class DrupalKernelTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    $currentErrorHandler = Error::currentErrorHandler();
+    if (is_string($currentErrorHandler) && $currentErrorHandler === '_drupal_error_handler') {
+      restore_error_handler();
+    }
+    parent::tearDown();
+  }
 
   /**
    * {@inheritdoc}

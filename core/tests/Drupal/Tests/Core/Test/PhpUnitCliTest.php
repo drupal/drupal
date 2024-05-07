@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\Process\Process;
 
 /**
@@ -30,11 +29,6 @@ class PhpUnitCliTest extends UnitTestCase {
       'core',
       '--list-tests',
     ];
-
-    // PHPUnit 10 dropped the --verbose command line option.
-    if (RunnerVersion::getMajor() < 10) {
-      $command[] = '--verbose';
-    }
 
     $process = new Process($command, $this->root);
     $process
