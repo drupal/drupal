@@ -1,0 +1,11 @@
+name: 'Config from module and recipe'
+type: 'Testing'
+install:
+  - config_test
+  - shortcut
+  - system
+config:
+  import:
+    config_test: '*'
+    shortcut:
+      - shortcut.set.default

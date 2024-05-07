@@ -1,0 +1,11 @@
+name: Tags
+description: 'Provides "Tags" taxonomy vocabulary and related configuration. Use tags to group content on similar topics into categories.'
+type: 'Taxonomy'
+install:
+  - taxonomy
+config:
+  import:
+    taxonomy:
+      - core.entity_view_mode.taxonomy_term.full
+      - system.action.taxonomy_term_publish_action
+      - system.action.taxonomy_term_unpublish_action

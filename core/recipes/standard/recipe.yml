@@ -1,0 +1,85 @@
+name: 'Standard'
+description: 'Provides a standard site with commonly used features pre-configured.'
+type: 'Site'
+recipes:
+  - basic_block_type
+  - basic_shortcuts
+  - article_comment
+  - article_tags
+  - feedback_contact_form
+  - article_content_type
+  - page_content_type
+  - basic_html_format_editor
+  - full_html_format_editor
+  - content_search
+  - core_recommended_performance
+  - core_recommended_maintenance
+  - core_recommended_admin_theme
+  - core_recommended_front_end_theme
+  - user_picture
+  # Provides a fallback text format which is available to all users.
+  - restricted_html_format
+install:
+  - image
+  - help
+  - history
+  - config
+  - contextual
+  - menu_link_content
+  - datetime
+  - menu_ui
+  - options
+  - toolbar
+  - field_ui
+  - views_ui
+  - shortcut
+config:
+  import:
+    claro:
+      - block.block.claro_help
+    help:
+      - search.page.help_search
+      - block.block.claro_help_search
+    image:
+      - image.style.large
+      - image.style.thumbnail
+    node:
+      - views.view.archive
+      - views.view.content
+      - views.view.content_recent
+      - views.view.frontpage
+      - views.view.glossary
+    olivero:
+      - block.block.olivero_help
+      - block.block.olivero_search_form_narrow
+      - block.block.olivero_search_form_wide
+      - block.block.olivero_syndicate
+    user:
+      - core.entity_view_mode.user.compact
+      - search.page.user_search
+      - views.view.user_admin_people
+      - views.view.who_s_new
+      - views.view.who_s_online
+  actions:
+    node.settings:
+      simple_config_update:
+        use_admin_theme: true
+    system.site:
+      simple_config_update:
+        page.front: /node
+    user.role.authenticated:
+      grantPermission: 'delete own files'
+    user.role.content_editor:
+      grantPermissionsForEachNodeType:
+        - 'create %bundle content'
+        - 'delete %bundle revisions'
+        - 'delete own %bundle content'
+        - 'edit own %bundle content'
+    user.role.anonymous:
+      # This recipe assumes all published content should be publicly accessible.
+      grantPermission: 'access content'
+    user.settings:
+      simple_config_update:
+        verify_mail: true
+        register: visitors_admin_approval
+        cancel_method: user_cancel_block

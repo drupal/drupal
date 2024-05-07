@@ -1,0 +1,6 @@
+name: 'Recipe include'
+type: 'Testing'
+recipes:
+  - install_node_with_config
+install:
+  - dblog

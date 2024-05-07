@@ -42,6 +42,10 @@ function config_test_entity_type_alter(array &$entity_types) {
   if (\Drupal::service('state')->get('config_test.lookup_keys', FALSE)) {
     $entity_types['config_test']->set('lookup_keys', ['uuid', 'style']);
   }
+
+  if (\Drupal::service('state')->get('config_test.class_override', FALSE)) {
+    $entity_types['config_test']->setClass(\Drupal::service('state')->get('config_test.class_override'));
+  }
 }
 
 /**

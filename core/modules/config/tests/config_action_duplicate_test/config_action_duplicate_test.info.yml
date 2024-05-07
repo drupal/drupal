@@ -1,0 +1,4 @@
+name: 'Config action duplicate test'
+type: module
+package: Testing
+version: VERSION

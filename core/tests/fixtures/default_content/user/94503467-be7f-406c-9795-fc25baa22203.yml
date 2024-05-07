@@ -1,0 +1,43 @@
+_meta:
+  version: '1.0'
+  entity_type: user
+  uuid: 94503467-be7f-406c-9795-fc25baa22203
+  default_langcode: en
+default:
+  preferred_langcode:
+    -
+      value: en
+  preferred_admin_langcode:
+    -
+      value: en
+  name:
+    -
+      value: 'Naomi Malone'
+  pass:
+    -
+      # cspell:disable
+      value: $2y$10$3GlpQmjbJ9raJNQ.JZmg/OVS7avJ7KPQxucunwovUtOvpKbe3k8lK
+      # cspell:enable
+      existing: ''
+      pre_hashed: false
+  mail:
+    -
+      value: author@example.com
+  timezone:
+    -
+      value: UTC
+  status:
+    -
+      value: true
+  created:
+    -
+      value: 1711125883
+  access:
+    -
+      value: 0
+  login:
+    -
+      value: 0
+  init:
+    -
+      value: author@example.com

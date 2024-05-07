@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: valid
+label: 'Valid date format'
+locked: false
+pattern: 'F j, Y'

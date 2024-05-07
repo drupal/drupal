@@ -1,0 +1,4 @@
+name: First level sub recipe
+type: 'Testing'
+recipes:
+  - level_2

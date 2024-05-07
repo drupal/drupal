@@ -1,0 +1,29 @@
+name: 'Article comments'
+description: 'Provides commenting on article content.'
+type: 'Content field'
+recipes:
+  - article_content_type
+  - comment_base
+config:
+  actions:
+    core.entity_form_display.node.article.default:
+      setComponent:
+        name: comment
+        options:
+          type: comment_default
+          weight: 20
+          region: content
+          settings: {}
+          third_party_settings: {}
+    core.entity_view_display.node.article.default:
+      setComponent:
+        name: comment
+        options:
+          type: comment_default
+          label: above
+          settings:
+            view_mode: default
+            pager_id: 0
+          third_party_settings: {  }
+          weight: 110
+          region: content

@@ -2,10 +2,12 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a common base class for entity view and form displays.
@@ -345,6 +347,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Add component to display'))]
   public function setComponent($name, array $options = []) {
     // If no weight specified, make sure the field sinks at the bottom.
     if (!isset($options['weight'])) {
