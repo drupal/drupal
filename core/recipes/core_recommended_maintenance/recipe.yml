@@ -1,0 +1,16 @@
+name: 'Recommended Maintenance'
+description: 'Sets up modules recommended for site maintenance.'
+type: 'Maintenance'
+install:
+  - automated_cron
+  - announcements_feed
+  - dblog
+  - views
+config:
+  import:
+    automated_cron:
+      - automated_cron.settings
+    dblog:
+      - views.view.watchdog
+    system:
+      - system.cron

@@ -1,0 +1,11 @@
+name: 'Restricted HTML'
+description: 'Provides "Restricted HTML" text format.'
+type: 'Text format'
+install:
+  - filter
+config:
+  import:
+    filter: '*'
+  actions:
+    user.role.anonymous:
+      grantPermission: 'use text format restricted_html'

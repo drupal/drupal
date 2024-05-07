@@ -1,0 +1,9 @@
+langcode: en
+status: true
+name: 'Another test content type'
+type: another_test
+description: 'Another test content type from a recipe'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

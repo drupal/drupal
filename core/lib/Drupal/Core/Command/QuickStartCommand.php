@@ -28,7 +28,7 @@ class QuickStartCommand extends Command {
   protected function configure() {
     $this->setName('quick-start')
       ->setDescription('Installs a Drupal site and runs a web server. This is not meant for production and might be too simple for custom development. It is a quick and easy way to get Drupal running.')
-      ->addArgument('install-profile', InputArgument::OPTIONAL, 'Install profile to install the site in.')
+      ->addArgument('install-profile-or-recipe', InputArgument::OPTIONAL, 'Install profile or recipe directory from which to install the site.')
       ->addOption('langcode', NULL, InputOption::VALUE_OPTIONAL, 'The language to install the site in. Defaults to en.', 'en')
       ->addOption('site-name', NULL, InputOption::VALUE_OPTIONAL, 'Set the site name. Defaults to Drupal.', 'Drupal')
       ->addOption('host', NULL, InputOption::VALUE_OPTIONAL, 'Provide a host for the server to run on. Defaults to 127.0.0.1.', '127.0.0.1')
@@ -36,7 +36,8 @@ class QuickStartCommand extends Command {
       ->addOption('suppress-login', 's', InputOption::VALUE_NONE, 'Disable opening a login URL in a browser.')
       ->addUsage('demo_umami --langcode fr')
       ->addUsage('standard --site-name QuickInstall --host localhost --port 8080')
-      ->addUsage('minimal --host my-site.com --port 80');
+      ->addUsage('minimal --host my-site.com --port 80')
+      ->addUsage('core/recipes/standard --site-name MyDrupalRecipe');
 
     parent::configure();
   }
@@ -49,7 +50,7 @@ class QuickStartCommand extends Command {
 
     $arguments = [
       'command' => 'install',
-      'install-profile' => $input->getArgument('install-profile'),
+      'install-profile-or-recipe' => $input->getArgument('install-profile-or-recipe'),
       '--langcode' => $input->getOption('langcode'),
       '--site-name' => $input->getOption('site-name'),
     ];

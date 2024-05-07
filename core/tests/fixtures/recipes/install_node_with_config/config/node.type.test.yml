@@ -1,0 +1,9 @@
+langcode: en
+status: true
+name: 'Test content type'
+type: test
+description: 'Test content type from a recipe'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

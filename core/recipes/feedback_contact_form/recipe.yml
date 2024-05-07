@@ -1,0 +1,24 @@
+name: 'Website feedback contact form'
+description: 'Provides a website feedback contact form.'
+type: 'Contact form'
+install:
+  - contact
+config:
+  import:
+    contact:
+      - contact.form.personal
+    system:
+      - system.menu.footer
+  actions:
+    core.menu.static_menu_link_overrides:
+      simple_config_update:
+        definitions.contact__site_page:
+          menu_name: footer
+          parent: ''
+          weight: 0
+          expanded: false
+          enabled: true
+    user.role.anonymous:
+      grantPermission: 'access site-wide contact form'
+    user.role.authenticated:
+      grantPermission: 'access site-wide contact form'

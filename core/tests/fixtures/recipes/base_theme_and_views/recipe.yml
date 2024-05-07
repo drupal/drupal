@@ -1,0 +1,6 @@
+name: 'Base theme and views'
+type: 'Testing'
+install:
+  - test_subsubtheme
+  - node
+  - views
