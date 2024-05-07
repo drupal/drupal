@@ -7,7 +7,6 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold\Integration;
 use Drupal\Composer\Plugin\Scaffold\Operations\ReplaceOp;
 use Drupal\Composer\Plugin\Scaffold\ScaffoldOptions;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,7 +15,6 @@ use PHPUnit\Framework\TestCase;
  * @group Scaffold
  */
 class ReplaceOpTest extends TestCase {
-  use PhpUnitWarnings;
 
   /**
    * @covers ::process

@@ -23,8 +23,8 @@ use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;
@@ -38,7 +38,6 @@ use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Base class for functional integration tests.
@@ -91,29 +90,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use ConfigTestTrait;
   use ExtensionListTestTrait;
   use TestRequirementsTrait;
-  use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;
-
-  /**
-   * {@inheritdoc}
-   *
-   * Back up and restore any global variables that may be changed by tests.
-   *
-   * @see self::runTestInSeparateProcess
-   */
-  protected $backupGlobals = TRUE;
-
-  /**
-   * {@inheritdoc}
-   *
-   * Kernel tests are run in separate processes because they allow autoloading
-   * of code from extensions. Running the test in a separate process isolates
-   * this behavior from other tests. Subclasses should not override this
-   * property.
-   */
-  protected $runTestInSeparateProcess = TRUE;
 
   /**
    * {@inheritdoc}
@@ -123,6 +102,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @see self::runTestInSeparateProcess
    */
   protected $backupStaticAttributes = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(string $name) {
+    parent::__construct($name);
+    $this->setRunTestInSeparateProcess(TRUE);
+  }
 
   /**
    * {@inheritdoc}
@@ -140,16 +127,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Settings cannot be serialized.
     'Drupal\Core\Site\Settings' => ['instance'],
   ];
-
-  /**
-   * {@inheritdoc}
-   *
-   * Do not forward any global state from the parent process to the processes
-   * that run the actual tests.
-   *
-   * @see self::runTestInSeparateProcess
-   */
-  protected $preserveGlobalState = FALSE;
 
   /**
    * @var \Composer\Autoload\Classloader

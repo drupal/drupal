@@ -457,6 +457,13 @@ abstract class Database {
       }
       unset(self::$connections[$key]);
     }
+
+    // When last connection for $key is closed, we also stop any active
+    // logging.
+    if (empty(self::$connections[$key])) {
+      unset(self::$logs[$key]);
+    }
+
     // Force garbage collection to run. This ensures that client connection
     // objects and results in the connection being closed are destroyed.
     gc_collect_cycles();

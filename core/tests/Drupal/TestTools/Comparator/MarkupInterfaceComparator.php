@@ -42,7 +42,7 @@ class MarkupInterfaceComparator extends Comparator {
         throw new \RuntimeException("Cannot compare markup between MarkupInterface objects and plain strings");
       }
     }
-    $comparator = $this->factory->getComparatorFor($expected_safe_stripped, $actual_safe_stripped);
+    $comparator = $this->factory()->getComparatorFor($expected_safe_stripped, $actual_safe_stripped);
     $comparator->assertEquals($expected_safe_stripped, $actual_safe_stripped, $delta, $canonicalize, $ignoreCase);
   }
 

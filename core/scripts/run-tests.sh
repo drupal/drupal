@@ -25,7 +25,6 @@ use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestRunResultsStorageInterface;
 use Drupal\Core\Test\TestDiscovery;
-use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -511,7 +510,6 @@ function simpletest_script_init() {
   $autoloader = require_once __DIR__ . '/../../autoload.php';
   // The PHPUnit compatibility layer needs to be available to autoload tests.
   $autoloader->add('Drupal\\TestTools', __DIR__ . '/../tests');
-  ClassWriter::mutateTestBase($autoloader);
 
   // Get URL from arguments.
   if (!empty($args['url'])) {
@@ -817,13 +815,8 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  * Run a PHPUnit-based test.
  */
 function simpletest_script_run_phpunit(TestRun $test_run, $class) {
-  $reflection = new \ReflectionClass($class);
-  if ($reflection->hasProperty('runLimit')) {
-    set_time_limit($reflection->getStaticPropertyValue('runLimit'));
-  }
-
   $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
-  $results = $runner->execute($test_run, [$class], $status);
+  $results = $runner->execute($test_run, $class, $status);
   $runner->processPhpUnitResults($test_run, $results);
 
   $summaries = $runner->summarizeResults($results);

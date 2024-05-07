@@ -6,6 +6,7 @@ namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Element\Element;
+use Behat\Mink\Exception\Exception as MinkException;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
@@ -19,13 +20,12 @@ use Drupal\Core\Utility\Error;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\TestVarDumper;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -72,7 +72,6 @@ abstract class BrowserTestBase extends TestCase {
     createUser as drupalCreateUser;
   }
   use XdebugRequestTrait;
-  use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ExpectDeprecationTrait;
   use ExtensionListTestTrait;
@@ -174,19 +173,6 @@ abstract class BrowserTestBase extends TestCase {
   protected $mink;
 
   /**
-   * {@inheritdoc}
-   *
-   * Browser tests are run in separate processes to prevent collisions between
-   * code that may be loaded by tests.
-   */
-  protected $runTestInSeparateProcess = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $preserveGlobalState = FALSE;
-
-  /**
    * The base URL.
    *
    * @var string
@@ -209,6 +195,14 @@ abstract class BrowserTestBase extends TestCase {
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $originalContainer;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(string $name) {
+    parent::__construct($name);
+    $this->setRunTestInSeparateProcess(TRUE);
+  }
 
   /**
    * {@inheritdoc}
@@ -369,7 +363,9 @@ abstract class BrowserTestBase extends TestCase {
     $this->prepareEnvironment();
     $this->installDrupal();
 
-    // Setup Mink.
+    // Setup Mink. Register Mink exceptions to cause test failures instead of
+    // errors.
+    $this->registerFailureType(MinkException::class);
     $this->initMink();
 
     // Set up the browser test output file.

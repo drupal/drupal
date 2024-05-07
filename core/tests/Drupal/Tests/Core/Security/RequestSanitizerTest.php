@@ -35,6 +35,14 @@ class RequestSanitizerTest extends UnitTestCase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    restore_error_handler();
+    parent::tearDown();
+  }
+
+  /**
    * Tests RequestSanitizer class.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request

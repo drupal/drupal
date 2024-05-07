@@ -78,8 +78,8 @@ class CallableResolverTest extends UnitTestCase {
         __CLASS__ . '::method',
       ],
       'Non-static function, instantiated by class resolver' => [
-        static::class . '::method',
-        __CLASS__ . '::method',
+        MethodCallable::class . '::method',
+        MethodCallable::class . '::method',
       ],
       'Non-static function, instantiated by class resolver, container injection' => [
         '\Drupal\Tests\Core\Utility\MockContainerInjection::getResult',
@@ -94,8 +94,8 @@ class CallableResolverTest extends UnitTestCase {
         __CLASS__ . '::staticMethod',
       ],
       'Class with invoke method' => [
-        static::class,
-        __CLASS__ . '::__invoke',
+        MethodCallable::class,
+        MethodCallable::class . '::__invoke',
       ],
     ];
 
@@ -131,14 +131,14 @@ class CallableResolverTest extends UnitTestCase {
         'The callable definition provided "[not_a_callable,not_a_callable]" is not a valid callable.',
       ],
       'Missing method on class, array notation' => [
-        [static::class, 'method_not_exists'],
+        [\stdClass::class, 'method_not_exists'],
         \InvalidArgumentException::class,
-        'The callable definition provided "[Drupal\Tests\Core\Utility\CallableResolverTest,method_not_exists]" is not a valid callable.',
+        'The callable definition provided "[stdClass,method_not_exists]" is not a valid callable.',
       ],
       'Missing method on class, static notation' => [
-        static::class . '::method_not_exists',
+        \stdClass::class . '::method_not_exists',
         \InvalidArgumentException::class,
-        'The callable definition provided was invalid. Either class "Drupal\Tests\Core\Utility\CallableResolverTest" does not have a method "method_not_exists", or it is not callable.',
+        'The callable definition provided was invalid. Either class "stdClass" does not have a method "method_not_exists", or it is not callable.',
       ],
       'Missing class, static notation' => [
         '\NotARealClass::method',
@@ -232,6 +232,39 @@ class NoInstantiationMockStaticCallable {
   }
 
   public static function staticMethod($suffix) {
+    return __METHOD__ . '+' . $suffix;
+  }
+
+}
+
+class MethodCallable {
+
+  /**
+   * A test __invoke method.
+   *
+   * @param string $suffix
+   *   A suffix to append.
+   *
+   * @return string
+   *   A test string.
+   */
+  public function __invoke($suffix) {
+    return __METHOD__ . '+' . $suffix;
+  }
+
+  /**
+   * A test method that returns "foo".
+   *
+   * @param string $suffix
+   *   A suffix to append.
+   *
+   * @return string
+   *   A test string.
+   *
+   * @throws \Exception
+   *   Throws an exception when called statically.
+   */
+  public function method($suffix) {
     return __METHOD__ . '+' . $suffix;
   }
 

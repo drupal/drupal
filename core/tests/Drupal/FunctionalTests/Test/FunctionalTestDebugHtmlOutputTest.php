@@ -26,8 +26,15 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
    * running a functional test are met.
    */
   public function testFunctionalTestDebugHtmlOutput(): void {
-    // Test with the specified output directory.
-    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose core/tests/Drupal/FunctionalTests/Test/FunctionalTestDebugHtmlOutputHelperTest.php');
+    $command = [
+      'vendor/bin/phpunit',
+      '--configuration',
+      'core',
+      'core/tests/Drupal/FunctionalTests/Test/FunctionalTestDebugHtmlOutputHelperTest.php',
+    ];
+
+    // Test with the default output directory, specified by BROWSERTEST_OUTPUT_DIRECTORY.
+    $process = new Process($command);
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
@@ -36,15 +43,31 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       'COMMAND: ' . $process->getCommandLine() . "\n" .
       'OUTPUT: ' . $process->getOutput() . "\n" .
       'ERROR: ' . $process->getErrorOutput() . "\n");
-    $this->assertStringContainsString('HTML output was generated', $process->getOutput());
-    $this->assertStringContainsString('Drupal_FunctionalTests_Test_FunctionalTestDebugHtmlOutputHelperTest', $process->getOutput());
+    $this->assertMatchesRegularExpression('/HTML output was generated, \d+ page\(s\)\./m', $process->getOutput());
 
-    // Test with a wrong output directory.
-    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose core/tests/Drupal/FunctionalTests/Test/FunctionalTestDebugHtmlOutputHelperTest.php');
+    // Test with verbose output.
+    $process = new Process($command);
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
-    $process->run(NULL, ['BROWSERTEST_OUTPUT_DIRECTORY' => 'can_we_assume_that_a_subdirectory_with_this_name_does_not_exist']);
+    $process->run(NULL, [
+      'BROWSERTEST_OUTPUT_VERBOSE' => '1',
+    ]);
+    $this->assertEquals(0, $process->getExitCode(),
+      'COMMAND: ' . $process->getCommandLine() . "\n" .
+      'OUTPUT: ' . $process->getOutput() . "\n" .
+      'ERROR: ' . $process->getErrorOutput() . "\n");
+    $this->assertStringContainsString('HTML output was generated.', $process->getOutput());
+    $this->assertStringContainsString('Drupal_FunctionalTests_Test_FunctionalTestDebugHtmlOutputHelperTest', $process->getOutput());
+
+    // Test with a wrong output directory.
+    $process = new Process($command);
+    $process->setWorkingDirectory($this->root)
+      ->setTimeout(300)
+      ->setIdleTimeout(300);
+    $process->run(NULL, [
+      'BROWSERTEST_OUTPUT_DIRECTORY' => 'can_we_assume_that_a_subdirectory_with_this_name_does_not_exist',
+    ]);
     $this->assertEquals(0, $process->getExitCode(),
       'COMMAND: ' . $process->getCommandLine() . "\n" .
       'OUTPUT: ' . $process->getOutput() . "\n" .

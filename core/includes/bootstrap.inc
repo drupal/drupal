@@ -218,6 +218,9 @@ function drupal_valid_test_ua($new_prefix = NULL) {
 
 /**
  * Generates a user agent string with a HMAC and timestamp for tests.
+ *
+ * @return string|null
+ *   The user agent, or NULL on failure.
  */
 function drupal_generate_test_ua($prefix) {
   static $key, $last_prefix;
@@ -242,7 +245,9 @@ function drupal_generate_test_ua($prefix) {
       // Generate and save a new hash salt for a test run.
       // Consumed by drupal_valid_test_ua() before settings.php is loaded.
       $private_key = Crypt::randomBytesBase64(55);
-      file_put_contents($key_file, $private_key);
+      if (!@file_put_contents($key_file, $private_key)) {
+        return NULL;
+      }
     }
     // The file properties add more entropy not easily accessible to others.
     $key = $private_key . filectime(__FILE__) . fileinode(__FILE__);

@@ -1451,7 +1451,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
     $closure = function () {};
     $static_method_string = __METHOD__;
     $static_method_array = [__CLASS__, __FUNCTION__];
-    $object_method_array = [new static(), __FUNCTION__];
+    $object_method_array = [new static('test'), __FUNCTION__];
 
     return [
       // A shorthand form method is generally expanded to become a method on an

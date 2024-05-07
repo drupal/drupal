@@ -842,6 +842,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/filter/src/Plugin/Filter/FilterHtml.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/help/tests/src/Unit/HelpTopicTwigTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/history/src/Plugin/views/field/HistoryUserTimestamp.php',
@@ -1107,6 +1112,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateTestBase.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/MigrateExecutableTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$sub_process_plugins might not be defined\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/process/SubProcessTest.php',
@@ -1355,6 +1365,11 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\serialization\\\\Normalizer\\\\EntityNormalizer\\:\\:getCustomSerializedPropertyNames\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/serialization/src/Normalizer/EntityNormalizer.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/serialization/tests/src/Unit/Normalizer/NormalizerBaseTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\shortcut\\\\Form\\\\SetCustomize\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
@@ -1839,6 +1854,36 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/StyleTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 5,
+	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/Derivative/ViewsLocalTaskTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/argument_validator/EntityTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/display/PathPluginBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/pager/PagerPluginBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/pager/SqlBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/views/field/EntityOperationsUnitTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/src/Form/Ajax/ConfigHandler.php',
@@ -1964,6 +2009,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$found might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php',
@@ -1992,6 +2042,16 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$new_field_schema_data might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
@@ -2075,6 +2135,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 4,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/PluginBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/PluginManagerBaseTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/StubPluginManagerBaseWithMapper.php',
@@ -2083,6 +2153,51 @@ $ignoreErrors[] = [
 	'message' => '#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/ComposerTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/Entity/ConfigEntityStorageTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Controller/ControllerBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/ContentEntityBaseUnitTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityFormTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityLinkTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityStorageBaseTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityTypeManagerTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityTypeTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityUrlTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Trying to mock an undefined method getRevisionId\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#',
@@ -2095,10 +2210,25 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityUrlTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/KeyValueStore/KeyValueEntityStorageTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
 Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Http/ClientFactoryTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Lock/LockBackendAbstractTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
@@ -2145,52 +2275,6 @@ $ignoreErrors[] = [
 ClientInterface\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/DrupalTestBrowser.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\Listeners\\\\DrupalListener implements deprecated interface PHPUnit\\\\Framework\\\\TestListener\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Listeners/DrupalListener.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait PHPUnit\\\\Framework\\\\TestListenerDefaultImplementation in class Drupal\\\\Tests\\\\Listeners\\\\DrupalListener\\:
-The `TestListener` interface is deprecated$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Listeners/DrupalListener.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\BuildTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/BuildTestSuite.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\FunctionalJavascriptTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/FunctionalJavascriptTestSuite.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\FunctionalTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/FunctionalTestSuite.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\KernelTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/KernelTestSuite.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\UnitTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/UnitTestSuite.php',
 ];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];

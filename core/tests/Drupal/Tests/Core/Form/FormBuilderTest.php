@@ -67,7 +67,7 @@ class FormBuilderTest extends FormTestBase {
    * @covers ::getFormId
    */
   public function testGetFormIdWithNonFormClass() {
-    $form_arg = __CLASS__;
+    $form_arg = \stdClass::class;
     $form_state = new FormState();
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage("The form argument $form_arg must be an instance of \Drupal\Core\Form\FormInterface.");

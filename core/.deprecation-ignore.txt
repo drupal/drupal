@@ -3,7 +3,6 @@
 # See https://www.drupal.org/node/3285162 for more details.
 
 %The "Symfony\\Component\\Validator\\Context\\ExecutionContextInterface::.*\(\)" method is considered internal Used by the validator engine\. (Should not be called by user\W+code\. )?It may change without further notice\. You should not extend it from "[^"]+"\.%
-%The "PHPUnit\\Framework\\TestCase::addWarning\(\)" method is considered internal%
 
 # Skip some dependencies' DebugClassLoader forward compatibility warnings.
 %Method "Behat\\[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
@@ -17,16 +16,13 @@
 %Method "Twig\\TokenParser\\TokenParserInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "WebDriver\\Service\\CurlServiceInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
 
+# Indirect deprecations. These are not in Drupal's remit to fix, but it is
+# worth keeping track of dependencies' issues.
+%Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "org\\bovigo\\vfs\\[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+
 # The following deprecation is listed for Twig 2 compatibility when unit
 # testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
 %The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
 
-# PHPUnit 9.
-%"PHPUnit\\Framework\\TestListener".*is deprecated%
-%"PHPUnit\\Framework\\TestListenerDefaultImplementation".*is deprecated%
-%"PHPUnit\\Framework\\TestSuite".*is considered internal%
-%"PHPUnit\\TextUI\\DefaultResultPrinter".*is considered internal%
-
-# PHPUnit 9.6.
-%Expecting E_WARNING and E_USER_WARNING is deprecated and will no longer be possible in PHPUnit 10%
-%Expecting E_ERROR and E_USER_ERROR is deprecated and will no longer be possible in PHPUnit 10%
+# PHPUnit 10.
+%The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered internal.*You should not extend it from "Drupal\\[^"]+"%

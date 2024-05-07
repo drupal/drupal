@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 
   use Drupal\Component\Utility\Crypt;
+  use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
   use PHPUnit\Framework\TestCase;
   use Prophecy\PhpUnit\ProphecyTrait;
   use Prophecy\Prophet;
-  use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
   use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
   use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
   use Symfony\Component\DependencyInjection\Definition;
