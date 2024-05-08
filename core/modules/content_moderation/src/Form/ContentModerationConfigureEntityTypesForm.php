@@ -98,7 +98,7 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, WorkflowInterface $workflow = NULL, $entity_type_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?WorkflowInterface $workflow = NULL, $entity_type_id = NULL) {
     $this->workflow = $workflow;
     try {
       $this->entityType = $this->entityTypeManager->getDefinition($entity_type_id);
@@ -218,7 +218,7 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
   /**
    * Route title callback.
    */
-  public function getTitle(WorkflowInterface $workflow = NULL, $entity_type_id) {
+  public function getTitle(WorkflowInterface $workflow, $entity_type_id) {
     $this->entityType = $this->entityTypeManager->getDefinition($entity_type_id);
 
     $title = $this->t('Select the @entity_type types for the @workflow workflow', ['@entity_type' => $this->entityType->getLabel(), '@workflow' => $workflow->label()]);
