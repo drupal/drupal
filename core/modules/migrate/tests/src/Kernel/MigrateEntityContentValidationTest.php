@@ -181,8 +181,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
       'name' => 'foobar',
       'mail' => 'foobar@example.com',
     ]);
-    $admin_user->addRole($role->id());
-    $admin_user->save();
+    $admin_user->addRole($role->id())->save();
     $normal_user = User::create([
       'name' => 'normal user',
       'mail' => 'normal@example.com',

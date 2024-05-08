@@ -235,7 +235,9 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertSession()->pageTextContains("The shortcut $title has been deleted.");
     $this->assertShortcutQuickLink('Add to Default shortcuts');
     \Drupal::service('module_installer')->install(['block_content']);
-    $this->adminUser->addRole($this->drupalCreateRole(['administer block types']))->save();
+    $this->adminUser
+      ->addRole($this->drupalCreateRole(['administer block types']))
+      ->save();
     BlockContentType::create([
       'id' => 'basic',
       'label' => 'Basic block',

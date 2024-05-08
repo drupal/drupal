@@ -51,9 +51,7 @@ class UserAdminListingTest extends BrowserTestBase {
     $rid_2 = $this->drupalCreateRole([], 'custom_role_2', 'custom_role_2');
 
     $account = $this->drupalCreateUser();
-    $account->addRole($rid_1);
-    $account->addRole($rid_2);
-    $account->save();
+    $account->addRole($rid_1)->addRole($rid_2)->save();
     $accounts[$account->label()] = $account;
     $role_account_name = $account->label();
 
