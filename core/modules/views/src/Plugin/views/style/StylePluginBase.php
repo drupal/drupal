@@ -564,7 +564,7 @@ abstract class StylePluginBase extends PluginBase {
     // This is for backward compatibility, when $groupings was a string
     // containing the ID of a single field.
     if (is_string($groupings)) {
-      $rendered = $group_rendered === NULL ? TRUE : $group_rendered;
+      $rendered = $group_rendered ?? TRUE;
       $groupings = [['field' => $groupings, 'rendered' => $rendered]];
     }
 

@@ -103,7 +103,7 @@ class FrontMatterTest extends KernelTestBase {
 
     // Ensure the proper metadata is returned.
     $metadata = $this->twig->getTemplateMetadata($name);
-    $this->assertEquals($yaml === NULL ? [] : $yaml, $metadata);
+    $this->assertEquals($yaml ?? [], $metadata);
 
     // Ensure the metadata is never rendered.
     $output = $this->twig->load($name)->render();

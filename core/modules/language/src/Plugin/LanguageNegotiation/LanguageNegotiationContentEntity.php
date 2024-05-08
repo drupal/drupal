@@ -251,7 +251,7 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
 
     if ($current_route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)) {
       $current_route_path = $current_route->getPath();
-      $content_entity_type_id_for_current_route = isset($this->getContentEntityPaths()[$current_route_path]) ? $this->getContentEntityPaths()[$current_route_path] : '';
+      $content_entity_type_id_for_current_route = $this->getContentEntityPaths()[$current_route_path] ?? '';
     }
 
     return $content_entity_type_id_for_current_route;

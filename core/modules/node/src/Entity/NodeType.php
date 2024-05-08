@@ -122,7 +122,7 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
    */
   public function isLocked() {
     $locked = \Drupal::state()->get('node.type.locked');
-    return isset($locked[$this->id()]) ? $locked[$this->id()] : FALSE;
+    return $locked[$this->id()] ?? FALSE;
   }
 
   /**

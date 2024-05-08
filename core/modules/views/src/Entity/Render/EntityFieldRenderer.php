@@ -218,7 +218,7 @@ class EntityFieldRenderer extends RendererBase {
       $field = $this->view->field[current($field_ids)];
       foreach ($values as $result_row) {
         if ($entity = $field->getEntity($result_row)) {
-          $relationship = isset($field->options['relationship']) ? $field->options['relationship'] : 'none';
+          $relationship = $field->options['relationship'] ?? 'none';
           $entities_by_bundles[$entity->bundle()][$result_row->index] = $this->getEntityTranslationByRelationship($entity, $result_row, $relationship);
         }
       }
