@@ -173,6 +173,14 @@
   opacity: 1;
 }
 
+.primary-nav__menu--level-2 .primary-nav__menu-item--level-2:first-child {
+  padding-block-start: var(--sp0-25);
+}
+
+.primary-nav__menu--level-2 .primary-nav__menu-item--level-2:last-child {
+  padding-block-end: var(--sp0-25);
+}
+
 @media (min-width: 43.75rem) {
   .primary-nav__menu--level-2 {
     margin-inline-start: calc(-1 * var(--sp3));
