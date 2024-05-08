@@ -191,8 +191,8 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
     for ($i = 0; $i < 3; $i++) {
       // Create 3 users, one with the first role and two with the second role.
       $users[$i] = $this->drupalCreateUser();
-      $users[$i]->addRole($i === 0 ? $role_llamalovers : $role_catcuddlers);
-      $users[$i]->save();
+      $users[$i]->addRole($i === 0 ? $role_llamalovers : $role_catcuddlers)
+        ->save();
       // For each user, create a node that is owned by that user. The node's
       // `uid` field will be used to test filtering by a content entity ID.
       Node::create([

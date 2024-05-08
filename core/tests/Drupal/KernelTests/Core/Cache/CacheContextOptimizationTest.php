@@ -109,8 +109,7 @@ class CacheContextOptimizationTest extends KernelTestBase {
     // cache context, the element should have been changed because 'user.roles'
     // cache context defined a cache tag for user entity changes, which should
     // have bubbled up for the element when it was optimized away.
-    $authenticated_user->removeRole($role);
-    $authenticated_user->save();
+    $authenticated_user->removeRole($role)->save();
     $element = $test_element;
     $element['#markup'] = 'this should be visible';
     $output = \Drupal::service('renderer')->renderRoot($element);
