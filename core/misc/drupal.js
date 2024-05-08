@@ -448,7 +448,7 @@ window.Drupal = { behaviors: {}, locale: {} };
 
     // Consider URLs that match this site's base URL but use HTTPS instead of HTTP
     // as local as well.
-    if (protocol === 'http:' && absoluteUrl.indexOf('https:') === 0) {
+    if (protocol === 'http:' && absoluteUrl.startsWith('https:')) {
       protocol = 'https:';
     }
     let baseUrl = `${protocol}//${
@@ -469,7 +469,7 @@ window.Drupal = { behaviors: {}, locale: {} };
 
     // The given URL matches the site's base URL, or has a path under the site's
     // base URL.
-    return absoluteUrl === baseUrl || absoluteUrl.indexOf(`${baseUrl}/`) === 0;
+    return absoluteUrl === baseUrl || absoluteUrl.startsWith(`${baseUrl}/`);
   };
 
   /**

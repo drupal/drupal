@@ -29,15 +29,18 @@
   const regexVertical = /top|center|bottom/;
   const regexOffset = /[+-]\d+(\.[\d]+)?%?/;
   const regexPosition = /^\w+/;
-  const regexPercent = /%$/;
   const _position = $.fn.position;
 
   function getOffsets(offsets, width, height) {
     return [
       parseFloat(offsets[0]) *
-        (regexPercent.test(offsets[0]) ? width / 100 : 1),
+        (typeof offsets[0] === 'string' && offsets[0].endsWith('%')
+          ? width / 100
+          : 1),
       parseFloat(offsets[1]) *
-        (regexPercent.test(offsets[1]) ? height / 100 : 1),
+        (typeof offsets[1] === 'string' && offsets[1].endsWith('%')
+          ? height / 100
+          : 1),
     ];
   }
 
