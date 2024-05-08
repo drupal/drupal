@@ -911,7 +911,7 @@ abstract class EntityTypeManagerTestEntity implements \Iterator, ContentEntityIn
    * {@inheritdoc}
    */
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
-    return isset(static::$bundleFieldDefinitions[$entity_type->id()][$bundle]) ? static::$bundleFieldDefinitions[$entity_type->id()][$bundle] : [];
+    return static::$bundleFieldDefinitions[$entity_type->id()][$bundle] ?? [];
   }
 
 }
