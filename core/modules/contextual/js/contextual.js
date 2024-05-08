@@ -26,7 +26,7 @@
       _.chain(storage)
         .keys()
         .each((key) => {
-          if (key.substring(0, 18) === 'Drupal.contextual.') {
+          if (key.startsWith('Drupal.contextual.')) {
             storage.removeItem(key);
           }
         });
