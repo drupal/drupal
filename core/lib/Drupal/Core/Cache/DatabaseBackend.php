@@ -115,7 +115,7 @@ class DatabaseBackend implements CacheBackendInterface {
       }
       $this->time = \Drupal::service(TimeInterface::class);
     }
-    $this->maxRows = $max_rows === NULL ? static::DEFAULT_MAX_ROWS : $max_rows;
+    $this->maxRows = $max_rows ?? static::DEFAULT_MAX_ROWS;
   }
 
   /**
