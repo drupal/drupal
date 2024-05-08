@@ -106,6 +106,15 @@ function navigation_theme($existing, $type, $theme, $path) {
     ],
   ];
 
+  $items['big_pipe_interface_preview__navigation_shortcut_lazy_builder_lazyLinks__Shortcuts'] = [
+    'variables' => [
+      'callback' => NULL,
+      'arguments' => NULL,
+      'preview' => NULL,
+    ],
+    'base hook' => 'big_pipe_interface_preview',
+  ];
+
   $items['block__navigation'] = [
     'render element' => 'elements',
     'base hook' => 'block',
