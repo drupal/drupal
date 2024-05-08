@@ -232,10 +232,10 @@ class UserLoginForm extends FormBase {
         if ($this->userAuth instanceof UserAuthenticationInterface) {
           $form_state->set('uid', $this->userAuth->authenticateAccount($account, $password) ? $account->id() : FALSE);
         }
-        else {
-          $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
-          $form_state->set('uid', $uid);
-        }
+      }
+      elseif (!$this->userAuth instanceof UserAuthenticationInterface) {
+        $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
+        $form_state->set('uid', $uid);
       }
     }
   }
