@@ -245,8 +245,9 @@
         // Set the URL to go to the anchor.
         elementSettings.url = $link.attr('href');
         if (
-          Drupal.Views.getPath(elementSettings.url).substring(0, 21) !==
-          'admin/structure/views'
+          !Drupal.Views.getPath(elementSettings.url).startsWith(
+            'admin/structure/views',
+          )
         ) {
           return true;
         }
@@ -273,8 +274,9 @@
           // Set the URL to go to the anchor.
           elementSettings.url = $(submit.form).attr('action');
           if (
-            Drupal.Views.getPath(elementSettings.url).substring(0, 21) !==
-            'admin/structure/views'
+            !Drupal.Views.getPath(elementSettings.url).startsWith(
+              'admin/structure/views',
+            )
           ) {
             return true;
           }

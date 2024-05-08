@@ -84,7 +84,7 @@
         // jQuery UI does not support percentages on heights, convert to pixels.
         if (
           typeof optionValue === 'string' &&
-          /%$/.test(optionValue) &&
+          optionValue.endsWith('%') &&
           /height/i.test(option)
         ) {
           // Take offsets in account.
