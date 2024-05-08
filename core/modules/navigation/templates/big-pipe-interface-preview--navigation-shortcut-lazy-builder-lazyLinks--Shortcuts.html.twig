@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Placeholder content for the shortcuts menu. This is used to eliminate layout
+ * shifts as BigPipe injects data.
+ */
+#}
+
+{% include '@navigation/toolbar-button.html.twig' with {
+  attributes: create_attribute(),
+  extra_classes: 'invisible toolbar-button--icon--shortcuts toolbar-button--expand--side toolbar-button--collapsible toolbar-popover__control',
+  icon: 'shortcuts',
+  text: 'Shortcuts'|t,
+} only %}
