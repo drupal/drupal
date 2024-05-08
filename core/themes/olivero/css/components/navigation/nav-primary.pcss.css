@@ -165,6 +165,16 @@
     opacity: 1;
   }
 
+  & .primary-nav__menu-item--level-2 {
+    &:first-child {
+      padding-block-start: var(--sp0-25);
+    }
+
+    &:last-child {
+      padding-block-end: var(--sp0-25);
+    }
+  }
+
   @media (--md) {
     margin-inline-start: calc(-1 * var(--sp3));
     padding-inline-start: var(--sp3);
