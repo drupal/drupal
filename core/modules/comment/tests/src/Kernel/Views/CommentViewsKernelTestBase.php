@@ -84,8 +84,7 @@ abstract class CommentViewsKernelTestBase extends ViewsKernelTestBase {
     $anonymous_role->save();
 
     $this->adminUser = $this->userStorage->create(['name' => $this->randomMachineName()]);
-    $this->adminUser->addRole('admin');
-    $this->adminUser->save();
+    $this->adminUser->addRole('admin')->save();
   }
 
 }

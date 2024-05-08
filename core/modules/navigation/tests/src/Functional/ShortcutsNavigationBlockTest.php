@@ -109,11 +109,9 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
     // user has a cache hit despite the user cache context, as
     // the returned cache contexts include those from lazy-builder content.
     $site_configuration_user1 = $this->drupalCreateUser();
-    $site_configuration_user1->addRole($site_configuration_role);
-    $site_configuration_user1->save();
+    $site_configuration_user1->addRole($site_configuration_role)->save();
     $site_configuration_user2 = $this->drupalCreateUser();
-    $site_configuration_user2->addRole($site_configuration_role);
-    $site_configuration_user2->save();
+    $site_configuration_user2->addRole($site_configuration_role)->save();
 
     $this->drupalLogin($site_configuration_user1);
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
