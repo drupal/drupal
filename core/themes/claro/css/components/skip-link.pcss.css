@@ -12,13 +12,16 @@
 }
 
 .skip-link {
-  z-index: 50;
-  left: 50%;
+  z-index: 503;
+  top: 0;
+  left: 0; /* LTR */
   padding: 1px 10px 2px;
-  transform: translateX(-50%);
   color: var(--skip-link-color);
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 0; /* LTR */
   background: var(--skip-link-bg-color);
+  box-shadow:
+    0 0 0 2px var(--color-white),
+    0 0 0 5px var(--color-focus);
   font-size: 0.94em;
   &:hover,
   &:active {
@@ -31,4 +34,9 @@
   &.visually-hidden.focusable:focus {
     position: absolute !important;
   }
+}
+[dir="rtl"] .skip-link {
+  right: 0;
+  left: auto;
+  border-radius: 0 0 0 10px;
 }

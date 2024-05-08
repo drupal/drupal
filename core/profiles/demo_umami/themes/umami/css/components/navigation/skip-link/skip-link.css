@@ -4,11 +4,9 @@
  */
 
 .skip-link {
-  z-index: 50;
-  left: 50%;
+  z-index: 503;
+  inset-inline-start: 0;
   padding: 1px 10px 2px;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
   border: 1px solid #444;
   border-top-width: 0;
   border-radius: 0 0 10px 10px;
