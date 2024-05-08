@@ -5,7 +5,7 @@
 
 @import "../base/media-queries.pcss.css";
 
-.region > * {
+.region > *:where(:not([data-big-pipe-placeholder-id])) {
   margin-block-end: var(--sp);
 
   @media (--md) {

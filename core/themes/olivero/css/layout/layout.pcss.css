@@ -55,3 +55,11 @@
     padding-block-start: var(--sp5);
   }
 }
+
+/*
+ * Contextual link wrappers load without the ".contextual" CSS class, which
+ * causes layout shifts. We fix this by setting this to position: absolute;
+ */
+[data-contextual-id]:not(.contextual) {
+  position: absolute;
+}
