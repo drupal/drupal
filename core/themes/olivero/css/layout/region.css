@@ -10,18 +10,18 @@
  * Region default layout.
  */
 
-.region > * {
+.region > *:where(:not([data-big-pipe-placeholder-id])) {
   margin-block-end: var(--sp);
 }
 
 @media (min-width: 43.75rem) {
-  .region > * {
+  .region > *:where(:not([data-big-pipe-placeholder-id])) {
     margin-block-end: var(--sp2);
   }
 }
 
 @media (min-width: 62.5rem) {
-  .region > * {
+  .region > *:where(:not([data-big-pipe-placeholder-id])) {
     margin-block-end: var(--sp3);
   }
 }
