@@ -171,7 +171,7 @@ if ($deprecationBridgeConfiguration = DeprecationHandler::getConfiguration()) {
   // DebugClassLoader, that occur before tests' setUp() methods are called.
   // We pass an instance of the PHPUnit error handler to redirect any error not
   // managed by our layer back to PHPUnit.
-  set_error_handler(new BootstrapErrorHandler(new PhpUnitErrorHandler()));
+  set_error_handler(new BootstrapErrorHandler(PhpUnitErrorHandler::instance()));
 
   // Enable the DebugClassLoader to get deprecations for methods' signature
   // changes.
