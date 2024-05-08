@@ -158,8 +158,7 @@ trait StandardTestTrait {
     ]);
     $role->grantPermission('view the administration theme');
     $role->save();
-    $this->adminUser->addRole($role->id());
-    $this->adminUser->save();
+    $this->adminUser->addRole($role->id())->save();
     $this->drupalGet('node/add');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -233,8 +232,7 @@ trait StandardTestTrait {
     ]);
     $role->grantPermission('administer workflows');
     $role->save();
-    $this->adminUser->addRole($role->id());
-    $this->adminUser->save();
+    $this->adminUser->addRole($role->id())->save();
     $this->rebuildContainer();
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial');
     $this->assertSession()->pageTextContains('Draft');
@@ -254,8 +252,7 @@ trait StandardTestTrait {
     $role->grantPermission('administer media');
     $role->grantPermission('administer media display');
     $role->save();
-    $this->adminUser->addRole($role->id());
-    $this->adminUser->save();
+    $this->adminUser->addRole($role->id())->save();
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     /** @var \Drupal\media\Entity\MediaType $media_type */

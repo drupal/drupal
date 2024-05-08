@@ -17,7 +17,8 @@ class RemoveRoleUserTest extends RoleUserTestBase {
    */
   public function testExecuteRemoveExistingRole() {
     $this->account->expects($this->once())
-      ->method('removeRole');
+      ->method('removeRole')
+      ->willReturn($this->account);
 
     $this->account->expects($this->any())
       ->method('hasRole')
@@ -35,7 +36,8 @@ class RemoveRoleUserTest extends RoleUserTestBase {
    */
   public function testExecuteRemoveNonExistingRole() {
     $this->account->expects($this->never())
-      ->method('removeRole');
+      ->method('removeRole')
+      ->willReturn($this->account);
 
     $this->account->expects($this->any())
       ->method('hasRole')

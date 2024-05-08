@@ -132,8 +132,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $role = Role::load($this->createRole([]));
     $role->setIsAdmin(TRUE);
     $role->save();
-    $this->adminUser->addRole($role->id());
-    $this->adminUser->save();
+    $this->adminUser->addRole($role->id())->save();
 
     // Uninstall a module.
     $edit = [];

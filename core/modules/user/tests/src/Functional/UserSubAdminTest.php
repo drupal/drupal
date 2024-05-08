@@ -62,8 +62,9 @@ class UserSubAdminTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Account ' . $cancel_user->getAccountName() . ' has been disabled.');
 
     // Repeat with permission to select account cancellation method.
-    $user->addRole($this->drupalCreateRole(['select account cancellation method']));
-    $user->save();
+    $user
+      ->addRole($this->drupalCreateRole(['select account cancellation method']))
+      ->save();
     $cancel_user = $this->createUser();
     $this->drupalGet('user/' . $cancel_user->id() . '/cancel');
     $this->assertSession()->pageTextContains('Cancellation method');

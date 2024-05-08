@@ -219,8 +219,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
 
     // Create a new role, which implicitly checks if the permission exists.
     $mediaOverviewRole = $this->createRole(['access content overview', 'access media overview']);
-    $this->nonAdminUser->addRole($mediaOverviewRole);
-    $this->nonAdminUser->save();
+    $this->nonAdminUser->addRole($mediaOverviewRole)->save();
 
     $this->drupalGet('admin/content');
     $assert_session->linkByHrefExists('/admin/content/media');
