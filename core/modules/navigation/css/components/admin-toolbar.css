@@ -65,14 +65,6 @@ body {
   font-family: var(--admin-toolbar-font-family);
   inline-size: calc(var(--admin-toolbar-sidebar-width) + 1px);
 }
-.admin-toolbar::after {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  content: "";
-  border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
-  inset-inline-end: 0;
-}
 [dir="rtl"] .admin-toolbar {
   right: 0;
   transform: translateX(100%);
@@ -272,6 +264,7 @@ body {
   gap: var(--admin-toolbar-space-12);
   padding-block: var(--admin-toolbar-sidebar-header) var(--admin-toolbar-space-16);
   padding-inline: var(--admin-toolbar-space-16);
+  border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
 }
 @media (min-width: 64rem) {
   .admin-toolbar__content {
@@ -307,10 +300,11 @@ body {
   margin-block-start: auto;
   padding: var(--admin-toolbar-space-16);
   border-block-start: 1px solid var(--admin-toolbar-color-gray-200);
+  border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
 }
 @media (min-width: 64rem) {
   .admin-toolbar__footer {
-    --admin-toolbar-z-index-footer: -1;
+    --admin-toolbar-z-index-footer: 1;
 
     position: sticky;
     bottom: 0;
