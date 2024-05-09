@@ -1485,7 +1485,7 @@ function install_check_localization_server($uri) {
 }
 
 /**
- * Extracts version information from a drupal core version string.
+ * Extracts version information from a Drupal core version string.
  *
  * @param string $version
  *   Version info string (e.g., 8.0.0, 8.1.0, 8.0.0-dev, 8.0.0-unstable1,
@@ -1495,10 +1495,10 @@ function install_check_localization_server($uri) {
  *   Associative array of version info:
  *   - major: Major version (e.g., "8").
  *   - minor: Minor version (e.g., "0").
- *   - patch: Patch version (e.g., "0").
- *   - extra: Extra version info (e.g., "alpha2").
- *   - extra_text: The text part of "extra" (e.g., "alpha").
- *   - extra_number: The number part of "extra" (e.g., "2").
+ *   - (optional) patch: Patch version (e.g., "0").
+ *   - (optional) extra: Extra version info (e.g., "alpha2").
+ *   - (optional) extra_text: The text part of "extra" (e.g., "alpha").
+ *   - (optional) extra_number: The number part of "extra" (e.g., "2").
  */
 function _install_get_version_info($version) {
   preg_match('/
@@ -1506,8 +1506,11 @@ function _install_get_version_info($version) {
       (?P<major>[0-9]+)    # Major release number.
       \.          # .
       (?P<minor>[0-9]+)    # Minor release number.
-      \.          # .
-      (?P<patch>[0-9]+|x)  # Patch release number.
+      (
+        \.        # .
+        (?P<patch>[0-9]+|x) # Patch release number.
+        |         # OR no patch release.
+      )
     )             #
     (             #
       -           # - separator for "extra" version information.
