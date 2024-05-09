@@ -114,6 +114,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
     $this->assertSession()->elementNotExists('css', 'form .block-navigation-shortcuts');
 
     // Add a new block.
+    $this->getSession()->getPage()->uncheckField('toggle_content_preview');
     $this->openAddBlockForm('Navigation Shortcuts');
 
     $page->fillField('settings[label]', 'New Shortcuts');
