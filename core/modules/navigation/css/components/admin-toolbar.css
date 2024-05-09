@@ -304,7 +304,7 @@ body {
 }
 @media (min-width: 64rem) {
   .admin-toolbar__footer {
-    --admin-toolbar-z-index-footer: 1;
+    --admin-toolbar-z-index-footer: -1;
 
     position: sticky;
     bottom: 0;

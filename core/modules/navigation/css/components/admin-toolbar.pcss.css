@@ -316,7 +316,7 @@ body {
   border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
 
   @media (--admin-toolbar-desktop) {
-    --admin-toolbar-z-index-footer: 1;
+    --admin-toolbar-z-index-footer: -1;
 
     position: sticky;
     bottom: 0;
