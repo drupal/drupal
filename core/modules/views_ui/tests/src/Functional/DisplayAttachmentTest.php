@@ -103,4 +103,35 @@ class DisplayAttachmentTest extends UITestBase {
 
   }
 
+  /**
+   * Tests the attachment after changing machine name.
+   */
+  public function testAttachmentOnAttachedMachineNameChange(): void {
+
+    $view = $this->randomView();
+    $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
+    $attachment_display_url = 'admin/structure/views/nojs/display/' . $view['id'] . '/attachment_1/displays';
+
+    // Open the Page display and create the attachment display.
+    $this->drupalGet($path_prefix . '/page_1');
+    $this->submitForm([], 'Add Attachment');
+    $this->assertSession()->pageTextContains('Not defined');
+
+    // Attach the Attachment to the Default and   Page display.
+    $this->drupalGet($attachment_display_url);
+    $this->submitForm(['displays[default]' => 1, 'displays[page_1]' => 1], 'Apply');
+    $this->submitForm([], 'Save');
+
+    // Change the machine name of the page.
+    $this->drupalGet('admin/structure/views/nojs/display/' . $view['id'] . '/page_1/display_id');
+    $this->submitForm(['display_id' => 'page_new_id'], 'Apply');
+    $this->submitForm([], 'Save');
+
+    // Check that the attachment is still attached to the page.
+    $this->drupalGet($attachment_display_url);
+    $this->assertSession()->checkboxChecked("edit-displays-default");
+    $this->assertSession()->checkboxChecked("edit-displays-page-new-id");
+
+  }
+
 }
