@@ -27,7 +27,7 @@ final class ComponentsTwigExtension extends AbstractExtension {
    */
   public function __construct(
     protected ComponentPluginManager $pluginManager,
-    protected ComponentValidator $componentValidator
+    protected ComponentValidator $componentValidator,
   ) {}
 
   /**

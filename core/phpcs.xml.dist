@@ -102,6 +102,7 @@
   <rule ref="Drupal.Formatting.SpaceUnaryOperator"/>
   <rule ref="Drupal.Functions.DiscouragedFunctions"/>
   <rule ref="Drupal.Functions.FunctionDeclaration"/>
+  <rule ref="Drupal.Functions.MultiLineFunctionDeclaration"/>
   <rule ref="Drupal.InfoFiles.AutoAddedKeys"/>
   <rule ref="Drupal.InfoFiles.ClassFiles"/>
   <rule ref="Drupal.InfoFiles.DuplicateEntry"/>
@@ -175,11 +176,6 @@
   <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
   <rule ref="Generic.Formatting.SpaceAfterCast"/>
   <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
-  <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie">
-    <properties>
-      <property name="checkClosures" value="true"/>
-    </properties>
-  </rule>
   <rule ref="Generic.NamingConventions.ConstructorName"/>
   <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
   <rule ref="Generic.PHP.DeprecatedFunctions"/>
@@ -383,23 +379,6 @@
     </properties>
   </rule>
   <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.NoSpaceBeforeArg">
-    <severity>0</severity>
-  </rule>
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration"/>
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine">
-    <severity>0</severity>
-  </rule>
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.CloseBracketLine">
-    <severity>0</severity>
-  </rule>
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.ContentAfterBrace">
-    <severity>0</severity>
-  </rule>
-  <!-- Standard yet to be finalized on this (https://www.drupal.org/node/1539712). -->
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.FirstParamSpacing">
-    <severity>0</severity>
-  </rule>
-  <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.Indent">
     <severity>0</severity>
   </rule>
   <rule ref="Squiz.PHP.LowercasePHPFunctions"/>

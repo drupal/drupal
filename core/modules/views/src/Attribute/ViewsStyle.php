@@ -56,7 +56,7 @@ class ViewsStyle extends Plugin {
     public readonly array $base = [],
     public readonly bool $no_ui = FALSE,
     public readonly bool $register_theme = TRUE,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

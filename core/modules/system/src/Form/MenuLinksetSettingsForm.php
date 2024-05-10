@@ -27,7 +27,7 @@ class MenuLinksetSettingsForm extends ConfigFormBase {
   public function __construct(
     ConfigFactoryInterface $config_factory,
     TypedConfigManagerInterface $typedConfigManager,
-    protected readonly RouteBuilderInterface $routerBuilder
+    protected readonly RouteBuilderInterface $routerBuilder,
   ) {
     parent::__construct($config_factory, $typedConfigManager);
   }

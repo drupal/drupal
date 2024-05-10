@@ -21,7 +21,7 @@ class FileValidationConstraintValidator extends ConstraintValidator implements C
    *   The file validator.
    */
   public function __construct(
-    protected FileValidatorInterface $fileValidator
+    protected FileValidatorInterface $fileValidator,
   ) {}
 
   /**

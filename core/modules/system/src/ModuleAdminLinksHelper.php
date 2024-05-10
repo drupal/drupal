@@ -28,7 +28,7 @@ class ModuleAdminLinksHelper {
    */
   public function __construct(
     protected MenuLinkTreeInterface $menuLinkTree,
-    protected MemoryCacheInterface $memoryCache
+    protected MemoryCacheInterface $memoryCache,
   ) {}
 
   /**

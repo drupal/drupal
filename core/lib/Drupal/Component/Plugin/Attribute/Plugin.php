@@ -24,7 +24,7 @@ class Plugin extends AttributeBase {
    */
   public function __construct(
     public readonly string $id,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

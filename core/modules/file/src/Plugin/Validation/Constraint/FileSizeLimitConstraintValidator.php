@@ -25,7 +25,7 @@ class FileSizeLimitConstraintValidator extends BaseFileConstraintValidator imple
    */
   public function __construct(
     protected AccountInterface $currentUser,
-    protected EntityTypeManagerInterface $entityTypeManager
+    protected EntityTypeManagerInterface $entityTypeManager,
   ) {}
 
   /**

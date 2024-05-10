@@ -33,7 +33,7 @@ class TestRun {
    */
   public function __construct(
     protected TestRunResultsStorageInterface $testRunResultsStorage,
-    protected int|string $testId
+    protected int|string $testId,
   ) {
   }
 

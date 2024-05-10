@@ -39,6 +39,7 @@ class Archiver extends Plugin {
     public readonly ?TranslatableMarkup $title = NULL,
     public readonly ?TranslatableMarkup $description = NULL,
     public readonly array $extensions = [],
-    public readonly ?string $deriver = NULL) {}
+    public readonly ?string $deriver = NULL,
+  ) {}
 
 }

@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityTypeInfo implements ContainerInjectionInterface {
 
   public function __construct(
-    protected readonly WorkspaceInformationInterface $workspaceInfo
+    protected readonly WorkspaceInformationInterface $workspaceInfo,
   ) {
   }
 

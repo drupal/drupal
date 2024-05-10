@@ -43,7 +43,7 @@ class CallableResolver {
    *   The class resolver.
    */
   public function __construct(
-    protected readonly ClassResolverInterface $classResolver
+    protected readonly ClassResolverInterface $classResolver,
   ) {
   }
 

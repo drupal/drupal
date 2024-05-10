@@ -36,7 +36,7 @@ abstract class WorkspacePublishEvent extends Event {
    */
   public function __construct(
     protected readonly WorkspaceInterface $workspace,
-    array $published_revision_ids
+    array $published_revision_ids,
   ) {
     $this->publishedRevisionIds = $published_revision_ids;
   }

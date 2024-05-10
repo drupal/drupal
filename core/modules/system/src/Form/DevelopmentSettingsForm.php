@@ -25,7 +25,7 @@ class DevelopmentSettingsForm extends FormBase {
    */
   public function __construct(
     protected KeyValueFactoryInterface $keyValueFactory,
-    protected DrupalKernelInterface $kernel
+    protected DrupalKernelInterface $kernel,
   ) {
   }
 

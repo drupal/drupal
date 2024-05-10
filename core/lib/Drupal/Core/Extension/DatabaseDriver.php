@@ -36,7 +36,8 @@ class DatabaseDriver extends Extension {
     string $root,
     protected Extension $module,
     protected string $driverName,
-    protected array $discoveredModules) {
+    protected array $discoveredModules,
+  ) {
     $this->root = $root;
     $this->type = 'database_driver';
   }

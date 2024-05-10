@@ -28,7 +28,8 @@ class TabledragWarningCommand implements CommandInterface, CommandWithAttachedAs
    */
   public function __construct(
     protected string $id,
-    protected string $tabledrag_instance) {}
+    protected string $tabledrag_instance,
+  ) {}
 
   /**
    * {@inheritdoc}

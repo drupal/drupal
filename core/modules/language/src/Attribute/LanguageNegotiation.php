@@ -43,12 +43,12 @@ class LanguageNegotiation extends Plugin {
    *   (optional) The route pointing to the plugin's configuration page.
    */
   public function __construct(
-      public readonly string $id,
-      public readonly TranslatableMarkup $name,
-      public readonly ?array $types = NULL,
-      public readonly int $weight = 0,
-      public readonly ?TranslatableMarkup $description = NULL,
-      public readonly ?string $config_route_name = NULL,
+    public readonly string $id,
+    public readonly TranslatableMarkup $name,
+    public readonly ?array $types = NULL,
+    public readonly int $weight = 0,
+    public readonly ?TranslatableMarkup $description = NULL,
+    public readonly ?string $config_route_name = NULL,
   ) {}
 
 }

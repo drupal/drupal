@@ -24,7 +24,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
    */
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
-    protected readonly ?WorkspaceAssociationInterface $workspaceAssociation
+    protected readonly ?WorkspaceAssociationInterface $workspaceAssociation,
   ) {}
 
   /**

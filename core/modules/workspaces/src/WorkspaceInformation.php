@@ -29,7 +29,7 @@ class WorkspaceInformation implements WorkspaceInformationInterface {
 
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
-    protected readonly WorkspaceAssociationInterface $workspaceAssociation
+    protected readonly WorkspaceAssociationInterface $workspaceAssociation,
   ) {}
 
   /**

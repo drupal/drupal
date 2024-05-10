@@ -30,7 +30,7 @@ class FileValidator implements FileValidatorInterface {
     protected ValidatorInterface $validator,
     protected ConstraintManager $constraintManager,
     protected EventDispatcherInterface $eventDispatcher,
-    protected ModuleHandlerInterface $moduleHandler
+    protected ModuleHandlerInterface $moduleHandler,
   ) {}
 
   /**

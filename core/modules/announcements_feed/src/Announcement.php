@@ -41,7 +41,7 @@ final class Announcement {
     public readonly string $date_published,
     public readonly string $content_html,
     public readonly string $version,
-    public readonly bool $featured
+    public readonly bool $featured,
   ) {
   }
 

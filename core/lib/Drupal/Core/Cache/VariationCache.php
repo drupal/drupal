@@ -25,7 +25,7 @@ class VariationCache implements VariationCacheInterface {
   public function __construct(
     protected RequestStack $requestStack,
     protected CacheBackendInterface $cacheBackend,
-    protected CacheContextsManager $cacheContextsManager
+    protected CacheContextsManager $cacheContextsManager,
   ) {}
 
   /**

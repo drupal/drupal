@@ -52,7 +52,7 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
     protected readonly ConfigFactoryInterface $configFactory,
     protected readonly FileUrlGeneratorInterface $fileUrlGenerator,
     protected readonly TimeInterface $time,
-    protected readonly LanguageManagerInterface $languageManager
+    protected readonly LanguageManagerInterface $languageManager,
   ) {}
 
   /**

@@ -54,7 +54,7 @@ final class AnnounceFetcher {
     ConfigFactoryInterface $config,
     KeyValueExpirableFactoryInterface $temp_store,
     protected LoggerInterface $logger,
-    protected string $feedUrl
+    protected string $feedUrl,
   ) {
     $this->config = $config->get('announcements_feed.settings');
     $this->tempStore = $temp_store->get('announcements_feed');

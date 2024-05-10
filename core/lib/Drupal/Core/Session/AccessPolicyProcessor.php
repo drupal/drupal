@@ -23,7 +23,8 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
     protected VariationCacheInterface $variationStatic,
     protected CacheBackendInterface $static,
     protected AccountProxyInterface $currentUser,
-    protected AccountSwitcherInterface $accountSwitcher) {
+    protected AccountSwitcherInterface $accountSwitcher,
+  ) {
   }
 
   /**
