@@ -89,7 +89,7 @@ class CKEditor5ImageController extends ControllerBase {
     MimeTypeGuesserInterface | LockBackendInterface $mime_type_guesser,
     LockBackendInterface | CKEditor5PluginManagerInterface $pluginManager,
     EventDispatcherInterface $event_dispatcher = NULL,
-    FileValidatorInterface $file_validator = NULL
+    FileValidatorInterface $file_validator = NULL,
   ) {
     $this->fileSystem = $fileSystem;
     if ($fileUploadHandler instanceof AccountInterface) {

@@ -33,7 +33,8 @@ class SiteSettingsForm extends FormBase {
   public function __construct(
     protected string $sitePath,
     protected RendererInterface $renderer,
-    protected DatabaseDriverList $databaseDriverList) {
+    protected DatabaseDriverList $databaseDriverList,
+  ) {
   }
 
   /**

@@ -95,13 +95,16 @@ class Html {
    * @return string
    *   The cleaned identifier.
    */
-  public static function cleanCssIdentifier($identifier, array $filter = [
-    ' ' => '-',
-    '_' => '-',
-    '/' => '-',
-    '[' => '-',
-    ']' => '',
-  ]) {
+  public static function cleanCssIdentifier(
+    $identifier,
+    array $filter = [
+      ' ' => '-',
+      '_' => '-',
+      '/' => '-',
+      '[' => '-',
+      ']' => '',
+    ],
+  ) {
     // We could also use strtr() here but its much slower than str_replace(). In
     // order to keep '__' to stay '__' we first replace it with a different
     // placeholder after checking that it is not defined as a filter.

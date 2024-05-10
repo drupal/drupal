@@ -34,7 +34,7 @@ class Block extends Plugin {
     public readonly ?TranslatableMarkup $category = NULL,
     public readonly array $context_definitions = [],
     public readonly ?string $deriver = NULL,
-    public readonly array $forms = []
+    public readonly array $forms = [],
   ) {}
 
 }

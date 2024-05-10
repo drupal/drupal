@@ -34,9 +34,11 @@ class RoleListBuilder extends DraggableListBuilder {
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(EntityTypeInterface $entityType,
-                              EntityStorageInterface $storage,
-                              MessengerInterface $messenger) {
+  public function __construct(
+    EntityTypeInterface $entityType,
+    EntityStorageInterface $storage,
+    MessengerInterface $messenger,
+  ) {
     parent::__construct($entityType, $storage);
     $this->messenger = $messenger;
   }

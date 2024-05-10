@@ -68,7 +68,7 @@ class MigrateField extends Plugin {
     public readonly array $type_map = [],
     public readonly ?string $source_module = NULL,
     public readonly ?string $destination_module = NULL,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

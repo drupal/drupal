@@ -42,7 +42,8 @@ class Update10101 implements ContainerInjectionInterface {
     protected EntityLastInstalledSchemaRepositoryInterface $entityLastInstalledSchemaRepository,
     protected Connection $connection,
     protected ModuleExtensionList $moduleExtensionList,
-    protected ModuleHandlerInterface $moduleHandler) {
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {
   }
 
   /**

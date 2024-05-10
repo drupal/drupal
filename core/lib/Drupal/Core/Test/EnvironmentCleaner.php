@@ -32,7 +32,7 @@ class EnvironmentCleaner implements EnvironmentCleanerInterface {
     protected Connection $testDatabase,
     protected TestRunResultsStorageInterface $testRunResultsStorage,
     protected OutputInterface $output,
-    protected FileSystemInterface $fileSystem
+    protected FileSystemInterface $fileSystem,
   ) {
   }
 

@@ -24,7 +24,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    *   The time service.
    */
   public function __construct(
-    protected ?TimeInterface $time = NULL
+    protected ?TimeInterface $time = NULL,
   ) {
     if ($this->time === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);

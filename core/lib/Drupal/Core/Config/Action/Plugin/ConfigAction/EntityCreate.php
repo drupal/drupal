@@ -33,7 +33,7 @@ final class EntityCreate implements ConfigActionPluginInterface, ContainerFactor
    */
   public function __construct(
     protected readonly ConfigManagerInterface $configManager,
-    protected readonly Exists $exists
+    protected readonly Exists $exists,
   ) {
   }
 

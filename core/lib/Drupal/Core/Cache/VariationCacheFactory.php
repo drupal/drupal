@@ -32,7 +32,7 @@ class VariationCacheFactory implements VariationCacheFactoryInterface {
   public function __construct(
     protected RequestStack $requestStack,
     protected CacheFactoryInterface $cacheFactory,
-    protected CacheContextsManager $cacheContextsManager
+    protected CacheContextsManager $cacheContextsManager,
   ) {}
 
   /**

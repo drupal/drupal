@@ -56,7 +56,7 @@ class FieldStorageReuseForm extends FormBase {
     protected FieldTypePluginManagerInterface $fieldTypePluginManager,
     protected EntityFieldManagerInterface $entityFieldManager,
     protected EntityDisplayRepositoryInterface $entityDisplayRepository,
-    protected EntityTypeBundleInfoInterface $bundleInfoService
+    protected EntityTypeBundleInfoInterface $bundleInfoService,
   ) {}
 
   /**

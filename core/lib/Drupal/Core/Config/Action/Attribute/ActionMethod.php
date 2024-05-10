@@ -34,7 +34,7 @@ final class ActionMethod {
   public function __construct(
     public readonly Exists $exists = Exists::ErrorIfNotExists,
     public readonly TranslatableMarkup|string $adminLabel = '',
-    public readonly bool|string $pluralize = TRUE
+    public readonly bool|string $pluralize = TRUE,
   ) {
   }
 

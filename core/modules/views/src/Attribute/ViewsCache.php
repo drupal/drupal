@@ -48,7 +48,7 @@ class ViewsCache extends Plugin {
     public readonly ?array $display_types = NULL,
     public readonly array $base = [],
     public readonly ?bool $no_ui = NULL,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

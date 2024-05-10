@@ -22,7 +22,7 @@ class CustomPlugin extends Plugin {
    */
   public function __construct(
     public readonly string $id,
-    public readonly string $title
+    public readonly string $title,
   ) {}
 
 }

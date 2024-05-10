@@ -39,7 +39,7 @@ class ViewsDisplayExtender extends Plugin {
     public readonly ?TranslatableMarkup $short_title = NULL,
     public readonly ?TranslatableMarkup $help = NULL,
     public readonly bool $no_ui = FALSE,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

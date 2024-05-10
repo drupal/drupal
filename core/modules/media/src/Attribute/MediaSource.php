@@ -81,7 +81,7 @@ class MediaSource extends Plugin {
     public readonly ?string $thumbnail_alt_metadata_attribute = NULL,
     public readonly ?string $thumbnail_title_metadata_attribute = NULL,
     public readonly string $default_name_metadata_attribute = 'default_name',
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

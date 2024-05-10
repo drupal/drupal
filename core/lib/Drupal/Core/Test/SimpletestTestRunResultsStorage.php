@@ -20,7 +20,7 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
    *   The database connection to use for inserting assertions.
    */
   public function __construct(
-    protected Connection $connection
+    protected Connection $connection,
   ) {
   }
 
