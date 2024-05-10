@@ -33,22 +33,9 @@ admin-reset-styles:
     base:
       css/base/admin-reset-styles.css: {}
 
-internal.navigation.escapeAdmin:
-  # Internal library. Do not depend on it outside core nor add core usage
-  # beyond the Navigation module.
-  version: VERSION
-  js:
-    js/escapeAdmin.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupalSettings
-    - core/once
-    - core/drupal.displace
-
 navigation.layout:
   dependencies:
     - navigation/internal.navigation
-    - navigation/internal.navigation.escapeAdmin
 
 body-scroll-lock:
   version: VERSION
