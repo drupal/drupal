@@ -84,7 +84,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     EntityFieldManagerInterface $entity_field_manager,
     TypedConfigManagerInterface $typed_config_manager,
     ViewsData $views_data,
-    PluginManagerInterface $formatter_plugin_manager
+    PluginManagerInterface $formatter_plugin_manager,
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;

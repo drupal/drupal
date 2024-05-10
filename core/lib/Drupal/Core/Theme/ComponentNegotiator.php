@@ -27,7 +27,7 @@ class ComponentNegotiator {
    */
   public function __construct(
     protected ThemeManagerInterface $themeManager,
-    protected ModuleExtensionList $moduleExtensionList
+    protected ModuleExtensionList $moduleExtensionList,
   ) {
   }
 

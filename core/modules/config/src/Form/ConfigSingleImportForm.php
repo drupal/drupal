@@ -89,7 +89,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     protected ModuleInstallerInterface $moduleInstaller,
     protected ThemeHandlerInterface $themeHandler,
     protected ModuleExtensionList $moduleExtensionList,
-    protected ThemeExtensionList $themeExtensionList
+    protected ThemeExtensionList $themeExtensionList,
   ) {
   }
 

@@ -83,7 +83,7 @@ class ViewsDisplay extends Plugin {
     public readonly bool $no_ui = FALSE,
     public readonly bool $register_theme = TRUE,
     public readonly bool $entity_reference_display = FALSE,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

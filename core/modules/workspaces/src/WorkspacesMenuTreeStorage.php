@@ -44,7 +44,7 @@ class WorkspacesMenuTreeStorage extends CoreMenuTreeStorage {
     CacheBackendInterface $menu_cache_backend,
     CacheTagsInvalidatorInterface $cache_tags_invalidator,
     string $table,
-    array $options = []
+    array $options = [],
   ) {
     parent::__construct($connection, $menu_cache_backend, $cache_tags_invalidator, $table, $options);
   }

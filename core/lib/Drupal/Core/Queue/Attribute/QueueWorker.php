@@ -54,7 +54,7 @@ class QueueWorker extends Plugin {
     public readonly string $id,
     public readonly ?TranslatableMarkup $title = NULL,
     public readonly ?array $cron = NULL,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

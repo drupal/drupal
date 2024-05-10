@@ -74,7 +74,7 @@ final class SettingsForm extends ConfigFormBase {
     FileSystemInterface $file_system,
     FileUrlGeneratorInterface $fileUrlGenerator,
     FileUsageInterface $fileUsage,
-    RendererInterface $renderer
+    RendererInterface $renderer,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
     $this->fileSystem = $file_system;

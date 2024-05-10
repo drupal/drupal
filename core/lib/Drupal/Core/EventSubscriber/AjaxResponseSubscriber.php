@@ -23,7 +23,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
    */
   public function __construct(
     #[AutowireServiceClosure('ajax_response.attachments_processor')]
-    protected \Closure $processorClosure
+    protected \Closure $processorClosure,
   ) {}
 
   /**

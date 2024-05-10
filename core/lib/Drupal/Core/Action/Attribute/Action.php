@@ -45,7 +45,7 @@ class Action extends Plugin {
     public readonly ?TranslatableMarkup $category = NULL,
     public readonly ?string $deriver = NULL,
     public readonly ?string $confirm_form_route_name = NULL,
-    public readonly ?string $type = NULL
+    public readonly ?string $type = NULL,
   ) {}
 
 }

@@ -16,7 +16,7 @@ class SessionWorkspaceNegotiator implements WorkspaceNegotiatorInterface, Worksp
   public function __construct(
     protected readonly AccountInterface $currentUser,
     protected readonly Session $session,
-    protected readonly EntityTypeManagerInterface $entityTypeManager
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
   ) {}
 
   /**

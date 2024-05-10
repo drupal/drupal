@@ -77,7 +77,7 @@ class ConfigSync extends FormBase {
     protected RendererInterface $renderer,
     protected ModuleExtensionList $moduleExtensionList,
     protected ImportStorageTransformer $importTransformer,
-    protected ThemeExtensionList $themeExtensionList
+    protected ThemeExtensionList $themeExtensionList,
   ) {
   }
 

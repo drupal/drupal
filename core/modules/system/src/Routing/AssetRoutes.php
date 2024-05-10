@@ -19,7 +19,7 @@ class AssetRoutes implements ContainerInjectionInterface {
    *   The stream wrapper manager service.
    */
   public function __construct(
-    protected readonly StreamWrapperManagerInterface $streamWrapperManager
+    protected readonly StreamWrapperManagerInterface $streamWrapperManager,
   ) {}
 
   /**

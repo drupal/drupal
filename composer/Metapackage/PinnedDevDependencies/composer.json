@@ -20,7 +20,7 @@
         "composer/xdebug-handler": "3.0.4",
         "dealerdirect/phpcodesniffer-composer-installer": "v1.0.0",
         "doctrine/instantiator": "2.0.0",
-        "drupal/coder": "8.3.23",
+        "drupal/coder": "8.3.24",
         "google/protobuf": "v3.25.3",
         "justinrainbow/json-schema": "v5.2.13",
         "lullabot/mink-selenium2-driver": "v1.7.2",

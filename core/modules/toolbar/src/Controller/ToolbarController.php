@@ -24,7 +24,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    *   The time service.
    */
   public function __construct(
-    protected TimeInterface $time
+    protected ?TimeInterface $time = NULL,
   ) {
   }
 

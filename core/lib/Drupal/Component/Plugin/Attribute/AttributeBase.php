@@ -24,7 +24,7 @@ abstract class AttributeBase implements AttributeInterface {
    *   The attribute class ID.
    */
   public function __construct(
-    protected readonly string $id
+    protected readonly string $id,
   ) {}
 
   /**

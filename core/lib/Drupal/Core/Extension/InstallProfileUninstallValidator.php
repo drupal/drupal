@@ -27,7 +27,7 @@ class InstallProfileUninstallValidator implements ModuleUninstallValidatorInterf
     protected ThemeExtensionList $themeExtensionList,
     protected string|false|null $installProfile,
     protected string $root,
-    protected string $sitePath
+    protected string $sitePath,
   ) {
     $this->setStringTranslation($string_translation);
   }

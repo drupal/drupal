@@ -20,7 +20,7 @@ class PluginExample extends Plugin {
    */
   public function __construct(
     public readonly string $id,
-    public readonly ?string $custom = NULL
+    public readonly ?string $custom = NULL,
   ) {}
 
 }
