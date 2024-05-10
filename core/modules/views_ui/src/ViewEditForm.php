@@ -300,6 +300,8 @@ class ViewEditForm extends ViewFormBase {
     foreach ($executable->displayHandlers as $id => $display) {
       if (!empty($display->display['new_id']) && $display->display['new_id'] !== $display->display['id'] && empty($display->display['deleted'])) {
         $new_id = $display->display['new_id'];
+        $attachments = $display->getAttachedDisplays();
+        $old_id = $display->display['id'];
         $display->display['id'] = $new_id;
         unset($display->display['new_id']);
         $executable->displayHandlers->set($new_id, $display);
@@ -312,6 +314,16 @@ class ViewEditForm extends ViewFormBase {
           'view' => $view->id(),
           'display_id' => $new_id,
         ]);
+
+        // Find attachments attached to old display id and attach them with new id.
+        if ($attachments) {
+          foreach ($attachments as $attachment) {
+            $attached_options = $executable->displayHandlers->get($attachment)->getOption('displays');
+            unset($attached_options[$old_id]);
+            $attached_options[$new_id] = $new_id;
+            $executable->displayHandlers->get($attachment)->setOption('displays', $attached_options);
+          }
+        }
       }
       elseif (isset($display->display['new_id'])) {
         unset($display->display['new_id']);
