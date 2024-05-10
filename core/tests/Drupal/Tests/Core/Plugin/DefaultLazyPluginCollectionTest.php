@@ -169,6 +169,37 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
   }
 
   /**
+   * Tests plugin instances are changed if the configuration plugin key changes.
+   *
+   * @covers ::setInstanceConfiguration
+   */
+  public function testSetInstanceConfigurationPluginChange() {
+    $configurable_plugin = $this->prophesize(ConfigurableInterface::class);
+    $configurable_config = ['id' => 'configurable', 'foo' => 'bar'];
+    $configurable_plugin->getConfiguration()->willReturn($configurable_config);
+
+    $nonconfigurable_plugin = $this->prophesize(PluginInspectionInterface::class);
+    $nonconfigurable_config = ['id' => 'non-configurable', 'baz' => 'qux'];
+    $nonconfigurable_plugin->configuration = $nonconfigurable_config;
+
+    $configurations = [
+      'instance' => $configurable_config,
+    ];
+
+    $plugin_manager = $this->prophesize(PluginManagerInterface::class);
+    $plugin_manager->createInstance('configurable', $configurable_config)->willReturn($configurable_plugin->reveal());
+    $plugin_manager->createInstance('non-configurable', $nonconfigurable_config)->willReturn($nonconfigurable_plugin->reveal());
+
+    $collection = new DefaultLazyPluginCollection($plugin_manager->reveal(), $configurations);
+    $this->assertInstanceOf(ConfigurableInterface::class, $collection->get('instance'));
+
+    // Ensure changing the instance to a different plugin via
+    // setInstanceConfiguration() results in a different plugin instance.
+    $collection->setInstanceConfiguration('instance', $nonconfigurable_config);
+    $this->assertNotInstanceOf(ConfigurableInterface::class, $collection->get('instance'));
+  }
+
+  /**
    * @covers ::count
    */
   public function testCount() {
