@@ -15,7 +15,7 @@
 .skip-link {
   display: block;
   width: 100%;
-  max-width: var(--max-bg-color);
+  max-width: calc(var(--max-bg-color) + var(--drupal-displace-offset-left, 0px));
   padding-block: var(--sp0-5);
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp);
