@@ -3,6 +3,7 @@
 # the type 'Site' means that the Drupal recipe will be listed in
 # the installer.
 type: 'Content type'
+name: 'Example'
 
 install:
   # An array of modules or themes to install, if they are not already.
