@@ -21,7 +21,7 @@ class AttributeBridgeDecorator implements DiscoveryInterface {
    */
   public function __construct(
     protected readonly DiscoveryInterface $decorated,
-    protected readonly string $pluginDefinitionAttributeName
+    protected readonly string $pluginDefinitionAttributeName,
   ) {}
 
   /**

@@ -22,7 +22,7 @@ class BatchController implements ContainerInjectionInterface {
    */
   public function __construct(
     protected string $root,
-    protected BatchStorageInterface $batchStorage
+    protected BatchStorageInterface $batchStorage,
   ) {
     require_once $this->root . '/core/includes/batch.inc';
   }

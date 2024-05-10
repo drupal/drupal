@@ -31,7 +31,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    */
   public function __construct(
     protected readonly array $pluginNamespaces = [],
-    protected readonly string $pluginDefinitionAttributeName = Plugin::class
+    protected readonly string $pluginDefinitionAttributeName = Plugin::class,
   ) {
     $file_cache_suffix = str_replace('\\', '_', $this->pluginDefinitionAttributeName);
     $this->fileCache = FileCacheFactory::get('attribute_discovery:' . $this->getFileCacheSuffix($file_cache_suffix));

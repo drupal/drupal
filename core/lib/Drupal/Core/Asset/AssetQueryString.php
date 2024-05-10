@@ -30,7 +30,7 @@ class AssetQueryString implements AssetQueryStringInterface {
    */
   public function __construct(
     protected StateInterface $state,
-    protected TimeInterface $time
+    protected TimeInterface $time,
   ) {}
 
   /**

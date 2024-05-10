@@ -27,7 +27,7 @@ class WorkspacesHtmlEntityFormController extends FormController {
     protected readonly FormController $entityFormController,
     protected readonly WorkspaceManagerInterface $workspaceManager,
     protected readonly WorkspaceInformationInterface $workspaceInfo,
-    protected readonly TypedDataManagerInterface $typedDataManager
+    protected readonly TypedDataManagerInterface $typedDataManager,
   ) {}
 
   /**

@@ -26,7 +26,7 @@ class TestWaitTerminateMiddleware implements HttpKernelInterface {
   public function __construct(
     protected HttpKernelInterface $httpKernel,
     protected StateInterface $state,
-    protected LockBackendInterface $lock
+    protected LockBackendInterface $lock,
   ) {
   }
 

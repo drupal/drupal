@@ -19,7 +19,7 @@ class QueryFactory extends BaseQueryFactory {
   public function __construct(
     Connection $connection,
     protected readonly WorkspaceManagerInterface $workspaceManager,
-    protected readonly WorkspaceInformationInterface $workspaceInfo
+    protected readonly WorkspaceInformationInterface $workspaceInfo,
   ) {
     $this->connection = $connection;
     $this->namespaces = QueryBase::getNamespaces($this);

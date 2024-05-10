@@ -41,7 +41,7 @@ class Constraint extends Plugin {
     public readonly string $id,
     public readonly ?TranslatableMarkup $label = NULL,
     public readonly string|array|false $type = [],
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

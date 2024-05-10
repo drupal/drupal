@@ -23,7 +23,7 @@ class FileExtensionSecureConstraintValidator extends BaseFileConstraintValidator
    *   The config factory.
    */
   public function __construct(
-    protected ConfigFactoryInterface $configFactory
+    protected ConfigFactoryInterface $configFactory,
   ) {}
 
   /**

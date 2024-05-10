@@ -25,7 +25,7 @@ final class AnnounceRenderer {
    */
   public function __construct(
     protected AnnounceFetcher $announceFetcher,
-    protected string $feedLink
+    protected string $feedLink,
   ) {
   }
 

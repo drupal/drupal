@@ -29,7 +29,7 @@ class ModulePermissionsLinkHelper {
   public function __construct(
     protected PermissionHandlerInterface $permissionHandler,
     protected AccessManagerInterface $accessManager,
-    protected ModuleExtensionList $moduleExtensionList
+    protected ModuleExtensionList $moduleExtensionList,
   ) {}
 
   /**

@@ -37,7 +37,7 @@ class ViewsArgumentDefault extends Plugin {
     public readonly ?TranslatableMarkup $title = NULL,
     public readonly ?TranslatableMarkup $short_title = NULL,
     public readonly bool $no_ui = FALSE,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

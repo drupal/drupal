@@ -34,7 +34,7 @@ class Search extends Plugin {
     public readonly string $id,
     public readonly ?TranslatableMarkup $title = NULL,
     public readonly bool $use_admin_theme = FALSE,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

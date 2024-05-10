@@ -553,6 +553,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    *
    * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * phpcs:ignore Drupal.Commenting.FunctionComment.InvalidReturnVoid
    * @return void
    */
   public function setContainer(ContainerInterface $container = NULL) {

@@ -44,7 +44,7 @@ class DisplayVariant extends Plugin {
   public function __construct(
     public readonly string $id,
     public readonly TranslatableMarkup $admin_label,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

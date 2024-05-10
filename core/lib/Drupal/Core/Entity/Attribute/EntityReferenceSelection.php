@@ -59,7 +59,7 @@ class EntityReferenceSelection extends Plugin {
     public readonly string $group,
     public readonly int $weight,
     public readonly array $entity_types = [],
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

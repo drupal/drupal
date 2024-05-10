@@ -57,7 +57,7 @@ class ViewsRow extends Plugin {
     public readonly ?string $theme = NULL,
     public readonly bool $no_ui = FALSE,
     public readonly bool $register_theme = TRUE,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

@@ -33,7 +33,7 @@ class ViewsWizard extends Plugin {
     public readonly string $id,
     public readonly TranslatableMarkup $title,
     public readonly ?string $base_table = NULL,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

@@ -18,7 +18,7 @@ class RegisterEventSubscribersPass implements CompilerPassInterface {
    *   The Symfony compiler pass that registers event subscribers.
    */
   public function __construct(
-    protected RegisterListenersPass $pass
+    protected RegisterListenersPass $pass,
   ) {}
 
   /**

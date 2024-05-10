@@ -86,7 +86,7 @@ class ExecutionContext implements ExecutionContextInterface {
     protected ValidatorInterface $validator,
     protected mixed $root,
     protected TranslatorInterface $translator,
-    protected ?string $translationDomain = NULL
+    protected ?string $translationDomain = NULL,
   ) {
     $this->violations = new ConstraintViolationList();
   }
