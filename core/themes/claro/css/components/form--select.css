@@ -46,7 +46,6 @@
   .form-element--type-select[disabled] {
     padding-inline-end: var(--input-padding-horizontal);
     background-image: none;
-    -webkit-appearance: revert;
     appearance: revert; /* Revert <select> appearance value for modern browsers. */
   }
 }

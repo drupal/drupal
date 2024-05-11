@@ -48,7 +48,6 @@
   font-size: var(--font-size-base);
   font-weight: 700;
   line-height: 1rem;
-  -webkit-appearance: none;
   appearance: none;
   -webkit-font-smoothing: antialiased; /* 2 */
 }
@@ -160,6 +159,5 @@
   text-decoration: underline;
   border: 0;
   background: none;
-  -webkit-appearance: none;
   appearance: none;
 }

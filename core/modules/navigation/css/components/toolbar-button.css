@@ -254,7 +254,6 @@ html:not([data-admin-toolbar="expanded"]) .toolbar-button--collapsible .toolbar-
   width: 1px;
   height: 1px;
   white-space: nowrap;
-  -webkit-clip-path: inset(50%);
   clip-path: inset(50%);
   opacity: 0;
 }

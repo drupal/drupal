@@ -7,10 +7,10 @@ internal.backbone:
   #  - https://www.drupal.org/project/drupal/issues/3204011
   #  - https://www.drupal.org/project/drupal/issues/3204015
   remote: https://github.com/jashkenas/backbone
-  version: "1.5.0"
+  version: "1.6.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/backbone/1.5.0/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/backbone/1.6.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
@@ -416,10 +416,10 @@ drupal.announce:
 
 loadjs:
   remote: https://github.com/muicss/loadjs
-  version: "4.2.0"
+  version: "4.3.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/muicss/loadjs/4.2.0/LICENSE.txt
+    url: https://raw.githubusercontent.com/muicss/loadjs/4.3.0/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/loadjs/loadjs.min.js: { minified: true }
@@ -842,10 +842,10 @@ once:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.15.1"
+  version: "1.15.2"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.1/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.2/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }
