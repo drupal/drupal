@@ -83,7 +83,7 @@
   --color--gray-70: hsl(var(--color--gray-hue), var(--color--gray-saturation), 72%); /* Gray medium 2 */
   --color--gray-90: hsl(var(--color--gray-hue), var(--color--gray-saturation), 88%); /* Gray light */
   --color--gray-95: hsl(var(--color--gray-hue), var(--color--gray-saturation), 93%); /* Gray light 1 */
-  --color--gray-100: hsl(var(--color--gray-hue), var(--color--gray-saturation), 97%);
+  --color--gray-100: hsl(var(--color--gray-hue), var(--color--gray-saturation), 97%); /* Gray light 2 */
 
   /**
    * Primary colors.
@@ -97,7 +97,7 @@
   --color--primary-40: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) - (0.24 * var(--color--primary-lightness))))); /* Blue dark */
   --color--primary-50: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * var(--color--primary-lightness))); /* Blue medium */
   --color--primary-60: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) + (0.24 * (100 - var(--color--primary-lightness)))))); /* Blue bright */
-  --color--primary-80: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) + (0.85 * (100 - var(--color--primary-lightness))))));
+  --color--primary-80: hsl(var(--color--primary-hue), var(--color--primary-saturation), calc(1% * (var(--color--primary-lightness) + (0.85 * (100 - var(--color--primary-lightness)))))); /* Blue very bright */
 
   /**
    * Variables specific to text.
@@ -116,7 +116,7 @@
   --color--white: #fff; /* White */
   --color--red: #e33f1e; /* Red */
   --color--gold: #fdca40; /* Gold */
-  --color--green: #3fa21c;
+  --color--green: #3fa21c; /* Green */
 
   /* Header */
   --header-height-wide-when-fixed: var(--sp6);
@@ -134,8 +134,6 @@
   }
 }
 
-/* Green */
-
 /* Width of a grid column. */
 
 @media (min-width: 43.75rem) {
@@ -145,15 +143,11 @@
   }
 }
 
-/* Blue very bright */
-
 @media (min-width: 62.5rem) {
   :root {
     --scrollbar-width: 0.9375rem; /* Approximate width of a scrollbar. Doesn't have to be perfect. */
   }
 }
-
-/* Gray light 2 */
 
 @media (min-width: 75rem) {
   :root {

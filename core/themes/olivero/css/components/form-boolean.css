@@ -23,7 +23,6 @@ input[type="radio"] {
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: var(--sp1) var(--sp1);
-  -webkit-appearance: none;
   appearance: none;
 }
 

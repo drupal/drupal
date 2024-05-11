@@ -140,7 +140,6 @@
   border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0; /* LTR */
   background: var(--button-bg-color);
   font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
-  -webkit-appearance: none;
   appearance: none;
 }
 
@@ -260,7 +259,6 @@
   font-size: var(--dropbutton-font-size);
   font-weight: 700;
   line-height: var(--dropbutton-line-height);
-  -webkit-appearance: none;
   appearance: none;
   -webkit-font-smoothing: antialiased;
 }

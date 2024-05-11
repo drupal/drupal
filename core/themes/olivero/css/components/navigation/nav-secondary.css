@@ -29,13 +29,14 @@
 }
 
 .secondary-nav__menu-item {
-  /* @todo should this be scoped to desktop nav? */
-  width: max-content;
-  max-width: 12.5rem;
   /* Parent element is set to flex-basis: 0. We
    * don't want text to wrap unless it goes over a
    * certain arbitrary width.
    */
+
+  /* @todo should this be scoped to desktop nav? */
+  width: max-content;
+  max-width: 12.5rem;
 }
 
 .secondary-nav__menu-item:not(:last-child) {

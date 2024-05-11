@@ -42,7 +42,6 @@
   font-size: var(--off-canvas-button-font-size);
   font-weight: var(--off-canvas-button-font-weight);
   line-height: normal;
-  -webkit-appearance: none;
   appearance: none;
 }
 #drupal-off-canvas-wrapper .button:hover,
