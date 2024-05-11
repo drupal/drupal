@@ -200,6 +200,19 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
   /**
    * {@inheritdoc}
    */
+  public function getCacheTags() {
+    $tags = parent::getCacheTags();
+    if (!empty($this->options['node'])) {
+      if (($node = $this->routeMatch->getParameter('node')) && $node instanceof NodeInterface) {
+        $tags = Cache::mergeTags($tags, $node->getCacheTags());
+      }
+    }
+    return $tags;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCacheMaxAge() {
     return Cache::PERMANENT;
   }
