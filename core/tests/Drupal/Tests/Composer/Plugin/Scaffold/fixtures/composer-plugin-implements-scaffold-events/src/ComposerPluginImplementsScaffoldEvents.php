@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\fixture\Composer\Plugin;
 
-use Composer\EventDispatcher\Event;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Composer;
 use Composer\IO\IOInterface;
+use Composer\Script\Event;
 use Drupal\Composer\Plugin\Scaffold\Handler;
 
 /**
@@ -30,14 +30,14 @@ class ComposerPluginImplementsScaffoldEvents implements PluginInterface, EventSu
    * Implements pre Drupal scaffold cmd.
    */
   public static function preDrupalScaffoldCmd(Event $event): void {
-    print 'Hello preDrupalScaffoldCmd' . PHP_EOL;
+    $event->getIO()->write('Hello preDrupalScaffoldCmd');
   }
 
   /**
    * Implements post Drupal scaffold cmd.
    */
   public static function postDrupalScaffoldCmd(Event $event): void {
-    print 'Hello postDrupalScaffoldCmd' . PHP_EOL;
+    $event->getIO()->write('Hello postDrupalScaffoldCmd');
   }
 
   /**
