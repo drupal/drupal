@@ -263,13 +263,13 @@ class LocalTasksTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer content types',
       'administer permissions',
+      'administer account settings',
     ]));
     $this->drupalCreateContentType(['type' => 'page']);
 
     // Only the Edit task. The block avoids showing a single tab.
     $this->drupalGet('/admin/config/people/accounts');
-    // @@todo Add assertion here to check the page was actually visited.
-    // https://www.drupal.org/project/drupal/issues/3443748
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertNoLocalTasks();
 
     // Only the Edit and Manage permission tabs.
