@@ -202,8 +202,10 @@ services:
     arguments:
       - '@current_user'
       - '@entity_field.manager'
-      - '@jsonapi.file.uploader.field'
+      - '@file.upload_handler'
       - '@http_kernel'
+      - '@file.input_stream_file_writer'
+      - '@file_system'
   Drupal\jsonapi\Controller\FileUpload: '@jsonapi.file_upload'
 
   # Event subscribers.
@@ -249,10 +251,3 @@ services:
       - '@jsonapi.version_negotiator'
     tags:
       - { name: route_enhancer }
-
-  # @todo Remove once https://www.drupal.org/project/drupal/issues/2940383 lands.
-  jsonapi.file.uploader.field:
-    class: Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader
-    public: false
-    arguments: ['@logger.channel.file', '@file_system', '@file.mime_type.guesser', '@token', '@lock', '@config.factory', '@event_dispatcher', '@file.validator', '@file.input_stream_file_writer']
-  Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader: '@jsonapi.file.uploader.field'

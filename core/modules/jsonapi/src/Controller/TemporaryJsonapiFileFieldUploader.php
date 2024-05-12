@@ -43,6 +43,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *     entity-level access.
  *
  * @internal This will be removed once https://www.drupal.org/project/drupal/issues/2940383 lands.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3445266
  */
 class TemporaryJsonapiFileFieldUploader {
 
@@ -161,6 +166,7 @@ class TemporaryJsonapiFileFieldUploader {
    *   The stream file uploader.
    */
   public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL, FileValidatorInterface $file_validator = NULL, InputStreamFileWriterInterface $input_stream_file_writer = NULL) {
+    @\trigger_error(__CLASS__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3445266', E_USER_DEPRECATED);
     $this->logger = $logger;
     $this->fileSystem = $file_system;
     $this->mimeTypeGuesser = $mime_type_guesser;
