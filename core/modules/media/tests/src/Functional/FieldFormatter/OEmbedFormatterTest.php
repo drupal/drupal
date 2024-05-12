@@ -72,6 +72,9 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
             'height' => '360',
             'title' => 'Drupal Rap Video - Schipulcon09',
             'loading' => 'lazy',
+            // cSpell:disable-next-line
+            'allowtransparency' => NULL,
+            'frameborder' => NULL,
           ],
         ],
         'self_closing' => TRUE,
