@@ -785,6 +785,7 @@ class FileUploadTest extends ResourceTestBase {
   protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE) {
     $author = User::load($this->account->id());
     $file = File::load($fid);
+    $this->assertInstanceOf(File::class, $file);
     $self_url = Url::fromUri('base:/jsonapi/file/file/' . $file->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
 
     return [
