@@ -27,6 +27,7 @@ use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
+use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -697,10 +698,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   }
 
   /**
-   * @after
-   *
    * Additional tear down method to close the connection at the end.
    */
+  #[After]
   public function tearDownCloseDatabaseConnection() {
     // Destroy the database connection, which for example removes the memory
     // from sqlite in memory.
