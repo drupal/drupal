@@ -1890,7 +1890,7 @@ function drupal_common_theme() {
       'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL, 'context' => []],
     ],
     'feed_icon' => [
-      'variables' => ['url' => NULL, 'title' => NULL],
+      'variables' => ['url' => NULL, 'title' => NULL, 'attributes' => []],
     ],
     'progress_bar' => [
       'variables' => ['label' => NULL, 'percent' => NULL, 'message' => NULL],
