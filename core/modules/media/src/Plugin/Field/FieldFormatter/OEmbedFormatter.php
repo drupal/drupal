@@ -22,7 +22,6 @@ use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-// cspell:ignore allowtransparency
 /**
  * Plugin implementation of the 'oembed' formatter.
  *
@@ -227,9 +226,7 @@ class OEmbedFormatter extends FormatterBase {
           '#tag' => 'iframe',
           '#attributes' => [
             'src' => $url->toString(),
-            'frameborder' => 0,
             'scrolling' => FALSE,
-            'allowtransparency' => TRUE,
             // External service is not supposed to send something larger
             // than the max width or max height, so those values should be used.
             'width' => $resource->getWidth() ?: $max_width,
