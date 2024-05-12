@@ -99,4 +99,20 @@ class AddFeedTest extends KernelTestBase {
     $this->assertEquals('Subscribe to &lt;&gt;&amp;&quot;&#039;', trim(strip_tags($text)), 'feed_icon template escapes reserved HTML characters.');
   }
 
+  /**
+   * Tests that the rendered output contains specific attributes.
+   */
+  public function testAttributeAdded(): void {
+    $variables = [
+      '#theme' => 'feed_icon',
+      '#url' => 'node/add/',
+      '#title' => 'testing title',
+      '#attributes' => ['title' => 'some title', 'class' => ['some-class']],
+    ];
+    $rendered_output = (string) \Drupal::service('renderer')->renderRoot($variables);
+
+    // Check if the class 'some-class' is present in the rendered output.
+    $this->assertStringContainsString('some-class', $rendered_output, "The class 'some-class' should be present in the rendered output.");
+  }
+
 }
