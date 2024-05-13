@@ -13,11 +13,12 @@ use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @coversDefaultClass \Drupal\Core\Update\UpdateRegistry
- * @group Update
+ * Tests UpdateRegistry.
  *
  * Note we load code, so isolate the tests.
  *
+ * @coversDefaultClass \Drupal\Core\Update\UpdateRegistry
+ * @group Update
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */

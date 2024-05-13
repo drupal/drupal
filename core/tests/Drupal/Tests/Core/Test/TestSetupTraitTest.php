@@ -11,11 +11,11 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the TestSetupTrait trait.
  *
- * @coversDefaultClass \Drupal\Core\Test\TestSetupTrait
- * @group Testing
- *
  * Run in a separate process as this test involves Database statics and
  * environment variables.
+ *
+ * @coversDefaultClass \Drupal\Core\Test\TestSetupTrait
+ * @group Testing
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */

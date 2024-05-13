@@ -280,10 +280,11 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadInclude
+   * Tests loadInclude().
    *
    * Note we load code, so isolate the test.
    *
+   * @covers ::loadInclude
    * @runInSeparateProcess
    * @preserveGlobalState disabled
    */

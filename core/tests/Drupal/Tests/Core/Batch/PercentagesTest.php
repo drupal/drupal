@@ -8,11 +8,12 @@ use Drupal\Core\Batch\Percentage;
 use Drupal\Tests\UnitTestCase;
 
 /**
+ * Tests the Batch helper object.
+ *
+ * Make sure that the rounding works properly in all cases.
+ *
  * @coversDefaultClass \Drupal\Core\Batch\Percentage
  * @group Batch
- *
- * Tests the Batch helper object to make sure that the rounding works properly
- * in all cases.
  */
 class PercentagesTest extends UnitTestCase {
   protected $testCases = [];

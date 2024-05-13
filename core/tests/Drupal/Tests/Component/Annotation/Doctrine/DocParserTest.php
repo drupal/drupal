@@ -14,8 +14,6 @@ use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\IntefaceWithConstants;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Annotation\Doctrine\DocParser
- *
  * This class is a near-copy of
  * Doctrine\Tests\Common\Annotations\DocParserTest, which is part of the
  * Doctrine project: <http://www.doctrine-project.org>.  It was copied from
@@ -25,6 +23,7 @@ use PHPUnit\Framework\TestCase;
  * core/tests/Drupal/Tests/Component/Annotation/Doctrine/Fixtures were also
  * copied from version 1.2.7.
  *
+ * @coversDefaultClass \Drupal\Component\Annotation\Doctrine\DocParser
  * @group Annotation
  */
 class DocParserTest extends TestCase

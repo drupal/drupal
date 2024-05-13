@@ -17,8 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class BubbleableMetadataTest extends UnitTestCase {
 
   /**
-   * @covers ::merge
-   * @dataProvider providerTestMerge
+   * Tests merge().
    *
    * This only tests at a high level, because it reuses existing logic. Detailed
    * tests exist for the existing logic:
@@ -32,6 +31,9 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @see testMergeAttachmentsHtmlHeadMerging()
    * @see testMergeAttachmentsHtmlHeadLinkMerging()
    * @see testMergeAttachmentsHttpHeaderMerging()
+   *
+   * @covers ::merge
+   * @dataProvider providerTestMerge
    */
   public function testMerge(BubbleableMetadata $a, CacheableMetadata $b, BubbleableMetadata $expected) {
     // Verify that if the second operand is a CacheableMetadata object, not a
@@ -96,9 +98,7 @@ class BubbleableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::addAttachments
-   * @covers ::setAttachments
-   * @dataProvider providerTestAddAttachments
+   * Tests addAttachments().
    *
    * This only tests at a high level, because it reuses existing logic. Detailed
    * tests exist for the existing logic:
@@ -108,6 +108,10 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @see testMergeAttachmentsHtmlHeadMerging()
    * @see testMergeAttachmentsHtmlHeadLinkMerging()
    * @see testMergeAttachmentsHttpHeaderMerging()
+   *
+   * @covers ::addAttachments
+   * @covers ::setAttachments
+   * @dataProvider providerTestAddAttachments
    */
   public function testAddAttachments(BubbleableMetadata $initial, $attachments, BubbleableMetadata $expected) {
     $test = $initial;
@@ -582,8 +586,7 @@ class BubbleableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::addCacheableDependency
-   * @dataProvider providerTestMerge
+   * Tests addCacheableDependency().
    *
    * This only tests at a high level, because it reuses existing logic. Detailed
    * tests exist for the existing logic:
@@ -591,6 +594,9 @@ class BubbleableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeTags()
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
+   *
+   * @covers ::addCacheableDependency
+   * @dataProvider providerTestMerge
    */
   public function testAddCacheableDependency(BubbleableMetadata $a, $b, BubbleableMetadata $expected) {
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')

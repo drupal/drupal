@@ -18,17 +18,16 @@ use Symfony\Component\Process\Process;
 /**
  * Tests core/scripts/test-site.php.
  *
- * @group Setup
- *
  * This test uses the Drupal\Core\Database\Database class which has a static.
  * Therefore run in a separate process to avoid side effects.
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
  *
  * @see \Drupal\TestSite\TestSiteApplication
  * @see \Drupal\TestSite\Commands\TestSiteInstallCommand
  * @see \Drupal\TestSite\Commands\TestSiteTearDownCommand
+ *
+ * @group Setup
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class TestSiteApplicationTest extends UnitTestCase {
 

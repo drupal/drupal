@@ -9,11 +9,12 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\Component\Datetime\Time
- * @group Datetime
+ * Tests the Time class.
  *
  * Isolate the tests to prevent side effects from altering system time.
  *
+ * @coversDefaultClass \Drupal\Component\Datetime\Time
+ * @group Datetime
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */

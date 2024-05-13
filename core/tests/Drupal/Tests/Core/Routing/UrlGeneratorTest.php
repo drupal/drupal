@@ -510,9 +510,6 @@ class UrlGeneratorTest extends UnitTestCase {
 
   /**
    * @covers \Drupal\Core\Routing\UrlGenerator::generateFromRoute
-   *
-   * Note: We use absolute covers to let
-   * \Drupal\Tests\Core\Render\MetadataBubblingUrlGeneratorTest work.
    */
   public function testGenerateWithPathProcessorChangingOptions() {
     $path_processor = $this->createMock(OutboundPathProcessorInterface::CLASS);
