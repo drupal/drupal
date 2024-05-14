@@ -2,8 +2,6 @@
 
 namespace Drupal\Component\EventDispatcher;
 
-@trigger_error('The ' . __NAMESPACE__ . '\ContainerAwareEventDispatcher is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use Symfony\Component\EventDispatcher\EventDispatcher instead. See https://www.drupal.org/node/3376090', E_USER_DEPRECATED);
-
 use Psr\EventDispatcher\StoppableEventInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -32,11 +30,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *     runtime is not affected by this change though.
  *   </dd>
  * </dl>
- *
- * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
- *   \Symfony\Component\EventDispatcher\EventDispatcher instead.
- *
- * @see https://www.drupal.org/node/3376090
  */
 class ContainerAwareEventDispatcher implements EventDispatcherInterface {
 
