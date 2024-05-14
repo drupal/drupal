@@ -59,27 +59,6 @@ final class InputStreamUploadedFile implements UploadedFileInterface {
   /**
    * {@inheritdoc}
    */
-  public function isValid(): bool {
-    throw new \BadMethodCallException(__METHOD__ . ' not implemented');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getErrorMessage(): string {
-    throw new \BadMethodCallException(__METHOD__ . ' not implemented');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getError(): int {
-    throw new \BadMethodCallException(__METHOD__ . ' not implemented');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function validate(ValidatorInterface $validator, array $options = []): ConstraintViolationListInterface {
     return new ConstraintViolationList();
   }
