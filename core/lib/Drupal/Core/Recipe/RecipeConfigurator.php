@@ -10,17 +10,57 @@ namespace Drupal\Core\Recipe;
  */
 final class RecipeConfigurator {
 
+  /**
+   * @var \Drupal\Core\Recipe\Recipe[]
+   */
   public readonly array $recipes;
 
   /**
    * @param string[] $recipes
    *   A list of recipes for a recipe to apply. The recipes will be applied in
    *   the order listed.
-   * @param \Drupal\Core\Recipe\RecipeDiscovery $recipeDiscovery
-   *   Recipe discovery.
+   * @param string $include_path
+   *   The recipe's include path.
    */
-  public function __construct(array $recipes, RecipeDiscovery $recipeDiscovery) {
-    $this->recipes = array_map([$recipeDiscovery, 'getRecipe'], $recipes);
+  public function __construct(array $recipes, string $include_path) {
+    $this->recipes = array_map(fn(string $name) => static::getIncludedRecipe($include_path, $name), $recipes);
+  }
+
+  /**
+   * Gets an included recipe object.
+   *
+   * @param string $include_path
+   *   The recipe's include path.
+   * @param string $name
+   *   The machine name of the recipe to get.
+   *
+   * @return \Drupal\Core\Recipe\Recipe
+   *   The recipe object.
+   *
+   * @throws \Drupal\Core\Recipe\UnknownRecipeException
+   *   Thrown when the recipe cannot be found.
+   */
+  public static function getIncludedRecipe(string $include_path, string $name): Recipe {
+    // In order to allow recipes to include core provided recipes, $name can be
+    // a Drupal root relative path to a recipe folder. For example, a recipe can
+    // include the core provided 'article_tags' recipe by listing the recipe as
+    // 'core/recipes/article_tags'. It is strongly recommended not to rely on
+    // relative paths for including recipes. Required recipes should be put in
+    // the same parent directory as the recipe being applied. Note, only linux
+    // style directory separators are supported. PHP on Windows can resolve the
+    // mix of directory separators.
+    if (str_contains($name, '/')) {
+      $path = \Drupal::root() . "/$name/recipe.yml";
+    }
+    else {
+      $path = $include_path . "/$name/recipe.yml";
+    }
+
+    if (file_exists($path)) {
+      return Recipe::createFromDirectory(dirname($path));
+    }
+    $search_path = dirname($path, 2);
+    throw new UnknownRecipeException($name, $search_path, sprintf("Can not find the %s recipe, search path: %s", $name, $search_path));
   }
 
   /**

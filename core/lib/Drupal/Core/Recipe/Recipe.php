@@ -57,8 +57,7 @@ final class Recipe {
   public static function createFromDirectory(string $path): static {
     $recipe_data = self::parse($path . '/recipe.yml');
 
-    $recipe_discovery = static::getRecipeDiscovery(dirname($path));
-    $recipes = new RecipeConfigurator(is_array($recipe_data['recipes']) ? $recipe_data['recipes'] : [], $recipe_discovery);
+    $recipes = new RecipeConfigurator(is_array($recipe_data['recipes']) ? $recipe_data['recipes'] : [], dirname($path));
     $install = new InstallConfigurator($recipe_data['install'], \Drupal::service('extension.list.module'), \Drupal::service('extension.list.theme'));
     $config = new ConfigConfigurator($recipe_data['config'], $path, \Drupal::service('config.storage'));
     $content = new Finder($path . '/content');
@@ -90,7 +89,7 @@ final class Recipe {
     // recipes.
     // @see ::validateRecipeExists()
     // @see ::validateConfigActions()
-    $discovery = self::getRecipeDiscovery(dirname($file, 2));
+    $include_path = dirname($file, 2);
 
     $constraints = new Collection([
       'name' => new Required([
@@ -136,7 +135,7 @@ final class Recipe {
             ),
             new Callback(
               callback: self::validateRecipeExists(...),
-              payload: $discovery,
+              payload: $include_path,
             ),
           ]),
         ]),
@@ -177,7 +176,7 @@ final class Recipe {
               new NotBlank(),
               new Callback(
                 callback: self::validateConfigActions(...),
-                payload: $discovery,
+                payload: $include_path,
               ),
             ]),
           ]),
@@ -232,31 +231,19 @@ final class Recipe {
    *   The machine name of the recipe to look for.
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validator execution context.
-   * @param \Drupal\Core\Recipe\RecipeDiscovery $discovery
-   *   A discovery object to find other recipes.
+   * @param string $include_path
+   *   The recipe's include path.
    */
-  private static function validateRecipeExists(string $name, ExecutionContextInterface $context, RecipeDiscovery $discovery): void {
+  private static function validateRecipeExists(string $name, ExecutionContextInterface $context, string $include_path): void {
     if (empty($name)) {
       return;
     }
     try {
-      $discovery->getRecipe($name);
+      RecipeConfigurator::getIncludedRecipe($include_path, $name);
     }
     catch (UnknownRecipeException) {
       $context->addViolation('The %name recipe does not exist.', ['%name' => $name]);
     }
-  }
-
-  /**
-   * Gets the recipe discovery object for a recipe.
-   *
-   * @param string $recipeDirectory
-   *   The directory the contains the recipe.
-   *
-   * @return \Drupal\Core\Recipe\RecipeDiscovery
-   */
-  private static function getRecipeDiscovery(string $recipeDirectory): RecipeDiscovery {
-    return new RecipeDiscovery($recipeDirectory);
   }
 
   /**
@@ -266,10 +253,10 @@ final class Recipe {
    *   The config action; not used.
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validator execution context.
-   * @param \Drupal\Core\Recipe\RecipeDiscovery $discovery
-   *   A discovery object to find other recipes.
+   * @param string $include_path
+   *   The recipe's include path.
    */
-  private static function validateConfigActions(mixed $value, ExecutionContextInterface $context, RecipeDiscovery $discovery): void {
+  private static function validateConfigActions(mixed $value, ExecutionContextInterface $context, string $include_path): void {
     $config_name = str_replace(['[config][actions]', '[', ']'], '', $context->getPropertyPath());
     [$config_provider] = explode('.', $config_name);
     if ($config_provider === 'core') {
@@ -279,7 +266,7 @@ final class Recipe {
     $recipe_being_validated = $context->getRoot();
     assert(is_array($recipe_being_validated));
 
-    $configurator = new RecipeConfigurator($recipe_being_validated['recipes'] ?? [], $discovery);
+    $configurator = new RecipeConfigurator($recipe_being_validated['recipes'] ?? [], $include_path);
 
     // The config provider must either be an already-installed module or theme,
     // or an extension being installed by this recipe or a recipe it depends on.
