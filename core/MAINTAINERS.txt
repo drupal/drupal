@@ -191,6 +191,11 @@ DateTime Range
 - Jonathan Hedstrom 'jhedstrom' https://www.drupal.org/u/jhedstrom
 - Matthew Donadio 'mpdonadio' https://www.drupal.org/u/mpdonadio
 
+Default Content
+- Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
+- Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
+- Jim Birch 'thejimbirch' https://www.drupal.org/u/thejimbirch
+
 Dynamic Page Cache
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
@@ -339,6 +344,11 @@ Plugin
 
 Queue
 - James Gilliland 'neclimdul' https://www.drupal.org/u/neclimdul
+
+Recipes
+- Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
+- Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
+- Jim Birch 'thejimbirch' https://www.drupal.org/u/thejimbirch
 
 Render API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
