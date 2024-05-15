@@ -10,7 +10,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.3.0",
-        "symfony/validator": "^7.0"
+        "symfony/validator": "^7.1@beta"
     },
     "autoload": {
         "psr-4": {
