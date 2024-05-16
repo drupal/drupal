@@ -1,5 +1,5 @@
 /*!
- * jQuery UI Resizable 1.13.3
+ * jQuery UI Resizable 1.14.0-beta.1
  * https://jqueryui.com
  *
  * Copyright OpenJS Foundation and other contributors
@@ -13,7 +13,6 @@
 	position: absolute;
 	font-size: 0.1px;
 	display: block;
-	-ms-touch-action: none;
 	touch-action: none;
 }
 .ui-resizable-disabled .ui-resizable-handle,

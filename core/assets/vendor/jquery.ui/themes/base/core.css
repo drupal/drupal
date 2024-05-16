@@ -1,5 +1,5 @@
 /*!
- * jQuery UI CSS Framework 1.13.3
+ * jQuery UI CSS Framework 1.14.0-beta.1
  * https://jqueryui.com
  *
  * Copyright OpenJS Foundation and other contributors
@@ -50,7 +50,6 @@
 	left: 0;
 	position: absolute;
 	opacity: 0;
-	-ms-filter: "alpha(opacity=0)"; /* support: IE8 */
 }
 
 .ui-front {
