@@ -1,5 +1,5 @@
 /*!
- * jQuery UI :data 1.13.3
+ * jQuery UI :data 1.14.0-beta.1
  * https://jqueryui.com
  *
  * Copyright OpenJS Foundation and other contributors
@@ -28,16 +28,10 @@
 "use strict";
 
 return $.extend( $.expr.pseudos, {
-	data: $.expr.createPseudo ?
-		$.expr.createPseudo( function( dataName ) {
-			return function( elem ) {
-				return !!$.data( elem, dataName );
-			};
-		} ) :
-
-		// Support: jQuery <1.8
-		function( elem, i, match ) {
-			return !!$.data( elem, match[ 3 ] );
-		}
+	data: $.expr.createPseudo( function( dataName ) {
+		return function( elem ) {
+			return !!$.data( elem, dataName );
+		};
+	} )
 } );
 } );
