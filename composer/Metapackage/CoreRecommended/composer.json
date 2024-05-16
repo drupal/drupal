@@ -27,7 +27,7 @@
         "psr/container": "~2.0.2",
         "psr/event-dispatcher": "~1.0.0",
         "psr/http-client": "~1.0.3",
-        "psr/http-factory": "~1.0.2",
+        "psr/http-factory": "~1.1.0",
         "psr/log": "~3.0.0",
         "ralouphie/getallheaders": "~3.0.3",
         "sebastian/diff": "~5.1.1",
@@ -60,6 +60,6 @@
         "symfony/var-dumper": "~v7.1.0-BETA1",
         "symfony/var-exporter": "~v7.0.7",
         "symfony/yaml": "~v7.1.0-BETA1",
-        "twig/twig": "~v3.9.3"
+        "twig/twig": "~v3.10.2"
     }
 }
