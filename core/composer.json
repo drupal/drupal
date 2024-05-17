@@ -17,6 +17,7 @@
         "ext-SPL": "*",
         "ext-tokenizer": "*",
         "ext-xml": "*",
+        "ext-zlib": "*",
         "php": ">=8.3.0",
         "symfony/console": "^7.1@beta",
         "symfony/dependency-injection": "^7.1@beta",
