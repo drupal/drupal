@@ -85,17 +85,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    if (!extension_loaded('zlib')) {
-      $this->markTestSkipped('The zlib extension is not available.');
-    }
-
-    parent::setUp();
-  }
-
-  /**
    * Overrides BrowserTestBase::installDrupal() for update testing.
    *
    * The main difference in this method is that rather than performing the

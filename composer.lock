@@ -495,7 +495,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "a04ae36ab48fdc8d48a813f739cdfeeddb7517eb"
+                "reference": "ff1a97312bafb66b9f39cc05fa161d99956a15be"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -517,6 +517,7 @@
                 "ext-spl": "*",
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
+                "ext-zlib": "*",
                 "guzzlehttp/guzzle": "^7.5",
                 "guzzlehttp/psr7": "^2.4.5",
                 "masterminds/html5": "^2.7",
