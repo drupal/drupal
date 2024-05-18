@@ -11,11 +11,11 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 
 /**
- * Tests for \Drupal\navigation\Plugin\Block\ShortcutsNavigationBlock.
+ * Tests for \Drupal\navigation\Plugin\Block\NavigationShortcutsBlock.
  *
  * @group navigation
  */
-class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
+class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 
@@ -80,7 +80,7 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
     // Verify that users without the 'access shortcuts' permission can't see the
     // shortcuts.
     $this->drupalLogin($this->drupalCreateUser(['access navigation']));
-    $this->assertSession()->linkNotExists('Shortcuts');
+    $this->assertSession()->pageTextNotContains('Shortcuts');
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
 
@@ -103,6 +103,7 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
       'access shortcuts',
       'administer site configuration',
       'access administration pages',
+      'configure any layout',
     ]);
 
     // Create two different users with the same role to assert that the second
@@ -169,44 +170,57 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
     ]);
     $new_shortcut->save();
 
-    // @todo Uncomment once tests are executed against 10.3.x.
     // Assign the new shortcut set to user 2 and confirm that links are changed
     // automatically.
-    // \Drupal::entityTypeManager()
-    // ->getStorage('shortcut_set')
-    // ->assignUser($new_set, $site_configuration_user2);
-    // //    $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    // $this->assertSession()->linkExists('Cron');
-    // $this->assertSession()->linkExists('New Llama');
-    // //    // Confirm that links for user 1 have not been affected.
-    // $this->drupalLogin($site_configuration_user1);
-    // $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    // $this->assertSession()->linkExists('Cron');
-    // $this->assertSession()->linkNotExists('New Llama');
+    \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->assignUser($new_set, $site_configuration_user2);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkExists('New Llama');
+    // Confirm that links for user 1 have not been affected.
+    $this->drupalLogin($site_configuration_user1);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkNotExists('New Llama');
     // Confirm that removing assignment automatically changes the links too.
-    // $this->drupalLogin($site_configuration_user2);
-    // $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    // $this->assertSession()->linkExists('Cron');
-    // $this->assertSession()->linkExists('New Llama');
-    // \Drupal::entityTypeManager()
-    // ->getStorage('shortcut_set')
-    // ->unassignUser($site_configuration_user2);
-    // $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    // $this->assertSession()->linkExists('Cron');
-    // $this->assertSession()->linkNotExists('New Llama');
+    $this->drupalLogin($site_configuration_user2);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkExists('New Llama');
+    \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->unassignUser($site_configuration_user2);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkNotExists('New Llama');
     // Confirm that deleting a shortcut set automatically changes the links too.
-    // \Drupal::entityTypeManager()
-    // ->getStorage('shortcut_set')
-    // ->assignUser($new_set, $site_configuration_user2);
-    // $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    // $this->assertSession()->linkExists('Cron');
-    // $this->assertSession()->linkExists('New Llama');
-    // \Drupal::entityTypeManager()
-    // ->getStorage('shortcut_set')
-    // ->delete([$new_set]);
-    // $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    // $this->assertSession()->linkExists('Cron');
-    // $this->assertSession()->linkNotExists('New Llama');
+    \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->assignUser($new_set, $site_configuration_user2);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkExists('New Llama');
+    \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->delete([$new_set]);
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->linkExists('Cron');
+    $this->assertSession()->linkNotExists('New Llama');
+
+    // Verify that block disappears gracefully when shortcut module is disabled.
+    // Shortcut entities has to be removed first.
+    $link_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
+    $link_storage->delete($link_storage->loadMultiple());
+    \Drupal::service('module_installer')->uninstall(['shortcut']);
+    $this->verifyDynamicPageCache($test_page_url, 'MISS');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('Shortcuts');
+
+    // Confirm that Navigation Blocks page is working.
+    // @see https://www.drupal.org/project/drupal/issues/3445184
+    $this->drupalGet('/admin/config/user-interface/navigation-block');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
