@@ -14,7 +14,6 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
-use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore htkey
 
@@ -568,16 +567,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     $session->set('some-other-val', 'do-cleanup');
     $this->assertEquals('do-cleanup', $session->remove('some-other-val'));
-  }
-
-  /**
-   * Tests deprecation of modified request stack lacking a session.
-   *
-   * @group legacy
-   */
-  public function testDeprecatedSessionMissing(): void {
-    $this->expectDeprecation('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193');
-    $this->container->get('request_stack')->push(Request::create('/'));
   }
 
   /**

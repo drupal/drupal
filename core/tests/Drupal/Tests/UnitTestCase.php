@@ -65,17 +65,6 @@ abstract class UnitTestCase extends TestCase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function __get(string $name) {
-    if ($name === 'randomGenerator') {
-      @trigger_error('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445', E_USER_DEPRECATED);
-
-      return $this->getRandomGenerator();
-    }
-  }
-
-  /**
    * Returns a stub config factory that behaves according to the passed array.
    *
    * Use this to generate a config factory that will return the desired values
