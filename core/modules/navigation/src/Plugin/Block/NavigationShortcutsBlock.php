@@ -59,12 +59,6 @@ final class NavigationShortcutsBlock extends BlockBase implements ContainerFacto
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account): AccessResultInterface {
-    // This navigation block requires shortcut module. Once the plugin is moved
-    // to the module, this should not be necessary.
-    if (!$this->moduleHandler->moduleExists('shortcut')) {
-      return AccessResult::forbidden();
-    }
-
     return AccessResult::allowedIfHasPermission($account, 'access shortcuts');
   }
 
@@ -72,6 +66,11 @@ final class NavigationShortcutsBlock extends BlockBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function build(): array {
+    // This navigation block requires shortcut module. Once the plugin is moved
+    // to the module, this should not be necessary.
+    if (!$this->moduleHandler->moduleExists('shortcut')) {
+      return [];
+    }
     return [
       'shortcuts' => [
         // @phpstan-ignore-next-line
