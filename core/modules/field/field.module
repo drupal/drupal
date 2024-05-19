@@ -314,11 +314,11 @@ function field_config_import_steps_alter(&$sync_steps, ConfigImporter $config_im
  * @see \Drupal\field\ConfigImporterFieldPurger
  */
 function field_form_config_admin_import_form_alter(&$form, FormStateInterface $form_state) {
-  // Only display the message when there is a storage comparer available and the
-  // form is not submitted.
+  // Only display the message when core.extension is available in the source
+  // storage and the form is not submitted.
   $user_input = $form_state->getUserInput();
   $storage_comparer = $form_state->get('storage_comparer');
-  if ($storage_comparer && empty($user_input)) {
+  if ($storage_comparer?->getSourceStorage()->exists('core.extension') && empty($user_input)) {
     $field_storages = ConfigImporterFieldPurger::getFieldStoragesToPurge(
       $storage_comparer->getSourceStorage()->read('core.extension'),
       $storage_comparer->getChangelist('delete')
