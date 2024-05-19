@@ -130,4 +130,18 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     $this->assertFalse(isset($deleted_storages[$field_storage->uuid()]), 'Text field has been completed removed from the system.');
   }
 
+  /**
+   * Tests if the synchronization form is available when the core.extension.yml is missing.
+   */
+  public function testSynchronizeForm(): void {
+    $sync = $this->container->get('config.storage.sync');
+    $this->copyConfig($this->container->get('config.storage'), $sync);
+
+    $sync->delete('core.extension');
+    $this->drupalGet('admin/config/development/configuration');
+    $assertSession = $this->assertSession();
+    $this->assertSession()->elementExists('css', 'input[value="Import all"]')->click();
+    $assertSession->pageTextContains('The core.extension configuration does not exist.');
+  }
+
 }
