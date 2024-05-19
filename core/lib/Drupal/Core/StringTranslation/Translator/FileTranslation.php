@@ -103,7 +103,7 @@ class FileTranslation extends StaticTranslation {
     // The file name matches: drupal-[release version].[language code].po
     // When provided the $langcode is use as language code. If not provided all
     // language codes will match.
-    return '!drupal-[0-9]+\.[0-9]+\.([0-9]+|x)(-[a-z]+[0-9]*)?\.' . (!empty($langcode) ? preg_quote($langcode, '!') : LanguageInterface::VALID_LANGCODE_REGEX) . '\.po$!';
+    return '!drupal-[0-9]+\.[0-9]+(\.([0-9]+|x))?(-[a-z]+[0-9]*)?\.' . (!empty($langcode) ? preg_quote($langcode, '!') : LanguageInterface::VALID_LANGCODE_REGEX) . '\.po$!';
   }
 
   /**
