@@ -94,6 +94,18 @@ class RecipeCommandTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the recipe command with a non-existent directory.
+   */
+  public function testErrorOnNonExistentDirectory(): void {
+    $process = $this->applyRecipe('core/tests/fixtures/recipes/does_not_exist', 1);
+
+    // The directory error should be the only error visible.
+    $output = trim(preg_replace('/\s+/', ' ', $process->getOutput()));
+    $this->assertSame('[ERROR] The supplied path core/tests/fixtures/recipes/does_not_exist is not a directory', $output);
+    $this->assertEmpty($process->getErrorOutput());
+  }
+
+  /**
    * Asserts that the current set of checkpoints matches the given labels.
    *
    * @param string[] $expected_labels
