@@ -65,6 +65,7 @@ final class RecipeCommand extends Command {
     $recipe_path = $input->getArgument('path');
     if (!is_string($recipe_path) || !is_dir($recipe_path)) {
       $io->error(sprintf('The supplied path %s is not a directory', $recipe_path));
+      return 1;
     }
     // Recipes can only be applied to an already-installed site.
     $container = $this->boot()->getContainer();
