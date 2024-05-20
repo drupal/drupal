@@ -17,6 +17,7 @@ parameters:
     cookie_samesite: Lax
     sid_length: 48
     sid_bits_per_character: 6
+    name_suffix: ''
   twig.config:
     debug: false
     auto_reload: null
