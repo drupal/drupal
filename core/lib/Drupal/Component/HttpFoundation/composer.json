@@ -8,7 +8,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.3.0",
-        "symfony/http-foundation": "^7.1@beta"
+        "symfony/http-foundation": "^7.1@RC"
     },
     "autoload": {
         "psr-4": {
