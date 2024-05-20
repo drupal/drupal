@@ -71,7 +71,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
     EntityTypeInterface $entity_type,
     AccountInterface $current_user,
     EntityTypeManagerInterface $entity_type_manager,
-    RendererInterface $renderer = NULL,
+    RendererInterface $renderer,
     MessengerInterface $messenger,
   ) {
     parent::__construct($entity_type, $entity_type_manager->getStorage($entity_type->id()));
