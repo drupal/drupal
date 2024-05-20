@@ -61,7 +61,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getAddPageRoute
    * @dataProvider providerTestGetAddPageRoute
    */
-  public function testGetAddPageRoute(Route $expected = NULL, EntityTypeInterface $entity_type) {
+  public function testGetAddPageRoute(?Route $expected, EntityTypeInterface $entity_type) {
     $route = $this->routeProvider->getAddPageRoute($entity_type);
     $this->assertEquals($expected, $route);
   }
@@ -99,7 +99,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getAddFormRoute
    * @dataProvider providerTestGetAddFormRoute
    */
-  public function testGetAddFormRoute(Route $expected = NULL, EntityTypeInterface $entity_type, EntityTypeInterface $bundle_entity_type = NULL, FieldStorageDefinitionInterface $field_storage_definition = NULL) {
+  public function testGetAddFormRoute(?Route $expected, EntityTypeInterface $entity_type, ?EntityTypeInterface $bundle_entity_type = NULL, ?FieldStorageDefinitionInterface $field_storage_definition = NULL) {
     if ($bundle_entity_type) {
       $this->entityTypeManager->getDefinition('the_bundle_entity_type_id')->willReturn($bundle_entity_type);
 
@@ -200,7 +200,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getCanonicalRoute
    * @dataProvider providerTestGetCanonicalRoute
    */
-  public function testGetCanonicalRoute(Route $expected = NULL, EntityTypeInterface $entity_type, FieldStorageDefinitionInterface $field_storage_definition = NULL) {
+  public function testGetCanonicalRoute(?Route $expected, EntityTypeInterface $entity_type, ?FieldStorageDefinitionInterface $field_storage_definition = NULL) {
     if ($field_storage_definition) {
       $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id())
         ->willReturn([$entity_type->getKey('id') => $field_storage_definition]);
@@ -260,7 +260,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getCollectionRoute
    * @dataProvider providerTestGetCollectionRoute
    */
-  public function testGetCollectionRoute(Route $expected = NULL, EntityTypeInterface $entity_type) {
+  public function testGetCollectionRoute(?Route $expected, EntityTypeInterface $entity_type) {
     $route = $this->routeProvider->getCollectionRoute($entity_type);
     $this->assertEquals($expected, $route);
   }
@@ -379,12 +379,12 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
   }
 
   /**
-   * @param \Prophecy\Prophecy\ObjectProphecy $base_entity_type
+   * @param \Prophecy\Prophecy\ObjectProphecy|null $base_entity_type
    *   (optional) The prophesize base entity type.
    *
    * @return \Prophecy\Prophecy\ObjectProphecy
    */
-  protected static function getEntityType(ObjectProphecy $base_entity_type = NULL) {
+  protected static function getEntityType(?ObjectProphecy $base_entity_type = NULL) {
     $entity_type = (new Prophet())->prophesize(EntityTypeInterface::class);
     if ($base_entity_type) {
       foreach ($base_entity_type->getMethodProphecies() as $method => $prophecies) {
