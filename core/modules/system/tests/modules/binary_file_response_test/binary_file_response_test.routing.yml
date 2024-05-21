@@ -1,0 +1,7 @@
+binary_file_response_test.download:
+  path: '/binary_file_response_test/download'
+  defaults:
+    _controller: '\Drupal\binary_file_response_test\Controller\BinaryFileResponseTestController::download'
+    _title: 'Redirect'
+  requirements:
+    _access:  'TRUE'
