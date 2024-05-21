@@ -48,7 +48,7 @@ class DirectoryWithMetadataDiscovery extends YamlDirectoryDiscovery {
       | \FilesystemIterator::SKIP_DOTS;
     $directory_iterator = new \RecursiveDirectoryIterator($directory, $flags);
     // Detect "my_component.component.yml".
-    $regex = '/^([a-z0-9_-])+.component.yml$/i';
+    $regex = '/^([a-z0-9_-])+\.component\.yml$/i';
     $filter = new RegexRecursiveFilterIterator($directory_iterator, $regex);
     return new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::LEAVES_ONLY, $flags);
   }
