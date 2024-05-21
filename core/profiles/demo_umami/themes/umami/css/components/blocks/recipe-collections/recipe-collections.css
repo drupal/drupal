@@ -7,39 +7,15 @@
   margin-bottom: 1.5rem;
   text-align: center;
 }
-.block-views-blockrecipe-collections-block .views-view-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.block-views-blockrecipe-collections-block .views-col {
-  width: 100%;
-  padding: 0 14px;
-  text-align: center;
-}
-
-@media screen and (min-width: 48em) {
-  .block-views-blockrecipe-collections-block .views-col {
-    width: 25%;
-    max-width: 13rem;
-    text-align: left; /* LTR */
-  }
-  [dir="rtl"] .block-views-blockrecipe-collections-block .views-col {
-    text-align: right;
-  }
-}
-.block-views-blockrecipe-collections-block .views-row {
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-.block-views-blockrecipe-collections-block .views-row a {
+.block-views-blockrecipe-collections-block .views-field-name a {
   text-decoration: none;
   color: #fff;
+  font-size: 0.9rem;
   font-weight: bold;
 }
-.block-views-blockrecipe-collections-block .views-row a:active,
-.block-views-blockrecipe-collections-block .views-row a:focus,
-.block-views-blockrecipe-collections-block .views-row a:hover {
+.block-views-blockrecipe-collections-block .views-field-name a:active,
+.block-views-blockrecipe-collections-block .views-field-name a:focus,
+.block-views-blockrecipe-collections-block .views-field-name a:hover {
   text-decoration: underline;
   outline-color: #fff;
   background: transparent;
