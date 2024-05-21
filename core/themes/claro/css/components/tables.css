@@ -130,7 +130,7 @@ tr {
 }
 
 tr:hover,
-tr:focus {
+tr:focus-within {
   color: var(--color-text);
   background: var(--color-bgblue-hover);
 }

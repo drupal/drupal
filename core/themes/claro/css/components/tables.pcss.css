@@ -109,7 +109,7 @@ th {
 tr {
   border-bottom: 0.0625rem solid var(--color-gray-200);
   &:hover,
-  &:focus {
+  &:focus-within {
     color: var(--color-text);
     background: var(--color-bgblue-hover);
   }
