@@ -3,7 +3,9 @@
 namespace Drupal\Core\File\MimeType;
 
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use Symfony\Component\Mime\MimeTypes;
 
 /**
  * Defines a MIME type guesser that also supports stream wrapper paths.
@@ -109,6 +111,21 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface {
   protected function sortGuessers() {
     krsort($this->guessers);
     return array_merge(...$this->guessers);
+  }
+
+  /**
+   * A helper function to register with Symfony's singleton MIME type guesser.
+   *
+   * Symfony's default mimetype guessers have dependencies on PHP's fileinfo
+   * extension or being able to run the system command file. Drupal's guesser
+   * does not have these dependencies.
+   *
+   * @see \Symfony\Component\Mime\MimeTypes
+   */
+  public static function registerWithSymfonyGuesser(ContainerInterface $container) {
+    $guesser = new MimeTypes();
+    $guesser->registerGuesser($container->get('file.mime_type.guesser'));
+    MimeTypes::setDefault($guesser);
   }
 
 }

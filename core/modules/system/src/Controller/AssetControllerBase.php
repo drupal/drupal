@@ -119,9 +119,6 @@ abstract class AssetControllerBase extends FileDownloadController {
     if (file_exists($uri)) {
       return new BinaryFileResponse($uri, 200, [
         'Cache-control' => static::CACHE_CONTROL,
-        // @todo: remove the explicit setting of Content-Type once this is
-        // fixed in https://www.drupal.org/project/drupal/issues/3172550.
-        'Content-Type' => $this->contentType,
       ]);
     }
 
