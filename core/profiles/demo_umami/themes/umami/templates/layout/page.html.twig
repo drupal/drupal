@@ -44,14 +44,14 @@
 #}
 <div class="layout-container">
 
-  {% if page.pre_header|render|striptags|trim is not empty or
-     page.header|render|striptags|trim is not empty %}
+  {% if page.pre_header|render|trim is not empty or
+     page.header|render|trim is not empty %}
     <header class="layout-header" role="banner">
       <div class="container">
-        {% if page.pre_header|render|striptags|trim is not empty %}
+        {% if page.pre_header|render|trim is not empty %}
           {{ page.pre_header }}
         {% endif %}
-        {% if page.header|render|striptags|trim is not empty %}
+        {% if page.header|render|trim is not empty %}
           {{ page.header }}
         {% endif %}
       </div>
@@ -74,13 +74,13 @@
   </div>
   {% endif %}
 
-  {% if page.banner_top|render|striptags|trim is not empty %}
+  {% if page.banner_top|render|trim is not empty %}
     <div class="layout-banner-top">
       {{ page.banner_top }}
     </div>
   {% endif %}
 
-  {% if page.breadcrumbs|render|striptags|trim is not empty %}
+  {% if page.breadcrumbs|render|trim is not empty %}
   <div class="layout-breadcrumbs">
     <div class="container">
       {{ page.breadcrumbs }}
@@ -89,7 +89,7 @@
   {% endif %}
 
   {% if not node %}
-    {% if page.page_title|render|striptags|trim is not empty %}
+    {% if page.page_title|render|trim is not empty %}
       <div class="layout-page-title">
         {% if is_front %}
           <div class="is-front container">
@@ -111,7 +111,7 @@
       {{ page.content }}
     </div>{# /.layout-content #}
 
-    {% if page.sidebar|render|striptags|trim is not empty %}
+    {% if page.sidebar|render|trim is not empty %}
       <aside class="layout-sidebar" role="complementary">
         {{ page.sidebar }}
       </aside>
@@ -119,13 +119,13 @@
 
   </main>
 
-  {% if page.content_bottom|render|striptags|trim is not empty %}
+  {% if page.content_bottom|render|trim is not empty %}
     <div class="layout-content-bottom">
       {{ page.content_bottom }}
     </div>
   {% endif %}
 
-  {% if page.footer|render|striptags|trim is not empty %}
+  {% if page.footer|render|trim is not empty %}
   <div class="layout-footer">
     <footer class="footer" role="contentinfo">
       <div class="container">
@@ -135,7 +135,7 @@
   </div>
   {% endif %}
 
-  {% if page.bottom|render|striptags|trim is not empty %}
+  {% if page.bottom|render|trim is not empty %}
     <div class="layout-bottom">
       <div class="container">
         {{ page.bottom }}
