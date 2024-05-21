@@ -8,11 +8,11 @@ use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 
 /**
- * Tests for \Drupal\navigation\Plugin\NavigationBlock\UserNavigationBlock.
+ * Tests for \Drupal\navigation\Plugin\NavigationBlock\NavigationUserBlock.
  *
  * @group navigation
  */
-class UserNavigationBlockTest extends PageCacheTagsTestBase {
+class NavigationUserBlockTest extends PageCacheTagsTestBase {
 
   /**
    * Modules to install.
@@ -63,9 +63,9 @@ class UserNavigationBlockTest extends PageCacheTagsTestBase {
   }
 
   /**
-   * Test output of the user navigation with regards to caching and contents.
+   * Test output of user navigation block with regards to caching and contents.
    */
-  public function testUserNavigationBlock() {
+  public function testNavigationUserBlock() {
     // Verify some basic cacheability metadata. Ensures that we're not doing
     // anything so egregious as to upset expected caching behavior. In this
     // case, as an anonymous user, we should have zero effect on the page.
