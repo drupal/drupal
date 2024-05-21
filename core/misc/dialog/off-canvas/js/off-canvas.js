@@ -244,9 +244,13 @@
           : `${parseFloat(height)}px`,
       });
 
+      $element.dialog('option', adjustedOptions);
+
       $element
-        .dialog('option', adjustedOptions)
-        .trigger('dialogContentResize.off-canvas');
+        ?.get(0)
+        ?.dispatchEvent(
+          new CustomEvent('dialogContentResize', { bubbles: true }),
+        );
 
       Drupal.offCanvas.position = position;
     },
