@@ -42,9 +42,6 @@ global:
       css/components/toolbar/toolbar.css: {}
       css/components/layout_builder/layout-builder.css: {}
     layout:
-      css/layout/grid-2.css: {}
-      css/layout/grid-3.css: {}
-      css/layout/grid-4.css: {}
       css/layout/layout.css: {}
 
 messages:

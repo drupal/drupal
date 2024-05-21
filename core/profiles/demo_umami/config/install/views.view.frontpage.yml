@@ -270,12 +270,13 @@ display:
         groups:
           1: AND
       style:
-        type: default
+        type: grid_responsive
         options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
           uses_fields: false
+          columns: 2
+          cell_min_width: 240
+          grid_gutter: 14
+          alignment: horizontal
       row:
         type: 'entity:node'
         options:
@@ -359,7 +360,7 @@ display:
       defaults:
         css_class: false
         header: false
-      css_class: grid--2
+      css_class: ''
       header:
         area:
           id: area
