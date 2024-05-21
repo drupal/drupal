@@ -347,8 +347,13 @@
     // Perhaps we should precache the text div, too.
     this.$selected_div
       .find('.views-selected-options')
-      .html(this.checkedItems.join(', '))
-      .trigger('dialogContentResize');
+      .html(this.checkedItems.join(', '));
+
+    this.$selected_div
+      ?.get(0)
+      ?.dispatchEvent(
+        new CustomEvent('dialogContentResize', { bubbles: true }),
+      );
   };
 
   /**
@@ -587,7 +592,9 @@
         });
 
         // Adapt dialog to content size.
-        $(event.target).trigger('dialogContentResize');
+        event.target?.dispatchEvent(
+          new CustomEvent('dialogContentResize', { bubbles: true }),
+        );
       },
     },
   );
