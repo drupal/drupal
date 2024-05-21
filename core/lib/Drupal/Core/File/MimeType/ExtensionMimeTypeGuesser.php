@@ -153,6 +153,8 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       129 => 'application/x-iphone',
       130 => 'application/x-iso9660-image',
       131 => 'application/x-java-jnlp-file',
+      // Per RFC 9239, text/javascript is preferred over application/javascript.
+      // @see https://www.rfc-editor.org/rfc/rfc9239
       132 => 'text/javascript',
       133 => 'application/x-jmol',
       134 => 'application/x-kchart',
