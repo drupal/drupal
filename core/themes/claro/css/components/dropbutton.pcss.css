@@ -312,6 +312,11 @@
 
 .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
   visibility: hidden;
+  /**
+  * By setting a height of 1px, the dropbutton items are hidden
+  * from view while still occupying minimal space, ensuring the layout remains intact.
+  */
+  height: 1px;
 }
 
 /**
