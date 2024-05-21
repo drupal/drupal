@@ -10,13 +10,6 @@ namespace Drupal\Core\FileTransfer;
  * to the server using some backend (for example FTP or SSH). To keep security,
  * the password should always be asked from the user and never stored. For
  * safety, all methods operate only inside a "jail", by default the Drupal root.
- *
- * The following properties are managed by magic methods:
- *
- * @property string|false|null $chroot
- *   Path to connection chroot.
- * @property object|false|null $connection
- *   The instantiated connection object.
  */
 abstract class FileTransfer {
 
@@ -54,6 +47,20 @@ abstract class FileTransfer {
    * @var string
    */
   protected $jail;
+
+  /**
+   * Path to connection chroot.
+   *
+   * @var string|false|null
+   */
+  private $chrootPath;
+
+  /**
+   * The instantiated connection object.
+   *
+   * @var object|false|null
+   */
+  private $connectionHandle;
 
   /**
    * Constructs a Drupal\Core\FileTransfer\FileTransfer object.
@@ -107,12 +114,12 @@ abstract class FileTransfer {
   public function __get($name) {
     if ($name == 'connection') {
       $this->connect();
-      return $this->connection;
+      return $this->connectionHandle;
     }
 
     if ($name == 'chroot') {
       $this->setChroot();
-      return $this->chroot;
+      return $this->chrootPath;
     }
   }
 
@@ -121,10 +128,10 @@ abstract class FileTransfer {
    */
   public function __set(string $name, $value): void {
     if ($name == 'connection') {
-      $this->connection = $value;
+      $this->connectionHandle = $value;
     }
     elseif ($name == 'chroot') {
-      $this->chroot = $value;
+      $this->chrootPath = $value;
     }
   }
 
@@ -133,10 +140,10 @@ abstract class FileTransfer {
    */
   public function __isset(string $name): bool {
     if ($name == 'connection') {
-      return isset($this->connection);
+      return isset($this->connectionHandle);
     }
     if ($name == 'chroot') {
-      return isset($this->chroot);
+      return isset($this->chrootPath);
     }
     return FALSE;
   }
@@ -146,10 +153,10 @@ abstract class FileTransfer {
    */
   public function __unset(string $name): void {
     if ($name == 'connection') {
-      unset($this->connection);
+      unset($this->connectionHandle);
     }
     elseif ($name == 'chroot') {
-      unset($this->chroot);
+      unset($this->chrootPath);
     }
   }
 
@@ -286,8 +293,8 @@ abstract class FileTransfer {
     // Strip out windows drive letter if its there.
     $path = preg_replace('|^([a-z]{1}):|i', '', $path);
     if ($strip_chroot) {
-      if ($this->chroot && str_starts_with($path, $this->chroot)) {
-        $path = ($path == $this->chroot) ? '' : substr($path, strlen($this->chroot));
+      if ($this->chrootPath && str_starts_with($path, $this->chrootPath)) {
+        $path = ($path == $this->chrootPath) ? '' : substr($path, strlen($this->chrootPath));
       }
     }
     return $path;
