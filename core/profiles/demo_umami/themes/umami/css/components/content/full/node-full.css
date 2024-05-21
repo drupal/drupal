@@ -3,7 +3,7 @@
  * This file is used to style the 'full' view mode.
  */
 .node--view-mode-full {
-  margin: 0 auto 2.37rem;
+  margin: 0 auto;
   padding: 1.266rem;
   border-top: 1px solid #fcece7;
   border-right: none;
