@@ -183,7 +183,3 @@ $browserTestOutputDirectory = getenv('BROWSERTEST_OUTPUT_DIRECTORY');
 if ($browserTestOutputDirectory !== FALSE) {
   HtmlOutputLogger::init($browserTestOutputDirectory, (bool) getenv('BROWSERTEST_OUTPUT_VERBOSE') ?? FALSE);
 }
-
-// Drupal expects to be run from its root directory. This ensures all test types
-// are consistent.
-chdir(dirname(__DIR__, 2));
