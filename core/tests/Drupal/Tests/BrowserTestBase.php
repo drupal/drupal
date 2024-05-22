@@ -352,7 +352,6 @@ abstract class BrowserTestBase extends TestCase {
     parent::setUp();
 
     $this->setUpAppRoot();
-    chdir($this->root);
 
     // Allow tests to compare MarkupInterface objects via assertEquals().
     $this->registerComparator(new MarkupInterfaceComparator());
