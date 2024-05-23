@@ -6,8 +6,6 @@ use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
-// cspell:ignore yarhar
-
 /**
  * Returns responses for Big Pipe routes.
  */
@@ -109,7 +107,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
         '#type' => 'container',
         '#attributes' => ['id' => 'placeholder-render-array-container'],
         'user_links' => [
-          '#lazy_builder' => [static::class . '::helloOrYarhar', []],
+          '#lazy_builder' => [static::class . '::helloOrHi', []],
           '#create_placeholder' => TRUE,
           '#lazy_builder_preview' => [
             '#attributes' => ['id' => 'render-array-preview'],
@@ -154,13 +152,13 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; says "hello" or "yarhar".
+   * #lazy_builder callback; says "hello" or "hi".
    *
    * @return array
    */
-  public static function helloOrYarhar() {
+  public static function helloOrHi() {
     return [
-      '#markup' => BigPipeMarkup::create('<marquee>Yarhar llamas forever!</marquee>'),
+      '#markup' => BigPipeMarkup::create('<marquee>llamas forever!</marquee>'),
       '#cache' => [
         'max-age' => 0,
         'tags' => ['cache_tag_set_in_lazy_builder'],
@@ -219,7 +217,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['currentTime', 'piggy', 'helloOrYarhar', 'exception', 'responseException', 'counter'];
+    return ['currentTime', 'piggy', 'helloOrHi', 'exception', 'responseException', 'counter'];
   }
 
 }
