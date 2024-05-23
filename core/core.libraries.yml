@@ -392,7 +392,8 @@ drupal.ajax:
       deprecation_link: https://www.drupal.org/node/3432346
       css:
         component:
-          css/components/ajax-progress.module.css: misc/components/ajax-progress.module.css
+          css/components/ajax-progress.module.css:
+            component: misc/components/ajax-progress.module.css
 
   drupalSettings:
     # These placeholder values will be set by system_js_settings_alter().
@@ -482,7 +483,8 @@ drupal.autocomplete:
       deprecation_link: https://www.drupal.org/node/3432346
       css:
         component:
-          css/components/autocomplete-loading.module.css: misc/components/autocomplete-loading.module.css
+          css/components/autocomplete-loading.module.css:
+            component: misc/components/autocomplete-loading.module.css
   dependencies:
     - core/jquery
     - core/internal.jquery_ui
@@ -691,7 +693,8 @@ drupal.progress:
       deprecation_link: https://www.drupal.org/node/3432346
       css:
         component:
-          css/components/progress.module.css: misc/components/progress.module.css
+          css/components/progress.module.css:
+            component: misc/components/progress.module.css
   dependencies:
     - core/drupal
     - core/jquery
@@ -736,8 +739,10 @@ drupal.tabledrag:
       deprecation_link: https://www.drupal.org/node/3432346
       css:
         component:
-          css/components/tabledrag.module.css: misc/components/tabledrag.module.css
-          css/components/tree-child.module.css: misc/components/tree-child.module.css
+          css/components/tabledrag.module.css:
+            component: misc/components/tabledrag.module.css
+          css/components/tree-child.module.css:
+            component: misc/components/tree-child.module.css
   dependencies:
     - core/jquery
     - core/drupal
