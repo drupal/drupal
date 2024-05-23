@@ -16,40 +16,24 @@ use Psr\Http\Client\ClientExceptionInterface;
 class ResourceFetcher implements ResourceFetcherInterface {
 
   /**
-   * The HTTP client.
-   *
-   * @var \GuzzleHttp\Client
-   */
-  protected $httpClient;
-
-  /**
-   * The oEmbed provider repository service.
-   *
-   * @var \Drupal\media\OEmbed\ProviderRepositoryInterface
-   */
-  protected $providers;
-
-  /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Constructs a ResourceFetcher object.
    *
-   * @param \GuzzleHttp\ClientInterface $http_client
+   * @param \GuzzleHttp\ClientInterface $httpClient
    *   The HTTP client.
    * @param \Drupal\media\OEmbed\ProviderRepositoryInterface $providers
    *   The oEmbed provider repository service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   The cache backend.
+   * @param int $timeout
+   *   The length of time to wait for the request before the request
+   *   should time out.
    */
-  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend) {
-    $this->httpClient = $http_client;
-    $this->providers = $providers;
-    $this->cacheBackend = $cache_backend;
+  public function __construct(
+    protected ClientInterface $httpClient,
+    protected ProviderRepositoryInterface $providers,
+    protected CacheBackendInterface $cacheBackend,
+    protected int $timeout = 5,
+  ) {
   }
 
   /**
@@ -65,7 +49,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
 
     try {
       $response = $this->httpClient->request('GET', $url, [
-        RequestOptions::TIMEOUT => 5,
+        RequestOptions::TIMEOUT => $this->timeout,
       ]);
     }
     catch (ClientExceptionInterface $e) {
