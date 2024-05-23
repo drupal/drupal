@@ -234,7 +234,9 @@ views_ui:
       removed_version: 11.0.0
       deprecation_link: https://www.drupal.org/node/3432346
       css:
-        component: 'css/components/views-ui.css'
+        component:
+          css/components/views-ui.css:
+            component: css/components/views-ui.css
 
 messages:
   js:
