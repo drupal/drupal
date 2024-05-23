@@ -154,28 +154,8 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     // Reindex the node when it is updated. The node is automatically indexed
     // when it is added, simply by being added to the node table.
     if ($update) {
-      $this->nodeSearchRemoveDeletedTranslations();
       node_reindex_node_search($this->id());
     }
-  }
-
-  /**
-   * Remove deleted translations from the search index.
-   *
-   * @return bool
-   *   TRUE if a translation was removed, FALSE otherwise.
-   */
-  private function nodeSearchRemoveDeletedTranslations(): bool {
-    $removed = FALSE;
-    if (\Drupal::moduleHandler()->moduleExists('search')) {
-      foreach ($this->translations as $langcode => $translation) {
-        if ($translation['status'] === static::TRANSLATION_REMOVED) {
-          \Drupal::service('search.index')->clear('node_search', $this->id(), $langcode);
-          $removed = TRUE;
-        }
-      }
-    }
-    return $removed;
   }
 
   /**
