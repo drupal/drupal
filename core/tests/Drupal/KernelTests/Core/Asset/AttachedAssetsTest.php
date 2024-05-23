@@ -8,8 +8,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\KernelTests\KernelTestBase;
 
-// cspell:ignore yarhar
-
 /**
  * Tests #attached assets: attached asset libraries and JavaScript settings.
  *
@@ -200,7 +198,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $build = [];
     $build['#attached']['library'][] = 'core/drupalSettings';
     // Nonsensical value to verify if it's possible to override path settings.
-    $build['#attached']['drupalSettings']['path']['pathPrefix'] = 'yarhar';
+    $build['#attached']['drupalSettings']['path']['pathPrefix'] = 'does_not_exist';
     $assets = AttachedAssets::createFromRenderArray($build);
 
     $js = $this->assetResolver->getJsAssets($assets, FALSE, \Drupal::languageManager()->getCurrentLanguage())[1];
@@ -220,7 +218,7 @@ class AttachedAssetsTest extends KernelTestBase {
 
     // Test whether the settings for core/drupalSettings are available.
     $this->assertTrue(isset($parsed_settings['path']['baseUrl']), 'drupalSettings.path.baseUrl is present.');
-    $this->assertSame('yarhar', $parsed_settings['path']['pathPrefix'], 'drupalSettings.path.pathPrefix is present and has the correct (overridden) value.');
+    $this->assertSame('does_not_exist', $parsed_settings['path']['pathPrefix'], 'drupalSettings.path.pathPrefix is present and has the correct (overridden) value.');
     $this->assertSame('', $parsed_settings['path']['currentPath'], 'drupalSettings.path.currentPath is present and has the correct value.');
     $this->assertFalse($parsed_settings['path']['currentPathIsAdmin'], 'drupalSettings.path.currentPathIsAdmin is present and has the correct value.');
     $this->assertFalse($parsed_settings['path']['isFront'], 'drupalSettings.path.isFront is present and has the correct value.');
