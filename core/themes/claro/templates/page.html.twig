@@ -39,24 +39,26 @@
  * @see html.html.twig
  */
 #}
-  <header class="content-header clearfix">
+  <main>
+    <div class="visually-hidden"><a id="main-content" tabindex="-1"></a></div>
+    <header class="content-header clearfix">
+      <div class="layout-container">
+        {{ page.breadcrumb }}
+        {{ page.header }}
+      </div>
+    </header>
+
     <div class="layout-container">
-      {{ page.breadcrumb }}
-      {{ page.header }}
+      {{ page.pre_content }}
+      <div class="page-content clearfix">
+        {{ page.highlighted }}
+        {% if page.help %}
+          <div class="help">
+            {{ page.help }}
+          </div>
+        {% endif %}
+        {{ page.content }}
+      </div>
+
     </div>
-  </header>
-
-  <div class="layout-container">
-    {{ page.pre_content }}
-    <main class="page-content clearfix" role="main">
-      <div class="visually-hidden"><a id="main-content" tabindex="-1"></a></div>
-      {{ page.highlighted }}
-      {% if page.help %}
-        <div class="help">
-          {{ page.help }}
-        </div>
-      {% endif %}
-      {{ page.content }}
-    </main>
-
-  </div>
+  </main>
