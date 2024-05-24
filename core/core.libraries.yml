@@ -715,15 +715,20 @@ drupal.tabledrag.ajax:
 
 drupal.tableheader:
   version: VERSION
-  js:
-    misc/tableheader.js: {}
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupalSettings
-    - core/once
-    - core/drupal.displace
-
+  css:
+    component:
+      misc/components/sticky-header.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3440477
+      css:
+        component:
+          css/components/sticky-header.module.css: misc/components/sticky-header.module.css
+      js:
+        misc/tableheader.js: false
+        
 drupal.tableresponsive:
   version: VERSION
   js:

@@ -295,11 +295,6 @@ function claro_element_info_alter(&$type) {
   if (isset($type['status_messages'])) {
     $type['status_messages']['#pre_render'][] = [ClaroPreRender::class, 'messagePlaceholder'];
   }
-
-  // Add a pre-render to tables to use CSS for sticky positioning.
-  if (isset($type['table'])) {
-    $type['table']['#pre_render'][] = [ClaroPreRender::class, 'tablePositionSticky'];
-  }
 }
 
 /**
