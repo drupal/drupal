@@ -106,6 +106,7 @@
     mask-repeat: no-repeat;
     mask-position: center center;
     mask-size: 100% auto;
+    -webkit-mask-image: var(--icon);
     mask-image: var(--icon);
   }
 
@@ -284,6 +285,19 @@
 
 .toolbar-button--icon--user {
   --icon: url(../../assets/icons/user.svg);
+}
+
+.toolbar-button--icon--announcements-feed-announcement {
+  --icon: url(../../assets/icons/announcement.svg);
+  &::before {
+    transform: scaleX(-1);
+  }
+
+  [dir="rtl"] & {
+    &::before {
+      transform: scaleX(1);
+    }
+  }
 }
 
 html:not([data-admin-toolbar="expanded"]) {
