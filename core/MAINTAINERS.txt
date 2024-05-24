@@ -396,6 +396,9 @@ Theme API
 - Joël Pittet 'joelpittet' https://www.drupal.org/u/joelpittet
 - Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
 
+  Single-Directory Components
+  - Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
+
 Token
 - ?
 
