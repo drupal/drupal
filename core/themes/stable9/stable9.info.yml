@@ -96,6 +96,11 @@ libraries-override:
         misc/components/tabledrag.module.css: css/core/components/tabledrag.module.css
         misc/components/tree-child.module.css: css/core/components/tree-child.module.css
 
+  core/drupal.tableheader:
+    css:
+      component:
+        misc/components/sticky-header.module.css: css/core/components/sticky-header.module.css
+
   core/drupal.vertical-tabs:
     css:
       component:
@@ -243,7 +248,6 @@ libraries-override:
         css/components/position-container.module.css: css/system/components/position-container.module.css
         css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
         css/components/resize.module.css: css/system/components/resize.module.css
-        css/components/sticky-header.module.css: css/system/components/sticky-header.module.css
         css/components/system-status-counter.css: css/system/components/system-status-counter.css
         css/components/system-status-report-counters.css: css/system/components/system-status-report-counters.css
         css/components/system-status-report-general-info.css: css/system/components/system-status-report-general-info.css
