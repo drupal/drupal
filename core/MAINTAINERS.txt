@@ -410,6 +410,7 @@ Theme API
 
   Single-Directory Components
   - Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
+  - Pierre Dureau 'pdureau' https://www.drupal.org/u/pdureau
 
 Token
 - ?
