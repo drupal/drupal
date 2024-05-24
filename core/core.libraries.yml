@@ -380,15 +380,6 @@ drupal.ajax:
   css:
     component:
       misc/components/ajax-progress.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 10.3.0
-      removed_version: 11.0.0
-      deprecation_link: https://www.drupal.org/node/3432346
-      css:
-        component:
-          css/components/ajax-progress.module.css:
-            component: misc/components/ajax-progress.module.css
 
   drupalSettings:
     # These placeholder values will be set by system_js_settings_alter().
@@ -471,15 +462,7 @@ drupal.autocomplete:
       assets/vendor/jquery.ui/themes/base/autocomplete.css: { weight: -11.7 }
       assets/vendor/jquery.ui/themes/base/menu.css: { weight: -11.7 }
       misc/components/autocomplete-loading.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 10.3.0
-      removed_version: 11.0.0
-      deprecation_link: https://www.drupal.org/node/3432346
-      css:
-        component:
-          css/components/autocomplete-loading.module.css:
-            component: misc/components/autocomplete-loading.module.css
+
   dependencies:
     - core/jquery
     - core/internal.jquery_ui
@@ -646,15 +629,7 @@ drupal.progress:
   css:
     component:
       misc/components/progress.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 10.3.0
-      removed_version: 11.0.0
-      deprecation_link: https://www.drupal.org/node/3432346
-      css:
-        component:
-          css/components/progress.module.css:
-            component: misc/components/progress.module.css
+
   dependencies:
     - core/drupal
     - core/jquery
@@ -687,17 +662,7 @@ drupal.tabledrag:
     component:
       misc/components/tabledrag.module.css: { weight: -10 }
       misc/components/tree-child.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 10.3.0
-      removed_version: 11.0.0
-      deprecation_link: https://www.drupal.org/node/3432346
-      css:
-        component:
-          css/components/tabledrag.module.css:
-            component: misc/components/tabledrag.module.css
-          css/components/tree-child.module.css:
-            component: misc/components/tree-child.module.css
+
   dependencies:
     - core/jquery
     - core/drupal
@@ -718,17 +683,7 @@ drupal.tableheader:
   css:
     component:
       misc/components/sticky-header.module.css: { weight: -10 }
-  moved_files:
-    system/base:
-      deprecation_version: 10.3.0
-      removed_version: 11.0.0
-      deprecation_link: https://www.drupal.org/node/3440477
-      css:
-        component:
-          css/components/sticky-header.module.css: misc/components/sticky-header.module.css
-      js:
-        misc/tableheader.js: false
-        
+
 drupal.tableresponsive:
   version: VERSION
   js:
