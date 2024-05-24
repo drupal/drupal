@@ -865,7 +865,7 @@ services:
   Drupal\Core\Queue\QueueWorkerManagerInterface: '@plugin.manager.queue_worker'
   plugin.cache_clearer:
     class: Drupal\Core\Plugin\CachedDiscoveryClearer
-    lazy: true
+    autowire: true
   Drupal\Core\Plugin\CachedDiscoveryClearerInterface: '@plugin.cache_clearer'
   paramconverter.menu_link:
     class: Drupal\Core\ParamConverter\MenuLinkPluginConverter

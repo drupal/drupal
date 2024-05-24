@@ -37,12 +37,12 @@ class ProxyServicesPassTest extends UnitTestCase {
    */
   public function testContainerWithoutLazyServices() {
     $container = new ContainerBuilder();
-    $container->register('plugin_cache_clearer', 'Drupal\Core\Plugin\CachedDiscoveryClearer');
+    $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend');
 
     $this->proxyServicesPass->process($container);
 
     $this->assertCount(2, $container->getDefinitions());
-    $this->assertEquals('Drupal\Core\Plugin\CachedDiscoveryClearer', $container->getDefinition('plugin_cache_clearer')->getClass());
+    $this->assertEquals('Drupal\Core\Lock\DatabaseLockBackend', $container->getDefinition('lock')->getClass());
   }
 
   /**
@@ -50,19 +50,19 @@ class ProxyServicesPassTest extends UnitTestCase {
    */
   public function testContainerWithLazyServices() {
     $container = new ContainerBuilder();
-    $container->register('plugin_cache_clearer', 'Drupal\Core\Plugin\CachedDiscoveryClearer')
+    $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend')
       ->setLazy(TRUE);
 
     $this->proxyServicesPass->process($container);
 
     $this->assertCount(3, $container->getDefinitions());
 
-    $non_proxy_definition = $container->getDefinition('drupal.proxy_original_service.plugin_cache_clearer');
-    $this->assertEquals('Drupal\Core\Plugin\CachedDiscoveryClearer', $non_proxy_definition->getClass());
+    $non_proxy_definition = $container->getDefinition('drupal.proxy_original_service.lock');
+    $this->assertEquals('Drupal\Core\Lock\DatabaseLockBackend', $non_proxy_definition->getClass());
     $this->assertFalse($non_proxy_definition->isLazy());
     $this->assertTrue($non_proxy_definition->isPublic());
 
-    $this->assertEquals('Drupal\Core\ProxyClass\Plugin\CachedDiscoveryClearer', $container->getDefinition('plugin_cache_clearer')->getClass());
+    $this->assertEquals('Drupal\Core\ProxyClass\Lock\DatabaseLockBackend', $container->getDefinition('lock')->getClass());
   }
 
   /**
