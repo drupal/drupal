@@ -10,6 +10,29 @@ use PHPUnit\Util\Test;
 
 /**
  * Base class for tests of Migrate source plugins.
+ *
+ * Implementing classes must declare a providerSource() method for this class
+ * to work, defined as follows:
+ *
+ * @code
+ * abstract public static function providerSource(): array;
+ * @endcode
+ *
+ * The returned array should be as follows:
+ *
+ * @code
+ *    Array of data sets to test, each of which is a numerically indexed array
+ *    with the following elements:
+ *    - An array of source data, which can be optionally processed and set up
+ *      by subclasses.
+ *    - An array of expected result rows.
+ *    - (optional) The number of result rows the plugin under test is expected
+ *      to return. If this is not a numeric value, the plugin will not be
+ *      counted.
+ *    - (optional) Array of configuration options for the plugin under test.
+ * @endcode
+ *
+ * @see \Drupal\Tests\migrate\Kernel\MigrateSourceTestBase::testSource
  */
 abstract class MigrateSourceTestBase extends KernelTestBase {
 
@@ -31,24 +54,6 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    * @var \Drupal\migrate\Plugin\MigrateSourceInterface
    */
   protected $plugin;
-
-  /**
-   * The data provider.
-   *
-   * @see \Drupal\Tests\migrate\Kernel\MigrateSourceTestBase::testSource
-   *
-   * @return array
-   *   Array of data sets to test, each of which is a numerically indexed array
-   *   with the following elements:
-   *   - An array of source data, which can be optionally processed and set up
-   *     by subclasses.
-   *   - An array of expected result rows.
-   *   - (optional) The number of result rows the plugin under test is expected
-   *     to return. If this is not a numeric value, the plugin will not be
-   *     counted.
-   *   - (optional) Array of configuration options for the plugin under test.
-   */
-  abstract public function providerSource();
 
   /**
    * {@inheritdoc}
