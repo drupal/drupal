@@ -330,7 +330,7 @@ default:
     KUBERNETES_CPU_REQUEST: "16"
   script:
     - vendor/bin/phpcs --version
-    - composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+    - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     reports:
       codequality: phpcs-quality-report.json
