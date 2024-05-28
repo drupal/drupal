@@ -165,7 +165,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
     // entities do not have "real" fields and therefore do not have field access
     // restrictions.
     if ($field instanceof FieldItemListInterface) {
-      $field_access_result = $field->access('view', $context['account'], TRUE);
+      $field_access_result = $field->access('view', $context['account'] ?? NULL, TRUE);
       if (!$field_access_result->isAllowed()) {
         return new CacheableOmission(CacheableMetadata::createFromObject($field_access_result));
       }
