@@ -353,6 +353,7 @@ function system_requirements($phase) {
     'SPL',
     'tokenizer',
     'xml',
+    'zlib',
   ];
   foreach ($required_extensions as $extension) {
     if (!extension_loaded($extension)) {
