@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Cache;
 
+use Drupal\Core\Cache\Cache;
+
 /**
  * Tests our clearing is done the proper way.
  *
  * @group Cache
  */
-use Drupal\Core\Cache\Cache;
-
 class ClearTest extends CacheTestBase {
 
   /**
