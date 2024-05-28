@@ -8,7 +8,7 @@ use Drupal\Component\Annotation\PluginID;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Annotation\PluginId
+ * @coversDefaultClass \Drupal\Component\Annotation\PluginID
  * @group Annotation
  */
 class PluginIdTest extends TestCase {
