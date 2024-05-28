@@ -648,11 +648,13 @@ services:
   Drupal\Core\Extension\ModuleHandlerInterface: '@module_handler'
   module_installer:
     class: Drupal\Core\Extension\ModuleInstaller
-    tags:
-      - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['%app.root%', '@module_handler', '@kernel', '@database', '@update.update_hook_registry', '@logger.channel.default']
+    autowire: true
     lazy: true
   Drupal\Core\Extension\ModuleInstallerInterface: '@module_installer'
+  module_installer.uninstall_validators:
+    class: \IteratorIterator
+    arguments: [!tagged_iterator module_install.uninstall_validator]
+    deprecated: The "%service_id%" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject "!tagged_iterator module_install.uninstall_validator" instead. See https://www.drupal.org/node/3432595
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
     arguments: ['%app.root%', 'module', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.profile', '%install_profile%', '%container.modules%']
@@ -679,34 +681,19 @@ services:
   Drupal\Core\Extension\ExtensionPathResolver: '@extension.path.resolver'
   content_uninstall_validator:
     class: Drupal\Core\Entity\ContentUninstallValidator
-    tags:
-      - { name: module_install.uninstall_validator }
     arguments: ['@entity_type.manager', '@string_translation']
-    lazy: true
   required_module_uninstall_validator:
     class: Drupal\Core\Extension\RequiredModuleUninstallValidator
-    tags:
-      - { name: module_install.uninstall_validator }
     arguments: ['@string_translation', '@extension.list.module']
-    lazy: true
   module_required_by_themes_uninstall_validator:
     class: Drupal\Core\Extension\ModuleRequiredByThemesUninstallValidator
-    tags:
-      - { name: module_install.uninstall_validator }
     arguments: ['@string_translation', '@extension.list.module', '@extension.list.theme']
-    lazy: true
   database_driver_uninstall_validator:
     class: Drupal\Core\Extension\DatabaseDriverUninstallValidator
-    tags:
-      - { name: module_install.uninstall_validator }
     arguments: ['@string_translation', '@extension.list.module', '@database']
-    lazy: true
   install_profile_uninstall_validator:
     class: Drupal\Core\Extension\InstallProfileUninstallValidator
-    tags:
-      - { name: module_install.uninstall_validator }
     arguments: ['@string_translation', '@extension.list.module', '@extension.list.theme', '%install_profile%', '%app.root%', '%site.path%']
-    lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
     arguments: ['%app.root%', '@config.factory', '@extension.list.theme']
@@ -1415,9 +1402,7 @@ services:
     class: Drupal\Core\EventSubscriber\RedirectLeadingSlashesSubscriber
   config_import_subscriber:
     class: Drupal\Core\EventSubscriber\ConfigImportSubscriber
-    tags:
-      - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['@extension.list.theme', '@extension.list.module']
+    autowire: true
   config_snapshot_subscriber:
     class: Drupal\Core\EventSubscriber\ConfigSnapshotSubscriber
     arguments: ['@config.manager', '@config.storage', '@config.storage.snapshot']

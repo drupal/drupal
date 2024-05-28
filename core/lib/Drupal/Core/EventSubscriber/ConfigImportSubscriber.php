@@ -9,9 +9,9 @@ use Drupal\Core\Config\ConfigImportValidateEventSubscriberBase;
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Extension\ConfigImportModuleUninstallValidatorInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
-use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Installer\InstallerKernel;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**
  * Config import subscriber for config import events.
@@ -40,33 +40,23 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
   protected ThemeExtensionList $themeList;
 
   /**
-   * The uninstall validators.
-   *
-   * @var \Drupal\Core\Extension\ModuleUninstallValidatorInterface[]
-   */
-  protected $uninstallValidators = [];
-
-  /**
    * Constructs the ConfigImportSubscriber.
    *
    * @param \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list
    *   The theme extension list.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The module extension list.
+   * @param \Traversable $uninstallValidators
+   *   The uninstall validator services.
    */
-  public function __construct(ThemeExtensionList $theme_extension_list, ModuleExtensionList $extension_list_module) {
+  public function __construct(
+    ThemeExtensionList $theme_extension_list,
+    ModuleExtensionList $extension_list_module,
+    #[AutowireIterator(tag: 'module_install.uninstall_validator')]
+    protected \Traversable $uninstallValidators,
+  ) {
     $this->themeList = $theme_extension_list;
     $this->moduleExtensionList = $extension_list_module;
-  }
-
-  /**
-   * Adds a module uninstall validator.
-   *
-   * @param \Drupal\Core\Extension\ModuleUninstallValidatorInterface $uninstall_validator
-   *   The uninstall validator to add.
-   */
-  public function addUninstallValidator(ModuleUninstallValidatorInterface $uninstall_validator): void {
-    $this->uninstallValidators[] = $uninstall_validator;
   }
 
   /**

@@ -7,6 +7,8 @@ namespace Drupal\KernelTests\Core\Extension;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
+use Drupal\Core\Extension\ModuleInstaller;
+use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -159,6 +161,29 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->expectDeprecation("The module 'deprecated_module' is deprecated. See http://example.com/deprecated");
     \Drupal::service('module_installer')->install(['deprecated_module']);
     $this->assertTrue(\Drupal::service('module_handler')->moduleExists('deprecated_module'));
+  }
+
+  /**
+   * Tests the BC layer for uninstall validators.
+   *
+   * @covers ::__construct
+   * @covers ::addUninstallValidator
+   *
+   * @group legacy
+   */
+  public function testUninstallValidatorsBC() {
+    $this->expectDeprecation('The "module_installer.uninstall_validators" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject "!tagged_iterator module_install.uninstall_validator" instead. See https://www.drupal.org/node/3432595');
+    $module_installer = new ModuleInstaller(
+      $this->container->getParameter('app.root'),
+      $this->container->get('module_handler'),
+      $this->container->get('kernel'),
+      $this->container->get('database'),
+      $this->container->get('update.update_hook_registry'),
+      $this->container->get('logger.channel.default'),
+    );
+
+    $this->expectDeprecation('Drupal\Core\Extension\ModuleInstaller::addUninstallValidator is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject the uninstall validators into the constructor instead. See https://www.drupal.org/node/3432595');
+    $module_installer->addUninstallValidator($this->createMock(ModuleUninstallValidatorInterface::class));
   }
 
 }

@@ -398,6 +398,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ExtensionVersion.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^The "module_installer\\.uninstall_validators" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0\\. Inject "\\!tagged_iterator module_install\\.uninstall_validator" instead\\. See https\\://www\\.drupal\\.org/node/3432595$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ModuleInstaller.php',
+];
+$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$callback in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
