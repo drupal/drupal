@@ -2,13 +2,23 @@
 
 image_size:
   type: mapping
+  constraints:
+    FullyValidatable: ~
   mapping:
     width:
       type: integer
       label: 'Width'
+      nullable: true
+      constraints:
+        NotBlank:
+          allowNull: true
     height:
       type: integer
       label: 'Height'
+      nullable: true
+      constraints:
+        NotBlank:
+          allowNull: true
 
 field_default_image:
   type: mapping

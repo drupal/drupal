@@ -105,4 +105,19 @@ class ImageToolkitManager extends DefaultPluginManager {
     return $output;
   }
 
+  /**
+   * Returns all valid extensions.
+   *
+   * @return string[]
+   *   All possible valid extensions.
+   *
+   * @see \Drupal\image\Plugin\ImageEffect\ConvertImageEffect::buildConfigurationForm()
+   *
+   * @internal
+   * @todo Revisit in https://www.drupal.org/node/3446364
+   */
+  public static function getAllValidExtensions(): array {
+    return \Drupal::service('image.toolkit.manager')->getDefaultToolkit()->getSupportedExtensions();
+  }
+
 }

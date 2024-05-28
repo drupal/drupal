@@ -3,6 +3,8 @@
 image.style.*:
   type: config_entity
   label: 'Image style'
+  constraints:
+    FullyValidatable: ~
   mapping:
     name:
       type: machine_name
@@ -46,6 +48,9 @@ image.effect.image_convert:
     extension:
       label: 'Extension'
       type: string
+      constraints:
+        Choice:
+          callback: 'Drupal\Core\ImageToolkit\ImageToolkitManager::getAllValidExtensions'
 
 image.effect.image_resize:
   type: image_size

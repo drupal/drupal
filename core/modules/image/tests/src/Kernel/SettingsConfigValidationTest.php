@@ -15,7 +15,7 @@ class SettingsConfigValidationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['image'];
+  protected static $modules = ['image', 'system'];
 
   /**
    * Tests that the preview_image setting must be an existing image file.

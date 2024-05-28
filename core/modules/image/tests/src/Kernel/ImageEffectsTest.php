@@ -229,7 +229,7 @@ class ImageEffectsTest extends KernelTestBase {
       'name' => 'foo',
       'label' => 'Foo',
     ]);
-    $effect_id = $image_style->addImageEffect(['id' => 'image_scale']);
+    $effect_id = $image_style->addImageEffect(['id' => 'image_scale', 'weight' => 0]);
     $image_style->save();
 
     $form = new ImageEffectEditForm();
