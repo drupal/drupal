@@ -88,9 +88,9 @@
 }
 
 [data-admin-toolbar="collapsed"] [data-toolbar-popover-wrapper] {
-  transform: translateX(calc((16 * var(--admin-toolbar-rem) * -1) + var(--drupal-displace-offset-left)));
+  transform: translateX(calc((16 * var(--admin-toolbar-rem) * -1) + var(--drupal-displace-offset-left, var(--admin-toolbar-space-72))));
 
   [dir="rtl"] & {
-    transform: translateX(calc((16 * var(--admin-toolbar-rem)) + var(--drupal-displace-offset-right)));
+    transform: translateX(calc((16 * var(--admin-toolbar-rem)) + var(--drupal-displace-offset-right, var(--admin-toolbar-space-72))));
   }
 }
