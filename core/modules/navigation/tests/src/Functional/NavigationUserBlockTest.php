@@ -48,7 +48,6 @@ class NavigationUserBlockTest extends PageCacheTagsTestBase {
 
     // Create an admin user, log in and enable test navigation blocks.
     $this->adminUser = $this->drupalCreateUser([
-      'administer navigation_block',
       'access administration pages',
       'access navigation',
     ]);

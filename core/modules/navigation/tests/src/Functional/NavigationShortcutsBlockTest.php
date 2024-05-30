@@ -103,7 +103,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
       'access shortcuts',
       'administer site configuration',
       'access administration pages',
-      'configure any layout',
+      'configure navigation layout',
     ]);
 
     // Create two different users with the same role to assert that the second

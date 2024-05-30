@@ -59,11 +59,10 @@ class NavigationBlockUiTest extends WebDriverTestBase {
     $this->drupalPlaceBlock('page_title_block', ['id' => 'title']);
     // Create an administrative user.
     $this->adminUser = $this->drupalCreateUser([
-      'administer navigation_block',
+      'configure navigation layout',
       'access administration pages',
       'access navigation',
       'access shortcuts',
-      'configure any layout',
       'access contextual links',
       'administer shortcuts',
       'administer site configuration',
