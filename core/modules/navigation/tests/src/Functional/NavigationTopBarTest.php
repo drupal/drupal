@@ -51,12 +51,10 @@ class NavigationTopBarTest extends BrowserTestBase {
     parent::setUp();
     // Create and log in an administrative user.
     $this->adminUser = $this->drupalCreateUser([
-      'administer navigation_block',
       'administer site configuration',
       'access administration pages',
       'access navigation',
       'bypass node access',
-      'configure any layout',
     ]);
     $this->drupalLogin($this->adminUser);
 
