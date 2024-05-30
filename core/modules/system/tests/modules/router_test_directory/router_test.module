@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Test module.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Performs an operation that calls the RouteProvider's collection method
+ * during an exception page view. (which is rendered during a subrequest.)
+ *
+ * @see \Drupal\FunctionalTests\Routing\RouteCachingQueryAlteredTest
+ */
+function router_test_preprocess_page(&$variables) {
+  $request = \Drupal::request();
+  if ($request->getPathInfo() === '/router-test/rejects-query-strings') {
+    // Create a URL from the request, e.g. for a breadcrumb or other contextual
+    // information.
+    Url::createFromRequest($request);
+  }
+}

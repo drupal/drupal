@@ -119,6 +119,19 @@ class TestControllers {
   }
 
   /**
+   * Rejects requests with query keys.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The given request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response.
+   */
+  public function rejectsQueryStrings(Request $request) {
+    return new Response('', $request->query->keys() ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK);
+  }
+
+  /**
    * Throws an exception.
    *
    * @param string $message
