@@ -247,3 +247,10 @@ router_test.case_sensitive_duplicate3:
     _controller: '\Drupal\router_test\TestControllers::testRouteName'
   requirements:
     _access: 'TRUE'
+
+router_test.rejects_query_strings:
+  path: '/router-test/rejects-query-strings'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::rejectsQueryStrings'
+  requirements:
+    _access: 'TRUE'
