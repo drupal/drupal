@@ -30,12 +30,15 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @internal The navigation module is experimental.
  */
-#[SectionStorage(id: "navigation", context_definitions: [
-  "navigation" => new ContextDefinition(
-    data_type: "string",
-    label: new TranslatableMarkup("Navigation flag"),
-  ),
-])]
+#[SectionStorage(id: "navigation",
+  context_definitions: [
+    "navigation" => new ContextDefinition(
+      data_type: "string",
+      label: new TranslatableMarkup("Navigation flag"),
+    ),
+  ],
+  handles_permission_check: TRUE,
+)]
 final class NavigationSectionStorage extends PluginBase implements SectionStorageInterface, SectionStorageLocalTaskProviderInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface {
 
   const STORAGE_ID = 'navigation.block_layout';
@@ -184,7 +187,7 @@ final class NavigationSectionStorage extends PluginBase implements SectionStorag
    * {@inheritdoc}
    */
   public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE): AccessResultInterface | bool {
-    $result = AccessResult::allowed();
+    $result = AccessResult::allowedIfHasPermission($account, 'configure navigation layout');
     return $return_as_object ? $result : $result->isAllowed();
   }
 
