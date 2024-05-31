@@ -8,6 +8,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\Database;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\views\ViewExecutable;
@@ -549,13 +550,17 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    * Tests if argument overrides by validators are propagated to tokens.
    */
   public function testArgumentValidatorValueOverride() {
+    $account = User::create(['name' => $this->randomString()]);
+    $account->save();
+
     $view = Views::getView('test_argument_dependency');
     $view->setDisplay('page_1');
-    $view->setArguments(['1', 'this value should be replaced']);
+    $view->setArguments([(string) $account->id(), 'this value should be replaced']);
     $view->execute();
+    $account = User::load(1);
     $expected = [
-      '{{ arguments.uid }}' => '1',
-      '{{ raw_arguments.uid }}' => '1',
+      '{{ arguments.uid }}' => $account->label(),
+      '{{ raw_arguments.uid }}' => (string) $account->id(),
     ];
     $this->assertEquals($expected, $view->build_info['substitutions']);
   }

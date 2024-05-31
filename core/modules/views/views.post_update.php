@@ -5,6 +5,10 @@
  * Post update functions for Views.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\views\ViewEntityInterface;
+use Drupal\views\ViewsConfigUpdater;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -47,4 +51,16 @@ function views_removed_post_updates() {
     'views_post_update_pager_heading' => '11.0.0',
     'views_post_update_rendered_entity_field_cache_metadata' => '11.0.0',
   ];
+}
+
+/**
+ * Post update configured views for entity reference argument plugin IDs.
+ */
+function views_post_update_views_data_argument_plugin_id(?array &$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  $view_config_updater->setDeprecationsEnabled(FALSE);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
+    return $view_config_updater->needsEntityArgumentUpdate($view);
+  });
 }
