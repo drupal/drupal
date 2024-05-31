@@ -10,7 +10,9 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Update\UpdateKernel;
 use Drupal\Core\Utility\ThemeRegistry;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Defines the theme registry service.
@@ -178,10 +180,12 @@ class Registry implements DestructableInterface {
    *   The cache backend interface to use for the runtime theme registry data.
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_list
    *   The module list.
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
+   *   The kernel.
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, $theme_name = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected HttpKernelInterface $kernel, $theme_name = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -252,11 +256,30 @@ class Registry implements DestructableInterface {
         return $cached;
       }
     }
-    $this->build();
-    // Only persist it if all modules are loaded to ensure it is complete.
-    if ($this->moduleHandler->isLoaded()) {
-      $this->setCache();
+
+    // Some theme hook implementations such as the one in Views request a lot of
+    // information such as field schemas. These might be broken until an update
+    // is run, so we need to build a limited registry while on update.php.
+    if ($this->kernel instanceof UpdateKernel) {
+      $module_list = $this->moduleHandler->getModuleList();
+      $filter_list = array_intersect_key($module_list, ['system' => TRUE]);
+
+      // Call ::build() with only the system module and then revert.
+      $this->moduleHandler->setModuleList($filter_list);
+      $this->build();
+      $this->moduleHandler->setModuleList($module_list);
+
+      // We might have poisoned the cache with only info from 'system'.
+      $this->cache->delete("theme_registry:build:modules");
     }
+    else {
+      $this->build();
+      // Only persist it if all modules are loaded to ensure it is complete.
+      if ($this->moduleHandler->isLoaded()) {
+        $this->setCache();
+      }
+    }
+
     return $this->registry[$this->theme->getName()];
   }
 

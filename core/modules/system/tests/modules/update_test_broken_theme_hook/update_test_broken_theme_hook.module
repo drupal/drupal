@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for the update_test_broken_theme_hook module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function update_test_broken_theme_hook_theme($existing, $type, $theme, $path) {
+  throw new \Exception('This mimics an exception caused by unstable dependencies.');
+}
