@@ -2340,6 +2340,42 @@ class UserEditTestCase extends DrupalWebTestCase {
     $this->drupalLogin($user1);
     $this->drupalLogout();
   }
+
+  /**
+   * Tests that the user can edit the account when another user with the same
+   * e-mail address exists.
+   */
+  public function testUserEditDuplicateEmail() {
+    // Create two regular users.
+    $user1 = $this->drupalCreateUser(array('change own username'));
+    $user2 = $this->drupalCreateUser(array('change own username'));
+
+    // Change the e-mail address of the user2 to have the same e-mail address
+    // as the user1.
+    db_update('users')
+      ->fields(array('mail' => $user1->mail))
+      ->condition('uid', $user2->uid)
+      ->execute();
+
+    $this->drupalLogin($user2);
+    $edit['name'] = $user2->name;
+    $this->drupalPost("user/" . $user2->uid . "/edit", $edit, t('Save'));
+    $this->assertRaw(t("The changes have been saved."));
+    $this->drupalLogout();
+
+    // Change the e-mail address of the user2 to have the same e-mail address
+    // as the user1, except that the first letter will be uppercase.
+    db_update('users')
+      ->fields(array('mail' => ucfirst($user1->mail)))
+      ->condition('uid', $user2->uid)
+      ->execute();
+
+    $this->drupalLogin($user2);
+    $edit['name'] = $user2->name;
+    $this->drupalPost("user/" . $user2->uid . "/edit", $edit, t('Save'));
+    $this->assertRaw(t("The changes have been saved."));
+    $this->drupalLogout();
+  }
 }
 
 /**
