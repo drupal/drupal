@@ -560,23 +560,22 @@ abstract class DrupalTestCase {
           'function' => $class . '->' . $method . '()',
         );
         $completion_check_id = DrupalTestCase::insertAssert($this->testId, $class, FALSE, t('The test did not complete due to a fatal error.'), 'Completion check', $caller);
-        $this->setUp();
-        if ($this->setup) {
-          try {
+        try {
+          $this->setUp();
+          if ($this->setup) {
             $this->$method();
-            // Finish up.
+            $this->tearDown();
           }
-          catch (Throwable $e) {
-            $this->exceptionHandler($e);
+          else {
+            $this->fail(t("The test cannot be executed because it has not been set up properly."));
           }
-          catch (Exception $e) {
-            // Cater for older PHP versions.
-            $this->exceptionHandler($e);
-          }
-          $this->tearDown();
         }
-        else {
-          $this->fail(t("The test cannot be executed because it has not been set up properly."));
+        catch (Throwable $e) {
+          $this->exceptionHandler($e);
+        }
+        catch (Exception $e) {
+          // Cater for older PHP versions.
+          $this->exceptionHandler($e);
         }
         // Remove the completion check record.
         DrupalTestCase::deleteAssert($completion_check_id);
