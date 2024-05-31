@@ -21,7 +21,7 @@ display:
           field: uid
           id: uid
           table: node_field_data
-          plugin_id: numeric
+          plugin_id: entity_target_id
           entity_type: node
           entity_field: uid
       cache:
