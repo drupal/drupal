@@ -5,7 +5,6 @@ namespace Drupal\system\Theme;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Theme\ThemeNegotiatorInterface;
 
 /**
@@ -51,7 +50,8 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    return Settings::get('maintenance_theme') ?: 'claro';
+    // The update page always uses Claro to ensure stability.
+    return 'claro';
   }
 
 }

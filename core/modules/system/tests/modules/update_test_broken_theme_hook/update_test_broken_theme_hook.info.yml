@@ -1,0 +1,5 @@
+name: 'Update test with broken theme hook'
+type: module
+description: 'Support module for update testing.'
+package: Testing
+version: VERSION
