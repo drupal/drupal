@@ -153,6 +153,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processDefaultPagerHeadingUpdate($handler, $handler_type)) {
         $changed = TRUE;
       }
+      if ($this->processEntityArgumentUpdate($view)) {
+        $changed = TRUE;
+      }
       if ($this->addLabelIfMissing($view)) {
         $changed = TRUE;
       }
@@ -545,6 +548,72 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       $view->set('display', $displays);
       $changed = TRUE;
     }
+    return $changed;
+  }
+
+  /**
+   * Checks if 'numeric' arguments should be converted to 'entity_target_id'.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if the view has any arguments that reference an entity reference
+   *   that need to be converted from 'numeric' to 'entity_target_id'.
+   */
+  public function needsEntityArgumentUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processEntityArgumentUpdate($view);
+    });
+  }
+
+  /**
+   * Processes arguments and convert 'numeric' to 'entity_target_id' if needed.
+   *
+   * Note that since this update will trigger deprecations if called by
+   * views_view_presave(), we cannot rely on the usual handler-specific checking
+   * and processing. That would still hit views_view_presave(), even when
+   * invoked from post_update. We must directly update the view here, so that
+   * it's already correct by the time views_view_presave() sees it.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View being updated.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function processEntityArgumentUpdate(ViewEntityInterface $view): bool {
+    $changed = FALSE;
+
+    $displays = $view->get('display');
+    foreach ($displays as &$display) {
+      if (isset($display['display_options']['arguments'])) {
+        foreach ($display['display_options']['arguments'] as $argument_id => $argument) {
+          $plugin_id = $argument['plugin_id'] ?? '';
+          if ($plugin_id === 'numeric') {
+            $argument_table_data = $this->viewsData->get($argument['table']);
+            $argument_definition = $argument_table_data[$argument['field']]['argument'] ?? [];
+            if (isset($argument_definition['id']) && $argument_definition['id'] === 'entity_target_id') {
+              $argument['plugin_id'] = 'entity_target_id';
+              $argument['target_entity_type_id'] = $argument_definition['target_entity_type_id'];
+              $display['display_options']['arguments'][$argument_id] = $argument;
+              $changed = TRUE;
+            }
+          }
+        }
+      }
+    }
+
+    if ($changed) {
+      $view->set('display', $displays);
+    }
+
+    $deprecations_triggered = &$this->triggeredDeprecations['2640994'][$view->id()];
+    if ($this->deprecationsEnabled && $changed && !$deprecations_triggered) {
+      $deprecations_triggered = TRUE;
+      @trigger_error(sprintf('The update to convert "numeric" arguments to "entity_target_id" for entity reference fields for view "%s" is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3441945', $view->id()), E_USER_DEPRECATED);
+    }
+
     return $changed;
   }
 

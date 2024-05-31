@@ -40,6 +40,18 @@ views.argument.numeric:
       type: boolean
       label: 'Exclude'
 
+views.argument.entity_id:
+  type: views.argument.numeric
+  label: 'Entity ID'
+
+views.argument.entity_target_id:
+  type: views.argument.numeric
+  label: 'Entity Target ID'
+  mapping:
+    target_entity_type_id:
+      type: string
+      label: 'Target entity type ID'
+
 views.argument.string:
   type: views_argument
   label: 'String'
