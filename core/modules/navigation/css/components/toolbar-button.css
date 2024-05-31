@@ -85,17 +85,21 @@
 }
 /* Class starts with `toolbar-button--icon`  */
 [class*="toolbar-button--icon"] {
-  --icon: url("data:image/svg+xml,%3csvg width='24' height='24' viewbox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e  %3cpath d='M19.5 3H4.5C4.10218 3 3.72064 3.15804 3.43934 3.43934C3.15804 3.72064 3 4.10218 3 4.5V19.5C3 19.8978 3.15804 20.2794 3.43934 20.5607C3.72064 20.842 4.10218 21 4.5 21H19.5C19.8978 21 20.2794 20.842 20.5607 20.5607C20.842 20.2794 21 19.8978 21 19.5V4.5C21 4.10218 20.842 3.72064 20.5607 3.43934C20.2794 3.15804 19.8978 3 19.5 3ZM4.5 19.5V5.56031L18.4397 19.5H4.5ZM5.56031 4.5H19.5V18.4406L5.56031 4.5Z' fill='currentColor'/%3e%3c/svg%3e"); /* Default icon, aka --basic */
-
   padding-inline: calc(0.75 * var(--admin-toolbar-rem));
 }
 [class*="toolbar-button--icon"]::before {
-  display: block;
+  display: flex;
   flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  content: attr(data-icon-text);
+  color: currentColor;
+  background-image: linear-gradient(currentColor, currentColor 50%, transparent 50%);
+  background-position-y: calc(100% - (100% * var(--icon, 0)));
+  background-size: 100% 200%;
+  font-size: calc(0.75 * var(--admin-toolbar-rem));
   inline-size: var(--admin-toolbar-space-20);
   block-size: var(--admin-toolbar-space-20);
-  content: "";
-  background-color: currentColor;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-position: center center;
@@ -106,7 +110,7 @@
   mask-image: var(--icon);
 }
 [class*="toolbar-button--icon"]:hover::before {
-  background-color: var(--admin-toolbar-color-blue-600);
+  background-color: linear-gradient(var(--admin-toolbar-color-blue-600), var(--admin-toolbar-color-blue-600) 50%, transparent 50%);
 }
 @media (forced-colors: active) {
   [class*="toolbar-button--icon"]::before,

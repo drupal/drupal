@@ -92,17 +92,21 @@
 
 /* Class starts with `toolbar-button--icon`  */
 [class*="toolbar-button--icon"] {
-  --icon: url(../../assets/icons/basic.svg); /* Default icon, aka --basic */
-
   padding-inline: calc(0.75 * var(--admin-toolbar-rem));
 
   &::before {
-    display: block;
+    display: flex;
     flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    content: attr(data-icon-text);
+    color: currentColor;
+    background-image: linear-gradient(currentColor, currentColor 50%, transparent 50%);
+    background-position-y: calc(100% - (100% * var(--icon, 0)));
+    background-size: 100% 200%;
+    font-size: calc(0.75 * var(--admin-toolbar-rem));
     inline-size: var(--admin-toolbar-space-20);
     block-size: var(--admin-toolbar-space-20);
-    content: "";
-    background-color: currentColor;
     mask-repeat: no-repeat;
     mask-position: center center;
     mask-size: 100% auto;
@@ -111,7 +115,7 @@
   }
 
   &:hover::before {
-    background-color: var(--admin-toolbar-color-blue-600);
+    background-color: linear-gradient(var(--admin-toolbar-color-blue-600), var(--admin-toolbar-color-blue-600) 50%, transparent 50%);
   }
 
   @media (--forced-colors) {
