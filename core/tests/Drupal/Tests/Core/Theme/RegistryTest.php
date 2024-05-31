@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\Registry;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Theme\Registry
@@ -79,6 +80,13 @@ class RegistryTest extends UnitTestCase {
   protected $moduleList;
 
   /**
+   * The kernel.
+   *
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $kernel;
+
+  /**
    * The list of functions that get_defined_functions() should provide.
    *
    * @var array
@@ -99,7 +107,8 @@ class RegistryTest extends UnitTestCase {
     $this->runtimeCache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->moduleList = $this->createMock(ModuleExtensionList::class);
-    $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, $this->runtimeCache, $this->moduleList);
+    $this->kernel = $this->createMock(HttpKernelInterface::class);
+    $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, $this->runtimeCache, $this->moduleList, $this->kernel);
     $this->registry->setThemeManager($this->themeManager);
   }
 
