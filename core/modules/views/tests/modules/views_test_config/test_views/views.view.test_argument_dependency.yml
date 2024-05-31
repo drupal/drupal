@@ -212,7 +212,7 @@ display:
           not: false
           entity_type: node
           entity_field: uid
-          plugin_id: numeric
+          plugin_id: entity_target_id
       display_extenders: {  }
   page_1:
     display_plugin: page
