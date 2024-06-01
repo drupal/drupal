@@ -777,6 +777,7 @@ unserializes
 unserializing
 unsets
 unsetting
+unshallow
 unsticky
 untabbable
 upcasted
