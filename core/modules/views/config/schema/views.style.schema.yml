@@ -108,7 +108,7 @@ views.style.table:
       label: 'Override normal sorting if click sorting is used'
     sticky:
       type: boolean
-      label: 'Enable Drupal style "sticky" table headers (JavaScript)'
+      label: 'Enable Drupal style "sticky" table headers'
     summary:
       type: label
       label: 'Summary title'
