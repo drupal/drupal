@@ -25,7 +25,7 @@ class JsonEncoder extends BaseJsonEncoder {
   /**
    * {@inheritdoc}
    */
-  public function __construct(JsonEncode $encodingImpl = NULL, JsonDecode $decodingImpl = NULL) {
+  public function __construct(?JsonEncode $encodingImpl = NULL, ?JsonDecode $decodingImpl = NULL) {
     // Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be
     // embedded into HTML.
     // @see \Symfony\Component\HttpFoundation\JsonResponse

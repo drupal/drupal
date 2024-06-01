@@ -514,7 +514,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see ::testGetIndividual()
    */
-  protected function getExpectedCacheTags(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheTags(?array $sparse_fieldset = NULL) {
     $expected_cache_tags = [
       'http_response',
     ];
@@ -543,7 +543,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see ::testGetIndividual()
    */
-  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     $cache_contexts = [
       // Cache contexts for JSON:API URL query parameters.
       'url.query_args:fields',
@@ -574,7 +574,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return \Drupal\Core\Cache\CacheableMetadata
    *   The expected cacheability for the given entity collection.
    */
-  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, array $sparse_fieldset = NULL, $filtered = FALSE) {
+  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, ?array $sparse_fieldset = NULL, $filtered = FALSE) {
     $cacheability = array_reduce($collection, function (CacheableMetadata $cacheability, EntityInterface $entity) use ($sparse_fieldset, $account) {
       $access_result = static::entityAccess($entity, 'view', $account);
       if (!$access_result->isAllowed()) {
@@ -1271,7 +1271,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getExpectedCollectionResponse(array $collection, $self_link, array $request_options, array $included_paths = NULL, $filtered = FALSE) {
+  protected function getExpectedCollectionResponse(array $collection, $self_link, array $request_options, ?array $included_paths = NULL, $filtered = FALSE) {
     $resource_identifiers = array_map([static::class, 'toResourceIdentifier'], $collection);
     $individual_responses = static::toResourceResponses($this->getResponses(static::getResourceLinks($resource_identifiers), $request_options));
     $merged_response = static::toCollectionResourceResponse($individual_responses, $self_link, TRUE);
@@ -1708,7 +1708,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return \Drupal\jsonapi\CacheableResourceResponse
    *   The expected ResourceResponse.
    */
-  protected function getExpectedGetRelationshipResponse($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipResponse($relationship_field_name, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
     $access = $access->orIf(static::entityFieldAccess($entity, $this->resourceType->getInternalName($relationship_field_name), 'view', $this->account));
@@ -1746,7 +1746,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return array
    *   The expected document array.
    */
-  protected function getExpectedGetRelationshipDocument($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocument($relationship_field_name, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $entity_type_id = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
@@ -1780,7 +1780,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return mixed
    *   The expected document data.
    */
-  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $internal_field_name = $this->resourceType->getInternalName($relationship_field_name);
     /** @var \Drupal\Core\Field\FieldItemListInterface $field */
@@ -1894,7 +1894,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getExpectedRelatedResponses(array $relationship_field_names, array $request_options, EntityInterface $entity = NULL) {
+  protected function getExpectedRelatedResponses(array $relationship_field_names, array $request_options, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     return array_map(function ($relationship_field_name) use ($entity, $request_options) {
       return $this->getExpectedRelatedResponse($relationship_field_name, $request_options, $entity);
@@ -3384,7 +3384,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return array
    *   An array of relationship field names.
    */
-  protected function getRelationshipFieldNames(EntityInterface $entity = NULL) {
+  protected function getRelationshipFieldNames(?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     // Only content entity types can have relationships.
     $fields = $entity instanceof ContentEntityInterface

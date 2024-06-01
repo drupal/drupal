@@ -26,7 +26,7 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
    *
    * @return $this
    */
-  public function setLanguage(LanguageInterface $language = NULL);
+  public function setLanguage(?LanguageInterface $language = NULL);
 
   /**
    * Get language override for given language and configuration name.

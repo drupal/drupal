@@ -91,7 +91,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
   /**
    * {@inheritdoc}
    */
-  public function getSelectionHandler(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
+  public function getSelectionHandler(FieldDefinitionInterface $field_definition, ?EntityInterface $entity = NULL) {
     $options = $field_definition->getSetting('handler_settings') ?: [];
     $options += [
       'target_type' => $field_definition->getFieldStorageDefinition()->getSetting('target_type'),

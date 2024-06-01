@@ -42,7 +42,7 @@ class UnprocessableHttpEntityException extends HttpException {
    * @param int $code
    *   The HTTP status code associated with the request. Defaults to zero.
    */
-  public function __construct(\Exception $previous = NULL, array $headers = [], $code = 0) {
+  public function __construct(?\Exception $previous = NULL, array $headers = [], $code = 0) {
     parent::__construct(422, "Unprocessable Entity: validation failed.", $previous, $headers, $code);
   }
 

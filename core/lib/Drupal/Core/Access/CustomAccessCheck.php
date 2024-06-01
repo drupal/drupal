@@ -51,7 +51,7 @@ class CustomAccessCheck implements RoutingAccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, Request $request = NULL) {
+  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, ?Request $request = NULL) {
     try {
       $callable = $this->callableResolver->getCallableFromDefinition($route->getRequirement('_custom_access'));
     }

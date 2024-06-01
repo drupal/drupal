@@ -18,7 +18,7 @@ class TestTasksSettingsSub1 extends LocalTaskDefault {
   /**
    * {@inheritdoc}
    */
-  public function getTitle(Request $request = NULL) {
+  public function getTitle(?Request $request = NULL) {
     return $this->t('Dynamic title for @class', ['@class' => 'TestTasksSettingsSub1']);
   }
 

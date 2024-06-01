@@ -30,7 +30,7 @@ class HistoryUserTimestamp extends Node {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     if (\Drupal::currentUser()->isAuthenticated()) {

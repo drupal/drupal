@@ -192,7 +192,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
    *
    * @dataProvider providerTestIsSatisfiedByGenerateBundledEntity
    */
-  public function testIsSatisfiedByGenerateBundledEntity($expected, array $requirement_bundles, array $candidate_bundles, array $bundles_to_instantiate = NULL) {
+  public function testIsSatisfiedByGenerateBundledEntity($expected, array $requirement_bundles, array $candidate_bundles, ?array $bundles_to_instantiate = NULL) {
     // If no bundles are explicitly specified, instantiate all bundles.
     if (!$bundles_to_instantiate) {
       $bundles_to_instantiate = $candidate_bundles;

@@ -127,7 +127,7 @@ class EntityPermissionsForm extends UserPermissionsForm {
    * @param string|\Drupal\Core\Entity\EntityInterface $bundle
    *   (optional) Either the bundle name or the bundle object.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, string $bundle_entity_type = NULL, $bundle = NULL): array {
+  public function buildForm(array $form, FormStateInterface $form_state, ?string $bundle_entity_type = NULL, $bundle = NULL): array {
     // Set $this->bundle for use by ::permissionsByProvider().
     if ($bundle instanceof EntityInterface) {
       $this->bundle = $bundle;

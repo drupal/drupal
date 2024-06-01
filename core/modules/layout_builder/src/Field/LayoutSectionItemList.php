@@ -100,7 +100,7 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
    *
    * @ingroup layout_builder_access
    */
-  public function defaultAccess($operation = 'view', AccountInterface $account = NULL) {
+  public function defaultAccess($operation = 'view', ?AccountInterface $account = NULL) {
     // @todo Allow access in https://www.drupal.org/node/2942975.
     return AccessResult::forbidden();
   }

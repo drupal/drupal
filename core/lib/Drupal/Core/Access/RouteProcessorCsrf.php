@@ -33,7 +33,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($route_name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($route_name, Route $route, array &$parameters, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     if ($route->hasRequirement('_csrf_token')) {
       $path = ltrim($route->getPath(), '/');
       // Replace the path parameters with values from the parameters array.

@@ -95,7 +95,7 @@ function filter_theme() {
  *
  * @see filter_formats_reset()
  */
-function filter_formats(AccountInterface $account = NULL) {
+function filter_formats(?AccountInterface $account = NULL) {
   $formats = &drupal_static(__FUNCTION__, []);
 
   // All available formats are cached for performance.
@@ -209,7 +209,7 @@ function filter_get_formats_by_role($rid) {
  *
  * @see filter_fallback_format()
  */
-function filter_default_format(AccountInterface $account = NULL) {
+function filter_default_format(?AccountInterface $account = NULL) {
   if (!isset($account)) {
     $account = \Drupal::currentUser();
   }

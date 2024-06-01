@@ -107,7 +107,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    * @return array
    *   The block list as a renderable array.
    */
-  public function render($theme = NULL, Request $request = NULL) {
+  public function render($theme = NULL, ?Request $request = NULL) {
     $this->request = $request;
     $this->theme = $theme;
 

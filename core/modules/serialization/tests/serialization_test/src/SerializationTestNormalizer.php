@@ -27,7 +27,7 @@ class SerializationTestNormalizer implements NormalizerInterface {
   /**
    * {@inheritdoc}
    */
-  public function supportsNormalization($data, string $format = NULL, array $context = []): bool {
+  public function supportsNormalization($data, ?string $format = NULL, array $context = []): bool {
     return static::$format === $format;
   }
 

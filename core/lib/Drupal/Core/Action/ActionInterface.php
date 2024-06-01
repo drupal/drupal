@@ -56,6 +56,6 @@ interface ActionInterface extends ExecutableInterface, PluginInspectionInterface
    *   returned, i.e. TRUE means access is explicitly allowed, FALSE means
    *   access is either explicitly forbidden or "no opinion".
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE);
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE);
 
 }

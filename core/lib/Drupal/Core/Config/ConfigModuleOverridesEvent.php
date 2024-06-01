@@ -40,7 +40,7 @@ class ConfigModuleOverridesEvent extends Event {
    * @param \Drupal\Core\Language\LanguageInterface $language
    *   (optional) The language for this configuration.
    */
-  public function __construct(array $names, LanguageInterface $language = NULL) {
+  public function __construct(array $names, ?LanguageInterface $language = NULL) {
     $this->names = $names;
     $this->language = $language;
     $this->overrides = [];

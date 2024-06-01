@@ -187,7 +187,7 @@ class Token {
    *
    * @see static::replacePlain()
    */
-  public function replace($markup, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function replace($markup, array $data = [], array $options = [], ?BubbleableMetadata $bubbleable_metadata = NULL) {
     return $this->doReplace(TRUE, (string) $markup, $data, $options, $bubbleable_metadata);
   }
 
@@ -206,7 +206,7 @@ class Token {
    * @return string
    *   The entered plain text with tokens replaced.
    */
-  public function replacePlain(string $plain, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL): string {
+  public function replacePlain(string $plain, array $data = [], array $options = [], ?BubbleableMetadata $bubbleable_metadata = NULL): string {
     return $this->doReplace(FALSE, $plain, $data, $options, $bubbleable_metadata);
   }
 
@@ -227,7 +227,7 @@ class Token {
    * @return string
    *   The token result is the entered string with tokens replaced.
    */
-  protected function doReplace(bool $markup, string $text, array $data, array $options, BubbleableMetadata $bubbleable_metadata = NULL): string {
+  protected function doReplace(bool $markup, string $text, array $data, array $options, ?BubbleableMetadata $bubbleable_metadata = NULL): string {
     $text_tokens = $this->scan($text);
     if (empty($text_tokens)) {
       return $text;

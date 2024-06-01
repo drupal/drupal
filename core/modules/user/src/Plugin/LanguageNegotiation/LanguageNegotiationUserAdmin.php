@@ -99,7 +99,7 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
   /**
    * {@inheritdoc}
    */
-  public function getLangcode(Request $request = NULL) {
+  public function getLangcode(?Request $request = NULL) {
     $langcode = NULL;
 
     // User preference (only for administrators).

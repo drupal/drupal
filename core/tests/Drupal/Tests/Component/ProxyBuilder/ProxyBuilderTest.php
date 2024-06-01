@@ -432,7 +432,7 @@ class TestServiceMethodWithParameter {
 
 class TestServiceComplexMethod {
 
-  public function complexMethod(string $parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []): array {
+  public function complexMethod(string $parameter, callable $function, ?TestServiceNoMethod $test_service = NULL, array &$elements = []): array {
     return [];
   }
 

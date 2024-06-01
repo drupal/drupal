@@ -384,7 +384,7 @@ class LanguageManager implements LanguageManagerInterface {
    *
    * @see \Drupal\language\ConfigurableLanguageManager::setConfigOverrideLanguage()
    */
-  public function setConfigOverrideLanguage(LanguageInterface $language = NULL) {
+  public function setConfigOverrideLanguage(?LanguageInterface $language = NULL) {
     return $this;
   }
 

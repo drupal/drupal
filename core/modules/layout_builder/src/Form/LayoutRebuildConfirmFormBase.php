@@ -75,7 +75,7 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase implements W
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL) {
     $this->sectionStorage = $section_storage;
     $this->delta = $delta;
 

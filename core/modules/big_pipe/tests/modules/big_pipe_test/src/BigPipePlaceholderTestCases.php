@@ -35,7 +35,7 @@ class BigPipePlaceholderTestCases {
    *
    * @return \Drupal\big_pipe_test\BigPipePlaceholderTestCase[]
    */
-  public static function cases(ContainerInterface $container = NULL, AccountInterface $user = NULL) {
+  public static function cases(?ContainerInterface $container = NULL, ?AccountInterface $user = NULL) {
     // Define the two types of cacheability that we expect to see. These will be
     // used in the expectations.
     $cacheability_depends_on_session_only = [

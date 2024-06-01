@@ -32,7 +32,7 @@ class FieldStorageDefinitionEvent extends Event {
    *   (optional) The original field storage definition. This should be passed
    *   only when updating the storage definition.
    */
-  public function __construct(FieldStorageDefinitionInterface $field_storage_definition, FieldStorageDefinitionInterface $original = NULL) {
+  public function __construct(FieldStorageDefinitionInterface $field_storage_definition, ?FieldStorageDefinitionInterface $original = NULL) {
     $this->fieldStorageDefinition = $field_storage_definition;
     $this->original = $original;
   }

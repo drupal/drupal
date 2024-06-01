@@ -17,7 +17,7 @@ use Drupal\Core\Access\AccessResult;
  *
  * @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::setUp()
  */
-function rest_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function rest_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
   // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::testPost()
   // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::testPatch()
   if ($field_definition->getName() === 'field_rest_test') {

@@ -526,7 +526,7 @@ abstract class BrowserTestBase extends TestCase {
    * @return array
    *   Associative array of option keys and values.
    */
-  protected function getOptions($select, Element $container = NULL) {
+  protected function getOptions($select, ?Element $container = NULL) {
     if (is_string($select)) {
       $select = $this->assertSession()->selectExists($select, $container);
     }

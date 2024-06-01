@@ -20,14 +20,14 @@ class FilterFormat extends StringData implements OptionsProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPossibleValues(AccountInterface $account = NULL) {
+  public function getPossibleValues(?AccountInterface $account = NULL) {
     return array_keys($this->getPossibleOptions($account));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPossibleOptions(AccountInterface $account = NULL) {
+  public function getPossibleOptions(?AccountInterface $account = NULL) {
     return array_map(function ($format) {
       return $format->label();
     }, filter_formats());
@@ -36,14 +36,14 @@ class FilterFormat extends StringData implements OptionsProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSettableValues(AccountInterface $account = NULL) {
+  public function getSettableValues(?AccountInterface $account = NULL) {
     return array_keys($this->getSettableOptions($account));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSettableOptions(AccountInterface $account = NULL) {
+  public function getSettableOptions(?AccountInterface $account = NULL) {
     // @todo: Avoid calling functions but move to injected dependencies.
     return array_map(function ($format) {
       return $format->label();

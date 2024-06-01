@@ -173,7 +173,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    *   Keys are category names, and values are arrays of which the keys are
    *   plugin IDs and the values are plugin definitions.
    */
-  public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label', $category_label_key = 'label') {
+  public function getGroupedDefinitions(?array $definitions = NULL, $label_key = 'label', $category_label_key = 'label') {
     $grouped_categories = $this->getGroupedDefinitionsTrait($definitions, $label_key);
     $category_info = $this->fieldTypeCategoryManager->getDefinitions();
 

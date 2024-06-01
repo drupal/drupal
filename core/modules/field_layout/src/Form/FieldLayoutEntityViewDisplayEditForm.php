@@ -33,7 +33,7 @@ class FieldLayoutEntityViewDisplayEditForm extends EntityViewDisplayEditForm {
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    */
-  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, LayoutPluginManagerInterface $layout_plugin_manager, EntityDisplayRepositoryInterface $entity_display_repository = NULL, EntityFieldManagerInterface $entity_field_manager = NULL) {
+  public function __construct(FieldTypePluginManagerInterface $field_type_manager, PluginManagerBase $plugin_manager, LayoutPluginManagerInterface $layout_plugin_manager, ?EntityDisplayRepositoryInterface $entity_display_repository = NULL, ?EntityFieldManagerInterface $entity_field_manager = NULL) {
     parent::__construct($field_type_manager, $plugin_manager, $entity_display_repository, $entity_field_manager);
     $this->layoutPluginManager = $layout_plugin_manager;
   }

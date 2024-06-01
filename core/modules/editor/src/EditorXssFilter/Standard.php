@@ -15,7 +15,7 @@ class Standard extends Xss implements EditorXssFilterInterface {
   /**
    * {@inheritdoc}
    */
-  public static function filterXss($html, FilterFormatInterface $format, FilterFormatInterface $original_format = NULL) {
+  public static function filterXss($html, FilterFormatInterface $format, ?FilterFormatInterface $original_format = NULL) {
     // Apply XSS filtering, but blacklist the <script>, <style>, <link>, <embed>
     // and <object> tags.
     // The <script> and <style> tags are blacklisted because their contents

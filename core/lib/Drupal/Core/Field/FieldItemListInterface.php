@@ -90,7 +90,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function defaultAccess($operation = 'view', AccountInterface $account = NULL);
+  public function defaultAccess($operation = 'view', ?AccountInterface $account = NULL);
 
   /**
    * Filters out empty field items and re-numbers the item deltas.

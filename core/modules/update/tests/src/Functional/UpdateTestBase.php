@@ -215,7 +215,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *   (optional) The expected label for the newer version. For example
    *   'Recommended version:' or 'Also available:'.
    */
-  protected function confirmUnsupportedStatus(string $unsupported_version, string $newer_version = NULL, string $new_version_label = NULL) {
+  protected function confirmUnsupportedStatus(string $unsupported_version, ?string $newer_version = NULL, ?string $new_version_label = NULL) {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();

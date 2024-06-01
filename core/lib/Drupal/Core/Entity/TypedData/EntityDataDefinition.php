@@ -138,7 +138,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
   /**
    * {@inheritdoc}
    */
-  public function setBundles(array $bundles = NULL) {
+  public function setBundles(?array $bundles = NULL) {
     if (isset($bundles)) {
       $this->addConstraint('Bundle', $bundles);
     }

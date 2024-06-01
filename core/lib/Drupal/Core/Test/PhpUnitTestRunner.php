@@ -109,7 +109,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @internal
    */
-  protected function runCommand(string $test_class_name, string $log_junit_file_path, int &$status = NULL, array &$output = NULL): void {
+  protected function runCommand(string $test_class_name, string $log_junit_file_path, ?int &$status = NULL, ?array &$output = NULL): void {
     global $base_url;
     // Setup an environment variable containing the database connection so that
     // functional tests can connect to the database.
@@ -169,7 +169,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @internal
    */
-  public function execute(TestRun $test_run, string $test_class_name, int &$status = NULL): array {
+  public function execute(TestRun $test_run, string $test_class_name, ?int &$status = NULL): array {
     $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
     // Store output from our test run.
     $output = [];

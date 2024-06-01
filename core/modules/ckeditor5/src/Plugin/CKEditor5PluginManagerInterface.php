@@ -126,6 +126,6 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
-  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE, bool $creatable_elements_only = FALSE): array;
+  public function getProvidedElements(array $plugin_ids = [], ?EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE, bool $creatable_elements_only = FALSE): array;
 
 }

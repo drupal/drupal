@@ -35,7 +35,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL) {
     $this->sectionStorage = $section_storage;
     return parent::buildForm($form, $form_state);
   }

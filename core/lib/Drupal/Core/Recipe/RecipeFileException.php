@@ -32,7 +32,7 @@ final class RecipeFileException extends \RuntimeException {
     string $message = '',
     public readonly ?ConstraintViolationList $violations = NULL,
     int $code = 0,
-    \Throwable $previous = NULL,
+    ?\Throwable $previous = NULL,
   ) {
     parent::__construct($message, $code, $previous);
   }

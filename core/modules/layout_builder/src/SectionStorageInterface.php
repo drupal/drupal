@@ -148,6 +148,6 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    *
    * @ingroup layout_builder_access
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE);
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE);
 
 }

@@ -275,7 +275,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchObject(string $class_name = NULL, array $constructor_arguments = []) {
+  public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
     if (!isset($class_name)) {
       return $this->fetch(\PDO::FETCH_OBJ);
     }

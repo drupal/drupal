@@ -186,7 +186,7 @@ class Sql extends QueryPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $base_table = $this->view->storage->get('base_table');
@@ -449,7 +449,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  public function addTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
+  public function addTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL, $alias = NULL) {
     if (!$this->ensurePath($table, $relationship, $join)) {
       return FALSE;
     }
@@ -488,7 +488,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  public function queueTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
+  public function queueTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL, $alias = NULL) {
     // If the alias is set, make sure it doesn't already exist.
     if (isset($this->tableQueue[$alias])) {
       return $alias;
@@ -595,7 +595,7 @@ class Sql extends QueryPluginBase {
    *   The alias used to refer to this specific table, or NULL if the table
    *   cannot be ensured.
    */
-  public function ensureTable($table, $relationship = NULL, JoinPluginBase $join = NULL) {
+  public function ensureTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL) {
     // ensure a relationship
     if (empty($relationship)) {
       $relationship = $this->view->storage->get('base_table');

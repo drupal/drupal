@@ -520,7 +520,7 @@ class BasicForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity_test = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?EntityInterface $entity_test = NULL) {
     return [];
   }
 
@@ -571,7 +571,7 @@ class BasicFormNoContainerInjectionInterface implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity_test = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?EntityInterface $entity_test = NULL) {
     return [];
   }
 

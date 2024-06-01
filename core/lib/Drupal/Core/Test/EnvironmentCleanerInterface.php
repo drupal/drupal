@@ -51,6 +51,6 @@ interface EnvironmentCleanerInterface {
    * @return int
    *   The number of results that were removed.
    */
-  public function cleanResults(TestRun $test_run = NULL): int;
+  public function cleanResults(?TestRun $test_run = NULL): int;
 
 }

@@ -126,14 +126,14 @@ class LanguageItem extends FieldItemBase implements OptionsProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPossibleValues(AccountInterface $account = NULL) {
+  public function getPossibleValues(?AccountInterface $account = NULL) {
     return array_keys(\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPossibleOptions(AccountInterface $account = NULL) {
+  public function getPossibleOptions(?AccountInterface $account = NULL) {
     $languages = \Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL);
     return array_map(function (LanguageInterface $language) {
       return $language->getName();
@@ -143,14 +143,14 @@ class LanguageItem extends FieldItemBase implements OptionsProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSettableValues(AccountInterface $account = NULL) {
+  public function getSettableValues(?AccountInterface $account = NULL) {
     return $this->getPossibleValues($account);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSettableOptions(AccountInterface $account = NULL) {
+  public function getSettableOptions(?AccountInterface $account = NULL) {
     return $this->getPossibleValues($account);
   }
 

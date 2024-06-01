@@ -249,7 +249,7 @@ class UpdateRegistry implements EventSubscriberInterface {
    *   (optional) Limits the extension update files loaded to the provided
    *   extension.
    */
-  protected function scanExtensionsAndLoadUpdateFiles(string $extension = NULL) {
+  protected function scanExtensionsAndLoadUpdateFiles(?string $extension = NULL) {
     if ($extension !== NULL && isset(self::$loadedFiles[$this->root][$this->sitePath][$extension][$this->updateType])) {
       // We've already checked for this file and, if it exists, loaded it.
       return;

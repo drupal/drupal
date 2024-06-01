@@ -118,7 +118,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function doLoadMultiple(array $ids = NULL) {
+  public function doLoadMultiple(?array $ids = NULL) {
     if (empty($ids)) {
       $entities = $this->keyValueStore->getAll();
     }

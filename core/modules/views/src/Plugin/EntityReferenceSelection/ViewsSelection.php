@@ -254,7 +254,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
    * @return array
    *   The results.
    */
-  protected function getDisplayExecutionResults(string $match = NULL, string $match_operator = 'CONTAINS', int $limit = 0, array $ids = NULL) {
+  protected function getDisplayExecutionResults(?string $match = NULL, string $match_operator = 'CONTAINS', int $limit = 0, ?array $ids = NULL) {
     $display_name = $this->getConfiguration()['view']['display_name'];
     $arguments = $this->getConfiguration()['view']['arguments'];
     $results = [];

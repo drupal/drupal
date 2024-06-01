@@ -43,6 +43,6 @@ interface EntityDataDefinitionInterface extends ComplexDataDefinitionInterface {
    *
    * @return $this
    */
-  public function setBundles(array $bundles = NULL);
+  public function setBundles(?array $bundles = NULL);
 
 }

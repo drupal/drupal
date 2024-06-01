@@ -131,7 +131,7 @@ class EnvironmentCleaner implements EnvironmentCleanerInterface {
   /**
    * {@inheritdoc}
    */
-  public function cleanResults(TestRun $test_run = NULL): int {
+  public function cleanResults(?TestRun $test_run = NULL): int {
     return $test_run ? $test_run->removeResults() : $this->testRunResultsStorage->cleanUp();
   }
 

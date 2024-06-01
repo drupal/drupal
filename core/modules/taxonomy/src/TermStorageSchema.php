@@ -111,7 +111,7 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
   /**
    * {@inheritdoc}
    */
-  protected function getDedicatedTableSchema(FieldStorageDefinitionInterface $storage_definition, ContentEntityTypeInterface $entity_type = NULL) {
+  protected function getDedicatedTableSchema(FieldStorageDefinitionInterface $storage_definition, ?ContentEntityTypeInterface $entity_type = NULL) {
     $dedicated_table_schema = parent::getDedicatedTableSchema($storage_definition, $entity_type);
 
     // Add an index on 'bundle', 'delta' and 'parent_target_id' columns to

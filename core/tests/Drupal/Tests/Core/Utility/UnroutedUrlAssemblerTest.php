@@ -154,7 +154,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
     $this->setupRequestStack(FALSE);
     $this->pathProcessor->expects($this->exactly(2))
       ->method('processOutbound')
-      ->willReturnCallback(function ($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+      ->willReturnCallback(function ($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
         if ($bubbleable_metadata) {
           $bubbleable_metadata->setCacheContexts(['some-cache-context']);
         }
@@ -179,7 +179,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
     $this->pathProcessor->expects($this->exactly(2))
       ->method('processOutbound')
       ->with('/test-uri', $this->anything(), $this->anything(), $this->anything())
-      ->willReturnCallback(function ($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+      ->willReturnCallback(function ($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
         $bubbleable_metadata?->setCacheContexts(['some-cache-context']);
         return '/test-other-uri';
       });

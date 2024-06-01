@@ -45,7 +45,7 @@ class FilterCaption extends FilterBase implements ContainerFactoryPluginInterfac
    * @param \Drupal\filter\FilterPluginManager $filter_manager
    *   Filter plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, FilterPluginManager $filter_manager = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ?FilterPluginManager $filter_manager = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->filterManager = $filter_manager ?: \Drupal::service('plugin.manager.filter');
   }

@@ -387,7 +387,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * Passes the path to a processor manager to allow alterations.
    */
-  protected function processPath(string $path, array &$options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
+  protected function processPath(string $path, array &$options = [], ?BubbleableMetadata $bubbleable_metadata = NULL) {
     $actual_path = $path === '/' ? $path : rtrim($path, '/');
     return $this->pathProcessor->processOutbound($actual_path, $options, $this->requestStack->getCurrentRequest(), $bubbleable_metadata);
   }
@@ -404,7 +404,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
    *   (optional) Object to collect route processors' bubbleable metadata.
    */
-  protected function processRoute(string $name, SymfonyRoute $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL) {
+  protected function processRoute(string $name, SymfonyRoute $route, array &$parameters, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     $this->routeProcessor->processOutbound($name, $route, $parameters, $bubbleable_metadata);
   }
 

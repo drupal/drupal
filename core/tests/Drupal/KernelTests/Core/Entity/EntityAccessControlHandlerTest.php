@@ -43,7 +43,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    *
    * @internal
    */
-  public function assertEntityAccess(array $ops, AccessibleInterface $object, AccountInterface $account = NULL): void {
+  public function assertEntityAccess(array $ops, AccessibleInterface $object, ?AccountInterface $account = NULL): void {
     foreach ($ops as $op => $result) {
       $message = new FormattableMarkup("Entity access returns @result with operation '@op'.", [
         '@result' => !isset($result) ? 'null' : ($result ? 'true' : 'false'),

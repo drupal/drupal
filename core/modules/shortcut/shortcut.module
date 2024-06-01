@@ -55,7 +55,7 @@ function shortcut_help($route_name, RouteMatchInterface $route_match) {
  * @return \Drupal\Core\Access\AccessResultInterface
  *   The access result.
  */
-function shortcut_set_edit_access(ShortcutSetInterface $shortcut_set = NULL) {
+function shortcut_set_edit_access(?ShortcutSetInterface $shortcut_set = NULL) {
   $account = \Drupal::currentUser();
 
   // Shortcut administrators can edit any set.

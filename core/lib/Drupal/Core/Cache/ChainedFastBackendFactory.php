@@ -54,7 +54,7 @@ class ChainedFastBackendFactory implements CacheFactoryInterface {
    *   - 'cache.backend.apcu' (if the PHP process has APCu enabled)
    *   - NULL (if the PHP process doesn't have APCu enabled)
    */
-  public function __construct(Settings $settings = NULL, $consistent_service_name = NULL, $fast_service_name = NULL) {
+  public function __construct(?Settings $settings = NULL, $consistent_service_name = NULL, $fast_service_name = NULL) {
     // Default the consistent backend to the site's default backend.
     if (!isset($consistent_service_name)) {
       $cache_settings = isset($settings) ? $settings->get('cache') : [];

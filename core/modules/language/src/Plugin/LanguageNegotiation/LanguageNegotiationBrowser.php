@@ -46,7 +46,7 @@ class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase implement
   /**
    * {@inheritdoc}
    */
-  public function getLangcode(Request $request = NULL) {
+  public function getLangcode(?Request $request = NULL) {
     $langcode = NULL;
 
     if ($this->languageManager && $request && $request->server->get('HTTP_ACCEPT_LANGUAGE')) {

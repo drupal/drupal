@@ -34,7 +34,7 @@ function views_entity_test_entity_base_field_info(EntityTypeInterface $entity_ty
  *
  * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
  */
-function views_entity_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function views_entity_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
   if ($field_definition->getName() == 'test_text_access') {
     if ($items) {
       if ($items->value == 'no access value') {

@@ -161,7 +161,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @return array
    *   An associative array of all placeholder arguments for this query.
    */
-  public function getArguments(PlaceholderInterface $queryPlaceholder = NULL);
+  public function getArguments(?PlaceholderInterface $queryPlaceholder = NULL);
 
   /* Query building operations */
 
@@ -490,7 +490,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @return bool
    *   TRUE if the validation was successful, FALSE if not.
    */
-  public function preExecute(SelectInterface $query = NULL);
+  public function preExecute(?SelectInterface $query = NULL);
 
   /**
    * Runs the query against the database.
