@@ -49,7 +49,7 @@ class ConfigHandler extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?Request $request = NULL) {
     /** @var \Drupal\views\Entity\View $view */
     $view = $form_state->get('view');
     $display_id = $form_state->get('display_id');

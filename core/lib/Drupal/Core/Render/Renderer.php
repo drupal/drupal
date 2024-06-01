@@ -619,7 +619,7 @@ class Renderer implements RendererInterface {
    *
    * @return $this
    */
-  protected function setCurrentRenderContext(RenderContext $context = NULL) {
+  protected function setCurrentRenderContext(?RenderContext $context = NULL) {
     $request = $this->requestStack->getCurrentRequest();
     static::$contextCollection[$request] = $context;
     return $this;

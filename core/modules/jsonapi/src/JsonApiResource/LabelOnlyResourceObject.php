@@ -27,7 +27,7 @@ final class LabelOnlyResourceObject extends ResourceObject {
   /**
    * {@inheritdoc}
    */
-  public static function createFromEntity(ResourceType $resource_type, EntityInterface $entity, LinkCollection $links = NULL) {
+  public static function createFromEntity(ResourceType $resource_type, EntityInterface $entity, ?LinkCollection $links = NULL) {
     $resource_object = new static(
       $entity,
       $resource_type,

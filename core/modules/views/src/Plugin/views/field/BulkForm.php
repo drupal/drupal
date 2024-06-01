@@ -137,7 +137,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $entity_type = $this->getEntityType();

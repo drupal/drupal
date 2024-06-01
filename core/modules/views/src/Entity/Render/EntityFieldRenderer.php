@@ -135,7 +135,7 @@ class EntityFieldRenderer extends RendererBase {
    * @return array
    *   A renderable array for the entity data contained in the result row.
    */
-  public function render(ResultRow $row, EntityField $field = NULL) {
+  public function render(ResultRow $row, ?EntityField $field = NULL) {
     // The method is called for each field in each result row. In order to
     // leverage multiple-entity building of formatter output, we build the
     // render arrays for all fields in all rows on the first call.

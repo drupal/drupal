@@ -190,7 +190,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
   /**
    * Get an instance of the normalizer to test.
    */
-  protected function getNormalizer(AccountInterface $current_user = NULL) {
+  protected function getNormalizer(?AccountInterface $current_user = NULL) {
     if (is_null($current_user)) {
       $current_user = $this->setUpCurrentUser();
     }

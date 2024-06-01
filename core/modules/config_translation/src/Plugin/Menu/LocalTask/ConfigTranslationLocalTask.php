@@ -22,7 +22,7 @@ class ConfigTranslationLocalTask extends LocalTaskDefault {
   /**
    * {@inheritdoc}
    */
-  public function getTitle(Request $request = NULL) {
+  public function getTitle(?Request $request = NULL) {
     // Take custom 'config_translation_plugin_id' plugin definition key to
     // retrieve title. We need to retrieve a runtime title (as opposed to
     // storing the title on the plugin definition for the link) because

@@ -82,7 +82,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
    * @param \Drupal\Core\Entity\EntityStorageInterface $block_storage
    *   The block storage, or NULL if not available.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, BlockManagerInterface $block_manager, ThemeHandlerInterface $theme_handler, EntityStorageInterface $block_storage = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, BlockManagerInterface $block_manager, ThemeHandlerInterface $theme_handler, ?EntityStorageInterface $block_storage = NULL) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->languageTypes = $this->config('language.types');
     $this->languageManager = $language_manager;

@@ -47,7 +47,7 @@ function user_access_test_entity_create_access(AccountInterface $account, array 
 /**
  * Implements hook_entity_field_access().
  */
-function user_access_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function user_access_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
   // Account with role sub-admin can view the status, init and mail fields for
   // user with no roles.
   if ($field_definition->getTargetEntityTypeId() == 'user' && $operation === 'view' && in_array($field_definition->getName(), ['status', 'init', 'mail'])) {

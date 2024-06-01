@@ -42,7 +42,7 @@ interface DisplayPluginInterface {
    * @param array $options
    *   (optional) The options for the display plugin. Defaults to NULL.
    */
-  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL);
+  public function initDisplay(ViewExecutable $view, array &$display, ?array &$options = NULL);
 
   /**
    * Destroys the display's components and the display itself.
@@ -427,7 +427,7 @@ interface DisplayPluginInterface {
   /**
    * Determines if the user has access to this display of the view.
    */
-  public function access(AccountInterface $account = NULL);
+  public function access(?AccountInterface $account = NULL);
 
   /**
    * Sets up any variables on the view prior to execution.

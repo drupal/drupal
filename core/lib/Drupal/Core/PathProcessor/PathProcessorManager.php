@@ -102,7 +102,7 @@ class PathProcessorManager implements InboundPathProcessorInterface, OutboundPat
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     $processors = $this->getOutbound();
     foreach ($processors as $processor) {
       $path = $processor->processOutbound($path, $options, $request, $bubbleable_metadata);

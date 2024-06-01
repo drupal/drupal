@@ -126,7 +126,7 @@ JS;
    *
    * @see \Behat\Mink\WebAssert::fieldValueEquals()
    */
-  protected function assertHtmlEsqueFieldValueEquals($field, $value, TraversableElement $container = NULL) {
+  protected function assertHtmlEsqueFieldValueEquals($field, $value, ?TraversableElement $container = NULL) {
     $assert_session = $this->assertSession();
 
     $node = $assert_session->fieldExists($field, $container);

@@ -41,7 +41,7 @@ interface OptionsProviderInterface {
    * @return array
    *   An array of possible values.
    */
-  public function getPossibleValues(AccountInterface $account = NULL);
+  public function getPossibleValues(?AccountInterface $account = NULL);
 
   /**
    * Returns an array of possible values with labels for display.
@@ -60,7 +60,7 @@ interface OptionsProviderInterface {
    *   two-dimensional array of option groups (array of flat option arrays,
    *   keyed by option group label). Note that labels should NOT be sanitized.
    */
-  public function getPossibleOptions(AccountInterface $account = NULL);
+  public function getPossibleOptions(?AccountInterface $account = NULL);
 
   /**
    * Returns an array of settable values.
@@ -75,7 +75,7 @@ interface OptionsProviderInterface {
    * @return array
    *   An array of settable values.
    */
-  public function getSettableValues(AccountInterface $account = NULL);
+  public function getSettableValues(?AccountInterface $account = NULL);
 
   /**
    * Returns an array of settable values with labels for display.
@@ -94,6 +94,6 @@ interface OptionsProviderInterface {
    *   of option groups (array of flat option arrays, keyed by option group
    *   label). Note that labels should NOT be sanitized.
    */
-  public function getSettableOptions(AccountInterface $account = NULL);
+  public function getSettableOptions(?AccountInterface $account = NULL);
 
 }

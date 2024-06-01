@@ -25,7 +25,7 @@ class ComponentValidator {
   /**
    * Sets the validator service if available.
    */
-  public function setValidator(Validator $validator = NULL): void {
+  public function setValidator(?Validator $validator = NULL): void {
     if ($validator) {
       $this->validator = $validator;
       return;

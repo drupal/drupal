@@ -91,7 +91,7 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
   /**
    * {@inheritdoc}
    */
-  public function getLangcode(Request $request = NULL) {
+  public function getLangcode(?Request $request = NULL) {
     if ($request === NULL || $this->languageManager === NULL) {
       return NULL;
     }
@@ -105,7 +105,7 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     // If appropriate, process outbound to add a query parameter to the URL and
     // remove the language option, so that URL negotiator does not rewrite the
     // URL.

@@ -157,7 +157,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    * @param \Drupal\User\UserInterface|null $user
    *   (optional) The entity owner.
    */
-  protected function setupEntity(UserInterface $user = NULL) {
+  protected function setupEntity(?UserInterface $user = NULL) {
     $default_langcode = $this->langcodes[0];
 
     // Create a test entity.

@@ -130,7 +130,7 @@ class AssetOptimizationTest extends BrowserTestBase {
    * @param string|null $content_type
    *   The expected content type, or NULL to skip checking.
    */
-  protected function assertAggregate(string $url, bool $from_php = TRUE, string $content_type = NULL): void {
+  protected function assertAggregate(string $url, bool $from_php = TRUE, ?string $content_type = NULL): void {
     $url = $this->getAbsoluteUrl($url);
     if (!stripos($url, $this->fileAssetsPath) !== FALSE) {
       return;

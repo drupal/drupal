@@ -45,7 +45,7 @@ class NullGenerator extends UrlGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function processRoute($name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL) {
+  protected function processRoute($name, Route $route, array &$parameters, ?BubbleableMetadata $bubbleable_metadata = NULL) {
   }
 
   /**
@@ -58,7 +58,7 @@ class NullGenerator extends UrlGenerator {
   /**
    * {@inheritdoc}
    */
-  protected function processPath($path, &$options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
+  protected function processPath($path, &$options = [], ?BubbleableMetadata $bubbleable_metadata = NULL) {
     return $path;
   }
 

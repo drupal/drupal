@@ -47,7 +47,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   /**
    * {@inheritdoc}
    */
-  public function getLangcode(Request $request = NULL) {
+  public function getLangcode(?Request $request = NULL) {
     $langcode = NULL;
 
     if ($request && $this->languageManager) {
@@ -123,7 +123,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     $url_scheme = 'http';
     $port = 80;
     if ($request) {

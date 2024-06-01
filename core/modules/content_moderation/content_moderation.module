@@ -254,7 +254,7 @@ function content_moderation_entity_access(EntityInterface $entity, $operation, A
 /**
  * Implements hook_entity_field_access().
  */
-function content_moderation_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function content_moderation_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
   if ($items && $operation === 'edit') {
     /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
     $moderation_info = Drupal::service('content_moderation.moderation_information');

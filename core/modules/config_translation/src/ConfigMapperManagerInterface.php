@@ -19,7 +19,7 @@ interface ConfigMapperManagerInterface extends PluginManagerInterface {
    * @return \Drupal\config_translation\ConfigMapperInterface[]
    *   An array of all mappers.
    */
-  public function getMappers(RouteCollection $collection = NULL);
+  public function getMappers(?RouteCollection $collection = NULL);
 
   /**
    * Returns TRUE if the configuration data has translatable items.

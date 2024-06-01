@@ -27,7 +27,7 @@ class DateTimeComputed extends TypedData {
   /**
    * {@inheritdoc}
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
     if (!$definition->getSetting('date source')) {
       throw new \InvalidArgumentException("The definition's 'date source' key has to specify the name of the date property to be computed.");

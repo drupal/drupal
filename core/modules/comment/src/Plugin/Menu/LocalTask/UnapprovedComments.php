@@ -54,7 +54,7 @@ class UnapprovedComments extends LocalTaskDefault implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function getTitle(Request $request = NULL) {
+  public function getTitle(?Request $request = NULL) {
     return $this->t('Unapproved comments (@count)', ['@count' => $this->commentStorage->getUnapprovedCount()]);
   }
 

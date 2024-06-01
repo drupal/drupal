@@ -222,7 +222,7 @@ class TestSqlBase extends SqlBase {
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   (optional) The migration being run.
    */
-  public function __construct(array $configuration = [], MigrationInterface $migration = NULL) {
+  public function __construct(array $configuration = [], ?MigrationInterface $migration = NULL) {
     parent::__construct($configuration, 'sql_base', ['requirements_met' => TRUE], $migration, \Drupal::state());
   }
 

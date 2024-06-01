@@ -26,7 +26,7 @@ function media_library_test_media_create_access(AccountInterface $account, array
 /**
  * Implements hook_entity_field_access().
  */
-function media_library_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function media_library_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
   $deny_fields = \Drupal::state()->get('media_library_test_entity_field_access_deny_fields', []);
   // Always deny the field_media_no_access field.
   $deny_fields[] = 'field_media_no_access';

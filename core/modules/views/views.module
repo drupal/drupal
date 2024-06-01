@@ -363,7 +363,7 @@ function views_theme_suggestions_container_alter(array &$suggestions, array $var
  * @see \Drupal\views\Plugin\Block\ViewsBlock::addContextualLinks()
  * @see template_preprocess_views_view()
  */
-function views_add_contextual_links(&$render_element, $location, $display_id, array $view_element = NULL) {
+function views_add_contextual_links(&$render_element, $location, $display_id, ?array $view_element = NULL) {
   if (!isset($view_element)) {
     $view_element = $render_element;
   }

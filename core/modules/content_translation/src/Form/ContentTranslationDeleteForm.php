@@ -23,7 +23,7 @@ class ContentTranslationDeleteForm extends ContentEntityDeleteForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, LanguageInterface $language = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?LanguageInterface $language = NULL) {
     if ($language) {
       $form_state->set('langcode', $language->getId());
     }

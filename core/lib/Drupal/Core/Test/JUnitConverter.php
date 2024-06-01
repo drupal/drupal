@@ -69,7 +69,7 @@ class JUnitConverter {
    *
    * @internal
    */
-  public static function findTestCases(\SimpleXMLElement $element, \SimpleXMLElement $parent = NULL) {
+  public static function findTestCases(\SimpleXMLElement $element, ?\SimpleXMLElement $parent = NULL) {
     if (!isset($parent)) {
       $parent = $element;
     }

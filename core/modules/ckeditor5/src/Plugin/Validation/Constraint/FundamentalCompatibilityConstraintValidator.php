@@ -259,7 +259,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    * @return iterable|\Drupal\filter\Plugin\FilterInterface[]
    *   An iterable of matched filter plugins.
    */
-  private static function getFiltersInFormatOfType(FilterFormatInterface $text_format, int $filter_type, callable $extra_requirements = NULL): iterable {
+  private static function getFiltersInFormatOfType(FilterFormatInterface $text_format, int $filter_type, ?callable $extra_requirements = NULL): iterable {
     assert(in_array($filter_type, [
       FilterInterface::TYPE_MARKUP_LANGUAGE,
       FilterInterface::TYPE_HTML_RESTRICTOR,

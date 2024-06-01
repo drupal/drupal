@@ -103,7 +103,7 @@ class ExtensionDiscovery {
    * @param string $site_path
    *   The path to the site.
    */
-  public function __construct(string $root, $use_file_cache = TRUE, array $profile_directories = NULL, string $site_path = NULL) {
+  public function __construct(string $root, $use_file_cache = TRUE, ?array $profile_directories = NULL, ?string $site_path = NULL) {
     $this->root = $root;
     $this->fileCache = $use_file_cache ? FileCacheFactory::get('extension_discovery') : NULL;
     $this->profileDirectories = $profile_directories;
@@ -271,7 +271,7 @@ class ExtensionDiscovery {
    *
    * @return $this
    */
-  public function setProfileDirectories(array $paths = NULL) {
+  public function setProfileDirectories(?array $paths = NULL) {
     $this->profileDirectories = $paths;
     return $this;
   }

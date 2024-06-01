@@ -29,7 +29,7 @@ interface TypedDataInterface {
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
-  public static function createInstance($definition, $name = NULL, TraversableTypedDataInterface $parent = NULL);
+  public static function createInstance($definition, $name = NULL, ?TraversableTypedDataInterface $parent = NULL);
 
   /**
    * Gets the data definition.
@@ -158,6 +158,6 @@ interface TypedDataInterface {
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    */
-  public function setContext($name = NULL, TraversableTypedDataInterface $parent = NULL);
+  public function setContext($name = NULL, ?TraversableTypedDataInterface $parent = NULL);
 
 }

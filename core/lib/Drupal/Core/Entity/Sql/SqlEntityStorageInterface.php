@@ -20,6 +20,6 @@ interface SqlEntityStorageInterface extends EntityStorageInterface {
    * @return \Drupal\Core\Entity\Sql\TableMappingInterface
    *   A table mapping object for the entity's tables.
    */
-  public function getTableMapping(array $storage_definitions = NULL);
+  public function getTableMapping(?array $storage_definitions = NULL);
 
 }

@@ -107,7 +107,7 @@ class MoveBlockForm extends FormBase implements WorkspaceDynamicSafeFormInterfac
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $uuid = NULL) {
     $parameters = array_slice(func_get_args(), 2);
     foreach ($parameters as $parameter) {
       if (is_null($parameter)) {

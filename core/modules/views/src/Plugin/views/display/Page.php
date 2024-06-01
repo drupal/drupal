@@ -124,7 +124,7 @@ class Page extends PathPluginBase {
    * @return array
    *   The page render array.
    */
-  public static function &setPageRenderArray(array &$element = NULL) {
+  public static function &setPageRenderArray(?array &$element = NULL) {
     if (isset($element)) {
       static::$pageRenderArray = &$element;
     }
@@ -176,7 +176,7 @@ class Page extends PathPluginBase {
   /**
    * {@inheritdoc}
    */
-  public static function buildBasicRenderable($view_id, $display_id, array $args = [], Route $route = NULL) {
+  public static function buildBasicRenderable($view_id, $display_id, array $args = [], ?Route $route = NULL) {
     $build = parent::buildBasicRenderable($view_id, $display_id, $args);
 
     if ($route) {

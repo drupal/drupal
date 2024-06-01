@@ -60,7 +60,7 @@ final class RelationshipRouteAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account = NULL) {
+  public function access(Route $route, RouteMatchInterface $route_match, ?AccountInterface $account = NULL) {
     [$relationship_field_name, $field_operation] = explode('.', $route->getRequirement(static::ROUTE_REQUIREMENT_KEY));
     assert(in_array($field_operation, ['view', 'edit'], TRUE));
     $entity_operation = $field_operation === 'view' ? 'view' : 'update';

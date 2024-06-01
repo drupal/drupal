@@ -75,7 +75,7 @@ class QueryTest extends QueryPluginBase {
     $this->orderBy = ['field' => $field, 'order' => $order];
   }
 
-  public function ensureTable($table, $relationship = NULL, JoinPluginBase $join = NULL) {
+  public function ensureTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL) {
     // There is no concept of joins.
   }
 

@@ -92,7 +92,7 @@ class TestSiteInstallCommand extends Command {
    * @todo Remove and fix test to not rely on super user.
    * @see https://www.drupal.org/project/drupal/issues/3437620
    */
-  public function __construct(string $name = NULL) {
+  public function __construct(?string $name = NULL) {
     parent::__construct($name);
     $this->usesSuperUserAccessPolicy = TRUE;
   }

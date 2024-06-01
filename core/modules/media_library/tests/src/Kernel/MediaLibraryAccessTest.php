@@ -414,7 +414,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
    * @param string[] $expected_cache_contexts
    *   (optional) The expected cache contexts attached to the access result.
    */
-  private function assertAccess(AccessResult $access_result, bool $is_allowed, string $expected_reason = NULL, array $expected_cache_tags = [], array $expected_cache_contexts = []): void {
+  private function assertAccess(AccessResult $access_result, bool $is_allowed, ?string $expected_reason = NULL, array $expected_cache_tags = [], array $expected_cache_contexts = []): void {
     $this->assertSame($is_allowed, $access_result->isAllowed());
     if ($access_result instanceof AccessResultReasonInterface && isset($expected_reason)) {
       $this->assertSame($expected_reason, $access_result->getReason());

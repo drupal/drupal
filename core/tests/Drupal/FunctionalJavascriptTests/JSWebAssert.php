@@ -593,7 +593,7 @@ JS;
    * @param int $timeout
    *   Optional timeout in milliseconds, defaults to 10000.
    */
-  public function statusMessageExistsAfterWait(string $type = NULL, int $timeout = 10000): void {
+  public function statusMessageExistsAfterWait(?string $type = NULL, int $timeout = 10000): void {
     $selector = $this->buildJavascriptStatusMessageSelector(NULL, $type);
     $status_message_element = $this->waitForElement('xpath', $selector, $timeout);
     if ($type) {
@@ -615,7 +615,7 @@ JS;
    * @param int $timeout
    *   Optional timeout in milliseconds, defaults to 10000.
    */
-  public function statusMessageNotExistsAfterWait(string $type = NULL, int $timeout = 10000): void {
+  public function statusMessageNotExistsAfterWait(?string $type = NULL, int $timeout = 10000): void {
     $selector = $this->buildJavascriptStatusMessageSelector(NULL, $type);
     $status_message_element = $this->waitForElement('xpath', $selector, $timeout);
     if ($type) {
@@ -637,7 +637,7 @@ JS;
    * @param int $timeout
    *   Optional timeout in milliseconds, defaults to 10000.
    */
-  public function statusMessageContainsAfterWait(string $message, string $type = NULL, int $timeout = 10000): void {
+  public function statusMessageContainsAfterWait(string $message, ?string $type = NULL, int $timeout = 10000): void {
     $selector = $this->buildJavascriptStatusMessageSelector($message, $type);
     $status_message_element = $this->waitForElement('xpath', $selector, $timeout);
     if ($type) {
@@ -661,7 +661,7 @@ JS;
    * @param int $timeout
    *   Optional timeout in milliseconds, defaults to 10000.
    */
-  public function statusMessageNotContainsAfterWait(string $message, string $type = NULL, int $timeout = 10000): void {
+  public function statusMessageNotContainsAfterWait(string $message, ?string $type = NULL, int $timeout = 10000): void {
     $selector = $this->buildJavascriptStatusMessageSelector($message, $type);
     $status_message_element = $this->waitForElement('xpath', $selector, $timeout);
     if ($type) {
@@ -691,7 +691,7 @@ JS;
    * @throws \InvalidArgumentException
    *   Thrown when $type is not an allowed type.
    */
-  private function buildJavascriptStatusMessageSelector(string $message = NULL, string $type = NULL): string {
+  private function buildJavascriptStatusMessageSelector(?string $message = NULL, ?string $type = NULL): string {
     $allowed_types = [
       'status',
       'error',

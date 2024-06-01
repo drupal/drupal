@@ -75,7 +75,7 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ViewExecutable $view = NULL, $output = []) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?ViewExecutable $view = NULL, $output = []) {
     $form['#prefix'] = '<div class="views-form">';
     $form['#suffix'] = '</div>';
 

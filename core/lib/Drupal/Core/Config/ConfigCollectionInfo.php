@@ -32,7 +32,7 @@ class ConfigCollectionInfo extends Event {
    *   Exception thrown if $collection is equal to
    *   \Drupal\Core\Config\StorageInterface::DEFAULT_COLLECTION.
    */
-  public function addCollection($collection, ConfigFactoryOverrideInterface $override_service = NULL) {
+  public function addCollection($collection, ?ConfigFactoryOverrideInterface $override_service = NULL) {
     if ($collection == StorageInterface::DEFAULT_COLLECTION) {
       throw new \InvalidArgumentException('Can not add the default collection to the ConfigCollectionInfo object');
     }

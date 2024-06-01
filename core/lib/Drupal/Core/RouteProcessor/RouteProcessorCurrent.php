@@ -31,7 +31,7 @@ class RouteProcessorCurrent implements OutboundRouteProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($route_name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($route_name, Route $route, array &$parameters, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     if ($route_name === '<current>') {
       if ($current_route = $this->routeMatch->getRouteObject()) {
         $requirements = $current_route->getRequirements();

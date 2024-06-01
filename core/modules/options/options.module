@@ -70,7 +70,7 @@ function options_field_storage_config_delete(FieldStorageConfigInterface $field_
  *
  * @see callback_allowed_values_function()
  */
-function options_allowed_values(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL) {
+function options_allowed_values(FieldStorageDefinitionInterface $definition, ?FieldableEntityInterface $entity = NULL) {
   $allowed_values = &drupal_static(__FUNCTION__, []);
 
   $cache_keys = [$definition->getTargetEntityTypeId(), $definition->getName()];

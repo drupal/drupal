@@ -29,7 +29,7 @@ class TestPluginManager extends DefaultPluginManager {
    * @param string $interface
    *   (optional) The interface required for the plugins.
    */
-  public function __construct(\Traversable $namespaces, array $definitions, ModuleHandlerInterface $module_handler = NULL, $alter_hook = NULL, $interface = NULL) {
+  public function __construct(\Traversable $namespaces, array $definitions, ?ModuleHandlerInterface $module_handler = NULL, $alter_hook = NULL, $interface = NULL) {
     // Create the object that can be used to return definitions for all the
     // plugins available for this type. Most real plugin managers use a richer
     // discovery implementation, but StaticDiscovery lets us add some simple

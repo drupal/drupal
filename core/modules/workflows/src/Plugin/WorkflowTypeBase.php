@@ -258,7 +258,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
   /**
    * {@inheritdoc}
    */
-  public function getTransitions(array $transition_ids = NULL) {
+  public function getTransitions(?array $transition_ids = NULL) {
     if ($transition_ids === NULL) {
       $transition_ids = array_keys($this->configuration['transitions']);
     }

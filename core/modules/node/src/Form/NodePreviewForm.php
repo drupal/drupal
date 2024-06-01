@@ -74,7 +74,7 @@ class NodePreviewForm extends FormBase {
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $node = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?EntityInterface $node = NULL) {
     $view_mode = $node->preview_view_mode;
 
     $query_options = ['query' => ['uuid' => $node->uuid()]];

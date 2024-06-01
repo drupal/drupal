@@ -155,7 +155,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    *
    * @return \Drupal\Core\Field\FieldItemListInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected function createMockFieldListItem($access, $internal, AccountInterface $user_context = NULL) {
+  protected function createMockFieldListItem($access, $internal, ?AccountInterface $user_context = NULL) {
     $data_definition = $this->prophesize(DataDefinitionInterface::class);
     $mock = $this->createMock('Drupal\Core\Field\FieldItemListInterface');
     $mock->expects($this->once())
