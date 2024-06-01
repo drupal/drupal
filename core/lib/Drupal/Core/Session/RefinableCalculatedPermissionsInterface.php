@@ -27,13 +27,14 @@ interface RefinableCalculatedPermissionsInterface extends RefinableCacheableDepe
    * Removes a single calculated permission item from a given scope.
    *
    * @param string $scope
-   *   The scope name to remove the item from.
+   *   (optional) The scope name to remove the item from, defaults to 'drupal'.
    * @param string|int $identifier
-   *   The scope identifier to remove the item from.
+   *   (optional) The scope identifier to remove the item from, defaults to
+   *   'drupal'.
    *
    * @return self
    */
-  public function removeItem(string $scope, string|int $identifier): self;
+  public function removeItem(string $scope = AccessPolicyInterface::SCOPE_DRUPAL, string|int $identifier = AccessPolicyInterface::SCOPE_DRUPAL): self;
 
   /**
    * Removes all of the calculated permission items, regardless of scope.
