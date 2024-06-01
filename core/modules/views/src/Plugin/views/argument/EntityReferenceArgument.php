@@ -61,4 +61,19 @@ class EntityReferenceArgument extends NumericArgument implements ContainerFactor
     return $titles;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function summaryName($data) {
+    $id = $data->{$this->name_alias};
+    $entity = $id ? $this->entityTypeManager->getStorage($this->definition['target_entity_type_id'])->load($id) : NULL;
+    if ($entity) {
+      return $this->entityRepository->getTranslationFromContext($entity)->label();
+    }
+    if (($id === NULL || $id === '') && isset($this->definition['empty field name'])) {
+      return $this->definition['empty field name'];
+    }
+    return $id;
+  }
+
 }
