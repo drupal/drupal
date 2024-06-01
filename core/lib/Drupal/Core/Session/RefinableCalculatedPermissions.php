@@ -28,7 +28,7 @@ class RefinableCalculatedPermissions implements RefinableCalculatedPermissionsIn
   /**
    * {@inheritdoc}
    */
-  public function removeItem(string $scope, string|int $identifier): self {
+  public function removeItem(string $scope = AccessPolicyInterface::SCOPE_DRUPAL, string|int $identifier = AccessPolicyInterface::SCOPE_DRUPAL): self {
     unset($this->items[$scope][$identifier]);
     return $this;
   }
