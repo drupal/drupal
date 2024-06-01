@@ -374,7 +374,7 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
 
       // @todo Legacy support. Remove in Drupal 8.
       if (isset($settings['method']) && $settings['method'] == 'replace') {
-        @trigger_error('Using "replace" as the method in #ajax property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use "replaceWith" instead. See https://www.drupal.org/project/drupal/issues/3303557', E_USER_DEPRECATED);
+        @trigger_error('Using "replace" as the method in #ajax property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use "replaceWith" instead. See https://www.drupal.org/node/3450770', E_USER_DEPRECATED);
         $settings['method'] = 'replaceWith';
       }
 
