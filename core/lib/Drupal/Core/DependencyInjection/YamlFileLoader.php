@@ -9,6 +9,7 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Core\Serialization\Yaml;
 use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -492,6 +493,11 @@ class YamlFileLoader
 
               return $argument;
             }
+
+            if ($value->getTag() === 'service_closure') {
+                return new ServiceClosureArgument($this->resolveServices($argument));
+            }
+
         }
         if (is_array($value)) {
             $value = array_map(array($this, 'resolveServices'), $value);
