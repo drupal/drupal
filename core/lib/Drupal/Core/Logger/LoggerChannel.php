@@ -133,14 +133,14 @@ class LoggerChannel implements LoggerChannelInterface {
   /**
    * {@inheritdoc}
    */
-  public function setRequestStack(RequestStack $requestStack = NULL) {
+  public function setRequestStack(?RequestStack $requestStack = NULL) {
     $this->requestStack = $requestStack;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setCurrentUser(AccountInterface $current_user = NULL) {
+  public function setCurrentUser(?AccountInterface $current_user = NULL) {
     $this->currentUser = $current_user;
   }
 

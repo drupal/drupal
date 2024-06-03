@@ -48,7 +48,7 @@ abstract class FieldUpdateActionBase extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\Core\Access\AccessResultInterface $result */
     $result = $object->access('update', $account, TRUE);
 

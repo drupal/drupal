@@ -187,7 +187,7 @@ interface LanguageManagerInterface {
    *
    * @return $this
    */
-  public function setConfigOverrideLanguage(LanguageInterface $language = NULL);
+  public function setConfigOverrideLanguage(?LanguageInterface $language = NULL);
 
   /**
    * Gets the current configuration override language.

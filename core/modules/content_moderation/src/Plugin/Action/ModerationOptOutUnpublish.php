@@ -80,7 +80,7 @@ class ModerationOptOutUnpublish extends UnpublishAction {
   /**
    * {@inheritdoc}
    */
-  public function access($entity, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($entity, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     if ($entity && $this->moderationInfo->isModeratedEntity($entity)) {
       $bundle_info = $this->bundleInfo->getBundleInfo($entity->getEntityTypeId());

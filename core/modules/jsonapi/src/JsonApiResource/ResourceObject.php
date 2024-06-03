@@ -88,7 +88,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    * @param \Drupal\Core\Language\LanguageInterface|null $language
    *   (optional) The resource language.
    */
-  public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, $id, $revision_id, array $fields, LinkCollection $links, LanguageInterface $language = NULL) {
+  public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, $id, $revision_id, array $fields, LinkCollection $links, ?LanguageInterface $language = NULL) {
     assert(is_null($revision_id) || $resource_type->isVersionable());
     $this->setCacheability($cacheability);
     $this->resourceType = $resource_type;
@@ -117,7 +117,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    * @return static
    *   An instantiated resource object.
    */
-  public static function createFromEntity(ResourceType $resource_type, EntityInterface $entity, LinkCollection $links = NULL) {
+  public static function createFromEntity(ResourceType $resource_type, EntityInterface $entity, ?LinkCollection $links = NULL) {
     return new static(
       $entity,
       $resource_type,

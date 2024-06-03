@@ -136,7 +136,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\node\NodeInterface $object */
     $result = $object->access('update', $account, TRUE)
       ->andIf($object->getOwner()->access('edit', $account, TRUE));

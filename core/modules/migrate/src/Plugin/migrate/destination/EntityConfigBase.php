@@ -107,7 +107,7 @@ class EntityConfigBase extends Entity {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
     $entity_type_id = static::getEntityTypeId($plugin_id);
     return new static(
       $configuration,

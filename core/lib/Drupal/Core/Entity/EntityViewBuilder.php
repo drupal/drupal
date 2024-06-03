@@ -399,7 +399,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $entities = NULL) {
+  public function resetCache(?array $entities = NULL) {
     // If no set of specific entities is provided, invalidate the entity view
     // builder's cache tag. This will invalidate all entities rendered by this
     // view builder.

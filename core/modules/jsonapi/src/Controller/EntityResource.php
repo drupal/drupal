@@ -1011,7 +1011,7 @@ class EntityResource {
    * @return \Drupal\jsonapi\ResourceResponse
    *   The response.
    */
-  protected function buildWrappedResponse(TopLevelDataInterface $data, Request $request, IncludedData $includes, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
+  protected function buildWrappedResponse(TopLevelDataInterface $data, Request $request, IncludedData $includes, $response_code = 200, array $headers = [], ?LinkCollection $links = NULL, array $meta = []) {
     $links = ($links ?: new LinkCollection([]));
     if (!$links->hasLinkWithKey('self')) {
       $self_link = new Link(new CacheableMetadata(), self::getRequestLink($request), 'self');

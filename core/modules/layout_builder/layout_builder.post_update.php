@@ -39,7 +39,7 @@ function layout_builder_removed_post_updates() {
 /**
  * Update timestamp formatter settings for Layout Builder fields.
  */
-function layout_builder_post_update_timestamp_formatter(array &$sandbox = NULL): void {
+function layout_builder_post_update_timestamp_formatter(?array &$sandbox = NULL): void {
   /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
   $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
 

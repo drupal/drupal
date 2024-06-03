@@ -557,7 +557,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * phpcs:ignore Drupal.Commenting.FunctionComment.InvalidReturnVoid
    * @return void
    */
-  public function setContainer(ContainerInterface $container = NULL) {
+  public function setContainer(?ContainerInterface $container = NULL) {
     if (isset($this->container)) {
       throw new \Exception('The container should not override an existing container.');
     }

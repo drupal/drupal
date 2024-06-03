@@ -78,7 +78,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $ids = NULL) {
+  public function resetCache(?array $ids = NULL) {
     $this->ancestors = [];
     $this->treeChildren = [];
     $this->treeParents = [];

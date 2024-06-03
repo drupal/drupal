@@ -29,7 +29,7 @@ class ThemeAdminForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, array $theme_options = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?array $theme_options = NULL) {
     // Administration theme settings.
     $form['admin_theme'] = [
       '#type' => 'details',

@@ -44,7 +44,7 @@ class AdminController extends ControllerBase {
    * @param \Drupal\user\ModulePermissionsLinkHelper|null $module_permissions_link
    *   The module permission link.
    */
-  public function __construct(ModuleExtensionList $extension_list_module, ModuleAdminLinksHelper $module_admin_links = NULL, ModulePermissionsLinkHelper $module_permissions_link = NULL) {
+  public function __construct(ModuleExtensionList $extension_list_module, ?ModuleAdminLinksHelper $module_admin_links = NULL, ?ModulePermissionsLinkHelper $module_permissions_link = NULL) {
     $this->moduleExtensionList = $extension_list_module;
     if (!isset($module_admin_links)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $module_admin_tasks_helper argument is deprecated in drupal:10.2.0 and the $module_admin_tasks_helper argument will be required in drupal:11.0.0. See https://www.drupal.org/node/3038972', E_USER_DEPRECATED);

@@ -51,7 +51,7 @@ interface AssetResolverInterface {
    * @return array
    *   A (possibly optimized) collection of CSS assets.
    */
-  public function getCssAssets(AttachedAssetsInterface $assets, $optimize, LanguageInterface $language = NULL);
+  public function getCssAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL);
 
   /**
    * Returns the JavaScript assets for the current response's libraries.
@@ -83,6 +83,6 @@ interface AssetResolverInterface {
    *   - at index one: the (possibly optimized) collection of JavaScript assets
    *     for the bottom of the page
    */
-  public function getJsAssets(AttachedAssetsInterface $assets, $optimize, LanguageInterface $language = NULL);
+  public function getJsAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL);
 
 }

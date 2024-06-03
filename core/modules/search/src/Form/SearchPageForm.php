@@ -38,7 +38,7 @@ class SearchPageForm extends FormBase implements WorkspaceSafeFormInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SearchPageInterface $search_page = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SearchPageInterface $search_page = NULL) {
     $this->entity = $search_page;
 
     $plugin = $this->entity->getPlugin();

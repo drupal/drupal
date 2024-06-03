@@ -51,7 +51,7 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
   /**
    * {@inheritdoc}
    */
-  protected function prepareAnnotationDefinition(AnnotationInterface $annotation, $class, BaseStaticReflectionParser $parser = NULL) {
+  protected function prepareAnnotationDefinition(AnnotationInterface $annotation, $class, ?BaseStaticReflectionParser $parser = NULL) {
     if (!($annotation instanceof MultipleProviderAnnotationInterface)) {
       throw new \LogicException('AnnotatedClassDiscoveryAutomatedProviders annotations must implement \Drupal\migrate\Annotation\MultipleProviderAnnotationInterface');
     }

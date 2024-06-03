@@ -99,7 +99,7 @@ class IncludeResolver {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    *   Thrown if a storage handler couldn't be loaded.
    */
-  protected function resolveIncludeTree(array $include_tree, Data $data, Data $includes = NULL) {
+  protected function resolveIncludeTree(array $include_tree, Data $data, ?Data $includes = NULL) {
     $includes = is_null($includes) ? new IncludedData([]) : $includes;
     foreach ($include_tree as $field_name => $children) {
       $references = [];

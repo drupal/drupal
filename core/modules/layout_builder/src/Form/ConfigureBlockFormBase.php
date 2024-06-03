@@ -160,7 +160,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
    * @return array
    *   The form array.
    */
-  public function doBuildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, SectionComponent $component = NULL) {
+  public function doBuildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, ?SectionComponent $component = NULL) {
     $this->sectionStorage = $section_storage;
     $this->delta = $delta;
     $this->uuid = $component->getUuid();

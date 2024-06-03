@@ -32,7 +32,7 @@ interface EntityStorageInterface {
    *   (optional) If specified, the cache is reset for the entities with the
    *   given ids only.
    */
-  public function resetCache(array $ids = NULL);
+  public function resetCache(?array $ids = NULL);
 
   /**
    * Loads one or more entities.
@@ -44,7 +44,7 @@ interface EntityStorageInterface {
    *   An array of entity objects indexed by their IDs. Returns an empty array
    *   if no matching entities are found.
    */
-  public function loadMultiple(array $ids = NULL);
+  public function loadMultiple(?array $ids = NULL);
 
   /**
    * Loads one entity.

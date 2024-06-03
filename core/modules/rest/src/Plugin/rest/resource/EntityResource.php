@@ -159,7 +159,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function post(EntityInterface $entity = NULL) {
+  public function post(?EntityInterface $entity = NULL) {
     if ($entity == NULL) {
       throw new BadRequestHttpException('No entity content received.');
     }
@@ -216,7 +216,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function patch(EntityInterface $original_entity, EntityInterface $entity = NULL) {
+  public function patch(EntityInterface $original_entity, ?EntityInterface $entity = NULL) {
     if ($entity == NULL) {
       throw new BadRequestHttpException('No entity content received.');
     }

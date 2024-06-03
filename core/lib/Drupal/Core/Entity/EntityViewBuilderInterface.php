@@ -78,7 +78,7 @@ interface EntityViewBuilderInterface {
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   (optional) If specified, the cache is reset for the given entities only.
    */
-  public function resetCache(array $entities = NULL);
+  public function resetCache(?array $entities = NULL);
 
   /**
    * Builds a renderable array for the value of a single field in an entity.

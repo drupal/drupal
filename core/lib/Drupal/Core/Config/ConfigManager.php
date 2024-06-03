@@ -266,7 +266,7 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function findConfigEntityDependencies($type, array $names, ConfigDependencyManager $dependency_manager = NULL) {
+  public function findConfigEntityDependencies($type, array $names, ?ConfigDependencyManager $dependency_manager = NULL) {
     if (!$dependency_manager) {
       $dependency_manager = $this->getConfigDependencyManager();
     }
@@ -280,7 +280,7 @@ class ConfigManager implements ConfigManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function findConfigEntityDependenciesAsEntities($type, array $names, ConfigDependencyManager $dependency_manager = NULL) {
+  public function findConfigEntityDependenciesAsEntities($type, array $names, ?ConfigDependencyManager $dependency_manager = NULL) {
     $dependencies = $this->findConfigEntityDependencies($type, $names, $dependency_manager);
     $entities = [];
     $definitions = $this->entityTypeManager->getDefinitions();

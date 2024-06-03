@@ -38,7 +38,7 @@ trait InstallerRedirectTrait {
    *   TRUE if the exception handler should redirect to the installer because
    *   Drupal is not installed yet, or FALSE otherwise.
    */
-  protected function shouldRedirectToInstaller(\Throwable $exception, Connection $connection = NULL) {
+  protected function shouldRedirectToInstaller(\Throwable $exception, ?Connection $connection = NULL) {
     // Never redirect on the command line.
     if ($this->isCli()) {
       return FALSE;

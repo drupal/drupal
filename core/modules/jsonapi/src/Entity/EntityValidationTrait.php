@@ -32,7 +32,7 @@ trait EntityValidationTrait {
    *
    * @see \Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait::validate()
    */
-  protected static function validate(EntityInterface $entity, array $field_names = NULL) {
+  protected static function validate(EntityInterface $entity, ?array $field_names = NULL) {
     if (!$entity instanceof FieldableEntityInterface) {
       return;
     }

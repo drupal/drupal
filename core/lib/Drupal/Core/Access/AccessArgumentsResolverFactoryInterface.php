@@ -24,6 +24,6 @@ interface AccessArgumentsResolverFactoryInterface {
    * @return \Drupal\Component\Utility\ArgumentsResolverInterface
    *   The parametrized arguments resolver instance.
    */
-  public function getArgumentsResolver(RouteMatchInterface $route_match, AccountInterface $account, Request $request = NULL);
+  public function getArgumentsResolver(RouteMatchInterface $route_match, AccountInterface $account, ?Request $request = NULL);
 
 }

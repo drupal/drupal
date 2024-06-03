@@ -129,7 +129,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
    * @param \Drupal\Core\Session\AccountSwitcherInterface $account_switcher
    *   The account switcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, AccountSwitcherInterface $account_switcher = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, ?AccountSwitcherInterface $account_switcher = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
     $this->entityFieldManager = $entity_field_manager;
     $this->fieldTypeManager = $field_type_manager;
@@ -139,7 +139,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
     $entity_type = static::getEntityTypeId($plugin_id);
     return new static(
       $configuration,

@@ -88,7 +88,7 @@ class WorkspaceOperationFactory {
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, EventDispatcherInterface|CacheTagsInvalidatorInterface $event_dispatcher, LoggerInterface|EventDispatcherInterface $logger = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, EventDispatcherInterface|CacheTagsInvalidatorInterface $event_dispatcher, LoggerInterface|EventDispatcherInterface|null $logger = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->workspaceManager = $workspace_manager;

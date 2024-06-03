@@ -52,7 +52,7 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, TermInterface $taxonomy_term = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?TermInterface $taxonomy_term = NULL) {
     $this->taxonomyTerm = $taxonomy_term;
 
     return parent::buildForm($form, $form_state);

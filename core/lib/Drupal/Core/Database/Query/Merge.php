@@ -193,7 +193,7 @@ class Merge extends Query implements ConditionInterface {
    * @return $this
    *   The called object.
    */
-  public function expression($field, $expression, array $arguments = NULL) {
+  public function expression($field, $expression, ?array $arguments = NULL) {
     $this->expressionFields[$field] = [
       'expression' => $expression,
       'arguments' => $arguments,

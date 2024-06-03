@@ -59,7 +59,7 @@ class MenuLinkContentForm extends ContentEntityForm {
    * @param \Drupal\Component\Datetime\TimeInterface|\Drupal\Core\Entity\EntityTypeBundleInfoInterface $time
    *   The time service.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, MenuParentFormSelectorInterface $menu_parent_selector, PathValidatorInterface|LanguageManagerInterface $path_validator, EntityTypeBundleInfoInterface|PathValidatorInterface $entity_type_bundle_info = NULL, TimeInterface|EntityTypeBundleInfoInterface $time = NULL) {
+  public function __construct(EntityRepositoryInterface $entity_repository, MenuParentFormSelectorInterface $menu_parent_selector, PathValidatorInterface|LanguageManagerInterface $path_validator, EntityTypeBundleInfoInterface|PathValidatorInterface|null $entity_type_bundle_info = NULL, TimeInterface|EntityTypeBundleInfoInterface|null $time = NULL) {
     if ($path_validator instanceof LanguageManagerInterface) {
       $path_validator = func_get_arg(3);
       $entity_type_bundle_info = func_get_arg(4);

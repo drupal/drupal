@@ -47,7 +47,7 @@ class State extends CacheCollector implements StateInterface {
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
    */
-  public function __construct(KeyValueFactoryInterface $key_value_factory, CacheBackendInterface $cache = NULL, LockBackendInterface $lock = NULL) {
+  public function __construct(KeyValueFactoryInterface $key_value_factory, ?CacheBackendInterface $cache = NULL, ?LockBackendInterface $lock = NULL) {
     if (!$cache) {
       @trigger_error('Calling  ' . __METHOD__ . '() without the $cache argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3177901', E_USER_DEPRECATED);
       $cache = \Drupal::cache('bootstrap');

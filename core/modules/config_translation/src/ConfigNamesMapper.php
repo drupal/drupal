@@ -132,7 +132,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
    *   Throws an exception if the route specified by the 'base_route_name' in
    *   the plugin definition could not be found by the route provider.
    */
-  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $string_translation, LanguageManagerInterface $language_manager, EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct($plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config, LocaleConfigManager $locale_config_manager, ConfigMapperManagerInterface $config_mapper_manager, RouteProviderInterface $route_provider, TranslationInterface $string_translation, LanguageManagerInterface $language_manager, ?EventDispatcherInterface $event_dispatcher = NULL) {
     $this->pluginId = $plugin_id;
     $this->pluginDefinition = $plugin_definition;
     $this->routeProvider = $route_provider;

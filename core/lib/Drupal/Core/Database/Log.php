@@ -140,7 +140,7 @@ class Log {
    *
    * @see https://www.drupal.org/node/3328053
    */
-  public function log(StatementInterface $statement, $args, $time, float $start = NULL) {
+  public function log(StatementInterface $statement, $args, $time, ?float $start = NULL) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ::logFromEvent(). See https://www.drupal.org/node/3328053', E_USER_DEPRECATED);
     foreach (array_keys($this->queryLog) as $key) {
       $this->queryLog[$key][] = [

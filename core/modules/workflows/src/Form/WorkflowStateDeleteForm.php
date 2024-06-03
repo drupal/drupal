@@ -71,7 +71,7 @@ class WorkflowStateDeleteForm extends ConfirmFormBase {
    * @return array
    *   The form structure.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, WorkflowInterface $workflow = NULL, $workflow_state = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?WorkflowInterface $workflow = NULL, $workflow_state = NULL) {
     if (!$workflow->getTypePlugin()->hasState($workflow_state)) {
       throw new NotFoundHttpException();
     }

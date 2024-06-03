@@ -51,7 +51,7 @@ interface ConfigInstallerInterface {
    *   'theme', or 'config') and the dependency name as the value
    *   ('node', 'olivero', 'views.view.frontpage').
    */
-  public function installOptionalConfig(StorageInterface $storage = NULL, $dependency = []);
+  public function installOptionalConfig(?StorageInterface $storage = NULL, $dependency = []);
 
   /**
    * Installs all default configuration in the specified collection.

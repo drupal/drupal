@@ -119,7 +119,7 @@ class EntityAccessChecker {
    *   EntityAccessDeniedHttpException object if neither is accessible. All
    *   three possible return values carry the access result cacheability.
    */
-  public function getAccessCheckedResourceObject(EntityInterface $entity, AccountInterface $account = NULL) {
+  public function getAccessCheckedResourceObject(EntityInterface $entity, ?AccountInterface $account = NULL) {
     $account = $account ?: $this->currentUser;
     $resource_type = $this->resourceTypeRepository->get($entity->getEntityTypeId(), $entity->bundle());
     $entity = $this->entityRepository->getTranslationFromContext($entity, NULL, ['operation' => 'entity_upcast']);

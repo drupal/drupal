@@ -24,7 +24,7 @@ class InfoParserDynamic implements InfoParserInterface {
    * @param string|null $app_root
    *   The root directory of the Drupal installation.
    */
-  public function __construct(string $app_root = NULL) {
+  public function __construct(?string $app_root = NULL) {
     if ($app_root === NULL) {
       @trigger_error('Calling InfoParserDynamic::__construct() without the $app_root argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3293709', E_USER_DEPRECATED);
       $app_root = \Drupal::hasService('kernel') ? \Drupal::root() : DRUPAL_ROOT;

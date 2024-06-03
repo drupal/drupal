@@ -71,7 +71,7 @@ interface VariantInterface extends PluginInspectionInterface, ConfigurableInterf
    * @return bool
    *   TRUE if this display variant is accessible, FALSE otherwise.
    */
-  public function access(AccountInterface $account = NULL);
+  public function access(?AccountInterface $account = NULL);
 
   /**
    * Builds and returns the renderable array for the display variant.

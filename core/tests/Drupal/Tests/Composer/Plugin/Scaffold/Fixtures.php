@@ -237,7 +237,7 @@ class Fixtures {
    *
    * @see \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath::destinationPath()
    */
-  public function destinationPath($destination, Interpolator $interpolator = NULL, $package_name = NULL) {
+  public function destinationPath($destination, ?Interpolator $interpolator = NULL, $package_name = NULL) {
     $interpolator = $interpolator ?: $this->getLocationReplacements();
     $package_name = $package_name ?: $interpolator->interpolate('[package-name]');
     return ScaffoldFilePath::destinationPath($package_name, $destination, $interpolator);

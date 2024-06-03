@@ -74,7 +74,7 @@ function views_post_update_responsive_image_lazy_load(?array &$sandbox = NULL): 
 /**
  * Update timestamp formatter settings for views.
  */
-function views_post_update_timestamp_formatter(array &$sandbox = NULL): void {
+function views_post_update_timestamp_formatter(?array &$sandbox = NULL): void {
   /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
@@ -119,7 +119,7 @@ function views_post_update_remove_skip_cache_setting(): void {
 /**
  * Remove default_argument_skip_url setting.
  */
-function views_post_update_remove_default_argument_skip_url(array &$sandbox = NULL): void {
+function views_post_update_remove_default_argument_skip_url(?array &$sandbox = NULL): void {
   /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {

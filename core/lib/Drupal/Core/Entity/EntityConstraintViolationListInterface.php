@@ -88,7 +88,7 @@ interface EntityConstraintViolationListInterface extends ConstraintViolationList
    *
    * @return $this
    */
-  public function filterByFieldAccess(AccountInterface $account = NULL);
+  public function filterByFieldAccess(?AccountInterface $account = NULL);
 
   /**
    * Returns the names of all violated fields.

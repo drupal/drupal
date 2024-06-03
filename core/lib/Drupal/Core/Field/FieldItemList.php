@@ -149,7 +149,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation = 'view', ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler($this->getEntity()->getEntityTypeId());
     return $access_control_handler->fieldAccess($operation, $this->getFieldDefinition(), $account, $this, $return_as_object);
   }
@@ -157,7 +157,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   /**
    * {@inheritdoc}
    */
-  public function defaultAccess($operation = 'view', AccountInterface $account = NULL) {
+  public function defaultAccess($operation = 'view', ?AccountInterface $account = NULL) {
     // Grant access per default.
     return AccessResult::allowed();
   }

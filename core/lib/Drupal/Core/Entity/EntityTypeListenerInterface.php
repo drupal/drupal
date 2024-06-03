@@ -51,7 +51,7 @@ interface EntityTypeListenerInterface {
    *   or a Batch API callback. If the entity schema update requires a data
    *   migration, this parameter is mandatory. Defaults to NULL.
    */
-  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL);
+  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, ?array &$sandbox = NULL);
 
   /**
    * Reacts to the deletion of the entity type.

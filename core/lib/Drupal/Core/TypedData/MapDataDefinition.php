@@ -54,7 +54,7 @@ class MapDataDefinition extends ComplexDataDefinitionBase {
    *
    * @return $this
    */
-  public function setPropertyDefinition($name, DataDefinitionInterface $definition = NULL) {
+  public function setPropertyDefinition($name, ?DataDefinitionInterface $definition = NULL) {
     if (isset($definition)) {
       $this->propertyDefinitions[$name] = $definition;
     }

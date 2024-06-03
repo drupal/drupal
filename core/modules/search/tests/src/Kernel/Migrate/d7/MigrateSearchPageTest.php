@@ -36,7 +36,7 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
    *
    * @internal
    */
-  protected function assertEntity(string $id, string $path, bool $status = FALSE, array $expected_config = NULL): void {
+  protected function assertEntity(string $id, string $path, bool $status = FALSE, ?array $expected_config = NULL): void {
     /** @var \Drupal\search\Entity\SearchPage $search_page */
     $search_page = SearchPage::load($id);
     $this->assertSame($id, $search_page->id());

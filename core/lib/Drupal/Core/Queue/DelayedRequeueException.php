@@ -37,7 +37,7 @@ class DelayedRequeueException extends \RuntimeException {
    * @param \Throwable|null $previous
    *   The previous throwable used for the exception chaining.
    */
-  public function __construct(int $delay = 0, string $message = '', int $code = 0, \Throwable $previous = NULL) {
+  public function __construct(int $delay = 0, string $message = '', int $code = 0, ?\Throwable $previous = NULL) {
     parent::__construct($message, $code, $previous);
     if ($delay > 0) {
       $this->delay = $delay;

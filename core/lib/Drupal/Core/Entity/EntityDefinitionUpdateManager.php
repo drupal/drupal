@@ -187,7 +187,7 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   /**
    * {@inheritdoc}
    */
-  public function updateFieldableEntityType(EntityTypeInterface $entity_type, array $field_storage_definitions, array &$sandbox = NULL) {
+  public function updateFieldableEntityType(EntityTypeInterface $entity_type, array $field_storage_definitions, ?array &$sandbox = NULL) {
     $original = $this->getEntityType($entity_type->id());
 
     if ($this->requiresEntityDataMigration($entity_type, $original) && $sandbox === NULL) {

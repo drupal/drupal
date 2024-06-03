@@ -41,7 +41,7 @@ class TestStateBasedSectionStorage extends SectionStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     throw new \RuntimeException(__METHOD__ . " not implemented for " . __CLASS__);
   }
 

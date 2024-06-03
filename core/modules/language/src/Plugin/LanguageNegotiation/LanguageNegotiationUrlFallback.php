@@ -46,7 +46,7 @@ class LanguageNegotiationUrlFallback extends LanguageNegotiationMethodBase {
   /**
    * {@inheritdoc}
    */
-  public function getLangcode(Request $request = NULL) {
+  public function getLangcode(?Request $request = NULL) {
     $langcode = NULL;
 
     if ($this->languageManager) {

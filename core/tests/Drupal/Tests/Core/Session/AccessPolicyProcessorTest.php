@@ -369,11 +369,11 @@ class AccessPolicyProcessorTest extends UnitTestCase {
    * @return \Drupal\Core\Session\AccessPolicyProcessorInterface
    */
   protected function setUpAccessPolicyProcessor(
-    VariationCacheInterface $variation_cache = NULL,
-    VariationCacheInterface $variation_cache_static = NULL,
-    CacheBackendInterface $cache_static = NULL,
-    AccountProxyInterface $current_user = NULL,
-    AccountSwitcherInterface $account_switcher = NULL,
+    ?VariationCacheInterface $variation_cache = NULL,
+    ?VariationCacheInterface $variation_cache_static = NULL,
+    ?CacheBackendInterface $cache_static = NULL,
+    ?AccountProxyInterface $current_user = NULL,
+    ?AccountSwitcherInterface $account_switcher = NULL,
   ) {
     // Prophecy does not accept a willReturn call on a mocked method if said
     // method has a return type of void. However, without willReturn() or any

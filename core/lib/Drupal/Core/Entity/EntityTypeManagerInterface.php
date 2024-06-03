@@ -132,7 +132,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @return object
    *   A handler instance.
    */
-  public function createHandlerInstance($class, EntityTypeInterface $definition = NULL);
+  public function createHandlerInstance($class, ?EntityTypeInterface $definition = NULL);
 
   /**
    * {@inheritdoc}

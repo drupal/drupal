@@ -108,7 +108,7 @@ class MediaLibraryUiBuilder {
    * @return array
    *   The render array for the media library.
    */
-  public function buildUi(MediaLibraryState $state = NULL) {
+  public function buildUi(?MediaLibraryState $state = NULL) {
     if (!$state) {
       $state = MediaLibraryState::fromRequest($this->request);
     }
@@ -176,7 +176,7 @@ class MediaLibraryUiBuilder {
    * @return \Drupal\Core\Access\AccessResult
    *   The access result.
    */
-  public function checkAccess(AccountInterface $account, MediaLibraryState $state = NULL) {
+  public function checkAccess(AccountInterface $account, ?MediaLibraryState $state = NULL) {
     if (!$state) {
       try {
         $state = MediaLibraryState::fromRequest($this->request);

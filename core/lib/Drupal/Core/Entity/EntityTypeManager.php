@@ -275,7 +275,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   /**
    * {@inheritdoc}
    */
-  public function createHandlerInstance($class, EntityTypeInterface $definition = NULL) {
+  public function createHandlerInstance($class, ?EntityTypeInterface $definition = NULL) {
     if (is_subclass_of($class, 'Drupal\Core\Entity\EntityHandlerInterface')) {
       $handler = $class::createInstance($this->container, $definition);
     }

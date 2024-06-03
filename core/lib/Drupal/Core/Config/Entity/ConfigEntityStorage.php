@@ -159,7 +159,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   /**
    * {@inheritdoc}
    */
-  protected function doLoadMultiple(array $ids = NULL) {
+  protected function doLoadMultiple(?array $ids = NULL) {
     $prefix = $this->getPrefix();
 
     // Get the names of the configuration entities we are going to load.
@@ -482,7 +482,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   /**
    * {@inheritdoc}
    */
-  public function loadMultipleOverrideFree(array $ids = NULL) {
+  public function loadMultipleOverrideFree(?array $ids = NULL) {
     $this->overrideFree = TRUE;
     $entities = $this->loadMultiple($ids);
     $this->overrideFree = FALSE;

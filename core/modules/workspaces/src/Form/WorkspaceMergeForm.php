@@ -78,7 +78,7 @@ class WorkspaceMergeForm extends ConfirmFormBase implements ContainerInjectionIn
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, WorkspaceInterface $source_workspace = NULL, WorkspaceInterface $target_workspace = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?WorkspaceInterface $source_workspace = NULL, ?WorkspaceInterface $target_workspace = NULL) {
     $this->sourceWorkspace = $source_workspace;
     $this->targetWorkspace = $target_workspace;
 

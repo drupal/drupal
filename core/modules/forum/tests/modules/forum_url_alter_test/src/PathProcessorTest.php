@@ -23,7 +23,7 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     // Rewrite forum/ to community/.
     return preg_replace('@^/forum(.*)@', '/community$1', $path);
   }

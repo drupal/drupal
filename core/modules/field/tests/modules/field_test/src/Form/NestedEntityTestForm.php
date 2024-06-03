@@ -25,7 +25,7 @@ class NestedEntityTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity_1 = NULL, EntityInterface $entity_2 = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?EntityInterface $entity_1 = NULL, ?EntityInterface $entity_2 = NULL) {
     // First entity.
     $form_state->set('entity_1', $entity_1);
     $form_display_1 = EntityFormDisplay::collectRenderDisplay($entity_1, 'default');

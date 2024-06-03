@@ -14,7 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see options_allowed_values()
  */
-function options_test_allowed_values_callback(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL) {
+function options_test_allowed_values_callback(FieldStorageDefinitionInterface $definition, ?FieldableEntityInterface $entity = NULL) {
   $values = [
     'Group 1' => [
       0 => 'Zero',
@@ -41,7 +41,7 @@ function options_test_allowed_values_callback(FieldStorageDefinitionInterface $d
  *
  * @see options_allowed_values()
  */
-function options_test_dynamic_values_callback(FieldStorageDefinitionInterface $definition, FieldableEntityInterface $entity = NULL, &$cacheable = NULL) {
+function options_test_dynamic_values_callback(FieldStorageDefinitionInterface $definition, ?FieldableEntityInterface $entity = NULL, &$cacheable = NULL) {
   $values = [];
   if (isset($entity)) {
     $cacheable = FALSE;

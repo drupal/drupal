@@ -131,7 +131,7 @@ interface StatementInterface extends \Traversable {
    *   The object of specified class or \stdClass if not specified. Returns
    *   FALSE or NULL if there is no next row.
    */
-  public function fetchObject(/* string $class_name = NULL, array $constructor_arguments = [] */);
+  public function fetchObject(/* ?string $class_name = NULL, array $constructor_arguments = [] */);
 
   /**
    * Fetches the next row and returns it as an associative array.

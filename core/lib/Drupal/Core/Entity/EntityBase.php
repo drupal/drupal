@@ -318,7 +318,7 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($operation == 'create') {
       return $this->entityTypeManager()
         ->getAccessControlHandler($this->entityTypeId)
@@ -506,7 +506,7 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public static function loadMultiple(array $ids = NULL) {
+  public static function loadMultiple(?array $ids = NULL) {
     $entity_type_repository = \Drupal::service('entity_type.repository');
     $entity_type_manager = \Drupal::entityTypeManager();
     $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass(static::class));

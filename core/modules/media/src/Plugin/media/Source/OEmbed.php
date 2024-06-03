@@ -400,7 +400,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    * toggle-able. See https://www.drupal.org/project/drupal/issues/2962751 for
    * more information.
    */
-  protected function getLocalThumbnailUri(Resource $resource, MediaInterface $media = NULL) {
+  protected function getLocalThumbnailUri(Resource $resource, ?MediaInterface $media = NULL) {
     if (is_null($media)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $media argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3432920', E_USER_DEPRECATED);
       $token_data = [];

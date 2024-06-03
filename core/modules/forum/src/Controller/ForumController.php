@@ -285,7 +285,7 @@ class ForumController extends ControllerBase {
    * @return array
    *   Render array containing the links.
    */
-  protected function buildActionLinks($vid, TermInterface $forum_term = NULL) {
+  protected function buildActionLinks($vid, ?TermInterface $forum_term = NULL) {
     $user = $this->currentUser();
 
     $links = [];

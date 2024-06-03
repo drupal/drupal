@@ -492,7 +492,7 @@ class VariationCacheTest extends UnitTestCase {
    *   (optional) The cacheability that should have been used. Does not apply
    *   when checking for cache redirects.
    */
-  protected function assertCacheBackendItem(string $cid, $data, CacheableMetadata $cacheability = NULL) {
+  protected function assertCacheBackendItem(string $cid, $data, ?CacheableMetadata $cacheability = NULL) {
     $cache_backend_item = $this->memoryBackend->get($cid);
     $this->assertNotFalse($cache_backend_item, 'The data was stored and retrieved successfully.');
     $this->assertEquals($data, $cache_backend_item->data, 'Cache item contains the right data.');

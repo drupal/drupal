@@ -46,6 +46,6 @@ interface SelectionPluginManagerInterface extends PluginManagerInterface {
    * @return \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
    *   The selection plugin.
    */
-  public function getSelectionHandler(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL);
+  public function getSelectionHandler(FieldDefinitionInterface $field_definition, ?EntityInterface $entity = NULL);
 
 }

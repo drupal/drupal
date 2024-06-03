@@ -46,7 +46,7 @@ class FilterID extends StaticMap implements ContainerFactoryPluginInterface {
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translator
    *   (optional) The string translation service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $filter_manager, TranslationInterface $translator = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $filter_manager, ?TranslationInterface $translator = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->filterManager = $filter_manager;
     $this->stringTranslation = $translator;

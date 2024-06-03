@@ -71,7 +71,7 @@ class CommentStatistics implements CommentStatisticsInterface {
     EntityTypeManagerInterface $entity_type_manager,
     StateInterface $state,
     protected TimeInterface|Connection|null $time = NULL,
-    Connection $database_replica = NULL,
+    ?Connection $database_replica = NULL,
   ) {
     $this->database = $database;
     $this->currentUser = $current_user;

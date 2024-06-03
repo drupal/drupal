@@ -90,7 +90,7 @@ class EditorMediaDialog extends FormBase {
    * @param \Drupal\editor\EditorInterface $editor
    *   The text editor to which this dialog corresponds.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EditorInterface $editor = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?EditorInterface $editor = NULL) {
     // This form is special, in that the default values do not come from the
     // server side, but from the client side, from a text editor. We must cache
     // this data in form state, because when the form is rebuilt, we will be

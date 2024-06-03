@@ -80,6 +80,6 @@ interface ConfigEntityStorageInterface extends EntityStorageInterface {
    *   An array of entity objects indexed by their IDs. Returns an empty array
    *   if no matching entities are found.
    */
-  public function loadMultipleOverrideFree(array $ids = NULL);
+  public function loadMultipleOverrideFree(?array $ids = NULL);
 
 }

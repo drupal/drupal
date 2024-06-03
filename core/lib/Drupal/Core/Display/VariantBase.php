@@ -130,7 +130,7 @@ abstract class VariantBase extends PluginBase implements VariantInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account = NULL) {
+  public function access(?AccountInterface $account = NULL) {
     return TRUE;
   }
 

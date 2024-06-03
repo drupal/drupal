@@ -192,7 +192,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
-  public function getTrackedEntitiesForListing($workspace_id, int $pager_id = NULL, int|false $limit = 50): array {
+  public function getTrackedEntitiesForListing($workspace_id, ?int $pager_id = NULL, int|false $limit = 50): array {
     $query = $this->database->select(static::TABLE)
       ->extend(PagerSelectExtender::class)
       ->limit($limit);

@@ -26,7 +26,7 @@ function datetime_range_removed_post_updates() {
  *
  * @see \datetime_range_entity_view_display_presave
  */
-function datetime_range_post_update_from_to_configuration(array &$sandbox = NULL): void {
+function datetime_range_post_update_from_to_configuration(?array &$sandbox = NULL): void {
   /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
   $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);

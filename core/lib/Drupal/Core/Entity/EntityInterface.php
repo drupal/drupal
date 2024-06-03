@@ -194,7 +194,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @return static[]
    *   An array of entity objects indexed by their IDs.
    */
-  public static function loadMultiple(array $ids = NULL);
+  public static function loadMultiple(?array $ids = NULL);
 
   /**
    * Constructs a new entity object, without permanently saving it.

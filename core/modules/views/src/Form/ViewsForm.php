@@ -95,7 +95,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, $view_id = NULL, $view_display_id = NULL, array $view_args = NULL) {
+  public static function create(ContainerInterface $container, $view_id = NULL, $view_display_id = NULL, ?array $view_args = NULL) {
     return new static(
       $container->get('class_resolver'),
       $container->get('url_generator'),
@@ -141,7 +141,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ViewExecutable $view = NULL, $output = []) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?ViewExecutable $view = NULL, $output = []) {
     if (!$step = $form_state->get('step')) {
       $step = 'views_form_views_form';
       $form_state->set('step', $step);

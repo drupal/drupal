@@ -27,7 +27,7 @@ class PublishAction extends EntityActionBase {
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $key = $object->getEntityType()->getKey('published');
 
     /** @var \Drupal\Core\Entity\EntityInterface $object */

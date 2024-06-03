@@ -22,7 +22,7 @@ function responsive_image_removed_post_updates() {
 /**
  * Re-order mappings by breakpoint ID and descending numeric multiplier order.
  */
-function responsive_image_post_update_order_multiplier_numerically(array &$sandbox = NULL): void {
+function responsive_image_post_update_order_multiplier_numerically(?array &$sandbox = NULL): void {
   /** @var \Drupal\responsive_image\ResponsiveImageConfigUpdater $responsive_image_config_updater */
   $responsive_image_config_updater = \Drupal::classResolver(ResponsiveImageConfigUpdater::class);
   $responsive_image_config_updater->setDeprecationsEnabled(FALSE);
@@ -34,7 +34,7 @@ function responsive_image_post_update_order_multiplier_numerically(array &$sandb
 /**
  * Add the image loading settings to responsive image field formatter instances.
  */
-function responsive_image_post_update_image_loading_attribute(array &$sandbox = NULL): void {
+function responsive_image_post_update_image_loading_attribute(?array &$sandbox = NULL): void {
   $responsive_image_config_updater = \Drupal::classResolver(ResponsiveImageConfigUpdater::class);
   $responsive_image_config_updater->setDeprecationsEnabled(FALSE);
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $view_display) use ($responsive_image_config_updater): bool {

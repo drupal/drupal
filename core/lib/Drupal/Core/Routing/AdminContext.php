@@ -36,7 +36,7 @@ class AdminContext {
    * @return bool
    *   Returns TRUE if the route is an admin one, otherwise FALSE.
    */
-  public function isAdminRoute(Route $route = NULL) {
+  public function isAdminRoute(?Route $route = NULL) {
     if (!$route) {
       $route = $this->routeMatch->getRouteObject();
       if (!$route) {

@@ -84,7 +84,7 @@ class CommentForm extends ContentEntityForm {
     RendererInterface $renderer,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     TimeInterface $time,
-    EntityFieldManagerInterface $entity_field_manager = NULL,
+    ?EntityFieldManagerInterface $entity_field_manager = NULL,
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->currentUser = $current_user;

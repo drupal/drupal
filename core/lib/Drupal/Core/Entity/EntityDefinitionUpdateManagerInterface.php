@@ -170,7 +170,7 @@ interface EntityDefinitionUpdateManagerInterface {
    *   or a Batch API callback. If the entity schema update requires a data
    *   migration, this parameter is mandatory. Defaults to NULL.
    */
-  public function updateFieldableEntityType(EntityTypeInterface $entity_type, array $field_storage_definitions, array &$sandbox = NULL);
+  public function updateFieldableEntityType(EntityTypeInterface $entity_type, array $field_storage_definitions, ?array &$sandbox = NULL);
 
   /**
    * Returns a field storage definition ready to be manipulated.
