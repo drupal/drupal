@@ -319,7 +319,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
     }
     else {
       $result = static::neutral();
-      if (!$this->isNeutral() || ($this->getCacheMaxAge() === 0 && $other->isNeutral()) || ($this->getCacheMaxAge() !== 0 && $other instanceof CacheableDependencyInterface && $other->getCacheMaxAge() !== 0)) {
+      if ($this->getCacheMaxAge() === 0  || ($other instanceof CacheableDependencyInterface && $other->getCacheMaxAge() !== 0)) {
         $merge_other = TRUE;
       }
 
