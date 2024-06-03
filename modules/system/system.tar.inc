@@ -341,7 +341,7 @@ class Archive_Tar
      *              single string with names separated by a single
      *              blank space.
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      * @see    createModify()
      */
     public function create($p_filelist)
@@ -361,7 +361,7 @@ class Archive_Tar
      *              single string with names separated by a single
      *              blank space.
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      * @see    createModify()
      * @access public
      */
@@ -504,7 +504,7 @@ class Archive_Tar
      *                             each element in the list, when
      *                             relevant.
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      */
     public function addModify($p_filelist, $p_add_dir, $p_remove_dir = '')
     {
@@ -557,7 +557,7 @@ class Archive_Tar
      *                               gid => the group ID of the file
      *                                   (default = 0 = root)
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      */
     public function addString($p_filename, $p_string, $p_datetime = false, $p_params = array())
     {
@@ -683,7 +683,7 @@ class Archive_Tar
      * @param boolean $p_preserve Preserve user/group ownership of files
      * @param boolean $p_symlinks Allow symlinks.
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      * @see    extractModify()
      */
     public function extractList($p_filelist, $p_path = '', $p_remove_path = '', $p_preserve = false, $p_symlinks = true)
@@ -721,7 +721,7 @@ class Archive_Tar
      * list of parameters, in the format attribute code + attribute values :
      * $arch->setAttribute(ARCHIVE_TAR_ATT_SEPARATOR, ',');
      *
-     * @return true on success, false on error.
+     * @return bool true on success, false on error.
      */
     public function setAttribute()
     {
@@ -2178,7 +2178,7 @@ class Archive_Tar
                 if ($v_extract_file) {
                     if ($v_header['typeflag'] == "5") {
                         if (!@file_exists($v_header['filename'])) {
-                            if (!@mkdir($v_header['filename'], 0777)) {
+                            if (!@mkdir($v_header['filename'], 0775)) {
                                 $this->_error(
                                     'Unable to create directory {'
                                     . $v_header['filename'] . '}'
@@ -2511,7 +2511,7 @@ class Archive_Tar
             return false;
         }
 
-        if (!@mkdir($p_dir, 0777)) {
+        if (!@mkdir($p_dir, 0775)) {
             $this->_error("Unable to create directory '$p_dir'");
             return false;
         }
