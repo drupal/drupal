@@ -79,7 +79,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, $event_dispatcher, WorkspaceInterface $source = NULL, protected ?LoggerInterface $logger = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, $event_dispatcher, ?WorkspaceInterface $source = NULL, protected ?LoggerInterface $logger = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->workspaceManager = $workspace_manager;

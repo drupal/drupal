@@ -76,7 +76,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    *
    * @dataProvider providerShowAdvisories
    */
-  public function testShowAdvisories(array $feed_item, string $existing_version = NULL): void {
+  public function testShowAdvisories(array $feed_item, ?string $existing_version = NULL): void {
     $this->setFeedItems([$feed_item]);
     if ($existing_version !== NULL) {
       $this->setExistingProjectVersion($existing_version);
@@ -247,7 +247,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    *
    * @dataProvider providerIgnoreAdvisories
    */
-  public function testIgnoreAdvisories(array $feed_item, string $existing_version = NULL): void {
+  public function testIgnoreAdvisories(array $feed_item, ?string $existing_version = NULL): void {
     $this->setFeedItems([$feed_item]);
     if ($existing_version !== NULL) {
       $this->setExistingProjectVersion($existing_version);

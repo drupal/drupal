@@ -78,7 +78,7 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
    * @param array $options
    *   The options configured for this plugin.
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL);
 
   /**
    * Handle any special handling on the validate form.

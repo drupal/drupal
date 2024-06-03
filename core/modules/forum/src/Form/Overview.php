@@ -26,7 +26,7 @@ class Overview extends OverviewTerms {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, VocabularyInterface $taxonomy_vocabulary = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?VocabularyInterface $taxonomy_vocabulary = NULL) {
     $forum_config = $this->config('forum.settings');
     $vid = $forum_config->get('vocabulary');
     $vocabulary = $this->entityTypeManager->getStorage('taxonomy_vocabulary')->load($vid);

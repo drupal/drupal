@@ -162,7 +162,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
+  public function initDisplay(ViewExecutable $view, array &$display, ?array &$options = NULL) {
     $this->view = $view;
 
     // Load extenders as soon as possible.
@@ -2300,7 +2300,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function access(AccountInterface $account = NULL) {
+  public function access(?AccountInterface $account = NULL) {
     if (!isset($account)) {
       $account = \Drupal::currentUser();
     }

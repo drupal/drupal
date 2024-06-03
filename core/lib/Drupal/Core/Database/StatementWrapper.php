@@ -193,7 +193,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchObject(string $class_name = NULL, array $constructor_arguments = []) {
+  public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
     if ($class_name) {
       return $this->clientStatement->fetchObject($class_name, $constructor_arguments);
     }

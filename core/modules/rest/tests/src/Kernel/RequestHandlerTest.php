@@ -102,7 +102,7 @@ class RequestHandlerTest extends KernelTestBase {
  */
 class StubRequestHandlerResourcePlugin extends ResourceBase {
 
-  public function get($example = NULL, Request $request = NULL) {}
+  public function get($example = NULL, ?Request $request = NULL) {}
 
   public function post() {}
 

@@ -96,7 +96,7 @@ class RevertOverridesForm extends ConfirmFormBase implements WorkspaceDynamicSaf
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL) {
     if (!$section_storage instanceof OverridesSectionStorageInterface) {
       throw new \InvalidArgumentException(sprintf('The section storage with type "%s" and ID "%s" does not provide overrides', $section_storage->getStorageType(), $section_storage->getStorageId()));
     }

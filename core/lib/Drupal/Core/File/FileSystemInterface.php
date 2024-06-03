@@ -330,7 +330,7 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
    */
-  public function deleteRecursive($path, callable $callback = NULL);
+  public function deleteRecursive($path, ?callable $callback = NULL);
 
   /**
    * Moves a file to a new location without database changes or hook invocation.

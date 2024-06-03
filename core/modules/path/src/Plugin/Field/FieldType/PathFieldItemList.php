@@ -44,7 +44,7 @@ class PathFieldItemList extends FieldItemList {
   /**
    * {@inheritdoc}
    */
-  public function defaultAccess($operation = 'view', AccountInterface $account = NULL) {
+  public function defaultAccess($operation = 'view', ?AccountInterface $account = NULL) {
     if ($operation == 'view') {
       return AccessResult::allowed();
     }

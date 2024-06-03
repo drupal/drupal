@@ -112,8 +112,8 @@ class FileUploadHandler {
     MimeTypeGuesserInterface $mimeTypeGuesser,
     AccountInterface $currentUser,
     RequestStack $requestStack,
-    FileRepositoryInterface $fileRepository = NULL,
-    FileValidatorInterface $file_validator = NULL,
+    ?FileRepositoryInterface $fileRepository = NULL,
+    ?FileValidatorInterface $file_validator = NULL,
     protected ?LockBackendInterface $lock = NULL,
     protected ?BasicRecursiveValidatorFactory $validatorFactory = NULL,
   ) {

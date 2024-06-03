@@ -54,7 +54,7 @@ class FieldReuseAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, string $bundle = NULL): AccessResultInterface {
+  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, ?string $bundle = NULL): AccessResultInterface {
     $access = AccessResult::neutral();
     if ($entity_type_id = $route->getDefault('entity_type_id')) {
       if (empty($bundle)) {

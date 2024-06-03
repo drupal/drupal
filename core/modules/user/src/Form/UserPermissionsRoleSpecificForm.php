@@ -36,7 +36,7 @@ class UserPermissionsRoleSpecificForm extends UserPermissionsForm {
    * @param \Drupal\user\RoleInterface|null $user_role
    *   (optional) The user role used for this form. Defaults to NULL.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, RoleInterface $user_role = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?RoleInterface $user_role = NULL) {
     $this->userRole = $user_role;
     return parent::buildForm($form, $form_state);
   }

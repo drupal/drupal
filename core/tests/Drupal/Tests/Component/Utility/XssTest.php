@@ -70,7 +70,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestFilterXssNormalized
    */
-  public function testFilterXssNormalized($value, $expected, $message, array $allowed_tags = NULL) {
+  public function testFilterXssNormalized($value, $expected, $message, ?array $allowed_tags = NULL) {
     if ($allowed_tags === NULL) {
       $value = Xss::filter($value);
     }
@@ -137,7 +137,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestFilterXssNotNormalized
    */
-  public function testFilterXssNotNormalized($value, $expected, $message, array $allowed_tags = NULL) {
+  public function testFilterXssNotNormalized($value, $expected, $message, ?array $allowed_tags = NULL) {
     if ($allowed_tags === NULL) {
       $value = Xss::filter($value);
     }

@@ -447,7 +447,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    *
    * @return $this
    */
-  public function setConfigOverrideLanguage(LanguageInterface $language = NULL) {
+  public function setConfigOverrideLanguage(?LanguageInterface $language = NULL) {
     $this->configFactoryOverride->setLanguage($language);
     return $this;
   }

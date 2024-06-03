@@ -45,7 +45,7 @@ class ContactController extends ControllerBase {
    *   Exception is thrown when user tries to access non existing default
    *   contact form.
    */
-  public function contactSitePage(ContactFormInterface $contact_form = NULL) {
+  public function contactSitePage(?ContactFormInterface $contact_form = NULL) {
     $config = $this->config('contact.settings');
 
     // Use the default form if no form has been passed.

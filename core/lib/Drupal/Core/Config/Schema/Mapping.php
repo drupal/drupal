@@ -25,7 +25,7 @@ class Mapping extends ArrayElement {
   /**
    * {@inheritdoc}
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
     assert($definition instanceof MapDataDefinition);
     // Validate basic structure.
     foreach ($definition['mapping'] as $key => $key_definition) {

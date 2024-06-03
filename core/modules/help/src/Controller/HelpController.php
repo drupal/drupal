@@ -67,7 +67,7 @@ class HelpController extends ControllerBase {
    * @param \Drupal\user\ModulePermissionsLinkHelper|null $module_permissions_link
    *   The module permissions link.
    */
-  public function __construct(RouteMatchInterface $route_match, HelpSectionManager $help_manager, ModuleExtensionList $module_extension_list, ModuleAdminLinksHelper $module_admin_links = NULL, ModulePermissionsLinkHelper $module_permissions_link = NULL) {
+  public function __construct(RouteMatchInterface $route_match, HelpSectionManager $help_manager, ModuleExtensionList $module_extension_list, ?ModuleAdminLinksHelper $module_admin_links = NULL, ?ModulePermissionsLinkHelper $module_permissions_link = NULL) {
     $this->routeMatch = $route_match;
     $this->helpManager = $help_manager;
     $this->moduleExtensionList = $module_extension_list;

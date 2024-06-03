@@ -54,7 +54,7 @@ interface LanguageNegotiationMethodInterface {
    *
    * @see https://www.drupal.org/node/3329952
    */
-  public function getLangcode(Request $request = NULL);
+  public function getLangcode(?Request $request = NULL);
 
   /**
    * Notifies the plugin that the language code it returned has been accepted.

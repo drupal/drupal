@@ -90,7 +90,7 @@ class EntityController implements ContainerInjectionInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, RendererInterface $renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, RouteMatchInterface $route_match = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, RendererInterface $renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, ?RouteMatchInterface $route_match = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->entityRepository = $entity_repository;
@@ -265,7 +265,7 @@ class EntityController implements ContainerInjectionInterface {
    * @return string|null
    *   The title for the entity view page, if an entity was found.
    */
-  public function title(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
+  public function title(RouteMatchInterface $route_match, ?EntityInterface $_entity = NULL) {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
       return $entity->label();
     }
@@ -282,7 +282,7 @@ class EntityController implements ContainerInjectionInterface {
    * @return string|null
    *   The title for the entity edit page, if an entity was found.
    */
-  public function editTitle(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
+  public function editTitle(RouteMatchInterface $route_match, ?EntityInterface $_entity = NULL) {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
       return $this->t('Edit %label', ['%label' => $entity->label()]);
     }
@@ -300,7 +300,7 @@ class EntityController implements ContainerInjectionInterface {
    * @return string
    *   The title for the entity delete page.
    */
-  public function deleteTitle(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
+  public function deleteTitle(RouteMatchInterface $route_match, ?EntityInterface $_entity = NULL) {
     if ($entity = $this->doGetEntity($route_match, $_entity)) {
       return $this->t('Delete %label', ['%label' => $entity->label()]);
     }
@@ -319,7 +319,7 @@ class EntityController implements ContainerInjectionInterface {
    *   The entity, if it is passed in directly or if the first parameter of the
    *   active route is an entity; otherwise, NULL.
    */
-  protected function doGetEntity(RouteMatchInterface $route_match, EntityInterface $_entity = NULL) {
+  protected function doGetEntity(RouteMatchInterface $route_match, ?EntityInterface $_entity = NULL) {
     if ($_entity) {
       $entity = $_entity;
     }

@@ -86,7 +86,7 @@ class BlockRepository implements BlockRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getUniqueMachineName(string $suggestion, string $theme = NULL): string {
+  public function getUniqueMachineName(string $suggestion, ?string $theme = NULL): string {
     if ($theme) {
       $suggestion = $theme . '_' . $suggestion;
     }

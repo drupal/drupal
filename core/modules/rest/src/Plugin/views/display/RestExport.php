@@ -154,7 +154,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
   /**
    * {@inheritdoc}
    */
-  public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
+  public function initDisplay(ViewExecutable $view, array &$display, ?array &$options = NULL) {
     parent::initDisplay($view, $display, $options);
 
     // If the default 'json' format is not selected as a format option in the

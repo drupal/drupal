@@ -67,7 +67,7 @@ abstract class EntityDenormalizerBase extends NormalizerBase implements Denormal
   /**
    * {@inheritdoc}
    */
-  public function supportsNormalization($data, string $format = NULL, array $context = []): bool {
+  public function supportsNormalization($data, ?string $format = NULL, array $context = []): bool {
     return FALSE;
   }
 

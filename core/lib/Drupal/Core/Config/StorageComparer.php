@@ -220,7 +220,7 @@ class StorageComparer implements StorageComparerInterface {
    *   (optional) Array to sort that can be used to sort the changelist. This
    *   array must contain all the items that are in the change list.
    */
-  protected function addChangeList($collection, $op, array $changes, array $sort_order = NULL) {
+  protected function addChangeList($collection, $op, array $changes, ?array $sort_order = NULL) {
     // Only add changes that aren't already listed.
     $changes = array_diff($changes, $this->changelist[$collection][$op]);
     $this->changelist[$collection][$op] = array_merge($this->changelist[$collection][$op], $changes);

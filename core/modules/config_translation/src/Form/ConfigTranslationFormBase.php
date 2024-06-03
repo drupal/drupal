@@ -127,7 +127,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
    *   Throws an exception if the language code provided as a query parameter in
    *   the request does not match an active language.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, RouteMatchInterface $route_match = NULL, $plugin_id = NULL, $langcode = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?RouteMatchInterface $route_match = NULL, $plugin_id = NULL, $langcode = NULL) {
     /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
     $mapper = $this->configMapperManager->createInstance($plugin_id);
     $mapper->populateFromRouteMatch($route_match);

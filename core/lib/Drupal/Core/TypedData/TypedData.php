@@ -43,7 +43,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   /**
    * {@inheritdoc}
    */
-  public static function createInstance($definition, $name = NULL, TraversableTypedDataInterface $parent = NULL) {
+  public static function createInstance($definition, $name = NULL, ?TraversableTypedDataInterface $parent = NULL) {
     return new static($definition, $name, $parent);
   }
 
@@ -61,7 +61,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
     $this->definition = $definition;
     $this->parent = $parent;
     $this->name = $name;
@@ -144,7 +144,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   /**
    * {@inheritdoc}
    */
-  public function setContext($name = NULL, TraversableTypedDataInterface $parent = NULL) {
+  public function setContext($name = NULL, ?TraversableTypedDataInterface $parent = NULL) {
     $this->parent = $parent;
     $this->name = $name;
   }

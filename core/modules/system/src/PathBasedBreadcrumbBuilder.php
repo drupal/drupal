@@ -119,7 +119,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher
    *   The path matcher service.
    */
-  public function __construct(RequestContext $context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user, CurrentPathStack $current_path, PathMatcherInterface $path_matcher = NULL) {
+  public function __construct(RequestContext $context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user, CurrentPathStack $current_path, ?PathMatcherInterface $path_matcher = NULL) {
     $this->context = $context;
     $this->accessManager = $access_manager;
     $this->router = $router;

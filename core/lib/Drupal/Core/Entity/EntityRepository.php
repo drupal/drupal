@@ -127,14 +127,14 @@ class EntityRepository implements EntityRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getActive($entity_type_id, $entity_id, array $contexts = NULL) {
+  public function getActive($entity_type_id, $entity_id, ?array $contexts = NULL) {
     return current($this->getActiveMultiple($entity_type_id, [$entity_id], $contexts)) ?: NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getActiveMultiple($entity_type_id, array $entity_ids, array $contexts = NULL) {
+  public function getActiveMultiple($entity_type_id, array $entity_ids, ?array $contexts = NULL) {
     $active = [];
 
     if (!isset($contexts)) {
@@ -171,14 +171,14 @@ class EntityRepository implements EntityRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCanonical($entity_type_id, $entity_id, array $contexts = NULL) {
+  public function getCanonical($entity_type_id, $entity_id, ?array $contexts = NULL) {
     return current($this->getCanonicalMultiple($entity_type_id, [$entity_id], $contexts)) ?: NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCanonicalMultiple($entity_type_id, array $entity_ids, array $contexts = NULL) {
+  public function getCanonicalMultiple($entity_type_id, array $entity_ids, ?array $contexts = NULL) {
     $entities = $this->entityTypeManager->getStorage($entity_type_id)
       ->loadMultiple($entity_ids);
 

@@ -90,7 +90,7 @@ class MenuLinkResetForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, MenuLinkInterface $menu_link_plugin = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?MenuLinkInterface $menu_link_plugin = NULL) {
     $this->link = $menu_link_plugin;
 
     $form = parent::buildForm($form, $form_state);

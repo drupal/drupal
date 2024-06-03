@@ -597,7 +597,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * {@inheritdoc}
    */
-  protected function preLoad(array &$ids = NULL) {
+  protected function preLoad(?array &$ids = NULL) {
     $entities = [];
 
     // Call hook_entity_preload().
@@ -1085,7 +1085,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * @return \Drupal\Core\Entity\ContentEntityInterface[]
    *   Array of entities from the persistent cache.
    */
-  protected function getFromPersistentCache(array &$ids = NULL) {
+  protected function getFromPersistentCache(?array &$ids = NULL) {
     if (!$this->entityType->isPersistentlyCacheable() || empty($ids)) {
       return [];
     }
@@ -1192,7 +1192,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   (optional) If specified, the cache is reset for the entities with the
    *   given ids only.
    */
-  public function resetCache(array $ids = NULL) {
+  public function resetCache(?array $ids = NULL) {
     if ($ids) {
       parent::resetCache($ids);
       if ($this->entityType->isPersistentlyCacheable()) {

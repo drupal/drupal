@@ -23,6 +23,6 @@ interface OutboundRouteProcessorInterface {
    * @param \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata
    *   (optional) Object to collect route processors' bubbleable metadata.
    */
-  public function processOutbound($route_name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL);
+  public function processOutbound($route_name, Route $route, array &$parameters, ?BubbleableMetadata $bubbleable_metadata = NULL);
 
 }

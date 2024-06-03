@@ -1345,7 +1345,7 @@ function file_icon_map($mime_type) {
  *
  * @ingroup file
  */
-function file_get_file_references(FileInterface $file, FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
+function file_get_file_references(FileInterface $file, ?FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
   $references = &drupal_static(__FUNCTION__, []);
   $field_columns = &drupal_static(__FUNCTION__ . ':field_columns', []);
 

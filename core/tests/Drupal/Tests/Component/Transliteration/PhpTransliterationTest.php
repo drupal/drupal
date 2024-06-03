@@ -91,7 +91,7 @@ class PhpTransliterationTest extends TestCase {
    *
    * @dataProvider providerTestPhpTransliteration
    */
-  public function testPhpTransliteration(string $langcode, string $original, string $expected, string $unknown_character = '?', int $max_length = NULL): void {
+  public function testPhpTransliteration(string $langcode, string $original, string $expected, string $unknown_character = '?', ?int $max_length = NULL): void {
     $transliterator_class = new PhpTransliteration();
     $actual = $transliterator_class->transliterate($original, $langcode, $unknown_character, $max_length);
     $this->assertSame($expected, $actual);

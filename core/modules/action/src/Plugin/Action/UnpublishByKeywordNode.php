@@ -70,7 +70,7 @@ class UnpublishByKeywordNode extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\node\NodeInterface $object */
     $access = $object->access('update', $account, TRUE)
       ->andIf($object->status->access('edit', $account, TRUE));

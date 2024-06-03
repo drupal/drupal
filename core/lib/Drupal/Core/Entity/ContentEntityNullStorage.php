@@ -14,14 +14,14 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function loadMultiple(array $ids = NULL) {
+  public function loadMultiple(?array $ids = NULL) {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function doLoadMultiple(array $ids = NULL) {
+  protected function doLoadMultiple(?array $ids = NULL) {
   }
 
   /**

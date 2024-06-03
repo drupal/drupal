@@ -50,7 +50,7 @@ class MigrateFieldPluginManager extends MigratePluginManager implements MigrateF
    *
    * @see \Drupal\migrate_drupal\Attribute\MigrateField
    */
-  public function getPluginIdFromFieldType($field_type, array $configuration = [], MigrationInterface $migration = NULL) {
+  public function getPluginIdFromFieldType($field_type, array $configuration = [], ?MigrationInterface $migration = NULL) {
     $core = static::DEFAULT_CORE_VERSION;
     if (!empty($configuration['core'])) {
       $core = $configuration['core'];

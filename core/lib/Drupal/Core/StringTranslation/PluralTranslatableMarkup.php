@@ -53,7 +53,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    *
    * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    */
-  public function __construct($count, $singular, $plural, array $args = [], array $options = [], TranslationInterface $string_translation = NULL) {
+  public function __construct($count, $singular, $plural, array $args = [], array $options = [], ?TranslationInterface $string_translation = NULL) {
     $this->count = $count;
     $translatable_string = implode(PoItem::DELIMITER, [$singular, $plural]);
     parent::__construct($translatable_string, $args, $options, $string_translation);

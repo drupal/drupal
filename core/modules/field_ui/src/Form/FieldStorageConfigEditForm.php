@@ -70,7 +70,7 @@ class FieldStorageConfigEditForm extends EntityForm {
    * @param \Drupal\field\FieldConfigInterface|string $field_config
    *   The ID of the field config whose field storage config is being edited.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, FieldConfigInterface|string $field_config = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, FieldConfigInterface|string|null $field_config = NULL) {
     if ($field_config) {
       $field = $field_config;
       if (is_string($field)) {

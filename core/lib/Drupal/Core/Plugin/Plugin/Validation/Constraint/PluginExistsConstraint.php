@@ -69,7 +69,7 @@ class PluginExistsConstraint extends SymfonyConstraint implements ContainerFacto
    * @param mixed|null $payload
    *   Domain-specific data attached to a constraint.
    */
-  public function __construct(public readonly PluginManagerInterface $pluginManager, mixed $options = NULL, array $groups = NULL, mixed $payload = NULL) {
+  public function __construct(public readonly PluginManagerInterface $pluginManager, mixed $options = NULL, ?array $groups = NULL, mixed $payload = NULL) {
     parent::__construct($options, $groups, $payload);
   }
 

@@ -209,7 +209,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   /**
    * {@inheritdoc}
    */
-  public function access($operation = 'view', AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation = 'view', ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $result = AccessResult::allowedIfHasPermission($account, 'access content');
     return $return_as_object ? $result : $result->isAllowed();
   }

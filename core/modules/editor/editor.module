@@ -303,7 +303,7 @@ function editor_load($format_id) {
  *
  * @see https://www.drupal.org/node/2099741
  */
-function editor_filter_xss($html, FilterFormatInterface $format = NULL, FilterFormatInterface $original_format = NULL) {
+function editor_filter_xss($html, ?FilterFormatInterface $format = NULL, ?FilterFormatInterface $original_format = NULL) {
   $editor = $format ? editor_load($format->id()) : NULL;
 
   // If no text editor is associated with this text format or the previously

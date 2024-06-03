@@ -49,7 +49,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getParentSelectOptions($id = '', array $menus = NULL, CacheableMetadata &$cacheability = NULL) {
+  public function getParentSelectOptions($id = '', ?array $menus = NULL, ?CacheableMetadata &$cacheability = NULL) {
     if (!isset($menus)) {
       $menus = $this->getMenuOptions();
     }
@@ -76,7 +76,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL) {
+  public function parentSelectElement($menu_parent, $id = '', ?array $menus = NULL) {
     $options_cacheability = new CacheableMetadata();
     $options = $this->getParentSelectOptions($id, $menus, $options_cacheability);
     // If no options were found, there is nothing to select.
@@ -138,7 +138,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * @param \Drupal\Core\Cache\CacheableMetadata|null &$cacheability
    *   The object to add cacheability metadata to, if not NULL.
    */
-  protected function parentSelectOptionsTreeWalk(array $tree, $menu_name, $indent, array &$options, $exclude, $depth_limit, CacheableMetadata &$cacheability = NULL) {
+  protected function parentSelectOptionsTreeWalk(array $tree, $menu_name, $indent, array &$options, $exclude, $depth_limit, ?CacheableMetadata &$cacheability = NULL) {
     foreach ($tree as $element) {
       if ($element->depth > $depth_limit) {
         // Don't iterate through any links on this level.
@@ -181,7 +181,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * @return array
    *   Keys are menu names (ids) values are the menu labels.
    */
-  protected function getMenuOptions(array $menu_names = NULL) {
+  protected function getMenuOptions(?array $menu_names = NULL) {
     $menus = $this->entityTypeManager->getStorage('menu')->loadMultiple($menu_names);
     $options = [];
     /** @var \Drupal\system\MenuInterface[] $menus */

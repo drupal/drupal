@@ -186,7 +186,7 @@ final class NavigationSectionStorage extends PluginBase implements SectionStorag
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE): AccessResultInterface | bool {
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE): AccessResultInterface | bool {
     $result = AccessResult::allowedIfHasPermission($account, 'configure navigation layout');
     return $return_as_object ? $result : $result->isAllowed();
   }

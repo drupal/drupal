@@ -26,7 +26,7 @@ function media_removed_post_updates() {
 /**
  * Add the oEmbed loading attribute setting to field formatter instances.
  */
-function media_post_update_oembed_loading_attribute(array &$sandbox = NULL): void {
+function media_post_update_oembed_loading_attribute(?array &$sandbox = NULL): void {
   $media_config_updater = \Drupal::classResolver(MediaConfigUpdater::class);
   assert($media_config_updater instanceof MediaConfigUpdater);
   $media_config_updater->setDeprecationsEnabled(TRUE);
@@ -50,7 +50,7 @@ function media_post_update_set_blank_iframe_domain_to_null() {
 /**
  * Make sure no Media types are using the source field in the meta mappings.
  */
-function media_post_update_remove_mappings_targeting_source_field(array &$sandbox = NULL): void {
+function media_post_update_remove_mappings_targeting_source_field(?array &$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)
     ->update($sandbox, 'media_type', function (MediaTypeInterface $media_type): bool {
       $source_field = $media_type->getSource()

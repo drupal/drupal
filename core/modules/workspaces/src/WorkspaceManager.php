@@ -121,7 +121,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * @param array|null $negotiator_ids
    *   The workspace negotiator service IDs.
    */
-  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, protected ?WorkspaceInformationInterface $workspace_information = NULL, array $negotiator_ids = NULL) {
+  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, protected ?WorkspaceInformationInterface $workspace_information = NULL, ?array $negotiator_ids = NULL) {
     $this->requestStack = $request_stack;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityMemoryCache = $entity_memory_cache;

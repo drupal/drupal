@@ -21,7 +21,7 @@ class TestLocalActionWithConfig extends LocalActionDefault {
   /**
    * {@inheritdoc}
    */
-  public function getTitle(Request $request = NULL) {
+  public function getTitle(?Request $request = NULL) {
     return $this->config->get('title');
   }
 

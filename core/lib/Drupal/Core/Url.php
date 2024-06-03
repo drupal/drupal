@@ -827,7 +827,7 @@ class Url implements TrustedCallbackInterface {
    *   returned, i.e. TRUE means access is explicitly allowed, FALSE means
    *   access is either explicitly forbidden or "no opinion".
    */
-  public function access(AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access(?AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($this->isRouted()) {
       return $this->accessManager()->checkNamedRoute($this->getRouteName(), $this->getRouteParameters(), $account, $return_as_object);
     }
@@ -897,7 +897,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return $this
    */
-  public function setUrlGenerator(UrlGeneratorInterface $url_generator = NULL) {
+  public function setUrlGenerator(?UrlGeneratorInterface $url_generator = NULL) {
     $this->urlGenerator = $url_generator;
     $this->internalPath = NULL;
     return $this;

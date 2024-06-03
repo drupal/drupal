@@ -118,7 +118,7 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
   /**
    * {@inheritdoc}
    */
-  public function getMappers(RouteCollection $collection = NULL) {
+  public function getMappers(?RouteCollection $collection = NULL) {
     $mappers = [];
     foreach ($this->getDefinitions() as $id => $definition) {
       $mappers[$id] = $this->createInstance($id);

@@ -24,7 +24,7 @@ class InfoParser extends InfoParserDynamic {
    * @param string|null $app_root
    *   The root directory of the Drupal installation.
    */
-  public function __construct(string $app_root = NULL) {
+  public function __construct(?string $app_root = NULL) {
     parent::__construct($app_root);
     if (FileCacheFactory::getPrefix() !== NULL) {
       $this->fileCache = FileCacheFactory::get('info_parser');

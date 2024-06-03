@@ -101,7 +101,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   (optional) The event dispatcher.
    */
-  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message = NULL, EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(MigrationInterface $migration, ?MigrateMessageInterface $message = NULL, ?EventDispatcherInterface $event_dispatcher = NULL) {
     $this->migration = $migration;
     $this->message = $message ?: new MigrateMessage();
     $this->getIdMap()->setMessage($this->message);
@@ -387,7 +387,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * {@inheritdoc}
    */
-  public function processRow(Row $row, array $process = NULL, $value = NULL) {
+  public function processRow(Row $row, ?array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
       $this->processPipeline($row, $destination, $plugins, $value);
     }

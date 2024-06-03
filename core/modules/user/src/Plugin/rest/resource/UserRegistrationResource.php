@@ -76,7 +76,7 @@ class UserRegistrationResource extends ResourceBase {
    * @param \Drupal\Core\Password\PasswordGeneratorInterface|null $password_generator
    *   The password generator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, ImmutableConfig $user_settings, AccountInterface $current_user, PasswordGeneratorInterface $password_generator = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, ImmutableConfig $user_settings, AccountInterface $current_user, ?PasswordGeneratorInterface $password_generator = NULL) {
     if (is_null($password_generator)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $password_generator argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3405799', E_USER_DEPRECATED);
       $password_generator = \Drupal::service('password_generator');
@@ -116,7 +116,7 @@ class UserRegistrationResource extends ResourceBase {
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
-  public function post(UserInterface $account = NULL) {
+  public function post(?UserInterface $account = NULL) {
     $this->ensureAccountCanRegister($account);
 
     // Only activate new users if visitors are allowed to register.
@@ -151,7 +151,7 @@ class UserRegistrationResource extends ResourceBase {
    * @param \Drupal\user\UserInterface $account
    *   The user account to register.
    */
-  protected function ensureAccountCanRegister(UserInterface $account = NULL) {
+  protected function ensureAccountCanRegister(?UserInterface $account = NULL) {
     if ($account === NULL) {
       throw new BadRequestHttpException('No user account data for registration received.');
     }

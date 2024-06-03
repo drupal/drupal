@@ -35,7 +35,7 @@ class ParamNotConvertedException extends \Exception {
    * @param array $raw_parameters
    *   The raw parameters that were not converted.
    */
-  public function __construct($message = "", $code = 0, \Exception $previous = NULL, $route_name = "", array $raw_parameters = []) {
+  public function __construct($message = "", $code = 0, ?\Exception $previous = NULL, $route_name = "", array $raw_parameters = []) {
     parent::__construct($message, $code, $previous);
     $this->routeName = $route_name;
     $this->rawParameters = $raw_parameters;

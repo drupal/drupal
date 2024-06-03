@@ -26,7 +26,7 @@ interface MenuParentFormSelectorInterface {
    *   Keyed array where the keys are contain a menu name and parent ID and
    *   the values are a menu name or link title indented by depth.
    */
-  public function getParentSelectOptions($id = '', array $menus = NULL, CacheableMetadata &$cacheability = NULL);
+  public function getParentSelectOptions($id = '', ?array $menus = NULL, ?CacheableMetadata &$cacheability = NULL);
 
   /**
    * Gets a form element to choose a menu and parent.
@@ -51,6 +51,6 @@ interface MenuParentFormSelectorInterface {
    *   a single string containing the chosen menu name and parent ID separated
    *   by a ':' character.
    */
-  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL);
+  public function parentSelectElement($menu_parent, $id = '', ?array $menus = NULL);
 
 }

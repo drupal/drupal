@@ -67,7 +67,7 @@ function system_post_update_linkset_settings() {
 /**
  * Update timestamp formatter settings for entity view displays.
  */
-function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
+function system_post_update_timestamp_formatter(?array &$sandbox = NULL): void {
   /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */
   $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
 
@@ -130,7 +130,7 @@ function system_post_update_remove_asset_query_string() {
 /**
  * Update description for view modes.
  */
-function system_post_update_add_description_to_entity_view_mode(array &$sandbox = NULL): void {
+function system_post_update_add_description_to_entity_view_mode(?array &$sandbox = NULL): void {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
 
   $callback = function (EntityViewModeInterface $entity_view_mode) {
@@ -143,7 +143,7 @@ function system_post_update_add_description_to_entity_view_mode(array &$sandbox 
 /**
  * Update description for form modes.
  */
-function system_post_update_add_description_to_entity_form_mode(array &$sandbox = NULL): void {
+function system_post_update_add_description_to_entity_form_mode(?array &$sandbox = NULL): void {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
 
   $callback = function (EntityFormModeInterface $entity_form_mode) {

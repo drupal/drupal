@@ -173,7 +173,7 @@ class Resource implements CacheableDependencyInterface {
    *   (optional) The height of the thumbnail, in pixels. If this parameter is
    *   present, $thumbnail_url and $thumbnail_width must also be present.
    */
-  protected function __construct(Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
+  protected function __construct(?Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
     $this->provider = $provider;
     $this->title = $title;
     $this->authorName = $author_name;
@@ -220,7 +220,7 @@ class Resource implements CacheableDependencyInterface {
    *
    * @return static
    */
-  public static function link($url = NULL, Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
+  public static function link($url = NULL, ?Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
     $resource = new static($provider, $title, $author_name, $author_url, $cache_age, $thumbnail_url, $thumbnail_width, $thumbnail_height);
     $resource->type = self::TYPE_LINK;
     $resource->url = $url;
@@ -260,7 +260,7 @@ class Resource implements CacheableDependencyInterface {
    *
    * @return static
    */
-  public static function photo($url, $width, $height = NULL, Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
+  public static function photo($url, $width, $height = NULL, ?Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
     if (empty($url)) {
       throw new \InvalidArgumentException('Photo resources must provide a URL.');
     }
@@ -304,7 +304,7 @@ class Resource implements CacheableDependencyInterface {
    *
    * @return static
    */
-  public static function rich($html, $width, $height = NULL, Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
+  public static function rich($html, $width, $height = NULL, ?Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
     if (empty($html)) {
       throw new \InvalidArgumentException('The resource must provide an HTML representation.');
     }
@@ -349,7 +349,7 @@ class Resource implements CacheableDependencyInterface {
    *
    * @return static
    */
-  public static function video($html, $width, $height = NULL, Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
+  public static function video($html, $width, $height = NULL, ?Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
     $resource = static::rich($html, $width, $height, $provider, $title, $author_name, $author_url, $cache_age, $thumbnail_url, $thumbnail_width, $thumbnail_height);
     $resource->type = self::TYPE_VIDEO;
 

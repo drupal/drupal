@@ -369,7 +369,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, ?EntityInterface $entity = NULL) {
     $data = parent::getExpectedGetRelationshipDocumentData($relationship_field_name, $entity);
     switch ($relationship_field_name) {
       case 'thumbnail':

@@ -112,7 +112,7 @@ class Cron implements CronInterface {
    * @param mixed[]|null $queue_config
    *   Queue configuration from the service container.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, TimeInterface $time = NULL, ?array $queue_config = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, ?TimeInterface $time = NULL, ?array $queue_config = NULL) {
     $this->moduleHandler = $module_handler;
     $this->lock = $lock;
     $this->queueFactory = $queue_factory;

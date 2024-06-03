@@ -138,7 +138,7 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
   /**
    * {@inheritdoc}
    */
-  public function setLanguage(LanguageInterface $language = NULL) {
+  public function setLanguage(?LanguageInterface $language = NULL) {
     $this->language = $language;
     return $this;
   }

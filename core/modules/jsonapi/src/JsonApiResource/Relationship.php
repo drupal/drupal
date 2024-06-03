@@ -115,7 +115,7 @@ class Relationship implements TopLevelDataInterface {
    * @return static
    *   An instantiated relationship object.
    */
-  public static function createFromEntityReferenceField(ResourceObject $context, EntityReferenceFieldItemListInterface $field, LinkCollection $links = NULL, array $meta = []) {
+  public static function createFromEntityReferenceField(ResourceObject $context, EntityReferenceFieldItemListInterface $field, ?LinkCollection $links = NULL, array $meta = []) {
     $context_resource_type = $context->getResourceType();
     $resource_field = $context_resource_type->getFieldByInternalName($field->getName());
     return new static(

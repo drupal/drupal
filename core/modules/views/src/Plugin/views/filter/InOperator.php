@@ -40,7 +40,7 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $this->valueTitle = $this->t('Options');

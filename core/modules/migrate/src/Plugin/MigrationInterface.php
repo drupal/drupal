@@ -128,7 +128,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *   An associative array. The keys are the destination property names. Values
    *   are process pipelines. Each pipeline contains an array of plugins.
    */
-  public function getProcessPlugins(array $process = NULL);
+  public function getProcessPlugins(?array $process = NULL);
 
   /**
    * Returns the initialized destination plugin.

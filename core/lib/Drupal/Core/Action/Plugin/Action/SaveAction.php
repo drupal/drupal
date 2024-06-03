@@ -69,7 +69,7 @@ class SaveAction extends EntityActionBase {
   /**
    * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     // It's not necessary to check the changed field access here, because
     // Drupal\Core\Field\ChangedFieldItemList would anyway return 'not allowed'.
     // Also changing the changed field value is only a workaround to trigger an

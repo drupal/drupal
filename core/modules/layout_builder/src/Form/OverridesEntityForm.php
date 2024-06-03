@@ -90,7 +90,7 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL) {
     $this->sectionStorage = $section_storage;
     $form = parent::buildForm($form, $form_state);
     $form['#attributes']['class'][] = 'layout-builder-form';

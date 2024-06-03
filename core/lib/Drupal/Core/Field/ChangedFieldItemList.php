@@ -13,7 +13,7 @@ class ChangedFieldItemList extends FieldItemList {
   /**
    * {@inheritdoc}
    */
-  public function defaultAccess($operation = 'view', AccountInterface $account = NULL) {
+  public function defaultAccess($operation = 'view', ?AccountInterface $account = NULL) {
     // It is not possible to edit the changed field.
     return AccessResult::allowedIf($operation !== 'edit');
   }

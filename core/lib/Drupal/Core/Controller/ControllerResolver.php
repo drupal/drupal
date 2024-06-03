@@ -32,7 +32,7 @@ class ControllerResolver implements ControllerResolverInterface {
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface|null $class_resolver
    *   The class resolver.
    */
-  public function __construct(protected CallableResolver|HttpMessageFactoryInterface $callableResolver, ClassResolverInterface $class_resolver = NULL) {
+  public function __construct(protected CallableResolver|HttpMessageFactoryInterface $callableResolver, ?ClassResolverInterface $class_resolver = NULL) {
     if ($callableResolver instanceof HttpMessageFactoryInterface) {
       @trigger_error('Calling ' . __METHOD__ . '() with the $http_message_factory argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3353869', E_USER_DEPRECATED);
       $this->callableResolver = \Drupal::service("callable_resolver");

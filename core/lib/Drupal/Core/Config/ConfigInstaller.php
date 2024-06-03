@@ -177,7 +177,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   /**
    * {@inheritdoc}
    */
-  public function installOptionalConfig(StorageInterface $storage = NULL, $dependency = []) {
+  public function installOptionalConfig(?StorageInterface $storage = NULL, $dependency = []) {
     $profile = $this->drupalGetProfile();
     $enabled_extensions = $this->getEnabledExtensions();
     $existing_config = $this->getActiveStorages()->listAll();

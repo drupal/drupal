@@ -285,7 +285,7 @@ class UserLoginTest extends BrowserTestBase {
    *
    * @internal
    */
-  public function assertFailedLogin(User $account, string $flood_trigger = NULL): void {
+  public function assertFailedLogin(User $account, ?string $flood_trigger = NULL): void {
     $database = \Drupal::database();
     $edit = [
       'name' => $account->getAccountName(),

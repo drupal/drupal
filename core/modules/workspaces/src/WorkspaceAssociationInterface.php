@@ -69,7 +69,7 @@ interface WorkspaceAssociationInterface {
    *   Returns a multidimensional array where the first level keys are entity
    *   type IDs and the values are an array of entity IDs keyed by revision IDs.
    */
-  public function getTrackedEntitiesForListing($workspace_id, int $pager_id = NULL, int|false $limit = 50): array;
+  public function getTrackedEntitiesForListing($workspace_id, ?int $pager_id = NULL, int|false $limit = 50): array;
 
   /**
    * Retrieves all content revisions tracked by a given workspace.

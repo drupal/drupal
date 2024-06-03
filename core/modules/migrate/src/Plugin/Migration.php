@@ -399,7 +399,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   /**
    * {@inheritdoc}
    */
-  public function getProcessPlugins(array $process = NULL) {
+  public function getProcessPlugins(?array $process = NULL) {
     if (!isset($process)) {
       $process = $this->getProcess();
     }

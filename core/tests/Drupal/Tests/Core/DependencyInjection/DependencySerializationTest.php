@@ -80,7 +80,7 @@ class DependencySerializationTestDummy implements ContainerAwareInterface {
    * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
    * @return void
    */
-  public function setContainer(ContainerInterface $container = NULL) {
+  public function setContainer(?ContainerInterface $container = NULL) {
     $this->container = $container;
   }
 

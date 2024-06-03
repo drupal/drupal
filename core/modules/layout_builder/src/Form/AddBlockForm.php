@@ -50,7 +50,7 @@ class AddBlockForm extends ConfigureBlockFormBase {
    * @return array
    *   The form array.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $plugin_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SectionStorageInterface $section_storage = NULL, $delta = NULL, $region = NULL, $plugin_id = NULL) {
     // Only generate a new component once per form submission.
     if (!$component = $form_state->get('layout_builder__component')) {
       $component = new SectionComponent($this->uuidGenerator->generate(), $region, ['id' => $plugin_id]);

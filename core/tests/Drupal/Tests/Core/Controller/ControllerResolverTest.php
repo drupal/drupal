@@ -54,7 +54,7 @@ class ControllerResolverTest extends UnitTestCase {
    * @dataProvider providerTestCreateController
    * @group legacy
    */
-  public function testCreateController($controller, $class, $output, string $deprecation = NULL) {
+  public function testCreateController($controller, $class, $output, ?string $deprecation = NULL) {
     if ($deprecation) {
       $this->expectDeprecation($deprecation);
     }

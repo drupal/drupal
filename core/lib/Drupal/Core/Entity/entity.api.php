@@ -2159,7 +2159,7 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandlerInterface::fieldAccess()
  */
-function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Field\FieldItemListInterface $items = NULL) {
+function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, ?\Drupal\Core\Field\FieldItemListInterface $items = NULL) {
   if ($field_definition->getName() == 'field_of_interest' && $operation == 'edit') {
     return AccessResult::allowedIfHasPermission($account, 'update field of interest');
   }

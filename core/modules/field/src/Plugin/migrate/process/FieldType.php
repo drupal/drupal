@@ -43,7 +43,7 @@ class FieldType extends StaticMap implements ContainerFactoryPluginInterface {
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration being run.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrateFieldPluginManagerInterface $field_plugin_manager, MigrationInterface $migration = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrateFieldPluginManagerInterface $field_plugin_manager, ?MigrationInterface $migration = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->fieldPluginManager = $field_plugin_manager;
     $this->migration = $migration;
@@ -52,7 +52,7 @@ class FieldType extends StaticMap implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
     return new static(
       $configuration,
       $plugin_id,

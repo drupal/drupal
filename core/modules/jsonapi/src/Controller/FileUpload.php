@@ -260,7 +260,7 @@ class FileUpload {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The file upload access result.
    */
-  public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
+  public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, ?EntityInterface $entity = NULL) {
     assert(is_null($entity) ||
       $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() &&
       // Base fields do not have target bundles.
@@ -286,7 +286,7 @@ class FileUpload {
    * @param \Drupal\Core\Entity\FieldableEntityInterface|null $entity
    *   The entity, if one exists, for which the file is to be uploaded.
    */
-  protected static function ensureFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, FieldableEntityInterface $entity = NULL) {
+  protected static function ensureFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, ?FieldableEntityInterface $entity = NULL) {
     $access_result = $entity
       ? static::checkFileUploadAccess($account, $field_definition, $entity)
       : static::checkFileUploadAccess($account, $field_definition);

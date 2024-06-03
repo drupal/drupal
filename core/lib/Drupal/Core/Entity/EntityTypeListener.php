@@ -149,7 +149,7 @@ class EntityTypeListener implements EntityTypeListenerInterface {
   /**
    * {@inheritdoc}
    */
-  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
+  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, ?array &$sandbox = NULL) {
     $entity_type_id = $entity_type->id();
 
     // @todo Forward this to all interested handlers, not only storage, once

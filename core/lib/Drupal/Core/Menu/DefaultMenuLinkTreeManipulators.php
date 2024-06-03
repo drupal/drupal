@@ -60,7 +60,7 @@ class DefaultMenuLinkTreeManipulators {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $module_handler
    *   The module handler.
    */
-  public function __construct(AccessManagerInterface $access_manager, AccountInterface $account, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler = NULL) {
+  public function __construct(AccessManagerInterface $access_manager, AccountInterface $account, EntityTypeManagerInterface $entity_type_manager, ?ModuleHandlerInterface $module_handler = NULL) {
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->entityTypeManager = $entity_type_manager;

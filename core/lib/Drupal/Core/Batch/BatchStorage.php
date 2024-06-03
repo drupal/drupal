@@ -53,7 +53,7 @@ class BatchStorage implements BatchStorageInterface {
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(Connection $connection, SessionInterface $session, CsrfTokenGenerator $csrf_token, TimeInterface $time = NULL) {
+  public function __construct(Connection $connection, SessionInterface $session, CsrfTokenGenerator $csrf_token, ?TimeInterface $time = NULL) {
     $this->connection = $connection;
     $this->session = $session;
     $this->csrfToken = $csrf_token;

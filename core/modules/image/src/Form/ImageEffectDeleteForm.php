@@ -58,7 +58,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ImageStyleInterface $image_style = NULL, $image_effect = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?ImageStyleInterface $image_style = NULL, $image_effect = NULL) {
     $this->imageStyle = $image_style;
     $this->imageEffect = $this->imageStyle->getEffect($image_effect);
 

@@ -470,7 +470,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchObject(string $class_name = NULL, array $constructor_arguments = []) {
+  public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
     if (isset($this->currentRow)) {
       if (!isset($class_name)) {
         // Directly cast to an object to avoid a function call.

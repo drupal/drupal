@@ -201,7 +201,7 @@ class ConfigImporter {
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, ?ThemeExtensionList $extension_list_theme = NULL) {
     $this->moduleExtensionList = $extension_list_module;
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;

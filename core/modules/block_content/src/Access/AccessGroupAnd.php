@@ -31,7 +31,7 @@ class AccessGroupAnd implements AccessibleInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     $access_result = AccessResult::neutral();
     foreach (array_slice($this->dependencies, 1) as $dependency) {
       $access_result = $access_result->andIf($dependency->access($operation, $account, TRUE));

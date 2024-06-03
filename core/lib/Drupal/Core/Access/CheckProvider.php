@@ -61,7 +61,7 @@ class CheckProvider implements CheckProviderInterface {
    *   The check provider service locator.
    */
   public function __construct(
-    array $dynamic_requirements_map = NULL,
+    ?array $dynamic_requirements_map = NULL,
     protected ?ContainerInterface $container = NULL,
   ) {
     $this->dynamicRequirementMap = $dynamic_requirements_map;

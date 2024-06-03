@@ -21,7 +21,7 @@ trait SqlFieldableEntityTypeListenerTrait {
   /**
    * {@inheritdoc}
    */
-  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
+  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, ?array &$sandbox = NULL) {
     /** @var \Drupal\Core\Entity\EntityStorageInterface $original_storage */
     $original_storage = $this->entityTypeManager->createHandlerInstance($original->getStorageClass(), $original);
     $has_data = $original_storage->hasData();
@@ -98,7 +98,7 @@ trait SqlFieldableEntityTypeListenerTrait {
    *   or a Batch API callback. If the entity schema update requires a data
    *   migration, this parameter is mandatory. Defaults to NULL.
    */
-  protected function preUpdateEntityTypeSchema(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
+  protected function preUpdateEntityTypeSchema(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, ?array &$sandbox = NULL) {
   }
 
   /**
@@ -117,7 +117,7 @@ trait SqlFieldableEntityTypeListenerTrait {
    *   or a Batch API callback. If the entity schema update requires a data
    *   migration, this parameter is mandatory. Defaults to NULL.
    */
-  protected function postUpdateEntityTypeSchema(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
+  protected function postUpdateEntityTypeSchema(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, ?array &$sandbox = NULL) {
   }
 
   /**

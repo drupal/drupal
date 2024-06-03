@@ -15,7 +15,7 @@ class AccessArgumentsResolverFactory implements AccessArgumentsResolverFactoryIn
   /**
    * {@inheritdoc}
    */
-  public function getArgumentsResolver(RouteMatchInterface $route_match, AccountInterface $account, Request $request = NULL) {
+  public function getArgumentsResolver(RouteMatchInterface $route_match, AccountInterface $account, ?Request $request = NULL) {
     $route = $route_match->getRouteObject();
 
     // Defaults for the parameters defined on the route object need to be added
