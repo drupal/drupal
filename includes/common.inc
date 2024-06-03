@@ -8212,7 +8212,10 @@ function entity_get_controller($entity_type) {
   $controllers = &drupal_static(__FUNCTION__, array());
   if (!isset($controllers[$entity_type])) {
     $type_info = entity_get_info($entity_type);
-    $class = $type_info['controller class'];
+    // Explicitly fail for malformed entities missing a valid controller class.
+    if (!isset($type_info['controller class']) || !class_exists($class = $type_info['controller class'])) {
+      throw new EntityMalformedException(t('Missing or non-existent controller class on entity of type @entity_type.', array('@entity_type' => $entity_type)));
+    }
     $controllers[$entity_type] = new $class($entity_type);
   }
   return $controllers[$entity_type];

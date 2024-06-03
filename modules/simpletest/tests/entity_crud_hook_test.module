@@ -249,3 +249,13 @@ function entity_crud_hook_test_taxonomy_vocabulary_delete() {
 function entity_crud_hook_test_user_delete() {
   $_SESSION['entity_crud_hook_test'][] = (__FUNCTION__ . ' called');
 }
+
+/**
+ * Implements hook_entity_info_alter().
+ */
+function entity_crud_hook_test_entity_info_alter(&$entity_info) {
+  if (variable_get('entity_crud_hook_test_alter_controller_class', FALSE)) {
+    // Set the controller class for nodes to NULL.
+    $entity_info['node']['controller class'] = NULL;
+  }
+}
