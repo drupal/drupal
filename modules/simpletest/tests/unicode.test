@@ -118,10 +118,12 @@ class UnicodeUnitTest extends DrupalUnitTestCase {
     $testcase = array(
       'tHe QUIcK bRoWn' => 15,
       'ÜBER-åwesome' => 12,
+      'NULL' => 0,
     );
 
     foreach ($testcase as $input => $output) {
-      $this->assertEqual(drupal_strlen($input), $output, format_string('%input length is %output', array('%input' => $input, '%output' => $output)));
+      $tested_value = ($input === 'NULL' ? NULL : $input);
+      $this->assertEqual(drupal_strlen($tested_value), $output, format_string('%input length is %output', array('%input' => $input, '%output' => $output)));
     }
   }
 

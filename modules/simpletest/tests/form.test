@@ -769,6 +769,109 @@ class FormValidationTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests validation of additional Form API properties.
+ *
+ * Limited to maxlength validation at present.
+ */
+class FormsElementsValidationTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Form element validation - misc',
+      'description' => 'Tests miscellaneous form element validation mechanisms.',
+      'group' => 'Form API',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests #maxlength validation.
+   */
+  public function testMaxlengthValidation() {
+    $max_length = 5;
+    // The field types that support #maxlength.
+    $form = array(
+      'textfield' => array(
+        '#type' => 'textfield',
+        '#title' => 'Textfield',
+        '#required' => FALSE,
+        '#maxlength' => $max_length,
+      ),
+      'password' => array(
+        '#type' => 'password',
+        '#title' => 'Password',
+        '#maxlength' => $max_length,
+      ),
+    );
+
+    $edit = array(
+      'textfield' => $this->randomString($max_length + 1),
+      'password' => $this->randomString($max_length + 1),
+    );
+    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, $edit);
+    $this->assertFalse(empty($errors), 'Form with overly long inputs returned errors.');
+    $this->assertTrue(isset($errors['textfield']) && strpos($errors['textfield'], 'cannot be longer than') !== FALSE, 'Long input error in textfield.');
+    $this->assertTrue(isset($errors['password']) && strpos($errors['password'], 'cannot be longer than') !== FALSE, 'Long input error in password.');
+
+    // This test for NULL inputs cannot be performed using the drupalPost() method.
+    $edit['textfield'] = NULL;
+    $edit['password'] = NULL;
+    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, $edit);
+    $this->assertTrue(empty($errors), 'Form with NULL inputs did not return errors.');
+
+    $edit['textfield'] = $this->randomString($max_length);
+    $edit['password'] = $this->randomString($max_length);
+    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, $edit);
+    $this->assertTrue(empty($errors), 'Form with maxlength inputs did not return errors.');
+
+  }
+
+  /**
+   * Helper function for the option check test to submit a form while collecting errors.
+   *
+   * Copied from FormsElementsTableSelectFunctionalTest.
+   *
+   * @param $form_element
+   *   A form element to test.
+   * @param $edit
+   *   An array containing post data.
+   *
+   * @return
+   *   An array containing the processed form, the form_state and any errors.
+   */
+  private function formSubmitHelper($form, $edit) {
+    $form_id = $this->randomName();
+    $form_state = form_state_defaults();
+
+    $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
+
+    $form_state['input'] = $edit;
+    $form_state['input']['form_id'] = $form_id;
+
+    // The form token CSRF protection should not interfere with this test,
+    // so we bypass it by marking this test form as programmed.
+    $form_state['programmed'] = TRUE;
+
+    drupal_prepare_form($form_id, $form, $form_state);
+
+    drupal_process_form($form_id, $form, $form_state);
+
+    $errors = form_get_errors();
+
+    // Clear errors and messages.
+    drupal_get_messages();
+    form_clear_error();
+
+    // Return the processed form together with form_state and errors
+    // to allow the caller lowlevel access to the form.
+    return array($form, $form_state, $errors);
+  }
+
+}
+
+/**
  * Test form element labels, required markers and associated output.
  */
 class FormsElementsLabelsTestCase extends DrupalWebTestCase {
