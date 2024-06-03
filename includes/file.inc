@@ -2082,7 +2082,7 @@ function file_download() {
   $target = implode('/', $args);
   $uri = $scheme . '://' . $target;
   $uri = file_uri_normalize_dot_segments($uri);
-  if (file_stream_wrapper_valid_scheme($scheme) && file_exists($uri)) {
+  if (file_stream_wrapper_valid_scheme($scheme) && is_file($uri)) {
     $headers = file_download_headers($uri);
     if (count($headers)) {
       file_transfer($uri, $headers);
