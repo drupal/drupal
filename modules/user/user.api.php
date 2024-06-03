@@ -302,12 +302,12 @@ function hook_user_update(&$edit, $account, $category) {
 /**
  * The user just logged in.
  *
- * @param $edit
- *   The array of form values submitted by the user.
+ * @param $form_state
+ *   A keyed array containing the current state of the login form.
  * @param $account
  *   The user object on which the operation was just performed.
  */
-function hook_user_login(&$edit, $account) {
+function hook_user_login(&$form_state, $account) {
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->timezone && variable_get('configurable_timezones', 1) && variable_get('empty_timezone_message', 0)) {
     drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
