@@ -618,4 +618,16 @@ class AJAXElementValidation extends AJAXTestCase {
     $this->assertNoText(t('Error message'), "No error message in resultant JSON");
     $this->assertText('ajax_forms_test_validation_form_callback invoked', 'The correct callback was invoked');
   }
+
+  /**
+   * Try to open default Ajax callback without passing required data.
+   */
+  function testAJAXPathWithoutData() {
+    $this->drupalGet('system/ajax');
+    $query_parameters = array(
+      ':type' => 'php',
+      ':severity' => WATCHDOG_WARNING,
+    );
+    $this->assertEqual(db_query('SELECT COUNT(*) FROM {watchdog} WHERE type = :type AND severity = :severity', $query_parameters)->fetchField(), 0, 'No warning message appears in the logs.');
+  }
 }
