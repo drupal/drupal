@@ -5544,14 +5544,47 @@ function drupal_cron_run() {
       DrupalQueue::get($queue_name)->createQueue();
     }
 
+    $module_previous = '';
+
+    // If detailed logging isn't enabled, don't log individual execution times.
+    $time_logging_enabled = variable_get('cron_detailed_logging', DRUPAL_CRON_DETAILED_LOGGING);
+
     // Iterate through the modules calling their cron handlers (if any):
     foreach (module_implements('cron') as $module) {
+      if ($time_logging_enabled) {
+        if (!$module_previous) {
+          watchdog('cron', 'Starting execution of @module_cron().', array('@module' => $module));
+        }
+        else {
+          watchdog('cron', 'Starting execution of @module_cron(), execution of @module_previous_cron() took @time.', array(
+            '@module' => $module,
+            '@module_previous' => $module_previous,
+            '@time' => timer_read('cron_' . $module_previous) . 'ms',
+          ));
+        }
+        timer_start('cron_' . $module);
+      }
+
       // Do not let an exception thrown by one module disturb another.
       try {
         module_invoke($module, 'cron');
       }
       catch (Exception $e) {
         watchdog_exception('cron', $e);
+      }
+
+      if ($time_logging_enabled) {
+        timer_stop('cron_' . $module);
+        $module_previous = $module;
+      }
+    }
+
+    if ($time_logging_enabled) {
+      if ($module_previous) {
+        watchdog('cron', 'Execution of @module_previous_cron() took @time.', array(
+          '@module_previous' => $module_previous,
+          '@time' => timer_read('cron_' . $module_previous) . 'ms',
+        ));
       }
     }
 

@@ -1645,6 +1645,12 @@ function system_cron_settings() {
     '#default_value' => variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD),
     '#options' => array(0 => t('Never')) + drupal_map_assoc(array(3600, 10800, 21600, 43200, 86400, 604800), 'format_interval'),
   );
+  $form['cron']['cron_detailed_logging'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Detailed cron logging'),
+    '#default_value' => variable_get('cron_detailed_logging', DRUPAL_CRON_DETAILED_LOGGING),
+    '#description' => t('Run times of individual cron jobs will be written to watchdog'),
+  );
 
   return system_settings_form($form);
 }
