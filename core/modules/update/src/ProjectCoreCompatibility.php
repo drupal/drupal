@@ -158,7 +158,12 @@ final class ProjectCoreCompatibility {
    *   version of Drupal core, otherwise FALSE.
    */
   protected function isCoreCompatible($core_compatibility_constraint) {
-    return Semver::satisfies($this->existingCoreVersion, $core_compatibility_constraint);
+    try {
+      return Semver::satisfies($this->existingCoreVersion, $core_compatibility_constraint);
+    }
+    catch (\Exception $e) {
+      return FALSE;
+    }
   }
 
   /**
