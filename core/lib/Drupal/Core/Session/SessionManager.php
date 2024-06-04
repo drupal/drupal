@@ -17,8 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
  * storing and retrieving session data has been extracted from it in Symfony 2.1
  * but the class name was not changed.
  *
- * @todo
- *   In fact the NativeSessionStorage class already implements all of the
+ * @todo In fact the NativeSessionStorage class already implements all of the
  *   functionality required by a typical Symfony application. Normally it is not
  *   necessary to subclass it at all. In order to reach the point where Drupal
  *   can use the Symfony session management unmodified, the code implemented
@@ -39,7 +38,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   /**
    * The write safe session handler.
    *
-   * @todo: This reference should be removed once all database queries
+   * @todo This reference should be removed once all database queries
    *   are removed from the session manager class.
    *
    * @var \Drupal\Core\Session\WriteSafeSessionHandlerInterface

@@ -107,7 +107,7 @@ class AssetResolver implements AssetResolverInterface {
     // representative set before then expanding the list to include all
     // dependencies.
     // @see Drupal\FunctionalTests\Core\Asset\AssetOptimizationTestUmami
-    // @todo: https://www.drupal.org/project/drupal/issues/1945262
+    // @todo https://www.drupal.org/project/drupal/issues/1945262
     $libraries = $assets->getLibraries();
     if ($libraries) {
       $libraries = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries);

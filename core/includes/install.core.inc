@@ -1932,7 +1932,7 @@ function install_check_translations($langcode, $server_pattern) {
 
   $readable = FALSE;
   $writable = FALSE;
-  // @todo: Make this configurable.
+  // @todo Make this configurable.
   $site_path = \Drupal::getContainer()->getParameter('site.path');
   $files_directory = $site_path . '/files';
   $translations_directory = $site_path . '/files/translations';

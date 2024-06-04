@@ -70,7 +70,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       return array_map([$this->serializer, 'decode'], $values);
     }
     catch (\Exception $e) {
-      // @todo: Perhaps if the database is never going to be available,
+      // @todo Perhaps if the database is never going to be available,
       // key/value requests should return FALSE in order to allow exception
       // handling to occur but for now, keep it an array, always.
       // https://www.drupal.org/node/2787737

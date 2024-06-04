@@ -221,7 +221,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
           $columns = $field_definition->getFieldStorageDefinition()->getColumns();
           // If there is more than one column, display them all, otherwise just
           // display the field label.
-          // @todo: Use property labels instead of the column name.
+          // @todo Use property labels instead of the column name.
           if (count($columns) > 1) {
             foreach ($columns as $column_name => $column_info) {
               $fields[$field_name . '.' . $column_name] = $this->t('@label (@column)', ['@label' => $field_definition->getLabel(), '@column' => $column_name]);

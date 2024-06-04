@@ -245,7 +245,7 @@ class EntityResource {
       // User resource objects contain a read-only attribute that is not a
       // real field on the user entity type.
       // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
-      // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+      // @todo Eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
       if ($resource_type->getEntityTypeId() === 'user') {
         $field_mapping = array_diff($field_mapping, [$resource_type->getPublicName('display_name')]);
       }
@@ -328,7 +328,7 @@ class EntityResource {
     // User resource objects contain a read-only attribute that is not a real
     // field on the user entity type.
     // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
-    // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+    // @todo Eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
     if ($entity->getEntityTypeId() === 'user') {
       $field_names = array_diff($field_names, [$resource_type->getPublicName('display_name')]);
     }

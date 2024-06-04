@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\Range;
  *
  * Overrides the symfony constraint to use Drupal-style replacement patterns.
  *
- * @todo: Move this below the TypedData core component.
+ * @todo Move this below the TypedData core component.
  */
 #[Constraint(
   id: 'Range',

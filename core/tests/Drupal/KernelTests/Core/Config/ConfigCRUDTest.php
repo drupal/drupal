@@ -281,9 +281,9 @@ class ConfigCRUDTest extends KernelTestBase {
       // Symfony 5.1's YAML parser issues a deprecation when reading octal with
       // a leading zero, to comply with YAML 1.2. However PECL YAML is still
       // YAML 1.1 compliant.
-      // @todo: revisit parsing of octal once PECL YAML supports YAML 1.2.
-      // See https://www.drupal.org/project/drupal/issues/3205480
-      // 'octal' => 0775,
+      // @todo Revisit parsing of octal once PECL YAML supports YAML 1.2.
+      //   https://www.drupal.org/project/drupal/issues/3205480
+      //   'octal' => 0775,
       'string' => 'string',
       'string_int' => '1',
       'nullable_array' => NULL,

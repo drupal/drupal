@@ -15,7 +15,7 @@ use Drupal\Component\Annotation\Plugin;
  * either load its own data or be injected with data from another Display
  * object.
  *
- * @todo: Revise description when/if Displays are added to core:
+ * @todo Revise description when/if Displays are added to core.
  *   https://www.drupal.org/node/2292733
  *
  * Plugin namespace: Plugin\DisplayVariant

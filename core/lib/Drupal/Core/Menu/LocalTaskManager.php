@@ -223,8 +223,8 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
             }
             // Tabs that link to the current route are viable parents
             // and their parent and children should be visible also.
-            // @todo - this only works for 2 levels of tabs.
-            // instead need to iterate up.
+            // @todo This only works for 2 levels of tabs instead
+            //   need to iterate up.
             $parents[$plugin_id] = TRUE;
             if (!empty($task_info['parent_id'])) {
               $parents[$task_info['parent_id']] = TRUE;

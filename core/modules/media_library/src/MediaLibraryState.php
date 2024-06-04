@@ -114,7 +114,8 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
       throw new BadRequestHttpException("Invalid media library parameters specified.");
     }
 
-    // @todo: Review parameters passed and remove irrelevant ones in https://www.drupal.org/i/3396650
+    // @todo Review parameters passed and remove irrelevant ones in
+    //   https://www.drupal.org/i/3396650
 
     // Once we have validated the required parameters, we restore the parameters
     // from the request since there might be additional values.

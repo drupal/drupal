@@ -256,7 +256,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function getCardinality() {
-    // @todo: Allow to control this.
+    // @todo Allow to control this.
     return $this->definition['cardinality'] ?? 1;
   }
 
@@ -565,8 +565,8 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
       $items = $entity->get($this->getName());
       return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
     }
-    // @todo: Allow setting custom options provider, see
-    // https://www.drupal.org/node/2002138.
+    // @todo Allow setting custom options provider.
+    //   https://www.drupal.org/node/2002138
   }
 
   /**

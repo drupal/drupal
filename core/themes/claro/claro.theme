@@ -388,7 +388,7 @@ function claro_preprocess_details(&$variables) {
 
     // If the error is the same as the one in the multiple field widget element,
     // we have to avoid displaying it twice. Stark has this issue as well.
-    // @todo revisit when https://www.drupal.org/node/3084906 is fixed.
+    // @todo Revisit when https://www.drupal.org/node/3084906 is fixed.
     if (isset($element['#errors']) && isset($variables['errors']) && $element['#errors'] === $variables['errors']) {
       unset($variables['errors']);
     }
@@ -542,7 +542,7 @@ function claro_preprocess_links(&$variables) {
   // This makes it so array keys of #links items are added as a class. This
   // functionality was removed in Drupal 8.1, but still necessary in some
   // instances.
-  // @todo remove in https://drupal.org/node/3120962
+  // @todo Remove in https://drupal.org/node/3120962
   if (!empty($variables['links'])) {
     foreach ($variables['links'] as $key => $value) {
       if (!is_numeric($key)) {
@@ -739,9 +739,9 @@ function claro_form_media_form_alter(&$form, FormStateInterface $form_state) {
   // the contrib Media Entity 1.x branch.
   if (\Drupal::moduleHandler()->moduleExists('media') && $form_state->getFormObject() instanceof MediaForm) {
     // @todo Revisit after https://www.drupal.org/node/2892304 is in. It
-    // introduces a footer region to these forms which will allow for us to
-    // display a top border over the published checkbox by defining a
-    // media-edit-form.html.twig template the same way node does.
+    //   introduces a footer region to these forms which will allow for us to
+    //   display a top border over the published checkbox by defining a
+    //   media-edit-form.html.twig template the same way node does.
     $form['#attached']['library'][] = 'claro/media-form';
   }
 }
@@ -750,7 +750,7 @@ function claro_form_media_form_alter(&$form, FormStateInterface $form_state) {
  * Implements hook_views_ui_display_top_alter().
  */
 function claro_views_ui_display_top_alter(&$element) {
-  // @todo remove this after https://www.drupal.org/node/3051605 has been
+  // @todo Remove this after https://www.drupal.org/node/3051605 has been
   //   solved.
   $element['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)tabs(\s.+"|")/', '$1views-tabs$3', $element['tabs']['#prefix']);
   $element['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)secondary(\s.+"|")/', '$1views-tabs--secondary$3', $element['tabs']['#prefix']);
@@ -804,7 +804,7 @@ function claro_views_ui_display_tab_alter(&$element) {
   // the Dropbutton type, we just have to set it's '#dropbutton_type' to
   // 'extrasmall'.
   //
-  // @todo: revisit after https://www.drupal.org/node/3057577 is fixed.
+  // @todo Revisit after https://www.drupal.org/node/3057577 is fixed.
   $dummy_dropbutton = &$element['details']['top']['actions'];
 
   if ($dummy_dropbutton) {
@@ -1052,7 +1052,7 @@ function claro_preprocess_fieldset(&$variables) {
 
   // Remove 'container-inline' class from the main attributes and add a flag
   // instead.
-  // @todo remove this after https://www.drupal.org/node/3059593 has been
+  // @todo Remove this after https://www.drupal.org/node/3059593 has been
   //   resolved.
   if (!empty($variables['attributes']['class'])) {
     $container_inline_key = array_search('container-inline', $variables['attributes']['class']);
@@ -1148,7 +1148,7 @@ function claro_preprocess_filter_tips(&$variables) {
 function claro_preprocess_table(&$variables) {
   // Adding table sort indicator CSS class for inactive sort link.
   // @todo Revisit after https://www.drupal.org/node/3025726 or
-  // https://www.drupal.org/node/1973418 is in.
+  //   https://www.drupal.org/node/1973418 is in.
   if (!empty($variables['header'])) {
     foreach ($variables['header'] as &$header_cell) {
       if ($header_cell['content'] instanceof Link) {
@@ -1197,7 +1197,7 @@ function claro_preprocess_field_ui_table(&$variables) {
  * Implements template_preprocess_HOOK() for views_view_table.
  *
  * @todo Revisit after https://www.drupal.org/node/3025726 or
- * https://www.drupal.org/node/1973418 is in.
+ *   https://www.drupal.org/node/1973418 is in.
  */
 function claro_preprocess_views_view_table(&$variables) {
   if (!empty($variables['header'])) {
@@ -1387,8 +1387,8 @@ function claro_preprocess_file_widget_multiple(&$variables) {
 function claro_preprocess_image_widget(&$variables) {
   // This prevents image widget templates from rendering preview container HTML
   // to users that do not have permission to access these previews.
-  // @todo revisit in https://drupal.org/node/953034
-  // @todo revisit in https://drupal.org/node/3114318
+  // @todo Revisit in https://drupal.org/node/953034
+  // @todo Revisit in https://drupal.org/node/3114318
   if (isset($variables['data']['preview']['#access']) && $variables['data']['preview']['#access'] === FALSE) {
     unset($variables['data']['preview']);
   }
@@ -1574,7 +1574,7 @@ function claro_preprocess_media_library_item__small(array &$variables) {
 
 /**
  * @todo Remove this when https://www.drupal.org/project/drupal/issues/2999549
- * lands.
+ *   lands.
  *
  * @see \Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::formElement()
  */
@@ -1683,7 +1683,7 @@ function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInter
     // whitespace and are no longer needed because uses of `float:` in this form
     // have been removed.
     // @todo Many of the changes to classes within this conditional may not be
-    // needed or require refactoring in https://drupal.org/node/3164890
+    //   needed or require refactoring in https://drupal.org/node/3164890
     unset($form['options']['clear_markup_start']);
     unset($form['options']['clear_markup_end']);
     if (isset($form['options']['expose_button']['#prefix'])) {

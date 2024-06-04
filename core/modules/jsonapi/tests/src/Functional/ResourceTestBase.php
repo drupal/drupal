@@ -3035,7 +3035,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $actual_response = $this->request('GET', $rel_working_copy_collection_url, $request_options);
     $expected_collection_document['links']['self']['href'] = $rel_working_copy_collection_url->toString();
     $this->assertResourceResponse(200, $expected_collection_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
-    // @todo: remove the next assertion when Drupal core supports entity query access control on revisions.
+    // @todo Remove the next assertion when Drupal core supports entity query access control on revisions.
     $rel_working_copy_collection_url_filtered = clone $rel_working_copy_collection_url;
     $rel_working_copy_collection_url_filtered->setOption('query', ['filter[foo]' => 'bar'] + $rel_working_copy_collection_url->getOption('query'));
     $actual_response = $this->request('GET', $rel_working_copy_collection_url_filtered, $request_options);
@@ -3206,7 +3206,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
       // Request the related route.
       $actual_response = $this->request('GET', $related_url, $request_options);
-      // @todo: refactor self::getExpectedRelatedResponses() into a function which returns a single response.
+      // @todo Refactor self::getExpectedRelatedResponses() into a function which returns a single response.
       $expected_response = $this->getExpectedRelatedResponses(['field_jsonapi_test_entity_ref'], $request_options, $revision)['field_jsonapi_test_entity_ref'];
       $expected_document = $expected_response->getResponseData();
       $expected_cacheability = $expected_response->getCacheableMetadata();
