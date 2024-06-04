@@ -97,7 +97,7 @@ abstract class TextItemBase extends FieldItemBase {
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
-    // @todo: Add in the filter default format here.
+    // @todo Add in the filter default format here.
     $this->setValue(['format' => NULL], $notify);
     return $this;
   }

@@ -18,7 +18,7 @@ abstract class ExecutablePluginBase extends PluginBase implements ExecutableInte
   /**
    * Gets an array of definitions of available configuration options.
    *
-   * @todo: This needs to go into an interface.
+   * @todo This needs to go into an interface.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
    *   An array of typed data definitions describing available configuration
@@ -38,7 +38,7 @@ abstract class ExecutablePluginBase extends PluginBase implements ExecutableInte
    * @param string $key
    *   The key of the configuration option to get.
    *
-   * @todo: This needs to go into an interface.
+   * @todo This needs to go into an interface.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface|false
    *   The typed data definition describing the configuration option, or FALSE
@@ -55,7 +55,7 @@ abstract class ExecutablePluginBase extends PluginBase implements ExecutableInte
   /**
    * Gets all configuration values.
    *
-   * @todo: This needs to go into an interface.
+   * @todo This needs to go into an interface.
    *
    * @return array
    *   The array of all configuration values, keyed by configuration option

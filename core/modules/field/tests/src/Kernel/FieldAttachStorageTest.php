@@ -34,7 +34,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $this->createFieldWithStorage('', $entity_type);
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
 
-    // TODO : test empty values filtering and "compression" (store consecutive deltas).
+    // @todo Test empty values filtering and "compression" (store consecutive deltas).
     // Preparation: create three revisions and store them in $revision array.
     $values = [];
     $entity = $this->container->get('entity_type.manager')

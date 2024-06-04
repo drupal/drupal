@@ -37,8 +37,7 @@ trait BlockCreationTrait {
    * @return \Drupal\block\Entity\Block
    *   The block entity.
    *
-   * @todo
-   *   Add support for creating content block instances.
+   * @todo Add support for creating content block instances.
    */
   protected function placeBlock($plugin_id, array $settings = []) {
     $config = \Drupal::configFactory();

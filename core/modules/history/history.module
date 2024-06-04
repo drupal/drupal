@@ -4,8 +4,7 @@
  * @file
  * Records which users have read which content.
  *
- * @todo
- * - Generic helper for node_mark().
+ * @todo Generic helper for node_mark().
  */
 
 use Drupal\Core\Url;

@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @todo: replace numbers with constants.
+ * @todo Replace numbers with constants.
  */
 
 /**

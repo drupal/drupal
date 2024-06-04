@@ -67,7 +67,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'argumentResolver');
     $property->setValue($manager, $argumentResolver);
 
-    // todo mock a request with a route.
+    // @todo Mock a request with a route.
     $request_stack = new RequestStack();
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'requestStack');
     $property->setValue($manager, $request_stack);

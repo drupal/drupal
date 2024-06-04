@@ -41,7 +41,7 @@ class JsonTest extends TestCase {
     parent::setUp();
 
     // Setup a string with the full ASCII table.
-    // @todo: Add tests for non-ASCII characters and Unicode.
+    // @todo Add tests for non-ASCII characters and Unicode.
     $this->string = '';
     for ($i = 1; $i < 128; $i++) {
       $this->string .= chr($i);

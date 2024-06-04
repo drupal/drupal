@@ -421,7 +421,7 @@ trait PerformanceTestTrait {
    */
   private function openTelemetryTracing(array $messages, string $service_name): void {
     // Open telemetry timestamps are always in nanoseconds.
-    // @todo: consider moving these to trait constants once we require PHP 8.2.
+    // @todo Consider moving these to trait constants once we require PHP 8.2.
     $nanoseconds_per_second = 1000_000_000;
     $nanoseconds_per_millisecond = 1000_000;
     $nanoseconds_per_microsecond = 1000;
@@ -463,9 +463,9 @@ trait PerformanceTestTrait {
       $this->markTestSkipped('Incomplete log from chromedriver, giving up.');
     }
 
-    // @todo: get commit hash from an environment variable and add this as an
-    // additional attribute.
-    // @see https://www.drupal.org/project/drupal/issues/3379761
+    // @todo Get commit hash from an environment variable and add this as an
+    //   additional attribute.
+    //   @see https://www.drupal.org/project/drupal/issues/3379761
     $resource = ResourceInfoFactory::defaultResource();
     $resource = $resource->merge(ResourceInfo::create(Attributes::create([
       ResourceAttributes::SERVICE_NAMESPACE => 'Drupal',

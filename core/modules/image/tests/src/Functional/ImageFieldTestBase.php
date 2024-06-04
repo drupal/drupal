@@ -8,7 +8,7 @@ use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * TODO: Test the following functions.
+ * @todo Test the following functions.
  *
  * In file:
  * - image.effects.inc:

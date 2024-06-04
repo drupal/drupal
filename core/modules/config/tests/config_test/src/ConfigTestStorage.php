@@ -5,9 +5,6 @@ namespace Drupal\config_test;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Config\Config;
 
-/**
- * @todo.
- */
 class ConfigTestStorage extends ConfigEntityStorage {
 
   /**

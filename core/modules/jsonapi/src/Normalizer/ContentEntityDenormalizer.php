@@ -45,7 +45,7 @@ final class ContentEntityDenormalizer extends EntityDenormalizerBase {
     // User resource objects contain a read-only attribute that is not a real
     // field on the user entity type.
     // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
-    // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+    // @todo Eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
     if ($entity_type_id === 'user') {
       $data = array_diff_key($data, array_flip([$resource_type->getPublicName('display_name')]));
     }

@@ -593,7 +593,7 @@ function _editor_get_formatted_text_fields(FieldableEntityInterface $entity) {
   }
 
   // Only return formatted text fields.
-  // @todo: improve as part of https://www.drupal.org/node/2732429
+  // @todo improve as part of https://www.drupal.org/node/2732429
   $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
   return array_keys(array_filter($field_definitions, function (FieldDefinitionInterface $definition) use ($field_type_manager) {
     $type = $definition->getType();

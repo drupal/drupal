@@ -135,7 +135,7 @@ class DirectoryTest extends FileTestBase {
     $path = $file_system->createFilename($basename, $directory);
     $this->assertEquals($expected, $path, "Creating a new filepath from $path equals $original (expected $expected).");
 
-    // @TODO: Finally we copy a file into a directory several times, to ensure a properly iterating filename suffix.
+    // @todo Finally we copy a file into a directory several times, to ensure a properly iterating filename suffix.
   }
 
   /**
