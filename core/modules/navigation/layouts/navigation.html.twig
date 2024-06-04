@@ -22,7 +22,7 @@
 <div {{ control_bar_attributes.addClass('admin-toolbar-control-bar').setAttribute('data-drupal-admin-styles', '').setAttribute('data-offset-top', '') }}>
   <div class="admin-toolbar-control-bar__content">
     {% include '@navigation/toolbar-button.html.twig' with {
-      attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar'}),
+      attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar', 'type': 'button'}),
       icon: 'burger',
       text: 'Expand sidebar'|t,
       extra_classes: 'admin-toolbar-control-bar__burger',
@@ -62,7 +62,7 @@
           text: 'Back'|t,
         } only %}
         {% include '@navigation/toolbar-button.html.twig' with {
-          attributes: create_attribute({ 'aria-controls': 'admin-toolbar', 'tabindex': '-1' }),
+           attributes: create_attribute({ 'aria-controls': 'admin-toolbar', 'tabindex': '-1', 'type': 'button' }),
           extra_classes: 'admin-toolbar__close-button',
           icon: 'cross',
           label_classes: 'visually-hidden',
@@ -77,7 +77,7 @@
     <nav {{ region_attributes.footer.setAttribute('id', 'menu-footer').addClass('admin-toolbar__footer').setAttribute('aria-labelledby', title_menu_footer) }}>
       <h3 id="{{ title_menu_footer }}" class="visually-hidden">{{ 'Administrative toolbar footer'|t }}</h3>
       {{ content.footer }}
-      <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button">
+      <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button" type="button">
         <span class="visually-hidden" data-text>{{ 'Collapse sidebar'|t }}</span>
       </button>
     </nav>
