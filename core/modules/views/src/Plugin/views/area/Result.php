@@ -78,7 +78,7 @@ class Result extends AreaPluginBase {
     // Calculate the page totals.
     $current_page = (int) $this->view->getCurrentPage() + 1;
     $per_page = (int) $this->view->getItemsPerPage();
-    // @TODO: Maybe use a possible is views empty functionality.
+    // @todo Maybe use a possible is views empty functionality.
     // Not every view has total_rows set, use view->result instead.
     $total = $this->view->total_rows ?? count($this->view->result);
     $label = Html::escape($this->view->storage->label());

@@ -44,7 +44,7 @@ class FilterFormat extends StringData implements OptionsProviderInterface {
    * {@inheritdoc}
    */
   public function getSettableOptions(?AccountInterface $account = NULL) {
-    // @todo: Avoid calling functions but move to injected dependencies.
+    // @todo Avoid calling functions but move to injected dependencies.
     return array_map(function ($format) {
       return $format->label();
     }, filter_formats($account));

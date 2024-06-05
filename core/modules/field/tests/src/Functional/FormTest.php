@@ -147,7 +147,7 @@ class FormTest extends FieldTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("{$this->field['label']} does not accept the value -1.");
-    // TODO : check that the correct field is flagged for error.
+    // @todo check that the correct field is flagged for error.
 
     // Create an entity
     $value = mt_rand(1, 127);
@@ -296,7 +296,7 @@ class FormTest extends FieldTestBase {
     $this->assertSession()->fieldValueEquals("{$field_name}[1][value]", '');
     // Verify that no extraneous widget is displayed.
     $this->assertSession()->fieldNotExists("{$field_name}[2][value]");
-    // TODO : check that non-field inputs are preserved ('title'), etc.
+    // @todo check that non-field inputs are preserved ('title'), etc.
 
     // Yet another time so that we can play with more values -> 3 widgets.
     $this->submitForm([], 'Add another item');

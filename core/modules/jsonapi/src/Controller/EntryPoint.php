@@ -94,7 +94,7 @@ class EntryPoint extends ControllerBase {
         // be used instead. Unfortunately, the `collection` link relation type
         // would not be semantically correct since it would imply that the
         // entrypoint is a *member* of the link target.
-        // @todo: implement an extension relation type to signal that this is a primary collection resource.
+        // @todo Implement an extension relation type to signal that this is a primary collection resource.
         $link_relation_type = $resource_type->getTypeName();
         return $carry->withLink($resource_type->getTypeName(), new Link(new CacheableMetadata(), $url, $link_relation_type));
       }

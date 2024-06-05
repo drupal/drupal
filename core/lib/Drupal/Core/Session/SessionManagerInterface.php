@@ -25,7 +25,7 @@ interface SessionManagerInterface extends SessionStorageInterface {
   /**
    * Sets the write safe session handler.
    *
-   * @todo: This should be removed once all database queries are removed from
+   * @todo This should be removed once all database queries are removed from
    *   the session manager class.
    *
    * @var \Drupal\Core\Session\WriteSafeSessionHandlerInterface

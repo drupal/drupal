@@ -5,7 +5,7 @@ namespace Drupal\Core\Session;
 /**
  * An implementation of the user account interface for the global user.
  *
- * @todo: Change all properties to protected.
+ * @todo Change all properties to protected.
  */
 #[\AllowDynamicProperties]
 class UserSession implements AccountInterface {

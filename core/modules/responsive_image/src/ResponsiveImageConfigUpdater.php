@@ -46,7 +46,7 @@ final class ResponsiveImageConfigUpdater {
    * @return bool
    *   Whether the responsive image style was updated.
    *
-   *   TODO: when removing this, evaluate if we need to keep it permanently
+   *   @todo when removing this, evaluate if we need to keep it permanently
    *   to support an upgrade path (migration) from Drupal 7 picture module.
    */
   public function orderMultipliersNumerically(ResponsiveImageStyleInterface $responsive_image_style): bool {

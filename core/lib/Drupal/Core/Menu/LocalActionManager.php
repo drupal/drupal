@@ -169,7 +169,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     if (!isset($this->instances[$route_appears])) {
       $route_names = [];
       $this->instances[$route_appears] = [];
-      // @todo - optimize this lookup by compiling or caching.
+      // @todo Optimize this lookup by compiling or caching.
       foreach ($this->getDefinitions() as $plugin_id => $action_info) {
         if (in_array($route_appears, $action_info['appears_on'])) {
           $plugin = $this->createInstance($plugin_id);

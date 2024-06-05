@@ -167,7 +167,7 @@ function book_form_node_form_alter(&$form, FormStateInterface $form_state, $form
 /**
  * Entity form builder to add the book information to the node.
  *
- * @todo: Remove this in favor of an entity field.
+ * @todo Remove this in favor of an entity field.
  */
 function book_node_builder($entity_type, NodeInterface $entity, &$form, FormStateInterface $form_state) {
   $entity->book = $form_state->getValue('book');

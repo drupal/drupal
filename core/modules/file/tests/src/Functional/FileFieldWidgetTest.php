@@ -214,7 +214,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $edit['files[test_file_field_1_0][' . $i . ']'] = \Drupal::service('file_system')->realpath($test_file->getFileUri());
     }
 
-    // @todo: Replace after https://www.drupal.org/project/drupal/issues/2917885
+    // @todo Replace after https://www.drupal.org/project/drupal/issues/2917885
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->fieldExists('files[test_file_field_1_0][]');
     $submit_xpath = $this->assertSession()->buttonExists('Save')->getXpath();

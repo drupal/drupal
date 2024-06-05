@@ -331,7 +331,7 @@ class ViewEditForm extends ViewFormBase {
     }
     $view->set('display', $displays);
 
-    // @todo: Revisit this when https://www.drupal.org/node/1668866 is in.
+    // @todo Revisit this when https://www.drupal.org/node/1668866 is in.
     $query = $this->requestStack->getCurrentRequest()->query;
     $destination = $query->get('destination');
 
@@ -387,7 +387,7 @@ class ViewEditForm extends ViewFormBase {
     // If the plugin doesn't exist, display an error message instead of an edit
     // page.
     if (empty($display)) {
-      // @TODO: Improved UX for the case where a plugin is missing.
+      // @todo Improved UX for the case where a plugin is missing.
       $build['#markup'] = $this->t("Error: Display @display refers to a plugin named '@plugin', but that plugin is not available.", ['@display' => $display->display['id'], '@plugin' => $display->display['display_plugin']]);
     }
     // Build the content of the edit page.
@@ -429,7 +429,7 @@ class ViewEditForm extends ViewFormBase {
     $is_display_deleted = !empty($display['deleted']);
     // The default display cannot be duplicated.
     $is_default = $display['id'] == 'default';
-    // @todo: Figure out why getOption doesn't work here.
+    // @todo Figure out why getOption doesn't work here.
     $is_enabled = $view->getExecutable()->displayHandlers->get($display['id'])->isEnabled();
 
     if ($display['id'] != 'default') {
@@ -1022,7 +1022,7 @@ class ViewEditForm extends ViewFormBase {
         // The rearrange form for filters contains the and/or UI, so override
         // the used path.
         $rearrange_url = Url::fromRoute('views_ui.form_rearrange_filter', ['js' => 'nojs', 'view' => $view->id(), 'display_id' => $display['id']]);
-        // TODO: Add another class to have another symbol for filter rearrange.
+        // @todo Add another class to have another symbol for filter rearrange.
         $class = 'icon compact rearrange';
         break;
 

@@ -84,7 +84,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
 
     // Submit your own IP address. This fails, although it works when testing
     // manually.
-    // TODO: On some systems this test fails due to a bug/inconsistency in cURL.
+    // @todo On some systems this test fails due to a bug/inconsistency in cURL.
     // $edit = array();
     // $edit['ip'] = \Drupal::request()->getClientIP();
     // $this->drupalGet('admin/config/people/ban');

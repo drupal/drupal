@@ -199,8 +199,8 @@ class UpdateManagerInstall extends FormBase {
     $archive_errors = $this->moduleHandler->invokeAll('verify_update_archive', [$project, $local_cache, $directory]);
     if (!empty($archive_errors)) {
       $this->messenger()->addError(array_shift($archive_errors));
-      // @todo: Fix me in D8: We need a way to set multiple errors on the same
-      // form element and have all of them appear!
+      // @todo Fix me in D8: We need a way to set multiple errors on the same
+      //   form element and have all of them appear!
       if (!empty($archive_errors)) {
         foreach ($archive_errors as $error) {
           $this->messenger()->addError($error);

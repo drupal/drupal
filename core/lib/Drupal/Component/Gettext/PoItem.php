@@ -5,7 +5,7 @@ namespace Drupal\Component\Gettext;
 /**
  * PoItem handles one translation.
  *
- * @todo: This class contains some really old legacy code.
+ * @todo This class contains some really old legacy code.
  * @see https://www.drupal.org/node/1637662
  */
 class PoItem {

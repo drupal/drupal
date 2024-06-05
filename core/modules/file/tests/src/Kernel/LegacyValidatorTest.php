@@ -206,7 +206,7 @@ class LegacyValidatorTest extends FileManagedUnitTestBase {
       \Drupal::service('file_system')->unlink('temporary://druplicon.png');
     }
     else {
-      // TODO: should check that the error is returned if no toolkit is available.
+      // @todo should check that the error is returned if no toolkit is available.
       $errors = file_validate_image_resolution($this->image, '5x10');
       $this->assertCount(1, $errors, 'Oversize images that cannot be scaled get an error.');
     }

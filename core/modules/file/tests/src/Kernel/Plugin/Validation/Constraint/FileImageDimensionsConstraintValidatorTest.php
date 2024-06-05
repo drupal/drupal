@@ -137,7 +137,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
       \Drupal::service('file_system')->unlink('temporary://druplicon.png');
     }
     else {
-      // TODO: should check that the error is returned if no toolkit is available.
+      // @todo Should check that the error is returned if no toolkit is available.
       $validators = [
         'FileImageDimensions' => [
           'maxDimensions' => '5x10',

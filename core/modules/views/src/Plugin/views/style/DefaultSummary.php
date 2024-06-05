@@ -74,7 +74,7 @@ class DefaultSummary extends StylePluginBase {
   public function render() {
     $rows = [];
     foreach ($this->view->result as $row) {
-      // @todo: Include separator as an option.
+      // @todo Include separator as an option.
       $rows[] = $row;
     }
 

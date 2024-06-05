@@ -149,7 +149,7 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function fields() {
-    // TODO: Implement fields() method.
+    // @todo Implement fields() method.
   }
 
   /**

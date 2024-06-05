@@ -60,7 +60,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     ];
   }
 
-  // TODO : test creation with
+  // @todo Test creation with
   // - a full fledged $field structure, check that all the values are there
   // - a minimal $field structure, check all default values are set
   // defer actual $field comparison to a helper function, used for the two cases above,
@@ -121,7 +121,7 @@ class FieldCrudTest extends FieldKernelTestBase {
       // Expected exception; just continue testing.
     }
 
-    // TODO: test other failures.
+    // @todo Test other failures.
   }
 
   /**
@@ -269,7 +269,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertEquals($field->getLabel(), $field_new->getLabel(), '"label" change is saved');
     $this->assertEquals($field->getDescription(), $field_new->getDescription(), '"description" change is saved');
 
-    // TODO: test failures.
+    // @todo Test failures.
   }
 
   /**

@@ -700,8 +700,8 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
       }
       return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
     }
-    // @todo: Allow setting custom options provider, see
-    // https://www.drupal.org/node/2002138.
+    // @todo Allow setting custom options provider.
+    //   https://www.drupal.org/node/2002138.
   }
 
   /**

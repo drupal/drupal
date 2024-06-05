@@ -22,7 +22,7 @@ class DurationIso8601 extends StringData implements DurationInterface {
    */
   public function getDuration() {
     if ($this->value) {
-      // @todo: Add support for negative intervals on top of the DateInterval
+      // @todo Add support for negative intervals on top of the DateInterval
       // constructor.
       return new \DateInterval($this->value);
     }

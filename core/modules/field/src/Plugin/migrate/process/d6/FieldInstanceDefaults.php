@@ -34,7 +34,7 @@ class FieldInstanceDefaults extends ProcessPluginBase {
         break;
 
       case 'imagefield_widget':
-        // @todo, load the image and populate the defaults.
+        // @todo load the image and populate the defaults.
         // $default['default_image'] = $widget_settings['default_image'];
         break;
 
