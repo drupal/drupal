@@ -47,7 +47,11 @@ body {
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
-  width: var(--admin-toolbar-sidebar-width);
+}
+@media (min-width: 64rem) {
+  .admin-toolbar__displace-placeholder {
+    width: var(--admin-toolbar-sidebar-width);
+  }
 }
 /**
  * The Admin toolbar component.

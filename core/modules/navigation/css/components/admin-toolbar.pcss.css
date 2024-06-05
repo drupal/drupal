@@ -47,7 +47,10 @@ body {
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
-  width: var(--admin-toolbar-sidebar-width);
+
+  @media (--admin-toolbar-desktop) {
+    width: var(--admin-toolbar-sidebar-width);
+  }
 }
 
 /**
