@@ -42,9 +42,10 @@ class TestFileTransfer extends FileTransfer {
   }
 
   public function connect() {
-    $connection = new MockTestConnection();
-    $connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
-    $this->connection = $connection;
+    $this->connection = new MockTestConnection();
+    // Access the connection via the property. The property used to be set via a
+    // magic method and this can cause problems if coded incorrectly.
+    $this->connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
   }
 
   public function copyFileJailed($source, $destination) {
