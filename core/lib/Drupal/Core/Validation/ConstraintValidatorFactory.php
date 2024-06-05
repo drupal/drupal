@@ -10,7 +10,7 @@ use Symfony\Component\Validator\ConstraintValidatorInterface;
 /**
  * Defines a constraint validator factory that works with container injection.
  *
- * @TODO Decide what to do with this class or how to reuse constraint
+ * @todo Decide what to do with this class or how to reuse constraint
  * validators in https://drupal.org/project/drupal/issues/3097071
  */
 class ConstraintValidatorFactory extends BaseConstraintValidatorFactory {

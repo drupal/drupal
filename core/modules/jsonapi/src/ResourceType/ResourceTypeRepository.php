@@ -302,7 +302,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
     // access the display name of a user. This is useful when displaying the
     // name of a node's author.
     // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
-    // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+    // @todo Eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
     if ($entity_type->id() === 'user') {
       $fields['display_name'] = new ResourceTypeAttribute('display_name');
     }

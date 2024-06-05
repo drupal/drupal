@@ -139,7 +139,7 @@ Drupal.behaviors.testSettingsCommand = {
 };
 JS;
     $session->executeScript($test_settings_command);
-    // @todo: Replace after https://www.drupal.org/project/drupal/issues/2616184
+    // @todo Replace after https://www.drupal.org/project/drupal/issues/2616184
     $session->executeScript('window.jQuery("#edit-settings-command-example").mousedown();');
     $this->assertWaitPageContains('<div class="test-settings-command">42</div>');
   }

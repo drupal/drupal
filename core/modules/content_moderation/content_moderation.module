@@ -373,8 +373,8 @@ function content_moderation_workflow_update(WorkflowInterface $entity) {
  * Implements hook_views_post_execute().
  */
 function content_moderation_views_post_execute(ViewExecutable $view) {
-  // @todo, remove this once broken handlers in views configuration result in
-  // a view no longer returning results. https://www.drupal.org/node/2907954.
+  // @todo Remove this once broken handlers in views configuration result in
+  //   a view no longer returning results. https://www.drupal.org/node/2907954.
   foreach ($view->filter as $id => $filter) {
     if (str_starts_with($id, 'moderation_state') && $filter instanceof Broken) {
       $view->result = [];

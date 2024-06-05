@@ -336,7 +336,7 @@ class PagerTest extends ViewTestBase {
 
     $this->assertCount(11, $view->result, 'All items are return');
 
-    // TODO test number of pages.
+    // @todo Test number of pages.
 
     // Test items per page = 0.
     // Setup and test an offset.

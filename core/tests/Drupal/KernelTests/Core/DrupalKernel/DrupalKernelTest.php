@@ -62,7 +62,7 @@ class DrupalKernelTest extends KernelTestBase {
    * Tests DIC compilation.
    */
   public function testCompileDIC() {
-    // @todo: write a memory based storage backend for testing.
+    // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',
@@ -166,7 +166,7 @@ class DrupalKernelTest extends KernelTestBase {
    * Tests setting of site path after kernel boot.
    */
   public function testPreventChangeOfSitePath() {
-    // @todo: write a memory based storage backend for testing.
+    // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',

@@ -1619,7 +1619,7 @@ function system_install() {
 function system_schema() {
   // @deprecated The sequences table has been deprecated in drupal:10.2.0 and is
   // removed from drupal:12.0.0. See https://www.drupal.org/node/3220378.
-  // @todo: Remove sequences table in Drupal 12. See https://www.drupal.org/i/3335756
+  // @todo Remove sequences table in Drupal 12. See https://www.drupal.org/i/3335756
   $schema['sequences'] = [
     'description' => 'Stores IDs.',
     'fields' => [

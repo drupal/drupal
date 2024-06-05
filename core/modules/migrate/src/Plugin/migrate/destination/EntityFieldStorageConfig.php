@@ -57,7 +57,7 @@ class EntityFieldStorageConfig extends EntityConfigBase {
   public function getIds() {
     $ids['entity_type']['type'] = 'string';
     $ids['field_name']['type'] = 'string';
-    // @todo: Remove conditional. https://www.drupal.org/node/3004574
+    // @todo Remove conditional. https://www.drupal.org/node/3004574
     if ($this->isTranslationDestination()) {
       $ids['langcode']['type'] = 'string';
     }

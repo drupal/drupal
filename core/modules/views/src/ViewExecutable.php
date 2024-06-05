@@ -1283,7 +1283,7 @@ class ViewExecutable {
     // Call a module hook and see if it wants to present us with a
     // pre-built query or instruct us not to build the query for
     // some reason.
-    // @todo: Implement this. Use the same mechanism Panels uses.
+    // @todo Implement this. Use the same mechanism Panels uses.
 
     // Run through our handlers and ensure they have necessary information.
     $this->initHandlers();

@@ -129,7 +129,8 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
     if (!empty($term)) {
       return $term->label();
     }
-    // TODO review text
+    // @todo Review text.
+
     return $this->t('No name');
   }
 

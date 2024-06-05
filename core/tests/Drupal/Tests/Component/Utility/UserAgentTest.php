@@ -156,9 +156,9 @@ class UserAgentTest extends TestCase {
       ['zh-tw, en-us;q=0.90, en;q=0.80, zh;q=0.70', 'zh-hant'],
       ['zh-hant, en-us;q=0.90, en;q=0.80, zh;q=0.70', 'zh-hant'],
       ['zh-hans, en-us;q=0.90, en;q=0.80, zh;q=0.70', 'zh-hans'],
-      // @todo: This is copied from RFC4647 but our regex skips the numbers so
-      // they where removed. Our code should be updated so private1-private2 is
-      // valid. http://tools.ietf.org/html/rfc4647#section-3.4
+      // @todo This is copied from RFC4647 but our regex skips the numbers so
+      //   they where removed. Our code should be updated so private1-private2
+      //   is valid. http://tools.ietf.org/html/rfc4647#section-3.4
       ['zh-hant-CN-x-private-private, en-us;q=0.90, en;q=0.80, zh;q=0.70', 'zh-hant'],
       ['zh-cn', 'zh-hans'],
       ['zh-sg', 'zh-hans'],

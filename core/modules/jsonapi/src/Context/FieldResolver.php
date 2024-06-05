@@ -544,7 +544,8 @@ class FieldResolver {
    */
   protected function isMemberFilterable($external_name, array $resource_types) {
     return array_reduce($resource_types, function ($carry, ResourceType $resource_type) use ($external_name) {
-      // @todo: remove the next line and uncomment the following one in https://www.drupal.org/project/drupal/issues/3017047.
+      // @todo Remove the next line and uncomment the following one in
+      //   https://www.drupal.org/project/drupal/issues/3017047.
       return $carry ?: $external_name === 'id' || $resource_type->isFieldEnabled($resource_type->getInternalName($external_name));
       /*return $carry ?: in_array($external_name, ['id', 'type']) || $resource_type->isFieldEnabled($resource_type->getInternalName($external_name));*/
     }, FALSE);

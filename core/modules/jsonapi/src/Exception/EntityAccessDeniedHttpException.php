@@ -71,7 +71,7 @@ class EntityAccessDeniedHttpException extends CacheableAccessDeniedHttpException
       $error['reason'] = $entity_access->getReason();
     }
     $this->error = $error;
-    // @todo: remove this ternary operation in https://www.drupal.org/project/drupal/issues/2997594.
+    // @todo remove this ternary operation in https://www.drupal.org/project/drupal/issues/2997594.
     $this->resourceIdentifier = $entity ? ResourceIdentifier::fromEntity($entity) : NULL;
   }
 

@@ -144,7 +144,7 @@ function jsonapi_entity_bundle_delete() {
  */
 function jsonapi_entity_create(EntityInterface $entity) {
   if (in_array($entity->getEntityTypeId(), ['field_storage_config', 'field_config'])) {
-    // @todo: only do this when relationship fields are updated, not just any field.
+    // @todo Only do this when relationship fields are updated, not just any field.
     JsonApiRoutes::rebuild();
   }
 }
@@ -154,7 +154,7 @@ function jsonapi_entity_create(EntityInterface $entity) {
  */
 function jsonapi_entity_delete(EntityInterface $entity) {
   if (in_array($entity->getEntityTypeId(), ['field_storage_config', 'field_config'])) {
-    // @todo: only do this when relationship fields are updated, not just any field.
+    // @todo Only do this when relationship fields are updated, not just any field.
     JsonApiRoutes::rebuild();
   }
 }

@@ -474,8 +474,8 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['preferred_langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Preferred language code'))
       ->setDescription(t("The user's preferred language code for receiving emails and viewing the site."))
-      // @todo: Define this via an options provider once
-      // https://www.drupal.org/node/2329937 is completed.
+      // @todo Define this via an options provider once
+      //   https://www.drupal.org/node/2329937 is completed.
       ->addPropertyConstraints('value', [
         'AllowedValues' => ['callback' => __CLASS__ . '::getAllowedConfigurableLanguageCodes'],
       ]);
@@ -483,12 +483,12 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['preferred_admin_langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Preferred admin language code'))
       ->setDescription(t("The user's preferred language code for viewing administration pages."))
-      // @todo: A default value of NULL is ignored, so we have to specify
-      // an empty field item structure instead. Fix this in
-      // https://www.drupal.org/node/2318605.
+      // @todo A default value of NULL is ignored, so we have to specify
+      //   an empty field item structure instead. Fix this in
+      //   https://www.drupal.org/node/2318605.
       ->setDefaultValue([0 => ['value' => NULL]])
-      // @todo: Define this via an options provider once
-      // https://www.drupal.org/node/2329937 is completed.
+      // @todo Define this via an options provider once
+      //   https://www.drupal.org/node/2329937 is completed.
       ->addPropertyConstraints('value', [
         'AllowedValues' => ['callback' => __CLASS__ . '::getAllowedConfigurableLanguageCodes'],
       ]);
@@ -524,8 +524,8 @@ class User extends ContentEntityBase implements UserInterface {
       ->setLabel(t('Timezone'))
       ->setDescription(t('The timezone of this user.'))
       ->setSetting('max_length', 32)
-      // @todo: Define this via an options provider once
-      // https://www.drupal.org/node/2329937 is completed.
+      // @todo Define this via an options provider once
+      //   https://www.drupal.org/node/2329937 is completed.
       ->addPropertyConstraints('value', [
         'AllowedValues' => ['callback' => __CLASS__ . '::getAllowedTimezones'],
       ]);

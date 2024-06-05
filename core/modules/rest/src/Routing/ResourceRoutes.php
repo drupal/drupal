@@ -89,7 +89,7 @@ class ResourceRoutes implements EventSubscriberInterface {
 
     foreach ($plugin->routes() as $name => $route) {
       /** @var \Symfony\Component\Routing\Route $route */
-      // @todo: Are multiple methods possible here?
+      // @todo Are multiple methods possible here?
       $methods = $route->getMethods();
       // Only expose routes that have an explicit method and allow >=1 format
       // for that method.

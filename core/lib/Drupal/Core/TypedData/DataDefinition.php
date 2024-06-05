@@ -312,7 +312,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
-   * @todo: Remove in https://www.drupal.org/node/1928868.
+   * @todo Remove in https://www.drupal.org/node/1928868.
    */
   #[\ReturnTypeWillChange]
   public function offsetExists($offset) {
@@ -325,7 +325,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
-   * @todo: Remove in https://www.drupal.org/node/1928868.
+   * @todo Remove in https://www.drupal.org/node/1928868.
    */
   #[\ReturnTypeWillChange]
   public function &offsetGet($offset) {
@@ -339,7 +339,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
-   * @todo: Remove in https://www.drupal.org/node/1928868.
+   * @todo Remove in https://www.drupal.org/node/1928868.
    */
   #[\ReturnTypeWillChange]
   public function offsetSet($offset, $value) {
@@ -350,7 +350,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * {@inheritdoc}
    *
    * This is for BC support only.
-   * @todo: Remove in https://www.drupal.org/node/1928868.
+   * @todo Remove in https://www.drupal.org/node/1928868.
    */
   #[\ReturnTypeWillChange]
   public function offsetUnset($offset) {

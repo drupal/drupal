@@ -7,7 +7,7 @@ use Drupal\views\Attribute\ViewsWizard;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
- * @todo: replace numbers with constants.
+ * @todo Replace numbers with constants.
  */
 
 /**
