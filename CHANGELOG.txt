@@ -1,3 +1,6 @@
+Drupal 7.xx, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.101, 2024-06-05
 -----------------------
 - Various security improvements
