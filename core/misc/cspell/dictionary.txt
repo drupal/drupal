@@ -24,7 +24,6 @@ autocompletefocus
 autocompleteselect
 autocompleting
 autoconfiguration
-autoconfigure
 autoconfigured
 autocreate
 autocreated
@@ -43,9 +42,6 @@ autoplace
 autoplay
 autoreply
 autosubmit
-autowire
-autowired
-autowiring
 backlink
 backlinks
 bakeware
@@ -73,7 +69,6 @@ blockbasic
 blockcontent
 blockfooter
 blocknodebundle
-blockpromoted
 blockquotes
 blockrecipe
 blockrelated
@@ -298,11 +293,9 @@ hexcode
 hilited
 hmac
 hookname
-hosters
 hrefs
 htmlcorrector
 httpheader
-httplug
 httponly
 hwldf
 icann
@@ -332,7 +325,6 @@ jsonlint
 jssdk
 justinrainbow
 kangarookitten
-kernighan
 keyevent
 keypresses
 keyvalue
@@ -376,7 +368,6 @@ maximumred
 maxlifetime
 maynot
 mbytes
-mdhash
 mediaimagetextalternative
 mediaimagetextalternativeediting
 mediaimagetextalternativeui
@@ -492,7 +483,6 @@ persistable
 phpass
 phpcbf
 phpcodesniffer
-phpcs
 phpdocumentor
 phpserialize
 phpspec
@@ -587,7 +577,6 @@ revisioning
 revlog
 revpub
 ribisi
-ritchie
 rowspans
 rsyslog
 rtsp
@@ -617,7 +606,6 @@ sitename
 sitewide
 skiptags
 slatkin
-slevomat
 smacss
 smalldatetime
 somecompany
@@ -796,7 +784,6 @@ vfsstream
 viewports
 vocabs
 wcag
-wcprops
 webassert
 webcal
 webflo
