@@ -17,6 +17,13 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
   protected $tempStoreFactory;
 
   /**
+   * The static cache of loaded values.
+   *
+   * @var \Drupal\layout_builder\SectionStorageInterface[]
+   */
+  protected array $cache = [];
+
+  /**
    * LayoutTempstoreRepository constructor.
    *
    * @param \Drupal\Core\TempStore\SharedTempStoreFactory $temp_store_factory
@@ -31,6 +38,12 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
    */
   public function get(SectionStorageInterface $section_storage) {
     $key = $this->getKey($section_storage);
+
+    // Check if the storage is present in the static cache.
+    if (isset($this->cache[$key])) {
+      return $this->cache[$key];
+    }
+
     $tempstore = $this->getTempstore($section_storage)->get($key);
     if (!empty($tempstore['section_storage'])) {
       $storage_type = $section_storage->getStorageType();
@@ -39,6 +52,9 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
       if (!($section_storage instanceof SectionStorageInterface)) {
         throw new \UnexpectedValueException(sprintf('The entry with storage type "%s" and ID "%s" is invalid', $storage_type, $key));
       }
+
+      // Set the storage in the static cache.
+      $this->cache[$key] = $section_storage;
     }
     return $section_storage;
   }
@@ -48,6 +64,12 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
    */
   public function has(SectionStorageInterface $section_storage) {
     $key = $this->getKey($section_storage);
+
+    // Check if the storage is present in the static cache.
+    if (isset($this->cache[$key])) {
+      return TRUE;
+    }
+
     $tempstore = $this->getTempstore($section_storage)->get($key);
     return !empty($tempstore['section_storage']);
   }
@@ -58,6 +80,8 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
   public function set(SectionStorageInterface $section_storage) {
     $key = $this->getKey($section_storage);
     $this->getTempstore($section_storage)->set($key, ['section_storage' => $section_storage]);
+    // Update the storage in the static cache.
+    $this->cache[$key] = $section_storage;
   }
 
   /**
@@ -66,6 +90,8 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
   public function delete(SectionStorageInterface $section_storage) {
     $key = $this->getKey($section_storage);
     $this->getTempstore($section_storage)->delete($key);
+    // Remove the storage from the static cache.
+    unset($this->cache[$key]);
   }
 
   /**
