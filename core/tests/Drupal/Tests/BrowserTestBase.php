@@ -14,7 +14,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
-use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -577,10 +576,6 @@ abstract class BrowserTestBase extends TestCase {
     // Clear the static cache so that subsequent cache invalidations will work
     // as expected.
     $this->container->get('cache_tags.invalidator')->resetChecksums();
-
-    // Generate a route to prime the URL generator with the correct base URL.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3207896.
-    Url::fromRoute('<front>')->setAbsolute()->toString();
 
     // Explicitly call register() again on the container registered in \Drupal.
     // @todo This should already be called through
