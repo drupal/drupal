@@ -18,7 +18,7 @@ use Drupal\node\NodeInterface;
  */
 #[ViewsArgumentDefault(
   id: 'user',
-  title: new TranslatableMarkup('User ID from route context"'),
+  title: new TranslatableMarkup('User ID from route context'),
 )]
 class User extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
