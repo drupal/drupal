@@ -770,10 +770,11 @@ drupal.tableheader:
       deprecation_link: https://www.drupal.org/node/3440477
       css:
         component:
-          css/components/sticky-header.module.css: misc/components/sticky-header.module.css
+          css/components/sticky-header.module.css:
+            component: misc/components/sticky-header.module.css
       js:
         misc/tableheader.js: false
-        
+
 drupal.tableresponsive:
   version: VERSION
   js:
