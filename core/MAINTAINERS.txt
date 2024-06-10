@@ -19,7 +19,7 @@ Project Lead
 Product managers
 - Dries Buytaert 'dries' https://www.drupal.org/u/dries
 - Gábor Hojtsy 'Gábor Hojtsy' https://www.drupal.org/u/gábor-hojtsy
-- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+- Lauri Timmanee 'lauriii' https://www.drupal.org/u/lauriii
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 
 Framework managers
@@ -110,14 +110,14 @@ Cache
 - Kristiaan Van den Eynde 'kristiaanvandeneynde' https://www.drupal.org/u/kristiaanvandeneynde
 
 CKEditor 5
-- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+- Lauri Timmanee 'lauriii' https://www.drupal.org/u/lauriii
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Claro
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
 - Sascha Eggenberger 'saschaeggi' https://www.drupal.org/u/saschaeggi
-- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+- Lauri Timmanee 'lauriii' https://www.drupal.org/u/lauriii
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Comment
@@ -395,7 +395,7 @@ Theme API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Fabian Franz 'Fabianx' https://www.drupal.org/u/fabianx
 - Joël Pittet 'joelpittet' https://www.drupal.org/u/joelpittet
-- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+- Lauri Timmanee 'lauriii' https://www.drupal.org/u/lauriii
 
   Single-Directory Components
   - Mateu Aguiló Bosch 'e0ipso' https://www.drupal.org/u/e0ipso
