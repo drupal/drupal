@@ -436,6 +436,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         // @see \Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber::onRespond()
         ->addCacheTags(['config:user.role.anonymous']);
       $expected_cacheability->addCacheableDependency($this->getExpectedUnauthorizedEntityAccessCacheability(FALSE));
+      // Mitigate https://www.drupal.org/project/drupal/issues/3451483 until
+      // it gets resolved.
+      $response = $response->withoutHeader('X-Drupal-Dynamic-Cache');
       $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'MISS', FALSE);
     }
     else {
@@ -448,6 +451,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // response.
     if (static::$auth) {
       $response = $this->request('GET', $url, $request_options);
+      // Mitigate https://www.drupal.org/project/drupal/issues/3451483 until
+      // it gets resolved.
+      $response = $response->withoutHeader('X-Drupal-Dynamic-Cache');
       $this->assertResponseWhenMissingAuthentication('GET', $response);
     }
 
@@ -485,6 +491,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 403 because unauthorized.
     $url->setOption('query', ['_format' => static::$format]);
     $response = $this->request('GET', $url, $request_options);
+    // Mitigate https://www.drupal.org/project/drupal/issues/3451483 until
+    // it gets resolved.
+    $response = $response->withoutHeader('X-Drupal-Dynamic-Cache');
     $this->assertResourceErrorResponse(403, FALSE, $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
 
     // Then, what we'll use for the remainder of the test: multiple formats.
@@ -505,6 +514,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 403 because unauthorized.
     $url->setOption('query', ['_format' => static::$format]);
     $response = $this->request('GET', $url, $request_options);
+    // Mitigate https://www.drupal.org/project/drupal/issues/3451483 until
+    // it gets resolved.
+    $response = $response->withoutHeader('X-Drupal-Dynamic-Cache');
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
     $this->assertArrayNotHasKey('Link', $response->getHeaders());
 
