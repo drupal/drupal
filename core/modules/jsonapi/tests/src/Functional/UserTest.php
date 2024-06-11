@@ -175,7 +175,7 @@ class UserTest extends ResourceTestBase {
    */
   protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     $cache_contexts = parent::getExpectedCacheContexts($sparse_fieldset);
-    if ($sparse_fieldset === NULL || in_array('mail', $sparse_fieldset)) {
+    if ($sparse_fieldset === NULL || !empty(array_intersect(['mail', 'display_name'], $sparse_fieldset))) {
       $cache_contexts = Cache::mergeContexts($cache_contexts, ['user']);
     }
     return $cache_contexts;
