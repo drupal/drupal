@@ -309,7 +309,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   protected function getExpectedUnauthorizedAccessMessage($method) {
     switch ($method) {
       case 'GET':
-        return "The 'access user profiles' permission is required and the user must be active.";
+        return "The 'access user profiles' permission is required.";
 
       case 'PATCH':
         return "Users can only update their own account, unless they have the 'administer users' permission.";
@@ -327,8 +327,13 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
    */
   protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
     // @see \Drupal\user\UserAccessControlHandler::checkAccess()
-    return parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated)
-      ->addCacheTags(['user:3']);
+    $result = parent::getExpectedUnauthorizedEntityAccessCacheability($is_authenticated);
+
+    if (!\Drupal::currentUser()->hasPermission('access user profiles')) {
+      $result->addCacheContexts(['user']);
+    }
+
+    return $result;
   }
 
   /**
