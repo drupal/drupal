@@ -900,15 +900,17 @@ function simpletest_script_get_test_list() {
   $types_processed = empty($args['types']);
   $test_list = [];
   $slow_tests = [];
-  if ($args['all'] || $args['module']) {
+  if ($args['all'] || $args['module'] || $args['directory']) {
     try {
-      $groups = $test_discovery->getTestClasses($args['module'], $args['types']);
+      $groups = $test_discovery->getTestClasses($args['module'], $args['types'], $args['directory']);
       $types_processed = TRUE;
     }
     catch (Exception $e) {
       echo (string) $e;
       exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
     }
+    // If the tests are run in parallel jobs, ensure that slow tests are
+    // distributed between each job.
     if ((int) $args['ci-parallel-node-total'] > 1) {
       if (key($groups) === '#slow') {
         $slow_tests = array_keys(array_shift($groups));
@@ -916,7 +918,28 @@ function simpletest_script_get_test_list() {
     }
     $all_tests = [];
     foreach ($groups as $group => $tests) {
-      $all_tests = array_merge($all_tests, array_keys($tests));
+      if ($group === '#slow') {
+        $slow_group = $tests;
+      }
+      else {
+        $all_tests = array_merge($all_tests, array_keys($tests));
+      }
+    }
+    // If no type has been set, order the tests alphabetically by test namespace
+    // so that unit tests run last. This takes advantage of the fact that Build,
+    // Functional, Functional JavaScript, Kernel, Unit roughly corresponds to
+    // test time.
+    usort($all_tests, function ($a, $b) {
+      $slice = function ($class) {
+        $parts = explode('\\', $class);
+        return implode('\\', array_slice($parts, 3));
+      };
+      return $slice($a) > $slice($b) ? 1 : -1;
+    });
+    // If the tests are not being run in parallel, then ensure slow tests run all
+    // together first.
+    if ((int) $args['ci-parallel-node-total'] <= 1 && !empty($slow_group)) {
+      $all_tests = array_merge(array_keys($slow_group), $all_tests);
     }
     $test_list = array_unique($all_tests);
     $test_list = array_diff($test_list, $slow_tests);
@@ -955,42 +978,6 @@ function simpletest_script_get_test_list() {
           simpletest_script_print_error('File not found: ' . $file);
           exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
         }
-        $test_list = array_merge($test_list, $parser->getTestListFromFile($file));
-      }
-    }
-    elseif ($args['directory']) {
-      // Extract test case class names from specified directory.
-      // Find all tests in the PSR-X structure; Drupal\$extension\Tests\*.php
-      // Since we do not want to hard-code too many structural file/directory
-      // assumptions about PSR-4 files and directories, we check for the
-      // minimal conditions only; i.e., a '*.php' file that has '/Tests/' in
-      // its path.
-      // Ignore anything from third party vendors.
-      $ignore = ['.', '..', 'vendor'];
-      $files = [];
-      if ($args['directory'][0] === '/') {
-        $directory = $args['directory'];
-      }
-      else {
-        $directory = DRUPAL_ROOT . "/" . $args['directory'];
-      }
-      foreach (\Drupal::service('file_system')->scanDirectory($directory, '/\.php$/', $ignore) as $file) {
-        // '/Tests/' can be contained anywhere in the file's path (there can be
-        // sub-directories below /Tests), but must be contained literally.
-        // Case-insensitive to match all Simpletest and PHPUnit tests:
-        // ./lib/Drupal/foo/Tests/Bar/Baz.php
-        // ./foo/src/Tests/Bar/Baz.php
-        // ./foo/tests/Drupal/foo/Tests/FooTest.php
-        // ./foo/tests/src/FooTest.php
-        // $file->filename doesn't give us a directory, so we use $file->uri
-        // Strip the drupal root directory and trailing slash off the URI.
-        $filename = substr($file->uri, strlen(DRUPAL_ROOT) + 1);
-        if (stripos($filename, '/Tests/')) {
-          $files[$filename] = $filename;
-        }
-      }
-      $parser = new TestFileParser();
-      foreach ($files as $file) {
         $test_list = array_merge($test_list, $parser->getTestListFromFile($file));
       }
     }
