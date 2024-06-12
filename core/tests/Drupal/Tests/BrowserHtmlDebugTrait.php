@@ -118,7 +118,7 @@ trait BrowserHtmlDebugTrait {
     // Do not use the file_url_generator service as the module_handler service
     // might not be available.
     $uri = $this->htmlOutputBaseUrl . '/sites/simpletest/browser_output/' . $html_output_filename;
-    HtmlOutputLogger::log($uri . "\n");
+    HtmlOutputLogger::log($uri);
   }
 
   /**
