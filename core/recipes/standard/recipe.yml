@@ -81,5 +81,5 @@ config:
     user.settings:
       simple_config_update:
         verify_mail: true
-        register: visitors_admin_approval
+        register: admin_only
         cancel_method: user_cancel_block

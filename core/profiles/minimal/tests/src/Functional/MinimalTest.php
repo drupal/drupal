@@ -32,7 +32,9 @@ class MinimalTest extends BrowserTestBase {
   public function testMinimal() {
     $this->drupalGet('');
     // Check the login block is present.
-    $this->assertSession()->linkExists('Create new account');
+    $this->assertSession()->buttonExists('Log in');
+    // Confirm anonymous users cannot create an account.
+    $this->assertSession()->linkNotExists('Create new account');
     $this->assertSession()->statusCodeEquals(200);
 
     // Create a user to test tools and navigation blocks for logged in users
@@ -60,7 +62,7 @@ class MinimalTest extends BrowserTestBase {
 
     // Ensure special configuration overrides are correct.
     $this->assertFalse($this->config('system.theme.global')->get('features.node_user_picture'), 'Configuration system.theme.global:features.node_user_picture is FALSE.');
-    $this->assertEquals(UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL, $this->config('user.settings')->get('register'));
+    $this->assertEquals(UserInterface::REGISTER_ADMINISTRATORS_ONLY, $this->config('user.settings')->get('register'));
 
     // Now we have all configuration imported, test all of them for schema
     // conformance. Ensures all imported default configuration is valid when
