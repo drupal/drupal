@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   basic_auth.authentication.basic_auth:
     class: Drupal\basic_auth\Authentication\Provider\BasicAuth
     arguments: ['@config.factory', '@user.auth', '@flood', '@entity_type.manager']

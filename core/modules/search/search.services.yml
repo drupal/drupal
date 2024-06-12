@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   plugin.manager.search:
     class: Drupal\search\SearchPluginManager
     parent: default_plugin_manager

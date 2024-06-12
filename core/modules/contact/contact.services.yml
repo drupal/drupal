@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   access_check.contact_personal:
     class: Drupal\contact\Access\ContactPageAccess
     tags:
