@@ -79,7 +79,7 @@ final class HtmlOutputLogger {
    * Logs a link to a generated HTML page.
    *
    * @param string $logEntry
-   *   A link to a generated HTML page.
+   *   A link to a generated HTML page, should not contain a trailing newline.
    *
    * @throws \RuntimeException
    */
