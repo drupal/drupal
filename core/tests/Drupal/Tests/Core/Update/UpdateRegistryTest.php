@@ -213,6 +213,7 @@ EOS;
         ],
     ], $key_value, $theme_handler, 'post_update');
 
+    // Confirm the updates are sorted alphabetically.
     $this->assertEquals([
       'module_a_post_update_a',
       'module_a_post_update_b',
@@ -250,6 +251,7 @@ EOS;
         ],
     ], $key_value, $theme_handler, 'post_update');
 
+    // Confirm the updates are sorted alphabetically.
     $this->assertEquals([
       'module_a_post_update_a',
       'module_a_post_update_b',
@@ -294,6 +296,7 @@ EOS;
         ],
     ], $key_value, $theme_handler, 'post_update');
 
+    // Confirm the updates are sorted alphabetically.
     $this->assertEquals(array_values([
       'module_a_post_update_b',
       'module_b_post_update_a',
@@ -336,6 +339,7 @@ EOS;
         ],
     ], $key_value, $theme_handler, 'post_update');
 
+    // Confirm the updates are sorted alphabetically.
     $expected = [];
     $expected['module_a']['pending']['a'] = 'Module A update A.';
     $expected['module_a']['pending']['b'] = 'Module A update B.';
@@ -387,6 +391,7 @@ EOS;
         ],
     ], $key_value, $theme_handler, 'post_update');
 
+    // Confirm the updates are sorted alphabetically.
     $expected = [];
     $expected['module_a']['pending']['b'] = 'Module A update B.';
     $expected['module_a']['start'] = 'b';
