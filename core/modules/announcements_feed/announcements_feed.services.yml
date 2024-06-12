@@ -3,6 +3,8 @@ parameters:
   announcements_feed.feed_link: https://www.drupal.org/about/announcements
 
 services:
+  _defaults:
+    autoconfigure: true
   announcements_feed.fetcher:
     class: Drupal\announcements_feed\AnnounceFetcher
     arguments: ['@http_client', '@config.factory', '@keyvalue.expirable', '@logger.channel.announcements_feed', '%announcements_feed.feed_json_url%']

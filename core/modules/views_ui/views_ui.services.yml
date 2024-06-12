@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   paramconverter.views_ui:
     class: Drupal\views_ui\ParamConverter\ViewUIConverter
     arguments: ['@entity_type.manager', '@tempstore.shared', '@config.factory', '@router.admin_context', '@entity.repository']

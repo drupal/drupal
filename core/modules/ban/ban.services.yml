@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   ban.ip_manager:
     class: Drupal\ban\BanIpManager
     arguments: ['@database']
