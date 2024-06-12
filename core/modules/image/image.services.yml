@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   path_processor.image_styles:
     class: Drupal\image\PathProcessor\PathProcessorImageStyles
     arguments: ['@stream_wrapper_manager']

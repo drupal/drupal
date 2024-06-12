@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   access_check.update.manager_access:
     class: Drupal\update\Access\UpdateManagerAccessCheck
     arguments: ['@settings']

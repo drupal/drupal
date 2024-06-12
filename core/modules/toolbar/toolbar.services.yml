@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   cache.toolbar:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:

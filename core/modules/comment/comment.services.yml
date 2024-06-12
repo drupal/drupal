@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   comment.breadcrumb:
     class: Drupal\comment\CommentBreadcrumbBuilder
     arguments: ['@entity_type.manager']

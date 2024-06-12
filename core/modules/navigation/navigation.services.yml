@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   navigation.renderer:
     class: Drupal\navigation\NavigationRenderer
     arguments:

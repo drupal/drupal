@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   logger.dblog:
     class: Drupal\dblog\Logger\DbLog
     arguments: ['@database', '@logger.log_message_parser']
