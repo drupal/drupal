@@ -91,7 +91,7 @@ class UpdateRegistry implements EventSubscriberInterface {
    * Gets all available update functions.
    *
    * @return callable[]
-   *   A list of update functions.
+   *   An alphabetical list of available update functions.
    */
   protected function getAvailableUpdateFunctions() {
     $regexp = '/^(?<extension>.+)_' . $this->updateType . '_(?<name>.+)$/';
@@ -123,7 +123,7 @@ class UpdateRegistry implements EventSubscriberInterface {
    * Find all update functions that haven't been executed.
    *
    * @return callable[]
-   *   A list of update functions.
+   *   An alphabetical list of update functions that have not been executed.
    */
   public function getPendingUpdateFunctions() {
     // We need a) the list of active extensions (we get that from the config
