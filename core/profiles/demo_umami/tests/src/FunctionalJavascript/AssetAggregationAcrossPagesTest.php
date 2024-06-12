@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
-use Drupal\Tests\PerformanceData;
 
 /**
  * Tests demo_umami profile performance.
@@ -23,9 +22,11 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
    * Checks the asset requests made when the front and recipe pages are visited.
    */
   public function testFrontAndRecipesPages() {
-    $performance_data = $this->doRequests();
-    $this->assertSame(4, $performance_data->getStylesheetCount());
-    $this->assertLessThan(80000, $performance_data->getStylesheetBytes());
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->doRequests();
+    }, 'umamiFrontAndRecipePages');
+    $this->assertSame(6, $performance_data->getStylesheetCount());
+    $this->assertLessThan(125000, $performance_data->getStylesheetBytes());
     $this->assertSame(1, $performance_data->getScriptCount());
     $this->assertLessThan(7500, $performance_data->getScriptBytes());
   }
@@ -36,26 +37,29 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   public function testFrontAndRecipesPagesAuthenticated() {
     $user = $this->createUser();
     $this->drupalLogin($user);
-    $this->rebuildAll();
-    $performance_data = $this->doRequests();
-    $this->assertSame(4, $performance_data->getStylesheetCount());
-    $this->assertLessThan(87000, $performance_data->getStylesheetBytes());
-    $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertLessThan(125500, $performance_data->getScriptBytes());
+    sleep(2);
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->doRequests();
+    }, 'umamiFrontAndRecipePagesAuthenticated');
+    $this->assertSame(6, $performance_data->getStylesheetCount());
+    $this->assertLessThan(132500, $performance_data->getStylesheetBytes());
+    $this->assertSame(2, $performance_data->getScriptCount());
+    $this->assertLessThan(250000, $performance_data->getScriptBytes());
   }
 
   /**
-   * Helper to do requests so the above test methods stay in sync.
+   * Performs a common set of requests so the above test methods stay in sync.
    */
-  protected function doRequests(): PerformanceData {
-    $performance_data = $this->collectPerformanceData(function () {
-      $this->drupalGet('<front>');
-      // Give additional time for the request and all assets to be returned
-      // before making the next request.
-      sleep(2);
-      $this->drupalGet('articles');
-    }, 'umamiFrontAndRecipePages');
-    return $performance_data;
+  protected function doRequests(): void {
+    $this->drupalGet('<front>');
+    // Give additional time for the request and all assets to be returned
+    // before making the next request.
+    sleep(2);
+    $this->drupalGet('articles');
+    sleep(2);
+    $this->drupalGet('recipes');
+    sleep(2);
+    $this->drupalGet('recipes/deep-mediterranean-quiche');
   }
 
 }
