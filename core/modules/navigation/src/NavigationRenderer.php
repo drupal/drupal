@@ -125,7 +125,7 @@ final class NavigationRenderer {
     $asset_url = $module_path . '/assets/fonts/inter-var.woff2';
 
     $defaults = [
-      '#hide_logo' => $logo_provider === self::LOGO_PROVIDER_HIDE,
+      'settings' => ['hide_logo' => $logo_provider === self::LOGO_PROVIDER_HIDE],
       '#attached' => [
         'html_head_link' => [
           [
@@ -149,11 +149,11 @@ final class NavigationRenderer {
         if ($logo_managed instanceof File) {
           $logo_managed_uri = $logo_managed->getFileUri();
           $logo_managed_url = $this->fileUrlGenerator->generateAbsoluteString($logo_managed_uri);
-          $page_top['navigation']['#logo_path'] = $logo_managed_url;
+          $page_top['navigation'][0]['settings']['logo_path'] = $logo_managed_url;
           $image = $this->imageFactory->get($logo_managed_uri);
           if ($image->isValid()) {
-            $page_top['navigation']['#logo_width'] = $image->getWidth();
-            $page_top['navigation']['#logo_height'] = $image->getHeight();
+            $page_top['navigation'][0]['settings']['logo_width'] = $image->getWidth();
+            $page_top['navigation'][0]['settings']['logo_height'] = $image->getHeight();
           }
         }
       }
