@@ -415,7 +415,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
     $this->assertSession()->pageTextContains('Successfully saved French translation.');
 
     // Check that the translations are saved.
-    $this->clickLink('Add');
+    $this->clickLink('Edit');
     $this->assertSession()->responseContains('FR label');
   }
 
