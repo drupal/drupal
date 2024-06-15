@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\KernelTests\Core\Recipe;
+namespace Drupal\FunctionalTests\Core\Recipe;
 
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Recipe\Recipe;
-use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**
