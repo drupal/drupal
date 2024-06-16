@@ -10,9 +10,9 @@ use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
-use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore arrakis complote détruire harkonnen
@@ -306,6 +306,17 @@ class MediaLibraryTest extends WebDriverTestBase {
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $drupal_media = $xpath->query('//drupal-media')[0];
     $this->assertEquals($test_alt, $drupal_media->getAttribute('alt'));
+
+    // Test that the media item can be designated 'decorative'.
+    // Click the "Override media image text alternative" button.
+    $this->getBalloonButton('Override media image alternative text')->click();
+    $page->pressButton('Decorative image');
+    $this->getBalloonButton('Save')->click();
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $drupal_media = $xpath->query('//drupal-media')[0];
+    // The alt text in CKEditor displays alt="&quot;&quot;", indicating
+    // decorative image (https://www.w3.org/WAI/tutorials/images/decorative/).
+    $this->assertEquals('""', $drupal_media->getAttribute('alt'));
   }
 
 }

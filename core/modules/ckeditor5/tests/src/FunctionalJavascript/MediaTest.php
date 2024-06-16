@@ -383,7 +383,7 @@ class MediaTest extends MediaTestBase {
     $this->getBalloonButton('Override media image alternative text')->click();
     $this->assertVisibleBalloon('.ck-media-alternative-text-form');
     // Assert that the default alt text is visible in the UI.
-    $assert_session->elementTextEquals('css', '.ck-media-alternative-text-form__default-alt-text-value', 'default alt');
+    $assert_session->elementTextEquals('css', '.ck-media-alternative-text-form .ck-labeled-field-view__status', 'Leave blank to use the default alternative text: "default alt".');
     // Assert that the value is currently empty.
     $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
     $this->assertSame('', $alt_override_input->getValue());
@@ -413,7 +413,7 @@ class MediaTest extends MediaTestBase {
     $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
     $this->assertSame($who_is_zartan, $alt_override_input->getValue());
     // Assert that the default alt text is still visible in the UI.
-    $assert_session->elementTextEquals('css', '.ck-media-alternative-text-form__default-alt-text-value', 'default alt');
+    $assert_session->elementTextEquals('css', '.ck-media-alternative-text-form .ck-labeled-field-view__status', 'Leave blank to use the default alternative text: "default alt".');
 
     // Test the process again with a different alt text to make sure it works
     // the second time around.
@@ -456,6 +456,9 @@ class MediaTest extends MediaTestBase {
     // media item.
     $this->getBalloonButton('Override media image alternative text')->click();
     $this->assertVisibleBalloon('.ck-media-alternative-text-form');
+    // The 'decorative image' toggle is enabled because the alt was set to `""`.
+    // Set the toggle to "off" to override the alt text value.
+    $page->pressButton('Decorative image');
     $alt_override_input = $page->find('css', '.ck-balloon-panel .ck-media-alternative-text-form input[type=text]');
     $alt_override_input->setValue('');
     $this->getBalloonButton('Save')->click();
@@ -545,7 +548,7 @@ class MediaTest extends MediaTestBase {
     // Assert that the default alt on the UI is the default alt text from the
     // media entity.
     // cSpell:disable-next-line
-    $assert_session->elementTextEquals('css', '.ck-media-alternative-text-form__default-alt-text-value', 'texte alternatif par dÃ©faut');
+    $assert_session->elementTextEquals('css', '.ck-media-alternative-text-form .ck-labeled-field-view__status', 'Leave blank to use the default alternative text: "texte alternatif par dÃ©faut".');
 
     // Fill in the alt field in the balloon form.
     // cSpell:disable-next-line

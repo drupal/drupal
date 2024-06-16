@@ -1,11 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
-
-// cspell:ignore focusables
+/* cspell:ignore focusables switchbuttonview */
 
 import {
   ButtonView,
   FocusCycler,
   LabeledFieldView,
+  SwitchButtonView,
   View,
   ViewCollection,
   createLabeledInputText,
@@ -15,8 +15,6 @@ import {
 } from 'ckeditor5/src/ui';
 import { FocusTracker, KeystrokeHandler } from 'ckeditor5/src/utils';
 import { icons } from 'ckeditor5/src/core';
-
-// cspell:ignore focusables
 
 export default class TextAlternativeFormView extends View {
   /**
@@ -36,25 +34,16 @@ export default class TextAlternativeFormView extends View {
     this.keystrokes = new KeystrokeHandler();
 
     /**
+     * A toggle for marking the image as decorative.
+     *
+     * @member {module:ui/button/switchbuttonview~SwitchButtonView} #decorativeToggle
+     */
+    this.decorativeToggle = this._decorativeToggleView();
+
+    /**
      * An input with a label.
      */
     this.labeledInput = this._createLabeledInputView();
-
-    /**
-     * The default alt text.
-     *
-     * @observable
-     *
-     * @member {string} #defaultAltText
-     */
-    this.set('defaultAltText', undefined);
-
-    /**
-     * The default alt text view.
-     *
-     * @type {module:ui/template~Template}
-     */
-    this.defaultAltTextView = this._createDefaultAltTextView();
 
     /**
      * A button used to submit the form.
@@ -106,7 +95,10 @@ export default class TextAlternativeFormView extends View {
       },
 
       children: [
-        this.defaultAltTextView,
+        {
+          tag: 'div',
+          children: [this.decorativeToggle],
+        },
         this.labeledInput,
         this.saveButtonView,
         this.cancelButtonView,
@@ -126,15 +118,18 @@ export default class TextAlternativeFormView extends View {
 
     submitHandler({ view: this });
 
-    [this.labeledInput, this.saveButtonView, this.cancelButtonView].forEach(
-      (v) => {
-        // Register the view as focusable.
-        this._focusables.add(v);
+    [
+      this.decorativeToggle,
+      this.labeledInput,
+      this.saveButtonView,
+      this.cancelButtonView,
+    ].forEach((v) => {
+      // Register the view as focusable.
+      this._focusables.add(v);
 
-        // Register the view in the focus tracker.
-        this.focusTracker.add(v.element);
-      },
-    );
+      // Register the view in the focus tracker.
+      this.focusTracker.add(v.element);
+    });
   }
 
   /**
@@ -185,49 +180,34 @@ export default class TextAlternativeFormView extends View {
       createLabeledInputText,
     );
 
+    labeledInput
+      .bind('class')
+      .to(this.decorativeToggle, 'isOn', (value) => (value ? 'ck-hidden' : ''));
     labeledInput.label = Drupal.t('Alternative text override');
-
     return labeledInput;
   }
 
   /**
-   * Creates a default alt text view.
+   * Creates a decorative image toggle view.
    *
-   * @return {module:ui/template~Template}
-   *   A template for default alt text view.
+   * @return {module:ui/button/switchbuttonview~SwitchButtonView}
+   *   Decorative image toggle view instance.
+   *
    * @private
    */
-  _createDefaultAltTextView() {
-    const bind = Template.bind(this, this);
-    return new Template({
-      tag: 'div',
-      attributes: {
-        class: [
-          'ck-media-alternative-text-form__default-alt-text',
-          bind.if('defaultAltText', 'ck-hidden', (value) => !value),
-        ],
-      },
-      children: [
-        {
-          tag: 'strong',
-          attributes: {
-            class: 'ck-media-alternative-text-form__default-alt-text-label',
-          },
-          children: [Drupal.t('Default alternative text:')],
-        },
-        ' ',
-        {
-          tag: 'span',
-          attributes: {
-            class: 'ck-media-alternative-text-form__default-alt-text-value',
-          },
-          children: [
-            {
-              text: [bind.to('defaultAltText')],
-            },
-          ],
-        },
-      ],
+  _decorativeToggleView() {
+    const decorativeToggle = new SwitchButtonView(this.locale);
+    decorativeToggle.set({
+      withText: true,
+      label: Drupal.t('Decorative image'),
     });
+    decorativeToggle.on('execute', () => {
+      if (decorativeToggle.isOn) {
+        // Clear value when decorative alt is turned off.
+        this.labeledInput.fieldView.element.value = '';
+      }
+      decorativeToggle.set('isOn', !decorativeToggle.isOn);
+    });
+    return decorativeToggle;
   }
 }
