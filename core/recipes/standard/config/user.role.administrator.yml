@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-id: administrator
-label: Administrator
-weight: 3
-is_admin: true
-permissions: {  }
