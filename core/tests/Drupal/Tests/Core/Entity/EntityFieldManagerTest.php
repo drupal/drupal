@@ -548,7 +548,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $module = 'entity_field_manager_test_module';
 
     // @todo Mock FieldDefinitionInterface once it exposes a proper provider
-    //   setter. See https://www.drupal.org/node/2225961.
+    //   setter. See https://www.drupal.org/node/2346329.
     $field_definition = $this->prophesize(BaseFieldDefinition::class);
 
     // We expect two calls as the field definition will be returned from both
