@@ -1,0 +1,15 @@
+name: 'Content editor role'
+description: 'Provides the Content editor role.'
+type: 'User role'
+config:
+  actions:
+    user.role.content_editor:
+      # If this role already exists, then this action has no effect. If it doesn't exist, we'll create it with the following values.
+      ensure_exists:
+        id: content_editor
+        label: 'Content editor'
+        weight: 2
+        is_admin: false
+        permissions:
+          - 'access administration pages'
+          - 'view own unpublished content'
