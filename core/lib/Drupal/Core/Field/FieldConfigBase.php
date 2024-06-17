@@ -136,10 +136,10 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * Example for an integer field:
    * @code
-   * array(
-   *   array('value' => 1),
-   *   array('value' => 2),
-   * )
+   * [
+   *   ['value' => 1],
+   *   ['value' => 2],
+   * ]
    * @endcode
    *
    * @var array

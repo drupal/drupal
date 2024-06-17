@@ -255,10 +255,10 @@ function drupal_get_database_types() {
  *   are dumped up to a stdClass object. The object can have value, required
  *   and comment properties.
  *   @code
- *   $settings['settings']['config_sync_directory'] = (object) array(
+ *   $settings['settings']['config_sync_directory'] = (object) [
  *     'value' => 'config_hash/sync',
  *     'required' => TRUE,
- *   );
+ *   ];
  *   @endcode
  *   gets dumped as:
  *   @code

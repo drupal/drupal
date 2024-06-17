@@ -335,44 +335,44 @@ class Table extends FormElementBase {
    *
    * Simple example usage:
    * @code
-   * $form['table'] = array(
+   * $form['table'] = [
    *   '#type' => 'table',
-   *   '#header' => array($this->t('Title'), array('data' => $this->t('Operations'), 'colspan' => '1')),
+   *   '#header' => [$this->t('Title'), ['data' => $this->t('Operations'), 'colspan' => '1']],
    *   // Optionally, to add tableDrag support:
-   *   '#tabledrag' => array(
-   *     array(
+   *   '#tabledrag' => [
+   *     [
    *       'action' => 'order',
    *       'relationship' => 'sibling',
    *       'group' => 'thing-weight',
-   *     ),
-   *   ),
-   * );
+   *     ],
+   *   ],
+   * ];
    * foreach ($things as $row => $thing) {
    *   $form['table'][$row]['#weight'] = $thing['weight'];
    *
-   *   $form['table'][$row]['title'] = array(
+   *   $form['table'][$row]['title'] = [
    *     '#type' => 'textfield',
    *     '#default_value' => $thing['title'],
-   *   );
+   *   ];
    *
    *   // Optionally, to add tableDrag support:
    *   $form['table'][$row]['#attributes']['class'][] = 'draggable';
-   *   $form['table'][$row]['weight'] = array(
+   *   $form['table'][$row]['weight'] = [
    *     '#type' => 'textfield',
-   *     '#title' => $this->t('Weight for @title', array('@title' => $thing['title'])),
+   *     '#title' => $this->t('Weight for @title', ['@title' => $thing['title']]),
    *     '#title_display' => 'invisible',
    *     '#size' => 4,
    *     '#default_value' => $thing['weight'],
-   *     '#attributes' => array('class' => array('thing-weight')),
+   *     '#attributes' => ['class' => ['thing-weight']],
    *   );
    *
    *   // The amount of link columns should be identical to the 'colspan'
    *   // attribute in #header above.
-   *   $form['table'][$row]['edit'] = array(
+   *   $form['table'][$row]['edit'] = [
    *     '#type' => 'link',
    *     '#title' => $this->t('Edit'),
    *     '#url' => Url::fromRoute('entity.test_entity.edit_form', ['test_entity' => $row]),
-   *   );
+   *   ];
    * }
    * @endcode
    *

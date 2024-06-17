@@ -42,11 +42,11 @@ use Drupal\Core\Render\BubbleableMetadata;
  *   $result = new FilterProcessResult($text);
  *
  *   // Associate assets to be attached.
- *   $result->setAttachments(array(
- *     'library' => array(
+ *   $result->setAttachments([
+ *     'library' => [
  *        'filter/caption',
- *     ),
- *   ));
+ *     ],
+ *   ]);
  *
  *   // Associate cache contexts to vary by.
  *   $result->setCacheContexts(['language']);

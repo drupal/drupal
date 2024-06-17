@@ -16,12 +16,12 @@ abstract class TourTestBasic extends TourTestBase {
    *   An array of tip attributes, keyed by path.
    *
    * @code
-   * protected $tips = array(
-   *   '/foo/bar' => array(
-   *     array('data-id' => 'foo'),
-   *     array('data-class' => 'bar'),
-   *   ),
-   * );
+   * protected $tips = [
+   *   '/foo/bar' => [
+   *     ['data-id' => 'foo'],
+   *     ['data-class' => 'bar'],
+   *   ],
+   * ];
    * @endcode
    */
   protected $tips = [];

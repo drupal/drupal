@@ -15,12 +15,12 @@ use Drupal\Core\Render\Element;
  *
  * Usage example:
  * @code
- * $form['pass'] = array(
+ * $form['pass'] = [
  *   '#type' => 'password',
  *   '#title' => $this->t('Password'),
  *   '#size' => 25,
  *   '#pattern' => '[01]+',
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\PasswordConfirm

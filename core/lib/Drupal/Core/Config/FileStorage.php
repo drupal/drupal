@@ -291,12 +291,12 @@ class FileStorage implements StorageInterface {
    *   ./collection/sub/two
    * this function will return:
    * @code
-   *   array(
+   *   [
    *     'another_collection.one',
    *     'another_collection.two',
    *     'collection.sub.one',
    *     'collection.sub.two',
-   *   );
+   *   ];
    * @endcode
    *
    * @param string $directory

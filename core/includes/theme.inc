@@ -863,16 +863,16 @@ function template_preprocess_image(&$variables) {
  *     - Any HTML attributes, such as "colspan", to apply to the table cell.
  *     Here's an example for $rows:
  *     @code
- *     $rows = array(
+ *     $rows = [
  *       // Simple row
- *       array(
+ *       [
  *         'Cell 1', 'Cell 2', 'Cell 3'
- *       ),
+ *       ],
  *       // Row with attributes on the row and some of its cells.
- *       array(
- *         'data' => array('Cell 1', array('data' => 'Cell 2', 'colspan' => 2)), 'class' => array('funky')
- *       ),
- *     );
+ *       [
+ *         'data' => ['Cell 1', ['data' => 'Cell 2', 'colspan' => 2]], 'class' => ['funky']
+ *       ],
+ *     ];
  *     @endcode
  *   - footer: An array of table rows which will be printed within a <tfoot>
  *     tag, in the same format as the rows element (see above).
@@ -888,23 +888,23 @@ function template_preprocess_image(&$variables) {
  *       associative array of HTML attributes.
  *     Here's an example for $colgroup:
  *     @code
- *     $colgroup = array(
+ *     $colgroup = [
  *       // <colgroup> with one <col> element.
- *       array(
- *         array(
- *           'class' => array('funky'), // Attribute for the <col> element.
- *         ),
- *       ),
+ *       [
+ *         [
+ *           'class' => ['funky'], // Attribute for the <col> element.
+ *         ],
+ *       ],
  *       // <colgroup> with attributes and inner <col> elements.
- *       array(
- *         'data' => array(
- *           array(
- *             'class' => array('funky'), // Attribute for the <col> element.
- *           ),
- *         ),
- *         'class' => array('jazzy'), // Attribute for the <colgroup> element.
- *       ),
- *     );
+ *       [
+ *         'data' => [
+ *           [
+ *             'class' => ['funky'], // Attribute for the <col> element.
+ *           ],
+ *         ],
+ *         'class' => ['jazzy'], // Attribute for the <colgroup> element.
+ *       ],
+ *     ];
  *     @endcode
  *     These optional tags are used to group and set properties on columns
  *     within a table. For example, one may easily group three columns and

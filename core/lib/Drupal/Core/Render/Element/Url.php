@@ -17,13 +17,13 @@ use Drupal\Core\Render\Element;
  *
  * Usage example:
  * @code
- * $form['homepage'] = array(
+ * $form['homepage'] = [
  *   '#type' => 'url',
  *   '#title' => $this->t('Home Page'),
  *   '#size' => 30,
  *   '#pattern' => '*.example.com',
  *   ...
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield

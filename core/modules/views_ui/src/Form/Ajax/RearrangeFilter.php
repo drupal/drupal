@@ -79,12 +79,12 @@ class RearrangeFilter extends ViewsFormBase {
 
     /**
      * Filter groups is an array that contains:
-     * array(
+     * [
      *   'operator' => 'and' || 'or',
-     *   'groups' => array(
+     *   'groups' => [
      *     $group_id => 'and' || 'or',
-     *   ),
-     * );
+     *   ],
+     * ];
      */
 
     $grouping = count(array_keys($groups['groups'])) > 1;
@@ -333,7 +333,7 @@ class RearrangeFilter extends ViewsFormBase {
   /**
    * Adds one to each key of an array.
    *
-   * For example array(0 => 'foo') would be array(1 => 'foo').
+   * For example [0 => 'foo'] would be [1 => 'foo'].
    *
    * @param array $array
    *   The array to increment keys on.

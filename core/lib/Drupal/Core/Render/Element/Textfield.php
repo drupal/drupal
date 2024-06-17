@@ -20,7 +20,7 @@ use Drupal\Core\Render\Element;
  *
  * Usage example:
  * @code
- * $form['title'] = array(
+ * $form['title'] = [
  *   '#type' => 'textfield',
  *   '#title' => $this->t('Subject'),
  *   '#default_value' => $node->title,
@@ -28,7 +28,7 @@ use Drupal\Core\Render\Element;
  *   '#maxlength' => 128,
  *   '#pattern' => 'some-prefix-[a-z]+',
  *   '#required' => TRUE,
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Color

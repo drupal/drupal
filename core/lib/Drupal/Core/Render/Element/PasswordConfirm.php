@@ -16,11 +16,11 @@ use Drupal\Core\Render\Attribute\FormElement;
  *
  * Usage example:
  * @code
- * $form['pass'] = array(
+ * $form['pass'] = [
  *   '#type' => 'password_confirm',
  *   '#title' => $this->t('Password'),
  *   '#size' => 25,
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Password

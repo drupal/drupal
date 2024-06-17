@@ -16,12 +16,12 @@ use Drupal\Core\Render\Attribute\FormElement;
  *
  * Usage example:
  * @code
- * $form['favorites']['colors'] = array(
+ * $form['favorites']['colors'] = [
  *   '#type' => 'checkboxes',
- *   '#options' => array('blue' => $this->t('Blue'), 'red' => $this->t('Red')),
+ *   '#options' => ['blue' => $this->t('Blue'), 'red' => $this->t('Red')],
  *   '#title' => $this->t('Which colors do you like?'),
  *   ...
- * );
+ * ];
  * @endcode
  *
  * Element properties may be set on single option items as follows.

@@ -301,14 +301,14 @@ class Config extends StorableConfigBase {
    *   (optional) A string that maps to a key within the configuration data.
    *   For instance in the following configuration array:
    *   @code
-   *   array(
-   *     'foo' => array(
+   *   [
+   *     'foo' => [
    *       'bar' => 'baz',
-   *     ),
-   *   );
+   *     ],
+   *   ];
    *   @endcode
    *   A key of 'foo.bar' would map to the string 'baz'. However, a key of 'foo'
-   *   would map to the array('bar' => 'baz').
+   *   would map to the ['bar' => 'baz'].
    *   If not supplied TRUE will be returned if there are any overrides at all
    *   for this configuration object.
    *

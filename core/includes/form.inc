@@ -150,7 +150,7 @@ function form_select_options($element, $choices = NULL) {
  * index is not sufficient, and supporting this would make the
  * "helper" too complicated and cumbersome to be of any help.
  *
- * As usual with functions that can return array() or FALSE, do not
+ * As usual with functions that can return [] or FALSE, do not
  * forget to use === and !== if needed.
  *
  * @param $element
@@ -576,15 +576,15 @@ function template_preprocess_form_element_label(&$variables) {
  *
  * Example:
  * @code
- * $batch = array(
+ * $batch = [
  *   'title' => t('Exporting'),
- *   'operations' => array(
- *     array('my_function_1', array($account->id(), 'story')),
- *     array('my_function_2', array()),
- *   ),
+ *   'operations' => [
+ *     ['my_function_1', [$account->id(), 'story']],
+ *     ['my_function_2', []],
+ *   ],
  *   'finished' => 'my_finished_callback',
  *   'file' => 'path_to_file_containing_my_functions',
- * );
+ * ];
  * batch_set($batch);
  * // Only needed if not inside a form _submit handler.
  * // Setting redirect in batch_process.
@@ -638,7 +638,7 @@ function template_preprocess_form_element_label(&$variables) {
  *   }
  *   $limit = 5;
  *   $result = \Drupal::database()->select('example')
- *     ->fields('example', array('id'))
+ *     ->fields('example', ['id'])
  *     ->condition('id', $context['sandbox']['current_id'], '>')
  *     ->orderBy('id')
  *     ->range(0, $limit)
@@ -671,7 +671,7 @@ function template_preprocess_form_element_label(&$variables) {
  *   \Drupal::messenger()->addMessage($message);
  *   // Providing data for the redirected page is done through the session.
  *   foreach ($results as $result) {
- *     $items[] = t('Loaded node %title.', array('%title' => $result));
+ *     $items[] = t('Loaded node %title.', ['%title' => $result)];
  *   }
  *   $session = \Drupal::getRequest()->getSession();
  *   $session->set('my_batch_results', $items);
@@ -702,10 +702,10 @@ function template_preprocess_form_element_label(&$variables) {
  *     callback_batch_operation() and an array of parameter.
  *     Example:
  *     @code
- *     array(
- *       array('callback_batch_operation_1', array($arg1)),
- *       array('callback_batch_operation_2', array($arg2_1, $arg2_2)),
- *     )
+ *     [
+ *       ['callback_batch_operation_1', [$arg1)],
+ *       ['callback_batch_operation_2', [$arg2_1, $arg2_2]],
+ *     ]
  *     @endcode
  *   - title: A safe, translated string to use as the title for the progress
  *     page. Defaults to t('Processing').

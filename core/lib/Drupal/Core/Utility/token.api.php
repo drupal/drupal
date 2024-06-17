@@ -58,7 +58,7 @@ use Drupal\user\Entity\User;
  *   For example:
  *   @code
  *     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
- *       $replacements = $token_service->generate('date', $created_tokens, array('date' => $node->getCreatedTime()), $options, $bubbleable_metadata);
+ *       $replacements = $token_service->generate('date', $created_tokens, ['date' => $node->getCreatedTime()], $options, $bubbleable_metadata);
  *     }
  *   @endcode
  *

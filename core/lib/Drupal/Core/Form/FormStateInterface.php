@@ -334,7 +334,7 @@ interface FormStateInterface {
    * @param string|array $key
    *   Values are stored as a multi-dimensional associative array. If $key is a
    *   string, it will return $values[$key]. If $key is an array, each element
-   *   of the array will be used as a nested key. If $key = array('foo', 'bar')
+   *   of the array will be used as a nested key. If $key = ['foo', 'bar']
    *   it will return $values['foo']['bar'].
    * @param mixed $default
    *   (optional) The default value if the specified key does not exist.
@@ -364,7 +364,7 @@ interface FormStateInterface {
    *   Values are stored as a multi-dimensional associative array. If $key is a
    *   string, it will use $values[$key] = $value. If $key is an array, each
    *   element of the array will be used as a nested key. If
-   *   $key = array('foo', 'bar') it will use $values['foo']['bar'] = $value.
+   *   $key = ['foo', 'bar'] it will use $values['foo']['bar'] = $value.
    * @param mixed $value
    *   The value to set.
    *
@@ -379,7 +379,7 @@ interface FormStateInterface {
    *   Values are stored as a multi-dimensional associative array. If $key is a
    *   string, it will use unset($values[$key]). If $key is an array, each
    *   element of the array will be used as a nested key. If
-   *   $key = array('foo', 'bar') it will use unset($values['foo']['bar']).
+   *   $key = ['foo', 'bar'] it will use unset($values['foo']['bar']).
    *
    * @return $this
    */
@@ -392,7 +392,7 @@ interface FormStateInterface {
    *   Values are stored as a multi-dimensional associative array. If $key is a
    *   string, it will return isset($values[$key]). If $key is an array, each
    *   element of the array will be used as a nested key. If
-   *   $key = array('foo', 'bar') it will return isset($values['foo']['bar']).
+   *   $key = ['foo', 'bar'] it will return isset($values['foo']['bar']).
    *
    * @return bool
    *   TRUE if the $key is set, FALSE otherwise.
@@ -406,7 +406,7 @@ interface FormStateInterface {
    *   Values are stored as a multi-dimensional associative array. If $key is a
    *   string, it will return empty($values[$key]). If $key is an array, each
    *   element of the array will be used as a nested key. If
-   *   $key = array('foo', 'bar') it will return empty($values['foo']['bar']).
+   *   $key = ['foo', 'bar'] it will return empty($values['foo']['bar']).
    *
    * @return bool
    *   TRUE if the $key has no value, FALSE otherwise.
@@ -433,8 +433,8 @@ interface FormStateInterface {
    *   set $element['#parents'] to be an array giving the path through the form
    *   array's keys to the element whose value you want to update. For instance,
    *   if you want to update the value of $form['elem1']['elem2'], which should
-   *   be stored in $form_state->getValue(array('elem1', 'elem2')), you would
-   *   set $element['#parents'] = array('elem1','elem2').
+   *   be stored in $form_state->getValue(['elem1', 'elem2']), you would
+   *   set $element['#parents'] = ['elem1','elem2'].
    * @param mixed $value
    *   The new value for the form element.
    *
@@ -483,33 +483,33 @@ interface FormStateInterface {
    * any user input is valid.
    *
    * @code
-   *   $form['actions']['previous'] = array(
+   *   $form['actions']['previous'] = [
    *     '#type' => 'submit',
    *     '#value' => t('Previous'),
-   *     '#limit_validation_errors' => array(),       // No validation.
-   *     '#submit' => array('some_submit_function'),  // #submit required.
-   *   );
+   *     '#limit_validation_errors' => [],       // No validation.
+   *     '#submit' => ['some_submit_function'],  // #submit required.
+   *   ];
    * @endcode
    *
    * Example 2: Require some, but not all, user input to be valid to process the
    * submission of a "Previous" button.
    *
    * @code
-   *   $form['actions']['previous'] = array(
+   *   $form['actions']['previous'] = [
    *     '#type' => 'submit',
    *     '#value' => t('Previous'),
-   *     '#limit_validation_errors' => array(
+   *     '#limit_validation_errors' => [
    *       // Validate $form_state->getValue('step1').
-   *       array('step1'),
-   *       // Validate $form_state->getValue(array('foo', 'bar')).
-   *       array('foo', 'bar'),
+   *       ['step1'],
+   *       // Validate $form_state->getValue(['foo', 'bar']).
+   *       ['foo', 'bar'],
    *     ),
-   *     '#submit' => array('some_submit_function'), // #submit required.
+   *     '#submit' => ['some_submit_function'], // #submit required.
    *   );
    * @endcode
    *
    * This will require $form_state->getValue('step1') and everything within it
-   * (for example, $form_state->getValue(array('step1', 'choice'))) to be valid,
+   * (for example, $form_state->getValue(['step1', 'choice'])) to be valid,
    * so calls to self::setErrorByName('step1', $message) or
    * self::setErrorByName('step1][choice', $message) will prevent the submit
    * handlers from running, and result in the error message being displayed to
@@ -517,10 +517,10 @@ interface FormStateInterface {
    * self::setErrorByName('step2][groupX][choiceY', $message) will be
    * suppressed, resulting in the message not being displayed to the user, and
    * the submit handlers will run despite $form_state->getValue('step2') and
-   * $form_state->getValue(array('step2', 'groupX', 'choiceY')) containing
+   * $form_state->getValue(['step2', 'groupX', 'choiceY']) containing
    * invalid values. Errors for an invalid $form_state->getValue('foo') will be
    * suppressed, but errors flagging invalid values for
-   * $form_state->getValue(array('foo', 'bar')) and everything within it will
+   * $form_state->getValue(['foo', 'bar']) and everything within it will
    * be flagged and submission prevented.
    *
    * Partial form validation is implemented by suppressing errors rather than by
@@ -533,7 +533,7 @@ interface FormStateInterface {
    *
    * @param string $name
    *   The name of the form element. If the #parents property of your form
-   *   element is array('foo', 'bar', 'baz') then you may set an error on 'foo'
+   *   element is ['foo', 'bar', 'baz'] then you may set an error on 'foo'
    *   or 'foo][bar][baz'. Setting an error on 'foo' sets an error for every
    *   element where the #parents array starts with 'foo'.
    * @param string $message

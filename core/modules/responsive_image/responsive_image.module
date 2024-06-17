@@ -242,25 +242,25 @@ function template_preprocess_responsive_image(&$variables) {
  * can contain image style mappings of mixed types (both 'image_style' and
  * 'sizes'). For example:
  * @code
- * $responsive_img_style = ResponsiveImageStyle::create(array(
+ * $responsive_img_style = ResponsiveImageStyle::create([
  *   'id' => 'style_one',
  *   'label' => 'Style One',
  *   'breakpoint_group' => 'responsive_image_test_module',
- * ));
- * $responsive_img_style->addImageStyleMapping('responsive_image_test_module.mobile', '1x', array(
+ * ]);
+ * $responsive_img_style->addImageStyleMapping('responsive_image_test_module.mobile', '1x', [
  *   'image_mapping_type' => 'image_style',
  *   'image_mapping' => 'thumbnail',
- * ))
- * ->addImageStyleMapping('responsive_image_test_module.narrow', '1x', array(
+ * ])
+ * ->addImageStyleMapping('responsive_image_test_module.narrow', '1x', [
  *   'image_mapping_type' => 'sizes',
- *   'image_mapping' => array(
+ *   'image_mapping' => [
  *     'sizes' => '(min-width: 700px) 700px, 100vw',
- *     'sizes_image_styles' => array(
+ *     'sizes_image_styles' => [
  *       'large' => 'large',
  *       'medium' => 'medium',
- *     ),
- *   ),
- * ))
+ *     ],
+ *   ],
+ * ])
  * ->save();
  * @endcode
  * The above responsive image style will result in a <picture> tag like this:

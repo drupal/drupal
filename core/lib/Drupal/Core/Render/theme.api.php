@@ -49,15 +49,15 @@
  * preprocessing functions. For example, the core Search module defines a theme
  * hook for a search result item in search_theme():
  * @code
- * return array(
- *   'search_result' => array(
- *     'variables' => array(
+ * return [
+ *   'search_result' => [
+ *     'variables' => [
  *       'result' => NULL,
  *       'plugin_id' => NULL,
- *     ),
+ *     ],
  *    'file' => 'search.pages.inc',
- *   ),
- * );
+ *   ],
+ * ];
  * @endcode
  * Given this definition, the template file with the default implementation is
  * search-result.html.twig, which can be found in the
@@ -688,7 +688,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *
  * @code
  * function MY_MODULE_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
- *   if (\Drupal::currentUser()->isAuthenticated() && in_array($hook, array('node', 'taxonomy_term'))) {
+ *   if (\Drupal::currentUser()->isAuthenticated() && in_array($hook, ['node', 'taxonomy_term'])) {
  *     $suggestions[] = $hook . '__' . 'logged_in';
  *   }
  * }
@@ -1281,24 +1281,24 @@ function hook_theme($existing, $type, $theme, $path) {
  *
  * For example:
  * @code
- * $theme_registry['block_content_add_list'] = array (
+ * $theme_registry['block_content_add_list'] = [
  *   'template' => 'block-content-add-list',
  *   'path' => 'core/themes/claro/templates',
  *   'type' => 'theme_engine',
  *   'theme path' => 'core/themes/claro',
- *   'includes' => array (
+ *   'includes' => [
  *     0 => 'core/modules/block_content/block_content.pages.inc',
- *   ),
- *   'variables' => array (
+ *   ],
+ *   'variables' => [
  *     'content' => NULL,
- *   ),
- *   'preprocess functions' => array (
+ *   ],
+ *   'preprocess functions' => [
  *     0 => 'template_preprocess',
  *     1 => 'template_preprocess_block_content_add_list',
  *     2 => 'contextual_preprocess',
  *     3 => 'claro_preprocess_block_content_add_list',
- *   ),
- * );
+ *   ],
+ * ];
  * @endcode
  *
  * @param $theme_registry

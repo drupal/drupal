@@ -108,21 +108,21 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    * file, you might set the variable as something like:
    *
    * @code
-   * array(
+   * [
    *   'default' => 'php_mail',
    *   'user' => 'devel_mail_log',
-   * );
+   * ];
    * @endcode
    *
    * Finally, a different system can be specified for a specific message ID (see
    * the $key param), such as one of the keys used by the contact module:
    *
    * @code
-   * array(
+   * [
    *   'default' => 'php_mail',
    *   'user' => 'devel_mail_log',
    *   'contact_page_autoreply' => 'null_mail',
-   * );
+   * ];
    * @endcode
    *
    * Other possible uses for system include a mail-sending plugin that actually

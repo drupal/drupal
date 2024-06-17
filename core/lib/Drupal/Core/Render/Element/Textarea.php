@@ -17,10 +17,10 @@ use Drupal\Core\Render\Attribute\FormElement;
  *
  * Usage example:
  * @code
- * $form['text'] = array(
+ * $form['text'] = [
  *   '#type' => 'textarea',
  *   '#title' => $this->t('Text'),
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield
