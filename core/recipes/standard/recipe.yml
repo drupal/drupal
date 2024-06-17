@@ -19,6 +19,8 @@ recipes:
   - user_picture
   # Provides a fallback text format which is available to all users.
   - restricted_html_format
+  - administrator_role
+  - content_editor_role
 install:
   - image
   - help
@@ -67,17 +69,32 @@ config:
     system.site:
       simple_config_update:
         page.front: /node
+    user.role.anonymous:
+      grantPermission: 'access content'
     user.role.authenticated:
-      grantPermission: 'delete own files'
+      grantPermissions:
+        - 'access content'
+        - 'delete own files'
     user.role.content_editor:
+      grantPermissions:
+        - 'access content overview'
+        - 'access contextual links'
+        - 'access files overview'
+        - 'access toolbar'
+        - 'administer url aliases'
+        - 'create terms in tags'
+        - 'create url aliases'
+        - 'edit own comments'
+        - 'edit terms in tags'
+        - 'delete own files'
+        - 'revert all revisions'
+        - 'view all revisions'
+        - 'view the administration theme'
       grantPermissionsForEachNodeType:
         - 'create %bundle content'
         - 'delete %bundle revisions'
         - 'delete own %bundle content'
         - 'edit own %bundle content'
-    user.role.anonymous:
-      # This recipe assumes all published content should be publicly accessible.
-      grantPermission: 'access content'
     user.settings:
       simple_config_update:
         verify_mail: true
