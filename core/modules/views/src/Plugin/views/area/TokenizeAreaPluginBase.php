@@ -107,11 +107,14 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
    *   will be replaced.
    */
   public function tokenizeValue($value) {
+    // As we add the globalTokenForm() we also should replace the token here.
+    $value = $this->globalTokenReplace($value);
+
     if ($this->options['tokenize']) {
       $value = $this->view->getStyle()->tokenizeValue($value, 0);
     }
-    // As we add the globalTokenForm() we also should replace the token here.
-    return $this->globalTokenReplace($value);
+
+    return $value;
   }
 
 }
