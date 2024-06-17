@@ -266,4 +266,22 @@ trait FieldUiTestTrait {
     $this->assertSession()->assert($element === NULL, sprintf('A field "%s" appears on this page, but it should not.', $label));
   }
 
+  /**
+   * Asserts that a header cell appears on a table.
+   *
+   * @param string $table_id
+   *   The HTML attribute value to target a given table.
+   * @param string $label
+   *   The cell label.
+   */
+  protected function assertTableHeaderExistsByLabel(string $table_id, string $label): void {
+    $expression = '//table[@id=:id]//tr//th[1 and text() = :label]';
+    $xpath = $this->assertSession()->buildXPathQuery($expression, [
+      ':id' => $table_id,
+      ':label' => $label,
+    ]);
+    $element = $this->getSession()->getPage()->find('xpath', $xpath);
+    $this->assertSession()->assert($element !== NULL, sprintf('Table header not found by label: "%s".', $label));
+  }
+
 }
