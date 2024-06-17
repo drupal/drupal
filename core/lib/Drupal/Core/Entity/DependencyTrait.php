@@ -50,13 +50,13 @@ trait DependencyTrait {
    * @param array $dependencies
    *   An array of dependencies keyed by the type of dependency. One example:
    *   @code
-   *   array(
-   *     'module' => array(
+   *   [
+   *     'module' => [
    *       'node',
    *       'field',
    *       'image',
-   *     ),
-   *   );
+   *     ],
+   *   ];
    *   @endcode
    *
    * @see \Drupal\Core\Entity\DependencyTrait::addDependency

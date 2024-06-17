@@ -158,19 +158,19 @@ interface DataDefinitionInterface {
    * Constraints are defined via an array, having constraint plugin IDs as key
    * and constraint options as values, e.g.
    * @code
-   * $constraints = array(
-   *   'Range' => array('min' => 5, 'max' => 10),
-   *   'NotBlank' => array(),
-   * );
+   * $constraints = [
+   *   'Range' => ['min' => 5, 'max' => 10],
+   *   'NotBlank' => [],
+   * ];
    * @endcode
    * Options have to be specified using another array if the constraint has more
    * than one or zero options. If it has exactly one option, the value should be
    * specified without nesting it into another array:
    * @code
-   * $constraints = array(
+   * $constraints = [
    *   'EntityType' => 'node',
    *   'Bundle' => 'article',
-   * );
+   * ];
    * @endcode
    *
    * Note that the specified constraints must be compatible with the data type,

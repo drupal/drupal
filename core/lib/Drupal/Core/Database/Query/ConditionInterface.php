@@ -148,11 +148,11 @@ interface ConditionInterface {
    * The data structure that is returned is an indexed array of entries, where
    * each entry looks like the following:
    * @code
-   * array(
+   * [
    *   'field' => $field,
    *   'value' => $value,
    *   'operator' => $operator,
-   * );
+   * ];
    * @endcode
    *
    * In the special case that $operator is NULL, the $field is taken as a raw

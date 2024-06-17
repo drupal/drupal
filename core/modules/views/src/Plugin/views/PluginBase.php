@@ -149,12 +149,12 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   /**
    * Information about options for all kinds of purposes will be held here.
    * @code
-   * 'option_name' => array(
+   * 'option_name' => [
    *  - 'default' => default value,
    *  - 'contains' => (optional) array of items this contains, with its own
    *      defaults, etc. If contains is set, the default will be ignored and
-   *      assumed to be array().
-   *  ),
+   *      assumed to be [].
+   *  ],
    * @endcode
    *
    * @return array

@@ -115,14 +115,14 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *   A string that maps to a key within the configuration data.
    *   For instance in the following configuration array:
    *   @code
-   *   array(
-   *     'foo' => array(
+   *   [
+   *     'foo' => [
    *       'bar' => 'baz',
-   *     ),
-   *   );
+   *     ],
+   *   ];
    *   @endcode
    *   A key of 'foo.bar' would return the string 'baz'. However, a key of 'foo'
-   *   would return array('bar' => 'baz').
+   *   would return ['bar' => 'baz'].
    *   If no key is specified, then the entire data array is returned.
    *
    * @return mixed

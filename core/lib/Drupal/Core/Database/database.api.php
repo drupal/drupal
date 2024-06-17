@@ -77,7 +77,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *   FROM {example} e
  *   WHERE e.uid = :uid
  *   ORDER BY e.created DESC',
- *   0, 10, array(':uid' => $uid));
+ *   0, 10, [':uid' => $uid)];
  * foreach ($result as $record) {
  *   // Perform operations on $record->title, etc. here.
  * }
@@ -90,7 +90,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * when you convert it to placeholders, omit the quotes:
  * @code
  * WHERE e.my_field = :my_field
- * ... array(':my_field' => 'foo') ...
+ * ... [':my_field' => 'foo'] ...
  * @endcode
  *
  * @section sec_dynamic Dynamic SELECT queries
@@ -110,7 +110,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * would be:
  * @code
  * $result = \Drupal::database()->select('example', 'e')
- *   ->fields('e', array('id', 'title', 'created'))
+ *   ->fields('e', ['id', 'title', 'created'])
  *   ->condition('e.uid', $uid)
  *   ->orderBy('e.created', 'DESC')
  *   ->range(0, 10)
@@ -152,7 +152,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * @endcode
  * You can execute it via:
  * @code
- * $fields = array('id' => 1, 'uid' => 2, 'path' => 'path', 'name' => 'Name');
+ * $fields = ['id' => 1, 'uid' => 2, 'path' => 'path', 'name' => 'Name'];
  * \Drupal::database()->insert('example')
  *   ->fields($fields)
  *   ->execute();
@@ -182,10 +182,10 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     $transaction = $connection->startTransaction();
  *
  *     $id = $connection->insert('example')
- *       ->fields(array(
+ *       ->fields([
  *         'field1' => 'string',
  *         'field2' => 5,
- *       ))
+ *       ])
  *       ->execute();
  *
  *     my_other_function($id);
@@ -216,7 +216,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *   if ($id % 2 == 0) {
  *     $connection->update('example')
  *       ->condition('id', $id)
- *       ->fields(array('field2' => 10))
+ *       ->fields(['field2' => 10])
  *       ->execute();
  *   }
  * }

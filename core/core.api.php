@@ -537,16 +537,16 @@
  * Example:
  * @code
  * // A cache item with nodes, users, and some custom module data.
- * $tags = array(
+ * $tags = [
  *   'my_custom_tag',
  *   'node:1',
  *   'node:3',
  *   'user:7',
- * );
+ * ];
  * \Drupal::cache()->set($cid, $data, CacheBackendInterface::CACHE_PERMANENT, $tags);
  *
  * // Invalidate all cache items with certain tags.
- * \Drupal\Core\Cache\Cache::invalidateTags(array('user:1'));
+ * \Drupal\Core\Cache\Cache::invalidateTags(['user:1']);
  * @endcode
  *
  * Drupal is a content management system, so naturally you want changes to your
@@ -1712,14 +1712,14 @@
  *
  *   public function buildForm(array $form, FormStateInterface $form_state) {
  *     // Create a $form API array.
- *     $form['phone_number'] = array(
+ *     $form['phone_number'] = [
  *       '#type' => 'tel',
  *       '#title' => $this->t('Your phone number'),
- *     );
- *     $form['save'] = array(
+ *     ];
+ *     $form['save'] = [
  *       '#type' => 'submit',
  *       '#value' => $this->t('Save'),
- *     );
+ *     ];
  *     return $form;
  *   }
  *
@@ -1753,11 +1753,11 @@
  * $form = \Drupal::formBuilder()->getForm('Drupal\my_module\Form\ExampleForm', $extra);
  * ...
  * public function buildForm(array $form, FormStateInterface $form_state, $extra = NULL)
- *   $form['phone_number'] = array(
+ *   $form['phone_number'] = [
  *     '#type' => 'tel',
  *     '#title' => $this->t('Your phone number'),
  *     '#value' => $extra,
- *   );
+ *   ];
  *   return $form;
  * }
  * @endcode
@@ -2340,14 +2340,14 @@ function hook_validation_constraint_alter(array &$definitions) {
  * Ajax response. This is done in the text field form array element
  * in \Drupal\config_translation\FormElement\DateFormat::getFormElement():
  * @code
- * '#ajax' => array(
+ * '#ajax' => [
  *   'callback' => 'Drupal\config_translation\FormElement\DateFormat::ajaxSample',
  *   'event' => 'keyup',
- *   'progress' => array(
+ *   'progress' => [
  *     'type' => 'throbber',
  *     'message' => NULL,
- *   ),
- * ),
+ *   ],
+ * ],
  * @endcode
  *
  * As you can see from this example, the #ajax property for a form element is
@@ -2435,7 +2435,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * 'wrapper' method and return HTML markup. This is not the case if you return
  * commands, but if you would like to show status messages, you can add
  * @code
- * array('#type' => 'status_messages')
+ * ['#type' => 'status_messages']
  * @endcode
  * to a render array, use \Drupal::service('renderer')->render() to render it,
  * and add a command to place the messages in an appropriate location.
@@ -2596,9 +2596,9 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   @code
  *   public static function getSubscribedEvents(): array {
  *     // Subscribe to kernel terminate with priority 100.
- *     $events[KernelEvents::TERMINATE][] = array('onTerminate', 100);
+ *     $events[KernelEvents::TERMINATE][] = ['onTerminate', 100];
  *     // Subscribe to kernel request with default priority of 0.
- *     $events[KernelEvents::REQUEST][] = array('onRequest');
+ *     $events[KernelEvents::REQUEST][] = ['onRequest'];
  *     return $events;
  *   }
  *   @endcode

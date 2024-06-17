@@ -145,8 +145,8 @@ interface QueryAggregateInterface extends QueryInterface {
    *   @endcode
    *   Will return:
    *   @code
-   *     $result[0] = array('count_nid' => 3, 'type' => 'page');
-   *     $result[1] = array('count_nid' => 4, 'type' => 'article');
+   *     $result[0] = ['count_nid' => 3, 'type' => 'page'];
+   *     $result[1] = ['count_nid' => 4, 'type' => 'article'];
    *   @endcode
    */
   public function execute();

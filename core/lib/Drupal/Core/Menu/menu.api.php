@@ -128,12 +128,12 @@
  * interface elements whose render arrays have a '#contextual_links' element
  * defined. For example, a block render array might look like this, in part:
  * @code
- * array(
- *   '#contextual_links' => array(
- *     'block' => array(
- *       'route_parameters' => array('block' => $entity->id()),
- *     ),
- *   ),
+ * [
+ *   '#contextual_links' => [
+ *     'block' => [
+ *       'route_parameters' => ['block' => $entity->id()],
+ *     ],
+ *   ],
  * @endcode
  * In this array, the outer key 'block' defines a "group" for contextual
  * links, and the inner array provides values for the route's placeholder
@@ -196,12 +196,12 @@
  * $tree = $menu_tree->load($menu_name, $parameters);
  *
  * // Transform the tree using the manipulators you want.
- * $manipulators = array(
+ * $manipulators = [
  *   // Only show links that are accessible for the current user.
- *   array('callable' => 'menu.default_tree_manipulators:checkAccess'),
+ *   ['callable' => 'menu.default_tree_manipulators:checkAccess'],
  *   // Use the default sorting of menu links.
- *   array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
- * );
+ *   ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+ * ];
  * $tree = $menu_tree->transform($tree, $manipulators);
  *
  * // Finally, build a renderable array from the transformed tree.
@@ -385,7 +385,7 @@ function hook_local_tasks_alter(&$local_tasks) {
  *   The route parameters passed to each route_name of the contextual links.
  *   For example:
  *   @code
- *   array('node' => $node->id())
+ *   ['node' => $node->id()]
  *   @endcode
  *
  * @see \Drupal\Core\Menu\ContextualLinkManager

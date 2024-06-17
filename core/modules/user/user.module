@@ -842,13 +842,13 @@ function user_user_role_delete(RoleInterface $role) {
  *   Any value that evaluates to FALSE will cause the permission to be
  *   revoked.
  *   @code
- *     array(
+ *     [
  *       'administer nodes' => 0,                // Revoke 'administer nodes'
  *       'administer blocks' => FALSE,           // Revoke 'administer blocks'
  *       'access user profiles' => 1,            // Grant 'access user profiles'
  *       'access content' => TRUE,               // Grant 'access content'
  *       'access comments' => 'access comments', // Grant 'access comments'
- *     )
+ *     ]
  *   @endcode
  *   Existing permissions are not changed, unless specified in $permissions.
  *

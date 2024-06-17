@@ -21,10 +21,10 @@ use Drupal\Core\Render\Element;
  *
  * Usage Example:
  * @code
- * $form['actions']['preview'] = array(
+ * $form['actions']['preview'] = [
  *   '#type' => 'button',
  *   '#value' => $this->t('Preview'),
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Submit

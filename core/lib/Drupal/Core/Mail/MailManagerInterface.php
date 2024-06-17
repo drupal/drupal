@@ -74,7 +74,7 @@ interface MailManagerInterface extends PluginManagerInterface {
    * message for sending later:
    *
    * @code
-   *   $params = array('current_conditions' => $data);
+   *   $params = ['current_conditions' => $data];
    *   $to = 'user@example.com';
    *   $message = \Drupal::service('plugin.manager.mail')->mail('example', 'notice', $to, $langcode, $params, FALSE);
    *   // Only add to the spool if sending was not canceled.
