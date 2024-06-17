@@ -76,7 +76,7 @@ interface TranslationInterface {
    *   $output = $string_translation->formatPlural($update_count,
    *     'Changed the content type of 1 post from %old-type to %new-type.',
    *     'Changed the content type of @count posts from %old-type to %new-type.',
-   *     array('%old-type' => $info->old_type, '%new-type' => $info->new_type));
+   *     ['%old-type' => $info->old_type, '%new-type' => $info->new_type)];
    * @endcode
    *
    * @param int $count

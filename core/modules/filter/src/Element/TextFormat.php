@@ -22,12 +22,12 @@ use Drupal\Core\Url;
  *
  * Usage Example:
  * @code
- * $form['body'] = array(
+ * $form['body'] = [
  *   '#type' => 'text_format',
  *   '#title' => 'Body',
  *   '#format' => 'full_html',
  *   '#default_value' => '<p>The quick brown fox jumped over the lazy dog.</p>',
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textarea

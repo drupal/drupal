@@ -85,10 +85,10 @@ class ViewsDisplay extends ViewsPluginAnnotationBase {
    *
    * For example:
    * @code
-   * array(
+   * [
    *   'page',
    *   'block',
-   * )
+   * ]
    * @endcode
    *
    * If you don't specify it there will be contextual links rendered for all

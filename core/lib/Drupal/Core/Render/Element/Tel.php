@@ -17,11 +17,11 @@ use Drupal\Core\Render\Element;
  *
  * Usage example:
  * @code
- * $form['phone'] = array(
+ * $form['phone'] = [
  *   '#type' => 'tel',
  *   '#title' => $this->t('Phone'),
  *   '#pattern' => '[^\d]*',
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element

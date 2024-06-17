@@ -179,7 +179,7 @@ abstract class CachePluginBase extends PluginBase {
    * go there:
    *
    * @code
-   *   strtr($output, array('<!--post-FIELD-1-->', 'output for FIELD of nid 1');
+   *   strtr($output, ['<!--post-FIELD-1-->', 'output for FIELD of nid 1']);
    * @endcode
    *
    * All of the cached result data will be available in $view->result, as well,

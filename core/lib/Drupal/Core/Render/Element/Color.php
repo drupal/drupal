@@ -15,11 +15,11 @@ use Drupal\Component\Utility\Color as ColorUtility;
  *
  * Example usage:
  * @code
- * $form['color'] = array(
+ * $form['color'] = [
  *   '#type' => 'color',
  *   '#title' => $this->t('Color'),
  *   '#default_value' => '#ffffff',
- * );
+ * ];
  * @endcode
  */
 #[FormElement('color')]

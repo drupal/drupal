@@ -311,7 +311,7 @@ interface ModuleHandlerInterface {
    * to be passed and alterable, modules provide additional variables assigned by
    * reference in the last $context argument:
    * @code
-   *   $context = array(
+   *   $context = [
    *     'alterable' => &$alterable,
    *     'unalterable' => $unalterable,
    *     'foo' => 'bar',
@@ -323,7 +323,7 @@ interface ModuleHandlerInterface {
    * required that no implementation alters a passed object in $context, then an
    * object needs to be cloned:
    * @code
-   *   $context = array(
+   *   $context = [
    *     'unalterable_object' => clone $object,
    *   );
    *   $this->alter('my_module_data', $data, $context);
@@ -336,7 +336,7 @@ interface ModuleHandlerInterface {
    *   array, ordered first by module, and then for each module, in the order of
    *   values in $type. For example, when Form API is using $this->alter() to
    *   execute both hook_form_alter() and hook_form_FORM_ID_alter()
-   *   implementations, it passes array('form', 'form_' . $form_id) for $type.
+   *   implementations, it passes ['form', 'form_' . $form_id] for $type.
    * @param mixed $data
    *   The variable that will be passed to hook_TYPE_alter() implementations to be
    *   altered. The type of this variable depends on the value of the $type
@@ -369,7 +369,7 @@ interface ModuleHandlerInterface {
    *   array, ordered first by module, and then for each module, in the order of
    *   values in $type. For example, when Form API is using $this->alter() to
    *   execute both hook_form_alter() and hook_form_FORM_ID_alter()
-   *   implementations, it passes array('form', 'form_' . $form_id) for $type.
+   *   implementations, it passes ['form', 'form_' . $form_id] for $type.
    * @param mixed $data
    *   The variable that will be passed to hook_TYPE_alter() implementations to be
    *   altered. The type of this variable depends on the value of the $type

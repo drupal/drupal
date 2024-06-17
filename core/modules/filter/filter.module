@@ -404,14 +404,14 @@ function template_preprocess_text_format_wrapper(&$variables) {
  *     'module-name/filter-id' (only used when $long is TRUE) for each
  *     filter in one or more text formats. Example:
  *     @code
- *       array(
- *         'Full HTML' => array(
- *           0 => array(
+ *       [
+ *         'Full HTML' => [
+ *           0 => [
  *             'tip' => 'Web page addresses and email addresses turn into links automatically.',
  *             'id' => 'filter/2',
- *           ),
- *         ),
- *       );
+ *           ],
+ *         ],
+ *       ];
  *     @endcode
  *   - long: (optional) Whether the passed-in filter tips contain extended
  *     explanations, i.e. intended to be output on the path 'filter/tips'

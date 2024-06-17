@@ -18,10 +18,10 @@ use Drupal\Core\Render\Attribute\FormElement;
  *
  * Usage Example:
  * @code
- * $form['actions']['submit'] = array(
+ * $form['actions']['submit'] = [
  *   '#type' => 'submit',
  *   '#value' => $this->t('Save'),
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Button

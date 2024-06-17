@@ -18,7 +18,7 @@ use Drupal\Core\Render\Element;
  *
  * Usage example:
  * @code
- * $form['entity_id'] = array('#type' => 'hidden', '#value' => $entity_id);
+ * $form['entity_id'] = ['#type' => 'hidden', '#value' => $entity_id];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Value

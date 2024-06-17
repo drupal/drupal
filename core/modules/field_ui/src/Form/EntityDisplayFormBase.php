@@ -102,8 +102,8 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * @return array
    *   Example usage:
    *   @code
-   *     return array(
-   *       'content' => array(
+   *     return [
+   *       'content' => [
    *         // label for the region.
    *         'title' => $this->t('Content'),
    *         // Indicates if the region is visible in the UI.
@@ -111,8 +111,8 @@ abstract class EntityDisplayFormBase extends EntityForm {
    *         // A message to indicate that there is nothing to be displayed in
    *         // the region.
    *         'message' => $this->t('No field is displayed.'),
-   *       ),
-   *     );
+   *       ],
+   *     ];
    *   @endcode
    */
   public function getRegions() {

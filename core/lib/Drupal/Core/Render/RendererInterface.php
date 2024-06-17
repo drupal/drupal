@@ -241,24 +241,24 @@ interface RendererInterface {
    *   of overrides as the value in #theme_wrappers array.
    *   For example, if we have a render element as follows:
    *   @code
-   *   array(
+   *   [
    *     '#theme' => 'image',
-   *     '#attributes' => array('class' => array('foo')),
-   *     '#theme_wrappers' => array('container'),
-   *   );
+   *     '#attributes' => ['class' => ['foo']],
+   *     '#theme_wrappers' => ['container'],
+   *   ];
    *   @endcode
    *   and we need to pass the class 'bar' as an attribute for 'container', we
    *   can rewrite our element thus:
    *   @code
-   *   array(
+   *   [
    *     '#theme' => 'image',
-   *     '#attributes' => array('class' => array('foo')),
-   *     '#theme_wrappers' => array(
-   *       'container' => array(
-   *         '#attributes' => array('class' => array('bar')),
-   *       ),
-   *     ),
-   *   );
+   *     '#attributes' => ['class' => ['foo']],
+   *     '#theme_wrappers' => [
+   *       'container' => [
+   *         '#attributes' => ['class' => ['bar']],
+   *       ],
+   *     ],
+   *   ];
    *    @endcode
    * - If this element has an array of #post_render functions defined, they
    *   are called sequentially to modify the rendered #children. Unlike

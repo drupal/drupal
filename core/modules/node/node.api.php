@@ -39,20 +39,20 @@ use Drupal\Component\Utility\Xss;
  * access modules can also grant "view all" permission on their custom realms;
  * for example, a module could create a record in {node_access} with:
  * @code
- * $record = array(
+ * $record = [
  *   'nid' => 0,
  *   'gid' => 888,
  *   'realm' => 'example_realm',
  *   'grant_view' => 1,
  *   'grant_update' => 0,
  *   'grant_delete' => 0,
- * );
+ * ];
  * \Drupal::database()->insert('node_access')->fields($record)->execute();
  * @endcode
  * And then in its hook_node_grants() implementation, it would need to return:
  * @code
  * if ($op == 'view') {
- *   $grants['example_realm'] = array(888);
+ *   $grants['example_realm'] = [888];
  * }
  * @endcode
  * If you decide to do this, be aware that the node_access_rebuild() function
@@ -124,14 +124,14 @@ function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $opera
  * A "deny all" grant may be used to deny all access to a particular node or
  * node translation:
  * @code
- * $grants[] = array(
+ * $grants[] = [
  *   'realm' => 'all',
  *   'gid' => 0,
  *   'grant_view' => 0,
  *   'grant_update' => 0,
  *   'grant_delete' => 0,
  *   'langcode' => 'ca',
- * );
+ * ];
  * @endcode
  * Note that another module node access module could override this by granting
  * access to one or more nodes, since grants are additive. To enforce that

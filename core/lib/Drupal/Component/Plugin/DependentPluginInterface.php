@@ -21,12 +21,12 @@ interface DependentPluginInterface {
    *   An array of dependencies grouped by type (config, content, module,
    *   theme). For example:
    *   @code
-   *   array(
-   *     'config' => array('user.role.anonymous', 'user.role.authenticated'),
-   *     'content' => array('node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'),
-   *     'module' => array('node', 'user'),
-   *     'theme' => array('claro'),
-   *   );
+   *   [
+   *     'config' => ['user.role.anonymous', 'user.role.authenticated'],
+   *     'content' => ['node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'],
+   *     'module' => ['node', 'user'],
+   *     'theme' => ['claro'],
+   *   ];
    *   @endcode
    *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyManager
