@@ -28,7 +28,7 @@ exports.command = function drupalInstallModule(module, force, callback) {
     if (force) {
       // Click `Continue` if applicable.
       this.waitForElementPresent(
-        '#system-modules-confirm-form',
+        '#system-modules-confirm-form, #system-modules-non-stable-confirm-form',
         10000,
         false,
         () => self.click('input[value=Continue]'),
