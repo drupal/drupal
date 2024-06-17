@@ -63,6 +63,7 @@
     <exclude name="Drupal.Commenting.DocComment.SpacingBeforeTags"/>
   </rule>
   <rule ref="Drupal.Commenting.DocCommentAlignment"/>
+  <rule ref="Drupal.Commenting.DocCommentLongArraySyntax"/>
   <rule ref="Drupal.Commenting.DocCommentStar"/>
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.Commenting.FunctionComment">

@@ -772,7 +772,7 @@ abstract class Connection {
    * @code
    * \Drupal::database()->update('example')
    *  ->condition('id', $id)
-   *  ->fields(array('field2' => 10))
+   *  ->fields(['field2' => 10])
    *  ->comment('Exploit * / DROP TABLE node; --')
    *  ->execute()
    * @endcode
@@ -1375,7 +1375,7 @@ abstract class Connection {
    * @code
    * $result = $injected_connection->query(
    *   'SELECT * FROM person WHERE name LIKE :pattern',
-   *   array(':pattern' => $injected_connection->escapeLike($prefix) . '%')
+   *   [':pattern' => $injected_connection->escapeLike($prefix) . '%']
    * );
    * @endcode
    *

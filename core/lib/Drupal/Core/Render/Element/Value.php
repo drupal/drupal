@@ -16,7 +16,7 @@ use Drupal\Core\Render\Attribute\FormElement;
  *
  * Usage Example:
  * @code
- * $form['entity_id'] = array('#type' => 'value', '#value' => $entity_id);
+ * $form['entity_id'] = ['#type' => 'value', '#value' => $entity_id];
  * @endcode
  */
 #[FormElement('value')]

@@ -20,10 +20,10 @@ abstract class TourTestBase extends BrowserTestBase {
    *
    * // Advanced example. The following would be used for multi-page or
    * // targeting a specific subset of tips.
-   * $tips = array();
-   * $tips[] = array('data-id' => 'foo');
-   * $tips[] = array('data-id' => 'bar');
-   * $tips[] = array('data-class' => 'baz');
+   * $tips = [];
+   * $tips[] = ['data-id' => 'foo'];
+   * $tips[] = ['data-id' => 'bar'];
+   * $tips[] = ['data-class' => 'baz'];
    * $this->assertTourTips($tips);
    * @endcode
    *

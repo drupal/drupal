@@ -20,10 +20,10 @@ use Drupal\Component\Utility\Number as NumberUtility;
  *
  * Usage example:
  * @code
- * $form['quantity'] = array(
+ * $form['quantity'] = [
  *   '#type' => 'number',
  *   '#title' => $this->t('Quantity'),
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Range

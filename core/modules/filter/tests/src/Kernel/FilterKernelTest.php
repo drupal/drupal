@@ -978,12 +978,12 @@ class FilterKernelTest extends KernelTestBase {
    *   strings and whose values are Booleans indicating whether the output is
    *   expected or not. For example:
    *   @code
-   *   $tests = array(
-   *     'Input string' => array(
+   *   $tests = [
+   *     'Input string' => [
    *       '<p>Input string</p>' => TRUE,
    *       'Input string<br' => FALSE,
-   *     ),
-   *   );
+   *     ],
+   *   ];
    *   @endcode
    *
    * @internal

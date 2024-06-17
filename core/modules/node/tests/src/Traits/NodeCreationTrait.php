@@ -48,19 +48,19 @@ trait NodeCreationTrait {
    *   in the array, for example:
    *
    *   @code
-   *     $this->drupalCreateNode(array(
+   *     $this->drupalCreateNode([
    *       'title' => t('Hello, world!'),
    *       'type' => 'article',
-   *     ));
+   *     ]);
    *   @endcode
    *   The following defaults are provided, if the node has the field in
    *   question:
    *   - body: Random string using the default filter format:
    *     @code
-   *       $values['body'][0] = array(
+   *       $values['body'][0] = [
    *         'value' => $this->randomMachineName(32),
    *         'format' => filter_default_format(),
-   *       );
+   *       ];
    *     @endcode
    *   - title: Random string.
    *   - type: 'page'.

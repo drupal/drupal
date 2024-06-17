@@ -202,7 +202,7 @@ interface MenuTreeStorageInterface {
    *   two parents (1, 6) looks like the following:
    *
    * @code
-   *   array(
+   *   [
    *     'p1' => 1,
    *     'p2' => 6,
    *     'p3' => 8,
@@ -212,7 +212,7 @@ interface MenuTreeStorageInterface {
    *     'p7' => 0,
    *     'p8' => 0,
    *     'p9' => 0
-   *   )
+   *   ]
    * @endcode
    */
   public function getRootPathIds($id);

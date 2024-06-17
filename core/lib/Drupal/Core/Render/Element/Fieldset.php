@@ -9,15 +9,15 @@ use Drupal\Core\Render\Attribute\RenderElement;
  *
  * Usage example:
  * @code
- * $form['author'] = array(
+ * $form['author'] = [
  *   '#type' => 'fieldset',
  *   '#title' => $this->t('Author'),
- * );
+ * ];
  *
- * $form['author']['name'] = array(
+ * $form['author']['name'] = [
  *   '#type' => 'textfield',
  *   '#title' => $this->t('Name'),
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Fieldgroup

@@ -138,7 +138,7 @@ trait UiHelperTrait {
    * For example:
    * @code
    *   // Create a user.
-   *   $account = $this->drupalCreateUser(array());
+   *   $account = $this->drupalCreateUser([]);
    *   $this->drupalLogin($account);
    *   // Load real user object.
    *   $pass_raw = $account->passRaw;

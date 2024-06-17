@@ -26,13 +26,13 @@ abstract class ConfigFormTestBase extends KernelTestBase {
    * Contains details for form key, configuration object name, and config key.
    * Example:
    * @code
-   *   array(
-   *     'user_mail_cancel_confirm_body' => array(
+   *   [
+   *     'user_mail_cancel_confirm_body' => [
    *       '#value' => $this->randomString(),
    *       '#config_name' => 'user.mail',
    *       '#config_key' => 'cancel_confirm.body',
-   *     ),
-   *   );
+   *     ],
+   *   ];
    * @endcode
    *
    * @var array

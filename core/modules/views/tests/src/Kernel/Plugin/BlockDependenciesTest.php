@@ -78,9 +78,9 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
    *   Override the defaults by specifying the key and value in the array, for
    *   example:
    *   @code
-   *     $this->createBlock('system_powered_by_block', array(
+   *     $this->createBlock('system_powered_by_block', [
    *       'label' => 'Hello, world!',
-   *     ));
+   *     ]);
    *   @endcode
    *   The following defaults are provided:
    *   - label: Random string.

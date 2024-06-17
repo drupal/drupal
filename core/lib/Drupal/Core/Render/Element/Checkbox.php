@@ -14,10 +14,10 @@ use Drupal\Core\Render\Element;
  *
  * Usage example:
  * @code
- * $form['copy'] = array(
+ * $form['copy'] = [
  *   '#type' => 'checkbox',
  *   '#title' => $this->t('Send me a copy'),
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Checkboxes

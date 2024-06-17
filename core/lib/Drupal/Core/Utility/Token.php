@@ -45,7 +45,7 @@ use Drupal\Core\Render\RendererInterface;
  *
  * // [date:...] tokens use the current date automatically.
  * $token_service = \Drupal::token();
- * $data = array('node' => $node, 'user' => $user);
+ * $data = ['node' => $node, 'user' => $user];
  * $result = $token_service->replace($text, $data);
  * return $result
  * @endcode
@@ -381,13 +381,13 @@ class Token {
    * Used to extract a group of 'chained' tokens (such as [node:author:name])
    * from the full list of tokens found in text. For example:
    * @code
-   *   $data = array(
+   *   $data = [
    *     'author:name' => '[node:author:name]',
    *     'title'       => '[node:title]',
    *     'created'     => '[node:created]',
-   *   );
+   *   ];
    *   $results = Token::findWithPrefix($data, 'author');
-   *   $results == array('name' => '[node:author:name]');
+   *   $results == ['name' => '[node:author:name]'];
    * @endcode
    *
    * @param array $tokens

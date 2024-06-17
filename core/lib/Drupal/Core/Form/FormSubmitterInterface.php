@@ -55,13 +55,13 @@ interface FormSubmitterInterface {
    * And here is an example of how to redirect to 'node/123?foo=bar#baz':
    * @code
    * $form_state->setRedirect('entity.node.canonical',
-   *   array('node' => 123),
-   *   array(
-   *     'query' => array(
+   *   ['node' => 123],
+   *   [
+   *     'query' => [
    *       'foo' => 'bar',
-   *     ),
+   *     ],
    *     'fragment' => 'baz',
-   *   ),
+   *   ],
    * );
    * @endcode
    *

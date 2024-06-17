@@ -106,10 +106,10 @@ class Merge extends Query implements ConditionInterface {
    *
    * This variable is a nested array in the following format:
    * @code
-   * <some field> => array(
+   * <some field> => [
    *  'condition' => <condition to execute, as a string>,
    *  'arguments' => <array of arguments for condition, or NULL for none>,
-   * );
+   * ];
    * @endcode
    *
    * @var array

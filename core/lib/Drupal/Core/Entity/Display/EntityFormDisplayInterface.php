@@ -37,10 +37,10 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *   // most common case), and will therefore be repeated as many times as
    *   // needed, or 'multiple-values' (one single widget allows the input of
    *   // several values; e.g., checkboxes, select box, etc.).
-   *   'field_foo' => array(
+   *   'field_foo' => [
    *     '#access' => TRUE if the current user has 'edit' grants for the field,
    *       FALSE if not.
-   *     'widget' => array(
+   *     'widget' => [
    *       '#field_name' => The name of the field,
    *       '#title' => The label of the field,
    *       '#description' => The description text for the field,
@@ -58,7 +58,7 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *       '#cardinality_multiple' => TRUE if the field can contain multiple
    *         items, FALSE otherwise.
    *       // One sub-array per copy of the widget, keyed by delta.
-   *       0 => array(
+   *       0 => [
    *         '#title' => The title to be displayed by the widget,
    *         '#description' => The description text for the field,
    *         '#required' => Whether the widget should be marked required,
@@ -67,15 +67,15 @@ interface EntityFormDisplayInterface extends EntityDisplayInterface {
    *         '#field_parents' => Same as above,
    *         // The remaining elements in the sub-array depend on the widget.
    *         ...
-   *       ),
-   *       1 => array(
+   *       ],
+   *       1 => [
    *         ...
-   *       ),
+   *       ],
    *       ...
-   *     ),
+   *     ],
    *     ...
-   *   ),
-   * )
+   *   ],
+   * ]
    * @endcode
    *
    * Additionally, some processing data is placed in $form_state, and can be

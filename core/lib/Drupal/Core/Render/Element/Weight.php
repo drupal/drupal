@@ -17,12 +17,12 @@ use Drupal\Core\Render\Attribute\FormElement;
  *
  * Usage example:
  * @code
- * $form['weight'] = array(
+ * $form['weight'] = [
  *   '#type' => 'weight',
  *   '#title' => $this->t('Weight'),
  *   '#default_value' => $edit['weight'],
  *   '#delta' => 10,
- * );
+ * ];
  * @endcode
  */
 #[FormElement('weight')]

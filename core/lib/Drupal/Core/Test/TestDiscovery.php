@@ -134,14 +134,14 @@ class TestDiscovery {
    *   to.
    *
    * @code
-   *     $groups['block'] => array(
-   *       'Drupal\Tests\block\Functional\BlockTest' => array(
+   *     $groups['block'] => [
+   *       'Drupal\Tests\block\Functional\BlockTest' => [
    *         'name' => 'Drupal\Tests\block\Functional\BlockTest',
    *         'description' => 'Tests block UI CRUD functionality.',
    *         'group' => 'block',
    *         'groups' => ['block', 'group2', 'group3'],
-   *       ),
-   *     );
+   *       ],
+   *     ];
    * @endcode
    *
    * @todo Remove singular grouping; retain list of groups in 'group' key.
