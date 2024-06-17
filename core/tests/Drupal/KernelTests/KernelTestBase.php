@@ -242,6 +242,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->registerComparator(new MarkupInterfaceComparator());
 
     $this->root = static::getDrupalRoot();
+    chdir($this->root);
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();

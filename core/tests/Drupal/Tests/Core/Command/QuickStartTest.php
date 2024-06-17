@@ -56,6 +56,7 @@ class QuickStartTest extends TestCase {
     $php_executable_finder = new PhpExecutableFinder();
     $this->php = $php_executable_finder->find();
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    chdir($this->root);
     if (!is_writable("{$this->root}/sites/simpletest")) {
       $this->markTestSkipped('This test requires a writable sites/simpletest directory');
     }
