@@ -33,9 +33,8 @@ class FileSaveUploadTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    \file_put_contents('test.bbb', 'test');
-
     parent::setUp();
+    \file_put_contents('test.bbb', 'test');
     $request = new Request();
     $request->files->set('files', [
       'file' => new UploadedFile(
@@ -51,6 +50,14 @@ class FileSaveUploadTest extends KernelTestBase {
     $requestStack->push($request);
 
     $this->container->set('request_stack', $requestStack);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    \unlink('test.bbb');
+    parent::tearDown();
   }
 
   /**
