@@ -112,9 +112,8 @@
       const tagged = autocomplete.splitValues(request.term);
       const il = tagged.length;
       for (let i = 0; i < il; i++) {
-        const index = suggestions.indexOf(tagged[i]);
-        if (index >= 0) {
-          suggestions.splice(index, 1);
+        if (suggestions.includes(tagged[i])) {
+          suggestions.splice(suggestions.indexOf(tagged[i]), 1);
         }
       }
       response(suggestions);
