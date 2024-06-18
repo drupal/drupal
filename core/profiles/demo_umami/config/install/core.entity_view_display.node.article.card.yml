@@ -3,7 +3,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.card
-    - field.field.node.article.body
+    - field.field.node.article.field_body
     - field.field.node.article.field_media_image
     - field.field.node.article.field_tags
     - field.field.node.article.layout_builder__layout
@@ -25,8 +25,8 @@ content:
     weight: 1
     region: content
 hidden:
-  body: true
   content_moderation_control: true
+  field_body: true
   field_tags: true
   langcode: true
   layout_builder__layout: true

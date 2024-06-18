@@ -3,7 +3,7 @@ status: true
 dependencies:
   config:
     - block_content.type.basic
-    - field.field.block_content.basic.body
+    - field.field.block_content.basic.field_body
   module:
     - text
 id: block_content.basic.default
@@ -11,7 +11,7 @@ targetEntityType: block_content
 bundle: basic
 mode: default
 content:
-  body:
+  field_body:
     type: text_default
     label: hidden
     settings: {  }

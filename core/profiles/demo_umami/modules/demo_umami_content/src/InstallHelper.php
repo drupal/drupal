@@ -418,9 +418,9 @@ class InstallHelper implements ContainerInjectionInterface {
       'langcode' => 'en',
     ];
     // Fields mapping starts.
-    // Set body field.
-    if (!empty($data['body'])) {
-      $values['body'] = [['value' => $data['body'], 'format' => 'basic_html']];
+    // Set field_body field.
+    if (!empty($data['field_body'])) {
+      $values['field_body'] = [['value' => $data['field_body'], 'format' => 'basic_html']];
     }
     // Set node alias if exists.
     if (!empty($data['slug'])) {
@@ -550,12 +550,12 @@ class InstallHelper implements ContainerInjectionInterface {
       'langcode' => 'en',
     ];
     // Fields mapping starts.
-    // Set body field.
-    if (!empty($data['body'])) {
-      $body_path = $this->module_path . '/default_content/languages/' . $langcode . '/article_body/' . $data['body'];
+    // Set field_body field.
+    if (!empty($data['field_body'])) {
+      $body_path = $this->module_path . '/default_content/languages/' . $langcode . '/article_body/' . $data['field_body'];
       $body = file_get_contents($body_path);
       if ($body !== FALSE) {
-        $values['body'] = [['value' => $body, 'format' => 'basic_html']];
+        $values['field_body'] = [['value' => $body, 'format' => 'basic_html']];
       }
     }
 

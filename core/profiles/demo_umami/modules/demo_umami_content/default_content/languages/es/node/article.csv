@@ -1,4 +1,4 @@
-id,title,body,author,slug,image_reference,tags
+id,title,field_body,author,slug,image_reference,tags
 1,Prueba y cultiva tus propias hierbas,give-it-a-go-and-grow-your-own-herbs.html,Holly Foat,articles/prueba-y-cultiva-tus-propias-hierbas,10,"14,23,16"
 2,Delicioso chocolate sin lactosa,dairy-free-delicious-milk-chocolate.html,Umami,articles/delicioso-chocolate-sin-lactosa,11,"27,7"
 3,El verdadero negocio para comprar en el supermercado,the-real-deal-for-supermarket-savvy-shopping.html,Gregorio Sánchez,articles/el-verdadeo-negocio-para-comprar-en-el-supermercado,12,"26,24"

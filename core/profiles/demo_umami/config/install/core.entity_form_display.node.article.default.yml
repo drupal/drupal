@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.article.body
+    - field.field.node.article.field_body
     - field.field.node.article.field_media_image
     - field.field.node.article.field_tags
     - field.field.node.article.layout_builder__layout
@@ -18,22 +18,20 @@ targetEntityType: node
 bundle: article
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
-    weight: 2
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
   created:
     type: datetime_timestamp
     weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_body:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 9
+      placeholder: ''
+    third_party_settings: { }
   field_media_image:
     type: media_library_widget
     weight: 1

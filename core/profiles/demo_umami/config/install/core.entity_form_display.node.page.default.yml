@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.page.body
+    - field.field.node.page.field_body
     - field.field.node.page.layout_builder__layout
     - node.type.page
     - workflows.workflow.editorial
@@ -15,22 +15,20 @@ targetEntityType: node
 bundle: page
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
-    weight: 6
-    region: content
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
   created:
     type: datetime_timestamp
     weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_body:
+    type: text_textarea
+    weight: 6
+    region: content
+    settings:
+      rows: 9
+      placeholder: ''
+    third_party_settings: { }
   langcode:
     type: language_select
     weight: 2

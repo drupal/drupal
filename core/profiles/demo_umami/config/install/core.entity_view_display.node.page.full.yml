@@ -3,7 +3,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.full
-    - field.field.node.page.body
+    - field.field.node.page.field_body
     - field.field.node.page.layout_builder__layout
     - node.type.page
   module:
@@ -25,7 +25,7 @@ third_party_settings:
             uuid: 74a08c63-70dc-42e7-89f8-e4c62efb07ce
             region: content
             configuration:
-              id: 'field_block:node:page:body'
+              id: 'field_block:node:page:field_body'
               label_display: '0'
               context_mapping:
                 entity: layout_builder.entity
@@ -62,17 +62,17 @@ targetEntityType: node
 bundle: page
 mode: full
 content:
-  body:
-    type: text_default
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
-    region: content
   content_moderation_control:
     settings: {  }
     third_party_settings: {  }
     weight: 2
+    region: content
+  field_body:
+    type: text_default
+    label: hidden
+    settings: { }
+    third_party_settings: { }
+    weight: 0
     region: content
   links:
     settings: {  }
