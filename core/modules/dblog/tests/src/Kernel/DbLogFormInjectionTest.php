@@ -93,7 +93,7 @@ class DbLogFormInjectionTest extends KernelTestBase implements FormInterface {
   /**
    * Tests db log injection serialization.
    */
-  public function testLoggerSerialization() {
+  public function testLoggerSerialization(): void {
     $form_state = new FormState();
 
     // Forms are only serialized during POST requests.

@@ -52,7 +52,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
   /**
    * Check the blocks are correctly copied by block_themes_installed().
    */
-  public function testNewDefaultThemeBlocks() {
+  public function testNewDefaultThemeBlocks(): void {
     $default_theme = $this->defaultTheme;
     $theme_installer = $this->themeInstaller;
     $theme_installer->install([$default_theme]);
@@ -115,7 +115,7 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
   /**
    * Checks that a theme block is still created when same ID exists.
    */
-  public function testBlockCollision() {
+  public function testBlockCollision(): void {
     $default_theme = $this->defaultTheme;
     $theme_installer = $this->themeInstaller;
     $theme_installer->install([$default_theme]);

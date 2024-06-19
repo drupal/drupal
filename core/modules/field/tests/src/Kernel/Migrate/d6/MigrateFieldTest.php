@@ -25,7 +25,7 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 field to Drupal 8 migration.
    */
-  public function testFields() {
+  public function testFields(): void {
     // Text field.
     /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
     $field_storage = FieldStorageConfig::load('node.field_test');

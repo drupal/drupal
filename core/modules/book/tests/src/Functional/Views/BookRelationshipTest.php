@@ -149,7 +149,7 @@ class BookRelationshipTest extends ViewTestBase {
   /**
    * Tests using the views relationship.
    */
-  public function testRelationship() {
+  public function testRelationship(): void {
 
     // Create new book.
     /** @var \Drupal\node\NodeInterface[] $nodes */

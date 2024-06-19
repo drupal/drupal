@@ -40,7 +40,7 @@ class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
   /**
    * Verifies the expected behaviors of the installation result.
    */
-  public function testInstalled() {
+  public function testInstalled(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
   }

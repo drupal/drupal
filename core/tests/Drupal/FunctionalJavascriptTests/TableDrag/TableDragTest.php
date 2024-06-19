@@ -63,7 +63,7 @@ class TableDragTest extends WebDriverTestBase {
   /**
    * Tests row weight switch.
    */
-  public function testRowWeightSwitch() {
+  public function testRowWeightSwitch(): void {
     $this->state->set('tabledrag_test_table', array_flip(range(1, 3)));
 
     $this->drupalGet('tabledrag_test');
@@ -100,7 +100,7 @@ class TableDragTest extends WebDriverTestBase {
   /**
    * Tests draggable table drag'n'drop.
    */
-  public function testDragAndDrop() {
+  public function testDragAndDrop(): void {
     $this->state->set('tabledrag_test_table', array_flip(range(1, 3)));
     $this->drupalGet('tabledrag_test');
 
@@ -147,7 +147,7 @@ class TableDragTest extends WebDriverTestBase {
   /**
    * Tests accessibility through keyboard of the tabledrag functionality.
    */
-  public function testKeyboardAccessibility() {
+  public function testKeyboardAccessibility(): void {
     $this->assertKeyboardAccessibility();
   }
 
@@ -248,7 +248,7 @@ class TableDragTest extends WebDriverTestBase {
   /**
    * Tests the root and leaf behaviors for rows.
    */
-  public function testRootLeafDraggableRowsWithKeyboard() {
+  public function testRootLeafDraggableRowsWithKeyboard(): void {
     $this->state->set('tabledrag_test_table', [
       1 => [],
       2 => ['parent' => 1, 'depth' => 1, 'classes' => ['tabledrag-leaf']],
@@ -298,7 +298,7 @@ class TableDragTest extends WebDriverTestBase {
   /**
    * Tests the warning that appears upon making changes to a tabledrag table.
    */
-  public function testTableDragChangedWarning() {
+  public function testTableDragChangedWarning(): void {
     $this->drupalGet('tabledrag_test');
 
     // By default no text is visible.
@@ -347,7 +347,7 @@ class TableDragTest extends WebDriverTestBase {
   /**
    * Tests nested draggable tables through keyboard.
    */
-  public function testNestedDraggableTables() {
+  public function testNestedDraggableTables(): void {
     $this->state->set('tabledrag_test_table', array_flip(range(1, 5)));
     $this->drupalGet('tabledrag_test_nested');
     $this->assertKeyboardAccessibility('');

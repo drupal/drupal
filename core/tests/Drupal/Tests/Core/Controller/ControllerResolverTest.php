@@ -54,7 +54,7 @@ class ControllerResolverTest extends UnitTestCase {
    * @dataProvider providerTestCreateController
    * @group legacy
    */
-  public function testCreateController($controller, $class, $output, ?string $deprecation = NULL) {
+  public function testCreateController($controller, $class, $output, ?string $deprecation = NULL): void {
     if ($deprecation) {
       $this->expectDeprecation($deprecation);
     }
@@ -87,7 +87,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Tests createController() with a non-existent class.
    */
-  public function testCreateControllerNonExistentClass() {
+  public function testCreateControllerNonExistentClass(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->controllerResolver->getControllerFromDefinition('Class::method');
   }
@@ -95,7 +95,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Tests createController() with an invalid name.
    */
-  public function testCreateControllerInvalidName() {
+  public function testCreateControllerInvalidName(): void {
     $this->expectException(\LogicException::class);
     $this->controllerResolver->getControllerFromDefinition('ClassWithoutMethod');
   }
@@ -106,7 +106,7 @@ class ControllerResolverTest extends UnitTestCase {
    * @dataProvider providerTestGetController
    * @group legacy
    */
-  public function testGetController($attributes, $class, $output = NULL) {
+  public function testGetController($attributes, $class, $output = NULL): void {
     if ($class) {
       $this->expectDeprecation('Implementing \Symfony\Component\DependencyInjection\ContainerAwareInterface is deprecated in drupal:10.3.0 and it will be removed in drupal:11.0.0. Implement \Drupal\Core\DependencyInjection\ContainerInjectionInterface and use dependency injection instead. See https://www.drupal.org/node/3428661');
     }
@@ -137,7 +137,7 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetControllerFromDefinition
    */
-  public function testGetControllerFromDefinition($definition, $output) {
+  public function testGetControllerFromDefinition($definition, $output): void {
     $this->container->set('invoke_service', new MockInvokeController());
     $controller = $this->controllerResolver->getControllerFromDefinition($definition);
     $this->assertCallableController($controller, NULL, $output);
@@ -164,7 +164,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Tests getControllerFromDefinition() without a callable.
    */
-  public function testGetControllerFromDefinitionNotCallable() {
+  public function testGetControllerFromDefinitionNotCallable(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->controllerResolver->getControllerFromDefinition('Drupal\Tests\Core\Controller\MockController::bananas');
   }

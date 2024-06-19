@@ -30,7 +30,7 @@ class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getBookAdminRoutes
    */
-  public function testBookAdminLocalTasks($route) {
+  public function testBookAdminLocalTasks($route): void {
 
     $this->assertLocalTasks($route, [
       0 => ['book.admin', 'book.settings'],
@@ -52,7 +52,7 @@ class BookLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getBookNodeRoutes
    */
-  public function testBookNodeLocalTasks($route) {
+  public function testBookNodeLocalTasks($route): void {
     $this->assertLocalTasks($route, [
       0 => ['entity.node.book_outline_form', 'entity.node.canonical', 'entity.node.edit_form', 'entity.node.delete_form', 'entity.node.version_history'],
     ]);

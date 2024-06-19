@@ -29,7 +29,7 @@ class TermNameFieldTest extends TaxonomyTestBase {
   /**
    * Tests term name field plugin functionality.
    */
-  public function testTermNameField() {
+  public function testTermNameField(): void {
     $this->term1->name->value = $this->randomMachineName() . ' ' . $this->randomMachineName();
     $this->term1->save();
 

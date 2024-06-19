@@ -53,7 +53,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * @covers \Drupal\Core\Entity\Plugin\DataType\Deriver\EntityDeriver::getDerivativeDefinitions
    */
-  public function testEntityDeriver() {
+  public function testEntityDeriver(): void {
     $definition = \Drupal::typedDataManager()->getDefinition('entity:config_test');
     $this->assertEquals(ConfigEntityAdapter::class, $definition['class']);
   }
@@ -61,7 +61,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * @covers ::validate
    */
-  public function testValidate() {
+  public function testValidate(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     $violations = $adapter->validate();
     $this->assertEmpty($violations);
@@ -85,7 +85,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * @covers ::getProperties
    */
-  public function testGetProperties() {
+  public function testGetProperties(): void {
     $expected_properties = [
       'uuid' => StringData::class,
       'langcode' => StringData::class,
@@ -111,7 +111,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * @covers ::getValue
    */
-  public function testGetValue() {
+  public function testGetValue(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     $this->assertEquals($this->entity->weight, $adapter->get('weight')->getValue());
     $this->assertEquals($this->entity->id(), $adapter->get('id')->getValue());
@@ -121,7 +121,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * @covers ::set
    */
-  public function testSet() {
+  public function testSet(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     // Get the value via typed data to ensure that the typed representation is
     // updated correctly when the value is set.
@@ -137,7 +137,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * @covers ::getString
    */
-  public function testGetString() {
+  public function testGetString(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     $this->assertEquals('foobar', $adapter->getString());
   }
@@ -145,7 +145,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * @covers ::applyDefaultValue
    */
-  public function testApplyDefaultValue() {
+  public function testApplyDefaultValue(): void {
     $this->expectException(\BadMethodCallException::class);
     $this->expectExceptionMessage('Method not supported');
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
@@ -155,7 +155,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * @covers ::getIterator
    */
-  public function testGetIterator() {
+  public function testGetIterator(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     $iterator = $adapter->getIterator();
     $fields = iterator_to_array($iterator);

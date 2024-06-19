@@ -32,7 +32,7 @@ class ConfigOverrideTest extends KernelTestBase {
   /**
    * Tests configuration override.
    */
-  public function testConfOverride() {
+  public function testConfOverride(): void {
     $expected_original_data = [
       'foo' => 'bar',
       'baz' => NULL,

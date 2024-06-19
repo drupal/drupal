@@ -86,7 +86,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
    * @covers ::checkRedirectUrl
    * @dataProvider providerTestDestinationRedirect
    */
-  public function testDestinationRedirect(Request $request, $expected) {
+  public function testDestinationRedirect(Request $request, $expected): void {
     $dispatcher = new EventDispatcher(\Drupal::getContainer());
     $kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $response = new RedirectResponse('http://example.com/drupal');
@@ -127,7 +127,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * @dataProvider providerTestDestinationRedirectToExternalUrl
    */
-  public function testDestinationRedirectToExternalUrl($request, $expected) {
+  public function testDestinationRedirectToExternalUrl($request, $expected): void {
     $dispatcher = new EventDispatcher(\Drupal::getContainer());
     $kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $response = new RedirectResponse('http://other-example.com');
@@ -142,7 +142,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * @covers ::checkRedirectUrl
    */
-  public function testRedirectWithOptInExternalUrl() {
+  public function testRedirectWithOptInExternalUrl(): void {
     $dispatcher = new EventDispatcher(\Drupal::getContainer());
     $kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $response = new TrustedRedirectResponse('http://external-url.com');
@@ -175,7 +175,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * @dataProvider providerTestDestinationRedirectWithInvalidUrl
    */
-  public function testDestinationRedirectWithInvalidUrl(Request $request) {
+  public function testDestinationRedirectWithInvalidUrl(Request $request): void {
     $dispatcher = new EventDispatcher(\Drupal::getContainer());
     $kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
     $response = new RedirectResponse('http://example.com/drupal');

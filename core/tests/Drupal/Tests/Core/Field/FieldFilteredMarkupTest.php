@@ -19,7 +19,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
    * @covers ::create
    * @dataProvider providerTestCreate
    */
-  public function testCreate($string, $expected, $instance_of_check) {
+  public function testCreate($string, $expected, $instance_of_check): void {
     $filtered_string = FieldFilteredMarkup::create($string);
 
     if ($instance_of_check) {
@@ -52,7 +52,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
   /**
    * @covers ::displayAllowedTags
    */
-  public function testDisplayAllowedTags() {
+  public function testDisplayAllowedTags(): void {
     $expected = '<a> <b> <big> <code> <del> <em> <i> <ins> <pre> <q> <small> <span> <strong> <sub> <sup> <tt> <ol> <ul> <li> <p> <br> <img>';
 
     $this->assertSame($expected, FieldFilteredMarkup::displayAllowedTags());

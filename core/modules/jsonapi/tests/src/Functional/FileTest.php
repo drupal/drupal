@@ -203,7 +203,7 @@ class FileTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPostIndividual() {
+  public function testPostIndividual(): void {
     // @todo https://www.drupal.org/node/1927648
     $this->markTestSkipped();
   }
@@ -223,7 +223,7 @@ class FileTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $label_field_name = 'filename';
     // Verify the expected behavior in the common case: when the file is public.
     $this->doTestCollectionFilterAccessBasedOnPermissions($label_field_name, 'access content');

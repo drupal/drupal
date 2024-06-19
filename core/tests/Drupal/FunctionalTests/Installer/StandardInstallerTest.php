@@ -19,7 +19,7 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
   /**
    * Ensures that the user page is available after installation.
    */
-  public function testInstaller() {
+  public function testInstaller(): void {
     // Verify that Olivero's default frontpage appears.
     $this->assertSession()->pageTextContains('Congratulations and welcome to the Drupal community.');
     $this->assertSession()->elementTextContains('css', '#block-olivero-powered', 'Powered by Drupal');
@@ -38,7 +38,7 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
   /**
    * Ensures that the exported standard configuration is up to date.
    */
-  public function testStandardConfig() {
+  public function testStandardConfig(): void {
     $skipped_config = [];
     // FunctionalTestSetupTrait::installParameters() uses Drupal as site name
     // and simpletest@example.com as mail address.

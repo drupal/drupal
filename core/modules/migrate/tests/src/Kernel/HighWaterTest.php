@@ -88,7 +88,7 @@ class HighWaterTest extends MigrateTestBase {
   /**
    * Tests high water property of SqlBase.
    */
-  public function testHighWater() {
+  public function testHighWater(): void {
     // Assert all of the nodes have been imported.
     $this->assertNodeExists('Item 1');
     $this->assertNodeExists('Item 2');
@@ -143,7 +143,7 @@ class HighWaterTest extends MigrateTestBase {
   /**
    * Tests that the high water value can be 0.
    */
-  public function testZeroHighwater() {
+  public function testZeroHighwater(): void {
     // Assert all of the nodes have been imported.
     $this->assertNodeExists('Item 1');
     $this->assertNodeExists('Item 2');
@@ -176,7 +176,7 @@ class HighWaterTest extends MigrateTestBase {
   /**
    * Tests that deleting the high water value causes all rows to be reimported.
    */
-  public function testNullHighwater() {
+  public function testNullHighwater(): void {
     // Assert all of the nodes have been imported.
     $this->assertNodeExists('Item 1');
     $this->assertNodeExists('Item 2');
@@ -209,7 +209,7 @@ class HighWaterTest extends MigrateTestBase {
   /**
    * Tests high water property of SqlBase when rows marked for update.
    */
-  public function testHighWaterUpdate() {
+  public function testHighWaterUpdate(): void {
     // Assert all of the nodes have been imported.
     $this->assertNodeExists('Item 1');
     $this->assertNodeExists('Item 2');

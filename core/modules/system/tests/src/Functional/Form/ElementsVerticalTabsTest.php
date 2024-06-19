@@ -56,7 +56,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
   /**
    * Ensures that vertical tab markup is not shown if user has no tab access.
    */
-  public function testWrapperNotShownWhenEmpty() {
+  public function testWrapperNotShownWhenEmpty(): void {
     // Test admin user can see vertical tabs and wrapper.
     $this->drupalGet('form_test/vertical-tabs');
     $this->assertSession()->elementExists('xpath', "//div[@data-vertical-tabs-panes]");
@@ -70,7 +70,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
   /**
    * Ensures that default vertical tab is correctly selected.
    */
-  public function testDefaultTab() {
+  public function testDefaultTab(): void {
     $this->drupalGet('form_test/vertical-tabs');
     $this->assertSession()->elementAttributeContains('css', 'input[name="vertical_tabs__active_tab"]', 'value', 'edit-tab3');
   }
@@ -78,7 +78,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
   /**
    * Ensures that vertical tab form values are cleaned.
    */
-  public function testDefaultTabCleaned() {
+  public function testDefaultTabCleaned(): void {
     $this->drupalGet('form_test/form-state-values-clean');
     $this->submitForm([], 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());

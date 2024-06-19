@@ -106,7 +106,7 @@ class HistoryTest extends BrowserTestBase {
   /**
    * Verifies that the history endpoints work.
    */
-  public function testHistory() {
+  public function testHistory(): void {
     $nid = $this->testNode->id();
 
     // Verify that previews of new entities do not create the history.

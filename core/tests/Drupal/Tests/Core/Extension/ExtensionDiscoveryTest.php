@@ -25,7 +25,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
    *
    * @covers ::scan
    */
-  public function testExtensionDiscoveryVfs() {
+  public function testExtensionDiscoveryVfs(): void {
 
     // Set up the file system.
     $filesystem = [];
@@ -73,7 +73,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
    * @covers ::scan
    * @runInSeparateProcess
    */
-  public function testExtensionDiscoveryCache() {
+  public function testExtensionDiscoveryCache(): void {
     // Set up an extension object in the cache to mimic site prior to changing
     // \Drupal\Core\Extension\ExtensionDiscovery::scanDirectory() to cache an
     // array instead of an object. Note we cannot use the VFS file system

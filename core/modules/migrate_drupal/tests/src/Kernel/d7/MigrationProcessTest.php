@@ -28,7 +28,7 @@ class MigrationProcessTest extends MigrateDrupal7TestBase {
    *
    * @throws \Exception
    */
-  public function testGetProcess() {
+  public function testGetProcess(): void {
     /** @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface $plugin_manager */
     $plugin_manager = $this->container->get('plugin.manager.migration');
     $migrations = $plugin_manager->createInstancesByTag('Drupal 7');

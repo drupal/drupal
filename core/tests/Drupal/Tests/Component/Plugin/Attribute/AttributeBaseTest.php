@@ -17,7 +17,7 @@ class AttributeBaseTest extends TestCase {
    * @covers ::getProvider
    * @covers ::setProvider
    */
-  public function testSetProvider() {
+  public function testSetProvider(): void {
     $plugin = new AttributeBaseStub(id: '1');
     $plugin->setProvider('example');
     $this->assertEquals('example', $plugin->getProvider());
@@ -26,7 +26,7 @@ class AttributeBaseTest extends TestCase {
   /**
    * @covers ::getId
    */
-  public function testGetId() {
+  public function testGetId(): void {
     $plugin = new AttributeBaseStub(id: 'example');
     $this->assertEquals('example', $plugin->getId());
   }
@@ -35,7 +35,7 @@ class AttributeBaseTest extends TestCase {
    * @covers ::getClass
    * @covers ::setClass
    */
-  public function testSetClass() {
+  public function testSetClass(): void {
     $plugin = new AttributeBaseStub(id: '1');
     $plugin->setClass('example');
     $this->assertEquals('example', $plugin->getClass());

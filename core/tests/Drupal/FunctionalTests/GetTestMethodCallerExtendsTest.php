@@ -21,7 +21,7 @@ class GetTestMethodCallerExtendsTest extends GetTestMethodCallerTest {
   /**
    * A test method that is not present in the parent class.
    */
-  public function testGetTestMethodCallerChildClass() {
+  public function testGetTestMethodCallerChildClass(): void {
     $method_caller = $this->getTestMethodCaller();
     $expected = [
       'file' => __FILE__,

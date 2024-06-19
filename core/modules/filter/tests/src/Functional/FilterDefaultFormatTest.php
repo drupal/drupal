@@ -29,7 +29,7 @@ class FilterDefaultFormatTest extends BrowserTestBase {
   /**
    * Tests if the default text format is accessible to users.
    */
-  public function testDefaultTextFormats() {
+  public function testDefaultTextFormats(): void {
     // Create two text formats, and two users. The first user has access to
     // both formats, but the second user only has access to the second one.
     $admin_user = $this->drupalCreateUser(['administer filters']);

@@ -18,7 +18,7 @@ class UnpublishByKeywordCommentTest extends UnitTestCase {
   /**
    * Tests deprecation message.
    */
-  public function testUnpublishByKeywordAction() {
+  public function testUnpublishByKeywordAction(): void {
     $comment_view_builder = $this->createMock(EntityViewBuilderInterface::class);
     $renderer = $this->createMock(RendererInterface::class);
     $this->expectDeprecation('Drupal\comment\Plugin\Action\UnpublishByKeywordComment is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\action\Plugin\Action\UnpublishByKeywordComment instead. See https://www.drupal.org/node/3424506');

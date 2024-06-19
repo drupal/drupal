@@ -85,7 +85,7 @@ class QuickStartTest extends TestCase {
   /**
    * Tests the quick-start command.
    */
-  public function testQuickStartCommand() {
+  public function testQuickStartCommand(): void {
     $sqlite = (new \PDO('sqlite::memory:'))->query('select sqlite_version()')->fetch()[0];
     if (version_compare($sqlite, Tasks::SQLITE_MINIMUM_VERSION) < 0) {
       $this->markTestSkipped();
@@ -141,7 +141,7 @@ class QuickStartTest extends TestCase {
   /**
    * Tests the quick-start commands.
    */
-  public function testQuickStartInstallAndServerCommands() {
+  public function testQuickStartInstallAndServerCommands(): void {
     $sqlite = (new \PDO('sqlite::memory:'))->query('select sqlite_version()')->fetch()[0];
     if (version_compare($sqlite, Tasks::SQLITE_MINIMUM_VERSION) < 0) {
       $this->markTestSkipped();
@@ -223,7 +223,7 @@ class QuickStartTest extends TestCase {
   /**
    * Tests the install command with an invalid profile.
    */
-  public function testQuickStartCommandProfileValidation() {
+  public function testQuickStartCommandProfileValidation(): void {
     // Install a site using the standard profile to ensure the one time login
     // link generation works.
     $install_command = [
@@ -241,7 +241,7 @@ class QuickStartTest extends TestCase {
   /**
    * Tests the server command when there is no installation.
    */
-  public function testServerWithNoInstall() {
+  public function testServerWithNoInstall(): void {
     $server_command = [
       $this->php,
       'core/scripts/drupal',

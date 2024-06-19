@@ -21,7 +21,7 @@ class ViewRenderTest extends ViewsKernelTestBase {
   /**
    * Tests render functionality.
    */
-  public function testRender() {
+  public function testRender(): void {
     $state = $this->container->get('state');
     $state->set('views_render.test', 0);
 

@@ -55,7 +55,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
   /**
    * Tests that the Media Library can automatically configure display modes.
    */
-  public function testDisplayModes() {
+  public function testDisplayModes(): void {
     $this->createMediaType('file', [
       'id' => 'type_one',
     ]);

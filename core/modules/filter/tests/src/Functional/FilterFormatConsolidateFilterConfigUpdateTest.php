@@ -29,7 +29,7 @@ class FilterFormatConsolidateFilterConfigUpdateTest extends UpdatePathTestBase {
   /**
    * @covers \filter_post_update_consolidate_filter_config
    */
-  public function testConsolidateFilterConfig() {
+  public function testConsolidateFilterConfig(): void {
     $format = $this->config('filter.format.plain_text');
     $this->assertArrayNotHasKey('id', $format->get('filters.filter_autop'));
     $this->assertSame('filter', $format->get('filters.filter_autop.provider'));

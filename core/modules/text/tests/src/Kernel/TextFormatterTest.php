@@ -71,7 +71,7 @@ class TextFormatterTest extends EntityKernelTestBase {
   /**
    * Tests all text field formatters.
    */
-  public function testFormatters() {
+  public function testFormatters(): void {
     $formatters = [
       'text_default',
       'text_trimmed',

@@ -32,7 +32,7 @@ class HiddenTaxonomyTermReferenceFieldWizardTest extends WizardTestBase {
   /**
    * Tests content type with a hidden Taxonomy Term Reference field.
    */
-  public function testHiddenTaxonomyTermReferenceField() {
+  public function testHiddenTaxonomyTermReferenceField(): void {
     // Create Article node type.
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 

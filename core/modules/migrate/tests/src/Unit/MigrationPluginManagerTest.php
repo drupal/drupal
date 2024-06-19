@@ -40,7 +40,7 @@ class MigrationPluginManagerTest extends UnitTestCase {
    *
    * @dataProvider dependencyProvider
    */
-  public function testDependencyBuilding($migrations_data, $result_ids) {
+  public function testDependencyBuilding($migrations_data, $result_ids): void {
     $migrations = [];
     foreach ($migrations_data as $migration_id => $migration_data) {
       $migrations[$migration_id] = new TestMigrationMock($migration_id, $migration_data['migration_dependencies']);
@@ -71,7 +71,7 @@ class MigrationPluginManagerTest extends UnitTestCase {
   /**
    * Tests that expandPluginIds returns all derivatives.
    */
-  public function testExpandPluginIds() {
+  public function testExpandPluginIds(): void {
     $backend = $this->prophesize(CacheBackendInterface::class);
     $cache = new \stdClass();
     $cache->data = [

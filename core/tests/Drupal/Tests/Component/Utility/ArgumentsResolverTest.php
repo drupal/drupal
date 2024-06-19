@@ -25,7 +25,7 @@ class ArgumentsResolverTest extends TestCase {
    *
    * @dataProvider providerTestGetArgument
    */
-  public function testGetArgument($callable, $scalars, $objects, $wildcards, $expected) {
+  public function testGetArgument($callable, $scalars, $objects, $wildcards, $expected): void {
     $arguments = (new ArgumentsResolver($scalars, $objects, $wildcards))->getArguments($callable);
     $this->assertSame($expected, $arguments);
   }
@@ -79,7 +79,7 @@ class ArgumentsResolverTest extends TestCase {
   /**
    * Tests getArgument() with an object.
    */
-  public function testGetArgumentObject() {
+  public function testGetArgumentObject(): void {
     $callable = function (\stdClass $object) {};
 
     $object = new \stdClass();
@@ -90,7 +90,7 @@ class ArgumentsResolverTest extends TestCase {
   /**
    * Tests getArgument() with a wildcard object for a parameter with a custom name.
    */
-  public function testGetWildcardArgument() {
+  public function testGetWildcardArgument(): void {
     $callable = function (\stdClass $custom_name) {};
 
     $object = new \stdClass();
@@ -101,7 +101,7 @@ class ArgumentsResolverTest extends TestCase {
   /**
    * Tests getArgument() with a Route, Request, and Account object.
    */
-  public function testGetArgumentOrder() {
+  public function testGetArgumentOrder(): void {
     $a1 = $this->getMockBuilder('\Drupal\Tests\Component\Utility\Test1Interface')->getMock();
     $a2 = $this->getMockBuilder('\Drupal\Tests\Component\Utility\TestClass')->getMock();
     $a3 = $this->getMockBuilder('\Drupal\Tests\Component\Utility\Test2Interface')->getMock();
@@ -128,7 +128,7 @@ class ArgumentsResolverTest extends TestCase {
    *
    * Without the type hint, the wildcard object will not be passed to the callable.
    */
-  public function testGetWildcardArgumentNoTypeHint() {
+  public function testGetWildcardArgumentNoTypeHint(): void {
     $a = $this->getMockBuilder('\Drupal\Tests\Component\Utility\Test1Interface')->getMock();
     $wildcards = [$a];
     $resolver = new ArgumentsResolver([], [], $wildcards);
@@ -145,7 +145,7 @@ class ArgumentsResolverTest extends TestCase {
    * Without the type hint, passing a value to a named parameter will still
    * receive the provided value.
    */
-  public function testGetArgumentRouteNoTypeHintAndValue() {
+  public function testGetArgumentRouteNoTypeHintAndValue(): void {
     $scalars = ['route' => 'foo'];
     $resolver = new ArgumentsResolver($scalars, [], []);
 
@@ -157,7 +157,7 @@ class ArgumentsResolverTest extends TestCase {
   /**
    * Tests handleUnresolvedArgument() for a scalar argument.
    */
-  public function testHandleNotUpcastedArgument() {
+  public function testHandleNotUpcastedArgument(): void {
     $objects = ['foo' => 'bar'];
     $scalars = ['foo' => 'baz'];
     $resolver = new ArgumentsResolver($scalars, $objects, []);
@@ -173,7 +173,7 @@ class ArgumentsResolverTest extends TestCase {
    *
    * @dataProvider providerTestHandleUnresolvedArgument
    */
-  public function testHandleUnresolvedArgument($callable) {
+  public function testHandleUnresolvedArgument($callable): void {
     $resolver = new ArgumentsResolver([], [], []);
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('requires a value for the "$foo" argument.');

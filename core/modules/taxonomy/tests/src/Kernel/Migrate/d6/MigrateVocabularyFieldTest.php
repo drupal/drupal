@@ -30,7 +30,7 @@ class MigrateVocabularyFieldTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 vocabulary-node type association to Drupal 8 migration.
    */
-  public function testVocabularyField() {
+  public function testVocabularyField(): void {
     // Test that the field exists.
     $field_storage_id = 'node.field_tags';
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */

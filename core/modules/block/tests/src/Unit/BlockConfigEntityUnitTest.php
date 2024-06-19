@@ -94,7 +94,7 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDependencies() {
+  public function testCalculateDependencies(): void {
     $this->themeHandler->themeExists('stark')->willReturn(TRUE);
     $values = ['theme' => 'stark'];
     // Mock the entity under test so that we can mock getPluginCollections().

@@ -23,7 +23,7 @@ class MigrateDefaultLanguageTest extends MigrateDrupal7TestBase {
   /**
    * Tests language_default migration with a non-existing language.
    */
-  public function testMigrationWithExistingLanguage() {
+  public function testMigrationWithExistingLanguage(): void {
     $this->setDefaultLanguage('is');
     $this->startCollectingMessages();
     $this->executeMigrations(['language', 'default_language']);
@@ -37,7 +37,7 @@ class MigrateDefaultLanguageTest extends MigrateDrupal7TestBase {
   /**
    * Tests language_default migration with a non-existing language.
    */
-  public function testMigrationWithNonExistentLanguage() {
+  public function testMigrationWithNonExistentLanguage(): void {
     $this->setDefaultLanguage('tv');
     $this->startCollectingMessages();
     $this->executeMigrations(['language', 'default_language']);
@@ -56,7 +56,7 @@ class MigrateDefaultLanguageTest extends MigrateDrupal7TestBase {
   /**
    * Tests language_default migration with unset default language variable.
    */
-  public function testMigrationWithUnsetVariable() {
+  public function testMigrationWithUnsetVariable(): void {
     // Delete the language_default variable.
     $this->sourceDatabase->delete('variable')
       ->condition('name', 'language_default')

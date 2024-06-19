@@ -57,7 +57,7 @@ class UpdateSchemaTest extends BrowserTestBase {
   /**
    * Tests that update hooks are properly run.
    */
-  public function testUpdateHooks() {
+  public function testUpdateHooks(): void {
     $connection = Database::getConnection();
 
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */

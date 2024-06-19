@@ -75,7 +75,7 @@ class MigrationPluginListTest extends KernelTestBase {
   /**
    * @covers ::getDefinitions
    */
-  public function testGetDefinitions() {
+  public function testGetDefinitions(): void {
     // Create an entity reference field to make sure that migrations derived by
     // EntityReferenceTranslationDeriver do not get discovered without
     // migrate_drupal enabled.

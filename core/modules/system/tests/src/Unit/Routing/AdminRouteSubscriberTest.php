@@ -22,7 +22,7 @@ class AdminRouteSubscriberTest extends UnitTestCase {
    *
    * @dataProvider providerTestAlterRoutes
    */
-  public function testAlterRoutes(Route $route, $is_admin) {
+  public function testAlterRoutes(Route $route, $is_admin): void {
     $collection = new RouteCollection();
     $collection->add('the_route', $route);
     (new AdminRouteSubscriber())->onAlterRoutes(new RouteBuildEvent($collection));

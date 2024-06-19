@@ -48,7 +48,7 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
   /**
    * Tests that Dynamic Page Cache works correctly, and verifies the edge cases.
    */
-  public function testDynamicPageCache() {
+  public function testDynamicPageCache(): void {
     // Controllers returning plain response objects are ignored by Dynamic Page
     // Cache.
     $url = Url::fromUri('route:dynamic_page_cache_test.response');

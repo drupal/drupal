@@ -89,7 +89,7 @@ class UserRegistrationResourceTest extends UnitTestCase {
   /**
    * Tests that an exception is thrown when no data provided for the account.
    */
-  public function testEmptyPost() {
+  public function testEmptyPost(): void {
     $this->expectException(BadRequestHttpException::class);
     $this->testClass->post(NULL);
   }
@@ -97,7 +97,7 @@ class UserRegistrationResourceTest extends UnitTestCase {
   /**
    * Tests that only new user accounts can be registered.
    */
-  public function testExistedEntityPost() {
+  public function testExistedEntityPost(): void {
     $entity = $this->prophesize(User::class);
     $entity->isNew()->willReturn(FALSE);
     $this->expectException(BadRequestHttpException::class);
@@ -108,7 +108,7 @@ class UserRegistrationResourceTest extends UnitTestCase {
   /**
    * Tests that admin permissions are required to register a user account.
    */
-  public function testRegistrationAdminOnlyPost() {
+  public function testRegistrationAdminOnlyPost(): void {
 
     $this->userSettings->get('register')->willReturn(UserInterface::REGISTER_ADMINISTRATORS_ONLY);
 
@@ -127,7 +127,7 @@ class UserRegistrationResourceTest extends UnitTestCase {
   /**
    * Tests that only anonymous users can register users.
    */
-  public function testRegistrationAnonymousOnlyPost() {
+  public function testRegistrationAnonymousOnlyPost(): void {
     $this->currentUser->isAnonymous()->willReturn(FALSE);
 
     $this->testClass = new UserRegistrationResource([], 'plugin_id', '', [], $this->logger, $this->userSettings->reveal(), $this->currentUser->reveal(), $this->passwordGenerator);
@@ -147,7 +147,7 @@ class UserRegistrationResourceTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testDeprecations() {
+  public function testDeprecations(): void {
     $this->expectDeprecation('Calling Drupal\user\Plugin\rest\resource\UserRegistrationResource::__construct() without the $password_generator argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3405799');
     $this->expectException(BadRequestHttpException::class);
 

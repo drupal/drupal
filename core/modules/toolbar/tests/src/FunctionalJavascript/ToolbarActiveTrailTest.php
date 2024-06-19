@@ -51,7 +51,7 @@ class ToolbarActiveTrailTest extends WebDriverTestBase {
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
-  public function testToolbarActiveTrail(string $orientation) {
+  public function testToolbarActiveTrail(string $orientation): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

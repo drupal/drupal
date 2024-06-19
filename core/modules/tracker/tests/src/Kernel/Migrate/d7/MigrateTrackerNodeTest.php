@@ -46,7 +46,7 @@ class MigrateTrackerNodeTest extends MigrateDrupalTestBase {
   /**
    * Tests migration of tracker node table.
    */
-  public function testMigrateTrackerNode() {
+  public function testMigrateTrackerNode(): void {
     $connection = Database::getConnection('default', 'migrate');
     $num_rows = $connection
       ->select('tracker_node', 'tn')

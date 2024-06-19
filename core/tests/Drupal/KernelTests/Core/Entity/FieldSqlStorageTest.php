@@ -107,7 +107,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   /**
    * Tests field loading works correctly by inserting directly in the tables.
    */
-  public function testFieldLoad() {
+  public function testFieldLoad(): void {
     $entity_type = $bundle = 'entity_test_rev';
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
@@ -183,7 +183,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   /**
    * Tests field saving works correctly by reading directly from the tables.
    */
-  public function testFieldWrite() {
+  public function testFieldWrite(): void {
     $entity_type = $bundle = 'entity_test_rev';
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
@@ -279,7 +279,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   /**
    * Tests that long entity type and field names do not break.
    */
-  public function testLongNames() {
+  public function testLongNames(): void {
     // Use one of the longest entity_type names in core.
     $entity_type = $bundle = 'entity_test_multivalue_basefield';
     $this->installEntitySchema('entity_test_multivalue_basefield');
@@ -320,7 +320,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   /**
    * Tests trying to update a field with data.
    */
-  public function testUpdateFieldSchemaWithData() {
+  public function testUpdateFieldSchemaWithData(): void {
     $entity_type = 'entity_test_rev';
     // Create a decimal 5.2 field and add some data.
     $field_storage = FieldStorageConfig::create([
@@ -353,7 +353,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   /**
    * Tests that failure to create fields is handled gracefully.
    */
-  public function testFieldUpdateFailure() {
+  public function testFieldUpdateFailure(): void {
     // Create a text field.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_text',
@@ -392,7 +392,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   /**
    * Tests adding and removing indexes while data is present.
    */
-  public function testFieldUpdateIndexesWithData() {
+  public function testFieldUpdateIndexesWithData(): void {
     // Create a decimal field.
     $field_name = 'test_field';
     $entity_type = 'entity_test_rev';
@@ -449,7 +449,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   /**
    * Tests foreign key support.
    */
-  public function testFieldSqlStorageForeignKeys() {
+  public function testFieldSqlStorageForeignKeys(): void {
     // Create a 'shape' field, with a configurable foreign key (see
     // field_test_field_schema()).
     $field_name = 'test_field';
@@ -483,7 +483,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   /**
    * Tests table name generation.
    */
-  public function testTableNames() {
+  public function testTableNames(): void {
     // Note: we need to test entity types with long names. We therefore use
     // fields on imaginary entity types (works as long as we don't actually save
     // them), and just check the generated table names.

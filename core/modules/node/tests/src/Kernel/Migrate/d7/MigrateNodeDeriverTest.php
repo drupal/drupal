@@ -21,7 +21,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal7TestBase {
   /**
    * Tests node translation migrations with translation disabled.
    */
-  public function testNoTranslations() {
+  public function testNoTranslations(): void {
     // Without content_translation, there should be no translation migrations.
     $migrations = $this->container->get('plugin.manager.migration')->createInstances('d7_node_translation');
     $this->assertEmpty($migrations);
@@ -30,7 +30,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal7TestBase {
   /**
    * Tests node translation migrations with translation enabled.
    */
-  public function testTranslations() {
+  public function testTranslations(): void {
     // With content_translation, there should be translation migrations for
     // each content type.
     $this->enableModules(['language', 'content_translation', 'filter']);
@@ -42,7 +42,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal7TestBase {
    *
    * @group node
    */
-  public function testBuilder() {
+  public function testBuilder(): void {
     $process = $this->getMigration('d7_node:test_content_type')->getProcess();
     $this->assertSame('field_boolean', $process['field_boolean'][0]['source']);
     $this->assertSame('field_email', $process['field_email'][0]['source']);

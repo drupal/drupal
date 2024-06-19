@@ -34,7 +34,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   /**
    * Tests the creation of a field storage.
    */
-  public function testCreate() {
+  public function testCreate(): void {
     $field_storage_definition = [
       'field_name' => 'field_2',
       'entity_type' => 'entity_test',
@@ -189,7 +189,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
    * This behavior is needed to allow field storage creation within updates,
    * since plugin classes (and thus the field type schema) cannot be accessed.
    */
-  public function testCreateWithExplicitSchema() {
+  public function testCreateWithExplicitSchema(): void {
     $schema = [
       'dummy' => 'foobar',
     ];
@@ -205,7 +205,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   /**
    * Tests reading field storage definitions.
    */
-  public function testRead() {
+  public function testRead(): void {
     $field_storage_definition = [
       'field_name' => 'field_1',
       'entity_type' => 'entity_test',
@@ -244,7 +244,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   /**
    * Tests creation of indexes on data column.
    */
-  public function testIndexes() {
+  public function testIndexes(): void {
     // Check that indexes specified by the field type are used by default.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_1',
@@ -294,7 +294,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   /**
    * Tests the deletion of a field storage.
    */
-  public function testDeleteNoData() {
+  public function testDeleteNoData(): void {
     // Deleting and purging field storages with data is tested in
     // \Drupal\Tests\field\Kernel\BulkDeleteTest.
 
@@ -374,7 +374,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     }
   }
 
-  public function testUpdateFieldType() {
+  public function testUpdateFieldType(): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_type',
       'entity_type' => 'entity_test',
@@ -395,7 +395,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   /**
    * Tests changing a field storage type.
    */
-  public function testUpdateEntityType() {
+  public function testUpdateEntityType(): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_type',
       'entity_type' => 'entity_test',
@@ -413,7 +413,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   /**
    * Tests changing a field storage entity type.
    */
-  public function testUpdateEntityTargetType() {
+  public function testUpdateEntityTargetType(): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_type',
       'entity_type' => 'entity_test',
@@ -431,7 +431,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   /**
    * Tests updating a field storage.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     // Create a field with a defined cardinality, so that we can ensure it's
     // respected. Since cardinality enforcement is consistent across database
     // systems, it makes a good test case.
@@ -473,7 +473,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
   /**
    * Tests field type modules forbidding an update.
    */
-  public function testUpdateForbid() {
+  public function testUpdateForbid(): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'forbidden',
       'entity_type' => 'entity_test',

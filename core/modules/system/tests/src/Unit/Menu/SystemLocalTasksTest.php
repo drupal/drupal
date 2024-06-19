@@ -69,7 +69,7 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getSystemAdminRoutes
    */
-  public function testSystemAdminLocalTasks($route, $expected) {
+  public function testSystemAdminLocalTasks($route, $expected): void {
     $this->assertLocalTasks($route, $expected);
   }
 

@@ -70,7 +70,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   /**
    * Tests the URL alias migration.
    */
-  public function testUrlAlias() {
+  public function testUrlAlias(): void {
     $this->executeMigrations([
       'd6_node',
       'd6_node_translation',
@@ -82,7 +82,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   /**
    * Tests the URL alias migration using the node complete migration.
    */
-  public function testNodeCompleteUrlAlias() {
+  public function testNodeCompleteUrlAlias(): void {
     $this->executeMigrations([
       'd6_node_complete',
       'd6_url_alias',

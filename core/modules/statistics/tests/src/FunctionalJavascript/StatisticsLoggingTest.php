@@ -59,7 +59,7 @@ class StatisticsLoggingTest extends WebDriverTestBase {
   /**
    * Tests that statistics works with different addressing variants.
    */
-  public function testLoggingPage() {
+  public function testLoggingPage(): void {
     // At the first request, the page does not contain statistics counter.
     $this->assertNull($this->getStatisticsCounter('node/1'));
     $this->assertSame(1, $this->getStatisticsCounter('node/1'));

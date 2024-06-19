@@ -33,7 +33,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNotBook() {
+  public function testValidateNotBook(): void {
     $this->bookUninstallValidator->expects($this->never())
       ->method('hasBookOutlines');
     $this->bookUninstallValidator->expects($this->never())
@@ -48,7 +48,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateEntityQueryWithoutResults() {
+  public function testValidateEntityQueryWithoutResults(): void {
     $this->bookUninstallValidator->expects($this->once())
       ->method('hasBookOutlines')
       ->willReturn(FALSE);
@@ -65,7 +65,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateEntityQueryWithResults() {
+  public function testValidateEntityQueryWithResults(): void {
     $this->bookUninstallValidator->expects($this->once())
       ->method('hasBookOutlines')
       ->willReturn(FALSE);
@@ -82,7 +82,7 @@ class BookUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateOutlineStorage() {
+  public function testValidateOutlineStorage(): void {
     $this->bookUninstallValidator->expects($this->once())
       ->method('hasBookOutlines')
       ->willReturn(TRUE);

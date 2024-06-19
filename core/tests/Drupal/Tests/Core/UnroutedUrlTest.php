@@ -69,7 +69,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @dataProvider providerFromUri
    */
-  public function testFromUri($uri, $is_external) {
+  public function testFromUri($uri, $is_external): void {
     $url = Url::fromUri($uri);
 
     $this->assertInstanceOf('Drupal\Core\Url', $url);
@@ -104,7 +104,7 @@ class UnroutedUrlTest extends UnitTestCase {
    * @covers ::fromUri
    * @dataProvider providerFromInvalidUri
    */
-  public function testFromInvalidUri($uri) {
+  public function testFromInvalidUri($uri): void {
     $this->expectException(\InvalidArgumentException::class);
     $url = Url::fromUri($uri);
   }
@@ -134,7 +134,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::createFromRequest
    */
-  public function testCreateFromRequest() {
+  public function testCreateFromRequest(): void {
     $request = Request::create('/test-path');
 
     $this->router->expects($this->once())
@@ -154,7 +154,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::isExternal
    */
-  public function testIsExternal($uri, $is_external) {
+  public function testIsExternal($uri, $is_external): void {
     $url = Url::fromUri($uri);
     $this->assertSame($url->isExternal(), $is_external);
   }
@@ -167,7 +167,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::toString
    */
-  public function testToString($uri) {
+  public function testToString($uri): void {
     $url = Url::fromUri($uri);
     $this->assertSame($uri, $url->toString());
   }
@@ -180,7 +180,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getRouteName
    */
-  public function testGetRouteName($uri) {
+  public function testGetRouteName($uri): void {
     $url = Url::fromUri($uri);
     $this->expectException(\UnexpectedValueException::class);
     $url->getRouteName();
@@ -194,7 +194,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getRouteParameters
    */
-  public function testGetRouteParameters($uri) {
+  public function testGetRouteParameters($uri): void {
     $url = Url::fromUri($uri);
     $this->expectException(\UnexpectedValueException::class);
     $url->getRouteParameters();
@@ -208,7 +208,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getInternalPath
    */
-  public function testGetInternalPath($uri) {
+  public function testGetInternalPath($uri): void {
     $url = Url::fromUri($uri);
     $this->expectException(\Exception::class);
     $url->getInternalPath();
@@ -222,7 +222,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getUri
    */
-  public function testGetUri($uri) {
+  public function testGetUri($uri): void {
     $url = Url::fromUri($uri);
     $this->assertNotNull($url->getUri());
   }
@@ -235,7 +235,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getOptions
    */
-  public function testGetOptions($uri) {
+  public function testGetOptions($uri): void {
     $url = Url::fromUri($uri);
     $this->assertIsArray($url->getOptions());
   }

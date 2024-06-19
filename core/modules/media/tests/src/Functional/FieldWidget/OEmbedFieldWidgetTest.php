@@ -22,7 +22,7 @@ class OEmbedFieldWidgetTest extends MediaFunctionalTestBase {
   /**
    * Tests that the oEmbed field widget shows the configured help text.
    */
-  public function testFieldWidgetHelpText() {
+  public function testFieldWidgetHelpText(): void {
     $account = $this->drupalCreateUser(['create media']);
     $this->drupalLogin($account);
 

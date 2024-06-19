@@ -26,7 +26,7 @@ class MenuLinkDefaultIntegrationTest extends KernelTestBase {
   /**
    * Tests moving a static menu link without a specified menu to the root.
    */
-  public function testMoveToRoot() {
+  public function testMoveToRoot(): void {
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
     $menu_link_manager->rebuild();

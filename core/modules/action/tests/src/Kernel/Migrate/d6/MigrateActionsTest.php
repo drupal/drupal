@@ -27,7 +27,7 @@ class MigrateActionsTest extends MigrateDrupal6TestBase {
   /**
    * Tests Drupal 6 action migration to Drupal 8.
    */
-  public function testActions() {
+  public function testActions(): void {
     // Test advanced actions.
     $this->assertEntity('unpublish_comment_containing_keyword_s_', 'Unpublish comment containing keyword(s)', 'comment', ["keywords" => [0 => "drupal"]]);
     $this->assertEntity('unpublish_post_containing_keyword_s_', 'Unpublish post containing keyword(s)', 'node', ["keywords" => [0 => "drupal"]]);

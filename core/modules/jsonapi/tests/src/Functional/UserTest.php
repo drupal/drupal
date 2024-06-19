@@ -128,7 +128,7 @@ class UserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testDeleteIndividual() {
+  public function testDeleteIndividual(): void {
     $this->config('user.settings')->set('cancel_method', 'user_cancel_delete')->save(TRUE);
 
     parent::testDeleteIndividual();
@@ -217,7 +217,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests PATCHing security-sensitive base fields of the logged in account.
    */
-  public function testPatchDxForSecuritySensitiveBaseFields() {
+  public function testPatchDxForSecuritySensitiveBaseFields(): void {
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
     $url = Url::fromRoute(sprintf('jsonapi.user--user.individual'), ['entity' => $this->account->uuid()]);
     /* $url = $this->account->toUrl('jsonapi'); */
@@ -337,7 +337,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests PATCHing security-sensitive base fields to change other users.
    */
-  public function testPatchSecurityOtherUser() {
+  public function testPatchSecurityOtherUser(): void {
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
     $url = Url::fromRoute(sprintf('jsonapi.user--user.individual'), ['entity' => $this->account->uuid()]);
     /* $url = $this->account->toUrl('jsonapi'); */
@@ -378,7 +378,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests GETting privacy-sensitive base fields.
    */
-  public function testGetMailFieldOnlyVisibleToOwner() {
+  public function testGetMailFieldOnlyVisibleToOwner(): void {
     // Create user B, with the same roles (and hence permissions) as user A.
     $user_a = $this->account;
     $pass = \Drupal::service('password_generator')->generate();
@@ -446,7 +446,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests good error DX when trying to filter users by role.
    */
-  public function testQueryInvolvingRoles() {
+  public function testQueryInvolvingRoles(): void {
     $this->setUpAuthorization('GET');
 
     $collection_url = Url::fromRoute('jsonapi.user--user.collection', [], ['query' => ['filter[roles.id][value]' => 'e9b1de3f-9517-4c27-bef0-0301229de792']]);
@@ -465,7 +465,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests that the collection contains the anonymous user.
    */
-  public function testCollectionContainsAnonymousUser() {
+  public function testCollectionContainsAnonymousUser(): void {
     $url = Url::fromRoute('jsonapi.user--user.collection', [], ['query' => ['sort' => 'drupal_internal__uid']]);
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
@@ -482,7 +482,7 @@ class UserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     // Set up data model.
     $this->assertTrue($this->container->get('module_installer')->install(['node'], TRUE), 'Installed modules.');
     FieldStorageConfig::create([
@@ -589,7 +589,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests users with altered display names.
    */
-  public function testResaveAccountName() {
+  public function testResaveAccountName(): void {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->setUpAuthorization('PATCH');
 
@@ -617,7 +617,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests if JSON:API respects user.settings.cancel_method: user_cancel_block.
    */
-  public function testDeleteRespectsUserCancelBlock() {
+  public function testDeleteRespectsUserCancelBlock(): void {
     $cancel_method = 'user_cancel_block';
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->config('user.settings')->set('cancel_method', $cancel_method)->save(TRUE);
@@ -647,7 +647,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests if JSON:API respects user.settings.cancel_method: user_cancel_block_unpublish.
    */
-  public function testDeleteRespectsUserCancelBlockUnpublish() {
+  public function testDeleteRespectsUserCancelBlockUnpublish(): void {
     $cancel_method = 'user_cancel_block_unpublish';
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->config('user.settings')->set('cancel_method', $cancel_method)->save(TRUE);
@@ -678,7 +678,7 @@ class UserTest extends ResourceTestBase {
    * Tests if JSON:API respects user.settings.cancel_method: user_cancel_block_unpublish.
    * @group jsonapi
    */
-  public function testDeleteRespectsUserCancelBlockUnpublishAndProcessesBatches() {
+  public function testDeleteRespectsUserCancelBlockUnpublishAndProcessesBatches(): void {
     $cancel_method = 'user_cancel_block_unpublish';
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->config('user.settings')->set('cancel_method', $cancel_method)->save(TRUE);
@@ -724,7 +724,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests if JSON:API respects user.settings.cancel_method: user_cancel_reassign.
    */
-  public function testDeleteRespectsUserCancelReassign() {
+  public function testDeleteRespectsUserCancelReassign(): void {
     $cancel_method = 'user_cancel_reassign';
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->config('user.settings')->set('cancel_method', $cancel_method)->save(TRUE);
@@ -755,7 +755,7 @@ class UserTest extends ResourceTestBase {
   /**
    * Tests if JSON:API respects user.settings.cancel_method: user_cancel_delete.
    */
-  public function testDeleteRespectsUserCancelDelete() {
+  public function testDeleteRespectsUserCancelDelete(): void {
     $cancel_method = 'user_cancel_delete';
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->config('user.settings')->set('cancel_method', $cancel_method)->save(TRUE);

@@ -79,7 +79,7 @@ PO;
   /**
    * Tests that translations ended up at the expected places.
    */
-  public function testTranslationsLoaded() {
+  public function testTranslationsLoaded(): void {
     $this->drupalLogin($this->createUser([], NULL, TRUE));
     // Ensure the title is correct.
     $this->assertEquals('SITE_NAME_en', \Drupal::config('system.site')->get('name'));

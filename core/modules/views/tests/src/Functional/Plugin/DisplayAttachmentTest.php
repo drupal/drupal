@@ -49,7 +49,7 @@ class DisplayAttachmentTest extends ViewTestBase {
   /**
    * Tests the attachment plugin.
    */
-  public function testAttachment() {
+  public function testAttachment(): void {
     $this->drupalGet('test-display-attachment');
     // Verify that both actual view and the attachment are rendered.
     $this->assertSession()->elementsCount('xpath', '//div[contains(@class, "view-content")]', 2);
@@ -62,7 +62,7 @@ class DisplayAttachmentTest extends ViewTestBase {
   /**
    * Tests that nothing is output when the attachment displays are disabled.
    */
-  public function testDisabledAttachments() {
+  public function testDisabledAttachments(): void {
     $this->drupalCreateContentType(['type' => 'page']);
     $this->drupalCreateNode();
 

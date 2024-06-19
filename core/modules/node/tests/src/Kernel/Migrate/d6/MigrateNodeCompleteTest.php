@@ -58,7 +58,7 @@ class MigrateNodeCompleteTest extends MigrateNodeTestBase {
   /**
    * Tests the complete node migration.
    */
-  public function testNodeCompleteMigration() {
+  public function testNodeCompleteMigration(): void {
     $db = \Drupal::database();
     $this->assertEquals($this->expectedNodeFieldRevisionTable(), $db->select('node_field_revision', 'nr')
       ->fields('nr')

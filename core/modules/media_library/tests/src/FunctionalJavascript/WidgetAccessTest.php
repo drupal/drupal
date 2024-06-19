@@ -25,7 +25,7 @@ class WidgetAccessTest extends MediaLibraryTestBase {
   /**
    * Tests that the widget access works as expected.
    */
-  public function testWidgetAccess() {
+  public function testWidgetAccess(): void {
     $assert_session = $this->assertSession();
     $session = $this->getSession();
 
@@ -142,7 +142,7 @@ class WidgetAccessTest extends MediaLibraryTestBase {
   /**
    * Tests the widget with a required field that the user can't access.
    */
-  public function testRequiredFieldNoAccess() {
+  public function testRequiredFieldNoAccess(): void {
     // Make field_single_media_type required.
     $fieldConfig = FieldConfig::loadByName('node', 'basic_page', 'field_single_media_type');
     assert($fieldConfig instanceof FieldConfig);

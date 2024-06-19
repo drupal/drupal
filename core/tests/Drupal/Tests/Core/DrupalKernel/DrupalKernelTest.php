@@ -25,7 +25,7 @@ class DrupalKernelTest extends UnitTestCase {
    * @covers ::setupTrustedHosts
    * @dataProvider providerTestTrustedHosts
    */
-  public function testTrustedHosts($host, $server_name, $message, $expected = FALSE) {
+  public function testTrustedHosts($host, $server_name, $message, $expected = FALSE): void {
     $request = new Request();
 
     $trusted_host_patterns = [
@@ -116,7 +116,7 @@ class DrupalKernelTest extends UnitTestCase {
    * @covers ::findSitePath
    * @runInSeparateProcess
    */
-  public function testFindSitePath() {
+  public function testFindSitePath(): void {
     $vfs_root = vfsStream::setup('drupal_root');
     $sites_php = <<<'EOD'
 <?php
@@ -145,7 +145,7 @@ EOD;
    * @covers ::getServiceIdMapping
    * @group legacy
    */
-  public function testGetServiceIdMapping() {
+  public function testGetServiceIdMapping(): void {
     $this->expectDeprecation("Drupal\Core\DrupalKernel::getServiceIdMapping() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
     $this->expectDeprecation("Drupal\Core\DrupalKernel::collectServiceIdMapping() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
     $service = new BarClass();
@@ -158,7 +158,7 @@ EOD;
    * @covers ::terminate
    * @runInSeparateProcess
    */
-  public function testUnBootedTerminate() {
+  public function testUnBootedTerminate(): void {
     $kernel = new DrupalKernel('test', new ClassLoader());
     $kernel->terminate(new Request(), new Response());
     $this->assertTrue(TRUE, "\Drupal\Core\DrupalKernel::terminate() called without error on kernel which has not booted");

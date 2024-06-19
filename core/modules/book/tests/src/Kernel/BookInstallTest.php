@@ -29,7 +29,7 @@ class BookInstallTest extends KernelTestBase {
    * Tests that Book module can be installed if content type with machine name
    * 'book' already exists.
    */
-  public function testBookInstallWithPreexistingContentType() {
+  public function testBookInstallWithPreexistingContentType(): void {
     // Create a 'book' content type.
     NodeType::create([
       'type' => 'book',

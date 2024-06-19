@@ -109,7 +109,7 @@ class PhpMailTest extends UnitTestCase {
    *
    * @covers ::mail
    */
-  public function testMail() {
+  public function testMail(): void {
     // Setup a mail message.
     $message = [
       'id' => 'example_key',

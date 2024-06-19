@@ -92,7 +92,7 @@ class Y2038TimestampUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update of time fields.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     if (\Drupal::service('database')->databaseType() == 'sqlite') {
       $this->markTestSkipped("This test does not support the SQLite database driver.");
     }

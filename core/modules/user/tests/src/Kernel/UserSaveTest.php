@@ -25,7 +25,7 @@ class UserSaveTest extends KernelTestBase {
   /**
    * Ensures that an existing password is unset after the user was saved.
    */
-  public function testExistingPasswordRemoval() {
+  public function testExistingPasswordRemoval(): void {
     $this->installEntitySchema('user');
 
     /** @var \Drupal\user\Entity\User $user */

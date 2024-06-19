@@ -40,7 +40,7 @@ class ViewsListingTest extends WebDriverTestBase {
   /**
    * Tests the filtering on the Views listing page.
    */
-  public function testFilterViewsListing() {
+  public function testFilterViewsListing(): void {
     $enabled_views_count = 6;
     $disabled_views_count = 2;
     $content_views_count = 3;

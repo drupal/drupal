@@ -46,7 +46,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
   /**
    * Build-id is regenerated when validating cached form.
    */
-  public function testValidateFormStorageOnCachedPage() {
+  public function testValidateFormStorageOnCachedPage(): void {
     $this->drupalGet('form-test/form-storage-page-cache');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertSession()->pageTextContains('No old build id');
@@ -92,7 +92,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
   /**
    * Build-id is regenerated when rebuilding cached form.
    */
-  public function testRebuildFormStorageOnCachedPage() {
+  public function testRebuildFormStorageOnCachedPage(): void {
     $this->drupalGet('form-test/form-storage-page-cache');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertSession()->pageTextContains('No old build id');

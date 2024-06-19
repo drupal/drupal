@@ -40,7 +40,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   /**
    * @covers ::getHttpClient
    */
-  public function testGetHttpClient() {
+  public function testGetHttpClient(): void {
     // Our stand-in for the Guzzle client object.
     $expected = new \stdClass();
 
@@ -63,7 +63,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   /**
    * @covers ::getHttpClient
    */
-  public function testGetHttpClientException() {
+  public function testGetHttpClientException(): void {
     // A driver type that isn't BrowserKitDriver. This should cause a
     // RuntimeException.
     $btb = $this->mockBrowserTestBaseWithDriver(new \stdClass());
@@ -80,7 +80,7 @@ class BrowserTestBaseTest extends UnitTestCase {
    *
    * @covers ::tearDown
    */
-  public function testTearDownWithoutSetUp() {
+  public function testTearDownWithoutSetUp(): void {
     $method = 'cleanupEnvironment';
     $this->assertTrue(method_exists(BrowserTestBase::class, $method));
     $btb = $this->getMockBuilder(BrowserTestBaseMockableClass::class)
@@ -97,7 +97,7 @@ class BrowserTestBaseTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testGetRandomGeneratorPropertyDeprecation() {
+  public function testGetRandomGeneratorPropertyDeprecation(): void {
     $this->expectDeprecation('Accessing the randomGenerator property is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use getRandomGenerator() instead. See https://www.drupal.org/node/3358445');
     // We purposely test accessing an undefined property here. We need to tell
     // PHPStan to ignore that.

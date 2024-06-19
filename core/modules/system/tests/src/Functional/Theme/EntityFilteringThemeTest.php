@@ -140,7 +140,7 @@ class EntityFilteringThemeTest extends BrowserTestBase {
   /**
    * Checks each themed entity for XSS filtering in available themes.
    */
-  public function testThemedEntity() {
+  public function testThemedEntity(): void {
     // Check paths where various view modes of the entities are rendered.
     $paths = [
       'user',

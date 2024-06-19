@@ -55,7 +55,7 @@ class TimestampItemTest extends FieldKernelTestBase {
   /**
    * Tests using entity fields of the datetime field type.
    */
-  public function testDateTime() {
+  public function testDateTime(): void {
     // Verify entity creation.
     $entity = EntityTest::create();
     $value = 1488914208;

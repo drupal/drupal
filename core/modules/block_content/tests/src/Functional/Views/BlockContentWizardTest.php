@@ -34,7 +34,7 @@ class BlockContentWizardTest extends BlockContentTestBase {
   /**
    * Tests creating a 'block_content' entity view.
    */
-  public function testViewAddBlockContent() {
+  public function testViewAddBlockContent(): void {
     $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = $this->randomMachineName(16);

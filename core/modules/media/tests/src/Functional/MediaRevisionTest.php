@@ -54,7 +54,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
   /**
    * Checks media revision operations.
    */
-  public function testRevisions() {
+  public function testRevisions(): void {
     $assert = $this->assertSession();
 
     $media = $this->createMedia('Sample media');
@@ -105,7 +105,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
   /**
    * Tests creating revisions of a File media item.
    */
-  public function testFileMediaRevision() {
+  public function testFileMediaRevision(): void {
     $assert = $this->assertSession();
 
     $uri = 'temporary://foo.txt';
@@ -147,7 +147,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
   /**
    * Tests creating revisions of an Image media item.
    */
-  public function testImageMediaRevision() {
+  public function testImageMediaRevision(): void {
     $assert = $this->assertSession();
 
     $this->createMediaType('image', ['id' => 'image', 'new_revision' => TRUE]);

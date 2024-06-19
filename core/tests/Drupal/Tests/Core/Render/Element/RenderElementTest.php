@@ -47,7 +47,7 @@ class RenderElementTest extends UnitTestCase {
   /**
    * @covers ::preRenderAjaxForm
    */
-  public function testPreRenderAjaxForm() {
+  public function testPreRenderAjaxForm(): void {
     $request = Request::create('/test');
     $request->query->set('foo', 'bar');
     $this->requestStack->push($request);
@@ -78,7 +78,7 @@ class RenderElementTest extends UnitTestCase {
   /**
    * @covers ::preRenderAjaxForm
    */
-  public function testPreRenderAjaxFormWithQueryOptions() {
+  public function testPreRenderAjaxFormWithQueryOptions(): void {
     $request = Request::create('/test');
     $request->query->set('foo', 'bar');
     $this->requestStack->push($request);

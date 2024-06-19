@@ -225,7 +225,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testUpgradeAndIncremental() {
+  public function testUpgradeAndIncremental(): void {
     // Perform upgrade followed by an incremental upgrade.
     $this->doUpgradeAndIncremental();
 

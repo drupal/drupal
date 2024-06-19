@@ -32,7 +32,7 @@ class RequiredModuleUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNoModule() {
+  public function testValidateNoModule(): void {
     $this->uninstallValidator->expects($this->once())
       ->method('getModuleInfoByModule')
       ->willReturn([]);
@@ -46,7 +46,7 @@ class RequiredModuleUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNotRequired() {
+  public function testValidateNotRequired(): void {
     $module = $this->randomMachineName();
 
     $this->uninstallValidator->expects($this->once())
@@ -61,7 +61,7 @@ class RequiredModuleUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateRequired() {
+  public function testValidateRequired(): void {
     $module = $this->randomMachineName();
 
     $this->uninstallValidator->expects($this->once())

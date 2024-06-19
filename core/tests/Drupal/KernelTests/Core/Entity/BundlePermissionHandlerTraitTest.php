@@ -25,7 +25,7 @@ class BundlePermissionHandlerTraitTest extends KernelTestBase {
   /**
    * @covers ::generatePermissions
    */
-  public function testGeneratePermissions() {
+  public function testGeneratePermissions(): void {
     EntityTestBundle::create([
       'id' => 'test1',
     ])->save();

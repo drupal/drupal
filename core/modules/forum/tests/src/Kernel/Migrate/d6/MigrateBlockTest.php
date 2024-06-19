@@ -101,7 +101,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
   /**
    * Tests the block migration.
    */
-  public function testBlockMigration() {
+  public function testBlockMigration(): void {
 
     // Check forum block settings.
     $settings = [

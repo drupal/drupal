@@ -58,7 +58,7 @@ class EntityUpdateInitialTest extends BrowserTestBase {
   /**
    * Tests that a pre-existing initial key in the field schema is not a change.
    */
-  public function testInitialIsIgnored() {
+  public function testInitialIsIgnored(): void {
     $this->runUpdates();
   }
 

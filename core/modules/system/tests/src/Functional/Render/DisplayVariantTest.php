@@ -28,7 +28,7 @@ class DisplayVariantTest extends BrowserTestBase {
   /**
    * Tests selecting the variant and passing configuration.
    */
-  public function testPageDisplayVariantSelectionEvent() {
+  public function testPageDisplayVariantSelectionEvent(): void {
     // Tests that our display variant was selected, and that its configuration
     // was passed correctly. If the configuration wasn't passed, we'd get an
     // error page here.

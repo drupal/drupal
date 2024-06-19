@@ -32,7 +32,7 @@ class ForumValidationTest extends EntityKernelTestBase {
   /**
    * Tests the forum validation constraints.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     $this->installConfig('forum');
 
     // Add a forum.

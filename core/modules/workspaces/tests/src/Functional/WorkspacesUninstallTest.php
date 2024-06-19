@@ -41,7 +41,7 @@ class WorkspacesUninstallTest extends BrowserTestBase {
   /**
    * Tests deleting workspace entities and uninstalling Workspaces module.
    */
-  public function testUninstallingWorkspace() {
+  public function testUninstallingWorkspace(): void {
     $this->createContentType(['type' => 'article']);
     $this->drupalGet('/admin/modules/uninstall');
     $session = $this->assertSession();

@@ -28,7 +28,7 @@ class FieldTypeDefaultsTest extends MigrateProcessTestCase {
    *
    * @covers ::transform
    */
-  public function testDefaults() {
+  public function testDefaults(): void {
     // Assert common values are passed through without modification.
     $this->assertNull($this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'property'));
     $this->assertEquals('string', $this->plugin->transform('string', $this->migrateExecutable, $this->row, 'property'));

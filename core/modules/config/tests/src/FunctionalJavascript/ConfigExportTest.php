@@ -78,7 +78,7 @@ class ConfigExportTest extends WebDriverTestBase {
   /**
    * Tests Ajax form functionality on the config export page.
    */
-  public function testAjaxOnExportPage() {
+  public function testAjaxOnExportPage(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'export configuration',
       'administer blocks',

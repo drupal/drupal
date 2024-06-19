@@ -51,7 +51,7 @@ class BlockConfigSchemaTest extends KernelTestBase {
   /**
    * Tests the block config schema for block plugins.
    */
-  public function testBlockConfigSchema() {
+  public function testBlockConfigSchema(): void {
     $id = strtolower($this->randomMachineName());
     $block = Block::create([
       'id' => $id,

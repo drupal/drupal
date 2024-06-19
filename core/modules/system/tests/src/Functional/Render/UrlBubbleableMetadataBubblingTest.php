@@ -39,7 +39,7 @@ class UrlBubbleableMetadataBubblingTest extends BrowserTestBase {
   /**
    * Tests that URL bubbleable metadata is correctly bubbled.
    */
-  public function testUrlBubbleableMetadataBubbling() {
+  public function testUrlBubbleableMetadataBubbling(): void {
     // Test that regular URLs bubble up bubbleable metadata when converted to
     // string.
     $url = Url::fromRoute('cache_test.url_bubbling');

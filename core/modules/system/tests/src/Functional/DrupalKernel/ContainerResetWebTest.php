@@ -49,7 +49,7 @@ class ContainerResetWebTest extends BrowserTestBase {
   /**
    * Sets a different deployment identifier.
    */
-  public function testContainerRebuild() {
+  public function testContainerRebuild(): void {
     $this->drupalLogin($this->drupalCreateUser());
 
     $this->drupalGet('container_rebuild_test/container_reset');

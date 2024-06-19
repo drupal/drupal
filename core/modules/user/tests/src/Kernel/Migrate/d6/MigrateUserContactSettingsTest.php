@@ -31,7 +31,7 @@ class MigrateUserContactSettingsTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal6 user contact settings migration.
    */
-  public function testUserContactSettings() {
+  public function testUserContactSettings(): void {
     $user_data = \Drupal::service('user.data');
     $module = $key = 'contact';
     $uid = 2;

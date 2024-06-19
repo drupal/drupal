@@ -55,7 +55,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    *
    * @see \Drupal\workspaces\EntityTypeInfo::entityTypeAlter()
    */
-  public function testWorkspaceEntityTypeModeration() {
+  public function testWorkspaceEntityTypeModeration(): void {
     /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
     $moderation_info = \Drupal::service('content_moderation.moderation_information');
     $entity_type = \Drupal::entityTypeManager()->getDefinition('workspace');
@@ -67,7 +67,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    *
    * @see content_moderation_workspace_access()
    */
-  public function testContentModerationIntegrationWithWorkspaces() {
+  public function testContentModerationIntegrationWithWorkspaces(): void {
     $editorial = $this->createEditorialWorkflow();
     $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('workspace');
 
@@ -191,7 +191,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  public function testModerationWithFieldConfigOverride() {
+  public function testModerationWithFieldConfigOverride(): void {
     // This test does not assert anything that can be workspace-specific.
     $this->markTestSkipped();
   }
@@ -199,7 +199,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  public function testWorkflowDependencies() {
+  public function testWorkflowDependencies(): void {
     // This test does not assert anything that can be workspace-specific.
     $this->markTestSkipped();
   }
@@ -207,7 +207,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  public function testWorkflowNonConfigBundleDependencies() {
+  public function testWorkflowNonConfigBundleDependencies(): void {
     // This test does not assert anything that can be workspace-specific.
     $this->markTestSkipped();
   }
@@ -215,7 +215,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  public function testGetCurrentUserId() {
+  public function testGetCurrentUserId(): void {
     // This test does not assert anything that can be workspace-specific.
     $this->markTestSkipped();
   }

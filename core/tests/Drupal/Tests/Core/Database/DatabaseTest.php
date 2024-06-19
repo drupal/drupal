@@ -71,7 +71,7 @@ class DatabaseTest extends UnitTestCase {
    * @dataProvider providerFindDriverAutoloadDirectory
    * @group legacy
    */
-  public function testFindDriverAutoloadDirectory($expected, $namespace, $include_test_drivers) {
+  public function testFindDriverAutoloadDirectory($expected, $namespace, $include_test_drivers): void {
     $this->expectDeprecation('Drupal\Core\Database\Database::findDriverAutoloadDirectory() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175');
     // The only module that provides a driver in core is a test module.
     if (!$expected) {
@@ -101,7 +101,7 @@ class DatabaseTest extends UnitTestCase {
    * @dataProvider providerFindDriverAutoloadDirectoryException
    * @group legacy
    */
-  public function testFindDriverAutoloadDirectoryException($expected_message, $namespace, $include_tests) {
+  public function testFindDriverAutoloadDirectoryException($expected_message, $namespace, $include_tests): void {
     $this->expectDeprecation('Drupal\Core\Database\Database::findDriverAutoloadDirectory() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175');
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage($expected_message);

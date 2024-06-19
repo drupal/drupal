@@ -27,7 +27,7 @@ class MigrateFileConfigsTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of file variables to file.settings.yml.
    */
-  public function testFileSettings() {
+  public function testFileSettings(): void {
     $config = $this->config('file.settings');
     $this->assertSame('textfield', $config->get('description.type'));
     $this->assertSame(128, $config->get('description.length'));

@@ -72,7 +72,7 @@ class WidgetViewsTest extends MediaLibraryTestBase {
   /**
    * Tests that the views in the Media library's widget work as expected.
    */
-  public function testWidgetViews() {
+  public function testWidgetViews(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

@@ -27,7 +27,7 @@ class MigrateTextConfigsTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of text variables to text.settings.yml.
    */
-  public function testTextSettings() {
+  public function testTextSettings(): void {
     $config = $this->config('text.settings');
     $this->assertSame(456, $config->get('default_summary_length'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'text.settings', $config->get());

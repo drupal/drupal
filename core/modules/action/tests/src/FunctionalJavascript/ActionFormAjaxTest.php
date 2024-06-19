@@ -38,7 +38,7 @@ class ActionFormAjaxTest extends WebDriverTestBase {
   /**
    * Tests action plugins with AJAX save their configuration.
    */
-  public function testActionConfigurationWithAjax() {
+  public function testActionConfigurationWithAjax(): void {
     $url = Url::fromRoute('action.admin_add', ['action_id' => 'action_form_ajax_test']);
     $this->drupalGet($url);
     $page = $this->getSession()->getPage();

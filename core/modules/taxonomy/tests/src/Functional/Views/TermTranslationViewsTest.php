@@ -75,7 +75,7 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
    * Taxonomy term: Term ID & Content: Has taxonomy term ID (with depth)
    * contextual filters are enabled for two separate view modes.
    */
-  public function testTermsTranslationWithContextualFilter() {
+  public function testTermsTranslationWithContextualFilter(): void {
     $this->drupalLogin($this->rootUser);
 
     foreach ($this->terms as $term) {

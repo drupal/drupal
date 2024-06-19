@@ -61,7 +61,7 @@ class TaxonomyGlossaryTest extends ViewTestBase {
   /**
    * Tests a taxonomy glossary view.
    */
-  public function testTaxonomyGlossaryView() {
+  public function testTaxonomyGlossaryView(): void {
     $initials = [];
     foreach ($this->taxonomyTerms as $term) {
       $char = mb_strtolower(substr($term->label(), 0, 1));

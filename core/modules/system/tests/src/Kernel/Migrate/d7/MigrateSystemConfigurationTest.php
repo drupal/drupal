@@ -177,7 +177,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
   /**
    * Tests that all expected configuration gets migrated.
    */
-  public function testConfigurationMigration() {
+  public function testConfigurationMigration(): void {
     foreach ($this->expectedConfig as $config_id => $values) {
       if ($config_id == 'system.mail') {
         $actual = \Drupal::config($config_id)->getRawData();

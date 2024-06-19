@@ -70,7 +70,7 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
   /**
    * Tests ID Conflict form.
    */
-  public function testIdConflictForm() {
+  public function testIdConflictForm(): void {
     // Start the upgrade process.
     $this->submitCredentialForm();
 

@@ -30,7 +30,7 @@ class ConstraintsTest extends KernelTestBase {
   /**
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\UuidConstraint
    */
-  public function testUuid() {
+  public function testUuid(): void {
     $typed_config_manager = \Drupal::service('config.typed');
     /** @var \Drupal\Core\Config\Schema\TypedConfigInterface $typed_config */
     $typed_config = $typed_config_manager->get('config_test.validation');

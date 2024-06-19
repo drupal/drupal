@@ -118,7 +118,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
   /**
    * Tests the block defined by the comments_recent view.
    */
-  public function testBlockDisplay() {
+  public function testBlockDisplay(): void {
     $user = $this->drupalCreateUser(['access comments']);
     $this->drupalLogin($user);
 

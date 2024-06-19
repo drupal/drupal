@@ -37,7 +37,7 @@ class OrderByTest extends UnitTestCase {
   /**
    * Checks that invalid sort directions in ORDER BY get converted to ASC.
    */
-  public function testInvalidDirection() {
+  public function testInvalidDirection(): void {
     $this->query->orderBy('test', 'invalid direction');
     $order_bys = $this->query->getOrderBy();
     $this->assertEquals('ASC', $order_bys['test'], 'Invalid order by direction is converted to ASC.');
@@ -46,7 +46,7 @@ class OrderByTest extends UnitTestCase {
   /**
    * Tests that fields passed for ordering get escaped properly.
    */
-  public function testFieldEscaping() {
+  public function testFieldEscaping(): void {
     $this->query->orderBy('x; DROP table node; --');
     $sql = $this->query->__toString();
     $this->assertStringEndsWith('ORDER BY xDROPtablenode ASC', $sql, 'Order by field is escaped correctly.');

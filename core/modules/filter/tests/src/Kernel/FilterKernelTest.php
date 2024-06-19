@@ -47,7 +47,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the align filter.
    */
-  public function testAlignFilter() {
+  public function testAlignFilter(): void {
     $filter = $this->filters['filter_align'];
 
     $test = function ($input) use ($filter) {
@@ -102,7 +102,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the caption filter.
    */
-  public function testCaptionFilter() {
+  public function testCaptionFilter(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
     $filter = $this->filters['filter_caption'];
@@ -330,7 +330,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the combination of the align and caption filters.
    */
-  public function testAlignAndCaptionFilters() {
+  public function testAlignAndCaptionFilters(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
     $align_filter = $this->filters['filter_align'];
@@ -405,7 +405,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the line break filter.
    */
-  public function testLineBreakFilter() {
+  public function testLineBreakFilter(): void {
     // Get FilterAutoP object.
     $filter = $this->filters['filter_autop'];
 
@@ -548,7 +548,7 @@ class FilterKernelTest extends KernelTestBase {
    * @todo Class, id, name and xmlns should be added to the list of forbidden
    *   attributes, or, better yet, use an allowed attribute list.
    */
-  public function testHtmlFilter() {
+  public function testHtmlFilter(): void {
     // Get FilterHtml object.
     $filter = $this->filters['filter_html'];
     $filter->setConfiguration([
@@ -648,7 +648,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the spam deterrent.
    */
-  public function testNoFollowFilter() {
+  public function testNoFollowFilter(): void {
     // Get FilterHtml object.
     $filter = $this->filters['filter_html'];
     $filter->setConfiguration([
@@ -681,7 +681,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the HTML escaping filter.
    */
-  public function testHtmlEscapeFilter() {
+  public function testHtmlEscapeFilter(): void {
     // Get FilterHtmlEscape object.
     $filter = $this->filters['filter_html_escape'];
 
@@ -698,7 +698,7 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests the URL filter.
    */
-  public function testUrlFilter() {
+  public function testUrlFilter(): void {
     // Get FilterUrl object.
     $filter = $this->filters['filter_url'];
     $filter->setConfiguration([
@@ -1028,7 +1028,7 @@ class FilterKernelTest extends KernelTestBase {
    * - Mix of absolute and partial URLs, and email addresses in one content.
    * - Input that exceeds PCRE backtracking limit.
    */
-  public function testUrlFilterContent() {
+  public function testUrlFilterContent(): void {
     // Get FilterUrl object.
     $filter = $this->filters['filter_url'];
     $filter->setConfiguration([
@@ -1067,7 +1067,7 @@ class FilterKernelTest extends KernelTestBase {
    *
    * @todo This test could really use some validity checking function.
    */
-  public function testHtmlCorrectorFilter() {
+  public function testHtmlCorrectorFilter(): void {
     // Tag closing.
     $f = Html::normalize('<p>text');
     $this->assertEquals('<p>text</p>', $f, 'HTML corrector -- tag closing at the end of input.');

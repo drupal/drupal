@@ -44,7 +44,7 @@ class ViewsRemoveDefaultArgumentSkipUrlTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path removing default_argument_skip_url.
    */
-  public function testViewsPostUpdateFixRevisionId() {
+  public function testViewsPostUpdateFixRevisionId(): void {
     $view = View::load('remove_default_argument_skip_url');
     $data = $view->toArray();
     $this->assertArrayHasKey('default_argument_skip_url', $data['display']['default']['display_options']['arguments']['tid']);

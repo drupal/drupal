@@ -57,7 +57,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   /**
    * Test enabling CKEditor 5 in a way that triggers validation.
    */
-  public function testEnablingToVersion5Validation() {
+  public function testEnablingToVersion5Validation(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -128,7 +128,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   /**
    * Confirm that switching to CKEditor 5 from another editor updates tags.
    */
-  public function testSwitchToVersion5() {
+  public function testSwitchToVersion5(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -162,7 +162,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   /**
    * Tests that the img tag is added after enabling image uploads.
    */
-  public function testImgAddedViaUploadPlugin() {
+  public function testImgAddedViaUploadPlugin(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -234,7 +234,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   /**
    * Test filter_html allowed tags.
    */
-  public function testAllowedTags() {
+  public function testAllowedTags(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -338,7 +338,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   /**
    * Test that <drupal-media> is added to allowed tags when media embed enabled.
    */
-  public function testMediaElementAllowedTags() {
+  public function testMediaElementAllowedTags(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -417,7 +417,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   /**
    * Tests full HTML text format.
    */
-  public function testFullHtml() {
+  public function testFullHtml(): void {
     FilterFormat::create(
       Yaml::parseFile('core/profiles/standard/config/install/filter.format.full_html.yml')
     )->save();

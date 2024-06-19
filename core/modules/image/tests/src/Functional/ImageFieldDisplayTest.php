@@ -42,14 +42,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests image formatters on node display for public files.
    */
-  public function testImageFieldFormattersPublic() {
+  public function testImageFieldFormattersPublic(): void {
     $this->_testImageFieldFormatters('public');
   }
 
   /**
    * Tests image formatters on node display for private files.
    */
-  public function testImageFieldFormattersPrivate() {
+  public function testImageFieldFormattersPrivate(): void {
     // Remove access content permission from anonymous users.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, ['access content' => FALSE]);
     $this->_testImageFieldFormatters('private');
@@ -243,7 +243,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests for image field settings.
    */
-  public function testImageFieldSettings() {
+  public function testImageFieldSettings(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -477,7 +477,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests use of a default image with an image field.
    */
-  public function testImageFieldDefaultImage() {
+  public function testImageFieldDefaultImage(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 

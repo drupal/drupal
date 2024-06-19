@@ -21,7 +21,7 @@ class MimeTypeTest extends FileTestBase {
   /**
    * Tests mapping of mimetypes from filenames.
    */
-  public function testFileMimeTypeDetection() {
+  public function testFileMimeTypeDetection(): void {
     $prefixes = ['public://', 'private://', 'temporary://', 'dummy-remote://'];
 
     $test_case = [

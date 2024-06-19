@@ -33,7 +33,7 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of user profile fields.
    */
-  public function testUserProfileFields() {
+  public function testUserProfileFields(): void {
     // Migrated a text field.
     $field = FieldConfig::load('user.user.profile_color');
     $this->assertSame('Favorite color', $field->label());

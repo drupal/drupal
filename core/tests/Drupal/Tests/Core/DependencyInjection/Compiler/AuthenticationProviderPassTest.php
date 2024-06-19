@@ -19,7 +19,7 @@ class AuthenticationProviderPassTest extends UnitTestCase {
   /**
    * @covers ::process
    */
-  public function testEncoders() {
+  public function testEncoders(): void {
     $container = new ContainerBuilder();
     $definition = new Definition(Serializer::class, [[], []]);
     $definition->setPublic(TRUE);

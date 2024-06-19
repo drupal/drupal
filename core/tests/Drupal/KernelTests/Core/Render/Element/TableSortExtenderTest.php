@@ -20,7 +20,7 @@ class TableSortExtenderTest extends KernelTestBase {
   /**
    * Tests \Drupal\Core\Utility\TableSort::getContextFromRequest().
    */
-  public function testTableSortInit() {
+  public function testTableSortInit(): void {
 
     // Test simple table headers.
 

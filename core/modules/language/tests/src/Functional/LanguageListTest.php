@@ -32,7 +32,7 @@ class LanguageListTest extends BrowserTestBase {
   /**
    * Functional tests for adding, editing and deleting languages.
    */
-  public function testLanguageList() {
+  public function testLanguageList(): void {
 
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser([
@@ -211,7 +211,7 @@ class LanguageListTest extends BrowserTestBase {
   /**
    * Functional tests for the language states (locked or configurable).
    */
-  public function testLanguageStates() {
+  public function testLanguageStates(): void {
     // Add some languages, and also lock some of them.
     ConfigurableLanguage::create(['label' => $this->randomMachineName(), 'id' => 'l1'])->save();
     ConfigurableLanguage::create(['label' => $this->randomMachineName(), 'id' => 'l2', 'locked' => TRUE])->save();

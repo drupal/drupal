@@ -32,7 +32,7 @@ class EntityBaseTest extends EntityKernelTestBase {
    *
    * @covers ::getTypedData
    */
-  public function testGetTypedData() {
+  public function testGetTypedData(): void {
     $bundle = EntityTestBundle::create([
       'id' => $this->randomMachineName(),
     ]);

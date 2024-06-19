@@ -26,7 +26,7 @@ class LogTest extends UnitTestCase {
    *
    * @covers ::findCaller
    */
-  public function testContribDriverLog() {
+  public function testContribDriverLog(): void {
     Database::addConnectionInfo('default', 'default', [
       'driver' => 'test',
       'namespace' => 'Drupal\Tests\Core\Database\Stub',

@@ -30,7 +30,7 @@ class SqlContentEntityStorageRevisionDataCleanupTest extends UpdatePathTestBase 
    *
    * @see system_update_8404()
    */
-  public function testRevisionDataCleanup() {
+  public function testRevisionDataCleanup(): void {
     // Ensure the test data exists.
     $connection = \Drupal::database();
 

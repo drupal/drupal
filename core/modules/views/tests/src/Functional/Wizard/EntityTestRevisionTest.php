@@ -24,7 +24,7 @@ class EntityTestRevisionTest extends WizardTestBase {
   /**
    * Tests creating a view of revisions where the type is not on the base table.
    */
-  public function testRevisionsViewWithNoTypeOnBaseTable() {
+  public function testRevisionsViewWithNoTypeOnBaseTable(): void {
     $type = [
       'show[wizard_key]' => 'standard:entity_test_rev_revision',
     ];

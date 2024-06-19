@@ -30,7 +30,7 @@ class ReviewPageTest extends NoMultilingualReviewPageTestBase {
   /**
    * Tests the review page.
    */
-  public function testMigrateUpgradeReviewPage() {
+  public function testMigrateUpgradeReviewPage(): void {
     $this->prepare();
     // Start the upgrade process.
     $this->submitCredentialForm();

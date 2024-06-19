@@ -55,7 +55,7 @@ class MigrateCommentEntityFormDisplayTest extends MigrateDrupal6TestBase {
   /**
    * Tests the migrated display configuration.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $this->assertDisplay('node.article.default', 'comment_node_article');
     $this->assertDisplay('node.company.default', 'comment_node_company');
     $this->assertDisplay('node.employee.default', 'comment_node_employee');

@@ -48,7 +48,7 @@ class SettingsTest extends UnitTestCase {
   /**
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     // Test stored settings.
     $this->assertEquals($this->config['one'], Settings::get('one'), 'The correct setting was not returned.');
     $this->assertEquals($this->config['two'], Settings::get('two'), 'The correct setting was not returned.');
@@ -61,14 +61,14 @@ class SettingsTest extends UnitTestCase {
   /**
    * @covers ::getAll
    */
-  public function testGetAll() {
+  public function testGetAll(): void {
     $this->assertEquals($this->config, Settings::getAll());
   }
 
   /**
    * @covers ::getInstance
    */
-  public function testGetInstance() {
+  public function testGetInstance(): void {
     $singleton = $this->settings->getInstance();
     $this->assertEquals($singleton, $this->settings);
   }
@@ -78,7 +78,7 @@ class SettingsTest extends UnitTestCase {
    *
    * @covers ::getHashSalt
    */
-  public function testGetHashSalt() {
+  public function testGetHashSalt(): void {
     $this->assertSame($this->config['hash_salt'], $this->settings->getHashSalt());
   }
 
@@ -89,7 +89,7 @@ class SettingsTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetHashSaltEmpty
    */
-  public function testGetHashSaltEmpty(array $config) {
+  public function testGetHashSaltEmpty(array $config): void {
     // Re-create settings with no 'hash_salt' key.
     $settings = new Settings($config);
     $this->expectException(\RuntimeException::class);
@@ -114,7 +114,7 @@ class SettingsTest extends UnitTestCase {
    *
    * @covers ::__sleep
    */
-  public function testSerialize() {
+  public function testSerialize(): void {
     $this->expectException(\LogicException::class);
     serialize(new Settings([]));
   }
@@ -124,7 +124,7 @@ class SettingsTest extends UnitTestCase {
    *
    * @covers ::getApcuPrefix
    */
-  public function testGetApcuPrefix() {
+  public function testGetApcuPrefix(): void {
     $settings = new Settings([
       'hash_salt' => 123,
       'apcu_ensure_unique_prefix' => TRUE,
@@ -143,7 +143,7 @@ class SettingsTest extends UnitTestCase {
    *
    * @covers ::getInstance
    */
-  public function testGetInstanceReflection() {
+  public function testGetInstanceReflection(): void {
     $settings = new Settings([]);
 
     $class = new \ReflectionClass(Settings::class);

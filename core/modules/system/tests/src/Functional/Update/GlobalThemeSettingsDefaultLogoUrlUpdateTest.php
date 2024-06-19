@@ -34,7 +34,7 @@ class GlobalThemeSettingsDefaultLogoUrlUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update of system.theme.global:logo.url.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     $logo_url_before = $this->config('system.theme.global')->get('logo.url');
     $this->assertSame('', $logo_url_before);
 

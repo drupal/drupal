@@ -63,7 +63,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
    * @see \Drupal\content_moderation\EntityOperations::entityPresave
    * @see \Drupal\content_moderation\Tests\ModerationFormTest::testModerationForm
    */
-  public function testCustomBlockModeration() {
+  public function testCustomBlockModeration(): void {
     $this->drupalLogin($this->rootUser);
 
     // Enable moderation for content blocks.

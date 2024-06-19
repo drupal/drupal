@@ -70,7 +70,7 @@ class CacheTest extends ViewsKernelTestBase {
    *
    * @see views_plugin_cache_time
    */
-  public function testTimeResultCaching() {
+  public function testTimeResultCaching(): void {
     $view = Views::getView('test_cache');
     $view->setDisplay();
     $view->display_handler->overrideOption('cache', [
@@ -108,7 +108,7 @@ class CacheTest extends ViewsKernelTestBase {
    *
    * @see views_plugin_cache_time
    */
-  public function testTimeResultCachingWithFilter() {
+  public function testTimeResultCachingWithFilter(): void {
     // Check that we can find the test filter plugin.
     $plugin = $this->container->get('plugin.manager.views.filter')->createInstance('test_filter');
     $this->assertInstanceOf(FilterPlugin::class, $plugin);
@@ -184,7 +184,7 @@ class CacheTest extends ViewsKernelTestBase {
   /**
    * Tests result caching with a pager.
    */
-  public function testTimeResultCachingWithPager() {
+  public function testTimeResultCachingWithPager(): void {
     $view = Views::getView('test_cache');
     $view->setDisplay();
     $view->display_handler->overrideOption('cache', [
@@ -227,7 +227,7 @@ class CacheTest extends ViewsKernelTestBase {
    *
    * @see views_plugin_cache_time
    */
-  public function testNoneResultCaching() {
+  public function testNoneResultCaching(): void {
     // Create a basic result which just 2 results.
     $view = Views::getView('test_cache');
     $view->setDisplay();
@@ -264,7 +264,7 @@ class CacheTest extends ViewsKernelTestBase {
   /**
    * Tests css/js storage and restoring mechanism.
    */
-  public function testHeaderStorage() {
+  public function testHeaderStorage(): void {
     // Create a view with output caching enabled.
     // Some hook_views_pre_render in views_test_data.module adds the test css/js file.
     // so they should be added to the css/js storage.
@@ -305,7 +305,7 @@ class CacheTest extends ViewsKernelTestBase {
   /**
    * Tests that Subqueries are cached as expected.
    */
-  public function testSubqueryStringCache() {
+  public function testSubqueryStringCache(): void {
     // Execute the view.
     $view = Views::getView('test_groupwise_term_ui');
     $view->setDisplay();
@@ -319,7 +319,7 @@ class CacheTest extends ViewsKernelTestBase {
   /**
    * Tests the data contained in cached items.
    */
-  public function testCacheData() {
+  public function testCacheData(): void {
     for ($i = 1; $i <= 5; $i++) {
       Node::create([
         'title' => $this->randomMachineName(8),
@@ -357,7 +357,7 @@ class CacheTest extends ViewsKernelTestBase {
   /**
    * Tests the cache context integration for views result cache.
    */
-  public function testCacheContextIntegration() {
+  public function testCacheContextIntegration(): void {
     $view = Views::getView('test_cache');
     $view->setDisplay('page_2');
     \Drupal::state()->set('views_test_cache_context', 'George');
@@ -389,7 +389,7 @@ class CacheTest extends ViewsKernelTestBase {
   /**
    * Tests that cacheability metadata is carried over from argument defaults.
    */
-  public function testArgumentDefaultCache() {
+  public function testArgumentDefaultCache(): void {
     $view = Views::getView('test_view');
 
     // Add a new argument and set the test plugin for the argument_default.

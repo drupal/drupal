@@ -22,7 +22,7 @@ class MediaSourceFileTest extends MediaSourceTestBase {
   /**
    * Tests the file media source.
    */
-  public function testMediaFileSource() {
+  public function testMediaFileSource(): void {
     // Skipped due to frequent random test failures.
     $this->markTestSkipped();
     $media_type_id = 'test_media_file_type';

@@ -50,7 +50,7 @@ class FieldDropButtonTest extends ViewTestBase {
   /**
    * Tests dropbutton field.
    */
-  public function testDropbutton() {
+  public function testDropbutton(): void {
     // Create some test nodes.
     $nodes = [];
     for ($i = 0; $i < 5; $i++) {

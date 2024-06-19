@@ -66,7 +66,7 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migrated comments.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $comment = Comment::load(1);
     $this->assertInstanceOf(Comment::class, $comment);
     $this->assertSame('Subject field in English', $comment->getSubject());

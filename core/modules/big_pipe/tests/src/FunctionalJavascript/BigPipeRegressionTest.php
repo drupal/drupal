@@ -45,7 +45,7 @@ class BigPipeRegressionTest extends WebDriverTestBase {
    *
    * @see https://www.drupal.org/node/2678662
    */
-  public function testMultipleClosingBodies_2678662() {
+  public function testMultipleClosingBodies_2678662(): void {
     $this->assertTrue($this->container->get('module_installer')->install(['render_placeholder_message_test'], TRUE), 'Installed modules.');
 
     $this->drupalLogin($this->drupalCreateUser());
@@ -78,7 +78,7 @@ JS;
    *
    * @see https://www.drupal.org/node/2712935
    */
-  public function testMessages_2712935() {
+  public function testMessages_2712935(): void {
     $this->assertTrue($this->container->get('module_installer')->install(['render_placeholder_message_test'], TRUE), 'Installed modules.');
 
     $this->drupalLogin($this->drupalCreateUser());
@@ -118,7 +118,7 @@ JS;
    *
    * @see https://www.drupal.org/node/2802923
    */
-  public function testPlaceholderInParagraph_2802923() {
+  public function testPlaceholderInParagraph_2802923(): void {
     $this->drupalLogin($this->drupalCreateUser());
     $this->drupalGet(Url::fromRoute('big_pipe_regression_test.2802923'));
 
@@ -131,7 +131,7 @@ JS;
    * Repeat loading of same page for two times, after second time the page is
    * cached and the bug consistently reproducible.
    */
-  public function testBigPipeLargeContent() {
+  public function testBigPipeLargeContent(): void {
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
     $assert_session = $this->assertSession();

@@ -29,7 +29,7 @@ class MediaReferenceFieldHelpTest extends MediaJavascriptTestBase {
    *
    * @see media_form_field_ui_field_storage_add_form_alter()
    */
-  public function testFieldCreationHelpText() {
+  public function testFieldCreationHelpText(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

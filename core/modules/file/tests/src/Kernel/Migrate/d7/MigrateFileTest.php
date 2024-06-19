@@ -44,7 +44,7 @@ class MigrateFileTest extends MigrateDrupal7TestBase {
   /**
    * Tests that all expected files are migrated.
    */
-  public function testFileMigration() {
+  public function testFileMigration(): void {
     $this->assertEntity(1, 'cube.jpeg', 'public://cube.jpeg', 'image/jpeg', 3620, 1421727515, 1421727515, '1');
     // Ensure temporary file was not migrated.
     $this->assertNull(File::load(4));

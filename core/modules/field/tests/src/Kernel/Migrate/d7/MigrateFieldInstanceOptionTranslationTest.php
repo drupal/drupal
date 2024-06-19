@@ -51,7 +51,7 @@ class MigrateFieldInstanceOptionTranslationTest extends MigrateDrupal7TestBase {
   /**
    * Migrate field instance option translations.
    */
-  public function testFieldInstanceOptionTranslation() {
+  public function testFieldInstanceOptionTranslation(): void {
     $language_manager = $this->container->get('language_manager');
 
     /** @var \Drupal\language\Config\LanguageConfigOverride $config_translation */

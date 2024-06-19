@@ -35,7 +35,7 @@ class BundleConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests bundle constraint validation.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     // Test with multiple values.
     $this->assertValidation(['foo', 'bar']);
     // Test with a single string value as well.

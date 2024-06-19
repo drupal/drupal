@@ -46,7 +46,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
   /**
    * Tests performance for anonymous users.
    */
-  public function testAnonymous() {
+  public function testAnonymous(): void {
     // Request the front page, then immediately clear all object caches, so that
     // aggregates and image styles are created on disk but otherwise caches are
     // empty.

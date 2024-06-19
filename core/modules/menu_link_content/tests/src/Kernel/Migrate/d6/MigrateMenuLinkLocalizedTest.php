@@ -49,7 +49,7 @@ class MigrateMenuLinkLocalizedTest extends MigrateNodeTestBase {
   /**
    * Tests migration of menu link localized translations.
    */
-  public function testMenuLinkLocalized() {
+  public function testMenuLinkLocalized(): void {
     // A localized menu link.
     $this->assertEntity('463', 'fr', 'fr - Test 1', 'secondary-links', 'fr - Test menu link 1', TRUE, FALSE, [
       'attributes' => ['title' => 'fr - Test menu link 1'],

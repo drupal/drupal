@@ -26,7 +26,7 @@ class TermDisplayConfigurableTest extends TaxonomyTestBase {
   /**
    * Sets base fields to configurable display and check settings are respected.
    */
-  public function testDisplayConfigurable() {
+  public function testDisplayConfigurable(): void {
     $user = $this->drupalCreateUser(['administer nodes']);
     $this->drupalLogin($user);
 

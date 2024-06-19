@@ -101,7 +101,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
   /**
    * Ensures that attributes are retained on conversion.
    */
-  public function testAttributeRetentionDuringUpcasting() {
+  public function testAttributeRetentionDuringUpcasting(): void {
     // Run test cases in a single test to make the test run faster.
     $attributes_to_retain = [
       '-none-' => 'inline',
@@ -163,7 +163,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    *
    * @dataProvider providerLinkability
    */
-  public function testImageArbitraryHtml(string $image_type, bool $unrestricted) {
+  public function testImageArbitraryHtml(string $image_type, bool $unrestricted): void {
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
 
@@ -210,7 +210,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    *
    * @dataProvider providerLinkability
    */
-  public function testLinkability(string $image_type, bool $unrestricted) {
+  public function testLinkability(string $image_type, bool $unrestricted): void {
     assert($image_type === 'inline' || $image_type === 'block');
 
     // Disable filter_html.
@@ -361,7 +361,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    *
    * @dataProvider providerAltTextRequired
    */
-  public function testAltTextRequired(bool $unrestricted) {
+  public function testAltTextRequired(bool $unrestricted): void {
     // Disable filter_html.
     if ($unrestricted) {
       FilterFormat::load('test_format')
@@ -584,7 +584,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
   /**
    * Ensures that images can have caption set.
    */
-  public function testImageCaption() {
+  public function testImageCaption(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

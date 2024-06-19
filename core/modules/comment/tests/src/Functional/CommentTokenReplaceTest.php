@@ -34,7 +34,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
   /**
    * Creates a comment, then tests the tokens generated from it.
    */
-  public function testCommentTokenReplacement() {
+  public function testCommentTokenReplacement(): void {
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $url_options = [

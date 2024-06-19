@@ -18,7 +18,7 @@ class InternalViolationTest extends UnitTestCase {
    * @covers ::__get
    * @covers ::__set
    */
-  public function testSetGetDynamicProperties() {
+  public function testSetGetDynamicProperties(): void {
     $violation = new InternalViolation($this->prophesize(ConstraintViolationInterface::class)->reveal());
     $this->expectDeprecation('Setting dynamic properties on violations is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3307919');
     $this->expectDeprecation('Accessing dynamic properties on violations is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3307919');
@@ -30,7 +30,7 @@ class InternalViolationTest extends UnitTestCase {
    * @covers ::__get
    * @covers ::__set
    */
-  public function testSetGetArrayPropertyPath() {
+  public function testSetGetArrayPropertyPath(): void {
     $violation = new InternalViolation($this->prophesize(ConstraintViolationInterface::class)->reveal());
     $this->expectDeprecation('Accessing the arrayPropertyPath property is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use \Symfony\Component\Validator\ConstraintViolationInterface::getPropertyPath() instead. See https://www.drupal.org/node/3307919');
     $violation->arrayPropertyPath = ['bar'];

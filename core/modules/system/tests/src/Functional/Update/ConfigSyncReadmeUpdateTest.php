@@ -32,7 +32,7 @@ class ConfigSyncReadmeUpdateTest extends UpdatePathTestBase {
   /**
    * Tests configuration synchronization readme file update.
    */
-  public function testConfigurationSynchronizationReadmeUpdate() {
+  public function testConfigurationSynchronizationReadmeUpdate(): void {
     $readme_path = Settings::get('config_sync_directory') . '/README.txt';
     // The test setup does not write the configuration synchronization
     // directory, so let us do it here instead.

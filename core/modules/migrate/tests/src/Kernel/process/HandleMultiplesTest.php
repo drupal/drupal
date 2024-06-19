@@ -117,7 +117,7 @@ class HandleMultiplesTest extends KernelTestBase {
    * @param array $expected_data
    *   The expected results.
    */
-  public function testScalarAndMultipleValues(array $source_data, array $expected_data) {
+  public function testScalarAndMultipleValues(array $source_data, array $expected_data): void {
     $definition = $this->getDefinition();
     $definition['source']['data_rows'] = [$source_data];
 

@@ -24,7 +24,7 @@ class AjaxTest extends WebDriverTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testAjaxWithAdminRoute() {
+  public function testAjaxWithAdminRoute(): void {
     \Drupal::service('theme_installer')->install(['stable9', 'claro']);
     $theme_config = \Drupal::configFactory()->getEditable('system.theme');
     $theme_config->set('admin', 'claro');
@@ -55,7 +55,7 @@ class AjaxTest extends WebDriverTestBase {
    *
    * @see https://www.drupal.org/node/2647916
    */
-  public function testDrupalSettingsCachingRegression() {
+  public function testDrupalSettingsCachingRegression(): void {
     $this->drupalGet('ajax-test/dialog');
     $assert = $this->assertSession();
     $session = $this->getSession();
@@ -100,7 +100,7 @@ class AjaxTest extends WebDriverTestBase {
    * reattached and all top-level elements of type Node.ELEMENT_NODE need to be
    * part of the context.
    */
-  public function testInsertAjaxResponse() {
+  public function testInsertAjaxResponse(): void {
     $render_single_root = [
       'pre-wrapped-div' => '<div class="pre-wrapped">pre-wrapped<script> var test;</script></div>',
       'pre-wrapped-span' => '<span class="pre-wrapped">pre-wrapped<script> var test;</script></span>',
@@ -162,7 +162,7 @@ JS;
   /**
    * Tests that jQuery's global Ajax events are triggered at the correct time.
    */
-  public function testGlobalEvents() {
+  public function testGlobalEvents(): void {
     $session = $this->getSession();
     $assert = $this->assertSession();
     $expected_event_order = implode('', ['ajaxSuccess', 'ajaxComplete', 'ajaxStop']);
@@ -260,7 +260,7 @@ JS;
   /**
    * Tests that Ajax errors are visible in the UI.
    */
-  public function testUiAjaxException() {
+  public function testUiAjaxException(): void {
     $themes = [
       'olivero',
       'claro',
@@ -300,7 +300,7 @@ JS;
   /**
    * Tests ajax focus handling.
    */
-  public function testAjaxFocus() {
+  public function testAjaxFocus(): void {
     $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3396536");
     $this->drupalGet('/ajax_forms_test_get_form');
 

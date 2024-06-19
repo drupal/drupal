@@ -28,7 +28,7 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
   /**
    * Tests editing a node in multiple workspaces.
    */
-  public function testConcurrentEditing() {
+  public function testConcurrentEditing(): void {
     // Create a test node.
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
     $this->setupWorkspaceSwitcherBlock();

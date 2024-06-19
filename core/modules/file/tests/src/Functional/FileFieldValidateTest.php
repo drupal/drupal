@@ -27,7 +27,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   /**
    * Tests the required property on file fields.
    */
-  public function testRequired() {
+  public function testRequired(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = $this->randomMachineName();
@@ -77,7 +77,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   /**
    * Tests the max file size validator.
    */
-  public function testFileMaxSize() {
+  public function testFileMaxSize(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = $this->randomMachineName();
@@ -129,7 +129,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   /**
    * Tests file extension checking.
    */
-  public function testFileExtension() {
+  public function testFileExtension(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = $this->randomMachineName();
@@ -171,7 +171,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   /**
    * Checks that a file can always be removed if it does not pass validation.
    */
-  public function testFileRemoval() {
+  public function testFileRemoval(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = 'file_test';

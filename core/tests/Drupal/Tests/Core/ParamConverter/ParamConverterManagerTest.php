@@ -38,7 +38,7 @@ class ParamConverterManagerTest extends UnitTestCase {
    *
    * @covers ::getConverter
    */
-  public function testGetConverter($name, $class) {
+  public function testGetConverter($name, $class): void {
     $converter = $this->getMockBuilder('Drupal\Core\ParamConverter\ParamConverterInterface')
       ->setMockClassName($class)
       ->getMock();
@@ -55,7 +55,7 @@ class ParamConverterManagerTest extends UnitTestCase {
    *
    * @covers ::getConverter
    */
-  public function testGetConverterException() {
+  public function testGetConverterException(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->manager->getConverter('undefined.converter');
   }
@@ -129,7 +129,7 @@ class ParamConverterManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetRouteParameterConverters
    */
-  public function testSetRouteParameterConverters($path, $parameters = NULL, $expected = NULL) {
+  public function testSetRouteParameterConverters($path, $parameters = NULL, $expected = NULL): void {
     $converter = $this->createMock('Drupal\Core\ParamConverter\ParamConverterInterface');
     $converter->expects($this->any())
       ->method('applies')
@@ -170,7 +170,7 @@ class ParamConverterManagerTest extends UnitTestCase {
   /**
    * @covers ::convert
    */
-  public function testConvert() {
+  public function testConvert(): void {
     $route = new Route('/test/{id}/{literal}/{null}');
     $parameters = [
       'id' => [
@@ -207,7 +207,7 @@ class ParamConverterManagerTest extends UnitTestCase {
   /**
    * @covers ::convert
    */
-  public function testConvertNoConverting() {
+  public function testConvertNoConverting(): void {
     $route = new Route('/test');
     $defaults = [
       RouteObjectInterface::ROUTE_OBJECT => $route,
@@ -223,7 +223,7 @@ class ParamConverterManagerTest extends UnitTestCase {
   /**
    * @covers ::convert
    */
-  public function testConvertMissingParam() {
+  public function testConvertMissingParam(): void {
     $route = new Route('/test/{id}');
     $parameters = [
       'id' => [

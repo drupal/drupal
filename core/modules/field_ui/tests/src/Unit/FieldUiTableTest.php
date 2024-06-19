@@ -18,7 +18,7 @@ class FieldUiTableTest extends UnitTestCase {
    *
    * @dataProvider providerTestReduceOrder
    */
-  public function testReduceOrder($array, $expected) {
+  public function testReduceOrder($array, $expected): void {
     $this->assertSame($expected, array_reduce($array, ['Drupal\field_ui\Element\FieldUiTable', 'reduceOrder']));
   }
 

@@ -99,7 +99,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
   /**
    * Testing when "Display all values in the same row" is checked.
    */
-  public function testGroupRows() {
+  public function testGroupRows(): void {
     $this->drupalGet('test-group-rows');
     $result = $this->cssSelect('div.views-field-field-views-testing-group- div');
 
@@ -113,7 +113,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
   /**
    * Testing when "Display all values in the same row" is unchecked.
    */
-  public function testUngroupedRows() {
+  public function testUngroupedRows(): void {
     $this->drupalGet('test-ungroup-rows');
     $result = $this->cssSelect('div.views-field-field-views-testing-group- div');
     $rendered_value = [];

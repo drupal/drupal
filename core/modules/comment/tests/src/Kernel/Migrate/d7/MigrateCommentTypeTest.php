@@ -40,7 +40,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migrated comment types.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $this->migrateCommentTypes();
 
     $comment_fields = [
@@ -80,7 +80,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
    *
    * @dataProvider providerTestNoCommentTypeMigration
    */
-  public function testNoCommentTypeMigration(array $disabled_source_modules, array $expected_messages) {
+  public function testNoCommentTypeMigration(array $disabled_source_modules, array $expected_messages): void {
     if (!empty($disabled_source_modules)) {
       $this->sourceDatabase->update('system')
         ->condition('name', $disabled_source_modules, 'IN')

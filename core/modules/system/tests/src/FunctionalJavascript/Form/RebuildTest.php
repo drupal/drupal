@@ -53,7 +53,7 @@ class RebuildTest extends WebDriverTestBase {
    * The 'action' attribute of a form should not change after an Ajax submission
    * followed by a non-Ajax submission, which triggers a validation error.
    */
-  public function testPreserveFormActionAfterAJAX() {
+  public function testPreserveFormActionAfterAJAX(): void {
     $page = $this->getSession()->getPage();
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';

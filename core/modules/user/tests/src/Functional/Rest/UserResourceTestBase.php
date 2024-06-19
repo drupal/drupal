@@ -147,7 +147,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   /**
    * Tests PATCHing security-sensitive base fields of the logged in account.
    */
-  public function testPatchDxForSecuritySensitiveBaseFields() {
+  public function testPatchDxForSecuritySensitiveBaseFields(): void {
     // The anonymous user is never allowed to modify itself.
     if (!static::$auth) {
       $this->markTestSkipped();
@@ -263,7 +263,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   /**
    * Tests PATCHing security-sensitive base fields to change other users.
    */
-  public function testPatchSecurityOtherUser() {
+  public function testPatchSecurityOtherUser(): void {
     // The anonymous user is never allowed to modify other users.
     if (!static::$auth) {
       $this->markTestSkipped();

@@ -40,7 +40,7 @@ class SubProcessTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerTestSubProcess
    */
-  public function testSubProcess($process_configuration, $source_values = []) {
+  public function testSubProcess($process_configuration, $source_values = []): void {
     $migration = $this->getMigration();
     // Set up the properties for the sub_process.
     $plugin = new SubProcess($process_configuration, 'sub_process', []);
@@ -134,7 +134,7 @@ class SubProcessTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerTestNotFoundSubProcess
    */
-  public function testNotFoundSubProcess($process_configuration, $source_values = []) {
+  public function testNotFoundSubProcess($process_configuration, $source_values = []): void {
     $migration = $this->getMigration();
     // Set up the properties for the sub_process.
     $plugin = new SubProcess($process_configuration, 'sub_process', []);
@@ -200,7 +200,7 @@ class SubProcessTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerTestSourceNotArray
    */
-  public function testSourceNotArray($source_values, $type) {
+  public function testSourceNotArray($source_values, $type): void {
     $process = new SubProcess(['process' => ['foo' => 'source_foo']], 'sub_process', []);
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage("Input array should hold elements of type array, instead element was of type '$type'");

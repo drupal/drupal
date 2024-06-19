@@ -204,7 +204,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests translate link on comment content admin page.
    */
-  public function testTranslateLinkCommentAdminPage() {
+  public function testTranslateLinkCommentAdminPage(): void {
     $this->adminUser = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer comments', 'skip comment approval']));
     $this->drupalLogin($this->adminUser);
 

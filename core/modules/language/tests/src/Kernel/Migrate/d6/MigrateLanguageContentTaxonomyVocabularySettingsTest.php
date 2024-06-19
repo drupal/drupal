@@ -40,7 +40,7 @@ class MigrateLanguageContentTaxonomyVocabularySettingsTest extends MigrateDrupal
   /**
    * Tests migration of 18ntaxonomy vocabulary settings.
    */
-  public function testLanguageContentTaxonomy() {
+  public function testLanguageContentTaxonomy(): void {
     $target_entity = 'taxonomy_term';
     // Per Language.
     $this->assertLanguageContentSettings($target_entity, 'vocabulary_1_i_0_', LanguageInterface::LANGCODE_SITE_DEFAULT, TRUE, ['enabled' => FALSE]);

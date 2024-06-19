@@ -107,7 +107,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   /**
    * Tests creating translations of shipped configuration.
    */
-  public function testCreateTranslation() {
+  public function testCreateTranslation(): void {
     $config_name = 'locale_test.no_translation';
 
     $this->saveLanguageOverride($config_name, 'test', 'Test (German)', 'de');
@@ -117,7 +117,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   /**
    * Tests creating translations configuration with multi value settings.
    */
-  public function testCreateTranslationMultiValue() {
+  public function testCreateTranslationMultiValue(): void {
     $config_name = 'locale_test.translation_multiple';
 
     $this->saveLanguageOverride($config_name, 'test_multiple', ['string' => 'String (German)', 'another_string' => 'Another string (German)'], 'de');
@@ -134,7 +134,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   /**
    * Tests importing community translations of shipped configuration.
    */
-  public function testLocaleCreateTranslation() {
+  public function testLocaleCreateTranslation(): void {
     $config_name = 'locale_test.no_translation';
 
     $this->saveLocaleTranslationData($config_name, 'test', 'Test', 'Test (German)', 'de');
@@ -144,7 +144,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   /**
    * Tests updating translations of shipped configuration.
    */
-  public function testUpdateTranslation() {
+  public function testUpdateTranslation(): void {
     $config_name = 'locale_test.translation';
 
     $this->saveLanguageOverride($config_name, 'test', 'Updated German test', 'de');
@@ -154,7 +154,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   /**
    * Tests updating community translations of shipped configuration.
    */
-  public function testLocaleUpdateTranslation() {
+  public function testLocaleUpdateTranslation(): void {
     $config_name = 'locale_test.translation';
 
     $this->saveLocaleTranslationData($config_name, 'test', 'English test', 'Updated German test', 'de');
@@ -164,7 +164,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   /**
    * Tests deleting translations of shipped configuration.
    */
-  public function testDeleteTranslation() {
+  public function testDeleteTranslation(): void {
     $config_name = 'locale_test.translation';
 
     $this->deleteLanguageOverride($config_name, 'test', 'English test', 'de');
@@ -177,7 +177,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   /**
    * Tests deleting community translations of shipped configuration.
    */
-  public function testLocaleDeleteTranslation() {
+  public function testLocaleDeleteTranslation(): void {
     $config_name = 'locale_test.translation';
 
     $this->deleteLocaleTranslationData($config_name, 'test', 'English test', 'de');

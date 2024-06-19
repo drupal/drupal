@@ -22,7 +22,7 @@ class FilteredPluginManagerTraitTest extends UnitTestCase {
    * @covers ::getFilteredDefinitions
    * @dataProvider providerTestGetFilteredDefinitions
    */
-  public function testGetFilteredDefinitions($contexts, $expected) {
+  public function testGetFilteredDefinitions($contexts, $expected): void {
     // Start with two plugins.
     $definitions = [];
     $definitions['plugin1'] = ['id' => 'plugin1'];

@@ -25,7 +25,7 @@ class MigrateLanguageContentTaxonomyVocabularySettingsTest extends CoreTest {
   /**
    * Tests migration of 18ntaxonomy vocabulary settings.
    */
-  public function testLanguageContentTaxonomy() {
+  public function testLanguageContentTaxonomy(): void {
     $this->assertLanguageContentSettings('taxonomy_term', 'forums', LanguageInterface::LANGCODE_NOT_SPECIFIED, FALSE, ['enabled' => FALSE]);
   }
 

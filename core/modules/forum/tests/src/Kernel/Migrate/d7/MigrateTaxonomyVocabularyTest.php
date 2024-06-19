@@ -31,7 +31,7 @@ class MigrateTaxonomyVocabularyTest extends TaxonomyVocabularyTest {
   /**
    * Tests the Drupal 7 taxonomy vocabularies to Drupal 8 migration.
    */
-  public function testTaxonomyVocabulary() {
+  public function testTaxonomyVocabulary(): void {
     $this->assertEntity('tags', 'Tags', 'Use tags to group articles on similar topics into categories.', 0);
     $this->assertEntity('forums', 'Subject of discussion', 'Forum navigation vocabulary', -10);
   }

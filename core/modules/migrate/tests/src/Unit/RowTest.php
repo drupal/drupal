@@ -87,7 +87,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests object creation: empty.
    */
-  public function testRowWithoutData() {
+  public function testRowWithoutData(): void {
     $row = new Row();
     $this->assertSame([], $row->getSource(), 'Empty row');
   }
@@ -95,7 +95,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests object creation: basic.
    */
-  public function testRowWithBasicData() {
+  public function testRowWithBasicData(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
     $this->assertSame($this->testValues, $row->getSource(), 'Row with data, simple id.');
   }
@@ -103,7 +103,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests object creation: multiple source IDs.
    */
-  public function testRowWithMultipleSourceIds() {
+  public function testRowWithMultipleSourceIds(): void {
     $multi_source_ids = $this->testSourceIds + ['vid' => 'Node revision'];
     $multi_source_ids_values = $this->testValues + ['vid' => 1];
     $row = new Row($multi_source_ids_values, $multi_source_ids);
@@ -113,7 +113,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests object creation: invalid values.
    */
-  public function testRowWithInvalidData() {
+  public function testRowWithInvalidData(): void {
     $invalid_values = [
       'title' => 'node X',
     ];
@@ -124,7 +124,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests source immutability after freeze.
    */
-  public function testSourceFreeze() {
+  public function testSourceFreeze(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
     $row->rehash();
     $this->assertSame($this->testHash, $row->getHash(), 'Correct hash.');
@@ -139,7 +139,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests setting on a frozen row.
    */
-  public function testSetFrozenRow() {
+  public function testSetFrozenRow(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
     $row->freezeSource();
     $this->expectException(\Exception::class);
@@ -150,7 +150,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests hashing.
    */
-  public function testHashing() {
+  public function testHashing(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
     $this->assertSame('', $row->getHash(), 'No hash at creation');
     $row->rehash();
@@ -213,7 +213,7 @@ class RowTest extends UnitTestCase {
    * @covers ::setIdMap
    * @covers ::getIdMap
    */
-  public function testGetSetIdMap() {
+  public function testGetSetIdMap(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
     $test_id_map = [
       'original_hash' => '',
@@ -227,7 +227,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests the source ID.
    */
-  public function testSourceIdValues() {
+  public function testSourceIdValues(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
     $this->assertSame(['nid' => $this->testValues['nid']], $row->getSourceIdValues());
   }
@@ -235,7 +235,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests the multiple source IDs.
    */
-  public function testMultipleSourceIdValues() {
+  public function testMultipleSourceIdValues(): void {
     // Set values in same order as ids.
     $multi_source_ids = $this->testSourceIds + [
       'vid' => 'Node revision',
@@ -270,7 +270,7 @@ class RowTest extends UnitTestCase {
    *
    * @covers ::getSourceProperty
    */
-  public function testGetSourceProperty() {
+  public function testGetSourceProperty(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
     $this->assertSame($this->testValues['nid'], $row->getSourceProperty('nid'));
     $this->assertSame($this->testValues['title'], $row->getSourceProperty('title'));
@@ -280,7 +280,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests setting and getting the destination.
    */
-  public function testDestination() {
+  public function testDestination(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
     $this->assertEmpty($row->getDestination());
     $this->assertFalse($row->hasDestinationProperty('nid'));
@@ -294,7 +294,7 @@ class RowTest extends UnitTestCase {
   /**
    * Tests setting/getting multiple destination IDs.
    */
-  public function testMultipleDestination() {
+  public function testMultipleDestination(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
     // Set some deep nested values.
     $row->setDestinationProperty('image/alt', 'alt text');
@@ -322,7 +322,7 @@ class RowTest extends UnitTestCase {
    * @dataProvider getDataProvider
    * @covers ::get
    */
-  public function testGet($key, $expected_value) {
+  public function testGet($key, $expected_value): void {
     $row = $this->createRowWithDestinationProperties($this->testGetSourceProperties, $this->testGetSourceIds, $this->testGetDestinationProperties);
     $this->assertSame($expected_value, $row->get($key));
   }
@@ -366,7 +366,7 @@ class RowTest extends UnitTestCase {
    * @covers ::getMultiple
    * @dataProvider getMultipleDataProvider
    */
-  public function testGetMultiple(array $keys, array $expected_values) {
+  public function testGetMultiple(array $keys, array $expected_values): void {
     $row = $this->createRowWithDestinationProperties($this->testGetSourceProperties, $this->testGetSourceIds, $this->testGetDestinationProperties);
     $this->assertEquals(array_combine($keys, $expected_values), $row->getMultiple($keys));
   }

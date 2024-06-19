@@ -59,7 +59,7 @@ class MigrateLanguageContentCommentSettingsNoEntityTranslationTest extends Migra
   /**
    * Tests migration of content language settings.
    */
-  public function testLanguageCommentSettings() {
+  public function testLanguageCommentSettings(): void {
     // Confirm there is no message about a missing bundle.
     $this->assertEmpty($this->migrateMessages, $this->migrateMessages['error'][0] ?? '');
 

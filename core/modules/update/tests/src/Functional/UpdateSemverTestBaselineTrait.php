@@ -25,7 +25,7 @@ trait UpdateSemverTestBaselineTrait {
    * - '8.0.2' is an unpublished release.
    * - '8.0.3' is marked as 'Release type' 'Unsupported'.
    */
-  public function testNoUpdatesAvailable() {
+  public function testNoUpdatesAvailable(): void {
     foreach ([0, 1] as $minor_version) {
       foreach ([0, 1] as $patch_version) {
         foreach (['-alpha1', '-beta1', ''] as $extra_version) {
@@ -48,7 +48,7 @@ trait UpdateSemverTestBaselineTrait {
   /**
    * Tests the Update Manager module when one normal update is available.
    */
-  public function testNormalUpdateAvailable() {
+  public function testNormalUpdateAvailable(): void {
     $this->setProjectInstalledVersion('8.0.0');
 
     // Ensure that the update check requires a token.
@@ -131,7 +131,7 @@ trait UpdateSemverTestBaselineTrait {
    * - drupal.current.xml and semver_test.current.xml: These declare major
    *   releases supported, 8 and 9.
    */
-  public function testMajorUpdateAvailable() {
+  public function testMajorUpdateAvailable(): void {
     foreach (['9.0.0', '8.0.0-9.0.0'] as $release_history) {
       foreach ([0, 1] as $minor_version) {
         foreach ([0, 1] as $patch_version) {
@@ -188,7 +188,7 @@ trait UpdateSemverTestBaselineTrait {
    * They both have an '8.0.2' release that is unpublished and an '8.1.0'
    * release that is published and is the expected update.
    */
-  public function testRevokedRelease() {
+  public function testRevokedRelease(): void {
     foreach (['8.1.0', '8.1.0-unsupported'] as $fixture) {
       $this->setProjectInstalledVersion('8.0.2');
       $this->refreshUpdateStatus([$this->updateProject => $fixture]);
@@ -216,7 +216,7 @@ trait UpdateSemverTestBaselineTrait {
    * 'unsupported' and an '8.1.0' release that has the 'Release type' value of
    * 'supported' and is the expected update.
    */
-  public function testUnsupportedRelease() {
+  public function testUnsupportedRelease(): void {
     foreach (['8.1.0', '8.1.0-unsupported'] as $fixture) {
       $this->setProjectInstalledVersion('8.0.3');
       $this->refreshUpdateStatus([$this->updateProject => $fixture]);

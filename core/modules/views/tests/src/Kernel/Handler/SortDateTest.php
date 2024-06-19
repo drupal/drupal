@@ -157,7 +157,7 @@ class SortDateTest extends ViewsKernelTestBase {
   /**
    * Tests numeric ordering of the result set.
    */
-  public function testDateOrdering() {
+  public function testDateOrdering(): void {
     foreach (['second', 'minute', 'hour', 'day', 'month', 'year'] as $granularity) {
       foreach ([FALSE, TRUE] as $reverse) {
         $view = Views::getView('test_view');

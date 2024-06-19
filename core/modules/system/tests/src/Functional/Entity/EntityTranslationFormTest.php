@@ -54,7 +54,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
   /**
    * Tests entity form language.
    */
-  public function testEntityFormLanguage() {
+  public function testEntityFormLanguage(): void {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $web_user = $this->drupalCreateUser([

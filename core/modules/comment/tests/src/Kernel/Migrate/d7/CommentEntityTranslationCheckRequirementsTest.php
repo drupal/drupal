@@ -28,7 +28,7 @@ class CommentEntityTranslationCheckRequirementsTest extends MigrateDrupal7TestBa
    *
    * @dataProvider providerTestCheckRequirements
    */
-  public function testCheckRequirements($module) {
+  public function testCheckRequirements($module): void {
     // Disable the module in the source site.
     $this->sourceDatabase->update('system')
       ->condition('name', $module)

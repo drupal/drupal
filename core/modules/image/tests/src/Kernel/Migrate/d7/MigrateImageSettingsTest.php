@@ -26,7 +26,7 @@ class MigrateImageSettingsTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migration.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $config = $this->config('image.settings');
     // These settings are not recommended...
     $this->assertTrue($config->get('allow_insecure_derivatives'));

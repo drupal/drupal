@@ -49,7 +49,7 @@ class LocaleTranslateStringTourTest extends TourTestBase {
   /**
    * Tests locale tour tip availability.
    */
-  public function testTranslateStringTourTips() {
+  public function testTranslateStringTourTips(): void {
     // Add another language so there are no missing form items.
     $edit = [];
     $edit['predefined_langcode'] = 'es';

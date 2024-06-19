@@ -77,7 +77,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
   /**
    * Tests the link collection normalizer.
    */
-  public function testNormalize() {
+  public function testNormalize(): void {
     $link_context = new ResourceObject(new CacheableMetadata(), new ResourceType('n/a', 'n/a', 'n/a'), 'n/a', NULL, [], new LinkCollection([]));
     $link_collection = (new LinkCollection([]))
       ->withLink('related', new Link(new CacheableMetadata(), Url::fromUri('http://example.com/post/42'), 'related', ['title' => 'Most viewed']))
@@ -110,7 +110,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
    *
    * @dataProvider linkAccessTestData
    */
-  public function testLinkAccess($current_user_id, $edit_form_uid, $expected_link_keys, $expected_cache_contexts) {
+  public function testLinkAccess($current_user_id, $edit_form_uid, $expected_link_keys, $expected_cache_contexts): void {
     // Get the current user and an edit-form URL.
     foreach ($this->testUsers as $user) {
       $uid = (int) $user->id();

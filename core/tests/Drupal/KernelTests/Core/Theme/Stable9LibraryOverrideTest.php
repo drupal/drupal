@@ -58,7 +58,7 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
   /**
    * Ensures that Stable 9 overrides all relevant core library assets.
    */
-  public function testStable9LibraryOverrides() {
+  public function testStable9LibraryOverrides(): void {
     // First get the clean library definitions with no active theme.
     $libraries_before = $this->getAllLibraries();
     $libraries_before = $this->removeVendorAssets($libraries_before);

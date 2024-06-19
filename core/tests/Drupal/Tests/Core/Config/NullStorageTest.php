@@ -18,7 +18,7 @@ class NullStorageTest extends UnitTestCase {
   /**
    * Tests createCollection.
    */
-  public function testCollection() {
+  public function testCollection(): void {
     $nullStorage = new NullStorage();
     $collection = $nullStorage->createCollection('test');
     $this->assertInstanceOf(StorageInterface::class, $collection);

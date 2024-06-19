@@ -49,7 +49,7 @@ class TimestampNormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsNormalization
    */
-  public function testSupportsNormalization() {
+  public function testSupportsNormalization(): void {
     $this->assertTrue($this->normalizer->supportsNormalization($this->data->reveal()));
 
     $integer = $this->prophesize(IntegerData::class);
@@ -62,14 +62,14 @@ class TimestampNormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsDenormalization
    */
-  public function testSupportsDenormalization() {
+  public function testSupportsDenormalization(): void {
     $this->assertTrue($this->normalizer->supportsDenormalization($this->data->reveal(), Timestamp::class));
   }
 
   /**
    * @covers ::normalize
    */
-  public function testNormalize() {
+  public function testNormalize(): void {
     $random_rfc_3339_string = $this->randomMachineName();
 
     $drupal_date_time = $this->prophesize(TimestampNormalizerTestDrupalDateTime::class);
@@ -91,7 +91,7 @@ class TimestampNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    * @dataProvider providerTestDenormalizeValidFormats
    */
-  public function testDenormalizeValidFormats($normalized, $expected) {
+  public function testDenormalizeValidFormats($normalized, $expected): void {
     $denormalized = $this->normalizer->denormalize($normalized, Timestamp::class, NULL, []);
     $this->assertSame($expected, $denormalized);
   }
@@ -123,7 +123,7 @@ class TimestampNormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalizeException() {
+  public function testDenormalizeException(): void {
     $this->expectException(UnexpectedValueException::class);
     $this->expectExceptionMessage('The specified date "2016/11/06 09:02am GMT" is not in an accepted format: "U" (UNIX timestamp), "Y-m-d\TH:i:sO" (ISO 8601), "Y-m-d\TH:i:sP" (RFC 3339).');
 

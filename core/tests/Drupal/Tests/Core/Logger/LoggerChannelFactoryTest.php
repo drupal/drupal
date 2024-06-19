@@ -22,7 +22,7 @@ class LoggerChannelFactoryTest extends UnitTestCase {
    *
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     $factory = new LoggerChannelFactory(
       $this->createMock(RequestStack::class),
       $this->createMock(AccountInterface::class),
@@ -37,7 +37,7 @@ class LoggerChannelFactoryTest extends UnitTestCase {
    * @covers ::__construct
    * @group legacy
    */
-  public function testConstructorDeprecation() {
+  public function testConstructorDeprecation(): void {
     $container = $this->prophesize(ContainerInterface::class);
     $container->get('request_stack')
       ->willReturn($this->prophesize(RequestStack::class)->reveal());
@@ -54,7 +54,7 @@ class LoggerChannelFactoryTest extends UnitTestCase {
    * @covers ::get
    * @group legacy
    */
-  public function testWithoutConstructor() {
+  public function testWithoutConstructor(): void {
     $container = $this->prophesize(ContainerInterface::class);
     $container->get('request_stack')
       ->willReturn($this->prophesize(RequestStack::class)->reveal());
@@ -72,7 +72,7 @@ class LoggerChannelFactoryTest extends UnitTestCase {
    * @covers ::setContainer
    * @group legacy
    */
-  public function testDeprecatedSetContainer() {
+  public function testDeprecatedSetContainer(): void {
     $factory = new LoggerChannelFactory(
       $this->createMock(RequestStack::class),
       $this->createMock(AccountInterface::class),
@@ -86,7 +86,7 @@ class LoggerChannelFactoryTest extends UnitTestCase {
    * @covers ::__get
    * @group legacy
    */
-  public function testDeprecatedGetContainer() {
+  public function testDeprecatedGetContainer(): void {
     $factory = new LoggerChannelFactory(
       $this->createMock(RequestStack::class),
       $this->createMock(AccountInterface::class),

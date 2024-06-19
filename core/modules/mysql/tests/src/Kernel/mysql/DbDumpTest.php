@@ -146,7 +146,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
   /**
    * Tests the command directly.
    */
-  public function testDbDumpCommand() {
+  public function testDbDumpCommand(): void {
     $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');
     $command_tester = new CommandTester($command);
@@ -175,7 +175,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
   /**
    * Tests loading the script back into the database.
    */
-  public function testScriptLoad() {
+  public function testScriptLoad(): void {
     // Generate the script.
     $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');

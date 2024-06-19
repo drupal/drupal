@@ -30,7 +30,7 @@ class EditorDialogAccessTest extends BrowserTestBase {
   /**
    * Tests access to the editor image dialog.
    */
-  public function testEditorImageDialogAccess() {
+  public function testEditorImageDialogAccess(): void {
     $url = Url::fromRoute('editor.image_dialog', ['editor' => 'plain_text']);
     $session = $this->assertSession();
 

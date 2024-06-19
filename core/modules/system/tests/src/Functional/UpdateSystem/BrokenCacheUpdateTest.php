@@ -32,7 +32,7 @@ class BrokenCacheUpdateTest extends BrowserTestBase {
   /**
    * Ensures that a broken or out-of-date element info cache is not used.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     $connection = Database::getConnection();
 
     // Create broken element info caches entries.

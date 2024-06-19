@@ -46,7 +46,7 @@ class InstallerDeprecatedDriverNameTest extends BrowserTestBase {
   /**
    * Verifies that installation succeeded.
    */
-  public function testInstaller() {
+  public function testInstaller(): void {
     $this->assertSession()->addressEquals('/');
     $this->assertSession()->statusCodeEquals(200);
   }

@@ -23,7 +23,7 @@ class FileVideoFormatterTest extends FileMediaFormatterTestBase {
    *
    * @dataProvider dataProvider
    */
-  public function testRender($tag_count, $formatter_settings) {
+  public function testRender($tag_count, $formatter_settings): void {
     $field_config = $this->createMediaField('file_video', 'mp4', $formatter_settings);
 
     file_put_contents('public://file.mp4', str_repeat('t', 10));
@@ -65,7 +65,7 @@ class FileVideoFormatterTest extends FileMediaFormatterTestBase {
   /**
    * Tests that the attributes added to the formatter are applied on render.
    */
-  public function testAttributes() {
+  public function testAttributes(): void {
     $field_config = $this->createMediaField(
       'file_video',
       'mp4',

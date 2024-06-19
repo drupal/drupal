@@ -29,7 +29,7 @@ class ElementValidationTest extends WebDriverTestBase {
    * Drupal AJAX commands update the DOM echoing back the validated values in
    * the form of messages that appear on the page.
    */
-  public function testAjaxElementValidation() {
+  public function testAjaxElementValidation(): void {
     $this->drupalGet('ajax_validation_test');
     $page = $this->getSession()->getPage();
     $assert = $this->assertSession();

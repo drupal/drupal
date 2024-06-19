@@ -40,7 +40,7 @@ class MigrateStatisticsConfigsTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of statistics variables to statistics.settings.yml.
    */
-  public function testStatisticsSettings() {
+  public function testStatisticsSettings(): void {
     $config = $this->config('statistics.settings');
     $this->assertSame(1, $config->get('count_content_views'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'statistics.settings', $config->get());

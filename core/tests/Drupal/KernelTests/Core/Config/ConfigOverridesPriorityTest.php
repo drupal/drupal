@@ -32,7 +32,7 @@ class ConfigOverridesPriorityTest extends KernelTestBase {
     'language',
   ];
 
-  public function testOverridePriorities() {
+  public function testOverridePriorities(): void {
     $GLOBALS['config_test_run_module_overrides'] = FALSE;
 
     $non_overridden_mail = 'site@example.com';

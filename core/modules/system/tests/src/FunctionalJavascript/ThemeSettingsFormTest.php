@@ -42,7 +42,7 @@ class ThemeSettingsFormTest extends WebDriverTestBase {
    *
    * @dataProvider providerTestFormSettingsSubmissionHandler
    */
-  public function testFormSettingsSubmissionHandler($theme) {
+  public function testFormSettingsSubmissionHandler($theme): void {
 
     \Drupal::service('theme_installer')->install([$theme]);
 

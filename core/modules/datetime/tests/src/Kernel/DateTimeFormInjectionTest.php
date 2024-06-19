@@ -93,7 +93,7 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface 
   /**
    * Tests custom string injection serialization.
    */
-  public function testDatetimeSerialization() {
+  public function testDatetimeSerialization(): void {
     $form_state = new FormState();
     $form_state->setRequestMethod('POST');
     $form_state->setCached();

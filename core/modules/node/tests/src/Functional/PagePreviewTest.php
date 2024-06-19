@@ -195,7 +195,7 @@ class PagePreviewTest extends NodeTestBase {
   /**
    * Checks the node preview functionality.
    */
-  public function testPagePreview() {
+  public function testPagePreview(): void {
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
     $term_key = $this->fieldName . '[target_id]';
@@ -449,7 +449,7 @@ class PagePreviewTest extends NodeTestBase {
   /**
    * Checks the node preview functionality, when using revisions.
    */
-  public function testPagePreviewWithRevisions() {
+  public function testPagePreviewWithRevisions(): void {
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';
     $term_key = $this->fieldName . '[target_id]';
@@ -505,7 +505,7 @@ class PagePreviewTest extends NodeTestBase {
   /**
    * Checks the node preview accessible for simultaneous node editing.
    */
-  public function testSimultaneousPreview() {
+  public function testSimultaneousPreview(): void {
     $title_key = 'title[0][value]';
     $node = $this->drupalCreateNode([]);
 
@@ -529,7 +529,7 @@ class PagePreviewTest extends NodeTestBase {
   /**
    * Tests node preview with dynamic_page_cache and anonymous users.
    */
-  public function testPagePreviewCache() {
+  public function testPagePreviewCache(): void {
     \Drupal::service('module_installer')->uninstall(['node_test']);
     $this->drupalLogout();
     $title_key = 'title[0][value]';

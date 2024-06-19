@@ -44,7 +44,7 @@ class FormattableMarkupKernelTest extends KernelTestBase {
    *
    * @dataProvider providerTestFormattableMarkupUri
    */
-  public function testFormattableMarkupUri($string, $uri, $options, $expected) {
+  public function testFormattableMarkupUri($string, $uri, $options, $expected): void {
     $args = self::getFormattableMarkupUriArgs($uri, $options);
     $this->assertSame($expected, (string) new FormattableMarkup($string, $args));
   }
@@ -103,7 +103,7 @@ class FormattableMarkupKernelTest extends KernelTestBase {
   /**
    * @dataProvider providerTestFormattableMarkupUriWithException
    */
-  public function testFormattableMarkupUriWithExceptionUri($string, $uri) {
+  public function testFormattableMarkupUriWithExceptionUri($string, $uri): void {
     // Should throw an \InvalidArgumentException, due to Uri::toString().
     $this->expectException(\InvalidArgumentException::class);
     $args = self::getFormattableMarkupUriArgs($uri);

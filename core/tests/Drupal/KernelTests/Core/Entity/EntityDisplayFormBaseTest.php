@@ -24,7 +24,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
   /**
    * @covers ::copyFormValuesToEntity
    */
-  public function testCopyFormValuesToEntity() {
+  public function testCopyFormValuesToEntity(): void {
     $field_values = [];
     $entity = $this->prophesize(EntityDisplayInterface::class);
     $entity->getPluginCollections()->willReturn([]);

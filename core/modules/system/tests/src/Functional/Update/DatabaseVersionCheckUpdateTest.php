@@ -33,7 +33,7 @@ class DatabaseVersionCheckUpdateTest extends BrowserTestBase {
   /**
    * Tests that updates fail if the database does not meet the minimum version.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     if (Database::getConnection()->driver() !== 'mysql') {
       $this->markTestSkipped('This test only works with the mysql driver');
     }

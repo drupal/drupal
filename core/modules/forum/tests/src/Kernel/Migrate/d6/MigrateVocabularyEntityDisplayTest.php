@@ -54,7 +54,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 vocabulary-node type association to Drupal 8 migration.
    */
-  public function testVocabularyEntityDisplay() {
+  public function testVocabularyEntityDisplay(): void {
     $this->assertEntity('node.forum.default');
     $this->assertComponent('node.forum.default', 'taxonomy_forums', 'entity_reference_label', 'hidden', 20);
     $this->assertComponent('node.forum.default', 'field_trees', 'entity_reference_label', 'hidden', 20);

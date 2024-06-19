@@ -68,7 +68,7 @@ class AjaxRendererTest extends UnitTestCase {
    *
    * @covers ::renderResponse
    */
-  public function testRenderWithFragmentObject() {
+  public function testRenderWithFragmentObject(): void {
     $main_content = ['#markup' => 'example content'];
     $request = new Request();
     $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');

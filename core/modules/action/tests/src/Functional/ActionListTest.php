@@ -29,7 +29,7 @@ class ActionListTest extends BrowserTestBase {
   /**
    * Tests the behavior when there are no actions to list in the admin page.
    */
-  public function testEmptyActionList() {
+  public function testEmptyActionList(): void {
     // Create a user with permission to view the actions administration pages.
     $this->drupalLogin($this->drupalCreateUser(['administer actions']));
 
@@ -45,7 +45,7 @@ class ActionListTest extends BrowserTestBase {
   /**
    * Tests that non-configurable actions can be created by the UI.
    */
-  public function testNonConfigurableActionsCanBeCreated() {
+  public function testNonConfigurableActionsCanBeCreated(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer actions']));
     $this->drupalGet('/admin/config/system/actions');
     $this->assertSession()->elementExists('css', 'select > option[value="user_block_user_action"]');

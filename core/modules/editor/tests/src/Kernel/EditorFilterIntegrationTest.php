@@ -23,7 +23,7 @@ class EditorFilterIntegrationTest extends KernelTestBase {
   /**
    * Tests text format removal or disabling.
    */
-  public function testTextFormatIntegration() {
+  public function testTextFormatIntegration(): void {
     // Create an arbitrary text format.
     $format = FilterFormat::create([
       'format' => $this->randomMachineName(),

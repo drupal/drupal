@@ -37,7 +37,7 @@ class AdminPathEntityConverterLanguageTest extends BrowserTestBase {
   /**
    * Tests the translated and untranslated config entities are loaded properly.
    */
-  public function testConfigUsingCurrentLanguage() {
+  public function testConfigUsingCurrentLanguage(): void {
     \Drupal::languageManager()
       ->getLanguageConfigOverride('es', 'language.entity.es')
       ->set('label', 'Español')

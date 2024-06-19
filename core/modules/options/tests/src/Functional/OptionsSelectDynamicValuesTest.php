@@ -19,7 +19,7 @@ class OptionsSelectDynamicValuesTest extends OptionsDynamicValuesTestBase {
   /**
    * Tests the 'options_select' widget (single select).
    */
-  public function testSelectListDynamic() {
+  public function testSelectListDynamic(): void {
     // Create an entity.
     $this->entity->save();
 

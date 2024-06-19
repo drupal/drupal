@@ -38,7 +38,7 @@ class RestExportAuthTest extends ViewTestBase {
    *
    * @link https://www.drupal.org/node/2825204
    */
-  public function testAuthProvidersOptions() {
+  public function testAuthProvidersOptions(): void {
     $view_id = 'test_view_rest_export';
     $view_label = 'Test view (REST export)';
     $view_display = 'rest_export_1';

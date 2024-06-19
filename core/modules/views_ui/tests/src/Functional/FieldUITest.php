@@ -30,7 +30,7 @@ class FieldUITest extends UITestBase {
   /**
    * Tests the UI of field handlers.
    */
-  public function testFieldUI() {
+  public function testFieldUI(): void {
     // Ensure the field is not marked as hidden on the first run.
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     $this->assertSession()->pageTextContains('Views test: Name');
@@ -84,7 +84,7 @@ class FieldUITest extends UITestBase {
   /**
    * Tests the field labels.
    */
-  public function testFieldLabel() {
+  public function testFieldLabel(): void {
     // Create a view with unformatted style and make sure the fields have no
     // labels by default.
     $view = [];

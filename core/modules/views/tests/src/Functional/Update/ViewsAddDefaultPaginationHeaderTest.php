@@ -44,7 +44,7 @@ class ViewsAddDefaultPaginationHeaderTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path adding pagination_heading_level.
    */
-  public function testViewsPostUpdatePaginationHeadingLevel() {
+  public function testViewsPostUpdatePaginationHeadingLevel(): void {
     $view = View::load('add_pagination_heading');
     $data = $view->toArray();
     $counter = 0;

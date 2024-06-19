@@ -132,7 +132,7 @@ class DisplayApiTest extends FieldKernelTestBase {
   /**
    * Tests the FieldItemListInterface::view() method.
    */
-  public function testFieldItemListView() {
+  public function testFieldItemListView(): void {
     $items = $this->entity->get($this->fieldName);
 
     \Drupal::service('theme_installer')->install(['stark']);
@@ -231,7 +231,7 @@ class DisplayApiTest extends FieldKernelTestBase {
   /**
    * Tests the FieldItemInterface::view() method.
    */
-  public function testFieldItemView() {
+  public function testFieldItemView(): void {
     // No display settings: check that default display settings are used.
     $settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('field_test_default');
     $setting = $settings['test_formatter_setting'];
@@ -295,7 +295,7 @@ class DisplayApiTest extends FieldKernelTestBase {
   /**
    * Tests that the prepareView() formatter method still fires for empty values.
    */
-  public function testFieldEmpty() {
+  public function testFieldEmpty(): void {
     // Uses \Drupal\field_test\Plugin\Field\FieldFormatter\TestFieldEmptyFormatter.
     $display = [
       'label' => 'hidden',

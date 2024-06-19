@@ -45,7 +45,7 @@ class ContentModerationStateAccessControlHandlerTest extends KernelTestBase {
    * @covers ::checkAccess
    * @covers ::checkCreateAccess
    */
-  public function testHandler() {
+  public function testHandler(): void {
     $entity = ContentModerationState::create([]);
     $this->assertFalse($this->accessControlHandler->access($entity, 'view'));
     $this->assertFalse($this->accessControlHandler->access($entity, 'update'));

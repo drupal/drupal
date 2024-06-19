@@ -44,7 +44,7 @@ class CommentStringIdEntitiesTest extends KernelTestBase {
   /**
    * Tests that comment fields cannot be added entities with non-integer IDs.
    */
-  public function testCommentFieldNonStringId() {
+  public function testCommentFieldNonStringId(): void {
     $this->expectException(\UnexpectedValueException::class);
     $bundle = CommentType::create([
       'id' => 'foo',

@@ -20,7 +20,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
   /**
    * Creates a node, then tests the statistics tokens generated from it.
    */
-  public function testStatisticsTokenReplacement() {
+  public function testStatisticsTokenReplacement(): void {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     // Create user and node.

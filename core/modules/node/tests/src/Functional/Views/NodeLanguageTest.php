@@ -115,7 +115,7 @@ class NodeLanguageTest extends NodeTestBase {
   /**
    * Tests translation language filter, field, and sort.
    */
-  public function testLanguages() {
+  public function testLanguages(): void {
     // Test the page with no arguments. It is filtered to Spanish and French.
     // The page shows node titles and languages.
     $this->drupalGet('test-language');
@@ -255,7 +255,7 @@ class NodeLanguageTest extends NodeTestBase {
   /**
    * Tests native name display in language field.
    */
-  public function testNativeLanguageField() {
+  public function testNativeLanguageField(): void {
     $this->assertLanguageNames();
 
     // Modify test view to display native language names and set translations.

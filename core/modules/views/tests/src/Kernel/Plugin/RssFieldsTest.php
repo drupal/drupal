@@ -49,7 +49,7 @@ class RssFieldsTest extends ViewsKernelTestBase {
    * ensure that root-relative links also work in a scenario without
    * subdirectory.
    */
-  public function testRssFields() {
+  public function testRssFields(): void {
     $this->setUpCurrentUser([], ['access content']);
 
     $date = '1975-05-18';

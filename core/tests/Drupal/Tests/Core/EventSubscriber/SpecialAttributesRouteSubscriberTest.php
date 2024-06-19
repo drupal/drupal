@@ -76,7 +76,7 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    *
    * @covers ::onAlterRoutes
    */
-  public function testOnRouteBuildingValidVariables(Route $route) {
+  public function testOnRouteBuildingValidVariables(Route $route): void {
     $route_collection = new RouteCollection();
     $route_collection->add('test', $route);
 
@@ -94,7 +94,7 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    * @dataProvider providerTestOnRouteBuildingInvalidVariables
    * @covers ::onAlterRoutes
    */
-  public function testOnRouteBuildingInvalidVariables(Route $route) {
+  public function testOnRouteBuildingInvalidVariables(Route $route): void {
     $route_collection = new RouteCollection();
     $route_collection->add('test', $route);
 

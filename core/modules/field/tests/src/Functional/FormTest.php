@@ -113,7 +113,7 @@ class FormTest extends FieldTestBase {
     ];
   }
 
-  public function testFieldFormSingle() {
+  public function testFieldFormSingle(): void {
     $field_storage = $this->fieldStorageSingle;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
@@ -195,7 +195,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests field widget default values on entity forms.
    */
-  public function testFieldFormDefaultValue() {
+  public function testFieldFormDefaultValue(): void {
     $field_storage = $this->fieldStorageSingle;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
@@ -225,7 +225,7 @@ class FormTest extends FieldTestBase {
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field is now empty.');
   }
 
-  public function testFieldFormSingleRequired() {
+  public function testFieldFormSingleRequired(): void {
     $field_storage = $this->fieldStorageSingle;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
@@ -265,7 +265,7 @@ class FormTest extends FieldTestBase {
     $this->assertSession()->pageTextContains("{$this->field['label']} field is required.");
   }
 
-  public function testFieldFormUnlimited() {
+  public function testFieldFormUnlimited(): void {
     $field_storage = $this->fieldStorageUnlimited;
     $field_name = $field_storage['field_name'];
     $this->field['field_name'] = $field_name;
@@ -360,7 +360,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests the position of the required label.
    */
-  public function testFieldFormUnlimitedRequired() {
+  public function testFieldFormUnlimitedRequired(): void {
     $field_name = $this->fieldStorageUnlimited['field_name'];
     $this->field['field_name'] = $field_name;
     $this->field['required'] = TRUE;
@@ -384,7 +384,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests widget handling of multiple required radios.
    */
-  public function testFieldFormMultivalueWithRequiredRadio() {
+  public function testFieldFormMultivalueWithRequiredRadio(): void {
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
 
@@ -439,7 +439,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests widgets handling multiple values.
    */
-  public function testFieldFormMultipleWidget() {
+  public function testFieldFormMultipleWidget(): void {
     // Create a field with fixed cardinality, configure the form to use a
     // "multiple" widget.
     $field_storage = $this->fieldStorageMultiple;
@@ -495,7 +495,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests fields with no 'edit' access.
    */
-  public function testFieldFormAccess() {
+  public function testFieldFormAccess(): void {
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
 
@@ -593,7 +593,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests hiding a field in a form.
    */
-  public function testHiddenField() {
+  public function testHiddenField(): void {
     $entity_type = 'entity_test_rev';
     $field_storage = $this->fieldStorageSingle;
     $field_storage['entity_type'] = $entity_type;
@@ -668,7 +668,7 @@ class FormTest extends FieldTestBase {
   /**
    * Tests the form display of the label for multi-value fields.
    */
-  public function testLabelOnMultiValueFields() {
+  public function testLabelOnMultiValueFields(): void {
     $user = $this->drupalCreateUser(['administer entity_test content']);
     $this->drupalLogin($user);
 
@@ -707,28 +707,28 @@ class FormTest extends FieldTestBase {
   /**
    * Tests hook_field_widget_complete_form_alter().
    */
-  public function testFieldFormMultipleWidgetAlter() {
+  public function testFieldFormMultipleWidgetAlter(): void {
     $this->widgetAlterTest('hook_field_widget_complete_form_alter', 'test_field_widget_multiple');
   }
 
   /**
    * Tests hook_field_widget_complete_form_alter() with single value elements.
    */
-  public function testFieldFormMultipleWidgetAlterSingleValues() {
+  public function testFieldFormMultipleWidgetAlterSingleValues(): void {
     $this->widgetAlterTest('hook_field_widget_complete_form_alter', 'test_field_widget_multiple_single_value');
   }
 
   /**
    * Tests hook_field_widget_complete_WIDGET_TYPE_form_alter().
    */
-  public function testFieldFormMultipleWidgetTypeAlter() {
+  public function testFieldFormMultipleWidgetTypeAlter(): void {
     $this->widgetAlterTest('hook_field_widget_complete_WIDGET_TYPE_form_alter', 'test_field_widget_multiple');
   }
 
   /**
    * Tests hook_field_widget_complete_WIDGET_TYPE_form_alter() with single value elements.
    */
-  public function testFieldFormMultipleWidgetTypeAlterSingleValues() {
+  public function testFieldFormMultipleWidgetTypeAlterSingleValues(): void {
     $this->widgetAlterTest('hook_field_widget_complete_WIDGET_TYPE_form_alter', 'test_field_widget_multiple_single_value');
   }
 

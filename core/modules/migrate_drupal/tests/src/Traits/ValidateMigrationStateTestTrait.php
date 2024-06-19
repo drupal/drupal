@@ -32,7 +32,7 @@ trait ValidateMigrationStateTestTrait {
    * made for the two cases where migrations are yet to be written and where
    * migrations are not needed.
    */
-  public function testMigrationState() {
+  public function testMigrationState(): void {
 
     // Level separator of destination and source properties.
     $separator = ',';

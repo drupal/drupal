@@ -30,7 +30,7 @@ class UnpublishedBlockTest extends BrowserTestBase {
   /**
    * Tests unpublishing of block_content entities.
    */
-  public function testViewShowsCorrectStates() {
+  public function testViewShowsCorrectStates(): void {
     $block_content = BlockContent::create([
       'info' => 'Test block',
       'type' => 'basic',

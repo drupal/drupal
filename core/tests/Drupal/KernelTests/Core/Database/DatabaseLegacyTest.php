@@ -17,7 +17,7 @@ class DatabaseLegacyTest extends DatabaseTestBase {
   /**
    * Tests deprecation of install.inc database driver functions.
    */
-  public function testDeprecatedInstallFunctions() {
+  public function testDeprecatedInstallFunctions(): void {
     include_once $this->root . '/core/includes/install.inc';
     $this->expectDeprecation('drupal_detect_database_types() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175');
     $this->expectDeprecation('drupal_get_database_types() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175');

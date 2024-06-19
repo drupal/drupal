@@ -41,7 +41,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    *
    * @covers ::generate
    */
-  public function testGenerateMissingStreamWrapper() {
+  public function testGenerateMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
     $result = $this->fileUrlGenerator->generate("foo://bar");
   }
@@ -51,7 +51,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    *
    * @covers ::generateString
    */
-  public function testGenerateStringMissingStreamWrapper() {
+  public function testGenerateStringMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
     $result = $this->fileUrlGenerator->generateString("foo://bar");
   }
@@ -61,7 +61,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    *
    * @covers ::generateAbsoluteString
    */
-  public function testGenerateAbsoluteStringMissingStreamWrapper() {
+  public function testGenerateAbsoluteStringMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
     $result = $this->fileUrlGenerator->generateAbsoluteString("foo://bar");
   }
@@ -71,7 +71,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    *
    * @covers ::generateAbsoluteString
    */
-  public function testShippedFileURL() {
+  public function testShippedFileURL(): void {
     // Test generating a URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
 
@@ -120,7 +120,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    *
    * @covers ::generateAbsoluteString
    */
-  public function testPublicManagedFileURL() {
+  public function testPublicManagedFileURL(): void {
     // Test generating a URL to a managed file.
 
     // Test alteration of file URLs to use a CDN.
@@ -152,7 +152,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    *
    * @covers ::generateAbsoluteString
    */
-  public function testRelativeFileURL() {
+  public function testRelativeFileURL(): void {
     // Disable file_test.module's hook_file_url_alter() implementation.
     \Drupal::state()->set('file_test.hook_file_url_alter', NULL);
 
@@ -182,7 +182,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    *
    * @dataProvider providerGenerateURI
    */
-  public function testGenerateURI($filepath, $expected) {
+  public function testGenerateURI($filepath, $expected): void {
     // Disable file_test.module's hook_file_url_alter() implementation.
     \Drupal::state()->set('file_test.hook_file_url_alter', NULL);
 
@@ -200,7 +200,7 @@ class FileUrlGeneratorTest extends FileTestBase {
   /**
    * @covers ::generate
    */
-  public function testGenerateURIWithSchema() {
+  public function testGenerateURIWithSchema(): void {
     // Disable file_test.module's hook_file_url_alter() implementation.
     \Drupal::state()->set('file_test.hook_file_url_alter', NULL);
 

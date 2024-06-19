@@ -37,7 +37,7 @@ class ClaroMenuUiJavascriptTest extends MenuUiJavascriptTest {
    * Contextual links do not work in admin themes, so this is empty to prevent
    * this test running in the parent class.
    */
-  public function testBlockContextualLinks() {
+  public function testBlockContextualLinks(): void {
   }
 
 }

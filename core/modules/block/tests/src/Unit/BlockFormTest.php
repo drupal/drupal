@@ -142,7 +142,7 @@ class BlockFormTest extends UnitTestCase {
    *
    * @see \Drupal\block\BlockForm::getUniqueMachineName()
    */
-  public function testGetUniqueMachineName() {
+  public function testGetUniqueMachineName(): void {
     $blocks = [];
 
     $blocks['test'] = $this->getBlockMockWithMachineName('test');

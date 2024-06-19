@@ -36,7 +36,7 @@ class EngineNyanCatTest extends BrowserTestBase {
   /**
    * Ensures a theme's template is overridable based on the 'template' filename.
    */
-  public function testTemplateOverride() {
+  public function testTemplateOverride(): void {
     $this->config('system.theme')
       ->set('default', 'test_theme_nyan_cat_engine')
       ->save();

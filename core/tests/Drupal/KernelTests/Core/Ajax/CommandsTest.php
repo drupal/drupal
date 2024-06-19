@@ -32,7 +32,7 @@ class CommandsTest extends KernelTestBase {
   /**
    * Regression test: Settings command exists regardless of JS aggregation.
    */
-  public function testAttachedSettings() {
+  public function testAttachedSettings(): void {
     $assert = function ($message) {
       $response = new AjaxResponse();
       $response->setAttachments([
@@ -69,7 +69,7 @@ class CommandsTest extends KernelTestBase {
    *
    * @doesNotPerformAssertions
    */
-  public function testEmptyInsertCommand() {
+  public function testEmptyInsertCommand(): void {
     (new InsertCommand('foobar', []))->render();
   }
 

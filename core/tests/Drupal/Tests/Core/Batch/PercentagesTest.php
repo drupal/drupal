@@ -21,7 +21,7 @@ class PercentagesTest extends UnitTestCase {
    * @dataProvider providerTestPercentages
    * @covers ::format
    */
-  public function testPercentages($total, $current, $expected_result) {
+  public function testPercentages($total, $current, $expected_result): void {
     $actual_result = Percentage::format($total, $current);
     $this->assertEquals($actual_result, $expected_result, sprintf('The expected the batch api percentage at the state %s/%s is %s%% and got %s%%.', $current, $total, $expected_result, $actual_result));
   }

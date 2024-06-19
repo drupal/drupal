@@ -20,7 +20,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests that default value is correctly validated and saved.
    */
-  public function testDefaultValue() {
+  public function testDefaultValue(): void {
     // Create a test field storage and field.
     $field_name = 'test';
     FieldStorageConfig::create([
@@ -112,7 +112,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests that Field UI respects disallowed field names.
    */
-  public function testDisallowedFieldNames() {
+  public function testDisallowedFieldNames(): void {
     // Reset the field prefix so we can test properly.
     $this->config('field_ui.settings')->set('field_prefix', '')->save();
 
@@ -144,7 +144,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests that Field UI respects locked fields.
    */
-  public function testLockedField() {
+  public function testLockedField(): void {
     // Create a locked field and attach it to a bundle. We need to do this
     // programmatically as there's no way to create a locked field through UI.
     $field_name = $this->randomMachineName(8);
@@ -178,7 +178,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests that Field UI respects the 'no_ui' flag in the field type definition.
    */
-  public function testHiddenFields() {
+  public function testHiddenFields(): void {
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
     $this->assertSession()->elementNotExists('css', "[name='new_storage_type'][value='hidden_test_field']");
@@ -244,7 +244,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests that a duplicate field name is caught by validation.
    */
-  public function testDuplicateFieldName() {
+  public function testDuplicateFieldName(): void {
     // field_tags already exists, so we're expecting an error when trying to
     // create a new field with the same name.
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
@@ -266,7 +266,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests that external URLs in the 'destinations' query parameter are blocked.
    */
-  public function testExternalDestinations() {
+  public function testExternalDestinations(): void {
     $options = [
       'query' => ['destinations' => ['http://example.com']],
     ];
@@ -281,7 +281,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests that deletion removes field storages and fields as expected for a term.
    */
-  public function testDeleteTaxonomyField() {
+  public function testDeleteTaxonomyField(): void {
     // Create a new field.
     $bundle_path = 'admin/structure/taxonomy/manage/tags/overview';
 
@@ -299,7 +299,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests that help descriptions render valid HTML.
    */
-  public function testHelpDescriptions() {
+  public function testHelpDescriptions(): void {
     // Create an image field.
     FieldStorageConfig::create([
       'field_name' => 'field_image',
@@ -346,7 +346,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
    *
    * @see \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface
    */
-  public function testPreconfiguredFields() {
+  public function testPreconfiguredFields(): void {
     $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
 
     // Check that the preconfigured field option exist alongside the regular
@@ -377,7 +377,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests the access to non-existent field URLs.
    */
-  public function testNonExistentFieldUrls() {
+  public function testNonExistentFieldUrls(): void {
     $field_id = 'node.foo.bar';
 
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
@@ -387,7 +387,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Tests that the 'field_prefix' setting works on Field UI.
    */
-  public function testFieldPrefix() {
+  public function testFieldPrefix(): void {
     // Change default field prefix.
     $field_prefix = $this->randomMachineName(10);
     $this->config('field_ui.settings')->set('field_prefix', $field_prefix)->save();
@@ -418,7 +418,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   /**
    * Test translation defaults.
    */
-  public function testTranslationDefaults() {
+  public function testTranslationDefaults(): void {
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
     $field_storage = FieldStorageConfig::loadByName('node', 'field_' . $this->fieldNameInput);
     $this->assertTrue($field_storage->isTranslatable(), 'Field storage translatable.');

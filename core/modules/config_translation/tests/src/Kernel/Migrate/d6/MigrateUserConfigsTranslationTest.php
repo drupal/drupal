@@ -41,7 +41,7 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of i18n user variables to user.mail.yml.
    */
-  public function testUserMail() {
+  public function testUserMail(): void {
     $config = \Drupal::service('language_manager')->getLanguageConfigOverride('fr', 'user.mail');
     $this->assertSame('fr - Account details for [user:name] at [site:name] (approved)', $config->get('status_activated.subject'));
     $this->assertSame("fr - [user:name],\r\n\r\nYour account at [site:name] has been activated.\r\n\r\nYou may now log in by clicking on this link or copying and pasting it in your browser:\r\n\r\n[user:one-time-login-url]\r\n\r\nThis is a one-time login, so it can be used only once.\r\n\r\nAfter logging in, you will be redirected to [user:edit-url] so you can change your password.\r\n\r\nOnce you have set your own password, you will be able to log in to [site:login-url] in the future using:\r\n\r\nusername: [user:name]\r\n", $config->get('status_activated.body'));

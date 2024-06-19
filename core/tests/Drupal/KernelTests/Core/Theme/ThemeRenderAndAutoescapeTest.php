@@ -37,7 +37,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
   /**
    * @dataProvider providerTestThemeRenderAndAutoescape
    */
-  public function testThemeRenderAndAutoescape($arg, $expected) {
+  public function testThemeRenderAndAutoescape($arg, $expected): void {
     if (is_array($arg) && isset($arg['#type']) && $arg['#type'] === 'link') {
       $arg = Link::createFromRoute($arg['#title'], $arg['#url']);
     }
@@ -81,7 +81,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
   /**
    * Ensures invalid content is handled correctly.
    */
-  public function testThemeEscapeAndRenderNotPrintable() {
+  public function testThemeEscapeAndRenderNotPrintable(): void {
     $this->expectException(\Exception::class);
     theme_render_and_autoescape(new NonPrintable());
   }
@@ -89,7 +89,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
   /**
    * Ensure cache metadata is bubbled when using theme_render_and_autoescape().
    */
-  public function testBubblingMetadata() {
+  public function testBubblingMetadata(): void {
     $link = new GeneratedLink();
     $link->setGeneratedLink('<a href="http://example.com"></a>');
     $link->addCacheTags(['foo']);
@@ -113,7 +113,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
   /**
    * Ensure cache metadata is bubbled when using theme_render_and_autoescape().
    */
-  public function testBubblingMetadataWithRenderable() {
+  public function testBubblingMetadataWithRenderable(): void {
     $link = new Link('', Url::fromRoute('<current>'));
 
     $context = new RenderContext();

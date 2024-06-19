@@ -77,7 +77,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
   /**
    * Tests that the operation "Translate" is displayed in the content listing.
    */
-  public function testOperationTranslateLink() {
+  public function testOperationTranslateLink(): void {
     $node = $this->drupalCreateNode(['type' => 'article', 'langcode' => 'es']);
     // Verify no translation operation links are displayed for users without
     // permission.
@@ -143,7 +143,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
    *
    * @see content_translation_translate_access()
    */
-  public function testContentTranslationOverviewAccess() {
+  public function testContentTranslationOverviewAccess(): void {
     $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
     $user = $this->createUser(['create content translations', 'access content']);
     $this->drupalLogin($user);

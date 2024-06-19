@@ -121,7 +121,7 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
   /**
    * Tests the translation of field and field storage configuration.
    */
-  public function testFieldConfigTranslation() {
+  public function testFieldConfigTranslation(): void {
     // Add a test field which has a translatable field setting and a
     // translatable field storage setting.
     $field_name = $this->randomMachineName();

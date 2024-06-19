@@ -36,7 +36,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
    *
    * @covers \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage::hasData
    */
-  public function testCRUD() {
+  public function testCRUD(): void {
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_label');
@@ -170,7 +170,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
   /**
    * Tests uninstallation of a module that does not use the SQL entity storage.
    */
-  public function testUninstall() {
+  public function testUninstall(): void {
     $uninstall_validator_reasons = \Drupal::service('content_uninstall_validator')->validate('keyvalue_test');
     $this->assertEmpty($uninstall_validator_reasons);
   }

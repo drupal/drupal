@@ -28,7 +28,7 @@ class TokenizeAreaUITest extends UITestBase {
   /**
    * Tests that the right tokens are shown as available for replacement.
    */
-  public function testTokenUI() {
+  public function testTokenUI(): void {
     $entity_test = EntityTest::create(['bundle' => 'entity_test']);
     $entity_test->save();
 

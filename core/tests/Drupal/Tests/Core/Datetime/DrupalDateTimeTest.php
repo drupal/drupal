@@ -30,7 +30,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    *
    * @dataProvider providerTestDateDiff
    */
-  public function testDateDiff($input1, $input2, $absolute, \DateInterval $expected) {
+  public function testDateDiff($input1, $input2, $absolute, \DateInterval $expected): void {
     $interval = $input1->diff($input2, $absolute);
     $this->assertEquals($interval, $expected);
   }
@@ -47,7 +47,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    *
    * @dataProvider providerTestInvalidDateDiff
    */
-  public function testInvalidDateDiff($input1, $input2, $absolute) {
+  public function testInvalidDateDiff($input1, $input2, $absolute): void {
     $this->expectException(\BadMethodCallException::class);
     $this->expectExceptionMessage('Method Drupal\Component\Datetime\DateTimePlus::diff expects parameter 1 to be a \DateTime or \Drupal\Component\Datetime\DateTimePlus object');
     $interval = $input1->diff($input2, $absolute);
@@ -165,7 +165,7 @@ class DrupalDateTimeTest extends UnitTestCase {
   /**
    * Tests setting the default time for date-only objects.
    */
-  public function testDefaultDateTime() {
+  public function testDefaultDateTime(): void {
     $utc = new \DateTimeZone('UTC');
 
     $date = DrupalDateTime::createFromFormat('Y-m-d H:i:s', '2017-05-23 22:58:00', $utc, ['langcode' => 'en']);
@@ -179,7 +179,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    *
    * @covers ::__call
    */
-  public function testChainable() {
+  public function testChainable(): void {
     $tz = new \DateTimeZone(date_default_timezone_get());
     $date = new DrupalDateTime('now', $tz, ['langcode' => 'en']);
 
@@ -197,7 +197,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    *
    * @covers ::__call
    */
-  public function testChainableNonChainable() {
+  public function testChainableNonChainable(): void {
     $tz = new \DateTimeZone(date_default_timezone_get());
     $datetime1 = new DrupalDateTime('2009-10-11 12:00:00', $tz, ['langcode' => 'en']);
     $datetime2 = new DrupalDateTime('2009-10-13 12:00:00', $tz, ['langcode' => 'en']);
@@ -211,7 +211,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    *
    * @covers ::__call
    */
-  public function testChainableNonCallable() {
+  public function testChainableNonCallable(): void {
     $this->expectException(\BadMethodCallException::class);
     $this->expectExceptionMessage('Call to undefined method Drupal\Core\Datetime\DrupalDateTime::nonexistent()');
     $tz = new \DateTimeZone(date_default_timezone_get());
@@ -222,7 +222,7 @@ class DrupalDateTimeTest extends UnitTestCase {
   /**
    * @covers ::getPhpDateTime
    */
-  public function testGetPhpDateTime() {
+  public function testGetPhpDateTime(): void {
     $new_york = new \DateTimeZone('America/New_York');
     $berlin = new \DateTimeZone('Europe/Berlin');
 
@@ -251,7 +251,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    *
    * @covers ::format
    */
-  public function testRfc2822DateFormat() {
+  public function testRfc2822DateFormat(): void {
     $language_manager = $this->createMock(LanguageManager::class);
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')

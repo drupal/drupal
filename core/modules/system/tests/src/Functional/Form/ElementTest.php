@@ -29,7 +29,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests placeholder text for elements that support placeholders.
    */
-  public function testPlaceHolderText() {
+  public function testPlaceHolderText(): void {
     $this->drupalGet('form-test/placeholder-text');
     foreach (['textfield', 'tel', 'url', 'password', 'email', 'number', 'textarea'] as $type) {
       $field = $this->assertSession()->fieldExists("edit-$type");
@@ -40,7 +40,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests expansion of #options for #type checkboxes and radios.
    */
-  public function testOptions() {
+  public function testOptions(): void {
     $this->drupalGet('form-test/checkboxes-radios');
 
     // Verify that all options appear in their defined order.
@@ -81,7 +81,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests correct checked attribute for radios element.
    */
-  public function testRadiosChecked() {
+  public function testRadiosChecked(): void {
     // Verify that there is only one radio option checked.
     $this->drupalGet('form-test/radios-checked');
     $this->assertSession()->elementsCount('xpath', '//input[@name="radios" and @checked]', 1);
@@ -110,7 +110,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests wrapper ids for checkboxes and radios.
    */
-  public function testWrapperIds() {
+  public function testWrapperIds(): void {
     $this->drupalGet('form-test/checkboxes-radios');
 
     // Verify that wrapper id is different from element id.
@@ -124,7 +124,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests button classes.
    */
-  public function testButtonClasses() {
+  public function testButtonClasses(): void {
     $this->drupalGet('form-test/button-class');
     // Just contains(@class, "button") won't do because then
     // "button--foo" would contain "button". Instead, check
@@ -138,7 +138,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests the #group property.
    */
-  public function testGroupElements() {
+  public function testGroupElements(): void {
     $this->drupalGet('form-test/group-details');
     $this->assertSession()->elementsCount('xpath', '//div[@class="details-wrapper"]//div[@class="details-wrapper"]//label', 1);
     $this->drupalGet('form-test/group-container');
@@ -154,7 +154,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests the #required property on details and fieldset elements.
    */
-  public function testRequiredFieldsetsAndDetails() {
+  public function testRequiredFieldsetsAndDetails(): void {
     $this->drupalGet('form-test/group-details');
     $this->assertEmpty($this->cssSelect('summary.form-required'));
     $this->drupalGet('form-test/group-details/1');
@@ -168,7 +168,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests a form with an autocomplete setting..
    */
-  public function testFormAutocomplete() {
+  public function testFormAutocomplete(): void {
     $this->drupalGet('form-test/autocomplete');
 
     // Ensure that the user does not have access to the autocompletion.
@@ -190,7 +190,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests form element error messages.
    */
-  public function testFormElementErrors() {
+  public function testFormElementErrors(): void {
     $this->drupalGet('form_test/details-form');
     $this->submitForm([], 'Submit');
     $this->assertSession()->pageTextContains('I am an error on the details element.');
@@ -199,7 +199,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests summary attributes of details.
    */
-  public function testDetailsSummaryAttributes() {
+  public function testDetailsSummaryAttributes(): void {
     $this->drupalGet('form-test/group-details');
     $this->assertSession()->elementExists('css', 'summary[data-summary-attribute="test"]');
   }

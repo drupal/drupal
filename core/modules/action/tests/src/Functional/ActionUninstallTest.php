@@ -31,7 +31,7 @@ class ActionUninstallTest extends BrowserTestBase {
   /**
    * Tests Actions UI uninstall.
    */
-  public function testActionUninstall() {
+  public function testActionUninstall(): void {
     \Drupal::service('module_installer')->uninstall(['action']);
 
     $storage = $this->container->get('entity_type.manager')->getStorage('action');

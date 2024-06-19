@@ -27,7 +27,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
   /**
    * Tests that uploads in the 'media_library_widget' works as expected.
    */
-  public function testWidgetUpload() {
+  public function testWidgetUpload(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $driver = $this->getSession()->getDriver();
@@ -371,7 +371,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
    * @todo Merge this with testWidgetUpload() in
    *   https://www.drupal.org/project/drupal/issues/3087227
    */
-  public function testWidgetUploadAdvancedUi() {
+  public function testWidgetUploadAdvancedUi(): void {
     $this->config('media_library.settings')->set('advanced_ui', TRUE)->save();
 
     $assert_session = $this->assertSession();

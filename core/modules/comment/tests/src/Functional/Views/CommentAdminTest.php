@@ -55,7 +55,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
   /**
    * Tests comment approval functionality through admin/content/comment.
    */
-  public function testApprovalAdminInterface() {
+  public function testApprovalAdminInterface(): void {
     // Set anonymous comments to require approval.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
@@ -205,7 +205,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
   /**
    * Tests commented entity label of admin view.
    */
-  public function testCommentedEntityLabel() {
+  public function testCommentedEntityLabel(): void {
     \Drupal::service('module_installer')->install(['block_content']);
     \Drupal::service('router.builder')->rebuildIfNeeded();
     $bundle = BlockContentType::create([

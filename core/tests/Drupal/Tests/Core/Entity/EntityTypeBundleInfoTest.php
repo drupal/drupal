@@ -145,7 +145,7 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
    *
    * @covers ::clearCachedBundles
    */
-  public function testClearCachedBundles() {
+  public function testClearCachedBundles(): void {
     $this->setUpEntityTypeDefinitions();
 
     $this->typedDataManager->clearCachedDefinitions()->shouldBeCalled();
@@ -162,7 +162,7 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetBundleInfo
    */
-  public function testGetBundleInfo($entity_type_id, $expected) {
+  public function testGetBundleInfo($entity_type_id, $expected): void {
     $this->moduleHandler->invokeAll('entity_bundle_info')->willReturn([]);
     $this->moduleHandler->alter('entity_bundle_info', Argument::type('array'))->willReturn(NULL);
 
@@ -212,7 +212,7 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
    *
    * @covers ::getAllBundleInfo
    */
-  public function testGetAllBundleInfo() {
+  public function testGetAllBundleInfo(): void {
     $this->moduleHandler->invokeAll('entity_bundle_info')->willReturn([]);
     $this->moduleHandler->alter('entity_bundle_info', Argument::type('array'))->willReturn(NULL);
 
@@ -270,7 +270,7 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
   /**
    * @covers ::getAllBundleInfo
    */
-  public function testGetAllBundleInfoWithEntityBundleInfo() {
+  public function testGetAllBundleInfoWithEntityBundleInfo(): void {
     // Ensure that EntityTypeBundleInfo::getAllBundleInfo() does not add
     // additional bundles if hook_entity_bundle_info() defines some and the
     // entity_type does not define a bundle entity type.

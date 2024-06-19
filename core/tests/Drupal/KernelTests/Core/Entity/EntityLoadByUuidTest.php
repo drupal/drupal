@@ -32,7 +32,7 @@ class EntityLoadByUuidTest extends KernelTestBase {
   /**
    * Ensures that ::loadEntityByUuid() doesn't apply access checking.
    */
-  public function testLoadEntityByUuidAccessChecking() {
+  public function testLoadEntityByUuidAccessChecking(): void {
     \Drupal::state()->set('entity_test_query_access', TRUE);
     // Create two test entities.
     $entity_0 = EntityTest::create([

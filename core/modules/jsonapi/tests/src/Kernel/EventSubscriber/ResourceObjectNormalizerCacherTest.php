@@ -75,7 +75,7 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3077287
    */
-  public function testLinkNormalizationCacheability() {
+  public function testLinkNormalizationCacheability(): void {
     $user = User::create([
       'name' => $this->randomMachineName(),
       'pass' => $this->randomString(),

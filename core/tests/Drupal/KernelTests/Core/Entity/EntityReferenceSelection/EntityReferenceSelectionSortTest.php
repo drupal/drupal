@@ -46,7 +46,7 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
   /**
    * Assert sorting by field and property.
    */
-  public function testSort() {
+  public function testSort(): void {
     // Add text field to entity, to sort by.
     FieldStorageConfig::create([
       'field_name' => 'field_text',

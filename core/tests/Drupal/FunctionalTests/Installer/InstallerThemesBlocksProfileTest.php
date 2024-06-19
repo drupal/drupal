@@ -26,7 +26,7 @@ class InstallerThemesBlocksProfileTest extends InstallerTestBase {
   /**
    * Verify that there is no automatic block generation.
    */
-  public function testInstaller() {
+  public function testInstaller(): void {
 
     // Account menu is a block that testing_theme_required_blocks provides,
     // but not testing_theme_optional_blocks. There shouldn't be a account menu

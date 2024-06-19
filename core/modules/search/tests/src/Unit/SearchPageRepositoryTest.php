@@ -70,7 +70,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * Tests the getActiveSearchPages() method.
    */
-  public function testGetActiveSearchPages() {
+  public function testGetActiveSearchPages(): void {
     $this->query->expects($this->once())
       ->method('condition')
       ->with('status', TRUE)
@@ -94,7 +94,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * Tests the isSearchActive() method.
    */
-  public function testIsSearchActive() {
+  public function testIsSearchActive(): void {
     $this->query->expects($this->once())
       ->method('condition')
       ->with('status', TRUE)
@@ -113,7 +113,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * Tests the getIndexableSearchPages() method.
    */
-  public function testGetIndexableSearchPages() {
+  public function testGetIndexableSearchPages(): void {
     $this->query->expects($this->once())
       ->method('condition')
       ->with('status', TRUE)
@@ -144,7 +144,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * Tests the clearDefaultSearchPage() method.
    */
-  public function testClearDefaultSearchPage() {
+  public function testClearDefaultSearchPage(): void {
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
       ->getMock();
@@ -162,7 +162,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * Tests the getDefaultSearchPage() method when the default is active.
    */
-  public function testGetDefaultSearchPageWithActiveDefault() {
+  public function testGetDefaultSearchPageWithActiveDefault(): void {
     $this->query->expects($this->once())
       ->method('condition')
       ->with('status', TRUE)
@@ -189,7 +189,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * Tests the getDefaultSearchPage() method when the default is inactive.
    */
-  public function testGetDefaultSearchPageWithInactiveDefault() {
+  public function testGetDefaultSearchPageWithInactiveDefault(): void {
     $this->query->expects($this->once())
       ->method('condition')
       ->with('status', TRUE)
@@ -216,7 +216,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * Tests the setDefaultSearchPage() method.
    */
-  public function testSetDefaultSearchPage() {
+  public function testSetDefaultSearchPage(): void {
     $id = 'bananas';
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
@@ -249,7 +249,7 @@ class SearchPageRepositoryTest extends UnitTestCase {
   /**
    * Tests the sortSearchPages() method.
    */
-  public function testSortSearchPages() {
+  public function testSortSearchPages(): void {
     $entity_type = $this->createMock(EntityTypeInterface::class);
     $entity_type
       ->method('getClass')

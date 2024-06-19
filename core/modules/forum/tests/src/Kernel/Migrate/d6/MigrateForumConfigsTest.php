@@ -41,7 +41,7 @@ class MigrateForumConfigsTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of forum variables to forum.settings.yml.
    */
-  public function testForumSettings() {
+  public function testForumSettings(): void {
     $config = $this->config('forum.settings');
     $this->assertSame(15, $config->get('topics.hot_threshold'));
     $this->assertSame(25, $config->get('topics.page_limit'));

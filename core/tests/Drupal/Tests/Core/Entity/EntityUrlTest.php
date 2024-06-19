@@ -95,7 +95,7 @@ class EntityUrlTest extends UnitTestCase {
    *
    * @covers ::toUrl
    */
-  public function testToUrlNoId() {
+  public function testToUrlNoId(): void {
     $entity = $this->getEntity(UrlTestEntity::class, []);
 
     $this->expectException(EntityMalformedException::class);
@@ -166,7 +166,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::linkTemplates
    * @covers ::urlRouteParameters
    */
-  public function testToUrlLinkTemplates($link_template, $expected_route_name) {
+  public function testToUrlLinkTemplates($link_template, $expected_route_name): void {
     $values = ['id' => static::ENTITY_ID, 'langcode' => $this->langcode];
     $entity = $this->getEntity(UrlTestEntity::class, $values);
     $this->registerLinkTemplate($link_template);
@@ -264,7 +264,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::linkTemplates
    * @covers ::urlRouteParameters
    */
-  public function testToUrlLinkTemplateNoId($link_template, $expected_route_name) {
+  public function testToUrlLinkTemplateNoId($link_template, $expected_route_name): void {
     $entity = $this->getEntity(UrlTestEntity::class, ['id' => static::ENTITY_ID]);
     $this->registerLinkTemplate($link_template);
 
@@ -354,7 +354,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::toUrl
    * @covers ::linkTemplates
    */
-  public function testToUrlUriCallbackUndefined(array $bundle_info, $uri_callback) {
+  public function testToUrlUriCallbackUndefined(array $bundle_info, $uri_callback): void {
     $entity = $this->getEntity(UrlTestEntity::class, ['id' => static::ENTITY_ID]);
 
     $this->registerBundleInfo($bundle_info);
@@ -432,7 +432,7 @@ class EntityUrlTest extends UnitTestCase {
    *
    * @covers ::uriRelationships
    */
-  public function testUriRelationships() {
+  public function testUriRelationships(): void {
     $entity = $this->getEntity(UrlTestEntity::class, ['id' => static::ENTITY_ID]);
 
     $container_builder = new ContainerBuilder();

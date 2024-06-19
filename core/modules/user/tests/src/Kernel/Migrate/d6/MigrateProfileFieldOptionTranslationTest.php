@@ -39,7 +39,7 @@ class MigrateProfileFieldOptionTranslationTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 field option translation.
    */
-  public function testFieldOptionTranslation() {
+  public function testFieldOptionTranslation(): void {
     $language_manager = $this->container->get('language_manager');
 
     /** @var \Drupal\language\Config\LanguageConfigOverride $config_translation */

@@ -31,7 +31,7 @@ class YamlPeclTest extends YamlTestBase {
   /**
    * Ensures that php object support is disabled.
    */
-  public function testObjectSupportDisabled() {
+  public function testObjectSupportDisabled(): void {
     $object = new \stdClass();
     $object->foo = 'bar';
     $this->assertEquals(['O:8:"stdClass":1:{s:3:"foo";s:3:"bar";}'], YamlPecl::decode(YamlPecl::encode([$object])));
@@ -44,7 +44,7 @@ class YamlPeclTest extends YamlTestBase {
    * @covers ::decode
    * @dataProvider providerDecodeTests
    */
-  public function testDecode($string, $data) {
+  public function testDecode($string, $data): void {
     $this->assertEquals($data, YamlPecl::decode($string));
   }
 
@@ -53,7 +53,7 @@ class YamlPeclTest extends YamlTestBase {
    *
    * @covers ::encode
    */
-  public function testEncode() {
+  public function testEncode(): void {
     // cSpell:disable
     $this->assertEquals('---
 foo:
@@ -74,14 +74,14 @@ foo:
    * @covers ::applyBooleanCallbacks
    * @dataProvider providerBoolTest
    */
-  public function testApplyBooleanCallbacks($string, $expected) {
+  public function testApplyBooleanCallbacks($string, $expected): void {
     $this->assertEquals($expected, YamlPecl::applyBooleanCallbacks($string, 'bool', NULL));
   }
 
   /**
    * @covers ::getFileExtension
    */
-  public function testGetFileExtension() {
+  public function testGetFileExtension(): void {
     $this->assertEquals('yml', YamlPecl::getFileExtension());
   }
 
@@ -90,7 +90,7 @@ foo:
    *
    * @covers ::errorHandler
    */
-  public function testError() {
+  public function testError(): void {
     $this->expectException(InvalidDataTypeException::class);
     YamlPecl::decode('foo: [ads');
   }

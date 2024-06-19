@@ -108,7 +108,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
   /**
    * Tests migrating D7 field instances to field_config entities.
    */
-  public function testFieldInstances() {
+  public function testFieldInstances(): void {
     $this->assertEntity('comment.comment_node_page.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.page.body', 'Body', 'text_with_summary', FALSE, FALSE);
     $this->assertEntity('comment.comment_node_article.comment_body', 'Comment', 'text_long', TRUE, FALSE);

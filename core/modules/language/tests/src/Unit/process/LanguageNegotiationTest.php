@@ -25,7 +25,7 @@ class LanguageNegotiationTest extends MigrateProcessTestCase {
   /**
    * Tests successful transformation without weights.
    */
-  public function testTransformWithWeights() {
+  public function testTransformWithWeights(): void {
     $source = [
       [
         'locale-url' => [],
@@ -59,7 +59,7 @@ class LanguageNegotiationTest extends MigrateProcessTestCase {
   /**
    * Tests successful transformation without weights.
    */
-  public function testTransformWithoutWeights() {
+  public function testTransformWithoutWeights(): void {
     $source = [
       [
         'locale-url' => [],
@@ -79,7 +79,7 @@ class LanguageNegotiationTest extends MigrateProcessTestCase {
   /**
    * Tests string input.
    */
-  public function testStringInput() {
+  public function testStringInput(): void {
     $this->plugin = new LanguageNegotiation([], 'map', []);
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The input should be an array');

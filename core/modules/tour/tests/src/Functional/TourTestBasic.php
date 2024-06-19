@@ -65,7 +65,7 @@ abstract class TourTestBasic extends TourTestBase {
   /**
    * A simple tip test.
    */
-  public function testTips() {
+  public function testTips(): void {
     foreach ($this->tips as $path => $attributes) {
       $this->drupalGet($path);
       $this->assertTourTips($attributes);

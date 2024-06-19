@@ -16,7 +16,7 @@ class SelectLeastTest extends DatabaseTestBase {
    *
    * @dataProvider selectLeastProvider
    */
-  public function testSelectLeast($values, $expected) {
+  public function testSelectLeast($values, $expected): void {
     $least = $this->connection->query("SELECT LEAST(:values[])", [':values[]' => $values])->fetchField();
     $this->assertEquals($expected, $least);
   }

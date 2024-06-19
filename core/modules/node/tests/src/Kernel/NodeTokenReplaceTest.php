@@ -39,7 +39,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
   /**
    * Creates a node, then tests the tokens generated from it.
    */
-  public function testNodeTokenReplacement() {
+  public function testNodeTokenReplacement(): void {
     $url_options = [
       'absolute' => TRUE,
       'language' => $this->interfaceLanguage,

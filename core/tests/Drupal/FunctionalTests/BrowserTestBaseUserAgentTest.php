@@ -28,7 +28,7 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
   /**
    * Tests validation of the User-Agent header we use to perform test requests.
    */
-  public function testUserAgentValidation() {
+  public function testUserAgentValidation(): void {
     $assert_session = $this->assertSession();
     $system_path = $this->buildUrl(\Drupal::service('extension.list.module')->getPath('system'));
     $http_path = $system_path . '/tests/http.php/user/login';

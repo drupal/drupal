@@ -99,7 +99,7 @@ class DiffEngineTest extends TestCase {
    * @covers ::diff
    * @dataProvider provideTestDiff
    */
-  public function testDiff($expected, $from, $to) {
+  public function testDiff($expected, $from, $to): void {
     $this->expectDeprecation('Drupal\Component\Diff\Engine\DiffEngine is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use sebastianbergmann/diff instead. See https://www.drupal.org/node/3337942');
     $diff_engine = new DiffEngine();
     $diff = $diff_engine->diff($from, $to);
@@ -116,7 +116,7 @@ class DiffEngineTest extends TestCase {
    *
    * @covers ::diff
    */
-  public function testDiffInfiniteLoop() {
+  public function testDiffInfiniteLoop(): void {
     $this->expectDeprecation('Drupal\Component\Diff\Engine\DiffEngine is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use sebastianbergmann/diff instead. See https://www.drupal.org/node/3337942');
     $from = explode("\n", file_get_contents(__DIR__ . '/fixtures/file1.txt'));
     $to = explode("\n", file_get_contents(__DIR__ . '/fixtures/file2.txt'));

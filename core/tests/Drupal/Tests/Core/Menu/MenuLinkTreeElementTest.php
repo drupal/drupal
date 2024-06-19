@@ -21,7 +21,7 @@ class MenuLinkTreeElementTest extends UnitTestCase {
    *
    * @covers ::__construct
    */
-  public function testConstruction() {
+  public function testConstruction(): void {
     $link = MenuLinkMock::create(['id' => 'test']);
     $item = new MenuLinkTreeElement($link, FALSE, 3, FALSE, []);
     $this->assertSame($link, $item->link);
@@ -36,7 +36,7 @@ class MenuLinkTreeElementTest extends UnitTestCase {
    *
    * @covers ::count
    */
-  public function testCount() {
+  public function testCount(): void {
     $link_1 = MenuLinkMock::create(['id' => 'test_1']);
     $link_2 = MenuLinkMock::create(['id' => 'test_2']);
     $child_item = new MenuLinkTreeElement($link_2, FALSE, 2, FALSE, []);

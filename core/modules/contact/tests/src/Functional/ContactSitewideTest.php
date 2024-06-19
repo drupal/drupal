@@ -59,7 +59,7 @@ class ContactSitewideTest extends BrowserTestBase {
   /**
    * Tests configuration options and the site-wide contact form.
    */
-  public function testSiteWideContact() {
+  public function testSiteWideContact(): void {
     // Tests name and email fields for authenticated and anonymous users.
     $this->drupalLogin($this->drupalCreateUser([
       'access site-wide contact form',
@@ -440,7 +440,7 @@ class ContactSitewideTest extends BrowserTestBase {
   /**
    * Tests auto-reply on the site-wide contact form.
    */
-  public function testAutoReply() {
+  public function testAutoReply(): void {
     // Create and log in administrative user.
     $admin_user = $this->drupalCreateUser([
       'access site-wide contact form',

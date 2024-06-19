@@ -62,7 +62,7 @@ class TourHelpPageTest extends BrowserTestBase {
   /**
    * Logs in users, tests help pages.
    */
-  public function testHelp() {
+  public function testHelp(): void {
     $this->drupalLogin($this->tourUser);
     $this->verifyHelp();
 

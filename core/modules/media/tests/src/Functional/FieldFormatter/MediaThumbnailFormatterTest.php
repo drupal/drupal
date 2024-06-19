@@ -28,7 +28,7 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
   /**
    * Tests the media thumbnail field formatter.
    */
-  public function testRender() {
+  public function testRender(): void {
     $this->drupalLogin($this->adminUser);
 
     /** @var \Drupal\node\NodeStorage $node_storage */

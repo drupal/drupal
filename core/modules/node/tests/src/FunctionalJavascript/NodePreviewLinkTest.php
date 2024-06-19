@@ -50,7 +50,7 @@ class NodePreviewLinkTest extends WebDriverTestBase {
   /**
    * Tests the behavior of clicking preview links.
    */
-  public function testPreviewLinks() {
+  public function testPreviewLinks(): void {
     $assertSession = $this->assertSession();
     $this->drupalGet('node/add/test');
     $this->submitForm([

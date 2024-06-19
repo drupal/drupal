@@ -63,7 +63,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
    * this is a single public test method that invokes a series of protected
    * methods to do assertions on specific kinds of triggering elements.
    */
-  public function testJavascriptStates() {
+  public function testJavascriptStates(): void {
     $this->doCheckboxTriggerTests();
     $this->doCheckboxesTriggerTests();
     $this->doTextfieldTriggerTests();

@@ -32,7 +32,7 @@ class EntityExistsTest extends KernelTestBase {
   /**
    * Tests the EntityExists plugin.
    */
-  public function testEntityExists() {
+  public function testEntityExists(): void {
     $user = User::create([
       'name' => $this->randomString(),
     ]);

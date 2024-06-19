@@ -47,7 +47,7 @@ class ConfigExportUITest extends BrowserTestBase {
   /**
    * Tests export of configuration.
    */
-  public function testExport() {
+  public function testExport(): void {
     // Verify the export page with export submit button is available.
     $this->drupalGet('admin/config/development/configuration/full/export');
     $this->assertSession()->buttonExists('Export');

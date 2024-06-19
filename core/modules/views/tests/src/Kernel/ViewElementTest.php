@@ -24,7 +24,7 @@ class ViewElementTest extends ViewsKernelTestBase {
   /**
    * Tests the rendered output and form output of a view element.
    */
-  public function testViewElement() {
+  public function testViewElement(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $view = Views::getView('test_view_embed');
@@ -74,7 +74,7 @@ class ViewElementTest extends ViewsKernelTestBase {
   /**
    * Tests the rendered output and form output of the "embed" display plugin.
    */
-  public function testViewElementEmbed() {
+  public function testViewElementEmbed(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $view = Views::getView('test_view_embed');
@@ -134,7 +134,7 @@ class ViewElementTest extends ViewsKernelTestBase {
   /**
    * Tests that an exception is thrown when an invalid View is passed.
    */
-  public function testInvalidView() {
+  public function testInvalidView(): void {
     $renderer = $this->container->get('renderer');
     $render_element = [
       '#type' => 'view',

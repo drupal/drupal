@@ -56,7 +56,7 @@ EOF;
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled() {
+  public function testInstalled(): void {
     $this->assertTrue(\Drupal::state()->get('cache_flush_test'));
   }
 

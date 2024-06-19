@@ -16,7 +16,7 @@ class DatabaseExceptionWrapperTest extends DriverSpecificKernelTestBase {
   /**
    * Tests Connection::prepareStatement exception on execution.
    */
-  public function testPrepareStatementFailOnExecution() {
+  public function testPrepareStatementFailOnExecution(): void {
     $this->expectException(\PDOException::class);
     $stmt = $this->connection->prepareStatement('bananas', []);
     $stmt->execute();

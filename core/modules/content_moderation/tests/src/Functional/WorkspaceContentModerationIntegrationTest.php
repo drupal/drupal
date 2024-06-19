@@ -52,7 +52,7 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
   /**
    * Tests moderating nodes in a workspace.
    */
-  public function testModerationInWorkspace() {
+  public function testModerationInWorkspace(): void {
     $stage = Workspace::load('stage');
     $this->switchToWorkspace($stage);
 

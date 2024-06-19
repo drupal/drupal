@@ -43,7 +43,7 @@ class FileTransferAuthorizeFormTest extends UpdateUploaderTestBase {
    *
    * @dataProvider archiveFileUrlProvider
    */
-  public function testViaAuthorize($url) {
+  public function testViaAuthorize($url): void {
     // Ensure the that we can select which file transfer backend to use.
     \Drupal::state()->set('test_uploaders_via_prompt', TRUE);
 

@@ -18,7 +18,7 @@ class UuidItemTest extends FieldKernelTestBase {
   /**
    * Tests 'uuid' random values.
    */
-  public function testSampleValue() {
+  public function testSampleValue(): void {
     $entity = EntityTest::create([]);
     $entity->save();
 

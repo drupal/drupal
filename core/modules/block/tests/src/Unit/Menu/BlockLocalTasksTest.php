@@ -67,7 +67,7 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Tests the admin edit local task.
    */
-  public function testBlockAdminLocalTasks() {
+  public function testBlockAdminLocalTasks(): void {
     $this->assertLocalTasks('entity.block.edit_form', [['entity.block.edit_form']]);
   }
 
@@ -76,7 +76,7 @@ class BlockLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider providerTestBlockAdminDisplay
    */
-  public function testBlockAdminDisplay($route, $expected) {
+  public function testBlockAdminDisplay($route, $expected): void {
     $this->assertLocalTasks($route, $expected);
   }
 

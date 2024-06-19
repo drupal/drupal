@@ -144,7 +144,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   /**
    * Tests basic functionality.
    */
-  public function testConfigEntityQuery() {
+  public function testConfigEntityQuery(): void {
     // Run a test without any condition.
     $this->queryResults = $this->entityStorage->getQuery()
       ->execute();
@@ -374,7 +374,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   /**
    * Tests ID conditions.
    */
-  public function testStringIdConditions() {
+  public function testStringIdConditions(): void {
     // We need an entity with a non-numeric ID.
     $entity = ConfigQueryTest::create([
       'label' => 'entity_1',
@@ -430,7 +430,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   /**
    * Tests count query.
    */
-  public function testCount() {
+  public function testCount(): void {
     // Test count on no conditions.
     $count = $this->entityStorage->getQuery()
       ->count()
@@ -456,7 +456,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   /**
    * Tests sorting and range on config entity queries.
    */
-  public function testSortRange() {
+  public function testSortRange(): void {
     // Sort by simple ascending/descending.
     $this->queryResults = $this->entityStorage->getQuery()
       ->sort('number', 'DESC')
@@ -546,7 +546,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   /**
    * Tests sorting with tableSort on config entity queries.
    */
-  public function testTableSort() {
+  public function testTableSort(): void {
     $header = [
       ['data' => 'ID', 'specifier' => 'id'],
       ['data' => 'Number', 'specifier' => 'number'],
@@ -614,7 +614,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   /**
    * Tests dotted path matching.
    */
-  public function testDotted() {
+  public function testDotted(): void {
     $this->queryResults = $this->entityStorage->getQuery()
       ->condition('array.level1.*', 1)
       ->execute();
@@ -688,7 +688,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   /**
    * Tests case sensitivity.
    */
-  public function testCaseSensitivity() {
+  public function testCaseSensitivity(): void {
     // Filter by label with a known containing case-sensitive word.
     $this->queryResults = $this->entityStorage->getQuery()
       ->condition('label', 'TEST', 'CONTAINS')
@@ -704,7 +704,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   /**
    * Tests lookup keys are added to the key value store.
    */
-  public function testLookupKeys() {
+  public function testLookupKeys(): void {
     \Drupal::service('state')->set('config_test.lookup_keys', TRUE);
     \Drupal::entityTypeManager()->clearCachedDefinitions();
     $key_value = $this->container->get('keyvalue')->get(QueryFactory::CONFIG_LOOKUP_PREFIX . 'config_test');

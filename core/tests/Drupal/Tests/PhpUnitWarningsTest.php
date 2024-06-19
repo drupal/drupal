@@ -13,7 +13,7 @@ class PhpUnitWarningsTest extends UnitTestCase {
   /**
    * Tests that selected PHPUnit warning is converted to deprecation.
    */
-  public function testAddWarning() {
+  public function testAddWarning(): void {
     $this->expectDeprecation('Test warning for \Drupal\Tests\PhpUnitWarningsTest::testAddWarning()');
     $this->addWarning('Test warning for \Drupal\Tests\PhpUnitWarningsTest::testAddWarning()');
   }

@@ -48,7 +48,7 @@ class BlockContentPermissionsTest extends KernelTestBase {
   /**
    * @covers ::blockTypePermissions
    */
-  public function testDynamicPermissions() {
+  public function testDynamicPermissions(): void {
     $permissions = $this->permissionHandler->getPermissions();
     $this->assertArrayNotHasKey('edit any basic block content', $permissions, 'The per-block-type permission does not exist.');
     $this->assertArrayNotHasKey('edit any square block content', $permissions, 'The per-block-type permission does not exist.');

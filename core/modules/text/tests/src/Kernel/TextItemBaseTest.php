@@ -30,7 +30,7 @@ class TextItemBaseTest extends KernelTestBase {
    * @covers ::generateSampleValue
    * @dataProvider providerTextFieldSampleValue
    */
-  public function testTextFieldSampleValue($max_length) {
+  public function testTextFieldSampleValue($max_length): void {
     // Create a text field.
     $field_definition = BaseFieldDefinition::create('text')
       ->setTargetEntityTypeId('foo');
@@ -66,7 +66,7 @@ class TextItemBaseTest extends KernelTestBase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDependencies() {
+  public function testCalculateDependencies(): void {
     $format = FilterFormat::create([
       'format' => 'test_format',
       'name' => 'Test format',

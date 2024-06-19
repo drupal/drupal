@@ -35,7 +35,7 @@ class CommentAdminTest extends CommentTestBase {
   /**
    * Tests comment approval functionality through admin/content/comment.
    */
-  public function testApprovalAdminInterface() {
+  public function testApprovalAdminInterface(): void {
     // Set anonymous comments to require approval.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
@@ -128,7 +128,7 @@ class CommentAdminTest extends CommentTestBase {
   /**
    * Tests comment approval functionality through the node interface.
    */
-  public function testApprovalNodeInterface() {
+  public function testApprovalNodeInterface(): void {
     // Set anonymous comments to require approval.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
@@ -181,7 +181,7 @@ class CommentAdminTest extends CommentTestBase {
   /**
    * Tests comment bundle admin.
    */
-  public function testCommentAdmin() {
+  public function testCommentAdmin(): void {
     // Login.
     $this->drupalLogin($this->adminUser);
     // Browse to comment bundle overview.
@@ -203,7 +203,7 @@ class CommentAdminTest extends CommentTestBase {
   /**
    * Tests editing a comment as an admin.
    */
-  public function testEditComment() {
+  public function testEditComment(): void {
     // Enable anonymous user comments.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments',
@@ -244,7 +244,7 @@ class CommentAdminTest extends CommentTestBase {
   /**
    * Tests commented translation deletion admin view.
    */
-  public function testCommentedTranslationDeletion() {
+  public function testCommentedTranslationDeletion(): void {
     \Drupal::service('module_installer')->install([
       'language',
       'locale',

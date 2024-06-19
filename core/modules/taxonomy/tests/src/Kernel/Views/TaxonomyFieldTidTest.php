@@ -61,7 +61,7 @@ class TaxonomyFieldTidTest extends ViewsKernelTestBase {
   /**
    * Tests the taxonomy field handler.
    */
-  public function testViewsHandlerTidField() {
+  public function testViewsHandlerTidField(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 

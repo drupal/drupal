@@ -18,7 +18,7 @@ class ContainerBuilderTest extends UnitTestCase {
   /**
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     $container = new ContainerBuilder();
     $container->register('bar', 'Drupal\Tests\Core\DependencyInjection\Fixture\BarClass');
 
@@ -29,7 +29,7 @@ class ContainerBuilderTest extends UnitTestCase {
   /**
    * @covers ::setParameter
    */
-  public function testSetParameterException() {
+  public function testSetParameterException(): void {
     $container = new ContainerBuilder();
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Parameter names must be lowercase: Buzz');
@@ -39,7 +39,7 @@ class ContainerBuilderTest extends UnitTestCase {
   /**
    * @covers ::register
    */
-  public function testRegister() {
+  public function testRegister(): void {
     $container = new ContainerBuilder();
     $service = $container->register('bar');
     $this->assertTrue($service->isPublic());
@@ -48,7 +48,7 @@ class ContainerBuilderTest extends UnitTestCase {
   /**
    * @covers ::setDefinition
    */
-  public function testSetDefinition() {
+  public function testSetDefinition(): void {
     // Test a service with public set to true.
     $container = new ContainerBuilder();
     $definition = new Definition();
@@ -66,7 +66,7 @@ class ContainerBuilderTest extends UnitTestCase {
   /**
    * @covers ::setAlias
    */
-  public function testSetAlias() {
+  public function testSetAlias(): void {
     $container = new ContainerBuilder();
     $container->register('bar');
     $alias = $container->setAlias('foo', 'bar');
@@ -76,7 +76,7 @@ class ContainerBuilderTest extends UnitTestCase {
   /**
    * Tests serialization.
    */
-  public function testSerialize() {
+  public function testSerialize(): void {
     $container = new ContainerBuilder();
     $this->expectException(\AssertionError::class);
     serialize($container);
@@ -91,7 +91,7 @@ class ContainerBuilderTest extends UnitTestCase {
    * @runInSeparateProcess
    * @preserveGlobalState disabled
    */
-  public function testConstructor() {
+  public function testConstructor(): void {
     class_alias(TestInterface::class, 'Symfony\Component\Config\Resource\ResourceInterface');
     $container = new ContainerBuilder();
     $this->assertFalse($container->isTrackingResources());

@@ -82,7 +82,7 @@ class DateRangeItemTest extends FieldKernelTestBase {
   /**
    * Tests the field configured for date-only.
    */
-  public function testDateOnly() {
+  public function testDateOnly(): void {
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATE);
     $field_name = $this->fieldStorage->getName();
     // Create an entity.

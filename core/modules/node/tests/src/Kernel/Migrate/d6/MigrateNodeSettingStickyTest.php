@@ -27,7 +27,7 @@ class MigrateNodeSettingStickyTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of the sticky checkbox's settings.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $this->assertSame('Sticky at the top of lists', BaseFieldOverride::load('node.article.sticky')->label());
   }
 

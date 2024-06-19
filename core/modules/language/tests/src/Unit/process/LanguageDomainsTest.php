@@ -44,7 +44,7 @@ class LanguageDomainsTest extends MigrateProcessTestCase {
   /**
    * @covers ::transform
    */
-  public function testTransform() {
+  public function testTransform(): void {
     $source = [
       ['language' => 'en', 'domain' => ''],
       ['language' => 'fr', 'domain' => 'fr.example.com'],

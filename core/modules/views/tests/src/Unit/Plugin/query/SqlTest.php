@@ -30,7 +30,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::getCacheTags
    * @covers ::getAllEntities
    */
-  public function testGetCacheTags() {
+  public function testGetCacheTags(): void {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $date_sql = $this->prophesize(DateSqlInterface::class);
@@ -78,7 +78,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::getCacheTags
    * @covers ::getAllEntities
    */
-  public function testGetCacheMaxAge() {
+  public function testGetCacheMaxAge(): void {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $date_sql = $this->prophesize(DateSqlInterface::class);
@@ -248,7 +248,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::loadEntities
    * @covers ::assignEntitiesToResult
    */
-  public function testLoadEntitiesWithEmptyResult() {
+  public function testLoadEntitiesWithEmptyResult(): void {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $view_entity = $this->prophesize(ViewEntityInterface::class);
     $view_entity->get('base_table')->willReturn('entity_first');
@@ -272,7 +272,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::loadEntities
    * @covers ::assignEntitiesToResult
    */
-  public function testLoadEntitiesWithNoRelationshipAndNoRevision() {
+  public function testLoadEntitiesWithNoRelationshipAndNoRevision(): void {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $view_entity = $this->prophesize(ViewEntityInterface::class);
     $view_entity->get('base_table')->willReturn('entity_first');
@@ -330,7 +330,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::loadEntities
    * @covers ::assignEntitiesToResult
    */
-  public function testLoadEntitiesWithRelationship() {
+  public function testLoadEntitiesWithRelationship(): void {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)->disableOriginalConstructor()->getMock();
     $this->setupViewWithRelationships($view);
@@ -390,7 +390,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::loadEntities
    * @covers ::assignEntitiesToResult
    */
-  public function testLoadEntitiesWithNonEntityRelationship() {
+  public function testLoadEntitiesWithNonEntityRelationship(): void {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)->disableOriginalConstructor()->getMock();
     $this->setupViewWithRelationships($view, 'entity_first_field_data');
@@ -441,7 +441,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::loadEntities
    * @covers ::assignEntitiesToResult
    */
-  public function testLoadEntitiesWithRevision() {
+  public function testLoadEntitiesWithRevision(): void {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)
       ->disableOriginalConstructor()
@@ -488,7 +488,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::loadEntities
    * @covers ::assignEntitiesToResult
    */
-  public function testLoadEntitiesWithRevisionOfSameEntityType() {
+  public function testLoadEntitiesWithRevisionOfSameEntityType(): void {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)
       ->disableOriginalConstructor()
@@ -550,7 +550,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::loadEntities
    * @covers ::assignEntitiesToResult
    */
-  public function testLoadEntitiesWithRelationshipAndRevision() {
+  public function testLoadEntitiesWithRelationshipAndRevision(): void {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)->disableOriginalConstructor()->getMock();
     $this->setupViewWithRelationships($view);

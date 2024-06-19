@@ -40,7 +40,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
   /**
    * Tests getLoadedRevisionId() returns the correct ID throughout the process.
    */
-  public function testLoadedRevisionId() {
+  public function testLoadedRevisionId(): void {
     // Create a basic EntityTestMulRev entity and save it.
     $entity = EntityTestMulRev::create();
     $entity->save();
@@ -82,7 +82,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
   /**
    * Tests the loaded revision ID after an entity re-save, clone and duplicate.
    */
-  public function testLoadedRevisionIdWithNoNewRevision() {
+  public function testLoadedRevisionIdWithNoNewRevision(): void {
     // Create a basic EntityTestMulRev entity and save it.
     $entity = EntityTestMulRev::create();
     $entity->save();
@@ -120,7 +120,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
   /**
    * Tests the loaded revision ID for translatable entities.
    */
-  public function testTranslatedLoadedRevisionId() {
+  public function testTranslatedLoadedRevisionId(): void {
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
     // Create a basic EntityTestMulRev entity and save it.
@@ -161,7 +161,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
   /**
    * Tests re-saving the entity in entity_test_entity_insert().
    */
-  public function testSaveInHookEntityInsert() {
+  public function testSaveInHookEntityInsert(): void {
     // Create an entity which will be saved again in entity_test_entity_insert().
     $entity = EntityTestMulRev::create(['name' => 'EntityLoadedRevisionTest']);
     $entity->save();
@@ -175,7 +175,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
    *
    * @covers ::isLatestRevision
    */
-  public function testIsLatestRevision() {
+  public function testIsLatestRevision(): void {
     // Create a basic EntityTestMulRev entity and save it.
     $entity = EntityTestMulRev::create();
     $entity->save();
@@ -208,7 +208,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
    * @covers \Drupal\Core\Entity\ContentEntityStorageBase::getLatestRevisionId
    * @covers \Drupal\Core\Entity\ContentEntityStorageBase::getLatestTranslationAffectedRevisionId
    */
-  public function testIsLatestAffectedRevisionTranslation() {
+  public function testIsLatestAffectedRevisionTranslation(): void {
     ConfigurableLanguage::createFromLangcode('it')->save();
 
     // Create a basic EntityTestMulRev entity and save it.
@@ -268,7 +268,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
    *
    * @covers \Drupal\Core\Entity\ContentEntityStorageBase::doSave
    */
-  public function testDefaultRevisionFlag() {
+  public function testDefaultRevisionFlag(): void {
     // Create a basic EntityTestMulRev entity and save it.
     $entity = EntityTestMulRev::create();
     $entity->save();

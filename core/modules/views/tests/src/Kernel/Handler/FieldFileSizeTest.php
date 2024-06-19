@@ -39,7 +39,7 @@ class FieldFileSizeTest extends ViewsKernelTestBase {
     return $data;
   }
 
-  public function testFieldFileSize() {
+  public function testFieldFileSize(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

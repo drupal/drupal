@@ -174,7 +174,7 @@ class VariableTest extends TestCase {
    * @param mixed $variable
    *   The variable to be exported.
    */
-  public function testExport($expected, $variable) {
+  public function testExport($expected, $variable): void {
     $this->assertEquals($expected, Variable::export($variable));
   }
 

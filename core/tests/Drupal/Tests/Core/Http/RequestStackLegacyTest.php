@@ -20,7 +20,7 @@ class RequestStackLegacyTest extends UnitTestCase {
    *
    * @covers ::getMainRequest
    */
-  public function testGetMainRequestDeprecation() {
+  public function testGetMainRequestDeprecation(): void {
     $stack = new RequestStack();
 
     $this->expectDeprecation('The Drupal\Core\Http\RequestStack is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3265357');

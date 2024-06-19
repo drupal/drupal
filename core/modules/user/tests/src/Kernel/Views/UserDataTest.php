@@ -31,7 +31,7 @@ class UserDataTest extends ViewsKernelTestBase {
   /**
    * Tests field handler.
    */
-  public function testDataField() {
+  public function testDataField(): void {
     ViewTestData::createTestViews(static::class, ['user_test_views']);
 
     $this->installEntitySchema('user');

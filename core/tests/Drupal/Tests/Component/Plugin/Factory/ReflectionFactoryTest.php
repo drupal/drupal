@@ -80,7 +80,7 @@ class ReflectionFactoryTest extends TestCase {
    * @covers ::createInstance
    * @dataProvider providerGetInstanceArguments
    */
-  public function testCreateInstance($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration) {
+  public function testCreateInstance($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration): void {
     // Create a mock DiscoveryInterface which can return our plugin definition.
     $mock_discovery = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryInterface')
       ->onlyMethods(['getDefinition', 'getDefinitions', 'hasDefinition'])
@@ -105,7 +105,7 @@ class ReflectionFactoryTest extends TestCase {
    * @covers ::getInstanceArguments
    * @dataProvider providerGetInstanceArguments
    */
-  public function testGetInstanceArguments($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration) {
+  public function testGetInstanceArguments($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration): void {
     $reflection_factory = $this->getMockBuilder('Drupal\Component\Plugin\Factory\ReflectionFactory')
       ->disableOriginalConstructor()
       ->getMock();

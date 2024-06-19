@@ -19,7 +19,7 @@ class AccessResultNeutralTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getReason
    */
-  public function testConstruction() {
+  public function testConstruction(): void {
     $a = new AccessResultNeutral();
     $this->assertEquals('', $a->getReason());
 
@@ -33,7 +33,7 @@ class AccessResultNeutralTest extends UnitTestCase {
    *
    * @covers ::setReason
    */
-  public function testSetReason() {
+  public function testSetReason(): void {
     $a = new AccessResultNeutral();
 
     $reason = $this->getRandomGenerator()->string();

@@ -28,7 +28,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
    * Note that we have to make an HTTP request to a test page handler
    * because the pager depends on GET parameters.
    */
-  public function testEvenPagerQuery() {
+  public function testEvenPagerQuery(): void {
     // To keep the test from being too brittle, we determine up front
     // what the page count should be dynamically, and pass the control
     // information forward to the actual query on the other side of the
@@ -62,7 +62,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
    * Note that we have to make an HTTP request to a test page handler
    * because the pager depends on GET parameters.
    */
-  public function testOddPagerQuery() {
+  public function testOddPagerQuery(): void {
     // To keep the test from being too brittle, we determine up front
     // what the page count should be dynamically, and pass the control
     // information forward to the actual query on the other side of the
@@ -95,7 +95,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
    *
    * This is a regression test for #467984.
    */
-  public function testInnerPagerQuery() {
+  public function testInnerPagerQuery(): void {
     $connection = Database::getConnection();
     $query = $connection->select('test', 't')
       ->extend(PagerSelectExtender::class);
@@ -119,7 +119,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
    *
    * This is a regression test for #467984.
    */
-  public function testHavingPagerQuery() {
+  public function testHavingPagerQuery(): void {
     $query = Database::getConnection()->select('test', 't')
       ->extend(PagerSelectExtender::class);
     $query
@@ -138,7 +138,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
   /**
    * Confirms that every pager gets a valid, non-overlapping element ID.
    */
-  public function testElementNumbers() {
+  public function testElementNumbers(): void {
 
     $request = Request::createFromGlobals();
     $request->query->replace([

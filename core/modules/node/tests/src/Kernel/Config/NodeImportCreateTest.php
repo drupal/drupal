@@ -37,7 +37,7 @@ class NodeImportCreateTest extends KernelTestBase {
   /**
    * Tests creating a content type during default config import.
    */
-  public function testImportCreateDefault() {
+  public function testImportCreateDefault(): void {
     $node_type_id = 'default';
 
     // Check that the content type does not exist yet.
@@ -53,7 +53,7 @@ class NodeImportCreateTest extends KernelTestBase {
   /**
    * Tests creating a content type during config import.
    */
-  public function testImportCreate() {
+  public function testImportCreate(): void {
     $node_type_id = 'import';
     $node_type_config_name = "node.type.$node_type_id";
 

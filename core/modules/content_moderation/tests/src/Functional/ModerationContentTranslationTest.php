@@ -68,7 +68,7 @@ class ModerationContentTranslationTest extends BrowserTestBase {
   /**
    * Tests existing translations being edited after enabling content moderation.
    */
-  public function testModerationWithExistingContent() {
+  public function testModerationWithExistingContent(): void {
     // Create a published article in English.
     $edit = [
       'title[0][value]' => 'Published English node',

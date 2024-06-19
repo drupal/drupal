@@ -49,7 +49,7 @@ class CommentRssTest extends CommentTestBase {
   /**
    * Tests comments as part of an RSS feed.
    */
-  public function testCommentRss() {
+  public function testCommentRss(): void {
     // Find comment in RSS feed.
     $this->drupalLogin($this->webUser);
     $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());

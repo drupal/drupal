@@ -38,7 +38,7 @@ class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
   /**
    * Tests that configuration schema enforces valid values.
    */
-  public function testInvalidConfiguration() {
+  public function testInvalidConfiguration(): void {
     $this->expectException(SchemaIncompleteException::class);
     $this->sectionList->getSection(0)->getComponent('10000000-0000-1000-a000-000000000000')->setConfiguration(['id' => 'foo', 'bar' => 'baz']);
     $this->sectionList->save();
@@ -47,7 +47,7 @@ class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
   /**
    * @dataProvider providerTestIsLayoutBuilderEnabled
    */
-  public function testIsLayoutBuilderEnabled($expected, $view_mode, $enabled) {
+  public function testIsLayoutBuilderEnabled($expected, $view_mode, $enabled): void {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
@@ -80,7 +80,7 @@ class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
   /**
    * Tests that setting overridable enables Layout Builder only when TRUE.
    */
-  public function testSetOverridable() {
+  public function testSetOverridable(): void {
     // Disable Layout Builder.
     $this->sectionList->disableLayoutBuilder();
 

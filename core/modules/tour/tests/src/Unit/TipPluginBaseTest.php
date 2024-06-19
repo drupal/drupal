@@ -18,7 +18,7 @@ class TipPluginBaseTest extends UnitTestCase {
   /**
    * @covers ::getLocation
    */
-  public function testGetLocationAssertion() {
+  public function testGetLocationAssertion(): void {
     $base_plugin = $this->getMockForAbstractClass(TipPluginBase::class, [], '', FALSE);
 
     $base_plugin->set('position', 'right');

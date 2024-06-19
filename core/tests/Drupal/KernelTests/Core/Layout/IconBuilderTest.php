@@ -23,7 +23,7 @@ class IconBuilderTest extends KernelTestBase {
    *
    * @dataProvider providerTestBuild
    */
-  public function testBuild(SvgIconBuilder $icon_builder, $icon_map, $expected) {
+  public function testBuild(SvgIconBuilder $icon_builder, $icon_map, $expected): void {
     $renderer = $this->container->get('renderer');
 
     $build = $icon_builder->build($icon_map);

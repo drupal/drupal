@@ -43,7 +43,7 @@ class BlockHookOperationTest extends BrowserTestBase {
   /**
    * Tests the block list to see if the test_operation link is added.
    */
-  public function testBlockOperationAlter() {
+  public function testBlockOperationAlter(): void {
     // Add a test block, any block will do.
     // Set the machine name so the test_operation link can be built later.
     $block_id = $this->randomMachineName(16);

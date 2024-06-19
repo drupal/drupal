@@ -58,7 +58,7 @@ class StyleSummaryTest extends ViewTestBase {
   /**
    * Tests a summary view.
    */
-  public function testSummaryView() {
+  public function testSummaryView(): void {
     $this->drupalGet('test-summary');
 
     // Ensure styles are properly added for summary views.

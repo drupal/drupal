@@ -19,7 +19,7 @@ class FileUriItemTest extends FileManagedUnitTestBase {
   /**
    * Tests the file entity override of the URI field.
    */
-  public function testCustomFileUriField() {
+  public function testCustomFileUriField(): void {
     $uri = 'public://druplicon.txt';
 
     // Create a new file entity.

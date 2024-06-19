@@ -37,7 +37,7 @@ class HelpTopicsMerge extends UpdatePathTestBase {
    * @see \help_post_update_help_topics_search()
    * @see \help_post_update_help_topics_disable()
    */
-  public function testHelpTopicsMerge() {
+  public function testHelpTopicsMerge(): void {
     $moduleHandler = \Drupal::moduleHandler();
     $this->assertTrue($moduleHandler->moduleExists('help'));
     $this->assertFalse($moduleHandler->moduleExists('help_topics'));

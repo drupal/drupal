@@ -229,7 +229,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
    *
    * @dataProvider setLatestRevisionFlagTestCases
    */
-  public function testSetLatestRevisionFlag($defaults, $parameters, $expected_parameters = FALSE) {
+  public function testSetLatestRevisionFlag($defaults, $parameters, $expected_parameters = FALSE): void {
     $route = new Route('/foo/{entity_test}', $defaults, [], [
       'parameters' => $parameters,
     ]);

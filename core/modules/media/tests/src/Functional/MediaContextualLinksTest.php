@@ -28,7 +28,7 @@ class MediaContextualLinksTest extends MediaFunctionalTestBase {
   /**
    * Tests contextual links.
    */
-  public function testMediaContextualLinks() {
+  public function testMediaContextualLinks(): void {
     \Drupal::configFactory()
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)

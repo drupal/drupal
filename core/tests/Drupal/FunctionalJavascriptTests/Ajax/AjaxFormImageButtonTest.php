@@ -26,7 +26,7 @@ class AjaxFormImageButtonTest extends WebDriverTestBase {
   /**
    * Tests image buttons can be operated with the keyboard ENTER key.
    */
-  public function testAjaxImageButtonKeypressEnter() {
+  public function testAjaxImageButtonKeypressEnter(): void {
     // Get a Field UI manage-display page.
     $this->drupalGet('ajax_forms_image_button_form');
     $assertSession = $this->assertSession();
@@ -41,7 +41,7 @@ class AjaxFormImageButtonTest extends WebDriverTestBase {
   /**
    * Tests image buttons can be operated with the keyboard SPACE key.
    */
-  public function testAjaxImageButtonKeypressSpace() {
+  public function testAjaxImageButtonKeypressSpace(): void {
     // Get a Field UI manage-display page.
     $this->drupalGet('ajax_forms_image_button_form');
     $assertSession = $this->assertSession();

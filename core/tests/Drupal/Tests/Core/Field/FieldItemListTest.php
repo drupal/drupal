@@ -25,7 +25,7 @@ class FieldItemListTest extends UnitTestCase {
    *
    * @dataProvider providerTestEquals
    */
-  public function testEquals($expected, ?FieldItemInterface $first_field_item = NULL, ?FieldItemInterface $second_field_item = NULL) {
+  public function testEquals($expected, ?FieldItemInterface $first_field_item = NULL, ?FieldItemInterface $second_field_item = NULL): void {
 
     // Mock the field type manager and place it in the container.
     $field_type_manager = $this->createMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
@@ -167,7 +167,7 @@ class FieldItemListTest extends UnitTestCase {
    *
    * @dataProvider providerTestEquals
    */
-  public function testHasAffectingChanges($expected, ?FieldItemInterface $first_field_item = NULL, ?FieldItemInterface $second_field_item = NULL) {
+  public function testHasAffectingChanges($expected, ?FieldItemInterface $first_field_item = NULL, ?FieldItemInterface $second_field_item = NULL): void {
     // Mock the field type manager and place it in the container.
     $field_type_manager = $this->createMock(FieldTypePluginManagerInterface::class);
     $container = new ContainerBuilder();
@@ -228,7 +228,7 @@ class FieldItemListTest extends UnitTestCase {
   /**
    * @covers ::equals
    */
-  public function testEqualsEmptyItems() {
+  public function testEqualsEmptyItems(): void {
     /** @var \Drupal\Core\Field\FieldItemBase  $fv */
     $first_field_item = new FieldItemTestClass();
     $first_field_item->setValue(['0' => 1, '1' => 2]);
@@ -292,7 +292,7 @@ class FieldItemListTest extends UnitTestCase {
   /**
    * @covers ::defaultValuesForm
    */
-  public function testDefaultValuesForm() {
+  public function testDefaultValuesForm(): void {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);
     $field_definition->expects($this->any())
       ->method('getType')
@@ -316,7 +316,7 @@ class FieldItemListTest extends UnitTestCase {
   /**
    * @covers ::defaultValuesFormValidate
    */
-  public function testDefaultValuesFormValidate() {
+  public function testDefaultValuesFormValidate(): void {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);
     /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit\Framework\MockObject\MockObject $field_list */
     $field_list = $this->getMockBuilder(FieldItemList::class)
@@ -337,7 +337,7 @@ class FieldItemListTest extends UnitTestCase {
   /**
    * @covers ::defaultValuesFormSubmit
    */
-  public function testDefaultValuesFormSubmit() {
+  public function testDefaultValuesFormSubmit(): void {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);
     /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit\Framework\MockObject\MockObject $field_list */
     $field_list = $this->getMockBuilder(FieldItemList::class)

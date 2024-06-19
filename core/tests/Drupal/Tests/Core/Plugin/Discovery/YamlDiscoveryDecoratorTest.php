@@ -72,7 +72,7 @@ class YamlDiscoveryDecoratorTest extends UnitTestCase {
   /**
    * Tests the getDefinitions() method.
    */
-  public function testGetDefinitions() {
+  public function testGetDefinitions(): void {
     $definitions = $this->discoveryDecorator->getDefinitions();
 
     $this->assertIsArray($definitions);

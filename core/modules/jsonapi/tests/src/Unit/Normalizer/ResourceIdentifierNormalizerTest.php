@@ -111,7 +111,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    * @dataProvider denormalizeProvider
    */
-  public function testDenormalize($input, $field_name, $expected) {
+  public function testDenormalize($input, $field_name, $expected): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $context = [
       'resource_type' => $this->resourceType,
@@ -152,7 +152,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    * @dataProvider denormalizeInvalidResourceProvider
    */
-  public function testDenormalizeInvalidResource($data, $field_name) {
+  public function testDenormalizeInvalidResource($data, $field_name): void {
     $context = [
       'resource_type' => $this->resourceType,
       'related' => $field_name,

@@ -19,7 +19,7 @@ class EmailValidatorTest extends TestCase {
   /**
    * @covers ::isValid
    */
-  public function testIsValid() {
+  public function testIsValid(): void {
     // Note that \Drupal\Component\Utility\EmailValidator wraps
     // \Egulias\EmailValidator\EmailValidator so we don't do anything more than
     // test that the wrapping works since the dependency has its own test
@@ -33,7 +33,7 @@ class EmailValidatorTest extends TestCase {
   /**
    * @covers ::isValid
    */
-  public function testIsValidException() {
+  public function testIsValidException(): void {
     $validator = new EmailValidator();
     $this->expectException(\BadMethodCallException::class);
     $this->expectExceptionMessage('Calling \Drupal\Component\Utility\EmailValidator::isValid() with the second argument is not supported. See https://www.drupal.org/node/2997196');

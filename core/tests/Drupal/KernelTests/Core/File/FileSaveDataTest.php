@@ -16,7 +16,7 @@ class FileSaveDataTest extends FileTestBase {
   /**
    * Tests the file_unmanaged_save_data() function.
    */
-  public function testFileSaveData() {
+  public function testFileSaveData(): void {
     $contents = $this->randomMachineName(8);
     $this->setSetting('file_chmod_file', 0777);
 

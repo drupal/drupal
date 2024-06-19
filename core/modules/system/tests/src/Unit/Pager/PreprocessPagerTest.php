@@ -52,7 +52,7 @@ class PreprocessPagerTest extends UnitTestCase {
    *
    * @covers ::template_preprocess_pager
    */
-  public function testQuantityNotSet() {
+  public function testQuantityNotSet(): void {
     require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
@@ -73,7 +73,7 @@ class PreprocessPagerTest extends UnitTestCase {
    *
    * @covers ::template_preprocess_pager
    */
-  public function testQuantitySet() {
+  public function testQuantitySet(): void {
     require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
@@ -98,7 +98,7 @@ class PreprocessPagerTest extends UnitTestCase {
    *
    * @covers ::template_preprocess_pager
    */
-  public function testEmptyPaginationHeadingLevelSet() {
+  public function testEmptyPaginationHeadingLevelSet(): void {
     require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
@@ -120,7 +120,7 @@ class PreprocessPagerTest extends UnitTestCase {
    *
    * @covers ::template_preprocess_pager
    */
-  public function testPaginationHeadingLevelNotSet() {
+  public function testPaginationHeadingLevelNotSet(): void {
     require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
@@ -141,7 +141,7 @@ class PreprocessPagerTest extends UnitTestCase {
    *
    * @covers ::template_preprocess_pager
    */
-  public function testPaginationHeadingLevelSet() {
+  public function testPaginationHeadingLevelSet(): void {
     require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [
@@ -163,7 +163,7 @@ class PreprocessPagerTest extends UnitTestCase {
    *
    * @covers ::template_preprocess_pager
    */
-  public function testPaginationHeadingLevelInvalid() {
+  public function testPaginationHeadingLevelInvalid(): void {
     require_once $this->root . '/core/includes/theme.inc';
     $variables = [
       'pager' => [

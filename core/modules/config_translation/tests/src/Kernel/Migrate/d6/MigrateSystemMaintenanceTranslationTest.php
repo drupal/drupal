@@ -33,7 +33,7 @@ class MigrateSystemMaintenanceTranslationTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of system variables to system.maintenance.yml.
    */
-  public function testSystemMaintenance() {
+  public function testSystemMaintenance(): void {
     $config = \Drupal::service('language_manager')->getLanguageConfigOverride('fr', 'system.maintenance');
     $this->assertSame('fr - Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.', $config->get('message'));
   }

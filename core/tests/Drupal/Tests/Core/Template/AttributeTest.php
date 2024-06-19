@@ -23,7 +23,7 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests the constructor of the attribute class.
    */
-  public function testConstructor() {
+  public function testConstructor(): void {
     $attribute = new Attribute(['class' => ['example-class']]);
     $this->assertTrue(isset($attribute['class']));
     $this->assertEquals(new AttributeArray('class', ['example-class']), $attribute['class']);
@@ -49,7 +49,7 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests set of values.
    */
-  public function testSet() {
+  public function testSet(): void {
     $attribute = new Attribute();
     $attribute['class'] = ['example-class'];
 
@@ -60,7 +60,7 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests adding new values to an existing part of the attribute.
    */
-  public function testAdd() {
+  public function testAdd(): void {
     $attribute = new Attribute(['class' => ['example-class']]);
 
     $attribute['class'][] = 'other-class';
@@ -70,7 +70,7 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests removing of values.
    */
-  public function testRemove() {
+  public function testRemove(): void {
     $attribute = new Attribute(['class' => ['example-class']]);
     unset($attribute['class']);
     $this->assertFalse(isset($attribute['class']));
@@ -80,7 +80,7 @@ class AttributeTest extends UnitTestCase {
    * Tests setting attributes.
    * @covers ::setAttribute
    */
-  public function testSetAttribute() {
+  public function testSetAttribute(): void {
     $attribute = new Attribute();
 
     // Test adding various attributes.
@@ -108,7 +108,7 @@ class AttributeTest extends UnitTestCase {
    * Tests removing attributes.
    * @covers ::removeAttribute
    */
-  public function testRemoveAttribute() {
+  public function testRemoveAttribute(): void {
     $attributes = [
       'alt' => 'Alternative text',
       'id' => 'bunny',
@@ -147,7 +147,7 @@ class AttributeTest extends UnitTestCase {
    * Tests adding class attributes with the AttributeArray helper method.
    * @covers ::addClass
    */
-  public function testAddClasses() {
+  public function testAddClasses(): void {
     // Add empty Attribute object with no classes.
     $attribute = new Attribute();
 
@@ -199,7 +199,7 @@ class AttributeTest extends UnitTestCase {
    * Tests removing class attributes with the AttributeArray helper method.
    * @covers ::removeClass
    */
-  public function testRemoveClasses() {
+  public function testRemoveClasses(): void {
     // Add duplicate class to ensure that both duplicates are removed.
     $classes = ['example-class', 'aa', 'xx', 'yy', 'red', 'green', 'blue', 'red'];
     $attribute = new Attribute(['class' => $classes]);
@@ -230,7 +230,7 @@ class AttributeTest extends UnitTestCase {
    * Tests checking for class names with the Attribute method.
    * @covers ::hasClass
    */
-  public function testHasClass() {
+  public function testHasClass(): void {
     // Test an attribute without any classes.
     $attribute = new Attribute();
     $this->assertFalse($attribute->hasClass('a-class-nowhere-to-be-found'));
@@ -246,7 +246,7 @@ class AttributeTest extends UnitTestCase {
    * @covers ::removeClass
    * @covers ::addClass
    */
-  public function testChainAddRemoveClasses() {
+  public function testChainAddRemoveClasses(): void {
     $attribute = new Attribute(
       ['class' => ['example-class', 'red', 'green', 'blue']]
     );
@@ -266,7 +266,7 @@ class AttributeTest extends UnitTestCase {
    * @covers ::removeClass
    * @covers ::addClass
    */
-  public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []) {
+  public function testTwigAddRemoveClasses($template, $expected, $seed_attributes = []): void {
     $loader = new StringLoader();
     $twig = new Environment($loader);
     $data = ['attributes' => new Attribute($seed_attributes)];
@@ -322,7 +322,7 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests iterating on the values of the attribute.
    */
-  public function testIterate() {
+  public function testIterate(): void {
     $attribute = new Attribute(['class' => ['example-class'], 'id' => 'example-id']);
 
     $counter = 0;
@@ -342,7 +342,7 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests printing of an attribute.
    */
-  public function testPrint() {
+  public function testPrint(): void {
     $attribute = new Attribute(['class' => ['example-class'], 'id' => 'example-id', 'enabled' => TRUE]);
 
     $content = $this->randomMachineName();
@@ -360,7 +360,7 @@ class AttributeTest extends UnitTestCase {
    * @covers ::createAttributeValue
    * @dataProvider providerTestAttributeValues
    */
-  public function testAttributeValues(array $attributes, $expected) {
+  public function testAttributeValues(array $attributes, $expected): void {
     $this->assertEquals($expected, (new Attribute($attributes))->__toString());
   }
 
@@ -458,7 +458,7 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests the storage method.
    */
-  public function testStorage() {
+  public function testStorage(): void {
     $attribute = new Attribute(['class' => ['example-class']]);
 
     $this->assertEquals(['class' => new AttributeArray('class', ['example-class'])], $attribute->storage());
@@ -485,7 +485,7 @@ class AttributeTest extends UnitTestCase {
    * @covers ::hasAttribute
    * @dataProvider providerTestHasAttribute
    */
-  public function testHasAttribute(array $test_data, $test_attribute, $expected) {
+  public function testHasAttribute(array $test_data, $test_attribute, $expected): void {
     $attributes = new Attribute($test_data);
     $this->assertSame($expected, $attributes->hasAttribute($test_attribute));
   }
@@ -509,14 +509,14 @@ class AttributeTest extends UnitTestCase {
    * @covers ::merge
    * @dataProvider providerTestMerge
    */
-  public function testMerge($original, $merge, $expected) {
+  public function testMerge($original, $merge, $expected): void {
     $this->assertEquals($expected, $original->merge($merge));
   }
 
   /**
    * @covers ::merge
    */
-  public function testMergeArgumentException() {
+  public function testMergeArgumentException(): void {
     $attributes = new Attribute(['class' => ['example-class']]);
     $this->expectException(\TypeError::class);
     $attributes->merge('not an array');

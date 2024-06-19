@@ -18,7 +18,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
    *
    * @see \database_test_schema()
    */
-  public function testDefaultInsert() {
+  public function testDefaultInsert(): void {
     $query = $this->connection->insert('test')->useDefaults(['job']);
     $id = $query->execute();
     $job = $this->connection->query('SELECT [job] FROM {test} WHERE [id] = :id', [':id' => $id])->fetchField();
@@ -28,7 +28,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
   /**
    * Tests that no action will be preformed if no fields are specified.
    */
-  public function testDefaultEmptyInsert() {
+  public function testDefaultEmptyInsert(): void {
     $num_records_before = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     try {
@@ -49,7 +49,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
    *
    * @see \database_test_schema()
    */
-  public function testDefaultInsertWithFields() {
+  public function testDefaultInsertWithFields(): void {
     $query = $this->connection->insert('test')
       ->fields(['name' => 'Bob'])
       ->useDefaults(['job']);

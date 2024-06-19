@@ -69,7 +69,7 @@ class BlockLanguageTest extends BrowserTestBase {
   /**
    * Tests the visibility settings for the blocks based on language.
    */
-  public function testLanguageBlockVisibility() {
+  public function testLanguageBlockVisibility(): void {
     // Check if the visibility setting is available.
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme);
@@ -108,7 +108,7 @@ class BlockLanguageTest extends BrowserTestBase {
   /**
    * Tests if the visibility settings are removed if the language is deleted.
    */
-  public function testLanguageBlockVisibilityLanguageDelete() {
+  public function testLanguageBlockVisibilityLanguageDelete(): void {
     // Enable a standard block and set the visibility setting for one language.
     $edit = [
       'visibility' => [
@@ -145,7 +145,7 @@ class BlockLanguageTest extends BrowserTestBase {
   /**
    * Tests block language visibility with different language types.
    */
-  public function testMultipleLanguageTypes() {
+  public function testMultipleLanguageTypes(): void {
     // Customize content language detection to be different from interface
     // language detection.
     $edit = [

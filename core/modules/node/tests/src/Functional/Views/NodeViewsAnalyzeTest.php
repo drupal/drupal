@@ -31,7 +31,7 @@ class NodeViewsAnalyzeTest extends NodeTestBase {
   /**
    * Tests the implementation of node_views_analyze().
    */
-  public function testNodeViewsAnalyze() {
+  public function testNodeViewsAnalyze(): void {
     // Create user with permission to view analyze message on views_ui.
     $admin_user = $this->createUser(['administer views']);
 

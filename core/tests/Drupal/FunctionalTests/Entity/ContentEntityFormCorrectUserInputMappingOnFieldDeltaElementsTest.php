@@ -78,7 +78,7 @@ class ContentEntityFormCorrectUserInputMappingOnFieldDeltaElementsTest extends B
   /**
    * Tests the correct user input mapping on complex fields.
    */
-  public function testCorrectUserInputMappingOnComplexFields() {
+  public function testCorrectUserInputMappingOnComplexFields(): void {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage($this->entityTypeId);
 

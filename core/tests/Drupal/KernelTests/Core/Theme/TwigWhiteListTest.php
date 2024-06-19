@@ -121,7 +121,7 @@ class TwigWhiteListTest extends KernelTestBase {
   /**
    * Tests white-listing of methods doesn't interfere with chaining.
    */
-  public function testWhiteListChaining() {
+  public function testWhiteListChaining(): void {
     /** @var \Drupal\Core\Template\TwigEnvironment $environment */
     $environment = \Drupal::service('twig');
     $node = Node::create([

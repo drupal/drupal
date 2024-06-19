@@ -45,7 +45,7 @@ class CommentBookTest extends BrowserTestBase {
   /**
    * Tests comments in book export.
    */
-  public function testBookCommentPrint() {
+  public function testBookCommentPrint(): void {
     $book_node = Node::create([
       'type' => 'book',
       'title' => 'Book title',

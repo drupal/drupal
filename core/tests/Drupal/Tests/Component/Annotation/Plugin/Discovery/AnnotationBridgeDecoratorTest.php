@@ -22,7 +22,7 @@ class AnnotationBridgeDecoratorTest extends TestCase {
   /**
    * @covers ::getDefinitions
    */
-  public function testGetDefinitions() {
+  public function testGetDefinitions(): void {
     $definitions = [];
     $definitions['object'] = new ObjectDefinition(['id' => 'foo']);
     $definitions['array'] = ['id' => 'bar'];

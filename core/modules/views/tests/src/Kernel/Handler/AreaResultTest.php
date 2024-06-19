@@ -23,7 +23,7 @@ class AreaResultTest extends ViewsKernelTestBase {
   /**
    * Tests the results area handler.
    */
-  public function testResult() {
+  public function testResult(): void {
     $view = Views::getView('test_area_result');
     $view->setDisplay('default');
     $this->executeView($view);
@@ -39,7 +39,7 @@ class AreaResultTest extends ViewsKernelTestBase {
   /**
    * Tests the results area handler.
    */
-  public function testResultEmpty() {
+  public function testResultEmpty(): void {
     $view = Views::getView('test_area_result');
 
     // Test that the area is displayed if we have checked the empty checkbox.

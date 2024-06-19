@@ -24,7 +24,7 @@ class UrlTest extends BrowserTestBase {
   /**
    * Tests the active class in links.
    */
-  public function testActiveLinkAttributes() {
+  public function testActiveLinkAttributes(): void {
     $options_no_query = [];
     $options_query = [
       'query' => [

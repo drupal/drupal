@@ -49,7 +49,7 @@ class DisplayPageWebTest extends ViewTestBase {
   /**
    * Tests arguments.
    */
-  public function testArguments() {
+  public function testArguments(): void {
     $xpath = '//span[@class="field-content"]';
 
     // Ensure that all the entries are returned.
@@ -94,7 +94,7 @@ class DisplayPageWebTest extends ViewTestBase {
   /**
    * Tests menu settings of page displays.
    */
-  public function testPageDisplayMenu() {
+  public function testPageDisplayMenu(): void {
     // Check local tasks.
     $this->drupalGet('test_page_display_menu');
     $this->assertSession()->statusCodeEquals(200);
@@ -131,7 +131,7 @@ class DisplayPageWebTest extends ViewTestBase {
   /**
    * Tests the title is not displayed in the output.
    */
-  public function testTitleOutput() {
+  public function testTitleOutput(): void {
     $this->drupalGet('test_page_display_200');
 
     $view = Views::getView('test_page_display');
@@ -142,7 +142,7 @@ class DisplayPageWebTest extends ViewTestBase {
   /**
    * Tests the views page path functionality.
    */
-  public function testPagePaths() {
+  public function testPagePaths(): void {
     $this->drupalLogin($this->createUser(['administer views']));
     $this->assertPagePath('0');
     $this->assertPagePath('9999');

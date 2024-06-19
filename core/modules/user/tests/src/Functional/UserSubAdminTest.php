@@ -26,7 +26,7 @@ class UserSubAdminTest extends BrowserTestBase {
   /**
    * Tests create and cancel forms as 'sub-admin'.
    */
-  public function testSubAdmin() {
+  public function testSubAdmin(): void {
     $user = $this->drupalCreateUser(['sub-admin']);
     $this->drupalLogin($user);
 

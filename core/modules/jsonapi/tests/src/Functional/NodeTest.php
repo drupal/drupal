@@ -281,7 +281,7 @@ class NodeTest extends ResourceTestBase {
    * @see \Drupal\Tests\jsonapi\Functional\TermTest::testPatchPath()
    * @see \Drupal\Tests\rest\Functional\EntityResource\Term\TermResourceTestBase::testPatchPath()
    */
-  public function testPatchPath() {
+  public function testPatchPath(): void {
     $this->setUpAuthorization('GET');
     $this->setUpAuthorization('PATCH');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -319,7 +319,7 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testGetIndividual() {
+  public function testGetIndividual(): void {
     // Cacheable normalizations are written after the response is flushed to
     // the client. We use WaitTerminateTestTrait to wait for Drupal to perform
     // its termination work before continuing.
@@ -429,7 +429,7 @@ class NodeTest extends ResourceTestBase {
    *
    * @see https://github.com/json-api/json-api/issues/1033
    */
-  public function testPostNonExistingAuthor() {
+  public function testPostNonExistingAuthor(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->grantPermissionsToTestedRole(['administer nodes']);
@@ -470,7 +470,7 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $label_field_name = 'title';
     $this->doTestCollectionFilterAccessForPublishableEntities($label_field_name, 'access content', 'bypass node access');
 

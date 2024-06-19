@@ -19,7 +19,7 @@ class PasswordConfirmTest extends UnitTestCase {
    *
    * @dataProvider providerTestValueCallback
    */
-  public function testValueCallback($expected, $element, $input) {
+  public function testValueCallback($expected, $element, $input): void {
     $form_state = $this->prophesize(FormStateInterface::class)->reveal();
     $this->assertSame($expected, PasswordConfirm::valueCallback($element, $input, $form_state));
   }

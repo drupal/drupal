@@ -31,7 +31,7 @@ class BigPipePreviewTest extends WebDriverTestBase {
   /**
    * Test preview functionality within placeholders.
    */
-  public function testLazyLoaderPreview() {
+  public function testLazyLoaderPreview(): void {
     $user = $this->drupalCreateUser([]);
     $display_name = $user->getDisplayName();
     $this->drupalLogin($user);

@@ -95,7 +95,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
   /**
    * Tests that all the numbers can be searched.
    */
-  public function testNumberSearching() {
+  public function testNumberSearching(): void {
     for ($i = 0; $i < count($this->numbers); $i++) {
       $node = $this->nodes[$i];
 

@@ -34,7 +34,7 @@ class CronLoggingUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update of system.cron:logging.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     $logging_before = $this->config('system.cron')->get('logging');
     $this->assertIsNotBool($logging_before);
 

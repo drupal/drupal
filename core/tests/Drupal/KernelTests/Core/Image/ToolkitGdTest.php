@@ -530,7 +530,7 @@ class ToolkitGdTest extends KernelTestBase {
    *
    * @group legacy
    */
-  public function testResourceDeprecation() {
+  public function testResourceDeprecation(): void {
     $toolkit = $this->imageFactory->get()->getToolkit();
     $image = imagecreate(10, 10);
     $this->expectDeprecation('Drupal\system\Plugin\ImageToolkit\GDToolkit::setResource() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\system\Plugin\ImageToolkit\GDToolkit::setImage() instead. See https://www.drupal.org/node/3265963');

@@ -32,7 +32,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
   /**
    * Tests configuration of the node_assign_owner_action action.
    */
-  public function testAssignOwnerNodeActionConfiguration() {
+  public function testAssignOwnerNodeActionConfiguration(): void {
     // Create a user with permission to view the actions administration pages.
     $user = $this->drupalCreateUser(['administer actions']);
     $this->drupalLogin($user);
@@ -107,7 +107,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
   /**
    * Tests the autocomplete field when configuring the AssignOwnerNode action.
    */
-  public function testAssignOwnerNodeActionAutocomplete() {
+  public function testAssignOwnerNodeActionAutocomplete(): void {
     // Create 200 users to force the action's configuration page to use an
     // autocomplete field instead of a select field. See
     // \Drupal\node\Plugin\Action\AssignOwnerNode::buildConfigurationForm().

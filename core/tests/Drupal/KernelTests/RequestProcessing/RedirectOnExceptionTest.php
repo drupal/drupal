@@ -20,7 +20,7 @@ class RedirectOnExceptionTest extends KernelTestBase {
    */
   protected static $modules = ['system', 'test_page_test'];
 
-  public function testRedirectOn404() {
+  public function testRedirectOn404(): void {
     \Drupal::configFactory()->getEditable('system.site')
       ->set('page.404', '/test-http-response-exception/' . Response::HTTP_PERMANENTLY_REDIRECT)
       ->save();

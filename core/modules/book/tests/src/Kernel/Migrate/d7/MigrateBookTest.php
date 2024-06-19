@@ -50,7 +50,7 @@ class MigrateBookTest extends MigrateDrupal7TestBase {
   /**
    * Tests the Drupal 7 book structure to Drupal 8 migration.
    */
-  public function testBook() {
+  public function testBook(): void {
     $nodes = Node::loadMultiple([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     $this->assertSame('1', $nodes[1]->book['bid']);
     $this->assertSame('0', $nodes[1]->book['pid']);

@@ -36,7 +36,7 @@ class HelpTopicsUninstall extends UpdatePathTestBase {
    * @see \help_post_update_help_topics_search()
    * @see \help_post_update_help_topics_uninstall()
    */
-  public function testHelpTopicsMerge() {
+  public function testHelpTopicsMerge(): void {
     $module_handler = \Drupal::moduleHandler();
     $this->assertTrue($module_handler->moduleExists('help'));
     $this->assertTrue($module_handler->moduleExists('help_topics'));

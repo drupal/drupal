@@ -31,7 +31,7 @@ class RegistryTest extends KernelTestBase {
   /**
    * Tests the behavior of the theme registry class.
    */
-  public function testRaceCondition() {
+  public function testRaceCondition(): void {
     // The theme registry is not marked as persistable in case we don't have a
     // proper request.
     \Drupal::request()->setMethod('GET');
@@ -69,7 +69,7 @@ class RegistryTest extends KernelTestBase {
   /**
    * Tests the theme registry with multiple subthemes.
    */
-  public function testMultipleSubThemes() {
+  public function testMultipleSubThemes(): void {
     $theme_handler = \Drupal::service('theme_handler');
     \Drupal::service('theme_installer')->install(['test_basetheme', 'test_subtheme', 'test_subsubtheme']);
 
@@ -108,7 +108,7 @@ class RegistryTest extends KernelTestBase {
   /**
    * Tests the theme registry with suggestions.
    */
-  public function testSuggestionPreprocessFunctions() {
+  public function testSuggestionPreprocessFunctions(): void {
     $theme_handler = \Drupal::service('theme_handler');
     \Drupal::service('theme_installer')->install(['test_theme']);
 
@@ -147,7 +147,7 @@ class RegistryTest extends KernelTestBase {
   /**
    * Tests that the theme registry can be altered by themes.
    */
-  public function testThemeRegistryAlterByTheme() {
+  public function testThemeRegistryAlterByTheme(): void {
 
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
     $theme_handler = \Drupal::service('theme_handler');
@@ -164,7 +164,7 @@ class RegistryTest extends KernelTestBase {
   /**
    * Tests front node theme suggestion generation.
    */
-  public function testThemeSuggestions() {
+  public function testThemeSuggestions(): void {
     // Mock the current page as the front page.
     /** @var \Drupal\Core\Path\PathMatcherInterface $path_matcher */
     $path_matcher = $this->prophesize(PathMatcherInterface::class);
@@ -197,7 +197,7 @@ class RegistryTest extends KernelTestBase {
   /**
    * Tests page theme suggestions for 200 responses.
    */
-  public function test200ThemeSuggestions() {
+  public function test200ThemeSuggestions(): void {
     $path_matcher = $this->prophesize(PathMatcherInterface::class);
     $path_matcher->isFrontPage()->willReturn(FALSE);
     \Drupal::getContainer()->set('path.matcher', $path_matcher->reveal());
@@ -259,7 +259,7 @@ class RegistryTest extends KernelTestBase {
   /**
    * Tests theme-provided templates that are registered by modules.
    */
-  public function testThemeTemplatesRegisteredByModules() {
+  public function testThemeTemplatesRegisteredByModules(): void {
     $theme_handler = \Drupal::service('theme_handler');
     \Drupal::service('theme_installer')->install(['test_theme']);
 
@@ -283,7 +283,7 @@ class RegistryTest extends KernelTestBase {
    * @see drupal_theme_rebuild()
    * @group legacy
    */
-  public function testLegacyThemeRegistryRebuild() {
+  public function testLegacyThemeRegistryRebuild(): void {
     $registry = \Drupal::service('theme.registry');
     $runtime = $registry->getRuntime();
     $hooks = $registry->get();
@@ -299,7 +299,7 @@ class RegistryTest extends KernelTestBase {
    * @see theme_get_registry()
    * @group legacy
    */
-  public function testLegacyThemeGetRegistry() {
+  public function testLegacyThemeGetRegistry(): void {
     $registry = \Drupal::service('theme.registry');
     $this->expectDeprecation('theme_get_registry() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use theme.registry service method get() instead. See https://www.drupal.org/node/3348850');
     $this->assertEquals($registry->get(), theme_get_registry());

@@ -69,7 +69,7 @@ class LinkViewsTokensTest extends ViewTestBase {
 
   }
 
-  public function testLinkViewsTokens() {
+  public function testLinkViewsTokens(): void {
     // Array of URI's to test.
     $uris = [
       'http://www.example.com' => 'example.com',

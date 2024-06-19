@@ -30,7 +30,7 @@ class FilterNumericWebTest extends UITestBase {
   /**
    * Tests the filter numeric UI.
    */
-  public function testFilterNumericUI() {
+  public function testFilterNumericUI(): void {
     // Add a page display to the test_view to be able to test the filtering.
     $path = 'test_view-path';
     $this->drupalGet('admin/structure/views/view/test_view/edit');

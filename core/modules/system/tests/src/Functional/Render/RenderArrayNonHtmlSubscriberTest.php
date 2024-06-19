@@ -29,7 +29,7 @@ class RenderArrayNonHtmlSubscriberTest extends BrowserTestBase {
   /**
    * Tests handling of responses by events subscriber.
    */
-  public function testResponses() {
+  public function testResponses(): void {
     // Test that event subscriber does not interfere with normal requests.
     $url = Url::fromRoute('render_array_non_html_subscriber_test.render_array');
 

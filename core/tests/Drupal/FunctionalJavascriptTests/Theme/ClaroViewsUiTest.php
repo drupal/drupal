@@ -47,7 +47,7 @@ class ClaroViewsUiTest extends WebDriverTestBase {
    * Ensures that the CSS classes added to display menu tabs are preserved when
    * Views UI is updated with AJAX.
    */
-  public function testViewsUiTabsCssClasses() {
+  public function testViewsUiTabsCssClasses(): void {
     $this->drupalGet('admin/structure/views/view/who_s_online');
     $assert_session = $this->assertSession();
     $assert_session->elementExists('css', '#views-display-menu-tabs.views-tabs.views-tabs--secondary');
@@ -69,7 +69,7 @@ class ClaroViewsUiTest extends WebDriverTestBase {
    * Ensures that the CSS classes added to the Views UI extra actions dropbutton
    * in .views-display-top are preserved when Views UI is refreshed with AJAX.
    */
-  public function testViewsUiDropButtonCssClasses() {
+  public function testViewsUiDropButtonCssClasses(): void {
     $this->drupalGet('admin/structure/views/view/who_s_online');
     $assert_session = $this->assertSession();
     $extra_actions_dropbutton_list = $assert_session->elementExists('css', '#views-display-extra-actions.dropbutton--small');

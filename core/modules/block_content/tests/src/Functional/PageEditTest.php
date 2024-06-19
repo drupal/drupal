@@ -34,7 +34,7 @@ class PageEditTest extends BlockContentTestBase {
   /**
    * Checks block edit functionality.
    */
-  public function testPageEdit() {
+  public function testPageEdit(): void {
     $this->drupalLogin($this->adminUser);
 
     $title_key = 'info[0][value]';

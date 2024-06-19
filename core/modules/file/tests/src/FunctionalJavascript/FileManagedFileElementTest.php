@@ -54,7 +54,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
   /**
    * Tests the managed_file element type.
    */
-  public function testManagedFile() {
+  public function testManagedFile(): void {
     // Perform the tests with all permutations of $form['#tree'],
     // $element['#extended'], and $element['#multiple'].
     $filename = \Drupal::service('file_system')->tempnam('temporary://', "testManagedFile") . '.txt';

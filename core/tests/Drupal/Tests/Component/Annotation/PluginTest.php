@@ -18,7 +18,7 @@ class PluginTest extends TestCase {
    * @covers ::parse
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     // Assert all values are accepted through constructor and default value is
     // used for non existent but defined property.
     $plugin = new PluginStub([
@@ -53,7 +53,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::getProvider
    */
-  public function testGetProvider() {
+  public function testGetProvider(): void {
     $plugin = new Plugin(['provider' => 'example']);
     $this->assertEquals('example', $plugin->getProvider());
   }
@@ -61,7 +61,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::setProvider
    */
-  public function testSetProvider() {
+  public function testSetProvider(): void {
     $plugin = new Plugin([]);
     $plugin->setProvider('example');
     $this->assertEquals('example', $plugin->getProvider());
@@ -70,7 +70,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::getId
    */
-  public function testGetId() {
+  public function testGetId(): void {
     $plugin = new Plugin(['id' => 'example']);
     $this->assertEquals('example', $plugin->getId());
   }
@@ -78,7 +78,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::getClass
    */
-  public function testGetClass() {
+  public function testGetClass(): void {
     $plugin = new Plugin(['class' => 'example']);
     $this->assertEquals('example', $plugin->getClass());
   }
@@ -86,7 +86,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::setClass
    */
-  public function testSetClass() {
+  public function testSetClass(): void {
     $plugin = new Plugin([]);
     $plugin->setClass('example');
     $this->assertEquals('example', $plugin->getClass());

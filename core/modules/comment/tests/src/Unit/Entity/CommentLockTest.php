@@ -19,7 +19,7 @@ class CommentLockTest extends UnitTestCase {
   /**
    * Tests the lock behavior.
    */
-  public function testLocks() {
+  public function testLocks(): void {
     $container = new ContainerBuilder();
     $container->set('module_handler', $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface'));
     $container->set('current_user', $this->createMock('Drupal\Core\Session\AccountInterface'));

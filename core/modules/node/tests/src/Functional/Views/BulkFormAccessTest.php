@@ -67,7 +67,7 @@ class BulkFormAccessTest extends NodeTestBase {
   /**
    * Tests if nodes that may not be edited, can not be edited in bulk.
    */
-  public function testNodeEditAccess() {
+  public function testNodeEditAccess(): void {
     // Create an account who will be the author of a private node.
     $author = $this->drupalCreateUser();
     // Create a private node (author may view, edit and delete, others may not).
@@ -143,7 +143,7 @@ class BulkFormAccessTest extends NodeTestBase {
   /**
    * Tests if nodes that may not be deleted, can not be deleted in bulk.
    */
-  public function testNodeDeleteAccess() {
+  public function testNodeDeleteAccess(): void {
     // Create an account who will be the author of a private node.
     $author = $this->drupalCreateUser();
     // Create a private node (author may view, edit and delete, others may not).

@@ -141,7 +141,7 @@ class RoleAccessCheckTest extends UnitTestCase {
    *
    * @dataProvider roleAccessProvider
    */
-  public function testRoleAccess($path, $grant_accounts, $deny_accounts) {
+  public function testRoleAccess($path, $grant_accounts, $deny_accounts): void {
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
     $cache_contexts_manager->reveal();

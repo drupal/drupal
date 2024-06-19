@@ -132,7 +132,7 @@ class EditorLoadingTest extends BrowserTestBase {
   /**
    * Tests loading of text editors.
    */
-  public function testLoading() {
+  public function testLoading(): void {
     // Only associate a text editor with the "Full HTML" text format.
     $editor = Editor::create([
       'format' => 'full_html',
@@ -252,7 +252,7 @@ class EditorLoadingTest extends BrowserTestBase {
   /**
    * Tests supported element types.
    */
-  public function testSupportedElementTypes() {
+  public function testSupportedElementTypes(): void {
     // Associate the unicorn text editor with the "Full HTML" text format.
     $editor = Editor::create([
       'format' => 'full_html',

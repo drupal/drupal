@@ -40,7 +40,7 @@ class RelationshipJoinInTest extends RelationshipJoinTestBase {
   /**
    * Tests the query result of a view with a relationship with an IN condition.
    */
-  public function testRelationshipInQuery() {
+  public function testRelationshipInQuery(): void {
     // Update the first two Beatles to be authored by Kristiaan.
     $account_k = $this->createUser([], 'Kristiaan');
     $connection = Database::getConnection();

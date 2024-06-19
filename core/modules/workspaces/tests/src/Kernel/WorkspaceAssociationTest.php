@@ -83,7 +83,7 @@ class WorkspaceAssociationTest extends KernelTestBase {
    * @covers ::getTrackedEntities
    * @covers ::getAssociatedRevisions
    */
-  public function testWorkspaceAssociation() {
+  public function testWorkspaceAssociation(): void {
     $this->createNode(['title' => 'Test article 1 - live - unpublished', 'type' => 'article', 'status' => 0]);
     $this->createNode(['title' => 'Test article 2 - live - published', 'type' => 'article']);
 

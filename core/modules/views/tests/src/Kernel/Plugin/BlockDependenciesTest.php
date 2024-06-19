@@ -41,7 +41,7 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
    *
    * @see \Drupal\views\Plugin\Derivative\ViewsExposedFilterBlock::getDerivativeDefinitions()
    */
-  public function testExposedBlock() {
+  public function testExposedBlock(): void {
     $block = $this->createBlock('views_exposed_filter_block:test_exposed_block-page_1');
     $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = [
@@ -57,7 +57,7 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
    *
    * @see \Drupal\views\Plugin\Derivative\ViewsBlock::getDerivativeDefinitions()
    */
-  public function testViewsBlock() {
+  public function testViewsBlock(): void {
     $block = $this->createBlock('views_block:content_recent-block_1');
     $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = [

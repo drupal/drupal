@@ -42,7 +42,7 @@ class InstallTranslationFilePatternTest extends KernelTestBase {
   /**
    * @dataProvider providerValidTranslationFiles
    */
-  public function testFilesPatternValid($langcode, $filename) {
+  public function testFilesPatternValid($langcode, $filename): void {
     $pattern = $this->filePatternMethod->invoke($this->fileTranslation, $langcode);
     $this->assertNotEmpty(preg_match($pattern, $filename));
   }
@@ -61,7 +61,7 @@ class InstallTranslationFilePatternTest extends KernelTestBase {
   /**
    * @dataProvider providerInvalidTranslationFiles
    */
-  public function testFilesPatternInvalid($langcode, $filename) {
+  public function testFilesPatternInvalid($langcode, $filename): void {
     $pattern = $this->filePatternMethod->invoke($this->fileTranslation, $langcode);
     $this->assertEmpty(preg_match($pattern, $filename));
   }

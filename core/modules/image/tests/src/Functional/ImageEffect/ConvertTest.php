@@ -28,7 +28,7 @@ class ConvertTest extends BrowserTestBase {
   /**
    * Tests that files stored in the root folder are converted properly.
    */
-  public function testConvertFileInRoot() {
+  public function testConvertFileInRoot(): void {
     // Create the test image style with a Convert effect.
     $image_style = ImageStyle::create([
       'name' => 'image_effect_test',

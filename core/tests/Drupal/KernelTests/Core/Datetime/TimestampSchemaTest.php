@@ -34,7 +34,7 @@ class TimestampSchemaTest extends KernelTestBase {
   /**
    * Tests if the timestamp field schema is validated.
    */
-  public function testTimestampSchema() {
+  public function testTimestampSchema(): void {
     $this->installConfig(['field_timestamp_test']);
     // Make at least an assertion.
     $this->assertTrue(TRUE);

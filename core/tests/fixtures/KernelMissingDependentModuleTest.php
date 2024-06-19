@@ -28,7 +28,7 @@ class KernelMissingDependentModuleTest extends KernelTestBase {
    * Depending on configuration, PHPUnit might fail a test if it has no test
    * methods, so we must provide one. This method should never be executed.
    */
-  public function testRequiresModule() {
+  public function testRequiresModule(): void {
     $this->fail('Running test with missing required module.');
   }
 

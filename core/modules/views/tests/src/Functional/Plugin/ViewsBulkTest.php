@@ -45,7 +45,7 @@ class ViewsBulkTest extends ViewTestBase {
   /**
    * Tests bulk selection.
    */
-  public function testBulkSelection() {
+  public function testBulkSelection(): void {
 
     // Create first node, set updated time to the past.
     $node_1 = $this->drupalCreateNode([

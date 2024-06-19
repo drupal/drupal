@@ -68,7 +68,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getBlockContentListingRoutes
    */
-  public function testBlockContentListLocalTasks($route) {
+  public function testBlockContentListLocalTasks($route): void {
     $this->assertLocalTasks($route, [
       0 => [
         'system.admin_content',

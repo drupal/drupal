@@ -128,7 +128,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests the format administration functionality.
    */
-  public function testFormatAdmin() {
+  public function testFormatAdmin(): void {
     // Add text format.
     $this->drupalGet('admin/config/content/formats');
     $this->clickLink('Add text format');
@@ -197,7 +197,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests filter administration functionality.
    */
-  public function testFilterAdmin() {
+  public function testFilterAdmin(): void {
     $first_filter = 'filter_autop';
     $second_filter = 'filter_url';
 
@@ -375,7 +375,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests the URL filter settings form is properly validated.
    */
-  public function testUrlFilterAdmin() {
+  public function testUrlFilterAdmin(): void {
     // The form does not save with an invalid filter URL length.
     $edit = [
       'filters[filter_url][settings][filter_url_length]' => $this->randomMachineName(4),
@@ -388,7 +388,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests whether filter tips page is not HTML escaped.
    */
-  public function testFilterTipHtmlEscape() {
+  public function testFilterTipHtmlEscape(): void {
     $this->drupalLogin($this->adminUser);
     global $base_url;
 
@@ -413,7 +413,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests whether a field using a disabled format is rendered.
    */
-  public function testDisabledFormat() {
+  public function testDisabledFormat(): void {
     // Create a node type and add a standard body field.
     $node_type = NodeType::create([
       'type' => $this->randomMachineName(),

@@ -136,7 +136,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
    * @phpstan-param class-string<\Drupal\Core\Access\AccessResultInterface>|null $parent_access
    * @phpstan-param class-string<\Drupal\Core\Access\AccessResultInterface> $expected_access
    */
-  public function testAccess(string $operation, bool $published, bool $reusable, array $permissions, bool $isLatest, ?string $parent_access, string $expected_access, ?string $expected_access_message = NULL) {
+  public function testAccess(string $operation, bool $published, bool $reusable, array $permissions, bool $isLatest, ?string $parent_access, string $expected_access, ?string $expected_access_message = NULL): void {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage */
     $entityStorage = \Drupal::entityTypeManager()->getStorage('block_content');
 

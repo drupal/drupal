@@ -26,7 +26,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests simple JOIN statements.
    */
-  public function testDefaultJoin() {
+  public function testDefaultJoin(): void {
     $query = $this->connection->select('test_task', 't');
     $people_alias = $query->join('test', 'p', '[t].[pid] = [p].[id]');
     $name_field = $query->addField($people_alias, 'name', 'name');
@@ -52,7 +52,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests LEFT OUTER joins.
    */
-  public function testLeftOuterJoin() {
+  public function testLeftOuterJoin(): void {
     $query = $this->connection->select('test', 'p');
     $people_alias = $query->leftJoin('test_task', 't', '[t].[pid] = [p].[id]');
     $name_field = $query->addField('p', 'name', 'name');
@@ -77,7 +77,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests GROUP BY clauses.
    */
-  public function testGroupBy() {
+  public function testGroupBy(): void {
     $query = $this->connection->select('test_task', 't');
     $count_field = $query->addExpression('COUNT([task])', 'num');
     $task_field = $query->addField('t', 'task');
@@ -118,7 +118,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests GROUP BY and HAVING clauses together.
    */
-  public function testGroupByAndHaving() {
+  public function testGroupByAndHaving(): void {
     $query = $this->connection->select('test_task', 't');
     $count_field = $query->addExpression('COUNT([task])', 'num');
     $task_field = $query->addField('t', 'task');
@@ -155,7 +155,7 @@ class SelectComplexTest extends DatabaseTestBase {
    *
    * The SQL clause varies with the database.
    */
-  public function testRange() {
+  public function testRange(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -168,7 +168,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests whether the range property of a select clause can be undone.
    */
-  public function testRangeUndo() {
+  public function testRangeUndo(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -182,7 +182,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests distinct queries.
    */
-  public function testDistinct() {
+  public function testDistinct(): void {
     $query = $this->connection->select('test_task');
     $query->addField('test_task', 'task');
     $query->orderBy('task');
@@ -196,7 +196,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that we can generate a count query from a built query.
    */
-  public function testCountQuery() {
+  public function testCountQuery(): void {
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
@@ -216,7 +216,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests having queries.
    */
-  public function testHavingCountQuery() {
+  public function testHavingCountQuery(): void {
     $query = $this->connection->select('test')
       ->extend(PagerSelectExtender::class)
       ->groupBy('age')
@@ -230,7 +230,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that countQuery removes 'all_fields' statements and ordering clauses.
    */
-  public function testCountQueryRemovals() {
+  public function testCountQueryRemovals(): void {
     $query = $this->connection->select('test');
     $query->fields('test');
     $query->orderBy('name');
@@ -260,7 +260,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that countQuery properly removes fields and expressions.
    */
-  public function testCountQueryFieldRemovals() {
+  public function testCountQueryFieldRemovals(): void {
     // countQuery should remove all fields and expressions, so this can be
     // tested by adding a non-existent field and expression: if it ends
     // up in the query, an error will be thrown. If not, it will return the
@@ -278,7 +278,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that we can generate a count query from a query with distinct.
    */
-  public function testCountQueryDistinct() {
+  public function testCountQueryDistinct(): void {
     $query = $this->connection->select('test_task');
     $query->addField('test_task', 'task');
     $query->distinct();
@@ -291,7 +291,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that we can generate a count query from a query with GROUP BY.
    */
-  public function testCountQueryGroupBy() {
+  public function testCountQueryGroupBy(): void {
     $query = $this->connection->select('test_task');
     $query->addField('test_task', 'pid');
     $query->groupBy('pid');
@@ -316,7 +316,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Confirms that we can properly nest conditional clauses.
    */
-  public function testNestedConditions() {
+  public function testNestedConditions(): void {
     // This query should translate to:
     // "SELECT job FROM {test} WHERE name = 'Paul' AND (age = 26 OR age = 27)"
     // That should find only one record. Yes it's a non-optimal way of writing
@@ -333,7 +333,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Confirms we can join on a single table twice with a dynamic alias.
    */
-  public function testJoinTwice() {
+  public function testJoinTwice(): void {
     $query = $this->connection->select('test')->fields('test');
     $alias = $query->join('test', 'test', '[test].[job] = [%alias].[job]');
     $query->addField($alias, 'name', 'other_name');
@@ -347,7 +347,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that we can join on a query.
    */
-  public function testJoinSubquery() {
+  public function testJoinSubquery(): void {
     $account = User::create([
       'name' => $this->randomMachineName(),
       'mail' => $this->randomMachineName() . '@example.com',
@@ -385,7 +385,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that rowCount() throws exception on SELECT query.
    */
-  public function testSelectWithRowCount() {
+  public function testSelectWithRowCount(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $result = $query->execute();
@@ -402,7 +402,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that join conditions can use Condition objects.
    */
-  public function testJoinConditionObject() {
+  public function testJoinConditionObject(): void {
     // Same test as testDefaultJoin, but with a Condition object.
     $query = $this->connection->select('test_task', 't');
     $join_cond = ($this->connection->condition('AND'))->where('[t].[pid] = [p].[id]');

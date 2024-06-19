@@ -56,7 +56,7 @@ class MigrateNodeCounterTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of node counter.
    */
-  public function testStatisticsSettings() {
+  public function testStatisticsSettings(): void {
     $this->assertNodeCounter(1, 2, 0, 1421727536);
     $this->assertNodeCounter(2, 1, 0, 1471428059);
     $this->assertNodeCounter(4, 1, 0, 1478755275);

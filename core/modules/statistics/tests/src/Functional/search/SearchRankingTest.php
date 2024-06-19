@@ -59,7 +59,7 @@ class SearchRankingTest extends BrowserTestBase {
   /**
    * Tests statistics ranking on search pages.
    */
-  public function testRankings() {
+  public function testRankings(): void {
     // Create nodes for testing.
     $nodes = [];
     $settings = [

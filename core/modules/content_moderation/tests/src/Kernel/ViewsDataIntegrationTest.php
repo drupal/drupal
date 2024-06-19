@@ -59,7 +59,7 @@ class ViewsDataIntegrationTest extends ViewsKernelTestBase {
   /**
    * Tests the content moderation state views field.
    */
-  public function testContentModerationStateField() {
+  public function testContentModerationStateField(): void {
     $node = Node::create([
       'type' => 'page',
       'title' => 'Test title',

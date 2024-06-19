@@ -71,7 +71,7 @@ class SortRandomTest extends ViewsKernelTestBase {
    *
    * @see DatabaseSelectTestCase::testRandomOrder()
    */
-  public function testRandomOrdering() {
+  public function testRandomOrdering(): void {
     // Execute a basic view first.
     $view = Views::getView('test_view');
     $this->executeView($view);
@@ -108,7 +108,7 @@ class SortRandomTest extends ViewsKernelTestBase {
    * The random sorting should opt out of caching by defining a max age of 0.
    * At the same time, the row render caching still works.
    */
-  public function testRandomOrderingWithRenderCaching() {
+  public function testRandomOrderingWithRenderCaching(): void {
     $view_random = $this->getBasicRandomView();
 
     $display = &$view_random->storage->getDisplay('default');

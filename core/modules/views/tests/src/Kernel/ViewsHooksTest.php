@@ -73,7 +73,7 @@ class ViewsHooksTest extends ViewsKernelTestBase {
   /**
    * Tests the hooks.
    */
-  public function testHooks() {
+  public function testHooks(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -113,7 +113,7 @@ class ViewsHooksTest extends ViewsKernelTestBase {
    * @see views_test_data_views_form_substitutions()
    * @see \Drupal\views\Form\ViewsFormMainForm::preRenderViewsForm()
    */
-  public function testViewsFormMainFormPreRender() {
+  public function testViewsFormMainFormPreRender(): void {
     $element = [
       'output' => [
         '#plain_text' => '<!--will-be-escaped--><!--will-be-not-escaped-->',
@@ -131,7 +131,7 @@ class ViewsHooksTest extends ViewsKernelTestBase {
   /**
    * Test that hook_views_invalidate_cache() is called when a view is deleted.
    */
-  public function testViewsInvalidateCacheOnDelete() {
+  public function testViewsInvalidateCacheOnDelete(): void {
     $this->container->get('state')->set('views_hook_test_views_invalidate_cache', FALSE);
     $view = $this->viewStorage->load('test_view');
     $view->delete();

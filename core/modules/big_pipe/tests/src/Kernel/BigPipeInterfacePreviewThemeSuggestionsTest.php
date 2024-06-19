@@ -60,7 +60,7 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
   /**
    * Tests template suggestions from big_pipe_theme_suggestions_big_pipe_interface_preview().
    */
-  public function testBigPipeThemeHookSuggestions() {
+  public function testBigPipeThemeHookSuggestions(): void {
     $entity = $this->controller->create([
       'id' => 'test_block1',
       'theme' => 'stark',

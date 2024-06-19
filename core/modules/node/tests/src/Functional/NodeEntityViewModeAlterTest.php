@@ -29,7 +29,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
   /**
    * Create a "Basic page" node and verify its consistency in the database.
    */
-  public function testNodeViewModeChange() {
+  public function testNodeViewModeChange(): void {
     $web_user = $this->drupalCreateUser([
       'create page content',
       'edit own page content',

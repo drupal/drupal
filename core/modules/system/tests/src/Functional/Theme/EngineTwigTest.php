@@ -41,7 +41,7 @@ class EngineTwigTest extends BrowserTestBase {
   /**
    * Tests that the Twig engine handles PHP data correctly.
    */
-  public function testTwigVariableDataTypes() {
+  public function testTwigVariableDataTypes(): void {
     $this->config('system.theme')
       ->set('default', 'test_theme')
       ->save();
@@ -54,7 +54,7 @@ class EngineTwigTest extends BrowserTestBase {
   /**
    * Tests the url and url_generate Twig functions.
    */
-  public function testTwigUrlGenerator() {
+  public function testTwigUrlGenerator(): void {
     $this->drupalGet('twig-theme-test/url-generator');
     // Find the absolute URL of the current site.
     $url_generator = $this->container->get('url_generator');
@@ -83,7 +83,7 @@ class EngineTwigTest extends BrowserTestBase {
   /**
    * Tests the link_generator Twig functions.
    */
-  public function testTwigLinkGenerator() {
+  public function testTwigLinkGenerator(): void {
     $this->drupalGet('twig-theme-test/link-generator');
 
     /** @var \Drupal\Core\Utility\LinkGenerator $link_generator */
@@ -119,7 +119,7 @@ class EngineTwigTest extends BrowserTestBase {
    *
    * @see \Drupal\Core\Url
    */
-  public function testTwigUrlToString() {
+  public function testTwigUrlToString(): void {
     $this->drupalGet('twig-theme-test/url-to-string');
 
     $expected = [
@@ -136,7 +136,7 @@ class EngineTwigTest extends BrowserTestBase {
   /**
    * Tests the automatic/magic calling of toString() on objects, if exists.
    */
-  public function testTwigFileUrls() {
+  public function testTwigFileUrls(): void {
     $this->drupalGet('/twig-theme-test/file-url');
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
     $file_url_generator = \Drupal::service('file_url_generator');
@@ -147,7 +147,7 @@ class EngineTwigTest extends BrowserTestBase {
   /**
    * Tests the attach of asset libraries.
    */
-  public function testTwigAttachLibrary() {
+  public function testTwigAttachLibrary(): void {
     $this->drupalGet('/twig-theme-test/attach-library');
     $this->assertSession()->responseContains('ckeditor5-dll.js');
   }
@@ -155,7 +155,7 @@ class EngineTwigTest extends BrowserTestBase {
   /**
    * Tests the rendering of renderables.
    */
-  public function testRenderable() {
+  public function testRenderable(): void {
     $this->drupalGet('/twig-theme-test/renderable');
     $this->assertSession()->responseContains('<div>Example markup</div>');
   }

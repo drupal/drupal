@@ -84,7 +84,7 @@ class FormErrorHandlerCKEditor5Test extends WebDriverTestBase {
   /**
    * Tests if the fragment link to a textarea works with CKEditor 5 enabled.
    */
-  public function testFragmentLink() {
+  public function testFragmentLink(): void {
     $session = $this->getSession();
     $web_assert = $this->assertSession();
     $ckeditor_class = '.ck-editor';

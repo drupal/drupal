@@ -408,7 +408,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a GET request for an entity, plus edge cases to ensure good DX.
    */
-  public function testGet() {
+  public function testGet(): void {
     $this->initAuthentication();
     $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
 
@@ -696,7 +696,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a POST request for an entity, plus edge cases to ensure good DX.
    */
-  public function testPost() {
+  public function testPost(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('POSTing config entities is not yet supported.');
@@ -870,7 +870,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a PATCH request for an entity, plus edge cases to ensure good DX.
    */
-  public function testPatch() {
+  public function testPatch(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('PATCHing config entities is not yet supported.');
@@ -1108,7 +1108,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a DELETE request for an entity, plus edge cases to ensure good DX.
    */
-  public function testDelete() {
+  public function testDelete(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('DELETEing config entities is not yet supported.');

@@ -31,7 +31,7 @@ class OliveroPostUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update hook setting base primary color.
    */
-  public function testOliveroPrimaryColorUpdate() {
+  public function testOliveroPrimaryColorUpdate(): void {
     $config = $this->config('olivero.settings');
     $this->assertEmpty($config->get('base_primary_color'));
 

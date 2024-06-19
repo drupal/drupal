@@ -26,7 +26,7 @@ class GarbageCollectionTest extends KernelTestBase {
   /**
    * Tests garbage collection.
    */
-  public function testGarbageCollection() {
+  public function testGarbageCollection(): void {
     $collection = $this->randomMachineName();
     $connection = Database::getConnection();
     $store = new DatabaseStorageExpirable($collection, new PhpSerialize(), $connection, \Drupal::time());
