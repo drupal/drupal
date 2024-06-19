@@ -77,7 +77,7 @@ class AccessAwareRouterTest extends UnitTestCase {
   /**
    * Tests the matchRequest() function for access allowed.
    */
-  public function testMatchRequestAllowed() {
+  public function testMatchRequestAllowed(): void {
     $this->setupRouter();
     $request = new Request();
     $access_result = AccessResult::allowed();
@@ -97,7 +97,7 @@ class AccessAwareRouterTest extends UnitTestCase {
   /**
    * Tests the matchRequest() function for access denied.
    */
-  public function testMatchRequestDenied() {
+  public function testMatchRequestDenied(): void {
     $this->setupRouter();
     $request = new Request();
     $access_result = AccessResult::forbidden();
@@ -112,7 +112,7 @@ class AccessAwareRouterTest extends UnitTestCase {
   /**
    * Tests the matchRequest() function for access denied with reason message.
    */
-  public function testCheckAccessResultWithReason() {
+  public function testCheckAccessResultWithReason(): void {
     $this->setupRouter();
     $request = new Request();
     $reason = $this->getRandomGenerator()->string();
@@ -131,7 +131,7 @@ class AccessAwareRouterTest extends UnitTestCase {
    *
    * @covers ::__call
    */
-  public function testCall() {
+  public function testCall(): void {
     $mock_router = $this->createMock(RouterInterface::class);
 
     $this->router = $this->getMockBuilder(MockRouterInterface::class)

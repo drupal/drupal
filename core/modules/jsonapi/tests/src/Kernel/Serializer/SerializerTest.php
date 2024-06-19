@@ -105,7 +105,7 @@ class SerializerTest extends JsonapiKernelTestBase {
   /**
    * @covers \Drupal\jsonapi\Serializer\Serializer::normalize
    */
-  public function testFallbackNormalizer() {
+  public function testFallbackNormalizer(): void {
     $context = [
       'account' => $this->user,
       'resource_object' => ResourceObject::createFromEntity($this->resourceType, $this->node),

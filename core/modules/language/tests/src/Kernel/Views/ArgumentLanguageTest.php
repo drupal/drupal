@@ -24,7 +24,7 @@ class ArgumentLanguageTest extends LanguageTestBase {
   /**
    * Tests the language argument.
    */
-  public function testArgument() {
+  public function testArgument(): void {
     $view = Views::getView('test_view');
     foreach (['en' => 'John', 'xx-lolspeak' => 'George'] as $langcode => $name) {
       $view->setDisplay();

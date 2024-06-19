@@ -95,7 +95,7 @@ class ViewsIntegrationTest extends ViewTestBase {
   /**
    * Tests integration with Views.
    */
-  public function testViewsAddResponsiveImageField() {
+  public function testViewsAddResponsiveImageField(): void {
     // Add the image field to the View.
     $this->drupalGet('admin/structure/views/nojs/add-handler/entity_test_row/default/field');
     $this->drupalGet('admin/structure/views/nojs/add-handler/entity_test_row/default/field');

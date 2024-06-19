@@ -135,7 +135,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
   /**
    * Tests comment admin view filters.
    */
-  public function testFilters() {
+  public function testFilters(): void {
     $this->doTestFilters('page_published');
     // Unpublish the comments to test the Unapproved comments tab.
     foreach ($this->comments as $comment) {

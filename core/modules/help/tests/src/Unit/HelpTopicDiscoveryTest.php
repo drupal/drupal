@@ -21,7 +21,7 @@ class HelpTopicDiscoveryTest extends UnitTestCase {
   /**
    * @covers ::findAll
    */
-  public function testDiscoveryExceptionMissingLabel() {
+  public function testDiscoveryExceptionMissingLabel(): void {
     vfsStream::setup('root');
 
     vfsStream::create([
@@ -44,7 +44,7 @@ class HelpTopicDiscoveryTest extends UnitTestCase {
   /**
    * @covers ::findAll
    */
-  public function testDiscoveryExceptionInvalidYamlKey() {
+  public function testDiscoveryExceptionInvalidYamlKey(): void {
     vfsStream::setup('root');
     $topic_content = <<<EOF
 ---
@@ -72,7 +72,7 @@ EOF;
   /**
    * @covers ::findAll
    */
-  public function testDiscoveryExceptionInvalidTopLevel() {
+  public function testDiscoveryExceptionInvalidTopLevel(): void {
     vfsStream::setup('root');
     $topic_content = <<<EOF
 ---
@@ -100,7 +100,7 @@ EOF;
   /**
    * @covers ::findAll
    */
-  public function testDiscoveryExceptionInvalidRelated() {
+  public function testDiscoveryExceptionInvalidRelated(): void {
     vfsStream::setup('root');
     $topic_content = <<<EOF
 ---
@@ -128,7 +128,7 @@ EOF;
   /**
    * @covers ::findAll
    */
-  public function testHelpTopicsExtensionProviderSpecialCase() {
+  public function testHelpTopicsExtensionProviderSpecialCase(): void {
     vfsStream::setup('root');
     $topic_content = <<<EOF
 ---
@@ -153,7 +153,7 @@ EOF;
   /**
    * @covers ::findAll
    */
-  public function testHelpTopicsInCore() {
+  public function testHelpTopicsInCore(): void {
     vfsStream::setup('root');
     $topic_content = <<<EOF
 ---
@@ -176,7 +176,7 @@ EOF;
   /**
    * @covers ::findAll
    */
-  public function testHelpTopicsBrokenYaml() {
+  public function testHelpTopicsBrokenYaml(): void {
     vfsStream::setup('root');
     $topic_content = <<<EOF
 ---
@@ -203,7 +203,7 @@ EOF;
   /**
    * @covers ::findAll
    */
-  public function testHelpTopicsDefinition() {
+  public function testHelpTopicsDefinition(): void {
     $container = new ContainerBuilder();
     $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);

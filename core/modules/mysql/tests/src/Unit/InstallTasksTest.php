@@ -130,7 +130,7 @@ class InstallTasksTest extends UnitTestCase {
   /**
    * @covers ::name
    */
-  public function testNameWithNoConnection() {
+  public function testNameWithNoConnection(): void {
     $tasks = $this->createTasksNoConnection();
     $this->assertSame('MySQL, MariaDB, Percona Server, or equivalent', $tasks->name());
   }

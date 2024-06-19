@@ -30,7 +30,7 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 taxonomy vocabularies to Drupal 8 migration.
    */
-  public function testTaxonomyVocabulary() {
+  public function testTaxonomyVocabulary(): void {
     for ($i = 0; $i < 3; $i++) {
       $j = $i + 1;
       $vocabulary = Vocabulary::load("vocabulary_{$j}_i_{$i}_");

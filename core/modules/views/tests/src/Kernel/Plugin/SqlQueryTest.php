@@ -37,7 +37,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
   /**
    * Tests adding some metadata/tags to the views query.
    */
-  public function testExecuteMetadata() {
+  public function testExecuteMetadata(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -91,7 +91,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
    *
    * @covers \Drupal\views\Plugin\views\query\Sql::getConnection
    */
-  public function testGetConnection() {
+  public function testGetConnection(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

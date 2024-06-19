@@ -35,7 +35,7 @@ class ComplexDataConstraintValidatorTest extends KernelTestBase {
    *
    * For testing a map including a constraint on one of its keys is defined.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     // Create a definition that specifies some ComplexData constraint.
     $definition = MapDataDefinition::create()
       ->setPropertyDefinition('key', DataDefinition::create('integer'))

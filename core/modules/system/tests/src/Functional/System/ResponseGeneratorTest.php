@@ -40,7 +40,7 @@ class ResponseGeneratorTest extends BrowserTestBase {
   /**
    * Tests to see if generator header is added.
    */
-  public function testGeneratorHeaderAdded() {
+  public function testGeneratorHeaderAdded(): void {
 
     $node = $this->drupalCreateNode();
 

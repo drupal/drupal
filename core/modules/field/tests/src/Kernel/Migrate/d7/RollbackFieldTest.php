@@ -17,7 +17,7 @@ class RollbackFieldTest extends MigrateFieldTest {
   /**
    * Tests migrating D7 fields to field_storage_config entities, then rolling back.
    */
-  public function testFields() {
+  public function testFields(): void {
     // Test that the fields have migrated (prior to rollback).
     parent::testFields();
 

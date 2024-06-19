@@ -82,7 +82,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
    *
    * @covers ::onRespond
    */
-  public function testDefaultHeaders() {
+  public function testDefaultHeaders(): void {
     $finishSubscriber = new FinishResponseSubscriber(
       $this->languageManager,
       $this->getConfigFactoryStub(),
@@ -113,7 +113,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
    *
    * @covers ::onRespond
    */
-  public function testExistingHeaders() {
+  public function testExistingHeaders(): void {
     $finishSubscriber = new FinishResponseSubscriber(
       $this->languageManager,
       $this->getConfigFactoryStub(),

@@ -50,7 +50,7 @@ class SearchBlockTest extends BrowserTestBase {
   /**
    * Tests that the search form block can be placed and works.
    */
-  public function testSearchFormBlock() {
+  public function testSearchFormBlock(): void {
 
     // Test availability of the search block in the admin "Place blocks" list.
     $this->drupalGet('admin/structure/block');

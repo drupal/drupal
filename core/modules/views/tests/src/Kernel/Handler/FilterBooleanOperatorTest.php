@@ -41,7 +41,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
   /**
    * Tests the BooleanOperator filter.
    */
-  public function testFilterBooleanOperator() {
+  public function testFilterBooleanOperator(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -115,7 +115,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
   /**
    * Tests the boolean filter with grouped exposed form enabled.
    */
-  public function testFilterGroupedExposed() {
+  public function testFilterGroupedExposed(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
 

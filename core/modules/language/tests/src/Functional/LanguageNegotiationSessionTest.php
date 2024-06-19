@@ -47,7 +47,7 @@ class LanguageNegotiationSessionTest extends BrowserTestBase {
   /**
    * Tests language negotiation via query/session parameters.
    */
-  public function testSessionLanguageNegotiationMethod() {
+  public function testSessionLanguageNegotiationMethod(): void {
     // Enable Session and Selected language for interface language detection.
     $this->drupalGet('admin/config/regional/language/detection');
     $edit = [

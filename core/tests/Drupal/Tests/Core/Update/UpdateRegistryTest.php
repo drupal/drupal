@@ -183,7 +183,7 @@ EOS;
   /**
    * @covers ::getPendingUpdateFunctions
    */
-  public function testGetPendingUpdateFunctionsNoExistingUpdates() {
+  public function testGetPendingUpdateFunctionsNoExistingUpdates(): void {
     $this->setupBasicExtensions();
 
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
@@ -227,7 +227,7 @@ EOS;
   /**
    * @covers ::getPendingUpdateFunctions
    */
-  public function testGetPendingUpdateFunctionsWithLoadedModulesButNotEnabled() {
+  public function testGetPendingUpdateFunctionsWithLoadedModulesButNotEnabled(): void {
     $this->setupBasicExtensions();
 
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
@@ -262,7 +262,7 @@ EOS;
   /**
    * @covers ::getPendingUpdateFunctions
    */
-  public function testGetPendingUpdateFunctionsExistingUpdates() {
+  public function testGetPendingUpdateFunctionsExistingUpdates(): void {
     $this->setupBasicExtensions();
 
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
@@ -309,7 +309,7 @@ EOS;
   /**
    * @covers ::getPendingUpdateInformation
    */
-  public function testGetPendingUpdateInformation() {
+  public function testGetPendingUpdateInformation(): void {
     $this->setupBasicExtensions();
 
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
@@ -357,7 +357,7 @@ EOS;
   /**
    * @covers ::getPendingUpdateInformation
    */
-  public function testGetPendingUpdateInformationWithExistingUpdates() {
+  public function testGetPendingUpdateInformationWithExistingUpdates(): void {
     $this->setupBasicExtensions();
 
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
@@ -407,7 +407,7 @@ EOS;
   /**
    * @covers ::getPendingUpdateInformation
    */
-  public function testGetPendingUpdateInformationWithRemovedUpdates() {
+  public function testGetPendingUpdateInformationWithRemovedUpdates(): void {
     $this->setupBasicExtensions();
 
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
@@ -434,7 +434,7 @@ EOS;
   /**
    * @covers ::getUpdateFunctions
    */
-  public function testGetUpdateFunctions() {
+  public function testGetUpdateFunctions(): void {
     $this->setupBasicExtensions();
     $key_value = $this->prophesize(KeyValueStoreInterface::class)->reveal();
 
@@ -470,7 +470,7 @@ EOS;
   /**
    * @covers ::registerInvokedUpdates
    */
-  public function testRegisterInvokedUpdatesWithoutExistingUpdates() {
+  public function testRegisterInvokedUpdatesWithoutExistingUpdates(): void {
     $this->setupBasicExtensions();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
     $key_value->get('existing_updates', [])
@@ -510,7 +510,7 @@ EOS;
   /**
    * @covers ::registerInvokedUpdates
    */
-  public function testRegisterInvokedUpdatesWithMultiple() {
+  public function testRegisterInvokedUpdatesWithMultiple(): void {
     $this->setupBasicExtensions();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
     $key_value->get('existing_updates', [])
@@ -550,7 +550,7 @@ EOS;
   /**
    * @covers ::registerInvokedUpdates
    */
-  public function testRegisterInvokedUpdatesWithExistingUpdates() {
+  public function testRegisterInvokedUpdatesWithExistingUpdates(): void {
     $this->setupBasicExtensions();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
     $key_value->get('existing_updates', [])
@@ -585,7 +585,7 @@ EOS;
   /**
    * @covers ::filterOutInvokedUpdatesByExtension
    */
-  public function testFilterOutInvokedUpdatesByExtension() {
+  public function testFilterOutInvokedUpdatesByExtension(): void {
     $this->setupBasicExtensions();
     $key_value = $this->prophesize(KeyValueStoreInterface::class);
     $key_value->get('existing_updates', [])
@@ -625,7 +625,7 @@ EOS;
   /**
    * @covers ::getPendingUpdateFunctions
    */
-  public function testGetPendingCustomUpdateFunctions() {
+  public function testGetPendingCustomUpdateFunctions(): void {
     // Set up a simplified module structure with custom update hooks.
     $info_a = <<<'EOS'
 type: module

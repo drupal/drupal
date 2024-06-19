@@ -37,14 +37,14 @@ class PrimitiveDataNormalizerTest extends UnitTestCase {
    * @covers ::supportsNormalization
    * @dataProvider dataProviderPrimitiveData
    */
-  public function testSupportsNormalization($primitive_data, $expected) {
+  public function testSupportsNormalization($primitive_data, $expected): void {
     $this->assertTrue($this->normalizer->supportsNormalization($primitive_data));
   }
 
   /**
    * @covers ::supportsNormalization
    */
-  public function testSupportsNormalizationFail() {
+  public function testSupportsNormalizationFail(): void {
     // Test that an object not implementing PrimitiveInterface fails.
     $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
   }
@@ -53,7 +53,7 @@ class PrimitiveDataNormalizerTest extends UnitTestCase {
    * @covers ::normalize
    * @dataProvider dataProviderPrimitiveData
    */
-  public function testNormalize($primitive_data, $expected) {
+  public function testNormalize($primitive_data, $expected): void {
     $this->assertSame($expected, $this->normalizer->normalize($primitive_data));
   }
 

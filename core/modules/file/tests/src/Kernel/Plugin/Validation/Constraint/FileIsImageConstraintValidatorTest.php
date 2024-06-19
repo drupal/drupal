@@ -52,7 +52,7 @@ class FileIsImageConstraintValidatorTest extends FileValidatorTestBase {
    *
    * @covers ::validate
    */
-  public function testFileIsImage() {
+  public function testFileIsImage(): void {
     $this->assertFileExists($this->image->getFileUri());
     $validators = [
       'FileIsImage' => [],

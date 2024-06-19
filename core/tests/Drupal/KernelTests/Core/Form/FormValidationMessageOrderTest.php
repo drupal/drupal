@@ -77,7 +77,7 @@ class FormValidationMessageOrderTest extends KernelTestBase implements FormInter
   /**
    * Tests that fields validation messages are sorted in the fields order.
    */
-  public function testValidationErrorMessagesSortedWithWeight() {
+  public function testValidationErrorMessagesSortedWithWeight(): void {
     $form_state = new FormState();
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);

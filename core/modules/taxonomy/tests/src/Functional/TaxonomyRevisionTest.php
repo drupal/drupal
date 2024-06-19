@@ -32,7 +32,7 @@ class TaxonomyRevisionTest extends BrowserTestBase {
   /**
    * Tests default revision settings on vocabularies.
    */
-  public function testVocabularyTermRevision() {
+  public function testVocabularyTermRevision(): void {
     $assert = $this->assertSession();
     $vocabulary1 = $this->createVocabulary(['new_revision' => TRUE]);
     $vocabulary2 = $this->createVocabulary(['new_revision' => FALSE]);

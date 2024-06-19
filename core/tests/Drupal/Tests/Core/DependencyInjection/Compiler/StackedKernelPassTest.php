@@ -46,7 +46,7 @@ class StackedKernelPassTest extends UnitTestCase {
   /**
    * @covers ::process
    */
-  public function testProcessWithStackedKernel() {
+  public function testProcessWithStackedKernel(): void {
     $stacked_kernel = new Definition(StackedHttpKernel::class);
     $stacked_kernel->setPublic(TRUE);
     $this->containerBuilder->setDefinition('http_kernel', $stacked_kernel);
@@ -88,7 +88,7 @@ class StackedKernelPassTest extends UnitTestCase {
   /**
    * @covers ::process
    */
-  public function testProcessWithHttpKernel() {
+  public function testProcessWithHttpKernel(): void {
     $kernel = new Definition('Symfony\Component\HttpKernel\HttpKernelInterface');
     $kernel->setPublic(TRUE);
     $this->containerBuilder->setDefinition('http_kernel', $kernel);

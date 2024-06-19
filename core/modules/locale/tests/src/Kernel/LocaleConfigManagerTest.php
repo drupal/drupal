@@ -38,7 +38,7 @@ class LocaleConfigManagerTest extends KernelTestBase {
   /**
    * Tests hasTranslation().
    */
-  public function testHasTranslation() {
+  public function testHasTranslation(): void {
     $this->installSchema('locale', ['locales_location', 'locales_source', 'locales_target']);
     $this->installConfig(['locale_test']);
     $locale_config_manager = \Drupal::service('locale.config_manager');
@@ -55,7 +55,7 @@ class LocaleConfigManagerTest extends KernelTestBase {
   /**
    * Tests getStringTranslation().
    */
-  public function testGetStringTranslation() {
+  public function testGetStringTranslation(): void {
     $this->installSchema('locale', ['locales_location', 'locales_source', 'locales_target']);
     $this->installConfig(['locale_test']);
 
@@ -76,7 +76,7 @@ class LocaleConfigManagerTest extends KernelTestBase {
   /**
    * Tests getDefaultConfigLangcode().
    */
-  public function testGetDefaultConfigLangcode() {
+  public function testGetDefaultConfigLangcode(): void {
     // Install the Language module's configuration so we can use the
     // module_installer service.
     $this->installConfig(['language']);

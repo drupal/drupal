@@ -64,7 +64,7 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
   /**
    * Tests if the translated taxonomy term is displayed.
    */
-  public function testTranslatedTaxonomyTermReferenceDisplay() {
+  public function testTranslatedTaxonomyTermReferenceDisplay(): void {
     $path = 'node/' . $this->node->id();
     $translation_path = $this->translateToLangcode . '/' . $path;
 

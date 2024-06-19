@@ -63,7 +63,7 @@ class ModerationActionsTest extends BrowserTestBase {
    *
    * @dataProvider nodeStatusActionsTestCases
    */
-  public function testNodeStatusActions($action, $bundle, $warning_appears, $starting_status, $final_status) {
+  public function testNodeStatusActions($action, $bundle, $warning_appears, $starting_status, $final_status): void {
     // Create and run an action on a node.
     $node = Node::create([
       'type' => $bundle,

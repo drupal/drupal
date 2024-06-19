@@ -30,7 +30,7 @@ class MigrateDblogConfigsTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of dblog variables to dblog.settings.yml.
    */
-  public function testDblogSettings() {
+  public function testDblogSettings(): void {
     $config = $this->config('dblog.settings');
     $this->assertSame(10000, $config->get('row_limit'));
   }

@@ -101,7 +101,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArray() {
+  public function testToRenderArray(): void {
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
     $render_array = [
@@ -150,7 +150,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArrayAccessDenied() {
+  public function testToRenderArrayAccessDenied(): void {
     $block = $this->prophesize(BlockPluginInterface::class);
     $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
 
@@ -182,7 +182,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArrayPreview() {
+  public function testToRenderArrayPreview(): void {
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
     $render_array = [
@@ -232,7 +232,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArrayEmpty() {
+  public function testToRenderArrayEmpty(): void {
     $section = [];
     $expected = [];
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
@@ -242,7 +242,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testContextAwareBlock() {
+  public function testContextAwareBlock(): void {
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
     $render_array = [
@@ -294,7 +294,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArrayMissingPluginId() {
+  public function testToRenderArrayMissingPluginId(): void {
     $this->expectException(PluginException::class);
     $this->expectExceptionMessage('No plugin ID specified for component with "some_uuid" UUID');
     (new Section('layout_onecol', [], [new SectionComponent('some_uuid', 'content')]))->toRenderArray();

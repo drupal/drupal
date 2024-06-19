@@ -39,7 +39,7 @@ class CommentOrphanTest extends EntityKernelTestBase {
    *
    * @dataProvider providerTestOrphan
    */
-  public function testOrphan($property) {
+  public function testOrphan($property): void {
 
     DateFormat::create([
       'id' => 'fallback',

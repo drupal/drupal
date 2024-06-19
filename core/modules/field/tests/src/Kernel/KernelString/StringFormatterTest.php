@@ -121,7 +121,7 @@ class StringFormatterTest extends KernelTestBase {
   /**
    * Tests string formatter output.
    */
-  public function testStringFormatter() {
+  public function testStringFormatter(): void {
     $value = $this->randomString();
     $value .= "\n\n<strong>" . $this->randomString() . '</strong>';
     $value .= "\n\n" . $this->randomString();
@@ -194,7 +194,7 @@ class StringFormatterTest extends KernelTestBase {
   /**
    * Test "link_to_entity" feature on fields which are added to config entity.
    */
-  public function testLinkToContentForEntitiesWithNoCanonicalPath() {
+  public function testLinkToContentForEntitiesWithNoCanonicalPath(): void {
     $this->enableModules(['entity_test']);
     $field_name = 'test_field_name';
     $entity_type = $bundle = 'entity_test_label';

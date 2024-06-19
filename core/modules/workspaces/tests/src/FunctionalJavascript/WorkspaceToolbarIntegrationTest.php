@@ -39,7 +39,7 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
   /**
    * Tests workspace canvas can be toggled with JavaScript.
    */
-  public function testWorkspaceCanvasToggling() {
+  public function testWorkspaceCanvasToggling(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -63,7 +63,7 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
   /**
    * Tests workspace switch and landing page behavior.
    */
-  public function testWorkspaceSwitch() {
+  public function testWorkspaceSwitch(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

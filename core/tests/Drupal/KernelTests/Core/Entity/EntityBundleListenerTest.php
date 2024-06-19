@@ -20,7 +20,7 @@ class EntityBundleListenerTest extends EntityKernelTestBase {
    *
    * @covers ::onBundleCreate
    */
-  public function testOnBundleCreate() {
+  public function testOnBundleCreate(): void {
     $field_map = $this->container->get('entity_field.manager')->getFieldMap();
     $expected = [
       'entity_test' => 'entity_test',

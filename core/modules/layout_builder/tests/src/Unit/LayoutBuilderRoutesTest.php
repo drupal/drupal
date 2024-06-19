@@ -48,7 +48,7 @@ class LayoutBuilderRoutesTest extends UnitTestCase {
   /**
    * @covers ::onAlterRoutes
    */
-  public function testOnAlterRoutes() {
+  public function testOnAlterRoutes(): void {
     $expected = [
       'test_route1' => new Route('/test/path1'),
       'test_route_shared' => new Route('/test/path/shared2'),

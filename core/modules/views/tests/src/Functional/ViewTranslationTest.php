@@ -53,7 +53,7 @@ class ViewTranslationTest extends ViewTestBase {
   /**
    * Tests that the view route title is translated.
    */
-  public function testViewTitleTranslation() {
+  public function testViewTitleTranslation(): void {
     $view = Views::getView('test_view');
 
     // Create a test display, add path and default language title.

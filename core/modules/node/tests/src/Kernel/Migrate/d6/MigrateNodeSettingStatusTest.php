@@ -27,7 +27,7 @@ class MigrateNodeSettingStatusTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of the publishing status checkbox's settings.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $this->assertSame('Publishing status', BaseFieldOverride::load('node.article.status')->label());
   }
 

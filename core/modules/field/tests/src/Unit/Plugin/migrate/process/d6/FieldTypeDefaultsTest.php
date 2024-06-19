@@ -29,7 +29,7 @@ class FieldTypeDefaultsTest extends MigrateProcessTestCase {
    *
    * @covers ::transform
    */
-  public function testDefaults() {
+  public function testDefaults(): void {
     $this->row->expects($this->once())
       ->method('getSourceProperty')
       ->willReturn('date');
@@ -48,7 +48,7 @@ class FieldTypeDefaultsTest extends MigrateProcessTestCase {
    *
    * @covers ::transform
    */
-  public function testDefaultsException() {
+  public function testDefaultsException(): void {
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage(sprintf('Failed to lookup field type %s in the static map.', var_export([], TRUE)));
     $this->plugin->transform([], $this->migrateExecutable, $this->row, 'property');

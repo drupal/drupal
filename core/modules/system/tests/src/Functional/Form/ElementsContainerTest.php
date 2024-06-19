@@ -28,7 +28,7 @@ class ElementsContainerTest extends BrowserTestBase {
   /**
    * Tests the #optional container property.
    */
-  public function testOptionalContainerElements() {
+  public function testOptionalContainerElements(): void {
     $this->drupalGet('form-test/optional-container');
     $assertSession = $this->assertSession();
     $assertSession->elementNotExists('css', 'div.empty_optional');

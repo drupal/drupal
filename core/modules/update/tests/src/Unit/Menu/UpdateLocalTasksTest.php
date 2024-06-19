@@ -26,7 +26,7 @@ class UpdateLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getUpdateReportRoutes
    */
-  public function testUpdateReportLocalTasks($route) {
+  public function testUpdateReportLocalTasks($route): void {
     $this->assertLocalTasks($route, [
       0 => ['update.status', 'update.settings', 'update.report_update'],
     ]);
@@ -48,7 +48,7 @@ class UpdateLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getUpdateModuleRoutes
    */
-  public function testUpdateModuleLocalTasks($route) {
+  public function testUpdateModuleLocalTasks($route): void {
     $this->assertLocalTasks($route, [
       0 => ['update.module_update'],
     ]);
@@ -68,7 +68,7 @@ class UpdateLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getUpdateThemeRoutes
    */
-  public function testUpdateThemeLocalTasks($route) {
+  public function testUpdateThemeLocalTasks($route): void {
     $this->assertLocalTasks($route, [
       0 => ['update.theme_update'],
     ]);

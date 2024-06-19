@@ -38,7 +38,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
   /**
    * Tests install profile config changes.
    */
-  public function testInstallProfileConfigOverwrite() {
+  public function testInstallProfileConfigOverwrite(): void {
     $config_name = 'system.cron';
     // The expected configuration from the system module.
     $expected_original_data = [

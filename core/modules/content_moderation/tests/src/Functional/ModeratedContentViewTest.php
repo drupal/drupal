@@ -67,7 +67,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
   /**
    * Tests the moderated content page.
    */
-  public function testModeratedContentPage() {
+  public function testModeratedContentPage(): void {
     $assert_session = $this->assertSession();
     $this->drupalLogin($this->adminUser);
 
@@ -151,7 +151,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
   /**
    * Tests the moderated content page with multilingual content.
    */
-  public function testModeratedContentPageMultilingual() {
+  public function testModeratedContentPageMultilingual(): void {
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
     $node = $this->drupalCreateNode([

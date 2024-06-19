@@ -57,7 +57,7 @@ class NodeOperationAccessTest extends UnitTestCase {
    *
    * @dataProvider providerTestRevisionOperations
    */
-  public function testRevisionOperations($operation, array $hasPermissionMap, $assertAccess, $isDefaultRevision = NULL) {
+  public function testRevisionOperations($operation, array $hasPermissionMap, $assertAccess, $isDefaultRevision = NULL): void {
     $account = $this->createMock(AccountInterface::class);
     $account->method('hasPermission')
       ->willReturnMap($hasPermissionMap);

@@ -78,7 +78,7 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
   /**
    * Tests removal of images having a non-local source.
    */
-  public function testImageSource() {
+  public function testImageSource(): void {
     global $base_url;
 
     $node = $this->drupalCreateNode();

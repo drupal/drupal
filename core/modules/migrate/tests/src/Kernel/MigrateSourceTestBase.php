@@ -146,7 +146,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    *
    * @dataProvider providerSource
    */
-  public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL) {
+  public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL): void {
     $plugin = $this->getPlugin($configuration);
     $clone_plugin = clone $plugin;
 

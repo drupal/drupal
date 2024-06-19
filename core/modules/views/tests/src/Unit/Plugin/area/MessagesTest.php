@@ -42,7 +42,7 @@ class MessagesTest extends UnitTestCase {
    * @covers ::defineOptions
    * @covers ::render
    */
-  public function testRender() {
+  public function testRender(): void {
     // The handler is configured to show with empty views by default, so should
     // appear.
     $this->assertSame(['#type' => 'status_messages'], $this->messagesHandler->render());

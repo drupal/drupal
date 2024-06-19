@@ -99,7 +99,7 @@ class MailHandlerTest extends UnitTestCase {
    *
    * @covers ::sendMailMessages
    */
-  public function testInvalidRecipient() {
+  public function testInvalidRecipient(): void {
     $message = $this->createMock('\Drupal\contact\MessageInterface');
     $message->expects($this->once())
       ->method('isPersonal')
@@ -133,7 +133,7 @@ class MailHandlerTest extends UnitTestCase {
    *
    * @covers ::sendMailMessages
    */
-  public function testSendMailMessages(bool $anonymous, ?bool $auto_reply, bool $copy_sender, array $results) {
+  public function testSendMailMessages(bool $anonymous, ?bool $auto_reply, bool $copy_sender, array $results): void {
     if ($anonymous) {
       $message = $this->getAnonymousMockMessage(explode(', ', $results[0]['to']), $auto_reply, $copy_sender);
       $sender = $this->getMockSender();

@@ -50,7 +50,7 @@ class DependentAccessTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetFirst
    */
-  public function testSetAccessDependency($use_set_first) {
+  public function testSetAccessDependency($use_set_first): void {
     $testRefinable = new RefinableDependentAccessTraitTestClass();
 
     if ($use_set_first) {
@@ -77,7 +77,7 @@ class DependentAccessTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetFirst
    */
-  public function testMergeNonGroup($use_set_first) {
+  public function testMergeNonGroup($use_set_first): void {
     $testRefinable = new RefinableDependentAccessTraitTestClass();
     if ($use_set_first) {
       $testRefinable->setAccessDependency($this->forbidden);
@@ -109,7 +109,7 @@ class DependentAccessTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetFirst
    */
-  public function testMergeGroup($use_set_first) {
+  public function testMergeGroup($use_set_first): void {
     $andGroup = new AccessGroupAnd();
     $andGroup->addDependency($this->forbidden);
     $testRefinable = new RefinableDependentAccessTraitTestClass();

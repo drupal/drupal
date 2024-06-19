@@ -44,7 +44,7 @@ class FilePrivateTest extends FileFieldTestBase {
   /**
    * Tests file access for file uploaded to a private node.
    */
-  public function testPrivateFile() {
+  public function testPrivateFile(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');

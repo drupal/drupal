@@ -43,7 +43,7 @@ class FieldConfigEditFormTest extends UnitTestCase {
    *
    * @dataProvider providerRequired
    */
-  public function testHasAnyRequired(array $element, bool $result) {
+  public function testHasAnyRequired(array $element, bool $result): void {
     $reflection = new \ReflectionClass('\Drupal\field_ui\Form\FieldConfigEditForm');
     $method = $reflection->getMethod('hasAnyRequired');
     $this->assertEquals($result, $method->invoke($this->fieldConfigEditForm, $element));

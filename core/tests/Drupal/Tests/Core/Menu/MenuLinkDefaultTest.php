@@ -17,7 +17,7 @@ class MenuLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::updateLink
    */
-  public function testUpdateLink() {
+  public function testUpdateLink(): void {
     $plugin_definition = [
       'title' => 'Hey jude',
       'enabled' => 1,
@@ -41,7 +41,7 @@ class MenuLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::updateLink
    */
-  public function testUpdateLinkWithoutPersist() {
+  public function testUpdateLinkWithoutPersist(): void {
     $plugin_definition = [
       'title' => 'Hey jude',
       'enabled' => 1,

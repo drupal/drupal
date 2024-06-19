@@ -31,7 +31,7 @@ class MediaTypeCreationTest extends MediaFunctionalTestBase {
    *
    * @dataProvider providerMediaTypeCreationForm
    */
-  public function testMediaTypeCreationForm($button_label, $address, $machine_name) {
+  public function testMediaTypeCreationForm($button_label, $address, $machine_name): void {
     $this->drupalGet('/admin/structure/media/add');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldExists('label')->setValue($this->randomString());

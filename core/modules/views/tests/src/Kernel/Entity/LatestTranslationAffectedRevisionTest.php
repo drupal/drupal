@@ -35,7 +35,7 @@ class LatestTranslationAffectedRevisionTest extends ViewsKernelTestBase {
   /**
    * Tests the 'Latest revision' filter.
    */
-  public function testLatestRevisionFilter() {
+  public function testLatestRevisionFilter(): void {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installSchema('node', ['node_access']);

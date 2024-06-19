@@ -29,7 +29,7 @@ class BasicTest extends WizardTestBase {
     $this->drupalPlaceBlock('page_title_block');
   }
 
-  public function testViewsWizardAndListing() {
+  public function testViewsWizardAndListing(): void {
     $this->drupalCreateContentType(['type' => 'article']);
     $this->drupalCreateContentType(['type' => 'page']);
 
@@ -203,7 +203,7 @@ class BasicTest extends WizardTestBase {
    *
    * @see \Drupal\views\Plugin\views\display\DisplayPluginBase::mergeDefaults()
    */
-  public function testWizardDefaultValues() {
+  public function testWizardDefaultValues(): void {
     $random_id = $this->randomMachineName(16);
     // Create a basic view.
     $view = [];

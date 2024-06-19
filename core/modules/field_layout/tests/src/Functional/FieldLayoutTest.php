@@ -58,7 +58,7 @@ class FieldLayoutTest extends BrowserTestBase {
   /**
    * Tests an entity type that has fields shown by default.
    */
-  public function testNodeView() {
+  public function testNodeView(): void {
     // By default, the one-column layout is used.
     $this->drupalGet('node/1');
     $this->assertSession()->elementExists('css', '.layout--onecol');
@@ -72,7 +72,7 @@ class FieldLayoutTest extends BrowserTestBase {
   /**
    * Tests that changes to the regions still leave the fields visible.
    */
-  public function testRegionChanges() {
+  public function testRegionChanges(): void {
     $this->drupalGet('admin/structure/types/manage/article/display');
     $this->assertEquals(['Content', 'Disabled'], $this->getRegionTitles());
     $this->assertSession()->optionExists('fields[body][region]', 'content');

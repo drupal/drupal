@@ -18,7 +18,7 @@ class InstallerLanguageTest extends KernelTestBase {
   /**
    * Tests that the installer can find translation files.
    */
-  public function testInstallerTranslationFiles() {
+  public function testInstallerTranslationFiles(): void {
     // Different translation files would be found depending on which language
     // we are looking for.
     $expected_translation_files = [
@@ -44,7 +44,7 @@ class InstallerLanguageTest extends KernelTestBase {
   /**
    * Tests profile info caching in non-English languages.
    */
-  public function testInstallerTranslationCache() {
+  public function testInstallerTranslationCache(): void {
     require_once 'core/includes/install.inc';
 
     // Prime the \Drupal\Core\Extension\ExtensionList::getPathname() static

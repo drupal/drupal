@@ -52,7 +52,7 @@ class ModeratedContentLocalTaskTest extends BrowserTestBase {
   /**
    * Tests the moderated content local task appears.
    */
-  public function testModeratedContentLocalTask() {
+  public function testModeratedContentLocalTask(): void {
     $this->drupalLogin($this->adminUser);
 
     // Verify the moderated content tab exists.

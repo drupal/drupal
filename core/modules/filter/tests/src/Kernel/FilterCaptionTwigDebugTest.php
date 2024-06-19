@@ -35,7 +35,7 @@ class FilterCaptionTwigDebugTest extends KernelTestBase {
   /**
    * Tests the caption filter with Twig debugging on.
    */
-  public function testCaptionFilter() {
+  public function testCaptionFilter(): void {
     $manager = $this->container->get('plugin.manager.filter');
     $bag = new FilterPluginCollection($manager, []);
     $filter = $bag->get('filter_caption');

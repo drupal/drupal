@@ -64,7 +64,7 @@ class MenuLinkTreeTest extends KernelTestBase {
   /**
    * Tests deleting all the links in a menu.
    */
-  public function testDeleteLinksInMenu() {
+  public function testDeleteLinksInMenu(): void {
     /** @var \Drupal\system\MenuStorage $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('menu');
     $storage->create(['id' => 'menu1', 'label' => 'Menu 1'])->save();
@@ -91,7 +91,7 @@ class MenuLinkTreeTest extends KernelTestBase {
   /**
    * Tests creating links with an expected tree structure.
    */
-  public function testCreateLinksInMenu() {
+  public function testCreateLinksInMenu(): void {
     // This creates a tree with the following structure:
     // - 1
     // - 2
@@ -141,7 +141,7 @@ class MenuLinkTreeTest extends KernelTestBase {
   /**
    * Tests user/login and user/logout links.
    */
-  public function testUserLoginAndUserLogoutLinks() {
+  public function testUserLoginAndUserLogoutLinks(): void {
     $account_switcher = $this->container->get('account_switcher');
 
     $login_menu_link = MenuLinkMock::create(['id' => 'user_login_example', 'route_name' => 'user.login']);

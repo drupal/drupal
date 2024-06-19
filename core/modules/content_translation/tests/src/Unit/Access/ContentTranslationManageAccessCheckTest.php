@@ -51,7 +51,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
    *
    * @covers ::access
    */
-  public function testCreateAccess() {
+  public function testCreateAccess(): void {
     // Set the mock translation handler.
     $translation_handler = $this->createMock('\Drupal\content_translation\ContentTranslationHandlerInterface');
     $translation_handler->expects($this->once())

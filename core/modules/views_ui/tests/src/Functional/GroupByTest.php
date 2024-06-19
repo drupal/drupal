@@ -28,7 +28,7 @@ class GroupByTest extends UITestBase {
    *
    * @todo This should check the change of the settings as well.
    */
-  public function testGroupBySave() {
+  public function testGroupBySave(): void {
     $this->drupalGet('admin/structure/views/view/test_views_groupby_save/edit');
 
     $edit_groupby_url = 'admin/structure/views/nojs/handler-group/test_views_groupby_save/default/field/id';

@@ -27,7 +27,7 @@ class UpdateCacheTest extends BrowserTestBase {
    * @see \Drupal\Core\Update\UpdateServiceProvider
    * @see \Drupal\Core\Update\UpdateBackend
    */
-  public function testCaches() {
+  public function testCaches(): void {
     \Drupal::cache()->set('will_not_exist_after_update', TRUE);
     // The site might be broken at the time so logging in using the UI might
     // not work, so we use the API itself.

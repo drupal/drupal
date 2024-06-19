@@ -57,7 +57,7 @@ class NodeAccessPagerTest extends BrowserTestBase {
   /**
    * Tests the comment pager for nodes with multiple grants per realm.
    */
-  public function testCommentPager() {
+  public function testCommentPager(): void {
     // Create a node.
     $node = $this->drupalCreateNode();
 

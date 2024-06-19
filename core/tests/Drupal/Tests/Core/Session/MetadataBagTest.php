@@ -17,7 +17,7 @@ class MetadataBagTest extends UnitTestCase {
   /**
    * @covers ::stampNew
    */
-  public function testStampNew() {
+  public function testStampNew(): void {
     $metadata = new MetadataBag(new Settings([]));
     $metadata->setCsrfTokenSeed('a_cryptographically_secure_long_random_string_should_used_here');
     $metadata->stampNew();

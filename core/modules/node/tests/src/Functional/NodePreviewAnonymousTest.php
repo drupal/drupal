@@ -48,7 +48,7 @@ class NodePreviewAnonymousTest extends BrowserTestBase {
   /**
    * Checks the node preview functionality for anonymous users.
    */
-  public function testAnonymousPagePreview() {
+  public function testAnonymousPagePreview(): void {
 
     $title_key = 'title[0][value]';
     $body_key = 'body[0][value]';

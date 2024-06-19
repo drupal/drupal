@@ -17,7 +17,7 @@ class ElementTest extends UnitTestCase {
   /**
    * Tests the property() method.
    */
-  public function testProperty() {
+  public function testProperty(): void {
     $this->assertTrue(Element::property('#property'));
     $this->assertFalse(Element::property('property'));
     $this->assertFalse(Element::property('property#'));
@@ -27,7 +27,7 @@ class ElementTest extends UnitTestCase {
   /**
    * Tests the properties() method.
    */
-  public function testProperties() {
+  public function testProperties(): void {
     $element = [
       '#property1' => 'property1',
       '#property2' => 'property2',
@@ -43,7 +43,7 @@ class ElementTest extends UnitTestCase {
   /**
    * Tests the child() method.
    */
-  public function testChild() {
+  public function testChild(): void {
     $this->assertFalse(Element::child('#property'));
     $this->assertTrue(Element::child('property'));
     $this->assertTrue(Element::child('property#'));
@@ -52,7 +52,7 @@ class ElementTest extends UnitTestCase {
   /**
    * Tests the children() method.
    */
-  public function testChildren() {
+  public function testChildren(): void {
     $element = [
       'child2' => ['#weight' => 10],
       'child1' => ['#weight' => 0],
@@ -104,7 +104,7 @@ class ElementTest extends UnitTestCase {
   /**
    * Tests the children() method with an invalid key.
    */
-  public function testInvalidChildren() {
+  public function testInvalidChildren(): void {
     $element = [
       'foo' => 'bar',
     ];
@@ -116,7 +116,7 @@ class ElementTest extends UnitTestCase {
   /**
    * Tests the children() method with an ignored key/value pair.
    */
-  public function testIgnoredChildren() {
+  public function testIgnoredChildren(): void {
     $element = [
       'foo' => NULL,
     ];
@@ -133,7 +133,7 @@ class ElementTest extends UnitTestCase {
    *
    * @dataProvider providerVisibleChildren
    */
-  public function testVisibleChildren(array $element, array $expected_keys) {
+  public function testVisibleChildren(array $element, array $expected_keys): void {
     $this->assertSame($expected_keys, Element::getVisibleChildren($element));
   }
 
@@ -161,7 +161,7 @@ class ElementTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetAttributes
    */
-  public function testSetAttributes($element, $map, $expected_element) {
+  public function testSetAttributes($element, $map, $expected_element): void {
     Element::setAttributes($element, $map);
     $this->assertSame($expected_element, $element);
   }
@@ -183,7 +183,7 @@ class ElementTest extends UnitTestCase {
    *
    * @dataProvider providerTestIsEmpty
    */
-  public function testIsEmpty(array $element, $expected) {
+  public function testIsEmpty(array $element, $expected): void {
     $this->assertSame(Element::isEmpty($element), $expected);
   }
 
@@ -229,7 +229,7 @@ class ElementTest extends UnitTestCase {
    * @covers ::isRenderArray
    * @dataProvider dataProviderIsRenderArray
    */
-  public function testIsRenderArray($build, $expected) {
+  public function testIsRenderArray($build, $expected): void {
     $this->assertSame(
       $expected,
       Element::isRenderArray($build)

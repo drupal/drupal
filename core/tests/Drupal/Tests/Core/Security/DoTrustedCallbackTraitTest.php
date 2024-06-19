@@ -21,7 +21,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
    * @covers ::doTrustedCallback
    * @dataProvider providerTestTrustedCallbacks
    */
-  public function testTrustedCallbacks(callable $callback, $extra_trusted_interface = NULL) {
+  public function testTrustedCallbacks(callable $callback, $extra_trusted_interface = NULL): void {
     $return = $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::THROW_EXCEPTION, $extra_trusted_interface);
     $this->assertSame('test', $return);
   }
@@ -50,7 +50,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
    * @covers ::doTrustedCallback
    * @dataProvider providerTestUntrustedCallbacks
    */
-  public function testUntrustedCallbacks(callable $callback, $extra_trusted_interface = NULL) {
+  public function testUntrustedCallbacks(callable $callback, $extra_trusted_interface = NULL): void {
     $this->expectException(UntrustedCallbackException::class);
     $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::THROW_EXCEPTION, $extra_trusted_interface);
   }
@@ -72,7 +72,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * @dataProvider errorTypeProvider
    */
-  public function testException($callback) {
+  public function testException($callback): void {
     $this->expectException(UntrustedCallbackException::class);
     $this->expectExceptionMessage('Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
     $this->doTrustedCallback($callback, [], '%s is not trusted');
@@ -82,7 +82,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
    * @dataProvider errorTypeProvider
    * @group legacy
    */
-  public function testSilencedDeprecation($callback) {
+  public function testSilencedDeprecation($callback): void {
     $this->expectDeprecation('Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
     $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION);
   }

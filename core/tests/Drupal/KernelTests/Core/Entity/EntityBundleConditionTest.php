@@ -33,7 +33,7 @@ class EntityBundleConditionTest extends EntityKernelTestBase {
   /**
    * Tests conditions.
    */
-  public function testConditions() {
+  public function testConditions(): void {
     $this->createUser();
     // Get some entities of various bundles to check against.
     $page = EntityTestWithBundle::create(['type' => 'page', 'name' => $this->randomMachineName()]);

@@ -29,7 +29,7 @@ class TwigSettingsTest extends BrowserTestBase {
   /**
    * Ensures Twig template auto reload setting can be overridden.
    */
-  public function testTwigAutoReloadOverride() {
+  public function testTwigAutoReloadOverride(): void {
     // Enable auto reload and rebuild the service container.
     $parameters = $this->container->getParameter('twig.config');
     $parameters['auto_reload'] = TRUE;
@@ -51,7 +51,7 @@ class TwigSettingsTest extends BrowserTestBase {
   /**
    * Ensures Twig engine debug setting can be overridden.
    */
-  public function testTwigDebugOverride() {
+  public function testTwigDebugOverride(): void {
     // Enable debug and rebuild the service container.
     $parameters = $this->container->getParameter('twig.config');
     $parameters['debug'] = TRUE;
@@ -81,7 +81,7 @@ class TwigSettingsTest extends BrowserTestBase {
   /**
    * Ensures Twig template cache setting can be overridden.
    */
-  public function testTwigCacheOverride() {
+  public function testTwigCacheOverride(): void {
     $extension = twig_extension();
     $theme_installer = $this->container->get('theme_installer');
     $theme_installer->install(['test_theme']);
@@ -126,7 +126,7 @@ class TwigSettingsTest extends BrowserTestBase {
   /**
    * Tests twig inline templates with auto_reload.
    */
-  public function testTwigInlineWithAutoReload() {
+  public function testTwigInlineWithAutoReload(): void {
     $parameters = $this->container->getParameter('twig.config');
     $parameters['auto_reload'] = TRUE;
     $parameters['debug'] = TRUE;

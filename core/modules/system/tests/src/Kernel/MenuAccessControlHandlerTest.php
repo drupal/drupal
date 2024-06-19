@@ -50,7 +50,7 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
    * @covers ::checkCreateAccess
    * @dataProvider testAccessProvider
    */
-  public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result) {
+  public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result): void {
     $user = $this->drupalCreateUser($permissions);
 
     $entity_values = ($which_entity === 'unlocked')

@@ -116,7 +116,7 @@ class CounterTest extends UnitTestCase {
    *
    * @dataProvider providerRowIndexes
    */
-  public function testSimpleCounter($i) {
+  public function testSimpleCounter($i): void {
     $counter_handler = new Counter([], 'counter', $this->definition);
     $options = [];
     $counter_handler->init($this->view, $this->display, $options);
@@ -138,7 +138,7 @@ class CounterTest extends UnitTestCase {
    *
    * @dataProvider providerRowIndexes
    */
-  public function testCounterRandomStart($i) {
+  public function testCounterRandomStart($i): void {
     // Setup a counter field with a random start.
     $rand_start = rand(5, 10);
     $counter_handler = new Counter([], 'counter', $this->definition);
@@ -164,7 +164,7 @@ class CounterTest extends UnitTestCase {
    *
    * @dataProvider providerRowIndexes
    */
-  public function testCounterRandomPagerOffset($i) {
+  public function testCounterRandomPagerOffset($i): void {
     // Setup a counter field with a pager with a random offset.
     $offset = 3;
     $this->pager->setOffset($offset);
@@ -193,7 +193,7 @@ class CounterTest extends UnitTestCase {
    *
    * @dataProvider providerRowIndexes
    */
-  public function testCounterSecondPage($i) {
+  public function testCounterSecondPage($i): void {
     $offset = 3;
     // Setup a pager on the second page.
     $this->pager->setOffset($offset);

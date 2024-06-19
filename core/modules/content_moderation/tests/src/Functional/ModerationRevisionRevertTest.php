@@ -64,7 +64,7 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
   /**
    * Tests that reverting a revision works.
    */
-  public function testEditingAfterRevertRevision() {
+  public function testEditingAfterRevertRevision(): void {
     // Create a draft.
     $this->drupalGet('node/add/moderated_bundle');
     $this->submitForm([

@@ -97,7 +97,7 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
    *
    * @dataProvider insertionReselectionProvider
    */
-  public function testInsertionAndReselection($widget) {
+  public function testInsertionAndReselection($widget): void {
     $this->container
       ->get('entity_display.repository')
       ->getFormDisplay('node', 'basic_page')

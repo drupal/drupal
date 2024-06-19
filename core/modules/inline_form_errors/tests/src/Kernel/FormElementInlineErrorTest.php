@@ -22,7 +22,7 @@ class FormElementInlineErrorTest extends KernelTestBase {
   /**
    * Tests that no inline form errors are shown when disabled for a form.
    */
-  public function testDisplayErrorMessagesNotInline() {
+  public function testDisplayErrorMessagesNotInline(): void {
     $form_id = 'test';
 
     $form = [

@@ -119,7 +119,7 @@ class FormErrorHandlerTest extends UnitTestCase {
    * @covers ::displayErrorMessages
    * @covers ::setElementErrorsFromFormState
    */
-  public function testErrorMessagesInline() {
+  public function testErrorMessagesInline(): void {
     $messages = [
       'no title given',
       'element is invisible',
@@ -169,7 +169,7 @@ class FormErrorHandlerTest extends UnitTestCase {
   /**
    * Tests that opting out of Inline Form Errors works.
    */
-  public function testErrorMessagesNotInline() {
+  public function testErrorMessagesNotInline(): void {
     // Asserts all messages are summarized.
     $messages = [
       'invalid',

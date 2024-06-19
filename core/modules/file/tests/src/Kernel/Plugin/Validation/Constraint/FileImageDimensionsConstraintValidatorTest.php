@@ -54,7 +54,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
    *
    * @covers ::validate
    */
-  public function testFileValidateImageResolution() {
+  public function testFileValidateImageResolution(): void {
     // Non-images.
     $validators = ['FileImageDimensions' => []];
     $violations = $this->validator->validate($this->nonImage, $validators);

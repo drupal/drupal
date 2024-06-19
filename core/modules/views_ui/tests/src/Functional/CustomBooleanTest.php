@@ -48,7 +48,7 @@ class CustomBooleanTest extends UITestBase {
   /**
    * Tests the setting and output of custom labels for boolean values.
    */
-  public function testCustomOption() {
+  public function testCustomOption(): void {
     // Add the boolean field handler to the test view.
     $view = Views::getView('test_view');
     $view->setDisplay();
@@ -113,7 +113,7 @@ class CustomBooleanTest extends UITestBase {
   /**
    * Tests the setting and output of custom labels for boolean values.
    */
-  public function testCustomOptionTemplate() {
+  public function testCustomOptionTemplate(): void {
     // Install theme to test with template system.
     \Drupal::service('theme_installer')->install(['views_test_theme']);
 

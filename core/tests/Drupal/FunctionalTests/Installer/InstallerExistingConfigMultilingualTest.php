@@ -28,7 +28,7 @@ class InstallerExistingConfigMultilingualTest extends InstallerExistingConfigTes
   /**
    * {@inheritdoc}
    */
-  public function testConfigSync() {
+  public function testConfigSync(): void {
     parent::testConfigSync();
 
     // Ensure no warning, error, critical, alert or emergency messages have been

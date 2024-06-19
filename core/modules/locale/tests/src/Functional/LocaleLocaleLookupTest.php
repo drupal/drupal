@@ -54,7 +54,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   /**
    * Tests that there are no circular dependencies.
    */
-  public function testCircularDependency() {
+  public function testCircularDependency(): void {
     // Ensure that we can enable early_translation_test on a non-english site.
     $this->drupalGet('admin/modules');
     $this->submitForm(['modules[early_translation_test][enable]' => TRUE], 'Install');
@@ -64,7 +64,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   /**
    * Tests language fallback defaults.
    */
-  public function testLanguageFallbackDefaults() {
+  public function testLanguageFallbackDefaults(): void {
     $this->drupalGet('');
     // Ensure state of fallback languages persisted by
     // locale_test_language_fallback_candidates_locale_lookup_alter() is empty.
@@ -80,7 +80,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
    *
    * @dataProvider providerTestFixOldPluralStyle
    */
-  public function testFixOldPluralStyle($translation_value, $expected) {
+  public function testFixOldPluralStyle($translation_value, $expected): void {
     $string_storage = \Drupal::service('locale.storage');
     $string = $string_storage->findString(['source' => 'Member for', 'context' => '']);
     $lid = $string->getId();

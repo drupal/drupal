@@ -36,7 +36,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
   /**
    * Tests that entity schemas are up-to-date after enabling translation.
    */
-  public function testEnable() {
+  public function testEnable(): void {
     $this->drupalLogin($this->rootUser);
     // Enable modules and make sure the related config entity type definitions
     // are installed.

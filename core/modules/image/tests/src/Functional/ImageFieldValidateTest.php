@@ -28,7 +28,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   /**
    * Tests image validity.
    */
-  public function testValid() {
+  public function testValid(): void {
     $file_system = $this->container->get('file_system');
     $image_files = $this->drupalGetTestFiles('image');
 
@@ -90,7 +90,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   /**
    * Tests min/max dimensions settings.
    */
-  public function testResolution() {
+  public function testResolution(): void {
     $field_names = [
       0 => $this->randomMachineName(),
       1 => $this->randomMachineName(),
@@ -165,7 +165,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   /**
    * Tests that required alt/title fields gets validated right.
    */
-  public function testRequiredAttributes() {
+  public function testRequiredAttributes(): void {
     $field_name = $this->randomMachineName();
     $field_settings = [
       'alt_field' => 1,
@@ -222,7 +222,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
    *
    * @dataProvider providerTestEmpty
    */
-  public function testEmpty($field_name, $required, $cardinality, $form_element_name, $expected_page_text_when_edit_access_allowed, $expected_page_text_when_edit_access_forbidden) {
+  public function testEmpty($field_name, $required, $cardinality, $form_element_name, $expected_page_text_when_edit_access_allowed, $expected_page_text_when_edit_access_forbidden): void {
     $this->createImageField($field_name, 'node', 'article', ['cardinality' => $cardinality], ['required' => $required]);
 
     // Test with field edit access allowed.

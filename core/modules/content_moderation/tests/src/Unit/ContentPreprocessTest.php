@@ -20,7 +20,7 @@ class ContentPreprocessTest extends UnitTestCase {
    * @covers ::isLatestVersionPage
    * @dataProvider routeNodeProvider
    */
-  public function testIsLatestVersionPage($route_name, $route_nid, $check_nid, $result, $message) {
+  public function testIsLatestVersionPage($route_name, $route_nid, $check_nid, $result, $message): void {
     $content_preprocess = new ContentPreprocess($this->setupCurrentRouteMatch($route_name, $route_nid));
     $node = $this->setupNode($check_nid);
     $this->assertEquals($result, $content_preprocess->isLatestVersionPage($node), $message);

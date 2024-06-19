@@ -73,7 +73,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
    * @param string[] $permissions
    *   An array of permissions to grant to the user.
    */
-  public function testAccess($expected, $is_enabled, array $section_data, array $permissions) {
+  public function testAccess($expected, $is_enabled, array $section_data, array $permissions): void {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
@@ -174,7 +174,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
   /**
    * @covers ::getContexts
    */
-  public function testGetContexts() {
+  public function testGetContexts(): void {
     $entity = EntityTest::create();
     $entity->save();
 
@@ -193,7 +193,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
   /**
    * @covers ::getContextsDuringPreview
    */
-  public function testGetContextsDuringPreview() {
+  public function testGetContextsDuringPreview(): void {
     $entity = EntityTest::create();
     $entity->save();
 
@@ -212,7 +212,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
   /**
    * @covers ::getDefaultSectionStorage
    */
-  public function testGetDefaultSectionStorage() {
+  public function testGetDefaultSectionStorage(): void {
     $entity = EntityTest::create();
     $entity->save();
     $this->plugin->setContext('entity', EntityContext::fromEntity($entity));
@@ -223,7 +223,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
   /**
    * @covers ::getTempstoreKey
    */
-  public function testGetTempstoreKey() {
+  public function testGetTempstoreKey(): void {
     $entity = EntityTest::create();
     $entity->save();
     $this->plugin->setContext('entity', EntityContext::fromEntity($entity));
@@ -236,7 +236,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
   /**
    * @covers ::deriveContextsFromRoute
    */
-  public function testDeriveContextsFromRoute() {
+  public function testDeriveContextsFromRoute(): void {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
@@ -261,7 +261,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
   /**
    * @covers ::isOverridden
    */
-  public function testIsOverridden() {
+  public function testIsOverridden(): void {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

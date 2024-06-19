@@ -106,7 +106,7 @@ class HtaccessTest extends BrowserTestBase {
   /**
    * Iterates over protected files and calls assertNoFileAccess().
    */
-  public function testFileAccess() {
+  public function testFileAccess(): void {
     foreach ($this->getProtectedFiles() as $file => $response_code) {
       $this->assertFileAccess($file, $response_code);
     }
@@ -156,7 +156,7 @@ class HtaccessTest extends BrowserTestBase {
   /**
    * Tests that SVGZ files are served with Content-Encoding: gzip.
    */
-  public function testSvgzContentEncoding() {
+  public function testSvgzContentEncoding(): void {
     $this->drupalGet('core/modules/system/tests/logo.svgz');
     $this->assertSession()->statusCodeEquals(200);
 

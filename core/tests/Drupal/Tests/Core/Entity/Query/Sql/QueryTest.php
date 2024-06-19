@@ -49,7 +49,7 @@ class QueryTest extends UnitTestCase {
    *
    * @covers ::prepare
    */
-  public function testNoBaseTable() {
+  public function testNoBaseTable(): void {
     $this->expectException(QueryException::class);
     $this->expectExceptionMessage('No base table for example_entity_query, invalid query.');
     $this->query->execute();
@@ -60,7 +60,7 @@ class QueryTest extends UnitTestCase {
    *
    * @covers ::prepare
    */
-  public function testNoRevisionTable() {
+  public function testNoRevisionTable(): void {
     $this->expectException(QueryException::class);
     $this->expectExceptionMessage('No revision table for example_entity_query, invalid query.');
     $this->query->allRevisions()->execute();

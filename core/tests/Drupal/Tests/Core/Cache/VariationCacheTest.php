@@ -184,7 +184,7 @@ class VariationCacheTest extends UnitTestCase {
    * @covers ::get
    * @covers ::set
    */
-  public function testNoVariations() {
+  public function testNoVariations(): void {
     $data = 'You have a nice house!';
     $cacheability = (new CacheableMetadata())->setCacheTags(['bar', 'foo']);
     $initial_cacheability = (new CacheableMetadata())->setCacheTags(['foo']);
@@ -198,7 +198,7 @@ class VariationCacheTest extends UnitTestCase {
    * @covers ::get
    * @covers ::set
    */
-  public function testSingleVariation() {
+  public function testSingleVariation(): void {
     $cacheability = $this->housingTypeCacheability;
 
     $house_data = [
@@ -221,7 +221,7 @@ class VariationCacheTest extends UnitTestCase {
    * @covers ::get
    * @covers ::set
    */
-  public function testNestedVariations() {
+  public function testNestedVariations(): void {
     // We are running this scenario in the best possible outcome: The redirects
     // are stored in expanding order, meaning the simplest one is stored first
     // and the nested ones are stored in subsequent ::set() calls. This means no
@@ -273,7 +273,7 @@ class VariationCacheTest extends UnitTestCase {
    *
    * @depends testNestedVariations
    */
-  public function testNestedVariationsSelfHealing() {
+  public function testNestedVariationsSelfHealing(): void {
     // This is the worst possible scenario: A very specific item was stored
     // first, followed by a less specific one. This means an overly specific
     // cache redirect was stored that needs to be dumbed down. After this
@@ -330,7 +330,7 @@ class VariationCacheTest extends UnitTestCase {
    * @covers ::get
    * @covers ::set
    */
-  public function testSplitVariationsSelfHealing() {
+  public function testSplitVariationsSelfHealing(): void {
     // This is an edge case. Something varies by AB where some values of B
     // trigger the whole to vary by either C, D or nothing extra. But due to an
     // unfortunate series of requests, only ABC and ABD variations were cached.
@@ -402,7 +402,7 @@ class VariationCacheTest extends UnitTestCase {
    * @covers ::get
    * @covers ::set
    */
-  public function testIncompatibleVariationsException() {
+  public function testIncompatibleVariationsException(): void {
     // This should never happen. When someone first stores something in the
     // cache using context A and then tries to store something using context B,
     // something is wrong. There should always be at least one shared context at

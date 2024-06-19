@@ -35,7 +35,7 @@ class MigrateResponsiveImageStylesTest extends MigrateDrupal7TestBase {
   /**
    * Tests the Drupal 7 to Drupal 8 responsive image styles migration.
    */
-  public function testResponsiveImageStyles() {
+  public function testResponsiveImageStyles(): void {
     $expected_image_style_mappings = [
       [
         'image_mapping_type' => 'image_style',

@@ -71,7 +71,7 @@ class ContextualLinksTest extends WebDriverTestBase {
   /**
    * Tests that the contextual links inside Layout Builder are removed.
    */
-  public function testContextualLinks() {
+  public function testContextualLinks(): void {
     $page = $this->getSession()->getPage();
 
     $this->drupalGet('node/1/layout');
@@ -99,7 +99,7 @@ class ContextualLinksTest extends WebDriverTestBase {
   /**
    * Tests that contextual links outside the layout are removed.
    */
-  public function testContextualLinksOutsideLayout() {
+  public function testContextualLinksOutsideLayout(): void {
     $assert_session = $this->assertSession();
     $this->drupalPlaceBlock('system_powered_by_block', ['id' => 'global_block']);
 

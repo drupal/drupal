@@ -26,7 +26,7 @@ class ConfigEntityTest extends WebDriverTestBase {
   /**
    * Tests ajax operations through the UI on 'Add' page.
    */
-  public function testAjaxOnAddPage() {
+  public function testAjaxOnAddPage(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
     ]));

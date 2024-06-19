@@ -37,7 +37,7 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * Tests module installation.
    */
-  public function testModuleInstallation() {
+  public function testModuleInstallation(): void {
     $default_config = 'config_test.system';
     $default_configuration_entity = 'config_test.dynamic.dotted.default';
 
@@ -87,7 +87,7 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * Tests that collections are ignored if the event does not return anything.
    */
-  public function testCollectionInstallationNoCollections() {
+  public function testCollectionInstallationNoCollections(): void {
     // Install the test module.
     $this->enableModules(['config_collection_install_test']);
     $this->installConfig(['config_collection_install_test']);
@@ -99,7 +99,7 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * Tests config objects in collections are installed as expected.
    */
-  public function testCollectionInstallationCollections() {
+  public function testCollectionInstallationCollections(): void {
     $collections = [
       'another_collection',
       'collection.test1',
@@ -178,7 +178,7 @@ class ConfigInstallTest extends KernelTestBase {
    * matching name but does not support config entities it should be created
    * using simple configuration.
    */
-  public function testCollectionInstallationCollectionConfigEntity() {
+  public function testCollectionInstallationCollectionConfigEntity(): void {
     $collections = [
       'entity',
     ];
@@ -205,7 +205,7 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * Tests the configuration with unmet dependencies is not installed.
    */
-  public function testDependencyChecking() {
+  public function testDependencyChecking(): void {
     $this->installModules(['config_test']);
     try {
       $this->installModules(['config_install_dependency_test']);
@@ -247,7 +247,7 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * Tests imported configuration entities with/without language information.
    */
-  public function testLanguage() {
+  public function testLanguage(): void {
     $this->installModules(['config_test_language']);
     // Test imported configuration with implicit language code.
     $storage = new InstallStorage();
@@ -264,7 +264,7 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * Tests installing configuration where the filename and ID do not match.
    */
-  public function testIdMisMatch() {
+  public function testIdMisMatch(): void {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('The configuration name "config_test.dynamic.no_id_match" does not match the ID "does_not_match"');
     $this->installModules(['config_test_id_mismatch']);

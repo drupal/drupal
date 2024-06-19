@@ -74,7 +74,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
   /**
    * Tests that disabled media items don't capture focus on page load.
    */
-  public function testFocusNotAppliedWithoutSelectionChange() {
+  public function testFocusNotAppliedWithoutSelectionChange(): void {
     // Create a node with the maximum number of values for the field_twin_media
     // field.
     $node = $this->drupalCreateNode([
@@ -99,7 +99,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
   /**
    * Tests that the Media library's widget works as expected.
    */
-  public function testWidget() {
+  public function testWidget(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -474,7 +474,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
   /**
    * Tests saving a required media library field.
    */
-  public function testRequiredMediaField() {
+  public function testRequiredMediaField(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -599,7 +599,7 @@ JS;
   /**
    * Tests the preview displayed by the field widget.
    */
-  public function testWidgetPreview() {
+  public function testWidgetPreview(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

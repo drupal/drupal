@@ -62,7 +62,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
   /**
    * Tests that default values are correctly translated to UUIDs in config.
    */
-  public function testEntityReferenceDefaultValue() {
+  public function testEntityReferenceDefaultValue(): void {
     // Create a node to be referenced.
     $referenced_node = $this->drupalCreateNode(['type' => 'referenced_content']);
 
@@ -126,7 +126,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
    *
    * @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::onDependencyRemoval()
    */
-  public function testEntityReferenceDefaultConfigValue() {
+  public function testEntityReferenceDefaultConfigValue(): void {
     // Create a node to be referenced.
     $referenced_node_type = $this->drupalCreateContentType(['type' => 'referenced_config_to_delete']);
     $referenced_node_type2 = $this->drupalCreateContentType(['type' => 'referenced_config_to_preserve']);

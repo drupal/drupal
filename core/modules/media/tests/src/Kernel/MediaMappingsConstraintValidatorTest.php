@@ -35,7 +35,7 @@ class MediaMappingsConstraintValidatorTest extends KernelTestBase {
   /**
    * @covers ::validate
    */
-  public function testMediaMappingSource() {
+  public function testMediaMappingSource(): void {
     $media_type = $this->createMediaType('image', [
       'id' => 'test',
     ]);

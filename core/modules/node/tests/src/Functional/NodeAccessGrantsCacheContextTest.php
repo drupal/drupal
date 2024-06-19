@@ -115,7 +115,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
   /**
    * Tests NodeAccessGrantsCacheContext::getContext().
    */
-  public function testCacheContext() {
+  public function testCacheContext(): void {
     $this->assertUserCacheContext([
       0 => 'view.all:0;node_access_test_author:0;node_access_all:0',
       1 => 'all',

@@ -31,7 +31,7 @@ class ConfigExportStorageTest extends KernelTestBase {
   /**
    * Tests configuration override.
    */
-  public function testExportStorage() {
+  public function testExportStorage(): void {
     /** @var \Drupal\Core\Config\StorageInterface $active */
     $active = $this->container->get('config.storage');
     /** @var \Drupal\Core\Config\StorageInterface $export */

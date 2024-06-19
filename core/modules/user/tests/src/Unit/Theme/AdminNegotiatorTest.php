@@ -22,7 +22,7 @@ class AdminNegotiatorTest extends UnitTestCase {
   /**
    * @dataProvider getThemes
    */
-  public function testDetermineActiveTheme($admin_theme, $expected) {
+  public function testDetermineActiveTheme($admin_theme, $expected): void {
     $user = $this->prophesize(AccountInterface::class);
     $config_factory = $this->getConfigFactoryStub(['system.theme' => ['admin' => $admin_theme]]);
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);

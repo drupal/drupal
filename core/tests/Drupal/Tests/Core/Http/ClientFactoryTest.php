@@ -44,7 +44,7 @@ class ClientFactoryTest extends UnitTestCase {
    * @param array $expected_config_keys
    *   The expected config keys.
    */
-  public function testCreateFromOptions($settings_config, $parameter_config, $expected_config_keys) {
+  public function testCreateFromOptions($settings_config, $parameter_config, $expected_config_keys): void {
     if ($settings_config) {
       new Settings(['http_client_config' => $settings_config]);
     }

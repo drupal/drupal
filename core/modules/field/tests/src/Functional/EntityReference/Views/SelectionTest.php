@@ -86,7 +86,7 @@ class SelectionTest extends BrowserTestBase {
   /**
    * Tests that the Views selection handles the views output properly.
    */
-  public function testAutocompleteOutput() {
+  public function testAutocompleteOutput(): void {
     // Reset any internal static caching.
     \Drupal::service('entity_type.manager')->getStorage('node')->resetCache();
 

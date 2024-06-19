@@ -20,7 +20,7 @@ class FileNameLengthConstraintValidatorTest extends FileValidatorTestBase {
    *
    * @covers ::validate
    */
-  public function testFileValidateNameLength() {
+  public function testFileValidateNameLength(): void {
     // Create a new file entity.
     $file = File::create();
 

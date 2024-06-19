@@ -66,7 +66,7 @@ class TranslatableFieldTest extends KernelTestBase {
   /**
    * Tests that sections on cleared when creating a new translation.
    */
-  public function testSectionsClearedOnCreateTranslation() {
+  public function testSectionsClearedOnCreateTranslation(): void {
     $section_data = [
       new Section('layout_onecol', [], [
         '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),

@@ -48,7 +48,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Tests the basic metadata retrieval layer.
    */
-  public function testSchemaMapping() {
+  public function testSchemaMapping(): void {
     // Nonexistent configuration key will have Undefined as metadata.
     $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.no_such_key'));
     $definition = \Drupal::service('config.typed')->getDefinition('config_schema_test.no_such_key');
@@ -320,7 +320,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Tests metadata retrieval with several levels of %parent indirection.
    */
-  public function testSchemaMappingWithParents() {
+  public function testSchemaMappingWithParents(): void {
     $config_data = \Drupal::service('config.typed')->get('config_schema_test.some_schema.with_parents');
 
     // Test fetching parent one level up.
@@ -366,7 +366,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Tests metadata applied to configuration objects.
    */
-  public function testSchemaData() {
+  public function testSchemaData(): void {
     // Try a simple property.
     $meta = \Drupal::service('config.typed')->get('system.site');
     $property = $meta->get('page')->get('front');
@@ -414,7 +414,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Tests configuration value data type enforcement using schemas.
    */
-  public function testConfigSaveWithSchema() {
+  public function testConfigSaveWithSchema(): void {
     $untyped_values = [
       // Test a custom type.
       'config_schema_test_integer' => '1',
@@ -484,7 +484,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Test configuration value data type enforcement using schemas.
    */
-  public function testConfigSaveMappingSort() {
+  public function testConfigSaveMappingSort(): void {
     // Top level map sorting.
     $data = [
       'foo' => '1',
@@ -502,7 +502,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Tests configuration sequence sorting using schemas.
    */
-  public function testConfigSaveWithSequenceSorting() {
+  public function testConfigSaveWithSequenceSorting(): void {
     $data = [
       'keyed_sort' => [
         'b' => '1',
@@ -572,7 +572,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Tests fallback to a greedy wildcard.
    */
-  public function testSchemaFallback() {
+  public function testSchemaFallback(): void {
     $definition = \Drupal::service('config.typed')->getDefinition('config_schema_test.wildcard_fallback.something');
     // This should be the schema of config_schema_test.wildcard_fallback.*.
     $expected = [];
@@ -607,7 +607,7 @@ class ConfigSchemaTest extends KernelTestBase {
    *
    * @see \Drupal\Core\Config\TypedConfigManager::getFallbackName()
    */
-  public function testColonsInSchemaTypeDetermination() {
+  public function testColonsInSchemaTypeDetermination(): void {
     $tests = \Drupal::service('config.typed')->get('config_schema_test.plugin_types')->get('tests')->getElements();
     $definition = $tests[0]->getDataDefinition()->toArray();
     $this->assertEquals('test.plugin_types.boolean', $definition['type']);
@@ -638,7 +638,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Tests hook_config_schema_info_alter().
    */
-  public function testConfigSchemaInfoAlter() {
+  public function testConfigSchemaInfoAlter(): void {
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
     $typed_config = \Drupal::service('config.typed');
     $typed_config->clearCachedDefinitions();
@@ -682,7 +682,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Tests saving config when the type is wrapped by a dynamic type.
    */
-  public function testConfigSaveWithWrappingSchema() {
+  public function testConfigSaveWithWrappingSchema(): void {
     $untyped_values = [
       'tests' => [
         [
@@ -713,7 +713,7 @@ class ConfigSchemaTest extends KernelTestBase {
   /**
    * Tests dynamic config schema type with multiple sub-key references.
    */
-  public function testConfigSaveWithWrappingSchemaDoubleBrackets() {
+  public function testConfigSaveWithWrappingSchemaDoubleBrackets(): void {
     $untyped_values = [
       'tests' => [
         [

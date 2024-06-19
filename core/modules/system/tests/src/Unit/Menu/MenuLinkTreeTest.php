@@ -100,7 +100,7 @@ class MenuLinkTreeTest extends UnitTestCase {
    * @covers ::build
    * @dataProvider providerTestBuildCacheability
    */
-  public function testBuildCacheability($description, $tree, $expected_build, $access, array $access_cache_contexts = []) {
+  public function testBuildCacheability($description, $tree, $expected_build, $access, array $access_cache_contexts = []): void {
     if ($access !== NULL) {
       $access->addCacheContexts($access_cache_contexts);
     }

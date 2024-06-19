@@ -31,7 +31,7 @@ class MigrateSearchPageTest extends MigrateDrupal6TestBase {
   /**
    * Tests Drupal 6 search settings to Drupal 8 search page entity migration.
    */
-  public function testSearchPage() {
+  public function testSearchPage(): void {
     $id = 'node_search';
     /** @var \Drupal\search\Entity\SearchPage $search_page */
     $search_page = SearchPage::load($id);

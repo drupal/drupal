@@ -57,7 +57,7 @@ class JsonTest extends TestCase {
   /**
    * Tests encoding for every ASCII character.
    */
-  public function testEncodingAscii() {
+  public function testEncodingAscii(): void {
     // Verify there aren't character encoding problems with the source string.
     $this->assertSame(127, strlen($this->string), 'A string with the full ASCII table has the correct length.');
     foreach ($this->htmlUnsafe as $char) {
@@ -68,7 +68,7 @@ class JsonTest extends TestCase {
   /**
    * Tests encoding length.
    */
-  public function testEncodingLength() {
+  public function testEncodingLength(): void {
     // Verify that JSON encoding produces a string with all of the characters.
     $json = Json::encode($this->string);
     // Verify that a JSON-encoded string is larger than the source string.
@@ -78,7 +78,7 @@ class JsonTest extends TestCase {
   /**
    * Tests end and start of the encoded string.
    */
-  public function testEncodingStartEnd() {
+  public function testEncodingStartEnd(): void {
     $json = Json::encode($this->string);
     // The first and last characters should be ", and no others.
     $this->assertStringStartsWith('"', $json, 'A JSON encoded string begins with ".');
@@ -89,7 +89,7 @@ class JsonTest extends TestCase {
   /**
    * Tests converting PHP variables to JSON strings and back.
    */
-  public function testReversibility() {
+  public function testReversibility(): void {
     $json = Json::encode($this->string);
     // Verify that encoding/decoding is reversible.
     $json_decoded = Json::decode($json);
@@ -99,7 +99,7 @@ class JsonTest extends TestCase {
   /**
    * Tests the reversibility of structured data.
    */
-  public function testStructuredReversibility() {
+  public function testStructuredReversibility(): void {
     // Verify reversibility for structured data. Also verify that necessary
     // characters are escaped.
     $source = [TRUE, FALSE, 0, 1, '0', '1', $this->string, ['key1' => $this->string, 'key2' => ['nested' => TRUE]]];

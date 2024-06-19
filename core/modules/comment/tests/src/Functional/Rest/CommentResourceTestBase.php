@@ -289,7 +289,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
    * - base fields that are marked as required, but yet can still result in
    *   validation errors other than "missing required field".
    */
-  public function testPostDxWithoutCriticalBaseFields() {
+  public function testPostDxWithoutCriticalBaseFields(): void {
     $this->initAuthentication();
     $this->provisionEntityResource();
     $this->setUpAuthorization('POST');
@@ -341,7 +341,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   /**
    * Tests POSTing a comment with and without 'skip comment approval'.
    */
-  public function testPostSkipCommentApproval() {
+  public function testPostSkipCommentApproval(): void {
     $this->initAuthentication();
     $this->provisionEntityResource();
     $this->setUpAuthorization('POST');

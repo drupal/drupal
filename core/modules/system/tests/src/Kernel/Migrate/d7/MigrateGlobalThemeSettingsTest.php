@@ -29,7 +29,7 @@ class MigrateGlobalThemeSettingsTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of global theme settings to configuration.
    */
-  public function testMigrateThemeSettings() {
+  public function testMigrateThemeSettings(): void {
     $config = $this->config('system.theme.global');
 
     $this->assertSame('image/png', $config->get('favicon.mimetype'));

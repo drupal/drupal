@@ -24,7 +24,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
   /**
    * Tests mappings between browser language codes and Drupal language codes.
    */
-  public function testUIBrowserLanguageMappings() {
+  public function testUIBrowserLanguageMappings(): void {
     // User to manage languages.
     $admin_user = $this->drupalCreateUser([
       'administer languages',

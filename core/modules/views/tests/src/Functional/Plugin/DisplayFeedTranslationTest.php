@@ -96,7 +96,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
   /**
    * Tests the rendered output for fields display with multiple translations.
    */
-  public function testFeedFieldOutput() {
+  public function testFeedFieldOutput(): void {
     $node = $this->drupalCreateNode([
       'type' => 'page',
       'title' => 'en',

@@ -16,7 +16,7 @@ class MediaTest extends MediaKernelTestBase {
   /**
    * Tests various aspects of a media item.
    */
-  public function testEntity() {
+  public function testEntity(): void {
     $media = Media::create(['bundle' => $this->testMediaType->id()]);
 
     $this->assertSame($media, $media->setOwnerId($this->user->id()), 'setOwnerId() method returns its own entity.');
@@ -25,7 +25,7 @@ class MediaTest extends MediaKernelTestBase {
   /**
    * Tests the Media "name" base field behavior.
    */
-  public function testNameBaseField() {
+  public function testNameBaseField(): void {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $field_definitions */
     $field_definitions = $this->container->get('entity_field.manager')
       ->getBaseFieldDefinitions('media');
@@ -39,7 +39,7 @@ class MediaTest extends MediaKernelTestBase {
   /**
    * Tests permissions based on a media type have the correct permissions.
    */
-  public function testPermissions() {
+  public function testPermissions(): void {
     $permissions = $this->container->get('user.permissions')->getPermissions();
     $name = "create {$this->testMediaType->id()} media";
     $this->assertArrayHasKey($name, $permissions);

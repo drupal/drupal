@@ -39,7 +39,7 @@ class ModuleFilterTest extends WebDriverTestBase {
   /**
    * Tests that filter results announcement has correct pluralization.
    */
-  public function testModuleFilter() {
+  public function testModuleFilter(): void {
 
     // Find the module filter field.
     $this->drupalGet('admin/modules');

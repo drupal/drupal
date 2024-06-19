@@ -53,7 +53,7 @@ class ShapeItemTest extends FieldKernelTestBase {
   /**
    * Tests using entity fields of the shape field type.
    */
-  public function testShapeItem() {
+  public function testShapeItem(): void {
     // Verify entity creation.
     $entity = EntityTest::create();
     $shape = 'cube';

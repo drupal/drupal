@@ -44,7 +44,7 @@ class NodeFieldOverridesTest extends EntityKernelTestBase {
   /**
    * Tests that field overrides work as expected.
    */
-  public function testFieldOverrides() {
+  public function testFieldOverrides(): void {
     if (!NodeType::load('ponies')) {
       NodeType::create(['name' => 'Ponies', 'type' => 'ponies'])->save();
     }

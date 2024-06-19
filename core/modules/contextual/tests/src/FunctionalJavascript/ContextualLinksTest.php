@@ -42,7 +42,7 @@ class ContextualLinksTest extends WebDriverTestBase {
   /**
    * Tests the visibility of contextual links.
    */
-  public function testContextualLinksVisibility() {
+  public function testContextualLinksVisibility(): void {
     $this->drupalGet('user');
     $contextualLinks = $this->assertSession()->waitForElement('css', '.contextual button');
     $this->assertEmpty($contextualLinks);
@@ -74,7 +74,7 @@ class ContextualLinksTest extends WebDriverTestBase {
   /**
    * Tests clicking contextual links.
    */
-  public function testContextualLinksClick() {
+  public function testContextualLinksClick(): void {
     $this->container->get('module_installer')->install(['contextual_test']);
     // Test clicking contextual link without toolbar.
     $this->drupalGet('user');
@@ -124,7 +124,7 @@ class ContextualLinksTest extends WebDriverTestBase {
   /**
    * Tests the contextual links destination.
    */
-  public function testContextualLinksDestination() {
+  public function testContextualLinksDestination(): void {
     $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), [
       'access contextual links',
       'administer blocks',
@@ -139,7 +139,7 @@ class ContextualLinksTest extends WebDriverTestBase {
   /**
    * Tests the contextual links destination with query.
    */
-  public function testContextualLinksDestinationWithQuery() {
+  public function testContextualLinksDestinationWithQuery(): void {
     $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), [
       'access contextual links',
       'administer blocks',

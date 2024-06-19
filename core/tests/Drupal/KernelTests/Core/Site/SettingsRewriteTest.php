@@ -18,7 +18,7 @@ class SettingsRewriteTest extends KernelTestBase {
   /**
    * @covers \Drupal\Core\Site\SettingsEditor::rewrite
    */
-  public function testDrupalRewriteSettings() {
+  public function testDrupalRewriteSettings(): void {
     include_once $this->root . '/core/includes/install.inc';
     $site_path = $this->container->getParameter('site.path');
     $tests = [

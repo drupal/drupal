@@ -24,7 +24,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
   /**
    * Tests creating configuration entities with changed UUIDs.
    */
-  public function testUUIDConflict() {
+  public function testUUIDConflict(): void {
     $entity_type = 'config_test';
     $id = 'test_1';
     // Load the original configuration entity.
@@ -57,7 +57,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
    *
    * @covers \Drupal\Core\Config\Entity\ConfigEntityStorage::hasData
    */
-  public function testHasData() {
+  public function testHasData(): void {
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertFalse($storage->hasData());
 

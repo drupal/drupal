@@ -28,7 +28,7 @@ class FileExtensionConstraintValidatorTest extends FileValidatorTestBase {
    * @dataProvider providerTestFileValidateExtensionsOnUri
    * @covers ::validate
    */
-  public function testFileExtensionOnUri(array $file_properties, array $extensions, array $expected_errors) {
+  public function testFileExtensionOnUri(array $file_properties, array $extensions, array $expected_errors): void {
     $file = File::create($file_properties);
     // Test for failure.
     $validators = [

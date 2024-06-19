@@ -91,7 +91,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerTransformException
    */
-  public function testTransformException(array $source_value) {
+  public function testTransformException(array $source_value): void {
     [$parent_id, $menu_name] = $source_value;
     $this->migrateLookup->lookup(NULL, [1])->willReturn([]);
     $plugin = new MenuLinkParent([], 'map', [], $this->migrateLookup->reveal(), $this->menuLinkManager->reveal(), $this->menuLinkStorage->reveal(), $this->migration->reveal());
@@ -138,7 +138,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerMenuLinkParent
    */
-  public function testMenuLinkParent(array $source_value, $lookup_result, $plugin_id, $route_name, $expected_result) {
+  public function testMenuLinkParent(array $source_value, $lookup_result, $plugin_id, $route_name, $expected_result): void {
     [$parent_id, $menu_name, $parent_link_path] = $source_value;
     $this->migrateLookup->lookup(NULL, [$parent_id])
       ->willReturn([['id' => $lookup_result]]);

@@ -24,7 +24,7 @@ class ToolbarStoredStateTest extends WebDriverTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testToolbarStoredState() {
+  public function testToolbarStoredState(): void {
     $admin_user = $this->drupalCreateUser([
       'access toolbar',
       'administer site configuration',

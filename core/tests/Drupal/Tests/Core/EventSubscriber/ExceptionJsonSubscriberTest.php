@@ -26,7 +26,7 @@ class ExceptionJsonSubscriberTest extends UnitTestCase {
    * @covers ::on4xx
    * @dataProvider providerTestOn4xx
    */
-  public function testOn4xx(HttpExceptionInterface $exception, $expected_response_class) {
+  public function testOn4xx(HttpExceptionInterface $exception, $expected_response_class): void {
     $kernel = $this->prophesize(HttpKernelInterface::class);
     $request = Request::create('/test');
     $event = new ExceptionEvent($kernel->reveal(), $request, HttpKernelInterface::MAIN_REQUEST, $exception);

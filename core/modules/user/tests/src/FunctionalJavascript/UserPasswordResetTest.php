@@ -74,7 +74,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
    * Make sure the ajax request from uploading a user picture does not
    * invalidate the reset token.
    */
-  public function testUserPasswordResetWithAdditionalAjaxForm() {
+  public function testUserPasswordResetWithAdditionalAjaxForm(): void {
     $this->drupalGet(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
 
     // Try to reset the password for an invalid account.

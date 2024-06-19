@@ -41,7 +41,7 @@ class CommentAnonymousTest extends CommentTestBase {
   /**
    * Tests anonymous comment functionality.
    */
-  public function testAnonymous() {
+  public function testAnonymous(): void {
     $this->setCommentAnonymous(CommentInterface::ANONYMOUS_MAYNOT_CONTACT);
 
     // Preview comments (with `skip comment approval` permission).

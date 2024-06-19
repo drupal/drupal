@@ -62,7 +62,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Theme\ThemeNegotiator::determineActiveTheme()
    */
-  public function testDetermineActiveTheme() {
+  public function testDetermineActiveTheme(): void {
     $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
     $negotiator->expects($this->once())
       ->method('determineActiveTheme')
@@ -90,7 +90,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Theme\ThemeNegotiator::determineActiveTheme()
    */
-  public function testDetermineActiveThemeWithPriority() {
+  public function testDetermineActiveThemeWithPriority(): void {
     $negotiators = [];
 
     $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
@@ -130,7 +130,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Theme\ThemeNegotiator::determineActiveTheme()
    */
-  public function testDetermineActiveThemeWithAccessCheck() {
+  public function testDetermineActiveThemeWithAccessCheck(): void {
     $negotiators = [];
 
     $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');
@@ -175,7 +175,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Theme\ThemeNegotiatorInterface
    */
-  public function testDetermineActiveThemeWithNotApplyingNegotiator() {
+  public function testDetermineActiveThemeWithNotApplyingNegotiator(): void {
     $negotiators = [];
 
     $negotiator = $this->createMock('Drupal\Core\Theme\ThemeNegotiatorInterface');

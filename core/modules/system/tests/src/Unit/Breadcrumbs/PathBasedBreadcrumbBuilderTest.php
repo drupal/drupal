@@ -141,7 +141,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    *
    * @covers ::build
    */
-  public function testBuildOnFrontpage() {
+  public function testBuildOnFrontpage(): void {
     $this->pathMatcher->expects($this->once())
       ->method('isFrontPage')
       ->willReturn(TRUE);
@@ -158,7 +158,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    *
    * @covers ::build
    */
-  public function testBuildWithOnePathElement() {
+  public function testBuildWithOnePathElement(): void {
     $this->context->expects($this->once())
       ->method('getPathInfo')
       ->willReturn('/example');
@@ -176,7 +176,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::build
    * @covers ::getRequestForPath
    */
-  public function testBuildWithTwoPathElements() {
+  public function testBuildWithTwoPathElements(): void {
     $this->context->expects($this->once())
       ->method('getPathInfo')
       ->willReturn('/example/baz');
@@ -215,7 +215,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::build
    * @covers ::getRequestForPath
    */
-  public function testBuildWithThreePathElements() {
+  public function testBuildWithThreePathElements(): void {
     $this->context->expects($this->once())
       ->method('getPathInfo')
       ->willReturn('/example/bar/baz');
@@ -273,7 +273,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    *
    * @dataProvider providerTestBuildWithException
    */
-  public function testBuildWithException($exception_class, $exception_argument) {
+  public function testBuildWithException($exception_class, $exception_argument): void {
     $this->context->expects($this->once())
       ->method('getPathInfo')
       ->willReturn('/example/bar');
@@ -314,7 +314,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::build
    * @covers ::getRequestForPath
    */
-  public function testBuildWithNonProcessedPath() {
+  public function testBuildWithNonProcessedPath(): void {
     $this->context->expects($this->once())
       ->method('getPathInfo')
       ->willReturn('/example/bar');
@@ -341,7 +341,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    *
    * @covers ::applies
    */
-  public function testApplies() {
+  public function testApplies(): void {
     $this->assertTrue($this->builder->applies($this->createMock('Drupal\Core\Routing\RouteMatchInterface')));
   }
 
@@ -351,7 +351,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
    * @covers ::build
    * @covers ::getRequestForPath
    */
-  public function testBuildWithUserPath() {
+  public function testBuildWithUserPath(): void {
     $this->context->expects($this->once())
       ->method('getPathInfo')
       ->willReturn('/user/1/edit');

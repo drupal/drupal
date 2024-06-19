@@ -48,7 +48,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
    *
    * @dataProvider providerTestSafeRequestFilter
    */
-  public function testSafeRequestFilter($method) {
+  public function testSafeRequestFilter($method): void {
     $collection = $this->fixtures->sampleRouteCollection();
     $collection->addCollection($this->fixtures->contentRouteCollection());
 
@@ -70,7 +70,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
   /**
    * Tests that XML-restricted routes get filtered out on JSON requests.
    */
-  public function testJsonRequest() {
+  public function testJsonRequest(): void {
     $collection = $this->fixtures->sampleRouteCollection();
     $collection->addCollection($this->fixtures->contentRouteCollection());
 
@@ -89,7 +89,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
   /**
    * Tests route filtering on POST form submission requests.
    */
-  public function testPostForm() {
+  public function testPostForm(): void {
     $collection = $this->fixtures->sampleRouteCollection();
     $collection->addCollection($this->fixtures->contentRouteCollection());
 
@@ -108,7 +108,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
    *
    * @covers ::filter
    */
-  public function testNoRouteFound() {
+  public function testNoRouteFound(): void {
     $matcher = new ContentTypeHeaderMatcher();
 
     $routes = $this->fixtures->contentRouteCollection();
@@ -124,7 +124,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
    *
    * @covers ::filter
    */
-  public function testContentTypeRequestHeaderMissing() {
+  public function testContentTypeRequestHeaderMissing(): void {
     $matcher = new ContentTypeHeaderMatcher();
 
     $routes = $this->fixtures->contentRouteCollection();

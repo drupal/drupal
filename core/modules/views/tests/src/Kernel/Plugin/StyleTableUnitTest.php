@@ -26,7 +26,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
   /**
    * Tests the table style.
    */
-  public function testTable() {
+  public function testTable(): void {
     $view = Views::getView('test_table');
 
     $view->setDisplay('default');

@@ -42,7 +42,7 @@ class MigrateFieldInstanceOptionTranslationTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of file variables to file.settings.yml.
    */
-  public function testFieldInstanceOptionTranslation() {
+  public function testFieldInstanceOptionTranslation(): void {
     $language_manager = $this->container->get('language_manager');
 
     /** @var \Drupal\language\Config\LanguageConfigOverride $config_translation */

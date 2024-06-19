@@ -55,7 +55,7 @@ class LinkFieldTest extends KernelTestBase {
   /**
    * @covers ::alterFieldInstanceMigration
    */
-  public function testAlterFieldInstanceMigration($method = 'alterFieldInstanceMigration') {
+  public function testAlterFieldInstanceMigration($method = 'alterFieldInstanceMigration'): void {
     $this->plugin->$method($this->migration);
 
     $expected = [

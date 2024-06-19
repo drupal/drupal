@@ -41,7 +41,7 @@ class ContactStorageTest extends ContactSitewideTest {
   /**
    * Tests configuration options and the site-wide contact form.
    */
-  public function testContactStorage() {
+  public function testContactStorage(): void {
     // Create and log in administrative user.
     $admin_user = $this->drupalCreateUser([
       'access site-wide contact form',

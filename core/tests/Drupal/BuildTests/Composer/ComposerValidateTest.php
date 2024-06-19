@@ -26,7 +26,7 @@ class ComposerValidateTest extends BuildTestBase {
   /**
    * @dataProvider provideComposerJson
    */
-  public function testValidateComposer($path) {
+  public function testValidateComposer($path): void {
     $this->executeCommand('composer validate --strict --no-check-all ' . $path);
     $this->assertCommandSuccessful();
   }

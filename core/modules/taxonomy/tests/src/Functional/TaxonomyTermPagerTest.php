@@ -45,7 +45,7 @@ class TaxonomyTermPagerTest extends TaxonomyTestBase {
   /**
    * Tests that the pager is displayed properly on the term overview page.
    */
-  public function testTaxonomyTermOverviewPager() {
+  public function testTaxonomyTermOverviewPager(): void {
     // Set limit to 3 terms per page.
     $this->config('taxonomy.settings')
       ->set('terms_per_page_admin', '3')
@@ -78,7 +78,7 @@ class TaxonomyTermPagerTest extends TaxonomyTestBase {
   /**
    * Tests that overview page only loads the necessary terms.
    */
-  public function testTaxonomyTermOverviewTermLoad() {
+  public function testTaxonomyTermOverviewTermLoad(): void {
     // Set limit to 3 terms per page.
     $this->config('taxonomy.settings')
       ->set('terms_per_page_admin', '3')

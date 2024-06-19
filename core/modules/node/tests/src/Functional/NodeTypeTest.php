@@ -38,7 +38,7 @@ class NodeTypeTest extends NodeTestBase {
    *
    * Load available node types and validate the returned data.
    */
-  public function testNodeTypeGetFunctions() {
+  public function testNodeTypeGetFunctions(): void {
     $node_types = NodeType::loadMultiple();
     $node_names = node_type_get_names();
 
@@ -55,7 +55,7 @@ class NodeTypeTest extends NodeTestBase {
   /**
    * Tests creating a content type programmatically and via a form.
    */
-  public function testNodeTypeCreation() {
+  public function testNodeTypeCreation(): void {
     // Create a content type programmatically.
     $type = $this->drupalCreateContentType();
 
@@ -106,7 +106,7 @@ class NodeTypeTest extends NodeTestBase {
   /**
    * Tests editing a node type using the UI.
    */
-  public function testNodeTypeEditing() {
+  public function testNodeTypeEditing(): void {
     $assert = $this->assertSession();
     $this->drupalPlaceBlock('system_breadcrumb_block');
     $web_user = $this->drupalCreateUser([
@@ -181,7 +181,7 @@ class NodeTypeTest extends NodeTestBase {
   /**
    * Tests deleting a content type that still has content.
    */
-  public function testNodeTypeDeletion() {
+  public function testNodeTypeDeletion(): void {
     $this->drupalPlaceBlock('page_title_block');
     // Create a content type programmatically.
     $type = $this->drupalCreateContentType();
@@ -234,7 +234,7 @@ class NodeTypeTest extends NodeTestBase {
   /**
    * Tests operations from Field UI and User modules for content types.
    */
-  public function testNodeTypeOperations() {
+  public function testNodeTypeOperations(): void {
     // Create an admin user who can only manage node fields.
     $admin_user_1 = $this->drupalCreateUser([
       'administer content types',
@@ -266,7 +266,7 @@ class NodeTypeTest extends NodeTestBase {
   /**
    * Tests for when there are no content types defined.
    */
-  public function testNodeTypeNoContentType() {
+  public function testNodeTypeNoContentType(): void {
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info */
     $bundle_info = \Drupal::service('entity_type.bundle.info');
     $this->assertCount(2, $bundle_info->getBundleInfo('node'), 'The bundle information service has 2 bundles for the Node entity type.');

@@ -37,7 +37,7 @@ class EntityDisplayTest extends BrowserTestBase {
   /**
    * Tests the use of regions for entity view displays.
    */
-  public function testEntityView() {
+  public function testEntityView(): void {
     $this->drupalGet('entity_test/structure/entity_test/display');
     $this->assertSession()->elementExists('css', '.region-content-message.region-empty');
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'hidden')->isSelected());

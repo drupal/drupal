@@ -28,7 +28,7 @@ class PathEncodedTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testGetEncoded() {
+  public function testGetEncoded(): void {
     $route_paths = [
       'path_encoded_test.colon' => '/hi/llama:party',
       'path_encoded_test.at_sign' => '/blog/@Dries',
@@ -40,7 +40,7 @@ class PathEncodedTest extends BrowserTestBase {
     }
   }
 
-  public function testAliasToEncoded() {
+  public function testAliasToEncoded(): void {
     $route_paths = [
       'path_encoded_test.colon' => '/hi/llama:party',
       'path_encoded_test.at_sign' => '/blog/@Dries',

@@ -53,7 +53,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
   /**
    * Tests writing with one class and reading with another.
    */
-  public function testReadOnly() {
+  public function testReadOnly(): void {
     // Random generator.
     $random = new Random();
 
@@ -85,7 +85,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
   /**
    * @covers ::deleteAll
    */
-  public function testDeleteAll() {
+  public function testDeleteAll(): void {
     // Random generator.
     $random = new Random();
 

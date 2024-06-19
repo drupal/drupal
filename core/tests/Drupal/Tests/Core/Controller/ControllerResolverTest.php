@@ -52,7 +52,7 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @dataProvider providerTestCreateController
    */
-  public function testCreateController($controller, $class, $output) {
+  public function testCreateController($controller, $class, $output): void {
     $this->container->set('some_service', new MockController());
     $result = $this->controllerResolver->getControllerFromDefinition($controller);
     $this->assertCallableController($result, $class, $output);
@@ -75,7 +75,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Tests createController() with a non-existent class.
    */
-  public function testCreateControllerNonExistentClass() {
+  public function testCreateControllerNonExistentClass(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->controllerResolver->getControllerFromDefinition('Class::method');
   }
@@ -83,7 +83,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Tests createController() with an invalid name.
    */
-  public function testCreateControllerInvalidName() {
+  public function testCreateControllerInvalidName(): void {
     $this->expectException(\LogicException::class);
     $this->controllerResolver->getControllerFromDefinition('ClassWithoutMethod');
   }
@@ -93,7 +93,7 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetController
    */
-  public function testGetController($attributes, $class, $output = NULL) {
+  public function testGetController($attributes, $class, $output = NULL): void {
     $request = new Request([], [], $attributes);
     $result = $this->controllerResolver->getController($request);
     if ($class) {
@@ -125,7 +125,7 @@ class ControllerResolverTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetControllerFromDefinition
    */
-  public function testGetControllerFromDefinition($definition, $output) {
+  public function testGetControllerFromDefinition($definition, $output): void {
     $this->container->set('invoke_service', new MockInvokeController());
     $controller = $this->controllerResolver->getControllerFromDefinition($definition);
     $this->assertCallableController($controller, NULL, $output);
@@ -152,7 +152,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Tests getControllerFromDefinition() without a callable.
    */
-  public function testGetControllerFromDefinitionNotCallable() {
+  public function testGetControllerFromDefinitionNotCallable(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->controllerResolver->getControllerFromDefinition('Drupal\Tests\Core\Controller\MockController::bananas');
   }

@@ -28,7 +28,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
   /**
    * Tests the image media source.
    */
-  public function testMediaImageSource() {
+  public function testMediaImageSource(): void {
     $media_type_id = 'test_media_image_type';
     $source_field_id = 'field_media_image';
     $provided_fields = [

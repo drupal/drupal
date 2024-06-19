@@ -46,7 +46,7 @@ class StorageTest extends BrowserTestBase {
   /**
    * Tests using the form in a usual way.
    */
-  public function testForm() {
+  public function testForm(): void {
     $this->drupalGet('form_test/form-storage');
 
     $assert_session = $this->assertSession();
@@ -75,7 +75,7 @@ class StorageTest extends BrowserTestBase {
   /**
    * Tests using the form after calling $form_state->setCached().
    */
-  public function testFormCached() {
+  public function testFormCached(): void {
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
     $this->assertSession()->pageTextContains('Form constructions: 1');
 
@@ -103,7 +103,7 @@ class StorageTest extends BrowserTestBase {
   /**
    * Tests validation when form storage is used.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     $this->drupalGet('form_test/form-storage');
     $this->submitForm([
       'title' => '',
@@ -123,7 +123,7 @@ class StorageTest extends BrowserTestBase {
    * during form validation, while another, required element in the form
    * triggers a form validation error.
    */
-  public function testCachedFormStorageValidation() {
+  public function testCachedFormStorageValidation(): void {
     // Request the form with 'cache' query parameter to enable form caching.
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
 
@@ -151,7 +151,7 @@ class StorageTest extends BrowserTestBase {
   /**
    * Tests form build ID regeneration when loading a cached immutable form.
    */
-  public function testImmutableForm() {
+  public function testImmutableForm(): void {
     // Request the form with 'cache' query parameter to enable form caching.
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
 
@@ -184,7 +184,7 @@ class StorageTest extends BrowserTestBase {
   /**
    * Verify that existing contrib code cannot overwrite immutable form state.
    */
-  public function testImmutableFormLegacyProtection() {
+  public function testImmutableFormLegacyProtection(): void {
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
     // Ensure the hidden 'form_build_id' field is unique.
     $this->assertSession()->elementsCount('xpath', '//input[@name="form_build_id"]', 1);

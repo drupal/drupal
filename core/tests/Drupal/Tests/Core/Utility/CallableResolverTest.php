@@ -41,7 +41,7 @@ class CallableResolverTest extends UnitTestCase {
   /**
    * @covers ::getCallableFromDefinition
    */
-  public function testCallbackResolver() {
+  public function testCallbackResolver(): void {
     $cases = [
       'Inline function' => [
         function ($suffix) {
@@ -109,7 +109,7 @@ class CallableResolverTest extends UnitTestCase {
    * @dataProvider callableResolverExceptionHandlingTestCases
    * @covers ::getCallableFromDefinition
    */
-  public function testCallbackResolverExceptionHandling($definition, $exception_class, $exception_message) {
+  public function testCallbackResolverExceptionHandling($definition, $exception_class, $exception_message): void {
     $this->expectException($exception_class);
     $this->expectExceptionMessage($exception_message);
     $this->resolver->getCallableFromDefinition($definition);

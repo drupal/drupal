@@ -69,7 +69,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
    *
    * @dataProvider providerBundleSelection
    */
-  public function testBundleSelection($display_mode, $path, $custom_mode) {
+  public function testBundleSelection($display_mode, $path, $custom_mode): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

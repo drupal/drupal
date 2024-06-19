@@ -17,7 +17,7 @@ class MockFileFinderTest extends TestCase {
    * @covers ::create
    * @covers ::findFile
    */
-  public function testFindFile() {
+  public function testFindFile(): void {
     $tmp = MockFileFinder::create('test_filename.txt');
     $this->assertEquals('test_filename.txt', $tmp->findFile('n/a'));
     $this->assertEquals('test_filename.txt', $tmp->findFile('SomeClass'));

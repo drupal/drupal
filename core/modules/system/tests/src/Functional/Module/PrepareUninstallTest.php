@@ -78,7 +78,7 @@ class PrepareUninstallTest extends BrowserTestBase {
   /**
    * Tests that Node and Taxonomy can be uninstalled.
    */
-  public function testUninstall() {
+  public function testUninstall(): void {
     // Check that Taxonomy cannot be uninstalled yet.
     $this->drupalGet('admin/modules/uninstall');
     $this->assertSession()->pageTextContains('Remove content items');

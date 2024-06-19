@@ -18,7 +18,7 @@ class ImageTest extends TestCase {
    *
    * @dataProvider providerTestScaleDimensions
    */
-  public function testScaleDimensions($input, $output) {
+  public function testScaleDimensions($input, $output): void {
     // Process the test dataset.
     $return_value = Image::scaleDimensions($input['dimensions'], $input['width'], $input['height'], $input['upscale']);
 

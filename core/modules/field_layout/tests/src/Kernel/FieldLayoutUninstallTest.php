@@ -14,7 +14,7 @@ class FieldLayoutUninstallTest extends LayoutBuilderCompatibilityTestBase {
   /**
    * Ensures field layout can be uninstalled with layout builder enabled.
    */
-  public function testFieldLayoutUninstall() {
+  public function testFieldLayoutUninstall(): void {
     // Setup user schema so user hook uninstall hook doesn't break.
     $this->installSchema('user', 'users_data');
 

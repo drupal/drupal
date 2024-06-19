@@ -32,7 +32,7 @@ class MigrateMenuLinkContentStubTest extends MigrateDrupalTestBase {
   /**
    * Tests creation of menu link content stubs.
    */
-  public function testStub() {
+  public function testStub(): void {
     $this->performStubTest('menu_link_content');
   }
 

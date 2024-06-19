@@ -18,7 +18,7 @@ class ValidateHostnameTest extends UnitTestCase {
    * @covers ::validateHostname
    * @dataProvider providerTestValidateHostname
    */
-  public function testValidateHostname($hostname, $message, $expected = FALSE) {
+  public function testValidateHostname($hostname, $message, $expected = FALSE): void {
     $server = ['HTTP_HOST' => $hostname];
     $request = new Request([], [], [], [], [], $server);
     $validated_hostname = DrupalKernel::validateHostname($request);

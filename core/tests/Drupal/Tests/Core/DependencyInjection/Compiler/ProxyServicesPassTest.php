@@ -35,7 +35,7 @@ class ProxyServicesPassTest extends UnitTestCase {
   /**
    * @covers ::process
    */
-  public function testContainerWithoutLazyServices() {
+  public function testContainerWithoutLazyServices(): void {
     $container = new ContainerBuilder();
     $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend');
 
@@ -48,7 +48,7 @@ class ProxyServicesPassTest extends UnitTestCase {
   /**
    * @covers ::process
    */
-  public function testContainerWithLazyServices() {
+  public function testContainerWithLazyServices(): void {
     $container = new ContainerBuilder();
     $container->register('lock', 'Drupal\Core\Lock\DatabaseLockBackend')
       ->setLazy(TRUE);
@@ -68,7 +68,7 @@ class ProxyServicesPassTest extends UnitTestCase {
   /**
    * @covers ::process
    */
-  public function testContainerWithLazyServicesWithoutProxyClass() {
+  public function testContainerWithLazyServicesWithoutProxyClass(): void {
     $container = new ContainerBuilder();
     $container->register('path.current', CurrentPathStack::class)
       ->setLazy(TRUE);

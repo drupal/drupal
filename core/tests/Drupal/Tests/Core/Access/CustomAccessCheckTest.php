@@ -54,7 +54,7 @@ class CustomAccessCheckTest extends UnitTestCase {
   /**
    * Tests the access method.
    */
-  public function testAccess() {
+  public function testAccess(): void {
     $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
 
     $this->callableResolver
@@ -111,7 +111,7 @@ class CustomAccessCheckTest extends UnitTestCase {
   /**
    * Tests the access method exception for invalid access callbacks.
    */
-  public function testAccessException() {
+  public function testAccessException(): void {
     // Create callableResolver mock to return InvalidArgumentException.
     $this->callableResolver = $this->getMockBuilder(CallableResolver::class)
       ->disableOriginalConstructor()

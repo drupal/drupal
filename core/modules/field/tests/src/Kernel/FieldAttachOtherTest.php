@@ -27,7 +27,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
   /**
    * Tests rendering fields with EntityDisplay build().
    */
-  public function testEntityDisplayBuild() {
+  public function testEntityDisplayBuild(): void {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
@@ -137,7 +137,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
   /**
    * Tests rendering fields with EntityDisplay::buildMultiple().
    */
-  public function testEntityDisplayViewMultiple() {
+  public function testEntityDisplayViewMultiple(): void {
     // Use a formatter that has a prepareView() step.
     $display = \Drupal::service('entity_display.repository')
       ->getViewDisplay('entity_test', 'entity_test', 'full')
@@ -165,7 +165,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
    * Complements unit test coverage in
    * \Drupal\Tests\Core\Entity\Sql\SqlContentEntityStorageTest.
    */
-  public function testEntityCache() {
+  public function testEntityCache(): void {
     // Initialize random values and a test entity.
     $entity_init = EntityTest::create(['type' => $this->fieldTestData->field->getTargetBundle()]);
     $values = $this->_generateTestFieldValues($this->fieldTestData->field_storage->getCardinality());
@@ -248,7 +248,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
    * This could be much more thorough, but it does verify that the correct
    * widgets show up.
    */
-  public function testEntityFormDisplayBuildForm() {
+  public function testEntityFormDisplayBuildForm(): void {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';
@@ -300,7 +300,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
   /**
    * Tests \Drupal\Core\Entity\Display\EntityFormDisplayInterface::extractFormValues().
    */
-  public function testEntityFormDisplayExtractFormValues() {
+  public function testEntityFormDisplayExtractFormValues(): void {
     $this->createFieldWithStorage('_2');
 
     $entity_type = 'entity_test';

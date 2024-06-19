@@ -72,7 +72,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestHasTranslatable
    */
-  public function testHasTranslatable(TypedDataInterface $element, $expected) {
+  public function testHasTranslatable(TypedDataInterface $element, $expected): void {
     $this->typedConfigManager
       ->expects($this->once())
       ->method('get')

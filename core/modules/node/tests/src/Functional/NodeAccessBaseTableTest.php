@@ -122,7 +122,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    * - Test that user 4 can view all content created above.
    * - Test that user 4 can view all content on taxonomy listing.
    */
-  public function testNodeAccessBasic() {
+  public function testNodeAccessBasic(): void {
     $num_simple_users = 2;
     $simple_users = [];
 

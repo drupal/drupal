@@ -59,7 +59,7 @@ class QueryBatchTest extends KernelTestBase {
   /**
    * Tests a negative batch size throws an exception.
    */
-  public function testBatchSizeNegative() {
+  public function testBatchSizeNegative(): void {
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('batch_size must be greater than or equal to zero');
     $plugin = $this->getPlugin(['batch_size' => -1]);
@@ -69,7 +69,7 @@ class QueryBatchTest extends KernelTestBase {
   /**
    * Tests a non integer batch size throws an exception.
    */
-  public function testBatchSizeNonInteger() {
+  public function testBatchSizeNonInteger(): void {
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('batch_size must be greater than or equal to zero');
     $plugin = $this->getPlugin(['batch_size' => '1']);
@@ -151,7 +151,7 @@ class QueryBatchTest extends KernelTestBase {
    *
    * @dataProvider queryDataProvider
    */
-  public function testQueryBatch($source_data, $expected_data, $num_rows, $configuration, $expected_batch_size, $expected_batch_count) {
+  public function testQueryBatch($source_data, $expected_data, $num_rows, $configuration, $expected_batch_size, $expected_batch_count): void {
     $plugin = $this->getPlugin($configuration);
 
     // Since we don't yet inject the database connection, we need to use a

@@ -45,7 +45,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
   /**
    * Tests node migration from Drupal 6 to 8.
    */
-  public function testNode() {
+  public function testNode(): void {
     // Confirm there are only classic node migration map tables. This shows
     // that only the classic migration ran.
     $results = $this->nodeMigrateMapTableCount('6');

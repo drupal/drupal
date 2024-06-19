@@ -46,7 +46,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
   /**
    * Tests that translated field descriptions do not affect the update system.
    */
-  public function testTranslatedSchemaDefinition() {
+  public function testTranslatedSchemaDefinition(): void {
     /** @var \Drupal\locale\StringDatabaseStorage $stringStorage */
     $stringStorage = \Drupal::service('locale.storage');
 
@@ -70,7 +70,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
   /**
    * Tests that translations do not affect the update system.
    */
-  public function testTranslatedUpdate() {
+  public function testTranslatedUpdate(): void {
     // Visit the update page to collect any strings that may be translatable.
     $user = $this->drupalCreateUser(['administer software updates']);
     $this->drupalLogin($user);

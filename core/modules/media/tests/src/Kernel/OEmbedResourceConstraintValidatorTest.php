@@ -41,7 +41,7 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
   /**
    * @covers ::validate
    */
-  public function testValidateEmptySource() {
+  public function testValidateEmptySource(): void {
     $media = Media::create([
       'bundle' => $this->createMediaType('oembed:video')->id(),
     ]);
@@ -68,7 +68,7 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
   /**
    * @covers ::validate
    */
-  public function testValidateUrlResolverInvoked() {
+  public function testValidateUrlResolverInvoked(): void {
     $media = Media::create([
       'bundle' => $this->createMediaType('oembed:video')->id(),
       'field_media_oembed_video' => 'source value',

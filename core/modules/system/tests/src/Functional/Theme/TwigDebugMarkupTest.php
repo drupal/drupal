@@ -29,7 +29,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
   /**
    * Tests debug markup added to Twig template output.
    */
-  public function testTwigDebugMarkup() {
+  public function testTwigDebugMarkup(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $extension = twig_extension();

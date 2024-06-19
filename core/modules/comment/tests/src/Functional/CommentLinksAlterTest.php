@@ -31,7 +31,7 @@ class CommentLinksAlterTest extends CommentTestBase {
   /**
    * Tests comment links altering.
    */
-  public function testCommentLinksAlter() {
+  public function testCommentLinksAlter(): void {
     $this->drupalLogin($this->webUser);
     $comment_text = $this->randomMachineName();
     $subject = $this->randomMachineName();

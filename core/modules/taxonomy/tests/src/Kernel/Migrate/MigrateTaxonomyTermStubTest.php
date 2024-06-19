@@ -35,7 +35,7 @@ class MigrateTaxonomyTermStubTest extends MigrateDrupalTestBase {
   /**
    * Tests creation of taxonomy term stubs.
    */
-  public function testStub() {
+  public function testStub(): void {
     Vocabulary::create([
       'vid' => 'test_vocabulary',
       'name' => 'Test vocabulary',
@@ -46,7 +46,7 @@ class MigrateTaxonomyTermStubTest extends MigrateDrupalTestBase {
   /**
    * Tests creation of stubs when weight is mapped.
    */
-  public function testStubWithWeightMapping() {
+  public function testStubWithWeightMapping(): void {
     // Create a vocabulary via migration for the terms to reference.
     $vocabulary_data_rows = [
       ['id' => '1', 'name' => 'tags'],

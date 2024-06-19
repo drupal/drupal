@@ -26,7 +26,7 @@ class MediaSourceImageTest extends MediaFunctionalTestBase {
   /**
    * Test that non-main properties do not trigger source field value change.
    */
-  public function testOnlyMainPropertiesTriggerSourceFieldChanged() {
+  public function testOnlyMainPropertiesTriggerSourceFieldChanged(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

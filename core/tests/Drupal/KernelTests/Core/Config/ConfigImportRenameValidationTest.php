@@ -73,7 +73,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
   /**
    * Tests configuration renaming validation.
    */
-  public function testRenameValidation() {
+  public function testRenameValidation(): void {
     // Create a test entity.
     $test_entity_id = $this->randomMachineName();
     $test_entity = \Drupal::entityTypeManager()->getStorage('config_test')->create([
@@ -123,7 +123,7 @@ class ConfigImportRenameValidationTest extends KernelTestBase {
   /**
    * Tests configuration renaming validation for simple configuration.
    */
-  public function testRenameSimpleConfigValidation() {
+  public function testRenameSimpleConfigValidation(): void {
     $uuid = new Php();
     // Create a simple configuration with a UUID.
     $config = $this->config('config_test.new');

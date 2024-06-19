@@ -46,7 +46,7 @@ class ConfigurablePluginTest extends KernelTestBase {
   /**
    * Tests default settings for configurable CKEditor 5 plugins.
    */
-  public function testDefaults() {
+  public function testDefaults(): void {
     $all_definitions = $this->manager->getDefinitions();
     $configurable_definitions = array_filter($all_definitions, function (CKEditor5PluginDefinition $definition): bool {
       return $definition->isConfigurable();

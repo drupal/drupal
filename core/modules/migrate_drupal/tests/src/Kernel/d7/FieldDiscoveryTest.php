@@ -117,7 +117,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    *
    * @covers ::addAllFieldProcesses
    */
-  public function testAddAllFieldProcesses() {
+  public function testAddAllFieldProcesses(): void {
     $expected_process_keys = [
       'comment_body',
       'field_integer',
@@ -172,7 +172,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    * @covers ::addAllFieldProcesses
    * @dataProvider addAllFieldProcessesAltersData
    */
-  public function testAddAllFieldProcessesAlters($field_plugin_method, $expected_process) {
+  public function testAddAllFieldProcessesAlters($field_plugin_method, $expected_process): void {
     $this->assertFieldProcess($this->fieldDiscovery, $this->migrationPluginManager, FieldDiscoveryInterface::DRUPAL_7, $field_plugin_method, $expected_process);
   }
 
@@ -322,7 +322,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    *
    * @covers ::getAllFields
    */
-  public function testGetAllFields() {
+  public function testGetAllFields(): void {
     $field_discovery_test = new FieldDiscoveryTestClass($this->fieldPluginManager, $this->migrationPluginManager, $this->logger);
     $actual_fields = $field_discovery_test->getAllFields('7');
     $this->assertSame(['comment', 'node', 'user', 'taxonomy_term'], array_keys($actual_fields));
@@ -348,7 +348,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    *
    * @covers ::getSourcePlugin
    */
-  public function testGetSourcePlugin() {
+  public function testGetSourcePlugin(): void {
     $this->assertSourcePlugin('7', FieldInstance::class, [
       'requirements_met' => TRUE,
       'id' => 'd7_field_instance',

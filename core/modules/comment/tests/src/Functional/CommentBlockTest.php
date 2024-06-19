@@ -45,7 +45,7 @@ class CommentBlockTest extends CommentTestBase {
   /**
    * Tests the recent comments block.
    */
-  public function testRecentCommentBlock() {
+  public function testRecentCommentBlock(): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('views_block:comments_recent-block_1');
 

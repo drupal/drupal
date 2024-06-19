@@ -47,7 +47,7 @@ class InstallerProfileRequirementsTest extends InstallerTestBase {
   /**
    * Assert that the profile failed hook_requirements().
    */
-  public function testHookRequirementsFailure() {
+  public function testHookRequirementsFailure(): void {
     $this->assertSession()->pageTextContains('Testing requirements failed requirements.');
   }
 

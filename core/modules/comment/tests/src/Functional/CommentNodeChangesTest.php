@@ -23,7 +23,7 @@ class CommentNodeChangesTest extends CommentTestBase {
   /**
    * Tests that comments are deleted with the node.
    */
-  public function testNodeDeletion() {
+  public function testNodeDeletion(): void {
     $this->drupalLogin($this->webUser);
     $comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName());
     $this->assertInstanceOf(Comment::class, $comment);

@@ -43,7 +43,7 @@ class EntityPermissionsFormTest extends UnitTestCase {
    * @covers \Drupal\user\Form\EntityPermissionsForm::access
    * @covers \Drupal\user\Form\EntityPermissionsForm::permissionsByProvider
    */
-  public function testPermissionsByProvider(string $dependency_name, bool $found) {
+  public function testPermissionsByProvider(string $dependency_name, bool $found): void {
 
     // Mock the constructor parameters.
     $prophecy = $this->prophesize(PermissionHandlerInterface::class);

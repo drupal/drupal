@@ -170,7 +170,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests base tables.
    */
-  public function testBaseTables() {
+  public function testBaseTables(): void {
     $data = $this->entityTypeManager->getHandler('entity_test', 'views_data')->getViewsData();
 
     $this->assertEquals('entity_test', $data['entity_test']['table']['entity type']);
@@ -193,7 +193,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests data_table support.
    */
-  public function testDataTable() {
+  public function testDataTable(): void {
     $entity_type = $this->baseEntityType
       ->set('data_table', 'entity_test_mul_property_data')
       ->set('id', 'entity_test_mul')
@@ -229,7 +229,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests revision table without data table support.
    */
-  public function testRevisionTableWithoutDataTable() {
+  public function testRevisionTableWithoutDataTable(): void {
     $entity_type = $this->baseEntityType
       ->set('revision_table', 'entity_test_mulrev_revision')
       ->set('revision_data_table', NULL)
@@ -268,7 +268,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests revision table with data table support.
    */
-  public function testRevisionTableWithRevisionDataTableAndDataTable() {
+  public function testRevisionTableWithRevisionDataTableAndDataTable(): void {
     $entity_type = $this->baseEntityType
       ->set('data_table', 'entity_test_mul_property_data')
       ->set('revision_table', 'entity_test_mulrev_revision')
@@ -326,7 +326,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests revision table with data table support.
    */
-  public function testRevisionTableWithRevisionDataTable() {
+  public function testRevisionTableWithRevisionDataTable(): void {
     $entity_type = $this->baseEntityType
       ->set('revision_table', 'entity_test_mulrev_revision')
       ->set('revision_data_table', 'entity_test_mulrev_property_revision')
@@ -382,7 +382,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests fields on the base table.
    */
-  public function testBaseTableFields() {
+  public function testBaseTableFields(): void {
     $data = $this->entityTypeManager->getHandler('entity_test', 'views_data')->getViewsData();
 
     $this->assertNumericField($data['entity_test']['id']);
@@ -435,7 +435,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests fields on the data table.
    */
-  public function testDataTableFields() {
+  public function testDataTableFields(): void {
     $entity_test_type = new ConfigEntityType([
       'class' => ConfigEntityBase::class,
       'id' => 'entity_test_bundle',
@@ -524,7 +524,7 @@ class EntityViewsDataTest extends KernelTestBase {
   /**
    * Tests fields on the revision table.
    */
-  public function testRevisionTableFields() {
+  public function testRevisionTableFields(): void {
     $entity_type = $this->baseEntityType
       ->set('id', 'entity_test_mulrev')
       ->set('base_table', 'entity_test_mulrev')

@@ -51,7 +51,7 @@ class BanMiddlewareTest extends UnitTestCase {
   /**
    * Tests a banned IP.
    */
-  public function testBannedIp() {
+  public function testBannedIp(): void {
     $banned_ip = '17.0.0.2';
     $this->banManager->expects($this->once())
       ->method('isBanned')
@@ -71,7 +71,7 @@ class BanMiddlewareTest extends UnitTestCase {
   /**
    * Tests an unbanned IP.
    */
-  public function testUnbannedIp() {
+  public function testUnbannedIp(): void {
     $unbanned_ip = '18.0.0.2';
     $this->banManager->expects($this->once())
       ->method('isBanned')

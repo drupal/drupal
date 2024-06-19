@@ -43,7 +43,7 @@ class TextSummaryTest extends KernelTestBase {
   /**
    * Tests text summaries for a question followed by a sentence.
    */
-  public function testFirstSentenceQuestion() {
+  public function testFirstSentenceQuestion(): void {
     $text = 'A question? A sentence. Another sentence.';
     $expected = 'A question? A sentence.';
     $this->assertTextSummary($text, $expected, NULL, 30);
@@ -52,7 +52,7 @@ class TextSummaryTest extends KernelTestBase {
   /**
    * Tests summary with long example.
    */
-  public function testLongSentence() {
+  public function testLongSentence(): void {
     // 125.
     // cSpell:disable
     $text =
@@ -74,7 +74,7 @@ class TextSummaryTest extends KernelTestBase {
   /**
    * Tests various summary length edge cases.
    */
-  public function testLength() {
+  public function testLength(): void {
     FilterFormat::create([
       'format' => 'autop',
       'name' => 'Autop',
@@ -234,7 +234,7 @@ class TextSummaryTest extends KernelTestBase {
    *
    * @see text_summary()
    */
-  public function testInvalidFilterFormat() {
+  public function testInvalidFilterFormat(): void {
 
     $this->assertTextSummary($this->randomString(100), '', 'non_existent_format');
   }
@@ -252,7 +252,7 @@ class TextSummaryTest extends KernelTestBase {
   /**
    * Tests required summary.
    */
-  public function testRequiredSummary() {
+  public function testRequiredSummary(): void {
     $this->installEntitySchema('entity_test');
     $this->setUpCurrentUser();
     $field_definition = FieldStorageConfig::create([
@@ -314,7 +314,7 @@ class TextSummaryTest extends KernelTestBase {
   /**
    * Test text normalization when filter_html or filter_htmlcorrector enabled.
    */
-  public function testNormalization() {
+  public function testNormalization(): void {
     FilterFormat::create([
       'format' => 'filter_html_enabled',
       'name' => 'Filter HTML enabled',

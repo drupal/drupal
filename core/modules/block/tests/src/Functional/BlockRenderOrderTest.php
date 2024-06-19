@@ -41,7 +41,7 @@ class BlockRenderOrderTest extends BrowserTestBase {
   /**
    * Tests the render order of the blocks.
    */
-  public function testBlockRenderOrder() {
+  public function testBlockRenderOrder(): void {
     // Enable test blocks and place them in the same region.
     $region = 'header';
     $test_blocks = [

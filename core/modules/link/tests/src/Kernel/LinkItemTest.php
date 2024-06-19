@@ -73,7 +73,7 @@ class LinkItemTest extends FieldKernelTestBase {
   /**
    * Tests using entity fields of the link field type.
    */
-  public function testLinkItem() {
+  public function testLinkItem(): void {
     // Create entity.
     $entity = EntityTest::create();
     $url = 'https://www.drupal.org?test_param=test_value';

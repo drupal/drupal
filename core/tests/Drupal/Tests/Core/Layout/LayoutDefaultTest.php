@@ -18,7 +18,7 @@ class LayoutDefaultTest extends UnitTestCase {
    * @covers ::build
    * @dataProvider providerTestBuild
    */
-  public function testBuild($regions, $expected) {
+  public function testBuild($regions, $expected): void {
     $definition = new LayoutDefinition([
       'theme_hook' => 'layout',
       'library' => 'core/drupal',

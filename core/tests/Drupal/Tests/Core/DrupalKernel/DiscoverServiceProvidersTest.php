@@ -20,7 +20,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
    *
    * @covers ::discoverServiceProviders
    */
-  public function testDiscoverServiceCustom() {
+  public function testDiscoverServiceCustom(): void {
     new Settings([
       'container_yamls' => [
         __DIR__ . '/fixtures/custom.yml',
@@ -46,7 +46,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
   /**
    * Tests the exception when container_yamls is not set.
    */
-  public function testDiscoverServiceNoContainerYamls() {
+  public function testDiscoverServiceNoContainerYamls(): void {
     new Settings([]);
     $kernel = new DrupalKernel('prod', new ClassLoader());
     $kernel->discoverServiceProviders();

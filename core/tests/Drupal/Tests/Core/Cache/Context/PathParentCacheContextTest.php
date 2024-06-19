@@ -20,7 +20,7 @@ class PathParentCacheContextTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetContext
    */
-  public function testGetContext($original_path, $context) {
+  public function testGetContext($original_path, $context): void {
     $request_stack = new RequestStack();
     $request = Request::create($original_path);
     $request_stack->push($request);

@@ -45,7 +45,7 @@ class WidgetAnonymousTest extends MediaLibraryTestBase {
   /**
    * Tests that the widget works as expected for anonymous users.
    */
-  public function testWidgetAnonymous() {
+  public function testWidgetAnonymous(): void {
     $assert_session = $this->assertSession();
 
     // Allow the anonymous user to create pages and view media.

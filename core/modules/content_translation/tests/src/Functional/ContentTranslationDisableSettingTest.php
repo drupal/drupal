@@ -32,7 +32,7 @@ class ContentTranslationDisableSettingTest extends BrowserTestBase {
   /**
    * Tests that entity schemas are up-to-date after enabling translation.
    */
-  public function testDisableSetting() {
+  public function testDisableSetting(): void {
     // Define selectors.
     $group_checkbox = 'entity_types[menu_link_content]';
     $translatable_checkbox = 'settings[menu_link_content][menu_link_content][translatable]';

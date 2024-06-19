@@ -22,7 +22,7 @@ class RawTest extends UnitTestCase {
    *
    * @see \Drupal\views\Plugin\views\argument_default\Raw::getArgument()
    */
-  public function testGetArgument() {
+  public function testGetArgument(): void {
     $view = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->getMock();

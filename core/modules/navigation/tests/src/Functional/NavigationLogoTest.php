@@ -71,7 +71,7 @@ class NavigationLogoTest extends BrowserTestBase {
   /**
    * Tests Navigation logo configuration base options.
    */
-  public function testSettingsLogoOptionsForm() {
+  public function testSettingsLogoOptionsForm(): void {
     // Navigate to the settings form.
     $this->drupalGet('/admin/config/user-interface/navigation/settings');
     $this->assertSession()->statusCodeEquals(200);

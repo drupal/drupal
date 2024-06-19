@@ -38,7 +38,7 @@ class MemoryBackendTest extends UnitTestCase {
   /**
    * Tests an allowed flood event.
    */
-  public function testAllowedProceeding() {
+  public function testAllowedProceeding(): void {
     $threshold = 2;
     $window_expired = -1;
 
@@ -49,7 +49,7 @@ class MemoryBackendTest extends UnitTestCase {
   /**
    * Tests a flood event with more than the allowed calls.
    */
-  public function testNotAllowedProceeding() {
+  public function testNotAllowedProceeding(): void {
     $threshold = 1;
     $window_expired = -1;
 
@@ -65,7 +65,7 @@ class MemoryBackendTest extends UnitTestCase {
    *
    * @medium
    */
-  public function testExpiring() {
+  public function testExpiring(): void {
     $threshold = 1;
     $window_expired = -1;
 
@@ -83,7 +83,7 @@ class MemoryBackendTest extends UnitTestCase {
   /**
    * Tests a flood event with no expiring, so cron will not allow to proceed.
    */
-  public function testNotExpiring() {
+  public function testNotExpiring(): void {
     $threshold = 2;
 
     $this->flood->register('test_event', 1);
@@ -100,7 +100,7 @@ class MemoryBackendTest extends UnitTestCase {
   /**
    * Tests memory backend records events to the nearest microsecond.
    */
-  public function testMemoryBackendThreshold() {
+  public function testMemoryBackendThreshold(): void {
     $this->flood->register('new event');
     $this->assertTrue($this->flood->isAllowed('new event', '2'));
     $this->flood->register('new event');

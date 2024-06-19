@@ -59,7 +59,7 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal6TestBase im
   /**
    * Tests migration of field label and description translations.
    */
-  public function testFieldInstanceLabelDescriptionTranslationMigration() {
+  public function testFieldInstanceLabelDescriptionTranslationMigration(): void {
     $language_manager = $this->container->get('language_manager');
 
     // Tests fields on 'story' node type.

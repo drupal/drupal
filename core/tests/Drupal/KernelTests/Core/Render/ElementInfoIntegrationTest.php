@@ -25,7 +25,7 @@ class ElementInfoIntegrationTest extends KernelTestBase {
   /**
    * Ensures that the element info can be altered by themes.
    */
-  public function testElementInfoByTheme() {
+  public function testElementInfoByTheme(): void {
     /** @var \Drupal\Core\Theme\ThemeInitializationInterface $theme_initializer */
     $theme_initializer = $this->container->get('theme.initialization');
 

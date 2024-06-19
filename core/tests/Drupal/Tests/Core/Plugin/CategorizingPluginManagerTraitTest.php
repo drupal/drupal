@@ -52,7 +52,7 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
   /**
    * @covers ::getCategories
    */
-  public function testGetCategories() {
+  public function testGetCategories(): void {
     $this->assertSame([
       'fruits',
       'vegetables',
@@ -62,7 +62,7 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
   /**
    * @covers ::getSortedDefinitions
    */
-  public function testGetSortedDefinitions() {
+  public function testGetSortedDefinitions(): void {
     $sorted = $this->pluginManager->getSortedDefinitions();
     $this->assertSame(['apple', 'mango', 'cucumber'], array_keys($sorted));
   }
@@ -70,7 +70,7 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
   /**
    * @covers ::getGroupedDefinitions
    */
-  public function testGetGroupedDefinitions() {
+  public function testGetGroupedDefinitions(): void {
     $grouped = $this->pluginManager->getGroupedDefinitions();
     $this->assertSame(['fruits', 'vegetables'], array_keys($grouped));
     $this->assertSame(['apple', 'mango'], array_keys($grouped['fruits']));
@@ -80,7 +80,7 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
   /**
    * @covers ::processDefinitionCategory
    */
-  public function testProcessDefinitionCategory() {
+  public function testProcessDefinitionCategory(): void {
     // Existing category.
     $definition = [
       'label' => 'some',

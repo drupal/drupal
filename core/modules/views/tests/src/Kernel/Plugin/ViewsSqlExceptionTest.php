@@ -32,7 +32,7 @@ class ViewsSqlExceptionTest extends ViewsKernelTestBase {
   /**
    * Tests for the SQL exception.
    */
-  public function testSqlException() {
+  public function testSqlException(): void {
     $view = Views::getView('test_filter');
     $view->initDisplay();
 

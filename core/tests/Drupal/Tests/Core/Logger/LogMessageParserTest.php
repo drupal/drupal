@@ -29,7 +29,7 @@ class LogMessageParserTest extends UnitTestCase {
    * @dataProvider providerTestParseMessagePlaceholders
    * @covers ::parseMessagePlaceholders
    */
-  public function testParseMessagePlaceholders(array $value, array $expected) {
+  public function testParseMessagePlaceholders(array $value, array $expected): void {
     $parser = new LogMessageParser();
     $message_placeholders = $parser->parseMessagePlaceholders($value['message'], $value['context']);
     $this->assertEquals($expected['message'], $value['message']);

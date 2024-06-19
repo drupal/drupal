@@ -34,7 +34,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests login with destination.
    */
-  public function testLoginCacheTagsAndDestination() {
+  public function testLoginCacheTagsAndDestination(): void {
     $this->drupalGet('user/login');
     // The user login form says "Enter your <site name> username.", hence it
     // depends on config:system.site, and its cache tags should be present.
@@ -50,7 +50,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests the global login flood control.
    */
-  public function testGlobalLoginFloodControl() {
+  public function testGlobalLoginFloodControl(): void {
     $this->config('user.flood')
       ->set('ip_limit', 10)
       // Set a high per-user limit out so that it is not relevant in the test.
@@ -94,7 +94,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests the per-user login flood control.
    */
-  public function testPerUserLoginFloodControl() {
+  public function testPerUserLoginFloodControl(): void {
     $this->config('user.flood')
       // Set a high global limit out so that it is not relevant in the test.
       ->set('ip_limit', 4000)
@@ -141,7 +141,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests user password is re-hashed upon login after changing $count_log2.
    */
-  public function testPasswordRehashOnLogin() {
+  public function testPasswordRehashOnLogin(): void {
     // Retrieve instance of password hashing algorithm.
     $password_hasher = $this->container->get('password');
 
@@ -182,7 +182,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests log in with a maximum length and a too long password.
    */
-  public function testPasswordLengthLogin() {
+  public function testPasswordLengthLogin(): void {
     // Create a new user and authenticate.
     $account = $this->drupalCreateUser([]);
     $current_password = $account->passRaw;
@@ -243,7 +243,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests with a browser that denies cookies.
    */
-  public function testCookiesNotAccepted() {
+  public function testCookiesNotAccepted(): void {
     $this->drupalGet('user/login');
     $form_build_id = $this->getSession()->getPage()->findField('form_build_id');
 
@@ -348,7 +348,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Tests that user login form has the autocomplete attributes.
    */
-  public function testAutocompleteHtmlAttributes() {
+  public function testAutocompleteHtmlAttributes(): void {
     $this->drupalGet('user/login');
     $name_field = $this->getSession()->getPage()->findField('name');
     $pass_field = $this->getSession()->getPage()->findField('pass');

@@ -28,7 +28,7 @@ class SortingTest extends WizardTestBase {
   /**
    * Tests the sorting functionality.
    */
-  public function testSorting() {
+  public function testSorting(): void {
     // Create nodes, each with a different creation time so that we can do a
     // meaningful sort.
     $this->drupalCreateContentType(['type' => 'page']);

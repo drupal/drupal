@@ -17,7 +17,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Tests that connections return appropriate connection objects.
    */
-  public function testConnectionRouting() {
+  public function testConnectionRouting(): void {
     // Clone the primary credentials to a replica connection.
     // Note this will result in two independent connection objects that happen
     // to point to the same place.
@@ -51,7 +51,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Tests that connections return appropriate connection objects.
    */
-  public function testConnectionRoutingOverride() {
+  public function testConnectionRoutingOverride(): void {
     // Clone the primary credentials to a replica connection.
     // Note this will result in two independent connection objects that happen
     // to point to the same place.
@@ -69,7 +69,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Tests the closing of a database connection.
    */
-  public function testConnectionClosing() {
+  public function testConnectionClosing(): void {
     // Open the default target so we have an object to compare.
     $db1 = Database::getConnection('default', 'default');
 
@@ -84,7 +84,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Tests the connection options of the active database.
    */
-  public function testConnectionOptions() {
+  public function testConnectionOptions(): void {
     $connection_info = Database::getConnectionInfo('default');
 
     // Be sure we're connected to the default database.
@@ -119,7 +119,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Tests per-table prefix connection option.
    */
-  public function testPerTablePrefixOption() {
+  public function testPerTablePrefixOption(): void {
     $connection_info = Database::getConnectionInfo('default');
     $new_connection_info = $connection_info['default'];
     $new_connection_info['prefix'] = [
@@ -134,7 +134,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Tests the prefix connection option in array form.
    */
-  public function testPrefixArrayOption() {
+  public function testPrefixArrayOption(): void {
     $connection_info = Database::getConnectionInfo('default');
     $new_connection_info = $connection_info['default'];
     $new_connection_info['prefix'] = [
@@ -148,7 +148,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Ensure that you cannot execute multiple statements in a query.
    */
-  public function testMultipleStatementsQuery() {
+  public function testMultipleStatementsQuery(): void {
     $this->expectException(\InvalidArgumentException::class);
     Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}');
   }
@@ -156,7 +156,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Ensure that you cannot prepare multiple statements.
    */
-  public function testMultipleStatements() {
+  public function testMultipleStatements(): void {
     $this->expectException(\InvalidArgumentException::class);
     Database::getConnection('default', 'default')->prepareStatement('SELECT * FROM {test}; SELECT * FROM {test_people}', []);
   }
@@ -164,7 +164,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Tests that the method ::condition() returns a Condition object.
    */
-  public function testCondition() {
+  public function testCondition(): void {
     $connection = Database::getConnection('default', 'default');
     $namespace = (new \ReflectionObject($connection))->getNamespaceName() . "\\Condition";
     if (!class_exists($namespace)) {
@@ -177,7 +177,7 @@ class ConnectionTest extends DatabaseTestBase {
   /**
    * Tests that the method ::hasJson() returns TRUE.
    */
-  public function testHasJson() {
+  public function testHasJson(): void {
     $this->assertTrue($this->connection->hasJson());
   }
 

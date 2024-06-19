@@ -88,7 +88,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
    * Ensures that contextual link placeholders always exist, even if the user is
    * not allowed to use contextual links.
    */
-  public function testDifferentPermissions() {
+  public function testDifferentPermissions(): void {
     $this->drupalLogin($this->editorUser);
 
     // Create three nodes in the following order:
@@ -172,7 +172,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
   /**
    * Tests the contextual placeholder content is protected by a token.
    */
-  public function testTokenProtection() {
+  public function testTokenProtection(): void {
     $this->drupalLogin($this->editorUser);
 
     // Create a node that will have a contextual link.

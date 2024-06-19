@@ -73,7 +73,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * Tests filter operations.
    */
-  public function testDatetimeFilter() {
+  public function testDatetimeFilter(): void {
     $this->_testOffset();
     $this->_testBetween();
     $this->_testExact();

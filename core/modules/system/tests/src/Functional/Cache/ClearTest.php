@@ -31,7 +31,7 @@ class ClearTest extends CacheTestBase {
   /**
    * Tests drupal_flush_all_caches().
    */
-  public function testFlushAllCaches() {
+  public function testFlushAllCaches(): void {
     // Create cache entries for each flushed cache bin.
     $bins = Cache::getBins();
     $this->assertNotEmpty($bins, 'Cache::getBins() returned bins to flush.');

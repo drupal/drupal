@@ -54,7 +54,7 @@ class AreaEmptyTest extends ViewsKernelTestBase {
   /**
    * Tests that the header and footer areas are not rendered if empty.
    */
-  public function testRenderEmptyHeaderFooter() {
+  public function testRenderEmptyHeaderFooter(): void {
     $view = Views::getView('test_example_area');
     $view->initHandlers();
 

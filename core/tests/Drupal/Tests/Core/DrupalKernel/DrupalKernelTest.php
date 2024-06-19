@@ -23,7 +23,7 @@ class DrupalKernelTest extends UnitTestCase {
    * @covers ::setupTrustedHosts
    * @dataProvider providerTestTrustedHosts
    */
-  public function testTrustedHosts($host, $server_name, $message, $expected = FALSE) {
+  public function testTrustedHosts($host, $server_name, $message, $expected = FALSE): void {
     $request = new Request();
 
     $trusted_host_patterns = [
@@ -114,7 +114,7 @@ class DrupalKernelTest extends UnitTestCase {
    * @covers ::findSitePath
    * @runInSeparateProcess
    */
-  public function testFindSitePath() {
+  public function testFindSitePath(): void {
     $vfs_root = vfsStream::setup('drupal_root');
     $sites_php = <<<'EOD'
 <?php
@@ -143,7 +143,7 @@ EOD;
    * @covers ::terminate
    * @runInSeparateProcess
    */
-  public function testUnBootedTerminate() {
+  public function testUnBootedTerminate(): void {
     $kernel = new DrupalKernel('test', new ClassLoader());
     $kernel->terminate(new Request(), new Response());
     $this->assertTrue(TRUE, "\Drupal\Core\DrupalKernel::terminate() called without error on kernel which has not booted");

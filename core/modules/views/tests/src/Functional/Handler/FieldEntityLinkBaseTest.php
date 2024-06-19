@@ -70,7 +70,7 @@ class FieldEntityLinkBaseTest extends ViewTestBase {
   /**
    * Tests entity link fields.
    */
-  public function testEntityLink() {
+  public function testEntityLink(): void {
     $this->drupalGet('test-link-base-links');
     $session = $this->assertSession();
 

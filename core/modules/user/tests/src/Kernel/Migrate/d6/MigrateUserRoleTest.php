@@ -283,7 +283,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    *
    * @dataProvider providerTestUserRole
    */
-  public function testUserRole(array $modules, array $migrations, array $role_data) {
+  public function testUserRole(array $modules, array $migrations, array $role_data): void {
     if ($modules) {
       // Install modules that have migrations that may provide permissions.
       \Drupal::service('module_installer')->install($modules);

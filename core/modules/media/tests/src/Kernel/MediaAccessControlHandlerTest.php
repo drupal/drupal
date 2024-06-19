@@ -42,7 +42,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @covers ::checkAccess
    * @dataProvider providerAccess
    */
-  public function testAccess(array $permissions, array $entity_values, string $operation, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags, bool $is_latest_revision) {
+  public function testAccess(array $permissions, array $entity_values, string $operation, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags, bool $is_latest_revision): void {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage $entity_storage */
     $entity_storage = $this->container->get('entity_type.manager')->getStorage('media');
 
@@ -91,7 +91,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @covers ::checkCreateAccess
    * @dataProvider providerCreateAccess
    */
-  public function testCreateAccess(array $permissions, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags) {
+  public function testCreateAccess(array $permissions, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags): void {
     $user = $this->createUser($permissions);
 
     /** @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface $access_handler */

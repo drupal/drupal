@@ -59,7 +59,7 @@ class LayoutBuilderToolbarTest extends WebDriverTestBase {
   /**
    * Tests the 'Back to site' link behaves with manage layout as admin page.
    */
-  public function testBackToSiteLink() {
+  public function testBackToSiteLink(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

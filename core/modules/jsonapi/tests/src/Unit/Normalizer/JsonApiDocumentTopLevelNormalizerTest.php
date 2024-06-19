@@ -89,7 +89,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    * @dataProvider denormalizeProvider
    */
-  public function testDenormalize($input, $expected) {
+  public function testDenormalize($input, $expected): void {
     $resource_type = new ResourceType('node', 'article', FieldableEntityInterface::class);
     $resource_type->setRelatableResourceTypes([]);
     $context = ['resource_type' => $resource_type];
@@ -211,7 +211,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    * @dataProvider denormalizeUuidProvider
    */
-  public function testDenormalizeUuid($id, $expect_exception) {
+  public function testDenormalizeUuid($id, $expect_exception): void {
     $data['data'] = (isset($id)) ?
       ['type' => 'node--article', 'id' => $id] :
       ['type' => 'node--article'];

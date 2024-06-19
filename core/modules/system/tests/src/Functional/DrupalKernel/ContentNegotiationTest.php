@@ -28,7 +28,7 @@ class ContentNegotiationTest extends BrowserTestBase {
    *
    * @see https://www.drupal.org/node/1716790
    */
-  public function testBogusAcceptHeader() {
+  public function testBogusAcceptHeader(): void {
     $tests = [
       // See https://bugs.webkit.org/show_bug.cgi?id=27267.
       'Firefox 3.5 (2009)' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

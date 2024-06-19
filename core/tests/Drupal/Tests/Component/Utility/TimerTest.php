@@ -23,7 +23,7 @@ class TimerTest extends TestCase {
    * @covers ::stop
    * @covers ::read
    */
-  public function testTimer() {
+  public function testTimer(): void {
     Timer::start('test');
     usleep(5000);
     $value = Timer::read('test');

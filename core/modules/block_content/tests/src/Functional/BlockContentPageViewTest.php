@@ -26,7 +26,7 @@ class BlockContentPageViewTest extends BlockContentTestBase {
   /**
    * Checks block edit and fallback functionality.
    */
-  public function testPageEdit() {
+  public function testPageEdit(): void {
     $this->drupalLogin($this->adminUser);
     $block = $this->createBlockContent();
 

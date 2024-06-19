@@ -34,7 +34,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::getTargetEntityTypeId
    */
-  public function testGetTargetEntityTypeId() {
+  public function testGetTargetEntityTypeId(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'targetEntityType');
     $reflection->setValue($this->entityDisplay, 'test');
     $this->assertEquals('test', $this->entityDisplay->getTargetEntityTypeId());
@@ -43,7 +43,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::getMode
    */
-  public function testGetMode() {
+  public function testGetMode(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'mode');
     $reflection->setValue($this->entityDisplay, 'test');
     $this->assertEquals('test', $this->entityDisplay->getMode());
@@ -52,7 +52,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::getOriginalMode
    */
-  public function testGetOriginalMode() {
+  public function testGetOriginalMode(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'originalMode');
     $reflection->setValue($this->entityDisplay, 'test');
     $this->assertEquals('test', $this->entityDisplay->getOriginalMode());
@@ -61,7 +61,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::getTargetBundle
    */
-  public function testGetTargetBundle() {
+  public function testGetTargetBundle(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'bundle');
     $reflection->setValue($this->entityDisplay, 'test');
     $this->assertEquals('test', $this->entityDisplay->getTargetBundle());
@@ -70,7 +70,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::setTargetBundle
    */
-  public function testSetTargetBundle() {
+  public function testSetTargetBundle(): void {
     $reflection = new \ReflectionProperty($this->entityDisplay, 'bundle');
     $this->entityDisplay->setTargetBundle('test');
     $this->assertEquals('test', $reflection->getValue($this->entityDisplay));

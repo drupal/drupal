@@ -51,7 +51,7 @@ class MachineNameTransliterationTest extends WebDriverTestBase {
    *
    * @dataProvider machineNameInputOutput
    */
-  public function testMachineNameTransliterations($langcode, $input, $output) {
+  public function testMachineNameTransliterations($langcode, $input, $output): void {
     $page = $this->getSession()->getPage();
     if ($langcode !== 'en') {
       ConfigurableLanguage::createFromLangcode($langcode)->save();

@@ -32,7 +32,7 @@ class PluginBaseTest extends KernelTestBase {
   /**
    * Tests that the token replacement in views works correctly.
    */
-  public function testViewsTokenReplace() {
+  public function testViewsTokenReplace(): void {
     $text = '{{ langcode__value }} means {{ langcode }}';
     $tokens = ['{{ langcode }}' => Markup::create('English'), '{{ langcode__value }}' => 'en'];
 
@@ -46,7 +46,7 @@ class PluginBaseTest extends KernelTestBase {
   /**
    * Tests that the token replacement in views works correctly with dots.
    */
-  public function testViewsTokenReplaceWithDots() {
+  public function testViewsTokenReplaceWithDots(): void {
     $text = '{{ argument.first }} comes before {{ argument.second }}';
     $tokens = ['{{ argument.first }}' => 'first', '{{ argument.second }}' => 'second'];
 
@@ -70,7 +70,7 @@ class PluginBaseTest extends KernelTestBase {
   /**
    * Tests viewsTokenReplace without any twig tokens.
    */
-  public function testViewsTokenReplaceWithTwigTokens() {
+  public function testViewsTokenReplaceWithTwigTokens(): void {
     $text = 'Just some text';
     $tokens = [];
     $result = $this->testPluginBase->viewsTokenReplace($text, $tokens);

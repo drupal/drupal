@@ -61,7 +61,7 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
   /**
    * Confirm Claro assets load on a non-Claro default theme.
    */
-  public function testClaroAssets() {
+  public function testClaroAssets(): void {
     $default_stylesheets = [
       'core/modules/toolbar/css/toolbar.module.css',
       'core/modules/toolbar/css/toolbar.menu.css',

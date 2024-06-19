@@ -14,7 +14,7 @@ trait SchemaConfigListenerTestTrait {
   /**
    * Tests \Drupal\Core\Config\Development\ConfigSchemaChecker.
    */
-  public function testConfigSchemaChecker() {
+  public function testConfigSchemaChecker(): void {
     // Test a non-existing schema.
     $message = 'Expected SchemaIncompleteException thrown';
     try {

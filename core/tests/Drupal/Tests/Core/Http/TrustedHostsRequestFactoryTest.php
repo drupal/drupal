@@ -29,7 +29,7 @@ class TrustedHostsRequestFactoryTest extends UnitTestCase {
    * @covers ::createRequest
    * @dataProvider providerTestCreateRequest
    */
-  public function testCreateRequest($host, $server, $expected) {
+  public function testCreateRequest($host, $server, $expected): void {
     $request_factory = new TrustedHostsRequestFactory($host);
     $request = $request_factory->createRequest([], [], [], [], [], $server, []);
     $this->assertEquals($expected, $request->getHost());

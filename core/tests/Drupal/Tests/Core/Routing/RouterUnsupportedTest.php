@@ -21,7 +21,7 @@ class RouterUnsupportedTest extends UnitTestCase {
   /**
    * @covers ::generate
    */
-  public function testGenerateUnsupported() {
+  public function testGenerateUnsupported(): void {
     $this->expectException(\BadMethodCallException::class);
     $route_provider = $this->prophesize(RouteProviderInterface::class);
     $current_path_stack = $this->prophesize(CurrentPathStack::class);

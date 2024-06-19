@@ -25,7 +25,7 @@ class MigrateViewModesTest extends MigrateDrupal6TestBase {
   /**
    * Tests Drupal 6 view modes to Drupal 8 migration.
    */
-  public function testViewModes() {
+  public function testViewModes(): void {
     // Test a new view mode.
     $view_mode = EntityViewMode::load('node.preview');
     $this->assertNotNull($view_mode);

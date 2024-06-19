@@ -161,7 +161,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - saving new to nonempty tables work.
    * - updating work.
    */
-  public function testSaveIdMapping() {
+  public function testSaveIdMapping(): void {
     $source = [
       'source_id_property' => 'source_value',
     ];
@@ -195,7 +195,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the SQL ID map set message method.
    */
-  public function testSetMessage() {
+  public function testSetMessage(): void {
     $message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
     $id_map = $this->getIdMap();
     $id_map->setMessage($message);
@@ -205,7 +205,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the clear messages method.
    */
-  public function testClearMessages() {
+  public function testClearMessages(): void {
     $message = 'Hello world.';
     $expected_results = [0, 1, 2, 3];
     $id_map = $this->getIdMap();
@@ -225,7 +225,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the getRowsNeedingUpdate method for rows that need an update.
    */
-  public function testGetRowsNeedingUpdate() {
+  public function testGetRowsNeedingUpdate(): void {
     $id_map = $this->getIdMap();
     $row_statuses = [
       MigrateIdMapInterface::STATUS_IMPORTED,
@@ -281,7 +281,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the SQL ID map message count method by counting and saving messages.
    */
-  public function testMessageCount() {
+  public function testMessageCount(): void {
     $message = 'Hello world.';
     $expected_results = [0, 1, 2, 3];
     $id_map = $this->getIdMap();
@@ -297,7 +297,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the SQL ID map save message method.
    */
-  public function testMessageSave() {
+  public function testMessageSave(): void {
     $message = 'Hello world.';
     $original_values = [
       1 => ['message' => $message, 'level' => MigrationInterface::MESSAGE_ERROR],
@@ -348,7 +348,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the getRowBySource method.
    */
-  public function testGetRowBySource() {
+  public function testGetRowBySource(): void {
     $this->getDatabase([]);
     $row = [
       'sourceid1' => 'source_id_value_1',
@@ -404,7 +404,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider lookupDestinationIdMappingDataProvider
    */
-  public function testLookupDestinationIdMapping($num_source_fields, $num_destination_fields) {
+  public function testLookupDestinationIdMapping($num_source_fields, $num_destination_fields): void {
     // Adjust the migration configuration according to the number of source and
     // destination fields.
     $this->sourceIds = [];
@@ -473,7 +473,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests lookupDestinationIds().
    */
-  public function testLookupDestinationIds() {
+  public function testLookupDestinationIds(): void {
     // Simple map with one source and one destination ID.
     $id_map = $this->setupRows(['nid'], ['nid'], [
       [1, 101],
@@ -557,7 +557,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the getRowByDestination method.
    */
-  public function testGetRowByDestination() {
+  public function testGetRowByDestination(): void {
     $row = [
       'sourceid1' => 'source_id_value_1',
       'sourceid2' => 'source_id_value_2',
@@ -622,7 +622,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider lookupSourceIdMappingDataProvider
    */
-  public function testLookupSourceIdMapping($num_source_fields, $num_destination_fields) {
+  public function testLookupSourceIdMapping($num_source_fields, $num_destination_fields): void {
     $source_id_property_prefix = 'source_id_property_';
     $this->doTestLookupSourceIdMapping($num_source_fields, $num_destination_fields, $source_id_property_prefix);
   }
@@ -641,7 +641,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider lookupSourceIdMappingDataProvider
    */
-  public function testLookupSourceIdMappingNonSqlCharacters($num_source_fields, $num_destination_fields) {
+  public function testLookupSourceIdMappingNonSqlCharacters($num_source_fields, $num_destination_fields): void {
     $source_id_property_prefix = '$ource id property * ';
     $this->doTestLookupSourceIdMapping($num_source_fields, $num_destination_fields, $source_id_property_prefix);
   }
@@ -694,7 +694,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests currentDestination() and currentSource().
    */
-  public function testCurrentDestinationAndSource() {
+  public function testCurrentDestinationAndSource(): void {
     // Simple map with one source and one destination ID.
     $id_map = $this->setupRows(['nid'], ['nid'], [
       [1, 101],
@@ -728,7 +728,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - One import.
    * - Multiple imports.
    */
-  public function testImportedCount() {
+  public function testImportedCount(): void {
     $id_map = $this->getIdMap();
     // Add a single failed row and assert zero imported rows.
     $source = ['source_id_property' => 'source_value_failed'];
@@ -760,7 +760,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - One processed row.
    * - Multiple processed rows.
    */
-  public function testProcessedCount() {
+  public function testProcessedCount(): void {
     $id_map = $this->getIdMap();
     // Assert zero rows have been processed before adding rows.
     $this->assertSame(0, $id_map->processedCount());
@@ -812,7 +812,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider updateCountDataProvider
    */
-  public function testUpdateCount($num_update_rows) {
+  public function testUpdateCount($num_update_rows): void {
     for ($i = 0; $i < 5; $i++) {
       $row = $this->idMapDefaults();
       $row['sourceid1'] = "source_id_value_$i";
@@ -860,7 +860,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider errorCountDataProvider
    */
-  public function testErrorCount($num_error_rows) {
+  public function testErrorCount($num_error_rows): void {
     for ($i = 0; $i < 5; $i++) {
       $row = $this->idMapDefaults();
       $row['sourceid1'] = "source_id_value_$i";
@@ -884,7 +884,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests setting a row source_row_status to STATUS_NEEDS_UPDATE.
    */
-  public function testSetUpdate() {
+  public function testSetUpdate(): void {
     $id_map = $this->getIdMap();
     $row_statuses = [
       MigrateIdMapInterface::STATUS_IMPORTED,
@@ -932,7 +932,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests prepareUpdate().
    */
-  public function testPrepareUpdate() {
+  public function testPrepareUpdate(): void {
     $id_map = $this->getIdMap();
     $row_statuses = [
       MigrateIdMapInterface::STATUS_IMPORTED,
@@ -978,7 +978,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - One error.
    * - Multiple errors.
    */
-  public function testDestroy() {
+  public function testDestroy(): void {
     $id_map = $this->getIdMap();
     // Initialize the ID map.
     $id_map->getDatabase();
@@ -1001,7 +1001,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the getQualifiedMapTable method with a prefixed database.
    */
-  public function testGetQualifiedMapTablePrefix() {
+  public function testGetQualifiedMapTablePrefix(): void {
     $connection_options = [
       'database' => ':memory:',
       'prefix' => 'prefix',
@@ -1025,7 +1025,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - Sql::key()
    * - Sql::current()
    */
-  public function testIterators() {
+  public function testIterators(): void {
     for ($i = 0; $i < 3; $i++) {
       $row = $this->idMapDefaults();
       $row['sourceid1'] = "source_id_value_$i";
@@ -1064,7 +1064,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the delayed creation of the "map" and "message" migrate tables.
    */
-  public function testMapTableCreation() {
+  public function testMapTableCreation(): void {
     $id_map = $this->getIdMap();
     $map_table_name = $id_map->mapTableName();
     $message_table_name = $id_map->messageTableName();
@@ -1096,7 +1096,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider getHighestIdDataProvider
    */
-  public function testGetHighestId(array $destination_ids, array $rows, $expected) {
+  public function testGetHighestId(array $destination_ids, array $rows, $expected): void {
     $this->database = $this->getDatabase([]);
     $this->sourceIds = $destination_ids;
     $this->destinationIds = $destination_ids;
@@ -1177,7 +1177,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider getHighestIdInvalidDataProvider
    */
-  public function testGetHighestIdInvalid(array $destination_ids) {
+  public function testGetHighestIdInvalid(array $destination_ids): void {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('To determine the highest migrated ID the first ID must be an integer');
     $this->destinationIds = $destination_ids;

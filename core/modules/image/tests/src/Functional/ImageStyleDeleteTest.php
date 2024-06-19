@@ -32,7 +32,7 @@ class ImageStyleDeleteTest extends ImageFieldTestBase {
   /**
    * Tests image style deletion.
    */
-  public function testDelete() {
+  public function testDelete(): void {
     $this->drupalGet('admin/config/media/image-styles/manage/medium/delete');
     // Checks that the 'replacement' select element is displayed.
     $this->assertSession()->fieldExists('replacement');

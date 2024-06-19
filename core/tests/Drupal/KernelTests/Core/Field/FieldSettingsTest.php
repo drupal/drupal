@@ -27,7 +27,7 @@ class FieldSettingsTest extends EntityKernelTestBase {
    * @covers \Drupal\Core\Field\BaseFieldDefinition::getSettings
    * @covers \Drupal\Core\Field\BaseFieldDefinition::setSettings
    */
-  public function testBaseFieldSettings() {
+  public function testBaseFieldSettings(): void {
     $base_field = BaseFieldDefinition::create('test_field');
 
     // Check that the default settings have been populated.
@@ -51,7 +51,7 @@ class FieldSettingsTest extends EntityKernelTestBase {
   /**
    * Tests the base field settings on a cloned base field definition object.
    */
-  public function testBaseFieldSettingsOnClone() {
+  public function testBaseFieldSettingsOnClone(): void {
     $base_field = BaseFieldDefinition::create('test_field');
 
     // Check that the default settings have been populated.
@@ -80,7 +80,7 @@ class FieldSettingsTest extends EntityKernelTestBase {
    * @covers \Drupal\field\Entity\FieldStorageConfig::getSettings
    * @covers \Drupal\field\Entity\FieldStorageConfig::setSettings
    */
-  public function testConfigurableFieldStorageSettings() {
+  public function testConfigurableFieldStorageSettings(): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',
@@ -108,7 +108,7 @@ class FieldSettingsTest extends EntityKernelTestBase {
    * @covers \Drupal\field\Entity\FieldStorageConfig::getSettings
    * @covers \Drupal\field\Entity\FieldStorageConfig::setSettings
    */
-  public function testConfigurableFieldSettings() {
+  public function testConfigurableFieldSettings(): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_field',
       'entity_type' => 'entity_test',

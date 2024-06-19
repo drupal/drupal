@@ -52,7 +52,7 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
   /**
    * Tests hook_post_update_NAME().
    */
-  public function testPostUpdate() {
+  public function testPostUpdate(): void {
     // There are expected to be failed updates.
     $this->checkFailedUpdates = FALSE;
 

@@ -32,7 +32,7 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
   /**
    * Tests default values on entities and fields.
    */
-  public function testDefaultValues() {
+  public function testDefaultValues(): void {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
       $this->assertDefaultValues($entity_type);
@@ -61,7 +61,7 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
   /**
    * Tests custom default value callbacks.
    */
-  public function testDefaultValueCallback() {
+  public function testDefaultValueCallback(): void {
     $entity = $this->entityTypeManager->getStorage('entity_test_default_value')->create();
     // The description field has a default value callback for testing, see
     // entity_test_field_default_value().

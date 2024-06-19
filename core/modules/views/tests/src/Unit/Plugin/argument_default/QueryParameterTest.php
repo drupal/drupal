@@ -20,7 +20,7 @@ class QueryParameterTest extends UnitTestCase {
    * @covers ::getArgument
    * @dataProvider providerGetArgument
    */
-  public function testGetArgument($options, Request $request, $expected) {
+  public function testGetArgument($options, Request $request, $expected): void {
     $view = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->onlyMethods([])

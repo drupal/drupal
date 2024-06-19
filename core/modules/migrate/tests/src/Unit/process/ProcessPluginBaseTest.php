@@ -23,7 +23,7 @@ class ProcessPluginBaseTest extends UnitTestCase {
    * @covers ::stopPipeline
    * @covers ::reset
    */
-  public function testStopPipeline() {
+  public function testStopPipeline(): void {
     $plugin = new ProcessPluginBase([], 'plugin_id', []);
     $this->assertFalse($plugin->isPipelineStopped());
     $stopPipeline = (new \ReflectionClass($plugin))->getMethod('stopPipeline');

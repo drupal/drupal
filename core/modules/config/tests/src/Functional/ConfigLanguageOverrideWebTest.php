@@ -41,7 +41,7 @@ class ConfigLanguageOverrideWebTest extends BrowserTestBase {
   /**
    * Tests translating the site name.
    */
-  public function testSiteNameTranslation() {
+  public function testSiteNameTranslation(): void {
     $adminUser = $this->drupalCreateUser([
       'administer site configuration',
       'administer languages',

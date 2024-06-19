@@ -23,7 +23,7 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
    *
    * @dataProvider entityTypesProvider
    */
-  public function testReuseField($entity_type, $bundle1, $bundle2) {
+  public function testReuseField($entity_type, $bundle1, $bundle2): void {
     $field_name = 'test_reuse';
     $label = $this->randomMachineName();
 
@@ -52,7 +52,7 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
    *
    * @dataProvider entityTypesProvider
    */
-  public function testReuseFieldMultipleDisplay($entity_type, $bundle1, $bundle2) {
+  public function testReuseFieldMultipleDisplay($entity_type, $bundle1, $bundle2): void {
     // Create additional form mode and enable it on both bundles.
     EntityFormMode::create([
       'id' => "{$entity_type}.little",

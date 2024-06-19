@@ -97,7 +97,7 @@ class HandlerTest extends UITestBase {
   /**
    * Tests UI CRUD.
    */
-  public function testUiCrud() {
+  public function testUiCrud(): void {
     $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       // Test adding handlers.
@@ -188,7 +188,7 @@ class HandlerTest extends UITestBase {
   /**
    * Tests escaping of field labels in help text.
    */
-  public function testHandlerHelpEscaping() {
+  public function testHandlerHelpEscaping(): void {
     // Setup a field with two instances using a different label.
     // Ensure that the label is escaped properly.
 
@@ -223,7 +223,7 @@ class HandlerTest extends UITestBase {
   /**
    * Tests broken handlers.
    */
-  public function testBrokenHandlers() {
+  public function testBrokenHandlers(): void {
     $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       $this->drupalGet('admin/structure/views/view/test_view_broken/edit');
@@ -257,7 +257,7 @@ class HandlerTest extends UITestBase {
    *
    * @see \Drupal\views\EntityViewsData
    */
-  public function testNoDuplicateFields() {
+  public function testNoDuplicateFields(): void {
     $handler_types = ['field', 'filter', 'sort', 'argument'];
 
     foreach ($handler_types as $handler_type) {
@@ -278,7 +278,7 @@ class HandlerTest extends UITestBase {
    *
    * @see \Drupal\views\EntityViewsData
    */
-  public function testErrorMissingHelp() {
+  public function testErrorMissingHelp(): void {
     // Test that the error message is not shown for entity fields but an empty
     // description field is shown instead.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_node_view/default/field');

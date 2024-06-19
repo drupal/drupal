@@ -101,7 +101,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
   /**
    * Tests the Layout Builder UI.
    */
-  public function testLayoutBuilderUi() {
+  public function testLayoutBuilderUi(): void {
     $layout_url = 'node/1/layout';
     $node_url = 'node/1';
 
@@ -265,7 +265,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
   /**
    * Tests configurable layouts.
    */
-  public function testConfigurableLayoutSections() {
+  public function testConfigurableLayoutSections(): void {
     $layout_url = 'node/1/layout';
 
     \Drupal::entityTypeManager()
@@ -344,7 +344,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
   /**
    * Tests bypassing the off-canvas dialog.
    */
-  public function testLayoutNoDialog() {
+  public function testLayoutNoDialog(): void {
     $layout_url = 'node/1/layout';
 
     \Drupal::entityTypeManager()

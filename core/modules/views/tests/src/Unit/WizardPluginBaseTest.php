@@ -20,7 +20,7 @@ class WizardPluginBaseTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetSelected
    */
-  public function testGetSelected($expected, $element = [], $parents = [], $user_input = [], $not_rebuilding_expected = NULL) {
+  public function testGetSelected($expected, $element = [], $parents = [], $user_input = [], $not_rebuilding_expected = NULL): void {
     $not_rebuilding_expected = $not_rebuilding_expected ?: $expected;
     $form_state = new FormState();
     $form_state->setUserInput($user_input);

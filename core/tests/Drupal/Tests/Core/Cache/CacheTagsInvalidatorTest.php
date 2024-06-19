@@ -18,7 +18,7 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
   /**
    * @covers ::invalidateTags
    */
-  public function testInvalidateTagsWithInvalidTags() {
+  public function testInvalidateTagsWithInvalidTags(): void {
     $cache_tags_invalidator = new CacheTagsInvalidator();
     $this->expectException(\AssertionError::class);
     $cache_tags_invalidator->invalidateTags(['node' => [2, 3, 5, 8, 13]]);
@@ -29,7 +29,7 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
    * @covers ::addInvalidator
    * @covers ::addBin
    */
-  public function testInvalidateTags() {
+  public function testInvalidateTags(): void {
     $cache_tags_invalidator = new CacheTagsInvalidator();
 
     $invalidator_cache_bin = $this->createMock(InvalidatingCacheBackendInterface::class);

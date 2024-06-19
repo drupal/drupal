@@ -24,7 +24,7 @@ class FilterLanguageTest extends LanguageTestBase {
   /**
    * Tests the language filter.
    */
-  public function testFilter() {
+  public function testFilter(): void {
     $view = Views::getView('test_view');
     foreach (['en' => 'John', 'xx-lolspeak' => 'George'] as $langcode => $name) {
       $view->setDisplay();

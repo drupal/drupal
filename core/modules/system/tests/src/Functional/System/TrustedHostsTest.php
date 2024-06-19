@@ -36,7 +36,7 @@ class TrustedHostsTest extends BrowserTestBase {
    * Checks that an error is shown when the trusted host setting is missing from
    * settings.php
    */
-  public function testStatusPageWithoutConfiguration() {
+  public function testStatusPageWithoutConfiguration(): void {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -47,7 +47,7 @@ class TrustedHostsTest extends BrowserTestBase {
   /**
    * Tests that the status page shows the trusted patterns from settings.php.
    */
-  public function testStatusPageWithConfiguration() {
+  public function testStatusPageWithConfiguration(): void {
     $settings['settings']['trusted_host_patterns'] = (object) [
       'value' => ['^' . preg_quote(\Drupal::request()->getHost()) . '$'],
       'required' => TRUE,
@@ -67,7 +67,7 @@ class TrustedHostsTest extends BrowserTestBase {
    *
    * @see \Drupal\Core\Http\TrustedHostsRequestFactory
    */
-  public function testFakeRequests() {
+  public function testFakeRequests(): void {
     $this->container->get('module_installer')->install(['trusted_hosts_test']);
 
     $host = $this->container->get('request_stack')->getCurrentRequest()->getHost();
@@ -85,7 +85,7 @@ class TrustedHostsTest extends BrowserTestBase {
   /**
    * Tests that shortcut module works together with host verification.
    */
-  public function testShortcut() {
+  public function testShortcut(): void {
     $this->container->get('module_installer')->install(['block', 'shortcut']);
     $this->rebuildContainer();
 
@@ -120,7 +120,7 @@ class TrustedHostsTest extends BrowserTestBase {
    *
    * @see \Drupal\Core\Http\TrustedHostsRequestFactory
    */
-  public function testRequestBags() {
+  public function testRequestBags(): void {
     $this->container->get('module_installer')->install(['trusted_hosts_test']);
 
     $host = $this->container->get('request_stack')->getCurrentRequest()->getHost();

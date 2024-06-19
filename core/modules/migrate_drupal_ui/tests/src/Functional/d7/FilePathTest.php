@@ -94,7 +94,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
    *
    * @dataProvider providerTestFilePath
    */
-  public function testFilePath(string $file_private_path, string $file_public_path, string $file_temporary_path, string $private, string $public, string $temporary) {
+  public function testFilePath(string $file_private_path, string $file_public_path, string $file_temporary_path, string $private, string $public, string $temporary): void {
     $this->sourceFileScheme['private'] = $file_private_path;
     $this->sourceFileScheme['public'] = $file_public_path;
     $this->sourceFileScheme['temporary'] = $file_temporary_path;

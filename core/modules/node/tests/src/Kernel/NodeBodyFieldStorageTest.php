@@ -45,7 +45,7 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
   /**
    * Tests node body field storage persistence even if there are no instances.
    */
-  public function testFieldOverrides() {
+  public function testFieldOverrides(): void {
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
     $this->assertNotEmpty($field_storage, 'Node body field storage exists.');
     $type = NodeType::create(['name' => 'Ponies', 'type' => 'ponies']);

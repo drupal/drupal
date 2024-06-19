@@ -26,7 +26,7 @@ class AdminUiTest extends CKEditor5TestBase {
   /**
    * Confirm settings only trigger AJAX when select value is CKEditor 5.
    */
-  public function testSettingsOnlyFireAjaxWithCkeditor5() {
+  public function testSettingsOnlyFireAjaxWithCkeditor5(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->addNewTextFormat($page, $assert_session);
@@ -139,7 +139,7 @@ JS;
   /**
    * CKEditor 5's filter UI modifications should not break it for other editors.
    */
-  public function testUnavailableFiltersHiddenWhenSwitching() {
+  public function testUnavailableFiltersHiddenWhenSwitching(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->createNewTextFormat($page, $assert_session, 'unicorn');
@@ -154,7 +154,7 @@ JS;
   /**
    * Test that filter settings are only visible when the filter is enabled.
    */
-  public function testFilterCheckboxesToggleSettings() {
+  public function testFilterCheckboxesToggleSettings(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -272,7 +272,7 @@ JS;
   /**
    * Tests the plugin settings form section.
    */
-  public function testPluginSettingsFormSection() {
+  public function testPluginSettingsFormSection(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -316,7 +316,7 @@ JS;
   /**
    * Tests the language config form.
    */
-  public function testLanguageConfigForm() {
+  public function testLanguageConfigForm(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

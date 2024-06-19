@@ -50,7 +50,7 @@ class ViewsUiIntegrationTest extends MediaLibraryTestBase {
   /**
    * Tests that the integration with Views works correctly.
    */
-  public function testViewsAdmin() {
+  public function testViewsAdmin(): void {
     $page = $this->getSession()->getPage();
 
     // Assert that the widget can be seen and that there are 8 items.

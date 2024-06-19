@@ -40,7 +40,7 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
   /**
    * Tests if config overrides correctly set cacheability metadata.
    */
-  public function testConfigOverride() {
+  public function testConfigOverride(): void {
     // It's pirate day today!
     $GLOBALS['it_is_pirate_day'] = TRUE;
 
@@ -60,7 +60,7 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
   /**
    * Tests if config overrides set cacheability metadata on config entities.
    */
-  public function testConfigEntityOverride() {
+  public function testConfigEntityOverride(): void {
     // It's pirate day today!
     $GLOBALS['it_is_pirate_day'] = TRUE;
 

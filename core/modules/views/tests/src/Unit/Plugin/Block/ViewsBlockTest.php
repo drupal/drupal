@@ -137,7 +137,7 @@ class ViewsBlockTest extends UnitTestCase {
    *
    * @see \Drupal\views\Plugin\block\ViewsBlock::build()
    */
-  public function testBuild() {
+  public function testBuild(): void {
     $output = $this->randomMachineName(100);
     $build = ['view_build' => $output, '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block', '#pre_rendered' => TRUE];
     $this->executable->expects($this->once())
@@ -160,7 +160,7 @@ class ViewsBlockTest extends UnitTestCase {
    *
    * @covers ::build
    */
-  public function testBuildEmpty() {
+  public function testBuildEmpty(): void {
     $build = ['view_build' => [], '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block', '#pre_rendered' => TRUE, '#cache' => ['contexts' => ['user']]];
     $this->executable->expects($this->once())
       ->method('buildRenderable')
@@ -182,7 +182,7 @@ class ViewsBlockTest extends UnitTestCase {
    *
    * @see \Drupal\views\Plugin\block\ViewsBlock::build()
    */
-  public function testBuildFailed() {
+  public function testBuildFailed(): void {
     $output = FALSE;
     $this->executable->expects($this->once())
       ->method('buildRenderable')

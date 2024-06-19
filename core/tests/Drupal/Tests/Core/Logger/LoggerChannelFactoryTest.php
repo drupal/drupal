@@ -20,7 +20,7 @@ class LoggerChannelFactoryTest extends UnitTestCase {
    *
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     $factory = new LoggerChannelFactory(
       $this->createMock(RequestStack::class),
       $this->createMock(AccountInterface::class),

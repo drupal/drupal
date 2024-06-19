@@ -29,7 +29,7 @@ class RestResourceConfigTest extends KernelTestBase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDependencies() {
+  public function testCalculateDependencies(): void {
     $rest_config = RestResourceConfig::create([
       'plugin_id' => 'entity:entity_test',
       'granularity' => RestResourceConfigInterface::METHOD_GRANULARITY,

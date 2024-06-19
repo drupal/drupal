@@ -45,7 +45,7 @@ class CollapsedSummariesTest extends WebDriverTestBase {
   /**
    * Confirm that summaries are provided for node meta at all widths.
    */
-  public function testSummaries() {
+  public function testSummaries(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

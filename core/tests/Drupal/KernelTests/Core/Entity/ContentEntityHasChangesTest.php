@@ -39,7 +39,7 @@ class ContentEntityHasChangesTest extends KernelTestBase {
   /**
    * Tests the correct functionality of the hasTranslationChanges() function.
    */
-  public function testHasTranslationChanges() {
+  public function testHasTranslationChanges(): void {
     $user1 = User::create([
       'name' => 'username1',
       'status' => 1,

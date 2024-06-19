@@ -39,7 +39,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   /**
    * @covers ::getHttpClient
    */
-  public function testGetHttpClient() {
+  public function testGetHttpClient(): void {
     // Our stand-in for the Guzzle client object.
     $expected = new \stdClass();
 
@@ -62,7 +62,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   /**
    * @covers ::getHttpClient
    */
-  public function testGetHttpClientException() {
+  public function testGetHttpClientException(): void {
     // A driver type that isn't BrowserKitDriver. This should cause a
     // RuntimeException.
     $btb = $this->mockBrowserTestBaseWithDriver(new \stdClass());
@@ -79,7 +79,7 @@ class BrowserTestBaseTest extends UnitTestCase {
    *
    * @covers ::tearDown
    */
-  public function testTearDownWithoutSetUp() {
+  public function testTearDownWithoutSetUp(): void {
     $method = 'cleanupEnvironment';
     $this->assertTrue(method_exists(BrowserTestBase::class, $method));
     $btb = $this->getMockBuilder(BrowserTestBaseMockableClass::class)

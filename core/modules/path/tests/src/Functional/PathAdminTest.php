@@ -42,7 +42,7 @@ class PathAdminTest extends PathTestBase {
   /**
    * Tests the filtering aspect of the Path UI.
    */
-  public function testPathFiltering() {
+  public function testPathFiltering(): void {
     // Create test nodes.
     $node1 = $this->drupalCreateNode();
     $node2 = $this->drupalCreateNode();

@@ -930,7 +930,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests GETting an individual resource, plus edge cases to ensure good DX.
    */
-  public function testGetIndividual() {
+  public function testGetIndividual(): void {
     // The URL and Guzzle request options that will be used in this test. The
     // request options will be modified/expanded throughout this test:
     // - to first test all mistakes a developer might make, and assert that the
@@ -1088,7 +1088,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests GETting a collection of resources.
    */
-  public function testCollection() {
+  public function testCollection(): void {
     $entity_collection = $this->getData();
     assert(count($entity_collection) > 1, 'A collection must have more that one entity in it.');
 
@@ -1318,7 +1318,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * single expected ResourceResponse. This is repeated for every relationship
    * field of the resource type under test.
    */
-  public function testRelated() {
+  public function testRelated(): void {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
@@ -1337,7 +1337,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * targeted resource and the target resource IDs. These type+ID combos are
    * referred to as "resource identifiers."
    */
-  public function testRelationships() {
+  public function testRelationships(): void {
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('Configuration entities cannot have relationships.');
     }
@@ -1984,7 +1984,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests POSTing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testPostIndividual() {
+  public function testPostIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('POSTing config entities is not yet supported.');
@@ -2199,7 +2199,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests PATCHing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testPatchIndividual() {
+  public function testPatchIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('PATCHing config entities is not yet supported.');
@@ -2527,7 +2527,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests DELETEing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testDeleteIndividual() {
+  public function testDeleteIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('DELETEing config entities is not yet supported.');
@@ -2804,7 +2804,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests individual and collection revisions.
    */
-  public function testRevisions() {
+  public function testRevisions(): void {
     if (!$this->entity->getEntityType()->isRevisionable() || !$this->entity instanceof FieldableEntityInterface) {
       return;
     }

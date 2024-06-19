@@ -56,7 +56,7 @@ class AccessResultTest extends UnitTestCase {
    *
    * @covers ::neutral
    */
-  public function testConstruction() {
+  public function testConstruction(): void {
     $verify = function (AccessResult $access) {
       $this->assertFalse($access->isAllowed());
       $this->assertFalse($access->isForbidden());
@@ -81,7 +81,7 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::isForbidden
    * @covers ::isNeutral
    */
-  public function testAccessAllowed() {
+  public function testAccessAllowed(): void {
     $verify = function (AccessResult $access) {
       $this->assertTrue($access->isAllowed());
       $this->assertFalse($access->isForbidden());
@@ -100,7 +100,7 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::isForbidden
    * @covers ::isNeutral
    */
-  public function testAccessForbidden() {
+  public function testAccessForbidden(): void {
     $verify = function (AccessResult $access) {
       $this->assertFalse($access->isAllowed());
       $this->assertTrue($access->isForbidden());
@@ -116,7 +116,7 @@ class AccessResultTest extends UnitTestCase {
   /**
    * @covers ::forbidden
    */
-  public function testAccessForbiddenReason() {
+  public function testAccessForbiddenReason(): void {
     $verify = function (AccessResult $access, $reason) {
       $this->assertInstanceOf(AccessResultReasonInterface::class, $access);
       $this->assertSame($reason, $access->getReason());
@@ -139,7 +139,7 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::isForbidden
    * @covers ::isNeutral
    */
-  public function testAccessConditionallyAllowed() {
+  public function testAccessConditionallyAllowed(): void {
     $verify = function (AccessResult $access, $allowed) {
       $this->assertSame($allowed, $access->isAllowed());
       $this->assertFalse($access->isForbidden());
@@ -159,7 +159,7 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::isForbidden
    * @covers ::isNeutral
    */
-  public function testAccessConditionallyForbidden() {
+  public function testAccessConditionallyForbidden(): void {
     $verify = function (AccessResult $access, $forbidden) {
       $this->assertFalse($access->isAllowed());
       $this->assertSame($forbidden, $access->isForbidden());
@@ -176,7 +176,7 @@ class AccessResultTest extends UnitTestCase {
   /**
    * @covers ::andIf
    */
-  public function testAndIf() {
+  public function testAndIf(): void {
     $neutral = AccessResult::neutral('neutral message');
     $allowed = AccessResult::allowed();
     $forbidden = AccessResult::forbidden('forbidden message');
@@ -267,7 +267,7 @@ class AccessResultTest extends UnitTestCase {
   /**
    * @covers ::orIf
    */
-  public function testOrIf() {
+  public function testOrIf(): void {
     $neutral = AccessResult::neutral('neutral message');
     $neutral_other = AccessResult::neutral('other neutral message');
     $neutral_reasonless = AccessResult::neutral();
@@ -385,7 +385,7 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::setCacheMaxAge
    * @covers ::getCacheMaxAge
    */
-  public function testCacheMaxAge() {
+  public function testCacheMaxAge(): void {
     $this->assertSame(Cache::PERMANENT, AccessResult::neutral()->getCacheMaxAge());
     $this->assertSame(1337, AccessResult::neutral()->setCacheMaxAge(1337)->getCacheMaxAge());
   }
@@ -398,7 +398,7 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::cachePerUser
    * @covers ::allowedIfHasPermission
    */
-  public function testCacheContexts() {
+  public function testCacheContexts(): void {
     $verify = function (AccessResult $access, array $contexts) {
       $this->assertFalse($access->isAllowed());
       $this->assertFalse($access->isForbidden());
@@ -474,7 +474,7 @@ class AccessResultTest extends UnitTestCase {
    * @covers ::getCacheTags
    * @covers ::resetCacheTags
    */
-  public function testCacheTags() {
+  public function testCacheTags(): void {
     $verify = function (AccessResult $access, array $tags, array $contexts = [], $max_age = Cache::PERMANENT) {
       $this->assertFalse($access->isAllowed());
       $this->assertFalse($access->isForbidden());
@@ -532,7 +532,7 @@ class AccessResultTest extends UnitTestCase {
   /**
    * @covers ::inheritCacheability
    */
-  public function testInheritCacheability() {
+  public function testInheritCacheability(): void {
     // andIf(); 1st has defaults, 2nd has custom tags, contexts and max-age.
     $access = AccessResult::allowed();
     $other = AccessResult::allowed()->setCacheMaxAge(1500)->cachePerPermissions()->addCacheTags(['node:20011988']);
@@ -852,7 +852,7 @@ class AccessResultTest extends UnitTestCase {
    *
    * @dataProvider andOrCacheabilityPropagationProvider
    */
-  public function testAndOrCacheabilityPropagation(AccessResultInterface $first, $op, AccessResultInterface $second, $implements_cacheable_dependency_interface, $is_cacheable) {
+  public function testAndOrCacheabilityPropagation(AccessResultInterface $first, $op, AccessResultInterface $second, $implements_cacheable_dependency_interface, $is_cacheable): void {
     if ($op === 'OR') {
       $result = $first->orIf($second);
     }
@@ -884,7 +884,7 @@ class AccessResultTest extends UnitTestCase {
    *
    * @covers ::orIf
    */
-  public function testOrIfCacheabilityMerging() {
+  public function testOrIfCacheabilityMerging(): void {
     $merge_both_directions = function (AccessResult $a, AccessResult $b) {
       // A globally cacheable access result.
       $a->setCacheMaxAge(3600);
@@ -920,7 +920,7 @@ class AccessResultTest extends UnitTestCase {
    * @param \Drupal\Core\Access\AccessResult $expected_access
    *   The expected access check result.
    */
-  public function testAllowedIfHasPermissions($permissions, $conjunction, AccessResult $expected_access) {
+  public function testAllowedIfHasPermissions($permissions, $conjunction, AccessResult $expected_access): void {
     $account = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $account->expects($this->any())
       ->method('hasPermission')

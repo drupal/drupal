@@ -26,7 +26,7 @@ class StorageCopyTraitTest extends UnitTestCase {
    *
    * @dataProvider providerTestReplaceStorageContents
    */
-  public function testReplaceStorageContents($source_collections, $target_collections) {
+  public function testReplaceStorageContents($source_collections, $target_collections): void {
     $source = new MemoryStorage();
     $target = new MemoryStorage();
     // Empty the storage should be the same.
@@ -121,7 +121,7 @@ class StorageCopyTraitTest extends UnitTestCase {
    *
    * @covers ::replaceStorageContents
    */
-  public function testWithInvalidConfiguration() {
+  public function testWithInvalidConfiguration(): void {
     $source = new TestStorage();
     $this->generateRandomData($source);
 

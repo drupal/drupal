@@ -99,7 +99,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
    * @group Drupal
    * @group Comment
    */
-  public function testRead() {
+  public function testRead(): void {
     $this->callsToFetch = 0;
     $results = $this->commentStatistics->read(['1' => 'boo', '2' => 'foo'], 'snafus');
     $this->assertEquals(['something', 'something-else'], $results);

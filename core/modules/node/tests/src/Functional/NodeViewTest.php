@@ -20,7 +20,7 @@ class NodeViewTest extends NodeTestBase {
   /**
    * Tests the html head links.
    */
-  public function testHtmlHeadLinks() {
+  public function testHtmlHeadLinks(): void {
     $node = $this->drupalCreateNode();
 
     $this->drupalGet($node->toUrl());
@@ -35,7 +35,7 @@ class NodeViewTest extends NodeTestBase {
   /**
    * Tests the Link header.
    */
-  public function testLinkHeader() {
+  public function testLinkHeader(): void {
     $node = $this->drupalCreateNode();
     $this->drupalGet($node->toUrl());
     $this->assertArrayNotHasKey('Link', $this->getSession()->getResponseHeaders());
@@ -44,7 +44,7 @@ class NodeViewTest extends NodeTestBase {
   /**
    * Tests that we store and retrieve multi-byte UTF-8 characters correctly.
    */
-  public function testMultiByteUtf8() {
+  public function testMultiByteUtf8(): void {
     $title = '🐝';
     // To ensure that the title has multi-byte characters, we compare the byte
     // length to the character length.

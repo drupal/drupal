@@ -33,7 +33,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   /**
    * Tests creating and deleting content.
    */
-  public function testCreatingContent() {
+  public function testCreatingContent(): void {
     $this->drupalGet('node/add/moderated_content');
     $this->submitForm([
       'title[0][value]' => 'moderated content',
@@ -86,7 +86,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   /**
    * Tests edit form destinations.
    */
-  public function testFormSaveDestination() {
+  public function testFormSaveDestination(): void {
     // Create new moderated content in draft.
     $this->drupalGet('node/add/moderated_content');
     $this->submitForm([
@@ -137,7 +137,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   /**
    * Tests pagers aren't broken by content_moderation.
    */
-  public function testPagers() {
+  public function testPagers(): void {
     // Create 51 nodes to force the pager.
     foreach (range(1, 51) as $delta) {
       Node::create([
@@ -160,7 +160,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   /**
    * Tests the workflow when a user has no Content Moderation permissions.
    */
-  public function testNoContentModerationPermissions() {
+  public function testNoContentModerationPermissions(): void {
     $session_assert = $this->assertSession();
 
     // Create a user with quite advanced node permissions but no content

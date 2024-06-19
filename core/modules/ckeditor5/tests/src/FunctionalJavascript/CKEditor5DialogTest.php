@@ -33,7 +33,7 @@ class CKEditor5DialogTest extends CKEditor5TestBase {
   /**
    * Tests if CKEditor 5 tooltips can be interacted with in dialogs.
    */
-  public function testCKEditor5FocusInTooltipsInDialog() {
+  public function testCKEditor5FocusInTooltipsInDialog(): void {
     FilterFormat::create([
       'format' => 'test_format',
       'name' => 'CKEditor 5 with link',

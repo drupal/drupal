@@ -53,7 +53,7 @@ class EntityDefaultLanguageTest extends KernelTestBase {
   /**
    * Tests that default language code is properly set for new nodes.
    */
-  public function testEntityTranslationDefaultLanguageViaCode() {
+  public function testEntityTranslationDefaultLanguageViaCode(): void {
     // With language module activated, and a content type that is configured to
     // have no language by default, a new node of this content type will have
     // "und" language code when language is not specified.

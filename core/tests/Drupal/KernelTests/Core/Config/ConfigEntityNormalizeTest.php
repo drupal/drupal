@@ -28,7 +28,7 @@ class ConfigEntityNormalizeTest extends KernelTestBase {
     $this->installConfig(static::$modules);
   }
 
-  public function testNormalize() {
+  public function testNormalize(): void {
     $config_entity = \Drupal::entityTypeManager()->getStorage('config_test')->create(['id' => 'system', 'label' => 'foobar', 'weight' => 1]);
     $config_entity->save();
 

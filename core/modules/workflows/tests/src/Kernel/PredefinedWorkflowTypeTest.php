@@ -22,7 +22,7 @@ class PredefinedWorkflowTypeTest extends KernelTestBase {
   /**
    * Tests a predefined workflow type.
    */
-  public function testPredefinedWorkflowType() {
+  public function testPredefinedWorkflowType(): void {
     $workflow = Workflow::create([
       'id' => 'aces',
       'label' => 'Aces Workflow',

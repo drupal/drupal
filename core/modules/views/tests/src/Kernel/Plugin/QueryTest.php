@@ -32,7 +32,7 @@ class QueryTest extends ViewsKernelTestBase {
   /**
    * Tests query plugins.
    */
-  public function testQuery() {
+  public function testQuery(): void {
     $this->_testInitQuery();
     $this->_testQueryExecute();
     $this->queryMethodsTests();

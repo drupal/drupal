@@ -66,7 +66,7 @@ class UserLocalTaskTest extends UnitTestCase {
    *
    * @covers \Drupal\user\Plugin\Derivative\UserLocalTask::getDerivativeDefinitions
    */
-  public function testGetDerivativeDefinitions() {
+  public function testGetDerivativeDefinitions(): void {
     $expected = [
       'permissions_entity_bundle_of_id' => [
         'route_name' => 'entity.entity_bundle_of_id.entity_permissions_form',

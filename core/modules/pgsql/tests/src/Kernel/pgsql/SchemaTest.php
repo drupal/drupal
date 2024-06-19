@@ -312,7 +312,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   /**
    * Tests the method tableExists().
    */
-  public function testTableExists() {
+  public function testTableExists(): void {
     $table_name = 'test_table';
     $table_specification = [
       'fields' => [
@@ -341,7 +341,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   /**
    * Tests renaming a table where the new index name is equal to the table name.
    */
-  public function testRenameTableWithNewIndexNameEqualsTableName() {
+  public function testRenameTableWithNewIndexNameEqualsTableName(): void {
     // Special table names for colliding with the PostgreSQL new index name.
     $table_name_old = 'some_new_table_name__id__idx';
     $table_name_new = 'some_new_table_name';

@@ -48,7 +48,7 @@ class NumberFieldTest extends BrowserTestBase {
   /**
    * Tests decimal field.
    */
-  public function testNumberDecimalField() {
+  public function testNumberDecimalField(): void {
     // Create a field with settings to validate.
     $field_name = $this->randomMachineName();
     FieldStorageConfig::create([
@@ -136,7 +136,7 @@ class NumberFieldTest extends BrowserTestBase {
   /**
    * Tests integer field.
    */
-  public function testNumberIntegerField() {
+  public function testNumberIntegerField(): void {
     $minimum = rand(-4000, -2000);
     $maximum = rand(2000, 4000);
 
@@ -302,7 +302,7 @@ class NumberFieldTest extends BrowserTestBase {
   /**
    * Tests float field.
    */
-  public function testNumberFloatField() {
+  public function testNumberFloatField(): void {
     // Create a field with settings to validate.
     $field_name = $this->randomMachineName();
     FieldStorageConfig::create([
@@ -395,7 +395,7 @@ class NumberFieldTest extends BrowserTestBase {
   /**
    * Tests setting the minimum value of a float field through the interface.
    */
-  public function testCreateNumberFloatField() {
+  public function testCreateNumberFloatField(): void {
     // Create a float field.
     $field_name = $this->randomMachineName();
     FieldStorageConfig::create([
@@ -420,7 +420,7 @@ class NumberFieldTest extends BrowserTestBase {
   /**
    * Tests setting the minimum value of a decimal field through the interface.
    */
-  public function testCreateNumberDecimalField() {
+  public function testCreateNumberDecimalField(): void {
     // Create a decimal field.
     $field_name = $this->randomMachineName();
     FieldStorageConfig::create([

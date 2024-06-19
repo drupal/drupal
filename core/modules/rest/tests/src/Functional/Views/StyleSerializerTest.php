@@ -87,7 +87,7 @@ class StyleSerializerTest extends ViewTestBase {
   /**
    * Checks that the auth options restricts access to a REST views display.
    */
-  public function testRestViewsAuthentication() {
+  public function testRestViewsAuthentication(): void {
     // Assume the view is hidden behind a permission.
     $this->drupalGet('test/serialize/auth_with_perm', ['query' => ['_format' => 'json']]);
     $this->assertSession()->statusCodeEquals(401);
@@ -118,7 +118,7 @@ class StyleSerializerTest extends ViewTestBase {
   /**
    * Verifies REST export views work on the same path as a page display.
    */
-  public function testSharedPagePath() {
+  public function testSharedPagePath(): void {
     // Test with no format as well as html explicitly.
     $this->drupalGet('test/serialize/shared');
     $this->assertSession()->statusCodeEquals(200);
@@ -140,7 +140,7 @@ class StyleSerializerTest extends ViewTestBase {
   /**
    * Verifies site maintenance mode functionality.
    */
-  public function testSiteMaintenance() {
+  public function testSiteMaintenance(): void {
     $view = Views::getView('test_serializer_display_field');
     $view->initDisplay();
     $this->executeView($view);
@@ -170,7 +170,7 @@ class StyleSerializerTest extends ViewTestBase {
   /**
    * Tests the "Grouped rows" functionality.
    */
-  public function testGroupRows() {
+  public function testGroupRows(): void {
     $this->drupalCreateContentType(['type' => 'page']);
     // Create a text field with cardinality set to unlimited.
     $field_name = 'field_group_rows';
@@ -235,7 +235,7 @@ class StyleSerializerTest extends ViewTestBase {
    * parameter. This is set to filter nodes by those whose title starts with
    * the value provided.
    */
-  public function testRestViewExposedFilter() {
+  public function testRestViewExposedFilter(): void {
     $this->drupalCreateContentType(['type' => 'page']);
     $node0 = $this->drupalCreateNode(['title' => 'Node 1']);
     $node1 = $this->drupalCreateNode(['title' => 'Node 11']);
@@ -291,7 +291,7 @@ class StyleSerializerTest extends ViewTestBase {
   /**
    * Tests multilingual entity rows.
    */
-  public function testMulEntityRows() {
+  public function testMulEntityRows(): void {
     // Create some languages.
     ConfigurableLanguage::createFromLangcode('l1')->save();
     ConfigurableLanguage::createFromLangcode('l2')->save();

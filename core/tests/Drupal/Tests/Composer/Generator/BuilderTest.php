@@ -88,7 +88,7 @@ class BuilderTest extends TestCase {
    *
    * @dataProvider builderTestData
    */
-  public function testBuilder($builderClass, $expected) {
+  public function testBuilder($builderClass, $expected): void {
     $fixtures = new Fixtures();
     $drupalCoreInfo = $fixtures->drupalCoreComposerFixture();
 

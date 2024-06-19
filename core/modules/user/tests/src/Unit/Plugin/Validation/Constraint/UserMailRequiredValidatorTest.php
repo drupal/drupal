@@ -58,7 +58,7 @@ class UserMailRequiredValidatorTest extends UnitTestCase {
    *
    * @dataProvider providerTestValidate
    */
-  public function testValidate($items, $expected_violation, $is_admin = FALSE) {
+  public function testValidate($items, $expected_violation, $is_admin = FALSE): void {
     $constraint = new UserMailRequired();
 
     // If a violation is expected, then the context's addViolation method will

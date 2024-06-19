@@ -86,7 +86,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
   /**
    * Tests that migrated view modes can be loaded using D8 APIs.
    */
-  public function testWidgetSettings() {
+  public function testWidgetSettings(): void {
     $this->assertEntity('node.page.default', 'node', 'page');
     $this->assertComponent('node.page.default', 'body', 'text_textarea_with_summary', -4);
     $this->assertComponent('node.page.default', 'field_text_plain', 'string_textfield', -2);

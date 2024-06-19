@@ -24,7 +24,7 @@ class SearchTextProcessorTest extends KernelTestBase {
   /**
    * Tests that text processing handles Unicode characters correctly.
    */
-  public function testSearchTextProcessorUnicode() {
+  public function testSearchTextProcessorUnicode(): void {
     // This test uses a file that was constructed so that the even lines are
     // boundary characters, and the odd lines are valid word characters. (It
     // was generated as a sequence of all the Unicode characters, and then the
@@ -79,7 +79,7 @@ class SearchTextProcessorTest extends KernelTestBase {
   /**
    * Tests that text analysis does the right thing with punctuation.
    */
-  public function testSearchTextProcessorPunctuation() {
+  public function testSearchTextProcessorPunctuation(): void {
     $cases = [
       ['20.03/94-28,876', '20039428876', 'Punctuation removed from numbers'],
       ['great...drupal--module', 'great drupal module', 'Multiple dot and dashes are word boundaries'],

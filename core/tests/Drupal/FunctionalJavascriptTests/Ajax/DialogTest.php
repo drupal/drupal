@@ -28,7 +28,7 @@ class DialogTest extends WebDriverTestBase {
   /**
    * Tests sending non-JS and AJAX requests to open and manipulate modals.
    */
-  public function testDialog() {
+  public function testDialog(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer contact forms']));
     // Ensure the elements render without notices or exceptions.
     $this->drupalGet('ajax-test/dialog');

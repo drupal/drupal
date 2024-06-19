@@ -33,7 +33,7 @@ class AnalyzeTest extends UITestBase {
   /**
    * Tests that analyze works in general.
    */
-  public function testAnalyzeBasic() {
+  public function testAnalyzeBasic(): void {
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');

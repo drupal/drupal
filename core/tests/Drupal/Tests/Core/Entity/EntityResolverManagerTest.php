@@ -72,7 +72,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetRouteOptionsWithStandardRoute
    */
-  public function testSetRouteOptionsWithStandardRoute($controller) {
+  public function testSetRouteOptionsWithStandardRoute($controller): void {
     $route = new Route('/example', [
       '_controller' => $controller,
     ]);
@@ -101,7 +101,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetRouteOptionsWithStandardRouteWithArgument
    */
-  public function testSetRouteOptionsWithStandardRouteWithArgument($controller) {
+  public function testSetRouteOptionsWithStandardRouteWithArgument($controller): void {
     $route = new Route('/example/{argument}', [
       '_controller' => $controller,
       'argument' => 'test',
@@ -131,7 +131,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetRouteOptionsWithContentController
    */
-  public function testSetRouteOptionsWithContentController($controller) {
+  public function testSetRouteOptionsWithContentController($controller): void {
     $route = new Route('/example/{argument}', [
       '_controller' => $controller,
       'argument' => 'test',
@@ -163,7 +163,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetRouteOptionsWithEntityTypeNoUpcasting
    */
-  public function testSetRouteOptionsWithEntityTypeNoUpcasting($controller) {
+  public function testSetRouteOptionsWithEntityTypeNoUpcasting($controller): void {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', [
@@ -196,7 +196,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetRouteOptionsWithEntityTypeUpcasting
    */
-  public function testSetRouteOptionsWithEntityTypeUpcasting($controller) {
+  public function testSetRouteOptionsWithEntityTypeUpcasting($controller): void {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', [
@@ -228,7 +228,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::getEntityTypes
    * @covers ::setParametersFromReflection
    */
-  public function testSetRouteOptionsWithEntityFormUpcasting() {
+  public function testSetRouteOptionsWithEntityFormUpcasting(): void {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', [
@@ -250,7 +250,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::getEntityTypes
    * @covers ::setParametersFromReflection
    */
-  public function testSetRouteOptionsWithEntityUpcastingNoCreate() {
+  public function testSetRouteOptionsWithEntityUpcastingNoCreate(): void {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', [
@@ -272,7 +272,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::getEntityTypes
    * @covers ::setParametersFromReflection
    */
-  public function testSetRouteOptionsWithEntityFormNoUpcasting() {
+  public function testSetRouteOptionsWithEntityFormNoUpcasting(): void {
     $this->setupEntityTypes();
 
     $route = new Route('/example/{entity_test}', [
@@ -294,7 +294,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::setParametersFromReflection
    * @covers ::setParametersFromEntityInformation
    */
-  public function testSetRouteOptionsWithEntityViewRouteAndManualParameters() {
+  public function testSetRouteOptionsWithEntityViewRouteAndManualParameters(): void {
     $this->setupEntityTypes();
     $route = new Route('/example/{foo}',
       [
@@ -326,7 +326,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::setParametersFromReflection
    * @covers ::setParametersFromEntityInformation
    */
-  public function testSetRouteOptionsWithEntityViewRoute() {
+  public function testSetRouteOptionsWithEntityViewRoute(): void {
     $this->setupEntityTypes();
     $route = new Route('/example/{entity_test}', [
       '_entity_view' => 'entity_test.view',
@@ -348,7 +348,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::setParametersFromReflection
    * @covers ::setParametersFromEntityInformation
    */
-  public function testSetRouteOptionsWithEntityListRoute() {
+  public function testSetRouteOptionsWithEntityListRoute(): void {
     $this->setupEntityTypes();
     $route = new Route('/example/{entity_test}', [
       '_entity_list' => 'entity_test',
@@ -370,7 +370,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::setParametersFromReflection
    * @covers ::setParametersFromEntityInformation
    */
-  public function testSetRouteOptionsWithEntityFormRoute() {
+  public function testSetRouteOptionsWithEntityFormRoute(): void {
     $this->setupEntityTypes();
     $route = new Route('/example/{entity_test}', [
       '_entity_form' => 'entity_test.edit',
@@ -395,7 +395,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::setParametersFromReflection
    * @covers ::setParametersFromEntityInformation
    */
-  public function testSetRouteOptionsWithEntityFormRouteAndArgument() {
+  public function testSetRouteOptionsWithEntityFormRouteAndArgument(): void {
     $this->setupEntityTypes();
     $route = new Route('/example/{argument}/{entity_test}', [
       '_entity_form' => 'entity_test.edit',
@@ -424,7 +424,7 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::setParametersFromReflection
    * @covers ::setParametersFromEntityInformation
    */
-  public function testSetRouteOptionsWithEntityAddFormRoute() {
+  public function testSetRouteOptionsWithEntityAddFormRoute(): void {
     $this->setupEntityTypes();
     $route = new Route('/example/add', [
       '_entity_form' => 'entity_test.add',

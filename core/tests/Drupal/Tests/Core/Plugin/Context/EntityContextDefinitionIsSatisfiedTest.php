@@ -108,7 +108,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
    *
    * @dataProvider providerTestIsSatisfiedBy
    */
-  public function testIsSatisfiedBy($expected, ContextDefinition $requirement, ContextDefinition $definition, $value = NULL) {
+  public function testIsSatisfiedBy($expected, ContextDefinition $requirement, ContextDefinition $definition, $value = NULL): void {
     $entity_storage = $this->prophesize(EntityStorageInterface::class);
     $content_entity_storage = $this->prophesize(ContentEntityStorageInterface::class);
     $this->entityTypeManager->getStorage('test_config')->willReturn($entity_storage->reveal());
@@ -192,7 +192,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
    *
    * @dataProvider providerTestIsSatisfiedByGenerateBundledEntity
    */
-  public function testIsSatisfiedByGenerateBundledEntity($expected, array $requirement_bundles, array $candidate_bundles, ?array $bundles_to_instantiate = NULL) {
+  public function testIsSatisfiedByGenerateBundledEntity($expected, array $requirement_bundles, array $candidate_bundles, ?array $bundles_to_instantiate = NULL): void {
     // If no bundles are explicitly specified, instantiate all bundles.
     if (!$bundles_to_instantiate) {
       $bundles_to_instantiate = $candidate_bundles;
@@ -289,7 +289,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
    *
    * @dataProvider providerTestIsSatisfiedByPassBundledEntity
    */
-  public function testIsSatisfiedByPassBundledEntity($expected, $requirement_constraint) {
+  public function testIsSatisfiedByPassBundledEntity($expected, $requirement_constraint): void {
     $entity_type = new EntityType(['id' => 'test_content']);
     $this->entityTypeManager->getDefinitions()->willReturn([
       'test_content' => $entity_type,

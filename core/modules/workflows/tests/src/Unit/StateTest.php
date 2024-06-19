@@ -22,7 +22,7 @@ class StateTest extends UnitTestCase {
    * @covers ::label
    * @covers ::weight
    */
-  public function testGetters() {
+  public function testGetters(): void {
     $state = new State(
       $this->prophesize(WorkflowTypeInterface::class)->reveal(),
       'draft',
@@ -37,7 +37,7 @@ class StateTest extends UnitTestCase {
   /**
    * @covers ::canTransitionTo
    */
-  public function testCanTransitionTo() {
+  public function testCanTransitionTo(): void {
     $workflow_type = new TestType([], '', []);
     $workflow_type
       ->addState('draft', 'Draft')
@@ -54,7 +54,7 @@ class StateTest extends UnitTestCase {
   /**
    * @covers ::getTransitionTo
    */
-  public function testGetTransitionTo() {
+  public function testGetTransitionTo(): void {
     $workflow_type = new TestType([], '', []);
     $workflow_type
       ->addState('draft', 'Draft')
@@ -68,7 +68,7 @@ class StateTest extends UnitTestCase {
   /**
    * @covers ::getTransitionTo
    */
-  public function testGetTransitionToException() {
+  public function testGetTransitionToException(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage("Can not transition to 'published' state");
     $workflow_type = new TestType([], '', []);
@@ -80,7 +80,7 @@ class StateTest extends UnitTestCase {
   /**
    * @covers ::getTransitions
    */
-  public function testGetTransitions() {
+  public function testGetTransitions(): void {
     $workflow_type = new TestType([], '', []);
     $workflow_type
       ->addState('draft', 'Draft')
@@ -99,7 +99,7 @@ class StateTest extends UnitTestCase {
   /**
    * @covers ::labelCallback
    */
-  public function testLabelCallback() {
+  public function testLabelCallback(): void {
     $workflow_type = $this->prophesize(WorkflowTypeInterface::class)->reveal();
     $states = [
       new State($workflow_type, 'draft', 'Draft'),

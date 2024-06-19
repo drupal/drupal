@@ -37,7 +37,7 @@ class TermKernelTest extends KernelTestBase {
   /**
    * Tests that a deleted term is no longer in the vocabulary.
    */
-  public function testTermDelete() {
+  public function testTermDelete(): void {
     $vocabulary = $this->createVocabulary();
     $valid_term = $this->createTerm($vocabulary);
     // Delete a valid term.
@@ -49,7 +49,7 @@ class TermKernelTest extends KernelTestBase {
   /**
    * Deleting a parent of a term with multiple parents does not delete the term.
    */
-  public function testMultipleParentDelete() {
+  public function testMultipleParentDelete(): void {
     $vocabulary = $this->createVocabulary();
     $parent_term1 = $this->createTerm($vocabulary);
     $parent_term2 = $this->createTerm($vocabulary);
@@ -73,7 +73,7 @@ class TermKernelTest extends KernelTestBase {
   /**
    * Tests a taxonomy with terms that have multiple parents of different depths.
    */
-  public function testTaxonomyVocabularyTree() {
+  public function testTaxonomyVocabularyTree(): void {
     // Create a new vocabulary with 6 terms.
     $vocabulary = $this->createVocabulary();
     $term = [];
@@ -153,7 +153,7 @@ class TermKernelTest extends KernelTestBase {
   /**
    * Tests that a Term is renderable when unsaved (preview).
    */
-  public function testTermPreview() {
+  public function testTermPreview(): void {
     $entity_manager = \Drupal::entityTypeManager();
     $vocabulary = $this->createVocabulary();
 

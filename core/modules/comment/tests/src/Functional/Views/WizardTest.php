@@ -43,7 +43,7 @@ class WizardTest extends WizardTestBase {
   /**
    * Tests adding a view of comments.
    */
-  public function testCommentWizard() {
+  public function testCommentWizard(): void {
     $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = $this->randomMachineName(16);

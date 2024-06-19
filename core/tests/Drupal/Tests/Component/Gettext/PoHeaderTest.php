@@ -29,7 +29,7 @@ class PoHeaderTest extends TestCase {
    *
    * @dataProvider providerTestPluralsFormula
    */
-  public function testPluralsFormula($plural, $expected) {
+  public function testPluralsFormula($plural, $expected): void {
     $p = new PoHeader();
     $parsed = $p->parsePluralForms($plural);
     [$nplurals, $new_plural] = $parsed;

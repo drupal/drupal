@@ -47,7 +47,7 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
    *
    * @see \Drupal\views\Plugin\views\wizard\WizardPluginBase
    */
-  public function testCreateView() {
+  public function testCreateView(): void {
     $form = [];
     $form_state = new FormState();
     $form = $this->wizard->buildForm($form, $form_state);

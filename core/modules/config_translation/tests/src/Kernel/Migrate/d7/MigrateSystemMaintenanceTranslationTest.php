@@ -33,7 +33,7 @@ class MigrateSystemMaintenanceTranslationTest extends MigrateDrupal7TestBase {
   /**
    * Tests migrations of i18n maintenance variable.
    */
-  public function testSystemMaintenance() {
+  public function testSystemMaintenance(): void {
     $config = \Drupal::service('language_manager')->getLanguageConfigOverride('is', 'system.maintenance');
     $this->assertSame('is - This is a custom maintenance mode message.', $config->get('message'));
   }

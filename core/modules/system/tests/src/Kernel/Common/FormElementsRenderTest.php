@@ -25,7 +25,7 @@ class FormElementsRenderTest extends KernelTestBase {
    *
    * @see \Drupal\Core\Form\FormBuilderInterface::doBuildForm()
    */
-  public function testDrupalRenderFormElements() {
+  public function testDrupalRenderFormElements(): void {
     // Define a series of form elements.
     $element = [
       '#type' => 'button',

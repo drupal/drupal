@@ -23,7 +23,7 @@ class CommentPagerTest extends CommentTestBase {
   /**
    * Confirms comment paging works correctly with flat and threaded comments.
    */
-  public function testCommentPaging() {
+  public function testCommentPaging(): void {
     $this->drupalLogin($this->adminUser);
 
     // Set comment variables.
@@ -113,7 +113,7 @@ class CommentPagerTest extends CommentTestBase {
   /**
    * Confirms comment paging works correctly with flat and threaded comments.
    */
-  public function testCommentPermalink() {
+  public function testCommentPermalink(): void {
     $this->drupalLogin($this->adminUser);
 
     // Set comment variables.
@@ -145,7 +145,7 @@ class CommentPagerTest extends CommentTestBase {
   /**
    * Tests comment ordering and threading.
    */
-  public function testCommentOrderingThreading() {
+  public function testCommentOrderingThreading(): void {
     $this->drupalLogin($this->adminUser);
 
     // Set comment variables.
@@ -246,7 +246,7 @@ class CommentPagerTest extends CommentTestBase {
   /**
    * Tests calculation of first page with new comment.
    */
-  public function testCommentNewPageIndicator() {
+  public function testCommentNewPageIndicator(): void {
     $this->drupalLogin($this->adminUser);
 
     // Set comment variables.
@@ -338,7 +338,7 @@ class CommentPagerTest extends CommentTestBase {
   /**
    * Confirms comment paging works correctly with two pagers.
    */
-  public function testTwoPagers() {
+  public function testTwoPagers(): void {
     // Add another field to article content-type.
     $this->addDefaultCommentField('node', 'article', 'comment_2');
     // Set default to display comment list with unique pager id.

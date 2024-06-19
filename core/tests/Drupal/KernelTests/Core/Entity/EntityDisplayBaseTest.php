@@ -43,7 +43,7 @@ class EntityDisplayBaseTest extends KernelTestBase {
   /**
    * @covers ::preSave
    */
-  public function testPreSave() {
+  public function testPreSave(): void {
     $entity_display = EntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
@@ -80,7 +80,7 @@ class EntityDisplayBaseTest extends KernelTestBase {
   /**
    * @covers ::onDependencyRemoval
    */
-  public function testOnDependencyRemoval() {
+  public function testOnDependencyRemoval(): void {
     // Create a comment field for entity_test.
     $comment_bundle = CommentType::create([
       'id' => 'entity_test',

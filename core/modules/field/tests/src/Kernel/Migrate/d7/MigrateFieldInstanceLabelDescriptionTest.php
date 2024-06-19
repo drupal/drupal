@@ -78,7 +78,7 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal7TestBase im
   /**
    * Tests migration of file variables to file.settings.yml.
    */
-  public function testFieldInstanceLabelDescriptionTranslationMigration() {
+  public function testFieldInstanceLabelDescriptionTranslationMigration(): void {
     $language_manager = $this->container->get('language_manager');
 
     // Check that the deleted field with translations was skipped.

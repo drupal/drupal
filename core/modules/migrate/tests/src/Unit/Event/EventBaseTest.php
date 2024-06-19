@@ -19,7 +19,7 @@ class EventBaseTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getMigration
    */
-  public function testGetMigration() {
+  public function testGetMigration(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();
     $message_service = $this->prophesize('\Drupal\migrate\MigrateMessageInterface')->reveal();
     $event = new EventBase($migration, $message_service);
@@ -32,7 +32,7 @@ class EventBaseTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::logMessage
    */
-  public function testLogMessage() {
+  public function testLogMessage(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();
     $message_service = $this->prophesize('\Drupal\migrate\MigrateMessageInterface');
     $event = new EventBase($migration, $message_service->reveal());

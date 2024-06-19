@@ -16,7 +16,7 @@ class MigrateStatusTest extends MigrateTestBase {
   /**
    * Tests different connection types.
    */
-  public function testStatus() {
+  public function testStatus(): void {
     // Create a minimally valid migration.
     $definition = [
       'id' => 'migrate_status_test',

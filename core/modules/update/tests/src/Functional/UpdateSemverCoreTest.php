@@ -20,7 +20,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Ensures proper results where there are date mismatches among modules.
    */
-  public function testDatestampMismatch() {
+  public function testDatestampMismatch(): void {
     $this->mockInstalledExtensionsInfo([
       'block' => [
         // This is 2001-09-09 01:46:40 GMT, so test for "2001-Sep-".
@@ -42,7 +42,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Tests the Update Manager module when the update server returns 503 errors.
    */
-  public function testServiceUnavailable() {
+  public function testServiceUnavailable(): void {
     $this->refreshUpdateStatus([], '503-error');
     // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
     $this->assertSession()->pageTextNotContains('SimpleXMLElement');
@@ -52,7 +52,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Tests that exactly one fetch task per project is created and not more.
    */
-  public function testFetchTasks() {
+  public function testFetchTasks(): void {
     $project_a = [
       'name' => 'aaa_update_test',
     ];
@@ -83,7 +83,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
    *  - drupal.sec.8.0.2.xml
    *     'supported_branches' is '8.0.,8.1.'.
    */
-  public function testBrokenThenFixedUpdates() {
+  public function testBrokenThenFixedUpdates(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'view update notifications',
@@ -117,7 +117,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Tests when a dev release does not have a date.
    */
-  public function testDevNoReleaseDate() {
+  public function testDevNoReleaseDate(): void {
     $this->setProjectInstalledVersion('8.0.x-dev');
     $this->refreshUpdateStatus([$this->updateProject => 'dev-no-date']);
   }

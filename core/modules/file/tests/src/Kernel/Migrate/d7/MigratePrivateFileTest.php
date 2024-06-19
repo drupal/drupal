@@ -54,7 +54,7 @@ class MigratePrivateFileTest extends MigrateDrupal7TestBase {
   /**
    * Tests that all expected files are migrated.
    */
-  public function testFileMigration() {
+  public function testFileMigration(): void {
     $this->assertEntity(3, 'Babylon5.txt', 'private://Babylon5.txt', 'text/plain', 3, 1486104045, 1486104045, '1');
   }
 

@@ -73,7 +73,7 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * Tests DIC compilation.
    */
-  public function testCompileDIC() {
+  public function testCompileDIC(): void {
     // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
@@ -155,7 +155,7 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * Tests repeated loading of compiled DIC with different environment.
    */
-  public function testRepeatedBootWithDifferentEnvironment() {
+  public function testRepeatedBootWithDifferentEnvironment(): void {
     $request = Request::createFromGlobals();
     $class_loader = require $this->root . '/autoload.php';
 
@@ -177,7 +177,7 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * Tests setting of site path after kernel boot.
    */
-  public function testPreventChangeOfSitePath() {
+  public function testPreventChangeOfSitePath(): void {
     // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
@@ -226,7 +226,7 @@ class DrupalKernelTest extends KernelTestBase {
    * @param bool $value
    *   The value to set class_loader_auto_detect to.
    */
-  public function testClassLoaderAutoDetect($value) {
+  public function testClassLoaderAutoDetect($value): void {
     // Create a virtual file system containing items that should be
     // excluded. Exception being modules directory.
     vfsStream::setup('root', NULL, [
@@ -264,7 +264,7 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * @covers ::resetContainer
    */
-  public function testResetContainer() {
+  public function testResetContainer(): void {
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',

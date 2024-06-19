@@ -64,7 +64,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsNormalization
    */
-  public function testSupportsNormalization() {
+  public function testSupportsNormalization(): void {
     $this->assertTrue($this->normalizer->supportsNormalization($this->data->reveal()));
 
     $datetime = $this->prophesize(DateTimeInterface::class);
@@ -77,7 +77,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsDenormalization
    */
-  public function testSupportsDenormalization() {
+  public function testSupportsDenormalization(): void {
     $this->assertTrue($this->normalizer->supportsDenormalization($this->data->reveal(), DateTimeIso8601::class));
   }
 
@@ -85,7 +85,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
    * @covers ::normalize
    * @dataProvider providerTestNormalize
    */
-  public function testNormalize($parent_field_item_class, $datetime_type, $expected_format) {
+  public function testNormalize($parent_field_item_class, $datetime_type, $expected_format): void {
     $formatted_string = $this->randomMachineName();
 
     $field_item = $this->prophesize($parent_field_item_class);
@@ -122,7 +122,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
    * @covers ::normalize
    * @dataProvider providerTestNormalize
    */
-  public function testNormalizeWhenNull($parent_field_item_class, $datetime_type, $expected_format) {
+  public function testNormalizeWhenNull($parent_field_item_class, $datetime_type, $expected_format): void {
     $field_item = $this->prophesize($parent_field_item_class);
     if ($parent_field_item_class === DateTimeItem::class) {
       $field_storage_definition = $this->prophesize(FieldStorageDefinitionInterface::class);
@@ -183,7 +183,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    * @dataProvider providerTestDenormalizeValidFormats
    */
-  public function testDenormalizeValidFormats($type, $normalized, $expected) {
+  public function testDenormalizeValidFormats($type, $normalized, $expected): void {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
     $field_definition->getSetting('datetime_type')->willReturn($type === 'date-only' ? DateTimeItem::DATETIME_TYPE_DATE : DateTimeItem::DATETIME_TYPE_DATETIME);
     $denormalized = $this->normalizer->denormalize($normalized, DateTimeIso8601::class, NULL, [
@@ -217,7 +217,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalizeDateOnlyException() {
+  public function testDenormalizeDateOnlyException(): void {
     $this->expectException(UnexpectedValueException::class);
     $this->expectExceptionMessage('The specified date "2016/11/06" is not in an accepted format: "Y-m-d" (date-only).');
 
@@ -233,7 +233,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalizeDateAndTimeException() {
+  public function testDenormalizeDateAndTimeException(): void {
     $this->expectException(UnexpectedValueException::class);
     $this->expectExceptionMessage('The specified date "on a rainy day" is not in an accepted format: "Y-m-d\TH:i:sP" (RFC 3339), "Y-m-d\TH:i:sO" (ISO 8601).');
 
@@ -249,7 +249,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalizeNoTargetInstanceOrFieldDefinitionException() {
+  public function testDenormalizeNoTargetInstanceOrFieldDefinitionException(): void {
     $this->expectException(InvalidArgumentException::class);
     $this->expectExceptionMessage('$context[\'target_instance\'] or $context[\'field_definition\'] must be set to denormalize with the DateTimeIso8601Normalizer');
     $this->normalizer->denormalize('', DateTimeIso8601::class, NULL, []);

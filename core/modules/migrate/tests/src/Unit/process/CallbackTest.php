@@ -19,7 +19,7 @@ class CallbackTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerCallback
    */
-  public function testCallback($callable) {
+  public function testCallback($callable): void {
     $configuration = ['callable' => $callable];
     $this->plugin = new Callback($configuration, 'map', []);
     $value = $this->plugin->transform('FooBar', $this->migrateExecutable, $this->row, 'destination_property');
@@ -41,7 +41,7 @@ class CallbackTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerCallbackArray
    */
-  public function testCallbackArray($callable, $args, $result) {
+  public function testCallbackArray($callable, $args, $result): void {
     $configuration = ['callable' => $callable, 'unpack_source' => TRUE];
     $this->plugin = new Callback($configuration, 'map', []);
     $value = $this->plugin->transform($args, $this->migrateExecutable, $this->row, 'destination_property');
@@ -90,7 +90,7 @@ class CallbackTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerCallbackExceptions
    */
-  public function testCallbackExceptions($message, array $configuration, $class = 'InvalidArgumentException', $args = NULL) {
+  public function testCallbackExceptions($message, array $configuration, $class = 'InvalidArgumentException', $args = NULL): void {
     $this->expectException($class);
     $this->expectExceptionMessage($message);
     $this->plugin = new Callback($configuration, 'map', []);

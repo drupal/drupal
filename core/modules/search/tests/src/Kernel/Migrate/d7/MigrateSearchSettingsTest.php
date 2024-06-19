@@ -26,7 +26,7 @@ class MigrateSearchSettingsTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migration of Search's variables to configuration.
    */
-  public function testSearchSettings() {
+  public function testSearchSettings(): void {
     $config = $this->config('search.settings');
     $this->assertSame('node_search', $config->get('default_page'));
     $this->assertSame(4, $config->get('index.minimum_word_size'));

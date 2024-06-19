@@ -35,7 +35,7 @@ class UuidFormatterTest extends KernelTestBase {
   /**
    * Tests string formatter output.
    */
-  public function testUuidStringFormatter() {
+  public function testUuidStringFormatter(): void {
     $entity = EntityTest::create([]);
     $entity->save();
 

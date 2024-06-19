@@ -91,7 +91,7 @@ class FormErrorHandlerFileUploadTest extends BrowserTestBase {
   /**
    * Tests that the required field error is displayed as inline error message.
    */
-  public function testFileUploadErrors() {
+  public function testFileUploadErrors(): void {
     $this->drupalGet('node/add/page');
     $edit = [
       'edit-title-0-value' => $this->randomString(),

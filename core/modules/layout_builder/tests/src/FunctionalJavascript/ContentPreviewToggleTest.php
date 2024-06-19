@@ -56,7 +56,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
   /**
    * Tests the content preview toggle.
    */
-  public function testContentPreviewToggle() {
+  public function testContentPreviewToggle(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $links_field_placeholder_label = '"Links" field';

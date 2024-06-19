@@ -32,7 +32,7 @@ class FileManagedAccessTest extends KernelTestBase {
   /**
    * Tests if public file is always accessible.
    */
-  public function testFileAccess() {
+  public function testFileAccess(): void {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installSchema('file', ['file_usage']);

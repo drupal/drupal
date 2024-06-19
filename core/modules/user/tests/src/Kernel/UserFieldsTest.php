@@ -38,7 +38,7 @@ class UserFieldsTest extends KernelTestBase {
   /**
    * Tests account's available fields.
    */
-  public function testUserFields() {
+  public function testUserFields(): void {
     // Create the user to test the user fields.
     $user = User::create([
       'name' => 'foobar',

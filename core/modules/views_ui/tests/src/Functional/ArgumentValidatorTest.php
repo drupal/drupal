@@ -28,7 +28,7 @@ class ArgumentValidatorTest extends UITestBase {
   /**
    * Tests the 'Specify validation criteria' checkbox functionality.
    */
-  public function testSpecifyValidation() {
+  public function testSpecifyValidation(): void {
     // Specify a validation based on Node for the 'id' argument on the default
     // display and assert that this works.
     $this->saveArgumentHandlerWithValidationOptions(TRUE);

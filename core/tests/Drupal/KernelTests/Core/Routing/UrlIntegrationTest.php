@@ -26,7 +26,7 @@ class UrlIntegrationTest extends KernelTestBase {
   /**
    * Ensures that the access() method on \Drupal\Core\Url objects works.
    */
-  public function testAccess() {
+  public function testAccess(): void {
     /** @var \Drupal\user\RoleInterface $role_with_access */
     $role_with_access = Role::create(['id' => 'role_with_access', 'label' => 'With access']);
     $role_with_access->grantPermission('administer users');

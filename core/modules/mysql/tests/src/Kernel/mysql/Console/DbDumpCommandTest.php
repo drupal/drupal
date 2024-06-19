@@ -43,7 +43,7 @@ class DbDumpCommandTest extends DriverSpecificKernelTestBase {
   /**
    * Tests the command directly.
    */
-  public function testDbDumpCommand() {
+  public function testDbDumpCommand(): void {
     $command = new DbDumpCommand();
     $command_tester = new CommandTester($command);
     $command_tester->execute([]);
@@ -63,7 +63,7 @@ class DbDumpCommandTest extends DriverSpecificKernelTestBase {
   /**
    * Tests schema only option.
    */
-  public function testSchemaOnly() {
+  public function testSchemaOnly(): void {
     $command = new DbDumpCommand();
     $command_tester = new CommandTester($command);
     $command_tester->execute(['--schema-only' => 'router']);
@@ -89,7 +89,7 @@ class DbDumpCommandTest extends DriverSpecificKernelTestBase {
   /**
    * Tests insert count option.
    */
-  public function testInsertCount() {
+  public function testInsertCount(): void {
     $command = new DbDumpCommand();
     $command_tester = new CommandTester($command);
     $command_tester->execute(['--insert-count' => '1']);

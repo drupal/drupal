@@ -40,7 +40,7 @@ class OverrideSectionsTest extends LayoutRestTestBase {
   /**
    * Tests that the layout override field is not normalized.
    */
-  public function testOverrideField() {
+  public function testOverrideField(): void {
     $this->assertCount(1, $this->node->get(OverridesSectionStorage::FIELD_NAME));
 
     // Make a GET request and ensure override field is not included.

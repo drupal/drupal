@@ -39,7 +39,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
   /**
    * Create, edit and delete a vocabulary via the user interface.
    */
-  public function testVocabularyPermissionsVocabulary() {
+  public function testVocabularyPermissionsVocabulary(): void {
     // VocabularyTest.php already tests for user with "administer taxonomy"
     // permission.
 
@@ -67,7 +67,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
   /**
    * Tests the vocabulary overview permission.
    */
-  public function testTaxonomyVocabularyOverviewPermissions() {
+  public function testTaxonomyVocabularyOverviewPermissions(): void {
     // Create two vocabularies, one with two terms, the other without any term.
     /** @var \Drupal\taxonomy\Entity\Vocabulary $vocabulary1 , $vocabulary2 */
     $vocabulary1 = $this->createVocabulary();
@@ -247,7 +247,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
   /**
    * Create, edit and delete a taxonomy term via the user interface.
    */
-  public function testVocabularyPermissionsTaxonomyTerm() {
+  public function testVocabularyPermissionsTaxonomyTerm(): void {
     // Vocabulary used for creating, removing and editing terms.
     $vocabulary = $this->createVocabulary();
 

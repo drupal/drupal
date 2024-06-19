@@ -49,7 +49,7 @@ class FormErrorHandlerTest extends UnitTestCase {
    * @covers ::handleFormErrors
    * @covers ::displayErrorMessages
    */
-  public function testDisplayErrorMessages() {
+  public function testDisplayErrorMessages(): void {
     $messages = [
       'invalid',
       'invalid',
@@ -125,7 +125,7 @@ class FormErrorHandlerTest extends UnitTestCase {
    * @covers ::handleFormErrors
    * @covers ::setElementErrorsFromFormState
    */
-  public function testSetElementErrorsFromFormState() {
+  public function testSetElementErrorsFromFormState(): void {
     $form = [
       '#parents' => [],
       '#array_parents' => [],

@@ -39,7 +39,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
   /**
    * Tests that translation overview handles pending revisions correctly.
    */
-  public function testOverview() {
+  public function testOverview(): void {
     $index = 1;
     $accounts = [
       $this->rootUser,

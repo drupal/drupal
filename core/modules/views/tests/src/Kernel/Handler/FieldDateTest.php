@@ -69,7 +69,7 @@ class FieldDateTest extends ViewsKernelTestBase {
   /**
    * Sets up functional test of the views date field.
    */
-  public function testFieldDate() {
+  public function testFieldDate(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

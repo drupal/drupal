@@ -77,7 +77,7 @@ class EntityNormalizerTest extends UnitTestCase {
    *
    * @covers ::normalize
    */
-  public function testNormalize() {
+  public function testNormalize(): void {
     $list_item_1 = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
     $list_item_2 = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
 
@@ -108,7 +108,7 @@ class EntityNormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalizeWithNoEntityType() {
+  public function testDenormalizeWithNoEntityType(): void {
     $this->expectException(UnexpectedValueException::class);
     $this->entityNormalizer->denormalize([], ContentEntityBaseMockableClass::class);
   }
@@ -118,7 +118,7 @@ class EntityNormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalizeWithValidBundle() {
+  public function testDenormalizeWithValidBundle(): void {
     $test_data = [
       'key_1' => 'value_1',
       'key_2' => 'value_2',
@@ -235,7 +235,7 @@ class EntityNormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalizeWithInvalidBundle() {
+  public function testDenormalizeWithInvalidBundle(): void {
     $test_data = [
       'key_1' => 'value_1',
       'key_2' => 'value_2',
@@ -317,7 +317,7 @@ class EntityNormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalizeWithNoBundle() {
+  public function testDenormalizeWithNoBundle(): void {
     $test_data = [
       'key_1' => 'value_1',
       'key_2' => 'value_2',
@@ -385,7 +385,7 @@ class EntityNormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalizeWithNoFieldableEntityType() {
+  public function testDenormalizeWithNoFieldableEntityType(): void {
     $test_data = [
       'key_1' => 'value_1',
       'key_2' => 'value_2',

@@ -54,7 +54,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
   /**
    * Tests multiple migrations to the same destination with no ID conflicts.
    */
-  public function testMultipleMigrationWithoutIdConflicts() {
+  public function testMultipleMigrationWithoutIdConflicts(): void {
     // Create a node of type page.
     $node = Node::create(['type' => 'page', 'title' => 'foo']);
     $node->moderation_state->value = 'published';
@@ -92,7 +92,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
   /**
    * Tests all migrations with no ID conflicts.
    */
-  public function testAllMigrationsWithNoIdConflicts() {
+  public function testAllMigrationsWithNoIdConflicts(): void {
     $migrations = $this->container
       ->get('plugin.manager.migration')
       ->createInstancesByTag('Drupal 7');
@@ -110,7 +110,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
   /**
    * Tests all migrations with ID conflicts.
    */
-  public function testAllMigrationsWithIdConflicts() {
+  public function testAllMigrationsWithIdConflicts(): void {
     $migrations = $this->container
       ->get('plugin.manager.migration')
       ->createInstancesByTag('Drupal 7');
@@ -146,7 +146,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
   /**
    * Tests draft revisions ID conflicts.
    */
-  public function testDraftRevisionIdConflicts() {
+  public function testDraftRevisionIdConflicts(): void {
     // Create a published node of type page.
     $node = Node::create(['type' => 'page', 'title' => 'foo']);
     $node->moderation_state->value = 'published';
@@ -180,7 +180,7 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
   /**
    * Tests ID conflicts for inaccessible nodes.
    */
-  public function testNodeGrantsIdConflicts() {
+  public function testNodeGrantsIdConflicts(): void {
     // Enable the node_test module to restrict access to page nodes.
     $this->enableModules(['node_test']);
 

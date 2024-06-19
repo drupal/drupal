@@ -57,7 +57,7 @@ class EditorManagerTest extends KernelTestBase {
   /**
    * Tests the configurable text editor manager.
    */
-  public function testManager() {
+  public function testManager(): void {
     $this->editorManager = $this->container->get('plugin.manager.editor');
 
     // Case 1: no text editor available:

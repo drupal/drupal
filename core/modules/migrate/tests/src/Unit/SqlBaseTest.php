@@ -33,7 +33,7 @@ class SqlBaseTest extends UnitTestCase {
    *
    * @dataProvider sqlBaseTestProvider
    */
-  public function testMapJoinable($expected_result, $id_map_is_sql, $with_id_map, $source_options = [], $id_map_options = []) {
+  public function testMapJoinable($expected_result, $id_map_is_sql, $with_id_map, $source_options = [], $id_map_options = []): void {
     // Setup a connection object.
     $source_connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()

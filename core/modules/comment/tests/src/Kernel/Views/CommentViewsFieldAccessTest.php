@@ -34,7 +34,7 @@ class CommentViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * Check access for comment fields.
    */
-  public function testCommentFields() {
+  public function testCommentFields(): void {
     $user = User::create([
       'name' => 'test user',
     ]);

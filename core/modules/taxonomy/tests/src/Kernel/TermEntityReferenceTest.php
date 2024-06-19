@@ -47,7 +47,7 @@ class TermEntityReferenceTest extends KernelTestBase {
    * field to limit the target vocabulary to one of them, ensuring that
    * the restriction applies.
    */
-  public function testSelectionTestVocabularyRestriction() {
+  public function testSelectionTestVocabularyRestriction(): void {
     // Create two vocabularies.
     $vocabulary = Vocabulary::create([
       'name' => 'test1',

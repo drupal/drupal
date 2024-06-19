@@ -44,7 +44,7 @@ class ConfigAccessTest extends SettingsTrayTestBase {
   /**
    * Tests access to block forms with related configuration is correct.
    */
-  public function testBlockConfigAccess() {
+  public function testBlockConfigAccess(): void {
     $page = $this->getSession()->getPage();
     $web_assert = $this->assertSession();
 

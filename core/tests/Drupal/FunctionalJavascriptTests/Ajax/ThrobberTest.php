@@ -33,7 +33,7 @@ class ThrobberTest extends WebDriverTestBase {
   /**
    * Tests theming throbber element.
    */
-  public function testThemingThrobberElement() {
+  public function testThemingThrobberElement(): void {
     $session = $this->getSession();
     $web_assert = $this->assertSession();
     $page = $session->getPage();

@@ -44,7 +44,7 @@ class EntityComputedFieldTest extends BrowserTestBase {
   /**
    * Tests that formatters bubble the cacheable metadata of computed fields.
    */
-  public function testFormatterComputedFieldCacheableMetadata() {
+  public function testFormatterComputedFieldCacheableMetadata(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer entity_test content']));
 
     $entity = EntityTestComputedField::create([

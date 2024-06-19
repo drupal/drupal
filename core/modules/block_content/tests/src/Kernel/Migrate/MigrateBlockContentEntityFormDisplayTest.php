@@ -52,7 +52,7 @@ class MigrateBlockContentEntityFormDisplayTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migrated display configuration.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $this->assertDisplay('block_content.basic.default', 'body');
   }
 

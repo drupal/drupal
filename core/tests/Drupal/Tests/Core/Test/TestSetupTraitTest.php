@@ -26,7 +26,7 @@ class TestSetupTraitTest extends UnitTestCase {
    *
    * @covers ::changeDatabasePrefix
    */
-  public function testChangeDatabasePrefix() {
+  public function testChangeDatabasePrefix(): void {
     $root = dirname(__FILE__, 7);
     putenv('SIMPLETEST_DB=pgsql://user:pass@127.0.0.1/db');
     $connection_info = Database::convertDbUrlToConnectionInfo('mysql://user:pass@localhost/db', $root);

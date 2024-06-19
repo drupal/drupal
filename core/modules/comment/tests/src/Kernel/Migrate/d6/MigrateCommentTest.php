@@ -59,7 +59,7 @@ class MigrateCommentTest extends MigrateDrupal6TestBase {
   /**
    * Tests the migrated comments.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $comment = Comment::load(1);
     $this->assertSame('The first comment.', $comment->getSubject());
     $this->assertSame('The first comment body.', $comment->comment_body->value);
