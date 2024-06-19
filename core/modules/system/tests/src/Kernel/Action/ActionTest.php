@@ -42,7 +42,7 @@ class ActionTest extends KernelTestBase {
   /**
    * Tests the functionality of test actions.
    */
-  public function testOperations() {
+  public function testOperations(): void {
     // Test that actions can be discovered.
     $definitions = $this->actionManager->getDefinitions();
     // Verify that the action definitions are found.
@@ -77,7 +77,7 @@ class ActionTest extends KernelTestBase {
   /**
    * Tests the dependency calculation of actions.
    */
-  public function testDependencies() {
+  public function testDependencies(): void {
     // Create a new action that depends on a user role.
     $action = Action::create([
       'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,

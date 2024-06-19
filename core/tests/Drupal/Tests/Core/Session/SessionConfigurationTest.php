@@ -32,7 +32,7 @@ class SessionConfigurationTest extends UnitTestCase {
    *
    * @dataProvider providerTestGeneratedCookieDomain
    */
-  public function testGeneratedCookieDomain($uri, $expected_domain) {
+  public function testGeneratedCookieDomain($uri, $expected_domain): void {
     $config = $this->createSessionConfiguration();
 
     $request = Request::create($uri);
@@ -71,7 +71,7 @@ class SessionConfigurationTest extends UnitTestCase {
    *
    * @dataProvider providerTestEnforcedCookieDomain
    */
-  public function testEnforcedCookieDomain($uri, $expected_domain) {
+  public function testEnforcedCookieDomain($uri, $expected_domain): void {
     $config = $this->createSessionConfiguration(['cookie_domain' => '.example.com']);
 
     $request = Request::create($uri);
@@ -109,7 +109,7 @@ class SessionConfigurationTest extends UnitTestCase {
    *
    * @dataProvider providerTestCookieSecure
    */
-  public function testCookieSecure($uri, $expected_secure) {
+  public function testCookieSecure($uri, $expected_secure): void {
     $config = $this->createSessionConfiguration();
 
     $request = Request::create($uri);
@@ -121,7 +121,7 @@ class SessionConfigurationTest extends UnitTestCase {
   /**
    * Test that session.cookie_samesite is configured correctly.
    */
-  public function testSameSiteCookie() {
+  public function testSameSiteCookie(): void {
     $request = Request::create('https://example.com');
 
     $config = $this->createSessionConfiguration(['cookie_samesite' => 'Strict']);
@@ -137,7 +137,7 @@ class SessionConfigurationTest extends UnitTestCase {
    *
    * @dataProvider providerTestCookieSecure
    */
-  public function testCookieSecureNotOverridable($uri, $expected_secure) {
+  public function testCookieSecureNotOverridable($uri, $expected_secure): void {
     $config = $this->createSessionConfiguration(['cookie_secure' => FALSE]);
 
     $request = Request::create($uri);
@@ -170,7 +170,7 @@ class SessionConfigurationTest extends UnitTestCase {
    *
    * @dataProvider providerTestGeneratedSessionName
    */
-  public function testGeneratedSessionName($uri, $expected_name) {
+  public function testGeneratedSessionName($uri, $expected_name): void {
     $config = $this->createSessionConfiguration();
 
     $request = Request::create($uri);
@@ -218,7 +218,7 @@ class SessionConfigurationTest extends UnitTestCase {
    *
    * @dataProvider providerTestEnforcedSessionName
    */
-  public function testEnforcedSessionNameViaCookieDomain($uri, $expected_name) {
+  public function testEnforcedSessionNameViaCookieDomain($uri, $expected_name): void {
     $config = $this->createSessionConfiguration(['cookie_domain' => '.example.com']);
 
     $request = Request::create($uri);
@@ -266,7 +266,7 @@ class SessionConfigurationTest extends UnitTestCase {
    *
    * @dataProvider providerTestConstructorDefaultSettings
    */
-  public function testConstructorDefaultSettings(array $options, int $expected_sid_length, int $expected_sid_bits_per_character, string $expected_name_suffix) {
+  public function testConstructorDefaultSettings(array $options, int $expected_sid_length, int $expected_sid_bits_per_character, string $expected_name_suffix): void {
     $config = $this->createSessionConfiguration($options);
     $options = $config->getOptions(Request::createFromGlobals());
     $this->assertSame($expected_sid_length, $options['sid_length']);

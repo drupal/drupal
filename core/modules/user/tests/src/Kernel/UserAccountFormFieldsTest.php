@@ -31,7 +31,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
   /**
    * Tests the root user account form section in the "Configure site" form.
    */
-  public function testInstallConfigureForm() {
+  public function testInstallConfigureForm(): void {
     require_once $this->root . '/core/includes/install.core.inc';
     require_once $this->root . '/core/includes/install.inc';
     $install_state = install_state_defaults();
@@ -53,7 +53,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
   /**
    * Tests the user registration form.
    */
-  public function testUserRegistrationForm() {
+  public function testUserRegistrationForm(): void {
     // Install default configuration; required for AccountFormController.
     $this->installConfig(['user']);
 
@@ -77,7 +77,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
   /**
    * Tests the user edit form.
    */
-  public function testUserEditForm() {
+  public function testUserEditForm(): void {
     // Install default configuration; required for AccountFormController.
     $this->installConfig(['user']);
     $this->installEntitySchema('user');

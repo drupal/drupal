@@ -35,7 +35,7 @@ class UriItemTest extends FieldKernelTestBase {
   /**
    * Tests URI field.
    */
-  public function testUriField() {
+  public function testUriField(): void {
     $label = $this->randomMachineName();
 
     // Create a field with settings to validate.

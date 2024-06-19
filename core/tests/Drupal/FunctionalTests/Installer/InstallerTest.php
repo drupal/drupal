@@ -26,7 +26,7 @@ class InstallerTest extends InstallerTestBase {
   /**
    * Ensures that the user page is available after installation.
    */
-  public function testInstaller() {
+  public function testInstaller(): void {
     $this->assertNotEquals('0', \Drupal::service('asset.query_string')->get(), 'The dummy query string should be set during install');
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
@@ -127,7 +127,7 @@ class InstallerTest extends InstallerTestBase {
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled() {
+  public function testInstalled(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
 

@@ -27,7 +27,7 @@ class MigrateUserProfileTranslationRollbackTest extends MigrateDrupal6TestBase {
   /**
    * Tests rollback of the complete node migration.
    */
-  public function testRollback() {
+  public function testRollback(): void {
     $migration_ids = [
       'user_profile_field',
       'd6_profile_field_option_translation',

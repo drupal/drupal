@@ -26,7 +26,7 @@ class DisplayExtenderTest extends ViewsKernelTestBase {
   /**
    * Tests display extenders.
    */
-  public function testDisplayExtenders() {
+  public function testDisplayExtenders(): void {
     $this->config('views.settings')->set('display_extenders', ['display_extender_test'])->save();
     $this->assertCount(1, Views::getEnabledDisplayExtenders(), 'Make sure that there is only one enabled display extender.');
 
@@ -47,7 +47,7 @@ class DisplayExtenderTest extends ViewsKernelTestBase {
   /**
    * Tests display extenders validation.
    */
-  public function testDisplayExtendersValidate() {
+  public function testDisplayExtendersValidate(): void {
     $this->config('views.settings')->set('display_extenders', ['display_extender_test_3'])->save();
 
     $view = Views::getView('test_view');

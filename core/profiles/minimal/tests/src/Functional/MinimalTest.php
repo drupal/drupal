@@ -29,7 +29,7 @@ class MinimalTest extends BrowserTestBase {
   /**
    * Tests Minimal installation profile.
    */
-  public function testMinimal() {
+  public function testMinimal(): void {
     $this->drupalGet('');
     // Check the login block is present.
     $this->assertSession()->linkExists('Create new account');

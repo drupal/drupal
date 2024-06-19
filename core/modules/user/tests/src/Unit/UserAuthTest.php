@@ -96,7 +96,7 @@ class UserAuthTest extends UnitTestCase {
    *
    * @dataProvider providerTestAuthenticateWithMissingCredentials
    */
-  public function testAuthenticateWithMissingCredentials($username, $password) {
+  public function testAuthenticateWithMissingCredentials($username, $password): void {
     $this->userStorage->expects($this->never())
       ->method('loadByProperties');
 
@@ -122,7 +122,7 @@ class UserAuthTest extends UnitTestCase {
    *
    * @covers ::authenticate
    */
-  public function testAuthenticateWithNoAccountReturned() {
+  public function testAuthenticateWithNoAccountReturned(): void {
     $this->userStorage->expects($this->once())
       ->method('loadByProperties')
       ->with(['name' => $this->username])
@@ -136,7 +136,7 @@ class UserAuthTest extends UnitTestCase {
    *
    * @covers ::authenticate
    */
-  public function testAuthenticateWithIncorrectPassword() {
+  public function testAuthenticateWithIncorrectPassword(): void {
     $this->userStorage->expects($this->once())
       ->method('loadByProperties')
       ->with(['name' => $this->username])
@@ -155,7 +155,7 @@ class UserAuthTest extends UnitTestCase {
    *
    * @covers ::authenticate
    */
-  public function testAuthenticateWithCorrectPassword() {
+  public function testAuthenticateWithCorrectPassword(): void {
     $this->testUser->expects($this->once())
       ->method('id')
       ->willReturn(1);
@@ -182,7 +182,7 @@ class UserAuthTest extends UnitTestCase {
    *
    * @covers ::authenticate
    */
-  public function testAuthenticateWithZeroPassword() {
+  public function testAuthenticateWithZeroPassword(): void {
     $this->testUser->expects($this->once())
       ->method('id')
       ->willReturn(2);
@@ -205,7 +205,7 @@ class UserAuthTest extends UnitTestCase {
    *
    * @covers ::authenticate
    */
-  public function testAuthenticateWithCorrectPasswordAndNewPasswordHash() {
+  public function testAuthenticateWithCorrectPasswordAndNewPasswordHash(): void {
     $this->testUser->expects($this->once())
       ->method('id')
       ->willReturn(1);

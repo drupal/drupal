@@ -51,7 +51,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
   /**
    * Tests that hidden regions do not inherit blocks when a theme is installed.
    */
-  public function testBlockNotInHiddenRegion() {
+  public function testBlockNotInHiddenRegion(): void {
 
     // Ensure that the search form block is displayed.
     $this->drupalGet('');

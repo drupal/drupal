@@ -19,7 +19,7 @@ class PagerTest extends WizardTestBase {
   /**
    * Tests the pager option.
    */
-  public function testPager() {
+  public function testPager(): void {
     // Create nodes, each with a different creation time so that we have
     // conditions that are meaningful for the use of a pager.
     $this->drupalCreateContentType(['type' => 'page']);

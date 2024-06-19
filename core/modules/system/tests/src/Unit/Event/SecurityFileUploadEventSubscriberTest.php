@@ -32,7 +32,7 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
    *
    * @covers ::sanitizeName
    */
-  public function testSanitizeName(string $filename, string $allowed_extensions, string $expected_filename, ?string $expected_filename_with_insecure_uploads = NULL) {
+  public function testSanitizeName(string $filename, string $allowed_extensions, string $expected_filename, ?string $expected_filename_with_insecure_uploads = NULL): void {
     // Configure insecure uploads to be renamed.
     $config_factory = $this->getConfigFactoryStub([
       'system.file' => [
@@ -106,7 +106,7 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
    *
    * @covers ::sanitizeName
    */
-  public function testSanitizeNameNoMunge(string $filename, string $allowed_extensions) {
+  public function testSanitizeNameNoMunge(string $filename, string $allowed_extensions): void {
     $config_factory = $this->getConfigFactoryStub([
       'system.file' => [
         'allow_insecure_uploads' => FALSE,

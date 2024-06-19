@@ -115,7 +115,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
    * @covers ::getRelatableResourceTypes
    * @dataProvider getRelatableResourceTypesProvider
    */
-  public function testGetRelatableResourceTypes($resource_type_name, $relatable_type_names) {
+  public function testGetRelatableResourceTypes($resource_type_name, $relatable_type_names): void {
     // We're only testing the fields that we set up.
     $test_fields = [
       'field_ref_foo',
@@ -166,7 +166,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
    * @covers ::getRelatableResourceTypesByField
    * @dataProvider getRelatableResourceTypesByFieldProvider
    */
-  public function testGetRelatableResourceTypesByField($entity_type_id, $bundle, $field) {
+  public function testGetRelatableResourceTypesByField($entity_type_id, $bundle, $field): void {
     $resource_type = $this->resourceTypeRepository->get($entity_type_id, $bundle);
     $relatable_types = $resource_type->getRelatableResourceTypes();
     $this->assertSame(
@@ -195,7 +195,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
    *
    * @link https://www.drupal.org/project/drupal/issues/2996114
    */
-  public function testGetRelatableResourceTypesFromFieldDefinition() {
+  public function testGetRelatableResourceTypesFromFieldDefinition(): void {
     $field_config_storage = $this->container->get('entity_type.manager')->getStorage('field_config');
 
     static::assertCount(0, $this->resourceTypeRepository->get('node', 'foo')->getRelatableResourceTypesByField('field_relationship'));

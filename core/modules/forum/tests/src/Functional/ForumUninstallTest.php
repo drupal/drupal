@@ -36,7 +36,7 @@ class ForumUninstallTest extends BrowserTestBase {
   /**
    * Tests if forum module uninstallation properly deletes the field.
    */
-  public function testForumUninstallWithField() {
+  public function testForumUninstallWithField(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer taxonomy',
       'administer nodes',
@@ -143,7 +143,7 @@ class ForumUninstallTest extends BrowserTestBase {
   /**
    * Tests uninstallation if the field storage has been deleted beforehand.
    */
-  public function testForumUninstallWithoutFieldStorage() {
+  public function testForumUninstallWithoutFieldStorage(): void {
     // Manually delete the taxonomy_forums field before module uninstallation.
     $field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums');
     $this->assertNotNull($field_storage, 'The taxonomy_forums field storage exists.');
@@ -168,7 +168,7 @@ class ForumUninstallTest extends BrowserTestBase {
   /**
    * Tests uninstallation of forum module when vocabulary is deleted.
    */
-  public function testForumUninstallWithoutForumVocabulary() {
+  public function testForumUninstallWithoutForumVocabulary(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer modules',
     ]));

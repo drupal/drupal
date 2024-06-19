@@ -30,7 +30,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Tests adding and editing of inline blocks.
    */
-  public function testInlineBlocks() {
+  public function testInlineBlocks(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -115,7 +115,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    *
    * @dataProvider layoutNoSaveProvider
    */
-  public function testNoLayoutSave($operation, $no_save_button_text, $confirm_button_text) {
+  public function testNoLayoutSave($operation, $no_save_button_text, $confirm_button_text): void {
     $this->drupalLogin($this->drupalCreateUser([
       'access contextual links',
       'configure any layout',
@@ -204,7 +204,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Tests entity blocks revisioning.
    */
-  public function testInlineBlocksRevisioning() {
+  public function testInlineBlocksRevisioning(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -271,7 +271,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Tests entity blocks revisioning.
    */
-  public function testInlineBlocksRevisioningIntegrity() {
+  public function testInlineBlocksRevisioningIntegrity(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'access contextual links',
       'configure any layout',
@@ -359,7 +359,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Tests that entity blocks deleted correctly.
    */
-  public function testDeletion() {
+  public function testDeletion(): void {
     /** @var \Drupal\Core\Cron $cron */
     $cron = \Drupal::service('cron');
     /** @var \Drupal\layout_builder\InlineBlockUsageInterface $usage */
@@ -488,7 +488,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    *
    * @see layout_builder_block_content_access()
    */
-  public function testAccess() {
+  public function testAccess(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'access contextual links',
       'configure any layout',
@@ -532,7 +532,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  public function testAddWorkFlow() {
+  public function testAddWorkFlow(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $type_storage = $this->container->get('entity_type.manager')->getStorage('block_content_type');
@@ -597,7 +597,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Tests the 'create and edit content blocks' permission to add a new block.
    */
-  public function testAddInlineBlocksPermission() {
+  public function testAddInlineBlocksPermission(): void {
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
       ->enableLayoutBuilder()
       ->setOverridable()
@@ -631,7 +631,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Tests 'create and edit custom blocks' permission to edit an existing block.
    */
-  public function testEditInlineBlocksPermission() {
+  public function testEditInlineBlocksPermission(): void {
 
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
       ->enableLayoutBuilder()
@@ -675,7 +675,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Test editing inline blocks when the parent has been reverted.
    */
-  public function testInlineBlockParentRevert() {
+  public function testInlineBlockParentRevert(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'access contextual links',
       'configure any layout',

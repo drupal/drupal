@@ -32,7 +32,7 @@ class ReportFieldsTest extends UITestBase {
   /**
    * Tests the Views fields report page.
    */
-  public function testReportFields() {
+  public function testReportFields(): void {
     $this->drupalGet('admin/reports/fields/views-fields');
     $this->assertSession()->pageTextContains('Used in views');
     $this->assertSession()->pageTextContains('No fields have been used in views yet.');

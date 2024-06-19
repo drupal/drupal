@@ -28,7 +28,7 @@ class RouteMatchTest extends RouteMatchTestBase {
    * @covers ::createFromRequest
    * @covers ::__construct
    */
-  public function testRouteMatchFromRequest() {
+  public function testRouteMatchFromRequest(): void {
     $request = new Request();
 
     // A request that hasn't been routed yet.

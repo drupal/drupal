@@ -64,7 +64,7 @@ PO;
   /**
    * Tests that the expected translated text appears on the login screen.
    */
-  public function testInstallerTranslations() {
+  public function testInstallerTranslations(): void {
     $this->drupalGet('user/login');
     // cSpell:disable-next-line
     $this->assertSession()->responseContains('Geben sie das Passwort für ihren Benutzernamen ein.');

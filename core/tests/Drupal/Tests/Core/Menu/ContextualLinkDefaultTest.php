@@ -68,7 +68,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getTitle
    */
-  public function testGetTitle() {
+  public function testGetTitle(): void {
     $title = 'Example';
     $this->pluginDefinition['title'] = (new TranslatableMarkup($title, [], [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
@@ -83,7 +83,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getTitle
    */
-  public function testGetTitleWithContext() {
+  public function testGetTitleWithContext(): void {
     $title = 'Example';
     $this->pluginDefinition['title'] = (new TranslatableMarkup($title, [], ['context' => 'context'], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
@@ -98,7 +98,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getTitle
    */
-  public function testGetTitleWithTitleArguments() {
+  public function testGetTitleWithTitleArguments(): void {
     $title = 'Example @test';
     $this->pluginDefinition['title'] = (new TranslatableMarkup($title, ['@test' => 'value'], [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
@@ -114,7 +114,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getRouteName
    */
-  public function testGetRouteName($route_name = 'test_route_name') {
+  public function testGetRouteName($route_name = 'test_route_name'): void {
     $this->pluginDefinition['route_name'] = $route_name;
     $this->setupContextualLinkDefault();
 
@@ -124,7 +124,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getGroup
    */
-  public function testGetGroup($group_name = 'test_group') {
+  public function testGetGroup($group_name = 'test_group'): void {
     $this->pluginDefinition['group'] = $group_name;
     $this->setupContextualLinkDefault();
 
@@ -134,7 +134,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getOptions
    */
-  public function testGetOptions($options = ['key' => 'value']) {
+  public function testGetOptions($options = ['key' => 'value']): void {
     $this->pluginDefinition['options'] = $options;
     $this->setupContextualLinkDefault();
 
@@ -144,7 +144,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getWeight
    */
-  public function testGetWeight($weight = 5) {
+  public function testGetWeight($weight = 5): void {
     $this->pluginDefinition['weight'] = $weight;
     $this->setupContextualLinkDefault();
 

@@ -27,7 +27,7 @@ class NullHelpAndDescriptionTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path for updating empty help and description to NULL.
    */
-  public function testRunUpdates() {
+  public function testRunUpdates(): void {
     $node_type = NodeType::load('article');
     $this->assertInstanceOf(NodeType::class, $node_type);
 

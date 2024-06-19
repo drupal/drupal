@@ -109,7 +109,7 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * Tests that trusted callbacks are executed.
    */
-  public function testDatelistElement() {
+  public function testDatelistElement(): void {
     $form_state = new FormState();
     $form = \Drupal::formBuilder()->buildForm($this, $form_state);
     $this->render($form);

@@ -30,7 +30,7 @@ class MigrateExecutableTest extends MigrateTestBase {
   /**
    * Tests the MigrateExecutable class.
    */
-  public function testMigrateExecutable() {
+  public function testMigrateExecutable(): void {
     $data_rows = [
       ['key' => '1', 'field1' => 'f1value1', 'field2' => 'f2value1'],
       ['key' => '2', 'field1' => 'f1value2', 'field2' => 'f2value2'],

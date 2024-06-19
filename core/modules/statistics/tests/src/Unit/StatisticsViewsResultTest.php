@@ -21,7 +21,7 @@ class StatisticsViewsResultTest extends UnitTestCase {
    *
    * @dataProvider providerTestStatisticsCount
    */
-  public function testStatisticsCount($total_count, $day_count, $timestamp) {
+  public function testStatisticsCount($total_count, $day_count, $timestamp): void {
     $statistics = new StatisticsViewsResult($total_count, $day_count, $timestamp);
     $this->assertSame((int) $total_count, $statistics->getTotalCount());
     $this->assertSame((int) $day_count, $statistics->getDayCount());

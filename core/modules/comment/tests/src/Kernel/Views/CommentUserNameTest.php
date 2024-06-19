@@ -107,7 +107,7 @@ class CommentUserNameTest extends ViewsKernelTestBase {
   /**
    * Tests the username formatter.
    */
-  public function testUsername() {
+  public function testUsername(): void {
     $view_id = $this->randomMachineName();
     $view = View::create([
       'id' => $view_id,

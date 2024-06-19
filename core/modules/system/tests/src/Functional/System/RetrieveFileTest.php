@@ -22,7 +22,7 @@ class RetrieveFileTest extends BrowserTestBase {
   /**
    * Invokes system_retrieve_file() in several scenarios.
    */
-  public function testFileRetrieving() {
+  public function testFileRetrieving(): void {
     // Test 404 handling by trying to fetch a randomly named file.
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');

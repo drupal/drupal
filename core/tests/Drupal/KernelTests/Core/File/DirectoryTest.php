@@ -21,7 +21,7 @@ class DirectoryTest extends FileTestBase {
   /**
    * Tests local directory handling functions.
    */
-  public function testFileCheckLocalDirectoryHandling() {
+  public function testFileCheckLocalDirectoryHandling(): void {
     $site_path = $this->container->getParameter('site.path');
     $directory = $site_path . '/files';
 
@@ -62,7 +62,7 @@ class DirectoryTest extends FileTestBase {
   /**
    * Tests directory handling functions.
    */
-  public function testFileCheckDirectoryHandling() {
+  public function testFileCheckDirectoryHandling(): void {
     // A directory to operate on.
     $default_scheme = 'public';
     $directory = $default_scheme . '://' . $this->randomMachineName() . '/' . $this->randomMachineName();
@@ -117,7 +117,7 @@ class DirectoryTest extends FileTestBase {
   /**
    * Tests the file paths of newly created files.
    */
-  public function testFileCreateNewFilepath() {
+  public function testFileCreateNewFilepath(): void {
     // First we test against an imaginary file that does not exist in a
     // directory.
     $basename = 'xyz.txt';
@@ -152,7 +152,7 @@ class DirectoryTest extends FileTestBase {
    * If the file doesn't currently exist, then it will simply return the
    * filepath.
    */
-  public function testFileDestination() {
+  public function testFileDestination(): void {
     // First test for non-existent file.
     $destination = 'core/misc/xyz.txt';
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
@@ -181,7 +181,7 @@ class DirectoryTest extends FileTestBase {
   /**
    * Ensure that the getTempDirectory() method always returns a value.
    */
-  public function testFileDirectoryTemp() {
+  public function testFileDirectoryTemp(): void {
     $tmp_directory = \Drupal::service('file_system')->getTempDirectory();
     $this->assertNotEmpty($tmp_directory);
     $this->assertEquals($tmp_directory, FileSystem::getOsTemporaryDirectory());
@@ -190,7 +190,7 @@ class DirectoryTest extends FileTestBase {
   /**
    * Tests directory creation.
    */
-  public function testDirectoryCreation() {
+  public function testDirectoryCreation(): void {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = $this->container->get('file_system');
 
@@ -206,7 +206,7 @@ class DirectoryTest extends FileTestBase {
    * Image style generation can result in many calls to create similar directory
    * paths. This test forks the process to create the same situation.
    */
-  public function testMultiplePrepareDirectory() {
+  public function testMultiplePrepareDirectory(): void {
     if (!function_exists('pcntl_fork')) {
       $this->markTestSkipped('Requires the pcntl_fork() function');
     }

@@ -83,7 +83,7 @@ class CommentEntityReferenceTest extends CommentTestBase {
   /**
    * Tests that comments are correctly saved as entity references.
    */
-  public function testCommentAsEntityReference() {
+  public function testCommentAsEntityReference(): void {
     // Load the node and save it.
     $edit = [
       'entity_reference_comment' => $this->comment->id(),
@@ -100,7 +100,7 @@ class CommentEntityReferenceTest extends CommentTestBase {
   /**
    * Tests that comments of unpublished are not shown.
    */
-  public function testCommentOfUnpublishedNodeBypassAccess() {
+  public function testCommentOfUnpublishedNodeBypassAccess(): void {
     // Unpublish the node that has the comment.
     $this->node->setUnpublished()->save();
 

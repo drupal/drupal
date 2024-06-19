@@ -16,7 +16,7 @@ class PluginBaseTest extends TestCase {
    * @dataProvider providerTestGetPluginId
    * @covers ::getPluginId
    */
-  public function testGetPluginId($plugin_id, $expected) {
+  public function testGetPluginId($plugin_id, $expected): void {
     $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       $plugin_id,
@@ -42,7 +42,7 @@ class PluginBaseTest extends TestCase {
    * @dataProvider providerTestGetBaseId
    * @coves ::getBaseId
    */
-  public function testGetBaseId($plugin_id, $expected) {
+  public function testGetBaseId($plugin_id, $expected): void {
     /** @var \Drupal\Component\Plugin\PluginBase|\PHPUnit\Framework\MockObject\MockObject $plugin_base */
     $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
@@ -69,7 +69,7 @@ class PluginBaseTest extends TestCase {
    * @dataProvider providerTestGetDerivativeId
    * @covers ::getDerivativeId
    */
-  public function testGetDerivativeId($plugin_id = NULL, $expected = NULL) {
+  public function testGetDerivativeId($plugin_id = NULL, $expected = NULL): void {
     /** @var \Drupal\Component\Plugin\PluginBase|\PHPUnit\Framework\MockObject\MockObject $plugin_base */
     $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
@@ -95,7 +95,7 @@ class PluginBaseTest extends TestCase {
   /**
    * @covers ::getPluginDefinition
    */
-  public function testGetPluginDefinition() {
+  public function testGetPluginDefinition(): void {
     $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       'plugin_id',

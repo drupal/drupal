@@ -23,7 +23,7 @@ class UpdateStorageTest extends KernelTestBase {
   /**
    * Tests the Update module storage is cleared correctly.
    */
-  public function testUpdateStorage() {
+  public function testUpdateStorage(): void {
     // Setting values in both key stores, then installing the module and
     // testing if these key values are cleared.
     $keyvalue_update = $this->container->get('keyvalue.expirable')->get('update');

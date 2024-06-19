@@ -63,7 +63,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
   /**
    * Tests the default display options.
    */
-  public function testDefaultOptions() {
+  public function testDefaultOptions(): void {
     // Save the view.
     $view = Views::getView('test_display_defaults');
     $view->mergeDefaults();
@@ -91,7 +91,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
   /**
    * Tests the \Drupal\views\Plugin\views\display\DisplayPluginBase::getPlugin() method.
    */
-  public function testGetPlugin() {
+  public function testGetPlugin(): void {
     $view = Views::getView('test_display_defaults');
     $view->initDisplay();
     $display_handler = $view->display_handler;
@@ -120,7 +120,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
   /**
    * Tests the ::isIdentifierUnique method.
    */
-  public function testisIdentifierUnique() {
+  public function testisIdentifierUnique(): void {
     $view = Views::getView('test_view');
     $view->initDisplay();
 

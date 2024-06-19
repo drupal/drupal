@@ -20,7 +20,7 @@ class ChainedFastBackendFactoryTest extends UnitTestCase {
   /**
    * Test if the same name is provided for consistent and fast services.
    */
-  public function testIdenticalService() {
+  public function testIdenticalService(): void {
     $container = $this->createMock(ContainerInterface::class);
     $testCacheFactory = $this->createMock(CacheFactoryInterface::class);
     $testCacheBackend = $this->createMock(CacheBackendInterface::class);
@@ -47,7 +47,7 @@ class ChainedFastBackendFactoryTest extends UnitTestCase {
   /**
    * Test if different names are provided for consistent and fast services.
    */
-  public function testDifferentServices() {
+  public function testDifferentServices(): void {
     $container = $this->createMock(ContainerInterface::class);
     $testConsistentCacheFactory = $this->createMock(CacheFactoryInterface::class);
     $testFastCacheFactory = $this->createMock(CacheFactoryInterface::class);

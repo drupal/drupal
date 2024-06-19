@@ -52,7 +52,7 @@ class FilterAndArgumentUserUidTest extends KernelTestBase {
   /**
    * Tests the user posted or commented filter and argument handlers.
    */
-  public function testHandlers() {
+  public function testHandlers(): void {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');

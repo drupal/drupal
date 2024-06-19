@@ -38,7 +38,7 @@ class UnpublishByKeywordActionTest extends KernelTestBase {
   /**
    * Tests creating an action using the node_unpublish_by_keyword_action plugin.
    */
-  public function testUnpublishByKeywordAction() {
+  public function testUnpublishByKeywordAction(): void {
     /** @var \Drupal\node\Plugin\Action\UnpublishByKeywordNode $action */
     $action = Action::create([
       'id' => 'foo',

@@ -23,7 +23,7 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
   /**
    * Tests the addition of a calculated permissions item.
    */
-  public function testAddItem() {
+  public function testAddItem(): void {
     $calculated_permissions = new RefinableCalculatedPermissions();
     $scope = 'some_scope';
 
@@ -46,7 +46,7 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
    *
    * @depends testAddItem
    */
-  public function testAddItemOverwrite() {
+  public function testAddItemOverwrite(): void {
     $calculated_permissions = new RefinableCalculatedPermissions();
     $scope = 'some_scope';
 
@@ -63,7 +63,7 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
    *
    * @depends testAddItem
    */
-  public function testRemoveItem() {
+  public function testRemoveItem(): void {
     $scope = 'some_scope';
     $item = new CalculatedPermissionsItem(['bar'], FALSE, $scope, 'foo');
 
@@ -78,7 +78,7 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
    *
    * @depends testAddItem
    */
-  public function testRemoveItems() {
+  public function testRemoveItems(): void {
     $scope = 'some_scope';
     $item = new CalculatedPermissionsItem(['bar'], FALSE, $scope, 'foo');
 
@@ -94,7 +94,7 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
    *
    * @depends testAddItem
    */
-  public function testRemoveItemsByScope() {
+  public function testRemoveItemsByScope(): void {
     $scope_a = 'cat';
     $scope_b = 'dog';
 
@@ -115,7 +115,7 @@ class RefinableCalculatedPermissionsTest extends UnitTestCase {
    *
    * @depends testAddItem
    */
-  public function testMerge() {
+  public function testMerge(): void {
     $scope = 'some_scope';
 
     $cache_context_manager = $this->prophesize(CacheContextsManager::class);

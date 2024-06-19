@@ -200,7 +200,7 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPost() {
+  public function testPost(): void {
     // Drupal does not allow creating file entities independently. It allows you
     // to create file entities that are referenced from another entity (e.g. an
     // image for a node's image field).

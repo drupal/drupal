@@ -25,7 +25,7 @@ class BigPipeStrategyTest extends UnitTestCase {
    *
    * @dataProvider placeholdersProvider
    */
-  public function testProcessPlaceholders(array $placeholders, $method, $route_match_has_no_big_pipe_option, $request_has_session, $request_has_big_pipe_nojs_cookie, array $expected_big_pipe_placeholders) {
+  public function testProcessPlaceholders(array $placeholders, $method, $route_match_has_no_big_pipe_option, $request_has_session, $request_has_big_pipe_nojs_cookie, array $expected_big_pipe_placeholders): void {
     $request = new Request();
     $request->setMethod($method);
     if ($request_has_big_pipe_nojs_cookie) {

@@ -40,7 +40,7 @@ class CommandLineOrUnsafeMethodTest extends UnitTestCase {
    * @dataProvider providerTestHttpMethod
    * @covers ::check
    */
-  public function testHttpMethod($expected_result, $method) {
+  public function testHttpMethod($expected_result, $method): void {
     $this->policy->expects($this->once())
       ->method('isCli')
       ->willReturn(FALSE);
@@ -74,7 +74,7 @@ class CommandLineOrUnsafeMethodTest extends UnitTestCase {
    *
    * @covers ::check
    */
-  public function testIsCli() {
+  public function testIsCli(): void {
     $this->policy->expects($this->once())
       ->method('isCli')
       ->willReturn(TRUE);

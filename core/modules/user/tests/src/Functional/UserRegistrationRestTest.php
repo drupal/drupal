@@ -71,7 +71,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
   /**
    * Tests that only anonymous users can register users.
    */
-  public function testRegisterUser() {
+  public function testRegisterUser(): void {
     $config = $this->config('user.settings');
 
     // Test out different setting User Registration and Email Verification.

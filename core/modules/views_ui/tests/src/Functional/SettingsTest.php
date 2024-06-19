@@ -36,7 +36,7 @@ class SettingsTest extends UITestBase {
   /**
    * Tests the settings for the edit ui.
    */
-  public function testEditUI() {
+  public function testEditUI(): void {
     $this->drupalLogin($this->adminUser);
 
     // Test the settings tab exists.

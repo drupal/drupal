@@ -46,7 +46,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
    * Testing the Available updates summary on the side wide status page and the
    * Available translation updates page.
    */
-  public function testInterface() {
+  public function testInterface(): void {
     // No language added.
     // Check status page and Available translation updates page.
     $this->drupalGet('admin/reports/status');

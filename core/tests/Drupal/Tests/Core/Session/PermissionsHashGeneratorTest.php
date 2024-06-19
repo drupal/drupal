@@ -96,7 +96,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
    *
    * @covers ::generate
    */
-  public function testGenerateRegular() {
+  public function testGenerateRegular(): void {
     $permissions = new CalculatedPermissions(
       (new RefinableCalculatedPermissions())->addItem(new CalculatedPermissionsItem([
         'permission foo',
@@ -117,7 +117,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
    *
    * @covers ::generate
    */
-  public function testGenerateAdmin() {
+  public function testGenerateAdmin(): void {
     $permissions = new CalculatedPermissions((new RefinableCalculatedPermissions())->addItem(new CalculatedPermissionsItem([], TRUE)));
     $this->processor->processAccessPolicies($this->account1)->willReturn($permissions);
     $this->processor->processAccessPolicies($this->account2)->willReturn($permissions);
@@ -136,7 +136,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
    *
    * @covers ::generate
    */
-  public function testGenerateNoAccessPolicies() {
+  public function testGenerateNoAccessPolicies(): void {
     $permissions = new CalculatedPermissions(new RefinableCalculatedPermissions());
     $this->processor->processAccessPolicies($this->account1)->willReturn($permissions);
     $this->processor->processAccessPolicies($this->account2)->willReturn($permissions);
@@ -155,7 +155,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
    *
    * @covers ::generate
    */
-  public function testGenerateCache() {
+  public function testGenerateCache(): void {
     $permissions = new CalculatedPermissions(new RefinableCalculatedPermissions());
     $this->processor->processAccessPolicies($this->account1)->willReturn($permissions);
     $this->processor->processAccessPolicies($this->account2)->willReturn($permissions);

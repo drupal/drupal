@@ -43,7 +43,7 @@ class ContentTranslationEntityBundleUITest extends BrowserTestBase {
   /**
    * Tests content types default translation behavior.
    */
-  public function testContentTypeUI() {
+  public function testContentTypeUI(): void {
     // Create first content type.
     $this->drupalCreateContentType(['type' => 'article']);
     // Enable content translation.

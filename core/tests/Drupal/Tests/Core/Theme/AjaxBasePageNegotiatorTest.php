@@ -56,7 +56,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
    * @covers ::applies
    * @dataProvider providerTestApplies
    */
-  public function testApplies($request_data, $expected) {
+  public function testApplies($request_data, $expected): void {
     $request = new Request();
     foreach ($request_data as $key => $data) {
       $request->query->set($key, $data);
@@ -80,7 +80,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
   /**
    * @covers ::determineActiveTheme
    */
-  public function testDetermineActiveThemeValidToken() {
+  public function testDetermineActiveThemeValidToken(): void {
     $theme = 'claro';
     $theme_token = 'valid_theme_token';
 
@@ -98,7 +98,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
   /**
    * @covers ::determineActiveTheme
    */
-  public function testDetermineActiveThemeInvalidToken() {
+  public function testDetermineActiveThemeInvalidToken(): void {
     $theme = 'claro';
     $theme_token = 'invalid_theme_token';
     $request = new Request();
@@ -116,7 +116,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
   /**
    * @covers ::determineActiveTheme
    */
-  public function testDetermineActiveThemeDefaultTheme() {
+  public function testDetermineActiveThemeDefaultTheme(): void {
     $theme = 'stark';
     // When the theme is the system default, an empty string is provided as the
     // theme token. See system_js_settings_alter().

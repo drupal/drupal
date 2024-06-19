@@ -41,7 +41,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
   /**
    * Tests the module list form.
    */
-  public function testModuleListForm() {
+  public function testModuleListForm(): void {
     $this->drupalGet('admin/modules');
 
     // Check that system_test's configure link was rendered correctly.
@@ -69,7 +69,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
   /**
    * Tests the status message when enabling one or more modules.
    */
-  public function testModulesListFormStatusMessage() {
+  public function testModulesListFormStatusMessage(): void {
     $this->drupalGet('admin/modules');
 
     // Enable a module that does not define permissions.
@@ -95,7 +95,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
   /**
    * Tests the module form with a module with an invalid info.yml file.
    */
-  public function testModulesListFormWithInvalidInfoFile() {
+  public function testModulesListFormWithInvalidInfoFile(): void {
     $path = \Drupal::getContainer()->getParameter('site.path') . "/modules/broken";
     mkdir($path, 0777, TRUE);
     $file_path = "$path/broken.info.yml";
@@ -128,7 +128,7 @@ BROKEN;
   /**
    * Tests the module form with a module with an empty description in info.yml.
    */
-  public function testModulesListFormWithEmptyDescriptionInfoFile() {
+  public function testModulesListFormWithEmptyDescriptionInfoFile(): void {
     $path = \Drupal::getContainer()
       ->getParameter('site.path') . "/modules/missing_description";
     mkdir($path, 0777, TRUE);
@@ -156,7 +156,7 @@ BROKEN;
   /**
    * Confirm that module 'Required By' descriptions include dependent themes.
    */
-  public function testRequiredByThemeMessage() {
+  public function testRequiredByThemeMessage(): void {
     $this->drupalGet('admin/modules');
     $module_theme_depends_on_description = $this->getSession()->getPage()->findAll('css', '#edit-modules-test-module-required-by-theme-enable-description .admin-requirements li:contains("Test Theme Depending on Modules (theme) (disabled)")');
     // Confirm that 'Test Theme Depending on Modules' is listed as being
@@ -169,7 +169,7 @@ BROKEN;
   /**
    * Tests that incompatible modules message is shown.
    */
-  public function testInstalledIncompatibleModule() {
+  public function testInstalledIncompatibleModule(): void {
     $incompatible_modules_message = 'There are errors with some installed modules. Visit the status report page for more information.';
     $path = \Drupal::getContainer()->getParameter('site.path') . "/modules/changing_module";
     mkdir($path, 0777, TRUE);

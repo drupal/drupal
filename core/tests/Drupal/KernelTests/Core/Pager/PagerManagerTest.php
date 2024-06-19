@@ -19,7 +19,7 @@ class PagerManagerTest extends KernelTestBase {
   /**
    * @covers ::getUpdatedParameters
    */
-  public function testGetUpdatedParameters() {
+  public function testGetUpdatedParameters(): void {
     $element = 2;
     $index = 5;
     $test_parameters = [
@@ -46,7 +46,7 @@ class PagerManagerTest extends KernelTestBase {
   /**
    * @covers ::findPage
    */
-  public function testFindPage() {
+  public function testFindPage(): void {
     $request = Request::create('http://example.com', 'GET', ['page' => '0,10']);
     $request->setSession(new Session(new MockArraySessionStorage()));
 

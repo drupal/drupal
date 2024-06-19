@@ -74,7 +74,7 @@ class BlockViewBuilderTest extends KernelTestBase {
   /**
    * Tests the rendering of blocks.
    */
-  public function testBasicRendering() {
+  public function testBasicRendering(): void {
     \Drupal::state()->set('block_test.content', '');
 
     $entity = $this->controller->create([
@@ -127,7 +127,7 @@ class BlockViewBuilderTest extends KernelTestBase {
   /**
    * Tests block render cache handling.
    */
-  public function testBlockViewBuilderCache() {
+  public function testBlockViewBuilderCache(): void {
     // Verify cache handling for a non-empty block.
     $this->verifyRenderCacheHandling();
 
@@ -191,7 +191,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    * @see hook_block_view_alter()
    * @see hook_block_view_BASE_BLOCK_ID_alter()
    */
-  public function testBlockViewBuilderViewAlter() {
+  public function testBlockViewBuilderViewAlter(): void {
     // Establish baseline.
     $build = $this->getBlockRenderArray();
     $this->setRawContent((string) $this->renderer->renderRoot($build));
@@ -225,7 +225,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    * @see hook_block_build_alter()
    * @see hook_block_build_BASE_BLOCK_ID_alter()
    */
-  public function testBlockViewBuilderBuildAlter() {
+  public function testBlockViewBuilderBuildAlter(): void {
     // Force a request via GET so we can test the render cache.
     $request = \Drupal::request();
     $request_method = $request->server->get('REQUEST_METHOD');

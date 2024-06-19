@@ -60,7 +60,7 @@ class RearrangeFieldsTest extends UITestBase {
   /**
    * Tests field sorting.
    */
-  public function testRearrangeFields() {
+  public function testRearrangeFields(): void {
     $view_name = 'test_view';
 
     // Checks that the order on the rearrange form matches the creation order.

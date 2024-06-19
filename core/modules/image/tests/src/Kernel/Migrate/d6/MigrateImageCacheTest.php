@@ -29,7 +29,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Tests that an exception is thrown when ImageCache is not installed.
    */
-  public function testMissingTable() {
+  public function testMissingTable(): void {
     $this->sourceDatabase->update('system')
       ->fields([
         'status' => 0,
@@ -47,7 +47,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Tests basic passing migrations.
    */
-  public function testPassingMigration() {
+  public function testPassingMigration(): void {
     $this->executeMigration('d6_imagecache_presets');
 
     /** @var \Drupal\image\Entity\ImageStyle $style */
@@ -84,7 +84,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Tests that missing actions causes failures.
    */
-  public function testMissingEffectPlugin() {
+  public function testMissingEffectPlugin(): void {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")
       ->fields([
         'presetid',
@@ -112,7 +112,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Tests that missing action's causes failures.
    */
-  public function testInvalidCropValues() {
+  public function testInvalidCropValues(): void {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")
       ->fields([
         'presetid',

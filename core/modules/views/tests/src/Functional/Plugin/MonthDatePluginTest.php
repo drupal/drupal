@@ -65,7 +65,7 @@ class MonthDatePluginTest extends ViewTestBase {
   /**
    * Tests the Month Date Plugin.
    */
-  public function testMonthDatePlugin() {
+  public function testMonthDatePlugin(): void {
     $assert_session = $this->assertSession();
 
     // Test fallback value.

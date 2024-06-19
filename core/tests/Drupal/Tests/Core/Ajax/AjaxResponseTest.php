@@ -39,7 +39,7 @@ class AjaxResponseTest extends UnitTestCase {
    * @see \Drupal\Core\Ajax\AjaxResponse::addCommand()
    * @see \Drupal\Core\Ajax\AjaxResponse::getCommands()
    */
-  public function testCommands() {
+  public function testCommands(): void {
     $command_one = $this->createMock('Drupal\Core\Ajax\CommandInterface');
     $command_one->expects($this->once())
       ->method('render')
@@ -79,7 +79,7 @@ class AjaxResponseTest extends UnitTestCase {
    *
    * @cover ::prepareResponse
    */
-  public function testPrepareResponseForIeFormRequestsWithFileUpload() {
+  public function testPrepareResponseForIeFormRequestsWithFileUpload(): void {
     $request = Request::create('/example', 'POST');
     $request->headers->set('Accept', 'text/html');
     $response = new AjaxResponse([]);

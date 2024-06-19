@@ -47,7 +47,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseNoTriggeringElement() {
+  public function testBuildResponseNoTriggeringElement(): void {
     $this->renderer->expects($this->never())
       ->method('renderResponse');
 
@@ -63,7 +63,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseNoCallable() {
+  public function testBuildResponseNoCallable(): void {
     $this->renderer->expects($this->never())
       ->method('renderResponse');
 
@@ -81,7 +81,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseRenderArray() {
+  public function testBuildResponseRenderArray(): void {
     $triggering_element = [
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
@@ -112,7 +112,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseResponse() {
+  public function testBuildResponseResponse(): void {
     $triggering_element = [
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
@@ -137,7 +137,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseWithCommands() {
+  public function testBuildResponseWithCommands(): void {
     $triggering_element = [
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
@@ -170,7 +170,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseWithUpdateCommand() {
+  public function testBuildResponseWithUpdateCommand(): void {
     $triggering_element = [
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {

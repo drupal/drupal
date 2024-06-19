@@ -62,7 +62,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
   /**
    * Tests \Drupal\image\ImageStyleInterface::buildUri().
    */
-  public function testImageStylePath() {
+  public function testImageStylePath(): void {
     $scheme = 'public';
     $actual = $this->style->buildUri("$scheme://foo/bar.gif");
     $expected = "$scheme://styles/" . $this->style->id() . "/$scheme/foo/bar.gif";
@@ -76,49 +76,49 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
   /**
    * Tests an image style URL using the "public://" scheme.
    */
-  public function testImageStyleUrlAndPathPublic() {
+  public function testImageStyleUrlAndPathPublic(): void {
     $this->doImageStyleUrlAndPathTests('public');
   }
 
   /**
    * Tests an image style URL using the "private://" scheme.
    */
-  public function testImageStyleUrlAndPathPrivate() {
+  public function testImageStyleUrlAndPathPrivate(): void {
     $this->doImageStyleUrlAndPathTests('private');
   }
 
   /**
    * Tests an image style URL with the "public://" scheme and unclean URLs.
    */
-  public function testImageStyleUrlAndPathPublicUnclean() {
+  public function testImageStyleUrlAndPathPublicUnclean(): void {
     $this->doImageStyleUrlAndPathTests('public', FALSE);
   }
 
   /**
    * Tests an image style URL with the "private://" schema and unclean URLs.
    */
-  public function testImageStyleUrlAndPathPrivateUnclean() {
+  public function testImageStyleUrlAndPathPrivateUnclean(): void {
     $this->doImageStyleUrlAndPathTests('private', FALSE);
   }
 
   /**
    * Tests an image style URL with the "public://" schema and language prefix.
    */
-  public function testImageStyleUrlAndPathPublicLanguage() {
+  public function testImageStyleUrlAndPathPublicLanguage(): void {
     $this->doImageStyleUrlAndPathTests('public', TRUE, TRUE, 'fr');
   }
 
   /**
    * Tests an image style URL with the "private://" schema and language prefix.
    */
-  public function testImageStyleUrlAndPathPrivateLanguage() {
+  public function testImageStyleUrlAndPathPrivateLanguage(): void {
     $this->doImageStyleUrlAndPathTests('private', TRUE, TRUE, 'fr');
   }
 
   /**
    * Tests an image style URL with a file URL that has an extra slash in it.
    */
-  public function testImageStyleUrlExtraSlash() {
+  public function testImageStyleUrlExtraSlash(): void {
     $this->doImageStyleUrlAndPathTests('public', TRUE, TRUE);
   }
 
@@ -141,7 +141,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
   /**
    * Tests that an invalid source image returns a 404.
    */
-  public function testImageStyleUrlForMissingSourceImage() {
+  public function testImageStyleUrlForMissingSourceImage(): void {
     $non_existent_uri = 'public://foo.png';
     $generated_url = $this->style->buildUrl($non_existent_uri);
     $this->drupalGet($generated_url);

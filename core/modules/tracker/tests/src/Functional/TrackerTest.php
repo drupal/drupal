@@ -81,7 +81,7 @@ class TrackerTest extends BrowserTestBase {
   /**
    * Tests for the presence of nodes on the global tracker listing.
    */
-  public function testTrackerAll() {
+  public function testTrackerAll(): void {
     $this->drupalLogin($this->user);
 
     $unpublished = $this->drupalCreateNode([
@@ -142,7 +142,7 @@ class TrackerTest extends BrowserTestBase {
   /**
    * Tests for the presence of nodes on a user's tracker listing.
    */
-  public function testTrackerUser() {
+  public function testTrackerUser(): void {
     $this->drupalLogin($this->user);
 
     $unpublished = $this->drupalCreateNode([
@@ -237,7 +237,7 @@ class TrackerTest extends BrowserTestBase {
   /**
    * Tests the metadata for the "new"/"updated" indicators.
    */
-  public function testTrackerHistoryMetadata() {
+  public function testTrackerHistoryMetadata(): void {
     $this->drupalLogin($this->user);
 
     // Create a page node.
@@ -289,7 +289,7 @@ class TrackerTest extends BrowserTestBase {
   /**
    * Tests for ordering on a users tracker listing when comments are posted.
    */
-  public function testTrackerOrderingNewComments() {
+  public function testTrackerOrderingNewComments(): void {
     $this->drupalLogin($this->user);
 
     $node_one = $this->drupalCreateNode([
@@ -359,7 +359,7 @@ class TrackerTest extends BrowserTestBase {
   /**
    * Tests that existing nodes are indexed by cron.
    */
-  public function testTrackerCronIndexing() {
+  public function testTrackerCronIndexing(): void {
     $this->drupalLogin($this->user);
 
     // Create 3 nodes.
@@ -423,7 +423,7 @@ class TrackerTest extends BrowserTestBase {
   /**
    * Tests that publish/unpublish works at admin/content/node.
    */
-  public function testTrackerAdminUnpublish() {
+  public function testTrackerAdminUnpublish(): void {
     \Drupal::service('module_installer')->install(['views']);
     $admin_user = $this->drupalCreateUser([
       'access content overview',

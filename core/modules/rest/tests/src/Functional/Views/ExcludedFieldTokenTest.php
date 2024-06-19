@@ -69,7 +69,7 @@ class ExcludedFieldTokenTest extends ViewTestBase {
   /**
    * Tests the display of an excluded title field when used as a token.
    */
-  public function testExcludedTitleTokenDisplay() {
+  public function testExcludedTitleTokenDisplay(): void {
     $actual_json = $this->drupalGet($this->view->getPath(), ['query' => ['_format' => 'json']]);
     $this->assertSession()->statusCodeEquals(200);
 

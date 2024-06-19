@@ -54,7 +54,7 @@ class MigrateUpgradeFormStepsTest extends BrowserTestBase {
    * this order; Overview or Incremental, if a migration has already been run
    * then Credential, Id conflict, if conflicts are detected, and lastly Review.
    */
-  public function testMigrateUpgradeReviewPage() {
+  public function testMigrateUpgradeReviewPage(): void {
     /** @var \Drupal\Core\TempStore\PrivateTempStore  $store */
     $store = \Drupal::service('tempstore.private')->get('migrate_drupal_ui');
     $state = \Drupal::service('state');

@@ -32,7 +32,7 @@ class MigrateUpdateConfigsTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of update variables to update.settings.yml.
    */
-  public function testUpdateSettings() {
+  public function testUpdateSettings(): void {
     $config = $this->config('update.settings');
     $this->assertSame(2, $config->get('fetch.max_attempts'));
     $this->assertSame('https://updates.drupal.org/release-history', $config->get('fetch.url'));

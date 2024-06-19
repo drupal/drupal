@@ -70,7 +70,7 @@ class RevisionUidTest extends ViewsKernelTestBase {
   /**
    * Tests the node_revision_uid relationship.
    */
-  public function testRevisionUid() {
+  public function testRevisionUid(): void {
     $primary_author = $this->createUser();
     $secondary_author = $this->createUser();
 

@@ -82,7 +82,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
   /**
    * Tests synced file fields on translated nodes.
    */
-  public function testSyncedImages() {
+  public function testSyncedImages(): void {
     // Enable translation for "Basic page" nodes.
     $this->enableContentTranslation('node', 'basic_page');
     static::setFieldTranslatable('node', 'basic_page', $this->fieldName, TRUE);

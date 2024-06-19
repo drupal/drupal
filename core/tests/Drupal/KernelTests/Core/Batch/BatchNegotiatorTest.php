@@ -25,7 +25,7 @@ class BatchNegotiatorTest extends KernelTestBase {
   /**
    * Test that the negotiator applies to the batch route.
    */
-  public function testApplies() {
+  public function testApplies(): void {
     $request = Request::create('/batch');
     // Use the router to enhance the object so that a RouteMatch can be created.
     $this->container->get('router')->matchRequest($request);

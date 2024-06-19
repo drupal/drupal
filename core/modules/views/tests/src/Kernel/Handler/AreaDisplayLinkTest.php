@@ -129,7 +129,7 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
   /**
    * Tests the views area display_link handler.
    */
-  public function testAreaDisplayLink() {
+  public function testAreaDisplayLink(): void {
     $view = Views::getView('test_view');
 
     // Assert only path-based displays are available in the display link

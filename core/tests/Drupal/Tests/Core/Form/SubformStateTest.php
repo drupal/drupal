@@ -68,7 +68,7 @@ class SubformStateTest extends UnitTestCase {
    * @param string $expected
    *   The expected state values.
    */
-  public function testGetValues(array $parents, $expected) {
+  public function testGetValues(array $parents, $expected): void {
     $parent_form_state = new FormState();
     $parent_form_state->setValues(static::$formStateValues);
 
@@ -107,7 +107,7 @@ class SubformStateTest extends UnitTestCase {
    * @param string $expected
    *   The expected state values.
    */
-  public function testGetValuesBroken(array $parents, $expected) {
+  public function testGetValuesBroken(array $parents, $expected): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->testGetValues($parents, $expected);
   }
@@ -134,7 +134,7 @@ class SubformStateTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetValue
    */
-  public function testGetValue($parents, $key, $expected, $default = NULL) {
+  public function testGetValue($parents, $key, $expected, $default = NULL): void {
     $parent_form_state = new FormState();
     $parent_form_state->setValues(static::$formStateValues);
 
@@ -168,7 +168,7 @@ class SubformStateTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetValueBroken
    */
-  public function testGetValueBroken(array $parents, $key, $expected, $default = NULL) {
+  public function testGetValueBroken(array $parents, $key, $expected, $default = NULL): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->testGetValue($parents, $key, $expected, $default);
   }
@@ -192,7 +192,7 @@ class SubformStateTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetValues
    */
-  public function testSetValues($parents, $new_values, $expected) {
+  public function testSetValues($parents, $new_values, $expected): void {
     $parent_form_state = new FormState();
     $parent_form_state->setValues(static::$formStateValues);
 
@@ -223,7 +223,7 @@ class SubformStateTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetValuesBroken
    */
-  public function testSetValuesBroken($parents, $new_values, $expected) {
+  public function testSetValuesBroken($parents, $new_values, $expected): void {
     $this->expectException(\UnexpectedValueException::class);
     $this->testSetValues($parents, $new_values, $expected);
   }
@@ -247,7 +247,7 @@ class SubformStateTest extends UnitTestCase {
   /**
    * @covers ::getCompleteFormState
    */
-  public function testGetCompleteFormStateWithParentCompleteForm() {
+  public function testGetCompleteFormStateWithParentCompleteForm(): void {
     $parent_form_state = $this->prophesize(FormStateInterface::class);
     $subform_state = SubformState::createForSubform($this->parentForm['dog'], $this->parentForm, $parent_form_state->reveal());
     $this->assertSame($parent_form_state->reveal(), $subform_state->getCompleteFormState());
@@ -256,7 +256,7 @@ class SubformStateTest extends UnitTestCase {
   /**
    * @covers ::getCompleteFormState
    */
-  public function testGetCompleteFormStateWithParentSubform() {
+  public function testGetCompleteFormStateWithParentSubform(): void {
     $complete_form_state = $this->prophesize(FormStateInterface::class);
     $parent_form_state = $this->prophesize(SubformStateInterface::class);
     $parent_form_state->getCompleteFormState()
@@ -269,7 +269,7 @@ class SubformStateTest extends UnitTestCase {
   /**
    * @covers ::setLimitValidationErrors
    */
-  public function testSetLimitValidationErrors() {
+  public function testSetLimitValidationErrors(): void {
     $parent_limit_validation_errors = ['dog', 'name'];
     $limit_validation_errors = ['name'];
 
@@ -284,7 +284,7 @@ class SubformStateTest extends UnitTestCase {
   /**
    * @covers ::getLimitValidationErrors
    */
-  public function testGetLimitValidationErrors() {
+  public function testGetLimitValidationErrors(): void {
     $parent_limit_validation_errors = ['dog', 'name'];
     $limit_validation_errors = ['name'];
 
@@ -300,7 +300,7 @@ class SubformStateTest extends UnitTestCase {
   /**
    * @covers ::setErrorByName
    */
-  public function testSetErrorByName() {
+  public function testSetErrorByName(): void {
     $parent_form_error_name = 'dog][name';
     $subform_error_name = 'name';
     // cSpell:disable-next-line
@@ -317,7 +317,7 @@ class SubformStateTest extends UnitTestCase {
   /**
    * @covers ::getFormObject
    */
-  public function testFormObject() {
+  public function testFormObject(): void {
     $parent_form_state = $this->prophesize(FormStateInterface::class);
     $parent_form_object = $this->prophesize(FormInterface::class)->reveal();
     $parent_form_state->getFormObject()->willReturn($parent_form_object)->shouldBeCalledOnce();

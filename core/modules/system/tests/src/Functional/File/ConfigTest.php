@@ -31,7 +31,7 @@ class ConfigTest extends BrowserTestBase {
   /**
    * Tests file configuration page.
    */
-  public function testFileConfigurationPage() {
+  public function testFileConfigurationPage(): void {
     $this->drupalGet('admin/config/media/file-system');
 
     // Set the file paths to non-default values.

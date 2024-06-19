@@ -81,7 +81,7 @@ EOF;
   /**
    * Tests installing from config is not available due to hook_INSTALL().
    */
-  public function testConfigSync() {
+  public function testConfigSync(): void {
     $this->assertSession()->titleEquals('Select an installation profile | Drupal');
     $this->assertSession()->responseNotContains('Use existing configuration');
 

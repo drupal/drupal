@@ -26,7 +26,7 @@ class SystemFunctionsLegacyTest extends KernelTestBase {
   /**
    * @covers ::system_time_zones
    */
-  public function testSystemTimeZones() {
+  public function testSystemTimeZones(): void {
     $this->expectDeprecation('system_time_zones() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This function is no longer used in Drupal core. Use \Drupal\Core\Datetime\TimeZoneFormHelper::getOptionsList(), \Drupal\Core\Datetime\TimeZoneFormHelper::getOptionsListByRegion() or \DateTimeZone::listIdentifiers() instead. See https://www.drupal.org/node/3023528');
     system_time_zones();
   }
@@ -34,7 +34,7 @@ class SystemFunctionsLegacyTest extends KernelTestBase {
   /**
    * @covers ::system_retrieve_file
    */
-  public function testSystemRetrieveFile() {
+  public function testSystemRetrieveFile(): void {
     $this->expectDeprecation('system_retrieve_file is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3223362');
     $retrieved_file = system_retrieve_file('http://example.com/foo.txt');
     $this->assertFalse($retrieved_file);

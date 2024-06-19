@@ -36,7 +36,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   /**
    * Tests update changes configuration translations if enabled after language.
    */
-  public function testConfigTranslationImport() {
+  public function testConfigTranslationImport(): void {
     $admin_user = $this->drupalCreateUser([
       'administer modules',
       'administer site configuration',
@@ -120,7 +120,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   /**
    * Tests update changes configuration translations if enabled after language.
    */
-  public function testConfigTranslationModuleInstall() {
+  public function testConfigTranslationModuleInstall(): void {
 
     // Enable locale, block and config_translation modules.
     $this->container->get('module_installer')->install(['block', 'config_translation']);
@@ -197,7 +197,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   /**
    * Tests removing a string from Locale deletes configuration translations.
    */
-  public function testLocaleRemovalAndConfigOverrideDelete() {
+  public function testLocaleRemovalAndConfigOverrideDelete(): void {
     // Enable the locale module.
     $this->container->get('module_installer')->install(['locale']);
     $this->resetAll();
@@ -243,7 +243,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   /**
    * Tests removing a string from Locale changes configuration translations.
    */
-  public function testLocaleRemovalAndConfigOverridePreserve() {
+  public function testLocaleRemovalAndConfigOverridePreserve(): void {
     // Enable the locale module.
     $this->container->get('module_installer')->install(['locale']);
     $this->resetAll();
@@ -309,7 +309,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   /**
    * Tests setting a non-English language as default and importing configuration.
    */
-  public function testConfigTranslationWithNonEnglishLanguageDefault() {
+  public function testConfigTranslationWithNonEnglishLanguageDefault(): void {
     /** @var \Drupal\Core\Extension\ModuleInstallerInterface $module_installer */
     $module_installer = $this->container->get('module_installer');
     ConfigurableLanguage::createFromLangcode('af')->save();

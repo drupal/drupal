@@ -30,7 +30,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests that `<drupal-media>` is converted into a block element.
    */
-  public function testConversion() {
+  public function testConversion(): void {
     // Wrap the `<drupal-media>` markup in a `<p>`.
     $original_value = $this->host->body->value;
     $this->host->body->value = '<p>foo' . $original_value . '</p>';
@@ -50,7 +50,7 @@ class MediaTest extends MediaTestBase {
    *
    * @see \Drupal\Tests\media\Kernel\MediaEmbedFilterTest::testOnlyDrupalMediaTagProcessed()
    */
-  public function testOnlyDrupalMediaTagProcessed() {
+  public function testOnlyDrupalMediaTagProcessed(): void {
     $original_value = $this->host->body->value;
     $this->host->body->value = str_replace('drupal-media', 'p', $original_value);
     $this->host->save();
@@ -75,7 +75,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests adding media to a list does not split the list.
    */
-  public function testMediaSplitList() {
+  public function testMediaSplitList(): void {
     $assert_session = $this->assertSession();
 
     $editor = Editor::load('test_format');
@@ -136,7 +136,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests that arbitrary attributes are allowed via GHS.
    */
-  public function testMediaArbitraryHtml() {
+  public function testMediaArbitraryHtml(): void {
     $assert_session = $this->assertSession();
 
     $editor = Editor::load('test_format');
@@ -193,7 +193,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests caption editing in the CKEditor widget.
    */
-  public function testEditableCaption() {
+  public function testEditableCaption(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     // Test that setting caption to blank string doesn't break 'Edit media'
@@ -362,7 +362,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests the CKEditor 5 media plugin can override image media's alt attribute.
    */
-  public function testAlt() {
+  public function testAlt(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->drupalGet($this->host->toUrl('edit-form'));
@@ -472,7 +472,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests the CKEditor 5 media plugin loads the translated alt attribute.
    */
-  public function testTranslationAlt() {
+  public function testTranslationAlt(): void {
     \Drupal::service('module_installer')->install(['language', 'content_translation']);
     $this->resetAll();
     ConfigurableLanguage::createFromLangcode('fr')->save();
@@ -572,7 +572,7 @@ class MediaTest extends MediaTestBase {
    * the media style toolbar allows altering the alignment and that the changes
    * are reflected on the widget and downcast drupal-media tag.
    */
-  public function testAlignment() {
+  public function testAlignment(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet($this->host->toUrl('edit-form'));
@@ -623,7 +623,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Ensures that Drupal Media Styles can be displayed in a dropdown.
    */
-  public function testDrupalMediaStyleInDropdown() {
+  public function testDrupalMediaStyleInDropdown(): void {
     \Drupal::service('module_installer')->install(['ckeditor5_drupalelementstyle_test']);
     $this->resetAll();
 
@@ -660,7 +660,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests Drupal Media Style with a CSS class.
    */
-  public function testDrupalMediaStyleWithClass() {
+  public function testDrupalMediaStyleWithClass(): void {
     $editor = Editor::load('test_format');
     $editor->setSettings([
       'toolbar' => [
@@ -747,7 +747,7 @@ class MediaTest extends MediaTestBase {
    *
    * @dataProvider providerTestViewMode
    */
-  public function testViewMode(bool $with_alignment) {
+  public function testViewMode(bool $with_alignment): void {
     EntityViewMode::create([
       'id' => 'media.view_mode_3',
       'targetEntityType' => 'media',

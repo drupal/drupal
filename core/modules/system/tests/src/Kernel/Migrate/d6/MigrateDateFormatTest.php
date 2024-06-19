@@ -26,7 +26,7 @@ class MigrateDateFormatTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 date formats to Drupal 8 migration.
    */
-  public function testDateFormats() {
+  public function testDateFormats(): void {
     $short_date_format = DateFormat::load('short');
     $this->assertSame('\S\H\O\R\T m/d/Y - H:i', $short_date_format->getPattern());
 

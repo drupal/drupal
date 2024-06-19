@@ -28,7 +28,7 @@ class ImageLoadingAttributeTest extends BrowserTestBase {
   /**
    * Tests that loading attribute is enabled for images.
    */
-  public function testImageLoadingAttribute() {
+  public function testImageLoadingAttribute(): void {
     $assert = $this->assertSession();
 
     // Get page under test.

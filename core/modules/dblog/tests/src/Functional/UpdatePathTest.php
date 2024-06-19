@@ -27,7 +27,7 @@ class UpdatePathTest extends UpdatePathTestBase {
   /**
    * Tests that, after update 10101, the 'wid' column can be a 64-bit integer.
    */
-  public function testLogEntryWithBigId() {
+  public function testLogEntryWithBigId(): void {
     if (PHP_INT_SIZE < 8) {
       $this->markTestSkipped('This test can only be run on a system that supports 64-bit integers (i.e., PHP_INT_SIZE is 8).');
     }

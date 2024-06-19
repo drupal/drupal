@@ -27,7 +27,7 @@ class MenuLinkContentEntityAccessTest extends UnitTestCase {
    *
    * @covers ::checkAccess
    */
-  public function testUnrecognizedOperation() {
+  public function testUnrecognizedOperation(): void {
     $entityType = $this->createMock(EntityTypeInterface::class);
     $accessManager = $this->createMock(AccessManagerInterface::class);
     $moduleHandler = $this->createMock(ModuleHandlerInterface::class);

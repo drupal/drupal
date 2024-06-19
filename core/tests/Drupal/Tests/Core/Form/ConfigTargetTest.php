@@ -114,7 +114,7 @@ class ConfigTargetTest extends UnitTestCase {
    * @covers ::fromForm
    * @covers ::fromString
    */
-  public function testFromFormString() {
+  public function testFromFormString(): void {
     $form = [
       'group' => [
         '#type' => 'details',
@@ -136,7 +136,7 @@ class ConfigTargetTest extends UnitTestCase {
   /**
    * @covers ::fromForm
    */
-  public function testFromFormConfigTarget() {
+  public function testFromFormConfigTarget(): void {
     $form = [
       'test' => [
         '#type' => 'text',
@@ -158,7 +158,7 @@ class ConfigTargetTest extends UnitTestCase {
    * @covers ::fromForm
    * @dataProvider providerTestFromFormException
    */
-  public function testFromFormException(array $form, array $array_parents, string $exception_message) {
+  public function testFromFormException(array $form, array $array_parents, string $exception_message): void {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage($exception_message);
     ConfigTarget::fromForm($array_parents, $form);

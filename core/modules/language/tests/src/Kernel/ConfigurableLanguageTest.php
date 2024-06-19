@@ -25,7 +25,7 @@ class ConfigurableLanguageTest extends KernelTestBase {
   /**
    * Tests configurable language name methods.
    */
-  public function testName() {
+  public function testName(): void {
     $name = $this->randomMachineName();
     $language_code = $this->randomMachineName(2);
     $configurableLanguage = new ConfigurableLanguage(['label' => $name, 'id' => $language_code], 'configurable_language');

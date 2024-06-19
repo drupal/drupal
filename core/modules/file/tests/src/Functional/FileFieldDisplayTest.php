@@ -26,7 +26,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   /**
    * Tests normal formatter display on node display.
    */
-  public function testNodeDisplay() {
+  public function testNodeDisplay(): void {
     $field_name = $this->randomMachineName();
     $type_name = 'article';
     $field_storage_settings = [
@@ -132,7 +132,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   /**
    * Tests default display of File Field.
    */
-  public function testDefaultFileFieldDisplay() {
+  public function testDefaultFileFieldDisplay(): void {
     $field_name = $this->randomMachineName();
     $type_name = 'article';
     $field_storage_settings = [
@@ -159,7 +159,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   /**
    * Tests description toggle for field instance configuration.
    */
-  public function testDescToggle() {
+  public function testDescToggle(): void {
     $type_name = 'test';
     $field_type = 'file';
     $field_name = $this->randomMachineName();
@@ -191,7 +191,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   /**
    * Tests description display of File Field.
    */
-  public function testDescriptionDefaultFileFieldDisplay() {
+  public function testDescriptionDefaultFileFieldDisplay(): void {
     $field_name = $this->randomMachineName();
     $type_name = 'article';
     $field_storage_settings = [

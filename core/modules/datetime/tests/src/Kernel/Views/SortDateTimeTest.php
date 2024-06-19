@@ -51,7 +51,7 @@ class SortDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * Tests the datetime sort handler.
    */
-  public function testDateTimeSort() {
+  public function testDateTimeSort(): void {
     $field = static::$fieldName . '_value';
     $view = Views::getView('test_sort_datetime');
 

@@ -70,7 +70,7 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
    *
    * @dataProvider acceptFilterProvider
    */
-  public function testAcceptFiltering($accept_header, $format, $included_route, $excluded_route) {
+  public function testAcceptFiltering($accept_header, $format, $included_route, $excluded_route): void {
     $collection = $this->fixtures->sampleRouteCollection();
 
     $request = Request::create('path/two', 'GET');
@@ -89,7 +89,7 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
   /**
    * Confirms that the AcceptHeaderMatcher throws an exception for no-route.
    */
-  public function testNoRouteFound() {
+  public function testNoRouteFound(): void {
     // Remove the sample routes that would match any method.
     $routes = $this->fixtures->sampleRouteCollection();
     $routes->remove('route_a');

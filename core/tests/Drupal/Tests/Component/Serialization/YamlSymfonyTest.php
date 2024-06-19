@@ -27,7 +27,7 @@ class YamlSymfonyTest extends YamlTestBase {
    * @covers ::decode
    * @dataProvider providerEncodeDecodeTests
    */
-  public function testEncodeDecode($data) {
+  public function testEncodeDecode($data): void {
     $this->expectDeprecation("Calling Drupal\Component\Serialization\YamlSymfony::encode() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Serialization\Yaml::encode() instead. See https://www.drupal.org/node/3415489");
     $this->expectDeprecation("Calling Drupal\Component\Serialization\YamlSymfony::decode() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Serialization\Yaml::decode() instead. See https://www.drupal.org/node/3415489");
     $this->assertEquals($data, YamlSymfony::decode(YamlSymfony::encode($data)));
@@ -39,7 +39,7 @@ class YamlSymfonyTest extends YamlTestBase {
    * @covers ::decode
    * @dataProvider providerDecodeTests
    */
-  public function testDecode($string, $data) {
+  public function testDecode($string, $data): void {
     $this->expectDeprecation("Calling Drupal\Component\Serialization\YamlSymfony::decode() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Serialization\Yaml::decode() instead. See https://www.drupal.org/node/3415489");
     $this->assertEquals($data, YamlSymfony::decode($string));
   }
@@ -49,7 +49,7 @@ class YamlSymfonyTest extends YamlTestBase {
    *
    * @covers ::encode
    */
-  public function testEncode() {
+  public function testEncode(): void {
     $this->expectDeprecation("Calling Drupal\Component\Serialization\YamlSymfony::encode() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Serialization\Yaml::encode() instead. See https://www.drupal.org/node/3415489");
     // cSpell:disable
     $this->assertEquals('foo:
@@ -61,7 +61,7 @@ class YamlSymfonyTest extends YamlTestBase {
   /**
    * @covers ::getFileExtension
    */
-  public function testGetFileExtension() {
+  public function testGetFileExtension(): void {
     $this->expectDeprecation("Calling Drupal\Component\Serialization\YamlSymfony::getFileExtension() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Serialization\Yaml::getFileExtension() instead. See https://www.drupal.org/node/3415489");
     $this->assertEquals('yml', YamlSymfony::getFileExtension());
   }
@@ -71,7 +71,7 @@ class YamlSymfonyTest extends YamlTestBase {
    *
    * @covers ::decode
    */
-  public function testError() {
+  public function testError(): void {
     $this->expectDeprecation("Calling Drupal\Component\Serialization\YamlSymfony::decode() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Serialization\Yaml::decode() instead. See https://www.drupal.org/node/3415489");
     $this->expectException(InvalidDataTypeException::class);
     YamlSymfony::decode('foo: [ads');
@@ -82,7 +82,7 @@ class YamlSymfonyTest extends YamlTestBase {
    *
    * @covers ::encode
    */
-  public function testEncodeObjectSupportDisabled() {
+  public function testEncodeObjectSupportDisabled(): void {
     $this->expectDeprecation("Calling Drupal\Component\Serialization\YamlSymfony::encode() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Serialization\Yaml::encode() instead. See https://www.drupal.org/node/3415489");
     $this->expectException(InvalidDataTypeException::class);
     $this->expectExceptionMessage('Object support when dumping a YAML file has been disabled.');
@@ -114,7 +114,7 @@ class YamlSymfonyTest extends YamlTestBase {
    *
    * @dataProvider taggedValuesProvider
    */
-  public function testCustomTagSupport($expected, $yaml) {
+  public function testCustomTagSupport($expected, $yaml): void {
     try {
       $this->assertEquals($expected, YamlSymfony::decode($yaml));
     }

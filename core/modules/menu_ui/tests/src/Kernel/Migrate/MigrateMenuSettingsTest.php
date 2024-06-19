@@ -24,7 +24,7 @@ class MigrateMenuSettingsTest extends MigrateDrupal7TestBase {
     $this->executeMigration('menu_settings');
   }
 
-  public function testMigration() {
+  public function testMigration(): void {
     $this->assertTrue(\Drupal::config('menu_ui.settings')->get('override_parent_selector'));
   }
 

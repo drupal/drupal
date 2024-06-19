@@ -59,7 +59,7 @@ class ContextualFilterTest extends WebDriverTestBase {
   /**
    * Tests adding a contextual filter handler through the UI.
    */
-  public function testAddContextualFilterUI() {
+  public function testAddContextualFilterUI(): void {
     $this->drupalGet('/admin/structure/views/view/test_field_body');
 
     $web_assert = $this->assertSession();

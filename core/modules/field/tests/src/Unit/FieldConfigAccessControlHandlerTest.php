@@ -37,7 +37,7 @@ class FieldConfigAccessControlHandlerTest extends FieldStorageConfigAccessContro
   /**
    * Ensures field config access is working properly.
    */
-  public function testAccess() {
+  public function testAccess(): void {
     $this->assertAllowOperations([], $this->anon);
     $this->assertAllowOperations(['view', 'update', 'delete'], $this->member);
   }

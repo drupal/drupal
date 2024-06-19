@@ -57,7 +57,7 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
   /**
    * Tests field UI integration for media library widget.
    */
-  public function testFieldUiIntegration() {
+  public function testFieldUiIntegration(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $user = $this->drupalCreateUser([

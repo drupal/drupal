@@ -90,7 +90,7 @@ class TestSuiteBaseTest extends TestCase {
    *
    * @dataProvider provideCoreTests
    */
-  public function testAddTestsBySuiteNamespaceCore($filesystem, $suite_namespace, $expected_tests) {
+  public function testAddTestsBySuiteNamespaceCore($filesystem, $suite_namespace, $expected_tests): void {
 
     $this->expectDeprecation('Drupal\\Tests\\Core\\Test\\StubTestSuiteBase is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement and test discovery will be handled differently in PHPUnit 10. See https://www.drupal.org/node/3405829');
 
@@ -114,7 +114,7 @@ class TestSuiteBaseTest extends TestCase {
   /**
    * Tests the assumption that local time is in 'Australia/Sydney'.
    */
-  public function testLocalTimeZone() {
+  public function testLocalTimeZone(): void {
     // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
     $this->assertEquals('Australia/Sydney', date_default_timezone_get());
   }

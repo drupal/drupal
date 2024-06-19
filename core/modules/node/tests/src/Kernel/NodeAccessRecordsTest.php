@@ -24,7 +24,7 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
   /**
    * Creates a node and tests the creation of node access rules.
    */
-  public function testNodeAccessRecords() {
+  public function testNodeAccessRecords(): void {
     // Create an article node.
     $node1 = $this->drupalCreateNode(['type' => 'article']);
     $this->assertNotEmpty(Node::load($node1->id()), 'Article node created.');

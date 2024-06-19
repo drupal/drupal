@@ -71,7 +71,7 @@ class ThemeHandlerTest extends UnitTestCase {
    * @see \Drupal\Core\Extension\ThemeHandler::rebuildThemeData()
    * @group legacy
    */
-  public function testRebuildThemeData() {
+  public function testRebuildThemeData(): void {
     $this->expectDeprecation("\Drupal\Core\Extension\ThemeHandlerInterface::rebuildThemeData() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal::service('extension.list.theme')->reset()->getList() instead. See https://www.drupal.org/node/3413196");
     $this->themeList->expects($this->once())
       ->method('reset')
@@ -97,7 +97,7 @@ class ThemeHandlerTest extends UnitTestCase {
   /**
    * Tests empty libraries in theme.info.yml file.
    */
-  public function testThemeLibrariesEmpty() {
+  public function testThemeLibrariesEmpty(): void {
     $theme = new Extension($this->root, 'theme', 'core/modules/system/tests/themes/test_theme_libraries_empty', 'test_theme_libraries_empty.info.yml');
     try {
       $this->themeHandler->addTheme($theme);

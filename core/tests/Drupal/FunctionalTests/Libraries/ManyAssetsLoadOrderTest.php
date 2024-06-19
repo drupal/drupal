@@ -28,7 +28,7 @@ class ManyAssetsLoadOrderTest extends BrowserTestBase {
    *
    * Confirms the load order reflects the configured weights for each asset.
    */
-  public function testLoadOrder() {
+  public function testLoadOrder(): void {
     $this->drupalGet('many_assets_test');
 
     $js = $this->getSession()->getPage()->findAll('css', 'script[data-weight]');

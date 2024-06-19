@@ -150,7 +150,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
   /**
    * Tests that the breadcrumb is updated when book content changes.
    */
-  public function testBreadcrumbTitleUpdates() {
+  public function testBreadcrumbTitleUpdates(): void {
     // Create a new book.
     $nodes = $this->createBreadcrumbBook();
     $book = $this->book;
@@ -186,7 +186,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
   /**
    * Tests that the breadcrumb is updated when book access changes.
    */
-  public function testBreadcrumbAccessUpdates() {
+  public function testBreadcrumbAccessUpdates(): void {
     // Create a new book.
     $nodes = $this->createBreadcrumbBook();
     $this->drupalLogin($this->bookAuthor);

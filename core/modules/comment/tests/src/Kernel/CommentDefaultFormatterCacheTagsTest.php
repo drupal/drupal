@@ -71,7 +71,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
   /**
    * Tests the bubbling of cache tags.
    */
-  public function testCacheTags() {
+  public function testCacheTags(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 

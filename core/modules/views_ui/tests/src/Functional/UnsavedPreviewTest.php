@@ -48,7 +48,7 @@ class UnsavedPreviewTest extends UITestBase {
   /**
    * Tests previews of unsaved new page displays.
    */
-  public function testUnsavedPageDisplayPreview() {
+  public function testUnsavedPageDisplayPreview(): void {
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 5; $i++) {
       $this->drupalCreateNode();

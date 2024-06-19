@@ -49,7 +49,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsNormalization
    */
-  public function testSupportsNormalization() {
+  public function testSupportsNormalization(): void {
     $timestamp_item = $this->createTimestampItemProphecy();
     $this->assertTrue($this->normalizer->supportsNormalization($timestamp_item->reveal()));
 
@@ -60,7 +60,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsDenormalization
    */
-  public function testSupportsDenormalization() {
+  public function testSupportsDenormalization(): void {
     $timestamp_item = $this->createTimestampItemProphecy();
     $this->assertTrue($this->normalizer->supportsDenormalization($timestamp_item->reveal(), TimestampItem::class));
 
@@ -76,7 +76,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
    * @covers ::normalize
    * @see \Drupal\Tests\serialization\Unit\Normalizer\TimestampNormalizerTest
    */
-  public function testNormalize() {
+  public function testNormalize(): void {
     // Mock TimestampItem @FieldType, which contains a Timestamp @DataType,
     // which has a DataDefinition.
     $data_definition = $this->prophesize(DataDefinitionInterface::class);
@@ -112,7 +112,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
   /**
    * @covers ::denormalize
    */
-  public function testDenormalize() {
+  public function testDenormalize(): void {
     $timestamp_item_normalization = [
       'value' => $this->randomMachineName(),
       'format' => \DateTime::RFC3339,

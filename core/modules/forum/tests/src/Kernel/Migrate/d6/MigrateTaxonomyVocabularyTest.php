@@ -56,7 +56,7 @@ class MigrateTaxonomyVocabularyTest extends TaxonomyVocabularyTest {
   /**
    * Tests the Drupal 6 taxonomy vocabularies migration.
    */
-  public function testTaxonomyVocabulary() {
+  public function testTaxonomyVocabulary(): void {
     $this->assertEntity('forums', 'Forums', '', 0);
     $this->assertEntity('trees', 'Trees', 'A list of trees.', 0);
     $this->assertEntity('freetags', 'FreeTags', '', 0);

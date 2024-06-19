@@ -39,7 +39,7 @@ class MenuLinkContentDeleteFormTest extends BrowserTestBase {
   /**
    * Tests the MenuLinkContentDeleteForm class.
    */
-  public function testMenuLinkContentDeleteForm() {
+  public function testMenuLinkContentDeleteForm(): void {
     // Add new menu item.
     $this->drupalGet('admin/structure/menu/manage/admin/add');
     $this->submitForm([

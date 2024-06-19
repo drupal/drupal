@@ -27,7 +27,7 @@ class TrackerRecentContentLinkTest extends BrowserTestBase {
   /**
    * Tests the recent content link in menu block.
    */
-  public function testRecentContentLink() {
+  public function testRecentContentLink(): void {
     $this->drupalGet('<front>');
     $this->assertSession()->linkNotExists('Recent content');
     $this->drupalPlaceBlock('system_menu_block:tools');

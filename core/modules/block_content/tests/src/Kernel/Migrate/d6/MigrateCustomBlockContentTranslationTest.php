@@ -43,7 +43,7 @@ class MigrateCustomBlockContentTranslationTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 i18n content block strings to Drupal 8 migration.
    */
-  public function testCustomBlockContentTranslation() {
+  public function testCustomBlockContentTranslation(): void {
     /** @var \Drupal\block_content\Entity\BlockContent $block */
     $block = BlockContent::load(1)->getTranslation('fr');
     $this->assertSame('fr - Static Block', $block->label());

@@ -21,7 +21,7 @@ class PageViewTest extends NodeTestBase {
   /**
    * Tests editing a node by users with various access permissions.
    */
-  public function testPageView() {
+  public function testPageView(): void {
     // Create a node to view.
     $node = $this->drupalCreateNode();
     $this->assertNotEmpty(Node::load($node->id()), 'Node created.');

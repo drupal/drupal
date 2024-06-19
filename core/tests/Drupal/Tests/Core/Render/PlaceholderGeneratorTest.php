@@ -30,7 +30,7 @@ class PlaceholderGeneratorTest extends RendererTestBase {
    * placeholders: the placeholder markup in #attached versus that in the HTML
    * processed by DOMDocument would no longer match.
    */
-  public function testCreatePlaceholderGeneratesValidHtmlMarkup(array $element) {
+  public function testCreatePlaceholderGeneratesValidHtmlMarkup(array $element): void {
     $build = $this->placeholderGenerator->createPlaceholder($element);
 
     $original_placeholder_markup = (string) $build['#markup'];
@@ -47,7 +47,7 @@ class PlaceholderGeneratorTest extends RendererTestBase {
    *
    * @covers ::createPlaceholder
    */
-  public function testRenderPlaceholdersDifferentSortedContextsTags() {
+  public function testRenderPlaceholdersDifferentSortedContextsTags(): void {
     $contexts_1 = ['user', 'foo'];
     $contexts_2 = ['foo', 'user'];
     $tags_1 = ['current-temperature', 'foo'];

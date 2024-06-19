@@ -35,7 +35,7 @@ class LoggerChannelTest extends UnitTestCase {
    * @covers ::setCurrentUser
    * @covers ::setRequestStack
    */
-  public function testLog(callable $expected, bool $request = FALSE, bool $account = FALSE) {
+  public function testLog(callable $expected, bool $request = FALSE, bool $account = FALSE): void {
     $channel = new LoggerChannel('test');
     $message = $this->randomMachineName();
     $logger = $this->createMock('Psr\Log\LoggerInterface');
@@ -72,7 +72,7 @@ class LoggerChannelTest extends UnitTestCase {
    *
    * @covers ::log
    */
-  public function testLogRecursionProtection() {
+  public function testLogRecursionProtection(): void {
     $channel = new LoggerChannel('test');
     $logger = $this->createMock('Psr\Log\LoggerInterface');
     $logger->expects($this->exactly(LoggerChannel::MAX_CALL_DEPTH))
@@ -88,7 +88,7 @@ class LoggerChannelTest extends UnitTestCase {
    * @covers ::addLogger
    * @covers ::sortLoggers
    */
-  public function testSortLoggers() {
+  public function testSortLoggers(): void {
     $channel = new LoggerChannel($this->randomMachineName());
     $index_order = '';
     for ($i = 0; $i < 4; $i++) {

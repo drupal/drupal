@@ -84,7 +84,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
   /**
    * Tests overriding the default render option with checkboxes.
    */
-  public function testExposedFormRenderCheckboxes() {
+  public function testExposedFormRenderCheckboxes(): void {
     // Use a test theme to convert multi-select elements into checkboxes.
     \Drupal::service('theme_installer')->install(['views_test_checkboxes_theme']);
     $this->config('system.theme')
@@ -117,7 +117,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
   /**
    * Tests that "is all of" filters work with checkboxes.
    */
-  public function testExposedIsAllOfFilter() {
+  public function testExposedIsAllOfFilter(): void {
     foreach (['Term 1', 'Term 2', 'Term 3'] as $term_name) {
       // Add a few terms to the new vocabulary.
       $term = Term::create([

@@ -79,7 +79,7 @@ class WorkspaceInformationTest extends KernelTestBase {
   /**
    * Tests fully supported entity types.
    */
-  public function testSupportedEntityTypes() {
+  public function testSupportedEntityTypes(): void {
     // Check a supported entity type.
     $entity = $this->entityTypeManager->getStorage('entity_test_revpub')->create();
 
@@ -98,7 +98,7 @@ class WorkspaceInformationTest extends KernelTestBase {
   /**
    * Tests an entity type with a custom workspace handler.
    */
-  public function testCustomSupportEntityTypes() {
+  public function testCustomSupportEntityTypes(): void {
     $entity_type = clone $this->entityTypeManager->getDefinition('entity_test_revpub');
     $entity_type->setHandlerClass('workspace', EntityTestRevPubWorkspaceHandler::class);
     $this->state->set('entity_test_revpub.entity_type', $entity_type);
@@ -135,7 +135,7 @@ class WorkspaceInformationTest extends KernelTestBase {
   /**
    * Tests ignored entity types.
    */
-  public function testIgnoredEntityTypes() {
+  public function testIgnoredEntityTypes(): void {
     $entity_type = clone $this->entityTypeManager->getDefinition('entity_test_rev');
     $entity_type->setHandlerClass('workspace', IgnoredWorkspaceHandler::class);
     $this->state->set('entity_test_rev.entity_type', $entity_type);
@@ -158,7 +158,7 @@ class WorkspaceInformationTest extends KernelTestBase {
   /**
    * Tests unsupported entity types.
    */
-  public function testUnsupportedEntityTypes() {
+  public function testUnsupportedEntityTypes(): void {
     // Check an unsupported entity type.
     $entity_test = $this->entityTypeManager->getDefinition('entity_test');
     $this->assertFalse($entity_test->hasHandlerClass('workspace'));

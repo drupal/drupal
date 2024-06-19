@@ -44,7 +44,7 @@ class RevisionRelationshipsTest extends KernelTestBase {
   /**
    * Create a block_content with revision and rest result count for both views.
    */
-  public function testBlockContentRevisionRelationship() {
+  public function testBlockContentRevisionRelationship(): void {
     $this->installEntitySchema('block_content');
     ViewTestData::createTestViews(static::class, ['block_content_test_views']);
 

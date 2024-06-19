@@ -26,7 +26,7 @@ class CommentOperationsTest extends CommentTestBase {
   /**
    * Tests the operations field plugin.
    */
-  public function testCommentOperations() {
+  public function testCommentOperations(): void {
     $admin_account = $this->drupalCreateUser(['administer comments']);
     $this->drupalLogin($admin_account);
     $this->drupalGet('test-comment-operations');

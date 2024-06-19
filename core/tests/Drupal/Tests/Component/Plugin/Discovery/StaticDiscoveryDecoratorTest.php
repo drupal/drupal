@@ -61,7 +61,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    * @covers ::getDefinition
    * @dataProvider providerGetDefinition
    */
-  public function testGetDefinition($expected, $has_register_definitions, $exception_on_invalid, $definitions, $base_plugin_id) {
+  public function testGetDefinition($expected, $has_register_definitions, $exception_on_invalid, $definitions, $base_plugin_id): void {
     // Mock our StaticDiscoveryDecorator.
     $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecorator::class)
       ->disableOriginalConstructor()
@@ -126,7 +126,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    * @covers ::getDefinitions
    * @dataProvider providerGetDefinitions
    */
-  public function testGetDefinitions($has_register_definitions, $definitions) {
+  public function testGetDefinitions($has_register_definitions, $definitions): void {
     // Mock our StaticDiscoveryDecorator.
     $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecorator::class)
       ->disableOriginalConstructor()
@@ -189,7 +189,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    * @covers ::__call
    * @dataProvider providerCall
    */
-  public function testCall($method, $args) {
+  public function testCall($method, $args): void {
     // Mock a decorated object.
     $mock_decorated = $this->getMockBuilder(StaticDiscoveryTestDecoratedClass::class)
       ->onlyMethods([$method])

@@ -46,7 +46,7 @@ class MenuTreeParametersTest extends UnitTestCase {
    * @covers ::setMinDepth
    * @dataProvider providerTestSetMinDepth
    */
-  public function testSetMinDepth($min_depth, $expected) {
+  public function testSetMinDepth($min_depth, $expected): void {
     $parameters = new MenuTreeParameters();
     $parameters->setMinDepth($min_depth);
     $this->assertEquals($expected, $parameters->minDepth);
@@ -57,7 +57,7 @@ class MenuTreeParametersTest extends UnitTestCase {
    *
    * @covers ::addExpandedParents
    */
-  public function testAddExpanded() {
+  public function testAddExpanded(): void {
     $parameters = new MenuTreeParameters();
 
     // Verify default value.
@@ -83,7 +83,7 @@ class MenuTreeParametersTest extends UnitTestCase {
    *
    * @covers ::addCondition
    */
-  public function testAddCondition() {
+  public function testAddCondition(): void {
     $parameters = new MenuTreeParameters();
 
     // Verify default value.
@@ -116,7 +116,7 @@ class MenuTreeParametersTest extends UnitTestCase {
    *
    * @covers ::onlyEnabledLinks
    */
-  public function testOnlyEnabledLinks() {
+  public function testOnlyEnabledLinks(): void {
     $parameters = new MenuTreeParameters();
     $parameters->onlyEnabledLinks();
     $this->assertEquals(1, $parameters->conditions['enabled']);
@@ -127,7 +127,7 @@ class MenuTreeParametersTest extends UnitTestCase {
    *
    * @covers ::setTopLevelOnly
    */
-  public function testSetTopLevelOnly() {
+  public function testSetTopLevelOnly(): void {
     $parameters = new MenuTreeParameters();
     $parameters->setTopLevelOnly();
     $this->assertEquals(1, $parameters->maxDepth);
@@ -138,7 +138,7 @@ class MenuTreeParametersTest extends UnitTestCase {
    *
    * @covers ::excludeRoot
    */
-  public function testExcludeRoot() {
+  public function testExcludeRoot(): void {
     $parameters = new MenuTreeParameters();
     $parameters->excludeRoot();
     $this->assertEquals(1, $parameters->minDepth);
@@ -148,7 +148,7 @@ class MenuTreeParametersTest extends UnitTestCase {
    * @covers ::serialize
    * @covers ::unserialize
    */
-  public function testSerialize() {
+  public function testSerialize(): void {
     $parameters = new MenuTreeParameters();
     $parameters->setRoot(1);
     $parameters->setMinDepth('2');

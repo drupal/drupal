@@ -87,7 +87,7 @@ class FieldFormatterTest extends KernelTestBase {
   /**
    * Tests availability of third party settings in field render arrays.
    */
-  public function testThirdPartySettings() {
+  public function testThirdPartySettings(): void {
     $third_party_settings = [
       'field_test' => [
         'foo' => 'bar',

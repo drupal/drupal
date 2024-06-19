@@ -32,7 +32,7 @@ class PasswordCompatibilityUpdateTest extends UpdatePathTestBase {
   /**
    * Tests that the password compatibility is working properly.
    */
-  public function testPasswordCompatibility() {
+  public function testPasswordCompatibility(): void {
     $this->runUpdates();
 
     /** @var \Drupal\Core\Extension\ModuleInstaller $installer */

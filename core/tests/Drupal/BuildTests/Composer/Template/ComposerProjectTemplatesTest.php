@@ -85,7 +85,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
   /**
    * Make sure that static::MINIMUM_STABILITY is sufficiently strict.
    */
-  public function testMinimumStabilityStrictness() {
+  public function testMinimumStabilityStrictness(): void {
     // Ensure that static::MINIMUM_STABILITY is not less stable than the
     // current core stability. For example, if we've already released a beta on
     // the branch, ensure that we no longer allow alpha dependencies.
@@ -146,7 +146,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
   /**
    * Make sure we've accounted for all the templates.
    */
-  public function testVerifyTemplateTestProviderIsAccurate() {
+  public function testVerifyTemplateTestProviderIsAccurate(): void {
     $root = $this->getDrupalRoot();
     $data = $this->provideTemplateCreateProject();
 
@@ -174,7 +174,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
   /**
    * @dataProvider provideTemplateCreateProject
    */
-  public function testTemplateCreateProject($project, $package_dir, $docroot_dir) {
+  public function testTemplateCreateProject($project, $package_dir, $docroot_dir): void {
     // Make a working COMPOSER_HOME directory for setting global composer config
     $composer_home = $this->getWorkspaceDirectory() . '/composer-home';
     mkdir($composer_home);

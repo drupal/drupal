@@ -78,7 +78,7 @@ class PathProcessorTest extends UnitTestCase {
   /**
    * Tests resolving the inbound path to the system path.
    */
-  public function testProcessInbound() {
+  public function testProcessInbound(): void {
 
     // Create an alias manager stub.
     $alias_manager = $this->getMockBuilder(AliasManager::class)

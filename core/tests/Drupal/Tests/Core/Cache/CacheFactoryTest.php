@@ -21,7 +21,7 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::get
    */
-  public function testCacheFactoryWithDefaultSettings() {
+  public function testCacheFactoryWithDefaultSettings(): void {
     $settings = new Settings([]);
     $cache_factory = new CacheFactory($settings);
 
@@ -47,7 +47,7 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::get
    */
-  public function testCacheFactoryWithCustomizedDefaultBackend() {
+  public function testCacheFactoryWithCustomizedDefaultBackend(): void {
     $settings = new Settings([
       'cache' => [
         'default' => 'cache.backend.custom',
@@ -77,7 +77,7 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::get
    */
-  public function testCacheFactoryWithDefaultBinBackend() {
+  public function testCacheFactoryWithDefaultBinBackend(): void {
     // Ensure the default bin backends are used before the configured default.
     $settings = new Settings([
       'cache' => [
@@ -113,7 +113,7 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::get
    */
-  public function testCacheFactoryWithSpecifiedPerBinBackend() {
+  public function testCacheFactoryWithSpecifiedPerBinBackend(): void {
     // Ensure the per-bin configuration is used before the configured default
     // and per-bin defaults.
     $settings = new Settings([

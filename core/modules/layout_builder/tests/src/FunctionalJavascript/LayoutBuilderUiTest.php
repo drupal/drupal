@@ -66,7 +66,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
   /**
    * Tests that after removing sections reloading the page does not re-add them.
    */
-  public function testReloadWithNoSections() {
+  public function testReloadWithNoSections(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -90,7 +90,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
   /**
    * Tests the message indicating unsaved changes.
    */
-  public function testUnsavedChangesMessage() {
+  public function testUnsavedChangesMessage(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -143,7 +143,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
   /**
    * Tests that elements that open the dialog are properly highlighted.
    */
-  public function testAddHighlights() {
+  public function testAddHighlights(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -255,7 +255,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
   /**
    * Tests removing newly added extra field.
    */
-  public function testNewExtraField() {
+  public function testNewExtraField(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

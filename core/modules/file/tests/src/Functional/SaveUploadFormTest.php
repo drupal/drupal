@@ -105,7 +105,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests the _file_save_upload_from_form() function.
    */
-  public function testNormal() {
+  public function testNormal(): void {
     $max_fid_after = (int) \Drupal::entityQueryAggregate('file')
       ->accessCheck(FALSE)
       ->aggregate('fid', 'max')
@@ -165,7 +165,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests extension handling.
    */
-  public function testHandleExtension() {
+  public function testHandleExtension(): void {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     // The file being tested is a .gif which is in the default safe list
@@ -230,7 +230,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests dangerous file handling.
    */
-  public function testHandleDangerousFile() {
+  public function testHandleDangerousFile(): void {
     $config = $this->config('system.file');
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
@@ -295,7 +295,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests file munge handling.
    */
-  public function testHandleFileMunge() {
+  public function testHandleFileMunge(): void {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     // Ensure insecure uploads are disabled for this test.
@@ -395,7 +395,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests renaming when uploading over a file that already exists.
    */
-  public function testExistingRename() {
+  public function testExistingRename(): void {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $edit = [
@@ -414,7 +414,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests replacement when uploading over a file that already exists.
    */
-  public function testExistingReplace() {
+  public function testExistingReplace(): void {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $edit = [
@@ -433,7 +433,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests for failure when uploading over a file that already exists.
    */
-  public function testExistingError() {
+  public function testExistingError(): void {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $edit = [
@@ -452,7 +452,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests for no failures when not uploading a file.
    */
-  public function testNoUpload() {
+  public function testNoUpload(): void {
     $this->drupalGet('file-test/save_upload_from_form_test');
     $this->submitForm([], 'Submit');
     $this->assertSession()->pageTextNotContains("Epic upload FAIL!");
@@ -461,7 +461,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests for log entry on failing destination.
    */
-  public function testDrupalMovingUploadedFileError() {
+  public function testDrupalMovingUploadedFileError(): void {
     // Create a directory and make it not writable.
     $test_directory = 'test_drupal_move_uploaded_file_fail';
     \Drupal::service('file_system')->mkdir('temporary://' . $test_directory, 0000);
@@ -493,7 +493,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests that form validation does not change error messages.
    */
-  public function testErrorMessagesAreNotChanged() {
+  public function testErrorMessagesAreNotChanged(): void {
     $error = 'An error message set before _file_save_upload_from_form()';
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
@@ -549,7 +549,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests that multiple validation errors are combined in one message.
    */
-  public function testCombinedErrorMessages() {
+  public function testCombinedErrorMessages(): void {
     $text_file = current($this->drupalGetTestFiles('text'));
     $this->assertFileExists($text_file->uri);
 
@@ -579,7 +579,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * Tests highlighting of file upload field when it has an error.
    */
-  public function testUploadFieldIsHighlighted() {
+  public function testUploadFieldIsHighlighted(): void {
     $this->assertCount(0, $this->cssSelect('input[name="files[file_test_upload][]"].error'), 'Successful file upload has no error.');
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */

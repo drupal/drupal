@@ -73,7 +73,7 @@ class BlockContentFieldFilterTest extends BlockContentTestBase {
   /**
    * Tests body and info filters.
    */
-  public function testFilters() {
+  public function testFilters(): void {
     // Test the info filter page, which filters for info contains 'Comida'.
     // Should show just the Spanish translation, once.
     $this->assertPageCounts('test-info-filter', ['es' => 1, 'fr' => 0, 'en' => 0], 'Comida info filter');

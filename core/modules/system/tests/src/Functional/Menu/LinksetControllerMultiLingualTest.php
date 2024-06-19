@@ -201,7 +201,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
    *
    * @throws \Exception
    */
-  public function testBasicMultilingualFunctions() {
+  public function testBasicMultilingualFunctions(): void {
     foreach (['aa', 'bb', 'cc', 'dd'] as $language_code) {
       $expected_linkset = $this->getReferenceLinksetDataFromFile(__DIR__ . '/../../../fixtures/linkset/linkset-menu-main-multilingual-' . $language_code . '.json');
       $response = $this->doRequest('GET', Url::fromUri('base:/' . $language_code . '/system/menu/main/linkset'));
@@ -214,7 +214,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
    *
    * @throws \Exception
    */
-  public function testDefaultMultilingualFunctions() {
+  public function testDefaultMultilingualFunctions(): void {
     $expected_linkset = $this->getReferenceLinksetDataFromFile(__DIR__ . '/../../../fixtures/linkset/linkset-menu-main-multilingual-default.json');
     $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     $this->assertSame($expected_linkset, Json::decode((string) $response->getBody()));

@@ -91,7 +91,7 @@ class TrackChangesTest extends MigrateTestBase {
   /**
    * Tests track changes property of SqlBase.
    */
-  public function testTrackChanges() {
+  public function testTrackChanges(): void {
     // Assert all of the terms have been imported.
     $this->assertTermExists('name', 'Item 1');
     $this->assertTermExists('name', 'Item 2');

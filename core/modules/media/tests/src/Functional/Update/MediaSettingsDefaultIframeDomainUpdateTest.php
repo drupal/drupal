@@ -49,7 +49,7 @@ class MediaSettingsDefaultIframeDomainUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update of media.settings:iframe_domain.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     $iframe_domain_before = $this->config('media.settings')->get('iframe_domain');
     $this->assertSame('', $iframe_domain_before);
 

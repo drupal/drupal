@@ -33,7 +33,7 @@ class UserAnonymousActivateTest extends KernelTestBase {
   /**
    * Tests that the anonymous user cannot be activated.
    */
-  public function testAnonymousActivate() {
+  public function testAnonymousActivate(): void {
     $accountAnon = \Drupal::entityTypeManager()->getStorage('user')->load(0);
 
     // Test that the anonymous user is blocked.

@@ -27,7 +27,7 @@ class ViewListBuilderTest extends UnitTestCase {
    * @see \Drupal\views_ui\ViewListBuilder::getDisplaysList()
    * @covers ::buildRow
    */
-  public function testBuildRowEntityList() {
+  public function testBuildRowEntityList(): void {
     $storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
       ->disableOriginalConstructor()
       ->getMock();

@@ -33,7 +33,7 @@ class UpdatePathTestJavaScriptTest extends BrowserTestBase {
    *
    * @see ::doPreUpdateTests
    */
-  public function testJavaScriptLoading() {
+  public function testJavaScriptLoading(): void {
     $this->runUpdates();
   }
 

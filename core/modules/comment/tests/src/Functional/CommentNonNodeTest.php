@@ -265,7 +265,7 @@ class CommentNonNodeTest extends BrowserTestBase {
   /**
    * Tests anonymous comment functionality.
    */
-  public function testCommentFunctionality() {
+  public function testCommentFunctionality(): void {
     $limited_user = $this->drupalCreateUser([
       'administer entity_test fields',
     ]);
@@ -490,7 +490,7 @@ class CommentNonNodeTest extends BrowserTestBase {
   /**
    * Tests comment fields cannot be added to entity types without integer IDs.
    */
-  public function testsNonIntegerIdEntities() {
+  public function testsNonIntegerIdEntities(): void {
     // Create a bundle for entity_test_string_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_string_id');
     $limited_user = $this->drupalCreateUser([
@@ -526,7 +526,7 @@ class CommentNonNodeTest extends BrowserTestBase {
   /**
    * Ensures that comment settings are not required.
    */
-  public function testCommentSettingsNotRequired() {
+  public function testCommentSettingsNotRequired(): void {
     $limited_user = $this->drupalCreateUser([
       'administer entity_test fields',
     ]);

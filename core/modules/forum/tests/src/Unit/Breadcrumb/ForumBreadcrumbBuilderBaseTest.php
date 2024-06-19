@@ -37,7 +37,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
    *
    * @covers ::__construct
    */
-  public function testConstructor() {
+  public function testConstructor(): void {
     // Make some test doubles.
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $config_factory = $this->getConfigFactoryStub(
@@ -74,7 +74,7 @@ class ForumBreadcrumbBuilderBaseTest extends UnitTestCase {
    *
    * @covers ::build
    */
-  public function testBuild() {
+  public function testBuild(): void {
     // Build all our dependencies, backwards.
     $translation_manager = $this->getMockBuilder('Drupal\Core\StringTranslation\TranslationInterface')
       ->disableOriginalConstructor()

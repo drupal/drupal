@@ -19,7 +19,7 @@ class TarTest extends ArchiverTestBase {
   /**
    * Tests that the Tar archive is created if it does not exist.
    */
-  public function testCreateArchive() {
+  public function testCreateArchive(): void {
     $textFile = current($this->getTestFiles('text'));
     $archiveFilename = $this->fileSystem->realpath('public://' . $this->randomMachineName() . '.tar');
     $tar = new Tar($archiveFilename);

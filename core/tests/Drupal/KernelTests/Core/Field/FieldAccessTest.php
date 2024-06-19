@@ -69,7 +69,7 @@ class FieldAccessTest extends KernelTestBase {
    * @see entity_test_entity_field_access()
    * @see entity_test_entity_field_access_alter()
    */
-  public function testFieldAccess() {
+  public function testFieldAccess(): void {
     $values = [
       'name' => $this->randomMachineName(),
       'user_id' => 1,

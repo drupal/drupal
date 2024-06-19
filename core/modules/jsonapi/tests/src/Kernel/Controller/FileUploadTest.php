@@ -89,7 +89,7 @@ class FileUploadTest extends JsonapiKernelTestBase {
   /**
    * @covers ::checkFileUploadAccess
    */
-  public function testCheckFileUploadAccessWithBaseField() {
+  public function testCheckFileUploadAccessWithBaseField(): void {
     // Create a set of users for access testing.
     $article_editor = User::create([
       'name' => 'article editor',

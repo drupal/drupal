@@ -21,7 +21,7 @@ class CalculatedPermissionsTest extends UnitTestCase {
   /**
    * Tests that the object values were set in the constructor.
    */
-  public function testConstructor() {
+  public function testConstructor(): void {
     $item_a = new CalculatedPermissionsItem(['baz'], FALSE, 'scope_a', 'foo');
     $item_b = new CalculatedPermissionsItem(['bob', 'charlie'], FALSE, 'scope_b', 1);
 

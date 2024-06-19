@@ -39,7 +39,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @covers ::getTableNames
    */
-  public function testGetTableNames() {
+  public function testGetTableNames(): void {
     // The storage definitions are only used in getColumnNames() so we do not
     // need to provide any here.
     $table_mapping = new TestDefaultTableMapping($this->entityType, []);
@@ -70,7 +70,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @covers ::getExtraColumns
    * @covers ::setExtraColumns
    */
-  public function testGetAllColumns() {
+  public function testGetAllColumns(): void {
     // Set up single-column and multi-column definitions.
     $definitions['id'] = $this->setUpDefinition('id', ['value']);
     $definitions['name'] = $this->setUpDefinition('name', ['value']);
@@ -176,7 +176,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @covers ::getFieldNames
    * @covers ::setFieldNames
    */
-  public function testGetFieldNames() {
+  public function testGetFieldNames(): void {
     // The storage definitions are only used in getColumnNames() so we do not
     // need to provide any here.
     $table_mapping = new TestDefaultTableMapping($this->entityType, []);
@@ -206,7 +206,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getColumnNames
    */
-  public function testGetColumnNames() {
+  public function testGetColumnNames(): void {
     $definitions['test'] = $this->setUpDefinition('test', []);
     $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $expected = [];
@@ -238,7 +238,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @covers ::getExtraColumns
    * @covers ::setExtraColumns
    */
-  public function testGetExtraColumns() {
+  public function testGetExtraColumns(): void {
     // The storage definitions are only used in getColumnNames() so we do not
     // need to provide any here.
     $table_mapping = new TestDefaultTableMapping($this->entityType, []);
@@ -279,7 +279,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetFieldColumnName
    */
-  public function testGetFieldColumnName($base_field, $columns, $column, $expected) {
+  public function testGetFieldColumnName($base_field, $columns, $column, $expected): void {
     $definitions['test'] = $this->setUpDefinition('test', $columns, $base_field);
     $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $result = $table_mapping->getFieldColumnName($definitions['test'], $column);
@@ -301,7 +301,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetFieldColumnName
    */
-  public function testGetFieldColumnNameInvalid($base_field, $columns, $column) {
+  public function testGetFieldColumnNameInvalid($base_field, $columns, $column): void {
     $definitions['test'] = $this->setUpDefinition('test', $columns, $base_field);
 
     // Mark field storage definition as custom storage.
@@ -355,7 +355,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetFieldTableName
    */
-  public function testGetFieldTableName($table_names, $expected) {
+  public function testGetFieldTableName($table_names, $expected): void {
     $field_name = 'test';
     $columns = ['test'];
 
@@ -444,7 +444,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @covers ::getFieldTableName
    */
-  public function testGetFieldTableNameInvalid() {
+  public function testGetFieldTableNameInvalid(): void {
     $table_mapping = new TestDefaultTableMapping($this->entityType, []);
     $this->expectException(SqlContentEntityStorageException::class);
     $this->expectExceptionMessage("Table information not available for the 'invalid_field_name' field.");
@@ -457,7 +457,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetDedicatedTableName
    */
-  public function testGetDedicatedTableName($info, $expected_data_table, $expected_revision_table) {
+  public function testGetDedicatedTableName($info, $expected_data_table, $expected_revision_table): void {
     $entity_type_id = $info['entity_type_id'];
     $field_name = $info['field_name'];
 

@@ -49,7 +49,7 @@ class PhpRequirementTest extends BrowserTestBase {
   /**
    * Tests status report messages regarding the PHP version.
    */
-  public function testStatusPage() {
+  public function testStatusPage(): void {
     $minimum_php_version = PhpRequirements::getMinimumSupportedPhp();
     // Go to Administration.
     $this->drupalGet('admin/reports/status');

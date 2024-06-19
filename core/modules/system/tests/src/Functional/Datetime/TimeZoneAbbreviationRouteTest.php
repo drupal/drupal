@@ -29,7 +29,7 @@ class TimeZoneAbbreviationRouteTest extends BrowserTestBase {
   /**
    * Test that the AJAX Timezone Callback can deal with various formats.
    */
-  public function testSystemTimezone() {
+  public function testSystemTimezone(): void {
     $options = [
       'query' => [
         'date' => 'Tue+Sep+17+2013+21%3A35%3A31+GMT%2B0100+(BST)#',
@@ -52,7 +52,7 @@ class TimeZoneAbbreviationRouteTest extends BrowserTestBase {
    *
    * @dataProvider providerAbbreviationConversion
    */
-  public function testAbbreviationConversion($path, $expectedResponse = NULL, $expectInvalidRequest = FALSE) {
+  public function testAbbreviationConversion($path, $expectedResponse = NULL, $expectInvalidRequest = FALSE): void {
     $response = $this->drupalGet('system/timezone/' . $path);
     if (isset($expectedResponse)) {
       $this->assertEquals($response, $expectedResponse);

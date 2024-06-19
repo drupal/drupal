@@ -35,7 +35,7 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
   /**
    * Tests the compatibility of Layout Builder and Field Layout.
    */
-  public function testCompatibility() {
+  public function testCompatibility(): void {
     // Ensure that the configurable field is shown in the correct region and
     // that the non-configurable field is shown outside the layout.
     $expected_fields = [

@@ -108,7 +108,7 @@ class TranslationTest extends FieldKernelTestBase {
   /**
    * Tests translatable fields storage/retrieval.
    */
-  public function testTranslatableFieldSaveLoad() {
+  public function testTranslatableFieldSaveLoad(): void {
     // Enable field translations for nodes.
     field_test_entity_info_translatable('node', TRUE);
     $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
@@ -204,7 +204,7 @@ class TranslationTest extends FieldKernelTestBase {
    *
    * @see https://www.drupal.org/node/2404739
    */
-  public function testFieldAccess() {
+  public function testFieldAccess(): void {
     $access_control_handler = \Drupal::entityTypeManager()->getAccessControlHandler($this->entityType);
     $this->assertTrue($access_control_handler->fieldAccess('view', $this->field));
   }

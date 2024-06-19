@@ -16,7 +16,7 @@ class PluginIdTest extends TestCase {
   /**
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     // Assert plugin starts with only an ID.
     $plugin = new PluginID(id: 'test');
     // Plugin's always have a class set by discovery.

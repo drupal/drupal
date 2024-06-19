@@ -152,7 +152,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * Tests using drupalMedia button to embed media into CKEditor 5.
    */
-  public function testButton() {
+  public function testButton(): void {
     // Skipped due to frequent random test failures.
     // @todo Fix this and stop skipping it at https://www.drupal.org/i/3351597.
     $this->markTestSkipped();
@@ -223,7 +223,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * Tests the allowed media types setting on the MediaEmbed filter.
    */
-  public function testAllowedMediaTypes() {
+  public function testAllowedMediaTypes(): void {
     $test_cases = [
       'all_media_types' => [],
       'only_image' => ['image' => 'image'],
@@ -275,7 +275,7 @@ class MediaLibraryTest extends WebDriverTestBase {
   /**
    * Ensures that alt text can be changed on Media Library inserted Media.
    */
-  public function testAlt() {
+  public function testAlt(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

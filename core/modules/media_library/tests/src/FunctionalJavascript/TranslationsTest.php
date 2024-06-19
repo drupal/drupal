@@ -121,7 +121,7 @@ class TranslationsTest extends WebDriverTestBase {
   /**
    * Tests the media library widget shows all media only once.
    */
-  public function testMediaLibraryTranslations() {
+  public function testMediaLibraryTranslations(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

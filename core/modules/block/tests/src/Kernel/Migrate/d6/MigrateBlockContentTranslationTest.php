@@ -55,7 +55,7 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
   /**
    * Tests the migration of block title translation.
    */
-  public function testBlockContentTranslation() {
+  public function testBlockContentTranslation(): void {
     /** @var \Drupal\language\ConfigurableLanguageManagerInterface $language_manager */
     $language_manager = $this->container->get('language_manager');
 

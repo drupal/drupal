@@ -35,7 +35,7 @@ class UserCreateTest extends BrowserTestBase {
   /**
    * Tests user creation and display from the administration interface.
    */
-  public function testUserAdd() {
+  public function testUserAdd(): void {
     $user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($user);
 

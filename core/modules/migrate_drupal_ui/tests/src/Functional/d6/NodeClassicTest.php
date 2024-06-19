@@ -77,7 +77,7 @@ class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
   /**
    * Tests node classic migration via the UI.
    */
-  public function testNodeClassicUpgrade() {
+  public function testNodeClassicUpgrade(): void {
     // Add a node classic migrate table to d8.
     $this->makeNodeMigrateMapTable(NodeMigrateType::NODE_MIGRATE_TYPE_CLASSIC, '6');
 

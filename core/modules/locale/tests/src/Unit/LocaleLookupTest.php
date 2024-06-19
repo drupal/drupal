@@ -98,7 +98,7 @@ class LocaleLookupTest extends UnitTestCase {
    *
    * @covers ::resolveCacheMiss
    */
-  public function testResolveCacheMissWithoutFallback() {
+  public function testResolveCacheMissWithoutFallback(): void {
     $args = [
       'language' => 'en',
       'source' => 'test',
@@ -136,7 +136,7 @@ class LocaleLookupTest extends UnitTestCase {
    *
    * @dataProvider resolveCacheMissWithFallbackProvider
    */
-  public function testResolveCacheMissWithFallback($langcode, $string, $context, $expected) {
+  public function testResolveCacheMissWithFallback($langcode, $string, $context, $expected): void {
     // These are fake words!
     // cSpell:disable
     $translations = [
@@ -219,7 +219,7 @@ class LocaleLookupTest extends UnitTestCase {
    *
    * @covers ::resolveCacheMiss
    */
-  public function testResolveCacheMissWithPersist() {
+  public function testResolveCacheMissWithPersist(): void {
     $args = [
       'language' => 'en',
       'source' => 'test',
@@ -251,7 +251,7 @@ class LocaleLookupTest extends UnitTestCase {
    *
    * @covers ::resolveCacheMiss
    */
-  public function testResolveCacheMissNoTranslation() {
+  public function testResolveCacheMissNoTranslation(): void {
     $string = $this->createMock('Drupal\locale\StringInterface');
     $string->expects($this->once())
       ->method('addLocation')
@@ -291,7 +291,7 @@ class LocaleLookupTest extends UnitTestCase {
    * @covers ::resolveCacheMiss
    * @dataProvider providerFixOldPluralTranslationProvider
    */
-  public function testFixOldPluralStyleTranslations($translations, $langcode, $string, $is_fix) {
+  public function testFixOldPluralStyleTranslations($translations, $langcode, $string, $is_fix): void {
     $this->storage->expects($this->any())
       ->method('findTranslation')
       ->willReturnCallback(function ($argument) use ($translations) {
@@ -349,7 +349,7 @@ class LocaleLookupTest extends UnitTestCase {
    *
    * @dataProvider getCidProvider
    */
-  public function testGetCid(array $roles, $expected) {
+  public function testGetCid(array $roles, $expected): void {
     $this->user = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->user->expects($this->any())
       ->method('getRoles')

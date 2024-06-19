@@ -27,7 +27,7 @@ class InstallProfileDependenciesTest extends BrowserTestBase {
   /**
    * Tests that an install profile can require modules.
    */
-  public function testUninstallingModules() {
+  public function testUninstallingModules(): void {
     $user = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($user);
     $this->drupalGet('admin/modules/uninstall');

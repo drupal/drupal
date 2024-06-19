@@ -52,7 +52,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestRequestSanitization
    */
-  public function testRequestSanitization(Request $request, array $expected = [], ?array $expected_errors = NULL, array $whitelist = []) {
+  public function testRequestSanitization(Request $request, array $expected = [], ?array $expected_errors = NULL, array $whitelist = []): void {
     // Set up globals.
     $_GET = $request->query->all();
     $_POST = $request->request->all();
@@ -207,7 +207,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestAcceptableDestinations
    */
-  public function testAcceptableDestinationGet($destination) {
+  public function testAcceptableDestinationGet($destination): void {
     // Set up a GET request.
     $request = $this->createRequestForTesting(['destination' => $destination]);
 
@@ -229,7 +229,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSanitizedDestinations
    */
-  public function testSanitizedDestinationGet($destination) {
+  public function testSanitizedDestinationGet($destination): void {
     // Set up a GET request.
     $request = $this->createRequestForTesting(['destination' => $destination]);
 
@@ -251,7 +251,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestAcceptableDestinations
    */
-  public function testAcceptableDestinationPost($destination) {
+  public function testAcceptableDestinationPost($destination): void {
     // Set up a POST request.
     $request = $this->createRequestForTesting([], ['destination' => $destination]);
 
@@ -273,7 +273,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSanitizedDestinations
    */
-  public function testSanitizedDestinationPost($destination) {
+  public function testSanitizedDestinationPost($destination): void {
     // Set up a POST request.
     $request = $this->createRequestForTesting([], ['destination' => $destination]);
 

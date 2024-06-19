@@ -153,7 +153,7 @@ class SystemMenuBlockTest extends KernelTestBase {
   /**
    * Tests calculation of a system menu block's configuration dependencies.
    */
-  public function testSystemMenuBlockConfigDependencies() {
+  public function testSystemMenuBlockConfigDependencies(): void {
 
     $block = Block::create([
       'plugin' => 'system_menu_block:' . $this->menu->id(),
@@ -180,7 +180,7 @@ class SystemMenuBlockTest extends KernelTestBase {
   /**
    * Tests the config start level and depth.
    */
-  public function testConfigLevelDepth() {
+  public function testConfigLevelDepth(): void {
     // Helper function to generate a configured block instance.
     $place_block = function ($level, $depth) {
       return $this->blockManager->createInstance('system_menu_block:' . $this->menu->id(), [
@@ -291,7 +291,7 @@ class SystemMenuBlockTest extends KernelTestBase {
    *
    * @dataProvider configExpandedTestCases
    */
-  public function testConfigExpanded($active_route, $menu_block_level, $expected_items) {
+  public function testConfigExpanded($active_route, $menu_block_level, $expected_items): void {
     $block = $this->blockManager->createInstance('system_menu_block:' . $this->menu->id(), [
       'region' => 'footer',
       'id' => 'machine_name',

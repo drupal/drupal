@@ -28,7 +28,7 @@ class ElementsAccessTest extends BrowserTestBase {
   /**
    * Ensures that child values are still processed when #access = FALSE.
    */
-  public function testAccessFalse() {
+  public function testAccessFalse(): void {
     $this->drupalGet('form_test/vertical-tabs-access');
     $this->submitForm([], 'Submit');
     $this->assertSession()->pageTextNotContains('This checkbox inside a vertical tab does not have its default value.');

@@ -401,7 +401,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
    * @dataProvider providerTestSetLinkActiveClass
    * @covers ::setLinkActiveClass
    */
-  public function testSetLinkActiveClass($html_markup, $current_path, $is_front, $url_language, array $query, $expected_html_markup) {
+  public function testSetLinkActiveClass($html_markup, $current_path, $is_front, $url_language, array $query, $expected_html_markup): void {
     $this->assertSame($expected_html_markup, ActiveLinkResponseFilter::setLinkActiveClass($html_markup, $current_path, $is_front, $url_language, $query));
   }
 
@@ -410,7 +410,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
    *
    * @covers ::onResponse
    */
-  public function testOnlyHtml() {
+  public function testOnlyHtml(): void {
     $session = new AnonymousUserSession();
     $language_manager = new LanguageManager(new LanguageDefault([]));
     $request_stack = new RequestStack();
@@ -449,7 +449,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
    *
    * @covers ::onResponse
    */
-  public function testSkipCertainResponseTypes() {
+  public function testSkipCertainResponseTypes(): void {
     $session = new AnonymousUserSession();
     $language_manager = new LanguageManager(new LanguageDefault([]));
     $request_stack = new RequestStack();

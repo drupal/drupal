@@ -47,7 +47,7 @@ class EditorAdminTest extends WebDriverTestBase {
   /**
    * Tests that editor selection can be toggled without breaking ajax.
    */
-  public function testEditorSelection() {
+  public function testEditorSelection(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -75,7 +75,7 @@ class EditorAdminTest extends WebDriverTestBase {
    * because the form state must change accordingly.
    * @see https://www.drupal.org/project/drupal/issues/3230829
    */
-  public function testEditorCreation() {
+  public function testEditorCreation(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

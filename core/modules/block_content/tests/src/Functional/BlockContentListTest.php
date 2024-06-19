@@ -90,7 +90,7 @@ class BlockContentListTest extends BlockContentTestBase {
   /**
    * Tests the content block listing page with different permissions.
    */
-  public function testListing() {
+  public function testListing(): void {
     // Test with the admin user.
     $this->drupalLogin($this->drupalCreateUser(['access block library', 'administer block content']));
     $this->drupalGet('admin/content/block');

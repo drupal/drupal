@@ -30,7 +30,7 @@ class MigrateUploadEntityDisplayTest extends MigrateDrupal6TestBase {
   /**
    * Tests Drupal 6 upload settings to Drupal 8 entity display migration.
    */
-  public function testUploadEntityDisplay() {
+  public function testUploadEntityDisplay(): void {
     $this->executeMigration('d6_upload_entity_display');
 
     $display = EntityViewDisplay::load('node.page.default');
@@ -55,7 +55,7 @@ class MigrateUploadEntityDisplayTest extends MigrateDrupal6TestBase {
    * Entity displays should be ignored when they belong to node types which
    * were not migrated.
    */
-  public function testSkipNonExistentNodeType() {
+  public function testSkipNonExistentNodeType(): void {
     // The "story" node type is migrated by d6_node_type but we need to pretend
     // that it didn't occur, so record that in the map table.
     $this->mockFailure('d6_node_type', ['type' => 'story']);

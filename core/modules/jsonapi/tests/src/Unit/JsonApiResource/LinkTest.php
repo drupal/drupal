@@ -122,7 +122,7 @@ class LinkTest extends UnitTestCase {
   /**
    * @covers ::getLinkRelationType
    */
-  public function testGetLinkRelationType() {
+  public function testGetLinkRelationType(): void {
     $this->mockUrlAssembler();
     $link = new Link((new CacheableMetadata())->addCacheTags(['foo']), Url::fromUri('https://jsonapi.org/foo'), 'self');
     $this->assertSame('self', $link->getLinkRelationType());

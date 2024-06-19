@@ -52,7 +52,7 @@ class DefaultValueWidgetTest extends WebDriverTestBase {
   /**
    * Tests default value options on field config change.
    */
-  public function testDefaultValueOptionsForChangingBundles() {
+  public function testDefaultValueOptionsForChangingBundles(): void {
     $vocab_1 = $this->createVocabulary(['name' => 'Colors']);
     $this->createTerm($vocab_1, ['name' => 'red']);
     $this->createTerm($vocab_1, ['name' => 'green']);

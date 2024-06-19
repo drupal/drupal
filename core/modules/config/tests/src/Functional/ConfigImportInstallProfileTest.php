@@ -58,7 +58,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
    *
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
-  public function testInstallProfileValidation() {
+  public function testInstallProfileValidation(): void {
     $sync = $this->container->get('config.storage.sync');
     $this->copyConfig($this->container->get('config.storage'), $sync);
     $core = $sync->read('core.extension');

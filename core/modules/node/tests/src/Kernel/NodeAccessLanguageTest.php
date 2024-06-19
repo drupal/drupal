@@ -53,7 +53,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
   /**
    * Tests node access with multiple node languages and no private nodes.
    */
-  public function testNodeAccess() {
+  public function testNodeAccess(): void {
     $web_user = $this->drupalCreateUser(['access content']);
 
     $expected_node_access = ['view' => TRUE, 'update' => FALSE, 'delete' => FALSE];
@@ -123,7 +123,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
   /**
    * Tests node access with multiple node languages and private nodes.
    */
-  public function testNodeAccessPrivate() {
+  public function testNodeAccessPrivate(): void {
     $web_user = $this->drupalCreateUser(['access content']);
     $expected_node_access = ['view' => TRUE, 'update' => FALSE, 'delete' => FALSE];
     $expected_node_access_no_access = ['view' => FALSE, 'update' => FALSE, 'delete' => FALSE];
@@ -189,7 +189,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
   /**
    * Tests select queries with a 'node_access' tag and langcode metadata.
    */
-  public function testNodeAccessQueryTag() {
+  public function testNodeAccessQueryTag(): void {
     // Create a normal authenticated user.
     $web_user = $this->drupalCreateUser(['access content']);
 

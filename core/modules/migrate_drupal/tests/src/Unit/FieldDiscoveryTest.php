@@ -62,7 +62,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @covers ::getEntityFields
    * @dataProvider getEntityFieldsData
    */
-  public function testGetEntityFields($entity_type_id, array $expected_fields) {
+  public function testGetEntityFields($entity_type_id, array $expected_fields): void {
     $test_data = [
       'getAllFields' => [
         '7' => $this->getAllFieldData(),
@@ -139,7 +139,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @covers ::getBundleFields
    * @dataProvider getBundleFieldsData
    */
-  public function testGetBundleFields($entity_type_id, $bundle, array $expected_fields) {
+  public function testGetBundleFields($entity_type_id, $bundle, array $expected_fields): void {
     $test_data = [
       'getAllFields' => [
         '7' => $this->getAllFieldData(),
@@ -225,7 +225,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @covers ::getCoreVersion
    * @dataProvider getCoreVersionData
    */
-  public function testGetCoreVersion(array $tags, $expected_result) {
+  public function testGetCoreVersion(array $tags, $expected_result): void {
     $migration = $this->prophesize(MigrationInterface::class);
     $migration->getMigrationTags()->willReturn($tags);
     $field_discovery = new FieldDiscoveryTestClass($this->fieldPluginManager->reveal(), $this->migrationPluginManager->reveal(), $this->logger->reveal());
@@ -315,7 +315,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @covers ::getFieldInstanceStubMigrationDefinition
    * @dataProvider getFieldInstanceStubMigrationDefinition
    */
-  public function testGetFieldInstanceStubMigrationDefinition($core, $expected_definition) {
+  public function testGetFieldInstanceStubMigrationDefinition($core, $expected_definition): void {
     $field_discovery = new FieldDiscoveryTestClass($this->fieldPluginManager->reveal(), $this->migrationPluginManager->reveal(), $this->logger->reveal());
     if (!$expected_definition) {
       $this->expectException(\InvalidArgumentException::class);

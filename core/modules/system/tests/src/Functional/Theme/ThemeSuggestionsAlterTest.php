@@ -37,7 +37,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
   /**
    * Tests that hooks to provide theme suggestions work.
    */
-  public function testTemplateSuggestions() {
+  public function testTemplateSuggestions(): void {
     $this->drupalGet('theme-test/suggestion-provided');
     $this->assertSession()->pageTextContains('Template for testing suggestions provided by the module declaring the theme hook.');
 
@@ -54,7 +54,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
   /**
    * Tests hook_theme_suggestions_alter().
    */
-  public function testGeneralSuggestionsAlter() {
+  public function testGeneralSuggestionsAlter(): void {
     $this->drupalGet('theme-test/general-suggestion-alter');
     $this->assertSession()->pageTextContains('Original template for testing hook_theme_suggestions_alter().');
     $this->assertSession()->pageTextContains('Hooks: theme_test_theme none');
@@ -79,7 +79,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
   /**
    * Tests that theme suggestion alter hooks work for templates.
    */
-  public function testTemplateSuggestionsAlter() {
+  public function testTemplateSuggestionsAlter(): void {
     $this->drupalGet('theme-test/suggestion-alter');
     $this->assertSession()->pageTextContains('Original template for testing hook_theme_suggestions_HOOK_alter().');
 
@@ -101,7 +101,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
   /**
    * Tests that theme suggestion alter hooks work for specific theme calls.
    */
-  public function testSpecificSuggestionsAlter() {
+  public function testSpecificSuggestionsAlter(): void {
     // Test that the default template is rendered.
     $this->drupalGet('theme-test/specific-suggestion-alter');
     $this->assertSession()->pageTextContains('Template for testing specific theme calls.');
@@ -132,7 +132,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
    * Hook hook_theme_suggestions_alter() should fire before
    * hook_theme_suggestions_HOOK_alter() within an extension (module or theme).
    */
-  public function testExecutionOrder() {
+  public function testExecutionOrder(): void {
     // Install our test theme and module.
     $this->config('system.theme')
       ->set('default', 'test_theme')

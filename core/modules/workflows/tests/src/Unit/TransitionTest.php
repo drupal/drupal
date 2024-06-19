@@ -21,7 +21,7 @@ class TransitionTest extends UnitTestCase {
    * @covers ::id
    * @covers ::label
    */
-  public function testGetters() {
+  public function testGetters(): void {
     $state = new Transition(
       $this->prophesize(WorkflowTypeInterface::class)->reveal(),
       'draft_published',
@@ -37,7 +37,7 @@ class TransitionTest extends UnitTestCase {
    * @covers ::from
    * @covers ::to
    */
-  public function testFromAndTo() {
+  public function testFromAndTo(): void {
     $workflow = new TestType([], '', []);
     $workflow
       ->addState('draft', 'Draft')

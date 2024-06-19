@@ -51,7 +51,7 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 vocabulary-node type association migration.
    */
-  public function testVocabularyFieldInstance() {
+  public function testVocabularyFieldInstance(): void {
     $this->assertEntity('node.forum.taxonomy_forums', 'Forums', 'entity_reference', FALSE, FALSE);
     $this->assertEntity('node.forum.field_trees', 'Trees', 'entity_reference', FALSE, FALSE);
     $this->assertEntity('node.forum.field_freetags', 'FreeTags', 'entity_reference', FALSE, FALSE);

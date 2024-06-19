@@ -38,7 +38,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testCssImport() {
+  public function testCssImport(): void {
     $mock_grouper = $this->createMock(AssetCollectionGrouperInterface::class);
     $mock_grouper->method('group')
       ->willReturnCallback(function ($assets) {
@@ -95,7 +95,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testCssLicenseAggregation() {
+  public function testCssLicenseAggregation(): void {
     $mock_grouper = $this->createMock(AssetCollectionGrouperInterface::class);
     $mock_grouper->method('group')
       ->willReturnCallback(function ($assets) {

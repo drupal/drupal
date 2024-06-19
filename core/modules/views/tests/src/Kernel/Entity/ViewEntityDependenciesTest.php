@@ -94,7 +94,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
   /**
    * Tests the getDependencies method.
    */
-  public function testGetDependencies() {
+  public function testGetDependencies(): void {
     $expected = [];
     $expected['test_field_get_entity'] = [
       'module' => [

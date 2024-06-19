@@ -85,7 +85,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
   /**
    * Tests the config translation mapper page.
    */
-  public function testMapperListPage() {
+  public function testMapperListPage(): void {
     $this->drupalGet('admin/config/regional/config-translation');
     $this->assertSession()->linkByHrefExists('admin/config/regional/config-translation/config_test');
     $this->assertSession()->linkByHrefExists('admin/config/people/accounts/translate');
@@ -138,7 +138,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
   /**
    * Tests availability of hidden entities in the translation overview.
    */
-  public function testHiddenEntities() {
+  public function testHiddenEntities(): void {
     // Hidden languages are only available to translate through the
     // configuration translation listings.
     $this->drupalGet('admin/config/regional/config-translation/configurable_language');
@@ -159,7 +159,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
   /**
    * Tests that overrides do not affect listing screens.
    */
-  public function testListingPageWithOverrides() {
+  public function testListingPageWithOverrides(): void {
     $original_label = 'Default';
     $overridden_label = 'Overridden label';
 
@@ -184,7 +184,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
   /**
    * Tests the field listing for the translate operation.
    */
-  public function testListingFieldsPage() {
+  public function testListingFieldsPage(): void {
     // Create a content type.
     $node_type = NodeType::create([
       'type' => 'basic',

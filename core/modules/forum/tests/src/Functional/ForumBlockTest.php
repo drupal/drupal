@@ -54,7 +54,7 @@ class ForumBlockTest extends BrowserTestBase {
   /**
    * Tests the "New forum topics" block.
    */
-  public function testNewForumTopicsBlock() {
+  public function testNewForumTopicsBlock(): void {
     $this->drupalLogin($this->adminUser);
 
     // Enable the new forum topics block.
@@ -92,7 +92,7 @@ class ForumBlockTest extends BrowserTestBase {
   /**
    * Tests the "Active forum topics" block.
    */
-  public function testActiveForumTopicsBlock() {
+  public function testActiveForumTopicsBlock(): void {
     $this->drupalLogin($this->adminUser);
 
     // Create 10 forum topics.

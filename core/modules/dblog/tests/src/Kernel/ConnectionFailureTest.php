@@ -22,7 +22,7 @@ class ConnectionFailureTest extends KernelTestBase {
   /**
    * Tests logging of connection failures.
    */
-  public function testConnectionFailureLogging() {
+  public function testConnectionFailureLogging(): void {
     $this->installSchema('dblog', ['watchdog']);
 
     // MySQL errors like "1153 - Got a packet bigger than 'max_allowed_packet'

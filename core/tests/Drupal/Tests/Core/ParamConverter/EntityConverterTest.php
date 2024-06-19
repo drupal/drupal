@@ -148,7 +148,7 @@ class EntityConverterTest extends UnitTestCase {
    *
    * @covers ::applies
    */
-  public function testApplies(array $definition, $name, Route $route, $applies) {
+  public function testApplies(array $definition, $name, Route $route, $applies): void {
     $this->entityTypeManager->expects($this->any())
       ->method('hasDefinition')
       ->willReturnCallback(function ($entity_type) {
@@ -179,7 +179,7 @@ class EntityConverterTest extends UnitTestCase {
    *
    * @covers ::convert
    */
-  public function testConvert($value, array $definition, array $defaults, $expected_result) {
+  public function testConvert($value, array $definition, array $defaults, $expected_result): void {
     $this->setUpMocks();
 
     $this->entityRepository->expects($this->any())
@@ -209,7 +209,7 @@ class EntityConverterTest extends UnitTestCase {
   /**
    * Tests the convert() method with an invalid entity type.
    */
-  public function testConvertWithInvalidEntityType() {
+  public function testConvertWithInvalidEntityType(): void {
     $this->setUpMocks();
 
     $plugin_id = 'invalid_id';
@@ -227,7 +227,7 @@ class EntityConverterTest extends UnitTestCase {
   /**
    * Tests the convert() method with an invalid dynamic entity type.
    */
-  public function testConvertWithInvalidDynamicEntityType() {
+  public function testConvertWithInvalidDynamicEntityType(): void {
     $this->expectException(ParamNotConvertedException::class);
     $this->expectExceptionMessage('The "foo" parameter was not converted because the "invalid_id" parameter is missing.');
     $this->entityConverter->convert('id', ['type' => 'entity:{invalid_id}'], 'foo', ['foo' => 'id']);

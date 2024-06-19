@@ -71,7 +71,7 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
    * @covers ::renderLinks
    * @covers ::buildLinks
    */
-  public function testPendingRevisionLinks() {
+  public function testPendingRevisionLinks(): void {
     $account = User::create([
       'name' => $this->randomString(),
     ]);

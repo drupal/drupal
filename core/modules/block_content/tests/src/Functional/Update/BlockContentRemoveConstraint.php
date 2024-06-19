@@ -40,7 +40,7 @@ class BlockContentRemoveConstraint extends UpdatePathTestBase {
   /**
    * Tests the upgrade path for moderation state reindexing.
    */
-  public function testRunUpdates() {
+  public function testRunUpdates(): void {
     $constraint = 'UniqueField';
     $constraints = $this->getFieldInfoConstraints();
     if (!isset($constraints[$constraint])) {

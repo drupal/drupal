@@ -40,7 +40,7 @@ class DateFormatTest extends WebDriverTestBase {
   /**
    * Tests XSS via date format configuration.
    */
-  public function testDateFormatXss() {
+  public function testDateFormatXss(): void {
     $page = $this->getSession()->getPage();
     $assert = $this->assertSession();
 

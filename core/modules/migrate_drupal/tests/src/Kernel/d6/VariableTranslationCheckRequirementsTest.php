@@ -29,7 +29,7 @@ class VariableTranslationCheckRequirementsTest extends MigrateDrupal6TestBase {
   /**
    * Tests exception in thrown when the i18n_variable table does not exist.
    */
-  public function testCheckRequirements() {
+  public function testCheckRequirements(): void {
     $this->expectException(RequirementsException::class);
     $this->expectExceptionMessage("Source database table 'i18n_variable' does not exist");
     $this->getMigration('d6_system_maintenance_translation')

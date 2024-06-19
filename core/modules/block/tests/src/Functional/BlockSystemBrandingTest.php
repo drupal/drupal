@@ -39,7 +39,7 @@ class BlockSystemBrandingTest extends BlockTestBase {
   /**
    * Tests system branding block configuration.
    */
-  public function testSystemBrandingSettings() {
+  public function testSystemBrandingSettings(): void {
     $site_logo_xpath = '//div[@id="block-site-branding"]/a/img';
     $site_name_xpath = '//div[@id="block-site-branding"]/a[text() = "Drupal"]';
     $site_slogan_xpath = '//div[@id="block-site-branding"]/descendant::text()[last()]';

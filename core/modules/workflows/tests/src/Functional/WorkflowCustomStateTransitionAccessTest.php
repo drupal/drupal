@@ -58,7 +58,7 @@ class WorkflowCustomStateTransitionAccessTest extends BrowserTestBase {
   /**
    * Tests the custom state/transition operation access rules.
    */
-  public function testCustomWorkflowAccessOperations() {
+  public function testCustomWorkflowAccessOperations(): void {
     $this->drupalLogin($this->adminUser);
     $forbidden_paths = [
       'admin/config/workflow/workflows/manage/test_type/state/cannot_delete/delete',

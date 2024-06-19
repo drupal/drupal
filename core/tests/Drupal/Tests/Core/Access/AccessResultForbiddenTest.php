@@ -19,7 +19,7 @@ class AccessResultForbiddenTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getReason
    */
-  public function testConstruction() {
+  public function testConstruction(): void {
 
     $a = new AccessResultForbidden();
     $this->assertEquals(NULL, $a->getReason());
@@ -34,7 +34,7 @@ class AccessResultForbiddenTest extends UnitTestCase {
    *
    * @covers ::setReason
    */
-  public function testSetReason() {
+  public function testSetReason(): void {
     $a = new AccessResultForbidden();
 
     $reason = $this->getRandomGenerator()->string();

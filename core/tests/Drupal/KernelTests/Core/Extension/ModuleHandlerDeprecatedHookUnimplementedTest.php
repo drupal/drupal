@@ -21,7 +21,7 @@ class ModuleHandlerDeprecatedHookUnimplementedTest extends KernelTestBase {
    * @covers ::invokeAllDeprecated
    * @covers ::invokeDeprecated
    */
-  public function testUnimplementedHooks() {
+  public function testUnimplementedHooks(): void {
     $unimplemented_hook_name = 'unimplemented_hook_name';
 
     /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */

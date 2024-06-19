@@ -41,7 +41,7 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
    *
    * @dataProvider providerTestWarningFilterUI
    */
-  public function testWarningFilterUi($theme, $expected_warning) {
+  public function testWarningFilterUi($theme, $expected_warning): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->addNewTextFormat($page, $assert_session);

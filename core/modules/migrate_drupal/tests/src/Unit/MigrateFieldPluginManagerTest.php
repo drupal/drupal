@@ -28,7 +28,7 @@ class MigrateFieldPluginManagerTest extends UnitTestCase {
    * @covers ::findDefinitions
    * @dataProvider weightsData
    */
-  public function testWeights($field_type, $core, $expected_plugin_id) {
+  public function testWeights($field_type, $core, $expected_plugin_id): void {
     /** @var \Drupal\Core\Cache\CacheBackendInterface $cache */
     $cache = $this->prophesize(CacheBackendInterface::class)->reveal();
     /** @var \Drupal\Core\Extension\ModuleHandlerInterfaceModuleHandlerInterface $module_handler */

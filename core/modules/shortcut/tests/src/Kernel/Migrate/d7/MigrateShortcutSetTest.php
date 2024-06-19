@@ -42,7 +42,7 @@ class MigrateShortcutSetTest extends MigrateDrupal7TestBase {
   /**
    * Tests the shortcut set migration.
    */
-  public function testShortcutSetMigration() {
+  public function testShortcutSetMigration(): void {
     $this->assertEntity('default', 'Default', 2);
     $this->assertEntity('shortcut-set-2', 'Alternative shortcut set', 2);
   }

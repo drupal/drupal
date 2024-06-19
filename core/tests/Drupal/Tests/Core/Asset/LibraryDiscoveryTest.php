@@ -81,7 +81,7 @@ class LibraryDiscoveryTest extends UnitTestCase {
   /**
    * @covers ::getLibrariesByExtension
    */
-  public function testGetLibrariesByExtension() {
+  public function testGetLibrariesByExtension(): void {
     $this->libraryDiscovery->getLibrariesByExtension('test');
     // Verify that subsequent calls don't trigger hook_library_info_alter()
     // and hook_js_settings_alter() invocations, nor do they talk to the
@@ -97,14 +97,14 @@ class LibraryDiscoveryTest extends UnitTestCase {
    *
    * @covers ::getLibraryByName
    */
-  public function testGetLibraryByName() {
+  public function testGetLibraryByName(): void {
     $this->assertSame($this->libraryData['test_1'], $this->libraryDiscovery->getLibraryByName('test', 'test_1'));
   }
 
   /**
    * Tests getting a deprecated library.
    */
-  public function testAssetLibraryDeprecation() {
+  public function testAssetLibraryDeprecation(): void {
     $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
       // Convert deprecation error into a catchable exception.
       if ($severity === E_USER_DEPRECATED) {

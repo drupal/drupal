@@ -54,7 +54,7 @@ class NodeRssCacheTest extends NodeTestBase {
   /**
    * Ensure the RSS teaser render does not interfere with default theme cache.
    */
-  public function testNodeRssCacheContent() {
+  public function testNodeRssCacheContent(): void {
     // Only the plain_text text format is available by default, which escapes
     // all HTML.
     FilterFormat::create([

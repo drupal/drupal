@@ -19,7 +19,7 @@ class UserEditedOwnAccountTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testUserEditedOwnAccount() {
+  public function testUserEditedOwnAccount(): void {
     // Change account setting 'Who can register accounts?' to Administrators
     // only.
     $this->config('user.settings')->set('register', UserInterface::REGISTER_ADMINISTRATORS_ONLY)->save();

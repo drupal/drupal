@@ -44,7 +44,7 @@ class ViewsAddMissingLabelsUpdateTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path for adding missing labels.
    */
-  public function testViewsPostUpdateFixRevisionId() {
+  public function testViewsPostUpdateFixRevisionId(): void {
     $view = View::load('test_fix_revision_id_update');
     $data = $view->toArray();
     $this->assertEmpty($data['label']);

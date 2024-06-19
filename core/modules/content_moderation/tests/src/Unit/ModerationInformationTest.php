@@ -71,7 +71,7 @@ class ModerationInformationTest extends UnitTestCase {
   /**
    * @covers ::isModeratedEntityType
    */
-  public function testIsModeratedEntityType() {
+  public function testIsModeratedEntityType(): void {
     $moderation_information = new ModerationInformation($this->getEntityTypeManager(), $this->setupModerationBundleInfo('test_bundle', 'workflow'));
 
     $moderated_entity_type = $this->prophesize(EntityTypeInterface::class);
@@ -88,7 +88,7 @@ class ModerationInformationTest extends UnitTestCase {
    * @dataProvider providerWorkflow
    * @covers ::isModeratedEntity
    */
-  public function testIsModeratedEntity($workflow, $expected) {
+  public function testIsModeratedEntity($workflow, $expected): void {
     $moderation_information = new ModerationInformation($this->getEntityTypeManager(), $this->setupModerationBundleInfo('test_bundle', $workflow));
 
     $entity_type = new ContentEntityType([
@@ -108,7 +108,7 @@ class ModerationInformationTest extends UnitTestCase {
    * @dataProvider providerWorkflow
    * @covers ::getWorkflowForEntity
    */
-  public function testGetWorkflowForEntity($workflow) {
+  public function testGetWorkflowForEntity($workflow): void {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     if ($workflow) {
       $workflow_entity = $this->prophesize(WorkflowInterface::class)->reveal();
@@ -131,7 +131,7 @@ class ModerationInformationTest extends UnitTestCase {
    * @dataProvider providerWorkflow
    * @covers ::shouldModerateEntitiesOfBundle
    */
-  public function testShouldModerateEntities($workflow, $expected) {
+  public function testShouldModerateEntities($workflow, $expected): void {
     $entity_type = new ContentEntityType([
       'id' => 'test_entity_type',
       'bundle_entity_type' => 'entity_test_bundle',

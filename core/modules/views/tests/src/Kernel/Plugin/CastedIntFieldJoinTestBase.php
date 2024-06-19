@@ -94,7 +94,7 @@ abstract class CastedIntFieldJoinTestBase extends DriverSpecificKernelTestBase {
    * \Drupal\Tests\views\Kernel\Plugin\JoinTest::testBasePlugin() to ensure that
    * no functionality provided by the base join plugin is broken.
    */
-  public function testBuildJoin() {
+  public function testBuildJoin(): void {
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');
     $view->initDisplay();

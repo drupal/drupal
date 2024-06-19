@@ -49,7 +49,7 @@ class ViewPageControllerTest extends UnitTestCase {
   /**
    * Tests the page controller.
    */
-  public function testPageController() {
+  public function testPageController(): void {
     $build = [
       '#type' => 'view',
       '#name' => 'test_page_view',
@@ -78,7 +78,7 @@ class ViewPageControllerTest extends UnitTestCase {
   /**
    * Tests the page controller with arguments on a non overridden page view.
    */
-  public function testHandleWithArgumentsWithoutOverridden() {
+  public function testHandleWithArgumentsWithoutOverridden(): void {
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
@@ -112,7 +112,7 @@ class ViewPageControllerTest extends UnitTestCase {
    *
    * Note: This test does not care about upcasting for now.
    */
-  public function testHandleWithArgumentsOnOverriddenRoute() {
+  public function testHandleWithArgumentsOnOverriddenRoute(): void {
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
@@ -149,7 +149,7 @@ class ViewPageControllerTest extends UnitTestCase {
    * This test care about upcasted values and ensures that the raw variables
    * are pulled in.
    */
-  public function testHandleWithArgumentsOnOverriddenRouteWithUpcasting() {
+  public function testHandleWithArgumentsOnOverriddenRouteWithUpcasting(): void {
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');

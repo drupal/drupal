@@ -44,7 +44,7 @@ class TestObjectItemTest extends FieldKernelTestBase {
   /**
    * Tests the serialization of a field type that has an object.
    */
-  public function testTestObjectItem() {
+  public function testTestObjectItem(): void {
     $object = new \stdClass();
     $object->foo = 'bar';
     $entity = EntityTest::create();

@@ -83,7 +83,7 @@ class RssTest extends TaxonomyTestBase {
    *
    * Create a node and assert that taxonomy terms appear in rss.xml.
    */
-  public function testTaxonomyRss() {
+  public function testTaxonomyRss(): void {
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);
 

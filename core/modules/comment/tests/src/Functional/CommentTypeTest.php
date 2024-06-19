@@ -57,7 +57,7 @@ class CommentTypeTest extends CommentTestBase {
   /**
    * Tests creating a comment type programmatically and via a form.
    */
-  public function testCommentTypeCreation() {
+  public function testCommentTypeCreation(): void {
     // Create a comment type programmatically.
     $type = $this->createCommentType('other');
 
@@ -121,7 +121,7 @@ class CommentTypeTest extends CommentTestBase {
   /**
    * Tests editing a comment type using the UI.
    */
-  public function testCommentTypeEditing() {
+  public function testCommentTypeEditing(): void {
     $this->drupalLogin($this->adminUser);
 
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
@@ -156,7 +156,7 @@ class CommentTypeTest extends CommentTestBase {
   /**
    * Tests deleting a comment type that still has content.
    */
-  public function testCommentTypeDeletion() {
+  public function testCommentTypeDeletion(): void {
     // Create a comment type programmatically.
     $type = $this->createCommentType('foo');
     $this->drupalCreateContentType(['type' => 'page']);

@@ -33,7 +33,7 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
   /**
    * Tests \Drupal\Core\Asset\CssCollectionGrouper.
    */
-  public function testGrouper() {
+  public function testGrouper(): void {
     $css_assets = [
       'system.base.css' => [
         'group' => -100,

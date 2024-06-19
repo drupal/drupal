@@ -32,7 +32,7 @@ class PhpTransliterationTest extends UnitTestCase {
    *
    * @dataProvider providerTestPhpTransliterationWithAlter
    */
-  public function testPhpTransliterationWithAlter($langcode, $original, $expected, $printable = NULL) {
+  public function testPhpTransliterationWithAlter($langcode, $original, $expected, $printable = NULL): void {
     if ($printable === NULL) {
       $printable = $original;
     }

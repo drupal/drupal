@@ -23,7 +23,7 @@ class PhpUnitCliTest extends UnitTestCase {
    * us from committing tests which don't break under run-tests.sh, but do
    * break under the PHPUnit CLI test runner tool.
    */
-  public function testPhpUnitListTests() {
+  public function testPhpUnitListTests(): void {
     $command = [
       'vendor/bin/phpunit',
       '--configuration',

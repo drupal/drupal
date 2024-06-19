@@ -30,7 +30,7 @@ class ShutdownFunctionTest extends KernelTestBase {
   /**
    * Tests that shutdown functions can be added by other shutdown functions.
    */
-  public function testShutdownFunctionInShutdownFunction() {
+  public function testShutdownFunctionInShutdownFunction(): void {
     // Ensure there are no shutdown functions registered before starting the
     // test.
     $this->assertEmpty(drupal_register_shutdown_function());

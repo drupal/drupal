@@ -168,7 +168,7 @@ class AssetResolverTest extends UnitTestCase {
    * @covers ::getCssAssets
    * @dataProvider providerAttachedCssAssets
    */
-  public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_css_cache_item_count) {
+  public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_css_cache_item_count): void {
     $this->libraryDiscovery->expects($this->any())
       ->method('getLibraryByName')
       ->willReturnOnConsecutiveCalls(
@@ -203,7 +203,7 @@ class AssetResolverTest extends UnitTestCase {
    * @covers ::getJsAssets
    * @dataProvider providerAttachedJsAssets
    */
-  public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_js_cache_item_count, $expected_multilingual_js_cache_item_count) {
+  public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_js_cache_item_count, $expected_multilingual_js_cache_item_count): void {
     $this->libraryDiscovery->expects($this->any())
       ->method('getLibraryByName')
       ->willReturnOnConsecutiveCalls(

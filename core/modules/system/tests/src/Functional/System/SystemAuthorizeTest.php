@@ -55,7 +55,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
   /**
    * Tests the FileTransfer hooks.
    */
-  public function testFileTransferHooks() {
+  public function testFileTransferHooks(): void {
     $page_title = $this->randomMachineName(16);
     $this->drupalGetAuthorizePHP($page_title);
     $this->assertSession()->titleEquals("$page_title | Drupal");

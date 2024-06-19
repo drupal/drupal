@@ -43,7 +43,7 @@ class NextIdTest extends DatabaseTestBase {
   /**
    * Tests that the sequences API works.
    */
-  public function testDbNextId() {
+  public function testDbNextId(): void {
     $this->expectDeprecation('Drupal\Core\Database\Connection::nextId() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules should use instead the keyvalue storage for the last used id. See https://www.drupal.org/node/3349345');
 
     $first = $this->connection->nextId();

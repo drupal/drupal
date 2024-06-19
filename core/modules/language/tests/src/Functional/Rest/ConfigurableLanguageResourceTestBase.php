@@ -83,7 +83,7 @@ abstract class ConfigurableLanguageResourceTestBase extends ConfigEntityResource
    *
    * @see https://www.drupal.org/node/2915414
    */
-  public function testGetDefaultConfig() {
+  public function testGetDefaultConfig(): void {
     $this->initAuthentication();
     $url = Url::fromUri('base:/entity/configurable_language/en')->setOption('query', ['_format' => static::$format]);
     $request_options = $this->getAuthenticationRequestOptions('GET');

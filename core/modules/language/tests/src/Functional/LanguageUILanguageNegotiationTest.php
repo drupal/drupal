@@ -101,7 +101,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   /**
    * Tests for language switching by URL path.
    */
-  public function testUILanguageNegotiation() {
+  public function testUILanguageNegotiation(): void {
     // A few languages to switch to.
     // This one is unknown, should get the default lang version.
     $langcode_unknown = 'blah-blah';
@@ -444,7 +444,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   /**
    * Tests URL language detection when the requested URL has no language.
    */
-  public function testUrlLanguageFallback() {
+  public function testUrlLanguageFallback(): void {
     // Add the Italian language.
     $langcode_browser_fallback = 'it';
     ConfigurableLanguage::createFromLangcode($langcode_browser_fallback)->save();
@@ -499,7 +499,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   /**
    * Tests URL handling when separate domains are used for multiple languages.
    */
-  public function testLanguageDomain() {
+  public function testLanguageDomain(): void {
     global $base_url;
 
     // Get the current host URI we're running on.
@@ -577,7 +577,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   /**
    * Tests persistence of negotiation settings for the content language type.
    */
-  public function testContentCustomization() {
+  public function testContentCustomization(): void {
     // Customize content language settings from their defaults.
     $edit = [
       'language_content[configurable]' => TRUE,
@@ -600,7 +600,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   /**
    * Tests if the language switcher block gets deleted when a language type has been made not configurable.
    */
-  public function testDisableLanguageSwitcher() {
+  public function testDisableLanguageSwitcher(): void {
     $block_id = 'test_language_block';
 
     // Enable the language switcher block.

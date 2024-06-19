@@ -44,7 +44,7 @@ class InitialStateTest extends KernelTestBase {
   /**
    * Tests the correct initial state.
    */
-  public function testInitialState() {
+  public function testInitialState(): void {
     $node_type = NodeType::create([
       'type' => 'example',
       'name' => 'Example',

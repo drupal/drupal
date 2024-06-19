@@ -26,7 +26,7 @@ class PluginDependencyTraitTest extends UnitTestCase {
    *
    * @dataProvider providerTestPluginDependencies
    */
-  public function testGetPluginDependencies(ProphecyInterface $plugin, $definition, array $expected) {
+  public function testGetPluginDependencies(ProphecyInterface $plugin, $definition, array $expected): void {
     $test_class = new TestPluginDependency();
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
@@ -58,7 +58,7 @@ class PluginDependencyTraitTest extends UnitTestCase {
    * @param array $expected
    *   The expected dependencies.
    */
-  public function testCalculatePluginDependencies(ProphecyInterface $plugin, $definition, array $expected) {
+  public function testCalculatePluginDependencies(ProphecyInterface $plugin, $definition, array $expected): void {
     $test_class = new TestPluginDependency();
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);

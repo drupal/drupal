@@ -72,7 +72,7 @@ class AccessPermissionTest extends KernelTestBase {
   /**
    * Tests perm access plugin.
    */
-  public function testAccessPerm() {
+  public function testAccessPerm(): void {
     $view = Views::getView('test_access_perm');
     $view->setDisplay();
 
@@ -87,7 +87,7 @@ class AccessPermissionTest extends KernelTestBase {
   /**
    * Tests access on render caching.
    */
-  public function testRenderCaching() {
+  public function testRenderCaching(): void {
     $view = Views::getView('test_access_perm');
     $display = &$view->storage->getDisplay('default');
     $display['display_options']['cache'] = [

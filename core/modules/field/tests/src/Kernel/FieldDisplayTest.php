@@ -101,7 +101,7 @@ class FieldDisplayTest extends KernelTestBase {
   /**
    * Tests that visually hidden works with core.
    */
-  public function testFieldVisualHidden() {
+  public function testFieldVisualHidden(): void {
     $value = $this->randomMachineName();
 
     // Set the formatter to link to the entity.

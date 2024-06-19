@@ -47,7 +47,7 @@ class BookPendingRevisionTest extends KernelTestBase {
   /**
    * Tests pending revision handling for books.
    */
-  public function testBookWithPendingRevisions() {
+  public function testBookWithPendingRevisions(): void {
     $content_type = NodeType::create([
       'type' => $this->randomMachineName(),
       'name' => $this->randomString(),

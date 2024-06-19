@@ -55,7 +55,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
   /**
    * Tests module re-installation.
    */
-  public function testIntegrationModuleReinstallation() {
+  public function testIntegrationModuleReinstallation(): void {
     $default_config = 'config_integration_test.settings';
     $default_configuration_entity = 'config_test.dynamic.config_integration_test';
 
@@ -135,7 +135,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
   /**
    * Tests pre-existing configuration detection.
    */
-  public function testPreExistingConfigInstall() {
+  public function testPreExistingConfigInstall(): void {
     $this->drupalLogin($this->adminUser);
 
     // Try to install config_install_fail_test and config_test. Doing this
@@ -201,7 +201,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
   /**
    * Tests unmet dependencies detection.
    */
-  public function testUnmetDependenciesInstall() {
+  public function testUnmetDependenciesInstall(): void {
     $this->drupalLogin($this->adminUser);
     // We need to install separately since config_install_dependency_test does
     // not depend on config_test and order is important.
@@ -228,7 +228,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
   /**
    * Tests config_requirements().
    */
-  public function testConfigModuleRequirements() {
+  public function testConfigModuleRequirements(): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/modules');
     $this->submitForm(['modules[config][enable]' => TRUE], 'Install');

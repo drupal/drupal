@@ -22,7 +22,7 @@ class PasswordVerifyTest extends UnitTestCase {
    *
    * @covers ::hash
    */
-  public function testPasswordHash() {
+  public function testPasswordHash(): void {
     $samplePassword = $this->randomMachineName();
     $sampleHash = $this->randomMachineName();
 
@@ -40,7 +40,7 @@ class PasswordVerifyTest extends UnitTestCase {
    *
    * @covers ::needsRehash
    */
-  public function testPasswordNeedsRehash() {
+  public function testPasswordNeedsRehash(): void {
     $sampleHash = $this->randomMachineName();
 
     $corePassword = $this->prophesize(PasswordInterface::class);
@@ -56,7 +56,7 @@ class PasswordVerifyTest extends UnitTestCase {
    *
    * @covers ::check
    */
-  public function testPasswordCheckUnknownHash() {
+  public function testPasswordCheckUnknownHash(): void {
     $samplePassword = $this->randomMachineName();
     $sampleHash = $this->randomMachineName();
 
@@ -77,7 +77,7 @@ class PasswordVerifyTest extends UnitTestCase {
    * @covers ::enforceLog2Boundaries
    * @covers ::base64Encode
    */
-  public function testPasswordCheckSupported() {
+  public function testPasswordCheckSupported(): void {
     $validPassword = 'valid password';
 
     // cspell:disable
@@ -108,7 +108,7 @@ class PasswordVerifyTest extends UnitTestCase {
    *
    * @covers ::enforceLog2Boundaries
    */
-  public function testWithinBounds() {
+  public function testWithinBounds(): void {
     $hasher = new PhpassHashedPasswordLog2BoundariesDouble();
     $this->assertEquals(PhpassHashedPassword::MIN_HASH_COUNT, $hasher->enforceLog2Boundaries(1), "Min hash count enforced");
     $this->assertEquals(PhpassHashedPassword::MAX_HASH_COUNT, $hasher->enforceLog2Boundaries(100), "Max hash count enforced");
@@ -121,7 +121,7 @@ class PasswordVerifyTest extends UnitTestCase {
    *
    * @dataProvider providerLongPasswords
    */
-  public function testLongPassword($password, $allowed) {
+  public function testLongPassword($password, $allowed): void {
     // cspell:disable
     $bogusHash = '$S$5TOxWPdvJRs0P/xZBdrrPlGgzViOS0drHu3jaIjitesfttrp18bk';
     // cspell:enable

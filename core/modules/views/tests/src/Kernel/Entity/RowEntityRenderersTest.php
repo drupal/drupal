@@ -168,35 +168,35 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
   /**
    * Tests the entity row renderers.
    */
-  public function testEntityRenderers() {
+  public function testEntityRenderers(): void {
     $this->checkLanguageRenderers('page_1', $this->values);
   }
 
   /**
    * Tests the field row renderers.
    */
-  public function testFieldRenderers() {
+  public function testFieldRenderers(): void {
     $this->checkLanguageRenderers('page_2', $this->values);
   }
 
   /**
    * Tests the entity row renderers for relationships.
    */
-  public function testEntityRenderersRelationship() {
+  public function testEntityRenderersRelationship(): void {
     $this->checkLanguageRenderersRelationship('page_3', $this->values);
   }
 
   /**
    * Tests the field row renderers for relationships.
    */
-  public function testFieldRenderersRelationship() {
+  public function testFieldRenderersRelationship(): void {
     $this->checkLanguageRenderersRelationship('page_4', $this->values);
   }
 
   /**
    * Tests the row renderer with a revision base table.
    */
-  public function testRevisionBaseTable() {
+  public function testRevisionBaseTable(): void {
     $view = Views::getView('test_entity_row_renderers_revisions_base');
     $view->execute();
     $this->assertIdenticalResultset($view, $this->ids, ['nid' => 'nid', 'uid' => 'uid']);

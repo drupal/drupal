@@ -56,7 +56,7 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
   /**
    * Create a node with revision and rest result count for both views.
    */
-  public function testNodeRevisionRelationship() {
+  public function testNodeRevisionRelationship(): void {
     $type = NodeType::create(['type' => 'page', 'name' => 'page']);
     $type->save();
     $node = Node::create(['type' => 'page', 'title' => 'test', 'uid' => 1]);

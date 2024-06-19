@@ -32,7 +32,7 @@ class ProviderRepositoryTest extends MediaFunctionalTestBase {
    *
    * @dataProvider providerEmptyProviderList
    */
-  public function testEmptyProviderList($content) {
+  public function testEmptyProviderList($content): void {
     $response = $this->prophesize('\GuzzleHttp\Psr7\Response');
     $response->getBody()->willReturn(Utils::streamFor($content));
 
@@ -69,7 +69,7 @@ class ProviderRepositoryTest extends MediaFunctionalTestBase {
    *
    * @dataProvider providerNonExistingProviderDatabase
    */
-  public function testNonExistingProviderDatabase($providers_url, $exception_message) {
+  public function testNonExistingProviderDatabase($providers_url, $exception_message): void {
     $this->config('media.settings')
       ->set('oembed_providers_url', $providers_url)
       ->save();

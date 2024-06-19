@@ -21,7 +21,7 @@ class LocaleTest extends UnitTestCase {
    * @covers ::config
    * @group legacy
    */
-  public function testConfig() {
+  public function testConfig(): void {
     $config_manager = $this->prophesize(LocaleConfigManager::class);
     $container = $this->prophesize(Container::class);
     $container->get('locale.config_manager')

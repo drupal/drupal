@@ -260,7 +260,7 @@ class BlockContentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $this->entity->setPublished()->save();
     $this->doTestCollectionFilterAccessForPublishableEntities('info', NULL, 'administer block content');
   }

@@ -38,7 +38,7 @@ class ModuleUninstallFilterTest extends WebDriverTestBase {
   /**
    * Tests that correct module count is returned when list filtered.
    */
-  public function testModuleUninstallFilter() {
+  public function testModuleUninstallFilter(): void {
 
     // Find the module filter field.
     $this->drupalGet('admin/modules/uninstall');

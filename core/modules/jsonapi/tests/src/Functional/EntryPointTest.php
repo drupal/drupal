@@ -40,7 +40,7 @@ class EntryPointTest extends BrowserTestBase {
   /**
    * Test GET to the entry point.
    */
-  public function testEntryPoint() {
+  public function testEntryPoint(): void {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $response = $this->request('GET', Url::fromUri('base://jsonapi'), $request_options);

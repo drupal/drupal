@@ -26,7 +26,7 @@ class CommandsTest extends WebDriverTestBase {
   /**
    * Tests the various Ajax Commands.
    */
-  public function testAjaxCommands() {
+  public function testAjaxCommands(): void {
     $session = $this->getSession();
     $page = $this->getSession()->getPage();
 
@@ -148,7 +148,7 @@ JS;
    * Tests the various Ajax Commands with legacy parameters.
    * @group legacy
    */
-  public function testLegacyAjaxCommands() {
+  public function testLegacyAjaxCommands(): void {
     $session = $this->getSession();
     $page = $this->getSession()->getPage();
 

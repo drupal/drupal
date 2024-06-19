@@ -45,7 +45,7 @@ class JoinTest extends RelationshipJoinTestBase {
   /**
    * Tests an example join plugin.
    */
-  public function testExamplePlugin() {
+  public function testExamplePlugin(): void {
 
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');
@@ -76,7 +76,7 @@ class JoinTest extends RelationshipJoinTestBase {
   /**
    * Tests the join plugin base.
    */
-  public function testBasePlugin() {
+  public function testBasePlugin(): void {
 
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');

@@ -34,7 +34,7 @@ class DisplayFeedTest extends UITestBase {
   /**
    * Tests feed display admin UI.
    */
-  public function testFeedUI() {
+  public function testFeedUI(): void {
     // Test the RSS feed.
     foreach (self::$testViews as $view_name) {
       $this->checkFeedViewUi($view_name);

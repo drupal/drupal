@@ -50,7 +50,7 @@ class PathNoCanonicalLinkTest extends KernelTestBase {
   /**
    * Tests for no canonical link templates.
    */
-  public function testNoCanonicalLinkTemplate() {
+  public function testNoCanonicalLinkTemplate(): void {
     $entity_type = EntityTestTranslatableUISkip::create([
       'name' => 'name english',
       'language' => 'en',

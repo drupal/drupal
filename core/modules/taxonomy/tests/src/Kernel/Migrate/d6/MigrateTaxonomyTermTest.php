@@ -31,7 +31,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 taxonomy term to Drupal 8 migration.
    */
-  public function testTaxonomyTerms() {
+  public function testTaxonomyTerms(): void {
     $expected_results = [
       '1' => [
         'source_vid' => 1,

@@ -20,7 +20,7 @@ class ConfigTest extends TestCase {
   /**
    * @covers ::getPathsForPackage
    */
-  public function testGetPathsForPackageMixedCase() {
+  public function testGetPathsForPackageMixedCase(): void {
     $config = $this->getMockBuilder(Config::class)
       ->onlyMethods(['getAllCleanupPaths'])
       ->disableOriginalConstructor()
@@ -36,7 +36,7 @@ class ConfigTest extends TestCase {
   /**
    * @covers ::getAllCleanupPaths
    */
-  public function testNoRootMergeConfig() {
+  public function testNoRootMergeConfig(): void {
     // Root package has no extra field.
     $root = $this->createMock(RootPackageInterface::class);
     $root->expects($this->once())
@@ -57,7 +57,7 @@ class ConfigTest extends TestCase {
   /**
    * @covers ::getAllCleanupPaths
    */
-  public function testRootMergeConfig() {
+  public function testRootMergeConfig(): void {
     // Root package has configuration in extra.
     $root = $this->createMock(RootPackageInterface::class);
     $root->expects($this->once())
@@ -84,7 +84,7 @@ class ConfigTest extends TestCase {
    *
    * @runInSeparateProcess
    */
-  public function testMixedCaseConfigCleanupPackages() {
+  public function testMixedCaseConfigCleanupPackages(): void {
     // Root package has configuration in extra.
     $root = $this->createMock(RootPackageInterface::class);
     $root->expects($this->once())

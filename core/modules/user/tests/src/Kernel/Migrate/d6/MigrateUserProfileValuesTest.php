@@ -39,7 +39,7 @@ class MigrateUserProfileValuesTest extends MigrateDrupal6TestBase {
   /**
    * Tests Drupal 6 profile values to Drupal 8 migration.
    */
-  public function testUserProfileValues() {
+  public function testUserProfileValues(): void {
     $user = User::load(2);
     $this->assertNotNull($user);
     $this->assertSame('red', $user->profile_color->value);

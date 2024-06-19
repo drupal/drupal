@@ -19,7 +19,7 @@ class EntityKeysTest extends EntityKernelTestBase {
    *
    * @dataProvider multipleKeysCacheTestCases
    */
-  public function testMultipleKeysCache($translatable) {
+  public function testMultipleKeysCache($translatable): void {
     $this->state->set('entity_test.additional_base_field_definitions', [
       'test_field' => BaseFieldDefinition::create('string')->setTranslatable($translatable),
     ]);

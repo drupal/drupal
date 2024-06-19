@@ -37,7 +37,7 @@ class SortTest extends UnitTestCase {
    * @covers ::createFromQueryParameter
    * @dataProvider parameterProvider
    */
-  public function testCreateFromQueryParameter($input, $expected) {
+  public function testCreateFromQueryParameter($input, $expected): void {
     $sort = Sort::createFromQueryParameter($input);
     foreach ($sort->fields() as $index => $sort_field) {
       $this->assertEquals($expected[$index]['path'], $sort_field['path']);
@@ -85,7 +85,7 @@ class SortTest extends UnitTestCase {
    * @covers ::createFromQueryParameter
    * @dataProvider badParameterProvider
    */
-  public function testCreateFromQueryParameterFail($input) {
+  public function testCreateFromQueryParameterFail($input): void {
     $this->expectException(BadRequestHttpException::class);
     Sort::createFromQueryParameter($input);
   }

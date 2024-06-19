@@ -19,7 +19,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
    *
    * @covers ::setValueForElement
    */
-  public function testSetValueForElement() {
+  public function testSetValueForElement(): void {
     $element = [
       '#parents' => [
         'foo',
@@ -43,7 +43,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
    *
    * @dataProvider providerGetValue
    */
-  public function testGetValue($key, $expected, $default = NULL) {
+  public function testGetValue($key, $expected, $default = NULL): void {
     $form_state = (new FormStateValuesTraitStub())->setValues([
       'foo' => 'one',
       'bar' => [
@@ -91,7 +91,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
   /**
    * @covers ::getValue
    */
-  public function testGetValueModifyReturn() {
+  public function testGetValueModifyReturn(): void {
     $initial_values = $values = [
       'foo' => 'one',
       'bar' => [
@@ -113,7 +113,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
    *
    * @dataProvider providerSetValue
    */
-  public function testSetValue($key, $value, $expected) {
+  public function testSetValue($key, $value, $expected): void {
     $form_state = (new FormStateValuesTraitStub())->setValues([
       'bar' => 'wrong',
     ]);
@@ -149,7 +149,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
    *
    * @dataProvider providerHasValue
    */
-  public function testHasValue($key, $expected) {
+  public function testHasValue($key, $expected): void {
     $form_state = (new FormStateValuesTraitStub())->setValues([
       'foo' => 'one',
       'bar' => [
@@ -198,7 +198,7 @@ class FormStateValuesTraitTest extends UnitTestCase {
    *
    * @dataProvider providerIsValueEmpty
    */
-  public function testIsValueEmpty($key, $expected) {
+  public function testIsValueEmpty($key, $expected): void {
     $form_state = (new FormStateValuesTraitStub())->setValues([
       'foo' => 'one',
       'bar' => [

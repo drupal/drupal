@@ -44,7 +44,7 @@ class ViewsFixRevisionIdUpdateTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path for revision ids in field aliases.
    */
-  public function testViewsPostUpdateFixRevisionId() {
+  public function testViewsPostUpdateFixRevisionId(): void {
     $view = View::load('test_fix_revision_id_update');
     $data = $view->toArray();
     $fields = $data['display']['default']['display_options']['fields'];

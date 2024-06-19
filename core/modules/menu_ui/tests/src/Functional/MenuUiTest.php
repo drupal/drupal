@@ -113,7 +113,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests menu functionality using the admin and user interfaces.
    */
-  public function testMenuAdministration() {
+  public function testMenuAdministration(): void {
     // Log in the user.
     $this->drupalLogin($this->adminUser);
     $this->items = [];
@@ -615,7 +615,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Test logout link isn't displayed when the user is logged out.
    */
-  public function testLogoutLinkVisibility() {
+  public function testLogoutLinkVisibility(): void {
     $adminUserWithLinkAnyPage = $this->drupalCreateUser([
       'access administration pages',
       'administer blocks',
@@ -654,7 +654,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Adds and removes a menu link with a query string and fragment.
    */
-  public function testMenuQueryAndFragment() {
+  public function testMenuQueryAndFragment(): void {
     $this->drupalLogin($this->adminUser);
 
     // Make a path with query and fragment on.
@@ -689,7 +689,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests renaming the built-in menu.
    */
-  public function testSystemMenuRename() {
+  public function testSystemMenuRename(): void {
     $this->drupalLogin($this->adminUser);
     $edit = [
       'label' => $this->randomMachineName(16),
@@ -707,7 +707,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests that menu items pointing to unpublished nodes are editable.
    */
-  public function testUnpublishedNodeMenuItem() {
+  public function testUnpublishedNodeMenuItem(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'access administration pages',
       'administer blocks',
@@ -1056,7 +1056,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests if admin users, other than UID1, can access parents AJAX callback.
    */
-  public function testMenuParentsJsAccess() {
+  public function testMenuParentsJsAccess(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer menu']));
     // Just check access to the callback overall, the POST data is irrelevant.
     $this->drupalGet('admin/structure/menu/parents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With: XMLHttpRequest']);
@@ -1072,7 +1072,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests the "expand all items" feature.
    */
-  public function testExpandAllItems() {
+  public function testExpandAllItems(): void {
     $this->drupalLogin($this->adminUser);
     $menu = $this->addCustomMenu();
     $node = $this->drupalCreateNode(['type' => 'article']);
@@ -1195,7 +1195,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests that menu links with pending revisions can not be re-parented.
    */
-  public function testMenuUiWithPendingRevisions() {
+  public function testMenuUiWithPendingRevisions(): void {
     $this->drupalLogin($this->adminUser);
     $assert_session = $this->assertSession();
 
@@ -1239,7 +1239,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests the user login/logout links.
    */
-  public function testUserLoginUserLogoutLinks() {
+  public function testUserLoginUserLogoutLinks(): void {
     MenuLinkContent::create([
       'menu' => 'tools',
       'link' => [

@@ -21,7 +21,7 @@ class RolesRidTest extends UnitTestCase {
    *
    * @covers ::titleQuery
    */
-  public function testTitleQuery() {
+  public function testTitleQuery(): void {
     $role1 = new Role([
       'id' => 'test_rid_1',
       'label' => 'test rid 1',

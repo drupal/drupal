@@ -18,7 +18,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
   /**
    * Tests the default settings convenience methods.
    */
-  public function testDefaultSettings() {
+  public function testDefaultSettings(): void {
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     foreach (['test_field', 'shape', 'hidden_test_field'] as $type) {
       $definition = $field_type_manager->getDefinition($type);
@@ -30,7 +30,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
   /**
    * Tests creation of field item instances.
    */
-  public function testCreateInstance() {
+  public function testCreateInstance(): void {
     /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     foreach (['test_field', 'shape', 'hidden_test_field'] as $type) {
@@ -57,7 +57,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
   /**
    * Tests creation of field item instances.
    */
-  public function testCreateInstanceWithConfig() {
+  public function testCreateInstanceWithConfig(): void {
     /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     $type = 'test_field';
@@ -89,7 +89,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
   /**
    * Tests all field items provide an existing main property.
    */
-  public function testMainProperty() {
+  public function testMainProperty(): void {
     // Let's enable all Drupal modules in Drupal core, so we test any field
     // type plugin.
     $this->enableAllCoreModules();
@@ -115,7 +115,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
   /**
    * Tests UI definitions per entity type.
    */
-  public function testUiDefinitionsPerEntityType() {
+  public function testUiDefinitionsPerEntityType(): void {
     /** @var \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     $definitions = $field_type_manager->getEntityTypeUiDefinitions('node');

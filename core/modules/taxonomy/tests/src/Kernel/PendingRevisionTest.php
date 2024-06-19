@@ -47,7 +47,7 @@ class PendingRevisionTest extends KernelTestBase {
   /**
    * Tests that the taxonomy index work correctly with pending revisions.
    */
-  public function testTaxonomyIndexWithPendingRevision() {
+  public function testTaxonomyIndexWithPendingRevision(): void {
     \Drupal::configFactory()->getEditable('taxonomy.settings')->set('maintain_index_table', TRUE)->save();
 
     Vocabulary::create([

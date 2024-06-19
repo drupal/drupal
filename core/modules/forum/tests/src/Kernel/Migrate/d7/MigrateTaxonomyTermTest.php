@@ -62,7 +62,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
   /**
    * Assert the forum taxonomy terms.
    */
-  public function testTaxonomyTerms() {
+  public function testTaxonomyTerms(): void {
     $this->assertEntity(1, 'en', 'General discussion', 'forums', '', NULL, 2, ['0'], 0);
 
     $this->assertEntity(5, 'en', 'Custom Forum', 'forums', 'Where the cool kids are.', NULL, 3, ['0'], 0);

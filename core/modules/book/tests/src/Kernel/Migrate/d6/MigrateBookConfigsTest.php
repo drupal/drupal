@@ -50,7 +50,7 @@ class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
    *
    * @dataProvider providerBookSettings
    */
-  public function testBookSettings($migration_id) {
+  public function testBookSettings($migration_id): void {
     $this->executeMigration($migration_id);
 
     $config = $this->config('book.settings');

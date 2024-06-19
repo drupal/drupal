@@ -17,7 +17,7 @@ class ServiceDestructionTest extends KernelTestBase {
   /**
    * Verifies that services are destructed when used.
    */
-  public function testDestructionUsed() {
+  public function testDestructionUsed(): void {
     // Enable the test module to add it to the container.
     $this->enableModules(['service_provider_test']);
 
@@ -39,7 +39,7 @@ class ServiceDestructionTest extends KernelTestBase {
   /**
    * Verifies that services are not unnecessarily destructed when not used.
    */
-  public function testDestructionUnused() {
+  public function testDestructionUnused(): void {
     // Enable the test module to add it to the container.
     $this->enableModules(['service_provider_test']);
 

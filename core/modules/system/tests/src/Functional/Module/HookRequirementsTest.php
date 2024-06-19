@@ -19,7 +19,7 @@ class HookRequirementsTest extends ModuleTestBase {
   /**
    * Assert that a module cannot be installed if it fails hook_requirements().
    */
-  public function testHookRequirementsFailure() {
+  public function testHookRequirementsFailure(): void {
     $this->assertModules(['requirements1_test'], FALSE);
 
     // Attempt to install the requirements1_test module.

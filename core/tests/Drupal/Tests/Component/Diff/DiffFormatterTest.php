@@ -50,7 +50,7 @@ class DiffFormatterTest extends TestCase {
    * @covers ::format
    * @dataProvider provideTestDiff
    */
-  public function testDiff($expected, $from, $to) {
+  public function testDiff($expected, $from, $to): void {
     $diff = new Diff($from, $to);
     $formatter = new DiffFormatter();
     $output = $formatter->format($diff);

@@ -83,7 +83,7 @@ class SqlTest extends MigrateTestBase {
    *
    * @dataProvider providerTestEnsureTables
    */
-  public function testEnsureTables($ids) {
+  public function testEnsureTables($ids): void {
     $this->migrationDefinition['source']['ids'] = $ids;
     $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition);
 
@@ -137,7 +137,7 @@ class SqlTest extends MigrateTestBase {
    *
    * @dataProvider providerTestFailEnsureTables
    */
-  public function testFailEnsureTables($ids) {
+  public function testFailEnsureTables($ids): void {
     // This just tests mysql, as other PDO integrations allow longer indexes.
     if (Database::getConnection()->databaseType() !== 'mysql') {
       $this->markTestSkipped("This test only runs for MySQL");

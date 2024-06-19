@@ -66,7 +66,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
   /**
    * Tests reading multilingual content.
    */
-  public function testReadMultilingual() {
+  public function testReadMultilingual(): void {
     // Different databases have different sort orders, so a sort is required so
     // test expectations do not need to vary per database.
     $default_sort = ['sort' => 'drupal_internal__nid'];
@@ -99,7 +99,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
   /**
    * Tests updating a translation.
    */
-  public function testPatchTranslation() {
+  public function testPatchTranslation(): void {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $node = $this->nodes[0];
     $uuid = $node->uuid();
@@ -198,7 +198,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
   /**
    * Tests updating a translation fallback.
    */
-  public function testPatchTranslationFallback() {
+  public function testPatchTranslationFallback(): void {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $node = $this->nodes[0];
     $uuid = $node->uuid();
@@ -239,7 +239,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
   /**
    * Tests creating a translation.
    */
-  public function testPostTranslation() {
+  public function testPostTranslation(): void {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->grantPermissions(Role::load(RoleInterface::ANONYMOUS_ID), [
       'bypass node access',
@@ -303,7 +303,7 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
   /**
    * Tests deleting multilingual content.
    */
-  public function testDeleteMultilingual() {
+  public function testDeleteMultilingual(): void {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->grantPermissions(Role::load(RoleInterface::ANONYMOUS_ID), [
       'bypass node access',

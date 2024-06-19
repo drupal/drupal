@@ -56,7 +56,7 @@ class ArgumentValidatorTermTest extends TaxonomyTestBase {
   /**
    * Tests the term argument validator plugin.
    */
-  public function testArgumentValidatorTerm() {
+  public function testArgumentValidatorTerm(): void {
     $view = Views::getView('test_argument_validator_term');
     $view->initHandlers();
 

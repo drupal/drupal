@@ -60,7 +60,7 @@ class UserControllerTest extends KernelTestBase {
    *
    * @covers ::userEditPage
    */
-  public function testUserEditPage() {
+  public function testUserEditPage(): void {
 
     $response = $this->userController->userEditPage();
 

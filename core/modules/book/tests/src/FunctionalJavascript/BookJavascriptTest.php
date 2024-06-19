@@ -30,7 +30,7 @@ class BookJavascriptTest extends WebDriverTestBase {
   /**
    * Tests re-ordering of books.
    */
-  public function testBookOrdering() {
+  public function testBookOrdering(): void {
     $book = Node::create([
       'type' => 'book',
       'title' => 'Book',
@@ -170,7 +170,7 @@ class BookJavascriptTest extends WebDriverTestBase {
   /**
    * Tests book outline AJAX request.
    */
-  public function testBookAddOutline() {
+  public function testBookAddOutline(): void {
     $this->drupalLogin($this->drupalCreateUser(['create book content', 'create new books', 'add content to books']));
     $this->drupalGet('node/add/book');
     $assert_session = $this->assertSession();

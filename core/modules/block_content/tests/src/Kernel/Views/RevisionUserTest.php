@@ -68,7 +68,7 @@ class RevisionUserTest extends ViewsKernelTestBase {
   /**
    * Tests the block_content_revision_user relationship.
    */
-  public function testRevisionUser() {
+  public function testRevisionUser(): void {
     $primary_author = $this->createUser();
     $secondary_author = $this->createUser();
 

@@ -28,14 +28,14 @@ class SortTest extends TestCase {
   /**
    * Tests that the file exists.
    */
-  public function testFileExists() {
+  public function testFileExists(): void {
     $this->assertFileExists($this->filePath);
   }
 
   /**
    * Tests that the file is properly sorted.
    */
-  public function testSorted() {
+  public function testSorted(): void {
     $content = file_get_contents($this->filePath);
     $this->assertIsString($content);
     $current_dictionary = explode("\n", rtrim($content));

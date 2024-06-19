@@ -39,7 +39,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
   /**
    * Tests the contextual links on a menu block.
    */
-  public function testBlockContextualLinks() {
+  public function testBlockContextualLinks(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer menu',
       'access contextual links',

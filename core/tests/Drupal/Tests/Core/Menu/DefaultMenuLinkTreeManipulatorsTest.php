@@ -150,7 +150,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    *
    * @covers ::generateIndexAndSort
    */
-  public function testGenerateIndexAndSort() {
+  public function testGenerateIndexAndSort(): void {
     $this->mockTree();
     $tree = $this->originalTree;
     $tree = $this->defaultMenuTreeManipulators->generateIndexAndSort($tree);
@@ -174,7 +174,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    * @covers ::checkAccess
    * @covers ::menuLinkCheckAccess
    */
-  public function testCheckAccess() {
+  public function testCheckAccess(): void {
     // Those menu links that are non-external will have their access checks
     // performed. 9 routes, but 1 is external, 2 already have their 'access'
     // property set, and 1 is a child if an inaccessible menu link, so only 5
@@ -282,7 +282,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    *
    * @covers ::flatten
    */
-  public function testFlatten() {
+  public function testFlatten(): void {
     $this->mockTree();
     $tree = $this->defaultMenuTreeManipulators->flatten($this->originalTree);
     $this->assertEquals([1, 2, 5, 6, 8, 9], array_keys($this->originalTree));
@@ -296,7 +296,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    * @covers ::collectNodeLinks
    * @covers ::checkAccess
    */
-  public function testCheckNodeAccess() {
+  public function testCheckNodeAccess(): void {
     $links = [
       1 => MenuLinkMock::create(['id' => 'node.1', 'route_name' => 'entity.node.canonical', 'title' => 'foo', 'parent' => '', 'route_parameters' => ['node' => 1]]),
       2 => MenuLinkMock::create(['id' => 'node.2', 'route_name' => 'entity.node.canonical', 'title' => 'bar', 'parent' => '', 'route_parameters' => ['node' => 2]]),

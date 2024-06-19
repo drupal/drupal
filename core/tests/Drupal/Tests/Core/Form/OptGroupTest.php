@@ -18,7 +18,7 @@ class OptGroupTest extends UnitTestCase {
    *
    * @dataProvider providerTestFlattenOptions
    */
-  public function testFlattenOptions($options) {
+  public function testFlattenOptions($options): void {
     $this->assertSame(['foo' => 'foo'], OptGroup::flattenOptions($options));
   }
 

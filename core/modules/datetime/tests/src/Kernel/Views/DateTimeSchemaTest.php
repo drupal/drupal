@@ -24,7 +24,7 @@ class DateTimeSchemaTest extends DateTimeHandlerTestBase {
   /**
    * Tests argument plugin schema.
    */
-  public function testDateTimeSchema() {
+  public function testDateTimeSchema(): void {
     // Test argument schema.
     $view = Views::getView('test_argument_datetime');
     $view->initHandlers();

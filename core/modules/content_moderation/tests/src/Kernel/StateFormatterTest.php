@@ -50,7 +50,7 @@ class StateFormatterTest extends KernelTestBase {
    *
    * @dataProvider formatterTestCases
    */
-  public function testStateFieldFormatter($field_value, $formatter_settings, $expected_output) {
+  public function testStateFieldFormatter($field_value, $formatter_settings, $expected_output): void {
     $entity = EntityTestRev::create([
       'moderation_state' => $field_value,
     ]);

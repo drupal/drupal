@@ -50,7 +50,7 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
    *
    * @dataProvider urlProvider
    */
-  public function testValidateUrl($url, $isValid) {
+  public function testValidateUrl($url, $isValid): void {
     $this->assertEquals($isValid, $this->fetcher->validateUrl($url));
   }
 

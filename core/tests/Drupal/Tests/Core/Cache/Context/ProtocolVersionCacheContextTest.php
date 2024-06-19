@@ -20,7 +20,7 @@ class ProtocolVersionCacheContextTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetContext
    */
-  public function testGetContext($protocol, $context) {
+  public function testGetContext($protocol, $context): void {
     $request_stack = new RequestStack();
     $request = Request::create('/');
     $request->server->set('SERVER_PROTOCOL', $protocol);

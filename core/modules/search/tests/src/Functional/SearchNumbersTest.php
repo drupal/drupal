@@ -102,7 +102,7 @@ class SearchNumbersTest extends BrowserTestBase {
   /**
    * Tests that all the numbers can be searched.
    */
-  public function testNumberSearching() {
+  public function testNumberSearching(): void {
     $types = array_keys($this->numbers);
 
     foreach ($types as $type) {

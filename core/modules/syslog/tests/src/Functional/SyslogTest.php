@@ -28,7 +28,7 @@ class SyslogTest extends BrowserTestBase {
   /**
    * Tests the syslog settings page.
    */
-  public function testSettings() {
+  public function testSettings(): void {
     $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
 

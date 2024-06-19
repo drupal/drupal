@@ -96,7 +96,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
   /**
    * Tests moving a block.
    */
-  public function testMoveBlock() {
+  public function testMoveBlock(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

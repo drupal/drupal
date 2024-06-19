@@ -71,7 +71,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::isValid
    */
-  public function testIsValidWithFrontpage() {
+  public function testIsValidWithFrontpage(): void {
     $this->accessAwareRouter->expects($this->never())
       ->method('match');
 
@@ -83,7 +83,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::isValid
    */
-  public function testIsValidWithNone() {
+  public function testIsValidWithNone(): void {
     $this->accessAwareRouter->expects($this->never())
       ->method('match');
 
@@ -95,7 +95,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::isValid
    */
-  public function testIsValidWithExternalUrl() {
+  public function testIsValidWithExternalUrl(): void {
     $this->accessAwareRouter->expects($this->never())
       ->method('match');
 
@@ -107,7 +107,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::isValid
    */
-  public function testIsValidWithInvalidExternalUrl() {
+  public function testIsValidWithInvalidExternalUrl(): void {
     $this->accessAwareRouter->expects($this->never())
       ->method('match');
 
@@ -120,7 +120,7 @@ class PathValidatorTest extends UnitTestCase {
    * @covers ::isValid
    * @covers ::getPathAttributes
    */
-  public function testIsValidWithLinkToAnyPageAccount() {
+  public function testIsValidWithLinkToAnyPageAccount(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -143,7 +143,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::isValid
    */
-  public function testIsValidWithoutLinkToAnyPageAccount() {
+  public function testIsValidWithoutLinkToAnyPageAccount(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -166,7 +166,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::isValid
    */
-  public function testIsValidWithPathAlias() {
+  public function testIsValidWithPathAlias(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -191,7 +191,7 @@ class PathValidatorTest extends UnitTestCase {
    * @covers ::isValid
    * @covers ::getPathAttributes
    */
-  public function testIsValidWithAccessDenied() {
+  public function testIsValidWithAccessDenied(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -213,7 +213,7 @@ class PathValidatorTest extends UnitTestCase {
    * @covers ::isValid
    * @covers ::getPathAttributes
    */
-  public function testIsValidWithResourceNotFound() {
+  public function testIsValidWithResourceNotFound(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -235,7 +235,7 @@ class PathValidatorTest extends UnitTestCase {
    * @covers ::isValid
    * @covers ::getPathAttributes
    */
-  public function testIsValidWithParamNotConverted() {
+  public function testIsValidWithParamNotConverted(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -257,7 +257,7 @@ class PathValidatorTest extends UnitTestCase {
    * @covers ::isValid
    * @covers ::getPathAttributes
    */
-  public function testIsValidWithMethodNotAllowed() {
+  public function testIsValidWithMethodNotAllowed(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -280,7 +280,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::isValid
    */
-  public function testIsValidWithFailingParameterConverting() {
+  public function testIsValidWithFailingParameterConverting(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -303,7 +303,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::isValid
    */
-  public function testIsValidWithNotExistingPath() {
+  public function testIsValidWithNotExistingPath(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -327,7 +327,7 @@ class PathValidatorTest extends UnitTestCase {
    * @covers ::getUrlIfValid
    * @covers ::getPathAttributes
    */
-  public function testGetUrlIfValidWithAccess() {
+  public function testGetUrlIfValidWithAccess(): void {
     $this->account->expects($this->exactly(2))
       ->method('hasPermission')
       ->with('link to any page')
@@ -360,7 +360,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::getUrlIfValid
    */
-  public function testGetUrlIfValidWithQuery() {
+  public function testGetUrlIfValidWithQuery(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -386,7 +386,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::getUrlIfValid
    */
-  public function testGetUrlIfValidWithoutAccess() {
+  public function testGetUrlIfValidWithoutAccess(): void {
     $this->account->expects($this->once())
       ->method('hasPermission')
       ->with('link to any page')
@@ -410,7 +410,7 @@ class PathValidatorTest extends UnitTestCase {
    *
    * @covers ::getUrlIfValid
    */
-  public function testGetUrlIfValidWithFrontPageAndQueryAndFragments() {
+  public function testGetUrlIfValidWithFrontPageAndQueryAndFragments(): void {
     $url = $this->pathValidator->getUrlIfValid('<front>?hei=sen#berg');
     $this->assertEquals('<front>', $url->getRouteName());
     $this->assertEquals(['hei' => 'sen'], $url->getOptions()['query']);
@@ -423,7 +423,7 @@ class PathValidatorTest extends UnitTestCase {
    * @covers ::getUrlIfValidWithoutAccessCheck
    * @covers ::getPathAttributes
    */
-  public function testGetUrlIfValidWithoutAccessCheck() {
+  public function testGetUrlIfValidWithoutAccessCheck(): void {
     $this->account->expects($this->never())
       ->method('hasPermission')
       ->with('link to any page');

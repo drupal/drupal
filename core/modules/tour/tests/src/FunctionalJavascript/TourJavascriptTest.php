@@ -44,7 +44,7 @@ class TourJavascriptTest extends WebDriverTestBase {
   /**
    * Confirm the 'tips' and 'tour 'query arguments.
    */
-  public function testQueryArg() {
+  public function testQueryArg(): void {
     $assert_session = $this->assertSession();
 
     $this->drupalGet('tour-test-1');
@@ -73,7 +73,7 @@ class TourJavascriptTest extends WebDriverTestBase {
   /**
    * Tests stepping through a tour.
    */
-  public function testGeneralTourUse() {
+  public function testGeneralTourUse(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

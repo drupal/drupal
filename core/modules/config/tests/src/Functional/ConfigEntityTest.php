@@ -40,7 +40,7 @@ class ConfigEntityTest extends BrowserTestBase {
   /**
    * Tests CRUD operations.
    */
-  public function testCRUD() {
+  public function testCRUD(): void {
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     // Verify default properties on a newly created empty entity.
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');
@@ -227,7 +227,7 @@ class ConfigEntityTest extends BrowserTestBase {
   /**
    * Tests CRUD operations through the UI.
    */
-  public function testCrudUi() {
+  public function testCrudUi(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
     ]));

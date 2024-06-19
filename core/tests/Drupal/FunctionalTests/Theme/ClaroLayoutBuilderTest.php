@@ -71,7 +71,7 @@ class ClaroLayoutBuilderTest extends BrowserTestBase {
    *
    * @see claro.theme
    */
-  public function testContextualLinks() {
+  public function testContextualLinks(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

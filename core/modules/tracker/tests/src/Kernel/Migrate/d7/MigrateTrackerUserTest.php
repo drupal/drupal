@@ -46,7 +46,7 @@ class MigrateTrackerUserTest extends MigrateDrupalTestBase {
   /**
    * Tests migration of tracker user table.
    */
-  public function testMigrateTrackerUser() {
+  public function testMigrateTrackerUser(): void {
     $connection = Database::getConnection('default', 'migrate');
     $num_rows = $connection
       ->select('tracker_user', 'tn')

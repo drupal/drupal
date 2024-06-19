@@ -30,7 +30,7 @@ class PlainTextOutputTest extends TestCase {
    * @covers ::renderFromHtml
    * @dataProvider providerRenderFromHtml
    */
-  public function testRenderFromHtml($expected, $string, $args = []) {
+  public function testRenderFromHtml($expected, $string, $args = []): void {
     $markup = new FormattableMarkup($string, $args);
     $output = PlainTextOutput::renderFromHtml($markup);
     $this->assertSame($expected, $output);

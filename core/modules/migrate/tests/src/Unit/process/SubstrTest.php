@@ -30,7 +30,7 @@ class SubstrTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerTestSubstr
    */
-  public function testSubstr($start = NULL, $length = NULL, $expected = NULL) {
+  public function testSubstr($start = NULL, $length = NULL, $expected = NULL): void {
     $configuration['start'] = $start;
     $configuration['length'] = $length;
     $this->plugin = new Substr($configuration, 'map', []);
@@ -61,7 +61,7 @@ class SubstrTest extends MigrateProcessTestCase {
   /**
    * Tests invalid input type.
    */
-  public function testSubstrFail() {
+  public function testSubstrFail(): void {
     $configuration = [];
     $this->plugin = new Substr($configuration, 'map', []);
     $this->expectException(MigrateException::class);
@@ -72,7 +72,7 @@ class SubstrTest extends MigrateProcessTestCase {
   /**
    * Tests that the start parameter is an integer.
    */
-  public function testStartIsString() {
+  public function testStartIsString(): void {
     $configuration['start'] = '2';
     $this->plugin = new Substr($configuration, 'map', []);
     $this->expectException(MigrateException::class);
@@ -83,7 +83,7 @@ class SubstrTest extends MigrateProcessTestCase {
   /**
    * Tests that the length parameter is an integer.
    */
-  public function testLengthIsString() {
+  public function testLengthIsString(): void {
     $configuration['length'] = '1';
     $this->plugin = new Substr($configuration, 'map', []);
     $this->expectException(MigrateException::class);

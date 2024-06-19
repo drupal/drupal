@@ -20,7 +20,7 @@ class AnonymousUserSessionTest extends UnitTestCase {
    * @covers ::getRoles
    * @todo Move roles constants to a class/interface
    */
-  public function testUserGetRoles() {
+  public function testUserGetRoles(): void {
     $anonymous_user = new AnonymousUserSession();
     $this->assertEquals([RoleInterface::ANONYMOUS_ID], $anonymous_user->getRoles());
     $this->assertEquals([], $anonymous_user->getRoles(TRUE));

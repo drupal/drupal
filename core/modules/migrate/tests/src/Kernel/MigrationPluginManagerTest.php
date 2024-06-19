@@ -40,7 +40,7 @@ class MigrationPluginManagerTest extends MigrateTestBase {
    *
    * @dataProvider providerCreateInstanceByTag
    */
-  public function testCreateInstancesByTag($tags, $expected) {
+  public function testCreateInstancesByTag($tags, $expected): void {
     // The test module includes a migration that does not use the migration_tags
     // property. It is there to confirm that it is not included in the results.
     // We create it to ensure it is a valid migration.

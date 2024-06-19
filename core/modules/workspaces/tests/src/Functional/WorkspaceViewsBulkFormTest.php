@@ -44,7 +44,7 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest {
     $this->switchToWorkspace($stage);
   }
 
-  public function testBulkForm() {
+  public function testBulkForm(): void {
     // Ignore entity types that are not being tested, in order to fully re-use
     // the parent test method.
     $this->ignoreEntityType('view');

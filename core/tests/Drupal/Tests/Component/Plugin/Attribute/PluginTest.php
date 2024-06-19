@@ -17,7 +17,7 @@ class PluginTest extends TestCase {
    * @covers ::__construct
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     $plugin = new PluginStub(id: 'example', deriver: 'test');
     $plugin->setClass('foo');
     $this->assertEquals([
@@ -31,7 +31,7 @@ class PluginTest extends TestCase {
    * @covers ::setProvider
    * @covers ::getProvider
    */
-  public function testSetProvider() {
+  public function testSetProvider(): void {
     $plugin = new Plugin(id: 'example');
     $plugin->setProvider('example');
     $this->assertEquals('example', $plugin->getProvider());
@@ -40,7 +40,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::getId
    */
-  public function testGetId() {
+  public function testGetId(): void {
     $plugin = new Plugin(id: 'example');
     $this->assertEquals('example', $plugin->getId());
   }
@@ -49,7 +49,7 @@ class PluginTest extends TestCase {
    * @covers ::setClass
    * @covers ::getClass
    */
-  public function testSetClass() {
+  public function testSetClass(): void {
     $plugin = new Plugin(id: 'test');
     $plugin->setClass('example');
     $this->assertEquals('example', $plugin->getClass());

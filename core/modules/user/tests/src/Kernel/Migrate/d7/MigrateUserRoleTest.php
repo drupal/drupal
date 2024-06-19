@@ -47,7 +47,7 @@ class MigrateUserRoleTest extends MigrateDrupal7TestBase {
   /**
    * Tests user role migration.
    */
-  public function testUserRole() {
+  public function testUserRole(): void {
     $anonymous_permissions = ['access content'];
     $this->assertEntity('anonymous', 'anonymous user', $anonymous_permissions);
     $this->assertEntity('authenticated', 'authenticated user', $anonymous_permissions);

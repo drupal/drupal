@@ -59,7 +59,7 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
   /**
    * Tests processed properties.
    */
-  public function testCrudAndUpdate() {
+  public function testCrudAndUpdate(): void {
     $entity_type = 'entity_test';
     $this->createField($entity_type);
 

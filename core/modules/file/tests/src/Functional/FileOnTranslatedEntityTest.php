@@ -82,7 +82,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
   /**
    * Tests synced file fields on translated nodes.
    */
-  public function testSyncedFiles() {
+  public function testSyncedFiles(): void {
     // Verify that the file field on the "Basic page" node type is translatable.
     $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'page');
     $this->assertTrue($definitions[$this->fieldName]->isTranslatable(), 'Node file field is translatable.');
@@ -213,7 +213,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
   /**
    * Tests if file field tracks file usages correctly on translated nodes.
    */
-  public function testFileUsage() {
+  public function testFileUsage(): void {
     /** @var \Drupal\file\FileUsage\FileUsageInterface $file_usage */
     $file_usage = \Drupal::service('file.usage');
 

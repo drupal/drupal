@@ -50,7 +50,7 @@ class MigrateForumSettingsTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migration of Forum's settings to configuration.
    */
-  public function testForumSettingsMigration() {
+  public function testForumSettingsMigration(): void {
     $config = $this->config('forum.settings');
     $this->assertSame(9, $config->get('block.active.limit'));
     $this->assertSame(4, $config->get('block.new.limit'));

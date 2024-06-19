@@ -17,7 +17,7 @@ class LegacyExtensionTest extends UnitTestCase {
   /**
    * @covers ::__call
    */
-  public function testDeprecatedCall() {
+  public function testDeprecatedCall(): void {
     $extension = new Extension($this->root, 'theme', 'core/themes/stark/stark.info.yml', 'stark.theme');
     $file = $extension->getFileInfo();
     $this->expectDeprecation('Drupal\Core\Extension\Extension::__call(\'getCTime\') is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\Extension::getFileInfo() instead. See https://www.drupal.org/node/3322608');

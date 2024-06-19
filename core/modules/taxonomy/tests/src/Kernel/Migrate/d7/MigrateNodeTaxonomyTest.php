@@ -42,7 +42,7 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
   /**
    * Tests node migration from Drupal 7 to 8.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $node = Node::load(2);
     $this->assertInstanceOf(NodeInterface::class, $node);
     $this->assertEquals(9, $node->field_tags[0]->target_id);

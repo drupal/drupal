@@ -14,7 +14,7 @@ class UpdateLobTest extends DatabaseTestBase {
   /**
    * Confirms that we can update a blob column.
    */
-  public function testUpdateOneBlob() {
+  public function testUpdateOneBlob(): void {
     $data = "This is\000a test.";
     $this->assertSame(15, strlen($data), 'Test data contains a NULL.');
     $id = $this->connection->insert('test_one_blob')
@@ -34,7 +34,7 @@ class UpdateLobTest extends DatabaseTestBase {
   /**
    * Tests that we can update a blob column to null.
    */
-  public function testUpdateNullBlob() {
+  public function testUpdateNullBlob(): void {
     $id = $this->connection->insert('test_one_blob')
       ->fields(['blob1' => 'test'])
       ->execute();
@@ -52,7 +52,7 @@ class UpdateLobTest extends DatabaseTestBase {
   /**
    * Confirms that we can update two blob columns in the same table.
    */
-  public function testUpdateMultipleBlob() {
+  public function testUpdateMultipleBlob(): void {
     $id = $this->connection->insert('test_two_blobs')
       ->fields([
         'blob1' => 'This is',

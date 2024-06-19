@@ -42,7 +42,7 @@ class ViewTest extends UnitTestCase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDependencies() {
+  public function testCalculateDependencies(): void {
     /** @var \Drupal\views\Entity\View $view_this */
     /** @var \Drupal\views\Entity\View $view_other */
     $view_this = $this->createMock('Drupal\views\ViewEntityInterface');

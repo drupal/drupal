@@ -33,7 +33,7 @@ class NodePostSettingsTest extends NodeTestBase {
   /**
    * Confirms "Basic page" content type and post information is on a new node.
    */
-  public function testPagePostInfo() {
+  public function testPagePostInfo(): void {
 
     // Set "Basic page" content type to display post information.
     $edit = [];

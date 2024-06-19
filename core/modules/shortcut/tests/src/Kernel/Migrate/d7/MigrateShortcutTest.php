@@ -65,7 +65,7 @@ class MigrateShortcutTest extends MigrateDrupal7TestBase {
   /**
    * Tests the shortcut migration.
    */
-  public function testShortcutMigration() {
+  public function testShortcutMigration(): void {
     // Check if the 4 shortcuts were migrated correctly.
     $this->assertEntity(1, 'Add content', -20, '/node/add');
     $this->assertEntity(2, 'Find content', -19, '/admin/content');

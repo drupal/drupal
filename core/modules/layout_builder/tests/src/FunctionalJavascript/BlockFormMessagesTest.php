@@ -48,7 +48,7 @@ class BlockFormMessagesTest extends WebDriverTestBase {
   /**
    * Tests that validation messages are shown on the block form.
    */
-  public function testValidationMessage() {
+  public function testValidationMessage(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

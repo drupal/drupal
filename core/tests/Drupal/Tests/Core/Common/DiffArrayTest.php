@@ -60,7 +60,7 @@ class DiffArrayTest extends UnitTestCase {
   /**
    * Tests DiffArray::diffAssocRecursive().
    */
-  public function testDiffAssocRecursive() {
+  public function testDiffAssocRecursive(): void {
     $expected = [
       'different' => 'no',
       'int_diff' => 1,

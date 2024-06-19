@@ -22,7 +22,7 @@ class DependencyTest extends ModuleTestBase {
   /**
    * Tests attempting to uninstall a module that has installed dependents.
    */
-  public function testUninstallDependents() {
+  public function testUninstallDependents(): void {
     // Enable the forum module.
     $edit = ['modules[forum][enable]' => 'forum'];
     $this->drupalGet('admin/modules');

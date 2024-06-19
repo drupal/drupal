@@ -25,7 +25,7 @@ class BatchKernelTest extends KernelTestBase {
   /**
    * Tests _batch_needs_update().
    */
-  public function testNeedsUpdate() {
+  public function testNeedsUpdate(): void {
     // Before ever being called, the return value should be FALSE.
     $this->assertEquals(FALSE, _batch_needs_update());
 

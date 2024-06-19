@@ -28,7 +28,7 @@ class ViewsFormTest extends ViewTestBase {
   /**
    * Tests the Views form wrapper.
    */
-  public function testFormWrapper() {
+  public function testFormWrapper(): void {
     $this->drupalGet('test_bulk_form');
     // Ensure we have the form tag on the page.
     $xpath = $this->cssSelect('.views-form form');

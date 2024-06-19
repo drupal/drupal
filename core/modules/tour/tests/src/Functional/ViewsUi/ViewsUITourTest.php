@@ -56,7 +56,7 @@ class ViewsUITourTest extends TourTestBase {
   /**
    * Tests views_ui tour tip availability.
    */
-  public function testViewsUiTourTips() {
+  public function testViewsUiTourTips(): void {
     // Create a basic view that shows all content, with a page and a block
     // display.
     $view['label'] = $this->randomMachineName(16);
@@ -71,7 +71,7 @@ class ViewsUITourTest extends TourTestBase {
   /**
    * Tests views_ui tour tip availability in a different language.
    */
-  public function testViewsUiTourTipsTranslated() {
+  public function testViewsUiTourTipsTranslated(): void {
     $langcode = 'nl';
 
     // Add a default locale storage for this test.

@@ -46,7 +46,7 @@ class RestExportTest extends ViewsKernelTestBase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponse() {
+  public function testBuildResponse(): void {
     /** @var \Drupal\views\Entity\View $view */
     $view = View::load('test_serializer_display_entity');
     $display = &$view->getDisplay('rest_export_1');

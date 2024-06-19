@@ -37,7 +37,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    *
    * @covers ::process
    */
-  public function testProcess() {
+  public function testProcess(): void {
     // Add a container with no set default_backend.
     $prefix = __NAMESPACE__ . '\\ServiceClass';
     $service = (new Definition($prefix . 'Default'))->addTag('backend_overridable');

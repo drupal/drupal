@@ -36,7 +36,7 @@ class TermContextTest extends KernelTestBase {
   /**
    * @covers ::getAvailableContexts
    */
-  public function testGetAvailableContexts() {
+  public function testGetAvailableContexts(): void {
     $context_repository = $this->container->get('context.repository');
 
     // Test taxonomy_term.taxonomy_term_route_context:taxonomy_term exists.
@@ -49,7 +49,7 @@ class TermContextTest extends KernelTestBase {
   /**
    * @covers ::getRuntimeContexts
    */
-  public function testGetRuntimeContexts() {
+  public function testGetRuntimeContexts(): void {
     // Create term.
     $vocabulary = $this->createVocabulary();
     $term = $this->createTerm($vocabulary);

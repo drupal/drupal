@@ -26,7 +26,7 @@ class KernelMissingDependentModuleMethodTest extends KernelTestBase {
    *
    * @requires module module_does_not_exist
    */
-  public function testRequiresModule() {
+  public function testRequiresModule(): void {
     $this->fail('Running test with missing required module.');
   }
 

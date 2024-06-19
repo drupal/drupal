@@ -24,7 +24,7 @@ class StyleTest extends CKEditor5TestBase {
   /**
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style::buildConfigurationForm
    */
-  public function testStyleSettingsForm() {
+  public function testStyleSettingsForm(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer filters']));
 
     $page = $this->getSession()->getPage();
@@ -151,7 +151,7 @@ JS;
   /**
    * Tests Style functionality: setting a class, expected style choices.
    */
-  public function testStyleFunctionality() {
+  public function testStyleFunctionality(): void {
     FilterFormat::create([
       'format' => 'test_format',
       'name' => 'Test format',

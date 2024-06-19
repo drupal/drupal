@@ -18,7 +18,7 @@ class DependencyTest extends UnitTestCase {
    * @covers ::createFromString
    * @dataProvider providerCreateFromString
    */
-  public function testCreateFromString($string, $expected_name, $expected_project, $expected_constraint) {
+  public function testCreateFromString($string, $expected_name, $expected_project, $expected_constraint): void {
     $dependency = Dependency::createFromString($string);
     $this->assertSame($expected_name, $dependency->getName());
     $this->assertSame($expected_project, $dependency->getProject());
@@ -40,7 +40,7 @@ class DependencyTest extends UnitTestCase {
   /**
    * @covers ::isCompatible
    */
-  public function testIsCompatible() {
+  public function testIsCompatible(): void {
     $dependency = new Dependency('paragraphs_demo', 'paragraphs', '>8.x-1.1');
     $this->assertFalse($dependency->isCompatible('1.1'));
     $this->assertTrue($dependency->isCompatible('1.2'));
@@ -51,7 +51,7 @@ class DependencyTest extends UnitTestCase {
    *
    * @covers ::__sleep
    */
-  public function testSerialization() {
+  public function testSerialization(): void {
     $dependency = new Dependency('paragraphs_demo', 'paragraphs', '>8.x-1.1');
     $this->assertTrue($dependency->isCompatible('1.2'));
     $reflected_constraint = (new \ReflectionObject($dependency))->getProperty('constraint');

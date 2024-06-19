@@ -14,7 +14,7 @@ class SelectOrderedTest extends DatabaseTestBase {
   /**
    * Tests basic ORDER BY.
    */
-  public function testSimpleSelectOrdered() {
+  public function testSimpleSelectOrdered(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
@@ -36,7 +36,7 @@ class SelectOrderedTest extends DatabaseTestBase {
   /**
    * Tests multiple ORDER BY.
    */
-  public function testSimpleSelectMultiOrdered() {
+  public function testSimpleSelectMultiOrdered(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
@@ -67,7 +67,7 @@ class SelectOrderedTest extends DatabaseTestBase {
   /**
    * Tests ORDER BY descending.
    */
-  public function testSimpleSelectOrderedDesc() {
+  public function testSimpleSelectOrderedDesc(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');

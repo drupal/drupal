@@ -35,7 +35,7 @@ class RendererBubblingTest extends RendererTestBase {
   /**
    * Tests bubbling of assets when NOT using #pre_render callbacks.
    */
-  public function testBubblingWithoutPreRender() {
+  public function testBubblingWithoutPreRender(): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
 
@@ -79,7 +79,7 @@ class RendererBubblingTest extends RendererTestBase {
   /**
    * Tests cache context bubbling with a custom cache bin.
    */
-  public function testContextBubblingCustomCacheBin() {
+  public function testContextBubblingCustomCacheBin(): void {
     $bin = $this->randomMachineName();
 
     $this->setUpRequest();
@@ -135,7 +135,7 @@ class RendererBubblingTest extends RendererTestBase {
    *
    * @dataProvider providerTestContextBubblingEdgeCases
    */
-  public function testContextBubblingEdgeCases(array $element, array $expected_top_level_contexts, $expected_cache_item) {
+  public function testContextBubblingEdgeCases(array $element, array $expected_top_level_contexts, $expected_cache_item): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
     $this->cacheContextsManager->expects($this->any())
@@ -314,7 +314,7 @@ class RendererBubblingTest extends RendererTestBase {
    * @todo Revisit now that we have self-healing tests for VariationCache. This
    * is essentially a clone of the other bubbling tests now.
    */
-  public function testConditionalCacheContextBubblingSelfHealing() {
+  public function testConditionalCacheContextBubblingSelfHealing(): void {
     $current_user_role = &$this->currentUserRole;
 
     $this->setUpRequest();
@@ -445,7 +445,7 @@ class RendererBubblingTest extends RendererTestBase {
    *
    * @dataProvider providerTestBubblingWithPrerender
    */
-  public function testBubblingWithPrerender($test_element) {
+  public function testBubblingWithPrerender($test_element): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
 
@@ -529,7 +529,7 @@ class RendererBubblingTest extends RendererTestBase {
   /**
    * Tests that an element's cache keys cannot be changed during its rendering.
    */
-  public function testOverWriteCacheKeys() {
+  public function testOverWriteCacheKeys(): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
 

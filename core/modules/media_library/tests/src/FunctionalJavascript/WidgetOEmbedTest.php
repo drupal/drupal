@@ -51,7 +51,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
   /**
    * Tests that oEmbed media can be added in the Media library's widget.
    */
-  public function testWidgetOEmbed() {
+  public function testWidgetOEmbed(): void {
     $this->hijackProviderEndpoints();
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
@@ -238,7 +238,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
    * @todo Merge this with testWidgetOEmbed() in
    *   https://www.drupal.org/project/drupal/issues/3087227
    */
-  public function testWidgetOEmbedAdvancedUi() {
+  public function testWidgetOEmbedAdvancedUi(): void {
     $this->config('media_library.settings')->set('advanced_ui', TRUE)->save();
 
     $this->hijackProviderEndpoints();

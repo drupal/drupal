@@ -57,7 +57,7 @@ class BlockRegionTest extends UnitTestCase {
    *
    * @covers ::transform
    */
-  public function testTransformSameThemeRegionExists() {
+  public function testTransformSameThemeRegionExists(): void {
     $this->assertSame('triptych_second', $this->transform(['bartik', 'bartik', 'triptych_middle']));
   }
 
@@ -69,7 +69,7 @@ class BlockRegionTest extends UnitTestCase {
    *
    * @covers ::transform
    */
-  public function testTransformSameThemeRegionNotExists() {
+  public function testTransformSameThemeRegionNotExists(): void {
     $this->assertSame('content', $this->transform(['bartik', 'bartik', 'footer']));
   }
 

@@ -24,7 +24,7 @@ class DefaultConfigTest extends UnitTestCase {
    * that were never installed. The default configuration of such extensions
    * would not exist. Installation hooks would never be executed.
    */
-  public function testConfigIsEmpty() {
+  public function testConfigIsEmpty(): void {
     $config = Yaml::parse(file_get_contents($this->root . '/core/config/install/core.extension.yml'));
     $expected = [
       'module' => [],

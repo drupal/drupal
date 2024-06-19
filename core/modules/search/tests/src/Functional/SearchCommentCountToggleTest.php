@@ -92,7 +92,7 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
   /**
    * Verify that comment count display toggles properly on comment status of node.
    */
-  public function testSearchCommentCountToggle() {
+  public function testSearchCommentCountToggle(): void {
     // Search for the nodes by string in the node body.
     $edit = [
       'keys' => "'SearchCommentToggleTestCase'",

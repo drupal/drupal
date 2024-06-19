@@ -50,7 +50,7 @@ class PostgreSqlSequenceUpdateTest extends UpdatePathTestBase {
   /**
    * Asserts that a newly created sequence has the correct ownership.
    */
-  public function testPostgreSqlSequenceUpdate() {
+  public function testPostgreSqlSequenceUpdate(): void {
     $this->assertFalse($this->getSequenceOwner('pgsql_sequence_test', 'sequence_field'));
 
     // Run the updates.

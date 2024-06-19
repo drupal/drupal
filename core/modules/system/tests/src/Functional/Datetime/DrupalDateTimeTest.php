@@ -40,7 +40,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
    * help ensure that the system timezone will be different than the
    * stated timezones.
    */
-  public function testDateTimezone() {
+  public function testDateTimezone(): void {
     $date_string = '2007-01-31 21:00:00';
 
     // Make sure no site timezone has been set.
@@ -96,7 +96,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
   /**
    * Tests the ability to override the time zone in the format method.
    */
-  public function testTimezoneFormat() {
+  public function testTimezoneFormat(): void {
     // Create a date in UTC
     $date = DrupalDateTime::createFromTimestamp(87654321, 'UTC');
 

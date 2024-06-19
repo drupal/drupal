@@ -24,7 +24,7 @@ class FieldLanguageTest extends LanguageTestBase {
   /**
    * Tests the language field.
    */
-  public function testField() {
+  public function testField(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('fields', [

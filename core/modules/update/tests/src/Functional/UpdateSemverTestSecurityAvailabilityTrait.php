@@ -23,7 +23,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
    *
    * @dataProvider securityUpdateAvailabilityProvider
    */
-  public function testSecurityUpdateAvailability($site_patch_version, array $expected_security_releases, $expected_update_message_type, $fixture) {
+  public function testSecurityUpdateAvailability($site_patch_version, array $expected_security_releases, $expected_update_message_type, $fixture): void {
     $this->setProjectInstalledVersion("8.$site_patch_version");
     $this->refreshUpdateStatus([$this->updateProject => $fixture]);
     $this->assertSecurityUpdates("{$this->updateProject}-8", $expected_security_releases, $expected_update_message_type, $this->updateTableLocator);

@@ -59,7 +59,7 @@ class MatcherDumperTest extends KernelTestBase {
   /**
    * Confirms that the dumper can be instantiated successfully.
    */
-  public function testCreate() {
+  public function testCreate(): void {
     $connection = Database::getConnection();
     $dumper = new MatcherDumper($connection, $this->state, $this->logger);
 
@@ -70,7 +70,7 @@ class MatcherDumperTest extends KernelTestBase {
   /**
    * Confirms that we can add routes to the dumper.
    */
-  public function testAddRoutes() {
+  public function testAddRoutes(): void {
     $connection = Database::getConnection();
     $dumper = new MatcherDumper($connection, $this->state, $this->logger);
 
@@ -91,7 +91,7 @@ class MatcherDumperTest extends KernelTestBase {
   /**
    * Confirms that we can add routes to the dumper when it already has some.
    */
-  public function testAddAdditionalRoutes() {
+  public function testAddAdditionalRoutes(): void {
     $connection = Database::getConnection();
     $dumper = new MatcherDumper($connection, $this->state, $this->logger);
 
@@ -119,7 +119,7 @@ class MatcherDumperTest extends KernelTestBase {
   /**
    * Confirm that we can dump a route collection to the database.
    */
-  public function testDump() {
+  public function testDump(): void {
     $connection = Database::getConnection();
     $dumper = new MatcherDumper($connection, $this->state, $this->logger, 'test_routes');
 
@@ -154,7 +154,7 @@ class MatcherDumperTest extends KernelTestBase {
   /**
    * Tests the determination of the masks generation.
    */
-  public function testMenuMasksGeneration() {
+  public function testMenuMasksGeneration(): void {
     $connection = Database::getConnection();
     $dumper = new MatcherDumper($connection, $this->state, $this->logger, 'test_routes');
 

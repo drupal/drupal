@@ -63,7 +63,7 @@ class ModerationInformationTest extends KernelTestBase {
   /**
    * @covers ::getDefaultRevisionId
    */
-  public function testGetDefaultRevisionId() {
+  public function testGetDefaultRevisionId(): void {
     $entity_test_rev = EntityTestRev::create([
       'name' => 'Default Revision',
       'moderation_state' => 'published',
@@ -84,7 +84,7 @@ class ModerationInformationTest extends KernelTestBase {
    * @covers ::isDefaultRevisionPublished
    * @dataProvider isDefaultRevisionPublishedTestCases
    */
-  public function testIsDefaultRevisionPublished($initial_state, $final_state, $initial_is_default_published, $final_is_default_published) {
+  public function testIsDefaultRevisionPublished($initial_state, $final_state, $initial_is_default_published, $final_is_default_published): void {
     $entity = EntityTestMulRevPub::create([
       'moderation_state' => $initial_state,
     ]);
@@ -131,7 +131,7 @@ class ModerationInformationTest extends KernelTestBase {
   /**
    * @covers ::isDefaultRevisionPublished
    */
-  public function testIsDefaultRevisionPublishedMultilingual() {
+  public function testIsDefaultRevisionPublishedMultilingual(): void {
     $entity = EntityTestMulRevPub::create([
       'moderation_state' => 'draft',
     ]);
@@ -153,7 +153,7 @@ class ModerationInformationTest extends KernelTestBase {
   /**
    * @covers ::hasPendingRevision
    */
-  public function testHasPendingRevision() {
+  public function testHasPendingRevision(): void {
     $entity = EntityTestMulRevPub::create([
       'moderation_state' => 'published',
     ]);
@@ -184,7 +184,7 @@ class ModerationInformationTest extends KernelTestBase {
   /**
    * @covers ::getOriginalState
    */
-  public function testGetOriginalState() {
+  public function testGetOriginalState(): void {
     $entity = EntityTestMulRevPub::create([
       'moderation_state' => 'published',
     ]);
@@ -196,7 +196,7 @@ class ModerationInformationTest extends KernelTestBase {
   /**
    * @covers ::getOriginalState
    */
-  public function testGetOriginalStateMultilingual() {
+  public function testGetOriginalStateMultilingual(): void {
     $entity = EntityTestMulRevPub::create([
       'moderation_state' => 'draft',
     ]);

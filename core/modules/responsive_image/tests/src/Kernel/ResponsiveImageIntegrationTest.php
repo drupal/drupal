@@ -42,7 +42,7 @@ class ResponsiveImageIntegrationTest extends KernelTestBase {
   /**
    * Tests integration with entity view display.
    */
-  public function testEntityViewDisplayDependency() {
+  public function testEntityViewDisplayDependency(): void {
     // Create a responsive image style.
     ResponsiveImageStyle::create([
       'id' => 'foo',

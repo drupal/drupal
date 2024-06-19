@@ -22,7 +22,7 @@ class UserPermissionsAdminTest extends BrowserTestBase {
   /**
    * Tests granting and revoking permissions via the UI sorts permissions.
    */
-  public function testPermissionsSorting() {
+  public function testPermissionsSorting(): void {
     $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
     // Start the role with a permission that is near the end of the alphabet.
     $role->grantPermission('view user email addresses');

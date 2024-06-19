@@ -51,7 +51,7 @@ class FileSystemTest extends UnitTestCase {
   /**
    * @covers ::chmod
    */
-  public function testChmodFile() {
+  public function testChmodFile(): void {
     vfsStream::setup('dir');
     vfsStream::create(['test.txt' => 'asdf']);
     $uri = 'vfs://dir/test.txt';
@@ -65,7 +65,7 @@ class FileSystemTest extends UnitTestCase {
   /**
    * @covers ::chmod
    */
-  public function testChmodDir() {
+  public function testChmodDir(): void {
     vfsStream::setup('dir');
     vfsStream::create(['nested_dir' => []]);
     $uri = 'vfs://dir/nested_dir';
@@ -79,7 +79,7 @@ class FileSystemTest extends UnitTestCase {
   /**
    * @covers ::chmod
    */
-  public function testChmodUnsuccessful() {
+  public function testChmodUnsuccessful(): void {
     vfsStream::setup('dir');
     $this->assertFalse($this->fileSystem->chmod('vfs://dir/test.txt'));
   }
@@ -87,7 +87,7 @@ class FileSystemTest extends UnitTestCase {
   /**
    * @covers ::unlink
    */
-  public function testUnlink() {
+  public function testUnlink(): void {
     vfsStream::setup('dir');
     vfsStream::create(['test.txt' => 'asdf']);
     $uri = 'vfs://dir/test.txt';
@@ -106,7 +106,7 @@ class FileSystemTest extends UnitTestCase {
    *
    * @dataProvider providerTestBasename
    */
-  public function testBasename($uri, $expected, $suffix = NULL) {
+  public function testBasename($uri, $expected, $suffix = NULL): void {
     $this->assertSame($expected, $this->fileSystem->basename($uri, $suffix));
   }
 
@@ -151,7 +151,7 @@ class FileSystemTest extends UnitTestCase {
    *
    * @covers ::createFilename
    */
-  public function testInvalidUTF8() {
+  public function testInvalidUTF8(): void {
     vfsStream::setup('dir');
     // cspell:disable-next-line
     $filename = "a\xFFsdf\x80€" . '.txt';

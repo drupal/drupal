@@ -49,7 +49,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests omission of module APIs for bare configuration operations.
    */
-  public function testNoImport() {
+  public function testNoImport(): void {
     $dynamic_name = 'config_test.dynamic.dotted.default';
 
     // Verify the default configuration values exist.
@@ -63,7 +63,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that trying to import from empty sync configuration directory fails.
    */
-  public function testEmptyImportFails() {
+  public function testEmptyImportFails(): void {
     $this->expectException(ConfigImporterException::class);
     $this->container->get('config.storage.sync')->deleteAll();
     $this->configImporter()->import();
@@ -72,7 +72,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests verification of site UUID before importing configuration.
    */
-  public function testSiteUuidValidate() {
+  public function testSiteUuidValidate(): void {
     $sync = \Drupal::service('config.storage.sync');
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();
@@ -102,7 +102,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests deletion of configuration during import.
    */
-  public function testDeleted() {
+  public function testDeleted(): void {
     $dynamic_name = 'config_test.dynamic.dotted.default';
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
@@ -140,7 +140,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests creation of configuration during import.
    */
-  public function testNew() {
+  public function testNew(): void {
     $dynamic_name = 'config_test.dynamic.new';
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
@@ -195,7 +195,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary writes are overwritten.
    */
-  public function testSecondaryWritePrimaryFirst() {
+  public function testSecondaryWritePrimaryFirst(): void {
     $name_primary = 'config_test.dynamic.primary';
     $name_secondary = 'config_test.dynamic.secondary';
     $sync = $this->container->get('config.storage.sync');
@@ -242,7 +242,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary writes are overwritten.
    */
-  public function testSecondaryWriteSecondaryFirst() {
+  public function testSecondaryWriteSecondaryFirst(): void {
     $name_primary = 'config_test.dynamic.primary';
     $name_secondary = 'config_test.dynamic.secondary';
     $sync = $this->container->get('config.storage.sync');
@@ -289,7 +289,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary updates for deleted files work as expected.
    */
-  public function testSecondaryUpdateDeletedParentFirst() {
+  public function testSecondaryUpdateDeletedParentFirst(): void {
     $name_dependency = 'config_test.dynamic.dependency';
     $name_dependent = 'config_test.dynamic.dependent';
     $name_other = 'config_test.dynamic.other';
@@ -376,7 +376,7 @@ class ConfigImporterTest extends KernelTestBase {
    * configuration tree imports. Therefore, any configuration updates that cause
    * secondary deletes should be reflected already in the staged configuration.
    */
-  public function testSecondaryUpdateDeletedChildFirst() {
+  public function testSecondaryUpdateDeletedChildFirst(): void {
     $name_dependency = 'config_test.dynamic.dependency';
     $name_dependent = 'config_test.dynamic.dependent';
     $storage = $this->container->get('config.storage');
@@ -423,7 +423,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that secondary deletes for deleted files work as expected.
    */
-  public function testSecondaryDeletedChildSecond() {
+  public function testSecondaryDeletedChildSecond(): void {
     $name_dependency = 'config_test.dynamic.dependency';
     $name_dependent = 'config_test.dynamic.dependent';
     $storage = $this->container->get('config.storage');
@@ -466,7 +466,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests updating of configuration during import.
    */
-  public function testUpdated() {
+  public function testUpdated(): void {
     $name = 'config_test.system';
     $dynamic_name = 'config_test.dynamic.dotted.default';
     $storage = $this->container->get('config.storage');
@@ -524,7 +524,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests the isInstallable method()
    */
-  public function testIsInstallable() {
+  public function testIsInstallable(): void {
     $config_name = 'config_test.dynamic.isinstallable';
     $this->assertFalse($this->container->get('config.storage')->exists($config_name));
     \Drupal::state()->set('config_test.isinstallable', TRUE);
@@ -538,7 +538,7 @@ class ConfigImporterTest extends KernelTestBase {
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    * @see \Drupal\Core\Config\ConfigImporter::createExtensionChangelist()
    */
-  public function testUnmetDependency() {
+  public function testUnmetDependency(): void {
     $storage = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
 
@@ -650,7 +650,7 @@ class ConfigImporterTest extends KernelTestBase {
    *
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
-  public function testMissingCoreExtension() {
+  public function testMissingCoreExtension(): void {
     $sync = $this->container->get('config.storage.sync');
     $sync->delete('core.extension');
     $config_importer = $this->configImporter();
@@ -671,7 +671,7 @@ class ConfigImporterTest extends KernelTestBase {
    *
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
-  public function testRequiredModuleValidation() {
+  public function testRequiredModuleValidation(): void {
     $sync = $this->container->get('config.storage.sync');
 
     $extensions = $sync->read('core.extension');
@@ -695,7 +695,7 @@ class ConfigImporterTest extends KernelTestBase {
    *
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
-  public function testInstallBaseAndSubThemes() {
+  public function testInstallBaseAndSubThemes(): void {
     $sync = $this->container->get('config.storage.sync');
     $extensions = $sync->read('core.extension');
     $extensions['theme']['test_basetheme'] = 0;
@@ -726,7 +726,7 @@ class ConfigImporterTest extends KernelTestBase {
    *
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
-  public function testInstallProfile() {
+  public function testInstallProfile(): void {
     $sync = $this->container->get('config.storage.sync');
 
     $extensions = $sync->read('core.extension');
@@ -753,7 +753,7 @@ class ConfigImporterTest extends KernelTestBase {
    *
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
-  public function testInstallProfileMisMatch() {
+  public function testInstallProfileMisMatch(): void {
     // Install profiles can not be changed. They can only be uninstalled. We
     // need to set an install profile prior to testing because KernelTestBase
     // tests do not use one.
@@ -781,7 +781,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests the isSyncing flags.
    */
-  public function testIsSyncingInHooks() {
+  public function testIsSyncingInHooks(): void {
     $dynamic_name = 'config_test.dynamic.dotted.default';
     $storage = $this->container->get('config.storage');
 
@@ -880,7 +880,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that the isConfigSyncing flag is cleanup after an invalid step.
    */
-  public function testInvalidStep() {
+  public function testInvalidStep(): void {
     $this->assertFalse(\Drupal::isConfigSyncing(), 'Before an import \Drupal::isConfigSyncing() returns FALSE');
     $context = [];
     $config_importer = $this->configImporter();
@@ -897,7 +897,7 @@ class ConfigImporterTest extends KernelTestBase {
   /**
    * Tests that the isConfigSyncing flag is set correctly during a custom step.
    */
-  public function testCustomStep() {
+  public function testCustomStep(): void {
     $this->assertFalse(\Drupal::isConfigSyncing(), 'Before an import \Drupal::isConfigSyncing() returns FALSE');
     $context = [];
     $this->configImporter()->doSyncStep(self::customStep(...), $context);

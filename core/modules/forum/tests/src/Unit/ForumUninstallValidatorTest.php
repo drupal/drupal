@@ -34,7 +34,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNotForum() {
+  public function testValidateNotForum(): void {
     $this->forumUninstallValidator->expects($this->never())
       ->method('hasForumNodes');
     $this->forumUninstallValidator->expects($this->never())
@@ -51,7 +51,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidate() {
+  public function testValidate(): void {
     $this->forumUninstallValidator->expects($this->once())
       ->method('hasForumNodes')
       ->willReturn(FALSE);
@@ -74,7 +74,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateHasForumNodes() {
+  public function testValidateHasForumNodes(): void {
     $this->forumUninstallValidator->expects($this->once())
       ->method('hasForumNodes')
       ->willReturn(TRUE);
@@ -99,7 +99,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateHasTermsForVocabularyWithNodesAccess() {
+  public function testValidateHasTermsForVocabularyWithNodesAccess(): void {
     $this->forumUninstallValidator->expects($this->once())
       ->method('hasForumNodes')
       ->willReturn(TRUE);
@@ -137,7 +137,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateHasTermsForVocabularyWithNodesNoAccess() {
+  public function testValidateHasTermsForVocabularyWithNodesNoAccess(): void {
     $this->forumUninstallValidator->expects($this->once())
       ->method('hasForumNodes')
       ->willReturn(TRUE);
@@ -171,7 +171,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateHasTermsForVocabularyAccess() {
+  public function testValidateHasTermsForVocabularyAccess(): void {
     $this->forumUninstallValidator->expects($this->once())
       ->method('hasForumNodes')
       ->willReturn(FALSE);
@@ -208,7 +208,7 @@ class ForumUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateHasTermsForVocabularyNoAccess() {
+  public function testValidateHasTermsForVocabularyNoAccess(): void {
     $this->forumUninstallValidator->expects($this->once())
       ->method('hasForumNodes')
       ->willReturn(FALSE);

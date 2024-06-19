@@ -44,7 +44,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
   /**
    * Tests the media actions (add/edit/delete).
    */
-  public function testMediaWithOnlyOneMediaType() {
+  public function testMediaWithOnlyOneMediaType(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();
@@ -167,7 +167,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    * Tests if the "media/add" page gives you a selecting option if there are
    * multiple media types available.
    */
-  public function testMediaWithMultipleMediaTypes() {
+  public function testMediaWithMultipleMediaTypes(): void {
     $assert_session = $this->assertSession();
 
     // Tests and creates the first media type.
@@ -190,7 +190,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
   /**
    * Tests that media in ER fields use the Rendered Entity formatter by default.
    */
-  public function testRenderedEntityReferencedMedia() {
+  public function testRenderedEntityReferencedMedia(): void {
     $assert_session = $this->assertSession();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
@@ -203,7 +203,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
   /**
    * Tests the redirect URL after creating a media item.
    */
-  public function testMediaCreateRedirect() {
+  public function testMediaCreateRedirect(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();
@@ -247,7 +247,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
   /**
    * Tests the media collection route.
    */
-  public function testMediaCollectionRoute() {
+  public function testMediaCollectionRoute(): void {
     /** @var \Drupal\Core\Entity\EntityStorageInterface $media_storage */
     $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
 

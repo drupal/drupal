@@ -66,7 +66,7 @@ class TextareaWithSummaryTest extends WebDriverTestBase {
   /**
    * Tests the textSummary javascript behavior.
    */
-  public function testTextSummaryBehavior() {
+  public function testTextSummaryBehavior(): void {
     // Test with field defaults.
     $this->assertSummaryToggle();
 
@@ -104,7 +104,7 @@ class TextareaWithSummaryTest extends WebDriverTestBase {
   /**
    * Tests that the textSummary behavior is not run for required summary fields.
    */
-  public function testTextSummaryRequiredBehavior() {
+  public function testTextSummaryRequiredBehavior(): void {
     // Test with field defaults.
     $this->assertSummaryToggle();
 

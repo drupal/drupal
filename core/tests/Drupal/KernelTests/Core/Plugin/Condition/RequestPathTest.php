@@ -79,7 +79,7 @@ class RequestPathTest extends KernelTestBase {
   /**
    * Tests the request path condition.
    */
-  public function testConditions() {
+  public function testConditions(): void {
 
     // Get the request path condition and test and configure it to check against
     // different patterns and requests.

@@ -53,7 +53,7 @@ class MigrateControllerTest extends BrowserTestBase {
   /**
    * Tests the upgrade report with the view enabled, disabled and uninstalled.
    */
-  public function testUpgradeReport() {
+  public function testUpgradeReport(): void {
     $session = $this->assertSession();
 
     $this->assertTrue(View::load('watchdog')->status(), 'Watchdog view is enabled');

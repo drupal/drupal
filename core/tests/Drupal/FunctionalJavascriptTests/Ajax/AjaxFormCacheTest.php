@@ -27,7 +27,7 @@ class AjaxFormCacheTest extends WebDriverTestBase {
   /**
    * Tests the usage of form cache for AJAX forms.
    */
-  public function testFormCacheUsage() {
+  public function testFormCacheUsage(): void {
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable */
     $key_value_expirable = \Drupal::service('keyvalue.expirable')->get('form');
     $this->drupalLogin($this->rootUser);
@@ -48,7 +48,7 @@ class AjaxFormCacheTest extends WebDriverTestBase {
   /**
    * Tests AJAX forms in blocks.
    */
-  public function testBlockForms() {
+  public function testBlockForms(): void {
     $this->container->get('module_installer')->install(['block', 'search']);
     $this->rebuildContainer();
     $this->drupalLogin($this->rootUser);
@@ -83,7 +83,7 @@ class AjaxFormCacheTest extends WebDriverTestBase {
   /**
    * Tests AJAX forms on pages with a query string.
    */
-  public function testQueryString() {
+  public function testQueryString(): void {
     $this->container->get('module_installer')->install(['block']);
     $this->drupalLogin($this->rootUser);
 

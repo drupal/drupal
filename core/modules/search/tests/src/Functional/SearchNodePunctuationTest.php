@@ -52,7 +52,7 @@ class SearchNodePunctuationTest extends BrowserTestBase {
   /**
    * Tests that search works with punctuation and HTML entities.
    */
-  public function testPhraseSearchPunctuation() {
+  public function testPhraseSearchPunctuation(): void {
     $node = $this->drupalCreateNode(['body' => [['value' => "The bunny's ears were fluffy."]]]);
     // cSpell:disable-next-line
     $this->drupalCreateNode(['body' => [['value' => 'Dignissim Aliquam &amp; Quieligo meus natu quae quia te. Damnum&copy; erat&mdash; neo pneum. Facilisi feugiat ibidem ratis.']]]);

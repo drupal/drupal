@@ -39,7 +39,7 @@ class FilterBooleanOperatorDefaultTest extends ViewsKernelTestBase {
   /**
    * Tests the queryOpBoolean() with default operator.
    */
-  public function testFilterBooleanOperatorDefault() {
+  public function testFilterBooleanOperatorDefault(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

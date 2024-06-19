@@ -32,7 +32,7 @@ class DestinationTest extends BrowserTestBase {
   /**
    * Tests that $_GET/$_REQUEST['destination'] only contain internal URLs.
    */
-  public function testDestination() {
+  public function testDestination(): void {
     $http_client = $this->getHttpClient();
     $session = $this->getSession();
 

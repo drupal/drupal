@@ -27,7 +27,7 @@ class MenuLinkSecurityTest extends BrowserTestBase {
   /**
    * Ensures that a menu link does not cause an XSS issue.
    */
-  public function testMenuLink() {
+  public function testMenuLink(): void {
     $menu_link_content = MenuLinkContent::create([
       'title' => '<script>alert("Wild animals")</script>',
       'menu_name' => 'tools',

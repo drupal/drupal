@@ -36,7 +36,7 @@ class DateTimeWidgetTest extends DateTestBase {
   /**
    * Test default value functionality.
    */
-  public function testDateOnlyDefaultValue() {
+  public function testDateOnlyDefaultValue(): void {
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_only_content']);
 

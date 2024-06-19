@@ -78,7 +78,7 @@ class EntityRepositoryTest extends KernelTestBase {
    * @covers ::getActive
    * @covers ::getActiveMultiple
    */
-  public function testGetActive() {
+  public function testGetActive(): void {
     $en_contexts = $this->getLanguageContexts('en');
 
     // Check that when the entity does not exist NULL is returned.
@@ -211,7 +211,7 @@ class EntityRepositoryTest extends KernelTestBase {
    * @covers ::getCanonical
    * @covers ::getCanonicalMultiple
    */
-  public function testGetCanonical() {
+  public function testGetCanonical(): void {
     // Check that when the entity does not exist NULL is returned.
     $entity_type_id = 'entity_test_mul';
     $canonical = $this->entityRepository->getActive($entity_type_id, -1);

@@ -48,7 +48,7 @@ class BookUninstallTest extends KernelTestBase {
   /**
    * Tests the book_system_info_alter() method.
    */
-  public function testBookUninstall() {
+  public function testBookUninstall(): void {
     // No nodes exist.
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(['book']);
     $this->assertEquals([], $validation_reasons, 'The book module is not required.');

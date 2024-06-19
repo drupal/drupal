@@ -67,7 +67,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
   /**
    * Tests the presence of the expected cache tag in various situations.
    */
-  public function testSearchText() {
+  public function testSearchText(): void {
     $this->drupalLogin($this->searchingUser);
 
     // Initial page for searching nodes.
@@ -137,7 +137,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
   /**
    * Tests the presence of expected cache tags with referenced entities.
    */
-  public function testSearchTagsBubbling() {
+  public function testSearchTagsBubbling(): void {
 
     // Install field UI module.
     $this->container->get('module_installer')->install(['field_ui']);

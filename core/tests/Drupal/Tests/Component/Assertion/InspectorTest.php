@@ -23,7 +23,7 @@ class InspectorTest extends TestCase {
    *
    * @group legacy
    */
-  public function testAssertTraversable() {
+  public function testAssertTraversable(): void {
     $this->expectDeprecation('Drupal\Component\Assertion\Inspector::assertTraversable() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use is_iterable() instead. See https://www.drupal.org/node/3422775');
     $this->assertTrue(Inspector::assertTraversable([]));
     $this->assertTrue(Inspector::assertTraversable(new \ArrayObject()));
@@ -37,7 +37,7 @@ class InspectorTest extends TestCase {
    * @covers ::assertAllStrings
    * @dataProvider providerTestAssertAllStrings
    */
-  public function testAssertAllStrings($input, $expected) {
+  public function testAssertAllStrings($input, $expected): void {
     $this->assertSame($expected, Inspector::assertAllStrings($input));
   }
 
@@ -72,7 +72,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllStringable
    */
-  public function testAssertAllStringable() {
+  public function testAssertAllStringable(): void {
     $this->assertTrue(Inspector::assertAllStringable([]));
     $this->assertTrue(Inspector::assertAllStringable(['foo', 'bar']));
     $this->assertFalse(Inspector::assertAllStringable('foo'));
@@ -84,7 +84,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllArrays
    */
-  public function testAssertAllArrays() {
+  public function testAssertAllArrays(): void {
     $this->assertTrue(Inspector::assertAllArrays([]));
     $this->assertTrue(Inspector::assertAllArrays([[], []]));
     $this->assertFalse(Inspector::assertAllArrays([[], 'foo']));
@@ -95,7 +95,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertStrictArray
    */
-  public function testAssertStrictArray() {
+  public function testAssertStrictArray(): void {
     $this->assertTrue(Inspector::assertStrictArray([]));
     $this->assertTrue(Inspector::assertStrictArray(['bar', 'foo']));
     $this->assertFalse(Inspector::assertStrictArray(['foo' => 'bar', 'bar' => 'foo']));
@@ -106,7 +106,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllStrictArrays
    */
-  public function testAssertAllStrictArrays() {
+  public function testAssertAllStrictArrays(): void {
     $this->assertTrue(Inspector::assertAllStrictArrays([]));
     $this->assertTrue(Inspector::assertAllStrictArrays([[], []]));
     $this->assertFalse(Inspector::assertAllStrictArrays([['foo' => 'bar', 'bar' => 'foo']]));
@@ -117,7 +117,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllHaveKey
    */
-  public function testAssertAllHaveKey() {
+  public function testAssertAllHaveKey(): void {
     $this->assertTrue(Inspector::assertAllHaveKey([]));
     $this->assertTrue(Inspector::assertAllHaveKey([['foo' => 'bar', 'bar' => 'foo']]));
     $this->assertTrue(Inspector::assertAllHaveKey([['foo' => 'bar', 'bar' => 'foo']], 'foo'));
@@ -130,7 +130,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllIntegers
    */
-  public function testAssertAllIntegers() {
+  public function testAssertAllIntegers(): void {
     $this->assertTrue(Inspector::assertAllIntegers([]));
     $this->assertTrue(Inspector::assertAllIntegers([1, 2, 3]));
     $this->assertFalse(Inspector::assertAllIntegers([1, 2, 3.14]));
@@ -142,7 +142,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllFloat
    */
-  public function testAssertAllFloat() {
+  public function testAssertAllFloat(): void {
     $this->assertTrue(Inspector::assertAllFloat([]));
     $this->assertTrue(Inspector::assertAllFloat([1.0, 2.1, 3.14]));
     $this->assertFalse(Inspector::assertAllFloat([1, 2.1, 3.14]));
@@ -155,7 +155,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllCallable
    */
-  public function testAllCallable() {
+  public function testAllCallable(): void {
     $this->assertTrue(Inspector::assertAllCallable([
       'strchr',
       [$this, 'callMe'],
@@ -181,7 +181,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllNotEmpty
    */
-  public function testAllNotEmpty() {
+  public function testAllNotEmpty(): void {
     $this->assertTrue(Inspector::assertAllNotEmpty([1, 'two']));
     $this->assertFalse(Inspector::assertAllNotEmpty(['']));
   }
@@ -191,7 +191,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllNumeric
    */
-  public function testAssertAllNumeric() {
+  public function testAssertAllNumeric(): void {
     $this->assertTrue(Inspector::assertAllNumeric([1, '2', 3.14]));
     $this->assertFalse(Inspector::assertAllNumeric([1, 'two', 3.14]));
   }
@@ -201,7 +201,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllMatch
    */
-  public function testAssertAllMatch() {
+  public function testAssertAllMatch(): void {
     $this->assertTrue(Inspector::assertAllMatch('f', ['fee', 'fi', 'fo']));
     $this->assertTrue(Inspector::assertAllMatch('F', ['fee', 'fi', 'fo']));
     $this->assertTrue(Inspector::assertAllMatch('f', ['fee', 'fi', 'fo'], TRUE));
@@ -215,7 +215,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllRegularExpressionMatch
    */
-  public function testAssertAllRegularExpressionMatch() {
+  public function testAssertAllRegularExpressionMatch(): void {
     $this->assertTrue(Inspector::assertAllRegularExpressionMatch('/f/i', ['fee', 'fi', 'fo']));
     $this->assertTrue(Inspector::assertAllRegularExpressionMatch('/F/i', ['fee', 'fi', 'fo']));
     $this->assertTrue(Inspector::assertAllRegularExpressionMatch('/f/', ['fee', 'fi', 'fo']));
@@ -229,7 +229,7 @@ class InspectorTest extends TestCase {
    *
    * @covers ::assertAllObjects
    */
-  public function testAssertAllObjects() {
+  public function testAssertAllObjects(): void {
     $this->assertTrue(Inspector::assertAllObjects([new \ArrayObject(), new \ArrayObject()]));
     $this->assertFalse(Inspector::assertAllObjects([new \ArrayObject(), new \ArrayObject(), 'foo']));
     $this->assertTrue(Inspector::assertAllObjects([new \ArrayObject(), new \ArrayObject()], '\\Traversable'));

@@ -25,7 +25,7 @@ class AreaMessagesTest extends ViewsKernelTestBase {
   /**
    * Tests the messages area handler.
    */
-  public function testMessageText() {
+  public function testMessageText(): void {
     \Drupal::messenger()->addStatus('My drupal set message.');
 
     $view = Views::getView('test_area_messages');

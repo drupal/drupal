@@ -18,7 +18,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    *
    * @covers ::reload
    */
-  public function testReload() {
+  public function testReload(): void {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $config_factory->expects($this->once())
       ->method('reset')
@@ -37,7 +37,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * @covers ::loadOverride
    * @covers ::getConfig
    */
-  public function testLoadOverride($overrides, $id, $expected) {
+  public function testLoadOverride($overrides, $id, $expected): void {
     $config_factory = $this->getConfigFactoryStub(['core.menu.static_menu_link_overrides' => ['definitions' => $overrides]]);
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
@@ -65,7 +65,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * @covers ::loadMultipleOverrides
    * @covers ::getConfig
    */
-  public function testLoadMultipleOverrides() {
+  public function testLoadMultipleOverrides(): void {
     $overrides = [];
     $overrides['test1'] = ['parent' => 'test0'];
     $overrides['test2'] = ['parent' => 'test1'];
@@ -84,7 +84,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    * @covers ::loadOverride
    * @covers ::getConfig
    */
-  public function testSaveOverride() {
+  public function testSaveOverride(): void {
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
       ->getMock();
@@ -146,7 +146,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
    *
    * @dataProvider providerTestDeleteOverrides
    */
-  public function testDeleteOverrides($ids, array $old_definitions, array $new_definitions) {
+  public function testDeleteOverrides($ids, array $old_definitions, array $new_definitions): void {
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')
       ->disableOriginalConstructor()
       ->getMock();

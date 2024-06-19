@@ -19,7 +19,7 @@ class RequestPagerTest extends KernelTestBase {
   /**
    * @covers ::findPage
    */
-  public function testFindPage() {
+  public function testFindPage(): void {
     $request = Request::create('http://example.com', 'GET', ['page' => '0,10']);
     $request->setSession(new Session(new MockArraySessionStorage()));
 
@@ -35,7 +35,7 @@ class RequestPagerTest extends KernelTestBase {
   /**
    * @covers ::getQueryParameters
    */
-  public function testGetQueryParameters() {
+  public function testGetQueryParameters(): void {
     $test_parameters = [
       'other' => 'arbitrary',
     ];

@@ -32,7 +32,7 @@ class CurrentUserContextTest extends KernelTestBase {
   /**
    * @covers ::getAvailableContexts
    */
-  public function testGetAvailableContexts() {
+  public function testGetAvailableContexts(): void {
     $context_repository = $this->container->get('context.repository');
 
     // Test an authenticated account.

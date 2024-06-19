@@ -27,7 +27,7 @@ class LegacyUserTest extends KernelTestBase {
   /**
    * Tests deprecation of user_role_permissions().
    */
-  public function testUserRolePermissions() {
+  public function testUserRolePermissions(): void {
     $this->expectDeprecation('user_role_permissions() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement beyond loading the roles and calling \Drupal\user\Entity\Role::getPermissions(). See https://www.drupal.org/node/3348138');
 
     $expected = [

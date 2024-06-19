@@ -25,7 +25,7 @@ class TruncateDeprecateTest extends ViewsKernelTestBase {
    *
    * @group legacy
    */
-  public function testDeprecateViewsUiTruncate() {
+  public function testDeprecateViewsUiTruncate(): void {
     $string = 'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen';
     $short_string = views_ui_truncate($string, 80);
     $this->expectDeprecation('views_ui_truncate() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Component\Utility\Unicode::truncate(). See https://www.drupal.org/node/3408283');

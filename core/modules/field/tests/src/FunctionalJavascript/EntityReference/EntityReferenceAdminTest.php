@@ -113,7 +113,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
   /**
    * Tests the Entity Reference Admin UI.
    */
-  public function testFieldAdminHandler() {
+  public function testFieldAdminHandler(): void {
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
 
     $page = $this->getSession()->getPage();

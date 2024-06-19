@@ -29,7 +29,7 @@ class SearchExcerptTest extends KernelTestBase {
    * contains either highlighted keywords or the original marked
    * up string if no keywords matched the string.
    */
-  public function testSearchExcerpt() {
+  public function testSearchExcerpt(): void {
     // Make some text with entities and tags.
     $text = 'The <strong>quick</strong> <a href="#">brown</a> fox &amp; jumps <h2>over</h2> the lazy dog';
     $expected = 'The quick brown fox &amp; jumps over the lazy dog';
@@ -77,7 +77,7 @@ class SearchExcerptTest extends KernelTestBase {
    * and compares them with strings that contain the original un-simplified
    * word.
    */
-  public function testSearchExcerptSimplified() {
+  public function testSearchExcerptSimplified(): void {
     $start_time = microtime(TRUE);
 
     // cSpell:disable

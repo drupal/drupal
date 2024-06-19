@@ -49,7 +49,7 @@ class SettingsTrayTest extends BrowserTestBase {
    *
    * @see SettingsTrayBlockFormTest::testBlocks()
    */
-  public function testPossibleAnnotations() {
+  public function testPossibleAnnotations(): void {
     $test_block_plugin_ids = [
       // Block that explicitly provides an "settings_tray" form class.
       'settings_tray_test_class',
@@ -87,7 +87,7 @@ class SettingsTrayTest extends BrowserTestBase {
   /**
    * Tests that certain blocks opt out from Settings Tray.
    */
-  public function testOptOut() {
+  public function testOptOut(): void {
     $web_assert = $this->assertSession();
 
     $non_excluded_block = $this->placeBlock('system_powered_by_block');

@@ -84,7 +84,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
   /**
    * Tests basic configuration translation.
    */
-  public function testConfigTranslation() {
+  public function testConfigTranslation(): void {
     // Check that the maintenance message exists and create translation for it.
     $source = '@site is currently under maintenance. We should be back shortly. Thank you for your patience.';
     $string = $this->storage->findString(['source' => $source, 'context' => '', 'type' => 'configuration']);
@@ -231,7 +231,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
   /**
    * Tests translatability of optional configuration in locale.
    */
-  public function testOptionalConfiguration() {
+  public function testOptionalConfiguration(): void {
     $this->assertNodeConfig(FALSE, FALSE);
     // Enable the node module.
     $this->drupalGet('admin/modules');

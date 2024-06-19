@@ -31,7 +31,7 @@ class StateValuesCleanTest extends BrowserTestBase {
   /**
    * Tests \Drupal\Core\Form\FormState::cleanValues().
    */
-  public function testFormStateValuesClean() {
+  public function testFormStateValuesClean(): void {
     $this->drupalGet('form_test/form-state-values-clean');
     $this->submitForm([], 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());

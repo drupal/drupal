@@ -32,7 +32,7 @@ class StyleGridTest extends PluginKernelTestBase {
   /**
    * Tests the grid style.
    */
-  public function testGrid() {
+  public function testGrid(): void {
     $view = Views::getView('test_grid');
     foreach (['horizontal', 'vertical'] as $alignment) {
       $this->assertGrid($view, $alignment, 5);

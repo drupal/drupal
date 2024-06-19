@@ -62,7 +62,7 @@ class MediaBulkFormTest extends MediaFunctionalTestBase {
   /**
    * Tests the media bulk form.
    */
-  public function testBulkForm() {
+  public function testBulkForm(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();

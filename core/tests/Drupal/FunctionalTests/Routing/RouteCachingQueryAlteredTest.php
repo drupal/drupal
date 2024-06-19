@@ -47,7 +47,7 @@ class RouteCachingQueryAlteredTest extends BrowserTestBase {
   /**
    * Tests route collection cache after an exception.
    */
-  public function testRouteCollectionCacheAfterException() {
+  public function testRouteCollectionCacheAfterException(): void {
     // Force an exception early in the Kernel middleware on a cold cache by
     // simulating bad Bearer authentication.
     $this->drupalGet('/router-test/rejects-query-strings', [], [

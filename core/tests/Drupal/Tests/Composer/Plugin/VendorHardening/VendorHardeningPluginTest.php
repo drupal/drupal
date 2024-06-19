@@ -44,7 +44,7 @@ class VendorHardeningPluginTest extends TestCase {
   /**
    * @covers ::cleanPackage
    */
-  public function testCleanPackage() {
+  public function testCleanPackage(): void {
 
     $config = $this->getMockBuilder(Config::class)
       ->disableOriginalConstructor()
@@ -80,7 +80,7 @@ class VendorHardeningPluginTest extends TestCase {
   /**
    * @covers ::cleanPathsForPackage
    */
-  public function testCleanPathsForPackage() {
+  public function testCleanPathsForPackage(): void {
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
       ->onlyMethods(['getInstallPathForPackage'])
       ->getMock();
@@ -108,7 +108,7 @@ class VendorHardeningPluginTest extends TestCase {
   /**
    * @covers ::cleanAllPackages
    */
-  public function testCleanAllPackages() {
+  public function testCleanAllPackages(): void {
     $config = $this->getMockBuilder(Config::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -148,7 +148,7 @@ class VendorHardeningPluginTest extends TestCase {
   /**
    * @covers ::writeAccessRestrictionFiles
    */
-  public function testWriteAccessRestrictionFiles() {
+  public function testWriteAccessRestrictionFiles(): void {
     $dir = vfsStream::url('vendor');
 
     // Set up mocks so that writeAccessRestrictionFiles() can eventually use
@@ -223,7 +223,7 @@ class VendorHardeningPluginTest extends TestCase {
    * @covers ::findBinOverlap
    * @dataProvider providerFindBinOverlap
    */
-  public function testFindBinOverlap($expected, $binaries, $clean_paths) {
+  public function testFindBinOverlap($expected, $binaries, $clean_paths): void {
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
       ->disableOriginalConstructor()
       ->getMock();

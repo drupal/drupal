@@ -39,7 +39,7 @@ abstract class DiscoveryTestBase extends KernelTestBase {
   /**
    * Tests getDefinitions() and getDefinition().
    */
-  public function testDiscoveryInterface() {
+  public function testDiscoveryInterface(): void {
     // Ensure that getDefinitions() returns the expected definitions.
     // For the arrays to be identical (instead of only equal), they must be
     // sorted equally, which seems unnecessary here.

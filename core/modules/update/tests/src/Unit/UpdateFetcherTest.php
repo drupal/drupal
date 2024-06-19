@@ -102,7 +102,7 @@ class UpdateFetcherTest extends UnitTestCase {
    *
    * @see \Drupal\update\UpdateFetcher::buildFetchUrl()
    */
-  public function testUpdateBuildFetchUrl(array $project, $site_key, $expected) {
+  public function testUpdateBuildFetchUrl(array $project, $site_key, $expected): void {
     $url = $this->updateFetcher->buildFetchUrl($project, $site_key);
     $this->assertEquals($url, $expected);
     $this->assertFalse($this->logger->hasErrorRecords());
@@ -176,7 +176,7 @@ class UpdateFetcherTest extends UnitTestCase {
    * @covers ::doRequest
    * @covers ::fetchProjectData
    */
-  public function testUpdateFetcherNoFallback() {
+  public function testUpdateFetcherNoFallback(): void {
     // First, try without the HTTP fallback setting, and HTTPS mocked to fail.
     $settings = new Settings([]);
     $this->mockClient(
@@ -205,7 +205,7 @@ class UpdateFetcherTest extends UnitTestCase {
    * @covers ::doRequest
    * @covers ::fetchProjectData
    */
-  public function testUpdateFetcherHttpFallback() {
+  public function testUpdateFetcherHttpFallback(): void {
     $settings = new Settings(['update_fetch_with_http_fallback' => TRUE]);
     $this->mockClient(
       new Response(500, [], 'HTTPS failed'),

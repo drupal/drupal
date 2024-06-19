@@ -23,7 +23,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
   /**
    * Tests the source field behavior on the add media type form.
    */
-  public function testSourceChangeOnMediaTypeCreationForm() {
+  public function testSourceChangeOnMediaTypeCreationForm(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();
@@ -62,7 +62,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
   /**
    * Tests the media type creation form.
    */
-  public function testMediaTypeCreationFormWithDefaultField() {
+  public function testMediaTypeCreationFormWithDefaultField(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();
@@ -149,7 +149,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
   /**
    * Tests creation of media type, reusing an existing source field.
    */
-  public function testMediaTypeCreationReuseSourceField() {
+  public function testMediaTypeCreationReuseSourceField(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();

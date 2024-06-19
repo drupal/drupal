@@ -94,7 +94,7 @@ class AddedStylesheetsTest extends BrowserTestBase {
   /**
    * Test the ckeditor5-stylesheets theme config.
    */
-  public function testCkeditorStylesheets() {
+  public function testCkeditorStylesheets(): void {
     $assert_session = $this->assertSession();
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */

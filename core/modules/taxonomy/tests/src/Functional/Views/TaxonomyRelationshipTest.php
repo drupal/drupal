@@ -59,7 +59,7 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
   /**
    * Tests the taxonomy parent plugin UI.
    */
-  public function testTaxonomyRelationships() {
+  public function testTaxonomyRelationships(): void {
 
     // Check the generated views data of taxonomy_index.
     $views_data = Views::viewsData()->get('taxonomy_index');

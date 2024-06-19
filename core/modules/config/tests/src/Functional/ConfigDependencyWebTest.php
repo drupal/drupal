@@ -36,7 +36,7 @@ class ConfigDependencyWebTest extends BrowserTestBase {
    *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyDeleteFormTrait
    */
-  public function testConfigDependencyDeleteFormTrait() {
+  public function testConfigDependencyDeleteFormTrait(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
     ]));

@@ -66,7 +66,7 @@ class BreadcrumbManagerTest extends UnitTestCase {
   /**
    * Tests the breadcrumb manager without any set breadcrumb.
    */
-  public function testBuildWithoutBuilder() {
+  public function testBuildWithoutBuilder(): void {
     $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     $this->moduleHandler->expects($this->once())
       ->method('alter')
@@ -82,7 +82,7 @@ class BreadcrumbManagerTest extends UnitTestCase {
   /**
    * Tests the build method with a single breadcrumb builder.
    */
-  public function testBuildWithSingleBuilder() {
+  public function testBuildWithSingleBuilder(): void {
     $builder = $this->createMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
     $links = ['<a href="/example">Test</a>'];
     $this->breadcrumb->setLinks($links);
@@ -113,7 +113,7 @@ class BreadcrumbManagerTest extends UnitTestCase {
   /**
    * Tests multiple breadcrumb builder with different priority.
    */
-  public function testBuildWithMultipleApplyingBuilders() {
+  public function testBuildWithMultipleApplyingBuilders(): void {
     $builder1 = $this->createMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
     $builder1->expects($this->never())
       ->method('applies');
@@ -150,7 +150,7 @@ class BreadcrumbManagerTest extends UnitTestCase {
   /**
    * Tests multiple breadcrumb builders of which one returns NULL.
    */
-  public function testBuildWithOneNotApplyingBuilders() {
+  public function testBuildWithOneNotApplyingBuilders(): void {
     $builder1 = $this->createMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
     $builder1->expects($this->once())
       ->method('applies')
@@ -188,7 +188,7 @@ class BreadcrumbManagerTest extends UnitTestCase {
   /**
    * Tests a breadcrumb builder with a bad return value.
    */
-  public function testBuildWithInvalidBreadcrumbResult() {
+  public function testBuildWithInvalidBreadcrumbResult(): void {
     $builder = $this->createMock('Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface');
     $builder->expects($this->once())
       ->method('applies')

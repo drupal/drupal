@@ -34,7 +34,7 @@ class OEmbedSourceTest extends MediaKernelTestBase {
   /**
    * @covers ::getMetadata
    */
-  public function testGetMetadata() {
+  public function testGetMetadata(): void {
     $configuration = [
       'source_field' => 'field_test_oembed',
     ];

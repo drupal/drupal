@@ -44,7 +44,7 @@ class FilterUidRevisionTest extends KernelTestBase {
   /**
    * Tests the node_uid_revision filter.
    */
-  public function testFilter() {
+  public function testFilter(): void {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installSchema('node', ['node_access']);

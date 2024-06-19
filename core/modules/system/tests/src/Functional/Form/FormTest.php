@@ -60,7 +60,7 @@ class FormTest extends BrowserTestBase {
    *
    * If the form field is found in $form_state->getErrors() then the test pass.
    */
-  public function testRequiredFields() {
+  public function testRequiredFields(): void {
     // Originates from https://www.drupal.org/node/117748.
     // Sets of empty strings and arrays.
     $empty_strings = ['""' => "", '"\n"' => "\n", '" "' => " ", '"\t"' => "\t", '" \n\t "' => " \n\t ", '"\n\n\n\n\n"' => "\n\n\n\n\n"];
@@ -172,7 +172,7 @@ class FormTest extends BrowserTestBase {
    *
    * @see \Drupal\form_test\Form\FormTestValidateRequiredForm
    */
-  public function testRequiredCheckboxesRadio() {
+  public function testRequiredCheckboxesRadio(): void {
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestValidateRequiredForm');
 
     // Attempt to submit the form with no required fields set.
@@ -246,7 +246,7 @@ class FormTest extends BrowserTestBase {
    *
    * Submits a test form containing several types of form elements.
    */
-  public function testInputWithInvalidToken() {
+  public function testInputWithInvalidToken(): void {
     // We need to be logged in to have CSRF tokens.
     $account = $this->createUser();
     $this->drupalLogin($account);
@@ -333,7 +333,7 @@ class FormTest extends BrowserTestBase {
   /**
    * CSRF tokens for GET forms should not be added by default.
    */
-  public function testGetFormsCsrfToken() {
+  public function testGetFormsCsrfToken(): void {
     // We need to be logged in to have CSRF tokens.
     $account = $this->createUser();
     $this->drupalLogin($account);
@@ -352,7 +352,7 @@ class FormTest extends BrowserTestBase {
    *
    * @see \Drupal\form_test\Form\FormTestValidateRequiredNoTitleForm
    */
-  public function testRequiredTextfieldNoTitle() {
+  public function testRequiredTextfieldNoTitle(): void {
     // Attempt to submit the form with no required field set.
     $edit = [];
     $this->drupalGet('form-test/validate-required-no-title');
@@ -381,7 +381,7 @@ class FormTest extends BrowserTestBase {
    *
    * @see _form_test_checkbox()
    */
-  public function testCheckboxProcessing() {
+  public function testCheckboxProcessing(): void {
     // First, try to submit without the required checkbox.
     $edit = [];
     $this->drupalGet('form-test/checkbox');
@@ -407,7 +407,7 @@ class FormTest extends BrowserTestBase {
   /**
    * Tests validation of #type 'select' elements.
    */
-  public function testSelect() {
+  public function testSelect(): void {
     $form = \Drupal::formBuilder()->getForm('Drupal\form_test\Form\FormTestSelectForm');
     $this->drupalGet('form-test/select');
 
@@ -480,7 +480,7 @@ class FormTest extends BrowserTestBase {
   /**
    * Tests a select element when #options is not set.
    */
-  public function testEmptySelect() {
+  public function testEmptySelect(): void {
     $this->drupalGet('form-test/empty-select');
     $this->assertSession()->elementExists('xpath', "//select[1]");
     $this->assertSession()->elementNotExists('xpath', "//select[1]/option");
@@ -489,7 +489,7 @@ class FormTest extends BrowserTestBase {
   /**
    * Tests sorting and not sorting of options in a select element.
    */
-  public function testSelectSorting() {
+  public function testSelectSorting(): void {
     $this->drupalGet('form-test/select');
 
     // Verify the order of the select options.
@@ -609,7 +609,7 @@ class FormTest extends BrowserTestBase {
   /**
    * Tests validation of #type 'number' and 'range' elements.
    */
-  public function testNumber() {
+  public function testNumber(): void {
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestNumberForm');
 
     // Array with all the error messages to be checked.
@@ -674,7 +674,7 @@ class FormTest extends BrowserTestBase {
   /**
    * Tests default value handling of #type 'range' elements.
    */
-  public function testRange() {
+  public function testRange(): void {
     $this->drupalGet('form-test/range');
     $this->submitForm([], 'Submit');
     $values = json_decode($this->getSession()->getPage()->getContent());
@@ -692,7 +692,7 @@ class FormTest extends BrowserTestBase {
   /**
    * Tests validation of #type 'color' elements.
    */
-  public function testColorValidation() {
+  public function testColorValidation(): void {
     // Keys are inputs, values are expected results.
     $values = [
       '' => '#000000',
@@ -733,7 +733,7 @@ class FormTest extends BrowserTestBase {
    *
    * @see _form_test_disabled_elements()
    */
-  public function testDisabledElements() {
+  public function testDisabledElements(): void {
     // Get the raw form in its original state.
     $form_state = new FormState();
     $form = (new FormTestDisabledElementsForm())->buildForm([], $form_state);
@@ -823,7 +823,7 @@ class FormTest extends BrowserTestBase {
    *
    * @see _form_test_disabled_elements()
    */
-  public function testDisabledMarkup() {
+  public function testDisabledMarkup(): void {
     $this->drupalGet('form-test/disabled-elements');
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestDisabledElementsForm');
     $type_map = [
@@ -879,7 +879,7 @@ class FormTest extends BrowserTestBase {
    *
    * @see \Drupal\form_test\Form\FormTestInputForgeryForm
    */
-  public function testInputForgery() {
+  public function testInputForgery(): void {
     $this->drupalGet('form-test/input-forgery');
     // The value for checkboxes[two] was changed using post render to simulate
     // an input forgery.
@@ -891,7 +891,7 @@ class FormTest extends BrowserTestBase {
   /**
    * Tests required attribute.
    */
-  public function testRequiredAttribute() {
+  public function testRequiredAttribute(): void {
     $this->drupalGet('form-test/required-attribute');
     foreach (['textfield', 'password', 'textarea'] as $type) {
       $field = $this->assertSession()->fieldExists("edit-$type");

@@ -29,7 +29,7 @@ class FileCopyTest extends MigrateProcessTestCase {
    * @param $expected
    *   The expected value of the plugin configuration.
    */
-  public function testFileProcessBaseConstructor($configuration, $expected) {
+  public function testFileProcessBaseConstructor($configuration, $expected): void {
     $this->assertPlugin($configuration, $expected);
   }
 

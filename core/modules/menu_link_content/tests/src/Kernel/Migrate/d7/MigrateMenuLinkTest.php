@@ -60,7 +60,7 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of menu links.
    */
-  public function testMenuLinks() {
+  public function testMenuLinks(): void {
     $this->assertEntity(469, 'und', 'Bing', static::MENU_NAME, 'Bing', TRUE, FALSE, ['attributes' => ['title' => 'Bing']], 'http://bing.com', 0);
     // This link has an i18n translation so the language is changed to the
     // default language of the source site.

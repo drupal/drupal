@@ -160,7 +160,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    *
    * @dataProvider userNameProvider
    */
-  public function testUserNameAccess($viewer, $target, $view, $edit) {
+  public function testUserNameAccess($viewer, $target, $view, $edit): void {
     $this->assertFieldAccess('name', $viewer, $target, $view, $edit);
   }
 
@@ -211,7 +211,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    *
    * @dataProvider hiddenUserSettingsProvider
    */
-  public function testHiddenUserSettings($field, $viewer, $target, $view, $edit) {
+  public function testHiddenUserSettings($field, $viewer, $target, $view, $edit): void {
     $this->assertFieldAccess($field, $viewer, $target, $view, $edit);
   }
 
@@ -278,7 +278,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    *
    * @dataProvider adminFieldAccessProvider
    */
-  public function testAdminFieldAccess($field, $viewer, $target, $view, $edit) {
+  public function testAdminFieldAccess($field, $viewer, $target, $view, $edit): void {
     $this->assertFieldAccess($field, $viewer, $target, $view, $edit);
   }
 
@@ -328,7 +328,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    *
    * @dataProvider passwordAccessProvider
    */
-  public function testPasswordAccess($viewer, $target, $view, $edit) {
+  public function testPasswordAccess($viewer, $target, $view, $edit): void {
     $this->assertFieldAccess('pass', $viewer, $target, $view, $edit);
   }
 
@@ -373,7 +373,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    *
    * @dataProvider createdAccessProvider
    */
-  public function testCreatedAccess($viewer, $target, $view, $edit) {
+  public function testCreatedAccess($viewer, $target, $view, $edit): void {
     $this->assertFieldAccess('created', $viewer, $target, $view, $edit);
   }
 
@@ -409,7 +409,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    *
    * @dataProvider NonExistingFieldAccessProvider
    */
-  public function testNonExistingFieldAccess($viewer, $target, $view, $edit) {
+  public function testNonExistingFieldAccess($viewer, $target, $view, $edit): void {
     // By default everyone has access to all fields that do not have explicit
     // access control.
     // @see EntityAccessControlHandler::checkFieldAccess()

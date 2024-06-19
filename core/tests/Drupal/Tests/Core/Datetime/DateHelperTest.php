@@ -49,7 +49,7 @@ class DateHelperTest extends UnitTestCase {
    * @covers ::weekDaysOrdered
    * @dataProvider providerTestWeekDaysOrdered
    */
-  public function testWeekDaysOrdered($first_day, $expected) {
+  public function testWeekDaysOrdered($first_day, $expected): void {
     $container = new ContainerBuilder();
     $config = ['system.date' => ['first_day' => $first_day]];
     $container->set('config.factory', $this->getConfigFactoryStub($config));
@@ -164,7 +164,7 @@ class DateHelperTest extends UnitTestCase {
   /**
    * @covers ::daysInMonth
    */
-  public function testDaysInMonth() {
+  public function testDaysInMonth(): void {
     // @todo Consider deprecating passing NULL in
     //   https://www.drupal.org/project/drupal/issues/3299788
     // Passing NULL, FALSE, or an empty string should default to now. Just
@@ -189,7 +189,7 @@ class DateHelperTest extends UnitTestCase {
   /**
    * @covers ::daysInYear
    */
-  public function testDaysInYear() {
+  public function testDaysInYear(): void {
     // Passing NULL, FALSE, or an empty string should default to now. Just
     // check these are NOT null to avoid copying the implementation here.
     $this->assertNotNull(DateHelper::daysInYear());
@@ -213,7 +213,7 @@ class DateHelperTest extends UnitTestCase {
   /**
    * @covers ::dayOfWeek
    */
-  public function testDayOfWeek() {
+  public function testDayOfWeek(): void {
     // Passing NULL, FALSE, or an empty string should default to now. Just
     // check these are NOT null to avoid copying the implementation here.
     $this->assertNotNull(DateHelper::dayOfWeek());
@@ -238,7 +238,7 @@ class DateHelperTest extends UnitTestCase {
   /**
    * @covers ::dayOfWeekName
    */
-  public function testDayOfWeekName() {
+  public function testDayOfWeekName(): void {
     // Passing NULL, FALSE, or an empty string should default to now. Just
     // check these are NOT null to avoid copying the implementation here.
     $this->assertNotNull(DateHelper::dayOfWeekName());
