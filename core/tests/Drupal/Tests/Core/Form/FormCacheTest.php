@@ -117,7 +117,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::getCache
    */
-  public function testGetCacheValidToken() {
+  public function testGetCacheValidToken(): void {
     $form_build_id = 'the_form_build_id';
     $form_state = new FormState();
     $cache_token = 'the_cache_token';
@@ -141,7 +141,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::getCache
    */
-  public function testGetCacheInvalidToken() {
+  public function testGetCacheInvalidToken(): void {
     $form_build_id = 'the_form_build_id';
     $form_state = new FormState();
     $cache_token = 'the_cache_token';
@@ -165,7 +165,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::getCache
    */
-  public function testGetCacheAnonUser() {
+  public function testGetCacheAnonUser(): void {
     $form_build_id = 'the_form_build_id';
     $form_state = new FormState();
     $cached_form = ['#cache_token' => NULL];
@@ -187,7 +187,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::getCache
    */
-  public function testGetCacheAuthUser() {
+  public function testGetCacheAuthUser(): void {
     $form_build_id = 'the_form_build_id';
     $form_state = new FormState();
     $cached_form = ['#cache_token' => NULL];
@@ -207,7 +207,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::getCache
    */
-  public function testGetCacheNoForm() {
+  public function testGetCacheNoForm(): void {
     $form_build_id = 'the_form_build_id';
     $form_state = new FormState();
     $cached_form = NULL;
@@ -226,7 +226,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::getCache
    */
-  public function testGetCacheImmutableForm() {
+  public function testGetCacheImmutableForm(): void {
     $form_build_id = 'the_form_build_id';
     $form_state = (new FormState())
       ->addBuildInfo('immutable', TRUE);
@@ -252,7 +252,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::loadCachedFormState
    */
-  public function testLoadCachedFormState() {
+  public function testLoadCachedFormState(): void {
     $form_build_id = 'the_form_build_id';
     $form_state = new FormState();
     $cached_form = ['#cache_token' => NULL];
@@ -278,7 +278,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::loadCachedFormState
    */
-  public function testLoadCachedFormStateWithFiles() {
+  public function testLoadCachedFormStateWithFiles(): void {
     $form_build_id = 'the_form_build_id';
     $form_state = new FormState();
     $cached_form = ['#cache_token' => NULL];
@@ -318,7 +318,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::setCache
    */
-  public function testSetCacheWithForm() {
+  public function testSetCacheWithForm(): void {
     $form_build_id = 'the_form_build_id';
     $form = [
       '#form_id' => 'the_form_id',
@@ -340,7 +340,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::setCache
    */
-  public function testSetCacheWithoutForm() {
+  public function testSetCacheWithoutForm(): void {
     $form_build_id = 'the_form_build_id';
     $form = NULL;
     $form_state = new FormState();
@@ -359,7 +359,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::setCache
    */
-  public function testSetCacheAuthUser() {
+  public function testSetCacheAuthUser(): void {
     $form_build_id = 'the_form_build_id';
     $form = [];
     $form_state = new FormState();
@@ -389,7 +389,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::setCache
    */
-  public function testSetCacheBuildIdMismatch() {
+  public function testSetCacheBuildIdMismatch(): void {
     $form_build_id = 'the_form_build_id';
     $form = [
       '#form_id' => 'the_form_id',
@@ -410,7 +410,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * @covers ::deleteCache
    */
-  public function testDeleteCache() {
+  public function testDeleteCache(): void {
     $form_build_id = 'the_form_build_id';
 
     $this->formCacheStore->expects($this->once())

@@ -97,7 +97,7 @@ class TokenReplaceTest extends KernelTestBase {
   /**
    * Creates some terms and a node, then tests the tokens generated from them.
    */
-  public function testTaxonomyTokenReplacement() {
+  public function testTaxonomyTokenReplacement(): void {
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 

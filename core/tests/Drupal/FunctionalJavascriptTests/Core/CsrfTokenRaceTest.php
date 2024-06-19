@@ -26,7 +26,7 @@ class CsrfTokenRaceTest extends WebDriverTestBase {
   /**
    * Tests race condition for CSRF tokens for simultaneous requests.
    */
-  public function testCsrfRace() {
+  public function testCsrfRace(): void {
     $user = $this->createUser(['access content']);
     $this->drupalLogin($user);
     $this->drupalGet('/csrf_race/test');

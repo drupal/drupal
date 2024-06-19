@@ -37,7 +37,7 @@ class UserRoleDeleteTest extends KernelTestBase {
    *
    * @see user_user_role_delete()
    */
-  public function testRoleDeleteUserRoleReferenceDelete() {
+  public function testRoleDeleteUserRoleReferenceDelete(): void {
     // Create two test roles.
     $role_storage = $this->container->get('entity_type.manager')->getStorage('user_role');
     $role_storage->create(['id' => 'test_role_one', 'label' => 'Test role 1'])->save();
@@ -82,7 +82,7 @@ class UserRoleDeleteTest extends KernelTestBase {
   /**
    * Tests the removal of user role dependencies.
    */
-  public function testDependenciesRemoval() {
+  public function testDependenciesRemoval(): void {
     $this->enableModules(['node', 'filter']);
     /** @var \Drupal\user\RoleStorage $role_storage */
     $role_storage = $this->container->get('entity_type.manager')->getStorage('user_role');

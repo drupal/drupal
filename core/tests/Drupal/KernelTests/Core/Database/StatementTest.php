@@ -17,7 +17,7 @@ class StatementTest extends DatabaseTestBase {
   /**
    * Tests that a prepared statement object can be reused for multiple inserts.
    */
-  public function testRepeatedInsertStatementReuse() {
+  public function testRepeatedInsertStatementReuse(): void {
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
 
     $sql = "INSERT INTO {test} ([name], [age]) VALUES (:name, :age)";

@@ -68,7 +68,7 @@ class RoutesTest extends UnitTestCase {
   /**
    * @covers ::routes
    */
-  public function testRoutesCollection() {
+  public function testRoutesCollection(): void {
     // Get the route collection and start making assertions.
     $routes = $this->routes['ok']->routes();
 
@@ -104,7 +104,7 @@ class RoutesTest extends UnitTestCase {
   /**
    * @covers ::routes
    */
-  public function testRoutesIndividual() {
+  public function testRoutesIndividual(): void {
     // Get the route collection and start making assertions.
     $iterator = $this->routes['ok']->routes()->getIterator();
 
@@ -147,7 +147,7 @@ class RoutesTest extends UnitTestCase {
   /**
    * @covers ::routes
    */
-  public function testRoutesRelated() {
+  public function testRoutesRelated(): void {
     // Get the route collection and start making assertions.
     $iterator = $this->routes['ok']->routes()->getIterator();
 
@@ -168,7 +168,7 @@ class RoutesTest extends UnitTestCase {
   /**
    * @covers ::routes
    */
-  public function testRoutesRelationships() {
+  public function testRoutesRelationships(): void {
     // Get the route collection and start making assertions.
     $iterator = $this->routes['ok']->routes()->getIterator();
 
@@ -191,7 +191,7 @@ class RoutesTest extends UnitTestCase {
    *
    * @dataProvider expectedRoutes
    */
-  public function testRoutes($route) {
+  public function testRoutes($route): void {
     $this->assertArrayHasKey($route, $this->routes['ok']->routes()->all());
   }
 
@@ -225,7 +225,7 @@ class RoutesTest extends UnitTestCase {
    *
    * @dataProvider notExpectedRoutes
    */
-  public function testInternalRoutes($route) {
+  public function testInternalRoutes($route): void {
     $this->assertArrayNotHasKey($route, $this->routes['ok']->routes()->all());
   }
 

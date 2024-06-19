@@ -83,7 +83,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
   /**
    * Tests file save operations when node with referenced files is saved.
    */
-  public function testFileSaveOperations() {
+  public function testFileSaveOperations(): void {
     $permanent_image = File::create([
       'uri' => 'core/misc/druplicon.png',
       'status' => 1,
@@ -122,7 +122,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
   /**
    * Tests the configurable text editor manager.
    */
-  public function testEditorEntityHooks() {
+  public function testEditorEntityHooks(): void {
     $image_paths = [
       0 => 'core/misc/druplicon.png',
       1 => 'core/misc/tree.png',

@@ -27,7 +27,7 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
   /**
    * Tests the integrity of field plugin definitions.
    */
-  public function testFieldPluginDefinitionIntegrity() {
+  public function testFieldPluginDefinitionIntegrity(): void {
     // Enable all core modules that provide field plugins, and their
     // dependencies.
     $this->enableModules(
@@ -92,7 +92,7 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
   /**
    * Tests to load field plugin definitions used in core's existing entities.
    */
-  public function testFieldPluginDefinitionAvailability() {
+  public function testFieldPluginDefinitionAvailability(): void {
     $this->enableModules(
       $this->modulesWithSubdirectory('src' . DIRECTORY_SEPARATOR . 'Entity')
     );

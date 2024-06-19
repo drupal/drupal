@@ -41,7 +41,7 @@ class CommentBaseFieldTest extends KernelTestBase {
   /**
    * Tests comment as a base field.
    */
-  public function testCommentBaseField() {
+  public function testCommentBaseField(): void {
     // Verify entity creation.
     $entity = CommentTestBaseField::create([
       'name' => $this->randomMachineName(),

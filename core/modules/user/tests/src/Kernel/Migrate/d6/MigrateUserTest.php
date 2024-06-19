@@ -74,7 +74,7 @@ class MigrateUserTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal6 user to Drupal 8 migration.
    */
-  public function testUser() {
+  public function testUser(): void {
     $users = Database::getConnection('default', 'migrate')
       ->select('users', 'u')
       ->fields('u')

@@ -45,7 +45,7 @@ class FileStorageTest extends PhpStorageTestBase {
    * @covers ::exists
    * @covers ::delete
    */
-  public function testCRUD() {
+  public function testCRUD(): void {
     $php = new FileStorage($this->standardSettings);
     $this->assertCRUD($php);
   }
@@ -53,7 +53,7 @@ class FileStorageTest extends PhpStorageTestBase {
   /**
    * @covers ::deleteAll
    */
-  public function testDeleteAll() {
+  public function testDeleteAll(): void {
     // Random generator.
     $random_generator = new Random();
 
@@ -88,7 +88,7 @@ class FileStorageTest extends PhpStorageTestBase {
   /**
    * @covers ::createDirectory
    */
-  public function testCreateDirectoryFailWarning() {
+  public function testCreateDirectoryFailWarning(): void {
     $directory = new vfsStreamDirectory('permissionDenied', 0200);
     $storage = new FileStorage([
       'directory' => $directory->url(),

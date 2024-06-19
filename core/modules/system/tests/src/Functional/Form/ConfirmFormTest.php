@@ -26,7 +26,7 @@ class ConfirmFormTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testConfirmForm() {
+  public function testConfirmForm(): void {
     // Test the building of the form.
     $this->drupalGet('form-test/confirm-form');
     $site_name = $this->config('system.site')->get('name');
@@ -59,7 +59,7 @@ class ConfirmFormTest extends BrowserTestBase {
   /**
    * Tests that the confirm form does not use external destinations.
    */
-  public function testConfirmFormWithExternalDestination() {
+  public function testConfirmFormWithExternalDestination(): void {
     $this->drupalGet('form-test/confirm-form');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('form_test.route8')->toString());
     $this->drupalGet('form-test/confirm-form', ['query' => ['destination' => 'node']]);

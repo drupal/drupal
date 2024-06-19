@@ -27,7 +27,7 @@ class MediaRequirementsTest extends MediaFunctionalTestBase {
   /**
    * Tests that the requirements check can handle a missing source field.
    */
-  public function testMissingSourceFieldDefinition() {
+  public function testMissingSourceFieldDefinition(): void {
     $media_type = $this->createMediaType('test');
     /** @var \Drupal\field\FieldConfigInterface $field_definition */
     $field_definition = $media_type->getSource()

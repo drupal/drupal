@@ -36,7 +36,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
   /**
    * Tests the get() method.
    */
-  public function testGet() {
+  public function testGet(): void {
     $this->setupPluginCollection($this->once());
     $apple = $this->pluginInstances['apple'];
 
@@ -48,7 +48,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
    * @covers ::getConfiguration
    * @covers ::setConfiguration
    */
-  public function testAddInstanceId() {
+  public function testAddInstanceId(): void {
     $this->setupPluginCollection($this->any());
 
     $this->assertEquals(['id' => 'apple', 'key' => 'value'], $this->defaultPluginCollection->get('apple')->getConfiguration());
@@ -64,7 +64,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
   /**
    * @covers ::getInstanceIds
    */
-  public function testGetInstanceIds() {
+  public function testGetInstanceIds(): void {
     $this->setupPluginCollection($this->any());
     $this->assertEquals(['apple' => 'apple'], $this->defaultPluginCollection->getInstanceIds());
 
@@ -75,7 +75,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
   /**
    * @covers ::setConfiguration
    */
-  public function testConfigurableSetConfiguration() {
+  public function testConfigurableSetConfiguration(): void {
     $this->setupPluginCollection($this->any());
 
     $this->defaultPluginCollection->setConfiguration(['apple' => ['value' => 'pineapple', 'id' => 'apple']]);

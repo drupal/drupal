@@ -31,7 +31,7 @@ class DownloadFunctionalTest extends BrowserTestBase {
   /**
    * Tests that an exception is thrown bu migration continues with the next row.
    */
-  public function testExceptionThrow() {
+  public function testExceptionThrow(): void {
     $invalid_url = "{$this->baseUrl}/not-existent-404";
     $valid_url = "{$this->baseUrl}/core/misc/favicon.ico";
 

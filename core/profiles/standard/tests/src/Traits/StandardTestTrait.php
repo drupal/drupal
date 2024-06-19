@@ -37,7 +37,7 @@ trait StandardTestTrait {
   /**
    * Tests Standard installation profile or recipe.
    */
-  public function testStandard() {
+  public function testStandard(): void {
     $this->drupalGet('');
     $this->assertSession()->pageTextContains('Powered by Drupal');
     $this->assertSession()->pageTextContains('Congratulations and welcome to the Drupal community.');

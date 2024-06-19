@@ -46,7 +46,7 @@ class PluginBaseTest extends UnitTestCase {
    * @dataProvider providerTestUnpackOptions
    * @covers ::unpackOptions
    */
-  public function testUnpackOptions($storage, $options, $definition, $expected, $all = FALSE) {
+  public function testUnpackOptions($storage, $options, $definition, $expected, $all = FALSE): void {
     $this->testHelperPlugin->unpackOptions($storage, $options, $definition, $all);
     $this->assertEquals($storage, $expected);
   }
@@ -64,7 +64,7 @@ class PluginBaseTest extends UnitTestCase {
    * @dataProvider providerTestSetOptionDefault
    * @covers ::setOptionDefaults
    */
-  public function testSetOptionDefault($storage, $definition, $expected) {
+  public function testSetOptionDefault($storage, $definition, $expected): void {
     $this->testHelperPlugin->testSetOptionDefaults($storage, $definition);
     $this->assertEquals($storage, $expected);
   }
@@ -283,7 +283,7 @@ class PluginBaseTest extends UnitTestCase {
    * @dataProvider providerTestFilterByDefinedOptions
    * @covers ::filterByDefinedOptions
    */
-  public function testFilterByDefinedOptions($storage, $options, $expected_storage) {
+  public function testFilterByDefinedOptions($storage, $options, $expected_storage): void {
     $this->testHelperPlugin->setDefinedOptions($options);
     $this->testHelperPlugin->filterByDefinedOptions($storage);
     $this->assertEquals($expected_storage, $storage);

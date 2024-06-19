@@ -53,7 +53,7 @@ class MigrateTermNodeTranslationTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 term-node association to Drupal 8 migration.
    */
-  public function testTermNode() {
+  public function testTermNode(): void {
     $this->container->get('entity_type.manager')
       ->getStorage('node')
       ->resetCache([18, 21]);

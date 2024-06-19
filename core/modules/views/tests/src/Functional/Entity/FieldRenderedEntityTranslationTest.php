@@ -73,7 +73,7 @@ class FieldRenderedEntityTranslationTest extends ViewTestBase {
   /**
    * Tests that different translation mechanisms can be used for base fields.
    */
-  public function testTranslationRows() {
+  public function testTranslationRows(): void {
     // First, an EN node with an ES translation.
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->entityTypeManager->getStorage('node')->create([

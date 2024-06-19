@@ -22,7 +22,7 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
    * In order to act on the same fields, and not create the fields over and over
    * again the following tests create, update and delete the same fields.
    */
-  public function testCRUDFields() {
+  public function testCRUDFields(): void {
     $this->manageFieldsPage();
     $this->createField();
     $this->updateField();

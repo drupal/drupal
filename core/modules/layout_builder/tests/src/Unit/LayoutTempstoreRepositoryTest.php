@@ -20,7 +20,7 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
    * @covers ::get
    * @covers ::has
    */
-  public function testGetEmptyTempstore() {
+  public function testGetEmptyTempstore(): void {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $section_storage->getStorageType()->willReturn('my_storage_type');
     $section_storage->getStorageId()->willReturn('my_storage_id');
@@ -43,7 +43,7 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
    * @covers ::get
    * @covers ::has
    */
-  public function testGetLoadedTempstore() {
+  public function testGetLoadedTempstore(): void {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $section_storage->getStorageType()->willReturn('my_storage_type');
     $section_storage->getStorageId()->willReturn('my_storage_id');
@@ -66,7 +66,7 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
   /**
    * @covers ::get
    */
-  public function testGetInvalidEntry() {
+  public function testGetInvalidEntry(): void {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $section_storage->getStorageType()->willReturn('my_storage_type');
     $section_storage->getStorageId()->willReturn('my_storage_id');

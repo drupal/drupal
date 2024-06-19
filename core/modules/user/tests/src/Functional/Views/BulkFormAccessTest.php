@@ -37,7 +37,7 @@ class BulkFormAccessTest extends UserTestBase {
   /**
    * Tests if users that may not be edited, can not be edited in bulk.
    */
-  public function testUserEditAccess() {
+  public function testUserEditAccess(): void {
     // Create an authenticated user.
     $no_edit_user = $this->drupalCreateUser([], 'no_edit');
     // Ensure this account is not blocked.
@@ -99,7 +99,7 @@ class BulkFormAccessTest extends UserTestBase {
   /**
    * Tests if users that may not be deleted, can not be deleted in bulk.
    */
-  public function testUserDeleteAccess() {
+  public function testUserDeleteAccess(): void {
     // Create two authenticated users.
     $account = $this->drupalCreateUser([], 'no_delete');
     $account2 = $this->drupalCreateUser([], 'may_delete');

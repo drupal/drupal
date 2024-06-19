@@ -65,7 +65,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
   /**
    * Tests sorting with a standard data base table.
    */
-  public function testSortBaseTable() {
+  public function testSortBaseTable(): void {
     $this->enableModules(['content_moderation_test_views']);
     $this->installConfig(['content_moderation_test_views']);
 
@@ -104,7 +104,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
   /**
    * Tests sorting with the revision base table.
    */
-  public function testSortRevisionBaseTable() {
+  public function testSortRevisionBaseTable(): void {
     $this->enableModules(['content_moderation_test_views']);
     $this->installConfig(['content_moderation_test_views']);
 

@@ -32,7 +32,7 @@ class MigrateLocaleConfigsTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of locale variables to locale.settings.yml.
    */
-  public function testLocaleSettings() {
+  public function testLocaleSettings(): void {
     $config = $this->config('locale.settings');
     $this->assertTrue($config->get('cache_strings'));
     $this->assertSame('languages', $config->get('javascript.directory'));

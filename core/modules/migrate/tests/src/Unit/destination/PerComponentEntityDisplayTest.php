@@ -18,7 +18,7 @@ class PerComponentEntityDisplayTest extends MigrateTestCase {
   /**
    * Tests the entity display import method.
    */
-  public function testImport() {
+  public function testImport(): void {
     $values = [
       'entity_type' => 'entity_type_test',
       'bundle' => 'bundle_test',

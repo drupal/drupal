@@ -124,7 +124,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
   /**
    * Tests normalizing and denormalizing an entity with field item normalizer.
    */
-  public function testFieldNormalizeDenormalize() {
+  public function testFieldNormalizeDenormalize(): void {
     $normalized = $this->serializer->normalize($this->entity, 'json');
 
     $expected_field_value = $this->entity->field_test_text[0]->getValue()['value'] . '::silly_suffix';
@@ -148,7 +148,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
   /**
    * Tests denormalizing using a scalar field value.
    */
-  public function testFieldDenormalizeWithScalarValue() {
+  public function testFieldDenormalizeWithScalarValue(): void {
     $this->expectException(UnexpectedValueException::class);
     $this->expectExceptionMessage('Field values for "uuid" must use an array structure');
 
@@ -170,7 +170,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
    *
    * @dataProvider providerTestCustomBooleanNormalization
    */
-  public function testCustomBooleanNormalization(array $test_modules, $format) {
+  public function testCustomBooleanNormalization(array $test_modules, $format): void {
     // Asserts the entity contains the value we set.
     $this->assertFalse($this->entity->field_test_boolean->value);
 

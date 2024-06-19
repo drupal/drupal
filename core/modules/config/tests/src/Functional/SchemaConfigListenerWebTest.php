@@ -27,7 +27,7 @@ class SchemaConfigListenerWebTest extends BrowserTestBase {
   /**
    * Tests \Drupal\Core\Config\Development\ConfigSchemaChecker.
    */
-  public function testConfigSchemaChecker() {
+  public function testConfigSchemaChecker(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
 
     // Test a non-existing schema.

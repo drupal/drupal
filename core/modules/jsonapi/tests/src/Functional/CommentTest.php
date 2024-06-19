@@ -322,7 +322,7 @@ class CommentTest extends ResourceTestBase {
    * - base fields that are marked as required, but yet can still result in
    *   validation errors other than "missing required field".
    */
-  public function testPostIndividualDxWithoutCriticalBaseFields() {
+  public function testPostIndividualDxWithoutCriticalBaseFields(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -362,7 +362,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * Tests POSTing a comment with and without 'skip comment approval'.
    */
-  public function testPostIndividualSkipCommentApproval() {
+  public function testPostIndividualSkipCommentApproval(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -425,7 +425,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     // Verify the expected behavior in the common case.
     $this->doTestCollectionFilterAccessForPublishableEntities('subject', 'access comments', 'administer comments');
 
@@ -468,7 +468,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchIndividual() {
+  public function testPatchIndividual(): void {
     // Ensure ::getModifiedEntityForPatchTesting() can pick an alternative value
     // for the 'entity_id' field.
     EntityTest::create([
@@ -476,7 +476,7 @@ class CommentTest extends ResourceTestBase {
       'type' => 'bar',
     ])->save();
 
-    return parent::testPatchIndividual();
+    parent::testPatchIndividual();
   }
 
 }

@@ -23,7 +23,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
   /**
    * Logs node page tracing data with a cold cache.
    */
-  public function testNodePageColdCache() {
+  public function testNodePageColdCache(): void {
     // @todo Chromedriver doesn't collect tracing performance logs for the very
     //   first request in a test, so warm it up.
     //   https://www.drupal.org/project/drupal/issues/3379750
@@ -40,7 +40,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
    *
    * Hot here means that all possible caches are warmed.
    */
-  public function testNodePageHotCache() {
+  public function testNodePageHotCache(): void {
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
     $this->drupalGet('node/1');
@@ -64,7 +64,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
    * Cool here means that 'global' site caches are warm but anything
    * specific to the route or path is cold.
    */
-  public function testNodePageCoolCache() {
+  public function testNodePageCoolCache(): void {
     // First of all visit the node page to ensure the image style exists.
     $this->drupalGet('node/1');
     $this->rebuildAll();
@@ -82,7 +82,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
    * Warm here means that 'global' site caches and route-specific caches are
    * warm but caches specific to this particular node/path are not.
    */
-  public function testNodePageWarmCache() {
+  public function testNodePageWarmCache(): void {
     // First of all visit the node page to ensure the image style exists.
     $this->drupalGet('node/1');
     $this->rebuildAll();

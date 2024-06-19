@@ -18,7 +18,7 @@ class FilterPluginBaseTest extends UnitTestCase {
    *
    * @dataProvider acceptExposedInputProvider
    */
-  public function testAcceptExposedInput(bool $expected_result, array $options, array $input) {
+  public function testAcceptExposedInput(bool $expected_result, array $options, array $input): void {
     $definition = [
       'title' => 'Accept exposed input Test',
       'group' => 'Test',

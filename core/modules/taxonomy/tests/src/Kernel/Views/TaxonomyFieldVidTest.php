@@ -83,7 +83,7 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
   /**
    * Tests the field handling for the Vocabulary ID.
    */
-  public function testViewsHandlerVidField() {
+  public function testViewsHandlerVidField(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 

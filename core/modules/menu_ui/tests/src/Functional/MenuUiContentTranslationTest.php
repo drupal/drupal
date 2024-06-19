@@ -120,7 +120,7 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
    *
    * @dataProvider provideChangeContentToPseudoLanguageData
    */
-  public function testChangeContentToPseudoLanguage($langcode) {
+  public function testChangeContentToPseudoLanguage($langcode): void {
     $node_title = 'Test node';
     $menu_link_title_en = 'Test menu link EN';
     $menu_link_title_pseudo = 'Test menu link PSEUDO';

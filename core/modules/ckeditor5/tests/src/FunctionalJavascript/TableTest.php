@@ -126,7 +126,7 @@ class TableTest extends WebDriverTestBase {
   /**
    * Confirms tables convert to the expected markup.
    */
-  public function testTableConversion() {
+  public function testTableConversion(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -153,7 +153,7 @@ class TableTest extends WebDriverTestBase {
   /**
    * Tests creating a table with caption in the UI.
    */
-  public function testTableCaptionUi() {
+  public function testTableCaptionUi(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

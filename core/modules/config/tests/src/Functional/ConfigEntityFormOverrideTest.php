@@ -26,7 +26,7 @@ class ConfigEntityFormOverrideTest extends BrowserTestBase {
   /**
    * Tests that overrides do not affect forms or listing screens.
    */
-  public function testFormsWithOverrides() {
+  public function testFormsWithOverrides(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
     ]));

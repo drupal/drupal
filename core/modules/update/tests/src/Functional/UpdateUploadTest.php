@@ -48,7 +48,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
   /**
    * Tests upload, extraction, and update of a module.
    */
-  public function testUploadModule() {
+  public function testUploadModule(): void {
     // Ensure that the update information is correct before testing.
     update_get_available(TRUE);
 
@@ -152,7 +152,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
   /**
    * Ensures that archiver extensions are properly merged in the UI.
    */
-  public function testFileNameExtensionMerging() {
+  public function testFileNameExtensionMerging(): void {
     $this->drupalGet('admin/modules/install');
     // Make sure the bogus extension supported by update_test.module is there.
     $this->assertSession()->responseMatches('/file extensions are supported:.*update-test-extension/');
@@ -163,7 +163,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
   /**
    * Checks the messages on update manager pages when missing a security update.
    */
-  public function testUpdateManagerCoreSecurityUpdateMessages() {
+  public function testUpdateManagerCoreSecurityUpdateMessages(): void {
     $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     $this->mockReleaseHistory(['drupal' => '0.2-sec']);
     $this->config('update.settings')
@@ -200,7 +200,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
   /**
    * Tests only an *.info.yml file are detected without supporting files.
    */
-  public function testUpdateDirectory() {
+  public function testUpdateDirectory(): void {
     $type = Updater::getUpdaterFromDirectory($this->root . '/core/modules/update/tests/modules/aaa_update_test');
     $this->assertEquals('Drupal\\Core\\Updater\\Module', $type, 'Detected a Module');
 

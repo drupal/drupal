@@ -40,7 +40,7 @@ class RequirementsTest extends BrowserTestBase {
   /**
    * Test the isolation level warning message on status page.
    */
-  public function testIsolationLevelWarningNotDisplaying() {
+  public function testIsolationLevelWarningNotDisplaying(): void {
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
       'access site reports',

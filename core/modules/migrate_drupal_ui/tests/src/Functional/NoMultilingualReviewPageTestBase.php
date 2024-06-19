@@ -12,7 +12,7 @@ abstract class NoMultilingualReviewPageTestBase extends MultilingualReviewPageTe
   /**
    * Tests the review page when content_translation is enabled.
    */
-  public function testMigrateUpgradeReviewPage() {
+  public function testMigrateUpgradeReviewPage(): void {
     $this->prepare();
     // Start the upgrade process.
     $this->submitCredentialForm();

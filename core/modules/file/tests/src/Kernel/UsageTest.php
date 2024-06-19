@@ -22,7 +22,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Tests \Drupal\file\FileUsage\DatabaseFileUsageBackend::listUsage().
    */
-  public function testGetUsage() {
+  public function testGetUsage(): void {
     $file = $this->createFile();
     $connection = Database::getConnection();
     $connection->insert('file_usage')
@@ -56,7 +56,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Tests \Drupal\file\FileUsage\DatabaseFileUsageBackend::add().
    */
-  public function testAddUsage() {
+  public function testAddUsage(): void {
     $file = $this->createFile();
     $file_usage = $this->container->get('file.usage');
     $file_usage->add($file, 'testing', 'foo', 1);
@@ -82,7 +82,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Tests file usage deletion when files are made temporary.
    */
-  public function testRemoveUsageTemporary() {
+  public function testRemoveUsageTemporary(): void {
     $this->config('file.settings')
       ->set('make_unused_managed_files_temporary', TRUE)
       ->save();
@@ -93,7 +93,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Tests file usage deletion when files are made temporary.
    */
-  public function testRemoveUsageNonTemporary() {
+  public function testRemoveUsageNonTemporary(): void {
     $this->config('file.settings')
       ->set('make_unused_managed_files_temporary', FALSE)
       ->save();
@@ -196,7 +196,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Ensure that temporary files are removed by default.
    */
-  public function testTempFileCleanupDefault() {
+  public function testTempFileCleanupDefault(): void {
     [$temp_old, $temp_new, $perm_old, $perm_new] = $this->createTempFiles();
 
     // Run cron and then ensure that only the old, temp file was deleted.
@@ -210,7 +210,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Ensure that temporary files are kept as configured.
    */
-  public function testTempFileNoCleanup() {
+  public function testTempFileNoCleanup(): void {
     [$temp_old, $temp_new, $perm_old, $perm_new] = $this->createTempFiles();
 
     // Set the max age to 0, meaning no temporary files will be deleted.
@@ -229,7 +229,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Ensure that temporary files are kept as configured.
    */
-  public function testTempFileCustomCleanup() {
+  public function testTempFileCustomCleanup(): void {
     [$temp_old, $temp_new, $perm_old, $perm_new] = $this->createTempFiles();
 
     // Set the max age to older than default.
@@ -248,7 +248,7 @@ class UsageTest extends FileManagedUnitTestBase {
   /**
    * Tests file usage with translated entities.
    */
-  public function testFileUsageWithEntityTranslation() {
+  public function testFileUsageWithEntityTranslation(): void {
     /** @var \Drupal\file\FileUsage\FileUsageInterface $file_usage */
     $file_usage = $this->container->get('file.usage');
 

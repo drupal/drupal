@@ -55,7 +55,7 @@ class DateFormatterTest extends KernelTestBase {
    *
    * @covers ::format
    */
-  public function testFormat() {
+  public function testFormat(): void {
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $formatter */
     $formatter = $this->container->get('date.formatter');
     /** @var \Drupal\Core\Language\LanguageManagerInterface $language_manager */
@@ -121,7 +121,7 @@ class DateFormatterTest extends KernelTestBase {
    *
    * @covers ::format
    */
-  public function testRfc2822DateFormat() {
+  public function testRfc2822DateFormat(): void {
     $days_of_week_abbr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     foreach ($days_of_week_abbr as $day_of_week_abbr) {
       $this->setSetting('locale_custom_strings_' . self::LANGCODE, [

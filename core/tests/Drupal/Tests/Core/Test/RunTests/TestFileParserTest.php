@@ -69,7 +69,7 @@ COMPOUND
    * @covers ::parseContents
    * @dataProvider provideTestFileContents
    */
-  public function testParseContents($expected, $contents) {
+  public function testParseContents($expected, $contents): void {
     $parser = new TestFileParser();
 
     $ref_parse = new \ReflectionMethod($parser, 'parseContents');
@@ -80,7 +80,7 @@ COMPOUND
   /**
    * @covers ::getTestListFromFile
    */
-  public function testGetTestListFromFile() {
+  public function testGetTestListFromFile(): void {
     $parser = new TestFileParser();
     $this->assertEquals(
       ['Drupal\Tests\Core\Test\RunTests\TestFileParserTest'],

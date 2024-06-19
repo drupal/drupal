@@ -21,7 +21,7 @@ class DefaultMetatagsTest extends BrowserTestBase {
   /**
    * Tests meta tags.
    */
-  public function testMetaTag() {
+  public function testMetaTag(): void {
     $this->drupalGet('');
     // Ensures that the charset metatag is on the page.
     $this->assertSession()->elementsCount('xpath', '//meta[@charset="utf-8"]', 1);

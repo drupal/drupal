@@ -56,7 +56,7 @@ class ClickSortingAJAXTest extends WebDriverTestBase {
   /**
    * Tests if sorting via AJAX works for the "Content" View.
    */
-  public function testClickSorting() {
+  public function testClickSorting(): void {
     // Visit the content page.
     $this->drupalGet('test-content-ajax');
 

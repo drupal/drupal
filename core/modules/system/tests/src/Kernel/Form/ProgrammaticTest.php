@@ -24,7 +24,7 @@ class ProgrammaticTest extends KernelTestBase {
   /**
    * Tests the programmatic form submission workflow.
    */
-  public function testSubmissionWorkflow() {
+  public function testSubmissionWorkflow(): void {
     // Backup the current batch status and reset it to avoid conflicts while
     // processing the dummy form submit handler.
     $current_batch = $batch =& batch_get();
@@ -91,7 +91,7 @@ class ProgrammaticTest extends KernelTestBase {
   /**
    * Tests the programmed_bypass_access_check flag.
    */
-  public function testProgrammaticAccessBypass() {
+  public function testProgrammaticAccessBypass(): void {
     $form_state = (new FormState())->setValues([
       'textfield' => 'dummy value',
       'field_restricted' => 'dummy value',

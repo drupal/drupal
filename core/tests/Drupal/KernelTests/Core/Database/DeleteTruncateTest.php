@@ -24,7 +24,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can use a subselect in a delete successfully.
    */
-  public function testSubselectDelete() {
+  public function testSubselectDelete(): void {
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {test_task}')->fetchField();
     $pid_to_delete = $this->connection->query("SELECT * FROM {test_task} WHERE [task] = 'sleep' ORDER BY [tid]")->fetchField();
 
@@ -45,7 +45,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can delete a single record successfully.
    */
-  public function testSimpleDelete() {
+  public function testSimpleDelete(): void {
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     $num_deleted = $this->connection->delete('test')
@@ -60,7 +60,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can truncate a whole table successfully.
    */
-  public function testTruncate() {
+  public function testTruncate(): void {
     $num_records_before = $this->connection->query("SELECT COUNT(*) FROM {test}")->fetchField();
     $this->assertNotEmpty($num_records_before);
 
@@ -73,7 +73,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can truncate a whole table while in transaction.
    */
-  public function testTruncateInTransaction() {
+  public function testTruncateInTransaction(): void {
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan(0, $num_records_before, 'The table is not empty.');
 
@@ -107,7 +107,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that transaction rollback voids a truncate operation.
    */
-  public function testTruncateTransactionRollback() {
+  public function testTruncateTransactionRollback(): void {
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan(0, $num_records_before, 'The table is not empty.');
 
@@ -141,7 +141,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can delete a single special column name record successfully.
    */
-  public function testSpecialColumnDelete() {
+  public function testSpecialColumnDelete(): void {
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {select}')->fetchField();
 
     $num_deleted = $this->connection->delete('select')

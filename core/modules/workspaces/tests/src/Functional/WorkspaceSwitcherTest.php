@@ -56,7 +56,7 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
   /**
    * Tests switching workspace via the switcher block and admin page.
    */
-  public function testSwitchingWorkspaces() {
+  public function testSwitchingWorkspaces(): void {
     $this->createAndActivateWorkspaceThroughUi('Vultures', 'vultures');
     $gravity = $this->createWorkspaceThroughUi('Gravity', 'gravity');
 
@@ -81,7 +81,7 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
   /**
    * Tests switching workspace via a query parameter.
    */
-  public function testQueryParameterNegotiator() {
+  public function testQueryParameterNegotiator(): void {
     $web_assert = $this->assertSession();
     // Initially the default workspace should be active.
     $web_assert->elementContains('css', '#block-workspace-switcher', 'None');
@@ -103,7 +103,7 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
   /**
    * Tests that the toolbar workspace switcher doesn't disable the page cache.
    */
-  public function testToolbarSwitcherDynamicPageCache() {
+  public function testToolbarSwitcherDynamicPageCache(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'access toolbar',
       'view any workspace',

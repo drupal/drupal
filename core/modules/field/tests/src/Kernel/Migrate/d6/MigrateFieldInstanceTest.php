@@ -24,7 +24,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of file variables to file.settings.yml.
    */
-  public function testFieldInstanceMigration() {
+  public function testFieldInstanceMigration(): void {
     $this->migrateFields();
     $this->installConfig(['comment']);
     $this->executeMigration('d6_comment_type');
@@ -179,7 +179,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
   /**
    * Tests migrating fields into non-existent content types.
    */
-  public function testMigrateFieldIntoUnknownNodeType() {
+  public function testMigrateFieldIntoUnknownNodeType(): void {
     $this->sourceDatabase->delete('node_type')
       ->condition('type', 'test_planet')
       ->execute();

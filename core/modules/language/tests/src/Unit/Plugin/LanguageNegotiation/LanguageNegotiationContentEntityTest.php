@@ -97,7 +97,7 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
   /**
    * @covers ::getLangcode
    */
-  public function testGetLangcode() {
+  public function testGetLangcode(): void {
     $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();
 
     // Case 1: Empty request.
@@ -131,7 +131,7 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
   /**
    * @covers ::processOutbound
    */
-  public function testProcessOutbound() {
+  public function testProcessOutbound(): void {
 
     // Case 1: Not all processing conditions are met.
     $languageNegotiationContentEntityMock = $this->createPartialMock($this->getPluginClass(),
@@ -208,7 +208,7 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
   /**
    * @covers ::getLanguageSwitchLinks
    */
-  public function testGetLanguageSwitchLinks() {
+  public function testGetLanguageSwitchLinks(): void {
     $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();
     $languageNegotiationContentEntity->setLanguageManager($this->languageManager);
 

@@ -61,7 +61,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Tests uncaught exception handling when system is in a bad state.
    */
-  public function testUncaughtException() {
+  public function testUncaughtException(): void {
     $this->expectedExceptionMessage = 'Oh oh, bananas in the instruments.';
     \Drupal::state()->set('error_service_test.break_bare_html_renderer', TRUE);
 
@@ -94,7 +94,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Tests displaying an uncaught fatal error.
    */
-  public function testUncaughtFatalError() {
+  public function testUncaughtFatalError(): void {
     $fatal_error = [
       '%type' => 'TypeError',
       '@message' => 'Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}(): Argument #1 ($test) must be of type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 65',
@@ -113,7 +113,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Tests uncaught exception handling with custom exception handler.
    */
-  public function testUncaughtExceptionCustomExceptionHandler() {
+  public function testUncaughtExceptionCustomExceptionHandler(): void {
     $settings_filename = $this->siteDirectory . '/settings.php';
     chmod($settings_filename, 0777);
     $settings_php = file_get_contents($settings_filename);
@@ -136,7 +136,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Tests a missing dependency on a service.
    */
-  public function testMissingDependency() {
+  public function testMissingDependency(): void {
     $this->expectedExceptionMessage = 'Too few arguments to function Drupal\error_service_test\LonelyMonkeyClass::__construct(), 0 passed';
     $this->drupalGet('broken-service-class');
     $this->assertSession()->statusCodeEquals(500);
@@ -149,7 +149,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Tests a container which has an error.
    */
-  public function testErrorContainer() {
+  public function testErrorContainer(): void {
     $settings = [];
     $settings['settings']['container_base_class'] = (object) [
       'value' => '\Drupal\FunctionalTests\Bootstrap\ErrorContainer',
@@ -169,7 +169,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Tests a container which has an exception really early.
    */
-  public function testExceptionContainer() {
+  public function testExceptionContainer(): void {
     $settings = [];
     $settings['settings']['container_base_class'] = (object) [
       'value' => '\Drupal\FunctionalTests\Bootstrap\ExceptionContainer',
@@ -190,7 +190,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Tests the case when the database connection is gone.
    */
-  public function testLostDatabaseConnection() {
+  public function testLostDatabaseConnection(): void {
     $incorrect_username = $this->randomMachineName(16);
     switch ($this->container->get('database')->driver()) {
       case 'pgsql':
@@ -225,7 +225,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Tests fallback to PHP error log when an exception is thrown while logging.
    */
-  public function testLoggerException() {
+  public function testLoggerException(): void {
     // Ensure the test error log is empty before these tests.
     $this->assertNoErrorsLogged();
 

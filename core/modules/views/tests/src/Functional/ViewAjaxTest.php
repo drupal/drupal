@@ -37,7 +37,7 @@ class ViewAjaxTest extends ViewTestBase {
   /**
    * Tests an ajax view.
    */
-  public function testAjaxView() {
+  public function testAjaxView(): void {
     $this->drupalGet('test_ajax_view');
 
     $drupal_settings = $this->getDrupalSettings();
@@ -51,7 +51,7 @@ class ViewAjaxTest extends ViewTestBase {
   /**
    * Ensures that non-ajax view cannot be accessed via an ajax HTTP request.
    */
-  public function testNonAjaxViewViaAjax() {
+  public function testNonAjaxViewViaAjax(): void {
     $client = $this->getHttpClient();
     $response = $client->request('POST', $this->buildUrl('views/ajax'), [
       'form_params' => ['view_name' => 'test_ajax_view', 'view_display_id' => 'default'],

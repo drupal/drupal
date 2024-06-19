@@ -42,7 +42,7 @@ abstract class ConfigFormTestBase extends KernelTestBase {
   /**
    * Submit the system_config_form ensure the configuration has expected values.
    */
-  public function testConfigForm() {
+  public function testConfigForm(): void {
     // Programmatically submit the given values.
     $values = [];
     foreach ($this->values as $form_key => $data) {

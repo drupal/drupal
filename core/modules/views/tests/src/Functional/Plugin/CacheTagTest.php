@@ -124,7 +124,7 @@ class CacheTagTest extends ViewTestBase {
   /**
    * Tests the tag cache plugin.
    */
-  public function testTagCaching() {
+  public function testTagCaching(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
     $view = Views::getView('test_tag_cache');

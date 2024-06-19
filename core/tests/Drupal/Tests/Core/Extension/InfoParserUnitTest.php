@@ -46,7 +46,7 @@ class InfoParserUnitTest extends UnitTestCase {
    *
    * @covers ::parse
    */
-  public function testInfoParserNonExisting() {
+  public function testInfoParserNonExisting(): void {
     vfsStream::setup('modules');
     $this->expectException('\Drupal\Core\Extension\InfoParserException');
     $this->expectExceptionMessage('Unable to parse vfs://modules/does_not_exist.info.txt as it does not exist');
@@ -128,7 +128,7 @@ YML,
    *
    * @covers ::parse
    */
-  public function testInfoParserBroken() {
+  public function testInfoParserBroken(): void {
     $broken_info = <<<BROKEN_INFO
 # info.yml for testing broken YAML parsing exception handling.
 name: File
@@ -158,7 +158,7 @@ BROKEN_INFO;
    *
    * @covers ::parse
    */
-  public function testTestingPackageMissingCoreVersionRequirement() {
+  public function testTestingPackageMissingCoreVersionRequirement(): void {
     $missing_core_version_requirement = <<<MISSING_CORE_VERSION_REQUIREMENT
 # info.yml for testing core_version_requirement.
 package: Testing
@@ -182,7 +182,7 @@ MISSING_CORE_VERSION_REQUIREMENT;
    *
    * @covers ::parse
    */
-  public function testInfoParserCommonInfo() {
+  public function testInfoParserCommonInfo(): void {
     $common = <<<COMMON
 core_version_requirement: '*'
 name: common_test
@@ -215,7 +215,7 @@ COMMON;
    *
    * @covers ::parse
    */
-  public function testInfoParserCoreInfo() {
+  public function testInfoParserCoreInfo(): void {
     $common = <<<CORE
 name: core_test
 type: module
@@ -242,7 +242,7 @@ CORE;
    *
    * @dataProvider providerCoreIncompatibility
    */
-  public function testCoreIncompatibility($test_case, $constraint, $expected) {
+  public function testCoreIncompatibility($test_case, $constraint, $expected): void {
     $core_incompatibility = <<<CORE_INCOMPATIBILITY
 core_version_requirement: $constraint
 name: common_test
@@ -303,7 +303,7 @@ CORE_INCOMPATIBILITY;
   /**
    * Tests a profile info file.
    */
-  public function testProfile() {
+  public function testProfile(): void {
     $profile = <<<PROFILE_TEST
 core_version_requirement: '*'
 name: The Perfect Profile
@@ -326,7 +326,7 @@ PROFILE_TEST;
    *
    * @covers ::parse
    */
-  public function testUnparsableCoreVersionRequirement() {
+  public function testUnparsableCoreVersionRequirement(): void {
     $unparsable_core_version_requirement = <<<UNPARSABLE_CORE_VERSION_REQUIREMENT
 # info.yml for testing invalid core_version_requirement value.
 name: Not this module
@@ -355,7 +355,7 @@ UNPARSABLE_CORE_VERSION_REQUIREMENT;
    *
    * @dataProvider providerValidLifecycle
    */
-  public function testValidLifecycle($lifecycle, $expected) {
+  public function testValidLifecycle($lifecycle, $expected): void {
     $info = <<<INFO
 package: Core
 core_version_requirement: '*'
@@ -415,7 +415,7 @@ INFO;
    *
    * @dataProvider providerInvalidLifecycle
    */
-  public function testInvalidLifecycle($lifecycle, $exception_message) {
+  public function testInvalidLifecycle($lifecycle, $exception_message): void {
     $info = <<<INFO
 package: Core
 core_version_requirement: '*'
@@ -464,7 +464,7 @@ INFO;
    *
    * @dataProvider providerLifecycleLink
    */
-  public function testLifecycleLink($lifecycle, $lifecycle_link = NULL, $exception_message = NULL) {
+  public function testLifecycleLink($lifecycle, $lifecycle_link = NULL, $exception_message = NULL): void {
     $info = <<<INFO
 package: Core
 core_version_requirement: '*'

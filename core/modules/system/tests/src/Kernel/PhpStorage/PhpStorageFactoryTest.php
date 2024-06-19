@@ -34,7 +34,7 @@ class PhpStorageFactoryTest extends KernelTestBase {
   /**
    * Tests the get() method with no settings.
    */
-  public function testGetNoSettings() {
+  public function testGetNoSettings(): void {
     $php = PhpStorageFactory::get('test');
     // This should be the default class used.
     $this->assertInstanceOf(MTimeProtectedFileStorage::class, $php);
@@ -43,7 +43,7 @@ class PhpStorageFactoryTest extends KernelTestBase {
   /**
    * Tests the get() method using the 'default' settings.
    */
-  public function testGetDefault() {
+  public function testGetDefault(): void {
     $this->setSettings();
     $php = PhpStorageFactory::get('test');
     $this->assertInstanceOf(MockPhpStorage::class, $php);
@@ -52,7 +52,7 @@ class PhpStorageFactoryTest extends KernelTestBase {
   /**
    * Tests the get() method with overridden settings.
    */
-  public function testGetOverride() {
+  public function testGetOverride(): void {
     $this->setSettings('test');
     $php = PhpStorageFactory::get('test');
     // The FileReadOnlyStorage should be used from settings.

@@ -38,7 +38,7 @@ class CommentDisplayConfigurableTest extends CommentTestBase {
   /**
    * Sets base fields to configurable display and check settings are respected.
    */
-  public function testDisplayConfigurable() {
+  public function testDisplayConfigurable(): void {
     // Add a comment.
     $nid = $this->node->id();
     /** @var \Drupal\comment\CommentInterface $comment */

@@ -52,7 +52,7 @@ class UserPermissionsTest extends WebDriverTestBase {
   /**
    * Tests the dummy checkboxes added to the permissions page.
    */
-  public function testPermissionCheckboxes() {
+  public function testPermissionCheckboxes(): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/people/permissions');
 

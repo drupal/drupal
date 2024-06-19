@@ -69,7 +69,7 @@ class StateTransitionValidationTest extends UnitTestCase {
    *
    * @dataProvider userTransitionsProvider
    */
-  public function testUserSensitiveValidTransitions($from_id, $to_id, $permission, $allowed, $result) {
+  public function testUserSensitiveValidTransitions($from_id, $to_id, $permission, $allowed, $result): void {
     $user = $this->prophesize(AccountInterface::class);
     // The one listed permission will be returned as instructed; Any others are
     // always denied.

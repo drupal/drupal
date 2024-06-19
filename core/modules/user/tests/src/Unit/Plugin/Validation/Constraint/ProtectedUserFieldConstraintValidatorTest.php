@@ -69,7 +69,7 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidate() {
+  public function testValidate(): void {
     // Case 1: Validation context should not be touched if no items are passed.
     $this->validate(NULL);
 

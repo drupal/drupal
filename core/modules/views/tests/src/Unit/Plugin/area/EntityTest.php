@@ -157,7 +157,7 @@ class EntityTest extends UnitTestCase {
    * @covers ::defineOptions
    * @covers ::init
    */
-  public function testRenderWithId() {
+  public function testRenderWithId(): void {
     $this->setupEntityTypeManager();
     $options = [
       'target' => 1,
@@ -193,7 +193,7 @@ class EntityTest extends UnitTestCase {
    *
    * @dataProvider providerTestTokens
    */
-  public function testRenderWithIdAndToken($token, $id) {
+  public function testRenderWithIdAndToken($token, $id): void {
     $this->setupEntityTypeManager();
     $options = [
       'target' => $token,
@@ -232,7 +232,7 @@ class EntityTest extends UnitTestCase {
    * @covers ::defineOptions
    * @covers ::init
    */
-  public function testRenderWithUuid() {
+  public function testRenderWithUuid(): void {
     $this->setupEntityTypeManager();
     $uuid = '1d52762e-b9d8-4177-908f-572d1a5845a4';
     $options = [
@@ -265,7 +265,7 @@ class EntityTest extends UnitTestCase {
    *
    * @dataProvider providerTestTokens
    */
-  public function testCalculateDependenciesWithPlaceholder($token, $id) {
+  public function testCalculateDependenciesWithPlaceholder($token, $id): void {
     $this->setupEntityTypeManager();
 
     $options = [
@@ -279,7 +279,7 @@ class EntityTest extends UnitTestCase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDependenciesWithUuid() {
+  public function testCalculateDependenciesWithUuid(): void {
     $this->setupEntityTypeManager();
 
     $uuid = '1d52762e-b9d8-4177-908f-572d1a5845a4';
@@ -311,7 +311,7 @@ class EntityTest extends UnitTestCase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDependenciesWithEntityId() {
+  public function testCalculateDependenciesWithEntityId(): void {
     $this->setupEntityTypeManager();
 
     $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');

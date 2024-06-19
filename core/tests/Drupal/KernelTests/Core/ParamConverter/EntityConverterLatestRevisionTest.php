@@ -59,7 +59,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
   /**
    * Tests with no matching entity.
    */
-  public function testNoEntity() {
+  public function testNoEntity(): void {
     $converted = $this->converter->convert(1, [
       'load_latest_revision' => TRUE,
       'type' => 'entity:entity_test_mulrev',
@@ -70,7 +70,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
   /**
    * Tests with no pending revision.
    */
-  public function testEntityNoPendingRevision() {
+  public function testEntityNoPendingRevision(): void {
     $entity = EntityTestMulRev::create();
     $entity->save();
 
@@ -84,7 +84,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
   /**
    * Tests with a pending revision.
    */
-  public function testEntityWithPendingRevision() {
+  public function testEntityWithPendingRevision(): void {
     $entity = EntityTestMulRev::create();
     $entity->save();
 
@@ -103,7 +103,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
   /**
    * Tests with a translated pending revision.
    */
-  public function testWithTranslatedPendingRevision() {
+  public function testWithTranslatedPendingRevision(): void {
     // Enable translation for test entities.
     $this->container->get('state')->set('entity_test.translation', TRUE);
     $this->container->get('entity_type.bundle.info')->clearCachedBundles();
@@ -151,7 +151,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
   /**
    * Tests that pending revisions are loaded only when needed.
    */
-  public function testOptimizedConvert() {
+  public function testOptimizedConvert(): void {
     $entity = EntityTestMulRev::create();
     $entity->save();
 
@@ -179,7 +179,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
   /**
    * Tests the latest revision flag and non-revisionable entities.
    */
-  public function testConvertNonRevisionableEntityType() {
+  public function testConvertNonRevisionableEntityType(): void {
     $entity = EntityTest::create();
     $entity->save();
 

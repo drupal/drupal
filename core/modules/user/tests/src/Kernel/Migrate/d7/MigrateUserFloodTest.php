@@ -25,7 +25,7 @@ class MigrateUserFloodTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migration.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $expected = [
       '_core' => [
         'default_config_hash' => 'UYfMzeP1S8jKm9PSvxf7nQNe8DsNS-3bc2WSNNXBQWs',

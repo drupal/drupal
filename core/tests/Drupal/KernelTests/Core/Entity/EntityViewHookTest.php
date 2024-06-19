@@ -24,7 +24,7 @@ class EntityViewHookTest extends EntityKernelTestBase {
   /**
    * Tests hook_entity_display_build_alter().
    */
-  public function testHookEntityDisplayBuildAlter() {
+  public function testHookEntityDisplayBuildAlter(): void {
     entity_test_create_bundle('display_build_alter_bundle');
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');

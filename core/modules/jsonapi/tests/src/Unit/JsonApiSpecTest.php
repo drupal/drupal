@@ -23,7 +23,7 @@ class JsonApiSpecTest extends UnitTestCase {
    * @dataProvider providerTestIsValidMemberName
    * @covers ::isValidMemberName
    */
-  public function testIsValidMemberName($member_name, $expected) {
+  public function testIsValidMemberName($member_name, $expected): void {
     $this->assertSame($expected, JsonApiSpec::isValidMemberName($member_name));
   }
 
@@ -104,7 +104,7 @@ class JsonApiSpecTest extends UnitTestCase {
    * @covers ::isValidCustomQueryParameter
    * @covers ::isValidMemberName
    */
-  public function testIsValidCustomQueryParameter($custom_query_parameter, $expected) {
+  public function testIsValidCustomQueryParameter($custom_query_parameter, $expected): void {
     $this->assertSame($expected, JsonApiSpec::isValidCustomQueryParameter($custom_query_parameter));
   }
 

@@ -45,7 +45,7 @@ class BaseThemeRequiredTest extends KernelTestBase {
   /**
    * Tests opting out of Stable 9 by setting the base theme to false.
    */
-  public function testWildWest() {
+  public function testWildWest(): void {
     $this->themeInstaller->install(['test_wild_west']);
     $this->config('system.theme')->set('default', 'test_wild_west')->save();
     $theme = $this->themeManager->getActiveTheme();

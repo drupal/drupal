@@ -48,7 +48,7 @@ class MigrateCommentFieldTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migrated comment fields.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $this->assertEntity('comment_node_page');
     $this->assertEntity('comment_node_article');
     $this->assertEntity('comment_node_blog');

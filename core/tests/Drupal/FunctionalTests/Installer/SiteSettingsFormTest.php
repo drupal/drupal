@@ -26,7 +26,7 @@ class SiteSettingsFormTest extends BrowserTestBase {
   /**
    * Confirms that the form is extensible.
    */
-  public function testSiteSettingsForm() {
+  public function testSiteSettingsForm(): void {
     // Test that the form page can be loaded without errors.
     $this->drupalGet('test-form');
     $this->assertSession()->statusCodeEquals(200);

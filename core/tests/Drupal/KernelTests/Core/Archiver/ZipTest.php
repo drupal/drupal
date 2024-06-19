@@ -19,7 +19,7 @@ class ZipTest extends ArchiverTestBase {
   /**
    * Tests that the Zip archive is created if it does not exist.
    */
-  public function testCreateArchive() {
+  public function testCreateArchive(): void {
     $textFile = current($this->getTestFiles('text'));
     $archiveFilename = $this->fileSystem->realpath('public://' . $this->randomMachineName() . '.zip');
     $zip = new Zip($archiveFilename, [
@@ -35,7 +35,7 @@ class ZipTest extends ArchiverTestBase {
   /**
    * Tests that the Zip archiver is created and overwritten.
    */
-  public function testOverwriteArchive() {
+  public function testOverwriteArchive(): void {
     // Create an archive similarly to how it's done in ::testCreateArchive.
     $files = $this->getTestFiles('text');
     $textFile = current($files);

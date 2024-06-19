@@ -30,7 +30,7 @@ class TokenReplaceWebTest extends BrowserTestBase {
   /**
    * Tests a token replacement on an actual website.
    */
-  public function testTokens() {
+  public function testTokens(): void {
     $node = $this->drupalCreateNode();
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);

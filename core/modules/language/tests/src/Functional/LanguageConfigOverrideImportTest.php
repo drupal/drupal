@@ -35,7 +35,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
   /**
    * Tests that language can be enabled and overrides are created during a sync.
    */
-  public function testConfigOverrideImport() {
+  public function testConfigOverrideImport(): void {
     ConfigurableLanguage::createFromLangcode('fr')->save();
     /** @var \Drupal\Core\Config\StorageInterface $sync */
     $sync = \Drupal::service('config.storage.sync');
@@ -72,7 +72,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
   /**
    * Tests that configuration events are not fired during a sync of overrides.
    */
-  public function testConfigOverrideImportEvents() {
+  public function testConfigOverrideImportEvents(): void {
     // Enable the config_events_test module so we can record events occurring.
     \Drupal::service('module_installer')->install(['config_events_test']);
     $this->rebuildContainer();

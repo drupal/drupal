@@ -85,7 +85,7 @@ class FilterNodeAccessTest extends NodeTestBase {
   /**
    * Tests the node access filter.
    */
-  public function testFilterNodeAccess() {
+  public function testFilterNodeAccess(): void {
     $this->drupalLogin($this->users[0]);
     $this->drupalGet('test_filter_node_access');
     // Test that the private node of the current user is shown.

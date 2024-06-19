@@ -22,7 +22,7 @@ class AddFeedTest extends KernelTestBase {
   /**
    * Tests attaching feeds with paths, URLs, and titles.
    */
-  public function testBasicFeedAddNoTitle() {
+  public function testBasicFeedAddNoTitle(): void {
     $path = $this->randomMachineName(12);
     $external_url = 'http://' . $this->randomMachineName(12) . '/' . $this->randomMachineName(12);
     $fully_qualified_local_url = Url::fromUri('base:' . $this->randomMachineName(12), ['absolute' => TRUE])->toString();
@@ -89,7 +89,7 @@ class AddFeedTest extends KernelTestBase {
    *
    * @see https://www.drupal.org/node/1211668
    */
-  public function testFeedIconEscaping() {
+  public function testFeedIconEscaping(): void {
     $variables = [
       '#theme' => 'feed_icon',
       '#url' => 'node',

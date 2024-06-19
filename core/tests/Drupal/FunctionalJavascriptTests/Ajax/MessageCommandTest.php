@@ -27,7 +27,7 @@ class MessageCommandTest extends WebDriverTestBase {
   /**
    * Tests AJAX MessageCommand use in a form.
    */
-  public function testMessageCommand() {
+  public function testMessageCommand(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

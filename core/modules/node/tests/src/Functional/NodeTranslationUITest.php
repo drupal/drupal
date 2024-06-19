@@ -81,7 +81,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests the basic translation UI.
    */
-  public function testTranslationUI() {
+  public function testTranslationUI(): void {
     parent::testTranslationUI();
     $this->doUninstallTest();
   }
@@ -89,7 +89,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests changing the published status on a node without fields.
    */
-  public function testPublishedStatusNoFields() {
+  public function testPublishedStatusNoFields(): void {
     // Test changing the published status of an article without fields.
     $this->drupalLogin($this->administrator);
     // Delete all fields.
@@ -245,7 +245,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that translation page inherits admin status of edit page.
    */
-  public function testTranslationLinkTheme() {
+  public function testTranslationLinkTheme(): void {
     $this->drupalLogin($this->administrator);
     $article = $this->drupalCreateNode(['type' => 'article', 'langcode' => $this->langcodes[0]]);
 
@@ -275,7 +275,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that no metadata is stored for a disabled bundle.
    */
-  public function testDisabledBundle() {
+  public function testDisabledBundle(): void {
     // Create a bundle that does not have translation enabled.
     $disabledBundle = $this->randomMachineName();
     $this->drupalCreateContentType(['type' => $disabledBundle, 'name' => $disabledBundle]);
@@ -304,7 +304,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that translations are rendered properly.
    */
-  public function testTranslationRendering() {
+  public function testTranslationRendering(): void {
     // Add a comment field to the article content type.
     \Drupal::service('module_installer')->install(['comment']);
     $this->addDefaultCommentField('node', 'article');
@@ -507,7 +507,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that revision translations are rendered properly.
    */
-  public function testRevisionTranslationRendering() {
+  public function testRevisionTranslationRendering(): void {
     $storage = \Drupal::entityTypeManager()->getStorage('node');
 
     // Create a node.
@@ -556,7 +556,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests title is not escaped (but XSS-filtered) for details form element.
    */
-  public function testDetailsTitleIsNotEscaped() {
+  public function testDetailsTitleIsNotEscaped(): void {
     // Create an image field.
     \Drupal::service('module_installer')->install(['image']);
     FieldStorageConfig::create([
@@ -601,7 +601,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * When language neutral content is displayed on interface language, it should
    * consider the interface language for creating the content link.
    */
-  public function testUrlPrefixOnLanguageNeutralContent() {
+  public function testUrlPrefixOnLanguageNeutralContent(): void {
     $this->drupalLogin($this->administrator);
     $neutral_langcodes = [
       LanguageInterface::LANGCODE_NOT_SPECIFIED,

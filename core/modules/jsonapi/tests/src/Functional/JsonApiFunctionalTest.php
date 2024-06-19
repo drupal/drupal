@@ -33,7 +33,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   /**
    * Tests the GET method.
    */
-  public function testRead() {
+  public function testRead(): void {
     $this->createDefaultContent(61, 5, TRUE, TRUE, static::IS_NOT_MULTILINGUAL, FALSE);
     // Unpublish the last entity, so we can check access.
     $this->nodes[60]->setUnpublished()->save();
@@ -554,7 +554,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   /**
    * Tests the GET method on articles referencing the same tag twice.
    */
-  public function testReferencingTwiceRead() {
+  public function testReferencingTwiceRead(): void {
     $this->createDefaultContent(1, 1, FALSE, FALSE, static::IS_NOT_MULTILINGUAL, TRUE);
 
     // 1. Load all articles (1st page).
@@ -568,7 +568,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   /**
    * Tests POST, PATCH and DELETE.
    */
-  public function testWrite() {
+  public function testWrite(): void {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
     $this->createDefaultContent(0, 3, FALSE, FALSE, static::IS_NOT_MULTILINGUAL, FALSE);

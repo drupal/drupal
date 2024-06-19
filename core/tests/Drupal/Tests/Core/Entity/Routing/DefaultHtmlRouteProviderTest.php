@@ -61,7 +61,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getAddPageRoute
    * @dataProvider providerTestGetAddPageRoute
    */
-  public function testGetAddPageRoute(?Route $expected, EntityTypeInterface $entity_type) {
+  public function testGetAddPageRoute(?Route $expected, EntityTypeInterface $entity_type): void {
     $route = $this->routeProvider->getAddPageRoute($entity_type);
     $this->assertEquals($expected, $route);
   }
@@ -99,7 +99,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getAddFormRoute
    * @dataProvider providerTestGetAddFormRoute
    */
-  public function testGetAddFormRoute(?Route $expected, EntityTypeInterface $entity_type, ?EntityTypeInterface $bundle_entity_type = NULL, ?FieldStorageDefinitionInterface $field_storage_definition = NULL) {
+  public function testGetAddFormRoute(?Route $expected, EntityTypeInterface $entity_type, ?EntityTypeInterface $bundle_entity_type = NULL, ?FieldStorageDefinitionInterface $field_storage_definition = NULL): void {
     if ($bundle_entity_type) {
       $this->entityTypeManager->getDefinition('the_bundle_entity_type_id')->willReturn($bundle_entity_type);
 
@@ -200,7 +200,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getCanonicalRoute
    * @dataProvider providerTestGetCanonicalRoute
    */
-  public function testGetCanonicalRoute(?Route $expected, EntityTypeInterface $entity_type, ?FieldStorageDefinitionInterface $field_storage_definition = NULL) {
+  public function testGetCanonicalRoute(?Route $expected, EntityTypeInterface $entity_type, ?FieldStorageDefinitionInterface $field_storage_definition = NULL): void {
     if ($field_storage_definition) {
       $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id())
         ->willReturn([$entity_type->getKey('id') => $field_storage_definition]);
@@ -260,7 +260,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    * @covers ::getCollectionRoute
    * @dataProvider providerTestGetCollectionRoute
    */
-  public function testGetCollectionRoute(?Route $expected, EntityTypeInterface $entity_type) {
+  public function testGetCollectionRoute(?Route $expected, EntityTypeInterface $entity_type): void {
     $route = $this->routeProvider->getCollectionRoute($entity_type);
     $this->assertEquals($expected, $route);
   }
@@ -352,7 +352,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
   /**
    * @covers ::getEntityTypeIdKeyType
    */
-  public function testGetEntityTypeIdKeyType() {
+  public function testGetEntityTypeIdKeyType(): void {
     $entity_type = $this->prophesize(EntityTypeInterface::class);
     $entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
     $entity_type->id()->willReturn('the_entity_type_id');
@@ -369,7 +369,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
   /**
    * @covers ::getEntityTypeIdKeyType
    */
-  public function testGetEntityTypeIdKeyTypeNotFieldable() {
+  public function testGetEntityTypeIdKeyTypeNotFieldable(): void {
     $entity_type = $this->prophesize(EntityTypeInterface::class);
     $entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
     $this->entityFieldManager->getFieldStorageDefinitions(Argument::any())->shouldNotBeCalled();

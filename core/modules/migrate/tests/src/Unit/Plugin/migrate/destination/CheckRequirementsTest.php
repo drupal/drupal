@@ -22,7 +22,7 @@ class CheckRequirementsTest extends UnitTestCase {
   /**
    * Tests the check requirements exception message.
    */
-  public function testException() {
+  public function testException(): void {
     $destination = new Config(
       ['config_name' => 'test'],
       'test',

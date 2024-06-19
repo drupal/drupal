@@ -29,7 +29,7 @@ class FieldImportDeleteTest extends FieldKernelTestBase {
   /**
    * Tests deleting field storages and fields as part of config import.
    */
-  public function testImportDelete() {
+  public function testImportDelete(): void {
     entity_test_create_bundle('test_bundle');
 
     $this->installConfig(['field_test_config']);

@@ -27,7 +27,7 @@ class ThemeExtensionListTest extends UnitTestCase {
   /**
    * Tests rebuild the theme data with theme parents.
    */
-  public function testRebuildThemeDataWithThemeParents() {
+  public function testRebuildThemeDataWithThemeParents(): void {
     $extension_discovery = $this->prophesize(ExtensionDiscovery::class);
     $extension_discovery
       ->scan('theme')
@@ -121,7 +121,7 @@ class ThemeExtensionListTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testGetBaseThemes(array $themes, $theme, array $expected) {
+  public function testGetBaseThemes(array $themes, $theme, array $expected): void {
     // Mocks and stubs.
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $state = new State(new KeyValueMemoryFactory(), new NullBackend('bin'), new NullLockBackend());

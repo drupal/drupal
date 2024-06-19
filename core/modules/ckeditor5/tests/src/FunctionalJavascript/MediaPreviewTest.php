@@ -19,7 +19,7 @@ class MediaPreviewTest extends MediaTestBase {
   /**
    * Tests that failed media embed preview requests inform the end user.
    */
-  public function testErrorMessages() {
+  public function testErrorMessages(): void {
     // This test currently frequently causes the SQLite database to lock, so
     // skip the test on SQLite until the issue can be resolved.
     // @todo https://www.drupal.org/project/drupal/issues/3273626
@@ -87,7 +87,7 @@ class MediaPreviewTest extends MediaTestBase {
   /**
    * The CKEditor Widget must load a preview generated using the default theme.
    */
-  public function testPreviewUsesDefaultThemeAndIsClientCacheable() {
+  public function testPreviewUsesDefaultThemeAndIsClientCacheable(): void {
     // Make the node edit form use the admin theme, like on most Drupal sites.
     $this->config('node.settings')
       ->set('use_admin_theme', TRUE)
@@ -144,7 +144,7 @@ class MediaPreviewTest extends MediaTestBase {
    *
    * @dataProvider previewAccessProvider
    */
-  public function testEmbedPreviewAccess($media_embed_enabled, $can_use_format) {
+  public function testEmbedPreviewAccess($media_embed_enabled, $can_use_format): void {
     // Reconfigure the host entity's text format to suit our needs.
     /** @var \Drupal\filter\FilterFormatInterface $format */
     $format = FilterFormat::load($this->host->body->format);
@@ -207,7 +207,7 @@ class MediaPreviewTest extends MediaTestBase {
   /**
    * Ensure media preview isn't clickable.
    */
-  public function testMediaPointerEvent() {
+  public function testMediaPointerEvent(): void {
     $entityViewDisplay = EntityViewDisplay::load('media.image.view_mode_1');
     $thumbnail = $entityViewDisplay->getComponent('thumbnail');
     $thumbnail['settings']['image_link'] = 'file';

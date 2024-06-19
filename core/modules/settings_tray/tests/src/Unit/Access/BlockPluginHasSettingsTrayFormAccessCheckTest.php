@@ -26,7 +26,7 @@ class BlockPluginHasSettingsTrayFormAccessCheckTest extends UnitTestCase {
    * @covers ::accessBlockPlugin
    * @dataProvider providerTestAccess
    */
-  public function testAccess($with_forms, array $plugin_definition, AccessResultInterface $expected_access_result) {
+  public function testAccess($with_forms, array $plugin_definition, AccessResultInterface $expected_access_result): void {
     $block_plugin = $this->prophesize()->willImplement(BlockPluginInterface::class);
 
     if ($with_forms) {

@@ -52,14 +52,14 @@ class TwigRegistryLoaderTest extends BrowserTestBase {
   /**
    * Tests template discovery using the Drupal theme registry.
    */
-  public function testTemplateDiscovery() {
+  public function testTemplateDiscovery(): void {
     $this->assertTwigTemplate($this->twig->load('block.html.twig'), 'Found block.html.twig in block module.');
   }
 
   /**
    * Tests template extension and includes using the Drupal theme registry.
    */
-  public function testTwigNamespaces() {
+  public function testTwigNamespaces(): void {
     // Test the module-provided extend and insert templates.
     $this->drupalGet('twig-theme-test/registry-loader');
     $this->assertSession()->pageTextContains('This line is from twig_theme_test/templates/twig-registry-loader-test-extend.html.twig');

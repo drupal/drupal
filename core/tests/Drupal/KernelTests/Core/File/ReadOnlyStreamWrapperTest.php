@@ -31,7 +31,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
   /**
    * Tests read-only specific behavior.
    */
-  public function testReadOnlyBehavior() {
+  public function testReadOnlyBehavior(): void {
     $type = DummyReadOnlyStreamWrapper::getType();
     // Checks that the stream wrapper type is not declared as writable.
     $this->assertSame(0, $type & StreamWrapperInterface::WRITE);

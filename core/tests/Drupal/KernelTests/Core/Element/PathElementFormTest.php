@@ -140,7 +140,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
   /**
    * Tests that default handlers are added even if custom are specified.
    */
-  public function testPathElement() {
+  public function testPathElement(): void {
     $form_state = (new FormState())
       ->setValues([
         'required_validate' => 'user/' . $this->testUser->id(),

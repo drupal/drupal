@@ -29,7 +29,7 @@ class MigrateUserProfileEntityFormDisplayTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of user profile fields.
    */
-  public function testUserProfileEntityFormDisplay() {
+  public function testUserProfileEntityFormDisplay(): void {
     $display = EntityFormDisplay::load('user.user.default');
 
     // Test a text field.

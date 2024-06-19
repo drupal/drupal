@@ -23,7 +23,7 @@ class ConfigEntityStatusTest extends KernelTestBase {
   /**
    * Tests the enabling/disabling of entities.
    */
-  public function testCRUD() {
+  public function testCRUD(): void {
     $entity = \Drupal::entityTypeManager()->getStorage('config_test')->create([
       'id' => $this->randomMachineName(),
     ]);

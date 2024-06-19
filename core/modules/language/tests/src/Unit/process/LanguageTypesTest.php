@@ -17,7 +17,7 @@ class LanguageTypesTest extends MigrateProcessTestCase {
   /**
    * Tests successful transformation of all language types.
    */
-  public function testTransformAll() {
+  public function testTransformAll(): void {
     $this->plugin = new LanguageTypes([], 'map', []);
     $source = [
       'language' => TRUE,
@@ -36,7 +36,7 @@ class LanguageTypesTest extends MigrateProcessTestCase {
   /**
    * Tests successful transformation of configurable language types.
    */
-  public function testTransformConfigurable() {
+  public function testTransformConfigurable(): void {
     $this->plugin = new LanguageTypes(['filter_configurable' => TRUE], 'map', []);
     $source = [
       'language' => TRUE,
@@ -53,7 +53,7 @@ class LanguageTypesTest extends MigrateProcessTestCase {
   /**
    * Tests string input.
    */
-  public function testStringInput() {
+  public function testStringInput(): void {
     $this->plugin = new LanguageTypes([], 'map', []);
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The input should be an array');

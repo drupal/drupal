@@ -19,7 +19,7 @@ class PluginAlterTest extends KernelTestBase {
   /**
    * Tests hook_element_plugin_alter().
    */
-  public function testPluginAlter() {
+  public function testPluginAlter(): void {
     $info_manager = $this->container->get('plugin.manager.element_info');
     $this->assertArrayHasKey('weight', $info_manager->getDefinitions());
 

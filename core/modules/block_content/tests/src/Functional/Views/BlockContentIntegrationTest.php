@@ -26,7 +26,7 @@ class BlockContentIntegrationTest extends BlockContentTestBase {
   /**
    * Tests basic block_content view with a block_content_type argument.
    */
-  public function testBlockContentViewTypeArgument() {
+  public function testBlockContentViewTypeArgument(): void {
     // Create two content types with three block_contents each.
     $types = [];
     $all_ids = [];

@@ -24,7 +24,7 @@ class WorkspacePublishFormTest extends KernelTestBase {
   /**
    * @covers ::submitForm
    */
-  public function testSubmitFormWithException() {
+  public function testSubmitFormWithException(): void {
     /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
     $messenger = \Drupal::service('messenger');
 

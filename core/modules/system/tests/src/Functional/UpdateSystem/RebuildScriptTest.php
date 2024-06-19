@@ -28,7 +28,7 @@ class RebuildScriptTest extends BrowserTestBase {
   /**
    * Tests redirect in rebuild.php.
    */
-  public function testRebuild() {
+  public function testRebuild(): void {
     $cache = $this->container->get('cache.default');
 
     $cache->set('rebuild_test', TRUE);

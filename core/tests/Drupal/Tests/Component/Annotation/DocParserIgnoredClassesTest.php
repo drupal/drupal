@@ -20,7 +20,7 @@ class DocParserIgnoredClassesTest extends TestCase {
    * Drupal's DocParser should never use class_exists() on an ignored
    * annotation, including cases where namespaces are set.
    */
-  public function testIgnoredAnnotationSkippedBeforeReflection() {
+  public function testIgnoredAnnotationSkippedBeforeReflection(): void {
     $annotation = 'neverReflectThis';
     $parser = new DocParser();
     $parser->setIgnoredAnnotationNames([$annotation => TRUE]);

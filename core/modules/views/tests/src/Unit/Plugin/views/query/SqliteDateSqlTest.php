@@ -39,7 +39,7 @@ class SqliteDateSqlTest extends UnitTestCase {
    *
    * @covers ::getDateField
    */
-  public function testGetDateField() {
+  public function testGetDateField(): void {
     $date_sql = new SqliteDateSql($this->database);
 
     $expected = "strftime('%s', foo.field)";
@@ -56,7 +56,7 @@ class SqliteDateSqlTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetDateFormat
    */
-  public function testGetDateFormat($field, $format, $expected) {
+  public function testGetDateFormat($field, $format, $expected): void {
     $date_sql = new SqliteDateSql($this->database);
 
     $this->assertEquals($expected, $date_sql->getDateFormat($field, $format));
@@ -79,7 +79,7 @@ class SqliteDateSqlTest extends UnitTestCase {
    *
    * @covers ::setFieldTimezoneOffset
    */
-  public function testSetFieldTimezoneOffset() {
+  public function testSetFieldTimezoneOffset(): void {
     $date_sql = new SqliteDateSql($this->database);
 
     $field = 'foobar.field';
@@ -92,7 +92,7 @@ class SqliteDateSqlTest extends UnitTestCase {
    *
    * @covers ::setTimezoneOffset
    */
-  public function testSetTimezoneOffset() {
+  public function testSetTimezoneOffset(): void {
     $database = $this->prophesize(Connection::class);
     $database->query()->shouldNotBeCalled();
     $date_sql = new SqliteDateSql($database->reveal());

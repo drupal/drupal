@@ -46,7 +46,7 @@ class HtaccessTest extends KernelTestBase {
   /**
    * @covers ::write
    */
-  public function testHtaccessSave() {
+  public function testHtaccessSave(): void {
     // Prepare test directories.
     $private = Settings::get('file_public_path') . '/test/private';
     $stream = 'public://test/stream';

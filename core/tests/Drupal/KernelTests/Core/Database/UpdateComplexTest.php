@@ -14,7 +14,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests updates with OR conditionals.
    */
-  public function testOrConditionUpdate() {
+  public function testOrConditionUpdate(): void {
     $update = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->condition(($this->connection->condition('OR'))
@@ -31,7 +31,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests WHERE IN clauses.
    */
-  public function testInConditionUpdate() {
+  public function testInConditionUpdate(): void {
     $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->condition('name', ['John', 'Paul'], 'IN')
@@ -45,7 +45,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests WHERE NOT IN clauses.
    */
-  public function testNotInConditionUpdate() {
+  public function testNotInConditionUpdate(): void {
     // The o is lowercase in the 'NoT IN' operator, to make sure the operators
     // work in mixed case.
     $num_updated = $this->connection->update('test')
@@ -61,7 +61,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests BETWEEN conditional clauses.
    */
-  public function testBetweenConditionUpdate() {
+  public function testBetweenConditionUpdate(): void {
     $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->condition('age', [25, 26], 'BETWEEN')
@@ -75,7 +75,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests LIKE conditionals.
    */
-  public function testLikeConditionUpdate() {
+  public function testLikeConditionUpdate(): void {
     $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->condition('name', '%ge%', 'LIKE')
@@ -89,7 +89,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests UPDATE with expression values.
    */
-  public function testUpdateExpression() {
+  public function testUpdateExpression(): void {
     $before_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchField();
     $num_updated = $this->connection->update('test')
       ->condition('name', 'Ringo')
@@ -110,7 +110,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests UPDATE with only expression values.
    */
-  public function testUpdateOnlyExpression() {
+  public function testUpdateOnlyExpression(): void {
     $before_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchField();
     $num_updated = $this->connection->update('test')
       ->condition('name', 'Ringo')
@@ -125,7 +125,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   /**
    * Tests UPDATE with a subselect value.
    */
-  public function testSubSelectUpdate() {
+  public function testSubSelectUpdate(): void {
     $subselect = $this->connection->select('test_task', 't');
     $subselect->addExpression('MAX([priority]) + :increment', 'max_priority', [':increment' => 30]);
     // Clone this to make sure we are running a different query when

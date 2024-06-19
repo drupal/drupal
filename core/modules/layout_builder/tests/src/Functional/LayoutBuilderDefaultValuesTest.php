@@ -99,7 +99,7 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
   /**
    * Tests display of default field values.
    */
-  public function testDefaultValues() {
+  public function testDefaultValues(): void {
     // Begin by viewing nodes with Layout Builder disabled.
     $this->assertNodeWithValues();
     $this->assertNodeWithDefaultValues();

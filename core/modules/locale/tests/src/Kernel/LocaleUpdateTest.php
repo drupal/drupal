@@ -25,7 +25,7 @@ class LocaleUpdateTest extends KernelTestBase {
   /**
    * Checks if a list of translatable projects gets build.
    */
-  public function testUpdateProjects() {
+  public function testUpdateProjects(): void {
     $this->container->get('module_handler')->loadInclude('locale', 'compare.inc');
 
     // Make the test modules look like a normal custom module. I.e. make the

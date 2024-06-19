@@ -35,7 +35,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
   /**
    * Tests the content negotiation aspect of routing.
    */
-  public function testContentRouting() {
+  public function testContentRouting(): void {
     // Alias with extension pointing to no extension/constant content-type.
     $this->createPathAlias('/content_negotiation/html', '/alias.html');
 
@@ -99,7 +99,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
   /**
    * Full negotiation by header only.
    */
-  public function testFullNegotiation() {
+  public function testFullNegotiation(): void {
     $this->enableModules(['accept_header_routing_test']);
     $tests = [
       // ['path', 'accept', 'content-type'],

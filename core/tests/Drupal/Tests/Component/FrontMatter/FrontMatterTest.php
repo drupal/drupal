@@ -50,7 +50,7 @@ class FrontMatterTest extends TestCase {
    * @covers ::__construct
    * @covers ::create
    */
-  public function testFrontMatterSerializerException() {
+  public function testFrontMatterSerializerException(): void {
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessage('The $serializer parameter must reference a class that implements Drupal\Component\Serialization\SerializationInterface.');
     FrontMatter::create('', '');
@@ -64,7 +64,7 @@ class FrontMatterTest extends TestCase {
    * @covers ::parse
    * @covers \Drupal\Component\FrontMatter\Exception\FrontMatterParseException
    */
-  public function testFrontMatterBroken() {
+  public function testFrontMatterBroken(): void {
     $this->expectException(FrontMatterParseException::class);
     $this->expectExceptionMessage('An error occurred when attempting to parse front matter data on line 4');
     $source = "---\ncollection:\n-  key: foo\n  foo: bar\n---\n";
@@ -90,7 +90,7 @@ class FrontMatterTest extends TestCase {
    *
    * @dataProvider providerFrontMatterData
    */
-  public function testFrontMatterData($yaml, $line, $content = self::SOURCE) {
+  public function testFrontMatterData($yaml, $line, $content = self::SOURCE): void {
     $source = static::createFrontMatterSource($yaml, $content);
     $frontMatter = FrontMatter::create($source);
     $this->assertEquals($content, $frontMatter->getContent());

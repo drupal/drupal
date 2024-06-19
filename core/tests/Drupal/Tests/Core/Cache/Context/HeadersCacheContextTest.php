@@ -20,7 +20,7 @@ class HeadersCacheContextTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetContext
    */
-  public function testGetContext($headers, $header_name, $context) {
+  public function testGetContext($headers, $header_name, $context): void {
     $request_stack = new RequestStack();
     $request = Request::create('/', 'GET');
     // Request defaults could change, so compare with default values instead of

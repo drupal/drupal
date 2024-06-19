@@ -19,7 +19,7 @@ class TranslationWrapperTest extends UnitTestCase {
   /**
    * @covers ::__construct
    */
-  public function testTranslationWrapper() {
+  public function testTranslationWrapper(): void {
     $object = new TranslationWrapper('Backward compatibility');
     $this->assertInstanceOf(TranslatableMarkup::class, $object);
   }

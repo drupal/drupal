@@ -18,7 +18,7 @@ class ProjectCoreCompatibilityTest extends UnitTestCase {
    * @covers ::setReleaseMessage
    * @dataProvider providerSetProjectCoreCompatibilityRanges
    */
-  public function testSetProjectCoreCompatibilityRanges(array $project_data, $core_data, array $supported_branches, array $core_releases, array $expected_releases, array $expected_security_updates) {
+  public function testSetProjectCoreCompatibilityRanges(array $project_data, $core_data, array $supported_branches, array $core_releases, array $expected_releases, array $expected_security_updates): void {
     $project_compatibility = new ProjectCoreCompatibility($core_data, $core_releases, $supported_branches);
     $project_compatibility->setStringTranslation($this->getStringTranslationStub());
     $project_compatibility->setReleaseMessage($project_data);

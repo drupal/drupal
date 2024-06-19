@@ -35,7 +35,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
    *
    * For testing we define an integer with a set of allowed values.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     // Create a definition that specifies some AllowedValues.
     $definition = DataDefinition::create('integer')
       ->addConstraint('AllowedValues', [1, 2, 3]);
@@ -65,7 +65,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests the AllowedValuesConstraintValidator with callbacks.
    */
-  public function testValidationCallback() {
+  public function testValidationCallback(): void {
     // Create a definition that specifies some AllowedValues and a callback.
     // This tests that callbacks have a higher priority than a supplied list of
     // values and can be used to coerce the value to the correct type.
@@ -105,7 +105,7 @@ class AllowedValuesConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests the AllowedValuesConstraintValidator with an invalid callback.
    */
-  public function testValidationCallbackException() {
+  public function testValidationCallbackException(): void {
     // Create a definition that specifies some AllowedValues and a callback.
     // This tests that callbacks have a higher priority than a supplied list of
     // values and can be used to coerce the value to the correct type.

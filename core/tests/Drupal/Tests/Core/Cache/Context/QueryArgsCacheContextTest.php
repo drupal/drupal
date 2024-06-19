@@ -20,7 +20,7 @@ class QueryArgsCacheContextTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetContext
    */
-  public function testGetContext(array $query_args, $cache_context_parameter, $context) {
+  public function testGetContext(array $query_args, $cache_context_parameter, $context): void {
     $request_stack = new RequestStack();
     $request = Request::create('/', 'GET', $query_args);
     $request_stack->push($request);

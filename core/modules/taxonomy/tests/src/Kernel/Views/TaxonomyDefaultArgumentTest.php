@@ -56,7 +56,7 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
   /**
    * Tests the relationship.
    */
-  public function testNodePath() {
+  public function testNodePath(): void {
     $view = $this->initViewWithRequest($this->nodes[0]->toUrl()->toString());
 
     $expected = implode(',', [$this->term1->id(), $this->term2->id()]);
@@ -65,7 +65,7 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
     $view->destroy();
   }
 
-  public function testNodePathWithViewSelection() {
+  public function testNodePathWithViewSelection(): void {
     // Change the term entity reference field to use a view as selection plugin.
     \Drupal::service('module_installer')->install(['entity_reference_test']);
 
@@ -87,7 +87,7 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
     $this->assertEquals($this->nodes[0]->getCacheTags(), $view->argument['tid']->getPlugin('argument_default')->getCacheTags());
   }
 
-  public function testTermPath() {
+  public function testTermPath(): void {
     $view = $this->initViewWithRequest($this->term1->toUrl()->toString());
 
     $expected = $this->term1->id();

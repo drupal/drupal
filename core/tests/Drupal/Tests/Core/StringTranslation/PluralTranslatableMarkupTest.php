@@ -21,7 +21,7 @@ class PluralTranslatableMarkupTest extends UnitTestCase {
    *
    * @dataProvider providerPluralTranslatableMarkupSerialization
    */
-  public function testPluralTranslatableMarkupSerialization($count, $expected_text) {
+  public function testPluralTranslatableMarkupSerialization($count, $expected_text): void {
     // Add a mock string translation service to the container.
     $container = new ContainerBuilder();
     $container->set('string_translation', $this->getStringTranslationStub());
@@ -46,7 +46,7 @@ class PluralTranslatableMarkupTest extends UnitTestCase {
   /**
    * Tests when the plural translation is missing.
    */
-  public function testMissingPluralTranslation() {
+  public function testMissingPluralTranslation(): void {
     $markup = PluralTranslatableMarkup::createFromTranslatedString(2, 'There is no plural delimiter @count');
     $this->assertEquals('There is no plural delimiter 2', $markup->render());
   }

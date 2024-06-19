@@ -45,7 +45,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/2953207
    */
-  public function testBundleSpecificTargetEntityTypeFromIssue2953207() {
+  public function testBundleSpecificTargetEntityTypeFromIssue2953207(): void {
     // Set up data model.
     $this->assertTrue($this->container->get('module_installer')->install(['comment'], TRUE), 'Installed modules.');
     $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'tcomment');
@@ -81,7 +81,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3015759
    */
-  public function testFilterByIdFromIssue3015759() {
+  public function testFilterByIdFromIssue3015759(): void {
     // Set up data model.
     $this->assertTrue($this->container->get('module_installer')->install(['shortcut'], TRUE), 'Installed modules.');
     $this->rebuildAll();
@@ -121,7 +121,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    *
    * @see https://www.drupal.org/project/jsonapi/issues/3025372
    */
-  public function testEmptyRelationshipFilteringFromIssue3025372() {
+  public function testEmptyRelationshipFilteringFromIssue3025372(): void {
     // Set up data model.
     $this->drupalCreateContentType(['type' => 'folder']);
     $this->createEntityReferenceField(
@@ -181,7 +181,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3036593
    */
-  public function testFilteringEntitiesByEntityReferenceTargetId() {
+  public function testFilteringEntitiesByEntityReferenceTargetId(): void {
     // Create two config entities to be the config targets of an entity
     // reference. In this case, the `roles` field.
     $role_llamalovers = $this->drupalCreateRole([], 'llamalovers', 'Llama Lovers');

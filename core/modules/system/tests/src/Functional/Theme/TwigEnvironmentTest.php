@@ -26,7 +26,7 @@ class TwigEnvironmentTest extends BrowserTestBase {
   /**
    * Tests template class loading with Twig embed.
    */
-  public function testTwigEmbed() {
+  public function testTwigEmbed(): void {
     $assert_session = $this->assertSession();
     // Test the Twig embed tag.
     $this->drupalGet('twig-theme-test/embed-tag');

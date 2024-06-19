@@ -52,7 +52,7 @@ class RegistrationWithUserFieldsTest extends WebDriverTestBase {
   /**
    * Tests Field API fields on user registration forms.
    */
-  public function testRegistrationWithUserFields() {
+  public function testRegistrationWithUserFields(): void {
     // Create a field on 'user' entity type.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_user_field',

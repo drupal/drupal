@@ -40,7 +40,7 @@ class TypedDataDefinitionTest extends KernelTestBase {
   /**
    * Tests deriving metadata about list items.
    */
-  public function testLists() {
+  public function testLists(): void {
     $list_definition = ListDataDefinition::create('string');
     $this->assertInstanceOf(ListDataDefinitionInterface::class, $list_definition);
     $item_definition = $list_definition->getItemDefinition();
@@ -63,7 +63,7 @@ class TypedDataDefinitionTest extends KernelTestBase {
   /**
    * Tests deriving metadata about maps.
    */
-  public function testMaps() {
+  public function testMaps(): void {
     $map_definition = MapDataDefinition::create()
       ->setPropertyDefinition('one', DataDefinition::create('string'))
       ->setPropertyDefinition('two', DataDefinition::create('string'))
@@ -89,7 +89,7 @@ class TypedDataDefinitionTest extends KernelTestBase {
   /**
    * Tests deriving metadata from data references.
    */
-  public function testDataReferences() {
+  public function testDataReferences(): void {
     $language_reference_definition = DataReferenceDefinition::create('language');
     $this->assertInstanceOf(DataReferenceDefinitionInterface::class, $language_reference_definition);
 
@@ -105,7 +105,7 @@ class TypedDataDefinitionTest extends KernelTestBase {
   /**
    * Tests getString() throws exception when getType() is not implemented.
    */
-  public function testNotImplementedGetType() {
+  public function testNotImplementedGetType(): void {
     $language_reference_definition = DataReferenceDefinition::create('language');
     $language_reference = $this->typedDataManager->create($language_reference_definition);
     $this->assertInstanceOf(DataReferenceInterface::class, $language_reference);

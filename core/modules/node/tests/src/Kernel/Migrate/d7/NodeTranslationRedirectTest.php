@@ -54,7 +54,7 @@ class NodeTranslationRedirectTest extends MigrateDrupal7TestBase {
   /**
    * Tests that not found node translations are redirected.
    */
-  public function testNodeTranslationRedirect() {
+  public function testNodeTranslationRedirect(): void {
     $kernel = $this->container->get('http_kernel');
     $request = Request::create('/node/3');
     $response = $kernel->handle($request);

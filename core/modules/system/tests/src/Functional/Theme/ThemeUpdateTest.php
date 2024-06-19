@@ -27,7 +27,7 @@ class ThemeUpdateTest extends BrowserTestBase {
    * separate file, so this test also ensures that the file is correctly loaded
    * when needed.
    */
-  public function testThemeUpdates() {
+  public function testThemeUpdates(): void {
     \Drupal::service('module_installer')->install(['test_module_required_by_theme']);
     $this->rebuildAll();
     \Drupal::state()->set('test_theme_depending_on_modules.system_info_alter', ['dependencies' => ['test_module_required_by_theme', 'stark']]);

@@ -78,7 +78,7 @@ class BigPipeTest extends BrowserTestBase {
    * - big_pipe_page_attachments()
    * - \Drupal\big_pipe\Controller\BigPipeController
    */
-  public function testNoJsDetection() {
+  public function testNoJsDetection(): void {
     $no_js_to_js_markup = '<script>document.cookie = "' . BigPipeStrategy::NOJS_COOKIE . '=1; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"</script>';
 
     // 1. No session (anonymous).
@@ -142,7 +142,7 @@ class BigPipeTest extends BrowserTestBase {
    *
    * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
-  public function testBigPipe() {
+  public function testBigPipe(): void {
     // Simulate production.
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
@@ -231,7 +231,7 @@ class BigPipeTest extends BrowserTestBase {
    *
    * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
-  public function testBigPipeNoJs() {
+  public function testBigPipeNoJs(): void {
     // Simulate production.
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
@@ -294,7 +294,7 @@ class BigPipeTest extends BrowserTestBase {
   /**
    * Tests BigPipe with a multi-occurrence placeholder.
    */
-  public function testBigPipeMultiOccurrencePlaceholders() {
+  public function testBigPipeMultiOccurrencePlaceholders(): void {
     $this->drupalLogin($this->rootUser);
     $this->assertSessionCookieExists('1');
     $this->assertBigPipeNoJsCookieExists('0');

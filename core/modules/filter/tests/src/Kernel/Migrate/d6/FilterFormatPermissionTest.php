@@ -22,7 +22,7 @@ class FilterFormatPermissionTest extends MigrateDrupalTestBase {
    *
    * @covers ::__construct
    */
-  public function testConfigurableFilterFormat() {
+  public function testConfigurableFilterFormat(): void {
     $migration = Migration::create($this->container, [], 'custom_migration', []);
     $filterFormatPermissionMigration = FilterFormatPermission::create($this->container, ['migration' => 'custom_filter_format'], 'custom_filter_format', [], $migration);
     $reflected_config = new \ReflectionProperty($filterFormatPermissionMigration, 'configuration');

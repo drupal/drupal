@@ -53,7 +53,7 @@ class NodeRevisionsUiBypassAccessTest extends NodeTestBase {
   /**
    * Checks that the Revision tab is displayed correctly.
    */
-  public function testDisplayRevisionTab() {
+  public function testDisplayRevisionTab(): void {
     $this->drupalPlaceBlock('local_tasks_block');
 
     $this->drupalLogin($this->editor);

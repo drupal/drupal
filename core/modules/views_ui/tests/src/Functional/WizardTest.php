@@ -25,7 +25,7 @@ class WizardTest extends WizardTestBase {
   /**
    * Tests filling in the wizard with really long strings.
    */
-  public function testWizardFieldLength() {
+  public function testWizardFieldLength(): void {
     $view = [];
     $view['label'] = $this->randomMachineName(256);
     $view['id'] = $this->randomMachineName(129);

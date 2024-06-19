@@ -111,7 +111,7 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
   /**
    * Tests different display options for fieldset element descriptions.
    */
-  public function testFieldsetDescriptions() {
+  public function testFieldsetDescriptions(): void {
     $form_state = new FormState();
     $form = \Drupal::formBuilder()->getForm($this);
     $this->render($form);

@@ -33,7 +33,7 @@ class ReportTest extends UITestBase {
   /**
    * Tests the existence of the views plugin report.
    */
-  public function testReport() {
+  public function testReport(): void {
     $this->drupalLogin($this->adminUser);
 
     // Test the report page.

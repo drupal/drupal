@@ -44,7 +44,7 @@ class SearchMatchTest extends KernelTestBase {
   /**
    * Tests search indexing.
    */
-  public function testMatching() {
+  public function testMatching(): void {
     $this->_setup();
     $this->_testQueries();
   }

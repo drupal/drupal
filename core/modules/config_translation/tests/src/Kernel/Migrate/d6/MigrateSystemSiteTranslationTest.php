@@ -33,7 +33,7 @@ class MigrateSystemSiteTranslationTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of system (site) variables to system.site.yml.
    */
-  public function testSystemSite() {
+  public function testSystemSite(): void {
     $config_translation = \Drupal::service('language_manager')->getLanguageConfigOverride('fr', 'system.site');
     $this->assertSame('fr site name', $config_translation->get('name'));
     $this->assertSame('fr_site_mail@example.com', $config_translation->get('mail'));

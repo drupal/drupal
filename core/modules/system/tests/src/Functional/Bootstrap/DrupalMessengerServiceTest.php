@@ -30,7 +30,7 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
   /**
    * Tests Messenger service.
    */
-  public function testDrupalMessengerService() {
+  public function testDrupalMessengerService(): void {
     // The page at system_test.messenger_service route sets two messages and
     // then removes the first before it is displayed.
     $this->drupalGet(Url::fromRoute('system_test.messenger_service'));

@@ -20,7 +20,7 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
    *
    * @dataProvider providerTestResolveConditions
    */
-  public function testResolveConditions($conditions, $logic, $expected) {
+  public function testResolveConditions($conditions, $logic, $expected): void {
     $mocks['true'] = $this->createMock('Drupal\Core\Condition\ConditionInterface');
     $mocks['true']->expects($this->any())
       ->method('execute')

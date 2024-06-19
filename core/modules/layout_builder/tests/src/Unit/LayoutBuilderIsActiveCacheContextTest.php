@@ -26,7 +26,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
   /**
    * @covers ::getContext
    */
-  public function testGetContextMissingEntityTypeId() {
+  public function testGetContextMissingEntityTypeId(): void {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $cache_context = new LayoutBuilderIsActiveCacheContext($route_match->reveal());
     $this->expectException(\LogicException::class);
@@ -38,7 +38,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
    * @covers ::getContext
    * @covers ::getDisplay
    */
-  public function testGetContextNonFieldableEntity() {
+  public function testGetContextNonFieldableEntity(): void {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $route_match->getParameter('not_a_fieldable_entity')->willReturn('something that is not a fieldable entity');
 
@@ -54,7 +54,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetContext
    */
-  public function testGetContext($is_overridden, $expected) {
+  public function testGetContext($is_overridden, $expected): void {
     $entity_display = $this->prophesize(LayoutEntityDisplayInterface::class);
     $entity_display->isOverridable()->willReturn($is_overridden);
 

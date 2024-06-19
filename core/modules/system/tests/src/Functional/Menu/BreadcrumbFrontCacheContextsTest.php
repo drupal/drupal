@@ -79,7 +79,7 @@ class BreadcrumbFrontCacheContextsTest extends BrowserTestBase {
    * Checking that the breadcrumb will be printed on node canonical routes even
    * if it was rendered for the <front> page first.
    */
-  public function testBreadcrumbsFrontPageCache() {
+  public function testBreadcrumbsFrontPageCache(): void {
     // Hit front page first as anonymous user with 'cold' render cache.
     $this->drupalGet('<front>');
     $web_assert = $this->assertSession();

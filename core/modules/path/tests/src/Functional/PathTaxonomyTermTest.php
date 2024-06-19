@@ -50,7 +50,7 @@ class PathTaxonomyTermTest extends PathTestBase {
   /**
    * Tests alias functionality through the admin interfaces.
    */
-  public function testTermAlias() {
+  public function testTermAlias(): void {
     // Create a term in the default 'Tags' vocabulary with URL alias.
     $vocabulary = Vocabulary::load('tags');
     $description = $this->randomMachineName();

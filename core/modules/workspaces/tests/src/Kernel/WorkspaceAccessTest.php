@@ -76,7 +76,7 @@ class WorkspaceAccessTest extends KernelTestBase {
    *
    * @dataProvider operationCases
    */
-  public function testWorkspaceAccess($operation, $permission) {
+  public function testWorkspaceAccess($operation, $permission): void {
     $user = $this->createUser();
     $this->setCurrentUser($user);
     $workspace = Workspace::create(['id' => 'oak']);
@@ -93,7 +93,7 @@ class WorkspaceAccessTest extends KernelTestBase {
   /**
    * Tests workspace publishing access.
    */
-  public function testPublishWorkspaceAccess() {
+  public function testPublishWorkspaceAccess(): void {
     $user = $this->createUser([
       'view own workspace',
       'edit own workspace',
@@ -116,7 +116,7 @@ class WorkspaceAccessTest extends KernelTestBase {
   /**
    * @covers \Drupal\workspaces\Plugin\EntityReferenceSelection\WorkspaceSelection::getReferenceableEntities
    */
-  public function testWorkspaceSelection() {
+  public function testWorkspaceSelection(): void {
     $own_permission_user = $this->createUser(['view own workspace']);
     $any_permission_user = $this->createUser(['view any workspace']);
     $admin_permission_user = $this->createUser(['administer workspaces']);

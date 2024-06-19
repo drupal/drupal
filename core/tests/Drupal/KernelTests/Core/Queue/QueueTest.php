@@ -19,7 +19,7 @@ class QueueTest extends KernelTestBase {
   /**
    * Tests the System queue.
    */
-  public function testSystemQueue() {
+  public function testSystemQueue(): void {
     // Create two queues.
     $queue1 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
     $queue1->createQueue();
@@ -32,7 +32,7 @@ class QueueTest extends KernelTestBase {
   /**
    * Tests the Memory queue.
    */
-  public function testMemoryQueue() {
+  public function testMemoryQueue(): void {
     // Create two queues.
     $queue1 = new Memory($this->randomMachineName());
     $queue1->createQueue();

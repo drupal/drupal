@@ -50,7 +50,7 @@ abstract class MigrateUrlAliasTestBase extends MigrateDrupal7TestBase {
   /**
    * Tests the URL alias migration.
    */
-  public function testUrlAlias() {
+  public function testUrlAlias(): void {
     $path_alias = $this->loadPathAliasByConditions([
       'path' => '/taxonomy/term/4',
       'alias' => '/term33',

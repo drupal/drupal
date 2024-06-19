@@ -29,7 +29,7 @@ class HandlerBaseTest extends UnitTestCase {
   /**
    * @covers ::getEntityType
    */
-  public function testGetEntityTypeForFieldOnBaseTable() {
+  public function testGetEntityTypeForFieldOnBaseTable(): void {
     $handler = new TestHandler([], 'test_handler', []);
     $handler->init($this->executable, $this->display);
 
@@ -51,7 +51,7 @@ class HandlerBaseTest extends UnitTestCase {
   /**
    * @covers ::getEntityType
    */
-  public function testGetEntityTypeForFieldWithRelationship() {
+  public function testGetEntityTypeForFieldWithRelationship(): void {
     $handler = new TestHandler([], 'test_handler', []);
 
     $options = ['relationship' => 'test_relationship'];

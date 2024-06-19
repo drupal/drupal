@@ -108,7 +108,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
   /**
    * Tests the Drupal 7 taxonomy term to Drupal 8 migration.
    */
-  public function testTaxonomyTerms() {
+  public function testTaxonomyTerms(): void {
     $this->assertEntity(1, 'en', 'General discussion', 'sujet_de_discussion', '', NULL, 2);
 
     // Tests that terms that used the Drupal 7 Title module and that have their

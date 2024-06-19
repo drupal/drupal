@@ -22,7 +22,7 @@ class RollbackViewModesTest extends MigrateViewModesTest {
   /**
    * Tests migrating D7 view modes, then rolling back.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     // Test that the view modes have migrated (prior to rollback).
     parent::testMigration();
 

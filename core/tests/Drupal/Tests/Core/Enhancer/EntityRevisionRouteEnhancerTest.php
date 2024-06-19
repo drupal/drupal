@@ -34,7 +34,7 @@ class EntityRevisionRouteEnhancerTest extends UnitTestCase {
   /**
    * @covers ::enhance
    */
-  public function testEnhanceWithoutParameter() {
+  public function testEnhanceWithoutParameter(): void {
     $route = new Route('/test-path/{entity_test}');
 
     $request = Request::create('/test-path');
@@ -47,7 +47,7 @@ class EntityRevisionRouteEnhancerTest extends UnitTestCase {
   /**
    * @covers ::enhance
    */
-  public function testEnhanceWithoutEntityRevision() {
+  public function testEnhanceWithoutEntityRevision(): void {
     $route = new Route('/test-path/{entity_test}', [], [], ['parameters' => ['entity_test' => ['type' => 'entity:entity_test']]]);
     $request = Request::create('/test-path/123');
     $entity = $this->prophesize(EntityInterface::class);
@@ -61,7 +61,7 @@ class EntityRevisionRouteEnhancerTest extends UnitTestCase {
   /**
    * @covers ::enhance
    */
-  public function testEnhanceWithEntityRevision() {
+  public function testEnhanceWithEntityRevision(): void {
     $route = new Route('/test-path/{entity_test_revision}', [], [], ['parameters' => ['entity_test_revision' => ['type' => 'entity_revision:entity_test']]]);
     $request = Request::create('/test-path/123');
     $entity = $this->prophesize(EntityInterface::class);

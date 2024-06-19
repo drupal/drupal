@@ -41,7 +41,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerTestRenderBasic
    */
-  public function testRenderBasic($build, $expected, ?callable $setup_code = NULL) {
+  public function testRenderBasic($build, $expected, ?callable $setup_code = NULL): void {
     if (isset($setup_code)) {
       $setup_code = $setup_code->bindTo($this);
       $setup_code($this->themeManager);
@@ -487,7 +487,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    */
-  public function testRenderSorting() {
+  public function testRenderSorting(): void {
     $first = $this->randomMachineName();
     $second = $this->randomMachineName();
     // Build an array with '#weight' set for each element.
@@ -522,7 +522,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    */
-  public function testRenderSortingWithSetHashSorted() {
+  public function testRenderSortingWithSetHashSorted(): void {
     $first = $this->randomMachineName();
     $second = $this->randomMachineName();
     // The same array structure again, but with #sorted set to TRUE.
@@ -549,7 +549,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerAccessValues
    */
-  public function testRenderWithPresetAccess($access) {
+  public function testRenderWithPresetAccess($access): void {
     $build = [
       '#access' => $access,
     ];
@@ -563,7 +563,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerAccessValues
    */
-  public function testRenderWithAccessCallbackCallable($access) {
+  public function testRenderWithAccessCallbackCallable($access): void {
     $build = [
       '#access_callback' => function () use ($access) {
         return $access;
@@ -581,7 +581,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerAccessValues
    */
-  public function testRenderWithAccessPropertyAndCallback($access) {
+  public function testRenderWithAccessPropertyAndCallback($access): void {
     $build = [
       '#access' => $access,
       '#access_callback' => function () {
@@ -598,7 +598,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerAccessValues
    */
-  public function testRenderWithAccessControllerResolved($access) {
+  public function testRenderWithAccessControllerResolved($access): void {
 
     switch ($access) {
       case AccessResult::allowed():
@@ -629,7 +629,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    */
-  public function testRenderAccessCacheabilityDependencyInheritance() {
+  public function testRenderAccessCacheabilityDependencyInheritance(): void {
     $build = [
       '#access' => AccessResult::allowed()->addCacheContexts(['user']),
     ];
@@ -651,7 +651,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerRenderTwice
    */
-  public function testRenderTwice($build) {
+  public function testRenderTwice($build): void {
     $this->assertEquals('kittens', $this->renderer->renderRoot($build));
     $this->assertEquals('kittens', $build['#markup']);
     $this->assertEquals(['kittens-147'], $build['#cache']['tags']);
@@ -703,7 +703,7 @@ class RendererTest extends RendererTestBase {
   /**
    * Ensures that #access is taken in account when rendering #render_children.
    */
-  public function testRenderChildrenAccess() {
+  public function testRenderChildrenAccess(): void {
     $build = [
       '#access' => FALSE,
       '#render_children' => TRUE,
@@ -754,7 +754,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    */
-  public function testRenderWithoutThemeArguments() {
+  public function testRenderWithoutThemeArguments(): void {
     $element = [
       '#theme' => 'common_test_foo',
     ];
@@ -772,7 +772,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    */
-  public function testRenderWithThemeArguments() {
+  public function testRenderWithThemeArguments(): void {
     $element = [
       '#theme' => 'common_test_foo',
       '#foo' => $this->randomMachineName(),
@@ -830,7 +830,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerRenderCache
    */
-  public function testRenderCache($child_access, $expected_tags) {
+  public function testRenderCache($child_access, $expected_tags): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
 
@@ -880,7 +880,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerTestRenderCacheMaxAge
    */
-  public function testRenderCacheMaxAge($max_age, $is_render_cached, $render_cache_item_expire) {
+  public function testRenderCacheMaxAge($max_age, $is_render_cached, $render_cache_item_expire): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
 
@@ -925,7 +925,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerTestRenderCacheProperties
    */
-  public function testRenderCacheProperties(array $expected_results) {
+  public function testRenderCacheProperties(array $expected_results): void {
     $this->setUpRequest();
     $this->setUpMemoryCache();
 
@@ -993,7 +993,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerTestAddCacheableDependency
    */
-  public function testAddCacheableDependency(array $build, $object, array $expected) {
+  public function testAddCacheableDependency(array $build, $object, array $expected): void {
     $this->renderer->addCacheableDependency($build, $object);
     $this->assertEquals($build, $expected);
   }

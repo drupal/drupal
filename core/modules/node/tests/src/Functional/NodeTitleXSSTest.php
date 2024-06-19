@@ -21,7 +21,7 @@ class NodeTitleXSSTest extends NodeTestBase {
   /**
    * Tests XSS functionality with a node entity.
    */
-  public function testNodeTitleXSS() {
+  public function testNodeTitleXSS(): void {
     // Prepare a user to do the stuff.
     $web_user = $this->drupalCreateUser([
       'create page content',

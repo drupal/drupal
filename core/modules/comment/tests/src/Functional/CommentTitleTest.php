@@ -19,7 +19,7 @@ class CommentTitleTest extends CommentTestBase {
   /**
    * Tests markup for comments with empty titles.
    */
-  public function testCommentEmptyTitles() {
+  public function testCommentEmptyTitles(): void {
     // Create a node.
     $this->drupalLogin($this->webUser);
     $this->node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1, 'uid' => $this->webUser->id()]);
@@ -67,7 +67,7 @@ class CommentTitleTest extends CommentTestBase {
   /**
    * Tests markup for comments with populated titles.
    */
-  public function testCommentPopulatedTitles() {
+  public function testCommentPopulatedTitles(): void {
     // Set comments to have a subject with preview disabled.
     $this->setCommentPreview(DRUPAL_DISABLED);
     $this->setCommentForm(TRUE);

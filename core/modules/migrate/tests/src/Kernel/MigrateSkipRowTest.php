@@ -26,7 +26,7 @@ class MigrateSkipRowTest extends KernelTestBase {
   /**
    * Tests migration interruptions.
    */
-  public function testPrepareRowSkip() {
+  public function testPrepareRowSkip(): void {
     // Run a simple little migration with two data rows which should be skipped
     // in different ways.
     $definition = [

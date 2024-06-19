@@ -19,7 +19,7 @@ class ReplaceOpTest extends TestCase {
   /**
    * @covers ::process
    */
-  public function testProcess() {
+  public function testProcess(): void {
     $fixtures = new Fixtures();
     $destination = $fixtures->destinationPath('[web-root]/robots.txt');
     $source = $fixtures->sourcePath('drupal-assets-fixture', 'robots.txt');
@@ -42,7 +42,7 @@ class ReplaceOpTest extends TestCase {
   /**
    * @covers ::process
    */
-  public function testEmptyFile() {
+  public function testEmptyFile(): void {
     $fixtures = new Fixtures();
     $destination = $fixtures->destinationPath('[web-root]/empty_file.txt');
     $source = $fixtures->sourcePath('empty-file', 'empty_file.txt');

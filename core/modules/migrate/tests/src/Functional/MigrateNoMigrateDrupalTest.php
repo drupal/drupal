@@ -45,7 +45,7 @@ class MigrateNoMigrateDrupalTest extends BrowserTestBase {
   /**
    * Tests execution of a migration.
    */
-  public function testExecutionNoMigrateDrupal() {
+  public function testExecutionNoMigrateDrupal(): void {
     $this->drupalGet('/migrate_no_migrate_drupal_test/execute');
     $this->assertSession()->pageTextContains('Migration was successful.');
     $node_1 = Node::load(1);

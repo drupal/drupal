@@ -57,7 +57,7 @@ class UserSessionTest extends UnitTestCase {
    * @covers ::getRoles
    * @todo Move roles constants to a class/interface
    */
-  public function testUserGetRoles() {
+  public function testUserGetRoles(): void {
     $user = $this->createUserSession(['role_two'], TRUE);
     $this->assertEquals([RoleInterface::AUTHENTICATED_ID, 'role_two'], $user->getRoles());
     $this->assertEquals(['role_two'], $user->getRoles(TRUE));
@@ -68,7 +68,7 @@ class UserSessionTest extends UnitTestCase {
    *
    * @covers ::hasRole
    */
-  public function testHasRole() {
+  public function testHasRole(): void {
     $user1 = $this->createUserSession(['role_one']);
     $user2 = $this->createUserSession(['role_one', 'role_two']);
     $user3 = $this->createUserSession(['role_two'], TRUE);

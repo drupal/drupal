@@ -36,7 +36,7 @@ class ClaroTest extends BrowserTestBase {
    *
    * @see claro.info.yml
    */
-  public function testRegressionMissingElementsCss() {
+  public function testRegressionMissingElementsCss(): void {
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
     // This can be any CSS file from the global library.
@@ -46,7 +46,7 @@ class ClaroTest extends BrowserTestBase {
   /**
    * Tests Claro's configuration schema.
    */
-  public function testConfigSchema() {
+  public function testConfigSchema(): void {
     $permissions = [
       'administer modules',
     ];
@@ -66,7 +66,7 @@ class ClaroTest extends BrowserTestBase {
   /**
    * Tests that the Claro theme can be uninstalled.
    */
-  public function testIsUninstallable() {
+  public function testIsUninstallable(): void {
     $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer themes']));
 
     $this->drupalGet('admin/appearance');

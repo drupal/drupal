@@ -46,7 +46,7 @@ class EntityUpdateTest extends EntityKernelTestBase {
    *
    * @see editor_test_entity_update()
    */
-  public function testEntityUpdate() {
+  public function testEntityUpdate(): void {
     // Create a node.
     $node = Node::create([
       'type' => 'page',

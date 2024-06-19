@@ -25,7 +25,7 @@ class LocaleBuildTest extends KernelTestBase {
   /**
    * Checks if a list of translatable projects gets built.
    */
-  public function testBuildProjects() {
+  public function testBuildProjects(): void {
     $this->container->get('module_handler')->loadInclude('locale', 'compare.inc');
     /** @var \Drupal\Core\Extension\ExtensionList $module_list */
     $module_list = \Drupal::service('extension.list.module');

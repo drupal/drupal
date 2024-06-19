@@ -53,7 +53,7 @@ class BlockFilterTest extends WebDriverTestBase {
   /**
    * Tests block filter.
    */
-  public function testBlockFilter() {
+  public function testBlockFilter(): void {
     $assert_session = $this->assertSession();
     $session = $this->getSession();
     $page = $session->getPage();

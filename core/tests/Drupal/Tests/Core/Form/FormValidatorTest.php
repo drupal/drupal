@@ -56,7 +56,7 @@ class FormValidatorTest extends UnitTestCase {
    * @covers ::validateForm
    * @covers ::finalizeValidation
    */
-  public function testValidationComplete() {
+  public function testValidationComplete(): void {
     $form_validator = new FormValidator(new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler);
 
     $form = [];
@@ -71,7 +71,7 @@ class FormValidatorTest extends UnitTestCase {
    *
    * @covers ::validateForm
    */
-  public function testPreventDuplicateValidation() {
+  public function testPreventDuplicateValidation(): void {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
       ->onlyMethods(['doValidateForm'])
@@ -91,7 +91,7 @@ class FormValidatorTest extends UnitTestCase {
    *
    * @covers ::validateForm
    */
-  public function testMustValidate() {
+  public function testMustValidate(): void {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
       ->onlyMethods(['doValidateForm'])
@@ -111,7 +111,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * @covers ::validateForm
    */
-  public function testValidateInvalidFormToken() {
+  public function testValidateInvalidFormToken(): void {
     $request_stack = new RequestStack();
     $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/test/example?foo=bar']);
     $request_stack->push($request);
@@ -141,7 +141,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * @covers ::validateForm
    */
-  public function testValidateValidFormToken() {
+  public function testValidateValidFormToken(): void {
     $request_stack = new RequestStack();
     $this->csrfToken->expects($this->once())
       ->method('validate')
@@ -170,7 +170,7 @@ class FormValidatorTest extends UnitTestCase {
    *
    * @dataProvider providerTestHandleErrorsWithLimitedValidation
    */
-  public function testHandleErrorsWithLimitedValidation($sections, $triggering_element, $values, $expected) {
+  public function testHandleErrorsWithLimitedValidation($sections, $triggering_element, $values, $expected): void {
     $form_validator = new FormValidator(new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler);
 
     $triggering_element['#limit_validation_errors'] = $sections;
@@ -263,7 +263,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * @covers ::executeValidateHandlers
    */
-  public function testExecuteValidateHandlers() {
+  public function testExecuteValidateHandlers(): void {
     $form_validator = new FormValidator(new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler);
 
     $mock = $this->getMockBuilder(FormValidatorTestMockInterface::class)
@@ -294,7 +294,7 @@ class FormValidatorTest extends UnitTestCase {
    *
    * @dataProvider providerTestRequiredErrorMessage
    */
-  public function testRequiredErrorMessage($element, $expected_message) {
+  public function testRequiredErrorMessage($element, $expected_message): void {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
       ->onlyMethods(['executeValidateHandlers'])
@@ -342,7 +342,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * @covers ::doValidateForm
    */
-  public function testElementValidate() {
+  public function testElementValidate(): void {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
       ->onlyMethods(['executeValidateHandlers'])
@@ -372,7 +372,7 @@ class FormValidatorTest extends UnitTestCase {
    *
    * @dataProvider providerTestPerformRequiredValidation
    */
-  public function testPerformRequiredValidation($element, $expected_message, $call_watchdog) {
+  public function testPerformRequiredValidation($element, $expected_message, $call_watchdog): void {
     $form_validator = new FormValidator(new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler);
 
     if ($call_watchdog) {

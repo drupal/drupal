@@ -215,7 +215,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
   /**
    * Tests the media entity metadata API.
    */
-  public function testApi() {
+  public function testApi(): void {
     $path = '/ckeditor5/filtered_html/media-entity-metadata';
     $token = $this->container->get('csrf_token')->get(ltrim($path, '/'));
     $uuid = $this->mediaImage->uuid();

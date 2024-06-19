@@ -43,7 +43,7 @@ class UninstallKernelTest extends KernelTestBase {
   /**
    * Tests uninstalling media and file modules.
    */
-  public function testUninstallMedia() {
+  public function testUninstallMedia(): void {
     // Media creates a file field that is removed on uninstall, ensure that it
     // is fully deleted (as it is empty) and that file then can be uninstalled
     // as well.
@@ -54,7 +54,7 @@ class UninstallKernelTest extends KernelTestBase {
   /**
    * Tests uninstalling a module with a plugin cache clearer service.
    */
-  public function testUninstallPluginCacheClear() {
+  public function testUninstallPluginCacheClear(): void {
     \Drupal::service('module_installer')->install(['module_test']);
     $this->assertFalse($this->container->get('state')->get(PluginManagerCacheClearer::class));
     \Drupal::service('module_installer')->install(['dblog']);

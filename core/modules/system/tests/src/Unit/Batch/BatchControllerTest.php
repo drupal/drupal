@@ -23,7 +23,7 @@ class BatchControllerTest extends UnitTestCase {
    *
    * @covers ::batchPageTitle
    */
-  public function testBatchPageTitle() {
+  public function testBatchPageTitle(): void {
     $batch_storage = $this->createMock(BatchStorageInterface::class);
     $controller = new BatchController($this->root, $batch_storage);
     require_once $this->root . '/core/includes/form.inc';

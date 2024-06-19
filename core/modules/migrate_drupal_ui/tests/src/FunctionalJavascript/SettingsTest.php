@@ -58,7 +58,7 @@ class SettingsTest extends WebDriverTestBase {
    *
    * @dataProvider providerTestCredentialForm
    */
-  public function testCredentialForm($source_connection, $version, array $manual, array $databases, $expected_source_connection) {
+  public function testCredentialForm($source_connection, $version, array $manual, array $databases, $expected_source_connection): void {
     // Write settings.
     $migrate_file_public_path = '/var/www/drupal7/sites/default/files';
     $migrate_file_private_path = '/var/www/drupal7/sites/default/files/private';

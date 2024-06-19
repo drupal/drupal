@@ -33,7 +33,7 @@ class OffCanvasDialogTest extends BrowserTestBase {
    *
    * @dataProvider dialogPosition
    */
-  public function testDialog($position) {
+  public function testDialog($position): void {
     // Ensure the elements render without notices or exceptions.
     $this->drupalGet('ajax-test/dialog');
 

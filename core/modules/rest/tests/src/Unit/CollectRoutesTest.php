@@ -143,7 +143,7 @@ class CollectRoutesTest extends UnitTestCase {
   /**
    * Tests if adding a requirement to a route only modify one route.
    */
-  public function testRoutesRequirements() {
+  public function testRoutesRequirements(): void {
     $this->restExport->collectRoutes($this->routes);
 
     $requirements_1 = $this->routes->get('test_1')->getRequirements();

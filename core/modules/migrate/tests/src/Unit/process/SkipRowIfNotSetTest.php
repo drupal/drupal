@@ -20,7 +20,7 @@ class SkipRowIfNotSetTest extends MigrateProcessTestCase {
    *
    * @covers ::transform
    */
-  public function testRowSkipWithoutMessage() {
+  public function testRowSkipWithoutMessage(): void {
     $configuration = [
       'index' => 'some_key',
     ];
@@ -34,7 +34,7 @@ class SkipRowIfNotSetTest extends MigrateProcessTestCase {
    *
    * @covers ::transform
    */
-  public function testRowSkipWithMessage() {
+  public function testRowSkipWithMessage(): void {
     $configuration = [
       'index' => 'some_key',
       'message' => "The 'some_key' key is not set",

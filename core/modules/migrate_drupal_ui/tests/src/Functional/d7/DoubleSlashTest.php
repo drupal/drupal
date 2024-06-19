@@ -44,7 +44,7 @@ class DoubleSlashTest extends MigrateUpgradeExecuteTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testMigrateUpgradeExecute() {
+  public function testMigrateUpgradeExecute(): void {
     // Change fid 1 to a filename that does not exist.
     $this->sourceDatabase
       ->update('file_managed')

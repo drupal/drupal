@@ -29,7 +29,7 @@ class RestPermissionsTest extends KernelTestBase {
   /**
    * @covers ::permissions
    */
-  public function testPermissions() {
+  public function testPermissions(): void {
     RestResourceConfig::create([
       'id' => 'dblog',
       'plugin_id' => 'dblog',

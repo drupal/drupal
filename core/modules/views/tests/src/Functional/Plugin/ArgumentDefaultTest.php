@@ -59,7 +59,7 @@ class ArgumentDefaultTest extends ViewTestBase {
    *
    * @see \Drupal\views_test_data\Plugin\views\argument_default\ArgumentDefaultTest
    */
-  public function testArgumentDefaultPlugin() {
+  public function testArgumentDefaultPlugin(): void {
     $view = Views::getView('test_view');
 
     // Add a new argument and set the test plugin for the argument_default.
@@ -96,7 +96,7 @@ class ArgumentDefaultTest extends ViewTestBase {
   /**
    * Tests the use of a default argument plugin that provides no options.
    */
-  public function testArgumentDefaultNoOptions() {
+  public function testArgumentDefaultNoOptions(): void {
     $admin_user = $this->drupalCreateUser([
       'administer views',
       'administer site configuration',
@@ -118,7 +118,7 @@ class ArgumentDefaultTest extends ViewTestBase {
   /**
    * Tests fixed default argument.
    */
-  public function testArgumentDefaultFixed() {
+  public function testArgumentDefaultFixed(): void {
     $random = $this->randomMachineName();
     $view = Views::getView('test_argument_default_fixed');
     $view->setDisplay();
@@ -144,7 +144,7 @@ class ArgumentDefaultTest extends ViewTestBase {
   /**
    * Tests node default argument.
    */
-  public function testArgumentDefaultNode() {
+  public function testArgumentDefaultNode(): void {
     // Create a user that has permission to place a view block.
     $permissions = [
       'administer views',
@@ -183,7 +183,7 @@ class ArgumentDefaultTest extends ViewTestBase {
   /**
    * Tests the query parameter default argument.
    */
-  public function testArgumentDefaultQueryParameter() {
+  public function testArgumentDefaultQueryParameter(): void {
     $view = Views::getView('test_argument_default_query_param');
 
     $request = Request::create(Url::fromUri('internal:/whatever', ['absolute' => TRUE])->toString());
@@ -203,7 +203,7 @@ class ArgumentDefaultTest extends ViewTestBase {
   /**
    * Tests the more line generation if a default argument is provided.
    */
-  public function testArgumentDefaultUrlGeneration() {
+  public function testArgumentDefaultUrlGeneration(): void {
     // Create a user that has permission to place a view block.
     $permissions = [
       'administer views',

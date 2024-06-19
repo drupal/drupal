@@ -49,7 +49,7 @@ class FieldSelfTokensTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testSelfTokenEscaping() {
+  public function testSelfTokenEscaping(): void {
     $view = Views::getView('test_field_self_tokens');
     $view->initHandlers();
     $this->executeView($view);

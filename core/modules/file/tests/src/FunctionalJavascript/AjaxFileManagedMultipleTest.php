@@ -32,7 +32,7 @@ class AjaxFileManagedMultipleTest extends WebDriverTestBase {
   /**
    * Tests if managed file form element works well with multiple files upload.
    */
-  public function testMultipleFilesUpload() {
+  public function testMultipleFilesUpload(): void {
     $file_system = \Drupal::service('file_system');
     $file_storage = \Drupal::entityTypeManager()->getStorage('file');
     $page = $this->getSession()->getPage();

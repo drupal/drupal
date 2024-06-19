@@ -35,7 +35,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
   /**
    * Tests recursive validation against given constraints against an entity.
    */
-  public function testRecursiveValidate() {
+  public function testRecursiveValidate(): void {
     $entity = EntityTest::create();
     $adapter = EntityAdapter::createFromEntity($entity);
     // This would trigger the ValidReferenceConstraint due to EntityTest
@@ -47,7 +47,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
   /**
    * Tests recursive propagation of violations.
    */
-  public function testRecursiveViolationPropagation() {
+  public function testRecursiveViolationPropagation(): void {
     // We create an entity reference field with a constraint which will
     // trigger the validation of the referenced entities. Then we add a
     // required field and populate it only on the parent entity, so that

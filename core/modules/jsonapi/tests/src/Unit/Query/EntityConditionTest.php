@@ -37,7 +37,7 @@ class EntityConditionTest extends UnitTestCase {
    * @covers ::createFromQueryParameter
    * @dataProvider queryParameterProvider
    */
-  public function testCreateFromQueryParameter($case) {
+  public function testCreateFromQueryParameter($case): void {
     $condition = EntityCondition::createFromQueryParameter($case);
     $this->assertEquals($case['path'], $condition->field());
     $this->assertEquals($case['value'], $condition->value());
@@ -75,7 +75,7 @@ class EntityConditionTest extends UnitTestCase {
    * @covers ::validate
    * @dataProvider validationProvider
    */
-  public function testValidation($input, $exception) {
+  public function testValidation($input, $exception): void {
     if ($exception) {
       $this->expectException(get_class($exception));
       $this->expectExceptionMessage($exception->getMessage());

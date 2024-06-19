@@ -40,7 +40,7 @@ class PathNodeFormTest extends PathTestBase {
   /**
    * Tests the node form ui.
    */
-  public function testNodeForm() {
+  public function testNodeForm(): void {
     $assert_session = $this->assertSession();
 
     $this->drupalGet('node/add/page');

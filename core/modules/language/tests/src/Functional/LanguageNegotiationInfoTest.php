@@ -74,7 +74,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
   /**
    * Tests alterations to language types/negotiation info.
    */
-  public function testInfoAlterations() {
+  public function testInfoAlterations(): void {
     $this->stateSet([
       // Enable language_test type info.
       'language_test.language_types' => TRUE,
@@ -184,7 +184,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
   /**
    * Tests altering config of configurable language types.
    */
-  public function testConfigLangTypeAlterations() {
+  public function testConfigLangTypeAlterations(): void {
     // Default of config.
     $test_type = LanguageInterface::TYPE_CONTENT;
     $this->assertFalse($this->isLanguageTypeConfigurable($test_type), 'Language type is not configurable.');

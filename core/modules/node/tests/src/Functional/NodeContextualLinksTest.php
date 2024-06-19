@@ -28,7 +28,7 @@ class NodeContextualLinksTest extends NodeTestBase {
   /**
    * Tests contextual links.
    */
-  public function testNodeContextualLinks() {
+  public function testNodeContextualLinks(): void {
     // Create a node item.
     $node = Node::create([
       'type' => 'article',

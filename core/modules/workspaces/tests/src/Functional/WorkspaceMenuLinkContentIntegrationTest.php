@@ -59,7 +59,7 @@ class WorkspaceMenuLinkContentIntegrationTest extends BrowserTestBase {
   /**
    * Tests custom menu links in non-default workspaces.
    */
-  public function testWorkspacesWithCustomMenuLinks() {
+  public function testWorkspacesWithCustomMenuLinks(): void {
     $stage = Workspace::load('stage');
 
     $this->setupWorkspaceSwitcherBlock();

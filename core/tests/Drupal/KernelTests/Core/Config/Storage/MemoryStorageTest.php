@@ -52,7 +52,7 @@ class MemoryStorageTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testInvalidStorage() {
+  public function testInvalidStorage(): void {
     $this->markTestSkipped('MemoryStorage cannot be invalid.');
   }
 

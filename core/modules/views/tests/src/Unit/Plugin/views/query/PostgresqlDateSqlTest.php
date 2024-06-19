@@ -37,7 +37,7 @@ class PostgresqlDateSqlTest extends UnitTestCase {
    *
    * @covers ::getDateField
    */
-  public function testGetDateField() {
+  public function testGetDateField(): void {
     $date_sql = new PostgresqlDateSql($this->database);
 
     $expected = "TO_TIMESTAMP(foo.field, 'YYYY-MM-DD\"T\"HH24:MI:SS')";
@@ -54,7 +54,7 @@ class PostgresqlDateSqlTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetDateFormat
    */
-  public function testGetDateFormat($field, $format, $expected_format) {
+  public function testGetDateFormat($field, $format, $expected_format): void {
     $date_sql = new PostgresqlDateSql($this->database);
 
     $this->assertEquals("TO_CHAR($field, '$expected_format')", $date_sql->getDateFormat($field, $format));
@@ -76,7 +76,7 @@ class PostgresqlDateSqlTest extends UnitTestCase {
    *
    * @covers ::setFieldTimezoneOffset
    */
-  public function testSetFieldTimezoneOffset() {
+  public function testSetFieldTimezoneOffset(): void {
     $date_sql = new PostgresqlDateSql($this->database);
 
     $field = 'foobar.field';
@@ -89,7 +89,7 @@ class PostgresqlDateSqlTest extends UnitTestCase {
    *
    * @covers ::setTimezoneOffset
    */
-  public function testSetTimezoneOffset() {
+  public function testSetTimezoneOffset(): void {
     $database = $this->prophesize(Connection::class);
     $database->query("SET TIME ZONE INTERVAL '42' HOUR TO MINUTE")->shouldBeCalledTimes(1);
     $date_sql = new PostgresqlDateSql($database->reveal());

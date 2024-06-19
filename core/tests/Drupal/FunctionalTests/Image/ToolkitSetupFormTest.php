@@ -46,7 +46,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
   /**
    * Tests Image toolkit setup form.
    */
-  public function testToolkitSetupForm() {
+  public function testToolkitSetupForm(): void {
     // Get form.
     $this->drupalGet('admin/config/media/image-toolkit');
 

@@ -28,7 +28,7 @@ class NodeViewLanguageTest extends NodeTestBase {
   /**
    * Tests the language extra field display.
    */
-  public function testViewLanguage() {
+  public function testViewLanguage(): void {
     // Add Spanish language.
     ConfigurableLanguage::createFromLangcode('es')->save();
 

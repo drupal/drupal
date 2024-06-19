@@ -44,7 +44,7 @@ class AliasTest extends KernelTestBase {
   /**
    * @covers ::preloadPathAlias
    */
-  public function testPreloadPathAlias() {
+  public function testPreloadPathAlias(): void {
     $path_alias_repository = $this->container->get('path_alias.repository');
 
     // Every interesting language combination:
@@ -288,7 +288,7 @@ class AliasTest extends KernelTestBase {
   /**
    * @covers ::lookupBySystemPath
    */
-  public function testLookupBySystemPath() {
+  public function testLookupBySystemPath(): void {
     $this->createPathAlias('/test-source-Case', '/test-alias');
 
     $path_alias_repository = $this->container->get('path_alias.repository');
@@ -299,7 +299,7 @@ class AliasTest extends KernelTestBase {
   /**
    * @covers ::lookupByAlias
    */
-  public function testLookupByAlias() {
+  public function testLookupByAlias(): void {
     $this->createPathAlias('/test-source', '/test-alias-Case');
 
     $path_alias_repository = $this->container->get('path_alias.repository');
@@ -311,7 +311,7 @@ class AliasTest extends KernelTestBase {
    * @covers \Drupal\path_alias\AliasManager::getPathByAlias
    * @covers \Drupal\path_alias\AliasManager::getAliasByPath
    */
-  public function testLookupPath() {
+  public function testLookupPath(): void {
     // Create AliasManager and Path object.
     $aliasManager = $this->container->get('path_alias.manager');
 
@@ -360,7 +360,7 @@ class AliasTest extends KernelTestBase {
   /**
    * Tests the alias whitelist.
    */
-  public function testWhitelist() {
+  public function testWhitelist(): void {
     $memoryCounterBackend = new MemoryCounterBackend(\Drupal::service(TimeInterface::class));
 
     // Create AliasManager and Path object.
@@ -421,7 +421,7 @@ class AliasTest extends KernelTestBase {
   /**
    * Tests situation where the whitelist cache is deleted mid-request.
    */
-  public function testWhitelistCacheDeletionMidRequest() {
+  public function testWhitelistCacheDeletionMidRequest(): void {
     $memoryCounterBackend = new MemoryCounterBackend(\Drupal::service(TimeInterface::class));
 
     // Create AliasManager and Path object.

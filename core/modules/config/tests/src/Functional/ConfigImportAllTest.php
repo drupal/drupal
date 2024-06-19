@@ -60,7 +60,7 @@ class ConfigImportAllTest extends ModuleTestBase {
   /**
    * Tests that a fixed set of modules can be installed and uninstalled.
    */
-  public function testInstallUninstall() {
+  public function testInstallUninstall(): void {
 
     // Get a list of modules to enable.
     $all_modules = $this->container->get('extension.list.module')->getList();

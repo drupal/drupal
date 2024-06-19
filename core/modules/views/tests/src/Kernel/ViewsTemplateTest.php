@@ -35,7 +35,7 @@ class ViewsTemplateTest extends ViewsKernelTestBase {
   /**
    * Tests render functionality.
    */
-  public function testTemplate() {
+  public function testTemplate(): void {
     // Make sure that the rendering just calls the preprocess function once.
     $output = Views::getView('test_view_display_template')->preview();
     $renderer = $this->container->get('renderer');
@@ -48,7 +48,7 @@ class ViewsTemplateTest extends ViewsKernelTestBase {
    * @covers views_theme_suggestions_container_alter
    * @throws \Exception
    */
-  public function testThemeSuggestionsContainerAlter() {
+  public function testThemeSuggestionsContainerAlter(): void {
     $build = [
       '#type' => 'view',
       '#name' => 'test_page_display',

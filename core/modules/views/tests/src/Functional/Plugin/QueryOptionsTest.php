@@ -35,7 +35,7 @@ class QueryOptionsTest extends ViewTestBase {
   /**
    * Test that query overrides are stored.
    */
-  public function testStoreQuerySettingsOverride() {
+  public function testStoreQuerySettingsOverride(): void {
     // Show the default display so the override selection is shown.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', TRUE)->save();
 

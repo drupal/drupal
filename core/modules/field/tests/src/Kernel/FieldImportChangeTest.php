@@ -27,7 +27,7 @@ class FieldImportChangeTest extends FieldKernelTestBase {
   /**
    * Tests importing an updated field.
    */
-  public function testImportChange() {
+  public function testImportChange(): void {
     entity_test_create_bundle('test_bundle');
 
     $this->installConfig(['field_test_config']);

@@ -86,7 +86,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
   /**
    * Tests that the taxonomy term view is working properly.
    */
-  public function testTaxonomyTermView() {
+  public function testTaxonomyTermView(): void {
     // Create terms in the vocabulary.
     $term = $this->createTerm();
 

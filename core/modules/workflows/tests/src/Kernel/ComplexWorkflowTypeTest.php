@@ -24,7 +24,7 @@ class ComplexWorkflowTypeTest extends KernelTestBase {
   /**
    * @covers \Drupal\workflows\Entity\Workflow::loadMultipleByType
    */
-  public function testLoadMultipleByType() {
+  public function testLoadMultipleByType(): void {
     $workflow1 = Workflow::create([
       'id' => 'test1',
       'label' => 'Test 1',

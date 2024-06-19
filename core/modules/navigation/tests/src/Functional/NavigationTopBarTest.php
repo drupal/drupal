@@ -75,7 +75,7 @@ class NavigationTopBarTest extends BrowserTestBase {
   /**
    * Tests the top bar visibility.
    */
-  public function testTopBarVisibility() {
+  public function testTopBarVisibility(): void {
     $this->drupalGet($this->node->toUrl());
 
     // Top Bar is not visible if the feature flag module is disabled.

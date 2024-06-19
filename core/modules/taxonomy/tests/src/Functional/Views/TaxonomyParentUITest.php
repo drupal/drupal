@@ -43,7 +43,7 @@ class TaxonomyParentUITest extends UITestBase {
   /**
    * Tests the taxonomy parent plugin UI.
    */
-  public function testTaxonomyParentUI() {
+  public function testTaxonomyParentUI(): void {
     $this->drupalGet('admin/structure/views/nojs/handler/test_taxonomy_parent/default/relationship/parent');
     $this->assertSession()->pageTextNotContains('The handler for this item is broken or missing.');
   }

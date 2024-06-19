@@ -25,7 +25,7 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
   /**
    * Tests template suggestions from block_theme_suggestions_block().
    */
-  public function testBlockThemeHookSuggestions() {
+  public function testBlockThemeHookSuggestions(): void {
     $this->installConfig(['system']);
 
     // Create a block using a plugin with derivative to be preprocessed.

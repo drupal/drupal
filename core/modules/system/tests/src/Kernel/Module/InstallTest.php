@@ -125,7 +125,7 @@ class InstallTest extends KernelTestBase {
   /**
    * Tests installing a module with the same name as an enabled theme.
    */
-  public function testInstallModuleSameNameAsTheme() {
+  public function testInstallModuleSameNameAsTheme(): void {
     $name = 'name_collision_test';
 
     // Install and uninstall the module.

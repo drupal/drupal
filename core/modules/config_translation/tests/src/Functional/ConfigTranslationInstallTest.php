@@ -64,7 +64,7 @@ msgstr "Language $langcode"
 PO;
   }
 
-  public function testConfigTranslation() {
+  public function testConfigTranslation(): void {
     \Drupal::service('module_installer')->install(['node', 'field_ui']);
     $this->createContentType(['type' => 'article']);
 

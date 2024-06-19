@@ -26,7 +26,7 @@ class LanguageConfigInstallOverrideExistingTest extends BrowserTestBase {
   /**
    * Tests when language config is installed existing config is not overridden.
    */
-  public function testLanguageConfigInstallOverrideExisting() {
+  public function testLanguageConfigInstallOverrideExisting(): void {
     /** @var \Drupal\Core\Config\StorageInterface $storage */
     $storage = $this->container->get('config.storage');
     $config = $this->config('language.types');

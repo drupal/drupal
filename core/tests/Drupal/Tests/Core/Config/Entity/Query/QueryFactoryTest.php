@@ -105,7 +105,7 @@ class QueryFactoryTest extends UnitTestCase {
    * @covers ::getKeys
    * @covers ::getValues
    */
-  public function testGetKeysWildCardEnd() {
+  public function testGetKeysWildCardEnd(): void {
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
     $key_value_factory = $this->createMock('Drupal\Core\KeyValueStore\KeyValueFactoryInterface');
     $config_manager = $this->createMock('Drupal\Core\Config\ConfigManagerInterface');

@@ -43,7 +43,7 @@ class TypedConfigTest extends KernelTestBase {
   /**
    * Verifies that the Typed Data API is implemented correctly.
    */
-  public function testTypedDataAPI() {
+  public function testTypedDataAPI(): void {
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
     $typed_config_manager = \Drupal::service('config.typed');
 
@@ -144,7 +144,7 @@ class TypedConfigTest extends KernelTestBase {
   /**
    * Tests config validation via the Typed Data API.
    */
-  public function testSimpleConfigValidation() {
+  public function testSimpleConfigValidation(): void {
     $config = \Drupal::configFactory()->getEditable('config_test.validation');
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
     $typed_config_manager = \Drupal::service('config.typed');

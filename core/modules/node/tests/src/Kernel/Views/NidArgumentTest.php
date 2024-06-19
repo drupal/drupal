@@ -52,7 +52,7 @@ class NidArgumentTest extends ViewsKernelTestBase {
   /**
    * Tests the nid argument.
    */
-  public function testNidArgument() {
+  public function testNidArgument(): void {
     $view = Views::getView('test_nid_argument');
     $view->setDisplay();
 

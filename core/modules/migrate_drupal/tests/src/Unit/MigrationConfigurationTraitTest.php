@@ -18,7 +18,7 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
    * @covers ::getLegacyDrupalVersion
    * @dataProvider providerTestGetLegacyDrupalVersion
    */
-  public function testGetLegacyDrupalVersion($expected_version_string, $schema_version, $exception, $system_table_exists) {
+  public function testGetLegacyDrupalVersion($expected_version_string, $schema_version, $exception, $system_table_exists): void {
     if ($schema_version) {
       $statement = $this->createMock('\Drupal\Core\Database\StatementInterface');
       $statement->expects($this->any())

@@ -37,7 +37,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::responseHeaderExists
    */
-  public function testResponseHeaderExists() {
+  public function testResponseHeaderExists(): void {
     $this->drupalGet('test-null-header');
     $this->assertSession()->responseHeaderExists('Null-Header');
 
@@ -51,7 +51,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::responseHeaderDoesNotExist
    */
-  public function testResponseHeaderDoesNotExist() {
+  public function testResponseHeaderDoesNotExist(): void {
     $this->drupalGet('test-null-header');
     $this->assertSession()->responseHeaderDoesNotExist('does-not-exist');
 
@@ -63,7 +63,7 @@ class WebAssertTest extends BrowserTestBase {
   /**
    * @covers ::pageTextMatchesCount
    */
-  public function testPageTextMatchesCount() {
+  public function testPageTextMatchesCount(): void {
     $this->drupalLogin($this->drupalCreateUser());
 
     // Visit a Drupal page that requires login.
@@ -78,7 +78,7 @@ class WebAssertTest extends BrowserTestBase {
   /**
    * @covers ::pageTextContainsOnce
    */
-  public function testPageTextContainsOnce() {
+  public function testPageTextContainsOnce(): void {
     $this->drupalLogin($this->drupalCreateUser());
 
     // Visit a Drupal page that requires login.
@@ -142,7 +142,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkExists
    */
-  public function testPipeCharInLocator() {
+  public function testPipeCharInLocator(): void {
     $this->drupalGet('test-pipe-char');
     $this->assertSession()->linkExists('foo|bar|baz');
   }
@@ -152,7 +152,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkExistsExact
    */
-  public function testLinkExistsExact() {
+  public function testLinkExistsExact(): void {
     $this->drupalGet('test-pipe-char');
     $this->assertSession()->linkExistsExact('foo|bar|baz');
   }
@@ -162,7 +162,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkExistsExact
    */
-  public function testInvalidLinkExistsExact() {
+  public function testInvalidLinkExistsExact(): void {
     $this->drupalGet('test-pipe-char');
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('Link with label foo|bar not found');
@@ -174,7 +174,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkNotExistsExact
    */
-  public function testLinkNotExistsExact() {
+  public function testLinkNotExistsExact(): void {
     $this->drupalGet('test-pipe-char');
     $this->assertSession()->linkNotExistsExact('foo|bar');
   }
@@ -184,7 +184,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkNotExistsExact
    */
-  public function testInvalidLinkNotExistsExact() {
+  public function testInvalidLinkNotExistsExact(): void {
     $this->drupalGet('test-pipe-char');
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('Link with label foo|bar|baz found');
@@ -295,7 +295,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::responseContains
    * @covers ::responseNotContains
    */
-  public function testTextAsserts() {
+  public function testTextAsserts(): void {
     $this->drupalGet('test-encoded');
     $dangerous = 'Bad html <script>alert(123);</script>';
     $sanitized = Html::escape($dangerous);
@@ -309,7 +309,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::buttonExists
    * @covers ::buttonNotExists
    */
-  public function testFieldAssertsForButton() {
+  public function testFieldAssertsForButton(): void {
     $this->drupalGet('test-field-xpath');
 
     // Verify if the test passes with button ID.
@@ -346,7 +346,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::pageContainsNoDuplicateId
    */
-  public function testPageContainsNoDuplicateId() {
+  public function testPageContainsNoDuplicateId(): void {
     $assert_session = $this->assertSession();
     $this->drupalGet(Url::fromRoute('test_page_test.page_without_duplicate_ids'));
     $assert_session->pageContainsNoDuplicateId();
@@ -363,7 +363,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::assertNoEscaped
    * @covers ::assertEscaped
    */
-  public function testEscapingAssertions() {
+  public function testEscapingAssertions(): void {
     $assert = $this->assertSession();
 
     $this->drupalGet('test-escaped-characters');

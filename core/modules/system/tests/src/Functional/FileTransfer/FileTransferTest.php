@@ -76,7 +76,7 @@ class FileTransferTest extends BrowserTestBase {
     }
   }
 
-  public function testJail() {
+  public function testJail(): void {
     $source = $this->_buildFakeModule();
 
     // This convoluted piece of code is here because our testing framework does

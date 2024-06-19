@@ -27,7 +27,7 @@ class MigrateThemeSettingsTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of theme settings to variables to configuration.
    */
-  public function testMigrateThemeSettings() {
+  public function testMigrateThemeSettings(): void {
     $config = $this->config('olivero.settings');
 
     $this->assertSame('', $config->get('favicon.path'));

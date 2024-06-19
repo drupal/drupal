@@ -46,7 +46,7 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of content language settings.
    */
-  public function testLanguageContent() {
+  public function testLanguageContent(): void {
     // Assert that a translatable content is still translatable.
     $config = $this->config('language.content_settings.node.article');
     $this->assertSame($config->get('target_entity_type_id'), 'node');

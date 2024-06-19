@@ -60,7 +60,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
    *
    * @covers ::getEntitySchema
    */
-  public function testUniqueKeys() {
+  public function testUniqueKeys(): void {
     // Create a node which will create a new ContentModerationState entity.
     $node = Node::create([
       'title' => 'Test title',

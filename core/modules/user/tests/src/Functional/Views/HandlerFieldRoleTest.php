@@ -27,7 +27,7 @@ class HandlerFieldRoleTest extends UserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testRole() {
+  public function testRole(): void {
     // Create a couple of roles for the view.
     $role_name_a = 'a' . $this->randomMachineName(8);
     $this->drupalCreateRole(['access content'], $role_name_a, '<em>' . $role_name_a . '</em>', 9);

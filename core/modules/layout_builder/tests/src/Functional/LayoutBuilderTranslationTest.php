@@ -51,7 +51,7 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
   /**
    * Tests that layout overrides work when created after a translation.
    */
-  public function testTranslationBeforeLayoutOverride() {
+  public function testTranslationBeforeLayoutOverride(): void {
     $assert_session = $this->assertSession();
 
     $this->addEntityTranslation();
@@ -91,7 +91,7 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
   /**
    * Tests that layout overrides work when created before a translation.
    */
-  public function testLayoutOverrideBeforeTranslation() {
+  public function testLayoutOverrideBeforeTranslation(): void {
     $assert_session = $this->assertSession();
 
     $entity_url = $this->entity->toUrl()->toString();

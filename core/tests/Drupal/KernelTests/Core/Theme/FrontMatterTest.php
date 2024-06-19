@@ -72,7 +72,7 @@ class FrontMatterTest extends KernelTestBase {
    * @covers \Drupal\Core\Template\TwigEnvironment::getTemplateMetadata
    * @covers \Drupal\Component\FrontMatter\Exception\FrontMatterParseException
    */
-  public function testFrontMatterBroken() {
+  public function testFrontMatterBroken(): void {
     $source = "---\ncollection:\n-  key: foo\n  foo: bar\n---\n" . ComponentFrontMatterTest::SOURCE;
     $file = $this->createTwigTemplate($source);
     $this->expectException(SyntaxError::class);
@@ -95,7 +95,7 @@ class FrontMatterTest extends KernelTestBase {
    *
    * @dataProvider \Drupal\Tests\Component\FrontMatter\FrontMatterTest::providerFrontMatterData
    */
-  public function testFrontMatter($yaml, $line, $content = ComponentFrontMatterTest::SOURCE) {
+  public function testFrontMatter($yaml, $line, $content = ComponentFrontMatterTest::SOURCE): void {
     // Create a temporary Twig template.
     $source = ComponentFrontMatterTest::createFrontMatterSource($yaml, $content);
     $file = $this->createTwigTemplate($source);

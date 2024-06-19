@@ -14,7 +14,7 @@ class ReservedWordTest extends DatabaseTestBase {
   /**
    * Tests SELECT count query from a table with a reserved name.
    */
-  public function testSelectReservedWordTableCount() {
+  public function testSelectReservedWordTableCount(): void {
     $query = $this->connection->select('virtual');
     $num_records = $query->countQuery()->execute()->fetchField();
 
@@ -24,7 +24,7 @@ class ReservedWordTest extends DatabaseTestBase {
   /**
    * Tests SELECT query with a specific field from a table with a reserved name.
    */
-  public function testSelectReservedWordTableSpecificField() {
+  public function testSelectReservedWordTableSpecificField(): void {
     $query = $this->connection->select('virtual');
     $query->addField('virtual', 'function');
     $rows = $query->execute()->fetchCol();
@@ -35,7 +35,7 @@ class ReservedWordTest extends DatabaseTestBase {
   /**
    * Tests SELECT query with all fields from a table with a reserved name.
    */
-  public function testSelectReservedWordTableAllFields() {
+  public function testSelectReservedWordTableAllFields(): void {
     $query = $this->connection->select('virtual');
     $query->fields('virtual');
     $result = $query->execute()->fetchObject();
@@ -46,7 +46,7 @@ class ReservedWordTest extends DatabaseTestBase {
   /**
    * Tests SELECT count query from a table with a reserved alias.
    */
-  public function testSelectReservedWordAliasCount() {
+  public function testSelectReservedWordAliasCount(): void {
     $query = $this->connection->select('test', 'character');
     $num_records = $query->countQuery()->execute()->fetchField();
 
@@ -56,7 +56,7 @@ class ReservedWordTest extends DatabaseTestBase {
   /**
    * Tests SELECT query with specific fields from a table with a reserved alias.
    */
-  public function testSelectReservedWordAliasSpecificFields() {
+  public function testSelectReservedWordAliasSpecificFields(): void {
     $query = $this->connection->select('test', 'high_priority');
     $query->addField('high_priority', 'name');
     $query->addField('high_priority', 'age', 'age');
@@ -71,7 +71,7 @@ class ReservedWordTest extends DatabaseTestBase {
   /**
    * Tests SELECT query with all fields from a table with a reserved alias.
    */
-  public function testSelectReservedWordAliasAllFields() {
+  public function testSelectReservedWordAliasAllFields(): void {
     $record = $this->connection->select('test', 'signal')
       ->fields('signal')
       ->condition('age', 27)
@@ -85,7 +85,7 @@ class ReservedWordTest extends DatabaseTestBase {
   /**
    * Tests SELECT query with GROUP BY clauses on fields with reserved names.
    */
-  public function testGroupBy() {
+  public function testGroupBy(): void {
     $this->connection->insert('select')
       ->fields([
         'id' => 2,

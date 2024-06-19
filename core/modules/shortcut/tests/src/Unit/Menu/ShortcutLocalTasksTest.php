@@ -38,7 +38,7 @@ class ShortcutLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getShortcutPageRoutes
    */
-  public function testShortcutPageLocalTasks($route) {
+  public function testShortcutPageLocalTasks($route): void {
     $tasks = [
       0 => ['shortcut.set_switch', 'entity.user.canonical', 'entity.user.edit_form'],
     ];

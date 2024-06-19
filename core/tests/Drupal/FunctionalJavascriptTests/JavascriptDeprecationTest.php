@@ -22,7 +22,7 @@ class JavascriptDeprecationTest extends WebDriverTestBase {
   /**
    * Tests Javascript deprecation notices.
    */
-  public function testJavascriptDeprecation() {
+  public function testJavascriptDeprecation(): void {
     $this->expectDeprecation('Javascript Deprecation: This function is deprecated for testing purposes.');
     $this->expectDeprecation('Javascript Deprecation: This property is deprecated for testing purposes.');
     $this->drupalGet('js_deprecation_test');

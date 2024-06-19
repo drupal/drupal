@@ -54,7 +54,7 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    * @param bool $removed
    *   Whether or not the route is expected to be removed from the collection.
    */
-  public function testRemoveRoute($route_name, array $requirements, $removed) {
+  public function testRemoveRoute($route_name, array $requirements, $removed): void {
     $collection = new RouteCollection();
     $route = new Route('', [], $requirements);
     $collection->add($route_name, $route);

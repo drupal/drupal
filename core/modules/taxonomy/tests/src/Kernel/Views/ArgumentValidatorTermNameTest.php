@@ -80,7 +80,7 @@ class ArgumentValidatorTermNameTest extends TaxonomyTestBase {
   /**
    * Tests the term name argument validator plugin.
    */
-  public function testArgumentValidatorTermName() {
+  public function testArgumentValidatorTermName(): void {
     $view = Views::getView('test_taxonomy_name_argument');
     $view->initHandlers();
 
@@ -150,7 +150,7 @@ class ArgumentValidatorTermNameTest extends TaxonomyTestBase {
   /**
    * Tests the access checking in term name argument validator plugin.
    */
-  public function testArgumentValidatorTermNameAccess() {
+  public function testArgumentValidatorTermNameAccess(): void {
     $this->installConfig(['user']);
     $this->setCurrentUser($this->createUser(['access content']));
     $view = Views::getView('test_taxonomy_name_argument');

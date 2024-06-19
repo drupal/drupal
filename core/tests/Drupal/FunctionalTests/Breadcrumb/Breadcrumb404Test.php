@@ -29,7 +29,7 @@ class Breadcrumb404Test extends BrowserTestBase {
   /**
    * Tests that different 404s don't create unnecessary cache entries.
    */
-  public function testBreadcrumbOn404Pages() {
+  public function testBreadcrumbOn404Pages(): void {
     $this->placeBlock('system_breadcrumb_block', ['id' => 'breadcrumb']);
 
     // Prime the cache first.

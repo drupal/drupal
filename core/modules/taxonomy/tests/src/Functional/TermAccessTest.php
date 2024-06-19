@@ -25,7 +25,7 @@ class TermAccessTest extends TaxonomyTestBase {
   /**
    * Tests access control functionality for taxonomy terms.
    */
-  public function testTermAccess() {
+  public function testTermAccess(): void {
     $assert_session = $this->assertSession();
 
     $vocabulary = $this->createVocabulary();

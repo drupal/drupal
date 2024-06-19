@@ -73,7 +73,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *
    * @dataProvider providerTestClean
    */
-  public function testClean($js_asset, $expected) {
+  public function testClean($js_asset, $expected): void {
     $this->assertEquals($expected, $this->optimizer->clean($js_asset));
   }
 
@@ -139,7 +139,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *
    * @dataProvider providerTestOptimize
    */
-  public function testOptimize($js_asset, $expected) {
+  public function testOptimize($js_asset, $expected): void {
     $this->assertEquals($expected, $this->optimizer->optimize($js_asset));
   }
 

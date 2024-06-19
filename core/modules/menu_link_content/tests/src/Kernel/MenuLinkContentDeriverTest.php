@@ -41,7 +41,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
   /**
    * Tests the rediscovering.
    */
-  public function testRediscover() {
+  public function testRediscover(): void {
     \Drupal::state()->set('menu_link_content_dynamic_route.routes', [
       'route_name_1' => new Route('/example-path'),
     ]);

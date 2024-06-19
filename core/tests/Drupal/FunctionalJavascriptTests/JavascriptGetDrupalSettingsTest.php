@@ -26,7 +26,7 @@ class JavascriptGetDrupalSettingsTest extends WebDriverTestBase {
    *
    * @see \Drupal\FunctionalJavascriptTests\WebDriverTestBase::getDrupalSettings()
    */
-  public function testGetDrupalSettings() {
+  public function testGetDrupalSettings(): void {
     $this->drupalLogin($this->drupalCreateUser());
     $this->drupalGet('test-page');
 

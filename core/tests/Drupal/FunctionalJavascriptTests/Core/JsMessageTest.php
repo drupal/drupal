@@ -40,7 +40,7 @@ class JsMessageTest extends WebDriverTestBase {
   /**
    * Tests click on links to show messages and remove messages.
    */
-  public function testAddRemoveMessages() {
+  public function testAddRemoveMessages(): void {
     $web_assert = $this->assertSession();
     $this->drupalGet('js_message_test_link');
 

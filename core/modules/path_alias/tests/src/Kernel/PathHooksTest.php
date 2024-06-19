@@ -36,7 +36,7 @@ class PathHooksTest extends KernelTestBase {
    * @covers ::postSave
    * @covers ::postDelete
    */
-  public function testPathHooks() {
+  public function testPathHooks(): void {
     $path_alias = PathAlias::create([
       'path' => '/' . $this->randomMachineName(),
       'alias' => '/' . $this->randomMachineName(),

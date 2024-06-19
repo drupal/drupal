@@ -88,7 +88,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
   /**
    * Tests that the field widget opener respects entity creation permissions.
    */
-  public function testFieldWidgetEntityCreateAccess() {
+  public function testFieldWidgetEntityCreateAccess(): void {
     /** @var \Drupal\media_library\MediaLibraryUiBuilder $ui_builder */
     $ui_builder = $this->container->get('media_library.ui_builder');
 
@@ -122,7 +122,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
    *
    * @dataProvider editorOpenerAccessProvider
    */
-  public function testEditorOpenerAccess($media_embed_enabled, $can_use_format) {
+  public function testEditorOpenerAccess($media_embed_enabled, $can_use_format): void {
     $format = $this->container
       ->get('entity_type.manager')
       ->getStorage('filter_format')->create([
@@ -185,7 +185,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
   /**
    * Tests that the field widget opener respects entity-specific access.
    */
-  public function testFieldWidgetEntityEditAccess() {
+  public function testFieldWidgetEntityEditAccess(): void {
     /** @var \Drupal\media_library\MediaLibraryUiBuilder $ui_builder */
     $ui_builder = $this->container->get('media_library.ui_builder');
 
@@ -261,7 +261,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
    *
    * @dataProvider providerFieldWidgetEntityFieldAccess
    */
-  public function testFieldWidgetEntityFieldAccess(string $field_type) {
+  public function testFieldWidgetEntityFieldAccess(string $field_type): void {
     $field_storage = FieldStorageConfig::create([
       'type' => $field_type,
       'entity_type' => 'entity_test_with_bundle',
@@ -319,7 +319,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
   /**
    * Tests that media library access respects the media_library view.
    */
-  public function testViewAccess() {
+  public function testViewAccess(): void {
     /** @var \Drupal\media_library\MediaLibraryUiBuilder $ui_builder */
     $ui_builder = $this->container->get('media_library.ui_builder');
 

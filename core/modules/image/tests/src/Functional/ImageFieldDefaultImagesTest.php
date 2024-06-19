@@ -42,7 +42,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
   /**
    * Tests CRUD for fields and field storages with default images.
    */
-  public function testDefaultImages() {
+  public function testDefaultImages(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Create files to use as the default images.
     $files = $this->drupalGetTestFiles('image');
@@ -260,7 +260,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
   /**
    * Tests image field and field storage having an invalid default image.
    */
-  public function testInvalidDefaultImage() {
+  public function testInvalidDefaultImage(): void {
     $field_storage = FieldStorageConfig::create([
       'field_name' => $this->randomMachineName(),
       'entity_type' => 'node',

@@ -26,7 +26,7 @@ class ConfigLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getConfigAdminRoutes
    */
-  public function testConfigAdminLocalTasks($route, $expected) {
+  public function testConfigAdminLocalTasks($route, $expected): void {
     $this->assertLocalTasks($route, $expected);
   }
 

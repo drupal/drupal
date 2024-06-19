@@ -15,7 +15,7 @@ class MediaEmbedFilterConfigurationUiEditTest extends MediaEmbedFilterTestBase {
    * @covers ::media_form_filter_format_edit_form_alter
    * @dataProvider providerTestValidations
    */
-  public function testValidationWhenEditing($filter_html_status, $filter_align_status, $filter_caption_status, $filter_html_image_secure_status, $media_embed, $allowed_html, $expected_error_message) {
+  public function testValidationWhenEditing($filter_html_status, $filter_align_status, $filter_caption_status, $filter_html_image_secure_status, $media_embed, $allowed_html, $expected_error_message): void {
     $this->drupalGet('admin/config/content/formats/manage/media_embed_test');
 
     // Enable the `filter_html` and `media_embed` filters.

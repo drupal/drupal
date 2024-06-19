@@ -38,7 +38,7 @@ class MigrateFieldOptionTranslationTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 field to Drupal 8 migration.
    */
-  public function testFieldOptionTranslation() {
+  public function testFieldOptionTranslation(): void {
     $language_manager = $this->container->get('language_manager');
 
     // Test a select list with allowed values of key only.

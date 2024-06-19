@@ -29,7 +29,7 @@ class ArgumentTransformTermTest extends TaxonomyTestBase {
    * @param string $name
    *   The name of the taxonomy term to use for the test.
    */
-  public function testTermArgumentTransformation($name) {
+  public function testTermArgumentTransformation($name): void {
     /** @var \Drupal\taxonomy\TermInterface $term */
     $term = $this->createTerm(['name' => $name]);
 

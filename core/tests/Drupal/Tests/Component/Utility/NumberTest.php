@@ -31,7 +31,7 @@ class NumberTest extends TestCase {
    * @param bool $expected
    *   Expected return value from Number::validStep().
    */
-  public function testValidStep($value, $step, $expected) {
+  public function testValidStep($value, $step, $expected): void {
     $return = Number::validStep($value, $step);
     $this->assertEquals($expected, $return);
   }
@@ -51,7 +51,7 @@ class NumberTest extends TestCase {
    * @param bool $expected
    *   Expected return value from Number::validStep().
    */
-  public function testValidStepOffset($value, $step, $offset, $expected) {
+  public function testValidStepOffset($value, $step, $offset, $expected): void {
     $return = Number::validStep($value, $step, $offset);
     $this->assertEquals($expected, $return);
   }
@@ -130,7 +130,7 @@ class NumberTest extends TestCase {
    * @param string $expected
    *   The expected alphadecimal value.
    */
-  public function testConversions($value, $expected) {
+  public function testConversions($value, $expected): void {
     $this->assertSame(Number::intToAlphadecimal($value), $expected);
     $this->assertSame($value, Number::alphadecimalToInt($expected));
   }

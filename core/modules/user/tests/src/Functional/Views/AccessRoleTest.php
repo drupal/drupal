@@ -42,7 +42,7 @@ class AccessRoleTest extends AccessTestBase {
   /**
    * Tests role access plugin.
    */
-  public function testAccessRole() {
+  public function testAccessRole(): void {
     /** @var \Drupal\views\ViewEntityInterface $view */
     $view = \Drupal::entityTypeManager()->getStorage('view')->load('test_access_role');
     $display = &$view->getDisplay('default');
@@ -113,7 +113,7 @@ class AccessRoleTest extends AccessTestBase {
   /**
    * Tests access on render caching.
    */
-  public function testRenderCaching() {
+  public function testRenderCaching(): void {
     $view = Views::getView('test_access_role');
     $display = &$view->storage->getDisplay('default');
     $display['display_options']['cache'] = [

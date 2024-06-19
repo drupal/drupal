@@ -46,7 +46,7 @@ class MigrateLanguageTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of Drupal 6 languages to configurable language entities.
    */
-  public function testLanguageMigration() {
+  public function testLanguageMigration(): void {
     $this->executeMigration('language');
     $this->assertLanguage('en', 'English');
     $this->assertLanguage('fr', 'French');

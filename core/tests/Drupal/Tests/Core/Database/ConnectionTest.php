@@ -50,7 +50,7 @@ class ConnectionTest extends UnitTestCase {
    *
    * @dataProvider providerPrefixRoundTrip
    */
-  public function testPrefixRoundTrip($expected, $prefix_info) {
+  public function testPrefixRoundTrip($expected, $prefix_info): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, []);
 
@@ -110,7 +110,7 @@ class ConnectionTest extends UnitTestCase {
    *
    * @dataProvider providerTestPrefixTables
    */
-  public function testPrefixTables($expected, $prefix_info, $query, array $quote_identifier = ['"', '"']) {
+  public function testPrefixTables($expected, $prefix_info, $query, array $quote_identifier = ['"', '"']): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info], $quote_identifier);
     $this->assertEquals($expected, $connection->prefixTables($query));
@@ -319,7 +319,7 @@ class ConnectionTest extends UnitTestCase {
    * @dataProvider providerGetDriverClass
    * @group legacy
    */
-  public function testGetDriverClass($expected, $namespace, $class) {
+  public function testGetDriverClass($expected, $namespace, $class): void {
     $additional_class_loader = new ClassLoader();
     $additional_class_loader->addPsr4("Drupal\\core_fake\\Driver\\Database\\CoreFake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFake");
     $additional_class_loader->addPsr4("Drupal\\core_fake\\Driver\\Database\\CoreFakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFakeWithAllCustomClasses");
@@ -369,7 +369,7 @@ class ConnectionTest extends UnitTestCase {
    *
    * @dataProvider providerSchema
    */
-  public function testSchema($expected, $driver, $namespace) {
+  public function testSchema($expected, $driver, $namespace): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
     $connection->driver = $driver;
@@ -406,7 +406,7 @@ class ConnectionTest extends UnitTestCase {
    *
    * @dataProvider providerMakeComments
    */
-  public function testMakeComments($expected, $comment_array) {
+  public function testMakeComments($expected, $comment_array): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, []);
     $this->assertEquals($expected, $connection->makeComment($comment_array));
@@ -433,7 +433,7 @@ class ConnectionTest extends UnitTestCase {
    *
    * @dataProvider providerFilterComments
    */
-  public function testFilterComments($expected, $comment) {
+  public function testFilterComments($expected, $comment): void {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     $connection = new StubConnection($mock_pdo, []);
 
@@ -475,7 +475,7 @@ class ConnectionTest extends UnitTestCase {
    * @covers ::escapeTable
    * @dataProvider providerEscapeTables
    */
-  public function testEscapeTable($expected, $name, array $identifier_quote = ['"', '"']) {
+  public function testEscapeTable($expected, $name, array $identifier_quote = ['"', '"']): void {
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, [], $identifier_quote);
 
@@ -506,7 +506,7 @@ class ConnectionTest extends UnitTestCase {
    * @covers ::escapeAlias
    * @dataProvider providerEscapeAlias
    */
-  public function testEscapeAlias($expected, $name, array $identifier_quote = ['"', '"']) {
+  public function testEscapeAlias($expected, $name, array $identifier_quote = ['"', '"']): void {
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, [], $identifier_quote);
 
@@ -540,7 +540,7 @@ class ConnectionTest extends UnitTestCase {
    * @covers ::escapeField
    * @dataProvider providerEscapeFields
    */
-  public function testEscapeField($expected, $name, array $identifier_quote = ['"', '"']) {
+  public function testEscapeField($expected, $name, array $identifier_quote = ['"', '"']): void {
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, [], $identifier_quote);
 
@@ -569,7 +569,7 @@ class ConnectionTest extends UnitTestCase {
    * @covers ::escapeDatabase
    * @dataProvider providerEscapeDatabase
    */
-  public function testEscapeDatabase($expected, $name, array $identifier_quote = ['"', '"']) {
+  public function testEscapeDatabase($expected, $name, array $identifier_quote = ['"', '"']): void {
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, [], $identifier_quote);
 
@@ -579,7 +579,7 @@ class ConnectionTest extends UnitTestCase {
   /**
    * @covers ::__construct
    */
-  public function testIdentifierQuotesAssertCount() {
+  public function testIdentifierQuotesAssertCount(): void {
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
     $mock_pdo = $this->createMock(StubPDO::class);
@@ -589,7 +589,7 @@ class ConnectionTest extends UnitTestCase {
   /**
    * @covers ::__construct
    */
-  public function testIdentifierQuotesAssertString() {
+  public function testIdentifierQuotesAssertString(): void {
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
     $mock_pdo = $this->createMock(StubPDO::class);
@@ -599,7 +599,7 @@ class ConnectionTest extends UnitTestCase {
   /**
    * @covers ::__construct
    */
-  public function testNamespaceDefault() {
+  public function testNamespaceDefault(): void {
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, []);
     $this->assertSame('Drupal\Tests\Core\Database\Stub', $connection->getConnectionOptions()['namespace']);
@@ -610,7 +610,7 @@ class ConnectionTest extends UnitTestCase {
    *
    * @dataProvider provideQueriesToTrim
    */
-  public function testQueryTrim($expected, $query, $options) {
+  public function testQueryTrim($expected, $query, $options): void {
     $mock_pdo = $this->getMockBuilder(StubPdo::class)->getMock();
     $connection = new StubConnection($mock_pdo, []);
 
@@ -669,7 +669,7 @@ class ConnectionTest extends UnitTestCase {
    * @covers ::removeDatabaseEntriesFromDebugBacktrace
    * @covers ::getDebugBacktrace
    */
-  public function testFindCallerFromDebugBacktrace() {
+  public function testFindCallerFromDebugBacktrace(): void {
     Database::addConnectionInfo('default', 'default', [
       'driver' => 'test',
       'namespace' => 'Drupal\Tests\Core\Database\Stub',

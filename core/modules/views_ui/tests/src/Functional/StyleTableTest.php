@@ -22,7 +22,7 @@ class StyleTableTest extends UITestBase {
   /**
    * Tests created a table style view.
    */
-  public function testWizard() {
+  public function testWizard(): void {
     // Create a new view and check that the first field has a label.
     $view = [];
     $view['label'] = $this->randomMachineName(16);

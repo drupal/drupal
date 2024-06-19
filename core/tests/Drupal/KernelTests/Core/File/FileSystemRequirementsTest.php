@@ -34,7 +34,7 @@ class FileSystemRequirementsTest extends KernelTestBase {
   /**
    * Tests if settings are set, there are not warnings.
    */
-  public function testSettingsExist() {
+  public function testSettingsExist(): void {
     $this->setSetting('file_temp_path', $this->randomMachineName());
     $requirements = $this->checkSystemRequirements();
     $this->assertArrayNotHasKey('temp_directory', $requirements);

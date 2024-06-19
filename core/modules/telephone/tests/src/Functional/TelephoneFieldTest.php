@@ -90,7 +90,7 @@ class TelephoneFieldTest extends BrowserTestBase {
    *
    * @covers \Drupal\telephone\Plugin\Field\FieldWidget\TelephoneDefaultWidget::formElement
    */
-  public function testTelephoneWidget() {
+  public function testTelephoneWidget(): void {
     $this->drupalGet('node/add/article');
     $this->assertSession()->fieldValueEquals("field_telephone[0][value]", '');
     $this->assertSession()->elementAttributeContains('css', 'input[name="field_telephone[0][value]"]', 'maxlength', (string) TelephoneItem::MAX_LENGTH);
@@ -104,7 +104,7 @@ class TelephoneFieldTest extends BrowserTestBase {
    *
    * @dataProvider providerPhoneNumbers
    */
-  public function testTelephoneFormatter($input, $expected) {
+  public function testTelephoneFormatter($input, $expected): void {
     // Test basic entry of telephone field.
     $edit = [
       'title[0][value]' => $this->randomMachineName(),

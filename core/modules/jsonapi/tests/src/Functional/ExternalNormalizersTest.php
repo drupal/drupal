@@ -113,7 +113,7 @@ class ExternalNormalizersTest extends BrowserTestBase {
    *
    * @dataProvider providerTestFormatAgnosticNormalizers
    */
-  public function testFormatAgnosticNormalizers($test_module, $expected_value_jsonapi_normalization, $expected_value_jsonapi_denormalization) {
+  public function testFormatAgnosticNormalizers($test_module, $expected_value_jsonapi_normalization, $expected_value_jsonapi_denormalization): void {
     assert(in_array($expected_value_jsonapi_normalization, [static::VALUE_ORIGINAL, static::VALUE_OVERRIDDEN], TRUE));
     assert(in_array($expected_value_jsonapi_denormalization, [static::VALUE_ORIGINAL, static::VALUE_OVERRIDDEN], TRUE));
 

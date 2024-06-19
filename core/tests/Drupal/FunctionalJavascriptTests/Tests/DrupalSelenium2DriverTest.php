@@ -47,7 +47,7 @@ class DrupalSelenium2DriverTest extends WebDriverTestBase {
   /**
    * Tests uploading remote files.
    */
-  public function testGetRemoteFilePath() {
+  public function testGetRemoteFilePath(): void {
     $web_driver = $this->getSession()->getDriver();
     $this->assertInstanceOf(Selenium2Driver::class, $web_driver);
     $this->assertFalse($web_driver->isW3C(), 'Driver is not operating in W3C mode');

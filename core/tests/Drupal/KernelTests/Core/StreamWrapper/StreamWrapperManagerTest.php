@@ -38,7 +38,7 @@ class StreamWrapperManagerTest extends KernelTestBase {
    *
    * @dataProvider providerTestUriScheme
    */
-  public function testUriScheme($uri, $expected) {
+  public function testUriScheme($uri, $expected): void {
     $this->assertSame($expected, StreamWrapperManager::getScheme($uri));
   }
 

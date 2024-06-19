@@ -21,7 +21,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   /**
    * Checks the asset requests made when the front and recipe pages are visited.
    */
-  public function testFrontAndRecipesPages() {
+  public function testFrontAndRecipesPages(): void {
     $performance_data = $this->collectPerformanceData(function () {
       $this->doRequests();
     }, 'umamiFrontAndRecipePages');
@@ -34,7 +34,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   /**
    * Checks the asset requests made when the front and recipe pages are visited.
    */
-  public function testFrontAndRecipesPagesAuthenticated() {
+  public function testFrontAndRecipesPagesAuthenticated(): void {
     $user = $this->createUser();
     $this->drupalLogin($user);
     sleep(2);

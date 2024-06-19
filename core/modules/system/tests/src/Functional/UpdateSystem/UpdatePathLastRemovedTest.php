@@ -56,7 +56,7 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
   /**
    * Tests that a module with a too old schema version can not be updated.
    */
-  public function testLastRemovedVersion() {
+  public function testLastRemovedVersion(): void {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
 

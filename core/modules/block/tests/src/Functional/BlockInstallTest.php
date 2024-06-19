@@ -18,7 +18,7 @@ class BlockInstallTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testCacheTagInvalidationUponInstallation() {
+  public function testCacheTagInvalidationUponInstallation(): void {
     // Warm the page cache.
     $this->drupalGet('');
     $this->assertSession()->pageTextNotContains('Powered by Drupal');

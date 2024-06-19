@@ -61,7 +61,7 @@ class EntityUrlLanguageTest extends LanguageTestBase {
   /**
    * Ensures that entity URLs in a language have the right language prefix.
    */
-  public function testEntityUrlLanguage() {
+  public function testEntityUrlLanguage(): void {
     $this->assertStringContainsString('/en/entity_test/' . $this->entity->id(), $this->entity->toUrl()->toString());
     $this->assertStringContainsString('/es/entity_test/' . $this->entity->id(), $this->entity->getTranslation('es')->toUrl()->toString());
     $this->assertStringContainsString('/fr/entity_test/' . $this->entity->id(), $this->entity->getTranslation('fr')->toUrl()->toString());
@@ -73,7 +73,7 @@ class EntityUrlLanguageTest extends LanguageTestBase {
    * Test case with the method language-content-entity enabled and configured
    * with higher and also with lower priority than the method language-url.
    */
-  public function testEntityUrlLanguageWithLanguageContentEnabled() {
+  public function testEntityUrlLanguageWithLanguageContentEnabled(): void {
     // Define the method language-content-entity with a higher priority than
     // language-url.
     $config = $this->config('language.types');

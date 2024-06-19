@@ -35,7 +35,7 @@ class MessengerTest extends KernelTestBase {
    * @covers ::deleteByType
    * @covers ::messagesByType
    */
-  public function testRemoveSingleMessage() {
+  public function testRemoveSingleMessage(): void {
 
     // Set two messages.
     $this->messenger->addStatus('First message (removed).');
@@ -65,7 +65,7 @@ class MessengerTest extends KernelTestBase {
    * @covers ::deleteByType
    * @covers ::deleteAll
    */
-  public function testAddNoDuplicates() {
+  public function testAddNoDuplicates(): void {
 
     $this->messenger->addStatus('Non Duplicated status message');
     $this->messenger->addStatus('Non Duplicated status message');
@@ -106,7 +106,7 @@ class MessengerTest extends KernelTestBase {
    * @covers ::addError
    * @covers ::deleteByType
    */
-  public function testAddWithDuplicates() {
+  public function testAddWithDuplicates(): void {
 
     $this->messenger->addStatus('Duplicated status message', TRUE);
     $this->messenger->addStatus('Duplicated status message', TRUE);
@@ -132,7 +132,7 @@ class MessengerTest extends KernelTestBase {
    * @covers ::deleteByType
    * @covers ::messagesByType
    */
-  public function testAddMarkup() {
+  public function testAddMarkup(): void {
 
     // Add a Markup message.
     $this->messenger->addStatus(Markup::create('Markup with <em>markup!</em>'));

@@ -23,7 +23,7 @@ class UrlTransformRelativeTest extends KernelTestBase {
    *
    * @dataProvider providerFileUrlTransformRelative
    */
-  public function testFileUrlTransformRelative($host, $port, $https, $base_path, $root_relative, $url, $expected) {
+  public function testFileUrlTransformRelative($host, $port, $https, $base_path, $root_relative, $url, $expected): void {
 
     $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     $_SERVER['SERVER_ADDR'] = '127.0.0.1';

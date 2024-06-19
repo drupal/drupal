@@ -66,7 +66,7 @@ class CreateSampleEntityTest extends KernelTestBase {
    *
    * @covers ::createWithSampleValues
    */
-  public function testSampleValueContentEntity() {
+  public function testSampleValueContentEntity(): void {
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $definition) {
       if ($definition->entityClassImplements(FieldableEntityInterface::class)) {
         $label = $definition->getKey('label');

@@ -87,7 +87,7 @@ class ManageFieldsTest extends WebDriverTestBase {
   /**
    * Tests re-using an existing field and the visibility of the re-use button.
    */
-  public function testReuseExistingField() {
+  public function testReuseExistingField(): void {
     $path = 'admin/structure/types/manage/article';
     $path2 = 'admin/structure/types/manage/page';
     $this->drupalGet($path2 . '/fields');
@@ -105,7 +105,7 @@ class ManageFieldsTest extends WebDriverTestBase {
   /**
    * Tests filter results in the re-use form.
    */
-  public function testFilterInReuseForm() {
+  public function testFilterInReuseForm(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $path = 'admin/structure/types/manage/article';
@@ -156,7 +156,7 @@ class ManageFieldsTest extends WebDriverTestBase {
   /**
    * Tests that field delete operation opens in modal.
    */
-  public function testFieldDelete() {
+  public function testFieldDelete(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -175,7 +175,7 @@ class ManageFieldsTest extends WebDriverTestBase {
   /**
    * Tests field add.
    */
-  public function testAddField() {
+  public function testAddField(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -298,7 +298,7 @@ class ManageFieldsTest extends WebDriverTestBase {
   /**
    * Tests the order in which the field types appear in the form.
    */
-  public function testFieldTypeOrder() {
+  public function testFieldTypeOrder(): void {
     $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
     $page = $this->getSession()->getPage();
     $field_type_categories = [
@@ -337,7 +337,7 @@ class ManageFieldsTest extends WebDriverTestBase {
   /**
    * Tests the form validation for allowed values field.
    */
-  public function testAllowedValuesFormValidation() {
+  public function testAllowedValuesFormValidation(): void {
     FieldStorageConfig::create([
       'field_name' => 'field_text',
       'entity_type' => 'node',
@@ -359,7 +359,7 @@ class ManageFieldsTest extends WebDriverTestBase {
   /**
    * Tests the form validation for label field.
    */
-  public function testLabelFieldFormValidation() {
+  public function testLabelFieldFormValidation(): void {
     $this->drupalGet('/admin/structure/types/manage/article/fields/add-field');
     $page = $this->getSession()->getPage();
 

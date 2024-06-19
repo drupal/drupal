@@ -87,7 +87,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
   /**
    * Tests the field synchronization algorithm.
    */
-  public function testFieldSync() {
+  public function testFieldSync(): void {
     // Add a new item to the source items and check that its added to all the
     // translations.
     $sync_langcode = $this->langcodes[2];
@@ -178,7 +178,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
   /**
    * Tests that items holding the same values are correctly synchronized.
    */
-  public function testMultipleSyncedValues() {
+  public function testMultipleSyncedValues(): void {
     $sync_langcode = $this->langcodes[1];
     $unchanged_items = $this->unchangedFieldValues[$sync_langcode];
 
@@ -237,7 +237,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
   /**
    * Tests that one change in a synchronized column triggers a change in all columns.
    */
-  public function testDifferingSyncedColumns() {
+  public function testDifferingSyncedColumns(): void {
     $sync_langcode = $this->langcodes[2];
     $unchanged_items = $this->unchangedFieldValues[$sync_langcode];
     $field_values = $this->unchangedFieldValues;

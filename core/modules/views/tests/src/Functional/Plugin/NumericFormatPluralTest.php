@@ -51,7 +51,7 @@ class NumericFormatPluralTest extends ViewTestBase {
   /**
    * Tests plural formatting setting on a numeric views handler.
    */
-  public function testNumericFormatPlural() {
+  public function testNumericFormatPlural(): void {
     // Create a file.
     $file = $this->createFile();
 

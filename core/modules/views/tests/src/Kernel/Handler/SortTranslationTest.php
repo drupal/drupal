@@ -99,7 +99,7 @@ class SortTranslationTest extends ViewsKernelTestBase {
   /**
    * Tests sorting on an untranslated field.
    */
-  public function testSortbyUntranslatedIntegerField() {
+  public function testSortbyUntranslatedIntegerField(): void {
     $map = [
       'nid' => 'nid',
       'node_field_data_langcode' => 'langcode',

@@ -35,7 +35,7 @@ class ViewNonTranslatableEntityTest extends BrowserTestBase {
   /**
    * Tests displaying a view of non-translatable entities.
    */
-  public function testViewNoTranslatableEntity() {
+  public function testViewNoTranslatableEntity(): void {
     // Add a new language.
     ConfigurableLanguage::createFromLangcode('sr')->save();
 

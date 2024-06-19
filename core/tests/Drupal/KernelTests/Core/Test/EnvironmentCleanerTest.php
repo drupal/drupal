@@ -20,7 +20,7 @@ class EnvironmentCleanerTest extends KernelTestBase {
   /**
    * @covers ::doCleanTemporaryDirectories
    */
-  public function testDoCleanTemporaryDirectories() {
+  public function testDoCleanTemporaryDirectories(): void {
     vfsStream::setup('cleanup_test', NULL, [
       'sites' => [
         'simpletest' => [

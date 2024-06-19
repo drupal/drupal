@@ -46,7 +46,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
   /**
    * Tests the output process.
    */
-  public function testProcessOutbound() {
+  public function testProcessOutbound(): void {
     $expected_cacheability = (new BubbleableMetadata())
       ->addCacheContexts(['route'])
       ->setCacheMaxAge(Cache::PERMANENT);

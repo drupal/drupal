@@ -23,7 +23,7 @@ class ConnectionTest extends UnitTestCase {
    * @param string $expected
    *   Expected connection option.
    */
-  public function testCreateConnectionOptionsFromUrl(string $url, string $expected) {
+  public function testCreateConnectionOptionsFromUrl(string $url, string $expected): void {
     $root = dirname(__DIR__, 8);
     $sqlite_connection = new Connection($this->createMock(StubPDO::class), []);
     $database = $sqlite_connection->createConnectionOptionsFromUrl($url, $root);

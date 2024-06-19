@@ -33,7 +33,7 @@ class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
   /**
    * Tests the EntityTypeConstraintValidator.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     // Create a typed data definition with an EntityType constraint.
     $entity_type = 'node';
     $definition = DataDefinition::create('entity_reference')

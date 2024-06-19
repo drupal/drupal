@@ -34,7 +34,7 @@ class ExcludedModulesEventSubscriberTest extends KernelTestBase {
   /**
    * Tests excluding modules from the config export.
    */
-  public function testExcludedModules() {
+  public function testExcludedModules(): void {
     // Assert that config_test is in the active config.
     $active = $this->container->get('config.storage');
     $this->assertNotEmpty($active->listAll('config_test.'));

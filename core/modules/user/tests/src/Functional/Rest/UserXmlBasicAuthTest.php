@@ -44,7 +44,7 @@ class UserXmlBasicAuthTest extends UserResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchDxForSecuritySensitiveBaseFields() {
+  public function testPatchDxForSecuritySensitiveBaseFields(): void {
     // Deserialization of the XML format is not supported.
     $this->markTestSkipped();
   }
@@ -52,7 +52,7 @@ class UserXmlBasicAuthTest extends UserResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchSecurityOtherUser() {
+  public function testPatchSecurityOtherUser(): void {
     // Deserialization of the XML format is not supported.
     $this->markTestSkipped();
   }

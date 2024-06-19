@@ -67,7 +67,7 @@ class FieldBlockTest extends WebDriverTestBase {
   /**
    * Tests configuring a field block for a user field.
    */
-  public function testUserFieldBlock() {
+  public function testUserFieldBlock(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -143,7 +143,7 @@ class FieldBlockTest extends WebDriverTestBase {
   /**
    * Tests configuring a field block that uses #states.
    */
-  public function testStatesFieldBlock() {
+  public function testStatesFieldBlock(): void {
     $page = $this->getSession()->getPage();
 
     $timestamp_field_storage = FieldStorageConfig::create([

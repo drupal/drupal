@@ -57,7 +57,7 @@ class UserPermissionsTest extends BrowserTestBase {
   /**
    * Tests changing user permissions through the permissions pages.
    */
-  public function testUserPermissionChanges() {
+  public function testUserPermissionChanges(): void {
     $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
 
     $storage = $this->container->get('entity_type.manager')->getStorage('user_role');
@@ -123,7 +123,7 @@ class UserPermissionsTest extends BrowserTestBase {
   /**
    * Tests assigning of permissions for the administrator role.
    */
-  public function testAdministratorRole() {
+  public function testAdministratorRole(): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/people/role-settings');
 
@@ -168,7 +168,7 @@ class UserPermissionsTest extends BrowserTestBase {
   /**
    * Verify proper permission changes by user_role_change_permissions().
    */
-  public function testUserRoleChangePermissions() {
+  public function testUserRoleChangePermissions(): void {
     $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
 
     $rid = $this->rid;
@@ -200,7 +200,7 @@ class UserPermissionsTest extends BrowserTestBase {
   /**
    * Verify 'access content' is listed in the correct location.
    */
-  public function testAccessContentPermission() {
+  public function testAccessContentPermission(): void {
     $this->drupalLogin($this->adminUser);
 
     // When Node is not installed the 'access content' permission is listed next
@@ -220,7 +220,7 @@ class UserPermissionsTest extends BrowserTestBase {
   /**
    * Verify that module-specific pages have correct access.
    */
-  public function testAccessModulePermission() {
+  public function testAccessModulePermission(): void {
     $this->drupalLogin($this->adminUser);
 
     // When Node is not installed, the node-permissions page is not available.
@@ -254,7 +254,7 @@ class UserPermissionsTest extends BrowserTestBase {
   /**
    * Verify that bundle-specific pages work properly.
    */
-  public function testAccessBundlePermission() {
+  public function testAccessBundlePermission(): void {
     $this->drupalLogin($this->adminUser);
 
     \Drupal::service('module_installer')->install(['contact', 'taxonomy']);

@@ -87,7 +87,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
   /**
    * Tests offsets with date-only fields.
    */
-  public function testDateOffsets() {
+  public function testDateOffsets(): void {
     $view = Views::getView('test_filter_datetime');
     $field = static::$fieldName . '_value';
 
@@ -171,7 +171,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
   /**
    * Tests date filter with date-only fields.
    */
-  public function testDateIs() {
+  public function testDateIs(): void {
     $view = Views::getView('test_filter_datetime');
     $field = static::$fieldName . '_value';
 

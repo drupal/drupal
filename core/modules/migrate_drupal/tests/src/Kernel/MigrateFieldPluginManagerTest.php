@@ -51,7 +51,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
    *
    * @covers ::getPluginIdFromFieldType
    */
-  public function testPluginSelection() {
+  public function testPluginSelection(): void {
     $this->assertSame('link', $this->pluginManager->getPluginIdFromFieldType('link', ['core' => 6]));
     $this->assertSame('link_field', $this->pluginManager->getPluginIdFromFieldType('link_field', ['core' => 7]));
     $this->assertSame('image', $this->pluginManager->getPluginIdFromFieldType('image', ['core' => 7]));
@@ -73,7 +73,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
    * @covers ::getPluginIdFromFieldType
    * @dataProvider nonExistentPluginExceptionsData
    */
-  public function testNonExistentPluginExceptions($core, $field_type) {
+  public function testNonExistentPluginExceptions($core, $field_type): void {
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage(sprintf("Plugin ID '%s' was not found.", $field_type));
     $this->pluginManager->getPluginIdFromFieldType($field_type, ['core' => $core]);
@@ -109,7 +109,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
   /**
    * Tests that plugins with no explicit weight are given a weight of 0.
    */
-  public function testDefaultWeight() {
+  public function testDefaultWeight(): void {
     $definitions = $this->pluginManager->getDefinitions();
     $deprecated_plugins = [
       'date',

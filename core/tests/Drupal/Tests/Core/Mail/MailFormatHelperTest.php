@@ -18,7 +18,7 @@ class MailFormatHelperTest extends UnitTestCase {
   /**
    * @covers ::wrapMail
    */
-  public function testWrapMail() {
+  public function testWrapMail(): void {
     $delimiter = "End of header\n";
     $long_file_name = $this->randomMachineName(64) . '.docx';
     $headers_in_body = 'Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document; name="' . $long_file_name . "\"\n";

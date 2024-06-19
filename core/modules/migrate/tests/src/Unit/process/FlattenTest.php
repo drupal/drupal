@@ -27,7 +27,7 @@ class FlattenTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerTestFlatten
    */
-  public function testFlatten($value, $expected) {
+  public function testFlatten($value, $expected): void {
     $flattened = $this->plugin->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected, $flattened);
   }
@@ -58,7 +58,7 @@ class FlattenTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerTestFlattenInvalid
    */
-  public function testFlattenInvalid($value) {
+  public function testFlattenInvalid($value): void {
     $this->expectException(MigrateException::class);
     $type = gettype($value);
     $this->expectExceptionMessage(sprintf("Input should be an array or an object, instead it was of type '%s'", $type));

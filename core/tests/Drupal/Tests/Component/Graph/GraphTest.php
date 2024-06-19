@@ -16,7 +16,7 @@ class GraphTest extends TestCase {
   /**
    * Tests depth-first-search features.
    */
-  public function testDepthFirstSearch() {
+  public function testDepthFirstSearch(): void {
     // The sample graph used is:
     // @code
     // 1 --> 2 --> 3     5 ---> 6

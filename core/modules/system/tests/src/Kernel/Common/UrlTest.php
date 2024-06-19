@@ -27,7 +27,7 @@ class UrlTest extends KernelTestBase {
   /**
    * Confirms that invalid URLs are filtered in link generating functions.
    */
-  public function testLinkXSS() {
+  public function testLinkXSS(): void {
     // Test link generator.
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
@@ -46,7 +46,7 @@ class UrlTest extends KernelTestBase {
   /**
    * Tests that #type=link bubbles outbound route/path processors' metadata.
    */
-  public function testLinkBubbleableMetadata() {
+  public function testLinkBubbleableMetadata(): void {
     \Drupal::service('module_installer')->install(['user']);
 
     $cases = [
@@ -76,7 +76,7 @@ class UrlTest extends KernelTestBase {
   /**
    * Tests that default and custom attributes are handled correctly on links.
    */
-  public function testLinkAttributes() {
+  public function testLinkAttributes(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -129,7 +129,7 @@ class UrlTest extends KernelTestBase {
   /**
    * Tests that link functions support render arrays as 'text'.
    */
-  public function testLinkRenderArrayText() {
+  public function testLinkRenderArrayText(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -182,7 +182,7 @@ class UrlTest extends KernelTestBase {
   /**
    * Tests UrlHelper::filterQueryParameters().
    */
-  public function testDrupalGetQueryParameters() {
+  public function testDrupalGetQueryParameters(): void {
     $original = [
       'a' => 1,
       'b' => [
@@ -218,7 +218,7 @@ class UrlTest extends KernelTestBase {
   /**
    * Tests UrlHelper::parse().
    */
-  public function testDrupalParseUrl() {
+  public function testDrupalParseUrl(): void {
     // Relative, absolute, and external URLs, without/with explicit script path,
     // without/with Drupal path.
     foreach (['', '/', 'https://www.drupal.org/'] as $absolute) {
@@ -256,7 +256,7 @@ class UrlTest extends KernelTestBase {
   /**
    * Tests external URL handling.
    */
-  public function testExternalUrls() {
+  public function testExternalUrls(): void {
     $test_url = 'https://www.drupal.org/';
 
     // Verify external URL can contain a fragment.

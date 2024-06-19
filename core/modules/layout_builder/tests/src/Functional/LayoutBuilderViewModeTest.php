@@ -20,7 +20,7 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
   /**
    * Tests that a non-default view mode works as expected.
    */
-  public function testNonDefaultViewMode() {
+  public function testNonDefaultViewMode(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -77,7 +77,7 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
    *
    * @see \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::getDefaultSectionStorage()
    */
-  public function testLayoutBuilderUiFullViewMode() {
+  public function testLayoutBuilderUiFullViewMode(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -253,7 +253,7 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
   /**
    * Ensures that one bundle doesn't interfere with another bundle.
    */
-  public function testFullViewModeMultipleBundles() {
+  public function testFullViewModeMultipleBundles(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

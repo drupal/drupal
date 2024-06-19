@@ -56,7 +56,7 @@ class FilterIdTest extends KernelTestBase {
    *
    * @covers ::transform
    */
-  public function testTransform($value, $expected_value, $invalid_id = NULL, $stop_pipeline = FALSE) {
+  public function testTransform($value, $expected_value, $invalid_id = NULL, $stop_pipeline = FALSE): void {
     $configuration = [
       'bypass' => TRUE,
       'map' => [

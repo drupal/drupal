@@ -224,7 +224,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    * @dataProvider normalizeProvider
    */
-  public function testNormalize($entity_property_names, $field_name, $expected) {
+  public function testNormalize($entity_property_names, $field_name, $expected): void {
     // Links cannot be generated in the test provider because the container
     // has not yet been set.
     $expected['links'] = [

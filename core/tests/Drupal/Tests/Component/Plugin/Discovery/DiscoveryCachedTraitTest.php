@@ -35,7 +35,7 @@ class DiscoveryCachedTraitTest extends TestCase {
    * @covers ::getDefinition
    * @dataProvider providerGetDefinition
    */
-  public function testGetDefinition($expected, $cached_definitions, $get_definitions, $plugin_id) {
+  public function testGetDefinition($expected, $cached_definitions, $get_definitions, $plugin_id): void {
     $trait = $this->getMockBuilder(DiscoveryCachedTraitMockableClass::class)
       ->onlyMethods(['getDefinitions'])
       ->getMock();

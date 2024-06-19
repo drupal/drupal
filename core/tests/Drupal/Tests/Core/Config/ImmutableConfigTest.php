@@ -35,7 +35,7 @@ class ImmutableConfigTest extends UnitTestCase {
   /**
    * @covers ::set
    */
-  public function testSet() {
+  public function testSet(): void {
     $this->expectException(ImmutableConfigException::class);
     $this->expectExceptionMessage('Can not set values on immutable configuration test:name. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object');
     $this->config->set('name', 'value');
@@ -44,7 +44,7 @@ class ImmutableConfigTest extends UnitTestCase {
   /**
    * @covers ::clear
    */
-  public function testClear() {
+  public function testClear(): void {
     $this->expectException(ImmutableConfigException::class);
     $this->expectExceptionMessage('Can not clear name key in immutable configuration test. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object');
     $this->config->clear('name');
@@ -53,7 +53,7 @@ class ImmutableConfigTest extends UnitTestCase {
   /**
    * @covers ::save
    */
-  public function testSave() {
+  public function testSave(): void {
     $this->expectException(ImmutableConfigException::class);
     $this->expectExceptionMessage('Can not save immutable configuration test. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object');
     $this->config->save();
@@ -62,7 +62,7 @@ class ImmutableConfigTest extends UnitTestCase {
   /**
    * @covers ::delete
    */
-  public function testDelete() {
+  public function testDelete(): void {
     $this->expectException(ImmutableConfigException::class);
     $this->expectExceptionMessage('Can not delete immutable configuration test. Use \Drupal\Core\Config\ConfigFactoryInterface::getEditable() to retrieve a mutable configuration object');
     $this->config->delete();

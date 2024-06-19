@@ -26,7 +26,7 @@ class NodeIntegrationTest extends NodeTestBase {
   /**
    * Tests basic node view with a node type argument.
    */
-  public function testNodeViewTypeArgument() {
+  public function testNodeViewTypeArgument(): void {
     // Create two content types with three nodes each.
     $types = [];
     $all_nids = [];

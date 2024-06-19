@@ -34,7 +34,7 @@ class MediaInstallTest extends BrowserTestBase {
   /**
    * Tests reinstalling after being uninstalled.
    */
-  public function testReinstallAfterUninstall() {
+  public function testReinstallAfterUninstall(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

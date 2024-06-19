@@ -29,7 +29,7 @@ class PathSetTranslatedTest extends MigrateProcessTestCase {
    *
    * @dataProvider transformDataProvider
    */
-  public function testTransform($path, $node_translation, $expected_result) {
+  public function testTransform($path, $node_translation, $expected_result): void {
     $plugin = new PathSetTranslated([], 'path_set_translated', []);
     $this->assertSame($expected_result, $plugin->transform([$path, $node_translation], $this->migrateExecutable, $this->row, 'destination_property'));
   }

@@ -134,7 +134,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * Tests that default handlers are added even if custom are specified.
    */
-  public function testDatetimeElement() {
+  public function testDatetimeElement(): void {
     $form_state = new FormState();
     $form = \Drupal::formBuilder()->buildForm($this, $form_state);
     $this->render($form);
@@ -195,7 +195,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * Tests proper timezone handling of the Datetime element.
    */
-  public function testTimezoneHandling() {
+  public function testTimezoneHandling(): void {
     // Render the form once with the site's timezone.
     $form = \Drupal::formBuilder()->getForm($this);
     $this->render($form);

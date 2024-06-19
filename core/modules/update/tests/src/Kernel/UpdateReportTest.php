@@ -30,7 +30,7 @@ class UpdateReportTest extends KernelTestBase {
   /**
    * @dataProvider providerTemplatePreprocessUpdateReport
    */
-  public function testTemplatePreprocessUpdateReport($variables) {
+  public function testTemplatePreprocessUpdateReport($variables): void {
     \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.report');
 
     // The function should run without an exception being thrown when the value
@@ -66,7 +66,7 @@ class UpdateReportTest extends KernelTestBase {
    *
    * @see template_preprocess_update_fetch_error_message()
    */
-  public function testTemplatePreprocessUpdateFetchErrorMessageNoDblog() {
+  public function testTemplatePreprocessUpdateFetchErrorMessageNoDblog(): void {
     $build = [
       '#theme' => 'update_fetch_error_message',
     ];
@@ -88,7 +88,7 @@ class UpdateReportTest extends KernelTestBase {
    *
    * @see template_preprocess_update_fetch_error_message()
    */
-  public function testTemplatePreprocessUpdateFetchErrorMessageWithDblog() {
+  public function testTemplatePreprocessUpdateFetchErrorMessageWithDblog(): void {
     \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.report');
 
     $this->enableModules(['dblog', 'user']);

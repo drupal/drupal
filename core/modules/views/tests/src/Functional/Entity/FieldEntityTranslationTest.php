@@ -67,7 +67,7 @@ class FieldEntityTranslationTest extends ViewTestBase {
   /**
    * Tests that different translation mechanisms can be used for base fields.
    */
-  public function testTranslationRows() {
+  public function testTranslationRows(): void {
     $node = Node::create([
       'type' => 'article',
       'title' => 'example EN',

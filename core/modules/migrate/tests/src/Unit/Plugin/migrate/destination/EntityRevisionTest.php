@@ -40,7 +40,7 @@ class EntityRevisionTest extends EntityTestBase {
   /**
    * Tests that revision destination fails for unrevisionable entities.
    */
-  public function testUnrevisionable() {
+  public function testUnrevisionable(): void {
     $this->entityType->getKey('id')->willReturn('id');
     $this->entityType->getKey('revision')->willReturn('');
     $this->entityFieldManager->getBaseFieldDefinitions('foo')
@@ -67,7 +67,7 @@ class EntityRevisionTest extends EntityTestBase {
   /**
    * Tests that translation destination fails for untranslatable entities.
    */
-  public function testUntranslatable() {
+  public function testUntranslatable(): void {
     $this->entityType->getKey('id')->willReturn('id');
     $this->entityType->getKey('revision')->willReturn('vid');
     $this->entityType->getKey('langcode')->willReturn('');

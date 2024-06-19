@@ -19,7 +19,7 @@ class EntityConditionGroupTest extends UnitTestCase {
    * @covers ::__construct
    * @dataProvider constructProvider
    */
-  public function testConstruct($case) {
+  public function testConstruct($case): void {
     $group = new EntityConditionGroup($case['conjunction'], $case['members']);
 
     $this->assertEquals($case['conjunction'], $group->conjunction());
@@ -33,7 +33,7 @@ class EntityConditionGroupTest extends UnitTestCase {
   /**
    * @covers ::__construct
    */
-  public function testConstructException() {
+  public function testConstructException(): void {
     $this->expectException(\InvalidArgumentException::class);
     new EntityConditionGroup('NOT_ALLOWED', []);
   }

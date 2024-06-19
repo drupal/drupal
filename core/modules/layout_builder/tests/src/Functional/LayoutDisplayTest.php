@@ -48,7 +48,7 @@ class LayoutDisplayTest extends BrowserTestBase {
   /**
    * Tests the interaction between multiple view modes.
    */
-  public function testMultipleViewModes() {
+  public function testMultipleViewModes(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field/display';

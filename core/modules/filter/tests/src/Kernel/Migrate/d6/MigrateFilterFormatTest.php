@@ -26,7 +26,7 @@ class MigrateFilterFormatTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 filter format to Drupal 8 migration.
    */
-  public function testFilterFormat() {
+  public function testFilterFormat(): void {
     $filter_format = FilterFormat::load('filtered_html');
 
     // Check filter status.

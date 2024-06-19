@@ -38,7 +38,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
   /**
    * Tests the exposed form markup.
    */
-  public function testExposedFormRender() {
+  public function testExposedFormRender(): void {
     $view = Views::getView('test_exposed_form_buttons');
     $this->executeView($view);
     $exposed_form = $view->display_handler->getPlugin('exposed_form');
@@ -58,7 +58,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
   /**
    * Tests the exposed form raw input.
    */
-  public function testExposedFormRawInput() {
+  public function testExposedFormRawInput(): void {
     NodeType::create([
       'type' => 'article',
       'name' => 'Article',

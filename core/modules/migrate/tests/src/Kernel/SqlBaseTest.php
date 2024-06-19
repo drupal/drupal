@@ -39,7 +39,7 @@ class SqlBaseTest extends MigrateTestBase {
   /**
    * Tests different connection types.
    */
-  public function testConnectionTypes() {
+  public function testConnectionTypes(): void {
     $sql_base = new TestSqlBase([], $this->migration);
 
     // Verify that falling back to the default 'migrate' connection (defined in
@@ -160,7 +160,7 @@ class SqlBaseTest extends MigrateTestBase {
    *
    * @dataProvider highWaterDataProvider
    */
-  public function testHighWater($high_water = NULL, array $query_result = []) {
+  public function testHighWater($high_water = NULL, array $query_result = []): void {
     $configuration = [
       'high_water_property' => [
         'name' => 'order',

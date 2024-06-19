@@ -31,7 +31,7 @@ class CommentTypeRequirementsTest extends MigrateDrupal7TestBase {
    *
    * @dataProvider providerTestCheckCommentTypeRequirements
    */
-  public function testCheckCommentTypeRequirements(array $disabled_source_modules, string $exception_message, string $migration_plugin_id) {
+  public function testCheckCommentTypeRequirements(array $disabled_source_modules, string $exception_message, string $migration_plugin_id): void {
     if (!empty($disabled_source_modules)) {
       $this->sourceDatabase->update('system')
         ->condition('name', $disabled_source_modules, 'IN')

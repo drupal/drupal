@@ -182,7 +182,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
    *   - 'recommended': The recommended version.
    *   - 'range': The versions of Drupal core required for that version.
    */
-  public function testIncompatibleUpdatesTable($core_fixture, $a_fixture, $b_fixture, array $compatible, array $incompatible) {
+  public function testIncompatibleUpdatesTable($core_fixture, $a_fixture, $b_fixture, array $compatible, array $incompatible): void {
 
     $assert_session = $this->assertSession();
     $compatible_table_locator = '[data-drupal-selector="edit-projects"]';
@@ -231,7 +231,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
   /**
    * Tests the Update form with an uninstalled module in the system.
    */
-  public function testUninstalledUpdatesTable() {
+  public function testUninstalledUpdatesTable(): void {
     $assert_session = $this->assertSession();
     $compatible_table_locator = '[data-drupal-selector="edit-projects"]';
     $uninstalled_table_locator = '[data-drupal-selector="edit-uninstalled-projects"]';

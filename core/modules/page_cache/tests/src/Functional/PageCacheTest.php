@@ -53,7 +53,7 @@ class PageCacheTest extends BrowserTestBase {
    * Since tag based invalidation works, we know that our tag properly
    * persisted.
    */
-  public function testPageCacheTags() {
+  public function testPageCacheTags(): void {
     $this->enablePageCaching();
 
     $path = 'system-test/cache_tags_page';
@@ -85,7 +85,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests that the page cache doesn't depend on cacheability headers.
    */
-  public function testPageCacheTagsIndependentFromCacheabilityHeaders() {
+  public function testPageCacheTagsIndependentFromCacheabilityHeaders(): void {
     // Disable the cacheability headers.
     $this->setContainerParameter('http.response.debug_cacheability_headers', FALSE);
     $this->rebuildContainer();
@@ -122,7 +122,7 @@ class PageCacheTest extends BrowserTestBase {
    *
    * The request formats are specified via a query parameter.
    */
-  public function testQueryParameterFormatRequests() {
+  public function testQueryParameterFormatRequests(): void {
     $this->enablePageCaching();
 
     $accept_header_cache_url = Url::fromRoute('system_test.page_cache_accept_header');
@@ -160,7 +160,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests support of requests with If-Modified-Since and If-None-Match headers.
    */
-  public function testConditionalRequests() {
+  public function testConditionalRequests(): void {
     $this->enablePageCaching();
 
     // Fill the cache.
@@ -221,7 +221,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests cache headers.
    */
-  public function testPageCache() {
+  public function testPageCache(): void {
     $this->enablePageCaching();
 
     // Fill the cache.
@@ -279,7 +279,7 @@ class PageCacheTest extends BrowserTestBase {
    * This test verifies that, and it verifies that it does not happen for other
    * roles.
    */
-  public function testPageCacheAnonymousRolePermissions() {
+  public function testPageCacheAnonymousRolePermissions(): void {
     $this->enablePageCaching();
 
     $content_url = Url::fromRoute('system_test.permission_dependent_content');
@@ -329,7 +329,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests the 4xx-response cache tag is added and invalidated.
    */
-  public function testPageCacheAnonymous403404() {
+  public function testPageCacheAnonymous403404(): void {
     $admin_url = Url::fromRoute('system.admin');
     $invalid_url = 'foo/does_not_exist';
     $tests = [
@@ -405,7 +405,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests the omit_vary_cookie setting.
    */
-  public function testPageCacheWithoutVaryCookie() {
+  public function testPageCacheWithoutVaryCookie(): void {
     $this->enablePageCaching();
 
     $settings['settings']['omit_vary_cookie'] = (object) [
@@ -430,7 +430,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests the setting of forms to be immutable.
    */
-  public function testFormImmutability() {
+  public function testFormImmutability(): void {
     // Install the module that provides the test form.
     $this->container->get('module_installer')
       ->install(['page_cache_form_test']);
@@ -461,7 +461,7 @@ class PageCacheTest extends BrowserTestBase {
    * Response object versus returning a Response object that implements the
    * CacheableResponseInterface.
    */
-  public function testCacheableResponseResponses() {
+  public function testCacheableResponseResponses(): void {
     $this->enablePageCaching();
 
     // GET a URL, which would be marked as a cache miss if it were cacheable.
@@ -507,7 +507,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests that HEAD requests are treated the same as GET requests.
    */
-  public function testHead() {
+  public function testHead(): void {
     /** @var \GuzzleHttp\ClientInterface $client */
     $client = $this->getSession()->getDriver()->getClient()->getClient();
 
@@ -537,7 +537,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests a cacheable response with custom cache control.
    */
-  public function testCacheableWithCustomCacheControl() {
+  public function testCacheableWithCustomCacheControl(): void {
     $this->enablePageCaching();
 
     $this->drupalGet('/system-test/custom-cache-control');
@@ -566,7 +566,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests that URLs are cached in a not normalized form.
    */
-  public function testNoUrlNormalization() {
+  public function testNoUrlNormalization(): void {
     // Use absolute URLs to avoid any processing.
     $url = Url::fromRoute('<front>')->setAbsolute()->toString();
 

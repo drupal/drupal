@@ -95,7 +95,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
   /**
    * Tests the block migration.
    */
-  public function testBlockMigration() {
+  public function testBlockMigration(): void {
     $blocks = Block::loadMultiple();
     $this->assertCount(25, $blocks);
 

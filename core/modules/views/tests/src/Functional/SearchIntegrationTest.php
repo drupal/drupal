@@ -37,7 +37,7 @@ class SearchIntegrationTest extends ViewTestBase {
   /**
    * Tests search integration.
    */
-  public function testSearchIntegration() {
+  public function testSearchIntegration(): void {
     // Create a content type.
     $type = $this->drupalCreateContentType();
 

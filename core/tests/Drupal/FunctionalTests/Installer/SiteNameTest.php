@@ -38,7 +38,7 @@ class SiteNameTest extends BrowserTestBase {
   /**
    * Tests that the desired site name appears on the page after installation.
    */
-  public function testSiteName() {
+  public function testSiteName(): void {
     $this->drupalGet('');
     $this->assertSession()->pageTextContains($this->siteName);
   }

@@ -27,7 +27,7 @@ class MigrationTest extends KernelTestBase {
    *
    * @covers ::set
    */
-  public function testSetInvalidation() {
+  public function testSetInvalidation(): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([
       'source' => ['plugin' => 'empty'],
       'destination' => ['plugin' => 'entity:entity_view_mode'],

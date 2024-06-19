@@ -73,7 +73,7 @@ class TranslatedViewTest extends UITestBase {
     $this->rebuildContainer();
   }
 
-  public function testTranslatedStrings() {
+  public function testTranslatedStrings(): void {
     $translation_url = 'admin/structure/views/view/files/translate/fr/add';
     $edit_url = 'admin/structure/views/view/files';
 

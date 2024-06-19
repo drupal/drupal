@@ -28,7 +28,7 @@ class UrlConversionTest extends UnitTestCase {
    *
    * @dataProvider providerConvertDbUrlToConnectionInfo
    */
-  public function testDbUrlToConnectionConversion($url, $database_array, $include_test_drivers) {
+  public function testDbUrlToConnectionConversion($url, $database_array, $include_test_drivers): void {
     $result = Database::convertDbUrlToConnectionInfo($url, $this->root, $include_test_drivers);
     $this->assertEquals($database_array, $result);
   }
@@ -278,7 +278,7 @@ class UrlConversionTest extends UnitTestCase {
    *
    * @dataProvider providerInvalidArgumentsUrlConversion
    */
-  public function testGetInvalidArgumentExceptionInUrlConversion($url, $root, $expected_exception_message) {
+  public function testGetInvalidArgumentExceptionInUrlConversion($url, $root, $expected_exception_message): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);
     Database::convertDbUrlToConnectionInfo($url, $root);
@@ -310,7 +310,7 @@ class UrlConversionTest extends UnitTestCase {
    *
    * @dataProvider providerGetConnectionInfoAsUrl
    */
-  public function testGetConnectionInfoAsUrl(array $info, $expected_url) {
+  public function testGetConnectionInfoAsUrl(array $info, $expected_url): void {
     Database::addConnectionInfo('default', 'default', $info);
     $url = Database::getConnectionInfoAsUrl();
     $this->assertEquals($expected_url, $url);
@@ -461,7 +461,7 @@ class UrlConversionTest extends UnitTestCase {
    *
    * @dataProvider providerInvalidArgumentGetConnectionInfoAsUrl
    */
-  public function testGetInvalidArgumentGetConnectionInfoAsUrl(array $connection_options, $expected_exception_message) {
+  public function testGetInvalidArgumentGetConnectionInfoAsUrl(array $connection_options, $expected_exception_message): void {
     Database::addConnectionInfo('default', 'default', $connection_options);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);
@@ -493,7 +493,7 @@ class UrlConversionTest extends UnitTestCase {
   /**
    * @covers ::convertDbUrlToConnectionInfo
    */
-  public function testDriverModuleDoesNotExist() {
+  public function testDriverModuleDoesNotExist(): void {
     $url = 'foo_bar_mysql://test_user:test_pass@test_host:3306/test_database?module=foo_bar';
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage("The database_driver Drupal\\foo_bar\\Driver\\Database\\foo_bar_mysql does not exist.");
@@ -503,7 +503,7 @@ class UrlConversionTest extends UnitTestCase {
   /**
    * @covers ::convertDbUrlToConnectionInfo
    */
-  public function testModuleDriverDoesNotExist() {
+  public function testModuleDriverDoesNotExist(): void {
     $url = 'driver_test_mysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage("The database_driver Drupal\\driver_test\\Driver\\Database\\driver_test_mysql does not exist.");

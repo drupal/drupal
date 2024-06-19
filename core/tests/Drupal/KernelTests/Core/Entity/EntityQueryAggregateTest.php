@@ -115,7 +115,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   /**
    * Tests aggregation support.
    */
-  public function testAggregation() {
+  public function testAggregation(): void {
     // Apply a simple groupby.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
@@ -593,7 +593,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   /**
    * Tests preparing a query and executing twice.
    */
-  public function testRepeatedExecution() {
+  public function testRepeatedExecution(): void {
     $query = $this->entityStorage->getAggregateQuery()
       ->accessCheck(FALSE)
       ->groupBy('user_id');

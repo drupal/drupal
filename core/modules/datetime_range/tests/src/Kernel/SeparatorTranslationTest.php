@@ -93,7 +93,7 @@ class SeparatorTranslationTest extends KernelTestBase {
   /**
    * Tests the translation of the range separator.
    */
-  public function testSeparatorTranslation() {
+  public function testSeparatorTranslation(): void {
     // Create an entity.
     $entity = EntityTest::create([
       'name' => $this->randomString(),

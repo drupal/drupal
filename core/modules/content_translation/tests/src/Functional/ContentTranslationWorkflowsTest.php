@@ -190,7 +190,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   /**
    * Tests simple and editorial translation workflows.
    */
-  public function testWorkflows() {
+  public function testWorkflows(): void {
     // Test workflows for the editor.
     $expected_status = [
       'edit' => 200,

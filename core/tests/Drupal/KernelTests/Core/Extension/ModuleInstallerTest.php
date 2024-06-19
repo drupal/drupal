@@ -25,7 +25,7 @@ class ModuleInstallerTest extends KernelTestBase {
    * @covers ::install
    * @covers ::uninstall
    */
-  public function testRouteRebuild() {
+  public function testRouteRebuild(): void {
     // Remove the routing table manually to ensure it can be created lazily
     // properly.
     Database::getConnection()->schema()->dropTable('router');
@@ -44,7 +44,7 @@ class ModuleInstallerTest extends KernelTestBase {
    *
    * @covers ::install
    */
-  public function testConfigChangeOnInstall() {
+  public function testConfigChangeOnInstall(): void {
     // Install the child module so the parent is installed automatically.
     $this->container->get('module_installer')->install(['module_handler_test_multiple_child']);
     $modules = $this->config('core.extension')->get('module');
@@ -60,7 +60,7 @@ class ModuleInstallerTest extends KernelTestBase {
    *
    * @covers ::removeCacheBins
    */
-  public function testCacheBinCleanup() {
+  public function testCacheBinCleanup(): void {
     $schema = $this->container->get('database')->schema();
     $table = 'cache_module_cache_bin';
 
@@ -83,7 +83,7 @@ class ModuleInstallerTest extends KernelTestBase {
   /**
    * Ensure that rebuilding the container in hook_install() works.
    */
-  public function testKernelRebuildDuringHookInstall() {
+  public function testKernelRebuildDuringHookInstall(): void {
     \Drupal::state()->set('module_test_install:rebuild_container', TRUE);
     $module_installer = $this->container->get('module_installer');
     $this->assertTrue($module_installer->install(['module_test']));
@@ -95,7 +95,7 @@ class ModuleInstallerTest extends KernelTestBase {
    * @dataProvider providerTestInvalidCoreInstall
    * @covers ::install
    */
-  public function testInvalidCoreInstall($module_name, $install_dependencies) {
+  public function testInvalidCoreInstall($module_name, $install_dependencies): void {
     $this->expectException(MissingDependencyException::class);
     $this->expectExceptionMessage("Unable to install modules: module '$module_name' is incompatible with this version of Drupal core.");
     $this->container->get('module_installer')->install([$module_name], $install_dependencies);
@@ -122,7 +122,7 @@ class ModuleInstallerTest extends KernelTestBase {
    *
    * @covers ::install
    */
-  public function testDependencyInvalidCoreInstall() {
+  public function testDependencyInvalidCoreInstall(): void {
     $this->expectException(MissingDependencyException::class);
     $this->expectExceptionMessage("Unable to install modules: module 'system_incompatible_core_version_dependencies_test'. Its dependency module 'system_core_incompatible_semver_test' is incompatible with this version of Drupal core.");
     $this->container->get('module_installer')->install(['system_incompatible_core_version_dependencies_test']);
@@ -133,7 +133,7 @@ class ModuleInstallerTest extends KernelTestBase {
    *
    * @covers ::install
    */
-  public function testDependencyInvalidCoreInstallNoDependencies() {
+  public function testDependencyInvalidCoreInstallNoDependencies(): void {
     $this->assertTrue($this->container->get('module_installer')->install(['system_incompatible_core_version_dependencies_test'], FALSE));
   }
 
@@ -142,7 +142,7 @@ class ModuleInstallerTest extends KernelTestBase {
    *
    * @covers ::install
    */
-  public function testObsoleteInstall() {
+  public function testObsoleteInstall(): void {
     $this->expectException(ObsoleteExtensionException::class);
     $this->expectExceptionMessage("Unable to install modules: module 'system_status_obsolete_test' is obsolete.");
     $this->container->get('module_installer')->install(['system_status_obsolete_test']);
@@ -155,7 +155,7 @@ class ModuleInstallerTest extends KernelTestBase {
    *
    * @group legacy
    */
-  public function testDeprecatedInstall() {
+  public function testDeprecatedInstall(): void {
     $this->expectDeprecation("The module 'deprecated_module' is deprecated. See http://example.com/deprecated");
     \Drupal::service('module_installer')->install(['deprecated_module']);
     $this->assertTrue(\Drupal::service('module_handler')->moduleExists('deprecated_module'));

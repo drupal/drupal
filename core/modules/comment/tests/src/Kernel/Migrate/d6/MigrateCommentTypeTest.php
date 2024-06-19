@@ -40,7 +40,7 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
   /**
    * Tests the migrated comment types.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $this->installConfig(['comment']);
     $this->executeMigration('d6_comment_type');
 
@@ -74,7 +74,7 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
    *
    * @dataProvider providerTestNoCommentTypeMigration
    */
-  public function testNoCommentTypeMigration(array $disabled_source_modules, array $expected_messages) {
+  public function testNoCommentTypeMigration(array $disabled_source_modules, array $expected_messages): void {
     if (!empty($disabled_source_modules)) {
       $this->sourceDatabase->update('system')
         ->condition('name', $disabled_source_modules, 'IN')

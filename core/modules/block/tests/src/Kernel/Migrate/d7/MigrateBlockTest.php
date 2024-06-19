@@ -115,7 +115,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
   /**
    * Tests the block migration.
    */
-  public function testBlockMigration() {
+  public function testBlockMigration(): void {
     $this->assertEntity('bartik_system_main', 'system_main_block', [], '', 'content', 'olivero', 0, '', '0');
     $this->assertEntity('bartik_search_form', 'search_form_block', [], '', 'content', 'olivero', -1, '', '0');
     $this->assertEntity('bartik_user_login', 'user_login_block', [], '', 'content', 'olivero', 0, 'User login title', 'visible');

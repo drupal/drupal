@@ -29,7 +29,7 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
    * @covers ::preSave
    * @covers ::calculateDependencies
    */
-  public function testPreSave() {
+  public function testPreSave(): void {
     // Create an entity display with one hidden and one visible field.
     $entity_display = FieldLayoutEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',

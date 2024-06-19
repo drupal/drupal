@@ -49,7 +49,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
   /**
    * Tests the dual user condition.
    */
-  public function testConditions() {
+  public function testConditions(): void {
     $this->doTestIdenticalUser();
     $this->doTestDifferentUser();
   }

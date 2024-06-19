@@ -30,7 +30,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Tests the display of checkboxes when #multiple is TRUE.
    */
-  public function testMultipleTrue() {
+  public function testMultipleTrue(): void {
 
     $this->drupalGet('form_test/tableselect/multiple-true');
 
@@ -48,7 +48,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Tests the display of radios when #multiple is FALSE.
    */
-  public function testMultipleFalse() {
+  public function testMultipleFalse(): void {
     $this->drupalGet('form_test/tableselect/multiple-false');
 
     $this->assertSession()->pageTextNotContains('Empty text.');
@@ -65,7 +65,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Tests the display when #colspan is set.
    */
-  public function testTableSelectColSpan() {
+  public function testTableSelectColSpan(): void {
     $this->drupalGet('form_test/tableselect/colspan');
 
     // Verify presence of column three and absence of column four.
@@ -89,7 +89,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Tests the display of the #empty text when #options is an empty array.
    */
-  public function testEmptyText() {
+  public function testEmptyText(): void {
     $this->drupalGet('form_test/tableselect/empty-text');
     $this->assertSession()->pageTextContains('Empty text.');
   }
@@ -97,7 +97,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Tests the submission of single and multiple values when #multiple is TRUE.
    */
-  public function testMultipleTrueSubmit() {
+  public function testMultipleTrueSubmit(): void {
 
     // Test a submission with one checkbox checked.
     $edit = [];
@@ -125,7 +125,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Tests submission of values when #multiple is FALSE.
    */
-  public function testMultipleFalseSubmit() {
+  public function testMultipleFalseSubmit(): void {
     $edit['tableselect'] = 'row1';
     $this->drupalGet('form_test/tableselect/multiple-false');
     $this->submitForm($edit, 'Submit');
@@ -135,7 +135,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Tests the #js_select property.
    */
-  public function testAdvancedSelect() {
+  public function testAdvancedSelect(): void {
     // When #multiple = TRUE a Select all checkbox should be displayed by default.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-default');
     $this->assertSession()->elementExists('xpath', '//th[@class="select-all"]');
@@ -155,7 +155,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Tests error handling for invalid tableselect values with checkboxes.
    */
-  public function testMultipleTrueOptionChecker() {
+  public function testMultipleTrueOptionChecker(): void {
 
     [$header, $options] = _form_test_tableselect_get_data();
 
@@ -178,7 +178,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Tests error handling for invalid tableselect values with radio buttons.
    */
-  public function testMultipleFalseOptionChecker() {
+  public function testMultipleFalseOptionChecker(): void {
 
     [$header, $options] = _form_test_tableselect_get_data();
 

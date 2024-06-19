@@ -31,7 +31,7 @@ class MigrationTest extends UnitTestCase {
    *
    * @dataProvider getInvalidMigrationDependenciesProvider
    */
-  public function testMigrationDependenciesInConstructor(array $dependencies) {
+  public function testMigrationDependenciesInConstructor(array $dependencies): void {
 
     $configuration = ['migration_dependencies' => $dependencies];
     $plugin_id = 'test_migration';
@@ -51,7 +51,7 @@ class MigrationTest extends UnitTestCase {
    *
    * @covers ::checkRequirements
    */
-  public function testRequirementsForSourcePlugin() {
+  public function testRequirementsForSourcePlugin(): void {
     $migration = new TestMigration();
 
     $source_plugin = $this->createMock('Drupal\Tests\migrate\Unit\RequirementsAwareSourceInterface');
@@ -73,7 +73,7 @@ class MigrationTest extends UnitTestCase {
    *
    * @covers ::checkRequirements
    */
-  public function testRequirementsForDestinationPlugin() {
+  public function testRequirementsForDestinationPlugin(): void {
     $migration = new TestMigration();
 
     $source_plugin = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');
@@ -95,7 +95,7 @@ class MigrationTest extends UnitTestCase {
    *
    * @covers ::checkRequirements
    */
-  public function testRequirementsForMigrations() {
+  public function testRequirementsForMigrations(): void {
     $migration = new TestMigration();
 
     // Setup source and destination plugins without any requirements.
@@ -140,7 +140,7 @@ class MigrationTest extends UnitTestCase {
    *
    * @covers ::getRequirements
    */
-  public function testGetMigrations() {
+  public function testGetMigrations(): void {
     $migration = new TestMigration();
 
     $requirements = ['test_a', 'test_b', 'test_c', 'test_d'];
@@ -161,7 +161,7 @@ class MigrationTest extends UnitTestCase {
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function testMigrationDependenciesWithValidConfig($source, array $expected_value) {
+  public function testMigrationDependenciesWithValidConfig($source, array $expected_value): void {
     $migration = new TestMigration();
 
     // Set the plugin manager to support getMigrationDependencies().
@@ -189,7 +189,7 @@ class MigrationTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testMigrationDependenciesWithInvalidConfig(array $dependencies) {
+  public function testMigrationDependenciesWithInvalidConfig(array $dependencies): void {
     $migration = new TestMigration();
 
     // Set the plugin ID to test the returned message.

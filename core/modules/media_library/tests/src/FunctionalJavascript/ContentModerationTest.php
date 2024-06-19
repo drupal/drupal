@@ -188,7 +188,7 @@ class ContentModerationTest extends WebDriverTestBase {
   /**
    * Tests the media library widget only shows published media.
    */
-  public function testAdministrationPage() {
+  public function testAdministrationPage(): void {
     // User 1 should be able to see all media items.
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/content/media');
@@ -258,7 +258,7 @@ class ContentModerationTest extends WebDriverTestBase {
   /**
    * Tests the media library widget only shows published media.
    */
-  public function testWidget() {
+  public function testWidget(): void {
     $assert_session = $this->assertSession();
 
     // All users should only be able to see published media items.

@@ -53,7 +53,7 @@ class RedirectAjaxTest extends WebDriverTestBase {
   /**
    * Ensures that redirects work with ajax.
    */
-  public function testRedirectWithAjax() {
+  public function testRedirectWithAjax(): void {
     $this->drupalGet('admin/content');
     $original_url = $this->getSession()->getCurrentUrl();
 

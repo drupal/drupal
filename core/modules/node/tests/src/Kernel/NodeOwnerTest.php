@@ -47,7 +47,7 @@ class NodeOwnerTest extends EntityKernelTestBase {
   /**
    * Tests node owner functionality.
    */
-  public function testOwner() {
+  public function testOwner(): void {
     $user = $this->createUser();
 
     $container = \Drupal::getContainer();
@@ -84,7 +84,7 @@ class NodeOwnerTest extends EntityKernelTestBase {
   /**
    * Tests an unsaved node owner.
    */
-  public function testUnsavedNodeOwner() {
+  public function testUnsavedNodeOwner(): void {
     $user = User::create([
       'name' => 'foo',
     ]);

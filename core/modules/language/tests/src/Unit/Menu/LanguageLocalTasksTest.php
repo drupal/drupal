@@ -28,7 +28,7 @@ class LanguageLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getLanguageAdminOverviewRoutes
    */
-  public function testLanguageAdminLocalTasks($route, $expected) {
+  public function testLanguageAdminLocalTasks($route, $expected): void {
     $this->assertLocalTasks($route, $expected);
   }
 
@@ -45,7 +45,7 @@ class LanguageLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Tests language edit local tasks existence.
    */
-  public function testLanguageEditLocalTasks() {
+  public function testLanguageEditLocalTasks(): void {
     $this->assertLocalTasks('entity.configurable_language.edit_form', [
       0 => ['entity.configurable_language.edit_form'],
     ]);

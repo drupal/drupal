@@ -35,7 +35,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    * @covers ::onResponse
    * @dataProvider providerTestSerialization
    */
-  public function testSerialization($data, $expected_response = FALSE) {
+  public function testSerialization($data, $expected_response = FALSE): void {
     $request = new Request();
     $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'rest_plugin'], ['_format' => 'json']));
 
@@ -78,7 +78,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    *
    * @dataProvider providerTestResponseFormat
    */
-  public function testResponseFormat($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
+  public function testResponseFormat($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
       $key = strtoupper(str_replace('-', '_', $key));
@@ -115,7 +115,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    *
    * @dataProvider providerTestResponseFormat
    */
-  public function testOnResponseWithCacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
+  public function testOnResponseWithCacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
       $key = strtoupper(str_replace('-', '_', $key));
@@ -165,7 +165,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    *
    * @dataProvider providerTestResponseFormat
    */
-  public function testOnResponseWithUncacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
+  public function testOnResponseWithUncacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
       $key = strtoupper(str_replace('-', '_', $key));

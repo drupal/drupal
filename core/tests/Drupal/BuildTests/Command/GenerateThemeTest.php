@@ -86,7 +86,7 @@ class GenerateThemeTest extends QuickStartTestBase {
   /**
    * Tests the generate-theme command.
    */
-  public function test() {
+  public function test(): void {
     // Do not rely on \Drupal::VERSION: change the version to a concrete version
     // number, to simulate using a tagged core release.
     $starterkit_info_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';
@@ -134,7 +134,7 @@ class GenerateThemeTest extends QuickStartTestBase {
   /**
    * Tests generating a theme from another Starterkit enabled theme.
    */
-  public function testGeneratingFromAnotherTheme() {
+  public function testGeneratingFromAnotherTheme(): void {
     // Do not rely on \Drupal::VERSION: change the version to a concrete version
     // number, to simulate using a tagged core release.
     $starterkit_info_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';
@@ -178,7 +178,7 @@ YAML
   /**
    * Tests the generate-theme command on a dev snapshot of Drupal core.
    */
-  public function testDevSnapshot() {
+  public function testDevSnapshot(): void {
     // Do not rely on \Drupal::VERSION: change the version to a development
     // snapshot version number, to simulate using a branch snapshot of core.
     $starterkit_info_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';

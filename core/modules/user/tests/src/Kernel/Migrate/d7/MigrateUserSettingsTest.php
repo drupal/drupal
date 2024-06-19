@@ -30,7 +30,7 @@ class MigrateUserSettingsTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migration.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $config = $this->config('user.settings');
     $this->assertTrue($config->get('notify.status_blocked'));
     $this->assertTrue($config->get('notify.status_activated'));

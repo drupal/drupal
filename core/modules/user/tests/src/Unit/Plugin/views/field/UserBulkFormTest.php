@@ -29,7 +29,7 @@ class UserBulkFormTest extends UnitTestCase {
   /**
    * Tests the constructor assignment of actions.
    */
-  public function testConstructor() {
+  public function testConstructor(): void {
     $actions = [];
 
     for ($i = 1; $i <= 2; $i++) {

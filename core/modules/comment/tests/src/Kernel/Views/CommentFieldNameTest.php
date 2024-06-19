@@ -53,7 +53,7 @@ class CommentFieldNameTest extends KernelTestBase {
   /**
    * Tests comment field name.
    */
-  public function testCommentFieldName() {
+  public function testCommentFieldName(): void {
     $renderer = $this->container->get('renderer');
 
     $this->installEntitySchema('user');

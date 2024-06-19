@@ -69,7 +69,7 @@ class UserPictureTest extends BrowserTestBase {
   /**
    * Tests creation, display, and deletion of user pictures.
    */
-  public function testCreateDeletePicture() {
+  public function testCreateDeletePicture(): void {
     $this->drupalLogin($this->webUser);
 
     // Save a new picture.
@@ -108,7 +108,7 @@ class UserPictureTest extends BrowserTestBase {
   /**
    * Tests embedded users on node pages.
    */
-  public function testPictureOnNodeComment() {
+  public function testPictureOnNodeComment(): void {
     $this->drupalLogin($this->webUser);
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
@@ -177,7 +177,7 @@ class UserPictureTest extends BrowserTestBase {
    *
    * @see user_user_view_alter()
    */
-  public function testUserViewAlter() {
+  public function testUserViewAlter(): void {
     \Drupal::service('module_installer')->install(['image_module_test']);
     // Set dummy_image_formatter to the default view mode of user entity.
     EntityViewDisplay::load('user.user.default')->setComponent('user_picture', [

@@ -28,7 +28,7 @@ class MailCaptureTest extends BrowserTestBase {
   /**
    * Tests to see if the wrapper function is executed correctly.
    */
-  public function testMailSend() {
+  public function testMailSend(): void {
     // Create an email.
     $subject = $this->randomString(64);
     $body = $this->randomString(128);

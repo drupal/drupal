@@ -66,7 +66,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
   /**
    * Tests fields rendering in views.
    */
-  public function testFieldRender() {
+  public function testFieldRender(): void {
     $this->installConfig(['filter']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');

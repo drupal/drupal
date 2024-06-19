@@ -19,7 +19,7 @@ class UserRoleTest extends ViewsKernelTestBase {
   /**
    * Tests numeric role.
    */
-  public function testNumericRole() {
+  public function testNumericRole(): void {
     $this->installEntitySchema('user');
     $this->installSchema('user', ['users_data']);
 

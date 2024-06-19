@@ -36,7 +36,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
   /**
    * Tests css classes on displays are cleaned correctly.
    */
-  public function testCssClassCleaning() {
+  public function testCssClassCleaning(): void {
     \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
 
@@ -64,7 +64,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
    *
    * @covers ::template_preprocess_views_mini_pager
    */
-  public function testEmptyPaginationHeadingLevelSet() {
+  public function testEmptyPaginationHeadingLevelSet(): void {
     require_once $this->root . '/core/modules/views/views.theme.inc';
     $variables = [
       'tags' => [],
@@ -83,7 +83,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
    *
    * @covers ::template_preprocess_views_mini_pager
    */
-  public function testPaginationHeadingLevelNotSet() {
+  public function testPaginationHeadingLevelNotSet(): void {
     require_once $this->root . '/core/modules/views/views.theme.inc';
     $variables = [
       'tags' => [],
@@ -101,7 +101,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
    *
    * @covers ::template_preprocess_views_mini_pager
    */
-  public function testPaginationHeadingLevelSet() {
+  public function testPaginationHeadingLevelSet(): void {
     require_once $this->root . '/core/modules/views/views.theme.inc';
     $variables = [
       'tags' => [],

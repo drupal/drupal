@@ -58,7 +58,7 @@ class ResultTest extends UnitTestCase {
   /**
    * Tests the query method.
    */
-  public function testQuery() {
+  public function testQuery(): void {
     $this->assertNull($this->view->get_total_rows);
     // @total should set get_total_rows.
     $this->resultHandler->options['content'] = '@total';
@@ -83,7 +83,7 @@ class ResultTest extends UnitTestCase {
    *
    * @dataProvider providerTestResultArea
    */
-  public function testResultArea($content, $expected, $items_per_page = 0) {
+  public function testResultArea($content, $expected, $items_per_page = 0): void {
     $this->setupViewPager($items_per_page);
     $this->resultHandler->options['content'] = $content;
     $this->assertEquals(['#markup' => $expected], $this->resultHandler->render());

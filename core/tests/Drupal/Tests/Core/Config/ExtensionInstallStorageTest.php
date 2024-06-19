@@ -19,7 +19,7 @@ class ExtensionInstallStorageTest extends UnitTestCase {
   /**
    * @covers ::createCollection
    */
-  public function testCreateCollection() {
+  public function testCreateCollection(): void {
     $memory = new MemoryStorage();
     $include_profile = FALSE;
     $profile = $this->randomMachineName();

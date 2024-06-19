@@ -22,7 +22,7 @@ class PluginWithFormsTraitTest extends UnitTestCase {
    * @covers ::hasFormClass
    * @dataProvider providerGetFormClass
    */
-  public function testGetFormClass(PluginWithFormsInterface $block_plugin, $operation, $expected_class) {
+  public function testGetFormClass(PluginWithFormsInterface $block_plugin, $operation, $expected_class): void {
     $this->assertSame($expected_class, $block_plugin->getFormClass($operation));
     $this->assertSame($expected_class !== NULL, $block_plugin->hasFormClass($operation));
   }

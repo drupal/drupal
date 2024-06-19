@@ -19,7 +19,7 @@ class TestDatabaseTest extends UnitTestCase {
   /**
    * @covers ::__construct
    */
-  public function testConstructorException() {
+  public function testConstructorException(): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage("Invalid database prefix: blah1253");
     new TestDatabase('blah1253');
@@ -33,7 +33,7 @@ class TestDatabaseTest extends UnitTestCase {
    *
    * @dataProvider providerTestConstructor
    */
-  public function testConstructor($db_prefix, $expected_db_prefix, $expected_site_path) {
+  public function testConstructor($db_prefix, $expected_db_prefix, $expected_site_path): void {
     $test_db = new TestDatabase($db_prefix);
     $this->assertEquals($expected_db_prefix, $test_db->getDatabasePrefix());
     $this->assertEquals($expected_site_path, $test_db->getTestSitePath());
@@ -58,7 +58,7 @@ class TestDatabaseTest extends UnitTestCase {
    * @covers ::getTestSitePath
    * @covers ::getPhpErrorLogPath
    */
-  public function testConstructorNullPrefix() {
+  public function testConstructorNullPrefix(): void {
     // We use a stub class here because we can't mock getTestLock() so that it's
     // available before the constructor is called.
     $test_db = new TestTestDatabase(NULL);

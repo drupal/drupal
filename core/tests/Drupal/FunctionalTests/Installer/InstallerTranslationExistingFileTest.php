@@ -80,7 +80,7 @@ PO;
   /**
    * Ensures language selection has not failed.
    */
-  public function testInstall() {
+  public function testInstall(): void {
     // At this point we'll be on the profile selection or requirements screen.
     $this->assertSession()->statusCodeEquals(200);
   }

@@ -49,7 +49,7 @@ class NoPreExistingSchemaUpdateTest extends BrowserTestBase {
   /**
    * Tests the system module updates with no dependencies installed.
    */
-  public function testNoPreExistingSchema() {
+  public function testNoPreExistingSchema(): void {
     $schema = \Drupal::service('update.update_hook_registry')->getAllInstalledVersions();
     $this->assertArrayNotHasKey('update_test_no_preexisting', $schema);
     $this->assertFalse(\Drupal::state()->get('update_test_no_preexisting_update_8001', FALSE));

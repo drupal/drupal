@@ -25,7 +25,7 @@ class MachineNameTest extends UnitTestCase {
    *
    * @dataProvider providerTestValueCallback
    */
-  public function testValueCallback($expected, $input) {
+  public function testValueCallback($expected, $input): void {
     $element = [];
     $form_state = $this->prophesize(FormStateInterface::class)->reveal();
     $this->assertSame($expected, MachineName::valueCallback($element, $input, $form_state));
@@ -48,7 +48,7 @@ class MachineNameTest extends UnitTestCase {
   /**
    * @covers ::processMachineName
    */
-  public function testProcessMachineName() {
+  public function testProcessMachineName(): void {
     $form_state = new FormState();
 
     $element = [

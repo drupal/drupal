@@ -42,7 +42,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    *
    * @covers ::getContentType
    */
-  public function testAjaxIframeUpload() {
+  public function testAjaxIframeUpload(): void {
     $request = new Request();
     $request->request->set('ajax_iframe_upload', '1');
 
@@ -54,7 +54,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    *
    * @covers ::getContentType
    */
-  public function testFormatViaQueryParameter() {
+  public function testFormatViaQueryParameter(): void {
     $request = new Request();
     $request->query->set('_format', 'bob');
 
@@ -66,7 +66,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    *
    * @covers ::getContentType
    */
-  public function testUnknownContentTypeReturnsNull() {
+  public function testUnknownContentTypeReturnsNull(): void {
     $request = new Request();
 
     $this->assertNull($this->contentNegotiation->getContentType($request));
@@ -77,7 +77,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    *
    * @covers ::getContentType
    */
-  public function testUnknownContentTypeButAjaxRequest() {
+  public function testUnknownContentTypeButAjaxRequest(): void {
     $request = new Request();
     $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
@@ -89,7 +89,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    *
    * @covers ::handle
    */
-  public function testHandle() {
+  public function testHandle(): void {
     $request = $this->prophesize(Request::class);
 
     // Default empty format list should not set any formats.
@@ -122,7 +122,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * @covers ::registerFormat
    */
-  public function testSetFormat() {
+  public function testSetFormat(): void {
     $app = $this->createMock(HttpKernelInterface::class);
     $app->expects($this->once())
       ->method('handle')

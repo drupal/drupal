@@ -83,7 +83,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
   /**
    * Tests the deletion of workspaces.
    */
-  public function testDeletingWorkspaces() {
+  public function testDeletingWorkspaces(): void {
     $admin = $this->createUser([
       'administer nodes',
       'create workspace',
@@ -209,7 +209,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
   /**
    * Tests that deleting a workspace keeps its already published content.
    */
-  public function testDeletingPublishedWorkspace() {
+  public function testDeletingPublishedWorkspace(): void {
     $admin = $this->createUser([
       'administer nodes',
       'create workspace',
@@ -283,7 +283,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
   /**
    * Tests that a workspace with children can not be deleted.
    */
-  public function testDeletingWorkspaceWithChildren() {
+  public function testDeletingWorkspaceWithChildren(): void {
     $stage = Workspace::create(['id' => 'stage', 'label' => 'Stage']);
     $stage->save();
 
@@ -311,7 +311,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
   /**
    * Tests loading the workspace tree when there are no workspaces available.
    */
-  public function testEmptyWorkspaceTree() {
+  public function testEmptyWorkspaceTree(): void {
     $tree = \Drupal::service('workspaces.repository')->loadTree();
     $this->assertSame([], $tree);
   }

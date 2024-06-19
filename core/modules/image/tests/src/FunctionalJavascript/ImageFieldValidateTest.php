@@ -22,7 +22,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   /**
    * Tests the validation message is displayed only once for ajax uploads.
    */
-  public function testAJAXValidationMessage() {
+  public function testAJAXValidationMessage(): void {
     $field_name = $this->randomMachineName();
     $this->createImageField($field_name, 'node', 'article', ['cardinality' => -1]);
 
@@ -42,7 +42,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   /**
    * Tests that image field validation works with other form submit handlers.
    */
-  public function testFriendlyAjaxValidation() {
+  public function testFriendlyAjaxValidation(): void {
     // Add a custom field to the Article content type that contains an AJAX
     // handler on a select field.
     $field_storage = FieldStorageConfig::create([

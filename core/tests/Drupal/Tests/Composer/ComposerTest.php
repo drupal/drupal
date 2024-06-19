@@ -18,7 +18,7 @@ class ComposerTest extends UnitTestCase {
    *
    * @covers ::ensureComposerVersion
    */
-  public function testEnsureComposerVersion() {
+  public function testEnsureComposerVersion(): void {
     try {
       $this->assertNull(Composer::ensureComposerVersion());
     }
@@ -33,7 +33,7 @@ class ComposerTest extends UnitTestCase {
    * Also ensure that the minimum php version in the root-level composer.json
    * file exactly matches \Drupal::MINIMUM_PHP.
    */
-  public function testEnsurePhpConfiguredVersion() {
+  public function testEnsurePhpConfiguredVersion(): void {
     $composer_json = json_decode(file_get_contents($this->root . '/composer.json'), TRUE);
     $composer_core_json = json_decode(file_get_contents($this->root . '/core/composer.json'), TRUE);
     $this->assertEquals(\Drupal::MINIMUM_PHP, $composer_json['config']['platform']['php'], 'The \Drupal::MINIMUM_PHP constant should always be exactly the same as the config.platform.php in the root composer.json.');

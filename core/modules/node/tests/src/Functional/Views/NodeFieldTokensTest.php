@@ -30,7 +30,7 @@ class NodeFieldTokensTest extends NodeTestBase {
   /**
    * Tests token replacement for Views tokens supplied by the Node module.
    */
-  public function testViewsTokenReplacement() {
+  public function testViewsTokenReplacement(): void {
     // Create the Article content type with a standard body field.
     /** @var \Drupal\node\NodeTypeInterface $node_type */
     $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);

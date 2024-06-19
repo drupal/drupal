@@ -76,7 +76,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   /**
    * @covers ::onException
    */
-  public function testOnException() {
+  public function testOnException(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
     $expected_form = $form + [
       '#build_id_old' => 'the_build_id',
@@ -101,7 +101,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   /**
    * @covers ::onException
    */
-  public function testOnExceptionNewBuildId() {
+  public function testOnExceptionNewBuildId(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
     $expected_form = $form + [
       '#build_id_old' => 'a_new_build_id',
@@ -126,7 +126,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   /**
    * @covers ::onException
    */
-  public function testOnExceptionOtherClass() {
+  public function testOnExceptionOtherClass(): void {
     $request = new Request();
     $exception = new \Exception();
 
@@ -139,7 +139,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   /**
    * @covers ::onException
    */
-  public function testOnExceptionResponseBuilderException() {
+  public function testOnExceptionResponseBuilderException(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
     $expected_form = $form + [
       '#build_id_old' => 'the_build_id',
@@ -162,7 +162,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   /**
    * @covers ::onException
    */
-  public function testOnExceptionBrokenPostRequest() {
+  public function testOnExceptionBrokenPostRequest(): void {
     $this->formAjaxResponseBuilder->expects($this->never())
       ->method('buildResponse');
 
@@ -209,7 +209,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
    * @covers ::onException
    * @covers ::getFormAjaxException
    */
-  public function testOnExceptionNestedException() {
+  public function testOnExceptionNestedException(): void {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
     $expected_form = $form + [
       '#build_id_old' => 'the_build_id',
@@ -233,7 +233,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   /**
    * @covers ::getFormAjaxException
    */
-  public function testOnExceptionNestedWrongException() {
+  public function testOnExceptionNestedWrongException(): void {
     $nested_exception = new \Exception();
     $exception = new \Exception('', 0, $nested_exception);
     $request = new Request();

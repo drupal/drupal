@@ -15,7 +15,7 @@ class RemoveRoleUserTest extends RoleUserTestBase {
   /**
    * Tests the execute method on a user with a role.
    */
-  public function testExecuteRemoveExistingRole() {
+  public function testExecuteRemoveExistingRole(): void {
     $this->account->expects($this->once())
       ->method('removeRole')
       ->willReturn($this->account);
@@ -34,7 +34,7 @@ class RemoveRoleUserTest extends RoleUserTestBase {
   /**
    * Tests the execute method on a user without a specific role.
    */
-  public function testExecuteRemoveNonExistingRole() {
+  public function testExecuteRemoveNonExistingRole(): void {
     $this->account->expects($this->never())
       ->method('removeRole')
       ->willReturn($this->account);

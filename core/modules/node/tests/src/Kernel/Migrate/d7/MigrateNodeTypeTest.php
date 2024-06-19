@@ -82,7 +82,7 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
   /**
    * Tests Drupal 7 node type to Drupal 8 migration.
    */
-  public function testNodeType() {
+  public function testNodeType(): void {
     $expected_available_menus = ['main'];
     $expected_parent = 'main:';
 

@@ -32,7 +32,7 @@ class TaxonomyViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * Check access for taxonomy fields.
    */
-  public function testTermFields() {
+  public function testTermFields(): void {
     $vocab = Vocabulary::create([
       'vid' => 'random',
       'name' => 'Randomness',

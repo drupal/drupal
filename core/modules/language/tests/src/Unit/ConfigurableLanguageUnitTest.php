@@ -19,7 +19,7 @@ class ConfigurableLanguageUnitTest extends UnitTestCase {
   /**
    * @covers ::getDirection
    */
-  public function testDirection() {
+  public function testDirection(): void {
     // Direction of language writing, an integer. Usually either
     // ConfigurableLanguage::DIRECTION_LTR or
     // ConfigurableLanguage::DIRECTION_RTL.
@@ -35,7 +35,7 @@ class ConfigurableLanguageUnitTest extends UnitTestCase {
    * @covers ::getWeight
    * @covers ::setWeight
    */
-  public function testWeight() {
+  public function testWeight(): void {
     // The weight, an integer. Used to order languages with larger positive
     // weights sinking items toward the bottom of lists.
     $configurableLanguage = new ConfigurableLanguage(['weight' => -5], 'configurable_language');

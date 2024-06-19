@@ -39,7 +39,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 vocabulary-node type association to Drupal 8 migration.
    */
-  public function testVocabularyEntityDisplay() {
+  public function testVocabularyEntityDisplay(): void {
     $this->executeMigration('d6_vocabulary_entity_display');
 
     // Test that the field exists.
@@ -61,7 +61,7 @@ class MigrateVocabularyEntityDisplayTest extends MigrateDrupal6TestBase {
    * Vocabulary displays should be ignored when they belong to node types which
    * were not migrated.
    */
-  public function testSkipNonExistentNodeType() {
+  public function testSkipNonExistentNodeType(): void {
     // The "story" node type is migrated by d6_node_type but we need to pretend
     // that it didn't occur, so record that in the map table.
     $this->mockFailure('d6_node_type', ['type' => 'story']);

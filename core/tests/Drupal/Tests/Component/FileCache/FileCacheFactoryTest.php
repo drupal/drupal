@@ -38,7 +38,7 @@ class FileCacheFactoryTest extends TestCase {
   /**
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     $file_cache = FileCacheFactory::get('test_foo_settings', []);
 
     // Ensure the right backend and configuration is used.
@@ -59,7 +59,7 @@ class FileCacheFactoryTest extends TestCase {
   /**
    * @covers ::get
    */
-  public function testGetNoPrefix() {
+  public function testGetNoPrefix(): void {
     FileCacheFactory::setPrefix(NULL);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Required prefix configuration is missing');
@@ -69,7 +69,7 @@ class FileCacheFactoryTest extends TestCase {
   /**
    * @covers ::get
    */
-  public function testGetDisabledFileCache() {
+  public function testGetDisabledFileCache(): void {
     // Ensure the returned FileCache is an instance of FileCache::class.
     $file_cache = FileCacheFactory::get('test_foo_settings', []);
     $this->assertInstanceOf(FileCache::class, $file_cache);
@@ -88,7 +88,7 @@ class FileCacheFactoryTest extends TestCase {
    *
    * @dataProvider configurationDataProvider
    */
-  public function testGetConfigurationOverrides($configuration, $arguments, $class) {
+  public function testGetConfigurationOverrides($configuration, $arguments, $class): void {
     FileCacheFactory::setConfiguration($configuration);
 
     $file_cache = FileCacheFactory::get('test_foo_settings', $arguments);
@@ -157,7 +157,7 @@ class FileCacheFactoryTest extends TestCase {
    * @covers ::getConfiguration
    * @covers ::setConfiguration
    */
-  public function testGetSetConfiguration() {
+  public function testGetSetConfiguration(): void {
     $configuration = FileCacheFactory::getConfiguration();
     $configuration['test_foo_bar'] = ['bar' => 'llama'];
     FileCacheFactory::setConfiguration($configuration);
@@ -169,7 +169,7 @@ class FileCacheFactoryTest extends TestCase {
    * @covers ::getPrefix
    * @covers ::setPrefix
    */
-  public function testGetSetPrefix() {
+  public function testGetSetPrefix(): void {
     // Random generator.
     $random = new Random();
 
