@@ -192,7 +192,7 @@ final class RecipeCommand extends Command {
    *   Exception thrown if kernel does not boot.
    */
   protected function boot() {
-    $kernel = new DrupalKernel('prod', $this->classLoader, FALSE);
+    $kernel = new DrupalKernel('prod', $this->classLoader);
     $kernel::bootEnvironment();
     $kernel->setSitePath($this->getSitePath());
     Settings::initialize($kernel->getAppRoot(), $kernel->getSitePath(), $this->classLoader);
