@@ -403,7 +403,7 @@ class LibraryDiscoveryParser {
       }
     }
     // Core also provides additional libraries that don't come from the YAML,
-    // file nor the hook_library_info_build. They come from single directory
+    // file nor the hook_library_info_build. They come from single-directory
     // component definitions.
     $additional_libraries = $extension === 'core'
       ? $this->librariesForComponents()
@@ -478,10 +478,10 @@ class LibraryDiscoveryParser {
   }
 
   /**
-   * Builds the dynamic library definitions for single directory components.
+   * Builds the dynamic library definitions for single-directory components.
    *
    * @return array
-   *   The core library definitions for Single Directory Components.
+   *   The core library definitions for Single-Directory Components.
    */
   protected function librariesForComponents(): array {
     // Iterate over all the components to get the CSS and JS files.
