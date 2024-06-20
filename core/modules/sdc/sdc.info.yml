@@ -1,4 +1,4 @@
-name: Single Directory Components
+name: Single-Directory Components
 type: module
 description: 'Allows discovery and rendering of self-contained UI components.'
 version: VERSION
