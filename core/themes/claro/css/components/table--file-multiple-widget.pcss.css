@@ -3,73 +3,59 @@
  * Styles for multiple file widget table.
  */
 
-.table-file-multiple-widget tbody {
-  vertical-align: top;
+.table-file-multiple-widget {
+  & tbody {
+    vertical-align: top;
+  }
+  & .tabledrag-cell-content {
+    position: relative;
+    display: block;
+    height: auto;
+
+    & > * {
+      display: block;
+    }
+  }
+  & .tabledrag-cell-content__item {
+    padding: 0;
+  }
+  & .tabledrag-handle,
+  & .tabledrag-changed {
+    float: left;
+  }
+  & .tabledrag-changed {
+    line-height: calc(var(--tabledrag-handle-icon-size) + calc(var(--space-xs) * 2));
+  }
+  & td {
+    height: calc(var(--space-m) * 3);
+    padding-block: var(--space-m);
+    & > :first-child,
+    & > :last-child {
+      margin-block: 0;
+    }
+  }
+  & .button.button:only-child {
+    margin: 0;
+  }
+  & th {
+    height: calc(var(--space-m) * 2);
+    color: var(--color-gray-800);
+    background: var(--color-gray-050);
+    font-size: var(--font-size-s);
+  }
+  & .tabledrag-cell {
+    padding-block: var(--space-xs);
+  }
+  & .checkbox .form-type--boolean {
+    line-height: calc(var(--space-m) * 3);
+  }
 }
 
-.table-file-multiple-widget .tabledrag-cell-content {
-  position: relative;
-  display: block;
-  height: auto;
-}
-
-.table-file-multiple-widget .tabledrag-cell-content > * {
-  display: block;
-}
-
-.table-file-multiple-widget .tabledrag-cell-content__item {
-  padding: 0;
-}
-
-.table-file-multiple-widget .tabledrag-handle {
-  float: left; /* LTR */
-}
-[dir="rtl"] .table-file-multiple-widget .tabledrag-handle {
-  float: right;
-}
-
-.table-file-multiple-widget .tabledrag-changed {
-  float: left; /* LTR */
-  line-height: calc(var(--tabledrag-handle-icon-size) + calc(var(--space-xs) * 2));
-}
-[dir="rtl"] .table-file-multiple-widget .tabledrag-changed {
-  float: left;
-}
-
-.table-file-multiple-widget td {
-  height: calc(var(--space-m) * 3);
-}
-
-.table-file-multiple-widget td > :first-child {
-  margin-top: 0;
-}
-.table-file-multiple-widget td > :last-child {
-  margin-bottom: 0;
-}
-
-.table-file-multiple-widget .button.button:only-child {
-  margin: 0;
-}
-
-.table-file-multiple-widget th {
-  height: calc(var(--space-m) * 2);
-  color: var(--color-gray-800);
-  background: var(--color-gray-050);
-  font-size: var(--font-size-s);
-}
-
-.table-file-multiple-widget td {
-  padding-top: var(--space-m);
-  padding-bottom: var(--space-m);
-}
-
-.table-file-multiple-widget .tabledrag-cell {
-  padding-top: var(--space-xs);
-  padding-bottom: var(--space-xs);
-}
-
-.table-file-multiple-widget .checkbox .form-type--boolean {
-  line-height: calc(var(--space-m) * 3);
+[dir="rtl"] .table-file-multiple-widget {
+  & .tabledrag-handle,
+  & .tabledrag-changed {
+    float: right;
+  }
 }
 
 .no-touchevents .table-file-multiple-widget .checkbox .form-type--boolean {
@@ -89,7 +75,7 @@
  * (A full file widget with limited cardinality.)
  */
 .table-file-multiple-widget--no-upload > tbody:last-child > tr:last-child {
-  border-bottom: 0;
+  border-block-end: 0;
 }
 
 /**
@@ -97,12 +83,9 @@
  */
 @media screen and (max-width: 37.5em) {
   .claro-details__wrapper .file-widget-multiple__table-wrapper {
-    margin-right: calc(var(--space-m) * -1);
-    margin-left: calc(var(--space-m) * -1);
-  }
-
-  .claro-details__wrapper .file-widget-multiple__table-wrapper > :not(table) {
-    margin-right: var(--space-m);
-    margin-left: var(--space-m);
+    margin-inline: calc(var(--space-m) * -1);
+    & > :not(table) {
+      margin-inline: var(--space-m);
+    }
   }
 }
