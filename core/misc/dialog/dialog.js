@@ -78,6 +78,13 @@ class DrupalDialogEvent extends Event {
 
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
+      if (settings.dialogClass) {
+        Drupal.deprecationError({
+          message:
+            'dialogClass is deprecated in drupal:10.4.x and will be removed from drupal:12.0.0.',
+        });
+      }
+
       // Trigger a global event to allow scripts to bind events to the dialog.
       const event = new DrupalDialogEvent('beforecreate', dialog, settings);
       domElement.dispatchEvent(event);
