@@ -124,6 +124,7 @@ function navigation_theme($existing, $type, $theme, $path) {
     'base hook' => 'menu',
     'variables' => [
       'menu_name' => NULL,
+      'title' => NULL,
       'items' => [],
       'attributes' => [],
     ],
