@@ -37,6 +37,7 @@
           // Setting tabIndex makes the div focusable
           tabIndex: -1,
           role: 'dialog',
+          'aria-modal': this.options.modal ? 'true' : null,
         })
         .appendTo(this._appendTo());
 

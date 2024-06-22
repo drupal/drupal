@@ -1,5 +1,5 @@
 /*!
- * jQuery UI Mouse 1.14.0-beta.1
+ * jQuery UI Mouse 1.14.0-beta.2
  * https://jqueryui.com
  *
  * Copyright OpenJS Foundation and other contributors
@@ -37,7 +37,7 @@ $( document ).on( "mouseup", function() {
 } );
 
 return $.widget( "ui.mouse", {
-	version: "1.14.0-beta.1",
+	version: "1.14.0-beta.2",
 	options: {
 		cancel: "input, textarea, button, select, option",
 		distance: 1,
