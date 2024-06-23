@@ -243,7 +243,7 @@ final class ProjectSecurityRequirement {
       $request_date = $date_formatter->format($time->getRequestTime(), 'custom', 'Y-m-d');
       if (!empty($this->securityCoverageInfo['security_coverage_ending_warn_date']) && $this->securityCoverageInfo['security_coverage_ending_warn_date'] <= $request_date) {
         $requirement['description']['coverage_message'] = [
-          '#markup' => $this->t('Update to a supported minor version soon to continue receiving security updates.'),
+          '#markup' => $this->t('Update to a supported version soon to continue receiving security updates.'),
           '#suffix' => ' ',
         ];
         $requirement['severity'] = REQUIREMENT_WARNING;
