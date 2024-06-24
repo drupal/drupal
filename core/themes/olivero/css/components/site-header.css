@@ -110,3 +110,9 @@
   display: flex;
   justify-content: space-between;
 }
+
+/* Reset width set by layout.css */
+
+body.is-fixed .site-header__inner__container {
+  width: auto;
+}
