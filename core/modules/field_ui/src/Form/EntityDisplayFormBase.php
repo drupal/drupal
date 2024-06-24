@@ -268,7 +268,11 @@ abstract class EntityDisplayFormBase extends EntityForm {
         // spinners will be added manually by the client-side script.
         'progress' => 'none',
       ],
-      '#attributes' => ['class' => ['visually-hidden']],
+      '#attributes' => [
+        'class' => ['visually-hidden'],
+        // Ensure the button is not focusable via keyboard navigation.
+        'tabindex' => '-1',
+      ],
     ];
 
     $form['actions'] = ['#type' => 'actions'];
