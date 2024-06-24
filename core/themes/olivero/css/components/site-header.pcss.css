@@ -105,3 +105,8 @@ body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded)
   display: flex;
   justify-content: space-between;
 }
+
+/* Reset width set by layout.css */
+body.is-fixed .site-header__inner__container {
+  width: auto;
+}
