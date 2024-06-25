@@ -635,12 +635,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Test/TestRunnerKernel.php',
 ];
 $ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\Core\\\\Theme\\\\ThemeInitialization\\:\\:resolveStyleSheetPlaceholders\\(\\) should return string but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Theme/ThemeInitialization.php',
-];
-$ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$candidate might not be defined\\.$#',
 	'count' => 1,

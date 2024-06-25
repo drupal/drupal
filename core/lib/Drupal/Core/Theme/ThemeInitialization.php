@@ -270,30 +270,4 @@ class ThemeInitialization implements ThemeInitializationInterface {
     return $this->extensions;
   }
 
-  /**
-   * Gets CSS file where tokens have been resolved.
-   *
-   * @param string $css_file
-   *   CSS file which may contain tokens.
-   *
-   * @return string
-   *   CSS file where placeholders are replaced.
-   *
-   * @todo Remove in Drupal 9.0.x.
-   */
-  protected function resolveStyleSheetPlaceholders($css_file) {
-    $token_candidate = explode('/', $css_file)[0];
-    if (!preg_match('/@[A-z0-9_-]+/', $token_candidate)) {
-      return $css_file;
-    }
-
-    $token = substr($token_candidate, 1);
-
-    // Prime extensions.
-    $extensions = $this->getExtensions();
-    if (isset($extensions[$token])) {
-      return str_replace($token_candidate, $extensions[$token]->getPath(), $css_file);
-    }
-  }
-
 }
