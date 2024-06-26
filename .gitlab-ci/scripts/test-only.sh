@@ -21,8 +21,12 @@ done
 fi
 
 echo "2️⃣ Running test changes for this branch"
+EXIT_CODE=0
 if [[ $(git diff ${BASELINE} --name-only|grep -E "Test.php$") ]]; then
 for test in `git diff ${BASELINE} --name-only|grep -E "Test.php$"`; do
-  sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data ./vendor/bin/phpunit -c core $test --log-junit=./sites/default/files/simpletest/phpunit-`echo $test|sed 's/\//_/g' `.xml;
+  sudo SIMPLETEST_BASE_URL="$SIMPLETEST_BASE_URL" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data ./vendor/bin/phpunit -c core $test --log-junit=./sites/default/files/simpletest/phpunit-`echo $test|sed 's/\//_/g' `.xml || EXIT_CODE=$?;
 done;
 fi
+
+echo "Exiting with EXIT_CODE=$EXIT_CODE"
+exit $EXIT_CODE
