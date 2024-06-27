@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\media\Functional;
+namespace Drupal\Tests\media\Kernel;
 
 use Drupal\media\OEmbed\ProviderException;
 use GuzzleHttp\Psr7\Utils;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Tests the oEmbed provider repository.
@@ -15,14 +14,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
  *
  * @group media
  */
-class ProviderRepositoryTest extends MediaFunctionalTestBase {
-
-  use ProphecyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+class ProviderRepositoryTest extends MediaKernelTestBase {
 
   /**
    * Tests that provider discovery fails if the provider database is empty.
