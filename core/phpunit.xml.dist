@@ -27,15 +27,6 @@
     <env name="SIMPLETEST_BASE_URL" value=""/>
     <!-- Example SIMPLETEST_DB value: mysql://username:password@localhost/database_name#table_prefix -->
     <env name="SIMPLETEST_DB" value=""/>
-    <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
-    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value=""/>
-    <!-- To avoid overcrowding the output in CI environments, browser tests
-     will not print the individual links in the test run report by default.
-     The output in Drupal testing environment is saved as an artifact that
-     can be browsed or downloaded from Gitlab. However, if you need to
-     print the individual links locally you can set the
-     BROWSERTEST_OUTPUT_VERBOSE environment variable to "true". -->
-    <!-- <env name="BROWSERTEST_OUTPUT_VERBOSE" value="true"/> -->
     <!-- By default, browser tests will output links that use the base URL set
      in SIMPLETEST_BASE_URL. However, if your SIMPLETEST_BASE_URL is an internal
      path (such as may be the case in a virtual or Docker-based environment),
@@ -65,6 +56,25 @@
     <!-- Example for changing the driver args to webdriver tests MINK_DRIVER_ARGS_WEBDRIVER value: '["chrome", { "goog:chromeOptions": { "w3c": false } }, "http://localhost:4444/wd/hub"]' For using the Firefox browser, replace "chrome" with "firefox" -->
     <env name="MINK_DRIVER_ARGS_WEBDRIVER" value=""/>
   </php>
+  <extensions>
+    <!-- Functional tests HTML output logging. -->
+    <bootstrap class="Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger">
+      <!-- The directory where the browser output will be stored. If a relative
+        path is specified, it will be relative to the current working directory
+        of the process running the PHPUnit CLI. In CI environments, this can be
+        overridden by the value set for the "BROWSERTEST_OUTPUT_DIRECTORY"
+        environment variable.
+      -->
+      <parameter name="outputDirectory" value="sites/simpletest/browser_output"/>
+      <!-- By default browser tests print the individual links in the test run
+        report. To avoid overcrowding the output in CI environments, you can
+        set the "verbose" parameter or the "BROWSERTEST_OUTPUT_VERBOSE"
+        environment variable to "false". In GitLabCI, the output is saved
+        anyway as an artifact that can be browsed or downloaded from Gitlab.
+      -->
+      <parameter name="verbose" value="true"/>
+    </bootstrap>
+  </extensions>
   <testsuites>
     <testsuite name="unit">
       <directory>tests/Drupal/Tests</directory>
