@@ -37,13 +37,27 @@
      *   The default destination for JavaScript messages.
      */
     static defaultWrapper() {
-      let wrapper = document.querySelector('[data-drupal-messages]');
+      // Search for the element with '[data-drupal-messages]' selector.
+      // If not found then only try to search for fallback element.
+      let wrapper =
+        document.querySelector('[data-drupal-messages]') ||
+        document.querySelector('[data-drupal-messages-fallback]');
       if (!wrapper) {
-        wrapper = document.querySelector('[data-drupal-messages-fallback]');
+        // If no status messages element is found, a fallback element is created to prevent
+        // execution-breaking JS errors when attempting to report a problem.
+        // This scenario can occur on any page that does not include a status_messages
+        // render element.
+        wrapper = document.createElement('div');
+        document.body.appendChild(wrapper);
+      }
+
+      if (wrapper.hasAttribute('data-drupal-messages-fallback')) {
+        // Remove the fallback attribute if it exists.
         wrapper.removeAttribute('data-drupal-messages-fallback');
-        wrapper.setAttribute('data-drupal-messages', '');
         wrapper.classList.remove('hidden');
       }
+      wrapper.setAttribute('data-drupal-messages', '');
+
       return wrapper.innerHTML === ''
         ? Drupal.Message.messageInternalWrapper(wrapper)
         : wrapper.firstElementChild;
