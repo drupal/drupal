@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see https://guzzle.readthedocs.org/en/latest/handlers-and-middleware.html
  *
- * @see \Drupal\Core\Http\Client
+ * @see \GuzzleHttp\Client
  * @see \Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware
  */
 class HandlerStackConfigurator {
