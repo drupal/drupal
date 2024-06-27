@@ -4,21 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Extension\HtmlLogging;
 
-use PHPUnit\Event\Facade;
 use PHPUnit\Event\TestRunner\Finished as TestRunnerFinished;
 use PHPUnit\Event\TestRunner\Started as TestRunnerStarted;
+use PHPUnit\Runner\Extension\Extension;
+use PHPUnit\Runner\Extension\Facade;
+use PHPUnit\Runner\Extension\ParameterCollection;
+use PHPUnit\TextUI\Configuration\Configuration;
 
 /**
  * Drupal's extension for providing HTML output results for functional tests.
  *
  * @internal
  */
-final class HtmlOutputLogger {
+final class HtmlOutputLogger implements Extension {
 
   /**
-   * The singleton instance.
+   * The status of the extension.
    */
-  private static ?self $instance = NULL;
+  private bool $enabled = FALSE;
 
   /**
    * A file with list of links to HTML pages generated.
@@ -26,53 +29,66 @@ final class HtmlOutputLogger {
   private ?string $browserOutputFile = NULL;
 
   /**
-   * @throws \PHPUnit\Event\EventFacadeIsSealedException
-   * @throws \PHPUnit\Util\Exception
-   * @throws \PHPUnit\Event\UnknownSubscriberTypeException
-   * @throws \RuntimeException
+   * A file with list of links to HTML pages generated.
    */
-  private function __construct(
-    private readonly string $outputDirectory,
-    private readonly bool $outputVerbose,
-    private readonly Facade $facade,
-  ) {
-    $this->facade->registerSubscriber(new TestRunnerStartedSubscriber($this));
-    $this->facade->registerSubscriber(new TestRunnerFinishedSubscriber($this));
-  }
+  private string $outputDirectory;
 
   /**
-   * Initializes the extension.
+   * Verbosity of the final report.
    *
-   * @param string $outputDirectory
-   *   The directory where the HTML pages should be generated.
-   * @param bool $outputVerbose
-   *   If TRUE, a list of links generated will be output at the end of the test
-   *   run; if FALSE, only a summary with the count of pages generated.
-   *
-   * @throws \PHPUnit\Event\EventFacadeIsSealedException
-   * @throws \PHPUnit\Util\Exception
-   * @throws \PHPUnit\Event\UnknownSubscriberTypeException
-   * @throws \RuntimeException
+   * If TRUE, a list of links generated will be output at the end of the test
+   * run; if FALSE, only a summary with the count of pages generated.
    */
-  public static function init(string $outputDirectory, bool $outputVerbose): void {
-    if (self::$instance === NULL) {
-      $realDirectory = realpath($outputDirectory);
-      if ($realDirectory === FALSE || !is_dir($realDirectory) || !is_writable($realDirectory)) {
-        print "HTML output directory {$outputDirectory} is not a writable directory.\n\n";
-        return;
-      }
-      self::$instance = new self($realDirectory, $outputVerbose, Facade::instance());
+  private bool $outputVerbose;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function bootstrap(
+    Configuration $configuration,
+    Facade $facade,
+    ParameterCollection $parameters,
+  ): void {
+    // Determine output directory.
+    $envDirectory = getenv('BROWSERTEST_OUTPUT_DIRECTORY');
+    if ($envDirectory === "") {
+      print "HTML output disabled by BROWSERTEST_OUTPUT_DIRECTORY = ''.\n\n";
+      return;
     }
-  }
+    elseif ($envDirectory !== FALSE) {
+      $directory = $envDirectory;
+    }
+    elseif ($parameters->has('outputDirectory')) {
+      $directory = $parameters->get('outputDirectory');
+    }
+    else {
+      print "HTML output directory not specified.\n\n";
+      return;
+    }
+    $realDirectory = realpath($directory);
+    if ($realDirectory === FALSE || !is_dir($realDirectory) || !is_writable($realDirectory)) {
+      print "HTML output directory {$directory} is not a writable directory.\n\n";
+      return;
+    }
+    $this->outputDirectory = $realDirectory;
 
-  /**
-   * Determines if the extension is enabled.
-   *
-   * @return bool
-   *   TRUE if enabled, FALSE if disabled.
-   */
-  public static function isEnabled(): bool {
-    return self::$instance !== NULL;
+    // Determine output verbosity.
+    $envVerbose = getenv('BROWSERTEST_OUTPUT_VERBOSE');
+    if ($envVerbose !== FALSE) {
+      $verbose = $envVerbose;
+    }
+    elseif ($parameters->has('verbose')) {
+      $verbose = $parameters->get('verbose');
+    }
+    else {
+      $verbose = FALSE;
+    }
+    $this->outputVerbose = filter_var($verbose, \FILTER_VALIDATE_BOOLEAN);
+
+    $facade->registerSubscriber(new TestRunnerStartedSubscriber($this));
+    $facade->registerSubscriber(new TestRunnerFinishedSubscriber($this));
+
+    $this->enabled = TRUE;
   }
 
   /**
@@ -84,11 +100,10 @@ final class HtmlOutputLogger {
    * @throws \RuntimeException
    */
   public static function log(string $logEntry): void {
-    if (!self::isEnabled()) {
+    $browserOutputFile = getenv('BROWSERTEST_OUTPUT_FILE');
+    if ($browserOutputFile === FALSE) {
       throw new \RuntimeException("HTML output is not enabled");
     }
-
-    $browserOutputFile = getenv('BROWSERTEST_OUTPUT_FILE');
     file_put_contents($browserOutputFile, $logEntry . "\n", FILE_APPEND);
   }
 
@@ -96,7 +111,7 @@ final class HtmlOutputLogger {
    * Empties the list of the HTML output created during the test run.
    */
   public function testRunnerStarted(TestRunnerStarted $event): void {
-    if (!self::isEnabled()) {
+    if (!$this->enabled) {
       throw new \RuntimeException("HTML output is not enabled");
     }
 
@@ -118,7 +133,7 @@ final class HtmlOutputLogger {
    * Prints the list of HTML output generated during the test.
    */
   public function testRunnerFinished(TestRunnerFinished $event): void {
-    if (!self::isEnabled()) {
+    if (!$this->enabled) {
       throw new \RuntimeException("HTML output is not enabled");
     }
 

@@ -125,7 +125,8 @@ trait BrowserHtmlDebugTrait {
    * Creates the directory to store browser output.
    */
   protected function initBrowserOutputFile() {
-    $this->htmlOutputEnabled = HtmlOutputLogger::isEnabled();
+    $browserOutputFile = getenv('BROWSERTEST_OUTPUT_FILE');
+    $this->htmlOutputEnabled = $browserOutputFile !== FALSE;
     $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $GLOBALS['base_url'];
     if ($this->htmlOutputEnabled) {
       $this->htmlOutputClassName = str_replace("\\", "_", static::class);

@@ -29,9 +29,6 @@ Settings to change in this file:
 * SIMPLETEST_DB: The URL of your Drupal database
 * The bootstrap attribute of the top-level phpunit tag, to take into account
   the location of the file
-* BROWSERTEST_OUTPUT_DIRECTORY: Set to sites/simpletest/browser_output;
-  you will also want to uncomment the printerClass attribute of the
-  top-level phpunit tag.
 
 ### Additional setup for JavaScript tests
 
