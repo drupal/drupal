@@ -47,7 +47,7 @@ class Sort {
   /**
    * The fields on which to sort.
    *
-   * @var string
+   * @var array
    */
   protected $fields;
 
