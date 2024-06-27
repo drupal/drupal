@@ -5,13 +5,12 @@ namespace Drupal\Core\Extension;
 use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\DestructableInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 
 /**
  * Class that manages modules in a Drupal installation.
  */
-class ModuleHandler implements ModuleHandlerInterface, DestructableInterface {
+class ModuleHandler implements ModuleHandlerInterface {
 
   /**
    * List of loaded files.
