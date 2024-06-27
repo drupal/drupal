@@ -426,6 +426,8 @@ function install_begin_request($class_loader, &$install_state) {
   $kernel::bootEnvironment();
   $kernel->setSitePath($site_path);
   $kernel->boot();
+  // Get the new version of the container from the kernel. This is now a
+  // complete container with all services.
   $container = $kernel->getContainer();
   // If Drupal is being installed behind a proxy, configure the request.
   ReverseProxyMiddleware::setSettingsOnRequest($request, Settings::getInstance());
