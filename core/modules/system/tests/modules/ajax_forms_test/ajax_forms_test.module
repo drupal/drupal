@@ -129,7 +129,7 @@ function ajax_forms_test_advanced_commands_css_callback($form, FormStateInterfac
 function ajax_forms_test_advanced_commands_data_callback($form, FormStateInterface $form_state) {
   $selector = '#data_div';
   $response = new AjaxResponse();
-  $response->addCommand(new DataCommand($selector, 'testkey', 'test_value'));
+  $response->addCommand(new DataCommand($selector, 'test_key', 'test_value'));
   return $response;
 }
 

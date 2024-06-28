@@ -10,6 +10,7 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 
 // cspell:ignore displaymessage scriptalertxsssubjectscript
+// cspell:ignore testcontextawareblock
 
 /**
  * Tests that the block configuration UI exists and stores data correctly.

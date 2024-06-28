@@ -8,6 +8,8 @@ use Drupal\ajax_test\Controller\AjaxTestController;
 use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
+// cspell:ignore testdialog
+
 /**
  * Performs tests on opening and manipulating dialogs via AJAX commands.
  *
