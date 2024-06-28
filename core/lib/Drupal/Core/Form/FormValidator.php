@@ -345,6 +345,12 @@ class FormValidator implements FormValidatorInterface {
       if (is_array($elements['#value'])) {
         $value = in_array($elements['#type'], ['checkboxes', 'tableselect']) ? array_keys($elements['#value']) : $elements['#value'];
         foreach ($value as $v) {
+          if (!is_scalar($v)) {
+            $message_arguments['%type'] = gettype($v);
+            $form_state->setError($elements, $this->t('The submitted value type %type in the %name element is not allowed.', $message_arguments));
+            $this->logger->error('The submitted value type %type in the %name element is not allowed.', $message_arguments);
+            continue;
+          }
           if (!isset($options[$v])) {
             $message_arguments['%choice'] = $v;
             $form_state->setError($elements, $this->t('The submitted value %choice in the %name element is not allowed.', $message_arguments));
