@@ -78,6 +78,7 @@ class FiberPlaceholderTest extends UnitTestCase {
         'ajaxPageState' => [],
       ],
       'big_pipe_placeholders' => [
+        // cspell:disable-next-line
         'callback=%5CDrupal%5CTests%5Cbig_pipe%5CUnit%5CRender%5CTurtleLazyBuilder%3A%3Aturtle&amp;&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU' => [
           '#lazy_builder' => [
             '\Drupal\Tests\big_pipe\Unit\Render\TurtleLazyBuilder::turtle',
@@ -89,6 +90,7 @@ class FiberPlaceholderTest extends UnitTestCase {
     $response->setAttachments($attachments);
 
     // Construct minimal HTML response.
+    // cspell:disable-next-line
     $content = '<html><body><span data-big-pipe-placeholder-id="callback=%5CDrupal%5CTests%5Cbig_pipe%5CUnit%5CRender%5CTurtleLazyBuilder%3A%3Aturtle&amp;&amp;token=uhKFNfT4eF449_W-kDQX8E5z4yHyt0-nSHUlwaGAQeU"></body></html>';
     $response->setContent($content);
 
