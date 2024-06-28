@@ -1010,3 +1010,145 @@ entity_reference_selection.default:
 # providing a specific schema.
 entity_reference_selection.default:*:
   type: entity_reference_selection.default
+
+# Schema for the configuration of mailer transport DSN.
+mailer_dsn:
+  type: mapping
+  label: 'Symfony mailer transport DSN'
+  mapping:
+    scheme:
+      type: string
+      label: 'Scheme'
+      constraints:
+        NotBlank:
+          message: 'The mailer DSN must contain a scheme.'
+        Regex:
+          # https://datatracker.ietf.org/doc/html/rfc3986#appendix-A
+          pattern: '/^[a-z][a-z0-9+\-\.]*$/i'
+          message: 'The mailer DSN scheme must start with a letter followed by zero or more letters, numbers, plus (+), minus (-) or periods (.)'
+    host:
+      type: string
+      label: 'Host'
+      constraints:
+        NotBlank:
+          message: 'The mailer DSN must contain a host (use "default" by default).'
+        UriHost:
+          message: 'The mailer DSN host should conform to RFC 3986 URI host component.'
+    user:
+      type: string
+      nullable: true
+      label: 'User'
+    password:
+      type: string
+      nullable: true
+      label: 'Password'
+    port:
+      type: integer
+      nullable: true
+      label: 'Port'
+      constraints:
+        Range:
+          min: 0
+          max: 65535
+          notInRangeMessage: 'The mailer DSN port must be between 0 and 65535.'
+    options:
+      type: mailer_dsn.options.[%parent.scheme]
+      label: 'Options'
+
+mailer_dsn.options.*:
+  type: sequence
+  label: 'Options'
+  sequence:
+    type: string
+    label: Option
+    constraints:
+      NotNull: []
+
+mailer_dsn.options.null:
+  type: mapping
+  label: 'Null transport options'
+  mapping: {}
+
+mailer_dsn.options.native:
+  type: mailer_dsn.options.null
+
+
+mailer_dsn.options.sendmail:
+  type: mapping
+  label: 'Sendmail transport options'
+  mapping:
+    command:
+      type: string
+      nullable: true
+      label: 'Command to be executed by sendmail transport'
+      constraints:
+        Regex:
+          # Forbid any kind of control character.
+          # @see https://stackoverflow.com/a/66587087
+          pattern: '/([^\PC])/u'
+          match: false
+          message: 'The command option is not allowed to span multiple lines or contain control characters.'
+
+mailer_dsn.options.sendmail+smtp:
+  type: mailer_dsn.options.sendmail
+  label: 'Sendmail transport options'
+
+mailer_dsn.options.smtp:
+  type: mapping
+  label: 'SMTP options'
+  mapping:
+    verify_peer:
+      type: boolean
+      nullable: true
+      label: 'TLS Peer Verification (defaults to true)'
+    peer_fingerprint:
+      type: string
+      nullable: true
+      label: 'TLS Peer Fingerprint (no default)'
+      constraints:
+        Regex:
+          pattern: '/^[a-fA-F0-9]+$/'
+          message: 'The peer_fingerprint option requires an md5, sha1 or sha256 certificate fingerprint in hex with all separators (colons) removed.'
+    local_domain:
+      type: string
+      nullable: true
+      label: 'Domain name or IP address that represents the identity of the client when establishing the SMTP session (defaults to 127.0.0.1)'
+      constraints:
+        Regex:
+          # Forbid any kind of control character.
+          # @see https://stackoverflow.com/a/66587087
+          pattern: '/([^\PC])/u'
+          match: false
+          message: 'The local_domain is not allowed to span multiple lines or contain control characters.'
+    restart_threshold:
+      type: integer
+      nullable: true
+      label: 'Maximum number of messages to send before re-starting the transport (defaults to 100 messages)'
+      constraints:
+        Range:
+          min: 0
+    restart_threshold_sleep:
+      type: float
+      nullable: true
+      label: 'Number of seconds to sleep between stopping and re-starting the transport (defaults to no delay)'
+      constraints:
+        Range:
+          min: 0
+    ping_threshold:
+      type: integer
+      nullable: true
+      label: 'The minimum number of seconds between two messages required to ping the server (defaults to 100 seconds)'
+      constraints:
+        Range:
+          min: 0
+    max_per_second:
+      type: integer
+      nullable: true
+      label: 'The number of messages to send per second (defaults to no limit)'
+      constraints:
+        Range:
+          min: 0
+
+mailer_dsn.options.smtps:
+  type: mailer_dsn.options.smtp
+  label: 'Secure SMTP options'

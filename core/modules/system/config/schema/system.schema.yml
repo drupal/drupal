@@ -361,6 +361,8 @@ system.image.gd:
 system.mail:
   type: config_object
   label: 'Mail system'
+  constraints:
+    FullyValidatable: ~
   mapping:
     interface:
       type: sequence
@@ -373,45 +375,8 @@ system.mail:
             manager: plugin.manager.mail
             interface: 'Drupal\Core\Mail\MailInterface'
     mailer_dsn:
-      type: mapping
+      type: mailer_dsn
       label: 'Symfony mailer transport DSN'
-      mapping:
-        scheme:
-          type: string
-          label: 'Scheme'
-          constraints:
-            NotBlank:
-              message: 'The mailer DSN must contain a scheme.'
-        host:
-          type: string
-          label: 'Host'
-          constraints:
-            NotBlank:
-              message: 'The mailer DSN must contain a host (use "default" by default).'
-        user:
-          type: string
-          nullable: true
-          label: 'User'
-        password:
-          type: string
-          nullable: true
-          label: 'Password'
-        port:
-          type: integer
-          nullable: true
-          label: 'Port'
-          constraints:
-            Range:
-              min: 0
-              max: 65535
-        options:
-          type: sequence
-          label: 'Options'
-          sequence:
-            type: string
-            label: Option
-            constraints:
-              NotNull: []
 
 system.theme.global:
   type: theme_settings
