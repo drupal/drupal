@@ -64,6 +64,14 @@ class DevelopmentSettingsForm extends FormBase {
         'checked' => TRUE,
       ],
     ];
+
+    $form['disable_rendered_output_cache_bins'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Do not cache markup'),
+      '#description' => $this->t('Disables render cache, dynamic page cache, and page cache.'),
+      '#default_value' => $development_settings->get('disable_rendered_output_cache_bins', FALSE),
+    ];
+
     $form['twig_development_mode'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Twig development mode'),
@@ -97,13 +105,6 @@ class DevelopmentSettingsForm extends FormBase {
         'checked' => $twig_development_state_conditions,
       ];
     }
-
-    $form['disable_rendered_output_cache_bins'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Do not cache markup'),
-      '#description' => $this->t('Disables render cache, dynamic page cache, and page cache.'),
-      '#default_value' => $development_settings->get('disable_rendered_output_cache_bins', FALSE),
-    ];
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = [
