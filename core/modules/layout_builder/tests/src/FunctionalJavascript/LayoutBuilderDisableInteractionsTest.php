@@ -13,6 +13,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 
+// cspell:ignore fieldbody
+
 /**
  * Tests the Layout Builder disables interactions of rendered blocks.
  *

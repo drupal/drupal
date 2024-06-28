@@ -8,6 +8,8 @@ use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Database\Database;
 
+// cspell:ignore testblock
+
 /**
  * Create a block and test saving it.
  *
