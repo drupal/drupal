@@ -78,7 +78,7 @@ interface ModuleInstallerInterface {
    * @param \Drupal\Core\Extension\ModuleUninstallValidatorInterface $uninstall_validator
    *   The uninstall validator to add.
    *
-   * @deprecated in drupal:11.1.0 and is removed from drupal:11.1.0. Inject
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject
    *   the uninstall validators into the constructor instead.
    *
    * @see https://www.drupal.org/node/3432595
