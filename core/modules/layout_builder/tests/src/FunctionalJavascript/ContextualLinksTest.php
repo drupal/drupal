@@ -8,6 +8,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
+// cspell:ignore blocktest
+
 /**
  * Test contextual links compatibility with the Layout Builder.
  *

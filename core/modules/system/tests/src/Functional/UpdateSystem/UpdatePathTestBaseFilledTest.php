@@ -9,7 +9,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
 
-// cspell:ignore hola usuario
+// cspell:ignore hola testblock usuario
 
 /**
  * Runs UpdatePathTestBase with a dump filled with content.

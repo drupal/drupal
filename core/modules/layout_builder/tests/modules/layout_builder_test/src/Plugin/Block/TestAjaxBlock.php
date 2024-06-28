@@ -11,7 +11,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Provides a 'TestAjax' block.
  */
 #[Block(
-  id: "layout_builder_test_testajax",
+  id: "layout_builder_test_ajax",
   admin_label: new TranslatableMarkup("TestAjax"),
   category: new TranslatableMarkup("Test")
 )]

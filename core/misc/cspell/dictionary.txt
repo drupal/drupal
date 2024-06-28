@@ -77,7 +77,6 @@ blockpromoted
 blockquotes
 blockrecipe
 blockrelated
-blocktest
 bodyless
 boing
 bovigo
@@ -254,11 +253,9 @@ fdiv
 fieldable
 fieldapi
 fieldblock
-fieldbody
 fieldgroup
 fieldgroups
 fieldlayout
-fieldlinks
 fieldnames
 fieldsets
 filemime
@@ -703,17 +700,10 @@ tappable
 taskless
 tcomment
 templating
-testajax
-testblock
-testbody
 testbot
 testbots
 testcase
-testcontent
-testcontextawareblock
-testdialog
 testgroups
-testkey
 testlogger
 testsuite
 testsuites
