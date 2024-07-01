@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   This API is experimental.
  */
 #[ConfigAction(
-  id: 'simple_config_update',
+  id: 'simpleConfigUpdate',
   admin_label: new TranslatableMarkup('Simple configuration update'),
 )]
 final class SimpleConfigUpdate implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {

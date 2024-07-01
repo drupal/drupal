@@ -20,5 +20,5 @@ config:
       - block.block.claro_secondary_local_tasks
   actions:
     system.theme:
-      simple_config_update:
+      simpleConfigUpdate:
         admin: claro

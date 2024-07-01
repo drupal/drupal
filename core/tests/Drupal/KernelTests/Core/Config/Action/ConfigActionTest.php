@@ -33,15 +33,15 @@ class ConfigActionTest extends KernelTestBase {
     $this->assertCount(0, \Drupal::entityTypeManager()->getStorage('config_test')->loadMultiple(), 'There are no config_test entities');
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
-    $manager->applyAction('entity_create:ensure_exists', 'config_test.dynamic.action_test', ['label' => 'Action test']);
+    $manager->applyAction('entity_create:createIfNotExists', 'config_test.dynamic.action_test', ['label' => 'Action test']);
     /** @var \Drupal\config_test\Entity\ConfigTest[] $config_test_entities */
     $config_test_entities = \Drupal::entityTypeManager()->getStorage('config_test')->loadMultiple();
     $this->assertCount(1, \Drupal::entityTypeManager()->getStorage('config_test')->loadMultiple(), 'There is 1 config_test entity');
     $this->assertSame('Action test', $config_test_entities['action_test']->label());
     $this->assertTrue(Uuid::isValid((string) $config_test_entities['action_test']->uuid()), 'Config entity assigned a valid UUID');
 
-    // Calling ensure exists action again will not error.
-    $manager->applyAction('entity_create:ensure_exists', 'config_test.dynamic.action_test', ['label' => 'Action test']);
+    // Calling createIfNotExists action again will not error.
+    $manager->applyAction('entity_create:createIfNotExists', 'config_test.dynamic.action_test', ['label' => 'Action test']);
 
     try {
       $manager->applyAction('entity_create:create', 'config_test.dynamic.action_test', ['label' => 'Action test']);
@@ -244,11 +244,11 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     // Call the simple config update action.
-    $manager->applyAction('simple_config_update', 'config_test.system', ['foo' => 'Yay!']);
+    $manager->applyAction('simpleConfigUpdate', 'config_test.system', ['foo' => 'Yay!']);
     $this->assertSame('Yay!', $this->config('config_test.system')->get('foo'));
 
     try {
-      $manager->applyAction('simple_config_update', 'config_test.system', 'Test');
+      $manager->applyAction('simpleConfigUpdate', 'config_test.system', 'Test');
       $this->fail('Expected exception not thrown');
     }
     catch (ConfigActionException $e) {
@@ -257,7 +257,7 @@ class ConfigActionTest extends KernelTestBase {
 
     $this->config('config_test.system')->delete();
     try {
-      $manager->applyAction('simple_config_update', 'config_test.system', ['foo' => 'Yay!']);
+      $manager->applyAction('simpleConfigUpdate', 'config_test.system', ['foo' => 'Yay!']);
       $this->fail('Expected exception not thrown');
     }
     catch (ConfigActionException $e) {
@@ -273,7 +273,7 @@ class ConfigActionTest extends KernelTestBase {
     $this->assertCount(0, $storage->loadMultiple(), 'There are no config_test entities');
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
-    $manager->applyAction('ensure_exists', 'config_test.dynamic.action_test', ['label' => 'Action test', 'protected_property' => '']);
+    $manager->applyAction('createIfNotExists', 'config_test.dynamic.action_test', ['label' => 'Action test', 'protected_property' => '']);
     /** @var \Drupal\config_test\Entity\ConfigTest[] $config_test_entities */
     $config_test_entities = $storage->loadMultiple();
     $this->assertCount(1, $config_test_entities, 'There is 1 config_test entity');
@@ -299,7 +299,7 @@ class ConfigActionTest extends KernelTestBase {
     $manager = $this->container->get('plugin.manager.config_action');
     $this->expectException(DuplicateConfigActionIdException::class);
     $this->expectExceptionMessage("The plugins 'entity_method:config_test.dynamic:setProtectedProperty' and 'config_action_duplicate_test:config_test.dynamic:setProtectedProperty' both resolve to the same shorthand action ID for the 'config_test' entity type");
-    $manager->applyAction('ensure_exists', 'config_test.dynamic.action_test', ['label' => 'Action test', 'protected_property' => '']);
+    $manager->applyAction('createIfNotExists', 'config_test.dynamic.action_test', ['label' => 'Action test', 'protected_property' => '']);
   }
 
   /**
