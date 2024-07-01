@@ -5,9 +5,9 @@ install:
 config:
   actions:
     config_test.dynamic.recipe:
-      ensure_exists:
+      createIfNotExists:
         label: 'Created by recipe'
       setProtectedProperty: 'Set by recipe'
     config_test.system:
-      simple_config_update:
+      simpleConfigUpdate:
         foo: 'not bar'
