@@ -122,7 +122,7 @@ name: 'Wildcards gone wild...'
 config:
   actions:
     $expression:
-      simple_config_update:
+      simpleConfigUpdate:
         label: 'Changed by config action'
 YAML;
     $recipe = $this->createRecipe($contents);

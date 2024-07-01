@@ -64,10 +64,10 @@ config:
       - views.view.who_s_online
   actions:
     node.settings:
-      simple_config_update:
+      simpleConfigUpdate:
         use_admin_theme: true
     system.site:
-      simple_config_update:
+      simpleConfigUpdate:
         page.front: /node
     user.role.anonymous:
       grantPermission: 'access content'
@@ -96,7 +96,7 @@ config:
         - 'delete own %bundle content'
         - 'edit own %bundle content'
     user.settings:
-      simple_config_update:
+      simpleConfigUpdate:
         verify_mail: true
         register: visitors_admin_approval
         cancel_method: user_cancel_block

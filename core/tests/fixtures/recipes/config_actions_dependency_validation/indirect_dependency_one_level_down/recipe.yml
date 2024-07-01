@@ -5,5 +5,5 @@ recipes:
 config:
   actions:
     node.settings:
-      simple_config_update:
+      simpleConfigUpdate:
         use_admin_theme: true
