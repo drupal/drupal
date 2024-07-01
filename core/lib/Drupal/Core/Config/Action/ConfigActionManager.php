@@ -54,6 +54,22 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstrai
 class ConfigActionManager extends DefaultPluginManager {
 
   /**
+   * Information about all deprecated plugin IDs.
+   *
+   * @var string[]
+   */
+  private static array $deprecatedPluginIds = [
+    'entity_create:ensure_exists' => [
+      'replacement' => 'entity_create:createIfNotExists',
+      'message' => 'The plugin ID "entity_create:ensure_exists" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/node/3458273.',
+    ],
+    'simple_config_update' => [
+      'replacement' => 'simpleConfigUpdate',
+      'message' => 'The plugin ID "simple_config_update" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "simpleConfigUpdate" instead. See https://www.drupal.org/node/3458273.',
+    ],
+  ];
+
+  /**
    * Constructs a new \Drupal\Core\Config\Action\ConfigActionManager object.
    *
    * @param \Traversable $namespaces
@@ -216,6 +232,30 @@ class ConfigActionManager extends DefaultPluginManager {
       }
     }
     return $map;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterDefinitions(&$definitions): void {
+    // Adds backwards compatibility for plugins that have been renamed.
+    foreach (self::$deprecatedPluginIds as $legacy => $new_plugin_id) {
+      $definitions[$legacy] = $definitions[$new_plugin_id['replacement']];
+    }
+    parent::alterDefinitions($definitions);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createInstance($plugin_id, array $configuration = []) {
+    $instance = parent::createInstance($plugin_id, $configuration);
+    // Trigger deprecation notices for renamed plugins.
+    if (array_key_exists($plugin_id, self::$deprecatedPluginIds)) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+      @trigger_error(self::$deprecatedPluginIds[$plugin_id]['message'], E_USER_DEPRECATED);
+    }
+    return $instance;
   }
 
 }

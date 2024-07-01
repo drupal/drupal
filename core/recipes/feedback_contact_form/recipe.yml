@@ -11,7 +11,7 @@ config:
       - system.menu.footer
   actions:
     core.menu.static_menu_link_overrides:
-      simple_config_update:
+      simpleConfigUpdate:
         definitions.contact__site_page:
           menu_name: footer
           parent: ''

@@ -264,7 +264,7 @@ install:
 config:
   actions:
     config_test.dynamic.recipe:
-      ensure_exists:
+      createIfNotExists:
         label: 'Created by recipe'
       setProtectedProperty: 'Set by recipe'
 YAML,

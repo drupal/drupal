@@ -5,7 +5,7 @@ config:
   actions:
     user.role.administrator:
       # If this role already exists, then this action has no effect. If it doesn't exist, we'll create it with the following values.
-      ensure_exists:
+      createIfNotExists:
         id: administrator
         label: Administrator
         weight: 3

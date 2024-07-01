@@ -25,5 +25,5 @@ config:
       - core.date_format.olivero_medium
   actions:
     system.theme:
-      simple_config_update:
+      simpleConfigUpdate:
         default: olivero

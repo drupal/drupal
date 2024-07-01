@@ -15,5 +15,5 @@ config:
       # This will cause a validation error, which will trigger a rollback.
       # The rollback should fail, since the Media module can't be uninstalled
       # now that the plain_text format is using one of its filters.
-      simple_config_update:
+      simpleConfigUpdate:
         non_existent_key: whatever!
