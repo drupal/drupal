@@ -90,7 +90,7 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
    * {@inheritdoc}
    */
   protected function handlePluginNotFound($plugin_id, array $configuration) {
-    $this->logger->warning('The "%plugin_id" was not found', ['%plugin_id' => $plugin_id]);
+    $this->logger->warning('The "%plugin_id" block plugin was not found', ['%plugin_id' => $plugin_id]);
     return parent::handlePluginNotFound($plugin_id, $configuration);
   }
 
