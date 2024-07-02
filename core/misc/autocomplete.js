@@ -149,7 +149,7 @@
   }
 
   /**
-   * Handles an autocompletefocus event.
+   * Handles an autocomplete focus event.
    *
    * @return {boolean}
    *   Always returns false.
@@ -159,7 +159,7 @@
   }
 
   /**
-   * Handles an autocompleteselect event.
+   * Handles an autocomplete select event.
    *
    * @param {jQuery.Event} event
    *   The event triggered.

@@ -20,9 +20,6 @@ arrowstop
 arrowthick
 arrowthickstop
 assertable
-autocompletefocus
-autocompleteselect
-autocompleting
 autoconfiguration
 autoconfigure
 autoconfigured
