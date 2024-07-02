@@ -123,6 +123,8 @@ user.flood:
 user.role.*:
   type: config_entity
   label: 'User role settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
       type: machine_name
@@ -143,6 +145,9 @@ user.role.*:
       sequence:
         type: string
         label: 'Permission'
+        constraints:
+          Callback:
+            callback: [\Drupal\user\Entity\Role, getAllValidPermissions]
 
 action.configuration.user_add_role_action:
   type: mapping

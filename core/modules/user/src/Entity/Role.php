@@ -88,7 +88,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
    *
    * @var bool
    */
-  protected $is_admin;
+  protected $is_admin = FALSE;
 
   /**
    * {@inheritdoc}
@@ -181,12 +181,11 @@ class Role extends ConfigEntityBase implements RoleInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if (!isset($this->weight) && ($roles = $storage->loadMultiple())) {
+    if (!isset($this->weight)) {
       // Set a role weight to make this new role last.
-      $max = array_reduce($roles, function ($max, $role) {
-        return $max > $role->weight ? $max : $role->weight;
-      });
-      $this->weight = $max + 1;
+      $this->weight = array_reduce($storage->loadMultiple(), function ($max, $role) {
+        return $max > $role->weight ? $max : $role->weight + 1;
+      }, 0);
     }
 
     if (!$this->isSyncing() && $this->hasTrustedData()) {
@@ -263,6 +262,21 @@ class Role extends ConfigEntityBase implements RoleInterface {
     }
 
     return $changed;
+  }
+
+  /**
+   * Returns all valid permissions.
+   *
+   * @return string[]
+   *   All possible valid permissions.
+   *
+   * @see \Drupal\user\PermissionHandler::getPermissions()
+   *
+   * @internal
+   * @todo Revisit in https://www.drupal.org/node/3446364
+   */
+  public static function getAllValidPermissions(): array {
+    return array_keys(\Drupal::service('user.permissions')->getPermissions());
   }
 
 }

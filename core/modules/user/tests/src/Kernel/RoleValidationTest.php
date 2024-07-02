@@ -25,6 +25,8 @@ class RoleValidationTest extends ConfigEntityValidationTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('user');
+
     $this->entity = Role::create([
       'id' => 'test',
       'label' => 'Test',
