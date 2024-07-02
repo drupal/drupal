@@ -12,6 +12,8 @@
  * @see autocomplete.js
  */
 
+/* cspell:ignore is-autocompleting */
+
 /**
  * Since the autocomplete library is attached conditionally and not globally,
  * we can be 99% sure that the default icon will be used.
@@ -19,14 +21,14 @@
  * autocomplete input's background — until are sure that it will be pushed by
  * the server with HTTP/2.
  *
- * The autocompleting (active) state's background-image is inlined because
- * non-used CSS selectors are usually ignored; popular browsers don't download
- * their 'url' references.
+ * The active autocomplete state's background-image is inlined because non-used
+ * CSS selectors are usually ignored; popular browsers don't download their
+ * 'url' references.
  * If these selectors become active, the browser needs some time for painting
  * previously ignored remote asset: it should get it from server, parse it and
  * repaint the background of autocomplete field. With the inlined background we
  * can prevent an additional timeout caused by a new request/response pair.
- * Besides this, the autocompleting event itself may easily finish before the
+ * Besides this, the autocomplete event itself may easily finish before the
  * missing asset gets downloaded/parsed/painted, and the missing instant visual
  * feedback would be a usability/accessibility issue as well.
  */
@@ -53,7 +55,7 @@
 }
 
 /**
- * Autocomplete wrapper for autocompleting message.
+ * Autocomplete wrapper for autocomplete message.
  */
 
 .claro-autocomplete {
