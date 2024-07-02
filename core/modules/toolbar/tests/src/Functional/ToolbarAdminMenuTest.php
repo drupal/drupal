@@ -385,7 +385,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Request a new page to refresh the drupalSettings object.
     $subtrees_hash = $this->getSubtreesHash();
 
-    $this->drupalGet('toolbar/subtrees/' . $subtrees_hash, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With: XMLHttpRequest']);
+    $this->drupalGet('toolbar/subtrees/' . $subtrees_hash, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With' => 'XMLHttpRequest']);
     $ajax_result = json_decode($this->getSession()->getPage()->getContent(), TRUE);
     $this->assertEquals('setToolbarSubtrees', $ajax_result[0]['command'], 'Subtrees response uses the correct command.');
     $this->assertEquals(['system-admin_content', 'system-admin_structure', 'system-themes_page', 'system-modules_list', 'system-admin_config', 'entity-user-collection', 'front'], array_keys($ajax_result[0]['subtrees']), 'Correct subtrees returned.');

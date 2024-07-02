@@ -1059,13 +1059,13 @@ class MenuUiTest extends BrowserTestBase {
   public function testMenuParentsJsAccess(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer menu']));
     // Just check access to the callback overall, the POST data is irrelevant.
-    $this->drupalGet('admin/structure/menu/parents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With: XMLHttpRequest']);
+    $this->drupalGet('admin/structure/menu/parents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With' => 'XMLHttpRequest']);
     $this->assertSession()->statusCodeEquals(200);
 
     // Log in as authenticated user.
     $this->drupalLogin($this->drupalCreateUser());
     // Check that a simple user is not able to access the menu.
-    $this->drupalGet('admin/structure/menu/parents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With: XMLHttpRequest']);
+    $this->drupalGet('admin/structure/menu/parents', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With' => 'XMLHttpRequest']);
     $this->assertSession()->statusCodeEquals(403);
   }
 
