@@ -97,7 +97,7 @@ function olivero_preprocess_maintenance_page(&$variables) {
 function olivero_preprocess_node(&$variables) {
   // Remove the "Add new comment" link on teasers or when the comment form is
   // displayed on the page.
-  if ($variables['teaser'] || !empty($variables['content']['comments']['comment_form'])) {
+  if ($variables['view_mode'] === 'teaser' || !empty($variables['content']['comments']['comment_form'])) {
     unset($variables['content']['links']['comment']['#links']['comment-add']);
   }
 

@@ -476,8 +476,11 @@ function node_theme_suggestions_node(array $variables) {
  */
 function template_preprocess_node(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
-  // Provide a distinct $teaser boolean.
+
+  // The teaser variable is deprecated.
+  $variables['deprecations']['teaser'] = "'teaser' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3458185";
   $variables['teaser'] = $variables['view_mode'] == 'teaser';
+
   $variables['node'] = $variables['elements']['#node'];
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
