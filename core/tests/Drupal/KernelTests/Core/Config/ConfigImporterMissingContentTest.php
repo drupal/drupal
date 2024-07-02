@@ -181,12 +181,12 @@ class ConfigImporterMissingContentTest extends KernelTestBase implements LoggerI
     $this->logMessages = [];
     $config_importer = $this->configImporter();
     $config_importer->import();
-    $this->assertNotContains('The "block_content:6376f337-fcbf-4b28-b30e-ed5b6932e692" was not found', $this->logMessages);
+    $this->assertNotContains('The "block_content:6376f337-fcbf-4b28-b30e-ed5b6932e692" block plugin was not found', $this->logMessages);
 
     // Ensure the expected message is generated when creating an instance of the
     // block.
     $instance = $this->container->get('plugin.manager.block')->createInstance($plugin_id);
-    $this->assertContains('The "block_content:6376f337-fcbf-4b28-b30e-ed5b6932e692" was not found', $this->logMessages);
+    $this->assertContains('The "block_content:6376f337-fcbf-4b28-b30e-ed5b6932e692" block plugin was not found', $this->logMessages);
     $this->assertInstanceOf(Broken::class, $instance);
   }
 
