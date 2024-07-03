@@ -57,9 +57,9 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
   /**
    * The action type.
    *
-   * @var string
+   * @var string|null
    */
-  protected $type;
+  protected $type = NULL;
 
   /**
    * The configuration of the action.

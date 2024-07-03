@@ -1,0 +1,6 @@
+# Schema for the configuration files of the Action test module.
+
+action.configuration.action_test_no_type:
+  type: mapping
+  label: 'Configuration for action_test_no_type plugin'
+  mapping: {}
