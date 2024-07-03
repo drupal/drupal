@@ -34,6 +34,12 @@ process:
       source:
         - module
         - 'constants/suffix'
+  label:
+    -
+      plugin: concat
+      source:
+        - module
+        - 'constants/suffix'
   plugin:
     -
       plugin: concat

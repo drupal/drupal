@@ -87,6 +87,8 @@ search.settings:
 search.page.*:
   type: config_entity
   label: 'Search page'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
       type: machine_name
@@ -95,8 +97,10 @@ search.page.*:
       type: required_label
       label: 'Label'
     path:
-      type: string
+      type: path
       label: 'Search page path'
+      constraints:
+        NotBlank: []
     weight:
       type: weight
       label: 'Weight'

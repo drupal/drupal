@@ -19,6 +19,7 @@ source:
 process:
   module: module
   id: 'constants/id'
+  label: 'constants/id'
   path: 'constants/path'
   plugin: 'constants/plugin'
   configuration:
