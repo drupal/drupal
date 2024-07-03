@@ -310,6 +310,13 @@ Migrate
 - Michael Lutz 'mikelutz' https://www.drupal.org/u/mikelutz
 - Victoria Spagnolo 'quietone' https://www.drupal.org/u/quietone
 
+Navigation
+- Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
+- Ivan Berdinsky 'finnsky' https://www.drupal.org/u/finnsky
+- Matthew Oliveira 'm4olivei' https://www.drupal.org/u/m4olivei
+- Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+- Pablo López 'plopesc' https://www.drupal.org/u/plopesc
+
 Node
 - ?
 
