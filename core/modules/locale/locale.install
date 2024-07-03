@@ -190,6 +190,7 @@ function locale_schema() {
     ],
     'indexes' => [
       'string_type' => ['sid', 'type'],
+      'type_name' => ['type', 'name'],
     ],
   ];
 
@@ -346,4 +347,65 @@ function locale_update_10100(&$sandbox = NULL) {
     ];
     $connection->schema()->changeField('locale_file', 'last_checked', 'last_checked', $new);
   }
+}
+
+/**
+ * Add an index on locales_location on type and name.
+ */
+function locale_update_10300() {
+  $spec = [];
+  $spec['locales_location'] = [
+    'description' => 'Location information for source strings.',
+    'fields' => [
+      'lid' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Unique identifier of this location.',
+      ],
+      'sid' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'Unique identifier of this string.',
+      ],
+      'type' => [
+        'type' => 'varchar_ascii',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The location type (file, config, path, etc).',
+      ],
+      'name' => [
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Type dependent location information (file name, path, etc).',
+      ],
+      'version' => [
+        'type' => 'varchar_ascii',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => 'none',
+        'description' => 'Version of Drupal where the location was found.',
+      ],
+    ],
+    'primary key' => ['lid'],
+    'foreign keys' => [
+      'locales_source' => [
+        'table' => 'locales_source',
+        'columns' => ['sid' => 'lid'],
+      ],
+    ],
+    'indexes' => [
+      'string_type' => ['sid', 'type'],
+      'type_name' => ['type', 'name'],
+    ],
+  ];
+  $schema = \Drupal::database()->schema();
+  // If the update has been manually applied, recreate the index using the
+  // current schema.
+  if ($schema->indexExists('locales_location', 'type_name')) {
+    $schema->dropIndex('locales_location', 'type_name');
+  }
+  $schema->addIndex('locales_location', 'type_name', ['type', 'name'], $spec['locales_location']);
 }
