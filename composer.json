@@ -22,7 +22,7 @@
         "drupal/coder": "^8.3.10",
         "justinrainbow/json-schema": "^5.2",
         "lullabot/mink-selenium2-driver": "^1.7",
-        "lullabot/php-webdriver": "^2.0.3",
+        "lullabot/php-webdriver": "^2.0.4",
         "mglaman/phpstan-drupal": "^1.2.10",
         "micheh/phpcs-gitlab": "^1.1",
         "mikey179/vfsstream": "^1.6.11",
