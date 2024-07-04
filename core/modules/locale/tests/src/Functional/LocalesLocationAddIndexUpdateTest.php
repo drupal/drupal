@@ -102,13 +102,10 @@ class LocalesLocationAddIndexUpdateTest extends UpdatePathTestBase {
     // Run updates and test them.
     $this->runUpdates();
 
+    // Ensure the update runs successfully even if an index existed prior to
+    // the update.
     $schema = \Drupal::database()->schema();
     $this->assertTrue($schema->indexExists('locales_location', 'type_name'));
-
-    // Ensure that index specification matches our expectations.
-    $introspect_index_schema = new \ReflectionMethod(get_class($schema), 'introspectIndexSchema');
-    $index_schema = $introspect_index_schema->invoke($schema, 'locales_location');
-    $this->assertSame(['type', 'name'], $index_schema['indexes']['type_name']);
   }
 
 }
