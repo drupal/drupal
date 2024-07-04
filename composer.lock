@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "edcc3c2da2dff9b1f2bef404a7af8cc0",
+    "content-hash": "ad0467b38272e8c39c7fe422d212e1df",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5491,20 +5491,21 @@
         },
         {
             "name": "lullabot/php-webdriver",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Lullabot/php-webdriver.git",
-                "reference": "ca66013201d8b0ef634ee5d1685fc7bb95c88d89"
+                "reference": "55fb15bd92663c3f90f42b2c79ca3ee11f2d7925"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lullabot/php-webdriver/zipball/ca66013201d8b0ef634ee5d1685fc7bb95c88d89",
-                "reference": "ca66013201d8b0ef634ee5d1685fc7bb95c88d89",
+                "url": "https://api.github.com/repos/Lullabot/php-webdriver/zipball/55fb15bd92663c3f90f42b2c79ca3ee11f2d7925",
+                "reference": "55fb15bd92663c3f90f42b2c79ca3ee11f2d7925",
                 "shasum": ""
             },
             "require": {
-                "ext-curl": "*"
+                "ext-curl": "*",
+                "php": ">=8.0.0"
             },
             "replace": {
                 "instaclick/php-webdriver": "1.4.16"
@@ -5531,9 +5532,9 @@
                 "webtest"
             ],
             "support": {
-                "source": "https://github.com/Lullabot/php-webdriver/tree/v2.0.3"
+                "source": "https://github.com/Lullabot/php-webdriver/tree/v2.0.4"
             },
-            "time": "2024-02-20T16:25:25+00:00"
+            "time": "2024-07-04T09:19:59+00:00"
         },
         {
             "name": "mglaman/phpstan-drupal",
@@ -9332,5 +9333,5 @@
     "platform-overrides": {
         "php": "8.3.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
