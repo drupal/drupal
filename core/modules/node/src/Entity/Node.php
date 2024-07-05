@@ -139,6 +139,15 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    if ($update && \Drupal::moduleHandler()->moduleExists('search')) {
+      // Remove deleted translations from the search index.
+      foreach ($this->translations as $langcode => $translation) {
+        if ($translation['status'] === static::TRANSLATION_REMOVED) {
+          \Drupal::service('search.index')->clear('node_search', $this->id(), $langcode);
+        }
+      }
+    }
+
     parent::postSave($storage, $update);
 
     // Update the node access table for this node, but only if it is the
