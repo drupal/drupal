@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Breadcrumb;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
@@ -62,7 +63,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(RouteMatchInterface $route_match) {
+  public function applies(RouteMatchInterface $route_match, ?CacheableMetadata $cacheable_metadata = NULL) {
     return TRUE;
   }
 
@@ -70,12 +71,13 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match) {
+    $cacheable_metadata = new CacheableMetadata();
     $breadcrumb = new Breadcrumb();
     $context = ['builder' => NULL];
     // Call the build method of registered breadcrumb builders,
     // until one of them returns an array.
     foreach ($this->getSortedBuilders() as $builder) {
-      if (!$builder->applies($route_match)) {
+      if (!$builder->applies($route_match, $cacheable_metadata)) {
         // The builder does not apply, so we continue with the other builders.
         continue;
       }
@@ -84,6 +86,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
 
       if ($breadcrumb instanceof Breadcrumb) {
         $context['builder'] = $builder;
+        $breadcrumb->addCacheableDependency($cacheable_metadata);
         break;
       }
       else {
