@@ -520,13 +520,6 @@ re-architect or otherwise improve large areas of Drupal core. See
 https://www.drupal.org/contribute/core/maintainers for more information on
 their responsibilities. The initiative coordinators are:
 
-Decoupled Menus Initiative
-- Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
-- Brian Perry 'brianperry' https://www.drupal.org/u/brianperry
-
-Media Initiative
-- Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
-
 Project Browser Initiative
 - Leslie Glynn 'leslieg' https://www.drupal.org/u/leslieg
 - Chris Wells 'chrisfromredfin' https://www.drupal.org/u/chrisfromredfin
