@@ -7,7 +7,6 @@ namespace Drupal\Core\Config\Plugin\Validation\Constraint;
 use Drupal\Core\Config\Schema\Mapping;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Exception\LogicException;
 
 /**
  * Validates the LangcodeRequiredIfTranslatableValues constraint.
@@ -22,8 +21,13 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
 
     $mapping = $this->context->getObject();
     assert($mapping instanceof Mapping);
-    if ($mapping !== $this->context->getRoot()) {
-      throw new LogicException('The LangcodeRequiredIfTranslatableValues constraint can only operate on the root object being validated.');
+    $root = $this->context->getRoot();
+    if ($mapping !== $root) {
+      @trigger_error(sprintf(
+        'The LangcodeRequiredIfTranslatableValues constraint can only be applied to the root object being validated, using the \'config_object\' schema type on \'%s\' is deprecated in drupal:10.3.0 and will trigger a \LogicException in drupal:11.0.0. See https://www.drupal.org/node/3459863',
+        $root->getName() . '::' . $mapping->getName()
+      ), E_USER_DEPRECATED);
+      return;
     }
 
     assert(in_array('langcode', $mapping->getValidKeys(), TRUE));
