@@ -69,18 +69,18 @@ class MimeTypeTest extends FileTestBase {
 
     $test_case = [
       'test.jar' => 'application/java-archive',
-      'test.jpeg' => 'application/octet-stream',
+      'test.jpeg' => NULL,
       'test.jpg' => 'image/jpeg',
       'test.jar.jpg' => 'image/jpeg',
       'test.jpg.jar' => 'application/java-archive',
-      'test.pcf.z' => 'application/octet-stream',
-      'pcf.z' => 'application/octet-stream',
-      'jar' => 'application/octet-stream',
-      'some.junk' => 'application/octet-stream',
-      'foo.file_test_1' => 'application/octet-stream',
-      'foo.file_test_2' => 'application/octet-stream',
-      'foo.doc' => 'application/octet-stream',
-      'test.ogg' => 'application/octet-stream',
+      'test.pcf.z' => NULL,
+      'pcf.z' => NULL,
+      'jar' => NULL,
+      'some.junk' => NULL,
+      'foo.file_test_1' => NULL,
+      'foo.file_test_2' => NULL,
+      'foo.doc' => NULL,
+      'test.ogg' => NULL,
     ];
     $extension_guesser = $this->container->get('file.mime_type.guesser.extension');
     $extension_guesser->setMapping($mapping);
