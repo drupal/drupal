@@ -30,7 +30,6 @@ update.report_install:
     _title: 'Add new module or theme'
   requirements:
     _permission: 'administer software updates'
-    _access_update_manager: 'TRUE'
 
 update.report_update:
   path: '/admin/reports/updates/update'
@@ -39,7 +38,6 @@ update.report_update:
     _title: 'Update'
   requirements:
     _permission: 'administer software updates'
-    _access_update_manager: 'TRUE'
 
 update.module_install:
   path: '/admin/modules/install'
@@ -48,7 +46,6 @@ update.module_install:
     _title: 'Add new module'
   requirements:
     _permission: 'administer software updates'
-    _access_update_manager: 'TRUE'
 
 update.module_update:
   path: '/admin/modules/update'
@@ -57,7 +54,6 @@ update.module_update:
     _title: 'Update'
   requirements:
     _permission: 'administer software updates'
-    _access_update_manager: 'TRUE'
 
 update.theme_install:
   path: '/admin/theme/install'
@@ -66,7 +62,6 @@ update.theme_install:
     _title: 'Add new theme'
   requirements:
     _permission: 'administer software updates'
-    _access_update_manager: 'TRUE'
 
 update.theme_update:
   path: '/admin/appearance/update'
@@ -75,7 +70,6 @@ update.theme_update:
     _title: 'Update'
   requirements:
     _permission: 'administer software updates'
-    _access_update_manager: 'TRUE'
 
 # @todo Deprecate this route once
 #   https://www.drupal.org/project/drupal/issues/3159210 is fixed, or remove
@@ -97,4 +91,3 @@ update.confirmation_page:
     _title: 'Ready to update'
   requirements:
     _permission: 'administer software updates'
-    _access_update_manager: 'TRUE'
