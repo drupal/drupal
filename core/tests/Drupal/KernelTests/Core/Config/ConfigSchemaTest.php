@@ -854,4 +854,21 @@ class ConfigSchemaTest extends KernelTestBase {
     ], $definition['mapping']['breed']);
   }
 
+  /**
+   * @group legacy
+   */
+  public function testLangcodeRequiredIfTranslatableValuesConstraintError(): void {
+    $config = \Drupal::configFactory()->getEditable('config_test.foo');
+
+    $config
+      ->set('broken_langcode_required.foo', 'bar')
+      ->save();
+
+    $this->expectDeprecation('The LangcodeRequiredIfTranslatableValues constraint can only be applied to the root object being validated, using the \'config_object\' schema type on \'config_test.foo::broken_langcode_required\' is deprecated in drupal:10.3.0 and will trigger a \LogicException in drupal:11.0.0. See https://www.drupal.org/node/3459863');
+    $violations = \Drupal::service('config.typed')->createFromNameAndData($config->getName(), $config->get())
+      ->validate();
+
+    $this->assertCount(0, $violations);
+  }
+
 }
