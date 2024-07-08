@@ -4,6 +4,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
@@ -46,7 +47,10 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(RouteMatchInterface $route_match) {
+  public function applies(RouteMatchInterface $route_match, ?CacheableMetadata $cacheable_metadata = NULL) {
+    // @todo Remove null safe operator in Drupal 12.0.0, see
+    //   https://www.drupal.org/project/drupal/issues/3459277.
+    $cacheable_metadata?->addCacheContexts(['route']);
     return $route_match->getRouteName() == 'entity.taxonomy_term.canonical'
       && $route_match->getParameter('taxonomy_term') instanceof TermInterface;
   }
@@ -74,8 +78,8 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $breadcrumb->addLink(Link::createFromRoute($term->getName(), 'entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()]));
     }
 
-    // This breadcrumb builder is based on a route parameter, and hence it
-    // depends on the 'route' cache context.
+    // @todo Remove in Drupal 12.0.0, will be added from ::applies(). See
+    //   https://www.drupal.org/project/drupal/issues/3459277
     $breadcrumb->addCacheContexts(['route']);
 
     return $breadcrumb;
