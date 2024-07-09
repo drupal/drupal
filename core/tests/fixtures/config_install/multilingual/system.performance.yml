@@ -1,0 +1,17 @@
+_core:
+  default_config_hash: b2cssrj-lOmATIbdehfCqfCFgVR0qCdxxWhwqa2KBVQ
+cache:
+  page:
+    max_age: 0
+css:
+  preprocess: true
+  gzip: true
+fast_404:
+  enabled: true
+  paths: '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i'
+  exclude_paths: '/\/(?:styles|imagecache)\//'
+  html: '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>'
+js:
+  preprocess: true
+  gzip: true
+stale_file_threshold: 2592000

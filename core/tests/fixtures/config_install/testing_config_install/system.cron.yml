@@ -1,0 +1,7 @@
+_core:
+  default_config_hash: 5Pw921y1EPfFN98wykliBBLArm51pC-SmrXeYCe7d0Y
+langcode: fr
+threshold:
+  requirements_warning: 172800
+  requirements_error: 1209600
+logging: true

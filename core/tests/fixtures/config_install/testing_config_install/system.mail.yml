@@ -1,0 +1,5 @@
+_core:
+  default_config_hash: rYgt7uhPafP2ngaN_ZUPFuyI4KdE0zU868zLNSlzKoE
+langcode: fr
+interface:
+  default: php_mail
