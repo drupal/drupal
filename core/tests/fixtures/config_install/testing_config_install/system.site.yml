@@ -1,0 +1,14 @@
+_core:
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI
+langcode: fr
+uuid: aac0d6a9-5ca6-4205-8ce8-c85b9f06acb3
+name: 'Config Install Testing'
+mail: admin@example.com
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /user/login
+admin_compact_mode: false
+weight_select_max: 100
+default_langcode: fr

@@ -1,0 +1,11 @@
+_core:
+  default_config_hash: V9UurX2GPT05NWKG9f2GWQqFG2TRG8vczidwjpy7Woo
+first_day: 0
+country:
+  default: ''
+timezone:
+  default: Europe/Zurich
+  user:
+    configurable: true
+    default: 0
+    warn: false

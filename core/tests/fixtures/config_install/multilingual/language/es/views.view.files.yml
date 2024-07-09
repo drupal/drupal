@@ -1,0 +1,84 @@
+label: Archivos
+description: 'Buscar y administrar archivos.'
+display:
+  default:
+    display_title: 'Por defecto'
+    display_options:
+      title: Archivos
+      fields:
+        filename:
+          label: Nombre
+        filemime:
+          label: 'Tipo MIME'
+        filesize:
+          label: Tamaño
+        status:
+          label: Estado
+          settings:
+            format_custom_false: Temporal
+            format_custom_true: Permanente
+        created:
+          label: 'Fecha de subida'
+        changed:
+          label: 'Fecha de modificación'
+        count:
+          label: 'Usado en'
+      pager:
+        options:
+          tags:
+            next: 'Siguiente >'
+            previous: '‹ Anterior'
+          expose:
+            items_per_page_label: 'Elementos por página'
+            items_per_page_options_all_label: '- Todo -'
+            offset_label: Desplazamiento
+      exposed_form:
+        options:
+          submit_button: Filtro
+          reset_button_label: Restablecer
+          exposed_sorts_label: 'Ordenar por'
+      empty:
+        area_text_custom:
+          content: 'No hay archivos disponibles.'
+      filters:
+        filename:
+          expose:
+            label: 'Nombre de archivo'
+        filemime:
+          expose:
+            label: 'Tipo MIME'
+        status:
+          expose:
+            label: Estado
+  page_1:
+    display_title: 'Resumen de ficheros'
+    display_options:
+      menu:
+        title: Archivos
+  page_2:
+    display_title: 'Usos del archivo'
+    display_options:
+      title: 'Usos del archivo'
+      fields:
+        entity_label:
+          label: Entidad
+        type:
+          label: 'Tipo de entidad'
+        module:
+          label: 'Módulo de registro'
+        count:
+          label: 'Recuento de uso'
+      pager:
+        options:
+          tags:
+            next: 'Siguiente >'
+            previous: '‹ Anterior'
+          expose:
+            items_per_page_label: 'Elementos por página'
+            items_per_page_options_all_label: '- Todo -'
+            offset_label: Desplazamiento
+      arguments:
+        fid:
+          exception:
+            title: Todo(s)
+          title: 'Información de uso de archivos para {{ arguments.fid }}'

@@ -1,0 +1,117 @@
+_core:
+  default_config_hash: m4J3ROov32OEquRYGLbx3SpdDGuqx9l_zJtNvihqdCg
+langcode: en
+cancel_confirm:
+  subject: 'Account cancellation request for [user:display-name] at [site:name]'
+  body: |-
+    [user:display-name],
+
+    A request to cancel your account has been made at [site:name].
+
+    You may now cancel your account on [site:url-brief] by clicking this link or copying and pasting it into your browser:
+
+    [user:cancel-url]
+
+    NOTE: The cancellation of your account is not reversible.
+
+    This link expires in one day and nothing will happen if it is not used.
+
+    --  [site:name] team
+password_reset:
+  subject: 'Replacement login information for [user:display-name] at [site:name]'
+  body: |-
+    [user:display-name],
+
+    A request to reset the password for your account has been made at [site:name].
+
+    You may now log in by clicking this link or copying and pasting it into your browser:
+
+    [user:one-time-login-url]
+
+    This link can only be used once to log in and will lead you to a page where you can set your password. It expires after one day and nothing will happen if it's not used.
+
+    --  [site:name] team
+register_admin_created:
+  subject: 'An administrator created an account for you at [site:name]'
+  body: |-
+    [user:display-name],
+
+    A site administrator at [site:name] has created an account for you. You may now log in by clicking this link or copying and pasting it into your browser:
+
+    [user:one-time-login-url]
+
+    This link can only be used once to log in and will lead you to a page where you can set your password.
+
+    After setting your password, you will be able to log in at [site:login-url] in the future using:
+
+    username: [user:name]
+    password: Your password
+
+    --  [site:name] team
+register_no_approval_required:
+  subject: 'Account details for [user:display-name] at [site:name]'
+  body: |-
+    [user:display-name],
+
+    Thank you for registering at [site:name]. You may now log in by clicking this link or copying and pasting it into your browser:
+
+    [user:one-time-login-url]
+
+    This link can only be used once to log in and will lead you to a page where you can set your password.
+
+    After setting your password, you will be able to log in at [site:login-url] in the future using:
+
+    username: [user:name]
+    password: Your password
+
+    --  [site:name] team
+register_pending_approval:
+  subject: 'Account details for [user:display-name] at [site:name] (pending admin approval)'
+  body: |-
+    [user:display-name],
+
+    Thank you for registering at [site:name]. Your application for an account is currently pending approval. Once it has been approved, you will receive another email containing information about how to log in, set your password, and other details.
+
+
+    --  [site:name] team
+register_pending_approval_admin:
+  subject: 'Account details for [user:display-name] at [site:name] (pending admin approval)'
+  body: |-
+    [user:display-name] has applied for an account.
+
+    [user:edit-url]
+status_activated:
+  subject: 'Account details for [user:display-name] at [site:name] (approved)'
+  body: |-
+    [user:display-name],
+
+    Your account at [site:name] has been activated.
+
+    You may now log in by clicking this link or copying and pasting it into your browser:
+
+    [user:one-time-login-url]
+
+    This link can only be used once to log in and will lead you to a page where you can set your password.
+
+    After setting your password, you will be able to log in at [site:login-url] in the future using:
+
+    username: [user:account-name]
+    password: Your password
+
+    --  [site:name] team
+status_blocked:
+  subject: 'Account details for [user:display-name] at [site:name] (blocked)'
+  body: |-
+    [user:display-name],
+
+    Your account on [site:name] has been blocked.
+
+    --  [site:name] team
+status_canceled:
+  subject: 'Account details for [user:display-name] at [site:name] (canceled)'
+  body: |-
+    [user:display-name],
+
+    Your account on [site:name] has been canceled.
+
+    --  [site:name] team

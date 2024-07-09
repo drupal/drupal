@@ -1,0 +1,31 @@
+label: Glosario
+description: 'Todo el contenido, alfabéticamente.'
+display:
+  default:
+    display_title: 'Por defecto'
+    display_options:
+      fields:
+        title:
+          label: Título
+        name:
+          label: Autor
+        changed:
+          label: 'Última actualización'
+      pager:
+        options:
+          expose:
+            items_per_page_label: 'Elementos por página'
+            items_per_page_options_all_label: '- Todo -'
+            offset_label: Desplazamiento
+      exposed_form:
+        options:
+          submit_button: Aplicar
+          reset_button_label: Restablecer
+          exposed_sorts_label: 'Ordenar por'
+  attachment_1:
+    display_title: Adjunto
+  page_1:
+    display_title: Página
+    display_options:
+      menu:
+        title: Glosario

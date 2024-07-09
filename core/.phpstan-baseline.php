@@ -2714,6 +2714,21 @@ Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigExistingSettingsTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoSystemSiteTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$found might not be defined\\.$#',
 	'count' => 1,

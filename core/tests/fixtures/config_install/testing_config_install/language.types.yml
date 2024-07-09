@@ -1,0 +1,20 @@
+_core:
+  default_config_hash: dqouFqVseNJNvEjsoYKxbinFOITuCxYhi4y2OTNQP_8
+langcode: fr
+all:
+  - language_interface
+  - language_content
+  - language_url
+configurable:
+  - language_interface
+negotiation:
+  language_content:
+    enabled:
+      language-interface: 0
+  language_url:
+    enabled:
+      language-url: 0
+      language-url-fallback: 1
+  language_interface:
+    enabled:
+      language-url: 0
