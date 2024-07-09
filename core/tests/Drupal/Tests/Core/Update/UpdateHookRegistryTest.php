@@ -74,17 +74,25 @@ class UpdateHookRegistryTest extends UnitTestCase {
   protected $keyValueFactory;
 
   /**
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected KeyValueStoreInterface $equivalentUpdatesStore;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $this->keyValueFactory = $this->createMock(KeyValueFactoryInterface::class);
     $this->keyValueStore = $this->createMock(KeyValueStoreInterface::class);
+    $this->equivalentUpdatesStore = $this->createMock(KeyValueStoreInterface::class);
 
     $this->keyValueFactory
       ->method('get')
-      ->with('system.schema')
-      ->willReturn($this->keyValueStore);
+      ->willReturnMap([
+        ['system.schema', $this->keyValueStore],
+        ['core.equivalent_updates', $this->equivalentUpdatesStore],
+      ]);
   }
 
   /**
