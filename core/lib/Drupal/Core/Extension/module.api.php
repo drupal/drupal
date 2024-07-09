@@ -667,6 +667,82 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * See the @link batch Batch operations topic @endlink for more information on
  * how to use the Batch API.
  *
+ * @section sec_equivalent_updates Multiple upgrade paths
+ * There are situations where changes require a hook_update_N() to be applied to
+ * different major branches. This results in more than one upgrade path from the
+ * current major version to the next major version.
+ *
+ * For example, if an update is added to 11.1.0 and 10.4.0, then a site on
+ * 10.3.7 can update either to 10.4.0 and from there to 11.1.0, or directly from
+ * 10.3.7 to 11.1.1. In one case, the update will run on the 10.x code base, and
+ * in another on the 11.x code base, but the update system needs to ensure that
+ * it doesn't run twice on the same site.
+ *
+ * hook_update_N() numbers are sequential integers, and numbers lower than the
+ * modules current schema version will never be run. This means once a site has
+ * run an update, for example, 11100, it will not run a later update added as
+ * 10400. Backporting of updates therefore needs to allow 'space' for the 10.4.x
+ * codebase to include updates which don't exist in 11.x (for example to ensure
+ * a later 11.x update goes smoothly).
+ *
+ * To resolve this, when handling potential backports of updates between major
+ * branches, we use different update numbers for each branch, but record the
+ * relationship between those updates in the older branches. This is best
+ * explained by an example showing the different branches updates could be
+ * applied to:
+ * - The first update, system_update_10300 is applied to 10.3.0.
+ * - Then, 11.0.0 is released with the update removed,
+ *   system_update_last_removed() is added which returns 10300.
+ * - The next update, system_update_11100, is applied to 11.1.x only.
+ * - Then 10.4.0 and 11.1.0 are released. system_update_11100 is not backported
+ *   to 11.0.x or any 10.x branch.
+ * - Finally, a critical data loss update is necessary. The bug-fix supported
+ *   branches are 11.1.x, 11.0.x, and 10.4.x. This results in adding the updates
+ *   system_update_10400 (10.4.x), system_update_11000 (11.0.x) and
+ *   system_update_11101 (11.1.x) and making the 10.4.1, 11.0.1 and 11.1.1
+ *   releases.
+ *
+ * This is a list of the example releases and the updates they contain:
+ * - 10.3.0: system_update_10300
+ * - 10.4.1: system_update_10300 and system_update_10400 (equivalent to
+ *   system_update_11101)
+ * - 11.0.0: No updates
+ * - 11.0.1: system_update_11000 (equivalent to system_update_11101)
+ * - 11.1.0: system_update_11100
+ * - 11.1.1: system_update_11100 and system_update_11101
+ *
+ * In this situation, sites on 10.4.1 or 11.0.1 will be required to update to
+ * versions that contain system_update_11101. For example, a site on 10.4.1
+ * would not be able to update to 11.0.0, because that would result in it going
+ * 'backwards' in terms of database schema, but it would be able to update to
+ * 11.1.1. The same is true for a site on 11.0.1.
+ *
+ * The following examples show how to implement a hook_update_N() that must be
+ * skipped in a future update process.
+ *
+ * Future updates can be marked as equivalent by adding the following code to an
+ * update.
+ * @code
+ * function my_module_update_10400() {
+ *   \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(11101, '11.1.1');
+ *
+ *   // The rest of the update function.
+ * }
+ * @endcode
+ *
+ * At the moment we need to add defensive coding in the future update to ensure
+ * it is skipped.
+ * @code
+ * function my_module_update_11101() {
+ *   $equivalent_update = \Drupal::service('update.update_hook_registry')->getEquivalentUpdate();
+ *   if ($equivalent_update instanceof \Drupal\Core\Update\EquivalentUpdate) {
+ *     return $equivalent_update->toSkipMessage();
+ *   }
+ *
+ *   // The rest of the update function.
+ * }
+ * @encode
+ *
  * @param array $sandbox
  *   Stores information for batch updates. See above for more information.
  *

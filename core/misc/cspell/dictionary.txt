@@ -45,6 +45,9 @@ autowired
 autowiring
 backlink
 backlinks
+backported
+backporting
+backports
 bakeware
 barbar
 barchart

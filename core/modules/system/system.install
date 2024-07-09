@@ -1519,6 +1519,7 @@ function system_requirements($phase) {
     }
     // Also check post-updates. Only do this if we're not already showing an
     // error for hook_update_N().
+    $missing_updates = [];
     if (empty($module_list)) {
       $existing_updates = \Drupal::service('keyvalue')->get('post_update')->get('existing_updates', []);
       $post_update_registry = \Drupal::service('update.post_update_registry');
@@ -1542,6 +1543,42 @@ function system_requirements($phase) {
             'description' => $description,
             'severity' => REQUIREMENT_ERROR,
           ];
+        }
+      }
+    }
+
+    if (empty($missing_updates)) {
+      foreach ($update_registry->getAllEquivalentUpdates() as $module => $equivalent_updates) {
+        $module_info = $module_extension_list->get($module);
+        foreach ($equivalent_updates as $future_update => $data) {
+          $future_update_function_name = $module . '_update_' . $future_update;
+          $ran_update_function_name = $module . '_update_' . $data['ran_update'];
+          // If an update was marked as an equivalent by a previous update, and
+          // both the previous update and the equivalent update are not found in
+          // the current code base, prevent updating. This indicates a site
+          // attempting to go 'backwards' in terms of database schema.
+          // @see \Drupal\Core\Update\UpdateHookRegistry::markFutureUpdateEquivalent()
+          if (!function_exists($ran_update_function_name) && !function_exists($future_update_function_name)) {
+            // If the module is provided by core prepend helpful text as the
+            // module does not exist in composer or Drupal.org.
+            if (str_starts_with($module_info->getPathname(), 'core/')) {
+              $future_version_string = 'Drupal Core ' . $data['future_version_string'];
+            }
+            else {
+              $future_version_string = $data['future_version_string'];
+            }
+            $requirements[$module . '_equivalent_update_missing'] = [
+              'title' => t('Missing updates for: @module', ['@module' => $module_info->info['name']]),
+              'description' => t('The version of the %module module that you are attempting to update to is missing update @future_update (which was marked as an equivalent by @ran_update). Update to at least @future_version_string.', [
+                '%module' => $module_info->info['name'],
+                '@ran_update' => $data['ran_update'],
+                '@future_update' => $future_update,
+                '@future_version_string' => $future_version_string,
+              ]),
+              'severity' => REQUIREMENT_ERROR,
+            ];
+            break;
+          }
         }
       }
     }
