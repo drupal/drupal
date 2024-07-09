@@ -41,6 +41,9 @@ autoreply
 autosubmit
 backlink
 backlinks
+backported
+backporting
+backports
 bakeware
 barbar
 barchart
