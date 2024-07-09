@@ -1,0 +1,22 @@
+_core:
+  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
+langcode: fr
+module:
+  block: 0
+  dblog: 0
+  dynamic_page_cache: 0
+  field: 0
+  file: 0
+  filter: 0
+  language: 0
+  locale: 0
+  node: 0
+  page_cache: 0
+  path_alias: 0
+  system: 0
+  text: 0
+  user: 0
+  minimal: 1000
+theme:
+  stark: 0
+profile: minimal

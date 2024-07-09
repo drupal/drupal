@@ -1,0 +1,31 @@
+label: 'Página inicio'
+description: 'Todo el contenido promovido a la página principal.'
+display:
+  default:
+    display_title: 'Por defecto'
+    display_options:
+      pager:
+        options:
+          tags:
+            next: 'Siguiente >'
+            previous: '‹ Anterior'
+            first: '« Primero'
+            last: 'Último »'
+          expose:
+            items_per_page_label: 'Elementos por página'
+            items_per_page_options_all_label: '- Todo -'
+            offset_label: Desplazamiento
+      exposed_form:
+        options:
+          submit_button: Aplicar
+          reset_button_label: Restablecer
+          exposed_sorts_label: 'Ordenar por'
+      empty:
+        area_text_custom:
+          content: 'Aún no se ha creado ningún contenido de página de inicio. <br>Siga la<a target="_blank" href="https://www.drupal.org/es/docs/user_guide/es/index.html">Guía del usuario</a> para comenzar a construir su sitio.'
+        title:
+          title: 'Bienvenido a [site:name]'
+  feed_1:
+    display_title: 'Canal de noticias'
+  page_1:
+    display_title: Página

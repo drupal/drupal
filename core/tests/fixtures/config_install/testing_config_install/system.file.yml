@@ -1,0 +1,6 @@
+_core:
+  default_config_hash: t48gCU9DzYfjb3bAOIqHLzhL0ChBlXh6_5B5Pyo9t8g
+langcode: fr
+allow_insecure_uploads: false
+default_scheme: public
+temporary_maximum_age: 21600

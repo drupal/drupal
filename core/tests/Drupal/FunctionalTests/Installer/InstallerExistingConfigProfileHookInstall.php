@@ -9,7 +9,7 @@ namespace Drupal\FunctionalTests\Installer;
  *
  * @group Installer
  */
-class InstallerExistingConfigProfileHookInstall extends InstallerExistingConfigTestBase {
+class InstallerExistingConfigProfileHookInstall extends InstallerConfigDirectoryTestBase {
 
   protected $profile = 'config_profile_with_hook_install';
 
@@ -55,10 +55,10 @@ EOF;
   /**
    * {@inheritdoc}
    */
-  protected function getConfigTarball() {
+  protected function getConfigLocation() {
     // We're not going to get to the config import stage so this does not
     // matter.
-    return __DIR__ . '/../../../fixtures/config_install/testing_config_install_no_config.tar.gz';
+    return __DIR__ . '/../../../fixtures/config_install/testing_config_install_no_config';
   }
 
   /**

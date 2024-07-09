@@ -1,0 +1,7 @@
+_core:
+  default_config_hash: 8LI-1XgwLt9hYRns_7c81S632d6JhdqXKs4vDheaG6E
+description:
+  type: textfield
+  length: 128
+icon:
+  directory: core/modules/file/icons

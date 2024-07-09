@@ -1,0 +1,12 @@
+_core:
+  default_config_hash: uEePITI9tV6WqzmsTb7MfPCi5yPWXSxAN1xeLcYFQbM
+langcode: fr
+session:
+  parameter: language
+url:
+  source: path_prefix
+  prefixes:
+    fr: ''
+  domains:
+    fr: ''
+selected_langcode: site_default

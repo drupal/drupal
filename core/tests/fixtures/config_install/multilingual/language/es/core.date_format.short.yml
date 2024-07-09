@@ -1,0 +1,2 @@
+label: 'Fecha corta por defecto'
+pattern: 'd/m/Y - H:i'

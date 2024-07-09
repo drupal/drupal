@@ -24,6 +24,7 @@
       "modules/system/tests/logo.svgz",
       "node_modules/*",
       "profiles/demo_umami/modules/demo_umami_content/default_content/languages/es/**/*",
+      "tests/fixtures/config_install/*",
       "tests/fixtures/files/*",
       "tests/Drupal/Tests/Component/Annotation/Doctrine/**",
       "tests/PHPStan/vendor/**",

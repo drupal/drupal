@@ -1,0 +1,23 @@
+_core:
+  default_config_hash: m2GVq11UAOVuNgj8x0t5fMOPujpvQQ_zxLoaly1BMEU
+module:
+  block: 0
+  config: 0
+  dblog: 0
+  dynamic_page_cache: 0
+  field: 0
+  file: 0
+  filter: 0
+  language: 0
+  locale: 0
+  node: 0
+  page_cache: 0
+  path_alias: 0
+  system: 0
+  text: 0
+  user: 0
+  views: 10
+  testing_config_install_multilingual: 1000
+theme:
+  stark: 0
+profile: testing_config_install_multilingual

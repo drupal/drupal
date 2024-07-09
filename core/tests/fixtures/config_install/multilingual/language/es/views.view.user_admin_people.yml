@@ -1,0 +1,67 @@
+label: Usuarios
+description: 'Encuentre y gestione a las personas que interactúan con su sitio.'
+display:
+  default:
+    display_title: 'Por defecto'
+    display_options:
+      title: Usuarios
+      fields:
+        user_bulk_form:
+          label: 'Actualización masiva'
+        name:
+          label: 'Nombre de usuario'
+        status:
+          label: Estado
+          settings:
+            format_custom_false: Bloqueado
+            format_custom_true: Activo
+        created:
+          label: 'Miembro desde hace'
+        access:
+          label: 'Último acceso'
+        operations:
+          label: Operaciones
+      pager:
+        options:
+          tags:
+            next: 'Siguiente >'
+            previous: '‹ Anterior'
+            first: '« Primero'
+            last: 'Último »'
+          expose:
+            items_per_page_label: 'Elementos por página'
+            items_per_page_options_all_label: '- Todo -'
+            offset_label: Desplazamiento
+      exposed_form:
+        options:
+          submit_button: Filtro
+          reset_button_label: Restablecer
+          exposed_sorts_label: 'Ordenar por'
+      filters:
+        combine:
+          expose:
+            label: 'Nombre o correo electrónico contiene'
+        status:
+          group_info:
+            label: Estado
+            group_items:
+              1:
+                title: Activo
+              2:
+                title: Bloqueado
+        roles_target_id:
+          expose:
+            label: Rol
+        permission:
+          expose:
+            label: Permiso
+      use_more_text: más
+  page_1:
+    display_title: Página
+    display_options:
+      menu:
+        title: Listado
+        description: 'Encuentre y gestione a las personas que interactúan con su sitio.'
+      tab_options:
+        title: Usuarios
+        description: 'Gestionar cuentas, roles y permisos de usuarios.'
