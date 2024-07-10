@@ -525,7 +525,7 @@ trait ResourceResponseTestTrait {
       'jsonapi' => static::$jsonApiMember,
       'errors' => [$error],
     ], 403))
-      ->addCacheableDependency((new CacheableMetadata())->addCacheTags(['4xx-response', 'http_response'])->addCacheContexts(['url.site']))
+      ->addCacheableDependency((new CacheableMetadata())->addCacheTags(['4xx-response', 'http_response'])->addCacheContexts(['url.query_args', 'url.site']))
       ->addCacheableDependency($access);
   }
 
@@ -545,8 +545,7 @@ trait ResourceResponseTestTrait {
     // If the entity type is revisionable, add a resource version cache context.
     $cache_contexts = Cache::mergeContexts([
       // Cache contexts for JSON:API URL query parameters.
-      'url.query_args:fields',
-      'url.query_args:include',
+      'url.query_args',
       // Drupal defaults.
       'url.site',
     ], $this->entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
