@@ -232,6 +232,13 @@ class UserLoginForm extends FormBase {
         if ($this->userAuth instanceof UserAuthenticationInterface) {
           $form_state->set('uid', $this->userAuth->authenticateAccount($account, $password) ? $account->id() : FALSE);
         }
+        // The userAuth object is decorated by an object that that has not
+        // been upgraded to the new UserAuthenticationInterface. Fallback
+        // to the authenticate() method.
+        else {
+          $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
+          $form_state->set('uid', $uid);
+        }
       }
       elseif (!$this->userAuth instanceof UserAuthenticationInterface) {
         $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
