@@ -132,7 +132,7 @@ class ExceptionHandlingTest extends KernelTestBase {
 
     // Test with 404 path pointing to a route that uses '_form'.
     $response = $this->doTest404Route('/router_test/test26');
-    $this->assertStringContainsString('<form class="system-logging-settings"', $response->getContent());
+    $this->assertStringContainsString('<form class="router-test-form"', $response->getContent());
 
     // Test with 404 path pointing to a route that uses '_entity_form'.
     $response = $this->doTest404Route('/router_test/test27');

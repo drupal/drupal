@@ -2,11 +2,13 @@
 
 namespace Drupal\Core\Form;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -91,7 +93,7 @@ abstract class ConfigFormBase extends FormBase {
     // property.
     $form['#process'][] = '::loadDefaultValuesFromConfig';
     $form['#after_build'][] = '::storeConfigKeyToFormElementMap';
-
+    $form['#after_build'][] = '::checkConfigOverrides';
     return $form;
   }
 
@@ -336,6 +338,60 @@ abstract class ConfigFormBase extends FormBase {
       $value = $form_state->getValue($target->elementParents);
       $target->setValue($config, $value, $form_state);
     }
+  }
+
+  /**
+   * Form #after_build callback: Adds message if overrides exist.
+   */
+  public function checkConfigOverrides(array $form, FormStateInterface $form_state): array {
+    // Determine which of those editable config keys have overrides.
+    $override_links = [];
+    $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
+    foreach ($map as $config_name => $config_keys) {
+      $stored_config = $this->configFactory->get($config_name);
+      if (!$stored_config->hasOverrides()) {
+        // The config has no overrides at all. Can be skipped.
+        continue;
+      }
+
+      foreach ($config_keys as $key => $array_parents) {
+        if ($stored_config->hasOverrides($key)) {
+          $element = NestedArray::getValue($form, $array_parents);
+          $override_links[] = [
+            'attributes' => ['title' => $this->t("'@title' form element", ['@title' => $element['#title']])],
+            'url' => Url::fromUri("internal:#{$element['#id']}"),
+            'title' => $element['#title'],
+          ];
+        }
+      }
+    }
+
+    if (!empty($override_links)) {
+      $override_output = [
+        '#theme' => 'links__config_overrides',
+        '#heading' => [
+          'text' => $this->t('These values are overridden. Changes on this form will be saved, but overrides will take precedence. See <a href="https://www.drupal.org/docs/drupal-apis/configuration-api/configuration-override-system">configuration overrides documentation</a> for more information.'),
+          'level' => 'div',
+        ],
+        '#links' => $override_links,
+      ];
+      $form['config_override_status_messages'] = [
+        'message' => [
+          '#theme' => 'status_messages',
+          '#message_list' => ['status' => [$override_output]],
+          '#status_headings' => [
+            'status' => $this->t('Status message'),
+          ],
+        ],
+        // Ensure that the status message is at the top of the form.
+        '#weight' => array_reduce(
+          Element::children($form),
+          fn (int $carry, string $key) => min(($form[$key]['#weight'] ?? 0), $carry),
+          0
+        ) - 1,
+      ];
+    }
+    return $form;
   }
 
 }

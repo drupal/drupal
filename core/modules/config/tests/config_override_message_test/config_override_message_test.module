@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Tests configuration override message functionality.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function config_override_message_test_form_system_site_information_settings_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
+  // Set a weight to a negative amount to ensure the config overrides message
+  // is above it.
+  $form['site_information']['#weight'] = -5;
+}
