@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Functional;
 
+use Drupal\Component\Utility\Html;
 use Drupal\file\Entity\File;
 
 /**
@@ -40,8 +41,14 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $input_base_name = $tree ? 'nested_file' : 'file';
           $file_field_name = $multiple ? 'files[' . $input_base_name . '][]' : 'files[' . $input_base_name . ']';
 
-          // Submit without a file.
           $this->drupalGet($path);
+
+          // Ensure the aria-describedby relationship works as expected.
+          $input_id = Html::getId('edit_' . $input_base_name);
+          $this->assertSession()->elementExists('css', '#' . $input_id . '--description');
+          $this->assertSession()->elementExists('css', '[aria-describedby="' . $input_id . '--description"]');
+
+          // Submit without a file.
           $this->submitForm([], 'Save');
           $this->assertSession()->pageTextContains("The file ids are .");
 
