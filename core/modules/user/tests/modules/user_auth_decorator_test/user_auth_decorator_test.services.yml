@@ -1,0 +1,6 @@
+services:
+  user_auth_decorator.user.auth:
+    class: \Drupal\user_auth_decorator_test\UserAuthDecorator
+    decorates: user.auth
+    arguments:
+      - '@user_auth_decorator.user.auth.inner'
