@@ -1,0 +1,1 @@
+!function(i){const e=i.ja=i.ja||{};e.dictionary=Object.assign(e.dictionary||{},{"Disable editing":"編集を無効にする","Enable editing":"編集を有効にする","Navigate editable regions":"編集可能な領域をナビゲート","Next editable region":"次に編集可能な領域","Previous editable region":"前の編集可能な領域"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

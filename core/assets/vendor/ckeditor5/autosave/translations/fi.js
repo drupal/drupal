@@ -1,0 +1,1 @@
+!function(n){const i=n.fi=n.fi||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"Tallennetaan muutoksia"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

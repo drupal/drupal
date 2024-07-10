@@ -1,0 +1,1 @@
+!function(n){const i=n.hy=n.hy||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"Փոփոխությունները պահպանվում են"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

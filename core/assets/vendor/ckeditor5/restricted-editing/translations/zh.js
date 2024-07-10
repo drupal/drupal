@@ -1,0 +1,1 @@
+!function(i){const e=i.zh=i.zh||{};e.dictionary=Object.assign(e.dictionary||{},{"Disable editing":"停用編輯","Enable editing":"啟用編輯","Navigate editable regions":"編輯區域導航","Next editable region":"下一個可編輯區域","Previous editable region":"上一個可編輯區域"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

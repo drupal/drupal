@@ -1,0 +1,1 @@
+!function(e){const i=e.zh=e.zh||{};i.dictionary=Object.assign(i.dictionary||{},{"Blue marker":"藍色標記","Green marker":"綠色標記","Green pen":"綠色筆",Highlight:"高亮","Pink marker":"粉色標記","Red pen":"紅色筆","Remove highlight":"清除高亮","Text highlight toolbar":"高亮","Yellow marker":"黃色標記"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

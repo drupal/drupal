@@ -1,0 +1,1 @@
+!function(e){const i=e.sl=e.sl||{};i.dictionary=Object.assign(i.dictionary||{},{"Edit source":"Uredi izvorno kodo","Empty snippet content":"","HTML snippet":"HTML izsek","Insert HTML":"Vstavi HTML","No preview available":"","Paste raw HTML here...":"Prilepi HTML kodo ...","Save changes":"Shrani spremembe"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

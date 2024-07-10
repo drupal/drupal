@@ -1,0 +1,1 @@
+!function(e){const i=e.ca=e.ca||{};i.dictionary=Object.assign(i.dictionary||{},{"Disable editing":"Desactivar l'edició","Enable editing":"Activar l'edició","Navigate editable regions":"Navegar per parts editables","Next editable region":"Següent part editable","Previous editable region":"Part editable anterior"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

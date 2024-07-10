@@ -1,0 +1,1 @@
+!function(o){const n=o.zh=o.zh||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"大",Default:"預設","Document colors":"文件顏色","Font Background Color":"前景顏色","Font Color":"字體顏色","Font Family":"字型","Font Size":"字體大小",Huge:"特大",Small:"小",Tiny:"特小"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

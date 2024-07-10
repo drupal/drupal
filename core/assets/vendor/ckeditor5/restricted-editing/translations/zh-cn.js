@@ -1,0 +1,1 @@
+!function(i){const e=i["zh-cn"]=i["zh-cn"]||{};e.dictionary=Object.assign(e.dictionary||{},{"Disable editing":"禁用编辑","Enable editing":"允许编辑","Navigate editable regions":"导航至可编辑区域","Next editable region":"下一个可编辑区域","Previous editable region":"上一个可编辑区域"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

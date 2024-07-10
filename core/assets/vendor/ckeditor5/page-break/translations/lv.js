@@ -1,0 +1,1 @@
+!function(i){const n=i.lv=i.lv||{};n.dictionary=Object.assign(n.dictionary||{},{"Page break":"Lappuses pārtraukums"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,1 +1,1 @@
-!function(n){const o=n.ku=n.ku||{};o.dictionary=Object.assign(o.dictionary||{},{"Code block":"","Insert code block":"دانانی  خشتەی کۆد","Plain text":"تێکستی سادە"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const e=n.ku=n.ku||{};e.dictionary=Object.assign(e.dictionary||{},{"Code block":"","Entering %0 code snippet":"","Entering code snippet":"","Insert code block":"دانانی  خشتەی کۆد","Leaving %0 code snippet":"","Leaving code snippet":"","Plain text":"تێکستی سادە"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

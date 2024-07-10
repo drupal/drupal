@@ -1,0 +1,1 @@
+!function(i){const n=i.he=i.he||{};n.dictionary=Object.assign(n.dictionary||{},{"Characters: %0":"מס' תווים: %0","Words: %0":"מס' מילים: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

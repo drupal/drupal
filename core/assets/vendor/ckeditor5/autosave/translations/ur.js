@@ -1,0 +1,1 @@
+!function(n){const i=n.ur=n.ur||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"خودکار محفوظ"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

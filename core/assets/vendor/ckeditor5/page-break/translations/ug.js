@@ -1,0 +1,1 @@
+!function(i){const n=i.ug=i.ug||{};n.dictionary=Object.assign(n.dictionary||{},{"Page break":"بەت ئايرىش بەلگىسى"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

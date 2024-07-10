@@ -1,0 +1,1 @@
+!function(n){const i=n.ro=n.ro||{};i.dictionary=Object.assign(i.dictionary||{},{"Page break":"Întrerupere de pagină"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(e){const i=e["zh-cn"]=e["zh-cn"]||{};i.dictionary=Object.assign(i.dictionary||{},{"Blue marker":"蓝色标记","Green marker":"绿色标记","Green pen":"绿色笔",Highlight:"高亮","Pink marker":"粉色标记","Red pen":"红色笔","Remove highlight":"清除高亮","Text highlight toolbar":"文本高亮工具栏","Yellow marker":"黄色标记"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

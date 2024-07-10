@@ -1,0 +1,1 @@
+!function(n){const i=n.sq=n.sq||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"Duke ruajtur ndryshimet"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

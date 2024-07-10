@@ -1,0 +1,1 @@
+!function(n){const i=n.af=n.af||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"Veranderinge word gestoor"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
