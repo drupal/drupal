@@ -320,6 +320,11 @@ class ManagedFile extends FormElementBase {
       '#weight' => -10,
       '#error_no_message' => TRUE,
     ];
+
+    if (!empty($element['#description'])) {
+      $element['upload']['#attributes']['aria-describedby'] = $element['#id'] . '--description';
+    }
+
     if (!empty($element['#accept'])) {
       $element['upload']['#attributes'] = ['accept' => $element['#accept']];
     }
