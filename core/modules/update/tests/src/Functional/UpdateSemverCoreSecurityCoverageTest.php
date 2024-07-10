@@ -194,7 +194,7 @@ class UpdateSemverCoreSecurityCoverageTest extends UpdateSemverCoreTestBase {
       'installed_version' => '9.5.0',
       'fixture' => 'sec.9.5.0',
       'requirements_section_heading' => 'Checked',
-      'message' => "Covered until 2023-Nov $release_coverage_message",
+      'message' => "Covered until November 2023 $release_coverage_message",
       'mock_date' => '2023-01-01',
     ];
     // Ensure a warning is displayed if less than six months remain until the
@@ -203,7 +203,7 @@ class UpdateSemverCoreSecurityCoverageTest extends UpdateSemverCoreTestBase {
       'installed_version' => '9.5.0',
       'fixture' => 'sec.9.5.0',
       'requirements_section_heading' => 'Warnings found',
-      'message' => "Covered until 2023-Nov $update_soon_message $release_coverage_message",
+      'message' => "Covered until November 2023 $update_soon_message $release_coverage_message",
       'mock_date' => '2023-05-15',
     ];
 
