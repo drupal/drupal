@@ -105,8 +105,7 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
     $message = "The current user is not authorized to filter by the `spotlight` field, given in the path `spotlight`.";
     $expected_cache_tags = ['4xx-response', 'http_response'];
     $expected_cache_contexts = [
-      'url.query_args:filter',
-      'url.query_args:sort',
+      'url.query_args',
       'url.site',
       'user.permissions',
     ];

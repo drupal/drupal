@@ -184,7 +184,7 @@ class BlockTest extends ConfigEntityResourceTestBase {
         'http_response',
         'user:2',
       ])
-      ->setCacheContexts(['url.site', 'user.roles']);
+      ->setCacheContexts(['url.query_args', 'url.site', 'user.roles']);
   }
 
   /**

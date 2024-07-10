@@ -104,7 +104,7 @@ class RestJsonApiUnsupported extends ResourceTestBase {
       FALSE,
       $response,
       ['4xx-response', 'config:system.logging', 'config:user.role.anonymous', 'http_response', 'node:1'],
-      ['url.query_args:_format', 'url.site', 'user.permissions'],
+      ['url.query_args', 'url.site', 'user.permissions'],
       'MISS',
       'MISS'
     );
