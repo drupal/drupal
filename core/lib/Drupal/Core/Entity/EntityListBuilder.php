@@ -51,6 +51,14 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
   protected $limit = 50;
 
   /**
+   * The entity key to sort the list by.
+   *
+   * This can be overridden in child classes to sort the list by a different
+   * entity key.
+   */
+  protected const SORT_KEY = 'id';
+
+  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -108,7 +116,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
   protected function getEntityListQuery(): QueryInterface {
     $query = $this->getStorage()->getQuery()
       ->accessCheck(TRUE)
-      ->sort($this->entityType->getKey('id'));
+      ->sort($this->entityType->getKey(static::SORT_KEY));
 
     // Only add the pager if a limit is specified.
     if ($this->limit) {
