@@ -345,7 +345,7 @@ class NodeTest extends ResourceTestBase {
       $response,
       '/data',
       ['4xx-response', 'http_response', 'node:1'],
-      ['url.query_args:resourceVersion', 'url.site', 'user.permissions'],
+      ['url.query_args', 'url.site', 'user.permissions'],
       FALSE,
       'MISS'
     );

@@ -46,6 +46,7 @@ class EntryPointTest extends BrowserTestBase {
     $response = $this->request('GET', Url::fromUri('base://jsonapi'), $request_options);
     $document = $this->getDocumentFromResponse($response);
     $expected_cache_contexts = [
+      'url.query_args',
       'url.site',
       'user.roles:authenticated',
     ];
