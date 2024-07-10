@@ -201,7 +201,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
         $authenticated = $this->userAuth->authenticateAccount($account, $credentials['pass']) ? $account->id() : FALSE;
       }
       else {
-        $authenticated = $this->userAuth->authenticateAccount($credentials['name'], $credentials['pass']);
+        $authenticated = $this->userAuth->authenticate($credentials['name'], $credentials['pass']);
       }
       if ($authenticated) {
         $this->userFloodControl->clear('user.http_login', $this->getLoginFloodIdentifier($request, $credentials['name']));
