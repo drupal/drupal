@@ -1,0 +1,4 @@
+name: 'Configuration override message test'
+type: module
+package: Testing
+version: VERSION
