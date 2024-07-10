@@ -1,0 +1,1 @@
+!function(i){const e=i.he=i.he||{};e.dictionary=Object.assign(e.dictionary||{},{"Disable editing":"הפוך עריכה ללא זמינה","Enable editing":"אפשר עריכה","Navigate editable regions":"ניווט באזורים הניתנים לעריכה","Next editable region":"האזור הבא שניתן לעריכה","Previous editable region":"האזור הקודם שניתן לעריכה"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

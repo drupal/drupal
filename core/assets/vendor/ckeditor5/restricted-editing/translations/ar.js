@@ -1,0 +1,1 @@
+!function(i){const e=i.ar=i.ar||{};e.dictionary=Object.assign(e.dictionary||{},{"Disable editing":"تعطيل التحرير","Enable editing":"تمكين التحرير","Navigate editable regions":"التنقل في مناطق التحرير","Next editable region":"منطقة التحرير التالية","Previous editable region":"منطقة التحرير السابقة"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

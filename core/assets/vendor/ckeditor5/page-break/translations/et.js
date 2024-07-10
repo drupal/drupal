@@ -1,0 +1,1 @@
+!function(e){const i=e.et=e.et||{};i.dictionary=Object.assign(i.dictionary||{},{"Page break":"Lehekülje murdmine"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

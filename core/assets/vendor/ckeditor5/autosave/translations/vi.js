@@ -1,0 +1,1 @@
+!function(i){const n=i.vi=i.vi||{};n.dictionary=Object.assign(n.dictionary||{},{"Saving changes":"Đang lưu"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

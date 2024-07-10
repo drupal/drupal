@@ -1,0 +1,1 @@
+!function(a){const n=a.ms=a.ms||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"Besar",Default:"Lalai","Document colors":"Warna dokumen","Font Background Color":"Warna Latar Belakang Fon","Font Color":"Warna Fon","Font Family":"Keluarga Fon","Font Size":"Saiz fon",Huge:"Gergasi",Small:"Kecil",Tiny:"Halus"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

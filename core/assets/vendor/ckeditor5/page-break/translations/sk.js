@@ -1,0 +1,1 @@
+!function(n){const i=n.sk=n.sk||{};i.dictionary=Object.assign(i.dictionary||{},{"Page break":"Zalomenie strany"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

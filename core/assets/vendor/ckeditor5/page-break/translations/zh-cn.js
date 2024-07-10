@@ -1,0 +1,1 @@
+!function(n){const i=n["zh-cn"]=n["zh-cn"]||{};i.dictionary=Object.assign(i.dictionary||{},{"Page break":"分页符"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

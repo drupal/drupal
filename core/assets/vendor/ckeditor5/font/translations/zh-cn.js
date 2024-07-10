@@ -1,0 +1,1 @@
+!function(o){const n=o["zh-cn"]=o["zh-cn"]||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"大",Default:"默认","Document colors":"文档中的颜色","Font Background Color":"字体背景色","Font Color":"字体颜色","Font Family":"字体","Font Size":"字体大小",Huge:"极大",Small:"小",Tiny:"极小"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

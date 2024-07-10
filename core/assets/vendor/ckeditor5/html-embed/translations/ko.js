@@ -1,0 +1,1 @@
+!function(e){const n=e.ko=e.ko||{};n.dictionary=Object.assign(n.dictionary||{},{"Edit source":"소스 편집","Empty snippet content":"빈 코드 조각 내용","HTML snippet":"HTML 코드 조각","Insert HTML":"HTML 삽입","No preview available":"미리보기를 이용할 수 없습니다","Paste raw HTML here...":"원시 HTML을 여기에 붙여넣으세요...","Save changes":"변경사항 저장"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

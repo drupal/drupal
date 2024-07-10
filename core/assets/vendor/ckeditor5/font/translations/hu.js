@@ -1,0 +1,1 @@
+!function(t){const n=t.hu=t.hu||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"Nagy",Default:"Alapértelmezett","Document colors":"Dokumentum színek","Font Background Color":"Betű háttérszín","Font Color":"Betűszín","Font Family":"Betűtípus","Font Size":"Betűméret",Huge:"Hatalmas",Small:"Kicsi",Tiny:"Apró"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

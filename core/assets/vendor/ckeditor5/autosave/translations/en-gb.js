@@ -1,0 +1,1 @@
+!function(n){const i=n["en-gb"]=n["en-gb"]||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"Saving changes"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

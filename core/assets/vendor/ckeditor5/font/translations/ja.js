@@ -1,0 +1,1 @@
+!function(o){const n=o.ja=o.ja||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"大",Default:"デフォルト","Document colors":"ドキュメント背景色","Font Background Color":"背景色","Font Color":"文字色","Font Family":"フォントファミリー","Font Size":"フォントサイズ",Huge:"極大",Small:"小",Tiny:"極小"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

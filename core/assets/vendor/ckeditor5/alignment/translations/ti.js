@@ -1,0 +1,1 @@
+!function(i){const n=i.ti=i.ti||{};n.dictionary=Object.assign(n.dictionary||{},{"Align center":"ናብ ማእኸል ኣመዓራርይ","Align left":"ንጸጋም ኣመዓራርይ","Align right":"ንየማን ኣመዓራርይ",Justify:"ብማዕረ መጠን ናብ ኩሉ ኣንፈት ኣመዓራርይ","Text alignment":"ምዕረያ ጽሑፍ","Text alignment toolbar":"መካወኒ ምዕረያ ጽሑፍ"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

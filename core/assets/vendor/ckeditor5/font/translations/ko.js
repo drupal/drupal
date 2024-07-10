@@ -1,0 +1,1 @@
+!function(o){const n=o.ko=o.ko||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"큰",Default:"기본","Document colors":"문서 색깔들","Font Background Color":"글자 배경 색깔","Font Color":"글자 색깔","Font Family":"글꼴 집합","Font Size":"글자 크기",Huge:"매우 큰",Small:"작은",Tiny:"매우 작은"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

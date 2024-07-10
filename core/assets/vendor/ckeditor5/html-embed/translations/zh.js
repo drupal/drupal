@@ -1,0 +1,1 @@
+!function(e){const n=e.zh=e.zh||{};n.dictionary=Object.assign(n.dictionary||{},{"Edit source":"編輯HTML","Empty snippet content":"HTML標籤中無內容","HTML snippet":"HTML標籤","Insert HTML":"輸入HTML","No preview available":"無法顯示預覽","Paste raw HTML here...":"在此貼上純HTML","Save changes":"儲存變更"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

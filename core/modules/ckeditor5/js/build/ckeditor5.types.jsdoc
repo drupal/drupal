@@ -1,4 +1,10 @@
 /**
+ * Declared in file @ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter.js
+ *
+ * @typedef {module:adapter-ckfinder/uploadadapter} module:adapter-ckfinder/uploadadapter~CKFinderUploadAdapter
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-alignment/src/alignment.js
  *
  * @typedef {module:alignment/alignment} module:alignment/alignment~Alignment
@@ -26,6 +32,12 @@
  * Declared in file @ckeditor/ckeditor5-autoformat/src/blockautoformatediting.js
  *
  * @typedef {module:autoformat/blockautoformatediting} module:autoformat/blockautoformatediting~blockAutoformatEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-autosave/src/autosave.js
+ *
+ * @typedef {module:autosave/autosave} module:autosave/autosave~Autosave
  */
 
 /**
@@ -185,6 +197,72 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ckbox/src/ckbox.js
+ *
+ * @typedef {module:ckbox/ckbox} module:ckbox/ckbox~CKBox
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckbox/src/ckboximageedit.js
+ *
+ * @typedef {module:ckbox/ckboximageedit} module:ckbox/ckboximageedit~CKBoxImageEdit
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckbox/src/ckboximageedit/ckboximageeditcommand.js
+ *
+ * @typedef {module:ckbox/ckboximageedit/ckboximageeditcommand} module:ckbox/ckboximageedit/ckboximageeditcommand~CKBoxImageEditCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckbox/src/ckboximageedit/ckboximageeditediting.js
+ *
+ * @typedef {module:ckbox/ckboximageedit/ckboximageeditediting} module:ckbox/ckboximageedit/ckboximageeditediting~CKBoxImageEditEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckbox/src/ckboximageedit/ckboximageeditui.js
+ *
+ * @typedef {module:ckbox/ckboximageedit/ckboximageeditui} module:ckbox/ckboximageedit/ckboximageeditui~CKBoxImageEditUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckbox/src/ckboxui.js
+ *
+ * @typedef {module:ckbox/ckboxui} module:ckbox/ckboxui~CKBoxUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckbox/src/ckboxuploadadapter.js
+ *
+ * @typedef {module:ckbox/ckboxuploadadapter} module:ckbox/ckboxuploadadapter~CKBoxUploadAdapter
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckfinder/src/ckfinder.js
+ *
+ * @typedef {module:ckfinder/ckfinder} module:ckfinder/ckfinder~CKFinder
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckfinder/src/ckfindercommand.js
+ *
+ * @typedef {module:ckfinder/ckfindercommand} module:ckfinder/ckfindercommand~CKFinderCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckfinder/src/ckfinderediting.js
+ *
+ * @typedef {module:ckfinder/ckfinderediting} module:ckfinder/ckfinderediting~CKFinderEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckfinder/src/ckfinderui.js
+ *
+ * @typedef {module:ckfinder/ckfinderui} module:ckfinder/ckfinderui~CKFinderUI
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-clipboard/src/clipboard.js
  *
  * @typedef {module:clipboard/clipboard} module:clipboard/clipboard~Clipboard
@@ -251,15 +329,33 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-code-block/src/codeblock.js
+ * Declared in file @ckeditor/ckeditor5-cloud-services/src/cloudservices.js
  *
- * @typedef {module:code-block/codeblock} module:code-block/codeblock~CodeBlock
+ * @typedef {module:cloud-services/cloudservices} module:cloud-services/cloudservices~CloudServices
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-code-block/src/codeblockediting.js
+ * Declared in file @ckeditor/ckeditor5-cloud-services/src/cloudservicescore.js
  *
- * @typedef {module:code-block/codeblockediting} module:code-block/codeblockediting~CodeBlockEditing
+ * @typedef {module:cloud-services/cloudservicescore} module:cloud-services/cloudservicescore~CloudServicesCore
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-cloud-services/src/token/token.js
+ *
+ * @typedef {module:cloud-services/token/token} module:cloud-services/token/token~Token
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-cloud-services/src/uploadgateway/uploadgateway.js
+ *
+ * @typedef {module:cloud-services/uploadgateway/uploadgateway} module:cloud-services/uploadgateway/uploadgateway~UploadGateway
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-code-block/src/codeblock.js
+ *
+ * @typedef {module:code-block/codeblock} module:code-block/codeblock~CodeBlock
  */
 
 /**
@@ -359,6 +455,30 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-easy-image/src/cloudservicesuploadadapter.js
+ *
+ * @typedef {module:easy-image/cloudservicesuploadadapter} module:easy-image/cloudservicesuploadadapter~CloudServicesUploadAdapter
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-easy-image/src/easyimage.js
+ *
+ * @typedef {module:easy-image/easyimage} module:easy-image/easyimage~EasyImage
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-editor-balloon/src/ballooneditor.js
+ *
+ * @typedef {module:editor-balloon/ballooneditor} module:editor-balloon/ballooneditor~BalloonEditor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-editor-balloon/src/ballooneditoruiview.js
+ *
+ * @typedef {module:editor-balloon/ballooneditoruiview} module:editor-balloon/ballooneditoruiview~BalloonEditorUIView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-editor-classic/src/classiceditor.js
  *
  * @typedef {module:editor-classic/classiceditor} module:editor-classic/classiceditor~ClassicEditor
@@ -380,6 +500,30 @@
  * Declared in file @ckeditor/ckeditor5-editor-decoupled/src/decouplededitoruiview.js
  *
  * @typedef {module:editor-decoupled/decouplededitoruiview} module:editor-decoupled/decouplededitoruiview~DecoupledEditorUIView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-editor-inline/src/inlineeditor.js
+ *
+ * @typedef {module:editor-inline/inlineeditor} module:editor-inline/inlineeditor~InlineEditor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-editor-inline/src/inlineeditoruiview.js
+ *
+ * @typedef {module:editor-inline/inlineeditoruiview} module:editor-inline/inlineeditoruiview~InlineEditorUIView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-editor-multi-root/src/multirooteditor.js
+ *
+ * @typedef {module:editor-multi-root/multirooteditor} module:editor-multi-root/multirooteditor~MultiRootEditor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-editor-multi-root/src/multirooteditoruiview.js
+ *
+ * @typedef {module:editor-multi-root/multirooteditoruiview} module:editor-multi-root/multirooteditoruiview~MultiRootEditorUIView
  */
 
 /**
@@ -971,6 +1115,144 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-find-and-replace/src/findandreplace.js
+ *
+ * @typedef {module:find-and-replace/findandreplace} module:find-and-replace/findandreplace~FindAndReplace
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-find-and-replace/src/findandreplaceediting.js
+ *
+ * @typedef {module:find-and-replace/findandreplaceediting} module:find-and-replace/findandreplaceediting~FindAndReplaceEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-find-and-replace/src/findandreplaceui.js
+ *
+ * @typedef {module:find-and-replace/findandreplaceui} module:find-and-replace/findandreplaceui~FindAndReplaceUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-find-and-replace/src/findcommand.js
+ *
+ * @typedef {module:find-and-replace/findcommand} module:find-and-replace/findcommand~FindCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-find-and-replace/src/findnextcommand.js
+ *
+ * @typedef {module:find-and-replace/findnextcommand} module:find-and-replace/findnextcommand~FindNextCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-find-and-replace/src/findpreviouscommand.js
+ *
+ * @typedef {module:find-and-replace/findpreviouscommand} module:find-and-replace/findpreviouscommand~FindPreviousCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-find-and-replace/src/replaceallcommand.js
+ *
+ * @typedef {module:find-and-replace/replaceallcommand} module:find-and-replace/replaceallcommand~ReplaceAllCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-find-and-replace/src/ui/findandreplaceformview.js
+ *
+ * @typedef {module:find-and-replace/ui/findandreplaceformview} module:find-and-replace/ui/findandreplaceformview~FindAndReplaceFormView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/font.js
+ *
+ * @typedef {module:font/font} module:font/font~Font
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontbackgroundcolor.js
+ *
+ * @typedef {module:font/fontbackgroundcolor} module:font/fontbackgroundcolor~FontBackgroundColor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontbackgroundcolor/fontbackgroundcolorediting.js
+ *
+ * @typedef {module:font/fontbackgroundcolor/fontbackgroundcolorediting} module:font/fontbackgroundcolor/fontbackgroundcolorediting~FontBackgroundColorEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontbackgroundcolor/fontbackgroundcolorui.js
+ *
+ * @typedef {module:font/fontbackgroundcolor/fontbackgroundcolorui} module:font/fontbackgroundcolor/fontbackgroundcolorui~FontBackgroundColorUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontcolor.js
+ *
+ * @typedef {module:font/fontcolor} module:font/fontcolor~FontColor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontcolor/fontcolorediting.js
+ *
+ * @typedef {module:font/fontcolor/fontcolorediting} module:font/fontcolor/fontcolorediting~FontColorEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontcolor/fontcolorui.js
+ *
+ * @typedef {module:font/fontcolor/fontcolorui} module:font/fontcolor/fontcolorui~FontColorUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontcommand.js
+ *
+ * @typedef {module:font/fontcommand} module:font/fontcommand~FontCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontfamily.js
+ *
+ * @typedef {module:font/fontfamily} module:font/fontfamily~FontFamily
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontfamily/fontfamilyediting.js
+ *
+ * @typedef {module:font/fontfamily/fontfamilyediting} module:font/fontfamily/fontfamilyediting~FontFamilyEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontfamily/fontfamilyui.js
+ *
+ * @typedef {module:font/fontfamily/fontfamilyui} module:font/fontfamily/fontfamilyui~FontFamilyUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontsize.js
+ *
+ * @typedef {module:font/fontsize} module:font/fontsize~FontSize
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontsize/fontsizeediting.js
+ *
+ * @typedef {module:font/fontsize/fontsizeediting} module:font/fontsize/fontsizeediting~FontSizeEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/fontsize/fontsizeui.js
+ *
+ * @typedef {module:font/fontsize/fontsizeui} module:font/fontsize/fontsizeui~FontSizeUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-font/src/ui/colorui.js
+ *
+ * @typedef {module:font/ui/colorui} module:font/ui/colorui~ColorUI
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-heading/src/heading.js
  *
  * @typedef {module:heading/heading} module:heading/heading~Heading
@@ -1007,6 +1289,30 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-highlight/src/highlight.js
+ *
+ * @typedef {module:highlight/highlight} module:highlight/highlight~Highlight
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-highlight/src/highlightcommand.js
+ *
+ * @typedef {module:highlight/highlightcommand} module:highlight/highlightcommand~HighlightCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-highlight/src/highlightediting.js
+ *
+ * @typedef {module:highlight/highlightediting} module:highlight/highlightediting~HighlightEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-highlight/src/highlightui.js
+ *
+ * @typedef {module:highlight/highlightui} module:highlight/highlightui~HighlightUI
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-horizontal-line/src/horizontalline.js
  *
  * @typedef {module:horizontal-line/horizontalline} module:horizontal-line/horizontalline~HorizontalLine
@@ -1022,6 +1328,24 @@
  * Declared in file @ckeditor/ckeditor5-horizontal-line/src/horizontallineui.js
  *
  * @typedef {module:horizontal-line/horizontallineui} module:horizontal-line/horizontallineui~HorizontalLineUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-html-embed/src/htmlembed.js
+ *
+ * @typedef {module:html-embed/htmlembed} module:html-embed/htmlembed~HtmlEmbed
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-html-embed/src/htmlembedediting.js
+ *
+ * @typedef {module:html-embed/htmlembedediting} module:html-embed/htmlembedediting~HtmlEmbedEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-html-embed/src/htmlembedui.js
+ *
+ * @typedef {module:html-embed/htmlembedui} module:html-embed/htmlembedui~HtmlEmbedUI
  */
 
 /**
@@ -1223,6 +1547,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-image/src/imageresize/imagecustomresizeui.js
+ *
+ * @typedef {module:image/imageresize/imagecustomresizeui} module:image/imageresize/imagecustomresizeui~ImageCustomResizeUI
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-image/src/imageresize/imageresizebuttons.js
  *
  * @typedef {module:image/imageresize/imageresizebuttons} module:image/imageresize/imageresizebuttons~ImageResizeButtons
@@ -1232,6 +1562,12 @@
  * Declared in file @ckeditor/ckeditor5-image/src/imageresize/resizeimagecommand.js
  *
  * @typedef {module:image/imageresize/resizeimagecommand} module:image/imageresize/resizeimagecommand~ResizeImageCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-image/src/imageresize/ui/imagecustomresizeformview.js
+ *
+ * @typedef {module:image/imageresize/ui/imagecustomresizeformview} module:image/imageresize/ui/imagecustomresizeformview~ImageCustomResizeFormView
  */
 
 /**
@@ -1637,6 +1973,150 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor.js
+ *
+ * @typedef {module:markdown-gfm/gfmdataprocessor} module:markdown-gfm/gfmdataprocessor~GFMDataProcessor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-markdown-gfm/src/markdown.js
+ *
+ * @typedef {module:markdown-gfm/markdown} module:markdown-gfm/markdown~Markdown
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-markdown-gfm/src/pastefrommarkdownexperimental.js
+ *
+ * @typedef {module:markdown-gfm/pastefrommarkdownexperimental} module:markdown-gfm/pastefrommarkdownexperimental~PasteFromMarkdownExperimental
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/src/automediaembed.js
+ *
+ * @typedef {module:media-embed/automediaembed} module:media-embed/automediaembed~AutoMediaEmbed
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/src/mediaembed.js
+ *
+ * @typedef {module:media-embed/mediaembed} module:media-embed/mediaembed~MediaEmbed
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/src/mediaembedediting.js
+ *
+ * @typedef {module:media-embed/mediaembedediting} module:media-embed/mediaembedediting~MediaEmbedEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/src/mediaembedtoolbar.js
+ *
+ * @typedef {module:media-embed/mediaembedtoolbar} module:media-embed/mediaembedtoolbar~MediaEmbedToolbar
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/src/mediaembedui.js
+ *
+ * @typedef {module:media-embed/mediaembedui} module:media-embed/mediaembedui~MediaEmbedUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/src/ui/mediaformview.js
+ *
+ * @typedef {module:media-embed/ui/mediaformview} module:media-embed/ui/mediaformview~MediaFormView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-mention/src/mention.js
+ *
+ * @typedef {module:mention/mention} module:mention/mention~Mention
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-mention/src/mentioncommand.js
+ *
+ * @typedef {module:mention/mentioncommand} module:mention/mentioncommand~MentionCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-mention/src/mentionediting.js
+ *
+ * @typedef {module:mention/mentionediting} module:mention/mentionediting~MentionEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-mention/src/mentionui.js
+ *
+ * @typedef {module:mention/mentionui} module:mention/mentionui~MentionUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-mention/src/ui/domwrapperview.js
+ *
+ * @typedef {module:mention/ui/domwrapperview} module:mention/ui/domwrapperview~DomWrapperView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-mention/src/ui/mentionlistitemview.js
+ *
+ * @typedef {module:mention/ui/mentionlistitemview} module:mention/ui/mentionlistitemview~MentionListItemView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-mention/src/ui/mentionsview.js
+ *
+ * @typedef {module:mention/ui/mentionsview} module:mention/ui/mentionsview~MentionsView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-minimap/src/minimap.js
+ *
+ * @typedef {module:minimap/minimap} module:minimap/minimap~Minimap
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-minimap/src/minimapiframeview.js
+ *
+ * @typedef {module:minimap/minimapiframeview} module:minimap/minimapiframeview~MinimapIframeView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-minimap/src/minimappositiontrackerview.js
+ *
+ * @typedef {module:minimap/minimappositiontrackerview} module:minimap/minimappositiontrackerview~MinimapPositionTrackerView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-minimap/src/minimapview.js
+ *
+ * @typedef {module:minimap/minimapview} module:minimap/minimapview~MinimapView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-page-break/src/pagebreak.js
+ *
+ * @typedef {module:page-break/pagebreak} module:page-break/pagebreak~PageBreak
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-page-break/src/pagebreakcommand.js
+ *
+ * @typedef {module:page-break/pagebreakcommand} module:page-break/pagebreakcommand~PageBreakCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-page-break/src/pagebreakediting.js
+ *
+ * @typedef {module:page-break/pagebreakediting} module:page-break/pagebreakediting~PageBreakEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-page-break/src/pagebreakui.js
+ *
+ * @typedef {module:page-break/pagebreakui} module:page-break/pagebreakui~PageBreakUI
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-paragraph/src/insertparagraphcommand.js
  *
  * @typedef {module:paragraph/insertparagraphcommand} module:paragraph/insertparagraphcommand~InsertParagraphCommand
@@ -1712,6 +2192,48 @@
  * Declared in file @ckeditor/ckeditor5-remove-format/src/removeformatui.js
  *
  * @typedef {module:remove-format/removeformatui} module:remove-format/removeformatui~RemoveFormatUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-restricted-editing/src/restrictededitingexceptioncommand.js
+ *
+ * @typedef {module:restricted-editing/restrictededitingexceptioncommand} module:restricted-editing/restrictededitingexceptioncommand~RestrictedEditingExceptionCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-restricted-editing/src/restrictededitingmode.js
+ *
+ * @typedef {module:restricted-editing/restrictededitingmode} module:restricted-editing/restrictededitingmode~RestrictedEditingMode
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-restricted-editing/src/restrictededitingmodeediting.js
+ *
+ * @typedef {module:restricted-editing/restrictededitingmodeediting} module:restricted-editing/restrictededitingmodeediting~RestrictedEditingModeEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-restricted-editing/src/restrictededitingmodeui.js
+ *
+ * @typedef {module:restricted-editing/restrictededitingmodeui} module:restricted-editing/restrictededitingmodeui~RestrictedEditingModeUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-restricted-editing/src/standardeditingmode.js
+ *
+ * @typedef {module:restricted-editing/standardeditingmode} module:restricted-editing/standardeditingmode~StandardEditingMode
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-restricted-editing/src/standardeditingmodeediting.js
+ *
+ * @typedef {module:restricted-editing/standardeditingmodeediting} module:restricted-editing/standardeditingmodeediting~StandardEditingModeEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-restricted-editing/src/standardeditingmodeui.js
+ *
+ * @typedef {module:restricted-editing/standardeditingmodeui} module:restricted-editing/standardeditingmodeui~StandardEditingModeUI
  */
 
 /**

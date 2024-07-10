@@ -1,0 +1,1 @@
+!function(n){const e=n["de-ch"]=n["de-ch"]||{};e.dictionary=Object.assign(e.dictionary||{},{"Saving changes":"Änderungen werden gespeichert"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

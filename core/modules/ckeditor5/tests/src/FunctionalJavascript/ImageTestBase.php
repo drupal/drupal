@@ -90,10 +90,10 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $src = $this->imageAttributes()['src'];
     $this->waitForEditor();
     $this->pressEditorButton('Insert image via URL');
-    $panel = $page->find('css', '.ck-dropdown__panel  .ck-image-insert-url');
-    $src_input = $panel->find('css', 'input[type=text]');
+    $dialog = $page->find('css', '.ck-dialog');
+    $src_input = $dialog->find('css', '.ck-image-insert-url input[type=text]');
     $src_input->setValue($src);
-    $panel->find('xpath', "//button[span[text()='Insert']]")->click();
+    $dialog->find('xpath', "//button[span[text()='Accept']]")->click();
     // Wait for the image to be uploaded and rendered by CKEditor 5.
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.ck-widget.image > img[src="' . $src . '"]'));
   }

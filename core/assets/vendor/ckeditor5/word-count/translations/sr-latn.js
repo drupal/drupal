@@ -1,0 +1,1 @@
+!function(i){const n=i["sr-latn"]=i["sr-latn"]||{};n.dictionary=Object.assign(n.dictionary||{},{"Characters: %0":"Karakteri: %0","Words: %0":"Reči: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

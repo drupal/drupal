@@ -1,0 +1,1 @@
+!function(i){const n=i.bg=i.bg||{};n.dictionary=Object.assign(n.dictionary||{},{"Page break":"Край на страница"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

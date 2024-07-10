@@ -1,0 +1,1 @@
+!function(i){const n=i.fr=i.fr||{};n.dictionary=Object.assign(n.dictionary||{},{"Saving changes":"Enregistrement des modifications"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

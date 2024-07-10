@@ -1,0 +1,1 @@
+!function(n){const i=n.km=n.km||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"កំពុង​រក្សាទុក​ការផ្លាស់ប្ដូរ"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

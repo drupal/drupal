@@ -1,0 +1,1 @@
+!function(i){const a=i.uz=i.uz||{};a.dictionary=Object.assign(a.dictionary||{},{"Page break":"Sahifalar uzilishi"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
