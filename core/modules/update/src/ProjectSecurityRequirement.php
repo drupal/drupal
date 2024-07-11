@@ -232,7 +232,7 @@ final class ProjectSecurityRequirement {
     }
     else {
       $security_coverage_end_timestamp = \DateTime::createFromFormat('Y-m-d', $full_security_coverage_end_date)->getTimestamp();
-      $output_date_format = $date_format === 'Y-m-d' ? 'Y-M-d' : 'F Y';
+      $output_date_format = $date_format === 'Y-m-d' ? 'Y-M-d' : 'Y-M';
       $formatted_end_date = $date_formatter
         ->format($security_coverage_end_timestamp, 'custom', $output_date_format);
       $translation_arguments = ['@date' => $formatted_end_date];
