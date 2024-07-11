@@ -39,10 +39,10 @@ function umami_preprocess_field(&$variables, $hook) {
       $element['#field_name'] == 'field_recipe_category' ||
       $element['#field_name'] == 'field_tags' ||
       $element['#field_name'] == 'field_difficulty') {
-      $variables['attributes']['class'] = 'label-items';
+      $variables['attributes']['class'][] = 'label-items';
 
       if ($element['#view_mode'] == 'card' && $element['#field_name'] == 'field_difficulty') {
-        $variables['attributes']['class'] = 'umami-card__label-items';
+        $variables['attributes']['class'][] = 'umami-card__label-items';
       }
     }
   }
