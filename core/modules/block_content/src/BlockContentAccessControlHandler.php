@@ -107,10 +107,8 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
     return AccessResult::allowedIfHasPermissions($account, [
       'create ' . $entity_bundle . ' block content',
-      'access block library',
-    ])->orIf(AccessResult::allowedIfHasPermissions($account, [
       'administer block content',
-    ]));
+    ], 'OR');
   }
 
 }
