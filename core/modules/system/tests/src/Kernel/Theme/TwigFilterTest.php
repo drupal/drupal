@@ -124,7 +124,7 @@ class TwigFilterTest extends KernelTestBase {
         'message' => 'All attributes printed again.',
       ],
       [
-        'expected' => '<div id="quotes-here"><span class="gray-like-a-bunny bem__ized--top-feature" id="quotes-here">ID and class. Having the same ID twice is not valid markup but we want to make sure the filter doesn\'t use \Drupal\Component\Utility\Html::getUniqueId().</span></div>',
+        'expected' => '<div id="quotes-here"><span class="gray-like-a-bunny bem__used--top-feature" id="quotes-here">ID and class. Having the same ID twice is not valid markup but we want to make sure the filter doesn\'t use \Drupal\Component\Utility\Html::getUniqueId().</span></div>',
         'message' => 'Class and ID filtered.',
       ],
       [

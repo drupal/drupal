@@ -36,7 +36,7 @@ class ExtensionTest extends MigrateSqlSourceTestBase {
         'bootstrap' => '0',
         'schema_version' => '0',
         'weight' => '0',
-        'info' => 'a:10:{s:4:"name";s:16:"Menu translation";s:11:"description";s:40:"Supports translatable custom menu items.";s:12:"dependencies";a:4:{i:0;s:4:"i18n";i:1;s:4:"menu";i:2;s:10:"i18nblocks";i:3;s:11:"i18nstrings";}s:7:"package";s:13:"Multilanguage";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";},',
+        'info' => 'a:10:{s:4:"name";s:16:"Menu translation";s:11:"description";s:40:"Supports translatable custom menu items.";s:12:"dependencies";a:4:{i:0;s:4:"i18n";i:1;s:4:"menu";i:2;s:10:"i18nblocks";i:3;s:11:"i18nstrings";}s:7:"package";s:12:"Multilingual";s:4:"core";s:3:"6.x";s:7:"version";s:8:"6.x-1.10";s:7:"project";s:4:"i18n";s:9:"datestamp";s:10:"1318336004";s:10:"dependents";a:0:{}s:3:"php";s:5:"4.3.5";},',
       ],
       [
         'filename' => 'sites/all/modules/variable/variable.module ',

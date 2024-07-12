@@ -97,7 +97,7 @@ class ConfigOverrideTest extends KernelTestBase {
     // Write file to sync.
     $sync = $this->container->get('config.storage.sync');
     $expected_new_data = [
-      'foo' => 'barbar',
+      'foo' => 'new_foo',
       '404' => 'try again',
     ];
     $sync->write('config_test.system', $expected_new_data);
