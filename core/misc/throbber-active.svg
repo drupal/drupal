@@ -1,0 +1,7 @@
+<svg width="17" height="13" viewBox="0 0 170 130">
+  <g stroke="#0b73be" stroke-width="20" stroke-linecap="round" fill="none">
+    <circle cx="85" cy="65" r="48" />
+    <line x1="85" y1="65" x2="85" y2="17" />
+    <animateTransform attributeName="transform" type="rotate" from="0 85 65" to="360 85 65" dur=".72s" repeatCount="indefinite" />
+  </g>
+</svg>

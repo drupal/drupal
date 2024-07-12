@@ -13,7 +13,7 @@
 .ajax-progress-throbber .throbber {
   display: inline;
   padding: 1px 6px 2px;
-  background: transparent url(../throbber-active.gif) no-repeat 0 center;
+  background: transparent url(../throbber-active.svg) no-repeat 0 center;
 }
 .ajax-progress-throbber .message {
   display: inline;
