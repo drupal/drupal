@@ -261,7 +261,7 @@ function system_post_update_add_langcode_to_all_translatable_config(&$sandbox = 
     $config = \Drupal::configFactory()->getEditable($name);
     $typed_config = $typed_config_manager->createFromNameAndData($name, $config->getRawData());
     // Simple config is always a mapping.
-    assert($typed_config instanceof Mapping);
+    assert($typed_config instanceof Mapping, "Failed on config name '$name'");
 
     // If this config contains any elements (at any level of nesting) which
     // are translatable, but the config hasn't got a langcode, assign one. But
