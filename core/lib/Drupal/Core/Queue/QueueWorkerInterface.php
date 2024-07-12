@@ -38,6 +38,8 @@ interface QueueWorkerInterface extends PluginInspectionInterface {
    *   behave as with a normal Exception, and in addition will not attempt to
    *   process further items from the current item's queue during the current
    *   cron run.
+   * @throws \Drupal\Core\Queue\DelayedRequeueException
+   *   To leave an item in the queue until its lock expires.
    *
    * @see \Drupal\Core\Cron::processQueues()
    */
