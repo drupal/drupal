@@ -40,7 +40,6 @@ backported
 backporting
 backports
 bakeware
-barbar
 barchart
 basefield
 basepath
@@ -58,7 +57,6 @@ bidi
 bigpipe
 bitmask
 bkmgtpezy
-bkslshv
 blockarticles
 blockbasic
 blockcontent
@@ -219,7 +217,6 @@ etag
 eurozone
 evenodd
 eventhandler
-exampleurl
 exitcode
 expirable
 extlink
@@ -228,7 +225,6 @@ extraspace
 failonerror
 fakepath
 falsey
-falsish
 fapi
 fastcgi
 favourite
@@ -303,14 +299,12 @@ invokable
 isam
 isinstallable
 itok
-ized
 javascripts
 jessebeach
 jqueryui
 jsonlint
 jssdk
 justinrainbow
-kangarookitten
 keyevent
 keypresses
 keyvalue
@@ -386,9 +380,8 @@ mulrevpub
 multibuys
 multibyte
 multicardinality
-multilanguage
+multipass
 multisite
-multistar
 multistep
 multivalue
 multivalued
@@ -436,7 +429,6 @@ oembed
 omittable
 onecol
 oneplusfourgrid
-onetwo
 onewidgetfield
 optgroups
 optin
@@ -448,7 +440,6 @@ overrider
 overrider's
 overriders
 pagecache
-pagetop
 paramconverter
 parseable
 parsererror
@@ -500,7 +491,6 @@ prophesizing
 protobuf
 protossl
 pseudotag
-ptablenode
 puzzlepiece
 pwprompt
 questionmark
@@ -678,7 +668,6 @@ tmpfs
 toggleable
 tongatapu
 toolkits
-toolongdomainexampledomainexampledomainexampledomainexampledomain
 toplevel
 torder
 touchevents

@@ -59,13 +59,13 @@ class UrlHelperTest extends TestCase {
       // cspell:disable-next-line
       '3xampl3.com',
       'example.com/parenthesis',
-      'example.com/index.html#pagetop',
+      'example.com/index.html#page-top',
       'example.com:8080',
       'subdomain.example.com',
       'example.com/index.php/node',
       'example.com/index.php/node?param=false',
       'user@www.example.com',
-      'user:pass@www.example.com:8080/login.php?do=login&style=%23#pagetop',
+      'user:pass@www.example.com:8080/login.php?do=login&style=%23#page-top',
       '127.0.0.1',
       'example.org?',
       'john%20doe:secret:foo@example.org/',
@@ -158,10 +158,10 @@ class UrlHelperTest extends TestCase {
   public static function providerTestValidRelativeData(): array {
     $data = [
       'paren(the)sis',
-      'index.html#pagetop',
+      'index.html#page-top',
       'index.php/node',
       'index.php/node?param=false',
-      'login.php?do=login&style=%23#pagetop',
+      'login.php?do=login&style=%23#page-top',
     ];
 
     return self::dataEnhanceWithPrefix($data);

@@ -25,10 +25,10 @@ html .clear-block {
 
 /* v1 of the commented backslash hack. This \ character between rules appears to have the effect
 that macIE5 ignores the following rule. Odd, but extremely useful. */
-.bkslshv1 { background-color: #c00; }
+.backslash-v1 { background-color: #c00; }
 .test3 { display:block; }
 
-/**************** A multiline, multistar comment ***************
+/**************** A multiline, multi-star comment***************
 ****************************************************************/
 .test4 { display:block;}
 
