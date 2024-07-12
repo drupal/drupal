@@ -115,7 +115,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     // visually hidden, and there is no link to the image file.
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
     $file_url_generator = \Drupal::service('file_url_generator');
-    $expected_image_src = $file_url_generator->generateString(\Drupal::token()->replace('public://styles/large/public/[date:custom:Y]-[date:custom:m]/example_1.jpeg'));
+    $expected_image_src = $file_url_generator->generate(\Drupal::token()->replace('public://styles/large/public/[date:custom:Y]-[date:custom:m]/example_1.jpeg'))->toString();
     $this->assertStringContainsString($expected_image_src, $media_image->getAttribute('src'));
     $field = $assert_session->elementExists('xpath', '/div[1]', $media_item);
     $assert_session->elementExists('xpath', '/div[@class="visually-hidden"]', $field);
