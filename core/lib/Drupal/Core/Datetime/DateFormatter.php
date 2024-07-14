@@ -127,7 +127,7 @@ class DateFormatter implements DateFormatterInterface {
       }
     }
 
-    // Fall back to the 'medium' date format type if the format string is
+    // Fall back to the 'fallback' date format type if the format string is
     // empty, either from not finding a requested date format or being given an
     // empty custom format string.
     if (empty($format)) {
