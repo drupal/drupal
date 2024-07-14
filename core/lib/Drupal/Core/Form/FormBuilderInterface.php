@@ -49,10 +49,10 @@ interface FormBuilderInterface {
    * @param mixed ...$args
    *   Additional arguments are passed on to the functions called by
    *   \Drupal::formBuilder()->getForm(), including the unique form constructor
-   *   function. For example, the node_edit form requires that a node object is
-   *   passed in here when it is called. These are available to implementations
-   *   of hook_form_alter() and hook_form_FORM_ID_alter() as the array
-   *   $form_state->getBuildInfo()['args'].
+   *   function. For example, the node preview form requires that a node object
+   *   is passed in here when it is called. These are available to
+   *   implementations of hook_form_alter() and hook_form_FORM_ID_alter() as the
+   *   array $form_state->getBuildInfo()['args'].
    *
    * @return array
    *   The form array.
@@ -159,18 +159,12 @@ interface FormBuilderInterface {
    *   \Drupal::request()->request entry, include the key, but set the value to
    *   NULL.
    * @param mixed ...$args
-   *   Additional arguments are passed on to the functions called by
-   *   self::submitForm(), including the unique form constructor function.
-   *   For example, the node_edit form requires that a node object be passed
-   *   in here when it is called. Arguments that need to be passed by reference
-   *   should not be included here, but rather placed directly in the
-   *   $form_state build info array so that the reference can be preserved. For
-   *   example, a form builder function with the following signature:
-   *   @code
-   *   function my_module_form($form, FormStateInterface &$form_state, &$object) {
-   *   }
-   *   @endcode
-   *   would be called via self::submitForm() as follows:
+   *   Arguments that need to be passed by reference should not be included
+   *   here, but rather placed directly in the $form_state build info array so
+   *   that the reference can be preserved. For example, a form whose ID is
+   *   my_module_form, built from a class for which its buildForm() method
+   *   expects a &$object argument would be called via self::submitForm() as
+   *   follows:
    *   @code
    *   $form_state->setValues($my_form_values);
    *   $form_state->addBuildInfo('args', [&$object]);
