@@ -1,0 +1,13 @@
+/**
+ * @file
+ * Views UI Tabs styles for when JavaScript is not loaded.
+ */
+#views-display-menu-tabs {
+  display: flex;
+}
+
+div.views-display-top {
+  input.button {
+    display: inline-block;
+  }
+}

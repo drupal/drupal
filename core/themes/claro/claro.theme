@@ -59,6 +59,18 @@ function claro_page_attachments_alter(array &$attachments) {
     ],
     'dropbutton_noscript',
   ];
+
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'link',
+      '#noscript' => TRUE,
+      '#attributes' => [
+        'rel' => 'stylesheet',
+        'href' => $theme_path . '/css/components/views-ui-noscript.css?' . $query_string,
+      ],
+    ],
+    'views_ui_noscript',
+  ];
 }
 
 /**
