@@ -63,7 +63,7 @@
   opacity: 0.9;
   border-radius: 7px;
   background-color: #232323;
-  background-image: url(../../images/icons/loading-small.gif);
+  background-image: url(../../images/icons/loading-small.svg);
   background-repeat: no-repeat;
   background-position: center center;
 }
