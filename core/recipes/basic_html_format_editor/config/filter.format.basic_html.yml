@@ -6,8 +6,6 @@ dependencies:
 name: 'Basic HTML'
 format: basic_html
 weight: 0
-roles:
-  - authenticated
 filters:
   editor_file_reference:
     id: editor_file_reference

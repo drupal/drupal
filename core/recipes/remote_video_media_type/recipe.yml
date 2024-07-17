@@ -21,3 +21,4 @@ config:
       - views.view.media
     image:
       - image.style.medium
+      - image.style.thumbnail
