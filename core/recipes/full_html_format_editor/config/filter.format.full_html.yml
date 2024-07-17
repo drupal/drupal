@@ -6,8 +6,6 @@ dependencies:
 name: 'Full HTML'
 format: full_html
 weight: 2
-roles:
-  - administrator
 filters:
   editor_file_reference:
     id: editor_file_reference
