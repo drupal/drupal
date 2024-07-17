@@ -20,6 +20,10 @@ source:
     - user_mail_register_pending_approval_body
     - user_mail_status_blocked_subject
     - user_mail_status_blocked_body
+    - user_mail_register_pending_approval_admin_subject
+    - user_mail_register_pending_approval_admin_body
+    - user_mail_status_canceled_subject
+    - user_mail_status_canceled_body
   source_module: user
 process:
   'status_activated/subject':
@@ -64,6 +68,18 @@ process:
   'status_blocked/body':
     plugin: convert_tokens
     source: user_mail_status_blocked_body
+  'register_pending_approval_admin/subject':
+    plugin: convert_tokens
+    source: user_mail_register_pending_approval_admin_subject
+  'register_pending_approval_admin/body':
+    plugin: convert_tokens
+    source: user_mail_register_pending_approval_admin_body
+  'status_canceled/subject':
+    plugin: convert_tokens
+    source: user_mail_status_canceled_subject
+  'status_canceled/body':
+    plugin: convert_tokens
+    source: user_mail_status_canceled_body
 destination:
   plugin: config
   config_name: user.mail

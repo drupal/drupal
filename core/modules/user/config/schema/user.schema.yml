@@ -71,6 +71,8 @@ user.settings:
 user.mail:
   type: config_object
   label: 'Email settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     cancel_confirm:
       type: mail

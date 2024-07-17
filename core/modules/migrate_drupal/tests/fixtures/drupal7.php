@@ -66221,6 +66221,14 @@ $connection->insert('variable')
   'value' => 's:25:"Your account is approved!";',
 ))
 ->values(array(
+  'name' => 'user_mail_register_pending_approval_admin_subject',
+  'value' => 's:34:"Account pending for admin approval";',
+))
+->values(array(
+  'name' => 'user_mail_register_pending_approval_admin_body',
+  'value' => 's:32:"You have applied for an account.";',
+))
+->values(array(
   'name' => 'user_mail_status_blocked_body',
   'value' => 's:72:"You no longer please the robot overlords. Go to your room and chill out.";',
 ))
@@ -66530,6 +66538,20 @@ $connection->insert('variable_store')
   'realm_key' => 'is',
   'name' => 'user_mail_status_blocked_body',
   'value' => 'is - You no longer please the robot overlords. Go to your room and chill out.',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_register_pending_approval_admin_subject',
+  'value' => 'is - Account pending for admin approval',
+  'serialized' => '0',
+))
+->values(array(
+  'realm' => 'language',
+  'realm_key' => 'is',
+  'name' => 'user_mail_register_pending_approval_admin_body',
+  'value' => 'is - You have applied for an account.',
   'serialized' => '0',
 ))
 ->values(array(

@@ -20,6 +20,8 @@ source:
     - user_mail_register_pending_approval_body
     - user_mail_status_blocked_subject
     - user_mail_status_blocked_body
+    - user_mail_register_pending_approval_admin_subject
+    - user_mail_register_pending_approval_admin_body
   source_module: user
 process:
   'status_activated/subject': user_mail_status_activated_subject
@@ -36,6 +38,10 @@ process:
   'register_pending_approval/body': user_mail_register_pending_approval_body
   'status_blocked/subject': user_mail_status_blocked_subject
   'status_blocked/body': user_mail_status_blocked_body
+  'register_pending_approval_admin/subject': user_mail_register_pending_approval_admin_subject
+  'register_pending_approval_admin/body': user_mail_register_pending_approval_admin_body
+  'status_canceled/subject': user_mail_status_canceled_subject
+  'status_canceled/body': user_mail_status_canceled_body
 destination:
   plugin: config
   config_name: user.mail

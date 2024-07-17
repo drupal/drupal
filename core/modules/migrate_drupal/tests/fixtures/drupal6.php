@@ -10661,6 +10661,26 @@ $connection->insert('i18n_variable')
   'value' => 's:54:"fr - Account details for !username at !site (approved)";',
 ))
 ->values(array(
+  'name' => 'user_mail_register_pending_approval_admin_subject',
+  'language' => 'fr',
+  'value' => 's:68:"fr - Account details for !username at !site (pending admin approval)";',
+))
+->values(array(
+  'name' => 'user_mail_register_pending_approval_admin_body',
+  'language' => 'fr',
+  'value' => 's:59:"fr - !username has applied for an account.\r\n\r\n!edit_uri";',
+))
+->values(array(
+  'name' => 'user_mail_status_canceled_subject',
+  'language' => 'fr',
+  'value' => 's:54:"fr - Account details for !username at !site (canceled)";',
+))
+->values(array(
+  'name' => 'user_mail_status_canceled_body',
+  'language' => 'fr',
+  'value' => 's:63:"fr - !username,\r\n\r\nYour account on !site has been canceled.";',
+))
+->values(array(
   'name' => 'user_mail_status_blocked_body',
   'language' => 'fr',
   'value' => "s:58:\"fr - !username,\r\n\r\nYour account on !site has been blocked.\";",
@@ -10844,6 +10864,26 @@ $connection->insert('i18n_variable')
   'name' => 'user_mail_status_activated_subject',
   'language' => 'zu',
   'value' => 's:49:"Account details for !username at !site (approved)";',
+))
+->values(array(
+  'name' => 'user_mail_register_pending_approval_admin_subject',
+  'language' => 'zu',
+  'value' => 's:63:"Account details for !username at !site (pending admin approval)";',
+))
+->values(array(
+  'name' => 'user_mail_register_pending_approval_admin_body',
+  'language' => 'zu',
+  'value' => 's:54:"!username has applied for an account.\r\n\r\n!edit_uri";',
+))
+->values(array(
+  'name' => 'user_mail_status_canceled_subject',
+  'language' => 'zu',
+  'value' => 's:49:"Account details for !username at !site (canceled)";',
+))
+->values(array(
+  'name' => 'user_mail_status_canceled_body',
+  'language' => 'zu',
+  'value' => 's:58:"!username,\r\n\r\nYour account on !site has been canceled.";',
 ))
 ->values(array(
   'name' => 'user_mail_status_blocked_body',
@@ -50490,6 +50530,22 @@ $connection->insert('variable')
 ->values(array(
   'name' => 'user_mail_status_activated_subject',
   'value' => 's:49:"Account details for !username at !site (approved)";',
+))
+->values(array(
+  'name' => 'user_mail_register_pending_approval_admin_subject',
+  'value' => 's:63:"Account details for !username at !site (pending admin approval)";',
+))
+->values(array(
+  'name' => 'user_mail_register_pending_approval_admin_body',
+  'value' => 's:54:"!username has applied for an account.\r\n\r\n!edit_uri";',
+))
+->values(array(
+  'name' => 'user_mail_status_canceled_subject',
+  'value' => 's:49:"Account details for !username at !site (canceled)";',
+))
+->values(array(
+  'name' => 'user_mail_status_canceled_body',
+  'value' => 's:54:"!username,\n\nYour account on !site has been canceled.";',
 ))
 ->values(array(
   'name' => 'user_mail_status_blocked_body',
