@@ -138,7 +138,7 @@ abstract class TextItemBase extends FieldItemBase {
     }
     else {
       // Textfield handling.
-      $max = ceil($settings['max_length'] / 3);
+      $max = (int) ceil($settings['max_length'] / 3);
       $value = substr($random->sentences(mt_rand(1, $max), FALSE), 0, $settings['max_length']);
     }
 
