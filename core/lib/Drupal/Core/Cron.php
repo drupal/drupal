@@ -226,7 +226,7 @@ class Cron implements CronInterface {
       // Each queue will be processed immediately when it is reached for the
       // first time, as zero > currentTime will never be true.
       if ($process_from > $this->time->getCurrentMicroTime()) {
-        $this->usleep(round($process_from - $this->time->getCurrentMicroTime(), 3) * 1000000);
+        $this->usleep((int) round($process_from - $this->time->getCurrentMicroTime(), 3) * 1000000);
       }
 
       try {
