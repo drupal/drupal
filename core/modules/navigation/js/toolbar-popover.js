@@ -9,6 +9,7 @@
 
 const POPOVER_OPEN_DELAY = 150;
 const POPOVER_CLOSE_DELAY = 400;
+const POPOVER_NO_CLICK_DELAY = 500;
 
 ((Drupal, once) => {
   Drupal.behaviors.navigationProcessPopovers = {
@@ -42,12 +43,17 @@ const POPOVER_CLOSE_DELAY = 400;
 
         const expandPopover = () => {
           popover.classList.add('toolbar-popover--expanded');
+          button.dataset.drupalNoClick = 'true';
           tooltip.removeAttribute('inert');
+          setTimeout(() => {
+            delete button.dataset.drupalNoClick;
+          }, POPOVER_NO_CLICK_DELAY);
         };
 
         const collapsePopover = () => {
           popover.classList.remove('toolbar-popover--expanded');
           tooltip.setAttribute('inert', true);
+          delete button.dataset.drupalNoClick;
         };
 
         /**
@@ -134,7 +140,10 @@ const POPOVER_CLOSE_DELAY = 400;
         button.addEventListener('click', (e) => {
           const state =
             e.currentTarget.getAttribute('aria-expanded') === 'false';
-          toggleState(state);
+
+          if (!e.currentTarget.dataset.drupalNoClick) {
+            toggleState(state);
+          }
         });
 
         // Listens events from sidebar.js.
