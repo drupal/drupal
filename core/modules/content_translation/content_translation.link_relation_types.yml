@@ -1,0 +1,14 @@
+# Content Translation extension relation types.
+# See https://tools.ietf.org/html/rfc5988#section-4.2.
+drupal:content-translation-overview:
+  uri: https://drupal.org/link-relations/drupal-content-translation-overview
+  description: A page where translations of a resource can be viewed.
+drupal:content-translation-add:
+  uri: https://drupal.org/link-relations/drupal-content-translation-add
+  description: A page where a translation of a resource can be created.
+drupal:content-translation-edit:
+  uri: https://drupal.org/link-relations/drupal-content-translation-edit
+  description: A page where a translation of a resource can be edited.
+drupal:content-translation-delete:
+  uri: https://drupal.org/link-relations/drupal-content-translation-delete
+  description: A page where a translation of a resource can be deleted.
