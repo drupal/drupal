@@ -38,7 +38,7 @@ final class WorkspacesLazyBuilders implements TrustedCallbackInterface {
       '#title' => $active_workspace ? $active_workspace->label() : $this->t('Live'),
       '#url' => Url::fromRoute('entity.workspace.collection', [], ['query' => \Drupal::destination()->getAsArray()]),
       '#attributes' => [
-        'title' => t('Switch workspace'),
+        'title' => $this->t('Switch workspace'),
         'class' => [
           'toolbar-item',
           'toolbar-icon',

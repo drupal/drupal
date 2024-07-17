@@ -59,7 +59,7 @@ class ViewsData {
       $table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
 
       $data[$table]['moderation_state'] = [
-        'title' => t('Moderation state'),
+        'title' => $this->t('Moderation state'),
         'field' => [
           'id' => 'moderation_state_field',
           'default_formatter' => 'content_moderation_state',
@@ -71,7 +71,7 @@ class ViewsData {
 
       $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
       $data[$revision_table]['moderation_state'] = [
-        'title' => t('Moderation state'),
+        'title' => $this->t('Moderation state'),
         'field' => [
           'id' => 'moderation_state_field',
           'default_formatter' => 'content_moderation_state',

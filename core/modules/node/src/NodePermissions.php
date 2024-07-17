@@ -57,11 +57,11 @@ class NodePermissions {
       ],
       "view $type_id revisions" => [
         'title' => $this->t('%type_name: View revisions', $type_params),
-        'description' => t('To view a revision, you also need permission to view the content item.'),
+        'description' => $this->t('To view a revision, you also need permission to view the content item.'),
       ],
       "revert $type_id revisions" => [
         'title' => $this->t('%type_name: Revert revisions', $type_params),
-        'description' => t('To revert a revision, you also need permission to edit the content item.'),
+        'description' => $this->t('To revert a revision, you also need permission to edit the content item.'),
       ],
       "delete $type_id revisions" => [
         'title' => $this->t('%type_name: Delete revisions', $type_params),
