@@ -1610,12 +1610,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/serialization/src/Normalizer/EntityNormalizer.php',
 ];
 $ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/tests/src/Unit/Normalizer/NormalizerBaseTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\shortcut\\\\Form\\\\SetCustomize\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'count' => 1,
