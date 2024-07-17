@@ -55,7 +55,7 @@ class ProfileValues extends Migration {
           }
         }
       }
-      catch (RequirementsException $e) {
+      catch (RequirementsException) {
         // The checkRequirements() call will fail when the profile module does
         // not exist on the source site, or if the required migrations have not
         // yet run.

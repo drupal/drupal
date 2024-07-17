@@ -237,7 +237,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
     try {
       \Drupal::service('file_system')->deleteRecursive($directory);
     }
-    catch (FileException $e) {
+    catch (FileException) {
       // Ignore failed deletes.
     }
     $this->drupalGet('/admin/reports/status');

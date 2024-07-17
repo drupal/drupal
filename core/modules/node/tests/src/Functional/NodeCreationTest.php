@@ -142,7 +142,7 @@ class NodeCreationTest extends NodeTestBase {
       Node::create($edit)->save();
       $this->fail('Expected exception has not been thrown.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Expected exception; just continue testing.
     }
 

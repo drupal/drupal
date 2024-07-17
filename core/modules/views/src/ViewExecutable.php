@@ -1964,7 +1964,7 @@ class ViewExecutable {
     try {
       $this->routeProvider->getRouteByName($display_handler->getRouteName());
     }
-    catch (RouteNotFoundException $e) {
+    catch (RouteNotFoundException) {
       return FALSE;
     }
 

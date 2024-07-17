@@ -73,7 +73,7 @@ class ServerCommand extends Command {
     try {
       $kernel = $this->boot();
     }
-    catch (ConnectionNotDefinedException $e) {
+    catch (ConnectionNotDefinedException) {
       $io->getErrorStyle()->error("No installation found. Use the 'install' command.");
       return 1;
     }

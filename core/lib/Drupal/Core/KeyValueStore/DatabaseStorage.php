@@ -87,7 +87,7 @@ class DatabaseStorage extends StorageBase {
         }
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // @todo Perhaps if the database is never going to be available,
       // key/value requests should return FALSE in order to allow exception
       // handling to occur but for now, keep it an array, always.
@@ -259,9 +259,9 @@ class DatabaseStorage extends StorageBase {
     }
     // If the table already exists, then attempting to recreate it will throw an
     // exception. In this case just catch the exception and do nothing.
-    catch (DatabaseException $e) {
+    catch (DatabaseException) {
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       return FALSE;
     }
     return TRUE;

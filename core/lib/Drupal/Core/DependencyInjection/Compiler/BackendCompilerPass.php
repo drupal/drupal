@@ -51,7 +51,7 @@ class BackendCompilerPass implements CompilerPassInterface {
         $default_backend = $container->get('database')->databaseType();
         $container->set('database', NULL);
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         // If Drupal is not installed or a test doesn't define database there
         // is nothing to override.
         return;

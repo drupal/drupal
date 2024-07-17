@@ -57,7 +57,7 @@ class ExtensionPathResolver {
     try {
       return $this->extensionLists[$type]->getPathname($name);
     }
-    catch (UnknownExtensionException $e) {
+    catch (UnknownExtensionException) {
       // Catch the exception. This will result in triggering an error.
       // If the filename is still unknown, create a user-level error message.
       trigger_error(sprintf('The following %s is missing from the file system: %s', $type, $name), E_USER_WARNING);

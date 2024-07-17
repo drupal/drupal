@@ -148,7 +148,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
         ->fetchField();
     }
     // The table might not exist.
-    catch (\Exception $e) {
+    catch (\Exception) {
       return FALSE;
     }
   }

@@ -57,7 +57,7 @@ class AssetDumper implements AssetDumperUriInterface {
         return FALSE;
       }
     }
-    catch (FileException $e) {
+    catch (FileException) {
       return FALSE;
     }
     // If CSS/JS gzip compression is enabled then create a gzipped version of
@@ -73,7 +73,7 @@ class AssetDumper implements AssetDumperUriInterface {
           return FALSE;
         }
       }
-      catch (FileException $e) {
+      catch (FileException) {
         return FALSE;
       }
     }

@@ -80,7 +80,7 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
     try {
       $node_types->checkRequirements();
     }
-    catch (RequirementsException $e) {
+    catch (RequirementsException) {
       // If the d7_node_type requirements failed, that means we do not have a
       // Drupal source database configured - there is nothing to generate.
       return $this->derivatives;
@@ -121,7 +121,7 @@ class D7NodeDeriver extends DeriverBase implements ContainerDeriverInterface {
         $this->derivatives[$node_type] = $migration->getPluginDefinition();
       }
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // Once we begin iterating the source plugin it is possible that the
       // source tables will not exist. This can happen when the
       // MigrationPluginManager gathers up the migration definitions but we do

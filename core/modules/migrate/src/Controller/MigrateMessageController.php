@@ -146,7 +146,7 @@ class MigrateMessageController extends ControllerBase {
     try {
       $fields = $source_plugin->fields();
     }
-    catch (DatabaseConnectionRefusedException | DatabaseNotFoundException | RequirementsException | \PDOException $e) {
+    catch (DatabaseConnectionRefusedException | DatabaseNotFoundException | RequirementsException | \PDOException) {
     }
 
     $source_id_field_names = array_keys($source_plugin->getIds());

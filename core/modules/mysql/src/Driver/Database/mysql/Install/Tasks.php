@@ -53,7 +53,7 @@ class Tasks extends InstallTasks {
       }
       return $this->t('MySQL, Percona Server, or equivalent');
     }
-    catch (ConnectionNotDefinedException $e) {
+    catch (ConnectionNotDefinedException) {
       return $this->t('MySQL, MariaDB, Percona Server, or equivalent');
     }
   }

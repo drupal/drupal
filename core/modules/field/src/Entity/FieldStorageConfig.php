@@ -688,7 +688,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
       try {
         $items = $entity->get($this->getName());
       }
-      catch (\InvalidArgumentException $e) {
+      catch (\InvalidArgumentException) {
         // When a field doesn't exist, create a new field item list using a
         // temporary base field definition. This step is necessary since there
         // may not be a field configuration for the storage when creating a new

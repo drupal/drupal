@@ -26,7 +26,7 @@ class LinkTypeConstraintValidator extends ConstraintValidator {
       try {
         $url = $link_item->getUrl();
       }
-      catch (\InvalidArgumentException $e) {
+      catch (\InvalidArgumentException) {
         $uri_is_valid = FALSE;
       }
 

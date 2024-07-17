@@ -250,10 +250,10 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       try {
         $destination_ids = $this->migrateStub->createStub($stub_migration, $source_id_values[$stub_migration], [], FALSE);
       }
-      catch (\LogicException $e) {
+      catch (\LogicException) {
         // For BC reasons, we must allow attempting to stub a derived migration.
       }
-      catch (PluginNotFoundException $e) {
+      catch (PluginNotFoundException) {
         // For BC reasons, we must allow attempting to stub a non-existent
         // migration.
       }

@@ -374,7 +374,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       $field_storage->save();
       $this->fail('Update succeeded.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Expected exception; just continue testing.
     }
 

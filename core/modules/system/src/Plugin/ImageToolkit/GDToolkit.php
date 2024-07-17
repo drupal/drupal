@@ -293,7 +293,7 @@ class GDToolkit extends ImageToolkitBase {
         $this->fileSystem->move($destination, $permanent_destination, FileExists::Replace);
         return TRUE;
       }
-      catch (FileException $e) {
+      catch (FileException) {
         return FALSE;
       }
     }

@@ -47,7 +47,7 @@ class TestSiteTearDownCommand extends Command {
     try {
       $test_database = new TestDatabase($db_prefix);
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       $io = new SymfonyStyle($input, $output);
       $io->getErrorStyle()->error("Invalid database prefix: $db_prefix\n\nValid database prefixes match the regular expression '/test(\d+)$/'. For example, 'test12345678'.");
       // Display the synopsis of the command like Composer does.

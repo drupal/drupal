@@ -211,7 +211,7 @@ class File extends ContentEntityBase implements FileInterface {
       try {
         \Drupal::service('file_system')->delete($entity->getFileUri());
       }
-      catch (FileException $e) {
+      catch (FileException) {
         // Ignore and continue.
       }
     }

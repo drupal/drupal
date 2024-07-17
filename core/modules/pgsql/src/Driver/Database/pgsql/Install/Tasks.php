@@ -137,7 +137,7 @@ class Tasks extends InstallTasks {
         ]));
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail(t('Drupal could not determine the encoding of the database was set to UTF-8'));
     }
   }
@@ -161,7 +161,7 @@ class Tasks extends InstallTasks {
       try {
         $database_connection->query($query);
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         // Ignore possible errors when the user doesn't have the necessary
         // privileges to ALTER the database.
       }
@@ -213,7 +213,7 @@ class Tasks extends InstallTasks {
       try {
         $database_connection->query($query);
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         // Ignore possible errors when the user doesn't have the necessary
         // privileges to ALTER the database.
       }

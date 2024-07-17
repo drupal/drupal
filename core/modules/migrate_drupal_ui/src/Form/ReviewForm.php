@@ -301,7 +301,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
             try {
               $destination_module_names[] = $this->moduleExtensionList->getName($destination_module);
             }
-            catch (UnknownExtensionException $e) {
+            catch (UnknownExtensionException) {
               $destination_module_names[] = $destination_module;
             }
           }

@@ -404,7 +404,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     try {
       return (bool) $this->query('SELECT JSON_TYPEOF(\'1\')');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       return FALSE;
     }
   }

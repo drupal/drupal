@@ -105,7 +105,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
       $plugin = $this->editorPluginManager()->createInstance($this->editor);
       $this->settings += $plugin->getDefaultSettings();
     }
-    catch (PluginNotFoundException $e) {
+    catch (PluginNotFoundException) {
       // When a Text Editor plugin has gone missing, still allow the Editor
       // config entity to be constructed. The only difference is that default
       // settings are not added.

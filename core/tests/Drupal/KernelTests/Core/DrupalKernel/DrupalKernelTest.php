@@ -190,7 +190,7 @@ class DrupalKernelTest extends KernelTestBase {
     try {
       $kernel->setSitePath('/dev/null');
     }
-    catch (\LogicException $e) {
+    catch (\LogicException) {
       $pass = TRUE;
     }
     $this->assertTrue($pass, 'Throws LogicException if DrupalKernel::setSitePath() is called after boot');

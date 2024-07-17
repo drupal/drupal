@@ -92,12 +92,12 @@ class AccessManager implements AccessManagerInterface {
       $route_match = new RouteMatch($route_name, $route, $upcasted_parameters, $parameters);
       return $this->check($route_match, $account, NULL, $return_as_object);
     }
-    catch (RouteNotFoundException $e) {
+    catch (RouteNotFoundException) {
       // Cacheable until extensions change.
       $result = AccessResult::forbidden()->addCacheTags(['config:core.extension']);
       return $return_as_object ? $result : $result->isAllowed();
     }
-    catch (ParamNotConvertedException $e) {
+    catch (ParamNotConvertedException) {
       // Uncacheable because conversion of the parameter may not have been
       // possible due to dynamic circumstances.
       $result = AccessResult::forbidden()->setCacheMaxAge(0);

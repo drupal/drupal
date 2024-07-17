@@ -23,7 +23,7 @@ class LinkNotExistingInternalConstraintValidator extends ConstraintValidator {
         $url = $value->getUrl();
       }
       // If the URL is malformed this constraint cannot check further.
-      catch (\InvalidArgumentException $e) {
+      catch (\InvalidArgumentException) {
         return;
       }
 
@@ -34,13 +34,13 @@ class LinkNotExistingInternalConstraintValidator extends ConstraintValidator {
         }
         // The following exceptions are all possible during URL generation, and
         // should be considered as disallowed URLs.
-        catch (RouteNotFoundException $e) {
+        catch (RouteNotFoundException) {
           $allowed = FALSE;
         }
-        catch (InvalidParameterException $e) {
+        catch (InvalidParameterException) {
           $allowed = FALSE;
         }
-        catch (MissingMandatoryParametersException $e) {
+        catch (MissingMandatoryParametersException) {
           $allowed = FALSE;
         }
         if (!$allowed) {

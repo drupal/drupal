@@ -105,7 +105,7 @@ class ModuleHandlerTest extends KernelTestBase {
       $result = $this->moduleInstaller()->install(['dblog']);
       $this->fail('ModuleInstaller::install() throws an exception if dependencies are missing.');
     }
-    catch (MissingDependencyException $e) {
+    catch (MissingDependencyException) {
       // Expected exception; just continue testing.
     }
 
@@ -288,7 +288,7 @@ class ModuleHandlerTest extends KernelTestBase {
       $this->moduleInstaller()->uninstall(['entity_test']);
       $this->fail($message);
     }
-    catch (ModuleUninstallValidatorException $e) {
+    catch (ModuleUninstallValidatorException) {
       // Expected exception; just continue testing.
     }
 
@@ -298,7 +298,7 @@ class ModuleHandlerTest extends KernelTestBase {
       $this->moduleInstaller()->uninstall(['help']);
       $this->fail($message);
     }
-    catch (ModuleUninstallValidatorException $e) {
+    catch (ModuleUninstallValidatorException) {
       // Expected exception; just continue testing.
     }
 

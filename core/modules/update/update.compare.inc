@@ -372,7 +372,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     try {
       $release_module_version = ExtensionVersion::createFromVersionString($release->getVersion());
     }
-    catch (UnexpectedValueException $exception) {
+    catch (UnexpectedValueException) {
       continue;
     }
     // This release is supported only if it is in a supported branch and is

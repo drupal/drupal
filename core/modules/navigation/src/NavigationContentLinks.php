@@ -197,7 +197,7 @@ final class NavigationContentLinks implements ContainerInjectionInterface {
       $this->routeProvider->getRouteByName($link['route_name']);
       $links[$link_name] = $link + ['menu_name' => 'content', 'provider' => 'navigation'];
     }
-    catch (RouteNotFoundException $e) {
+    catch (RouteNotFoundException) {
       // The module isn't installed, or the route (such as provided by a view)
       // has been deleted.
     }

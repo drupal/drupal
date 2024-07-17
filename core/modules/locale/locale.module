@@ -1272,7 +1272,7 @@ function _locale_rebuild_js($langcode = NULL) {
     try {
       $file_system->delete($dir . '/' . $language->getId() . '_' . $locale_javascripts[$language->getId()] . '.js');
     }
-    catch (FileException $e) {
+    catch (FileException) {
       // Ignore.
     }
     $locale_javascripts[$language->getId()] = '';
@@ -1311,7 +1311,7 @@ function _locale_rebuild_js($langcode = NULL) {
         $status = 'error';
       }
     }
-    catch (FileException $e) {
+    catch (FileException) {
       // Do nothing.
     }
   }

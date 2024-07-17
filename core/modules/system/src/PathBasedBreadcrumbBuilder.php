@@ -227,7 +227,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $request->attributes->add($this->router->matchRequest($request));
       return $request;
     }
-    catch (ParamNotConvertedException | ResourceNotFoundException | MethodNotAllowedException | AccessDeniedHttpException | NotFoundHttpException $e) {
+    catch (ParamNotConvertedException | ResourceNotFoundException | MethodNotAllowedException | AccessDeniedHttpException | NotFoundHttpException) {
       return NULL;
     }
   }

@@ -43,7 +43,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
       $entity->save();
       $this->fail('Exception thrown when attempting to save a configuration entity with a UUID that does not match the existing UUID.');
     }
-    catch (ConfigDuplicateUUIDException $e) {
+    catch (ConfigDuplicateUUIDException) {
       // Expected exception; just continue testing.
     }
 

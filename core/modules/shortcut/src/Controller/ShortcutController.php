@@ -42,7 +42,7 @@ class ShortcutController extends ControllerBase {
       $shortcut->delete();
       $this->messenger()->addStatus($this->t('The shortcut %title has been deleted.', ['%title' => $label]));
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->messenger()->addStatus($this->t('Unable to delete the shortcut for %title.', ['%title' => $label]), 'error');
     }
 

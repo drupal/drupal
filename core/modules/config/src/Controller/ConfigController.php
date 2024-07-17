@@ -134,7 +134,7 @@ class ConfigController implements ContainerInjectionInterface {
     try {
       $this->fileSystem->delete($this->fileSystem->getTempDirectory() . '/config.tar.gz');
     }
-    catch (FileException $e) {
+    catch (FileException) {
       // Ignore failed deletes.
     }
 

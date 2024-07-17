@@ -35,7 +35,7 @@ class ToolbarItemConditionsMetConstraintValidator extends ConstraintValidator im
     try {
       $definition = $this->findDefinitionForToolbarItem($toolbar_item);
     }
-    catch (\OutOfBoundsException $e) {
+    catch (\OutOfBoundsException) {
       // No plugin definition found for this toolbar item. It's the
       // responsibility of another validation constraint to raise this problem.
       // @see \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraint

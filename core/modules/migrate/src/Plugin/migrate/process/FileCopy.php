@@ -191,7 +191,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
         return $this->fileSystem->copy($source, $destination, $fileExists);
       }
     }
-    catch (FileException $e) {
+    catch (FileException) {
       return FALSE;
     }
   }

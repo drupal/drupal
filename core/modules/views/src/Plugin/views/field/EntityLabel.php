@@ -111,10 +111,10 @@ class EntityLabel extends FieldPluginBase {
         $this->options['alter']['url'] = $entity->toUrl();
         $this->options['alter']['make_link'] = TRUE;
       }
-      catch (UndefinedLinkTemplateException $e) {
+      catch (UndefinedLinkTemplateException) {
         $this->options['alter']['make_link'] = FALSE;
       }
-      catch (EntityMalformedException $e) {
+      catch (EntityMalformedException) {
         $this->options['alter']['make_link'] = FALSE;
       }
     }

@@ -176,7 +176,7 @@ function update_manager_archive_extract($file, $directory) {
     try {
       \Drupal::service('file_system')->deleteRecursive($extract_location);
     }
-    catch (FileException $e) {
+    catch (FileException) {
       // Ignore failed deletes.
     }
   }

@@ -383,7 +383,7 @@ class RouteProviderTest extends KernelTestBase {
       $this->assertCount(1, $routes, 'The correct number of routes was found.');
       $this->assertNotNull($routes->get('foo'), 'The first matching route was found.');
     }
-    catch (ResourceNotFoundException $e) {
+    catch (ResourceNotFoundException) {
       $this->fail('No matching route found with default argument value.');
     }
   }
@@ -422,7 +422,7 @@ class RouteProviderTest extends KernelTestBase {
       $this->assertCount(1, $routes, 'The correct number of routes was found.');
       $this->assertNotNull($routes->get('foo'), 'The first matching route was found.');
     }
-    catch (ResourceNotFoundException $e) {
+    catch (ResourceNotFoundException) {
       $this->fail('No matching route found with default argument value.');
     }
   }
@@ -461,7 +461,7 @@ class RouteProviderTest extends KernelTestBase {
       $this->assertNotNull($routes->get('foo'), 'The second matching route was found.');
       $this->assertNull($routes->get('eep'), 'Non-matching route was not found.');
     }
-    catch (ResourceNotFoundException $e) {
+    catch (ResourceNotFoundException) {
       $this->fail('No matching route found with default argument value.');
     }
   }
@@ -500,7 +500,7 @@ class RouteProviderTest extends KernelTestBase {
       $this->assertNotNull($routes->get('foo2'), 'The second matching route was found.');
       $this->assertNull($routes->get('eep'), 'Non-matching route was not found.');
     }
-    catch (ResourceNotFoundException $e) {
+    catch (ResourceNotFoundException) {
       $this->fail('No matching route found with default argument value.');
     }
   }
@@ -535,7 +535,7 @@ class RouteProviderTest extends KernelTestBase {
 
       $this->assertCount(1, $routes, 'The correct number of routes was found.');
     }
-    catch (ResourceNotFoundException $e) {
+    catch (ResourceNotFoundException) {
       $this->fail('No matchout route found with 0 as argument value');
     }
   }
@@ -680,7 +680,7 @@ class RouteProviderTest extends KernelTestBase {
     try {
       $provider->getRouteByName('invalid_name');
     }
-    catch (RouteNotFoundException $e) {
+    catch (RouteNotFoundException) {
       $exception_thrown = TRUE;
     }
     $this->assertTrue($exception_thrown, 'Random route was not found.');

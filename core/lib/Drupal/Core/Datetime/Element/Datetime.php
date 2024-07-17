@@ -94,7 +94,7 @@ class Datetime extends DateElementBase {
         $date_time_input = trim($date_input . ' ' . $time_input);
         $date = DrupalDateTime::createFromFormat($date_time_format, $date_time_input, $element['#date_timezone']);
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         $date = NULL;
       }
       $input = [

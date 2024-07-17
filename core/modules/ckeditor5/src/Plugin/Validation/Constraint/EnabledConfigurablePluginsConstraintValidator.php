@@ -35,7 +35,7 @@ class EnabledConfigurablePluginsConstraintValidator extends ConstraintValidator 
     try {
       $plugin_settings = $this->context->getRoot()->get('settings.plugins')->getValue();
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       $plugin_settings = [];
     }
 

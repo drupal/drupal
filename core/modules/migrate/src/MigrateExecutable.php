@@ -452,7 +452,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         try {
           $value = $plugin->transform($value, $this, $row, $destination);
         }
-        catch (MigrateSkipProcessException $e) {
+        catch (MigrateSkipProcessException) {
           $value = NULL;
           break;
         }

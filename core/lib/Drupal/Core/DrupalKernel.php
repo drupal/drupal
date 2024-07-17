@@ -1422,7 +1422,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     try {
       $this->bootstrapContainer->get('cache.container')->set($this->getContainerCacheKey(), $container_definition);
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // There is no way to get from the Cache API if the cache set was
       // successful or not, hence an Exception is caught and the caller informed
       // about the error condition.
@@ -1453,7 +1453,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       try {
         $this->configStorage = BootstrapConfigStorageFactory::get($this->classLoader);
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         $this->configStorage = new NullStorage();
       }
     }
@@ -1578,7 +1578,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     try {
       $http_host = $request->getHost();
     }
-    catch (\UnexpectedValueException $e) {
+    catch (\UnexpectedValueException) {
       return FALSE;
     }
 
@@ -1636,7 +1636,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       Request::setFactory([$request_factory, 'createRequest'](...));
 
     }
-    catch (\UnexpectedValueException $e) {
+    catch (\UnexpectedValueException) {
       return FALSE;
     }
 

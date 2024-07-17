@@ -56,7 +56,7 @@ class Provider {
         $this->endpoints[] = new Endpoint($endpoint['url'], $this, $endpoint['schemes'], $endpoint['formats'], $endpoint['discovery']);
       }
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       // Just skip all the invalid endpoints.
       // @todo Log the exception message to help with debugging in
       // https://www.drupal.org/project/drupal/issues/2972846.

@@ -315,7 +315,7 @@ class RouterTest extends BrowserTestBase {
       \Drupal::service('router.route_provider')->getRouteByName('router_test.1');
       $this->fail('Route was delete on uninstall.');
     }
-    catch (RouteNotFoundException $e) {
+    catch (RouteNotFoundException) {
       // Expected exception; just continue testing.
     }
     // Install the module again.

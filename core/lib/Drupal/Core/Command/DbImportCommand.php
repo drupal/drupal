@@ -62,7 +62,7 @@ class DbImportCommand extends DbCommandBase {
     try {
       require $script;
     }
-    catch (SchemaObjectExistsException $e) {
+    catch (SchemaObjectExistsException) {
       throw new \RuntimeException('An existing Drupal installation exists at this location. Try removing all tables or changing the database prefix in your settings.php file.');
     }
     Database::setActiveConnection($old_key);

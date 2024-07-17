@@ -62,7 +62,7 @@ class Color extends FormElementBase {
       try {
         $form_state->setValueForElement($element, ColorUtility::rgbToHex(ColorUtility::hexToRgb($value)));
       }
-      catch (\InvalidArgumentException $e) {
+      catch (\InvalidArgumentException) {
         $form_state->setError($element, t('%name must be a valid color.', ['%name' => empty($element['#title']) ? $element['#parents'][0] : $element['#title']]));
       }
     }

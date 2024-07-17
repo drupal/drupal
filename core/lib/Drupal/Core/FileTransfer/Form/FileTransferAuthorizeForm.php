@@ -207,7 +207,7 @@ class FileTransferAuthorizeForm extends FormBase {
             $form_state->setResponse($response);
           }
         }
-        catch (\Exception $e) {
+        catch (\Exception) {
           // If there is no database available, we don't care and just skip
           // this part entirely.
         }

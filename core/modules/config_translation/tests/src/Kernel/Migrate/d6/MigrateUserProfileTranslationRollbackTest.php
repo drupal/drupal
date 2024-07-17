@@ -61,7 +61,7 @@ class MigrateUserProfileTranslationRollbackTest extends MigrateDrupal6TestBase {
         (new MigrateExecutable($migration, $this))->rollback();
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
     }
   }
 

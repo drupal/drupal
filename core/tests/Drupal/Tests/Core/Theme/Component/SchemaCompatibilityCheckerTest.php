@@ -36,7 +36,7 @@ class SchemaCompatibilityCheckerTest extends UnitTestCase {
       $this->checker->isCompatible($first_schema, $second_schema);
       $is_compatible = TRUE;
     }
-    catch (IncompatibleComponentSchema $e) {
+    catch (IncompatibleComponentSchema) {
       $is_compatible = FALSE;
     }
     $this->assertSame($expected, $is_compatible);

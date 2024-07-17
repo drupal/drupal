@@ -107,7 +107,7 @@ function views_tokens($type, $tokens, array $data, array $options, BubbleableMet
                 ->toString();
             }
           }
-          catch (\InvalidArgumentException $e) {
+          catch (\InvalidArgumentException) {
             // The view has no URL so we leave the value empty.
             $replacements[$original] = '';
           }

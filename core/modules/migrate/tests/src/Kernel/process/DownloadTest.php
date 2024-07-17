@@ -83,7 +83,7 @@ class DownloadTest extends FileTestBase {
       $fix_permissions();
       $this->fail('MigrateException was not thrown for non-writable destination URI.');
     }
-    catch (MigrateException $e) {
+    catch (MigrateException) {
       $this->assertTrue(TRUE, 'MigrateException was thrown for non-writable destination URI.');
       $fix_permissions();
     }

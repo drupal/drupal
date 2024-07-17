@@ -52,7 +52,7 @@ class QueryTest extends DatabaseTestBase {
       $this->connection->query("SELECT * FROM {test} WHERE [name] = :name", [':name' => $condition])->fetchObject();
       $this->fail('SQL injection attempt via array arguments should result in a database exception.');
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       // Expected exception; just continue testing.
     }
 

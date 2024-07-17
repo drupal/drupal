@@ -70,7 +70,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->storage->exists('config.settings');
       $this->fail('Expected exception not thrown from exists()');
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // Exception was expected
     }
 
@@ -78,7 +78,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->storage->read('config.settings');
       $this->fail('Expected exception not thrown from read()');
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // Exception was expected
     }
 
@@ -86,7 +86,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->storage->readMultiple(['config.settings', 'config.settings2']);
       $this->fail('Expected exception not thrown from readMultiple()');
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // Exception was expected
     }
 
@@ -94,7 +94,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->storage->write('config.settings', ['data' => '']);
       $this->fail('Expected exception not thrown from deleteAll()');
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // Exception was expected
     }
 
@@ -102,7 +102,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->storage->listAll();
       $this->fail('Expected exception not thrown from listAll()');
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // Exception was expected
     }
 
@@ -110,7 +110,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->storage->deleteAll();
       $this->fail('Expected exception not thrown from deleteAll()');
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // Exception was expected
     }
 
@@ -118,7 +118,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->storage->getAllCollectionNames();
       $this->fail('Expected exception not thrown from getAllCollectionNames()');
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // Exception was expected
     }
 

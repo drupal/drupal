@@ -53,7 +53,7 @@ class CommandsTest extends WebDriverTestBase {
         $session->getDriver()->getWebDriverSession()->getAlert_text();
         return TRUE;
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         return FALSE;
       }
     });

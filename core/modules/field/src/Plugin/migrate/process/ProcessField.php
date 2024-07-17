@@ -104,7 +104,7 @@ class ProcessField extends ProcessPluginBase implements ContainerFactoryPluginIn
     try {
       return $this->callMethodOnFieldPlugin($this->fieldPluginManager, $value, $method, $row);
     }
-    catch (PluginNotFoundException $e) {
+    catch (PluginNotFoundException) {
       return NULL;
     }
   }

@@ -227,7 +227,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       $this->createBlockContent('fail_creation');
       $this->fail('Expected exception has not been thrown.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Expected exception; just continue testing.
     }
 

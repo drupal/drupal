@@ -121,7 +121,7 @@ class TwigTransTest extends BrowserTestBase {
     catch (SyntaxError $e) {
       $this->assertStringContainsString('{% trans %} tag cannot be empty', $e->getMessage());
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail('{% trans %}{% endtrans %} threw an unexpected exception.');
     }
   }

@@ -103,7 +103,7 @@ class ThemeHandlerTest extends UnitTestCase {
       $this->themeHandler->addTheme($theme);
       $this->assertTrue(TRUE, 'Empty libraries key in theme.info.yml does not cause PHP warning');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail('Empty libraries key in theme.info.yml causes PHP warning.');
     }
   }

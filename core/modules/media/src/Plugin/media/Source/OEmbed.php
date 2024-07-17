@@ -455,7 +455,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
         '%error' => $e->getMessage(),
       ]);
     }
-    catch (FileException $e) {
+    catch (FileException) {
       $this->logger->warning('Could not download remote thumbnail from {url}.', [
         'url' => $remote_thumbnail_url,
       ]);

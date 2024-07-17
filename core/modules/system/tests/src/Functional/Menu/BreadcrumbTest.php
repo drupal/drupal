@@ -409,7 +409,7 @@ class BreadcrumbTest extends BrowserTestBase {
       $this->assertBreadcrumb('menu-test/breadcrumb1', []);
       $this->fail($message);
     }
-    catch (ExpectationFailedException $e) {
+    catch (ExpectationFailedException) {
       $this->assertTrue(TRUE, $message);
     }
 
@@ -419,7 +419,7 @@ class BreadcrumbTest extends BrowserTestBase {
       $this->assertBreadcrumb('menu-test/breadcrumb1', $home);
       $this->fail($message);
     }
-    catch (ExpectationFailedException $e) {
+    catch (ExpectationFailedException) {
       $this->assertTrue(TRUE, $message);
     }
 
@@ -436,7 +436,7 @@ class BreadcrumbTest extends BrowserTestBase {
       $this->assertBreadcrumb('menu-test/breadcrumb1', $trail);
       $this->fail($message);
     }
-    catch (ExpectationFailedException $e) {
+    catch (ExpectationFailedException) {
       $this->assertTrue(TRUE, $message);
     }
   }

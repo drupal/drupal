@@ -60,7 +60,7 @@ class ConfigTranslationOverviewAccess implements AccessInterface {
     try {
       $langcode = $mapper->getLangcode();
     }
-    catch (ConfigMapperLanguageException $exception) {
+    catch (ConfigMapperLanguageException) {
       // ConfigTranslationController shows a helpful message if the language
       // codes do not match, so do not let that prevent granting access.
       $langcode = 'en';

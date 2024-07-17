@@ -184,7 +184,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
         $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, ['core' => $core], $migration);
         $plugin = $this->fieldPluginManager->createInstance($plugin_id, ['core' => $core], $migration);
       }
-      catch (PluginNotFoundException $ex) {
+      catch (PluginNotFoundException) {
         $plugin = FALSE;
       }
       $this->fieldPluginCache[$core][$field_type] = $plugin;

@@ -21,7 +21,7 @@ class LinkExternalProtocolsConstraintValidator extends ConstraintValidator {
         $url = $value->getUrl();
       }
       // If the URL is malformed this constraint cannot check further.
-      catch (\InvalidArgumentException $e) {
+      catch (\InvalidArgumentException) {
         return;
       }
       // Disallow external URLs using untrusted protocols.

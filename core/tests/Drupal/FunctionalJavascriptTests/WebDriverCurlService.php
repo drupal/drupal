@@ -142,7 +142,7 @@ class WebDriverCurlService extends CurlService {
         }
         return [$rawResult, $info];
       }
-      catch (CurlExec $exception) {
+      catch (CurlExec) {
         $retries++;
       }
     }

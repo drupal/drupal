@@ -238,7 +238,7 @@ class LinkFormatter extends FormatterBase {
     try {
       $url = $item->getUrl();
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       // @todo Add logging here in https://www.drupal.org/project/drupal/issues/3348020
       $url = Url::fromRoute('<none>');
     }

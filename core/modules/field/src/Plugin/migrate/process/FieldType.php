@@ -71,7 +71,7 @@ class FieldType extends StaticMap implements ContainerFactoryPluginInterface {
       $plugin_id = $this->fieldPluginManager->getPluginIdFromFieldType($field_type, [], $this->migration);
       return $this->fieldPluginManager->createInstance($plugin_id, [], $this->migration)->getFieldType($row);
     }
-    catch (PluginNotFoundException $e) {
+    catch (PluginNotFoundException) {
       return parent::transform($value, $migrate_executable, $row, $destination_property);
     }
   }

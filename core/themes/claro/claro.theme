@@ -360,7 +360,7 @@ function claro_theme_suggestions_maintenance_page_alter(&$suggestions) {
   try {
     $is_front = \Drupal::service('path.matcher')->isFrontPage();
   }
-  catch (Exception $e) {
+  catch (Exception) {
     // An exception could mean that the database is offline. This scenario
     // should also be rendered using the frontpage template.
     $is_front = TRUE;

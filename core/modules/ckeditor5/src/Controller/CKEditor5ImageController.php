@@ -115,10 +115,10 @@ class CKEditor5ImageController extends ControllerBase {
         throw new UnprocessableEntityHttpException((string) $uploadResult->getViolations());
       }
     }
-    catch (FileException $e) {
+    catch (FileException) {
       throw new HttpException(500, 'File could not be saved');
     }
-    catch (LockAcquiringException $e) {
+    catch (LockAcquiringException) {
       throw new HttpException(503, sprintf('File "%s" is already locked for writing.', $upload->getClientOriginalName()), NULL, ['Retry-After' => 1]);
     }
 

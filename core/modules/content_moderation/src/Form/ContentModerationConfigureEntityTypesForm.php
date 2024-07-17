@@ -103,7 +103,7 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
     try {
       $this->entityType = $this->entityTypeManager->getDefinition($entity_type_id);
     }
-    catch (PluginNotFoundException $e) {
+    catch (PluginNotFoundException) {
       throw new NotFoundHttpException();
     }
 

@@ -924,7 +924,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       $id_map->setUpdate([]);
       $this->assertFalse(FALSE, 'MigrateException not thrown, when source identifiers were provided to update.');
     }
-    catch (MigrateException $e) {
+    catch (MigrateException) {
       $this->assertTrue(TRUE, "MigrateException thrown, when source identifiers were not provided to update.");
     }
   }

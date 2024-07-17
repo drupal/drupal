@@ -55,7 +55,7 @@ class CustomAccessCheck implements RoutingAccessInterface {
     try {
       $callable = $this->callableResolver->getCallableFromDefinition($route->getRequirement('_custom_access'));
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       // The custom access controller method was not found.
       throw new \BadMethodCallException(sprintf('The "%s" method is not callable as a _custom_access callback in route "%s"', $route->getRequirement('_custom_access'), $route->getPath()));
     }

@@ -704,7 +704,7 @@ function update_delete_file_if_stale($path) {
         \Drupal::service('file_system')->deleteRecursive($path);
         return TRUE;
       }
-      catch (FileException $e) {
+      catch (FileException) {
         // Ignore failed deletes.
       }
     }

@@ -888,7 +888,7 @@ class ConfigImporterTest extends KernelTestBase {
       $config_importer->doSyncStep('a_non_existent_step', $context);
       $this->fail('Expected \InvalidArgumentException thrown');
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       // Expected exception; just continue testing.
     }
     $this->assertFalse(\Drupal::isConfigSyncing(), 'After an invalid step \Drupal::isConfigSyncing() returns FALSE');

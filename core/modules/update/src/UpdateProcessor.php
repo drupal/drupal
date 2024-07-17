@@ -231,7 +231,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
     try {
       $xml = new \SimpleXMLElement($raw_xml);
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // SimpleXMLElement::__construct produces an E_WARNING error message for
       // each error found in the XML data and throws an exception if errors
       // were detected. Catch any exception and return failure (NULL).

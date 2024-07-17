@@ -317,7 +317,7 @@ function update_get_update_list() {
     }
     // It is possible that the system schema has orphaned entries, so the
     // incompatibility checking might throw an exception.
-    catch (UnknownExtensionException $e) {
+    catch (UnknownExtensionException) {
       $args = [
         '%name' => $module,
         ':url' => 'https://www.drupal.org/node/3137656',

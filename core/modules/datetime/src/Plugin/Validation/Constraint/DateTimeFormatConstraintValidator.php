@@ -30,14 +30,14 @@ class DateTimeFormatConstraintValidator extends ConstraintValidator {
         try {
           $date = DateTimePlus::createFromFormat($format, $value, new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
         }
-        catch (\InvalidArgumentException $e) {
+        catch (\InvalidArgumentException) {
           $this->context->addViolation($constraint->badFormat, [
             '@value' => $value,
             '@format' => $format,
           ]);
           return;
         }
-        catch (\UnexpectedValueException $e) {
+        catch (\UnexpectedValueException) {
           $this->context->addViolation($constraint->badValue, [
             '@value' => $value,
             '@format' => $format,

@@ -60,7 +60,7 @@ trait DependencySerializationTrait {
         }
       }
     }
-    catch (ContainerNotInitializedException $e) {
+    catch (ContainerNotInitializedException) {
       // No container, no problem.
     }
 

@@ -140,7 +140,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
     try {
       ContentModerationState::updateOrCreateFromEntity($entity);
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $exception_triggered = TRUE;
     }
     $this->assertEquals($has_exception, $exception_triggered);

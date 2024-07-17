@@ -233,7 +233,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
 
           $this->cache->set($cid, $routes, Cache::PERMANENT, ['routes']);
         }
-        catch (\Exception $e) {
+        catch (\Exception) {
           $routes = [];
         }
       }
@@ -370,7 +370,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       ])
         ->fetchAll(\PDO::FETCH_ASSOC);
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $routes = [];
     }
 

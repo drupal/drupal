@@ -477,7 +477,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         $values['logo_path'] = $filename;
       }
     }
-    catch (FileException $e) {
+    catch (FileException) {
       // Ignore.
     }
     try {
@@ -488,7 +488,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         $values['toggle_favicon'] = 1;
       }
     }
-    catch (FileException $e) {
+    catch (FileException) {
       // Ignore.
     }
     unset($values['logo_upload']);

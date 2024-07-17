@@ -559,7 +559,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       EntityTest::create(['name' => 'fail_insert'])->save();
       $this->fail('Expected exception has not been thrown.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Expected exception; just continue testing.
     }
 

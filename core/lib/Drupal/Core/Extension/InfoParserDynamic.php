@@ -61,7 +61,7 @@ class InfoParserDynamic implements InfoParserInterface {
     try {
       $parsed_info['core_incompatible'] = !Semver::satisfies(\Drupal::VERSION, $parsed_info['core_version_requirement']);
     }
-    catch (\UnexpectedValueException $exception) {
+    catch (\UnexpectedValueException) {
       throw new InfoParserException("The 'core_version_requirement' constraint ({$parsed_info['core_version_requirement']}) is not a valid value in $filename");
     }
     if (isset($parsed_info['version']) && $parsed_info['version'] === 'VERSION') {

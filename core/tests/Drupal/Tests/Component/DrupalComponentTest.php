@@ -150,7 +150,7 @@ class DrupalComponentTest extends TestCase {
       $pass = TRUE;
       $this->assertNoCoreUsage($file_uri);
     }
-    catch (AssertionFailedError $e) {
+    catch (AssertionFailedError) {
       $pass = FALSE;
     }
     $this->assertEquals($expected_pass, $pass, $expected_pass ?

@@ -51,7 +51,7 @@ trait CategorizingPluginManagerTrait {
     try {
       return $this->getModuleExtensionList()->getName($provider);
     }
-    catch (UnknownExtensionException $e) {
+    catch (UnknownExtensionException) {
       // Otherwise, return the machine name.
       return $provider;
     }

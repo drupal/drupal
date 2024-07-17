@@ -336,7 +336,7 @@ class WebAssertTest extends BrowserTestBase {
       $this->assertSession()->buttonNotExists('Duplicate button 2');
       $this->fail('The "duplicate_button" field with the value Duplicate button 2 was not found.');
     }
-    catch (ExpectationException $e) {
+    catch (ExpectationException) {
       // Expected exception; just continue testing.
     }
   }

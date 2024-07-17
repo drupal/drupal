@@ -657,7 +657,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     try {
       return $query->execute()->fetchAll(\PDO::FETCH_NUM);
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // It's possible that the query will cause an exception to be thrown. For
       // example, the URL alias migration uses a dummy node ID of 'INVALID_NID'
       // to cause the lookup to return no results. On PostgreSQL this causes an
@@ -824,7 +824,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     try {
       $count = (int) $query->countQuery()->execute()->fetchField();
     }
-    catch (DatabaseException $e) {
+    catch (DatabaseException) {
       // The table does not exist, therefore there are no records.
       $count = 0;
     }

@@ -320,7 +320,7 @@ function system_theme_suggestions_maintenance_page(array $variables) {
   try {
     \Drupal::service('path.matcher')->isFrontPage();
   }
-  catch (Exception $e) {
+  catch (Exception) {
     // The database is not yet available.
     $offline = TRUE;
   }

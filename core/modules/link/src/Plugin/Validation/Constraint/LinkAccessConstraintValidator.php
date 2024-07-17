@@ -49,7 +49,7 @@ class LinkAccessConstraintValidator extends ConstraintValidator implements Conta
         $url = $value->getUrl();
       }
       // If the URL is malformed this constraint cannot check access.
-      catch (\InvalidArgumentException $e) {
+      catch (\InvalidArgumentException) {
         return;
       }
       // Disallow URLs if the current user doesn't have the 'link to any page'

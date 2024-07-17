@@ -46,7 +46,7 @@ function locale_uninstall() {
         try {
           $file_system->delete($locale_js_directory . '/' . $langcode . '_' . $file_suffix . '.js');
         }
-        catch (FileException $e) {
+        catch (FileException) {
           // Ignore and continue.
         }
       }

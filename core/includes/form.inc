@@ -904,7 +904,7 @@ function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = 
     try {
       $batch['id'] = $batch['progressive'] ? \Drupal::service(BatchStorageInterface::class)->getId() : 'non-progressive';
     }
-    catch (IntegrityConstraintViolationException $e) {
+    catch (IntegrityConstraintViolationException) {
       // @todo this is here to support the update path to deprecate
       // Connection::nextId(). Remove in Drupal 11.
       $connection = \Drupal::database();

@@ -131,7 +131,7 @@ class InstallCommand extends Command {
       Settings::initialize($kernel->getAppRoot(), $kernel->getSitePath(), $this->classLoader);
       $kernel->boot();
     }
-    catch (ConnectionNotDefinedException $e) {
+    catch (ConnectionNotDefinedException) {
       return FALSE;
     }
     return !empty(Database::getConnectionInfo());

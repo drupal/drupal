@@ -67,7 +67,7 @@ class DatabaseEventTest extends DatabaseTestBase {
       $this->connection->query('bananas on the palm tree');
       $this->fail('An exception was expected, but was not thrown');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Expected, keep going.
     }
     $this->assertSame(3, $subscriber->countStatementStarts);

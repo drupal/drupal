@@ -82,7 +82,7 @@ class WorkflowTransitionDeleteForm extends ConfirmFormBase {
     try {
       $this->transition = $workflow->getTypePlugin()->getTransition($workflow_transition);
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       throw new NotFoundHttpException();
     }
     $this->workflow = $workflow;

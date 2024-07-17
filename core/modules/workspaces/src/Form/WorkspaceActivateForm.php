@@ -111,7 +111,7 @@ class WorkspaceActivateForm extends EntityConfirmFormBase implements WorkspaceSa
       $this->workspaceManager->setActiveWorkspace($this->entity);
       $this->messenger->addMessage($this->t('%workspace_label is now the active workspace.', ['%workspace_label' => $this->entity->label()]));
     }
-    catch (WorkspaceAccessException $e) {
+    catch (WorkspaceAccessException) {
       $this->messenger->addError($this->t('You do not have access to activate the %workspace_label workspace.', ['%workspace_label' => $this->entity->label()]));
     }
 

@@ -303,7 +303,7 @@ function template_preprocess_views_view_summary(&$variables) {
 
         $url->setRouteParameters($parameters);
       }
-      catch (Exception $e) {
+      catch (Exception) {
         // If the given route doesn't exist, default to <front>
         $url = Url::fromRoute('<front>');
       }
@@ -389,7 +389,7 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
 
         $url->setRouteParameters($parameters);
       }
-      catch (Exception $e) {
+      catch (Exception) {
         // If the given route doesn't exist, default to <front>
         $url = Url::fromRoute('<front>');
       }

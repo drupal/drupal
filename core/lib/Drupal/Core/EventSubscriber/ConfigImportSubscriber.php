@@ -73,7 +73,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
         try {
           Config::validateName($name);
         }
-        catch (ConfigNameException $e) {
+        catch (ConfigNameException) {
           $message = $this->t('The config name @config_name is invalid.', ['@config_name' => $name]);
           $event->getConfigImporter()->logError($message);
         }

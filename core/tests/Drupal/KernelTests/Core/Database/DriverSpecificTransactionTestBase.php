@@ -561,7 +561,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
       $this->fail('Using the query method should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -573,7 +573,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Select query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -588,7 +588,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Insert query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -601,7 +601,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Update query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -613,7 +613,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Delete query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -629,7 +629,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Merge query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -647,7 +647,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Upsert query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 

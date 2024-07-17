@@ -423,7 +423,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
               try {
                 return $url instanceof Url && $url->access();
               }
-              catch (\Exception $e) {
+              catch (\Exception) {
                 return FALSE;
               }
             });

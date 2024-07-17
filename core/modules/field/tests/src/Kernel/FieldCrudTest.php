@@ -107,7 +107,7 @@ class FieldCrudTest extends FieldKernelTestBase {
       FieldConfig::create($this->fieldDefinition)->save();
       $this->fail('Cannot create two fields with the same field / bundle combination.');
     }
-    catch (EntityStorageException $e) {
+    catch (EntityStorageException) {
       // Expected exception; just continue testing.
     }
 
@@ -117,7 +117,7 @@ class FieldCrudTest extends FieldKernelTestBase {
       FieldConfig::create($this->fieldDefinition)->save();
       $this->fail('Cannot create a field with a non-existing storage.');
     }
-    catch (FieldException $e) {
+    catch (FieldException) {
       // Expected exception; just continue testing.
     }
 

@@ -91,10 +91,10 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
             $contexts = $this->contextRepository->getRuntimeContexts(array_values($condition->getContextMapping()));
             $this->contextHandler->applyContextMapping($condition, $contexts);
           }
-          catch (MissingValueContextException $e) {
+          catch (MissingValueContextException) {
             $missing_value = TRUE;
           }
-          catch (ContextException $e) {
+          catch (ContextException) {
             $missing_context = TRUE;
           }
         }
@@ -123,12 +123,12 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
           }
           $access = $block_plugin->access($account, TRUE);
         }
-        catch (MissingValueContextException $e) {
+        catch (MissingValueContextException) {
           // The contexts exist but have no value. Deny access without
           // disabling caching.
           $access = AccessResult::forbidden();
         }
-        catch (ContextException $e) {
+        catch (ContextException) {
           // If any context is missing then we might be missing cacheable
           // metadata, and don't know based on what conditions the block is
           // accessible or not. Make sure the result cannot be cached.

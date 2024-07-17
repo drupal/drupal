@@ -134,7 +134,7 @@ class Insert extends QueryInsert {
         $query .= ' RETURNING ' . $table_information->serial_fields[0];
       }
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // If we fail to get the table information it is probably because the
       // table does not exist yet so adding the returning statement is pointless
       // because the query will fail. This happens for tables created on demand,

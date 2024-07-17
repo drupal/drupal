@@ -59,7 +59,7 @@ class ShortcutSetController extends ControllerBase {
         $shortcut->save();
         $this->messenger()->addStatus($this->t('Added a shortcut for %title.', ['%title' => $shortcut->label()]));
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         $this->messenger()->addError($this->t('Unable to add a shortcut for %title.', ['%title' => $shortcut->label()]));
       }
 

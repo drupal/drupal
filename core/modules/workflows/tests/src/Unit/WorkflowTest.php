@@ -369,7 +369,7 @@ class WorkflowTest extends UnitTestCase {
     try {
       $workflow->getTypePlugin()->addTransition('publish', 'Publish', ['draft'], 'published');
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
     }
     // Ensure that the workflow is not left in an inconsistent state after an
     // exception is thrown from Workflow::setTransitionFromStates() whilst

@@ -46,7 +46,7 @@ function _drupal_maintenance_theme() {
         $custom_theme = $config->get('default');
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Whatever went wrong (often a database connection problem), we are
       // about to fall back to a sensible theme so there is no need for special
       // handling.

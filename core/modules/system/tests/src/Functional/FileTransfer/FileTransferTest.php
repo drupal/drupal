@@ -85,7 +85,7 @@ class FileTransferTest extends BrowserTestBase {
     try {
       $this->testConnection->copyDirectory($source, sys_get_temp_dir());
     }
-    catch (FileTransferException $e) {
+    catch (FileTransferException) {
       $got_it = TRUE;
     }
     $this->assertTrue($got_it, 'Was not able to copy a directory outside of the jailed area.');
@@ -94,7 +94,7 @@ class FileTransferTest extends BrowserTestBase {
     try {
       $this->testConnection->copyDirectory($source, $this->root . '/' . PublicStream::basePath());
     }
-    catch (FileTransferException $e) {
+    catch (FileTransferException) {
       $got_it = FALSE;
     }
     $this->assertTrue($got_it, 'Was able to copy a directory inside of the jailed area');

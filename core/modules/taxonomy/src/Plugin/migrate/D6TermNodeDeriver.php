@@ -64,7 +64,7 @@ class D6TermNodeDeriver extends DeriverBase implements ContainerDeriverInterface
         $this->derivatives[$source_vid] = $definition;
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // It is possible no D6 tables are loaded so just eat exceptions.
     }
     return $this->derivatives;

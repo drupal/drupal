@@ -376,7 +376,7 @@ class ImageItem extends FileItem {
       try {
         $file_system->move($tmp_file, $destination);
       }
-      catch (FileException $e) {
+      catch (FileException) {
         // Ignore failed move.
       }
       if ($path = $random->image($file_system->realpath($destination), $min_resolution, $max_resolution)) {

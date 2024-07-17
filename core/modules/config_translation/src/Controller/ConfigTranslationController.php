@@ -147,7 +147,7 @@ class ConfigTranslationController extends ControllerBase {
       $original_langcode = $mapper->getLangcode();
       $operations_access = TRUE;
     }
-    catch (ConfigMapperLanguageException $exception) {
+    catch (ConfigMapperLanguageException) {
       $items = [];
       foreach ($mapper->getConfigNames() as $config_name) {
         $langcode = $mapper->getLangcodeFromConfig($config_name);

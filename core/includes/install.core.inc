@@ -385,7 +385,7 @@ function install_begin_request($class_loader, &$install_state) {
     $sync_directory = Settings::get('config_sync_directory', FALSE);
     $install_state['config_verified'] = file_exists($sync_directory);
   }
-  catch (Exception $e) {
+  catch (Exception) {
     $install_state['config_verified'] = FALSE;
   }
   $install_state['database_verified'] = install_verify_database_settings($site_path);
@@ -399,7 +399,7 @@ function install_begin_request($class_loader, &$install_state) {
       $table = array_key_last($system_schema);
       $install_state['base_system_verified'] = Database::getConnection()->schema()->tableExists($table);
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       // The last defined table of the base system_schema() does not exist yet.
       // $install_state['base_system_verified'] defaults to FALSE, so the code
       // following below will use the minimal installer service container.
@@ -1142,7 +1142,7 @@ function install_verify_completed_task() {
   }
   // Do not trigger an error if the database query fails, since the database
   // might not be set up yet.
-  catch (\Exception $e) {
+  catch (\Exception) {
   }
   if (isset($task)) {
     if ($task == 'done') {
@@ -1191,7 +1191,7 @@ function install_verify_database_ready() {
     }
     // Do not trigger an error if the database query fails, since the database
     // might not be set up yet.
-    catch (\Exception $e) {
+    catch (\Exception) {
     }
   }
   if ($existing_install) {
@@ -1218,7 +1218,7 @@ function install_database_errors($database, $settings_file) {
     Database::addConnectionInfo('default', 'default', $database);
     $errors = $driverExtension->getInstallTasks()->runTasks();
   }
-  catch (UnknownExtensionException $e) {
+  catch (UnknownExtensionException) {
     $errors['driver'] = t("In your %settings_file file you have configured @drupal to use a %driver server, however your PHP installation currently does not support this database type.", ['%settings_file' => $settings_file, '@drupal' => drupal_install_profile_distribution_name(), '%driver' => $database['driver']]);
   }
   return $errors;
@@ -2401,7 +2401,7 @@ function install_config_import_batch() {
 
     return $batch_builder->toArray();
   }
-  catch (ConfigImporterException $e) {
+  catch (ConfigImporterException) {
     global $install_state;
     // There are validation errors.
     $messenger = \Drupal::messenger();
@@ -2460,7 +2460,7 @@ function install_config_revert_install_changes() {
     try {
       $config_importer->import();
     }
-    catch (ConfigImporterException $e) {
+    catch (ConfigImporterException) {
       $messenger = \Drupal::messenger();
       // There are validation errors.
       $messenger->addError(t('The configuration synchronization failed validation.'));

@@ -212,7 +212,7 @@ class SubProcess extends ProcessPluginBase {
         try {
           $migrate_executable->processRow($new_row, $this->configuration['process']);
         }
-        catch (MigrateSkipRowException $e) {
+        catch (MigrateSkipRowException) {
           continue;
         }
         $destination = $new_row->getDestination();

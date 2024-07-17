@@ -71,10 +71,10 @@ class VersionNegotiator {
       }
       return $this->negotiators[$version_negotiator_name]->getRevision($entity, $version_argument);
     }
-    catch (VersionNotFoundException $exception) {
+    catch (VersionNotFoundException) {
       static::throwNotFoundHttpException($entity, $resource_version_identifier);
     }
-    catch (InvalidVersionIdentifierException $exception) {
+    catch (InvalidVersionIdentifierException) {
       static::throwBadRequestHttpException($resource_version_identifier);
     }
   }

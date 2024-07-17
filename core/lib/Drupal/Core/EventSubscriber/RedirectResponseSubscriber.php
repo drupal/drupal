@@ -65,7 +65,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
         try {
           $response->setTargetUrl($destination);
         }
-        catch (\InvalidArgumentException $e) {
+        catch (\InvalidArgumentException) {
         }
       }
 
@@ -79,7 +79,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
           $safe_response = LocalRedirectResponse::createFromRedirectResponse($response);
           $safe_response->setRequestContext($this->requestContext);
         }
-        catch (\InvalidArgumentException $e) {
+        catch (\InvalidArgumentException) {
           // If the above failed, it's because the redirect target wasn't
           // local. Do not follow that redirect. Log an error message instead,
           // then return a 400 response to the client with the error message.

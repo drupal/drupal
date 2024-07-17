@@ -75,7 +75,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
       try {
         return $this->getFactory()->createInstance($plugin_id, $configuration);
       }
-      catch (PluginNotFoundException $e) {
+      catch (PluginNotFoundException) {
         return $this->handlePluginNotFound($plugin_id, $configuration);
       }
     }

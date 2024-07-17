@@ -30,7 +30,7 @@ class MonthDate extends Date {
     try {
       return $this->dateFormatter->format(strtotime("2005" . $month . "15" . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       return parent::summaryName($data);
     }
   }
@@ -43,7 +43,7 @@ class MonthDate extends Date {
     try {
       return $this->dateFormatter->format(strtotime("2005" . $month . "15" . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
     }
-    catch (\InvalidArgumentException $e) {
+    catch (\InvalidArgumentException) {
       return parent::title();
     }
   }

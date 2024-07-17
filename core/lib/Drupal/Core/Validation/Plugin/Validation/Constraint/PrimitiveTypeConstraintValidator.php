@@ -69,7 +69,7 @@ class PrimitiveTypeConstraintValidator extends ConstraintValidator {
         $valid = FALSE;
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Invalid durations or dates might throw exceptions.
       $valid = FALSE;
     }

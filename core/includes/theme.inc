@@ -233,7 +233,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
           $cache[$theme]->merge($theme_settings);
         }
       }
-      catch (StorageException $e) {
+      catch (StorageException) {
       }
 
       // If the theme does not support a particular feature, override the global
@@ -1245,7 +1245,7 @@ function template_preprocess_page(&$variables) {
   try {
     $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
   }
-  catch (Exception $e) {
+  catch (Exception) {
     // If the database is not yet available, set default values for these
     // variables.
     $variables['is_front'] = FALSE;

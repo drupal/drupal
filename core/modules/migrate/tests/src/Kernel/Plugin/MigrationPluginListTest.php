@@ -111,7 +111,7 @@ class MigrationPluginListTest extends KernelTestBase {
         try {
           $source_plugin->checkRequirements();
         }
-        catch (RequirementsException $e) {
+        catch (RequirementsException) {
           unset($source_plugins[$id]);
         }
       }

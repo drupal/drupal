@@ -179,7 +179,7 @@ class ConfigEntityTest extends BrowserTestBase {
         '@max' => static::MAX_ID_LENGTH,
       ]));
     }
-    catch (ConfigEntityIdLengthException $e) {
+    catch (ConfigEntityIdLengthException) {
       // Expected exception; just continue testing.
     }
 
@@ -193,7 +193,7 @@ class ConfigEntityTest extends BrowserTestBase {
       $same_id->save();
       $this->fail('Not possible to overwrite an entity.');
     }
-    catch (EntityStorageException $e) {
+    catch (EntityStorageException) {
       // Expected exception; just continue testing.
     }
 

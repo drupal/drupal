@@ -75,7 +75,7 @@ trait InstallerRedirectTrait {
       try {
         return !$connection->schema()->tableExists('sequences');
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         // If we still have an exception at this point, we need to be careful
         // since we should not redirect if the exception represents an error on
         // an already-installed site (for example, if the database server went

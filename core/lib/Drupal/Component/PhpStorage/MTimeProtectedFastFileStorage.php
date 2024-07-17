@@ -158,7 +158,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       try {
         $dir_iterator = new \FilesystemIterator($directory, $flags);
       }
-      catch (\UnexpectedValueException $e) {
+      catch (\UnexpectedValueException) {
         // FilesystemIterator throws an UnexpectedValueException if the
         // specified path is not a directory, or if it is not accessible.
         continue;

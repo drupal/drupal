@@ -305,7 +305,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
           $config_importer->validate();
           $form_state->set('config_importer', $config_importer);
         }
-        catch (ConfigImporterException $e) {
+        catch (ConfigImporterException) {
           // There are validation errors.
           $item_list = [
             '#theme' => 'item_list',
@@ -351,7 +351,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
         }
         batch_set($batch_builder->toArray());
       }
-      catch (ConfigImporterException $e) {
+      catch (ConfigImporterException) {
         // There are validation errors.
         $this->messenger()->addError($this->t('The configuration import failed for the following reasons:'));
         foreach ($config_importer->getErrors() as $message) {

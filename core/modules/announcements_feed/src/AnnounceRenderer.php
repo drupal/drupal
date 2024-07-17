@@ -39,7 +39,7 @@ final class AnnounceRenderer {
     try {
       $announcements = $this->announceFetcher->fetch();
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       return [
         '#theme' => 'status_messages',
         '#message_list' => [

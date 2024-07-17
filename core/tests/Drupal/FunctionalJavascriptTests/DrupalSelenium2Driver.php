@@ -230,7 +230,7 @@ JS);
     try {
       parent::dragTo($sourceXpath, $destinationXpath);
     }
-    catch (Exception $e) {
+    catch (Exception) {
       // Do not care if this fails for any reason. It is a source of random
       // fails. The calling code should be doing assertions on the results of
       // dragging anyway. See upstream issues:

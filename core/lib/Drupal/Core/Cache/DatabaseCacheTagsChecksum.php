@@ -81,9 +81,9 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
     // If another process has already created the cachetags table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (DatabaseException $e) {
+    catch (DatabaseException) {
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       return FALSE;
     }
     return TRUE;

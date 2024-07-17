@@ -1457,7 +1457,7 @@ abstract class Connection {
     try {
       return (bool) $this->query('SELECT JSON_TYPE(\'1\')');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       return FALSE;
     }
   }

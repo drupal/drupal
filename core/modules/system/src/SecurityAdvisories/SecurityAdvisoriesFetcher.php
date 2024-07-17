@@ -198,7 +198,7 @@ final class SecurityAdvisoriesFetcher {
           try {
             $insecure_project_version = ExtensionVersion::createFromVersionString($insecure_version);
           }
-          catch (\UnexpectedValueException $exception) {
+          catch (\UnexpectedValueException) {
             // An invalid version string should not halt the evaluation of valid
             // versions in $insecure_versions. Version numbers that start with
             // core prefix besides '8.x-' are allowed in $insecure_versions,

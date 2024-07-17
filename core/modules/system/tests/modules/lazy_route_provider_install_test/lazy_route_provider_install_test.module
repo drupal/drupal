@@ -14,7 +14,7 @@ function lazy_route_provider_install_test_menu_links_discovered_alter(&$links) {
     // Ensure that calling this does not cause a recursive rebuild.
     \Drupal::service('router.route_provider')->getAllRoutes();
   }
-  catch (\RuntimeException $e) {
+  catch (\RuntimeException) {
     $message = 'failed';
   }
   \Drupal::state()->set(__FUNCTION__, $message);

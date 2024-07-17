@@ -37,7 +37,7 @@ class ConfigTranslationFormAccess extends ConfigTranslationOverviewAccess {
 
       return $this->doCheckAccess($account, $mapper, $source_language, $target_language);
     }
-    catch (ConfigMapperLanguageException $exception) {
+    catch (ConfigMapperLanguageException) {
       return AccessResult::forbidden();
     }
   }

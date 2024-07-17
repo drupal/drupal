@@ -114,7 +114,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
         try {
           $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
         }
-        catch (PluginNotFoundException $e) {
+        catch (PluginNotFoundException) {
           throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
         }
         // In order to maintain the order ($delta) of the relationships, we need

@@ -1137,12 +1137,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     try {
       $this->connection->schema()->createTable($this->table, static::schemaDefinition());
     }
-    catch (DatabaseException $e) {
+    catch (DatabaseException) {
       // If another process has already created the config table, attempting to
       // recreate it will throw an exception. In this case just catch the
       // exception and do nothing.
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       return FALSE;
     }
     return TRUE;

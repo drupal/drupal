@@ -38,7 +38,7 @@ function media_install() {
       try {
         $file_system->copy($file->uri, $destination, FileExists::Error);
       }
-      catch (FileException $e) {
+      catch (FileException) {
         // Ignore and continue.
       }
 
