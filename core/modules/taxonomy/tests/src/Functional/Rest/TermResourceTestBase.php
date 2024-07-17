@@ -15,7 +15,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy', 'path'];
+  protected static $modules = ['content_translation', 'path', 'taxonomy'];
 
   /**
    * {@inheritdoc}
