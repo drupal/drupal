@@ -253,7 +253,6 @@ class Datelist extends DateElementBase {
       $element[$part] = [
         '#type' => in_array($part, $text_parts) ? 'textfield' : 'select',
         '#title' => $title,
-        '#title_display' => 'invisible',
         '#value' => $value,
         '#attributes' => $element['#attributes'],
         '#options' => $options,
