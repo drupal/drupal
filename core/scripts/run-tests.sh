@@ -1030,8 +1030,8 @@ function simpletest_script_get_test_list() {
   }
 
   if ((int) $args['ci-parallel-node-total'] > 1) {
-    $slow_tests_per_job = ceil(count($slow_tests) / $args['ci-parallel-node-total']);
-    $tests_per_job = ceil(count($test_list) / $args['ci-parallel-node-total']);
+    $slow_tests_per_job = (int) ceil(count($slow_tests) / $args['ci-parallel-node-total']);
+    $tests_per_job = (int) ceil(count($test_list) / $args['ci-parallel-node-total']);
     $test_list = array_merge(array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job), array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job));
   }
 
