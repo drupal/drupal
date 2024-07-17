@@ -4,12 +4,14 @@ namespace Drupal\block\Entity;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Condition\ConditionPluginCollection;
+use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\block\BlockPluginCollection;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a Block configuration entity class.
@@ -310,6 +312,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set region'), pluralize: FALSE)]
   public function setRegion($region) {
     $this->region = $region;
     return $this;
@@ -318,6 +321,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set weight'), pluralize: FALSE)]
   public function setWeight($weight) {
     $this->weight = $weight;
     return $this;

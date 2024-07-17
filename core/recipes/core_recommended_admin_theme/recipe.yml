@@ -9,16 +9,28 @@ config:
     system:
       - system.menu.account
       - system.menu.main
-      - system.theme
     claro:
       - block.block.claro_breadcrumbs
       - block.block.claro_content
       - block.block.claro_local_actions
       - block.block.claro_messages
-      - block.block.claro_page_title
       - block.block.claro_primary_local_tasks
       - block.block.claro_secondary_local_tasks
   actions:
+    # Create this block dynamically so as not to conflict with the block created
+    # by block_theme_initialize() when Claro is installed.
+    block.block.claro_page_title:
+      createIfNotExists:
+        theme: claro
+        plugin: page_title_block
+        settings:
+          id: page_title_block
+          label: 'Page title'
+          label_display: '0'
+          provider: core
+      setRegion: header
+      setStatus: true
+      setWeight: -30
     system.theme:
       simpleConfigUpdate:
         admin: claro

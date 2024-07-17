@@ -67,6 +67,8 @@ class CoreRecipesTest extends BrowserTestBase {
   public function testApplyRecipe(string $path): void {
     $this->setUpCurrentUser(admin: TRUE);
     $this->applyRecipe($path);
+    // Apply the recipe again to prove that it is idempotent.
+    $this->applyRecipe($path);
   }
 
 }

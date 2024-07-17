@@ -26,3 +26,119 @@ config:
       - image.style.medium
       - image.style.thumbnail
       - image.style.wide
+  actions:
+    core.entity_form_display.node.article.default:
+      createIfNotExists:
+        targetEntityType: node
+        bundle: article
+        mode: default
+        status: true
+      setComponents:
+        - name: body
+          options:
+            type: text_textarea_with_summary
+            weight: 2
+            region: content
+        - name: created
+          options:
+            type: datetime_timestamp
+            weight: 10
+            region: content
+        - name: field_image
+          options:
+            type: image_image
+            weight: 1
+            region: content
+        - name: path
+          options:
+            type: path
+            weight: 30
+            region: content
+        - name: promote
+          options:
+            type: boolean_checkbox
+            weight: 15
+            region: content
+        - name: status
+          options:
+            type: boolean_checkbox
+            weight: 120
+            region: content
+        - name: sticky
+          options:
+            type: boolean_checkbox
+            weight: 16
+            region: content
+        - name: title
+          options:
+            type: string_textfield
+            weight: 0
+            region: content
+        - name: uid
+          options:
+            type: entity_reference_autocomplete
+            weight: 5
+            region: content
+    core.entity_view_display.node.article.default:
+      createIfNotExists:
+        targetEntityType: node
+        bundle: article
+        mode: default
+        status: true
+      setComponents:
+        - name: body
+          options:
+            type: text_default
+            label: hidden
+            weight: 0
+            region: content
+        - name: field_image
+          options:
+            type: image
+            label: hidden
+            settings:
+              image_style: wide
+              image_loading:
+                attribute: eager
+            weight: -1
+            region: content
+        - name: links
+          options:
+            weight: 100
+            region: content
+    core.entity_view_display.node.article.rss:
+      createIfNotExists:
+        targetEntityType: node
+        bundle: article
+        mode: rss
+        status: true
+        content:
+          links:
+            weight: 100
+            region: content
+    core.entity_view_display.node.article.teaser:
+      createIfNotExists:
+        targetEntityType: node
+        bundle: article
+        mode: teaser
+        status: true
+        content:
+          links:
+            weight: 100
+            region: content
+      setComponents:
+        - name: body
+          options:
+            type: text_summary_or_trimmed
+            label: hidden
+            weight: 0
+            region: content
+        - name: field_image
+          options:
+            type: image
+            label: hidden
+            settings:
+              image_style: medium
+              image_link: content
+            weight: -1
+            region: content

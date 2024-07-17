@@ -1,7 +1,5 @@
 langcode: en
 dependencies:
-  module:
-    - responsive_image
   enforced:
     module:
       - responsive_image
@@ -22,3 +20,4 @@ effects:
     weight: 2
     data:
       extension: webp
+status: true
