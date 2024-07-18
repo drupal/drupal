@@ -754,10 +754,10 @@ internal.floating-ui:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "4.0.0-beta"
+  version: "4.0.0-beta.2"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/4.0.0-beta/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/4.0.0-beta.2/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
