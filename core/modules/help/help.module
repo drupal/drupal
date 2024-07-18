@@ -148,11 +148,9 @@ function _help_search_update(array $extensions = []): void {
     return;
   }
 
-  if (\Drupal::service('update.update_hook_registry')->getInstalledVersion('help') >= 10200) {
-    // Ensure that topics for extensions that have been uninstalled are removed
-    // and that the index state variable is updated.
-    $help_search = \Drupal::service('plugin.manager.search')->createInstance('help_search');
-    $help_search->updateTopicList();
-    $help_search->updateIndexState();
-  }
+  // Ensure that topics for extensions that have been uninstalled are removed
+  // and that the index state variable is updated.
+  $help_search = \Drupal::service('plugin.manager.search')->createInstance('help_search');
+  $help_search->updateTopicList();
+  $help_search->updateIndexState();
 }
