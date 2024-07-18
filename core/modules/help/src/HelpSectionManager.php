@@ -58,8 +58,9 @@ class HelpSectionManager extends DefaultPluginManager {
    */
   public function clearCachedDefinitions() {
     parent::clearCachedDefinitions();
-    $version = \Drupal::service('update.update_hook_registry')->getInstalledVersion('help');
-    if ($this->searchManager && $version >= 10200) {
+    // Search module may be missing. Help module might be installing,
+    // so its search plugin may not be discovered yet.
+    if ($this->searchManager && $this->searchManager->hasDefinition('help_search')) {
       // Rebuild the index on cache clear so that new help topics are indexed
       // and any changes due to help topics edits or translation changes are
       // picked up.
