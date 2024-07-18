@@ -13,6 +13,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
+use PHPUnit\Framework\Attributes\Before;
 
 abstract class CommentResourceTestBase extends EntityResourceTestBase {
 
@@ -49,6 +50,16 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
    * @var \Drupal\comment\CommentInterface
    */
   protected $entity;
+
+  /**
+   * Marks some tests as skipped because XML cannot be deserialized.
+   */
+  #[Before]
+  public function commentResourceTestBaseSkipTests(): void {
+    if (static::$format === 'xml' && in_array($this->name(), ['testPostDxWithoutCriticalBaseFields', 'testPostSkipCommentApproval'], TRUE)) {
+      $this->markTestSkipped('Deserialization of the XML format is not supported.');
+    }
+  }
 
   /**
    * {@inheritdoc}

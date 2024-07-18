@@ -41,20 +41,4 @@ class UserXmlBasicAuthTest extends UserResourceTestBase {
    */
   protected static $auth = 'basic_auth';
 
-  /**
-   * {@inheritdoc}
-   */
-  public function testPatchDxForSecuritySensitiveBaseFields(): void {
-    // Deserialization of the XML format is not supported.
-    $this->markTestSkipped();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testPatchSecurityOtherUser(): void {
-    // Deserialization of the XML format is not supported.
-    $this->markTestSkipped();
-  }
-
 }
