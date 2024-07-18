@@ -31,12 +31,4 @@ class TermXmlAnonTest extends TermResourceTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * {@inheritdoc}
-   */
-  public function testPatchPath(): void {
-    // Deserialization of the XML format is not supported.
-    $this->markTestSkipped();
-  }
-
 }
