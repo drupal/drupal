@@ -49,6 +49,23 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   protected static $secondCreatedEntityId = 5;
 
   /**
+   * Marks some tests as skipped because XML cannot be deserialized.
+   *
+   * @before
+   */
+  public function userResourceTestBaseSkipTests(): void {
+    if (in_array($this->name(), ['testPatchDxForSecuritySensitiveBaseFields', 'testPatchSecurityOtherUser'], TRUE)) {
+      if (static::$format === 'xml') {
+        $this->markTestSkipped('Deserialization of the XML format is not supported.');
+      }
+
+      if (static::$auth === FALSE) {
+        $this->markTestSkipped('The anonymous user is never allowed to modify itself.');
+      }
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
@@ -148,11 +165,6 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
    * Tests PATCHing security-sensitive base fields of the logged in account.
    */
   public function testPatchDxForSecuritySensitiveBaseFields(): void {
-    // The anonymous user is never allowed to modify itself.
-    if (!static::$auth) {
-      $this->markTestSkipped();
-    }
-
     $this->initAuthentication();
     $this->provisionEntityResource();
 
@@ -264,11 +276,6 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
    * Tests PATCHing security-sensitive base fields to change other users.
    */
   public function testPatchSecurityOtherUser(): void {
-    // The anonymous user is never allowed to modify other users.
-    if (!static::$auth) {
-      $this->markTestSkipped();
-    }
-
     $this->initAuthentication();
     $this->provisionEntityResource();
 

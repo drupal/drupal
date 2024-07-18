@@ -51,6 +51,17 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   protected $entity;
 
   /**
+   * Marks some tests as skipped because XML cannot be deserialized.
+   *
+   * @before
+   */
+  public function commentResourceTestBaseSkipTests(): void {
+    if (static::$format === 'xml' && in_array($this->name(), ['testPostDxWithoutCriticalBaseFields', 'testPostSkipCommentApproval'], TRUE)) {
+      $this->markTestSkipped('Deserialization of the XML format is not supported.');
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {

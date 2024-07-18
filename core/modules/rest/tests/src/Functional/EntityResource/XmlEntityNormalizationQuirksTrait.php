@@ -26,6 +26,17 @@ trait XmlEntityNormalizationQuirksTrait {
   use XmlNormalizationQuirksTrait;
 
   /**
+   * Marks some tests as skipped because XML cannot be deserialized.
+   *
+   * @before
+   */
+  public function xmlEntityNormalizationQuirksTraitSkipTests(): void {
+    if (in_array($this->name(), ['testPatch', 'testPost'], TRUE)) {
+      $this->markTestSkipped('Deserialization of the XML format is not supported.');
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function getExpectedNormalizedEntity() {
@@ -146,22 +157,6 @@ trait XmlEntityNormalizationQuirksTrait {
     }
 
     return $normalization;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testPost(): void {
-    // Deserialization of the XML format is not supported.
-    $this->markTestSkipped();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testPatch(): void {
-    // Deserialization of the XML format is not supported.
-    $this->markTestSkipped();
   }
 
 }

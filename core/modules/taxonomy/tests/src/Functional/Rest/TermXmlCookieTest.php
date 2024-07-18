@@ -36,12 +36,4 @@ class TermXmlCookieTest extends TermResourceTestBase {
    */
   protected static $auth = 'cookie';
 
-  /**
-   * {@inheritdoc}
-   */
-  public function testPatchPath(): void {
-    // Deserialization of the XML format is not supported.
-    $this->markTestSkipped();
-  }
-
 }

@@ -41,6 +41,17 @@ abstract class NodeResourceTestBase extends EntityResourceTestBase {
   protected $entity;
 
   /**
+   * Marks some tests as skipped because XML cannot be deserialized.
+   *
+   * @before
+   */
+  public function nodeResourceTestBaseSkipTests(): void {
+    if (static::$format === 'xml' && $this->name() === 'testPatchPath') {
+      $this->markTestSkipped('Deserialization of the XML format is not supported.');
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
