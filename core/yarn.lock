@@ -2186,7 +2186,7 @@ __metadata:
     eslint-plugin-prettier: "npm:^5.1.3"
     eslint-plugin-yml: "npm:^1.14.0"
     glob: "npm:11.0.0"
-    jquery: "npm:4.0.0-beta"
+    jquery: "npm:^4.0.0-beta.2"
     jquery-ui: "npm:^1.14.0-beta.2"
     js-cookie: "npm:^3.0.5"
     jsdom: "npm:^24.1.0"
@@ -5360,17 +5360,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:4.0.0-beta":
-  version: 4.0.0-beta
-  resolution: "jquery@npm:4.0.0-beta"
-  checksum: 10c0/8569645a128764c518fd6c471a45485b9e637f7602219f80c0c37f234c0aa07b97847ca51df81db0fecd2c614238e33d0d7d02d30f455cf8a3582dda74454507
-  languageName: node
-  linkType: hard
-
 "jquery@npm:>=1.12.0 <5.0.0":
   version: 3.7.1
   resolution: "jquery@npm:3.7.1"
   checksum: 10c0/808cfbfb758438560224bf26e17fcd5afc7419170230c810dd11f5c1792e2263e2970cca8d659eb84fcd9acc301edb6d310096e450277d54be4f57071b0c82d9
+  languageName: node
+  linkType: hard
+
+"jquery@npm:^4.0.0-beta.2":
+  version: 4.0.0-beta.2
+  resolution: "jquery@npm:4.0.0-beta.2"
+  checksum: 10c0/046f3f325b512da31f87fcdddfe27f53df496f01f5c4f76f8906cddc152757f906f5bf6cb6c6ac8e31036ddcf89fde2a9f95b106b35fda3396db4d8c5921a10e
   languageName: node
   linkType: hard
 
