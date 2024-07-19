@@ -7,6 +7,7 @@ use Drupal\Component\Plugin\FallbackPluginManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\views\Plugin\views\ViewsHandlerInterface;
 use Drupal\views\ViewsData;
 use Symfony\Component\DependencyInjection\Container;
 use Drupal\views\Plugin\views\HandlerBase;
@@ -75,14 +76,14 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
    *   An associative array representing the handler to be retrieved:
    *   - table: The name of the table containing the handler.
    *   - field: The name of the field the handler represents.
-   * @param string|null $override
+   * @param string|null $override_plugin_id
    *   (optional) Override the actual handler object with this plugin ID. Used for
    *   aggregation when the handler is redirected to the aggregation handler.
    *
    * @return \Drupal\views\Plugin\views\ViewsHandlerInterface
    *   An instance of a handler object. May be a broken handler instance.
    */
-  public function getHandler($item, $override = NULL) {
+  public function getHandler(array $item, ?string $override_plugin_id = NULL): ViewsHandlerInterface {
     $table = $item['table'];
     $field = $item['field'];
     // Get the plugin manager for this type.
@@ -104,11 +105,17 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
         }
       }
 
-      // @todo This is crazy. Find a way to remove the override functionality.
-      $plugin_id = $override ?: $definition['id'];
+      // When aggregation is enabled, particular plugins need to be
+      // replaced in order to override the query with a query that
+      // can run the aggregate counts, sums, or averages for example.
+      // @see Drupal\views\Plugin\views\query\Sql::getAggregationInfo()
+      // for example which aggressively overrides any filter used
+      // by a number of mathematical-type queries regardless of the
+      // original filter.
+      $plugin_id = $override_plugin_id ?: $definition['id'];
       // Try to use the overridden handler.
       $handler = $this->createInstance($plugin_id, $definition);
-      if ($override && method_exists($handler, 'broken') && $handler->broken()) {
+      if ($override_plugin_id && method_exists($handler, 'broken') && $handler->broken()) {
         $handler = $this->createInstance($definition['id'], $definition);
       }
       return $handler;
