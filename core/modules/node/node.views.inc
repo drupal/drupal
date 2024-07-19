@@ -19,7 +19,7 @@ function node_views_analyze(ViewExecutable $view) {
   if ($view->storage->get('base_table') == 'node') {
     foreach ($view->displayHandlers as $display) {
       if (!$display->isDefaulted('access') || !$display->isDefaulted('filters')) {
-        // check for no access control
+        // Check for no access control
         $access = $display->getOption('access');
         if (empty($access['type']) || $access['type'] == 'none') {
           $anonymous_role = Role::load(RoleInterface::ANONYMOUS_ID);

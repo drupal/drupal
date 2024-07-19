@@ -150,7 +150,7 @@ class PageCache implements HttpKernelInterface {
       $if_none_match = $request->server->has('HTTP_IF_NONE_MATCH') ? stripslashes($request->server->get('HTTP_IF_NONE_MATCH')) : FALSE;
 
       if ($if_modified_since && $if_none_match
-        // etag must match.
+        // ETag must match.
         && $if_none_match == $response->getEtag()
         // if-modified-since must match.
         && $if_modified_since == $last_modified->getTimestamp()) {

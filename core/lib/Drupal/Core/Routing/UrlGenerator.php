@@ -61,7 +61,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @see \Symfony\Component\Routing\Generator\UrlGenerator
    */
   protected $decodedChars = [
-    // the slash can be used to designate a hierarchical structure and we want allow using it with this meaning
+    // The slash can be used to designate a hierarchical structure and we want allow using it with this meaning
     // some webservers don't allow the slash in encoded form in the path for security reasons anyway
     // see http://stackoverflow.com/questions/4069002/http-400-if-2f-part-of-get-url-in-jboss
     // Map from these encoded characters.
@@ -182,7 +182,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     $variables = array_flip($variables);
     $mergedParams = array_replace($defaults, $this->context->getParameters(), $parameters);
 
-    // all params must be given
+    // All params must be given
     if ($diff = array_diff_key($variables, $mergedParams)) {
       throw new MissingMandatoryParametersException($name, array_keys($diff));
     }
@@ -203,7 +203,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     foreach ($tokens as $token) {
       if ('variable' === $token[0]) {
         if (!$optional || !array_key_exists($token[3], $defaults) || (isset($mergedParams[$token[3]]) && (string) $mergedParams[$token[3]] !== (string) $defaults[$token[3]])) {
-          // check requirement
+          // Check requirement
           if (!preg_match('#^' . $token[2] . '$#', $mergedParams[$token[3]])) {
             $message = sprintf('Parameter "%s" for route "%s" must match "%s" ("%s" given) to generate a corresponding URL.', $token[3], $name, $token[2], $mergedParams[$token[3]]);
             throw new InvalidParameterException($message);
@@ -315,7 +315,7 @@ class UrlGenerator implements UrlGeneratorInterface {
 
     // Drupal paths rarely include dots, so skip this processing if possible.
     if (str_contains($path, '/.')) {
-      // the path segments "." and ".." are interpreted as relative reference when
+      // The path segments "." and ".." are interpreted as relative reference when
       // resolving a URI; see http://tools.ietf.org/html/rfc3986#section-3.3
       // so we need to encode them as they are not used for this purpose here
       // otherwise we would generate a URI that, when followed by a user agent

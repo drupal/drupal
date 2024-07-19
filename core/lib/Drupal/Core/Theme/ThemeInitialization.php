@@ -137,14 +137,14 @@ class ThemeInitialization implements ThemeInitializationInterface {
       $active_theme->getExtension()->load();
     }
     else {
-      // include non-engine theme files
+      // Include non-engine theme files
       foreach (array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
         // Include the theme file or the engine.
         if ($base->owner) {
           include_once $this->root . '/' . $base->owner;
         }
       }
-      // and our theme gets one too.
+      // And our theme gets one too.
       if ($active_theme->getOwner()) {
         include_once $this->root . '/' . $active_theme->getOwner();
       }

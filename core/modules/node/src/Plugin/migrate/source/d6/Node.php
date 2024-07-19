@@ -186,7 +186,7 @@ class Node extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    // format = 0 can happen when the body field is hidden. Set the format to 1
+    // Format = 0 can happen when the body field is hidden. Set the format to 1
     // to avoid migration map issues (since the body field isn't used anyway).
     if ($row->getSourceProperty('format') === '0') {
       $row->setSourceProperty('format', $this->filterDefaultFormat);

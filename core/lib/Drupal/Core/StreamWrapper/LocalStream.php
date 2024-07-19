@@ -198,8 +198,8 @@ abstract class LocalStream implements StreamWrapperInterface {
    * {@inheritdoc}
    */
   public function stream_seek($offset, $whence = SEEK_SET) {
-    // fseek returns 0 on success and -1 on a failure.
-    // stream_seek   1 on success and  0 on a failure.
+    // fseek() returns 0 on success and -1 on a failure.
+    // stream_seek()   1 on success and  0 on a failure.
     return !fseek($this->handle, $offset, $whence);
   }
 

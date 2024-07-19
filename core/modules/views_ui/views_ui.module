@@ -66,7 +66,7 @@ function views_ui_entity_type_build(array &$entity_types) {
  */
 function views_ui_theme() {
   return [
-    // edit a view
+    // Edit a view
     'views_ui_display_tab_setting' => [
       'variables' => ['description' => '', 'link' => '', 'settings_links' => [], 'overridden' => FALSE, 'defaulted' => FALSE, 'description_separator' => TRUE, 'class' => []],
       'file' => 'views_ui.theme.inc',
