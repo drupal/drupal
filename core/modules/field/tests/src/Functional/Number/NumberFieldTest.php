@@ -13,7 +13,6 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the creation of numeric fields.
  *
  * @group field
- * @group #slow
  */
 class NumberFieldTest extends BrowserTestBase {
 
@@ -393,9 +392,9 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Tests setting the minimum value of a float field through the interface.
+   * Tests setting minimum values through the interface.
    */
-  public function testCreateNumberFloatField(): void {
+  public function testMinimumValues(): void {
     // Create a float field.
     $field_name = $this->randomMachineName();
     FieldStorageConfig::create([
@@ -415,12 +414,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->assertSetMinimumValue($field, 0.0001);
     // Set the minimum value to an integer value.
     $this->assertSetMinimumValue($field, 1);
-  }
 
-  /**
-   * Tests setting the minimum value of a decimal field through the interface.
-   */
-  public function testCreateNumberDecimalField(): void {
     // Create a decimal field.
     $field_name = $this->randomMachineName();
     FieldStorageConfig::create([
