@@ -10,6 +10,7 @@ use Drupal\file\Entity\File;
 /**
  * @coversDefaultClass \Drupal\file\Plugin\Field\FieldFormatter\FileAudioFormatter
  * @group file
+ * @group #slow
  */
 class FileAudioFormatterTest extends FileMediaFormatterTestBase {
 
