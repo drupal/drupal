@@ -94,13 +94,13 @@ class ConfigHandler extends ViewsFormBase {
         $relationship_options = [];
 
         foreach ($relationships as $relationship) {
-          // relationships can't link back to self. But also, due to ordering,
+          // Relationships can't link back to self. But also, due to ordering,
           // relationships can only link to prior relationships.
           if ($type == 'relationship' && $id == $relationship['id']) {
             break;
           }
           $relationship_handler = Views::handlerManager('relationship')->getHandler($relationship);
-          // ignore invalid/broken relationships.
+          // Ignore invalid/broken relationships.
           if (empty($relationship_handler)) {
             continue;
           }

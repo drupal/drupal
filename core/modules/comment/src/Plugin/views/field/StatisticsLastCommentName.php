@@ -39,7 +39,7 @@ class StatisticsLastCommentName extends FieldPluginBase {
     // last_comment_name only contains data if the user is anonymous. So we
     // have to join in a specially related user table.
     $this->ensureMyTable();
-    // join 'users' to this table via vid
+    // Join 'users' to this table via vid
     $definition = [
       'table' => 'users_field_data',
       'field' => 'uid',

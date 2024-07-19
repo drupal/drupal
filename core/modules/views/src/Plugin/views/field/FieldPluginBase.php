@@ -185,7 +185,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   protected function addAdditionalFields($fields = NULL) {
     if (!isset($fields)) {
-      // notice check
+      // Notice check
       if (empty($this->additional_fields)) {
         return;
       }

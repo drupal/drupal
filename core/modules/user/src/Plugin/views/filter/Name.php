@@ -99,7 +99,7 @@ class Name extends InOperator {
   }
 
   protected function valueSubmit($form, FormStateInterface $form_state) {
-    // prevent array filter from removing our anonymous user.
+    // Prevent array filter from removing our anonymous user.
   }
 
   /**
@@ -110,7 +110,7 @@ class Name extends InOperator {
   }
 
   public function adminSummary() {
-    // set up $this->valueOptions for the parent summary
+    // Set up $this->valueOptions for the parent summary
     $this->valueOptions = [];
 
     if ($this->value) {

@@ -882,7 +882,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
         'int' => 1337,
         'float' => 3.14,
         'null' => NULL,
-        // array is not one of the scalar types.
+        // Array is not one of the scalar types.
         'array' => ['hi!'],
       ],
     ];

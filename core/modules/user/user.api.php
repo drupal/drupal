@@ -102,7 +102,7 @@ function hook_user_cancel_methods_alter(&$methods) {
   $methods['my_module_zero_out'] = [
     'title' => t('Delete the account and remove all content.'),
     'description' => t('All your content will be replaced by empty strings.'),
-    // access should be used for administrative methods only.
+    // Access should be used for administrative methods only.
     'access' => $account->hasPermission('access zero-out account cancellation method'),
   ];
 }

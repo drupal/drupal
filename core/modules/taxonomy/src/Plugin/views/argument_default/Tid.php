@@ -181,7 +181,7 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
         }
         if (!empty($this->options['limit'])) {
           $tids = [];
-          // filter by vocabulary
+          // Filter by vocabulary
           foreach ($taxonomy as $tid => $vocab) {
             if (!empty($this->options['vids'][$vocab])) {
               $tids[] = $tid;

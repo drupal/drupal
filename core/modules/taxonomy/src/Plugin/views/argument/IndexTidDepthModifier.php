@@ -38,7 +38,7 @@ class IndexTidDepthModifier extends ArgumentPluginBase {
       $argument = -10;
     }
 
-    // figure out which argument preceded us.
+    // Figure out which argument preceded us.
     $keys = array_reverse(array_keys($this->view->argument));
     $skip = TRUE;
     foreach ($keys as $key) {

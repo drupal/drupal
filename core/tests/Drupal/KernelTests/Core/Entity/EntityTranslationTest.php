@@ -733,7 +733,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $controller = $this->entityTypeManager->getStorage($entity_type);
     $langcode = $this->langcodes[0];
 
-    // check that field languages match entity language regardless of field
+    // Check that field languages match entity language regardless of field
     // translatability.
     $values = [
       $langcode_key => $langcode,

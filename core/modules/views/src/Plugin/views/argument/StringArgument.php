@@ -139,7 +139,7 @@ class StringArgument extends ArgumentPluginBase {
       ];
     }
 
-    // allow + for or, , for and
+    // Allow '+' for "or". Allow ',' for "and".
     $form['break_phrase'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow multiple values'),

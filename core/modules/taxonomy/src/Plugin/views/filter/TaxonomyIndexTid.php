@@ -372,7 +372,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   protected function valueSubmit($form, FormStateInterface $form_state) {
-    // prevent array_filter from messing up our arrays in parent submit.
+    // Prevent array_filter from messing up our arrays in parent submit.
   }
 
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
@@ -388,7 +388,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   public function adminSummary() {
-    // set up $this->valueOptions for the parent summary
+    // Set up $this->valueOptions for the parent summary
     $this->valueOptions = [];
 
     if ($this->value) {

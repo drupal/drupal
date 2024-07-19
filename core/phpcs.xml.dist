@@ -79,7 +79,6 @@
     <!-- Sniff for: NoSpaceBefore, SpacingBefore, WrongStyle -->
     <exclude name="Drupal.Commenting.InlineComment.DocBlock"/>
     <exclude name="Drupal.Commenting.InlineComment.InvalidEndChar"/>
-    <exclude name="Drupal.Commenting.InlineComment.NotCapital"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingAfter"/>
   </rule>
   <rule ref="Drupal.Commenting.InlineVariableComment"/>

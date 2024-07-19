@@ -16,7 +16,7 @@ class Date extends NumericFilter {
   protected function defineOptions() {
     $options = parent::defineOptions();
 
-    // value is already set up properly, we're just adding our new field to it.
+    // Value is already set up properly, we're just adding our new field to it.
     $options['value']['contains']['type']['default'] = 'date';
 
     return $options;

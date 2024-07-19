@@ -1567,7 +1567,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     // know where to look for session stored values.
     $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
 
-    // shortcut test.
+    // Shortcut test.
     $operator = !empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id']);
 
     // False means that we got a setting that means to recurse ourselves,

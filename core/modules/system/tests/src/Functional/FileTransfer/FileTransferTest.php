@@ -70,7 +70,7 @@ class FileTransferTest extends BrowserTestBase {
         $this->_writeDirectory($base . DIRECTORY_SEPARATOR . $key, $file);
       }
       else {
-        // just write the filename into the file
+        // Just write the filename into the file
         file_put_contents($base . DIRECTORY_SEPARATOR . $file, $file);
       }
     }

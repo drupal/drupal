@@ -68,7 +68,7 @@ class ManyToOne extends ArgumentPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    // allow + for or, , for and
+    // Allow '+' for "or". Allow ',' for "and".
     $form['break_phrase'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow multiple values'),
