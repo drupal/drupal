@@ -63,23 +63,6 @@ libraries-override:
       component:
         misc/components/autocomplete-loading.module.css: css/core/components/autocomplete-loading.module.css
 
-  core/drupal.dialog.off_canvas:
-    css:
-      base:
-        misc/dialog/off-canvas.reset.css: css/core/dialog/off-canvas.reset.css
-        misc/dialog/off-canvas.base.css: css/core/dialog/off-canvas.base.css
-        misc/dialog/off-canvas.css: css/core/dialog/off-canvas.css
-        misc/dialog/off-canvas.theme.css: css/core/dialog/off-canvas.theme.css
-      component:
-        misc/dialog/off-canvas.motion.css: css/core/dialog/off-canvas.motion.css
-        misc/dialog/off-canvas.button.css: css/core/dialog/off-canvas.button.css
-        misc/dialog/off-canvas.form.css: css/core/dialog/off-canvas.form.css
-        misc/dialog/off-canvas.table.css: css/core/dialog/off-canvas.table.css
-        misc/dialog/off-canvas.details.css: css/core/dialog/off-canvas.details.css
-        misc/dialog/off-canvas.tabledrag.css: css/core/dialog/off-canvas.tabledrag.css
-        misc/dialog/off-canvas.dropbutton.css: css/core/dialog/off-canvas.dropbutton.css
-        misc/dialog/off-canvas.layout.css: css/core/dialog/off-canvas.layout.css
-
   core/drupal.dropbutton:
     css:
       component:
