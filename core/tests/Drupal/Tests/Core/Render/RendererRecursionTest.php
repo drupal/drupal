@@ -10,7 +10,7 @@ namespace Drupal\Tests\Core\Render;
  */
 class RendererRecursionTest extends RendererTestBase {
 
-  protected function setUpRenderRecursionComplexElements() {
+  protected function setUpRenderRecursionComplexElements(): array {
     $complex_child_markup = '<p>Imagine this is a render array for an entity.</p>';
     $parent_markup = '<p>Rendered!</p>';
 

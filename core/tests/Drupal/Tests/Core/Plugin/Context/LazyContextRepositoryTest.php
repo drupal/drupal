@@ -127,7 +127,7 @@ class LazyContextRepositoryTest extends UnitTestCase {
    * @return array
    *   An array of set up contexts.
    */
-  protected function setupContextAndProvider($service_id, array $unqualified_context_ids, array $expected_unqualified_context_ids = []) {
+  protected function setupContextAndProvider($service_id, array $unqualified_context_ids, array $expected_unqualified_context_ids = []): array {
     $contexts = [];
     for ($i = 0; $i < count($unqualified_context_ids); $i++) {
       $contexts[] = new Context(new ContextDefinition('example'));

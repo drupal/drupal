@@ -218,7 +218,7 @@ trait ResourceResponseTestTrait {
    * @return \Drupal\jsonapi\ResourceResponse[]
    *   The ResourceResponses.
    */
-  protected static function toResourceResponses(array $responses) {
+  protected static function toResourceResponses(array $responses): array {
     return array_map([self::class, 'toResourceResponse'], $responses);
   }
 
@@ -260,7 +260,7 @@ trait ResourceResponseTestTrait {
    * @return array
    *   A resource identifier for the given entity.
    */
-  protected static function toResourceIdentifier(EntityInterface $entity) {
+  protected static function toResourceIdentifier(EntityInterface $entity): array {
     return [
       'type' => $entity->getEntityTypeId() . '--' . $entity->bundle(),
       'id' => $entity->uuid(),
@@ -346,7 +346,7 @@ trait ResourceResponseTestTrait {
    * @return array
    *   The extracted links, keyed by the original associated key name.
    */
-  protected static function extractLinks(array $link_paths, array $document) {
+  protected static function extractLinks(array $link_paths, array $document): array {
     return array_map(function ($link_path) use ($document) {
       $link = array_reduce(
         explode('.', $link_path),
@@ -366,7 +366,7 @@ trait ResourceResponseTestTrait {
    * @return string[]
    *   The resource links.
    */
-  protected static function getResourceLinks(array $resource_identifiers) {
+  protected static function getResourceLinks(array $resource_identifiers): array {
     return array_map([static::class, 'getResourceLink'], $resource_identifiers);
   }
 
@@ -585,7 +585,7 @@ trait ResourceResponseTestTrait {
    * @return array
    *   A new omitted object.
    */
-  protected static function errorsToOmittedObject(array $errors) {
+  protected static function errorsToOmittedObject(array $errors): array {
     $omitted = [
       'detail' => 'Some resources have been omitted because of insufficient authorization.',
       'links' => [

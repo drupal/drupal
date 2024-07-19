@@ -207,7 +207,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    * @return array
    *   List of parent term IDs.
    */
-  protected function getParentIDs($tid) {
+  protected function getParentIDs($tid): array {
     return array_keys(\Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadParents($tid));
   }
 

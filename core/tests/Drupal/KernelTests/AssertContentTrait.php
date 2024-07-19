@@ -243,7 +243,7 @@ trait AssertContentTrait {
    * @return \SimpleXmlElement[]
    *   Option elements in select.
    */
-  protected function getAllOptions(\SimpleXMLElement $element) {
+  protected function getAllOptions(\SimpleXMLElement $element): array {
     $options = [];
     // Add all options items.
     foreach ($element->option as $option) {

@@ -156,7 +156,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static function getTestThemes() {
+  protected static function getTestThemes(): array {
     // Remove 'claro' theme. Settings Tray "Edit Mode" will not work with this
     // theme because it removes all contextual links.
     return array_filter(parent::getTestThemes(), function ($theme) {

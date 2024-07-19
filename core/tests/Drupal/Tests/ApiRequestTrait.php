@@ -62,7 +62,7 @@ trait ApiRequestTrait {
    * @return array
    *   Request options updated with the Xdebug cookie if present.
    */
-  protected function decorateWithXdebugCookie(array $request_options) {
+  protected function decorateWithXdebugCookie(array $request_options): array {
     $session = $this->getSession();
     $driver = $session->getDriver();
     if ($driver instanceof BrowserKitDriver) {

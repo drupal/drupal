@@ -32,7 +32,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @return string[]
    *   The header value, potentially exploded by spaces.
    */
-  protected function getCacheHeaderValues($header_name) {
+  protected function getCacheHeaderValues($header_name): array {
     $header_value = $this->getSession()->getResponseHeader($header_name);
     return empty($header_value) ? [] : explode(' ', $header_value);
   }

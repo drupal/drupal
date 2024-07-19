@@ -317,7 +317,7 @@ class NodeCreationTest extends NodeTestBase {
    *   Array containing the IDs of the log records with the rollback exception
    *   message.
    */
-  protected static function getWatchdogIdsForTestExceptionRollback() {
+  protected static function getWatchdogIdsForTestExceptionRollback(): array {
     // PostgreSQL doesn't support bytea LIKE queries, so we need to unserialize
     // first to check for the rollback exception message.
     $matches = [];

@@ -145,7 +145,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getAdditionalCacheContextsForEntity(EntityInterface $entity) {
+  protected function getAdditionalCacheContextsForEntity(EntityInterface $entity): array {
     return [];
   }
 
@@ -154,7 +154,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
    *
    * Each comment must have a comment body, which always has a text format.
    */
-  protected function getAdditionalCacheTagsForEntity(EntityInterface $entity) {
+  protected function getAdditionalCacheTagsForEntity(EntityInterface $entity): array {
     /** @var \Drupal\comment\CommentInterface $entity */
     return [
       'config:filter.format.plain_text',
@@ -166,7 +166,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultCacheContexts() {
+  protected function getDefaultCacheContexts(): array {
     return [
       'languages:' . LanguageInterface::TYPE_INTERFACE,
       'theme',

@@ -401,7 +401,7 @@ class ManageDisplayTest extends BrowserTestBase {
    * @return array
    *   An array of option values as strings.
    */
-  protected function getAllOptionsList(NodeElement $element) {
+  protected function getAllOptionsList(NodeElement $element): array {
     $options = [];
     // Add all options items.
     foreach ($element->option as $option) {

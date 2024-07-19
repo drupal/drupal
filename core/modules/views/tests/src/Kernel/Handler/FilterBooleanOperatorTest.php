@@ -173,7 +173,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
    *
    * @return array
    */
-  protected function getGroupedExposedFilters() {
+  protected function getGroupedExposedFilters(): array {
     $filters = [
       'status' => [
         'id' => 'status',

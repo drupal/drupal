@@ -848,7 +848,7 @@ class FilterStringTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
   }
 
-  protected function getGroupedExposedFilters() {
+  protected function getGroupedExposedFilters(): array {
     $filters = [
       'name' => [
         'id' => 'name',

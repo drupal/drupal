@@ -211,7 +211,7 @@ class EditorAdminTest extends BrowserTestBase {
    * @return array
    *   Returns an edit array containing the values to be posted.
    */
-  protected function selectUnicornEditor() {
+  protected function selectUnicornEditor(): array {
     // Verify the <select> when a text editor is available.
     $select = $this->assertSession()->selectExists('editor[editor]');
     $this->assertFalse($select->hasAttribute('disabled'));

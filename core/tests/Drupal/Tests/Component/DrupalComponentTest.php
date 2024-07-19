@@ -73,7 +73,7 @@ class DrupalComponentTest extends TestCase {
    * @return array
    *   An array of class paths.
    */
-  protected function findPhpClasses($dir) {
+  protected function findPhpClasses($dir): array {
     $classes = [];
     foreach (new \DirectoryIterator($dir) as $file) {
       if ($file->isDir() && !$file->isDot()) {

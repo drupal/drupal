@@ -121,7 +121,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
    *   Format: $[$type][$name] = $yml_file
    *   E.g. $['module']['system'] = 'system.info.yml'
    */
-  protected function populateFilesystemStructure(array &$filesystem_structure) {
+  protected function populateFilesystemStructure(array &$filesystem_structure): array {
     $info_by_file = [
       'core/profiles/standard/standard.info.yml' => [
         'type' => 'profile',

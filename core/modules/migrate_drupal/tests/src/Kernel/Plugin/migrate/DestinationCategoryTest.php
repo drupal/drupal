@@ -98,7 +98,7 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
    * @return array
    *   The configuration class names.
    */
-  protected function getConfigurationClasses() {
+  protected function getConfigurationClasses(): array {
     return [
       Config::class,
       EntityConfigBase::class,
@@ -117,7 +117,7 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
    * @return array
    *   The content class names.
    */
-  protected function getContentClasses() {
+  protected function getContentClasses(): array {
     return [
       EntityContentBase::class,
       BlockedIp::class,

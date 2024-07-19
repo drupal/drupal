@@ -1126,7 +1126,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @return \Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface[]|\PHPUnit\Framework\MockObject\MockObject[]
    *   An array of mock base field definitions.
    */
-  protected function mockFieldDefinitions(array $field_names, $methods = []) {
+  protected function mockFieldDefinitions(array $field_names, $methods = []): array {
     $field_definitions = [];
     $definition = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
 

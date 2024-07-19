@@ -103,7 +103,7 @@ class FilterTest extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement[]
    *   The filtered elements.
    */
-  protected function filterVisibleElements($elements) {
+  protected function filterVisibleElements($elements): array {
     $elements = array_filter($elements, function ($element) {
       return $element->isVisible();
     });

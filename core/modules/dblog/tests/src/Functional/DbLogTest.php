@@ -735,7 +735,7 @@ class DbLogTest extends BrowserTestBase {
    *   - message: (string) The message for this database log event.
    *   - user: (string) The user associated with this database log event.
    */
-  protected function getLogEntries() {
+  protected function getLogEntries(): array {
     $entries = [];
     if ($table = $this->getLogsEntriesTable()) {
       foreach ($table as $row) {
@@ -770,7 +770,7 @@ class DbLogTest extends BrowserTestBase {
    * @return array
    *   The count of each type keyed by the key of the $types array.
    */
-  protected function getTypeCount(array $types) {
+  protected function getTypeCount(array $types): array {
     $entries = $this->getLogEntries();
     $count = array_fill(0, count($types), 0);
     foreach ($entries as $entry) {

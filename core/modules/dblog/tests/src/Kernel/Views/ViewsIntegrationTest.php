@@ -178,7 +178,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
    * @return array
    *   An array of data used to create the log entries.
    */
-  protected function createLogEntries() {
+  protected function createLogEntries(): array {
     $entries = [];
     // Setup a watchdog entry without tokens.
     $entries[] = [

@@ -171,7 +171,7 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
    *   - containing the required $subdirectory
    *   and all modules required by any of these modules.
    */
-  protected function modulesWithSubdirectory($subdirectory) {
+  protected function modulesWithSubdirectory($subdirectory): array {
     $modules = \Drupal::service('extension.list.module')->getList();
     $modules = array_filter($modules, function (Extension $module) use ($subdirectory) {
       // Filter contrib, hidden, already enabled modules and modules in the

@@ -115,14 +115,14 @@ class HookDiscoveryTest extends UnitTestCase {
     $this->hookDiscovery->getDefinition('test_non_existent', TRUE);
   }
 
-  protected function hookDiscoveryTestTestPlugin() {
+  protected function hookDiscoveryTestTestPlugin(): array {
     return [
       'test_id_1' => ['class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Apple'],
       'test_id_2' => ['class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Orange'],
     ];
   }
 
-  protected function hookDiscoveryTest2TestPlugin() {
+  protected function hookDiscoveryTest2TestPlugin(): array {
     return [
       'test_id_3' => ['class' => 'Drupal\plugin_test\Plugin\plugin_test\fruit\Cherry'],
     ];

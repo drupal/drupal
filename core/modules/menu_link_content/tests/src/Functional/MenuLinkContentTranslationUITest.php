@@ -49,14 +49,14 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions() {
+  protected function getTranslatorPermissions(): array {
     return array_merge(parent::getTranslatorPermissions(), ['administer menu']);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAdministratorPermissions() {
+  protected function getAdministratorPermissions(): array {
     return array_merge(parent::getAdministratorPermissions(), ['administer themes', 'view the administration theme']);
   }
 

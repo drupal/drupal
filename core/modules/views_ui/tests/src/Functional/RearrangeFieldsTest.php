@@ -29,7 +29,7 @@ class RearrangeFieldsTest extends UITestBase {
   /**
    * Gets the fields from the View.
    */
-  protected function getViewFields($view_name = 'test_view', $display_id = 'default') {
+  protected function getViewFields($view_name = 'test_view', $display_id = 'default'): array {
     $view = Views::getView($view_name);
     $view->setDisplay($display_id);
     $fields = [];

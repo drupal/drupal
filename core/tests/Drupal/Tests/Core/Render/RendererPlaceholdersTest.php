@@ -530,7 +530,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    *   - A render array containing a placeholder.
    *   - The context used for that #lazy_builder callback.
    */
-  protected function generatePlaceholderElement() {
+  protected function generatePlaceholderElement(): array {
     $args = [static::randomContextValue()];
     $test_element = [];
     $test_element['#attached']['drupalSettings']['foo'] = 'bar';
@@ -1106,7 +1106,7 @@ HTML;
    * @return array
    *   The generated render array for testing.
    */
-  protected function generatePlaceholdersWithChildrenTestElement(array $args_1, array $args_2, array $args_3) {
+  protected function generatePlaceholdersWithChildrenTestElement(array $args_1, array $args_2, array $args_3): array {
     $test_element = [
       '#type' => 'details',
       '#cache' => [

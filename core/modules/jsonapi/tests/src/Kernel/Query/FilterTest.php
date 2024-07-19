@@ -195,7 +195,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Simply provides test data to keep the actual test method tidy.
    */
-  protected function queryConditionData() {
+  protected function queryConditionData(): array {
     // ((RED or CIRCLE) or (YELLOW and SQUARE))
     $query = $this->nodeStorage->getQuery()->accessCheck(FALSE);
 

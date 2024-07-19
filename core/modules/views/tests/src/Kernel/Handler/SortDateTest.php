@@ -22,7 +22,7 @@ class SortDateTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
-  protected function expectedResultSet($granularity, $reverse = TRUE) {
+  protected function expectedResultSet($granularity, $reverse = TRUE): array {
     $expected = [];
     if (!$reverse) {
       switch ($granularity) {

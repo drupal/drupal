@@ -114,7 +114,7 @@ class ImageTest extends ImageTestBase {
    *
    * @return string[]
    */
-  protected function imageAttributes() {
+  protected function imageAttributes(): array {
     return [
       'data-entity-type' => 'file',
       'data-entity-uuid' => $this->file->uuid(),

@@ -223,7 +223,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
    * @return array
    *   Array keyed by field name, with the values being the field type.
    */
-  protected function getTableSchema($table) {
+  protected function getTableSchema($table): array {
     // Verify the field type on the data column in the cache table.
     // @todo this is MySQL specific.
     $query = Database::getConnection()->query("SHOW COLUMNS FROM {" . $table . "}");
@@ -244,7 +244,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
    *   The 'primary key', 'unique keys', and 'indexes' portion of the Drupal
    *   table schema.
    */
-  protected function getTableIndexes($table) {
+  protected function getTableIndexes($table): array {
     $query = Database::getConnection()->query("SHOW INDEX FROM {" . $table . "}");
     $definition = [];
     while ($row = $query->fetchAssoc()) {

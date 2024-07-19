@@ -268,7 +268,7 @@ class LocalTaskManagerTest extends UnitTestCase {
    * @return array
    *   An array of plugin definition keyed by plugin ID.
    */
-  protected function getLocalTaskFixtures() {
+  protected function getLocalTaskFixtures(): array {
     $definitions = [];
     $definitions['menu_local_task_test_tasks_settings'] = [
       'route_name' => 'menu_local_task_test_tasks_settings',
@@ -343,7 +343,7 @@ class LocalTaskManagerTest extends UnitTestCase {
    * @return array
    *   The expected result, keyed by local task level.
    */
-  protected function getLocalTasksForRouteResult($mock_plugin) {
+  protected function getLocalTasksForRouteResult($mock_plugin): array {
     $result = [
       0 => [
         'menu_local_task_test_tasks_settings' => $mock_plugin,
@@ -363,7 +363,7 @@ class LocalTaskManagerTest extends UnitTestCase {
    *
    * @return array
    */
-  protected function getLocalTasksCache() {
+  protected function getLocalTasksCache(): array {
     $local_task_fixtures = $this->getLocalTaskFixtures();
     $local_tasks = [
       'base_routes' => [

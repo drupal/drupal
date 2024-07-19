@@ -527,7 +527,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
     $this->assertTrue(isset($age_operators['not empty']));
   }
 
-  protected function getGroupedExposedFilters() {
+  protected function getGroupedExposedFilters(): array {
     $filters = [
       'age' => [
         'id' => 'age',

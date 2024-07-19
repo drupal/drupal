@@ -22,7 +22,7 @@ class PathFieldDefinitionTest extends BaseFieldDefinitionTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getModuleAndPath() {
+  protected function getModuleAndPath(): array {
     return ['path', dirname(__DIR__, 4)];
   }
 

@@ -1032,7 +1032,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
    *   An array where all the entity IDs and revision IDs are merged inside each
    *   expected values array.
    */
-  protected function flattenExpectedValues(array $expected, $entity_type_id) {
+  protected function flattenExpectedValues(array $expected, $entity_type_id): array {
     $flattened = [];
 
     $entity_keys = $this->entityTypeManager->getDefinition($entity_type_id)->getKeys();

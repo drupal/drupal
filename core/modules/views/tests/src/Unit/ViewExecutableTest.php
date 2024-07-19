@@ -544,7 +544,7 @@ class ViewExecutableTest extends UnitTestCase {
    * @return array
    *   Returns the view executable and default display.
    */
-  protected function setupBaseViewAndDisplay() {
+  protected function setupBaseViewAndDisplay(): array {
     $config = [
       'id' => 'test_view',
       'tag' => 'OnE, TWO, and three',

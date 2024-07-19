@@ -316,7 +316,7 @@ class EntityRepositoryTest extends KernelTestBase {
    * @return \Drupal\Core\Plugin\Context\ContextInterface[]
    *   An array of contexts.
    */
-  protected function getLanguageContexts($langcode) {
+  protected function getLanguageContexts($langcode): array {
     return ['langcode' => $langcode];
   }
 

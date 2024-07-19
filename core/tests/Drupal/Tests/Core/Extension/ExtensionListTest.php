@@ -311,7 +311,7 @@ class ExtensionListTest extends UnitTestCase {
     return $test_extension_list;
   }
 
-  protected function getMocks() {
+  protected function getMocks(): array {
     $cache = $this->prophesize(CacheBackendInterface::class);
     $info_parser = $this->prophesize(InfoParserInterface::class);
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);

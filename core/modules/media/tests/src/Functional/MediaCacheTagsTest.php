@@ -63,14 +63,14 @@ class MediaCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getAdditionalCacheContextsForEntity(EntityInterface $media) {
+  protected function getAdditionalCacheContextsForEntity(EntityInterface $media): array {
     return ['timezone'];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAdditionalCacheTagsForEntity(EntityInterface $media) {
+  protected function getAdditionalCacheTagsForEntity(EntityInterface $media): array {
     // Each media item must have an author and a thumbnail.
     return [
       'user:' . $media->getOwnerId(),

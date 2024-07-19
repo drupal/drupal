@@ -134,7 +134,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   - rollback_action
    *   - hash
    */
-  protected function idMapDefaults() {
+  protected function idMapDefaults(): array {
     $defaults = [
       'source_row_status' => MigrateIdMapInterface::STATUS_IMPORTED,
       'rollback_action' => MigrateIdMapInterface::ROLLBACK_DELETE,
@@ -1045,7 +1045,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   The contents of an ID map.
    */
-  private function getIdMapContents() {
+  private function getIdMapContents(): array {
     $result = $this->database
       ->select('migrate_map_sql_idmap_test', 't')
       ->fields('t')

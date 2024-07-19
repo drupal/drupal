@@ -102,7 +102,7 @@ class LanguagePluginTest extends UnitTestCase {
    * @return array
    *   The expected output of the dynamic plugin configuration.
    */
-  protected static function buildExpectedDynamicConfig(array $language_list) {
+  protected static function buildExpectedDynamicConfig(array $language_list): array {
     $expected_language_config = [];
     foreach ($language_list as $language_code => $language_list_item) {
       $item = [

@@ -605,7 +605,7 @@ class TermTest extends TaxonomyTestBase {
    * @return array
    *   A sorted array of tids and 0 if the root is a parent.
    */
-  private function getParentTids($term) {
+  private function getParentTids($term): array {
     $parent_tids = [];
     foreach ($term->get('parent') as $item) {
       $parent_tids[] = (int) $item->target_id;

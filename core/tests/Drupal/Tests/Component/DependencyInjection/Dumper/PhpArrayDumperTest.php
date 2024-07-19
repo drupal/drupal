@@ -24,7 +24,7 @@ class PhpArrayDumperTest extends OptimizedPhpArrayDumperTest {
   /**
    * {@inheritdoc}
    */
-  protected static function serializeDefinition(array $service_definition) {
+  protected static function serializeDefinition(array $service_definition): array {
     return $service_definition;
   }
 

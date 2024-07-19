@@ -42,7 +42,7 @@ class LayoutBuilderEntityViewDisplayTest extends EntityViewDisplayTest {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $document = parent::getExpectedDocument();
     array_unshift($document['data']['attributes']['dependencies']['module'], 'layout_builder');
     $document['data']['attributes']['hidden'][OverridesSectionStorage::FIELD_NAME] = TRUE;

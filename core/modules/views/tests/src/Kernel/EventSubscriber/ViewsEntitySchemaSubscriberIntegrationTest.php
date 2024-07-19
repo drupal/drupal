@@ -538,7 +538,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * @return array
    *   An array with the view as first item, and the display as second.
    */
-  protected function getUpdatedViewAndDisplay($revision = FALSE) {
+  protected function getUpdatedViewAndDisplay($revision = FALSE): array {
     $entity_storage = $this->entityTypeManager->getStorage('view');
     /** @var \Drupal\views\Entity\View $view */
     $view = $entity_storage->load($revision ? 'test_view_entity_test_revision' : 'test_view_entity_test');

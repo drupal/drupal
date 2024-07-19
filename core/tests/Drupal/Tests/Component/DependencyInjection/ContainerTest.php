@@ -735,7 +735,7 @@ class ContainerTest extends TestCase {
    * @return array
    *   Associated array with parameters and services.
    */
-  protected function getMockContainerDefinition() {
+  protected function getMockContainerDefinition(): array {
     $fake_service = new \stdClass();
     $parameters = [];
     $parameters['some_parameter_class'] = get_class($fake_service);

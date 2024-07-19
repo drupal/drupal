@@ -90,7 +90,7 @@ class GraphTest extends TestCase {
    * @return array
    *   The normalized version of a graph.
    */
-  protected function normalizeGraph($graph) {
+  protected function normalizeGraph($graph): array {
     $normalized_graph = [];
     foreach ($graph as $vertex => $edges) {
       // Create vertex even if it hasn't any edges.

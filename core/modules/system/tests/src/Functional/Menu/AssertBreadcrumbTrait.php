@@ -110,7 +110,7 @@ trait AssertBreadcrumbTrait {
   /**
    * Returns the breadcrumb contents of the current page in the internal browser.
    */
-  protected function getBreadcrumbParts() {
+  protected function getBreadcrumbParts(): array {
     $parts = [];
     $elements = $this->xpath('//nav[@aria-labelledby="system-breadcrumb"]//ol/li/a');
     if (!empty($elements)) {

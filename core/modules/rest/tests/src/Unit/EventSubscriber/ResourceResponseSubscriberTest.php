@@ -411,7 +411,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    * @return array
    *   An array of route requirements.
    */
-  protected function generateRouteRequirements(array $supported_response_formats, array $supported_request_formats) {
+  protected function generateRouteRequirements(array $supported_response_formats, array $supported_request_formats): array {
     $route_requirements = [
       '_format' => implode('|', $supported_response_formats),
     ];

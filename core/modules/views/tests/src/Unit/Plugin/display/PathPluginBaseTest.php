@@ -557,7 +557,7 @@ class PathPluginBaseTest extends UnitTestCase {
   /**
    * Returns some mocked view entity, view executable, and access plugin.
    */
-  protected function setupViewExecutableAccessPlugin() {
+  protected function setupViewExecutableAccessPlugin(): array {
     $view_entity = $this->getMockBuilder('Drupal\views\Entity\View')
       ->disableOriginalConstructor()
       ->getMock();

@@ -53,7 +53,7 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
    *   The first element of the array is the link value to test. The second
    *   value is an array of expected violation messages.
    */
-  protected function getTestLinks() {
+  protected function getTestLinks(): array {
     $violation_0 = "The path '%s' is invalid.";
     $violation_1 = 'This value should be of the correct primitive type.';
     return [

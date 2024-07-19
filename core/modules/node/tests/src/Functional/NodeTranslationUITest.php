@@ -132,21 +132,21 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions() {
+  protected function getTranslatorPermissions(): array {
     return array_merge(parent::getTranslatorPermissions(), ['administer nodes', "edit any $this->bundle content"]);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEditorPermissions() {
+  protected function getEditorPermissions(): array {
     return ['administer nodes', 'create article content'];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAdministratorPermissions() {
+  protected function getAdministratorPermissions(): array {
     return array_merge(parent::getAdministratorPermissions(), ['access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access', 'administer languages', 'administer themes', 'view the administration theme']);
   }
 

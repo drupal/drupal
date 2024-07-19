@@ -376,7 +376,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
    * @return array
    *   A pair of view storage entity and executable.
    */
-  protected function setupValidMocks($use_ajax = self::USE_AJAX) {
+  protected function setupValidMocks($use_ajax = self::USE_AJAX): array {
     $view = $this->getMockBuilder('Drupal\views\Entity\View')
       ->disableOriginalConstructor()
       ->getMock();

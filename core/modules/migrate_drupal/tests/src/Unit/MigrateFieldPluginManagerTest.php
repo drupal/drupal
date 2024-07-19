@@ -112,7 +112,7 @@ class MigrateFieldPluginManagerTest extends UnitTestCase {
    * @return array
    *   The test plugin data.
    */
-  protected function pluginFixtureData() {
+  protected function pluginFixtureData(): array {
     return [
       // Represents a deprecated core field plugin that applied to field_1
       // and field_2 for Drupal 6.

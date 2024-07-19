@@ -91,7 +91,7 @@ class FieldLayoutTest extends BrowserTestBase {
    * @return string[]
    *   An array of region titles.
    */
-  protected function getRegionTitles() {
+  protected function getRegionTitles(): array {
     $region_titles = [];
     $region_title_elements = $this->getSession()->getPage()->findAll('css', '.region-title td');
     /** @var \Behat\Mink\Element\NodeElement[] $region_title_elements */

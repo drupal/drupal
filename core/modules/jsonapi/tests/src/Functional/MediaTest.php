@@ -153,7 +153,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $file = File::load(1);
     $thumbnail = File::load(3);
     $author = User::load($this->entity->getOwnerId());
@@ -294,7 +294,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     $file = File::load(2);
     return [
       'data' => [
@@ -344,7 +344,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEditorialPermissions() {
+  protected function getEditorialPermissions(): array {
     return array_merge(parent::getEditorialPermissions(), ['view any unpublished content']);
   }
 

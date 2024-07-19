@@ -193,7 +193,7 @@ class FieldApiDataTest extends ViewsKernelTestBase {
    * @return array
    *   Views data.
    */
-  protected function getViewsData($field_storage_key = 'field_string') {
+  protected function getViewsData($field_storage_key = 'field_string'): array {
     $views_data = $this->container->get('views.views_data');
     $data = [];
 

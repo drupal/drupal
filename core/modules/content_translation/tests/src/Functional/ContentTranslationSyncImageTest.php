@@ -97,7 +97,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEditorPermissions() {
+  protected function getEditorPermissions(): array {
     // Every entity-type-specific test needs to define these.
     return ['administer entity_test_mul fields', 'administer languages', 'administer content translation'];
   }

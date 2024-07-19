@@ -67,7 +67,7 @@ trait XmlEntityNormalizationQuirksTrait {
    *
    * @see \Symfony\Component\Serializer\Encoder\XmlEncoder
    */
-  protected function applyXmlFieldDecodingQuirks(array $normalization) {
+  protected function applyXmlFieldDecodingQuirks(array $normalization): array {
     foreach ($this->entity->getFields(TRUE) as $field_name => $field) {
       // Not every field is accessible.
       if (!isset($normalization[$field_name])) {
