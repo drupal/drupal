@@ -111,7 +111,7 @@
 .fieldset__wrapper {
   margin-block-start: 0;
   padding-block: var(--sp);
-  padding-inline-start: var(--sp);
+  padding-inline: var(--sp);
 }
 
 .fieldset--group .fieldset__legend--visible ~ .fieldset__wrapper {
