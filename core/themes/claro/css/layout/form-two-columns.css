@@ -20,7 +20,7 @@
   .layout-form {
     display: grid;
     grid-template-rows: auto 1fr;
-    grid-template-columns: 3fr minmax(22.5rem, 1fr);
+    grid-template-columns: minmax(0, 3fr) minmax(22.5rem, 1fr);
     gap: var(--space-l);
   }
 
