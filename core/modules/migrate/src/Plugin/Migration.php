@@ -400,13 +400,12 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function getProcessPlugins(?array $process = NULL) {
-    if (!isset($process)) {
-      $process = $this->getProcess();
-    }
+    $process = isset($process) ? $this->getProcessNormalized($process) : $this->getProcess();
     $index = serialize($process);
     if (!isset($this->processPlugins[$index])) {
       $this->processPlugins[$index] = [];
-      foreach ($this->getProcessNormalized($process) as $property => $configurations) {
+
+      foreach ($process as $property => $configurations) {
         $this->processPlugins[$index][$property] = [];
         foreach ($configurations as $configuration) {
           if (isset($configuration['source'])) {
