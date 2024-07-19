@@ -93,7 +93,7 @@ class BuildTestTest extends BuildTestBase {
     $base = $this->getMockBuilder(BuildTestBase::class)
       ->onlyMethods(['getDrupalRoot', 'getComposerRoot'])
       ->setConstructorArgs(['test'])
-      ->getMockForAbstractClass();
+      ->getMock();
     $base->expects($this->exactly(1))
       ->method('getDrupalRoot')
       ->willReturn(vfsStream::url('drupal'));
@@ -172,7 +172,7 @@ class BuildTestTest extends BuildTestBase {
     $base = $this->getMockBuilder(BuildTestBase::class)
       ->onlyMethods(['getDrupalRoot', 'getComposerRoot'])
       ->setConstructorArgs(['test'])
-      ->getMockForAbstractClass();
+      ->getMock();
     $base->expects($this->exactly(3))
       ->method('getDrupalRoot')
       ->willReturn(vfsStream::url('drupal/docroot'));

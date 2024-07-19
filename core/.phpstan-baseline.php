@@ -2368,12 +2368,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigExistingSettingsTest.php',
