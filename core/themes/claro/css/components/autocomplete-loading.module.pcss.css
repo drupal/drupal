@@ -28,6 +28,8 @@
 
 .js {
   & .form-autocomplete {
+    margin-inline-end: calc(var(--input-border-size) - 1.5 * var(--input-padding-horizontal));
+    padding-inline-end: calc(var(--input-padding-horizontal) * 2.5 - var(--input-border-size));
     background-image: url(../../images/icons/868686/magnifier.svg);
     background-repeat: no-repeat;
     background-position: 100% 50%;
