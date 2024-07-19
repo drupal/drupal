@@ -171,7 +171,7 @@ class DisplayTest extends ViewTestBase {
     $view = Views::getView('test_filter_groups');
     $view->initDisplay();
 
-    // mark is as overridden, yes FALSE, means overridden.
+    // Mark is as overridden, yes FALSE, means overridden.
     $view->displayHandlers->get('page')->setOverride('filter_groups', FALSE);
     $this->assertFalse($view->displayHandlers->get('page')->isDefaulted('filter_groups'), "Make sure that 'filter_groups' is marked as overridden.");
     $this->assertFalse($view->displayHandlers->get('page')->isDefaulted('filters'), "Make sure that 'filters'' is marked as overridden.");

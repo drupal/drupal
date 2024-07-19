@@ -85,7 +85,7 @@ class ManyToOne extends InOperator {
         'ensure_my_table' => 'helper',
       ],
     ];
-    // if the definition allows for the empty operator, add it.
+    // If the definition allows for the empty operator, add it.
     if (!empty($this->definition['allow empty'])) {
       $operators += [
         'empty' => [

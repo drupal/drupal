@@ -512,7 +512,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->cacheBackend
       ->expects($this->exactly(2))
       ->method('set')
-      // reset sets module_implements to array() and getHookInfo later
+      // Reset sets module_implements to array() and getHookInfo later
       // populates hook_info.
       ->with($this->logicalOr('module_implements', 'hook_info'));
     $module_handler->resetImplementations();

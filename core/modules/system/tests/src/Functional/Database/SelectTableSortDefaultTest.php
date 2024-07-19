@@ -28,7 +28,7 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
       ['field' => 'Task ID', 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
       ['field' => 'Task', 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'],
       ['field' => 'Task', 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'],
-      // more elements here
+      // More elements here
 
     ];
 
@@ -56,7 +56,7 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
       ['field' => 'Task ID', 'sort' => 'asc', 'first' => 'eat', 'last' => 'perform at superbowl'],
       ['field' => 'Task', 'sort' => 'asc', 'first' => 'code', 'last' => 'sleep'],
       ['field' => 'Task', 'sort' => 'desc', 'first' => 'sleep', 'last' => 'code'],
-      // more elements here
+      // More elements here
 
     ];
 

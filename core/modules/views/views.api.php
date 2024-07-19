@@ -191,7 +191,7 @@ function hook_views_data() {
   //   ... FROM example_table et ... JOIN node_field_data nfd
   //   ON et.nid = nfd.nid AND ('extra' clauses will be here) ...
   // @endcode
-  // although the table aliases will be different.
+  // (The table aliases will be different.)
   $data['example_table']['table']['join'] = [
     // Within the 'join' section, list one or more tables to automatically
     // join to. In this example, every time 'node_field_data' is available in
@@ -245,7 +245,7 @@ function hook_views_data() {
   //   JOIN node_field_data nfd ON (definition of the join from the foo
   //   module goes here) ...
   // @endcode
-  // although the table aliases will be different.
+  // Although the table aliases will be different.
   $data['example_table']['table']['join']['node_field_data'] = [
     // 'node_field_data' above is the base we're joining to in Views.
     // 'left_table' is the table we're actually joining to, in order to get to

@@ -52,7 +52,7 @@ class UserValidationTest extends KernelTestBase {
       'Foo O\'Bar'             => ['Valid username', 'assertNull'],
       'foo@bar'                => ['Valid username', 'assertNull'],
       'foo@example.com'        => ['Valid username', 'assertNull'],
-      // invalid domains are allowed in usernames.
+      // Invalid domains are allowed in usernames.
       'foo@-example.com'       => ['Valid username', 'assertNull'],
       'þòøÇßªř€'               => ['Valid username', 'assertNull'],
       // '+' symbol is allowed.

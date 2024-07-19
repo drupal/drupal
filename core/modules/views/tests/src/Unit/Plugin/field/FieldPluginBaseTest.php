@@ -367,7 +367,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     // entity_type flag.
     $entity_type_id = 'node';
     $data[] = ['test-path', ['entity_type' => $entity_type_id], '<a href="/test-path">value</a>'];
-    // prefix
+    // Prefix
     $data[] = ['test-path', ['prefix' => 'test_prefix'], 'test_prefix<a href="/test-path">value</a>'];
     // suffix.
     $data[] = ['test-path', ['suffix' => 'test_suffix'], '<a href="/test-path">value</a>test_suffix'];

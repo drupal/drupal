@@ -1271,7 +1271,7 @@ class FormState implements FormStateInterface {
       // @code
       //   array('foo', 'bar', 'baz')
       // @endcode
-      // then the corresponding self::getValues() part will look like this:
+      // Then the corresponding self::getValues() part will look like this:
       // @code
       // array(
       //   'foo' => array(
