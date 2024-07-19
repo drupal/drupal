@@ -156,7 +156,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
       ],
     ];
 
-    // if the definition allows for the empty operator, add it.
+    // If the definition allows for the empty operator, add it.
     if (!empty($this->definition['allow empty'])) {
       $operators += [
         'empty' => [
@@ -219,7 +219,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
       $identifier = $this->options['expose']['identifier'];
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
-        // exposed and locked.
+        // Exposed and locked.
         $which = in_array($this->operator, $this->operatorValues(2)) ? 'minmax' : 'value';
       }
       else {

@@ -66,7 +66,7 @@ class FieldBooleanTest extends ViewsKernelTestBase {
     $this->assertEquals('False', $view->field['age']->advancedRender($view->result[0]));
     $this->assertEquals('True', $view->field['age']->advancedRender($view->result[1]));
 
-    // test awesome unicode.
+    // Test awesome unicode.
     $view->field['age']->options['type'] = 'unicode-yes-no';
     $this->assertEquals('✖', $view->field['age']->advancedRender($view->result[0]));
     $this->assertEquals('✔', $view->field['age']->advancedRender($view->result[1]));

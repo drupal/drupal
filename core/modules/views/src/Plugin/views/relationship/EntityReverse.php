@@ -101,7 +101,7 @@ class EntityReverse extends RelationshipPluginBase {
     $second_join = $this->joinManager->createInstance('standard', $second);
     $second_join->adjusted = TRUE;
 
-    // use a short alias for this:
+    // Use a short alias for this:
     $alias = $this->definition['field_name'] . '_' . $this->table;
 
     $this->alias = $this->query->addRelationship($alias, $second_join, $this->definition['base'], $this->relationship);

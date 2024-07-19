@@ -153,7 +153,6 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
     }
     // FileExistsException is a subclass of FileException.
     catch (FileExistsException $e) {
-      // expected exception.
       $this->assertStringContainsString("could not be copied because a file by that name already exists in the destination directory", $e->getMessage());
     }
     $this->assertEquals($contents, file_get_contents($existing->getFileUri()), 'Contents of existing file were unchanged.');

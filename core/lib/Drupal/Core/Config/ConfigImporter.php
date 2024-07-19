@@ -419,7 +419,7 @@ class ConfigImporter {
     //   'text' => -1,
     // );
     // @endcode
-    // will result in the following sort order:
+    // Will result in the following sort order:
     // 1. -2   options
     // 2. -1   text
     // 3.  0 0 ban

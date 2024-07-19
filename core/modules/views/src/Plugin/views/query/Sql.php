@@ -198,7 +198,7 @@ class Sql extends QueryPluginBase {
       'base' => $base_table,
     ];
 
-    // init the table queue with our primary table.
+    // Initialize the table queue with our primary table.
     $this->tableQueue[$base_table] = [
       'alias' => $base_table,
       'table' => $base_table,
@@ -206,7 +206,7 @@ class Sql extends QueryPluginBase {
       'join' => NULL,
     ];
 
-    // init the tables with our primary table
+    // Init the tables with our primary table
     $this->tables[$base_table][$base_table] = [
       'count' => 1,
       'alias' => $base_table,
@@ -557,7 +557,7 @@ class Sql extends QueryPluginBase {
       if (!isset($alias)) {
         $alias = '';
         if ($relationship != $this->view->storage->get('base_table')) {
-          // double underscore will help prevent accidental name
+          // Double underscore will help prevent accidental name
           // space collisions.
           $alias = $relationship . '__';
         }
@@ -596,7 +596,7 @@ class Sql extends QueryPluginBase {
    *   cannot be ensured.
    */
   public function ensureTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL) {
-    // ensure a relationship
+    // Ensure a relationship
     if (empty($relationship)) {
       $relationship = $this->view->storage->get('base_table');
     }
@@ -646,7 +646,7 @@ class Sql extends QueryPluginBase {
       // example, a view that filters on 3 taxonomy terms using AND
       // needs to join taxonomy_term_data 3 times with the same join.
 
-      // scan through the table queue to see if a matching join and
+      // Scan through the table queue to see if a matching join and
       // relationship exists.  If so, use it instead of this join.
 
       // @todo Scanning through $this->tableQueue results in an
@@ -1402,7 +1402,7 @@ class Sql extends QueryPluginBase {
     }
 
     if (!$this->getCountOptimized) {
-      // we only add the orderby if we're not counting.
+      // We only add the orderby if we're not counting.
       if ($this->orderby) {
         foreach ($this->orderby as $order) {
           if ($order['field'] == 'rand_') {

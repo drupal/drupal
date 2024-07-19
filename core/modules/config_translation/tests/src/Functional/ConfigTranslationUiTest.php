@@ -234,7 +234,7 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
     $translation = $this->getTranslation('user.settings', 'anonymous', 'fr');
     $this->assertEquals('Anonyme', $translation->getString());
 
-    // revert custom translations to base translation.
+    // Revert custom translations to base translation.
     $edit = [
       'translation[config_names][user.settings][anonymous]' => 'Anonymous',
     ];

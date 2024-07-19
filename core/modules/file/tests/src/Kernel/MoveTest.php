@@ -155,7 +155,6 @@ class MoveTest extends FileManagedUnitTestBase {
       $this->fail('expected FileExistsException');
     }
     catch (FileExistsException $e) {
-      // expected exception.
       $this->assertStringContainsString("could not be copied because a file by that name already exists in the destination directory", $e->getMessage());
     }
     $this->assertEquals($contents, file_get_contents($source->getFileUri()), 'Contents of file were not altered.');
@@ -187,7 +186,6 @@ class MoveTest extends FileManagedUnitTestBase {
     }
     // FileExistsException is a subclass of FileException.
     catch (FileExistsException $e) {
-      // expected exception.
       $this->assertStringContainsString("could not be copied because a file by that name already exists in the destination directory", $e->getMessage());
     }
     // Check the return status and that the contents did not change.

@@ -477,7 +477,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       $plugin->validateOptionsForm($form['argument_default'][$default_id], $form_state, $option_values['argument_default'][$default_id]);
     }
 
-    // summary plugin
+    // Summary plugin
     $summary_id = $option_values['summary']['format'];
     $plugin = $this->getPlugin('style', $summary_id);
     if ($plugin) {
@@ -510,7 +510,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       $option_values['default_argument_options'] = $options;
     }
 
-    // summary plugin
+    // Summary plugin
     $summary_id = $option_values['summary']['format'];
     $plugin = $this->getPlugin('style', $summary_id);
     if ($plugin) {
@@ -927,7 +927,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     // name field would be 'name' (i.e, the username).
 
     if (isset($this->name_table)) {
-      // if the alias is different then we're probably added, not ensured,
+      // If the alias is different then we're probably added, not ensured,
       // so look up the join and add it instead.
       if ($this->tableAlias != $this->name_table) {
         $j = HandlerBase::getTableJoin($this->name_table, $this->table);
@@ -1131,7 +1131,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     if (!isset($arg) && $argument->hasDefaultArgument()) {
       $arg = $argument->getDefaultArgument();
 
-      // remember that this argument was computed, not passed on the URL.
+      // Remember that this argument was computed, not passed on the URL.
       $this->is_default = TRUE;
     }
     // Set the argument, which will also validate that the argument can be set.
@@ -1166,7 +1166,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
       $name = $plugin_name;
     }
 
-    // we only fetch the options if we're fetching the plugin actually
+    // We only fetch the options if we're fetching the plugin actually
     // in use.
     if ($name == $plugin_name) {
       $options = $this->options[$options_name] ?? [];

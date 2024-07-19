@@ -82,7 +82,7 @@ class User extends Entity {
    * {@inheritdoc}
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) {
-    // filter trash out of the options so we don't store giant unnecessary arrays
+    // Filter trash out of the options so we don't store giant unnecessary arrays
     $options['roles'] = array_filter($options['roles']);
   }
 

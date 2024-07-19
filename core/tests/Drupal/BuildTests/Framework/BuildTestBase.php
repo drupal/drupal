@@ -185,7 +185,7 @@ abstract class BuildTestBase extends TestCase {
         ->directories()
         ->ignoreVCS(FALSE)
         ->ignoreDotFiles(FALSE)
-        // composer script is a symlink and fails chmod. Ignore it.
+        // Composer script is a symlink and fails chmod. Ignore it.
         ->notPath('/^vendor\/bin\/composer$/');
       $fs->chmod($finder->getIterator(), 0775, 0000);
       $fs->remove($ws);

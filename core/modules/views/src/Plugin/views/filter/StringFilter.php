@@ -186,7 +186,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
         'values' => 1,
       ],
     ];
-    // if the definition allows for the empty operator, add it.
+    // If the definition allows for the empty operator, add it.
     if (!empty($this->definition['allow empty'])) {
       $operators += [
         'empty' => [
@@ -265,7 +265,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
       $identifier = $this->options['expose']['identifier'];
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
-        // exposed and locked.
+        // Exposed and locked.
         $which = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
       }
       else {
@@ -390,7 +390,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
       return;
     }
 
-    // previously this was a call_user_func_array but that's unnecessary
+    // Previously this was a call_user_func_array but that's unnecessary
     // as views will unpack an array that is a single arg.
     $this->query->addWhere($this->options['group'], $where);
   }
