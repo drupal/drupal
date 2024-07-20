@@ -19,6 +19,59 @@ function demo_umami_content_module_preinstall($module) {
 }
 
 /**
+ * Implements hook_install().
+ */
+function demo_umami_content_install($is_syncing) {
+  if (!$is_syncing) {
+    $query = \Drupal::entityQuery('node')->accessCheck(TRUE);
+    $nids = $query->execute();
+
+    if (empty($nids)) {
+      return;
+    }
+
+    // Sort node IDs in descending order
+    rsort($nids);
+
+    $nodes = \Drupal::entityTypeManager()->getStorage('node')->loadMultiple($nids);
+
+    // Use a counter to determine the "days ago" offset
+    $counter = 1;
+
+    foreach ($nodes as $node) {
+      // Get all translation languages for the node
+      $languages = $node->getTranslationLanguages();
+      foreach ($languages as $language) {
+        // Load the translated version of the node.
+        $translatedNode = $node->getTranslation($language->getId());
+        try {
+          // Use the counter to calculate "days ago".
+          $timestamp = strtotime("-{$counter} days");
+
+          // Set the created and updated time for the translated node.
+          $translatedNode->setCreatedTime($timestamp);
+          $translatedNode->setChangedTime($timestamp);
+
+          // Check if the translation is the default language.
+          // If not, mark the translation as changed.
+          if (!$translatedNode->isDefaultTranslation()) {
+            $translatedNode->setNewRevision(FALSE);
+            $translatedNode->isDefaultRevision(FALSE);
+            $translatedNode->setRevisionTranslationAffected(TRUE);
+          }
+          $translatedNode->save();
+        }
+        catch (\Exception $e) {
+          \Drupal::logger('system')->error($e->getMessage());
+        }
+      }
+      // Increment the counter for the next node
+      $counter++;
+    }
+  }
+}
+
+/**
  * Implements hook_uninstall().
  */
 function demo_umami_content_uninstall($is_syncing) {
