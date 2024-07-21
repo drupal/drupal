@@ -227,7 +227,8 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
    */
   public function getLayoutOptions() {
     $layout_options = [];
-    foreach ($this->getGroupedDefinitions() as $category => $layout_definitions) {
+    $filtered_definitions = $this->getFilteredDefinitions($this->getType());
+    foreach ($this->getGroupedDefinitions($filtered_definitions) as $category => $layout_definitions) {
       foreach ($layout_definitions as $name => $layout_definition) {
         $layout_options[$category][$name] = $layout_definition->getLabel();
       }

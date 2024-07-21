@@ -17,6 +17,7 @@ use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Layout\LayoutPluginManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
@@ -44,6 +45,13 @@ class LayoutPluginManagerTest extends UnitTestCase {
   protected $themeHandler;
 
   /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
    * Cache backend instance.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
@@ -67,6 +75,8 @@ class LayoutPluginManagerTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $container->set('string_translation', $this->getStringTranslationStub());
+    $this->themeManager = $this->prophesize(ThemeManagerInterface::class);
+    $container->set('theme.manager', $this->themeManager->reveal());
     \Drupal::setContainer($container);
 
     $this->moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
@@ -345,6 +355,28 @@ EOS;
       $this->assertEquals($expected, array_keys($definitions[$category]));
       $this->assertContainsOnlyInstancesOf(LayoutDefinition::class, $definitions[$category]);
     }
+  }
+
+  /**
+   * @covers ::getLayoutOptions
+   *
+   * Test that modules and themes can alter the list of layouts.
+   */
+  public function testGetLayoutOptions(): void {
+    $this->moduleHandler->alter(
+      ['plugin_filter_layout', 'plugin_filter_layout__layout'],
+      Argument::type('array'),
+      [],
+      'layout',
+    )->shouldBeCalled();
+    $this->themeManager->alter(
+      ['plugin_filter_layout', 'plugin_filter_layout__layout'],
+      Argument::type('array'),
+      [],
+      'layout',
+    )->shouldBeCalled();
+
+    $this->layoutPluginManager->getLayoutOptions();
   }
 
   /**
