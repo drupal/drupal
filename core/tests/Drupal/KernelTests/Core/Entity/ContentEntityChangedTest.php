@@ -473,6 +473,29 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests the changed functionality when an entity is syncing.
+   */
+  public function testChangedSyncing(): void {
+    $entity = EntityTestMulChanged::create();
+    $entity->save();
+    $changed_time_1 = $entity->getChangedTime();
+
+    // Without the syncing flag the changed time will increment when content is
+    // changed.
+    $entity->setName($this->randomString());
+    $entity->save();
+    $changed_time_2 = $entity->getChangedTime();
+    $this->assertTrue($changed_time_2 > $changed_time_1);
+
+    // With the syncing flag, the changed time will not change.
+    $entity->setName($this->randomString());
+    $entity->setSyncing(TRUE);
+    $entity->save();
+    $changed_time_3 = $entity->getChangedTime();
+    $this->assertEquals($changed_time_2, $changed_time_3);
+  }
+
+  /**
    * Retrieves the revision translation affected flag value.
    *
    * @param \Drupal\entity_test\Entity\EntityTestMulRevChanged $entity
