@@ -93,11 +93,10 @@ class EntityPermissionsForm extends UserPermissionsForm {
     // Get the names of all config entities that depend on $this->bundle.
     $config_name = $this->bundle->getConfigDependencyName();
     $config_entities = $this->configManager
-      ->getConfigEntitiesToChangeOnDependencyRemoval('config', [$config_name]);
+      ->findConfigEntityDependencies('config', [$config_name]);
     $config_names = array_map(
-      function ($dependent_config) {
-        return $dependent_config->getConfigDependencyName();
-      }, $config_entities['delete'] ?? []
+      fn($dependent_config) => $dependent_config->getConfigDependencyName(),
+      $config_entities,
     );
     $config_names[] = $config_name;
 
