@@ -777,18 +777,60 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   /**
    * Tests post-transaction callback executes after transaction rollback.
    */
-  public function testRootTransactionEndCallbackCalledOnRollback(): void {
+  public function testRootTransactionEndCallbackCalledAfterRollbackAndDestruction(): void {
     $transaction = $this->createRootTransaction('', FALSE);
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
     $this->insertRow('row');
     $this->assertNull($this->postTransactionCallbackAction);
+
+    // Callbacks are processed only when destructing the transaction.
+    // Executing a rollback is not sufficient by itself.
     $transaction->rollBack();
-    $this->assertSame('rtcRollback', $this->postTransactionCallbackAction);
-    unset($transaction);
-    $this->assertRowAbsent('row');
-    // The row insert should be missing since the client rollback occurs after
-    // the processing of the callbacks.
+    $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
     $this->assertRowAbsent('rtcRollback');
+    $this->assertRowAbsent('row');
+
+    // Destruct the transaction.
+    unset($transaction);
+
+    // The post-transaction callback should now have inserted a 'rtcRollback'
+    // row.
+    $this->assertSame('rtcRollback', $this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+    $this->assertRowPresent('rtcRollback');
+    $this->assertRowAbsent('row');
+  }
+
+  /**
+   * Tests post-transaction callback executes after a DDL statement.
+   */
+  public function testRootTransactionEndCallbackCalledAfterDdlAndDestruction(): void {
+    $transaction = $this->createRootTransaction('', FALSE);
+    $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
+    $this->insertRow('row');
+    $this->assertNull($this->postTransactionCallbackAction);
+
+    // Callbacks are processed only when destructing the transaction.
+    // Executing a DDL statement is not sufficient itself.
+    // We cannot use truncate here, since it has protective code to fall back
+    // to a transactional delete when in transaction. We drop an unrelated
+    // table instead.
+    $this->connection->schema()->dropTable('test_people');
+    $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+    $this->assertRowAbsent('rtcRollback');
+    $this->assertRowPresent('row');
+
+    // Destruct the transaction.
+    unset($transaction);
+
+    // The post-transaction callback should now have inserted a 'rtcCommit'
+    // row.
+    $this->assertSame('rtcCommit', $this->postTransactionCallbackAction);
+    $this->assertRowPresent('rtcCommit');
+    $this->assertRowAbsent('rtcRollback');
+    $this->assertRowPresent('row');
   }
 
   /**
