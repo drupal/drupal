@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Functional;
 
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Verifies role permissions can be added and removed via the permissions page.
@@ -14,6 +15,8 @@ use Drupal\user\Entity\Role;
  * @group user
  */
 class UserPermissionsTest extends BrowserTestBase {
+
+  use CommentTestTrait;
 
   /**
    * User with admin privileges.
@@ -295,6 +298,37 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/structure/contact/manage/test_contact_type/permissions');
     $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
+   * Tests that access check does not trigger warnings.
+   *
+   * The access check for /admin/structure/comment/manage/comment/permissions is
+   * \Drupal\user\Form\EntityPermissionsForm::EntityPermissionsForm::access().
+   */
+  public function testBundlePermissionError(): void {
+    \Drupal::service('module_installer')->install(['comment', 'dblog', 'field_ui', 'node']);
+    // Set up the node and comment field. Use the 'default' view mode since
+    // 'full' is not defined, so it will not be added to the config entity.
+    $this->drupalCreateContentType(['type' => 'article']);
+    $this->addDefaultCommentField('node', 'article', comment_view_mode: 'default');
+
+    $this->drupalLogin($this->adminUser);
+    $this->grantPermissions(Role::load($this->rid), ['access site reports', 'administer comment display']);
+
+    // Access both the Manage display and permission page, which is not
+    // accessible currently.
+    $assert_session = $this->assertSession();
+    $this->drupalGet('/admin/structure/comment/manage/comment/display');
+    $assert_session->statusCodeEquals(200);
+    $this->drupalGet('/admin/structure/comment/manage/comment/permissions');
+    $assert_session->statusCodeEquals(403);
+
+    // Ensure there are no warnings in the log.
+    $this->drupalGet('/admin/reports/dblog');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->pageTextContains('access denied');
+    $assert_session->pageTextNotContains("Entity view display 'node.article.default': Component");
   }
 
 }

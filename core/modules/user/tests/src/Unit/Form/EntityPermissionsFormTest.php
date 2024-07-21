@@ -60,12 +60,10 @@ class EntityPermissionsFormTest extends UnitTestCase {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class)->reveal();
     $module_extension_list = $this->prophesize(ModuleExtensionList::class)->reveal();
     $prophecy = $this->prophesize(ConfigManagerInterface::class);
-    $prophecy->getConfigEntitiesToChangeOnDependencyRemoval('config', ['node.type.article'])
+    $prophecy->findConfigEntityDependencies('config', ['node.type.article'])
       ->willReturn([
-        'delete' => [
-          new ConfigEntityDependency('core.entity_view_display.node.article.full'),
-          new ConfigEntityDependency('field.field.node.article.body'),
-        ],
+        new ConfigEntityDependency('core.entity_view_display.node.article.full'),
+        new ConfigEntityDependency('field.field.node.article.body'),
       ]);
     $config_manager = $prophecy->reveal();
     $prophecy = $this->prophesize(EntityTypeInterface::class);
