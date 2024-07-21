@@ -318,7 +318,7 @@ class FilterAPITest extends EntityKernelTestBase {
       'user.permissions',
     ];
     $this->assertEqualsCanonicalizing($expected_cache_contexts, $build['#cache']['contexts'], 'Expected cache contexts present.');
-    $expected_markup = '<p>Hello, world!</p><p>This is a dynamic llama.</p>';
+    $expected_markup = '<p>Hello, world!</p><p>This is a dynamic llama.</p><p>This is a static llama.</p>';
     $this->assertSame($expected_markup, (string) $build['#markup'], 'Expected #lazy_builder callback has been applied.');
   }
 
