@@ -24,6 +24,26 @@ use Drupal\Core\Database\TransactionOutOfOrderException;
 abstract class TransactionManagerBase implements TransactionManagerInterface {
 
   /**
+   * The ID of the root Transaction object.
+   *
+   * The unique identifier of the first 'root' transaction object created, when
+   * the stack is empty.
+   *
+   * Normally, during the transaction stack lifecycle only one 'root'
+   * Transaction object is processed. Any post transaction callbacks are only
+   * processed during its destruction. However, there are cases when there
+   * could be multiple 'root' transaction objects in the stack. For example: a
+   * 'root' transaction object is opened, then a DDL statement is executed in a
+   * database that does not support transactional DDL, and because of that,
+   * another 'root' is opened before the original one is closed.
+   *
+   * Keeping track of the first 'root' created allows us to process the post
+   * transaction callbacks only during its destruction and not during
+   * destruction of another one.
+   */
+  private ?string $rootId = NULL;
+
+  /**
    * The stack of Drupal transactions currently active.
    *
    * This property is keeping track of the Transaction objects started and
@@ -234,11 +254,19 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       throw new TransactionNameNonUniqueException("A transaction named {$name} is already in use. Active stack: " . $this->dumpStackItemsAsString());
     }
 
+    // Define a unique ID for the transaction.
+    $id = uniqid('', TRUE);
+
     // Do the client-level processing.
     if ($this->stackDepth() === 0) {
       $this->beginClientTransaction();
       $type = StackItemType::Root;
       $this->setConnectionTransactionState(ClientConnectionTransactionState::Active);
+      // Only set ::rootId if there's not one set already, which may happen in
+      // case of broken transactions.
+      if ($this->rootId === NULL) {
+        $this->rootId = $id;
+      }
     }
     else {
       // If we're already in a Drupal transaction then we want to create a
@@ -247,9 +275,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       $this->addClientSavepoint($name);
       $type = StackItemType::Savepoint;
     }
-
-    // Define an unique id for the transaction.
-    $id = uniqid('', TRUE);
 
     // Add an item on the stack, increasing its depth.
     $this->addStackItem($id, new StackItem($name, $type));
@@ -262,6 +287,18 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * {@inheritdoc}
    */
   public function unpile(string $name, string $id): void {
+    // If this is a 'root' transaction, and it is voided (that is, no longer in
+    // the stack), then the transaction on the database is no longer active. An
+    // action such as a rollback, or a DDL statement, was executed that
+    // terminated the database transaction. So, we can process the post
+    // transaction callbacks.
+    if (!isset($this->stack()[$id]) && isset($this->voidedItems[$id]) && $this->rootId === $id) {
+      $this->processPostTransactionCallbacks();
+      $this->rootId = NULL;
+      unset($this->voidedItems[$id]);
+      return;
+    }
+
     // If the $id does not correspond to the one in the stack for that $name,
     // we are facing an orphaned Transaction object (for example in case of a
     // DDL statement breaking an active transaction). That should be listed in
@@ -289,6 +326,10 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
         // If this was the root Drupal transaction, we can commit the client
         // transaction.
         $this->processRootCommit();
+        if ($this->rootId === $id) {
+          $this->processPostTransactionCallbacks();
+          $this->rootId = NULL;
+        }
       }
       else {
         // The stack got corrupted.
@@ -420,7 +461,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * Processes the root transaction rollback.
    */
   protected function processRootRollback(): void {
-    $this->processPostTransactionCallbacks();
     $this->rollbackClientTransaction();
   }
 
@@ -432,7 +472,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    */
   protected function processRootCommit(): void {
     $clientCommit = $this->commitClientTransaction();
-    $this->processPostTransactionCallbacks();
     if (!$clientCommit) {
       throw new TransactionCommitFailedException();
     }
@@ -534,7 +573,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       $this->voidStackItem((string) $i);
     }
     $this->setConnectionTransactionState(ClientConnectionTransactionState::Voided);
-    $this->processPostTransactionCallbacks();
   }
 
 }
