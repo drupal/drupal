@@ -136,7 +136,11 @@ class FilterProcessResult extends BubbleableMetadata {
     // @see \Drupal\Core\Render\PlaceholderGenerator::createPlaceholder()
     $arguments = UrlHelper::buildQuery($args);
     $token = Crypt::hashBase64(serialize([$callback, $args]));
-    $placeholder_markup = '<drupal-filter-placeholder callback="' . Html::escape($callback) . '" arguments="' . Html::escape($arguments) . '" token="' . Html::escape($token) . '"></drupal-filter-placeholder>';
+    $placeholder_markup = '<drupal-filter-placeholder callback="' . Html::escape($callback) . '"';
+    if ($arguments !== '') {
+      $placeholder_markup .= ' arguments="' . Html::escape($arguments) . '"';
+    }
+    $placeholder_markup .= ' token="' . Html::escape($token) . '"></drupal-filter-placeholder>';
 
     // Add the placeholder attachment.
     $this->addAttachments([
