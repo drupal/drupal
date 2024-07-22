@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Updater;
 
-use Drupal\Core\Url;
-
 /**
  * Defines a class for updating modules.
  *
@@ -74,37 +72,6 @@ class Module extends Updater implements UpdaterInterface {
    */
   public static function canUpdate($project_name) {
     return (bool) \Drupal::service('extension.list.module')->getPath($project_name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postInstallTasks() {
-    // Since this is being called outside of the primary front controller,
-    // the base_url needs to be set explicitly to ensure that links are
-    // relative to the site root.
-    // @todo Simplify with https://www.drupal.org/node/2548095
-    $default_options = [
-      '#type' => 'link',
-      '#options' => [
-        'absolute' => TRUE,
-        'base_url' => $GLOBALS['base_url'],
-      ],
-    ];
-    return [
-      $default_options + [
-        '#url' => Url::fromRoute('update.module_install'),
-        '#title' => t('Add another module'),
-      ],
-      $default_options + [
-        '#url' => Url::fromRoute('system.modules_list'),
-        '#title' => t('Install newly added modules'),
-      ],
-      $default_options + [
-        '#url' => Url::fromRoute('system.admin'),
-        '#title' => t('Administration pages'),
-      ],
-    ];
   }
 
   /**

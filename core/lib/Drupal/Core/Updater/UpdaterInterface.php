@@ -58,6 +58,11 @@ interface UpdaterInterface {
 
   /**
    * Actions to run after an install has occurred.
+   *
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3461934
    */
   public function postInstall();
 

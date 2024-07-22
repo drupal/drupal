@@ -986,7 +986,7 @@ function hook_update_last_removed() {
  *
  * Drupal\Core\Updater\Updater is a class that knows how to update various parts
  * of the Drupal file system, for example to update modules that have newer
- * releases, or to install a new theme.
+ * releases.
  *
  * @return array
  *   An associative array of information about the updater(s) being provided.
@@ -1026,8 +1026,7 @@ function hook_updater_info() {
  * Alter the Updater information array.
  *
  * An Updater is a class that knows how to update various parts of the Drupal
- * file system, for example to update modules that have newer releases, or to
- * install a new theme.
+ * file system, for example to update modules that have newer releases.
  *
  * @param array $updaters
  *   Associative array of updaters as defined through hook_updater_info().

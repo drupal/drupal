@@ -290,6 +290,7 @@ abstract class Updater {
    * @throws \Drupal\Core\Updater\UpdaterFileTransferException
    */
   public function install(&$filetransfer, $overrides = []) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
     try {
       // Establish arguments with possible overrides.
       $args = $this->getInstallArgs($overrides);
@@ -400,15 +401,10 @@ abstract class Updater {
   }
 
   /**
-   * Performs actions after new code is updated.
-   */
-  public function postUpdate() {
-  }
-
-  /**
    * Performs actions after installation.
    */
   public function postInstall() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
   }
 
   /**
@@ -418,7 +414,14 @@ abstract class Updater {
    *   Links which provide actions to take after the install is finished.
    */
   public function postInstallTasks() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
     return [];
+  }
+
+  /**
+   * Performs actions after new code is updated.
+   */
+  public function postUpdate() {
   }
 
   /**
