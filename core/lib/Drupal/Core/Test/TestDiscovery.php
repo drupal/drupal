@@ -106,6 +106,15 @@ class TestDiscovery {
       $this->testNamespaces["Drupal\\Tests\\$name\\"][] = "$base_path/tests/src";
     }
 
+    // Expose tests provided by core recipes.
+    $base_path = $this->root . '/core/recipes';
+    if (@opendir($base_path)) {
+      while (($recipe = readdir()) !== FALSE) {
+        $this->testNamespaces["Drupal\\Tests\\Recipe\\Core\\$recipe\\"][] = "$base_path/$recipe/tests/src";
+      }
+      closedir();
+    }
+
     foreach ($this->testNamespaces as $prefix => $paths) {
       $this->classLoader->addPsr4($prefix, $paths);
     }
