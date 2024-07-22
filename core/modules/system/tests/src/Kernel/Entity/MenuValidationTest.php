@@ -11,6 +11,7 @@ use Drupal\system\Entity\Menu;
  * Tests validation of menu entities.
  *
  * @group system
+ * @group #slow
  */
 class MenuValidationTest extends ConfigEntityValidationTestBase {
 
