@@ -58,11 +58,6 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
         'use_site_name' => TRUE,
         'use_site_slogan' => TRUE,
         'label_display' => FALSE,
-        // TRICKY: these 4 are inherited from `type: block_settings`.
-        'status' => TRUE,
-        'info' => '',
-        'view_mode' => 'full',
-        'context_mapping' => [],
       ],
     ]);
     $block->save();
@@ -250,8 +245,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
     // Passing a non-array value should raise an exception.
     try {
-      // TRICKY: we must clone the definition because the instance is modified
-      // when processing.
+      // We must clone the definition because the instance is modified when
+      // processing.
       // @see \Drupal\Core\Config\Schema\Mapping::processRequiredKeyFlags()
       $typed_config->create(clone $definition, 2501)->validate();
       $this->fail('Expected an exception but none was raised.');

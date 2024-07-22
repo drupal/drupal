@@ -24,8 +24,29 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static array $propertiesWithRequiredKeys = [
+    'settings' => [
+      "'id' is a required key.",
+      "'label' is a required key.",
+      "'label_display' is a required key.",
+      "'provider' is a required key.",
+    ],
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static array $propertiesWithOptionalValues = [
+    'provider',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->container->get('theme_installer')->install(['stark']);
 
     $this->entity = Block::create([
       'id' => 'test_block',
@@ -90,6 +111,73 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     // implementation in the base class to know at which property to expect a
     // validation error. Hence it is hardcoded in this case.
     $this->assertValidationErrors(['settings.label' => "Labels are not allowed to span multiple lines or contain control characters."]);
+  }
+
+  /**
+   * Tests validating a block with a non-existent theme.
+   */
+  public function testThemeValidation(): void {
+    $this->entity->set('theme', 'non_existent');
+    $this->assertValidationErrors([
+      'region' => 'This is not a valid region of the <em class="placeholder">non_existent</em> theme.',
+      'theme' => "Theme 'non_existent' is not installed.",
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testRequiredPropertyValuesMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
+    parent::testRequiredPropertyValuesMissing([
+      'region' => [
+        'region' => [
+          'This is not a valid region of the <em class="placeholder">stark</em> theme.',
+          'This value should not be null.',
+        ],
+      ],
+      'theme' => [
+        'region' => 'This block does not say which theme it appears in.',
+      ],
+    ]);
+  }
+
+  /**
+   * Tests validating a block's region in a theme.
+   */
+  public function testRegionValidation(): void {
+    $this->entity->set('region', 'non_existent');
+    $this->assertValidationErrors([
+      'region' => 'This is not a valid region of the <em class="placeholder">stark</em> theme.',
+    ]);
+    // Set a valid region and assert it is saved properly.
+    $this->entity->set('region', 'header');
+    $this->assertValidationErrors([]);
+  }
+
+  /**
+   * Tests validating weight.
+   */
+  public function testWeightValidation(): void {
+    $this->entity->set('weight', $this->randomString());
+    $this->assertValidationErrors([
+      'weight' => [
+        'This value should be a valid number.',
+        'This value should be of the correct primitive type.',
+      ],
+    ]);
+
+    $this->entity->set('weight', 10);
+    $this->assertValidationErrors([]);
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testWeightCannotBeNull(): void {
+    $this->entity->set('weight', NULL);
+    $this->assertNull($this->entity->getWeight());
+    $this->expectDeprecation('Saving a block with a non-integer weight is deprecated in drupal:11.1.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3462474');
+    $this->entity->save();
   }
 
 }

@@ -93,7 +93,7 @@ class BlockStorageUnitTest extends KernelTestBase {
       'id' => 'test_block',
       'theme' => 'stark',
       'region' => 'content',
-      'weight' => NULL,
+      'weight' => 0,
       'provider' => NULL,
       'plugin' => 'test_html',
       'settings' => [

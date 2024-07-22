@@ -303,7 +303,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     // Check migrate messages.
     $messages = iterator_to_array($this->getMigration('d6_block')->getIdMap()->getMessages());
     $this->assertCount(7, $messages);
-    $this->assertSame($messages[0]->message, 'Schema errors for block.block.block_1 with the following errors: 0 [dependencies.theme.0] Theme &#039;bluemarine&#039; is not installed.');
+    $this->assertSame($messages[0]->message, 'Schema errors for block.block.block_1 with the following errors: 0 [dependencies.theme.0] Theme &#039;bluemarine&#039; is not installed., 1 [theme] Theme &#039;bluemarine&#039; is not installed., 2 [region] This value should not be blank., 3 [region] This is not a valid region of the &lt;em class=&quot;placeholder&quot;&gt;bluemarine&lt;/em&gt; theme.');
     $this->assertSame($messages[1]->message, "d6_block:visibility: The block with bid '13' from module 'block' will have no PHP or request_path visibility configuration.");
     $this->assertSame($messages[2]->message, 'Schema errors for block.block.aggregator with the following errors: block.block.aggregator:settings.block_count missing schema, block.block.aggregator:settings.feed missing schema, 0 [settings.feed] &#039;feed&#039; is not a supported key., 1 [settings] &#039;block_count&#039; is an unknown key because plugin is aggregator_feed_block (see config schema type block.settings.*).');
     $this->assertSame($messages[3]->message, 'Schema errors for block.block.book with the following errors: block.block.book:settings.block_mode missing schema, 0 [settings.block_mode] &#039;block_mode&#039; is not a supported key.');

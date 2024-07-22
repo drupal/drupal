@@ -16,5 +16,5 @@ settings:
   label: 'Search form (wide)'
   label_display: '0'
   provider: search
-  page_id: ''
+  page_id: null
 visibility: {  }

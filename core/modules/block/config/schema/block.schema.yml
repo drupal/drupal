@@ -3,6 +3,8 @@
 block.block.*:
   type: config_entity
   label: 'Block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
       type: machine_name
@@ -17,13 +19,22 @@ block.block.*:
     theme:
       type: string
       label: 'Theme'
+      constraints:
+        NotBlank: []
+        ExtensionName: []
+        ExtensionExists: theme
     region:
       type: string
       label: 'Region'
+      constraints:
+        NotBlank: []
+        Callback: ['\Drupal\block\Entity\Block', validateRegion]
     weight:
       type: weight
       label: 'Weight'
     provider:
+      # @todo Deprecate this from config schema and remove it from the `config_export` definition in https://www.drupal.org/project/drupal/issues/3426278
+      nullable: true
       type: string
       label: 'Provider'
     plugin:

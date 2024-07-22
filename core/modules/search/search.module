@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\block\BlockInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
@@ -417,4 +418,19 @@ function search_form_search_block_form_alter(&$form, FormStateInterface $form_st
   $form['form_build_id']['#access'] = FALSE;
   $form['form_token']['#access'] = FALSE;
   $form['form_id']['#access'] = FALSE;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for block entities.
+ */
+function search_block_presave(BlockInterface $block) {
+  // @see \Drupal\search\Plugin\Block\SearchBlock
+  if ($block->getPluginId() === 'search_form_block') {
+    $settings = $block->get('settings');
+    if ($settings['page_id'] === '') {
+      @trigger_error('Saving a search block with an empty page ID is deprecated in drupal:11.1.0 and removed in drupal:12.0.0. To use the default search page, use NULL. See https://www.drupal.org/node/3463132', E_USER_DEPRECATED);
+      $settings['page_id'] = NULL;
+      $block->set('settings', $settings);
+    }
+  }
 }

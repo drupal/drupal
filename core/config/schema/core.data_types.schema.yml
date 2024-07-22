@@ -427,12 +427,16 @@ config_entity:
       requiredKey: false
       type: _core_config_info
 
+# This applies to all blocks that have no additional settings of their own.
 block.settings.*:
   type: block_settings
+  constraints:
+    FullyValidatable: ~
 
 block_settings:
   type: mapping
   label: 'Block settings'
+  # This is intentionally not marked as fully validatable: each `type: block.settings.SOMETHING` must do that.
   mapping:
     id:
       type: string
@@ -441,21 +445,17 @@ block_settings:
       type: label
       label: 'Description'
     label_display:
-      type: string
+      type: label
       label: 'Display title'
     provider:
       type: string
-      label: 'Provider'
-    status:
-      type: boolean
-      label: 'Status'
-    info:
-      type: label
-      label: 'Admin info'
-    view_mode:
-      type: string
-      label: 'View mode'
+      label: 'Provider of this block plugin'
+      constraints:
+        NotBlank: []
+        ExtensionName: []
+        ExtensionExists: module
     context_mapping:
+      requiredKey: false
       type: sequence
       label: 'Context assignments'
       sequence:

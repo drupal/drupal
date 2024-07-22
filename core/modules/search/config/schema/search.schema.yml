@@ -117,7 +117,16 @@ search.page.*:
 block.settings.search_form_block:
   type: block_settings
   label: 'Search block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     page_id:
       type: string
       label: 'Search page'
+      # Optional: falls back to the default search page.
+      # @see \Drupal\search\Form\SearchBlockForm::buildForm()
+      # @see \Drupal\search\SearchPageRepositoryInterface::getDefaultSearchPage()
+      nullable: true
+      constraints:
+        ConfigExists:
+          prefix: search.page.

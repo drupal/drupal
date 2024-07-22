@@ -22,3 +22,27 @@ block_content.type.*:
           allowNull: true
   constraints:
     FullyValidatable: ~
+
+# @see \Drupal\block_content\Plugin\Block\BlockContentBlock
+# @eee \Drupal\block_content\Plugin\Derivative\BlockContent
+block.settings.block_content:*:
+  type: block_settings
+  label: 'Content block'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    # @see \Drupal\block_content\Plugin\Block\BlockContentBlock::defaultConfiguration()
+    # @todo Deprecate this in https://www.drupal.org/project/drupal/issues/3426302
+    status:
+      type: boolean
+      label: 'Status'
+    # @todo Deprecate this in https://www.drupal.org/project/drupal/issues/3426302
+    info:
+      type: label
+      label: 'Admin info'
+    view_mode:
+      type: string
+      label: 'View mode'
+      constraints:
+        ConfigExists:
+          prefix: core.entity_view_mode.block_content.

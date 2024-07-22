@@ -26,6 +26,17 @@ class BlockRebuildTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $configSchemaCheckerExclusions = [
+    // These blocks are intentionally put into invalid regions, so they will
+    // violate config schema.
+    // @see ::testRebuildInvalidBlocks()
+    'block.block.invalid_block1',
+    'block.block.invalid_block2',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -71,8 +82,12 @@ class BlockRebuildTest extends KernelTestBase {
    */
   public function testRebuildInvalidBlocks(): void {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
-    $block1 = $this->placeBlock('system_powered_by_block');
-    $block2 = $this->placeBlock('system_powered_by_block');
+    $block1 = $this->placeBlock('system_powered_by_block', [
+      'id' => 'invalid_block1',
+    ]);
+    $block2 = $this->placeBlock('system_powered_by_block', [
+      'id' => 'invalid_block2',
+    ]);
     $block2->disable()->save();
     // Use the config API directly to bypass Block::preSave().
     \Drupal::configFactory()->getEditable('block.block.' . $block1->id())->set('region', 'INVALID')->save();

@@ -8,7 +8,7 @@ dependencies:
 id: foobar_gorilla
 theme: stark
 region: content
-weight: null
+weight: 0
 provider: null
 plugin: 'block_content:fb5e8434-3617-4a1d-a252-8273e95ec30e'
 settings:
@@ -18,7 +18,7 @@ settings:
   provider: block_content
   status: true
   info: ''
-  view_mode: default
+  view_mode: full
 visibility:
   request_path:
     id: request_path

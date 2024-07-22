@@ -174,7 +174,7 @@ class BlockForm extends EntityForm {
     }
 
     // Hidden weight setting.
-    $weight = $entity->isNew() ? $this->getRequest()->query->get('weight', 0) : $entity->getWeight();
+    $weight = $entity->isNew() ? $this->getRequest()->query->getInt('weight') : $entity->getWeight();
     $form['weight'] = [
       '#type' => 'hidden',
       '#default_value' => $weight,

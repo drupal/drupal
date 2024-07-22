@@ -12,9 +12,6 @@ sections:
           label: Shortcuts
           label_display: '0'
           provider: navigation
-          status: true
-          info: ''
-          view_mode: default
         weight: 0
         additional: { }
       3ff7be01-c8b0-4444-88f3-2364d7a8054e:
@@ -49,9 +46,6 @@ sections:
           label: User
           label_display: '0'
           provider: navigation
-          status: true
-          info: ''
-          view_mode: default
         weight: 0
         additional: { }
     third_party_settings: { }

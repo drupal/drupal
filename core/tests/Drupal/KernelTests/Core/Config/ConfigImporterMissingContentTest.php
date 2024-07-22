@@ -147,9 +147,12 @@ class ConfigImporterMissingContentTest extends KernelTestBase implements LoggerI
     $this->enableModules([
       'block',
       'block_content',
+      'field',
+      'text',
     ]);
     $this->container->get('theme_installer')->install(['stark']);
     $this->installEntitySchema('block_content');
+    $this->installConfig(['block_content']);
     // Create a block content type.
     $block_content_type = BlockContentType::create([
       'id' => 'test',

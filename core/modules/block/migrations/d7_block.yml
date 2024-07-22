@@ -117,7 +117,14 @@ process:
           sidebar_first: 'sidebar_first'
     # If mapping fails, put the block in the content region.
     default_value: content
-  weight: weight
+  weight:
+    -
+      plugin: get
+      source: weight
+    -
+      # Block weights must be integers.
+      plugin: callback
+      callable: intval
   settings:
     plugin: block_settings
     source:

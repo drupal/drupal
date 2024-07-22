@@ -11,6 +11,7 @@ use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -89,7 +90,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    *
    * @var int
    */
-  protected $weight;
+  protected $weight = 0;
 
   /**
    * The plugin instance ID.
@@ -323,7 +324,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    */
   #[ActionMethod(adminLabel: new TranslatableMarkup('Set weight'), pluralize: FALSE)]
   public function setWeight($weight) {
-    $this->weight = $weight;
+    $this->weight = (int) $weight;
     return $this;
   }
 
@@ -347,6 +348,11 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
+    if (!is_int($this->weight)) {
+      @trigger_error('Saving a block with a non-integer weight is deprecated in drupal:11.1.0 and removed in drupal:12.0.0. See https://www.drupal.org/node/3462474', E_USER_DEPRECATED);
+      $this->setWeight((int) $this->weight);
+    }
+
     // Ensure the region is valid to mirror the behavior of block_rebuild().
     // This is done primarily for backwards compatibility support of
     // \Drupal\block\BlockInterface::BLOCK_REGION_NONE.
@@ -355,6 +361,25 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
       $this
         ->setRegion(system_default_region($this->theme))
         ->disable();
+    }
+  }
+
+  /**
+   * Validates that a region exists in the active theme.
+   *
+   * @param null|string $region
+   *   The region to validate.
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
+   *   The validation context.
+   */
+  public static function validateRegion(?string $region, ExecutionContextInterface $context): void {
+    if ($theme = $context->getRoot()->get('theme')->getValue()) {
+      if (!array_key_exists($region, system_region_list($theme))) {
+        $context->addViolation('This is not a valid region of the %theme theme.', ['%theme' => $theme]);
+      }
+    }
+    else {
+      $context->addViolation('This block does not say which theme it appears in.');
     }
   }
 
