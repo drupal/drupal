@@ -85,6 +85,11 @@ class ProcessedText extends RenderElementBase {
       $message = !$format ? 'Missing text format: %format.' : 'Disabled text format: %format.';
       static::logger('filter')->alert($message, ['%format' => $format_id]);
       $element['#markup'] = '';
+      // Associate the disabled text format's cache tag, to ensure re-enabling
+      // the text format invalidates the appropriate render cache items.
+      if ($format !== NULL) {
+        $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'] ?? [], $format->getCacheTags());
+      }
       return $element;
     }
 

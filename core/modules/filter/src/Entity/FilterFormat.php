@@ -3,6 +3,7 @@
 namespace Drupal\filter\Entity;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
@@ -30,7 +31,8 @@ use Drupal\user\Entity\Role;
  *     "form" = {
  *       "add" = "Drupal\filter\FilterFormatAddForm",
  *       "edit" = "Drupal\filter\FilterFormatEditForm",
- *       "disable" = "Drupal\filter\Form\FilterDisableForm"
+ *       "disable" = "Drupal\filter\Form\FilterDisableForm",
+ *       "enable" = "Drupal\filter\Form\FilterEnableForm",
  *     },
  *     "list_builder" = "Drupal\filter\FilterFormatListBuilder",
  *     "access" = "Drupal\filter\FilterFormatAccessControlHandler",
@@ -45,7 +47,8 @@ use Drupal\user\Entity\Role;
  *   },
  *   links = {
  *     "edit-form" = "/admin/config/content/formats/manage/{filter_format}",
- *     "disable" = "/admin/config/content/formats/manage/{filter_format}/disable"
+ *     "disable" = "/admin/config/content/formats/manage/{filter_format}/disable",
+ *     "enable" = "/admin/config/content/formats/manage/{filter_format}/enable",
  *   },
  *   config_export = {
  *     "name",
