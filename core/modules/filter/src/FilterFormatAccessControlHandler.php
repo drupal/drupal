@@ -41,7 +41,7 @@ class FilterFormatAccessControlHandler extends EntityAccessControlHandler {
       return AccessResult::forbidden();
     }
 
-    if (in_array($operation, ['disable', 'update', 'view'])) {
+    if (in_array($operation, ['disable', 'update', 'view', 'enable'])) {
       return parent::checkAccess($filter_format, $operation, $account);
     }
 

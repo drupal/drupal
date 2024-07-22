@@ -45,3 +45,11 @@ entity.filter_format.disable:
     _title: 'Disable text format'
   requirements:
     _entity_access: 'filter_format.disable'
+
+entity.filter_format.enable:
+  path: '/admin/config/content/formats/manage/{filter_format}/enable'
+  defaults:
+    _entity_form: 'filter_format.enable'
+    _title: 'Enable text format'
+  requirements:
+    _entity_access: 'filter_format.enable'

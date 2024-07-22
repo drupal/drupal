@@ -38,7 +38,10 @@ class FilterDisableForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t('Disabled text formats are completely removed from the administrative interface, and any content stored with that format will not be displayed. This action cannot be undone.');
+    return $this->t(
+      'Any content saved with the %format text format will not be displayed on the site until it is resaved with an enabled text format.',
+      ['%format' => $this->entity->label()],
+    );
   }
 
   /**
