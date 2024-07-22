@@ -87,6 +87,8 @@ function update_authorize_run_update($filetransfer, $projects) {
  *   should use that response for the current page request.
  */
 function update_authorize_run_install($filetransfer, $project, $updater_name, $local_url) {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:10.4.0 and is removed from drupal:11.1.0. There is no replacement. See https://www.drupal.org/node/3461934');
+
   // @todo Instantiate our Updater to set the human-readable title?
   $batch_builder = (new BatchBuilder())
     ->setFile(\Drupal::service('extension.list.module')->getPath('update') . '/update.authorize.inc')

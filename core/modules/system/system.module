@@ -128,7 +128,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
     case 'system.modules_list':
       $output = '<p>' . t('Add <a href=":modules">contributed modules</a> to extend your site\'s functionality.', [':modules' => 'https://www.drupal.org/project/modules']) . '</p>';
       if (!\Drupal::moduleHandler()->moduleExists('update')) {
-        $output .= '<p>' . t('Regularly review available updates and update as required to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time a module is updated. Install the <a href=":update-manager">Update Manager module</a> to update and add modules and themes.', [':update-php' => Url::fromRoute('system.db_update')->toString(), ':update-manager' => Url::fromRoute('system.modules_list', [], ['fragment' => 'module-update'])->toString()]) . '</p>';
+        $output .= '<p>' . t('Regularly review available updates and update as required to maintain a secure and current site. Always run the <a href=":update-php">update script</a> each time a module is updated. Install the <a href=":update-manager">Update Manager module</a> to update modules and themes.', [':update-php' => Url::fromRoute('system.db_update')->toString(), ':update-manager' => Url::fromRoute('system.modules_list', [], ['fragment' => 'module-update'])->toString()]) . '</p>';
       }
       return $output;
 
@@ -442,11 +442,11 @@ function template_preprocess_entity_add_list(&$variables) {
  *   system_authorized_init($callback, $file, $arguments, $page_title);
  *   return new RedirectResponse(system_authorized_get_url()->toString());
  * @endcode
- * Example (update_manager_install_form_submit()):
+ * Example (Drupal\update\Form\UpdateReady::submitForm()):
  * @code
- *  system_authorized_init('update_authorize_run_install',
- *    \Drupal::service('extension.list.module')->getPath('update') . '/update.authorize.inc',
- *    $arguments, t('Update manager'));
+ *  system_authorized_init('update_authorize_run_update',
+ *    __DIR__ . '/../../update.authorize.inc',
+ *    [$updates], $this->t('Update manager'));
  *  $form_state->setRedirectUrl(system_authorized_get_url());
  * @endcode
  *

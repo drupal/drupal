@@ -29,11 +29,8 @@ class UpdateRouteSubscriber extends RouteSubscriberBase {
       return;
     }
     $routes = [
-      'update.report_install',
       'update.report_update',
-      'update.module_install',
       'update.module_update',
-      'update.theme_install',
       'update.theme_update',
       'update.confirmation_page',
     ];
