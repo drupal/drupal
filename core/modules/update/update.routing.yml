@@ -23,14 +23,6 @@ update.manual_status:
     _permission: 'administer site configuration'
     _csrf_token: 'TRUE'
 
-update.report_install:
-  path: '/admin/reports/updates/install'
-  defaults:
-    _form: '\Drupal\update\Form\UpdateManagerInstall'
-    _title: 'Add new module or theme'
-  requirements:
-    _permission: 'administer software updates'
-
 update.report_update:
   path: '/admin/reports/updates/update'
   defaults:
@@ -39,27 +31,11 @@ update.report_update:
   requirements:
     _permission: 'administer software updates'
 
-update.module_install:
-  path: '/admin/modules/install'
-  defaults:
-    _form: '\Drupal\update\Form\UpdateManagerInstall'
-    _title: 'Add new module'
-  requirements:
-    _permission: 'administer software updates'
-
 update.module_update:
   path: '/admin/modules/update'
   defaults:
     _form: '\Drupal\update\Form\UpdateManagerUpdate'
     _title: 'Update'
-  requirements:
-    _permission: 'administer software updates'
-
-update.theme_install:
-  path: '/admin/theme/install'
-  defaults:
-    _form: '\Drupal\update\Form\UpdateManagerInstall'
-    _title: 'Add new theme'
   requirements:
     _permission: 'administer software updates'
 

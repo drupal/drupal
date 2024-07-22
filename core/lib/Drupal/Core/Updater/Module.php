@@ -93,10 +93,6 @@ class Module extends Updater implements UpdaterInterface {
     ];
     return [
       $default_options + [
-        '#url' => Url::fromRoute('update.module_install'),
-        '#title' => t('Add another module'),
-      ],
-      $default_options + [
         '#url' => Url::fromRoute('system.modules_list'),
         '#title' => t('Install newly added modules'),
       ],

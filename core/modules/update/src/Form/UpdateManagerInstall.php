@@ -15,6 +15,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Configure update settings for this site.
  *
+ * @deprecated in drupal:10.4.0 and is removed from drupal:11.1.0. There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3461934
+ *
  * @internal
  */
 class UpdateManagerInstall extends FormBase {
@@ -60,6 +64,7 @@ class UpdateManagerInstall extends FormBase {
    *   The archiver plugin manager service.
    */
   public function __construct($root, ModuleHandlerInterface $module_handler, $site_path, ArchiverManager $archiver_manager) {
+    @trigger_error('The UpdateManagerInstall form is deprecated in drupal:10.4.0 and will be removed in drupal:11.1.0. There is no replacement. See https://www.drupal.org/node/3461934');
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->sitePath = $site_path;
