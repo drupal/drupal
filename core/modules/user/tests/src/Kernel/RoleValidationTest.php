@@ -11,6 +11,7 @@ use Drupal\user\Entity\Role;
  * Tests validation of user_role entities.
  *
  * @group user
+ * @group #slow
  */
 class RoleValidationTest extends ConfigEntityValidationTestBase {
 

@@ -11,6 +11,7 @@ use Drupal\system\Entity\Action;
  * Tests validation of action entities.
  *
  * @group system
+ * @group #slow
  */
 class ActionValidationTest extends ConfigEntityValidationTestBase {
 

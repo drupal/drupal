@@ -29,6 +29,7 @@ use Symfony\Component\Routing\RouteCollection;
  * Confirm that the default route provider is working correctly.
  *
  * @group Routing
+ * @group #slow
  */
 class RouteProviderTest extends KernelTestBase {
 
