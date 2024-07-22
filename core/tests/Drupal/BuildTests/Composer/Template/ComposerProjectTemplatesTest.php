@@ -245,7 +245,9 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
 
     $installed_composer_json = $this->getWorkspaceDirectory() . '/test_project/composer.json';
     $autoloader = $this->getWorkspaceDirectory() . '/test_project' . $docroot_dir . '/autoload.php';
+    $recipes_dir = $this->getWorkspaceDirectory() . '/test_project/recipes';
     $this->assertFileDoesNotExist($autoloader);
+    $this->assertDirectoryDoesNotExist($recipes_dir);
 
     $this->executeCommand("COMPOSER_HOME=$composer_home COMPOSER_ROOT_VERSION=$simulated_core_version composer create-project --no-ansi $project test_project $simulated_core_version -vvv --repository $repository_path");
     $this->assertCommandSuccessful();
@@ -266,6 +268,8 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
     // Verify that there is an autoloader. This is written by the scaffold
     // plugin, so its existence assures us that scaffolding happened.
     $this->assertFileExists($autoloader);
+    // Verify recipes directory exists.
+    $this->assertDirectoryExists($recipes_dir);
 
     // Verify that the minimum stability in the installed composer.json file
     // matches the stability of the simulated core version.

@@ -125,6 +125,7 @@
             "file-mapping": {
                 "[project-root]/.editorconfig": "assets/scaffold/files/editorconfig",
                 "[project-root]/.gitattributes": "assets/scaffold/files/gitattributes",
+                "[project-root]/recipes/README.txt": "assets/scaffold/files/recipes.README.txt",
                 "[web-root]/.csslintrc": "assets/scaffold/files/csslintrc",
                 "[web-root]/.eslintignore": "assets/scaffold/files/eslintignore",
                 "[web-root]/.eslintrc.json": "assets/scaffold/files/eslintrc.json",

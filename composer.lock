@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ad0467b38272e8c39c7fe422d212e1df",
+    "content-hash": "63f0b59ba81213ad8f8e124c60a8bb82",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -496,7 +496,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "7ef1db8ef53f81722f34bc38512af9c4665d9d72"
+                "reference": "f9821a77ceb47977e9db1cf4cb3364e47f74a66d"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -583,6 +583,7 @@
                     "file-mapping": {
                         "[project-root]/.editorconfig": "assets/scaffold/files/editorconfig",
                         "[project-root]/.gitattributes": "assets/scaffold/files/gitattributes",
+                        "[project-root]/recipes/README.txt": "assets/scaffold/files/recipes.README.txt",
                         "[web-root]/.csslintrc": "assets/scaffold/files/csslintrc",
                         "[web-root]/.eslintignore": "assets/scaffold/files/eslintignore",
                         "[web-root]/.eslintrc.json": "assets/scaffold/files/eslintrc.json",
