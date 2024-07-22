@@ -11,6 +11,7 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
  * Tests validation of media_type entities.
  *
  * @group media
+ * @group #slow
  */
 class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
 

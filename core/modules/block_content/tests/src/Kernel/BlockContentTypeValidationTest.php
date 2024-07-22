@@ -11,6 +11,7 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
  * Tests validation of block_content_type entities.
  *
  * @group block_content
+ * @group #slow
  */
 class BlockContentTypeValidationTest extends ConfigEntityValidationTestBase {
 

@@ -24,6 +24,7 @@ use Drupal\user\Entity\User;
  * Tests the entity content source plugin.
  *
  * @group migrate_drupal
+ * @group #slow
  */
 class ContentEntityTest extends KernelTestBase {
 

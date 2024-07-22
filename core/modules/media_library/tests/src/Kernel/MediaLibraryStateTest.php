@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * Tests the media library state value object.
  *
  * @group media_library
+ * @group #slow
  *
  * @coversDefaultClass \Drupal\media_library\MediaLibraryState
  */

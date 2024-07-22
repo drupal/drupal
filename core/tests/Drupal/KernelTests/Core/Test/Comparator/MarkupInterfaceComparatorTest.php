@@ -18,6 +18,7 @@ use SebastianBergmann\Comparator\ComparisonFailure;
  * objects to strings can require an initialized container.
  *
  * @group Test
+ * @group #slow
  *
  * @coversDefaultClass \Drupal\TestTools\Comparator\MarkupInterfaceComparator
  */

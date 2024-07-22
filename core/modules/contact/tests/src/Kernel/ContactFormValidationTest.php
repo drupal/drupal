@@ -12,6 +12,7 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
  * Tests validation of contact_form entities.
  *
  * @group contact
+ * @group #slow
  */
 class ContactFormValidationTest extends ConfigEntityValidationTestBase {
 

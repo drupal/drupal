@@ -11,6 +11,7 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
  * Tests validation of filter_format entities.
  *
  * @group filter
+ * @group #slow
  */
 class FilterFormatValidationTest extends ConfigEntityValidationTestBase {
 
