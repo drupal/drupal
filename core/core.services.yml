@@ -1857,6 +1857,8 @@ services:
   response_filter.active_link:
     class: Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
     arguments: ['@current_user', '@path.current', '@path.matcher', '@language_manager']
+  response_filter.rss.cdata:
+    class: Drupal\Core\EventSubscriber\RssResponseCdata
   response_filter.rss.relative_url:
     class: Drupal\Core\EventSubscriber\RssResponseRelativeUrlFilter
   messenger:

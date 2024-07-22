@@ -74,6 +74,7 @@ class RssResponseRelativeUrlFilter implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     // Should run after any other response subscriber that modifies the markup.
+    // Only the CDATA wrapper should run after this filter.
     // @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
     $events[KernelEvents::RESPONSE][] = ['onResponse', -512];
 
