@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldConfig;
 /**
  * @coversDefaultClass \Drupal\media\Plugin\Filter\MediaEmbed
  * @group media
+ * @group #slow
  */
 class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
 

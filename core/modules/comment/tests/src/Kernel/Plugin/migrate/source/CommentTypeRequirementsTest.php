@@ -11,6 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Tests check requirements for comment type source plugin.
  *
  * @group comment
+ * @group #slow
  */
 class CommentTypeRequirementsTest extends MigrateDrupal7TestBase {
 

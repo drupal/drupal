@@ -23,6 +23,7 @@ use Drupal\user\Entity\User;
  * @coversDefaultClass \Drupal\block_content\BlockContentAccessControlHandler
  *
  * @group block_content
+ * @group #slow
  */
 class BlockContentAccessHandlerTest extends KernelTestBase {
 
