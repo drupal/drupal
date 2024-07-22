@@ -224,4 +224,14 @@ class TermKernelTest extends KernelTestBase {
     $this->assertFalse($entity->get('revision_log_message')->access('view', $viewer));
   }
 
+  /**
+   * The "parent" field must restrict references to the same vocabulary.
+   */
+  public function testParentHandlerSettings(): void {
+    $vocabulary = $this->createVocabulary();
+    $vocabulary_fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('taxonomy_term', $vocabulary->id());
+    $parent_target_bundles = $vocabulary_fields['parent']->getSetting('handler_settings')['target_bundles'];
+    $this->assertSame([$vocabulary->id() => $vocabulary->id()], $parent_target_bundles);
+  }
+
 }
