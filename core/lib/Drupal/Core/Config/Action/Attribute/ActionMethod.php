@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Core\Config\Action\Attribute;
 
 // cspell:ignore inflector
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Config\Action\Exists;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -30,12 +32,23 @@ final class ActionMethod {
    *   ID. For example, if the method is called 'addArray' this can be set to
    *   'addMultipleArrays'. Set to FALSE if a pluralized version does not make
    *   logical sense.
+   * @param string|null $name
+   *   The name of the action, if it should differ from the method name. Will be
+   *   pluralized if $pluralize is TRUE. Must follow the rules for a valid PHP
+   *   function name (e.g., no spaces, no Unicode characters, etc.). If used,
+   *   the actual name of the method will NOT be available as an action name.
+   *
+   * @see https://www.php.net/manual/en/functions.user-defined.php
    */
   public function __construct(
     public readonly Exists $exists = Exists::ErrorIfNotExists,
     public readonly TranslatableMarkup|string $adminLabel = '',
     public readonly bool|string $pluralize = TRUE,
+    public readonly ?string $name = NULL,
   ) {
+    if ($name && !preg_match(ExtensionDiscovery::PHP_FUNCTION_PATTERN, $name)) {
+      throw new InvalidPluginDefinitionException('entity_method', sprintf("'%s' is not a valid PHP function name.", $name));
+    }
   }
 
 }

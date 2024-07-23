@@ -5,6 +5,12 @@ core.entity_view_display.*.*.*.third_party.entity_test:
     foo:
       type: string
       label: 'Label for foo'
+    noun:
+      type: string
+      label: 'A noun'
+    verb:
+      type: string
+      label: 'A verb'
 
 field.storage_settings.shape:
   type: mapping

@@ -11,6 +11,7 @@ use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 
 /**
  * @covers \Drupal\block\Plugin\ConfigAction\PlaceBlock
@@ -19,10 +20,12 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class ConfigActionsTest extends KernelTestBase {
 
+  use BlockCreationTrait;
+
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'user', 'system'];
+  protected static $modules = ['block', 'system', 'user'];
 
   private readonly ConfigActionManager $configActionManager;
 
@@ -40,21 +43,41 @@ class ConfigActionsTest extends KernelTestBase {
       ->set('default', 'olivero')
       ->set('admin', 'claro')
       ->save();
-
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
+  }
+
+  public function testEntityMethodActions(): void {
+    $block = $this->placeBlock('system_messages_block', ['theme' => 'olivero']);
+    $this->assertSame('content', $block->getRegion());
+    $this->assertSame(0, $block->getWeight());
+
+    $this->configActionManager->applyAction(
+      'entity_method:block.block:setRegion',
+      $block->getConfigDependencyName(),
+      'highlighted',
+    );
+    $this->configActionManager->applyAction(
+      'entity_method:block.block:setWeight',
+      $block->getConfigDependencyName(),
+      -10,
+    );
+
+    $block = Block::load($block->id());
+    $this->assertSame('highlighted', $block->getRegion());
+    $this->assertSame(-10, $block->getWeight());
   }
 
   /**
    * @testWith ["placeBlockInDefaultTheme"]
    *           ["placeBlockInAdminTheme"]
    */
-  public function testActionOnlyWorksOnBlocks(string $action): void {
+  public function testPlaceBlockActionOnlyWorksOnBlocks(string $action): void {
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage("The \"$action\" plugin does not exist.");
     $this->configActionManager->applyAction($action, 'user.role.anonymous', []);
   }
 
-  public function testExistingBlockIsNotChanged(): void {
+  public function testPlaceBlockActionDoesNotChangeExistingBlock(): void {
     $extant_region = Block::load('olivero_powered')->getRegion();
     $this->assertNotSame('content', $extant_region);
 
