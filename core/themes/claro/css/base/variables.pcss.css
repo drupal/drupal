@@ -231,10 +231,6 @@
   --progress-track-border-color: var(--color-gray-500);
   --progress-track-bg-color: var(--color-gray-200);
   /**
-   * Tabledrag icon size.
-   */
-  --tabledrag-handle-icon-size: calc(17rem / 16); /* 17px */
-  /**
    * Ajax progress.
    */
   --ajax-progress-margin-horizontal: var(--space-s);

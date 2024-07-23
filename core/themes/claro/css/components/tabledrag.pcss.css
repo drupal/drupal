@@ -7,11 +7,6 @@
  * @see tabledrag.js
  */
 
-:root {
-  --table-row--dragging-bg-color: #fe7;
-  --table-row--last-dragged-bg-color: #ffb;
-}
-
 body.drag {
   cursor: move;
 }
@@ -19,18 +14,35 @@ body.drag-y {
   cursor: row-resize;
 }
 
+.draggable-table {
+  --table-row--dragging-bg-color: #fe7;
+  --table-row--last-dragged-bg-color: #ffb;
+  --tabledrag-handle-icon-size: 17px;
+
+  /**
+  * Reduce the spacing of draggable table cells.
+  */
+  & td:first-child ~ td,
+  & th:first-child ~ th {
+    padding-inline-start: 0;
+  }
+}
+
 /* The block region's title row in table. */
 .region-title {
   font-weight: bold;
 }
+
 /* Empty region message row in table. */
 .region-message {
   color: var(--color-gray-600);
+
+  &.region-populated {
+    /* If the region is populated, we shouldn't display the empty message. */
+    display: none;
+  }
 }
-/* If the region is populated, we shouldn't display the empty message. */
-.region-message.region-populated {
-  display: none;
-}
+
 /**
  * Remove border-bottom from abbr element. Class is duplicated in the selector
  * to increase weight to be able to win normalize.css selectors.
@@ -38,22 +50,22 @@ body.drag-y {
 .tabledrag-changed.tabledrag-changed {
   border-bottom: none;
 }
-/* Don't display the abbreviation of 'add-new' table rows. */
-.add-new .tabledrag-changed {
-  display: none;
-}
 
-.draggable .tabledrag-changed {
-  position: relative;
-  left: calc(var(--space-xs) * -1); /* LTR */
-}
-[dir="rtl"] .draggable .tabledrag-changed {
-  right: calc(var(--space-xs) * -1); /* LTR */
-  left: auto;
-}
-.tabledrag-cell--only-drag .tabledrag-changed {
-  width: var(--space-l);
-  min-width: var(--space-l);
+.tabledrag-changed {
+  /* Don't display the abbreviation of 'add-new' table rows. */
+  @nest .add-new & {
+    display: none;
+  }
+
+  @nest .draggable & {
+    position: relative;
+    inset-inline-start: calc(var(--space-xs) * -1);
+  }
+
+  @nest .tabledrag-cell--only-drag & {
+    width: var(--space-l);
+    min-width: var(--space-l);
+  }
 }
 
 /**
@@ -63,21 +75,9 @@ body.drag-y {
 .draggable.drag:focus {
   background-color: var(--table-row--dragging-bg-color);
 }
+
 .draggable.drag-previous {
   background-color: var(--table-row--last-dragged-bg-color);
-}
-
-/**
- * Reduce the spacing of draggable table cells.
- */
-.draggable-table td:first-child ~ td,
-.draggable-table th:first-child ~ th {
-  padding-left: 0 /* LTR */;
-}
-[dir="rtl"] .draggable-table td:first-child ~ td,
-[dir="rtl"] .draggable-table th:first-child ~ th {
-  padding-right: 0;
-  padding-left: var(--space-m);
 }
 
 /* Auto width for weight selects and number inputs. */
@@ -97,21 +97,24 @@ body.drag-y {
   cursor: move;
   text-align: center;
   vertical-align: text-top;
-}
 
-.tabledrag-handle::after {
-  display: inline-block;
-  width: var(--tabledrag-handle-icon-size);
-  height: var(--tabledrag-handle-icon-size);
-  margin-left: calc(var(--space-m) * -1); /* LTR */
-  padding: var(--space-xs) var(--space-m);
-  content: "";
-  transition: transform 0.1s ease-in-out 0s;
-  background: url(../../images/icons/000f33/tabledrag-handle.svg) no-repeat center;
-}
-[dir="rtl"] .tabledrag-handle::after {
-  margin-right: calc(var(--space-m) * -1);
-  margin-left: 0;
+  &::after {
+    display: inline-block;
+    width: var(--tabledrag-handle-icon-size);
+    height: var(--tabledrag-handle-icon-size);
+    margin-inline-start: calc(var(--space-m) * -1);
+    padding: var(--space-xs) var(--space-m);
+    content: "";
+    transition: transform 0.1s ease-in-out 0s;
+    background: url(../../images/icons/000f33/tabledrag-handle.svg) no-repeat center;
+
+    @media (forced-colors: active) {
+      background: linktext;
+      mask-image: url(../../images/icons/000f33/tabledrag-handle.svg);
+      mask-repeat: no-repeat;
+      mask-position: center;
+    }
+  }
 }
 
 /* Change icon and cursor if only vertical drag is allowed. */
@@ -124,23 +127,12 @@ body.drag-y {
   background-size: 16px 16px;
 }
 
-@media (forced-colors: active) {
-  .tabledrag-handle::after {
-    content: "";
-    background: linktext;
-    mask-image: url(../../images/icons/000f33/tabledrag-handle.svg);
-    mask-repeat: no-repeat;
-    mask-position: center;
-  }
-}
-
 .tabledrag-handle::after,
 .tabledrag-disabled .tabledrag-handle.tabledrag-handle.tabledrag-handle::after {
   transform: scale(1);
 }
 
-.tabledrag-handle:hover::after,
-.tabledrag-handle:focus::after,
+.tabledrag-handle:is(:hover, :focus)::after,
 .draggable.drag .tabledrag-handle::after {
   transform: scale(1.25);
 }
@@ -148,27 +140,29 @@ body.drag-y {
 .tabledrag-handle:focus {
   outline: none !important;
   box-shadow: none !important;
-}
 
-.tabledrag-handle:focus::before {
-  display: block;
-  width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
-  height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
-  margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
-  content: "";
-  border-radius: var(--base-border-radius);
-  outline: var(--outline-size) dotted transparent;
-  box-shadow: 0 0 0 var(--focus-border-size) var(--color-focus);
+  &::before {
+    display: block;
+    width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
+    height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
+    margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
+    content: "";
+    border-radius: var(--base-border-radius);
+    outline: var(--outline-size) dotted transparent;
+    box-shadow: 0 0 0 var(--focus-border-size) var(--color-focus);
+  }
 }
 
 /* Disabled tabledrag handle. */
-.tabledrag-disabled .tabledrag-handle {
-  cursor: default;
-  opacity: 0.4;
-}
+.tabledrag-disabled {
+  & .tabledrag-handle {
+    cursor: default;
+    opacity: 0.4;
 
-.tabledrag-disabled .tabledrag-handle.tabledrag-handle::before {
-  content: normal;
+    &.tabledrag-handle::before {
+      content: none;
+    }
+  }
 }
 
 /**
@@ -178,37 +172,33 @@ body.drag-y {
 /**
  * Increase handle size.
  */
-.touchevents .tabledrag-handle::after {
-  padding-top: var(--space-s);
-  padding-bottom: var(--space-s);
-}
+.touchevents {
+  & .tabledrag-handle::after {
+    padding-block: var(--space-s);
+  }
 
-.touchevents .draggable .menu-item__link {
-  padding-top: var(--space-xs);
-  padding-bottom: var(--space-xs);
+  & .draggable .menu-item__link {
+    padding-block: var(--space-xs);
+  }
 }
 
 /**
  * Wrapper of the toggle weight button (styled as a link).
  */
 .tabledrag-toggle-weight-wrapper {
-  text-align: right; /* LTR */
-}
-[dir="rtl"] .tabledrag-toggle-weight-wrapper {
-  text-align: left;
-}
+  text-align: end;
 
-/* Hide nested weight toggles as they are redundant. */
-.draggable-table .tabledrag-toggle-weight-wrapper {
-  display: none;
+  /* Hide nested weight toggles as they are redundant. */
+  @nest .draggable-table & {
+    display: none;
+  }
 }
 
 /**
  * Keep crowded tabledrag cells vertically centered.
  */
 .tabledrag-cell {
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-block: 0;
 }
 
 /**
@@ -219,62 +209,34 @@ body.drag-y {
  */
 .tabledrag-cell--only-drag {
   width: 1px; /* This forces this cell to use the smallest possible width. */
-  padding-right: 0; /* LTR */
-}
-[dir="rtl"] .tabledrag-cell--only-drag {
-  padding-right: var(--space-m);
-  padding-left: 0;
+  padding-inline-end: 0;
 }
 
 .tabledrag-cell-content {
-  display: table;
+  display: flex;
+  align-items: center;
   height: 100%;
-}
 
-.tabledrag-cell-content > * {
-  display: table-cell;
-  vertical-align: middle;
-}
+  & > * {
+    display: table-cell;
+    vertical-align: middle;
+  }
 
-.tabledrag-cell-content__item {
-  padding-right: var(--space-xs); /* LTR */
-}
-[dir="rtl"] .tabledrag-cell-content__item {
-  padding-right: 0;
-  padding-left: var(--space-xs);
-}
-.tabledrag-cell-content__item:empty {
-  display: none;
-}
+  & .tree {
+    flex-grow: 1;
+  }
 
-.tabledrag-cell-content .indentation,
-[dir="rtl"] .tabledrag-cell-content .indentation {
-  float: none;
-  overflow: hidden;
-  height: 100%;
-}
-
-.tabledrag-cell-content .tree {
-  min-height: 100%;
-}
-
-/**
- * Safari (at least version 13.0) thinks that if we define a width or height for
- * and SVG, then we refer to the elements total size inside the SVG.
- * We only want to inherit the height of the parent element.
- */
-/* stylelint-disable-next-line unit-allowed-list */
-@media not all and (min-resolution: 0.001dpcm) {
-  @supports (-webkit-appearance: none) {
-    .tabledrag-cell-content .tree {
-      overflow: visible;
-      min-height: 0;
-    }
+  & .tabledrag-handle::after {
+    vertical-align: middle;
   }
 }
 
-.tabledrag-cell-content .tabledrag-handle::after {
-  vertical-align: middle;
+.tabledrag-cell-content__item {
+  padding-inline-end: var(--space-xs);
+
+  &:empty {
+    display: none;
+  }
 }
 
 /**
@@ -282,17 +244,26 @@ body.drag-y {
  */
 .indentation {
   position: relative;
-  left: calc(var(--space-xs) * -0.5); /* LTR */
+  inset-inline-start: calc(var(--space-xs) * -0.5);
   float: left; /* LTR */
-  width: calc(25rem / 16); /* 25px */
-  height: calc(25rem / 16); /* 25px */
+  width: 25px;
+  height: 25px;
   background: none !important;
   line-height: 0;
-}
-[dir="rtl"] .indentation {
-  right: calc(var(--space-xs) * -0.5);
-  left: auto;
-  float: right;
+
+  @nest .tabledrag-cell-content & {
+    /* Fixes Safari bug (16.1 at least) where table rows are overly large when
+      using indentation (e.g. re-ordering menu items. */
+    display: inline-flex;
+    float: none;
+    overflow: hidden;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  @nest [dir="rtl"] & {
+    float: right;
+  }
 }
 
 /**
@@ -303,8 +274,8 @@ body.drag-y {
  * element.
  */
 .tree {
-  width: calc(25rem / 16); /* 25px */
-  height: calc(25rem / 16); /* 25px */
+  width: 25px;
+  height: 25px;
 }
 
 .tree__item {
@@ -312,41 +283,55 @@ body.drag-y {
 }
 
 /* LTR tree child. */
-.tree-child path:not(.tree__item-child-ltr) {
-  display: none;
-}
-.tree-child path.tree__item-child-ltr {
-  display: block;
+.tree-child path {
+  &:not(.tree__item-child-ltr) {
+    display: none;
+  }
+
+  &.tree__item-child-ltr {
+    display: block;
+  }
 }
 
 /* RTL tree child. */
-[dir="rtl"] .tree-child path:not(.tree__item-child-rtl) {
-  display: none;
-}
-[dir="rtl"] .tree-child path.tree__item-child-rtl {
-  display: block;
+[dir="rtl"] {
+  & .tree-child path {
+    &:not(.tree__item-child-rtl) {
+      display: none;
+    }
+    &.tree__item-child-rtl {
+      display: block;
+    }
+  }
+
+  /* Last RTL tree child. */
+  & .tree-child-last path {
+    &:not(.tree__item-child-last-rtl) {
+      display: none;
+    }
+    &.tree__item-child-last-rtl {
+      display: block;
+    }
+  }
 }
 
 /* Last LTR tree child. */
-.tree-child-last path:not(.tree__item-child-last-ltr) {
-  display: none;
-}
-.tree-child-last path.tree__item-child-last-ltr {
-  display: block;
-}
-
-/* Last RTL tree child. */
-[dir="rtl"] .tree-child-last path:not(.tree__item-child-last-rtl) {
-  display: none;
-}
-[dir="rtl"] .tree-child-last path.tree__item-child-last-rtl {
-  display: block;
+.tree-child-last path {
+  &:not(.tree__item-child-last-ltr) {
+    display: none;
+  }
+  &.tree__item-child-last-ltr {
+    display: block;
+  }
 }
 
 /* Horizontal line. */
-.tree-child-horizontal path:not(.tree__item-horizontal) {
-  display: none;
-}
-.tree-child-horizontal path.tree__item-horizontal {
-  display: block;
+.tree-child-horizontal path {
+  &:not(.tree__item-horizontal) {
+    display: none;
+  }
+
+  &.tree__item-horizontal {
+    display: block;
+  }
 }
