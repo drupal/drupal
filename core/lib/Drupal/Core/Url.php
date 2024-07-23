@@ -482,8 +482,12 @@ class Url implements TrustedCallbackInterface {
    *   would get an access denied running the same request via the normal page
    *   flow.
    *
-   * @throws \Drupal\Core\Routing\MatchingRouteNotFoundException
-   *   Thrown when the request cannot be matched.
+   * @throws Symfony\Component\Routing\Exception\NoConfigurationException
+   *   If no routing configuration could be found.
+   * @throws Symfony\Component\Routing\Exception\ResourceNotFoundException
+   *   If no matching resource could be found.
+   * @throws Symfony\Component\Routing\Exception\MethodNotAllowedException
+   *   If a matching resource was found but the request method is not allowed.
    */
   public static function createFromRequest(Request $request) {
     // We use the router without access checks because URL objects might be
