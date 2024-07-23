@@ -102,15 +102,16 @@ final class EntityMethodDeriver extends DeriverBase implements ContainerDeriverI
       'pluralized' => FALSE,
     ];
     $derivative['entity_types'] = [$entity_type->id()];
+    $action_name = $action_attribute->name ?: $method->name;
     // Build a config action identifier from the entity type's config
     // prefix  and the method name. For example, the Role entity adds a
     // 'user.role:grantPermission' action.
-    $this->addDerivative($method->name, $entity_type, $derivative, $method->name);
+    $this->addDerivative($action_name, $entity_type, $derivative, $method->name);
 
     $pluralized_name = match(TRUE) {
       is_string($action_attribute->pluralize) => $action_attribute->pluralize,
       $action_attribute->pluralize === FALSE => '',
-      default => $this->inflector->pluralize($method->name)[0]
+      default => $this->inflector->pluralize($action_name)[0]
     };
     // Add a pluralized version of the plugin.
     if (strlen($pluralized_name) > 0) {
