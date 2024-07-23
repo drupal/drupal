@@ -77,7 +77,7 @@ class Number {
    * @see \Drupal\Component\Utility\Number::alphadecimalToInt
    */
   public static function intToAlphadecimal($i = 0) {
-    $num = base_convert((int) $i, 10, 36);
+    $num = base_convert((string) $i, 10, 36);
     $length = strlen($num);
 
     return chr($length + ord('0') - 1) . $num;
