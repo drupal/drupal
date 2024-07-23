@@ -54,7 +54,7 @@ class ExtensionDiscovery {
    *
    * @see http://php.net/manual/functions.user-defined.php
    */
-  const PHP_FUNCTION_PATTERN = '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/';
+  const PHP_FUNCTION_PATTERN = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/';
 
   /**
    * Previously discovered files keyed by origin directory and extension type.
