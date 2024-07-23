@@ -107,13 +107,21 @@ language.entity.*:
 language.content_settings.*.*:
   type: config_entity
   label: 'Content Language Settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
       type: string
       label: 'ID'
+      constraints:
+        NotBlank: []
     target_entity_type_id:
       type: string
       label: 'Entity Type ID'
+      constraints:
+        PluginExists:
+          manager: entity_type.manager
+          interface: Drupal\Core\Entity\ContentEntityInterface
     target_bundle:
       type:  string
       label: 'Bundle'
