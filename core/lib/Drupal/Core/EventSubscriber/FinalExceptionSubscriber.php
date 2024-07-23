@@ -152,7 +152,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
    */
   public function on4xx(ExceptionEvent $event) {
     $exception = $event->getThrowable();
-    if ($exception && $exception instanceof HttpExceptionInterface && str_starts_with($exception->getStatusCode(), '4')) {
+    if ($exception && $exception instanceof HttpExceptionInterface && str_starts_with((string) $exception->getStatusCode(), '4')) {
       $message = PlainTextOutput::renderFromHtml($exception->getMessage());
       // If the exception is cacheable, generate a cacheable response.
       if ($exception instanceof CacheableDependencyInterface) {

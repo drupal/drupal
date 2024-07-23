@@ -84,7 +84,7 @@ class Color {
       $out |= $v << (16 - $k * 8);
     }
 
-    return '#' . str_pad(dechex($out), 6, 0, STR_PAD_LEFT);
+    return '#' . str_pad(dechex($out), 6, '0', STR_PAD_LEFT);
   }
 
   /**

@@ -53,7 +53,7 @@ class NullLockBackend implements LockBackendInterface {
    */
   public function getLockId() {
     if (!isset($this->lockId)) {
-      $this->lockId = uniqid(mt_rand(), TRUE);
+      $this->lockId = uniqid((string) mt_rand(), TRUE);
     }
     return $this->lockId;
   }
