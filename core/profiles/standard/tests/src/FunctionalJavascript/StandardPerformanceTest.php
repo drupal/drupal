@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use Drupal\Tests\PerformanceData;
 use Drupal\node\NodeInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Tests the performance of basic functionality in the standard profile.
@@ -30,6 +31,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
   protected $profile = 'standard';
 
   /**
+   * The user account created during testing.
+   */
+  protected ?UserInterface $user = NULL;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -44,9 +50,18 @@ class StandardPerformanceTest extends PerformanceTestBase {
   }
 
   /**
+   * Tests performance of the standard profile.
+   */
+  public function testStandardPerformance(): void {
+    $this->testAnonymous();
+    $this->testLogin();
+    $this->testLoginBlock();
+  }
+
+  /**
    * Tests performance for anonymous users.
    */
-  public function testAnonymous(): void {
+  protected function testAnonymous(): void {
     // Request the front page, then immediately clear all object caches, so that
     // aggregates and image styles are created on disk but otherwise caches are
     // empty.
@@ -146,9 +161,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
 
     // Test user profile page.
-    $user = $this->drupalCreateUser();
-    $performance_data = $this->collectPerformanceData(function () use ($user) {
-      $this->drupalGet('user/' . $user->id());
+    $this->user = $this->drupalCreateUser();
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('user/' . $this->user->id());
     }, 'standardUserPage');
     $this->assertNoJavaScript($performance_data);
     $this->assertSame(1, $performance_data->getStylesheetCount());
@@ -182,23 +197,22 @@ class StandardPerformanceTest extends PerformanceTestBase {
   /**
    * Tests the performance of logging in.
    */
-  public function testLogin(): void {
+  protected function testLogin(): void {
     // Create a user and log them in to warm all caches. Manually submit the
     // form so that we repeat the same steps when recording performance data. Do
     // this twice so that any caches which take two requests to warm are also
     // covered.
-    $account = $this->drupalCreateUser();
     foreach (range(0, 1) as $index) {
       $this->drupalGet('node');
       $this->drupalGet('user/login');
-      $this->submitLoginForm($account);
+      $this->submitLoginForm($this->user);
       $this->drupalLogout();
     }
 
     $this->drupalGet('node');
     $this->drupalGet('user/login');
-    $performance_data = $this->collectPerformanceData(function () use ($account) {
-      $this->submitLoginForm($account);
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->submitLoginForm($this->user);
     }, 'standardLogin');
 
     $expected_queries = [
@@ -228,30 +242,29 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
     $this->assertSame(23, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $this->drupalLogout();
   }
 
   /**
    * Tests the performance of logging in via the user login block.
    */
-  public function testLoginBlock(): void {
+  protected function testLoginBlock(): void {
     $this->drupalPlaceBlock('user_login_block');
-    // Create a user and log them in to warm all caches. Manually submit the
-    // form so that we repeat the same steps when recording performance data. Do
-    // this twice so that any caches which take two requests to warm are also
-    // covered.
-    $account = $this->drupalCreateUser();
+    // Log the user in in to warm all caches. Manually submit the form so that
+    // we repeat the same steps when recording performance data. Do this twice
+    // so that any caches which take two requests to warm are also covered.
 
     foreach (range(0, 1) as $index) {
       $this->drupalGet('node');
       $this->assertSession()->responseContains('Password');
-      $this->submitLoginForm($account);
+      $this->submitLoginForm($this->user);
       $this->drupalLogout();
     }
 
     $this->drupalGet('node');
     $this->assertSession()->responseContains('Password');
-    $performance_data = $this->collectPerformanceData(function () use ($account) {
-      $this->submitLoginForm($account);
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->submitLoginForm($this->user);
     }, 'standardBlockLogin');
 
     $expected_queries = [
