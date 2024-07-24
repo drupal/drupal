@@ -1,4 +1,4 @@
-# cspell:ignore drupaltestbot drupaltestbotpw
+# cspell:ignore drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB
 
 stages:
   - 🗜️ Test
@@ -14,7 +14,7 @@ variables:
   POSTGRES_DB: drupaltestbot
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
-  MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless"]}}, "http://localhost:9515"]'
+  MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
 
 '🩹 Test-only changes':
   stage: 🗜️ Test
@@ -29,14 +29,14 @@ variables:
   services:
     - name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
       alias: database
-    - name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
-      alias: chrome
-      entrypoint:
-        - chromedriver
-        - "--no-sandbox"
-        - "--log-path=/tmp/chromedriver.log"
-        - "--verbose"
-        - "--whitelisted-ips="
+    - name: selenium/standalone-chrome:latest
+      alias: selenium
+      variables:
+        JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
+        SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+        SE_NODE_MAX_SESSIONS: "5"
+        SE_START_XVFB: "false"
+        SE_START_VNC: "false"
   before_script:
     - |
       [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite

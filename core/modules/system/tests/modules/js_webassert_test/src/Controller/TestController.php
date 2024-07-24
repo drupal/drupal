@@ -12,9 +12,8 @@ class TestController {
 var timesRun = 0;
 var interval = setInterval(function() {
   timesRun += 1;
-  // Clear the interval after 1.1 seconds as this is longer than the time
-  // WebDriverCurlService would retry for if retries are enabled but shorter
-  // than the 10 seconds JSWebAssert::waitForElementVisible() waits for.
+  // Clear the interval after 1.1 seconds as this is shorter than the 10 seconds
+  // JSWebAssert::waitForElementVisible() waits for.
   if (timesRun === 1100) {
     clearInterval(interval);
   }

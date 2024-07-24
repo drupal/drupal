@@ -9,7 +9,6 @@ namespace Drupal\Tests;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\TraversableElement;
-use Drupal\FunctionalJavascriptTests\WebDriverCurlService;
 use WebDriver\Exception;
 
 /**
@@ -93,7 +92,6 @@ class DocumentElement extends TraversableElement {
    */
   public function waitFor($timeout, $callback) {
     // Wraps waits in a function to catch curl exceptions to continue waiting.
-    WebDriverCurlService::disableRetry();
     $count = 0;
     $wrapper = function (Element $element) use ($callback, &$count) {
       $count++;
@@ -111,7 +109,6 @@ class DocumentElement extends TraversableElement {
       // page state has probably changed while the callback is running.
       return call_user_func($callback, $this);
     }
-    WebDriverCurlService::enableRetry();
     return $result;
   }
 

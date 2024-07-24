@@ -34,9 +34,14 @@ exports.command = function drupalCreateRole(
       .to.be.visible.before(2000);
 
     machineName = await this.getText('.user-role-form .machine-name-value');
-    this.submitForm('#user-role-form');
+    this.submitForm('#user-role-form').assert.textContains(
+      '[data-drupal-messages]',
+      `Role ${roleName} has been added.`,
+    );
 
-    this.drupalRelativeURL('/admin/people/permissions');
+    this.drupalRelativeURL('/admin/people/permissions').waitForElementVisible(
+      'table.permissions',
+    );
 
     await Promise.all(
       permissions.map(async (permission) =>
@@ -44,9 +49,10 @@ exports.command = function drupalCreateRole(
       ),
     );
 
-    this.submitForm('#user-admin-permissions');
-
-    this.drupalRelativeURL('/admin/people/permissions');
+    this.submitForm('#user-admin-permissions').assert.textContains(
+      '[data-drupal-messages]',
+      'The changes have been saved.',
+    );
   }).perform(() => {
     if (typeof callback === 'function') {
       callback.call(self, machineName);

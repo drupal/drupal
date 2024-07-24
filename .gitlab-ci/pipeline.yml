@@ -1,4 +1,4 @@
-# cspell:ignore cobertura drupaltestbot drupaltestbotpw
+# cspell:ignore cobertura drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB
 
 stages:
   - 🗜️ Test
@@ -67,7 +67,8 @@ variables:
   POSTGRES_DB: drupaltestbot
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
-  MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--dns-prefetch-disable"]}}, "http://localhost:9515"]'
+  MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
+  MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--dns-prefetch-disable"]}}, "http://localhost:9515"]'
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
@@ -84,6 +85,16 @@ variables:
     - "--log-path=/builds/chromedriver.log"
     - "--whitelisted-ips="
     - "--allowed-origins=*"
+
+.with-selenium-chrome: &with-selenium-chrome
+  name: selenium/standalone-chrome:latest
+  alias: selenium
+  variables:
+    JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
+    SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+    SE_NODE_MAX_SESSIONS: "5"
+    SE_START_XVFB: "false"
+    SE_START_VNC: "false"
 
 .run-tests: &run-tests
   script:
@@ -125,14 +136,34 @@ variables:
 
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 2
+  parallel: 4
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 15
     KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
+    - <<: *with-selenium-chrome
+  after_script:
+    - echo $MINK_DRIVER_ARGS_WEBDRIVER
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+    - cp /builds/chromedriver.log ./
+
+'🖱️️️ PHPUnit Functional Javascript (non W3C legacy)':
+  <<: [ *with-composer, *default-job-settings ]
+  parallel: 1
+  variables:
+    TESTSUITE: PHPUnit-FunctionalJavascript
+    CONCURRENCY: 15
+    KUBERNETES_CPU_REQUEST: "24"
+    MINK_DRIVER_ARGS_WEBDRIVER: $MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C
+  services:
+    - <<: *with-database
     - <<: *with-chrome
+  script:
+    # Run a small subset of tests to prove non W3C testing still works.
+    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
+
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
     - cp /builds/chromedriver.log ./
@@ -208,7 +239,7 @@ variables:
     KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
-    - <<: *with-chrome
+    - <<: *with-selenium-chrome
   script:
     - export DRUPAL_TEST_DB_URL=$SIMPLETEST_DB
     - cp ./core/.env.example ./core/.env
@@ -218,9 +249,10 @@ variables:
     - echo "DRUPAL_TEST_BASE_URL='http://localhost/subdirectory'" >> ./core/.env
     - echo "DRUPAL_TEST_CHROMEDRIVER_AUTOSTART=false" >> ./core/.env
     - echo "DRUPAL_TEST_DB_URL='${DRUPAL_TEST_DB_URL}'" >> ./core/.env
-    - echo "DRUPAL_TEST_WEBDRIVER_HOSTNAME='localhost'" >> ./core/.env
+    - echo "DRUPAL_TEST_WEBDRIVER_HOSTNAME='selenium'" >> ./core/.env
     - echo "DRUPAL_TEST_WEBDRIVER_CHROME_ARGS='--disable-dev-shm-usage --disable-gpu --headless --dns-prefetch-disable'" >> ./core/.env
-    - echo "DRUPAL_TEST_WEBDRIVER_PORT='9515'" >> ./core/.env
+    - echo "DRUPAL_TEST_WEBDRIVER_W3C=true" >> ./core/.env
+    - echo "DRUPAL_TEST_WEBDRIVER_PORT='4444'" >> ./core/.env
     - echo "DRUPAL_NIGHTWATCH_OUTPUT='"../nightwatch_output"'" >> ./core/.env
     - echo "COLUMNS=1000" >> ./core/.env
     - chown -R www-data:www-data ./sites /var/www
@@ -253,12 +285,12 @@ variables:
     - if: $PERFORMANCE_TEST == "1"
   variables:
     KUBERNETES_CPU_REQUEST: "24"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--no-sandbox"]}}, "http://chrome:9515"]'
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable", "--no-sandbox"]}}, "http://selenium:4444"]'
   tags:
     - performance-test-runner
   services:
     - <<: *with-database
-    - <<: *with-chrome
+    - <<: *with-selenium-chrome
   script:
     #  Determine DB driver.
     - |

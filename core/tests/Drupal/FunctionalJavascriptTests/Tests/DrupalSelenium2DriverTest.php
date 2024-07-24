@@ -50,7 +50,6 @@ class DrupalSelenium2DriverTest extends WebDriverTestBase {
   public function testGetRemoteFilePath(): void {
     $web_driver = $this->getSession()->getDriver();
     $this->assertInstanceOf(Selenium2Driver::class, $web_driver);
-    $this->assertFalse($web_driver->isW3C(), 'Driver is not operating in W3C mode');
 
     $file_system = \Drupal::service('file_system');
     $entity = EntityTest::create();

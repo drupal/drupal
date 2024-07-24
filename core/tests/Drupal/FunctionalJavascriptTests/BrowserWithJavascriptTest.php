@@ -141,8 +141,8 @@ JS;
     $session->visit($url);
 
     // There are 2 alerts to accept before we can get the content of the page.
-    $session->getDriver()->getWebdriverSession()->accept_alert();
-    $session->getDriver()->getWebdriverSession()->accept_alert();
+    $session->getDriver()->getWebdriverSession()->alert()->accept();
+    $session->getDriver()->getWebdriverSession()->alert()->accept();
 
     $out = $session->getPage()->getContent();
 

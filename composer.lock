@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63f0b59ba81213ad8f8e124c60a8bb82",
+    "content-hash": "a7381d9c8398db71aa38d0efa7daa309",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5417,22 +5417,22 @@
         },
         {
             "name": "lullabot/mink-selenium2-driver",
-            "version": "v1.7.2",
+            "version": "v1.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Lullabot/MinkSelenium2Driver.git",
-                "reference": "5f9ecc2dc329d87442843f6143a4307a62fc5f8c"
+                "reference": "91445897dda062790a741003c9c85d9bb2f902cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lullabot/MinkSelenium2Driver/zipball/5f9ecc2dc329d87442843f6143a4307a62fc5f8c",
-                "reference": "5f9ecc2dc329d87442843f6143a4307a62fc5f8c",
+                "url": "https://api.github.com/repos/Lullabot/MinkSelenium2Driver/zipball/91445897dda062790a741003c9c85d9bb2f902cf",
+                "reference": "91445897dda062790a741003c9c85d9bb2f902cf",
                 "shasum": ""
             },
             "require": {
                 "behat/mink": "^1.11@dev",
                 "ext-json": "*",
-                "lullabot/php-webdriver": "^2.0",
+                "lullabot/php-webdriver": "^2.0.5",
                 "php": ">=7.2"
             },
             "replace": {
@@ -5483,22 +5483,22 @@
                 "webdriver"
             ],
             "support": {
-                "source": "https://github.com/Lullabot/MinkSelenium2Driver/tree/v1.7.2"
+                "source": "https://github.com/Lullabot/MinkSelenium2Driver/tree/v1.7.3"
             },
-            "time": "2024-02-12T10:40:39+00:00"
+            "time": "2024-07-17T16:07:12+00:00"
         },
         {
             "name": "lullabot/php-webdriver",
-            "version": "v2.0.4",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Lullabot/php-webdriver.git",
-                "reference": "55fb15bd92663c3f90f42b2c79ca3ee11f2d7925"
+                "reference": "b686c5fe74ae4f3d5f7ff6e45234d99562de9ff4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lullabot/php-webdriver/zipball/55fb15bd92663c3f90f42b2c79ca3ee11f2d7925",
-                "reference": "55fb15bd92663c3f90f42b2c79ca3ee11f2d7925",
+                "url": "https://api.github.com/repos/Lullabot/php-webdriver/zipball/b686c5fe74ae4f3d5f7ff6e45234d99562de9ff4",
+                "reference": "b686c5fe74ae4f3d5f7ff6e45234d99562de9ff4",
                 "shasum": ""
             },
             "require": {
@@ -5530,9 +5530,10 @@
                 "webtest"
             ],
             "support": {
-                "source": "https://github.com/Lullabot/php-webdriver/tree/v2.0.4"
+                "issues": "https://github.com/Lullabot/php-webdriver/issues",
+                "source": "https://github.com/Lullabot/php-webdriver/tree/v2.0.5"
             },
-            "time": "2024-07-04T09:19:59+00:00"
+            "time": "2024-07-17T15:21:54+00:00"
         },
         {
             "name": "mglaman/phpstan-drupal",
