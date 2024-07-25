@@ -93,7 +93,7 @@ function template_preprocess_views_view(&$variables) {
  *     - element_default_classes: If the default classes are to be added.
  *     - separator: A string to be placed between inline fields to keep them
  *       visually distinct.
- *    - row: An array containing information about the current row.
+ *   - row: An array containing information about the current row.
  */
 function template_preprocess_views_view_fields(&$variables) {
   $view = $variables['view'];
