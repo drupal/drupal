@@ -284,6 +284,7 @@ variables:
   rules:
     - if: $PERFORMANCE_TEST == "1"
     - when: manual
+      allow_failure: true
   variables:
     KUBERNETES_CPU_REQUEST: "24"
     MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--no-sandbox"]}}, "http://chrome:9515"]'
