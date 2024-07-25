@@ -111,7 +111,6 @@ trait PerformanceTestTrait {
 
     $session = $this->getSession();
     $session->getDriver()->getWebDriverSession()->log('performance');
-    $collection = \Drupal::keyValue('performance_test');
     $collection->deleteAll();
     $return = $callable();
     $performance_data = $this->processChromeDriverPerformanceLogs($service_name);

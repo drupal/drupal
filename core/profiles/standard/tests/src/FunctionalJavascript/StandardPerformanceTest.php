@@ -16,6 +16,7 @@ use Drupal\user\UserInterface;
  * Stark is used as the default theme so that this test is not Olivero specific.
  *
  * @group Common
+ * @group #slow
  * @requires extension apcu
  */
 class StandardPerformanceTest extends PerformanceTestBase {
