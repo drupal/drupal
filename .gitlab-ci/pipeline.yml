@@ -258,7 +258,7 @@ variables:
   variables:
     CI_DEBUG_SERVICES: "true"
     KUBERNETES_CPU_REQUEST: "24"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--disable-dev-shm-usage", "--disable-gpu", "--disable-extensions", "--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable""]}}, "http://selenium:4444"]'
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--disable-dev-shm-usage", "--disable-gpu", "--disable-extensions", "--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
   tags:
     - performance-test-runner
   services:
