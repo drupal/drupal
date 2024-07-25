@@ -257,12 +257,12 @@ variables:
       allow_failure: true
   variables:
     KUBERNETES_CPU_REQUEST: "24"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--no-sandbox"]}}, "http://chrome:9515"]'
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--disable-dev-shm-usage", "--disable-gpu", "--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable", "--no-sandbox"]}}, "http://selenium:4444"]'
   tags:
     - performance-test-runner
   services:
     - <<: *with-database
-    - <<: *with-chrome
+    - <<: *with-selenium-chrome
   script:
     #  Determine DB driver.
     - |
