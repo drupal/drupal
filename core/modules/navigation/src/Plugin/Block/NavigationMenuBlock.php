@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 #[Block(
   id: "navigation_menu",
   admin_label: new TranslatableMarkup("Navigation menu"),
-  category: new TranslatableMarkup("Menus"),
+  category: new TranslatableMarkup("Menus (Navigation)"),
   deriver: SystemMenuNavigationBlockDeriver::class,
 )]
 final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFactoryPluginInterface {
