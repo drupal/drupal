@@ -256,6 +256,7 @@ variables:
     - when: manual
       allow_failure: true
   variables:
+    CI_DEBUG_SERVICES: "true"
     KUBERNETES_CPU_REQUEST: "24"
     MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--disable-dev-shm-usage", "--disable-gpu", "--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable", "--no-sandbox"]}}, "http://selenium:4444"]'
   tags:
