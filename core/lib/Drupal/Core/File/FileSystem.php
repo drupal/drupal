@@ -289,7 +289,7 @@ class FileSystem implements FileSystemInterface {
    */
   public function copy($source, $destination, /* FileExists */$fileExists = FileExists::Rename) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     $this->prepareDestination($source, $destination, $fileExists);
@@ -370,7 +370,7 @@ class FileSystem implements FileSystemInterface {
    */
   public function move($source, $destination, /* FileExists */$fileExists = FileExists::Rename) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     $this->prepareDestination($source, $destination, $fileExists);
@@ -431,7 +431,7 @@ class FileSystem implements FileSystemInterface {
    */
   protected function prepareDestination($source, &$destination, /* FileExists */$fileExists) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     $original_source = $source;
@@ -477,7 +477,7 @@ class FileSystem implements FileSystemInterface {
    */
   public function saveData($data, $destination, /* FileExists */$fileExists = FileExists::Rename) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     // Write the data to a temporary file.
@@ -531,7 +531,7 @@ class FileSystem implements FileSystemInterface {
    */
   public function getDestinationFilename($destination, /* FileExists */$fileExists) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     $basename = $this->basename($destination);

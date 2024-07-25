@@ -129,7 +129,7 @@ class VariationCache implements VariationCacheInterface {
       // need to be cleared. If they ever end up leading to a stale cache item
       // that now uses different contexts then said item will either follow an
       // existing path of redirects or carve its own over the old one.
-      /** @phpstan-ignore-next-line */
+      /** @phpstan-ignore variable.undefined */
       $this->cacheBackend->set($chain_cid, new CacheRedirect($cacheability));
     }
 

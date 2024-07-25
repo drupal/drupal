@@ -174,7 +174,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    */
   protected function writeFile($source, $destination, FileExists|int $fileExists = FileExists::Replace) {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     // Check if there is a destination available for copying. If there isn't,

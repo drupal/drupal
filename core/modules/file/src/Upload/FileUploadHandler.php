@@ -149,7 +149,7 @@ class FileUploadHandler {
    */
   public function handleFileUpload(UploadedFileInterface $uploadedFile, array $validators = [], string $destination = 'temporary://', /*FileExists*/$fileExists = FileExists::Replace): FileUploadResult {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     $result = new FileUploadResult();

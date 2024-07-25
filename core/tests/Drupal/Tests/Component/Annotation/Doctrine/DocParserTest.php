@@ -839,7 +839,7 @@ DOCBLOCK;
                 // Since this class is a near-copy of
                 // Doctrine\Tests\Common\Annotations\DocParserTest, we don't fix
                 // PHPStan errors here.
-                // @phpstan-ignore-next-line
+                // @phpstan-ignore array.duplicateKey
                 ClassWithConstants::SOME_KEY    => ClassWithConstants::SOME_VALUE,
                 ClassWithConstants::SOME_KEY    => IntefaceWithConstants::SOME_VALUE
             )

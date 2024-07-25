@@ -89,7 +89,7 @@ class FileRepository implements FileRepositoryInterface {
    */
   public function writeData(string $data, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     if (!$this->streamWrapperManager->isValidUri($destination)) {
@@ -137,7 +137,7 @@ class FileRepository implements FileRepositoryInterface {
    */
   public function copy(FileInterface $source, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     if (!$this->streamWrapperManager->isValidUri($destination)) {
@@ -175,7 +175,7 @@ class FileRepository implements FileRepositoryInterface {
    */
   public function move(FileInterface $source, string $destination, FileExists|int $fileExists = FileExists::Rename): FileInterface {
     if (!$fileExists instanceof FileExists) {
-      // @phpstan-ignore-next-line
+      // @phpstan-ignore staticMethod.deprecated
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
     if (!$this->streamWrapperManager->isValidUri($destination)) {

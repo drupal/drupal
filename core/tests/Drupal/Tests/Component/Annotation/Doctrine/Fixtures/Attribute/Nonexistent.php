@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\Component\Annotation\Doctrine\Fixtures\Attribute;
 
-// @phpstan-ignore-next-line
+// @phpstan-ignore attribute.notFound
 #[NonexistentAttribute]
 final class Nonexistent
 {

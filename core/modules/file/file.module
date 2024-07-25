@@ -239,7 +239,7 @@ function file_cron() {
  */
 function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
   if (!$fileExists instanceof FileExists) {
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore staticMethod.deprecated
     $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
   }
   // Get all errors set before calling this method. This will also clear them
@@ -333,7 +333,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  */
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
   if (!$fileExists instanceof FileExists) {
-    // @phpstan-ignore-next-line
+    // @phpstan-ignore staticMethod.deprecated
     $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
   }
   static $upload_cache;

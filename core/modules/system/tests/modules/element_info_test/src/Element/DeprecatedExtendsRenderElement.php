@@ -8,7 +8,7 @@ use Drupal\Core\Render\Element\RenderElement as RenderElementDeprecated;
 /**
  * Provides render element that extends deprecated RenderElement for testing.
  *
- * @phpstan-ignore-next-line
+ * @phpstan-ignore class.extendsDeprecatedClass
  */
 #[RenderElement('deprecated_extends_render')]
 class DeprecatedExtendsRenderElement extends RenderElementDeprecated {
