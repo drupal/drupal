@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 
 /**
@@ -21,9 +22,19 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
   protected $profile = 'demo_umami';
 
   /**
+   * Test canonical node page performance with various cache permutations.
+   */
+  public function testNodePage(): void {
+    $this->testNodePageColdCache();
+    $this->testNodePageCoolCache();
+    $this->testNodePageWarmCache();
+    $this->testNodePageHotCache();
+  }
+
+  /**
    * Logs node page tracing data with a cold cache.
    */
-  public function testNodePageColdCache(): void {
+  protected function testNodePageColdCache(): void {
     // @todo Chromedriver doesn't collect tracing performance logs for the very
     //   first request in a test, so warm it up.
     //   https://www.drupal.org/project/drupal/issues/3379750
@@ -40,7 +51,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
    *
    * Hot here means that all possible caches are warmed.
    */
-  public function testNodePageHotCache(): void {
+  protected function testNodePageHotCache(): void {
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
     $this->drupalGet('node/1');
@@ -64,10 +75,10 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
    * Cool here means that 'global' site caches are warm but anything
    * specific to the route or path is cold.
    */
-  public function testNodePageCoolCache(): void {
+  protected function testNodePageCoolCache(): void {
     // First of all visit the node page to ensure the image style exists.
     $this->drupalGet('node/1');
-    $this->rebuildAll();
+    $this->clearCaches();
     // Now visit a non-node page to warm non-route-specific caches.
     $this->drupalGet('user/login');
     $this->collectPerformanceData(function () {
@@ -82,16 +93,25 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
    * Warm here means that 'global' site caches and route-specific caches are
    * warm but caches specific to this particular node/path are not.
    */
-  public function testNodePageWarmCache(): void {
+  protected function testNodePageWarmCache(): void {
     // First of all visit the node page to ensure the image style exists.
     $this->drupalGet('node/1');
-    $this->rebuildAll();
+    $this->clearCaches();
     // Now visit a different node page to warm non-path-specific caches.
     $this->drupalGet('node/2');
     $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     }, 'umamiNodePageWarmCache');
     $this->assertSession()->pageTextContains('quiche');
+  }
+
+  /**
+   * Clear caches.
+   */
+  protected function clearCaches(): void {
+    foreach (Cache::getBins() as $bin) {
+      $bin->deleteAll();
+    }
   }
 
 }
