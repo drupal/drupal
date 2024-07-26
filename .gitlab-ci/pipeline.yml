@@ -47,14 +47,14 @@ default:
 .with-composer: &with-composer
   needs:
     - pipeline: $PARENT_PIPELINE_ID
-      job: '📦️ Composer'
+      job: '🧹 PHP Coding standards (PHPCS)'
 
 .with-composer-and-yarn: &with-composer-and-yarn
   needs:
     - pipeline: $PARENT_PIPELINE_ID
-      job: '📦️ Composer'
+      job: '🧹 PHP Coding standards (PHPCS)'
     - pipeline: $PARENT_PIPELINE_ID
-      job: '📦️ Yarn'
+      job: '📔 Spell-checking'
 
 variables:
   FF_NETWORK_PER_BUILD: 1
@@ -248,7 +248,7 @@ variables:
     - <<: *with-database
 
 '🚲 Performance tests':
-  <<: [ *with-composer, *default-job-settings ]
+  <<: [ *default-job-settings ]
   rules:
     - if: $PERFORMANCE_TEST == "1"
   variables:
@@ -266,6 +266,7 @@ variables:
       [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+    - composer install --optimize-autoloader
     - export OTEL_COLLECTOR="$OTEL_COLLECTOR"
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/

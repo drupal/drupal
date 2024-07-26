@@ -69,7 +69,6 @@ variables:
 # Stages    #
 #############
 stages:
-  - 🏗️ Build
   - 🪄 Lint
   - 🗜️ Test
 
@@ -96,11 +95,7 @@ default:
 
 .with-composer: &with-composer
   needs:
-    - '📦️ Composer'
-
-.with-yarn: &with-yarn
-  needs:
-    - '📦️ Yarn'
+    - '🧹 PHP Coding standards (PHPCS)'
 
 .default-job-settings-lint: &default-job-settings-lint
   rules:
@@ -241,64 +236,21 @@ default:
   <<: [ *run-daily ]
 
 ################
-# Build Jobs for linting
-################
-
-'📦️ Composer':
-  variables:
-    KUBERNETES_CPU_REQUEST: "1"
-  stage: 🏗️ Build
-  cache:
-    key:
-      files:
-        - ./composer.json
-        - ./composer.lock
-    paths:
-      - ./vendor
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'web-vendor'
-    paths:
-      - vendor/
-  script:
-      - composer validate
-      - composer install --optimize-autoloader
-      - if [ -n "$COMPOSER_UPDATE" ]; then
-          composer update --optimize-autoloader;
-          composer outdated;
-        fi
-
-'📦️ Yarn':
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-  stage: 🏗️ Build
-  cache:
-    key:
-      files:
-        - ./core/package.json
-        - ./core/yarn.lock
-    paths:
-      - ./core/node_modules
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'yarn-vendor'
-    paths:
-      - core/node_modules/
-  script:
-    - cd core
-    - corepack enable
-    - yarn install
-
-################
 # Lint Jobs
 ################
 
 '🧹 PHP Static Analysis (phpstan)':
-  <<: [ *with-composer, *default-job-settings-lint ]
+  <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
+    - composer validate
+    - composer install --optimize-autoloader
+    - if [ -n "$COMPOSER_UPDATE" ]; then
+        composer update --optimize-autoloader;
+        composer outdated;
+      fi
     - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
@@ -324,19 +276,28 @@ default:
       - core/.phpstan-baseline.php
 
 '🧹 PHP Coding standards (PHPCS)':
-  <<: [ *with-composer, *default-job-settings-lint ]
+  <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
+    - composer validate
+    - composer install --optimize-autoloader
+    - if [ -n "$COMPOSER_UPDATE" ]; then
+        composer update --optimize-autoloader;
+        composer outdated;
+      fi
     - vendor/bin/phpcs --version
     - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
+    expire_in: 1 week
+    expose_as: 'web-vendor'
+    paths:
+      - vendor/
     reports:
       codequality: phpcs-quality-report.json
 
 '🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -356,6 +317,7 @@ default:
   script:
     - cd core
     - corepack enable
+    - yarn install
     - yarn run check:ckeditor5
     - yarn run lint:core-js-passing --format gitlab
   artifacts:
@@ -363,7 +325,6 @@ default:
       codequality: eslint-quality-report.json
 
 '🧹 CSS linting (stylelint)':
-  <<: [ *with-yarn ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -382,6 +343,7 @@ default:
   script:
     - corepack enable
     - cd core
+    - yarn install
     - yarn run build:css --check
     - yarn run lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
@@ -389,7 +351,7 @@ default:
       codequality: stylelint-quality-report.json
 
 '📔 Spell-checking':
-  <<: [ *with-yarn, *default-job-settings-lint ]
+  <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
@@ -401,8 +363,21 @@ default:
       fi;
     - cd core
     - corepack enable
+    - yarn install
     - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only 2>1 > /dev/null || (echo "Warning, cannot find changed files, converting to full clone." & (git fetch --unshallow --quiet && echo "Fetch successful."))
     - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn run spellcheck:core --no-must-find-files --file-list stdin
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/node_modules
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
 
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]
@@ -412,6 +387,7 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
   # Run on MRs if config schema files have changed, or manually.
   rules:
+    - if: $PERFORMANCE_TEST != "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - "**/config/schema/*.schema.yml"
