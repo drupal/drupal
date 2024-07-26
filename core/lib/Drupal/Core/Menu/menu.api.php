@@ -308,6 +308,8 @@ function hook_menu_links_discovered_alter(&$links) {
  * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
  *   The cacheability metadata for the current route's local tasks.
  *
+ * @see hook_local_tasks_alter()
+ *
  * @ingroup menu
  */
 function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface &$cacheability) {
@@ -351,6 +353,7 @@ function hook_menu_local_actions_alter(&$local_actions) {
  *
  * @see \Drupal\Core\Menu\LocalTaskInterface
  * @see \Drupal\Core\Menu\LocalTaskManager
+ * @see hook_menu_local_tasks_alter()
  *
  * @ingroup menu
  */
