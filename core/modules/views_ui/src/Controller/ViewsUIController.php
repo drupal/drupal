@@ -73,7 +73,7 @@ class ViewsUIController extends ControllerBase {
       }
     }
 
-    $header = [t('Field name'), t('Used in')];
+    $header = [$this->t('Field name'), $this->t('Used in')];
     $rows = [];
     foreach ($fields as $field_name => $views) {
       $rows[$field_name]['data'][0]['data']['#plain_text'] = $field_name;
@@ -94,7 +94,7 @@ class ViewsUIController extends ControllerBase {
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => t('No fields have been used in views yet.'),
+      '#empty' => $this->t('No fields have been used in views yet.'),
     ];
 
     return $output;
@@ -126,9 +126,9 @@ class ViewsUIController extends ControllerBase {
     ksort($rows);
     return [
       '#type' => 'table',
-      '#header' => [t('Type'), t('Name'), t('Provided by'), t('Used in')],
+      '#header' => [$this->t('Type'), $this->t('Name'), $this->t('Provided by'), $this->t('Used in')],
       '#rows' => $rows,
-      '#empty' => t('There are no enabled views.'),
+      '#empty' => $this->t('There are no enabled views.'),
     ];
   }
 

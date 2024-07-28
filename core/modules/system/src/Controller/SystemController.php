@@ -334,7 +334,7 @@ class SystemController extends ControllerBase {
               'attributes' => ['title' => $this->t('Set @theme as default theme', ['@theme' => $theme->info['name']])],
             ];
           }
-          $admin_theme_options[$theme->getName()] = $theme->info['name'] . ($theme->isExperimental() ? ' (' . t('Experimental') . ')' : '');
+          $admin_theme_options[$theme->getName()] = $theme->info['name'] . ($theme->isExperimental() ? ' (' . $this->t('Experimental') . ')' : '');
         }
         else {
           $theme->operations[] = [
