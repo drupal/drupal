@@ -726,4 +726,25 @@ JS;
     return $this->buildStatusMessageSelector($message, $type) . ' | ' . $js_selector;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function statusMessageContains(string $message, ?string $type = NULL): void {
+    $selector = $this->buildStatusMessageSelector($message, $type);
+    $this->waitForElement('xpath', $selector);
+    parent::statusMessageContains($message, $type);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function statusMessageNotContains(string $message, ?string $type = NULL): void {
+    $selector = $this->buildStatusMessageSelector($message, $type);
+    // Wait for a second for the message to not exist.
+    $this->waitForHelper(1000, function (Element $page) use ($selector) {
+      return !$page->find('xpath', $selector);
+    });
+    parent::statusMessageNotContains($message, $type);
+  }
+
 }
