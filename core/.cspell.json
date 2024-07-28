@@ -38,6 +38,8 @@
       "MAINTAINERS.txt",
       "package.json",
       "yarn.lock",
+      ".yarnrc.yml",
+      ".yarn/*",
       "misc/cspell/dictionary.txt",
       "phpstan*"
     ],
