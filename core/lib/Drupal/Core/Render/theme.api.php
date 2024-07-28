@@ -326,8 +326,9 @@
  * on plugins. You can search for classes with the RenderElement or FormElement
  * attribute to discover what render elements are available. API reference
  * sites (such as https://api.drupal.org) generate lists of all existing
- * elements from these classes. Look for the Elements link in the API Navigation
- * block.
+ * elements from these classes. Use the
+ * @link listing_page_element Elements link @endlink in the API Navigation
+ * block to view the available elements.
  *
  * Modules can define render elements by defining an element plugin.
  *
