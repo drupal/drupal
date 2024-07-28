@@ -358,7 +358,9 @@ default:
     paths:
       - core/node_modules/
   script:
-    - yarn --cwd ./core install
+    - cd core
+    - corepack enable
+    - yarn install
 
 ################
 # Lint Jobs
@@ -425,8 +427,10 @@ default:
     - when: manual
       allow_failure: true
   script:
-    - yarn --cwd=./core run -s check:ckeditor5
-    - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
+    - cd core
+    - corepack enable
+    - yarn run check:ckeditor5
+    - yarn run lint:core-js-passing --format gitlab
   artifacts:
     reports:
       codequality: eslint-quality-report.json
@@ -449,8 +453,10 @@ default:
     - when: manual
       allow_failure: true
   script:
-    - yarn run --cwd=./core build:css --check
-    - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - corepack enable
+    - cd core
+    - yarn run build:css --check
+    - yarn run lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
@@ -466,8 +472,10 @@ default:
       else
         echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_DIFF_BASE_SHA is ${CI_MERGE_REQUEST_DIFF_BASE_SHA}";
       fi;
+    - cd core
+    - corepack enable
     - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only 2>1 > /dev/null || (echo "Warning, cannot find changed files, converting to full clone." & (git fetch --unshallow --quiet && echo "Fetch successful."))
-    - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
+    - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn run -s spellcheck:core --no-must-find-files --file-list stdin
 
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]

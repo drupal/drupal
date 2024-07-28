@@ -195,7 +195,9 @@ variables:
     - echo "DRUPAL_NIGHTWATCH_OUTPUT='"../nightwatch_output"'" >> ./core/.env
     - echo "COLUMNS=1000" >> ./core/.env
     - chown -R www-data:www-data ./sites /var/www
-    - sudo -u www-data yarn run --cwd=./core test:nightwatch --workers=4
+    - cd core
+    - corepack enable
+    - sudo -u www-data yarn run test:nightwatch --workers=4
   after_script:
     - cp /builds/chromedriver.log ./
   artifacts:
