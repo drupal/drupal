@@ -352,6 +352,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // @see https://www.drupal.org/node/2208429
         \Drupal::service('theme_handler')->refreshInfo();
 
+        // Modules may provide single directory components which are added to
+        // the core library definitions rather than the module itself, this
+        // requires the library discovery cache to be rebuilt.
+        \Drupal::service('library.discovery')->clearCachedDefinitions();
+
         // Allow the module to perform install tasks.
         $this->moduleHandler->invoke($module, 'install', [$sync_status]);
 
