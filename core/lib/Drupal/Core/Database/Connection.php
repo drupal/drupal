@@ -1945,7 +1945,7 @@ abstract class Connection {
   public static function createConnectionOptionsFromUrl($url, $root) {
     $url_components = parse_url($url);
     if (!isset($url_components['scheme'], $url_components['host'], $url_components['path'])) {
-      throw new \InvalidArgumentException('Minimum requirement: driver://host/database');
+      throw new \InvalidArgumentException("The database connection URL '$url' is invalid. The minimum requirement is: 'driver://host/database'");
     }
 
     $url_components += [
