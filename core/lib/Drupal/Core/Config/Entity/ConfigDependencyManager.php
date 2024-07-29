@@ -61,10 +61,20 @@ use Drupal\Component\Graph\Graph;
  * dependencies. Implementations should call the base class implementation to
  * inherit the generic functionality.
  *
- * Classes for configurable plugins are a special case. They can either declare
- * their configuration dependencies using the calculateDependencies() method
- * described in the paragraph above, or if they have only static dependencies,
- * these can be declared using the 'config_dependencies' annotation key.
+ * Some configuration entities have dependencies from plugins and third-party
+ * settings; these dependencies can be collected by
+ * \Drupal\Core\Config\Entity\ConfigEntityBase::calculateDependencies().
+ * Entities with third-party settings need to implement
+ * \Drupal\Core\Config\Entity\ThirdPartySettingsInterface in order to trigger
+ * this generic dependency collection. Entities with plugin dependencies need to
+ * implement \Drupal\Core\Entity\EntityWithPluginCollectionInterface; this
+ * causes the base calculateDependencies() method to add the plugins' providers
+ * as dependencies, as well as dependencies declared in the
+ * "config_dependencies" key from the plugins' definitions. In addition, plugins
+ * that implement \Drupal\Component\Plugin\ConfigurablePluginInterface can
+ * declare additional dependencies using
+ * \Drupal\Component\Plugin\DependentPluginInterface::calculateDependencies(),
+ * and these will also be collected by the base method.
  *
  * If an extension author wants a configuration entity to depend on something
  * that is not calculable then they can add these dependencies to the enforced
@@ -112,6 +122,7 @@ use Drupal\Component\Graph\Graph;
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::getDependencies()
  * @see \Drupal\Core\Config\Entity\ConfigEntityInterface::onDependencyRemoval()
  * @see \Drupal\Core\Config\Entity\ConfigEntityBase::addDependency()
+ * @see \Drupal\Core\Config\Entity\ConfigEntityBase::calculateDependencies()
  * @see \Drupal\Core\Config\ConfigInstallerInterface::installDefaultConfig()
  * @see \Drupal\Core\Config\ConfigManagerInterface::uninstall()
  * @see \Drupal\Core\Config\Entity\ConfigEntityDependency
