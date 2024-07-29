@@ -215,7 +215,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    * @return bool
    *   TRUE if the specified language type is configurable, FALSE otherwise.
    */
-  protected function isLanguageTypeConfigurable($type) {
+  protected function isLanguageTypeConfigurable($type): bool {
     $configurable_types = $this->config('language.types')->get('configurable');
     return in_array($type, $configurable_types);
   }

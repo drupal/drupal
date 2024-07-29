@@ -276,7 +276,7 @@ trait ResourceResponseTestTrait {
    * @return bool
    *   TRUE if the array has a type and ID, FALSE otherwise.
    */
-  protected static function isResourceIdentifier(array $data) {
+  protected static function isResourceIdentifier(array $data): bool {
     return array_key_exists('type', $data) && array_key_exists('id', $data);
   }
 

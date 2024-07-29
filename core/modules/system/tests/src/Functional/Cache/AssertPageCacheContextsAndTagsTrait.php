@@ -129,7 +129,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @return bool
    *   Always returns TRUE.
    */
-  protected function assertCacheContexts(array $expected_contexts, $message = NULL, $include_default_contexts = TRUE) {
+  protected function assertCacheContexts(array $expected_contexts, $message = NULL, $include_default_contexts = TRUE): bool {
     if ($include_default_contexts) {
       $default_contexts = ['languages:language_interface', 'theme'];
       // Add the user based contexts to the list of default contexts except when

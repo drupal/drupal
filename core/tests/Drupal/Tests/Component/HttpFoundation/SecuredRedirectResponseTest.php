@@ -49,7 +49,7 @@ class SecuredRedirectStub extends SecuredRedirectResponse {
   /**
    * {@inheritdoc}
    */
-  protected function isSafe($url) {
+  protected function isSafe($url): bool {
     // Empty implementation for testing.
     return TRUE;
   }
