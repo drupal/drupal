@@ -201,7 +201,8 @@ trait FieldableEntityNormalizerTrait {
    *   The context passed into the Normalizer.
    *
    * @return mixed
-   *   The value to use in Entity::setValue().
+   *   The value to use in \Drupal\Core\Field\FieldItemBase::setValue() or a
+   *   subclass.
    */
   protected function constructValue($data, $context) {
     $field_item = $context['target_instance'];

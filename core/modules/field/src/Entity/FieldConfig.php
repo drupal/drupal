@@ -153,7 +153,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::preSave().
+   * Overrides \Drupal\Core\Entity\EntityBase::preSave().
    *
    * @throws \Drupal\Core\Field\FieldException
    *   If the field definition is invalid.

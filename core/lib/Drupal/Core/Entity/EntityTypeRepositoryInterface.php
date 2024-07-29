@@ -39,8 +39,8 @@ interface EntityTypeRepositoryInterface {
    * @throws \Drupal\Core\Entity\Exception\NoCorrespondingEntityClassException
    *   Thrown when no entity class corresponds to the called class.
    *
-   * @see \Drupal\Core\Entity\Entity::load()
-   * @see \Drupal\Core\Entity\Entity::loadMultiple()
+   * @see \Drupal\Core\Entity\EntityBase::load()
+   * @see \Drupal\Core\Entity\EntityBase::loadMultiple()
    */
   public function getEntityTypeFromClass($class_name);
 

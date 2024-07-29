@@ -136,7 +136,9 @@ use Drupal\node\Entity\NodeType;
  * $entity->save();
  * @endcode
  * There is also a shortcut method on entity classes, which creates an entity
- * with an array of provided property values: \Drupal\Core\Entity::create().
+ * with an array of provided property values. It is the create method. To create
+ * an Action entity one would use Drupal\system\Entity\Action::create(). For a
+ * custom entity use $yourEntityTypeClass::create().
  *
  * Hooks invoked during the create operation:
  * - hook_ENTITY_TYPE_create()

@@ -424,7 +424,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *   placeholder of {node_type} used on the Node class.
    *
    * Specific entity types may also expand upon this list by overriding the
-   * Entity::urlRouteParameters() method.
+   * EntityBase::urlRouteParameters() method.
    *
    * @link http://www.iana.org/assignments/link-relations/link-relations.xml @endlink
    * @link http://tools.ietf.org/html/rfc6570 @endlink

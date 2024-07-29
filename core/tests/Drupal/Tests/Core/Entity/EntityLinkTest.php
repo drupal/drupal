@@ -56,7 +56,7 @@ class EntityLinkTest extends UnitTestCase {
   }
 
   /**
-   * Tests for the Entity::toLink() method.
+   * Tests for the EntityBase::toLink() method.
    *
    * @covers ::toLink
    *

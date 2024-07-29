@@ -177,7 +177,7 @@ class StringFormatter extends FormatterBase {
   protected function getEntityUrl(EntityInterface $entity) {
     // For the default revision, the 'revision' link template falls back to
     // 'canonical'.
-    // @see \Drupal\Core\Entity\Entity::toUrl()
+    // @see \Drupal\Core\Entity\EntityBase::toUrl()
     $rel = $entity->getEntityType()->hasLinkTemplate('revision') ? 'revision' : 'canonical';
     return $entity->toUrl($rel);
   }

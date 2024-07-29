@@ -233,7 +233,7 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function setupTestLoad() {
     // Base our mocked entity on a real entity class so we can test if calling
-    // Entity::load() on the base class will bubble up to an actual entity.
+    // EntityBase::load() on the base class will bubble up to an actual entity.
     $this->entityTypeId = 'entity_test_mul';
     $methods = get_class_methods(EntityTestMul::class);
     unset($methods[array_search('load', $methods)]);
@@ -247,7 +247,7 @@ class EntityUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests Entity::load().
+   * Tests EntityBase::load().
    *
    * When called statically on a subclass of Entity.
    *
@@ -277,12 +277,13 @@ class EntityUnitTest extends UnitTestCase {
 
     \Drupal::getContainer()->set('entity_type.repository', $entity_type_repository);
 
-    // Call Entity::load statically and check that it returns the mock entity.
+    // Call EntityBase::load statically and check that it returns the mock
+    // entity.
     $this->assertSame($this->entity, $class_name::load(1));
   }
 
   /**
-   * Tests Entity::loadMultiple().
+   * Tests EntityBase::loadMultiple().
    *
    * When called statically on a subclass of Entity.
    *
@@ -312,8 +313,8 @@ class EntityUnitTest extends UnitTestCase {
 
     \Drupal::getContainer()->set('entity_type.repository', $entity_type_repository);
 
-    // Call Entity::loadMultiple statically and check that it returns the mock
-    // entity.
+    // Call EntityBase::loadMultiple() statically and check that it returns the
+    // mock entity.
     $this->assertSame([1 => $this->entity], $class_name::loadMultiple([1]));
   }
 
@@ -344,7 +345,7 @@ class EntityUnitTest extends UnitTestCase {
 
     \Drupal::getContainer()->set('entity_type.repository', $entity_type_repository);
 
-    // Call Entity::create() statically and check that it returns the mock
+    // Call EntityBase::create() statically and check that it returns the mock
     // entity.
     $this->assertSame($this->entity, $class_name::create([]));
   }

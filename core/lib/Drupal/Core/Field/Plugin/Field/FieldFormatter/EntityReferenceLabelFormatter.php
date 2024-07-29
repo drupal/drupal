@@ -69,10 +69,11 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
           $uri = $entity->toUrl();
         }
         catch (UndefinedLinkTemplateException) {
-          // This exception is thrown by \Drupal\Core\Entity\Entity::urlInfo()
-          // and it means that the entity type doesn't have a link template nor
-          // a valid "uri_callback", so don't bother trying to output a link for
-          // the rest of the referenced entities.
+          // This exception is thrown by
+          // \Drupal\Core\Entity\EntityInterface::toUrl() and it means that the
+          // entity type doesn't have a link template nor a valid
+          // "uri_callback", so don't bother trying to output a link for the
+          // rest of the referenced entities.
           $output_as_link = FALSE;
         }
       }

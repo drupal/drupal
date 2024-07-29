@@ -393,9 +393,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $this->assertEquals($this->referencedEntity->label(), $build[0]['#plain_text'], sprintf('The markup returned by the %s formatter is correct for an item with a saved entity.', $formatter));
     $this->assertEquals($this->unsavedReferencedEntity->label(), $build[1]['#plain_text'], sprintf('The markup returned by the %s formatter is correct for an item with a unsaved entity.', $formatter));
 
-    // Test an entity type that doesn't have any link templates, which means
-    // \Drupal\Core\Entity\EntityInterface::urlInfo() will throw an exception
-    // and the label formatter will output only the label instead of a link.
+    // Test an entity type that doesn't have any link templates.
     $field_storage_config = FieldStorageConfig::loadByName($this->entityType, $this->fieldName);
     $field_storage_config->setSetting('target_type', 'entity_test_label');
     $field_storage_config->save();

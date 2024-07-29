@@ -248,8 +248,8 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    // Entity::postSave() calls Entity::invalidateTagsOnSave(), which only
-    // handles the regular cases. The Block entity has one special case: a
+    // EntityBase::postSave() calls EntityBase::invalidateTagsOnSave(), which
+    // only handles the regular cases. The Block entity has one special case: a
     // newly created block may *also* appear on any page in the current theme,
     // so we must invalidate the associated block's cache tag (which includes
     // the theme cache tag).

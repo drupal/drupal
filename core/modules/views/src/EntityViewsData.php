@@ -426,7 +426,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * @param string $field_name
    *   The name of the field to handle.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition defined in Entity::baseFieldDefinitions()
+   *   The field definition.
    * @param \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping
    *   The table mapping information
    * @param array $table_data

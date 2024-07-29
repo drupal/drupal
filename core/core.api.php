@@ -559,8 +559,8 @@
  * the ability to override any of the default behavior if needed.
  * See \Drupal\Core\Cache\CacheableDependencyInterface::getCacheTags(),
  * \Drupal\Core\Entity\EntityTypeInterface::getListCacheTags(),
- * \Drupal\Core\Entity\Entity::invalidateTagsOnSave() and
- * \Drupal\Core\Entity\Entity::invalidateTagsOnDelete().
+ * \Drupal\Core\Entity\EntityBase::invalidateTagsOnSave() and
+ * \Drupal\Core\Entity\EntityBase::invalidateTagsOnDelete().
  *
  * @section context Cache contexts
  *

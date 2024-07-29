@@ -54,7 +54,7 @@ class EntityResourcePostRouteSubscriber implements EventSubscriberInterface {
         // Create a route for the 'create' link relation type for this entity
         // type that uses the same route definition as the REST 'POST' route
         // which use that entity type.
-        // @see \Drupal\Core\Entity\Entity::toUrl()
+        // @see \Drupal\Core\Entity\EntityBase::toUrl()
         $entity_create_route_name = "entity.$entity_type_id.create";
         $route_collection->add($entity_create_route_name, $rest_post_route);
       }
