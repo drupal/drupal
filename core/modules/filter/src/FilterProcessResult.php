@@ -3,9 +3,9 @@
 namespace Drupal\filter;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\PlaceholderGenerator;
 
 /**
  * Used to return values from a text filter plugin's processing method.
@@ -133,14 +133,11 @@ class FilterProcessResult extends BubbleableMetadata {
    */
   public function createPlaceholder($callback, array $args) {
     // Generate placeholder markup.
-    // @see \Drupal\Core\Render\PlaceholderGenerator::createPlaceholder()
-    $arguments = UrlHelper::buildQuery($args);
-    $token = Crypt::hashBase64(serialize([$callback, $args]));
-    $placeholder_markup = '<drupal-filter-placeholder callback="' . Html::escape($callback) . '"';
-    if ($arguments !== '') {
-      $placeholder_markup .= ' arguments="' . Html::escape($arguments) . '"';
-    }
-    $placeholder_markup .= ' token="' . Html::escape($token) . '"></drupal-filter-placeholder>';
+    $placeholder_markup = PlaceholderGenerator::createPlaceholderTag('drupal-filter-placeholder', [
+      'callback' => $callback,
+      'arguments' => UrlHelper::buildQuery($args),
+      'token' => Crypt::hashBase64(serialize([$callback, $args])),
+    ]);
 
     // Add the placeholder attachment.
     $this->addAttachments([

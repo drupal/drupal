@@ -62,4 +62,17 @@ interface PlaceholderGeneratorInterface {
    */
   public function createPlaceholder(array $element);
 
+  /**
+   * Generates a placeholder HTML tag.
+   *
+   * @param string $tag
+   *   The placeholder tag.
+   * @param array $attributes
+   *   An array of key-value pairs to use as tag attributes.
+   *
+   * @return string
+   *   The HTML placeholder.
+   */
+  public static function createPlaceholderTag(string $tag, array $attributes): string;
+
 }
