@@ -240,10 +240,8 @@ class UserPasswordResetTest extends BrowserTestBase {
 
   /**
    * Tests password reset functionality when user has set preferred language.
-   *
-   * @dataProvider languagePrefixTestProvider
    */
-  public function testUserPasswordResetPreferredLanguage($setPreferredLangcode, $activeLangcode, $prefix, $visitingUrl, $expectedResetUrl, $unexpectedResetUrl): void {
+  public function testUserPasswordResetPreferredLanguage(): void {
     // Set two new languages.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     ConfigurableLanguage::createFromLangcode('zh-hant')->save();
@@ -255,34 +253,37 @@ class UserPasswordResetTest extends BrowserTestBase {
     $config->set('url.prefixes', ['en' => '', 'fr' => 'fr', 'zh-hant' => 'zh'])->save();
     $this->rebuildContainer();
 
-    $this->account->preferred_langcode = $setPreferredLangcode;
-    $this->account->save();
-    $this->assertSame($setPreferredLangcode, $this->account->getPreferredLangcode(FALSE));
+    foreach ($this->languagePrefixTestProvider() as $scenario) {
+      [$setPreferredLangcode, $activeLangcode, $prefix, $visitingUrl, $expectedResetUrl, $unexpectedResetUrl] = array_values($scenario);
+      $this->account->preferred_langcode = $setPreferredLangcode;
+      $this->account->save();
+      $this->assertSame($setPreferredLangcode, $this->account->getPreferredLangcode(FALSE));
 
-    // Test Default langcode is different from active langcode when visiting different.
-    if ($setPreferredLangcode !== 'en') {
-      $this->drupalGet($prefix . '/user/password');
-      $this->assertSame($activeLangcode, $this->getSession()->getResponseHeader('Content-language'));
-      $this->assertSame('en', $this->languageManager->getDefaultLanguage()->getId());
+      // Test Default langcode is different from active langcode when visiting different.
+      if ($setPreferredLangcode !== 'en') {
+        $this->drupalGet($prefix . '/user/password');
+        $this->assertSame($activeLangcode, $this->getSession()->getResponseHeader('Content-language'));
+        $this->assertSame('en', $this->languageManager->getDefaultLanguage()->getId());
+      }
+
+      // Test password reset with language prefixes.
+      $this->drupalGet($visitingUrl);
+      $edit = ['name' => $this->account->getAccountName()];
+      $this->submitForm($edit, 'Submit');
+      $this->assertValidPasswordReset($edit['name']);
+
+      $resetURL = $this->getResetURL();
+      $this->assertStringContainsString($expectedResetUrl, $resetURL);
+      $this->assertStringNotContainsString($unexpectedResetUrl, $resetURL);
     }
-
-    // Test password reset with language prefixes.
-    $this->drupalGet($visitingUrl);
-    $edit = ['name' => $this->account->getAccountName()];
-    $this->submitForm($edit, 'Submit');
-    $this->assertValidPasswordReset($edit['name']);
-
-    $resetURL = $this->getResetURL();
-    $this->assertStringContainsString($expectedResetUrl, $resetURL);
-    $this->assertStringNotContainsString($unexpectedResetUrl, $resetURL);
   }
 
   /**
-   * Data provider for testUserPasswordResetPreferredLanguage().
+   * Provides scenarios for testUserPasswordResetPreferredLanguage().
    *
    * @return array
    */
-  public static function languagePrefixTestProvider() {
+  protected function languagePrefixTestProvider() {
     return [
       'Test language prefix set as \'\', visiting default with preferred language as en' => [
         'setPreferredLangcode' => 'en',
