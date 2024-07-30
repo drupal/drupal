@@ -13,6 +13,7 @@ use Drupal\user\RoleInterface;
  * Tests the Media library entity reference widget.
  *
  * @group media_library
+ * @group #slow
  */
 class EntityReferenceWidgetTest extends MediaLibraryTestBase {
 
