@@ -6,8 +6,10 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 
@@ -296,7 +298,7 @@ function template_preprocess_system_themes_page(&$variables) {
       }
 
       // Localize the theme description.
-      $current_theme['description'] = t($theme->info['description']);
+      $current_theme['description'] = Markup::create(Xss::filterAdmin(t($theme->info['description'])));
 
       $current_theme['attributes'] = new Attribute();
       $current_theme['name'] = $theme->info['name'];
