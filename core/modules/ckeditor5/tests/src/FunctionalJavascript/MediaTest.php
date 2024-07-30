@@ -28,9 +28,21 @@ use Symfony\Component\Validator\ConstraintViolation;
 class MediaTest extends MediaTestBase {
 
   /**
+   * Tests the drupal-media tag.
+   */
+  public function testDrupalMedia(): void {
+    $this->testConversion();
+    $this->testOnlyDrupalMediaTagProcessed();
+    $this->testEditableCaption();
+    $this->testAlignment();
+    $this->testAlt();
+    $this->testMediaSplitList();
+  }
+
+  /**
    * Tests that `<drupal-media>` is converted into a block element.
    */
-  public function testConversion(): void {
+  protected function testConversion(): void {
     // Wrap the `<drupal-media>` markup in a `<p>`.
     $original_value = $this->host->body->value;
     $this->host->body->value = '<p>foo' . $original_value . '</p>';
@@ -50,7 +62,7 @@ class MediaTest extends MediaTestBase {
    *
    * @see \Drupal\Tests\media\Kernel\MediaEmbedFilterTest::testOnlyDrupalMediaTagProcessed()
    */
-  public function testOnlyDrupalMediaTagProcessed(): void {
+  protected function testOnlyDrupalMediaTagProcessed(): void {
     $original_value = $this->host->body->value;
     $this->host->body->value = str_replace('drupal-media', 'p', $original_value);
     $this->host->save();
@@ -75,7 +87,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests adding media to a list does not split the list.
    */
-  public function testMediaSplitList(): void {
+  protected function testMediaSplitList(): void {
     $assert_session = $this->assertSession();
 
     $editor = Editor::load('test_format');
@@ -193,7 +205,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests caption editing in the CKEditor widget.
    */
-  public function testEditableCaption(): void {
+  protected function testEditableCaption(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     // Test that setting caption to blank string doesn't break 'Edit media'
@@ -362,7 +374,7 @@ class MediaTest extends MediaTestBase {
   /**
    * Tests the CKEditor 5 media plugin can override image media's alt attribute.
    */
-  public function testAlt(): void {
+  protected function testAlt(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->drupalGet($this->host->toUrl('edit-form'));
@@ -569,7 +581,7 @@ class MediaTest extends MediaTestBase {
    * the media style toolbar allows altering the alignment and that the changes
    * are reflected on the widget and downcast drupal-media tag.
    */
-  public function testAlignment(): void {
+  protected function testAlignment(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet($this->host->toUrl('edit-form'));

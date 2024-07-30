@@ -13,6 +13,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * BigPipe regression tests.
  *
  * @group big_pipe
+ * @group #slow
  */
 class BigPipeRegressionTest extends WebDriverTestBase {
 
