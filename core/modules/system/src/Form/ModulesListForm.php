@@ -17,10 +17,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Provides module installation interface.
@@ -207,7 +209,7 @@ class ModulesListForm extends FormBase {
     foreach (Element::children($form['modules']) as $package) {
       $form['modules'][$package] += [
         '#type' => 'details',
-        '#title' => $this->t($package),
+        '#title' => Markup::create(Xss::filterAdmin($this->t($package))),
         '#open' => TRUE,
         '#theme' => 'system_modules_details',
         '#attributes' => ['class' => ['package-listing']],
@@ -272,7 +274,7 @@ class ModulesListForm extends FormBase {
           ])
         )->toString();
     }
-    $row['description']['#markup'] = $this->t($module->info['description']);
+    $row['description']['#markup'] = (string) $this->t($module->info['description']);
     $row['version']['#markup'] = $module->info['version'];
 
     // Generate link for module's help page. Assume that if a hook_help()

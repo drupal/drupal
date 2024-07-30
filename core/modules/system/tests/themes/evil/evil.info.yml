@@ -1,0 +1,5 @@
+name: <script>alert('Evil theme name');</script>
+type: theme
+description: <script>alert('Evil theme desc');</script>
+version: VERSION
+base theme: false
