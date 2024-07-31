@@ -103,7 +103,9 @@ checkboxify
 checkboxradio
 chocolatiers
 chromedriver
+chtext
 chumillas
+chvotes
 cidhash
 cids
 circlesmall
@@ -380,7 +382,6 @@ mulrevpub
 multibuys
 multibyte
 multicardinality
-multipass
 multisite
 multistep
 multivalue
@@ -719,10 +720,12 @@ urandom
 userinfo
 userref
 vampirize
+varchar
 versionable
 versionless
 vfsstream
 viewports
+vocabs
 wcag
 webassert
 webcal
