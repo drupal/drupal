@@ -6,6 +6,8 @@ includes:
 
 parameters:
 
+  tmpDir: phpstan-tmp
+
   level: 1
 
   fileExtensions:
@@ -26,6 +28,8 @@ parameters:
     - ../*/node_modules/*
     - */tests/fixtures/*.php
     - */tests/fixtures/*.php.gz
+    # Skip the phpstan tmpDir
+    - phpstan-tmp/*
     # Skip Drupal's own PHPStan rules test fixtures.
     - tests/PHPStan/fixtures/*
     # Skip Drupal 6 & 7 code.
