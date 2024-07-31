@@ -287,6 +287,7 @@
           `${width}px`;
 
         $container.attr(`data-offset-${Drupal.offCanvas.getEdge()}`, width);
+        $container.attr('data-offset-top', 0);
         displace();
       }
 
@@ -294,6 +295,7 @@
       if (position === 'top') {
         mainCanvasWrapper.style.paddingTop = `${height}px`;
         $container.attr('data-offset-top', height);
+        $container.attr(`data-offset-${Drupal.offCanvas.getEdge()}`, 0);
         displace();
       }
     },
