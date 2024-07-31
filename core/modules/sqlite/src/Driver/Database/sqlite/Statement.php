@@ -73,7 +73,7 @@ class Statement extends StatementPrefetchIterator implements StatementInterface 
             // When replacing the placeholders, make sure we search for the
             // exact placeholder. For example, if searching for
             // ':db_placeholder_1', do not replace ':db_placeholder_11'.
-            $query = preg_replace('/' . preg_quote($placeholder) . '\b/', $value, $query);
+            $query = preg_replace('/' . preg_quote($placeholder, NULL) . '\b/', $value, $query);
           }
         }
       }

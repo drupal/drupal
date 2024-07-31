@@ -34,7 +34,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Function install_download_translation\\(\\) should return string but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/includes/install.core.inc',
 ];
 $ignoreErrors[] = [
@@ -697,7 +697,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\block_content\\\\BlockContentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/block_content/src/BlockContentForm.php',
 ];
 $ignoreErrors[] = [
@@ -787,7 +787,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\contact\\\\MessageForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/contact/src/MessageForm.php',
 ];
 $ignoreErrors[] = [
@@ -955,7 +955,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\file\\\\Plugin\\\\Field\\\\FieldType\\\\FileFieldItemList\\:\\:postSave\\(\\) should return bool but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/file/src/Plugin/Field/FieldType/FileFieldItemList.php',
 ];
 $ignoreErrors[] = [
@@ -1153,7 +1153,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\locale\\\\LocaleDefaultConfigStorage\\:\\:read\\(\\) should return array but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/locale/src/LocaleDefaultConfigStorage.php',
 ];
 $ignoreErrors[] = [
@@ -1455,13 +1455,13 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\node\\\\ConfigTranslation\\\\NodeTypeMapper\\:\\:setEntity\\(\\) should return bool but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/node/src/ConfigTranslation/NodeTypeMapper.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\node\\\\NodeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/node/src/NodeForm.php',
 ];
 $ignoreErrors[] = [
@@ -1545,7 +1545,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:postSave\\(\\) should return bool but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 3,
 	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathItem.php',
 ];
 $ignoreErrors[] = [
@@ -1569,7 +1569,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/responsive_image/src/ResponsiveImageStyleForm.php',
 ];
 $ignoreErrors[] = [
@@ -1800,7 +1800,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\taxonomy\\\\TermForm\\:\\:validateForm\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/taxonomy/src/TermForm.php',
 ];
 $ignoreErrors[] = [
@@ -1860,7 +1860,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\user\\\\RegisterForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 4,
 	'path' => __DIR__ . '/modules/user/src/RegisterForm.php',
 ];
 $ignoreErrors[] = [
@@ -2256,7 +2256,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewUI\\:\\:set\\(\\) should return \\$this\\(Drupal\\\\views_ui\\\\ViewUI\\) but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/views_ui/src/ViewUI.php',
 ];
 $ignoreErrors[] = [
@@ -2310,7 +2310,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\workspaces\\\\Form\\\\WorkspaceForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/workspaces/src/Form/WorkspaceForm.php',
 ];
 $ignoreErrors[] = [
