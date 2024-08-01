@@ -6,7 +6,7 @@
          beStrictAboutChangesToGlobalState="true"
          failOnWarning="true"
          cacheResult="false"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd">
   <php>
     <!-- Set error reporting to E_ALL. -->
     <ini name="error_reporting" value="32767"/>
@@ -19,9 +19,9 @@
     </testsuite>
   </testsuites>
   <!-- Settings for coverage reports. -->
-  <coverage>
+  <source>
     <include>
       <directory>Rules</directory>
     </include>
-  </coverage>
+  </source>
 </phpunit>

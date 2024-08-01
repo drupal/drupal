@@ -1,4 +1,4 @@
-# cspell:ignore cobertura drupaltestbot drupaltestbotpw
+# cspell:ignore cobertura drupaltestbot drupaltestbotpw testdox
 
 stages:
   - 🗜️ Test
@@ -191,7 +191,7 @@ variables:
     - docker-php-ext-enable pcov
     - cd core/tests/PHPStan
     - composer install
-    - vendor/bin/phpunit tests --coverage-text --colors=never --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
+    - vendor/bin/phpunit tests --testdox --coverage-text --colors=never --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
   # Default job settings runs a script that junit files in a specific location..
   after_script: []
   artifacts:
