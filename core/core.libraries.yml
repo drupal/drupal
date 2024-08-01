@@ -743,10 +743,10 @@ drupal.vertical-tabs:
 
 internal.floating-ui:
   remote: https://github.com/floating-ui/floating-ui
-  version: "1.1.1"
+  version: "1.6.8"
   license:
     name: MIT
-    url: https://github.com/floating-ui/floating-ui/blob/master/LICENSE
+    url: https://github.com/floating-ui/floating-ui/blob/@floating-ui/dom@1.6.8/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/floating-ui/floating-ui.core.umd.min.js: { minified: true }
@@ -843,10 +843,10 @@ internal.underscore:
   #  - https://www.drupal.org/project/drupal/issues/3204011
   #  - https://www.drupal.org/project/drupal/issues/3204015
   remote: https://github.com/jashkenas/underscore
-  version: "1.13.6"
+  version: "1.13.7"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.6/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.7/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }

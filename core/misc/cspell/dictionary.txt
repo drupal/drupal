@@ -79,7 +79,6 @@ bundleless
 bundlenode
 buttonpane
 buttonset
-buttontext
 buytaert
 bytea
 cachetag
@@ -171,7 +170,6 @@ dflt
 dialogsave
 diffchange
 differring
-divs
 dnumber
 dockerhub
 docroot
@@ -380,7 +378,6 @@ mulrevpub
 multibuys
 multibyte
 multicardinality
-multipass
 multisite
 multistep
 multivalue
@@ -640,7 +637,6 @@ tablesort's
 tablesorts
 tabset
 tabwidth
-tappable
 taskless
 tcomment
 testbot
@@ -713,7 +709,6 @@ untabbable
 upcasted
 upcasting
 updateprogress
-uploaders
 uploadprogress
 upscaling
 urandom
