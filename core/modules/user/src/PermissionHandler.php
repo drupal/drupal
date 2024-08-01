@@ -90,7 +90,7 @@ class PermissionHandler implements PermissionHandlerInterface {
    */
   public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface|CallableResolver $callable_resolver, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
     if ($callable_resolver instanceof ControllerResolverInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3397954', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3397954', E_USER_DEPRECATED);
       $callable_resolver = \Drupal::service('callable_resolver');
     }
     $this->callableResolver = $callable_resolver;
