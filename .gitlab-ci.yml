@@ -107,13 +107,13 @@ default:
   # job from the target branch. Allow the job to proceed and pass if the file
   # doesn't exist.
   - mkdir core/phpstan-tmp
-  - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming&job_token=$CI_JOB_TOKEN" || true'
+  - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming" || true'
 
 .cspell-cache: &cspell-cache
   # Fetch the cspell cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming&job_token=$CI_JOB_TOKEN" || true'
+  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
 
 .core-spellcheck: &core-spellcheck
   - cd core
