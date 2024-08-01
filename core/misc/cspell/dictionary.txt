@@ -79,7 +79,6 @@ bundleless
 bundlenode
 buttonpane
 buttonset
-buttontext
 buytaert
 bytea
 cachetag
@@ -173,7 +172,6 @@ dflt
 dialogsave
 diffchange
 differring
-divs
 dnumber
 dockerhub
 docroot
@@ -640,7 +638,6 @@ tablesort's
 tablesorts
 tabset
 tabwidth
-tappable
 taskless
 tcomment
 testbot
