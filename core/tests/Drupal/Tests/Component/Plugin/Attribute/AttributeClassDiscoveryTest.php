@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Plugin\Attribute;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
 use PHPUnit\Framework\TestCase;
@@ -22,6 +23,7 @@ class AttributeClassDiscoveryTest extends TestCase {
    */
   protected function setUp(): void {
     parent::setUp();
+
     // Ensure the file cache is disabled.
     FileCacheFactory::setConfiguration([FileCacheFactory::DISABLE_CACHE => TRUE]);
     // Ensure that FileCacheFactory has a prefix.
@@ -29,7 +31,10 @@ class AttributeClassDiscoveryTest extends TestCase {
 
     // Normally the attribute classes would be autoloaded.
     include_once __DIR__ . '/Fixtures/CustomPlugin.php';
-    include_once __DIR__ . '/Fixtures/Plugins/PluginNamespace/AttributeDiscoveryTest1.php';
+
+    $additionalClassLoader = new ClassLoader();
+    $additionalClassLoader->addPsr4("com\\example\\PluginNamespace\\", __DIR__ . "/Fixtures/Plugins/PluginNamespace");
+    $additionalClassLoader->register(TRUE);
   }
 
   /**
