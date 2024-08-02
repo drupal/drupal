@@ -3,7 +3,7 @@
     "description": "Tests Drupal core's PHPStan rules",
     "require-dev": {
         "phpunit/phpunit": "^10",
-        "phpstan/phpstan": "1.11.7"
+        "phpstan/phpstan": "1.11.9"
     },
     "license": "GPL-2.0-or-later",
     "autoload": {
