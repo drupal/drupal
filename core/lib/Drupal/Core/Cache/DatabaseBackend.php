@@ -498,8 +498,11 @@ class DatabaseBackend implements CacheBackendInterface {
    */
   protected function normalizeCid($cid) {
     // Nothing to do if the ID is a US ASCII string of 255 characters or less.
+    // Additionally check for trailing spaces in the cache ID because MySQL
+    // may or may not take these into account when making comparisons.
+    // @see https://dev.mysql.com/doc/refman/9.0/en/char.html
     $cid_is_ascii = mb_check_encoding($cid, 'ASCII');
-    if (strlen($cid) <= 255 && $cid_is_ascii) {
+    if (strlen($cid) <= 255 && $cid_is_ascii && !str_ends_with($cid, ' ')) {
       return $cid;
     }
     // Return a string that uses as much as possible of the original cache ID
