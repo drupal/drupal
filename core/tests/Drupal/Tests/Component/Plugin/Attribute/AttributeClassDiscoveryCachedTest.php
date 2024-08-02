@@ -29,10 +29,10 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
     FileCacheFactory::setPrefix('prefix');
 
     // Normally the attribute classes would be autoloaded.
-    include_once __DIR__ . '/Fixtures/CustomPlugin.php';
+    include_once __DIR__ . '/../../../../../fixtures/plugins/CustomPlugin.php';
 
     $additionalClassLoader = new ClassLoader();
-    $additionalClassLoader->addPsr4("com\\example\\PluginNamespace\\", __DIR__ . "/Fixtures/Plugins/PluginNamespace");
+    $additionalClassLoader->addPsr4("com\\example\\PluginNamespace\\", __DIR__ . "/../../../../../fixtures/plugins/Plugin/PluginNamespace");
     $additionalClassLoader->register(TRUE);
   }
 
@@ -43,7 +43,7 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
    */
   public function testGetDefinitions(): void {
     // Path to the classes which we'll discover and parse annotation.
-    $discovery_path = __DIR__ . '/Fixtures/Plugins';
+    $discovery_path = __DIR__ . "/../../../../../fixtures/plugins/Plugin";
     // File path that should be discovered within that directory.
     $file_path = $discovery_path . '/PluginNamespace/AttributeDiscoveryTest1.php';
     // Define a file path within the directory that should not be discovered.
