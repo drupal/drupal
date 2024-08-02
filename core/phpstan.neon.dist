@@ -41,7 +41,6 @@ parameters:
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/custom_annotation/UsingNonInstalledTraitClass.php
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/custom_annotation/ExtendingNonInstalledClass.php
-    - tests/Drupal/Tests/Component/Plugin/Attribute/Fixtures/Plugins/PluginNamespace/AttributeDiscoveryTest2.php
 
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
