@@ -226,7 +226,7 @@ class ComponentGenerator {
       ],
       // Always reconcile PHP version.
       'require' => [
-        'php' => '>=7.3.0',
+        'php' => '>=' . \Drupal::MINIMUM_PHP,
       ],
     ];
   }
