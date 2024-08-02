@@ -8,8 +8,6 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
 use PHPUnit\Framework\TestCase;
-use com\example\PluginNamespace\CustomPlugin;
-use com\example\PluginNamespace\CustomPlugin2;
 
 /**
  * @coversDefaultClass \Drupal\Component\Plugin\Discovery\AttributeClassDiscovery
@@ -30,10 +28,10 @@ class AttributeClassDiscoveryTest extends TestCase {
     FileCacheFactory::setPrefix('prefix');
 
     // Normally the attribute classes would be autoloaded.
-    include_once __DIR__ . '/Fixtures/CustomPlugin.php';
+    include_once __DIR__ . '/../../../../../fixtures/plugins/CustomPlugin.php';
 
     $additionalClassLoader = new ClassLoader();
-    $additionalClassLoader->addPsr4("com\\example\\PluginNamespace\\", __DIR__ . "/Fixtures/Plugins/PluginNamespace");
+    $additionalClassLoader->addPsr4("com\\example\\PluginNamespace\\", __DIR__ . "/../../../../../fixtures/plugins/Plugin/PluginNamespace");
     $additionalClassLoader->register(TRUE);
   }
 
@@ -57,7 +55,7 @@ class AttributeClassDiscoveryTest extends TestCase {
    * @covers ::prepareAttributeDefinition
    */
   public function testGetDefinitions(): void {
-    $discovery = new AttributeClassDiscovery(['com\example' => [__DIR__ . '/Fixtures/Plugins']]);
+    $discovery = new AttributeClassDiscovery(['com\example' => [__DIR__ . "/../../../../../fixtures/plugins/Plugin"]]);
     $this->assertEquals([
       'discovery_test_1' => [
         'id' => 'discovery_test_1',
@@ -65,7 +63,7 @@ class AttributeClassDiscoveryTest extends TestCase {
       ],
     ], $discovery->getDefinitions());
 
-    $custom_annotation_discovery = new AttributeClassDiscovery(['com\example' => [__DIR__ . '/Fixtures/Plugins']], CustomPlugin::class);
+    $custom_annotation_discovery = new AttributeClassDiscovery(['com\example' => [__DIR__ . "/../../../../../fixtures/plugins/Plugin"]], 'com\example\PluginNamespace\CustomPlugin');
     $this->assertEquals([
       'discovery_test_1' => [
         'id' => 'discovery_test_1',
@@ -74,7 +72,7 @@ class AttributeClassDiscoveryTest extends TestCase {
       ],
     ], $custom_annotation_discovery->getDefinitions());
 
-    $empty_discovery = new AttributeClassDiscovery(['com\example' => [__DIR__ . '/Fixtures/Plugins']], CustomPlugin2::class);
+    $empty_discovery = new AttributeClassDiscovery(['com\example' => [__DIR__ . "/../../../../../fixtures/plugins/Plugin"]], 'com\example\PluginNamespace\CustomPlugin2');
     $this->assertEquals([], $empty_discovery->getDefinitions());
   }
 
