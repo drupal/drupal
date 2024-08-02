@@ -29,7 +29,6 @@ function layout_builder_removed_post_updates() {
     'layout_builder_post_update_section_storage_context_mapping' => '10.0.0',
     'layout_builder_post_update_tempstore_route_enhancer' => '10.0.0',
     'layout_builder_post_update_timestamp_formatter' => '11.0.0',
-    'layout_builder_post_update_default_expose_field_block_setting' => '11.0.0',
     'layout_builder_post_update_enable_expose_field_block_feature_flag' => '11.0.0',
   ];
 }
