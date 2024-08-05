@@ -9,7 +9,6 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
-use Drupal\user\Entity\User;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -29,14 +28,6 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
     'node_access_test_language',
     'node_access_test',
   ];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * A set of nodes to use in testing.
@@ -99,9 +90,11 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
     // Create a normal authenticated user.
     $this->webUser = $this->drupalCreateUser(['access content']);
 
-    // Load the user 1 user for later use as an admin user with permission to
-    // see everything.
-    $this->adminUser = User::load(1);
+    // Create a user as an admin user with permission bypass node access
+    // to see everything.
+    $this->adminUser = $this->drupalCreateUser([
+      'bypass node access',
+    ]);
 
     // The node_access_test_language module allows individual translations of a
     // node to be marked private (not viewable by normal users), and the
