@@ -2,35 +2,70 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests;
+namespace Drupal\Tests\Core\Test;
 
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Exception\ExpectationException;
+use Behat\Mink\Exception\ResponseTextException;
+use Behat\Mink\Session;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
-use Behat\Mink\Exception\ResponseTextException;
+use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\WebAssert;
 use PHPUnit\Framework\AssertionFailedError;
+use Symfony\Component\BrowserKit\AbstractBrowser;
+use Symfony\Component\BrowserKit\Response;
 
 /**
  * Tests WebAssert functionality.
  *
  * @group browsertestbase
- * @group #slow
  * @coversDefaultClass \Drupal\Tests\WebAssert
  */
-class WebAssertTest extends BrowserTestBase {
+class WebAssertTest extends UnitTestCase {
+
+  /**
+   * Session mock.
+   */
+  protected Session $session;
+
+  /**
+   * Client mock.
+   */
+  protected AbstractBrowser $client;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
-    'test_page_test',
-  ];
+  public function setUp(): void {
+    parent::setUp();
+    $this->client = new MockClient();
+    $driver = new BrowserKitDriver($this->client);
+    $this->session = new Session($driver);
+  }
 
   /**
-   * {@inheritdoc}
+   * Get the mocked session.
    */
-  protected $defaultTheme = 'stark';
+  protected function assertSession(): WebAssert {
+    return new WebAssert($this->session);
+  }
+
+  /**
+   * Simulate a page visit and expect a response.
+   *
+   * @param string $uri
+   *   The URI to visit. This is only required if assertions are made about the
+   *   URL, otherwise it can be left empty.
+   * @param string $content
+   *   The expected response content.
+   * @param array $responseHeaders
+   *   The expected response headers.
+   */
+  protected function visit(string $uri = '', string $content = '', array $responseHeaders = []): void {
+    $this->client->setExpectedResponse(new Response($content, 200, $responseHeaders));
+    $this->session->visit($uri);
+  }
 
   /**
    * Tests WebAssert::responseHeaderExists().
@@ -38,9 +73,8 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::responseHeaderExists
    */
   public function testResponseHeaderExists(): void {
-    $this->drupalGet('test-null-header');
+    $this->visit('', '', ['Null-Header' => '']);
     $this->assertSession()->responseHeaderExists('Null-Header');
-
     $this->expectException(AssertionFailedError::class);
     $this->expectExceptionMessage("Failed asserting that the response has a 'does-not-exist' header.");
     $this->assertSession()->responseHeaderExists('does-not-exist');
@@ -52,7 +86,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::responseHeaderDoesNotExist
    */
   public function testResponseHeaderDoesNotExist(): void {
-    $this->drupalGet('test-null-header');
+    $this->visit('', '', ['Null-Header' => '']);
     $this->assertSession()->responseHeaderDoesNotExist('does-not-exist');
 
     $this->expectException(AssertionFailedError::class);
@@ -64,10 +98,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::pageTextMatchesCount
    */
   public function testPageTextMatchesCount(): void {
-    $this->drupalLogin($this->drupalCreateUser());
-
-    // Visit a Drupal page that requires login.
-    $this->drupalGet('test-page');
+    $this->visit('', 'Test page text. <a href="#">Foo</a>');
     $this->assertSession()->pageTextMatchesCount(1, '/Test page text\./');
 
     $this->expectException(AssertionFailedError::class);
@@ -79,10 +110,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::pageTextContainsOnce
    */
   public function testPageTextContainsOnce(): void {
-    $this->drupalLogin($this->drupalCreateUser());
-
-    // Visit a Drupal page that requires login.
-    $this->drupalGet('test-page');
+    $this->visit('', 'Test page text. <a href="#">Foo</a>');
     $this->assertSession()->pageTextContainsOnce('Test page text.');
 
     $this->expectException(ResponseTextException::class);
@@ -94,7 +122,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::elementTextEquals
    */
   public function testElementTextEquals(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<h1>Test page</h1>');
     $this->assertSession()->elementTextEquals('xpath', '//h1', 'Test page');
 
     $this->expectException(AssertionFailedError::class);
@@ -106,16 +134,23 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::addressEquals
    */
   public function testAddressEquals(): void {
-    $this->drupalGet('test-page');
+    $this->visit('http://localhost/test-page');
     $this->assertSession()->addressEquals('test-page');
     $this->assertSession()->addressEquals('test-page?');
     $this->assertSession()->addressNotEquals('test-page?a=b');
     $this->assertSession()->addressNotEquals('other-page');
 
-    $this->drupalGet('test-page', ['query' => ['a' => 'b', 'c' => 'd']]);
+    $this->visit('http://localhost/test-page?a=b&c=d');
     $this->assertSession()->addressEquals('test-page');
     $this->assertSession()->addressEquals('test-page?a=b&c=d');
-    $this->assertSession()->addressEquals(Url::fromRoute('test_page_test.test_page', [], ['query' => ['a' => 'b', 'c' => 'd']]));
+    $url = $this->createMock(Url::class);
+    $url->expects($this->any())
+      ->method('setAbsolute')
+      ->willReturn($url);
+    $url->expects($this->any())
+      ->method('toString')
+      ->willReturn('test-page?a=b&c=d');
+    $this->assertSession()->addressEquals($url);
     $this->assertSession()->addressNotEquals('test-page?c=d&a=b');
     $this->assertSession()->addressNotEquals('test-page?a=b');
     $this->assertSession()->addressNotEquals('test-page?a=b&c=d&e=f');
@@ -131,7 +166,8 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::addressNotEquals
    */
   public function testAddressNotEqualsException(): void {
-    $this->drupalGet('test-page', ['query' => ['a' => 'b', 'c' => 'd']]);
+    $this->visit('http://localhost/test-page?a=b&c=d');
+
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('Current page is "/test-page?a=b&c=d", but should not be.');
     $this->assertSession()->addressNotEquals('test-page?a=b&c=d');
@@ -143,8 +179,9 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkExists
    */
   public function testPipeCharInLocator(): void {
-    $this->drupalGet('test-pipe-char');
+    $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->assertSession()->linkExists('foo|bar|baz');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -153,8 +190,9 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkExistsExact
    */
   public function testLinkExistsExact(): void {
-    $this->drupalGet('test-pipe-char');
+    $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->assertSession()->linkExistsExact('foo|bar|baz');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -163,7 +201,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkExistsExact
    */
   public function testInvalidLinkExistsExact(): void {
-    $this->drupalGet('test-pipe-char');
+    $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('Link with label foo|bar not found');
     $this->assertSession()->linkExistsExact('foo|bar');
@@ -175,8 +213,9 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkNotExistsExact
    */
   public function testLinkNotExistsExact(): void {
-    $this->drupalGet('test-pipe-char');
+    $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->assertSession()->linkNotExistsExact('foo|bar');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -185,10 +224,11 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkNotExistsExact
    */
   public function testInvalidLinkNotExistsExact(): void {
-    $this->drupalGet('test-pipe-char');
+    $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('Link with label foo|bar|baz found');
     $this->assertSession()->linkNotExistsExact('foo|bar|baz');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -197,11 +237,12 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkByHrefExists
    */
   public function testLinkByHrefExists(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     // Partial matching.
     $this->assertSession()->linkByHrefExists('/user');
     // Full matching.
     $this->assertSession()->linkByHrefExists('/user/login');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -210,9 +251,10 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkByHrefExists
    */
   public function testInvalidLinkByHrefExists(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->expectException(ExpectationException::class);
     $this->assertSession()->linkByHrefExists('/foo');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -221,8 +263,9 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkByHrefNotExists
    */
   public function testLinkByHrefNotExists(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->assertSession()->linkByHrefNotExists('/foo');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -231,9 +274,10 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkByHrefNotExists
    */
   public function testInvalidLinkByHrefNotExistsPartial(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->expectException(ExpectationException::class);
     $this->assertSession()->linkByHrefNotExists('/user');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -242,7 +286,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkByHrefNotExists
    */
   public function testInvalidLinkByHrefNotExistsFull(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->expectException(ExpectationException::class);
     $this->assertSession()->linkByHrefNotExists('/user/login');
   }
@@ -253,8 +297,9 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkByHrefExistsExact
    */
   public function testLinkByHrefExistsExact(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->assertSession()->linkByHrefExistsExact('/user/login');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -263,7 +308,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkByHrefExistsExact
    */
   public function testInvalidLinkByHrefExistsExact(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->expectException(ExpectationException::class);
     $this->assertSession()->linkByHrefExistsExact('/foo');
   }
@@ -274,8 +319,9 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkByHrefNotExistsExact
    */
   public function testLinkByHrefNotExistsExact(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->assertSession()->linkByHrefNotExistsExact('/foo');
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -284,7 +330,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::linkByHrefNotExistsExact
    */
   public function testInvalidLinkByHrefNotExistsExact(): void {
-    $this->drupalGet('test-page');
+    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->expectException(ExpectationException::class);
     $this->assertSession()->linkByHrefNotExistsExact('/user/login');
   }
@@ -296,11 +342,12 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::responseNotContains
    */
   public function testTextAsserts(): void {
-    $this->drupalGet('test-encoded');
+    $this->visit('', 'Bad html &lt;script&gt;alert(123);&lt;/script&gt;');
     $dangerous = 'Bad html <script>alert(123);</script>';
     $sanitized = Html::escape($dangerous);
     $this->assertSession()->responseNotContains($dangerous);
     $this->assertSession()->responseContains($sanitized);
+    $this->addToAssertionCount(2);
   }
 
   /**
@@ -310,7 +357,11 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::buttonNotExists
    */
   public function testFieldAssertsForButton(): void {
-    $this->drupalGet('test-field-xpath');
+    $this->visit('', <<<HTML
+      <input type="submit" id="edit-save" value="Save" name="op">
+      <input type="submit" id="duplicate_button" value="Duplicate button 1" name="duplicate_button">
+      <input type="submit" id="duplicate_button" value="Duplicate button 2" name="duplicate_button">
+HTML);
 
     // Verify if the test passes with button ID.
     $this->assertSession()->buttonExists('edit-save');
@@ -339,6 +390,7 @@ class WebAssertTest extends BrowserTestBase {
     catch (ExpectationException $e) {
       // Expected exception; just continue testing.
     }
+    $this->addToAssertionCount(11);
   }
 
   /**
@@ -347,11 +399,17 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::pageContainsNoDuplicateId
    */
   public function testPageContainsNoDuplicateId(): void {
+    $this->visit('', <<<HTML
+      <h1 id="page-element-title">Hello</h1>
+      <h2 id="page-element-description">World</h2>
+HTML);
     $assert_session = $this->assertSession();
-    $this->drupalGet(Url::fromRoute('test_page_test.page_without_duplicate_ids'));
     $assert_session->pageContainsNoDuplicateId();
 
-    $this->drupalGet(Url::fromRoute('test_page_test.page_with_duplicate_ids'));
+    $this->visit('', <<<HTML
+      <h1 id="page-element">Hello</h1>
+      <h2 id="page-element">World</h2>
+HTML);
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('The page contains a duplicate HTML ID "page-element".');
     $assert_session->pageContainsNoDuplicateId();
@@ -366,21 +424,40 @@ class WebAssertTest extends BrowserTestBase {
   public function testEscapingAssertions(): void {
     $assert = $this->assertSession();
 
-    $this->drupalGet('test-escaped-characters');
+    $this->visit('', '<div class="escaped">Escaped: &lt;&quot;&#039;&amp;&gt;</div>');
     $assert->assertNoEscaped('<div class="escaped">');
     $assert->responseContains('<div class="escaped">');
     $assert->assertEscaped('Escaped: <"\'&>');
 
-    $this->drupalGet('test-escaped-script');
+    $this->visit('', '<div class="escaped">&lt;script&gt;alert(&#039;XSS&#039;);alert(&quot;XSS&quot;);&lt;/script&gt;</div>');
     $assert->assertNoEscaped('<div class="escaped">');
     $assert->responseContains('<div class="escaped">');
     $assert->assertEscaped("<script>alert('XSS');alert(\"XSS\");</script>");
 
-    $this->drupalGet('test-unescaped-script');
+    $this->visit('', <<<HTML
+        <div class="unescaped"><script>alert('Marked safe');alert("Marked safe");</script></div>
+HTML);
+    $this->session->visit('');
     $assert->assertNoEscaped('<div class="unescaped">');
     $assert->responseContains('<div class="unescaped">');
     $assert->responseContains("<script>alert('Marked safe');alert(\"Marked safe\");</script>");
     $assert->assertNoEscaped("<script>alert('Marked safe');alert(\"Marked safe\");</script>");
+    $this->addToAssertionCount(10);
+  }
+
+}
+
+/**
+ * A mock client.
+ */
+class MockClient extends AbstractBrowser {
+
+  public function setExpectedResponse(Response $response) {
+    $this->response = $response;
+  }
+
+  protected function doRequest(object $request) {
+    return $this->response ?? new Response();
   }
 
 }
