@@ -8,7 +8,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
-use Drupal\user\Entity\User;
 
 /**
  * Tests multilingual node access with a module that is not language-aware.
@@ -21,14 +20,6 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
    * {@inheritdoc}
    */
   protected static $modules = ['language', 'node_access_test'];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -193,9 +184,11 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     // Create a normal authenticated user.
     $web_user = $this->drupalCreateUser(['access content']);
 
-    // Load the user 1 user for later use as an admin user with permission to
-    // see everything.
-    $admin_user = User::load(1);
+    // Create a user as an admin user with permission bypass node access
+    // to see everything.
+    $admin_user = $this->drupalCreateUser([
+      'bypass node access',
+    ]);
 
     // Creating a private node with langcode Hungarian, will be saved as
     // the fallback in node access table.
