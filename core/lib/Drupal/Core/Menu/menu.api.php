@@ -92,7 +92,9 @@
  *   matches the base route, that will be the default/first tab shown.
  *
  * Local tasks from other modules can be altered using
- * hook_menu_local_tasks_alter().
+ * hook_local_tasks_alter().
+ * Additionally, hook_menu_local_tasks_alter() can be used to dynamically alter
+ * local tasks before they are rendered.
  *
  * @todo Derivatives are in flux for these; when they are more stable, add
  *   documentation here.
