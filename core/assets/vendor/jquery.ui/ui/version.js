@@ -15,6 +15,6 @@
 
 $.ui = $.ui || {};
 
-return $.ui.version = "1.14.0-beta.2";
+return $.ui.version = "1.14.0";
 
 } );

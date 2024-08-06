@@ -2362,7 +2362,7 @@ __metadata:
     eslint-plugin-yml: "npm:^1.14.0"
     glob: "npm:11.0.0"
     jquery: "npm:^4.0.0-beta.2"
-    jquery-ui: "npm:^1.14.0-beta.2"
+    jquery-ui: "npm:^1.14.0"
     js-cookie: "npm:^3.0.5"
     jsdom: "npm:^24.1.1"
     loadjs: "npm:^4.3.0"
@@ -5533,12 +5533,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery-ui@npm:^1.14.0-beta.2":
-  version: 1.14.0-beta.2
-  resolution: "jquery-ui@npm:1.14.0-beta.2"
+"jquery-ui@npm:^1.14.0":
+  version: 1.14.0
+  resolution: "jquery-ui@npm:1.14.0"
   dependencies:
     jquery: "npm:>=1.12.0 <5.0.0"
-  checksum: 10c0/b52ffdb188707fcfde4cc88f7c642be4d8bb080bc5851292c86b9fe71508504f54ef012b1479264d55d7e46129967da0d800ef0046a66f0062e97a0cf0d16382
+  checksum: 10c0/7139e5273ddf3cb572b32a73dad66a5f4acd1a62dce8f74cdc096643c0ce08fb0ef1a7c8cada8fbb5c27580486351abc8ba9c33f121416f22004a8cd2c456035
   languageName: node
   linkType: hard
 
