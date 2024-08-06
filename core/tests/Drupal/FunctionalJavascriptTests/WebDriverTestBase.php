@@ -12,6 +12,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Runs a browser test using a driver that supports JavaScript.
  *
+ * Module tests extending WebDriverTestBase must exist in the
+ * Drupal\Tests\your_module\FunctionalJavascript namespace and live in the
+ * modules/your_module/tests/src/FunctionalJavascript directory.
+ *
  * Base class for testing browser interaction implemented in JavaScript.
  *
  * @ingroup testing

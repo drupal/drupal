@@ -43,6 +43,10 @@ use Symfony\Component\VarDumper\VarDumper;
 /**
  * Base class for functional integration tests.
  *
+ * Module tests extending KernelTestBase must exist in the
+ * Drupal\Tests\your_module\Kernel namespace and live in the
+ * modules/your_module/tests/src/Kernel directory.
+ *
  * This base class should be useful for testing some types of integrations which
  * don't require the overhead of a fully-installed Drupal instance, but which
  * have many dependencies on parts of Drupal which can't or shouldn't be mocked.

@@ -30,7 +30,7 @@ use Symfony\Component\VarDumper\VarDumper;
 /**
  * Provides a test case for functional Drupal tests.
  *
- * Tests extending BrowserTestBase must exist in the
+ * Module tests extending BrowserTestBase must exist in the
  * Drupal\Tests\your_module\Functional namespace and live in the
  * modules/your_module/tests/src/Functional directory.
  *
