@@ -92,7 +92,9 @@ variables:
   variables:
     JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
-    SE_NODE_MAX_SESSIONS: "5"
+    SE_NODE_MAX_SESSIONS: "16"
+    SE_SESSION_RETRY_INTERVAL: "1"
+    SE_SESSION_REQUEST_TIMEOUT: "10"
     SE_START_XVFB: "false"
     SE_START_VNC: "false"
 
@@ -136,10 +138,10 @@ variables:
 
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 4
+  parallel: 2
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 15
+    CONCURRENCY: 8
     KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database

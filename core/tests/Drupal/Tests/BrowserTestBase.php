@@ -431,6 +431,11 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
+    // Close any mink sessions as early as possible to free a new browser
+    // session up for the next test method or test.
+    if ($this->mink) {
+      $this->mink->stopSessions();
+    }
     parent::tearDown();
 
     if ($this->container) {
@@ -449,10 +454,6 @@ abstract class BrowserTestBase extends TestCase {
 
     // Ensure that internal logged in variable is reset.
     $this->loggedInUser = FALSE;
-
-    if ($this->mink) {
-      $this->mink->stopSessions();
-    }
 
     // Restore original shutdown callbacks.
     if (function_exists('drupal_register_shutdown_function')) {
