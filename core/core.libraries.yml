@@ -425,16 +425,12 @@ internal.jquery_ui:
     assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/jquery-patch-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
   css:

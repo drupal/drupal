@@ -1,1 +1,0 @@
-{"version":3,"file":"form-min.js","names":["factory","define","amd","jQuery","$","fn","_form","this","form","closest"],"sources":["form.js"],"mappings":"CAAA,SAAYA,GACX,aAEuB,mBAAXC,QAAyBA,OAAOC,IAG3CD,OAAQ,CAAE,SAAU,aAAeD,GAInCA,EAASG,OAET,CAZF,EAYK,SAAUC,GACf,aAKA,OAAOA,EAAEC,GAAGC,MAAQ,WACnB,MAAiC,iBAAnBC,KAAM,GAAIC,KAAoBD,KAAKE,QAAS,QAAWL,EAAGG,KAAM,GAAIC,KACnF,CAEA"}

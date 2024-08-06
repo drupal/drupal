@@ -1,1 +1,0 @@
-{"version":3,"file":"ie-min.js","names":["factory","define","amd","jQuery","$","ui","ie","exec","navigator","userAgent","toLowerCase"],"sources":["ie.js"],"mappings":"CAAA,SAAYA,GACX,aAEuB,mBAAXC,QAAyBA,OAAOC,IAG3CD,OAAQ,CAAE,SAAU,aAAeD,GAInCA,EAASG,OAET,CAZF,EAYK,SAAUC,GACf,aAGA,OAAOA,EAAEC,GAAGC,KAAO,cAAcC,KAAMC,UAAUC,UAAUC,cAC3D"}
