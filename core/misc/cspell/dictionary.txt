@@ -208,6 +208,7 @@ endtrans
 enoki
 entityviewedit
 errmode
+eslintcache
 etag
 eurozone
 evenodd
@@ -568,6 +569,7 @@ strs
 sttid
 styleguide
 stylelint
+stylelintcache
 stylescombo
 subarrays
 subchild
