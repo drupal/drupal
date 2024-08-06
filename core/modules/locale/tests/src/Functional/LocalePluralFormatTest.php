@@ -9,7 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore heure heures jours lundi ponedjeljak
+// cspell:ignore nmsgid nmsgstr heure heures jours lundi ponedjeljak
 
 /**
  * Tests plural handling for various languages.

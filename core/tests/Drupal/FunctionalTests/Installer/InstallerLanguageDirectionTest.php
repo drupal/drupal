@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
+// cspell:ignore nmsgid nmsgstr
+
 /**
  * Verifies that the early installer uses the correct language direction.
  *

@@ -6,6 +6,8 @@ namespace Drupal\Tests\config\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore loquesea
+
 /**
  * Tests language-negotiation overrides are not on language-negotiation form.
  *

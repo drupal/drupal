@@ -186,7 +186,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
     $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSection(0)->getLayoutSettings());
 
     $new_section_storage = clone $this->sectionList;
-    $new_section_storage->getSection(0)->setLayoutSettings(['asdf' => 'qwer']);
+    $new_section_storage->getSection(0)->setLayoutSettings(['asdf' => 'foo']);
     $this->assertSame(['setting_1' => 'Default'], $this->sectionList->getSection(0)->getLayoutSettings());
   }
 

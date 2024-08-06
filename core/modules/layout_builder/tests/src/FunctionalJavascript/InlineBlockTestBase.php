@@ -8,6 +8,8 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
+// cspell:ignore blockbasic
+
 /**
  * Base class for testing inline blocks.
  */

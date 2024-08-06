@@ -339,7 +339,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       ],
     ];
 
-    $unsafe_method_bodyless_test_cases = [
+    $unsafe_method_no_body_test_cases = [
       'unsafe methods without request bodies (DELETE): client requested no format, response should have the first acceptable format' => [
         ['DELETE'],
         ['xml', 'json'],
@@ -375,7 +375,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       ],
     ];
 
-    return $safe_method_test_cases + $unsafe_method_bodied_test_cases + $unsafe_method_bodyless_test_cases;
+    return $safe_method_test_cases + $unsafe_method_bodied_test_cases + $unsafe_method_no_body_test_cases;
   }
 
   /**

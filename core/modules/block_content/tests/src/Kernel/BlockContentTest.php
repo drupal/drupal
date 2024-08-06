@@ -43,8 +43,8 @@ class BlockContentTest extends KernelTestBase {
     // Create a block content type.
     BlockContentType::create([
       'id' => 'spiffy',
-      'label' => 'Mucho spiffy',
-      'description' => "Provides a block type that increases your site's spiffiness by up to 11%",
+      'label' => 'Very spiffy',
+      'description' => "Provides a block type that increases your site's spiffy rating by up to 11%",
     ])->save();
     // And a block content entity.
     $block_content = BlockContent::create([

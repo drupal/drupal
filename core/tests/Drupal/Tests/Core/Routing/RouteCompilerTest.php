@@ -43,7 +43,7 @@ class RouteCompilerTest extends UnitTestCase {
     return [
       ['test', 1],
       ['/estWithLeadingSlash', 1],
-      ['testWithTrailingslash/', 1],
+      ['testWithTrailingSlash/', 1],
       ['/testWithSlashes/', 1],
       ['test/with/multiple/parts', 15],
       ['test/with/{some}/slugs', 13],

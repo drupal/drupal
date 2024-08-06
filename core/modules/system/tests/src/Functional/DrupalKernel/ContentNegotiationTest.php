@@ -6,7 +6,7 @@ namespace Drupal\Tests\system\Functional\DrupalKernel;
 
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore msword
+// cspell:ignore msword silverlight
 
 /**
  * Tests content negotiation.

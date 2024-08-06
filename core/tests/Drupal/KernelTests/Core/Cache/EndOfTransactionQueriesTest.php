@@ -15,6 +15,8 @@ use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\Reference;
 use Drupal\Component\Serialization\PhpSerialize;
 
+// cspell:ignore pretransaction
+
 /**
  * Tests delaying of cache tag invalidation queries to the end of transactions.
  *

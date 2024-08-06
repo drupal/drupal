@@ -149,7 +149,7 @@ class EntityLinkTest extends UnitTestCase {
       'link text',
       'link text',
       'edit-form',
-      ['foo' => 'qwer'],
+      ['foo' => 'bar'],
     ];
     return $data;
   }

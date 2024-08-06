@@ -30,6 +30,8 @@ use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore exitcode wwwrun
+
 // Define some colors for display.
 // A nice calming green.
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32;

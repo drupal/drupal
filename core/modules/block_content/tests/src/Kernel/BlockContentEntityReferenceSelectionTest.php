@@ -75,8 +75,8 @@ class BlockContentEntityReferenceSelectionTest extends KernelTestBase {
     // Create a block content type.
     $block_content_type = BlockContentType::create([
       'id' => 'spiffy',
-      'label' => 'Mucho spiffy',
-      'description' => "Provides a block type that increases your site's spiffiness by up to 11%",
+      'label' => 'Very spiffy',
+      'description' => "Provides a block type that increases your site's spiffy rating by up to 11%",
     ]);
     $block_content_type->save();
     $this->entityTypeManager = $this->container->get('entity_type.manager');

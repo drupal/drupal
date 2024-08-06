@@ -50,7 +50,7 @@ a particular group:
 ```
 ./vendor/bin/phpunit -c /path/to/your/phpunit.xml path/to/your/class/file.php
 ./vendor/bin/phpunit --list-groups
-./vendor/bin/phpunit -c /path/to/your/phpunit.xml --group Groupname
+./vendor/bin/phpunit -c /path/to/your/phpunit.xml --group group_name
 ```
 
 Drupal core currently has a number of different types of tests that can be run
@@ -154,7 +154,7 @@ If you run into file permission problems while running tests, you may need to
 invoke the phpunit executable with a user in the same group as the web server
 user, or with access to files owned by the web server user. For example:
 ```
-sudo -u www-data ./vendor/bin/phpunit -c /path/to/your/phpunit.xml --group Groupname
+sudo -u www-data ./vendor/bin/phpunit -c /path/to/your/phpunit.xml --group group_name
 ```
 
 If you have permission problems accessing files after running tests, try

@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+// cspell:ignore xfbml
+
 /**
  * @coversDefaultClass \Drupal\Core\EventSubscriber\RssResponseRelativeUrlFilter
  * @group event_subscriber
@@ -88,7 +90,7 @@ Drupal is an open source content management platform powering millions of websit
   js = d.createElement(s); js.id = id;
   js.src = "//connect.facebook.net/de_DE/sdk.js#xfbml=1&version=v2.3";
   fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
+}(document, 'script', 'facebook-js-sdk'));
 //--><!]]]]]]><![CDATA[><![CDATA[>
 
 //--><!]]]]><![CDATA[>

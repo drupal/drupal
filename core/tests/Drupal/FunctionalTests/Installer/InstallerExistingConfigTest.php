@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Installer;
 
-// cspell:ignore enregistrer
+// cspell:ignore nmsgid nmsgstr enregistrer
 
 /**
  * Verifies that installing from existing configuration works.

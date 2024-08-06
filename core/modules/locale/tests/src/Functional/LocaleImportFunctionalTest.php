@@ -10,7 +10,8 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
-// cspell:ignore chien chiens deutsch januari lundi moutons műveletek svibanj
+// cspell:ignore chien chiens deutsch januari lundi montag moutons műveletek
+// cspell:ignore svibanj
 
 /**
  * Tests the import of locale files.
