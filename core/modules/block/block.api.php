@@ -12,11 +12,13 @@ use Drupal\Core\Access\AccessResult;
  * @{
  * Information about the classes and interfaces that make up the Block API.
  *
+ * @section sec_overview Overview
  * Blocks are a combination of a configuration entity and a plugin. The
  * configuration entity stores placement information (theme, region, weight) and
  * any other configuration that is specific to the block. The block plugin does
  * the work of rendering the block's content for display.
  *
+ * @section sec_requirements Basic requirements
  * To define a block in a module you need to:
  * - Define a Block plugin by creating a new class that implements the
  *   \Drupal\Core\Block\BlockPluginInterface, in namespace Plugin\Block under your
@@ -30,6 +32,28 @@ use Drupal\Core\Access\AccessResult;
  *   @link annotation Annotations topic @endlink for more information about
  *   annotations.
  *
+ * This is an example of a basic block plugin class:
+ * @code
+ * namespace Drupal\my_module\Plugin\Block;
+ *
+ * use Drupal\Core\Block\BlockBase;
+ * #[Block(
+ *   id: "my_block",
+ *   admin_label: new TranslatableMarkup("My Block"),
+ * )]
+ * class MyBlock extends BlockBase {
+ *   public function build() {
+ *     return [
+ *       '#type' => '#markup',
+ *       '#markup' => 'Example block',
+ *     ];
+ *   }
+ * }
+ * @endcode
+ *
+ * More examples are available at the links below.
+ *
+ * @section sec_extending Extending blocks with conditions and hooks
  * The Block API also makes use of Condition plugins, for conditional block
  * placement. Condition plugins have interface
  * \Drupal\Core\Condition\ConditionInterface, base class
@@ -43,7 +67,7 @@ use Drupal\Core\Access\AccessResult;
  * - hook_block_view_BASE_BLOCK_ID_alter()
  * - hook_block_access()
  *
- * Further information and examples:
+ * @section sec_further_information Further information
  * - \Drupal\system\Plugin\Block\SystemPoweredByBlock provides a simple example
  *   of defining a block.
  * - \Drupal\user\Plugin\Condition\UserRole is a straightforward example of a
@@ -51,7 +75,7 @@ use Drupal\Core\Access\AccessResult;
  * - \Drupal\system\Plugin\Block\SystemMenuBlock is an example of a block with
  *   a custom configuration form.
  * - For a more in-depth discussion of the Block API, see
- *   https://www.drupal.org/developing/api/8/block_api.
+ *   https://www.drupal.org/docs/drupal-apis/block-api/block-api-overview.
  * - The Examples for Developers project also provides a Block example in
  *   https://www.drupal.org/project/examples.
  * @}
