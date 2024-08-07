@@ -277,8 +277,6 @@
     <include-pattern>./modules/system/src/Tests/Routing/*</include-pattern>
     <exclude-pattern>./tests/Drupal/Tests/*/Fixture/*</exclude-pattern>
     <exclude-pattern>./tests/Drupal/Tests/*/fixtures/*</exclude-pattern>
-    <!-- @todo remove this in https://www.drupal.org/project/drupal/issues/3402707 -->
-    <exclude-pattern>./tests/Drupal/KernelTests/AssertContentTrait.php</exclude-pattern>
   </rule>
   <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
 
