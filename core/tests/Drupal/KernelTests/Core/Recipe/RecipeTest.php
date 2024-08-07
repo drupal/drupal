@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Recipe;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeFileException;
 use Drupal\Core\Recipe\RecipePreExistingConfigException;
+use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -65,6 +66,18 @@ class RecipeTest extends KernelTestBase {
 
     $recipe = Recipe::createFromDirectory('core/tests/fixtures/recipes/install_node_with_config');
     $this->assertSame('core/tests/fixtures/recipes/install_node_with_config/config', $recipe->config->recipeConfigDirectory);
+  }
+
+  public function testExampleRecipe(): void {
+    // The example recipe imports all the configurations from the node module
+    // including optional configurations associated with the search and view
+    // modules. So we have to install them before applying the example recipe.
+    $this->container->get('module_installer')->install(['search', 'views']);
+    // Apply the example recipe.
+    $recipe = Recipe::createFromDirectory('core/recipes/example');
+    RecipeRunner::processRecipe($recipe);
+    // Verify if the 'default_summary_length' value is updated.
+    $this->assertSame($this->config('text.settings')->get('default_summary_length'), 700);
   }
 
 }
