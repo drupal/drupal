@@ -74,7 +74,7 @@
     "eslint-plugin-yml": "^1.8.0",
     "glob": "10.3.5",
     "jquery": "~3.7.0",
-    "jquery-ui": "1.13.x",
+    "jquery-ui": "^1.14.0",
     "js-cookie": "^3.0.5",
     "jsdom": "^24.0.0",
     "loadjs": "^4.3.0",

@@ -1,5 +1,5 @@
 /*!
- * jQuery UI Unique ID 1.13.3
+ * jQuery UI Unique ID 1.14.0
  * https://jqueryui.com
  *
  * Copyright OpenJS Foundation and other contributors
