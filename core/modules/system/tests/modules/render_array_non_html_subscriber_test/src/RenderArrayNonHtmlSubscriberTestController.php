@@ -11,7 +11,7 @@ class RenderArrayNonHtmlSubscriberTestController extends ControllerBase {
    * @return string
    */
   public function rawString() {
-    return new Response($this->t('Raw controller response.'));
+    return new Response((string) $this->t('Raw controller response.'));
   }
 
   /**
