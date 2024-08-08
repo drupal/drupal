@@ -27,7 +27,7 @@ class SessionTestSubscriber implements EventSubscriberInterface {
    */
   public function onKernelRequestSessionTest(RequestEvent $event) {
     $session = $event->getRequest()->getSession();
-    $this->emptySession = (int) !($session && $session->start());
+    $this->emptySession = !($session && $session->start());
   }
 
   /**
@@ -39,7 +39,7 @@ class SessionTestSubscriber implements EventSubscriberInterface {
   public function onKernelResponseSessionTest(ResponseEvent $event) {
     // Set header for session testing.
     $response = $event->getResponse();
-    $response->headers->set('X-Session-Empty', $this->emptySession);
+    $response->headers->set('X-Session-Empty', $this->emptySession ? '1' : '0');
   }
 
   /**
