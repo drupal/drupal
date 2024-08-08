@@ -59,7 +59,7 @@ class FormTestInputForgeryForm extends FormBase implements TrustedCallbackInterf
    * @see \Drupal\Tests\system\Functional\Form\FormTest::testInputForgery()
    */
   public static function postRender($rendered_form) {
-    return str_replace('value="two"', 'value="FORGERY"', $rendered_form);
+    return str_replace('value="two"', 'value="FORGERY"', (string) $rendered_form);
   }
 
   /**

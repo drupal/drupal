@@ -61,7 +61,7 @@ class ErrorTestController extends ControllerBase {
   public function generateFatalErrors() {
     $function = function (array $test) {
     };
-
+    // Use an incorrect parameter type, string, for testing a fatal error.
     $function("test-string");
     return [];
   }
