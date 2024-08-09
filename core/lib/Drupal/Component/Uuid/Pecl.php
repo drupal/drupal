@@ -11,7 +11,7 @@ class Pecl implements UuidInterface {
    * {@inheritdoc}
    */
   public function generate() {
-    return uuid_create(UUID_TYPE_DEFAULT);
+    return strtolower(uuid_create(UUID_TYPE_DEFAULT));
   }
 
 }
