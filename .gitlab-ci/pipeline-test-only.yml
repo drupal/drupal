@@ -25,7 +25,7 @@ variables:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
   needs:
     - pipeline: $PARENT_PIPELINE_ID
-      job: '📦️ Composer'
+      job: '🧹 PHP Coding standards (PHPCS)'
   services:
     - name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
       alias: database
