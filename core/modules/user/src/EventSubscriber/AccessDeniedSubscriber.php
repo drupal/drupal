@@ -2,14 +2,12 @@
 
 namespace Drupal\user\EventSubscriber;
 
+use Drupal\Core\EventSubscriber\HttpExceptionSubscriberBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Redirects users when access is denied.
@@ -19,7 +17,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * their profile page and from the user registration form to their profile edit
  * form.
  */
-class AccessDeniedSubscriber implements EventSubscriberInterface {
+class AccessDeniedSubscriber extends HttpExceptionSubscriberBase {
 
   /**
    * The current user.
@@ -39,51 +37,54 @@ class AccessDeniedSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Redirects users when access is denied.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
-   *   The event to process.
+   * {@inheritdoc}
    */
-  public function onException(ExceptionEvent $event) {
-    $exception = $event->getThrowable();
-    if ($exception instanceof AccessDeniedHttpException) {
-      $route_name = RouteMatch::createFromRequest($event->getRequest())->getRouteName();
-      $redirect_url = NULL;
-      if ($this->account->isAuthenticated()) {
-        switch ($route_name) {
-          case 'user.login';
-            // Redirect an authenticated user to the profile page.
-            $redirect_url = Url::fromRoute('entity.user.canonical', ['user' => $this->account->id()], ['absolute' => TRUE]);
-            break;
-
-          case 'user.register';
-            // Redirect an authenticated user to the profile form.
-            $redirect_url = Url::fromRoute('entity.user.edit_form', ['user' => $this->account->id()], ['absolute' => TRUE]);
-            break;
-        }
-      }
-      elseif ($route_name === 'user.page') {
-        $redirect_url = Url::fromRoute('user.login', [], ['absolute' => TRUE]);
-      }
-      elseif (in_array($route_name, ['user.logout', 'user.logout.confirm'], TRUE)) {
-        $redirect_url = Url::fromRoute('<front>', [], ['absolute' => TRUE]);
-      }
-
-      if ($redirect_url) {
-        $event->setResponse(new RedirectResponse($redirect_url->toString()));
-      }
-    }
+  protected function getHandledFormats(): array {
+    return ['html'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents(): array {
-    // Use a higher priority than
-    // \Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber, because there's
+  protected static function getPriority(): int {
+    // Use a higher priority than ExceptionLoggingSubscriber, because there's
     // no need to log the exception if we can redirect.
-    $events[KernelEvents::EXCEPTION][] = ['onException', 75];
-    return $events;
+    // @see Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber
+    return 75;
+  }
+
+  /**
+   * Redirects users when access is denied.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+   *   The event to process.
+   */
+  public function on403(ExceptionEvent $event): void {
+    $route_name = RouteMatch::createFromRequest($event->getRequest())->getRouteName();
+    $redirect_url = NULL;
+    if ($this->account->isAuthenticated()) {
+      switch ($route_name) {
+        case 'user.login';
+          // Redirect an authenticated user to the profile page.
+          $redirect_url = Url::fromRoute('entity.user.canonical', ['user' => $this->account->id()], ['absolute' => TRUE]);
+          break;
+
+        case 'user.register';
+          // Redirect an authenticated user to the profile form.
+          $redirect_url = Url::fromRoute('entity.user.edit_form', ['user' => $this->account->id()], ['absolute' => TRUE]);
+          break;
+      }
+    }
+    elseif ($route_name === 'user.page') {
+      $redirect_url = Url::fromRoute('user.login', [], ['absolute' => TRUE]);
+    }
+    elseif (in_array($route_name, ['user.logout', 'user.logout.confirm'], TRUE)) {
+      $redirect_url = Url::fromRoute('<front>', [], ['absolute' => TRUE]);
+    }
+
+    if ($redirect_url) {
+      $event->setResponse(new RedirectResponse($redirect_url->toString()));
+    }
   }
 
 }
