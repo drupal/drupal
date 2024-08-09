@@ -4,7 +4,9 @@ namespace Drupal\big_pipe_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber;
+use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Returns responses for Big Pipe routes.
@@ -214,10 +216,62 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
+   * Route callback to test a trusted lazy builder redirect response.
+   *
+   * @return array
+   *   The lazy builder callback.
+   */
+  public function trustedRedirectLazyBuilder(): array {
+    return [
+      'redirect' => [
+        '#lazy_builder' => [static::class . '::redirectTrusted', []],
+        '#create_placeholder' => TRUE,
+      ],
+    ];
+  }
+
+  /**
+   * Supports Big Pipe testing of the enforced redirect response.
+   *
+   * @throws \Drupal\Core\Form\EnforcedResponseException
+   *   Trigger catch of Big Pipe enforced redirect response exception.
+   */
+  public static function redirectTrusted(): void {
+    $response = new RedirectResponse('/big_pipe_test');
+    throw new EnforcedResponseException($response);
+  }
+
+  /**
+   * Route callback to test an untrusted lazy builder redirect response.
+   *
+   * @return array
+   *   The lazy builder callback.
+   */
+  public function untrustedRedirectLazyBuilder(): array {
+    return [
+      'redirect' => [
+        '#lazy_builder' => [static::class . '::redirectUntrusted', []],
+        '#create_placeholder' => TRUE,
+      ],
+    ];
+  }
+
+  /**
+   * Supports Big Pipe testing of an untrusted external URL.
+   *
+   * @throws \Drupal\Core\Form\EnforcedResponseException
+   *   Trigger catch of Big Pipe enforced redirect response exception.
+   */
+  public static function redirectUntrusted(): void {
+    $response = new RedirectResponse('https://example.com');
+    throw new EnforcedResponseException($response);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['currentTime', 'piggy', 'helloOrHi', 'exception', 'responseException', 'counter'];
+    return ['currentTime', 'piggy', 'helloOrHi', 'exception', 'responseException', 'counter', 'redirectTrusted', 'redirectUntrusted'];
   }
 
 }
