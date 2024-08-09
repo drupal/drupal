@@ -452,11 +452,11 @@ HTML);
  */
 class MockClient extends AbstractBrowser {
 
-  public function setExpectedResponse(Response $response) {
+  public function setExpectedResponse(Response $response): void {
     $this->response = $response;
   }
 
-  protected function doRequest(object $request) {
+  protected function doRequest(object $request): object {
     return $this->response ?? new Response();
   }
 
