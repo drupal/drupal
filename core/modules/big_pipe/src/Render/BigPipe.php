@@ -2,17 +2,24 @@
 
 namespace Drupal\big_pipe\Render;
 
+use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\MessageCommand;
+use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Routing\LocalRedirectResponse;
+use Drupal\Core\Routing\RequestContext;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -173,6 +180,8 @@ class BigPipe {
     protected EventDispatcherInterface $eventDispatcher,
     protected ConfigFactoryInterface $configFactory,
     protected MessengerInterface $messenger,
+    protected RequestContext $requestContext,
+    protected LoggerInterface $logger,
   ) {
   }
 
@@ -552,6 +561,53 @@ EOF;
           if (isset($ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries'])) {
             $cumulative_assets->setAlreadyLoadedLibraries(explode(',', $ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries']));
           }
+        }
+        // Handle enforced redirect responses.
+        // A typical use case where this might happen are forms using GET as
+        // #method that are build inside a lazy builder.
+        catch (EnforcedResponseException $e) {
+          $response = $e->getResponse();
+          if (!$response instanceof RedirectResponse) {
+            throw $e;
+          }
+          $ajax_response = new AjaxResponse();
+          if ($response instanceof SecuredRedirectResponse) {
+            // Only redirect to safe locations.
+            $ajax_response->addCommand(new RedirectCommand($response->getTargetUrl()));
+          }
+          else {
+            try {
+              // SecuredRedirectResponse is an abstract class that requires a
+              // concrete implementation. Default to LocalRedirectResponse, which
+              // considers only redirects to within the same site as safe.
+              $safe_response = LocalRedirectResponse::createFromRedirectResponse($response);
+              $safe_response->setRequestContext($this->requestContext);
+              $ajax_response->addCommand(new RedirectCommand($safe_response->getTargetUrl()));
+            }
+            catch (\InvalidArgumentException) {
+              // If the above failed, it's because the redirect target wasn't
+              // local. Do not follow that redirect. Log an error message
+              // instead, then return a 400 response to the client with the
+              // error message. We don't throw an exception, because this is a
+              // client error rather than a server error.
+              $message = 'Redirects to external URLs are not allowed by default, use \Drupal\Core\Routing\TrustedRedirectResponse for it.';
+              $this->logger->error($message);
+              $ajax_response->addCommand(new MessageCommand($message));
+            }
+          }
+          $ajax_response = $this->filterEmbeddedResponse($fake_request, $ajax_response);
+
+          $json = $ajax_response->getContent();
+          $output = <<<EOF
+<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="$placeholder_id">
+$json
+</script>
+EOF;
+          $this->sendChunk($output);
+
+          // Send the stop signal.
+          $this->sendChunk("\n" . static::STOP_SIGNAL . "\n");
+          break;
         }
         catch (\Exception $e) {
           unset($fibers[$placeholder_id]);

@@ -31,3 +31,19 @@ big_pipe_test_preview:
     _title: 'Test placeholder previews'
   requirements:
     _access: 'TRUE'
+
+big_pipe_test_trusted_redirect:
+  path: '/big_pipe_test_trusted_redirect'
+  defaults:
+    _controller: '\Drupal\big_pipe_test\BigPipeTestController::trustedRedirectLazyBuilder'
+    _title: 'BigPipe test trusted redirect'
+  requirements:
+    _access: 'TRUE'
+
+big_pipe_test_untrusted_redirect:
+  path: '/big_pipe_test_untrusted_redirect'
+  defaults:
+    _controller: '\Drupal\big_pipe_test\BigPipeTestController::untrustedRedirectLazyBuilder'
+    _title: 'BigPipe test untrusted redirect'
+  requirements:
+    _access: 'TRUE'

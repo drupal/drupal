@@ -219,6 +219,16 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains('</body>');
     // The exception is expected. Do not interpret it as a test failure.
     unlink($this->root . '/' . $this->siteDirectory . '/error.log');
+
+    // Tests the enforced redirect response exception handles redirecting to
+    // a trusted redirect.
+    $this->drupalGet(Url::fromRoute('big_pipe_test_trusted_redirect'));
+    $this->assertSession()->responseContains('application/vnd.drupal-ajax');
+    $this->assertSession()->responseContains('[{"command":"redirect","url":"\/big_pipe_test"}]');
+
+    // Test that it rejects an untrusted redirect.
+    $this->drupalGet(Url::fromRoute('big_pipe_test_untrusted_redirect'));
+    $this->assertSession()->responseContains('Redirects to external URLs are not allowed by default');
   }
 
   /**
