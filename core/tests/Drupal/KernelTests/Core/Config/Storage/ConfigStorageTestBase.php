@@ -44,6 +44,9 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     // Checking whether readMultiple() works with empty storage.
     $this->assertEmpty($this->storage->readMultiple([$name]));
 
+    // readMultiple() accepts an empty array.
+    $this->assertSame([], $this->storage->readMultiple([]), 'Empty query should return empty array');
+
     // Reading a non-existing name returns FALSE.
     $data = $this->storage->read($name);
     $this->assertFalse($data);
