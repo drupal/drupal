@@ -36,7 +36,6 @@ function node_access_test_language_node_access_records(NodeInterface $node) {
       'grant_view' => empty($translation->field_private->value) ? 1 : 0,
       'grant_update' => 0,
       'grant_delete' => 0,
-      'priority' => 0,
       'langcode' => $langcode,
     ];
   }

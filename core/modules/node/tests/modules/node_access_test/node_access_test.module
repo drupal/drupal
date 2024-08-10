@@ -88,7 +88,6 @@ function node_access_test_node_access_records(NodeInterface $node) {
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
-      'priority' => 0,
     ];
     $grants[] = [
       'realm' => 'node_access_test',
@@ -96,7 +95,6 @@ function node_access_test_node_access_records(NodeInterface $node) {
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
-      'priority' => 0,
     ];
     // For the author realm, the group ID is equivalent to a user ID, which
     // means there are many groups of just 1 user.
@@ -106,7 +104,6 @@ function node_access_test_node_access_records(NodeInterface $node) {
       'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,
-      'priority' => 0,
     ];
   }
 

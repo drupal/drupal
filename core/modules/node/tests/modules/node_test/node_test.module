@@ -83,7 +83,6 @@ function node_test_node_access_records(NodeInterface $node) {
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
-      'priority' => 0,
     ];
   }
   elseif ($node->getType() == 'page') {
@@ -94,7 +93,6 @@ function node_test_node_access_records(NodeInterface $node) {
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
-      'priority' => 0,
     ];
   }
   return $grants;
