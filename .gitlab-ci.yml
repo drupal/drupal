@@ -64,7 +64,7 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  _TARGET_PHP: "8.3"
+  _TARGET_PHP: "8.3-ubuntu"
 
 #############
 # Stages    #
@@ -170,7 +170,7 @@ default:
 'DEFAULT: PHP 8.3 MySQL 8':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OTEL_COLLECTOR: $OTEL_COLLECTOR
@@ -205,7 +205,7 @@ default:
   when: manual
   allow_failure: true
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -221,13 +221,13 @@ default:
 'PHP 8.3 MariaDB 10.6':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mariadb-10.6"
 
 'PHP 8.3 PostgreSQL 16':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "pgsql-16"
 
 'PHP 8.3 SQLite 3.45':
