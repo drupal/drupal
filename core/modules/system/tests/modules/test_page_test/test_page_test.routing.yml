@@ -36,13 +36,6 @@ test_page_test.dynamic_title:
   requirements:
     _access: 'TRUE'
 
-test_page_test.admin_render_title:
-  path: '/admin/test-render-title'
-  defaults:
-    _controller: '\Drupal\test_page_test\Controller\Test::renderTitle'
-  requirements:
-    _access: 'TRUE'
-
 test_page_test.http_response_exception:
   path: '/test-http-response-exception/{code}'
   defaults:
@@ -56,30 +49,6 @@ test_page_test.error:
   defaults:
     _controller: '\Drupal\test_page_test\Controller\Test::error'
     code: 200
-  requirements:
-    _access: 'TRUE'
-
-test_page_test.null_header:
-  path: '/test-null-header'
-  defaults:
-    _controller: '\Drupal\test_page_test\Controller\Test::setHeader'
-    name: Null-Header
-  requirements:
-    _access: 'TRUE'
-
-test_page_test.encoded:
-  path: '/test-encoded'
-  defaults:
-    _title: 'Page with encoded HTML'
-    _controller: '\Drupal\test_page_test\Controller\Test::renderEncodedMarkup'
-  requirements:
-    _access: 'TRUE'
-
-test_page_test.pipe:
-  path: '/test-pipe-char'
-  defaults:
-    _title: 'Page with pipe char in link'
-    _controller: '\Drupal\test_page_test\Controller\Test::renderPipeInLink'
   requirements:
     _access: 'TRUE'
 
@@ -120,20 +89,6 @@ test_page_test.meta_refresh:
   defaults:
     _title: 'Page with a redirect'
     _controller: '\Drupal\test_page_test\Controller\Test::metaRefresh'
-  requirements:
-    _access: 'TRUE'
-
-test_page_test.page_with_duplicate_ids:
-  path: '/test-page-with-duplicate-ids'
-  defaults:
-    _controller: '\Drupal\test_page_test\Controller\Test::renderPageWithDuplicateIds'
-  requirements:
-    _access: 'TRUE'
-
-test_page_test.page_without_duplicate_ids:
-  path: '/test-page-without-duplicate-ids'
-  defaults:
-    _controller: '\Drupal\test_page_test\Controller\Test::renderPageWithoutDuplicateIds'
   requirements:
     _access: 'TRUE'
 
