@@ -2,28 +2,41 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\Recipe;
+namespace Drupal\FunctionalTests\Core\Recipe;
 
-use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\BrowserTestBase;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Tests that all core recipes have a generic test.
+ * Tests applying all core-provided recipes on top of the Empty profile.
  *
  * @group Recipe
+ * @group #slow
  */
-class CoreRecipesTest extends UnitTestCase {
+class CoreRecipesTest extends BrowserTestBase {
+
+  use RecipeTestTrait;
 
   /**
-   * Data provider for ::testRecipeHasGenericTest().
+   * {@inheritdoc}
+   */
+  protected $profile = 'minimal';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * The data provider for apply recipe test.
    *
    * @return iterable<array<string>>
    *   An iterable containing paths to recipe files.
    */
-  public static function providerRecipeHasGenericTest(): iterable {
+  public static function providerApplyRecipe(): iterable {
     $finder = Finder::create()
       ->in([
-        dirname(__DIR__, 5) . '/recipes',
+        static::getDrupalRoot() . '/core/recipes',
       ])
       ->directories()
       // Recipes can't contain other recipes, so we don't need to search in
@@ -31,7 +44,6 @@ class CoreRecipesTest extends UnitTestCase {
       ->depth(0)
       // The Example recipe is for documentation only, and cannot be applied.
       ->notName(['example']);
-    static::assertGreaterThan(0, count($finder), 'No core recipes were found.');
 
     $scenarios = [];
     /** @var \Symfony\Component\Finder\SplFileInfo $recipe */
@@ -45,15 +57,18 @@ class CoreRecipesTest extends UnitTestCase {
   }
 
   /**
-   * Test that a recipe has a generic test.
+   * Test the recipe apply.
    *
    * @param string $path
    *   The path to the recipe file.
    *
-   * @dataProvider providerRecipeHasGenericTest
+   * @dataProvider providerApplyRecipe
    */
-  public function testRecipeHasGenericTest(string $path): void {
-    $this->assertFileExists($path . '/tests/src/Functional/GenericTest.php');
+  public function testApplyRecipe(string $path): void {
+    $this->setUpCurrentUser(admin: TRUE);
+    $this->applyRecipe($path);
+    // Apply the recipe again to prove that it is idempotent.
+    $this->applyRecipe($path);
   }
 
 }

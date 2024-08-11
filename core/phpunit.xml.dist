@@ -88,7 +88,6 @@
     <testsuite name="kernel">
       <directory>tests/Drupal/KernelTests</directory>
       <directory>modules/**/tests/src/Kernel</directory>
-      <directory>recipes/*/tests/src/Kernel</directory>
       <directory>profiles/**/tests/src/Kernel</directory>
       <directory>themes/**/tests/src/Kernel</directory>
       <directory>../modules/**/tests/src/Kernel</directory>
@@ -99,7 +98,6 @@
       <directory>tests/Drupal/FunctionalTests</directory>
       <directory>modules/**/tests/src/Functional</directory>
       <directory>profiles/**/tests/src/Functional</directory>
-      <directory>recipes/*/tests/src/Functional</directory>
       <directory>themes/**/tests/src/Functional</directory>
       <directory>../modules/**/tests/src/Functional</directory>
       <directory>../profiles/**/tests/src/Functional</directory>
@@ -108,7 +106,6 @@
     <testsuite name="functional-javascript">
       <directory>tests/Drupal/FunctionalJavascriptTests</directory>
       <directory>modules/**/tests/src/FunctionalJavascript</directory>
-      <directory>recipes/*/tests/src/FunctionalJavascript</directory>
       <directory>profiles/**/tests/src/FunctionalJavascript</directory>
       <directory>themes/**/tests/src/FunctionalJavascript</directory>
       <directory>../modules/**/tests/src/FunctionalJavascript</directory>
