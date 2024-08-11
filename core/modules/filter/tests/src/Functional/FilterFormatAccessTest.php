@@ -77,9 +77,6 @@ class FilterFormatAccessTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->drupalPlaceBlock('page_title_block');
-
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create a user who can administer text formats, but does not have
@@ -92,20 +89,16 @@ class FilterFormatAccessTest extends BrowserTestBase {
 
     // Create three text formats. Two text formats are created for all users so
     // that the drop-down list appears for all tests.
-    $this->drupalLogin($this->filterAdminUser);
     $formats = [];
     for ($i = 0; $i < 3; $i++) {
-      $edit = [
+      $format = FilterFormat::create([
         'format' => $this->randomMachineName(),
         'name' => $this->randomMachineName(),
-      ];
-      $this->drupalGet('admin/config/content/formats/add');
-      $this->submitForm($edit, 'Save configuration');
-      $this->resetFilterCaches();
-      $formats[] = FilterFormat::load($edit['format']);
+      ]);
+      $format->save();
+      $formats[] = $format;
     }
     [$this->allowedFormat, $this->secondAllowedFormat, $this->disallowedFormat] = $formats;
-    $this->drupalLogout();
 
     // Create a regular user with access to two of the formats.
     $this->webUser = $this->drupalCreateUser([
