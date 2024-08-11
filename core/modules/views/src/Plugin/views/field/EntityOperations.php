@@ -147,6 +147,10 @@ class EntityOperations extends FieldPluginBase {
     $build = [
       '#type' => 'operations',
       '#links' => $operations,
+      // Allow links to use modals.
+      '#attached' => [
+        'library' => ['core/drupal.dialog.ajax'],
+      ],
     ];
 
     return $build;
