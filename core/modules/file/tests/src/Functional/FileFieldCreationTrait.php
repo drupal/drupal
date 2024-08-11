@@ -32,7 +32,7 @@ trait FileFieldCreationTrait {
    * @return \Drupal\field\FieldStorageConfigInterface
    *   The file field.
    */
-  public function createFileField($name, $entity_type, $bundle, $storage_settings = [], $field_settings = [], $widget_settings = []) {
+  protected function createFileField($name, $entity_type, $bundle, $storage_settings = [], $field_settings = [], $widget_settings = []) {
     $field_storage = FieldStorageConfig::create([
       'entity_type' => $entity_type,
       'field_name' => $name,
@@ -61,7 +61,7 @@ trait FileFieldCreationTrait {
    * @param array $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
    */
-  public function attachFileField($name, $entity_type, $bundle, $field_settings = [], $widget_settings = []) {
+  protected function attachFileField($name, $entity_type, $bundle, $field_settings = [], $widget_settings = []) {
     $field = [
       'field_name' => $name,
       'label' => $name,
