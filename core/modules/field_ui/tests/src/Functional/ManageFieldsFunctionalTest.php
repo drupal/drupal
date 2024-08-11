@@ -110,38 +110,6 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   }
 
   /**
-   * Tests that Field UI respects disallowed field names.
-   */
-  public function testDisallowedFieldNames(): void {
-    // Reset the field prefix so we can test properly.
-    $this->config('field_ui.settings')->set('field_prefix', '')->save();
-
-    $label = 'Disallowed field';
-    $edit1 = [
-      'new_storage_type' => 'test_field',
-    ];
-    $edit2 = [
-      'label' => $label,
-    ];
-
-    // Try with an entity key.
-    $edit2['field_name'] = 'title';
-    $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
-    $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit1, 'Continue');
-    $this->submitForm($edit2, 'Continue');
-    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
-
-    // Try with a base field.
-    $edit2['field_name'] = 'sticky';
-    $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
-    $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit1, 'Continue');
-    $this->submitForm($edit2, 'Continue');
-    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
-  }
-
-  /**
    * Tests that Field UI respects locked fields.
    */
   public function testLockedField(): void {
@@ -242,9 +210,9 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
   }
 
   /**
-   * Tests that a duplicate field name is caught by validation.
+   * Tests validation of duplicate and disallowed field names.
    */
-  public function testDuplicateFieldName(): void {
+  public function testFieldNameValidation(): void {
     // field_tags already exists, so we're expecting an error when trying to
     // create a new field with the same name.
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
@@ -260,13 +228,45 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->submitForm($edit, 'Continue');
 
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+
+    // Reset the field prefix so we can test properly.
+    $this->config('field_ui.settings')->set('field_prefix', '')->save();
+
+    $label = 'Disallowed field';
+    $edit1 = [
+      'new_storage_type' => 'test_field',
+    ];
+    $edit2 = [
+      'label' => $label,
+    ];
+
+    // Try with an entity key.
+    $edit2['field_name'] = 'title';
+    $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
+    $this->drupalGet("{$bundle_path}/fields/add-field");
+    $this->submitForm($edit1, 'Continue');
+    $this->submitForm($edit2, 'Continue');
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+
+    // Try with a base field.
+    $edit2['field_name'] = 'sticky';
+    $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
+    $this->drupalGet("{$bundle_path}/fields/add-field");
+    $this->submitForm($edit1, 'Continue');
+    $this->submitForm($edit2, 'Continue');
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
     $this->assertSession()->addressEquals($url);
   }
 
   /**
-   * Tests that external URLs in the 'destinations' query parameter are blocked.
+   * Tests invalid field UI URLs and destinations.
    */
-  public function testExternalDestinations(): void {
+  public function testInvalidUrlsAndDestinations(): void {
+    $field_id = 'node.foo.bar';
+
+    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
+    $this->assertSession()->statusCodeEquals(404);
+
     $options = [
       'query' => ['destinations' => ['http://example.com']],
     ];
@@ -276,24 +276,6 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body?destinations%5B0%5D=http%3A//example.com');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component &#039;http://example.com&#039; is external. You are not allowed to specify an external URL together with internal:/.</em>.');
-  }
-
-  /**
-   * Tests that deletion removes field storages and fields as expected for a term.
-   */
-  public function testDeleteTaxonomyField(): void {
-    // Create a new field.
-    $bundle_path = 'admin/structure/taxonomy/manage/tags/overview';
-
-    $this->fieldUIAddNewField($bundle_path, $this->fieldNameInput, $this->fieldLabel);
-
-    // Delete the field.
-    $this->fieldUIDeleteField($bundle_path, "taxonomy_term.tags.$this->fieldName", $this->fieldLabel, 'Tags', 'taxonomy vocabulary');
-
-    // Check that the field was deleted.
-    $this->assertNull(FieldConfig::loadByName('taxonomy_term', 'tags', $this->fieldName), 'Field was deleted.');
-    // Check that the field storage was deleted too.
-    $this->assertNull(FieldStorageConfig::loadByName('taxonomy_term', $this->fieldName), 'Field storage was deleted.');
   }
 
   /**
@@ -372,16 +354,6 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $view_display = $display_repository->getViewDisplay('node', 'article');
     $this->assertEquals('field_test_multiple', $view_display->getComponent('field_test_custom_options')['type']);
     $this->assertEquals('altered dummy test string', $view_display->getComponent('field_test_custom_options')['settings']['test_formatter_setting_multiple']);
-  }
-
-  /**
-   * Tests the access to non-existent field URLs.
-   */
-  public function testNonExistentFieldUrls(): void {
-    $field_id = 'node.foo.bar';
-
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
-    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**
