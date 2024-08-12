@@ -49,7 +49,6 @@ exports.command = function drupalInstall(
       // Colons need to be URL encoded to be valid.
       value: encodeURIComponent(installData.user_agent),
       path: url.pathname,
-      domain: url.host,
     });
   } catch (error) {
     this.assert.fail(error);

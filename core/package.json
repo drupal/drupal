@@ -80,7 +80,7 @@
     "loadjs": "^4.3.0",
     "minimist": "^1.2.8",
     "mkdirp": "^3.0.1",
-    "nightwatch": "2.4.2",
+    "nightwatch": "^3.7.0",
     "normalize.css": "^8.0.1",
     "postcss": "^8.4.40",
     "postcss-header": "^3.0.3",
@@ -104,10 +104,6 @@
     "underscore": "~1.13.7",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4"
-  },
-  "resolutions": {
-    "glob/jackspeak": "2.1.1",
-    "nightwatch/semver": "~7.5.2"
   },
   "browserslist": [
     "last 2 Chrome major versions",
