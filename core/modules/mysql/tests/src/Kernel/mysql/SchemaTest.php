@@ -340,6 +340,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       'type' => 'serial',
       'not null' => TRUE,
     ], ['primary key' => ['id']]);
+    $this->assertTrue($this->schema->fieldExists('test_primary_key', 'id'));
   }
 
 }
