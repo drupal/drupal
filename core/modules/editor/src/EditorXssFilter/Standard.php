@@ -16,13 +16,15 @@ class Standard extends Xss implements EditorXssFilterInterface {
    * {@inheritdoc}
    */
   public static function filterXss($html, FilterFormatInterface $format, ?FilterFormatInterface $original_format = NULL) {
-    // Apply XSS filtering, but blacklist the <script>, <style>, <link>, <embed>
+    // Apply XSS filtering, but disallow the <script>, <style>, <link>, <embed>
     // and <object> tags.
-    // The <script> and <style> tags are blacklisted because their contents
-    // can be malicious (and therefore they are inherently unsafe), whereas for
-    // all other tags, only their attributes can make them malicious. Since
-    // \Drupal\Component\Utility\Xss::filter() protects against malicious
-    // attributes, we take no blacklisting action.
+    //
+    // The <script> and <style> tags are removed because their contents can be
+    // malicious (and therefore they are inherently unsafe), whereas for all
+    // other tags, only their attributes can make them malicious. Since
+    // \Drupal\Component\Utility\Xss::filter() is used to protect against
+    // malicious attributes, we do not remove tags.
+    //
     // The exceptions to the above rule are <link>, <embed> and <object>:
     // - <link> because the href attribute allows the attacker to import CSS
     //   using the HTTP(S) protocols which Xss::filter() considers safe by
@@ -37,10 +39,10 @@ class Standard extends Xss implements EditorXssFilterInterface {
     // embedded, hence ensuring the same origin policy always applies.
     $dangerous_tags = ['script', 'style', 'link', 'embed', 'object'];
 
-    // Simply blacklisting these five dangerous tags would bring safety, but
-    // also user frustration: what if a text format is configured to allow
-    // <embed>, for example? Then we would strip that tag, even though it is
-    // allowed, thereby causing data loss!
+    // Simply removing these five dangerous tags would bring safety, but also
+    // user frustration: what if a text format is configured to allow <embed>,
+    // for example? Then we would strip that tag, even though it is allowed,
+    // thereby causing data loss!
     // Therefore, we want to be smarter still. We want to take into account
     // which HTML tags are allowed by the text format we're filtering for, and
     // if we're switching from another text format, we want to take that
@@ -52,9 +54,9 @@ class Standard extends Xss implements EditorXssFilterInterface {
       $original_format_restrictions = $original_format->getHtmlRestrictions();
     }
 
-    // Any tags that are explicitly whitelisted by the text format must be
-    // removed from the list of default dangerous tags: if they're explicitly
-    // allowed, then we must respect that configuration.
+    // Any tags that are explicitly allowed by the text format must be removed
+    // from the list of default dangerous tags: if they're explicitly allowed,
+    // then we must respect that configuration.
     // When switching from another format, we must use the intersection of
     // allowed tags: if either format is more restrictive, then the safety
     // expectations of *both* formats apply.
@@ -63,11 +65,11 @@ class Standard extends Xss implements EditorXssFilterInterface {
       $allowed_tags = array_intersect($allowed_tags, self::getAllowedTags($original_format_restrictions));
     }
 
-    // Don't blacklist dangerous tags that are explicitly allowed in both text
+    // Don't remove dangerous tags that are explicitly allowed in both text
     // formats.
-    $blacklisted_tags = array_diff($dangerous_tags, $allowed_tags);
+    $removed_tags = array_diff($dangerous_tags, $allowed_tags);
 
-    $output = static::filter($html, $blacklisted_tags);
+    $output = static::filter($html, $removed_tags);
 
     // Since data-attributes can contain encoded HTML markup that could be
     // decoded and interpreted by editors, we need to apply XSS filtering to
@@ -130,8 +132,9 @@ class Standard extends Xss implements EditorXssFilterInterface {
    * {@inheritdoc}
    */
   protected static function needsRemoval(array $html_tags, $elem) {
-    // See static::filterXss() about how this class uses blacklisting instead
-    // of the normal whitelisting.
+    // This class uses a list of tags to remove instead of the normal list of
+    // tags to allow.
+    // @see static::filterXss()
     return !parent::needsRemoval($html_tags, $elem);
   }
 
