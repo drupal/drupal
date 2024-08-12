@@ -31,7 +31,6 @@ global:
       css/components/navigation/menu-account/menu-account.css: {}
       css/components/navigation/skip-link/skip-link.css: {}
       css/components/navigation/tabs/tabs.css: {}
-      css/components/navigation/toolbar/toolbar.css: {}
       css/components/navigation/breadcrumbs/breadcrumbs.css: {}
       css/components/regions/bottom/bottom.css: {}
       css/components/regions/footer/footer.css: {}
