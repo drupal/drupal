@@ -147,7 +147,7 @@ trait TestFileCreationTrait {
    * @return string
    *   The name of the file, including the path.
    */
-  public static function generateFile($filename, $width, $lines, $type = 'binary-text') {
+  protected static function generateFile($filename, $width, $lines, $type = 'binary-text') {
     $text = '';
     for ($i = 0; $i < $lines; $i++) {
       // Generate $width - 1 characters to leave space for the "\n" character.
