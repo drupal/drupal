@@ -11,7 +11,6 @@ use Drupal\Tests\Core\DependencyInjection\Fixture\FinalTestHttpMiddlewareClass;
 use Drupal\Tests\Core\DependencyInjection\Fixture\FinalTestNonTerminableHttpMiddlewareClass;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -144,12 +143,7 @@ class StackedKernelPassTest extends UnitTestCase {
         'responder' => TRUE,
       ]));
     $this->stackedKernelPass->process($this->containerBuilder);
-    try {
-      $this->containerBuilder->get('http_kernel');
-    }
-    catch (InvalidArgumentException $e) {
-      $this->fail($e->getMessage());
-    }
+    $this->assertIsObject($this->containerBuilder->get('http_kernel'));
   }
 
   /**

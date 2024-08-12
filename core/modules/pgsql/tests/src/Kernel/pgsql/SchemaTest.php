@@ -381,6 +381,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       'primary key' => ['order'],
     ];
     $this->schema->createTable($table_name, $table_spec);
+    $this->assertTrue($this->schema->tableExists($table_name));
   }
 
 }
