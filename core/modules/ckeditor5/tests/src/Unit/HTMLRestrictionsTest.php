@@ -24,7 +24,8 @@ class HTMLRestrictionsTest extends UnitTestCase {
       $this->expectException(\InvalidArgumentException::class);
       $this->expectExceptionMessage($expected_exception_message);
     }
-    new HTMLRestrictions($elements);
+    $restrictions = new HTMLRestrictions($elements);
+    $this->assertIsArray($restrictions->getAllowedElements(FALSE));
   }
 
   public static function providerConstruct(): \Generator {

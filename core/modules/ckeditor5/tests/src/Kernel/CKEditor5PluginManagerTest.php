@@ -197,7 +197,9 @@ YAML,
       $this->expectExceptionMessage($expected_message);
     }
     $container = $this->mockModuleInVfs('ckeditor5_invalid_plugin', $yaml, $additional_files);
-    $container->get('plugin.manager.ckeditor5.plugin')->getDefinitions();
+    $pluginManager = $container->get('plugin.manager.ckeditor5.plugin');
+    $this->assertNotNull($pluginManager);
+    $this->assertIsArray($pluginManager->getDefinitions());
   }
 
   /**
