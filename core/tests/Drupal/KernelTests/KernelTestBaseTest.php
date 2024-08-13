@@ -10,6 +10,7 @@ use Drupal\Tests\StreamCapturer;
 use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use Psr\Http\Client\ClientExceptionInterface;
 
 /**
@@ -256,6 +257,13 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
+   * Tests that ::tearDown() does not perform assertions.
+   */
+  #[DoesNotPerformAssertions]
+  public function testTearDown(): void {
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function tearDown(): void {
@@ -266,18 +274,20 @@ class KernelTestBaseTest extends KernelTestBase {
     // the tables.
     $connection = Database::getConnection();
     if ($connection->databaseType() === 'sqlite') {
-      $result = $connection->query("SELECT name FROM " . $this->databasePrefix .
+      $tables = $connection->query("SELECT name FROM " . $this->databasePrefix .
         ".sqlite_master WHERE type = :type AND name LIKE :table_name AND name NOT LIKE :pattern", [
           ':type' => 'table',
           ':table_name' => '%',
           ':pattern' => 'sqlite_%',
         ]
       )->fetchAllKeyed(0, 0);
-      $this->assertEmpty($result, 'All test tables have been removed.');
     }
     else {
       $tables = $connection->schema()->findTables($this->databasePrefix . '%');
-      $this->assertEmpty($tables, 'All test tables have been removed.');
+    }
+
+    if (!empty($tables)) {
+      throw new \RuntimeException("Not all test tables were removed");
     }
   }
 
