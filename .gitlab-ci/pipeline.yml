@@ -171,7 +171,8 @@ variables:
     - <<: *with-database
   variables:
     TESTSUITE: PHPUnit-Unit
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "1"
+    CONCURRENCY: 6
 
 '✅️ PHPStan Tests':
   <<: [ *default-job-settings ]
