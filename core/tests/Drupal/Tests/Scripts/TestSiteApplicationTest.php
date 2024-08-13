@@ -26,7 +26,6 @@ use Symfony\Component\Process\Process;
  * @see \Drupal\TestSite\Commands\TestSiteTearDownCommand
  *
  * @group Setup
- * @group #slow
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */

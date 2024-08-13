@@ -23,7 +23,6 @@ use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
  * information.
  *
  * @group Scaffold
- * @group #slow
  */
 class ComposerHookTest extends BuildTestBase {
 

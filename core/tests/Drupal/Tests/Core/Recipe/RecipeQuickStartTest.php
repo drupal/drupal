@@ -25,7 +25,6 @@ use Symfony\Component\Process\Process;
  *
  * @group Command
  * @group Recipe
- * @group #slow
  */
 class RecipeQuickStartTest extends TestCase {
 

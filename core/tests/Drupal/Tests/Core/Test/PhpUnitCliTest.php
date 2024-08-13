@@ -10,7 +10,6 @@ use Symfony\Component\Process\Process;
 /**
  * @group TestSuites
  * @group Test
- * @group #slow
  */
 class PhpUnitCliTest extends UnitTestCase {
 
