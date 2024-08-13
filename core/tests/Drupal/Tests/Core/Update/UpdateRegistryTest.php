@@ -19,6 +19,7 @@ use org\bovigo\vfs\vfsStream;
  *
  * @coversDefaultClass \Drupal\Core\Update\UpdateRegistry
  * @group Update
+ * @group #slow
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */

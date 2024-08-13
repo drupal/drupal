@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @coversDefaultClass \Drupal\Component\Datetime\Time
  * @group Datetime
+ * @group #slow
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */

@@ -24,6 +24,7 @@ use Symfony\Component\Process\Process;
  * @requires extension pdo_sqlite
  *
  * @group Command
+ * @group #slow
  */
 class QuickStartTest extends TestCase {
 

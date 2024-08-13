@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @coversDefaultClass \Drupal\Component\Utility\Rectangle
  * @group Image
+ * @group #slow
  */
 class RectangleTest extends TestCase {
 
