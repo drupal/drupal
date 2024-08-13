@@ -116,7 +116,7 @@ class ViewExecutableTest extends UnitTestCase {
   /**
    * The display plugin manager.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface;
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
    */
   protected $displayPluginManager;
 
