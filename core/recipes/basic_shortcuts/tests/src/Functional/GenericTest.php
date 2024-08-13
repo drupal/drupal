@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\basic_shortcuts\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\basic_shortcuts;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

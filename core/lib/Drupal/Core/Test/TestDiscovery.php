@@ -110,7 +110,7 @@ class TestDiscovery {
     $base_path = $this->root . '/core/recipes';
     if (@opendir($base_path)) {
       while (($recipe = readdir()) !== FALSE) {
-        $this->testNamespaces["Drupal\\Tests\\Recipe\\Core\\$recipe\\"][] = "$base_path/$recipe/tests/src";
+        $this->testNamespaces["Drupal\\FunctionalTests\\Recipe\\Core\\$recipe\\"][] = "$base_path/$recipe/tests/src/Functional";
       }
       closedir();
     }

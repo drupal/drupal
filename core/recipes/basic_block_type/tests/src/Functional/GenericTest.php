@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\basic_block_type\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\basic_block_type;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

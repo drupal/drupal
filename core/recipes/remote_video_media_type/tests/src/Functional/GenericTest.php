@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\remote_video_media_type\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\remote_video_media_type;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

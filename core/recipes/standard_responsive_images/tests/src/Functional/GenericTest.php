@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\standard_responsive_images\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\standard_responsive_images;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

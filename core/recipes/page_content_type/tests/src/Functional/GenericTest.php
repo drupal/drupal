@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\page_content_type\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\page_content_type;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\user_picture\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\user_picture;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

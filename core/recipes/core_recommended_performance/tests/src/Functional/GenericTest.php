@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\core_recommended_performance\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\core_recommended_performance;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

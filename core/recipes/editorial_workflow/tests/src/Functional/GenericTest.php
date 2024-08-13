@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\editorial_workflow\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\editorial_workflow;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

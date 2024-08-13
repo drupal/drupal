@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\article_comment\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\article_comment;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\article_tags\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\article_tags;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 

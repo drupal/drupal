@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Recipe\Core\basic_html_format_editor\Functional;
+namespace Drupal\FunctionalTests\Recipe\Core\basic_html_format_editor;
 
 use Drupal\Tests\system\Functional\Recipe\GenericRecipeTestBase;
 
