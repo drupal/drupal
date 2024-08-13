@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @coversDefaultClass \Drupal\Core\DrupalKernel
  * @group DrupalKernel
+ * @group #slow
  */
 class DrupalKernelTest extends UnitTestCase {
 

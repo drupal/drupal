@@ -14,6 +14,7 @@ use org\bovigo\vfs\vfsStream;
  * @coversDefaultClass \Drupal\Core\Site\Settings
  * @runTestsInSeparateProcesses
  * @group Site
+ * @group #slow
  */
 class SettingsTest extends UnitTestCase {
 

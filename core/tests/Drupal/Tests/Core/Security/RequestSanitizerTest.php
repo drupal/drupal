@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @group Security
+ * @group #slow
  */
 class RequestSanitizerTest extends UnitTestCase {
 

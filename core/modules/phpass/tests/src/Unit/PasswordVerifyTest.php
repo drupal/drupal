@@ -14,6 +14,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @coversDefaultClass \Drupal\phpass\Password\PhpassHashedPassword
  * @group phpass
+ * @group #slow
  */
 class PasswordVerifyTest extends UnitTestCase {
 

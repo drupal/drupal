@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
  *   CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
  *
  * @group Utility
+ * @group #slow
  * @coversDefaultClass \Drupal\Component\Utility\Xss
  * @runTestsInSeparateProcesses
  */

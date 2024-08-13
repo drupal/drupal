@@ -27,6 +27,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * @coversDefaultClass \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
  * @group EventSubscriber
+ * @group #slow
  */
 class ActiveLinkResponseFilterTest extends UnitTestCase {
 
