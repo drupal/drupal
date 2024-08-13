@@ -108,16 +108,16 @@ class UrlConversionTest extends UnitTestCase {
         FALSE,
       ],
       'MySQL contrib test driver without prefix' => [
-        'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test',
+        'DriverTestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test',
         [
-          'driver' => 'DrivertestMysql',
+          'driver' => 'DriverTestMysql',
           'username' => 'test_user',
           'password' => 'test_pass',
           'host' => 'test_host',
           'database' => 'test_database',
           'port' => 3306,
-          'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestMysql',
-          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
+          'namespace' => 'Drupal\driver_test\Driver\Database\DriverTestMysql',
+          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DriverTestMysql/',
           'dependencies' => [
             'mysql' => [
               'namespace' => 'Drupal\mysql',
@@ -132,17 +132,17 @@ class UrlConversionTest extends UnitTestCase {
         TRUE,
       ],
       'MySQL contrib test driver with prefix' => [
-        'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test#bar',
+        'DriverTestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test#bar',
         [
-          'driver' => 'DrivertestMysql',
+          'driver' => 'DriverTestMysql',
           'username' => 'test_user',
           'password' => 'test_pass',
           'host' => 'test_host',
           'database' => 'test_database',
           'prefix' => 'bar',
           'port' => 3306,
-          'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestMysql',
-          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
+          'namespace' => 'Drupal\driver_test\Driver\Database\DriverTestMysql',
+          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DriverTestMysql/',
           'dependencies' => [
             'mysql' => [
               'namespace' => 'Drupal\mysql',
@@ -157,16 +157,16 @@ class UrlConversionTest extends UnitTestCase {
         TRUE,
       ],
       'PostgreSQL contrib test driver without prefix' => [
-        'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test',
+        'DriverTestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test',
         [
-          'driver' => 'DrivertestPgsql',
+          'driver' => 'DriverTestPgsql',
           'username' => 'test_user',
           'password' => 'test_pass',
           'host' => 'test_host',
           'database' => 'test_database',
           'port' => 5432,
-          'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestPgsql',
-          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
+          'namespace' => 'Drupal\driver_test\Driver\Database\DriverTestPgsql',
+          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DriverTestPgsql/',
           'dependencies' => [
             'mysql' => [
               'namespace' => 'Drupal\mysql',
@@ -181,17 +181,17 @@ class UrlConversionTest extends UnitTestCase {
         TRUE,
       ],
       'PostgreSQL contrib test driver with prefix' => [
-        'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test#bar',
+        'DriverTestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test#bar',
         [
-          'driver' => 'DrivertestPgsql',
+          'driver' => 'DriverTestPgsql',
           'username' => 'test_user',
           'password' => 'test_pass',
           'host' => 'test_host',
           'database' => 'test_database',
           'prefix' => 'bar',
           'port' => 5432,
-          'namespace' => 'Drupal\driver_test\Driver\Database\DrivertestPgsql',
-          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
+          'namespace' => 'Drupal\driver_test\Driver\Database\DriverTestPgsql',
+          'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DriverTestPgsql/',
           'dependencies' => [
             'mysql' => [
               'namespace' => 'Drupal\mysql',
@@ -368,11 +368,11 @@ class UrlConversionTest extends UnitTestCase {
       'prefix' => '',
       'host' => 'test_host',
       'port' => '3306',
-      'driver' => 'DrivertestMysql',
-      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestMysql',
-      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
+      'driver' => 'DriverTestMysql',
+      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DriverTestMysql',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DriverTestMysql/',
     ];
-    $expected_url5 = 'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
+    $expected_url5 = 'DriverTestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
 
     $info6 = [
       'database' => 'test_database',
@@ -381,11 +381,11 @@ class UrlConversionTest extends UnitTestCase {
       'prefix' => 'pre',
       'host' => 'test_host',
       'port' => '3306',
-      'driver' => 'DrivertestMysql',
-      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestMysql',
-      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
+      'driver' => 'DriverTestMysql',
+      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DriverTestMysql',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DriverTestMysql/',
     ];
-    $expected_url6 = 'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test#pre';
+    $expected_url6 = 'DriverTestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test#pre';
 
     $info7 = [
       'database' => 'test_database',
@@ -394,11 +394,11 @@ class UrlConversionTest extends UnitTestCase {
       'prefix' => '',
       'host' => 'test_host',
       'port' => '5432',
-      'driver' => 'DrivertestPgsql',
-      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestPgsql',
-      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
+      'driver' => 'DriverTestPgsql',
+      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DriverTestPgsql',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DriverTestPgsql/',
     ];
-    $expected_url7 = 'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test';
+    $expected_url7 = 'DriverTestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test';
 
     $info8 = [
       'database' => 'test_database',
@@ -407,11 +407,11 @@ class UrlConversionTest extends UnitTestCase {
       'prefix' => 'pre',
       'host' => 'test_host',
       'port' => '5432',
-      'driver' => 'DrivertestPgsql',
-      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestPgsql',
-      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestPgsql/',
+      'driver' => 'DriverTestPgsql',
+      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DriverTestPgsql',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DriverTestPgsql/',
     ];
-    $expected_url8 = 'DrivertestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test#pre';
+    $expected_url8 = 'DriverTestPgsql://test_user:test_pass@test_host:5432/test_database?module=driver_test#pre';
 
     $info9 = [
       'database' => 'test_database',
@@ -420,9 +420,9 @@ class UrlConversionTest extends UnitTestCase {
       'prefix' => '',
       'host' => 'test_host',
       'port' => '3306',
-      'driver' => 'DrivertestMysql',
-      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DrivertestMysql',
-      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/',
+      'driver' => 'DriverTestMysql',
+      'namespace' => 'Drupal\\driver_test\\Driver\\Database\\DriverTestMysql',
+      'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/DriverTestMysql/',
       'dependencies' => [
         'mysql' => [
           'namespace' => 'Drupal\mysql',
@@ -434,7 +434,7 @@ class UrlConversionTest extends UnitTestCase {
         ],
       ],
     ];
-    $expected_url9 = 'DrivertestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
+    $expected_url9 = 'DriverTestMysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
 
     return [
       [$info1, $expected_url1],

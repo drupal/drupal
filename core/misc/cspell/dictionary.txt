@@ -175,7 +175,6 @@ dotenv
 downcasting
 dragtable
 drillable
-drivertest
 dropbutton
 dropbuttons
 drupaldevdays
@@ -184,7 +183,6 @@ drupalelementstylecommand
 drupalelementstyleediting
 drupalelementstyleui
 drupalhtmlbuilder
-drupalimage
 drupalism
 drupalisms
 drupallink
@@ -386,8 +384,6 @@ nightwatch
 nightwatchjs
 nikic
 nntp
-noadd
-nocache
 nocase
 nodir
 nofields
@@ -566,7 +562,6 @@ streamwrappers
 strikethrough
 striptags
 strs
-sttid
 styleguide
 stylelint
 stylelintcache
@@ -621,7 +616,6 @@ tablesorts
 tabset
 tabwidth
 taskless
-tcomment
 testbot
 testbots
 testgroups

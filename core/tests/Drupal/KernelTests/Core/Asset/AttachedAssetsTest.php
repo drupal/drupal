@@ -255,7 +255,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $assets = AttachedAssets::createFromRenderArray($build);
 
     $js = $this->assetResolver->getJsAssets($assets, FALSE, \Drupal::languageManager()->getCurrentLanguage())[1];
-    $this->assertFalse($js['core/modules/system/tests/modules/common_test/nocache.js']['preprocess'], 'Setting cache to FALSE sets preprocess to FALSE when adding JavaScript.');
+    $this->assertFalse($js['core/modules/system/tests/modules/common_test/no_cache.js']['preprocess'], 'Setting cache to FALSE sets preprocess to FALSE when adding JavaScript.');
   }
 
   /**

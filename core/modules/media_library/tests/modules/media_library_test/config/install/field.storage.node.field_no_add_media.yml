@@ -4,8 +4,8 @@ dependencies:
   module:
     - media
     - node
-id: node.field_noadd_media
-field_name: field_noadd_media
+id: node.field_no_add_media
+field_name: field_no_add_media
 entity_type: node
 type: entity_reference
 settings:

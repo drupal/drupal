@@ -6,6 +6,7 @@ dependee's
 dependees
 drupalci
 druplicon
+drupalimage
 drush
 langcode
 langcodes

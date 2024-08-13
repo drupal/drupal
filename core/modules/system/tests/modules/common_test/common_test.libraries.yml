@@ -41,7 +41,7 @@ js-header:
 # Library to test setting cache = FALSE, to prevent aggregation.
 no-cache:
   js:
-    nocache.js: { cache: false }
+    no_cache.js: { cache: false }
 
 order:
   js:

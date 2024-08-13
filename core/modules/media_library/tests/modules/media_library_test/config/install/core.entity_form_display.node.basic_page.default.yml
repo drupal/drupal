@@ -5,7 +5,7 @@ dependencies:
     - field.field.node.basic_page.field_twin_media
     - field.field.node.basic_page.field_single_media_type
     - field.field.node.basic_page.field_unlimited_media
-    - field.field.node.basic_page.field_noadd_media
+    - field.field.node.basic_page.field_no_add_media
     - node.type.basic_page
   module:
     - media_library
@@ -43,7 +43,7 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_noadd_media:
+  field_no_add_media:
     type: media_library_widget
     weight: 123
     region: content

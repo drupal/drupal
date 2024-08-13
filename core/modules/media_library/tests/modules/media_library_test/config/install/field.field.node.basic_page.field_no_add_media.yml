@@ -2,12 +2,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_noadd_media
+    - field.storage.node.field_no_add_media
     - media.type.type_one
     - media.type.type_two
     - node.type.basic_page
-id: node.basic_page.field_noadd_media
-field_name: field_noadd_media
+id: node.basic_page.field_no_add_media
+field_name: field_no_add_media
 entity_type: node
 bundle: basic_page
 label: 'No add media'

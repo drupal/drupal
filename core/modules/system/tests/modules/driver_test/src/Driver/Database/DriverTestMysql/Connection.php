@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\driver_test\Driver\Database\DrivertestMysql;
+namespace Drupal\driver_test\Driver\Database\DriverTestMysql;
 
 use Drupal\mysql\Driver\Database\mysql\Connection as CoreConnection;
 
@@ -13,7 +13,7 @@ class Connection extends CoreConnection {
    * {@inheritdoc}
    */
   public function driver() {
-    return 'DrivertestMysql';
+    return 'DriverTestMysql';
   }
 
 }

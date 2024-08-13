@@ -133,8 +133,8 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
     // 'test_class' from {simpletest}.
     $select = $this->connection->select($max_message_id_subquery, 'st_sub');
     $select->join('simpletest', 'st', '[st].[message_id] = [st_sub].[max_message_id]');
-    $select->join('simpletest_test_id', 'sttid', '[st].[test_id] = [sttid].[test_id]');
-    $select->addField('sttid', 'last_prefix', 'db_prefix');
+    $select->join('simpletest_test_id', 'st_tid', '[st].[test_id] = [st_tid].[test_id]');
+    $select->addField('st_tid', 'last_prefix', 'db_prefix');
     $select->addField('st', 'test_class');
 
     return $select->execute()->fetchAssoc();

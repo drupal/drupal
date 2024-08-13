@@ -35,9 +35,9 @@ class DatabaseDriverListTest extends UnitTestCase {
       ['mysql', 'mysql', 'Drupal\\mysql\\Driver\\Database\\mysql'],
       ['pgsql', 'pgsql', 'Drupal\\pgsql\\Driver\\Database\\pgsql'],
       ['sqlite', 'sqlite', 'Drupal\\sqlite\\Driver\\Database\\sqlite'],
-      ['DrivertestMysql', 'driver_test', 'Drupal\\driver_test\\Driver\\Database\\DrivertestMysql'],
-      ['DrivertestPgsql', 'driver_test', 'Drupal\\driver_test\\Driver\\Database\\DrivertestPgsql'],
-      ['DrivertestMysqlDeprecatedVersion', 'driver_test', 'Drupal\\driver_test\\Driver\\Database\\DrivertestMysqlDeprecatedVersion'],
+      ['DriverTestMysql', 'driver_test', 'Drupal\\driver_test\\Driver\\Database\\DriverTestMysql'],
+      ['DriverTestPgsql', 'driver_test', 'Drupal\\driver_test\\Driver\\Database\\DriverTestPgsql'],
+      ['DriverTestMysqlDeprecatedVersion', 'driver_test', 'Drupal\\driver_test\\Driver\\Database\\DriverTestMysqlDeprecatedVersion'],
     ];
   }
 

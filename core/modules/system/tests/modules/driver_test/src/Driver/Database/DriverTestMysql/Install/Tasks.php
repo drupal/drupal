@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\driver_test\Driver\Database\DrivertestMysqlDeprecatedVersion\Install;
+namespace Drupal\driver_test\Driver\Database\DriverTestMysql\Install;
 
 use Drupal\mysql\Driver\Database\mysql\Install\Tasks as CoreTasks;
 
@@ -13,7 +13,7 @@ class Tasks extends CoreTasks {
    * {@inheritdoc}
    */
   public function name() {
-    return t('MySQL deprecated version by the driver_test module');
+    return t('MySQL by the driver_test module');
   }
 
 }
