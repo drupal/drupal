@@ -11,4 +11,4 @@ id: invalid
 # error.
 label: null
 locked: false
-pattern: 'F j, Y'
+pattern: 'j F Y'

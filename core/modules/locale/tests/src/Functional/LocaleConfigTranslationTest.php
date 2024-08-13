@@ -113,7 +113,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $this->assertEquals($message, $translation['message']);
 
     // Check default medium date format exists and create a translation for it.
-    $string = $this->storage->findString(['source' => 'D, m/d/Y - H:i', 'context' => 'PHP date format', 'type' => 'configuration']);
+    $string = $this->storage->findString(['source' => 'D, j M Y - H:i', 'context' => 'PHP date format', 'type' => 'configuration']);
     $this->assertNotEmpty($string, 'Configuration date formats have been created upon installation.');
 
     // Translate using the UI so configuration is refreshed.

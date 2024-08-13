@@ -74,21 +74,21 @@ class BlockContentRevisionVersionHistoryTest extends BlockContentTestBase {
     $this->assertSession()->elementNotExists('named', ['link', 'Delete'], $row1);
     $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', 'Current revision');
     $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', 'third revision log');
-    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', '06/03/2020 - 09:00 by third author');
+    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(1)', '3 Jun 2020 - 09:00 by third author');
 
     $row2 = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(2)');
     $this->assertSession()->elementExists('named', ['link', 'Revert'], $row2);
     $this->assertSession()->elementExists('named', ['link', 'Delete'], $row2);
     $this->assertSession()->elementTextNotContains('css', 'table tbody tr:nth-child(2)', 'Current revision');
     $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(2)', 'second revision log');
-    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(2)', '06/02/2020 - 08:00 by second author');
+    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(2)', '2 Jun 2020 - 08:00 by second author');
 
     $row3 = $this->assertSession()->elementExists('css', 'table tbody tr:nth-child(3)');
     $this->assertSession()->elementExists('named', ['link', 'Revert'], $row3);
     $this->assertSession()->elementExists('named', ['link', 'Delete'], $row3);
     $this->assertSession()->elementTextNotContains('css', 'table tbody tr:nth-child(2)', 'Current revision');
     $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(3)', 'first revision log');
-    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(3)', '06/01/2020 - 07:00 by first author');
+    $this->assertSession()->elementTextContains('css', 'table tbody tr:nth-child(3)', '1 Jun 2020 - 07:00 by first author');
   }
 
 }

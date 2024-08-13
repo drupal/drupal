@@ -259,7 +259,7 @@ class DateTimeTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Selected combination of day and month is not valid.');
 
     $this->drupalGet('node/1');
-    $this->assertSession()->pageTextContains('Mon, 02/29/2016 - 01:30');
+    $this->assertSession()->pageTextContains('Mon, 29 Feb 2016 - 01:30');
   }
 
 }

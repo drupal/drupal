@@ -4,4 +4,4 @@ dependencies: {  }
 id: fallback
 label: 'Fallback date format'
 locked: true
-pattern: 'D, m/d/Y - H:i'
+pattern: 'D, j M Y - H:i'

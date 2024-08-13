@@ -137,7 +137,7 @@ class FieldBlockTest extends WebDriverTestBase {
 
     // Assert that the block is displaying the user field.
     $this->drupalGet('admin');
-    $assert_session->pageTextContains('Sunday, November 19, 1978 - 16:00');
+    $assert_session->pageTextContains('Sunday, 19 November 1978 - 16:00');
   }
 
   /**

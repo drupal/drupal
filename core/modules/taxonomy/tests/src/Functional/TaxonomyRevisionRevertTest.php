@@ -87,7 +87,7 @@ class TaxonomyRevisionRevertTest extends BrowserTestBase {
     $revision = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
       ->loadRevision($revisionId);
     $this->drupalGet($revision->toUrl('revision-revert-form'));
-    $this->assertSession()->pageTextContains('Are you sure you want to revert to the revision from Sun, 01/11/2009 - 16:00?');
+    $this->assertSession()->pageTextContains('Are you sure you want to revert to the revision from Sun, 11 Jan 2009 - 16:00?');
     $this->assertSession()->buttonExists('Revert');
     $this->assertSession()->linkExists('Cancel');
 
@@ -105,7 +105,7 @@ class TaxonomyRevisionRevertTest extends BrowserTestBase {
     $this->assertEquals($count + 1, $countRevisions());
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals(sprintf('taxonomy/term/%s/revisions', $entity->id()));
-    $this->assertSession()->pageTextContains(sprintf('Test %s has been reverted to the revision from Sun, 01/11/2009 - 16:00.', $termName));
+    $this->assertSession()->pageTextContains(sprintf('Test %s has been reverted to the revision from Sun, 11 Jan 2009 - 16:00.', $termName));
     $this->assertSession()->elementsCount('css', 'table tbody tr', 3);
   }
 

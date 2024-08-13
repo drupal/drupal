@@ -7,4 +7,4 @@ _core:
 id: fallback
 label: 'Format de date de repli'
 locked: true
-pattern: 'D, m/d/Y - H:i'
+pattern: 'D, j M Y - H:i'
