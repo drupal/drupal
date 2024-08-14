@@ -362,7 +362,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // Modules may provide single directory components which are added to
         // the core library definitions rather than the module itself, this
         // requires the library discovery cache to be rebuilt.
-        \Drupal::service('library.discovery')->clearCachedDefinitions();
+        \Drupal::service('library.discovery')->clear();
 
         // Allow the module to perform install tasks.
         $this->moduleHandler->invoke($module, 'install', [$sync_status]);
