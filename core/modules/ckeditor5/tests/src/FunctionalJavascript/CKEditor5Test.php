@@ -53,7 +53,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $assert_session->responseNotContains('<p>This is test content</p>');
     $assert_session->responseContains('&lt;p&gt;This is test content&lt;/p&gt;');
 
-    $this->addNewTextFormat($page, $assert_session);
+    $this->addNewTextFormat();
 
     // Change the node to use the new text format.
     $this->drupalGet('node/1/edit');
@@ -152,7 +152,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    $this->addNewTextFormat($page, $assert_session);
+    $this->addNewTextFormat();
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
     $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', '<br> <p> <h2> <h3> <h4> <h5> <h6> <strong> <em>');
 
@@ -612,8 +612,7 @@ JS;
     $page->fillField('body[0][value]', '<p>This is a <em>test!</em></p>');
     $page->pressButton('Save');
 
-    $this->createNewTextFormat($page, $assert_session);
-    $this->saveNewTextFormat($page, $assert_session);
+    $this->addNewTextFormat();
 
     $this->drupalGet('node/1/edit');
     $page->selectFieldOption('body[0][format]', 'ckeditor5');
@@ -743,8 +742,7 @@ JS;
     $page->fillField('body[0][value]', '<p dir="ltr" lang="en">Hello World</p><p dir="rtl" lang="ar">مرحبا بالعالم</p>');
     $page->pressButton('Save');
 
-    $this->createNewTextFormat($page, $assert_session);
-    $this->saveNewTextFormat($page, $assert_session);
+    $this->addNewTextFormat();
 
     $this->drupalGet('node/1/edit');
     $page->selectFieldOption('body[0][format]', 'ckeditor5');
