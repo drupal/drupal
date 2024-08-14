@@ -361,13 +361,19 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
   /**
    * Tests that alt text is required for images.
+   */
+  public function testAltTextRequired() {
+    foreach ([FALSE, TRUE] as $unrestricted) {
+      $this->doTestAltTextRequired($unrestricted);
+    }
+  }
+
+  /**
+   * Tests that alt text is required for images.
    *
    * @see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/architecture/editing-engine.html#conversion
-   *
-   * @dataProvider providerAltTextRequired
    */
-  public function testAltTextRequired(bool $unrestricted): void {
-    // Disable filter_html.
+  protected function doTestAltTextRequired(bool $unrestricted): void {
     if ($unrestricted) {
       FilterFormat::load('test_format')
         ->setFilterConfig('filter_html', ['status' => FALSE])
@@ -380,7 +386,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
       'width="500"',
       '<img ' . $this->imageAttributesAsString() . ' />'
     );
-    $this->host->body->value .= $img_tag . "<p>$img_tag</p>";
+    $this->host->body->value = "<p>I'm a pirate</p>" . $img_tag . "<p>$img_tag</p>";
     $this->host->save();
 
     $page = $this->getSession()->getPage();
@@ -455,13 +461,6 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->assertVisibleBalloon('.ck-text-alternative-form');
   }
 
-  public static function providerAltTextRequired(): array {
-    return [
-      'Restricted' => [FALSE],
-      'Unrestricted' => [TRUE],
-    ];
-  }
-
   protected function providerLinkability(): array {
     return [
       'BLOCK image, restricted' => ['block', FALSE],
@@ -473,15 +472,22 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
   /**
    * Tests alignment integration.
-   *
-   * @dataProvider providerAlignment
    */
-  public function testAlignment(string $image_type): void {
+  public function testAlignment() {
+    foreach (['block', 'inline'] as $image_type) {
+      $this->doTestAlignment($image_type);
+    }
+  }
+
+  /**
+   * Tests alignment integration.
+   */
+  protected function doTestAlignment(string $image_type): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     // Make the test content have either a block image or an inline image.
     $img_tag = '<img alt="drupalimage test image" ' . $this->imageAttributesAsString() . ' />';
-    $this->host->body->value .= $image_type === 'block'
+    $this->host->body->value = "<p>I'm a pirate</p>" . $image_type === 'block'
       ? $img_tag
       : "<p>$img_tag</p>";
     $this->host->save();
@@ -533,22 +539,22 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
   }
 
-  public static function providerAlignment() {
-    return [
-      'Block image' => ['block'],
-      'Inline image' => ['inline'],
-    ];
+  /**
+   * Ensures that width attribute upcasts and downcasts correctly.
+   */
+  public function testWidth() {
+    foreach (static::providerWidth() as $data) {
+      $this->doTestWidth($data['width']);
+    }
   }
 
   /**
-   * Ensures that width attribute upcasts and downcasts correctly.
+   * Tests the width attribute with different widths.
    *
    * @param string $width
    *   The width input for the image.
-   *
-   * @dataProvider providerWidth
    */
-  public function testWidth(string $width): void {
+  protected function doTestWidth(string $width): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -641,13 +647,20 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    *
    * Confirms that enabling the resize plugin introduces the resize class to
    * images within CKEditor 5.
+   */
+  public function testResize() {
+    foreach ([TRUE, FALSE] as $is_resize_enabled) {
+      $this->doTestResize($is_resize_enabled);
+    }
+  }
+
+  /**
+   * Tests the image resize plugin.
    *
    * @param bool $is_resize_enabled
    *   Boolean flag to test enabled or disabled.
-   *
-   * @dataProvider providerResize
    */
-  public function testResize(bool $is_resize_enabled): void {
+  protected function doTestResize(bool $is_resize_enabled): void {
     // Disable resize plugin because it is enabled by default.
     if (!$is_resize_enabled) {
       Editor::load('test_format')->setSettings([
@@ -671,23 +684,6 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->addImage();
     $image_figure = $assert_session->waitForElementVisible('css', 'figure');
     $this->assertSame($is_resize_enabled, $image_figure->hasClass('ck-widget_with-resizer'));
-  }
-
-  /**
-   * Data provider for ::testResize().
-   *
-   * @return array
-   *   The test cases.
-   */
-  public static function providerResize(): array {
-    return [
-      'Image resize is enabled' => [
-        'is_resize_enabled' => TRUE,
-      ],
-      'Image resize is disabled' => [
-        'is_resize_enabled' => FALSE,
-      ],
-    ];
   }
 
 }
