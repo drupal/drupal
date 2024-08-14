@@ -68,6 +68,13 @@ class AssetResolverTest extends UnitTestCase {
   protected $cache;
 
   /**
+   * The mocked theme handler.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $themeHandler;
+
+  /**
    * A mocked English language object.
    */
   protected LanguageInterface $english;
@@ -161,7 +168,9 @@ class AssetResolverTest extends UnitTestCase {
       ->willReturn($english, $english, $japanese, $japanese);
     $this->cache = new TestMemoryBackend(new Time());
 
-    $this->assetResolver = new AssetResolver($this->libraryDiscovery, $this->libraryDependencyResolver, $this->moduleHandler, $this->themeManager, $this->languageManager, $this->cache);
+    $this->themeHandler = $this->createMock('\Drupal\Core\Extension\ThemeHandlerInterface');
+
+    $this->assetResolver = new AssetResolver($this->libraryDiscovery, $this->libraryDependencyResolver, $this->moduleHandler, $this->themeManager, $this->languageManager, $this->cache, $this->themeHandler);
   }
 
   /**

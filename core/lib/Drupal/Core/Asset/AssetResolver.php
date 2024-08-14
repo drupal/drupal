@@ -7,6 +7,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -59,6 +60,13 @@ class AssetResolver implements AssetResolverInterface {
   protected $cache;
 
   /**
+   * The theme handler service.
+   *
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
+   */
+  protected $themeHandler;
+
+  /**
    * Constructs a new AssetResolver instance.
    *
    * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery
@@ -73,14 +81,22 @@ class AssetResolver implements AssetResolverInterface {
    *   The language manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   *   The theme handler service.
    */
-  public function __construct(LibraryDiscoveryInterface $library_discovery, LibraryDependencyResolverInterface $library_dependency_resolver, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, LanguageManagerInterface $language_manager, CacheBackendInterface $cache) {
+  public function __construct(LibraryDiscoveryInterface $library_discovery, LibraryDependencyResolverInterface $library_dependency_resolver, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, LanguageManagerInterface $language_manager, CacheBackendInterface $cache, ?ThemeHandlerInterface $theme_handler = NULL) {
+    if ($theme_handler === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $theme_handler argument is deprecated in drupal:11.1.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3451667', E_USER_DEPRECATED);
+      $theme_handler = \Drupal::service('theme_handler');
+    }
+
     $this->libraryDiscovery = $library_discovery;
     $this->libraryDependencyResolver = $library_dependency_resolver;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
     $this->languageManager = $language_manager;
     $this->cache = $cache;
+    $this->themeHandler = $theme_handler;
   }
 
   /**
@@ -140,10 +156,14 @@ class AssetResolver implements AssetResolverInterface {
     if (!isset($language)) {
       $language = $this->languageManager->getCurrentLanguage();
     }
-    $theme_info = $this->themeManager->getActiveTheme();
-    // Add the theme name to the cache key since themes may implement
-    // hook_library_info_alter().
-    $cid = 'css:' . $theme_info->getName() . ':' . $language->getId() . Crypt::hashBase64(serialize($libraries_to_load)) . (int) $optimize;
+    // Add the active theme name to the cache key since active themes may
+    // implement hook_library_info_alter().
+    $active_theme = $this->themeManager->getActiveTheme()->getName();
+    // Add the default theme name to the cache key since css generated for an
+    // active admin theme may include the default theme's ckeditor5-stylesheets
+    // and default themes may be set conditionally and dynamically.
+    $default_theme = $this->themeHandler->getDefault();
+    $cid = 'css:' . $active_theme . ':' . $default_theme . ':' . $language->getId() . Crypt::hashBase64(serialize($libraries_to_load)) . (int) $optimize;
     if ($cached = $this->cache->get($cid)) {
       return $cached->data;
     }
