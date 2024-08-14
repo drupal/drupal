@@ -29,8 +29,8 @@ class AdminUiTest extends CKEditor5TestBase {
   public function testSettingsOnlyFireAjaxWithCkeditor5(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
-    $this->addNewTextFormat($page, $assert_session);
-    $this->addNewTextFormat($page, $assert_session, 'unicorn');
+    $this->addNewTextFormat();
+    $this->addNewTextFormat('unicorn');
 
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
 
@@ -184,7 +184,7 @@ JS;
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    $this->addNewTextFormat($page, $assert_session);
+    $this->addNewTextFormat();
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
 
     // Add the image plugin to the CKEditor 5 toolbar.
@@ -233,7 +233,7 @@ JS;
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    $this->addNewTextFormat($page, $assert_session);
+    $this->addNewTextFormat();
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
 
     // Add the source editing plugin to the CKEditor 5 toolbar.
