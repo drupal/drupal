@@ -55,9 +55,9 @@ abstract class InstallerTestBase extends BrowserTestBase {
   /**
    * Additional parameters to use for installer screens.
    *
-   * @see FunctionalTestSetupTrait::installParameters()
-   *
    * @var array
+   *
+   * @see FunctionalTestSetupTrait::installParameters()
    */
   protected $parameters = [];
 

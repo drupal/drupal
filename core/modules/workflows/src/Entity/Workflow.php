@@ -82,9 +82,9 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface, EntityWith
   /**
    * The workflow type plugin ID.
    *
-   * @see \Drupal\workflows\WorkflowTypeManager
-   *
    * @var string
+   *
+   * @see \Drupal\workflows\WorkflowTypeManager
    */
   protected $type;
 

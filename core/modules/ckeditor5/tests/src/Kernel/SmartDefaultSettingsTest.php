@@ -31,9 +31,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
    *
    * The updated Text Format & Text Editors are explicitly checked.
    *
-   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
-   *
    * @var bool
+   *
+   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
    */
   protected $strictConfigSchema = FALSE;
 

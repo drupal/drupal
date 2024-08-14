@@ -30,18 +30,18 @@ class Archiver extends Plugin {
   /**
    * The human-readable name of the archiver plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $title;
 
   /**
    * The description of the archiver plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $description;
 

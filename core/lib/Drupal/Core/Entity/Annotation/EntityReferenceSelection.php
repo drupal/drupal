@@ -35,15 +35,16 @@ class EntityReferenceSelection extends Plugin {
   /**
    * The human-readable name of the selection plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $label;
 
   /**
    * The selection plugin group.
    *
+   * @var string
    * This property is used to allow selection plugins to target a specific
    * entity type while also inheriting the code of an existing selection plugin.
    * For example, if we want to override the NodeSelection from the 'default'
@@ -54,8 +55,6 @@ class EntityReferenceSelection extends Plugin {
    * group = "default",
    * weight = 5
    * @endcode
-   *
-   * @var string
    */
   public $group;
 

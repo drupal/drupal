@@ -103,9 +103,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * Some entities do not specify a 'label' entity key. For example: User.
    *
-   * @see ::getInvalidNormalizedEntityToCreate
-   *
    * @var string|null
+   *
+   * @see ::getInvalidNormalizedEntityToCreate
    */
   protected static $labelFieldName = NULL;
 
@@ -114,9 +114,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * The default value of 2 should work for most content entities.
    *
-   * @see ::testPost()
-   *
    * @var string|int
+   *
+   * @see ::testPost()
    */
   protected static $firstCreatedEntityId = 2;
 
@@ -125,9 +125,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * The default value of 3 should work for most content entities.
    *
-   * @see ::testPost()
-   *
    * @var string|int
+   *
+   * @see ::testPost()
    */
   protected static $secondCreatedEntityId = 3;
 

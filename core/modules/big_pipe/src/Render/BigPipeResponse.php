@@ -34,10 +34,10 @@ class BigPipeResponse extends HtmlResponse implements ResponseKeepSessionOpenInt
    * Still contains placeholders. Its cacheability metadata and attachments are
    * for everything except the placeholders (since those are not yet rendered).
    *
+   * @var \Drupal\Core\Render\HtmlResponse
+   *
    * @see \Drupal\Core\Render\StreamedResponseInterface
    * @see ::getStreamedResponse()
-   *
-   * @var \Drupal\Core\Render\HtmlResponse
    */
   protected $originalHtmlResponse;
 

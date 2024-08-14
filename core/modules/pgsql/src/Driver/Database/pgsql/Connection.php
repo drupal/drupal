@@ -78,11 +78,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * savepoints opened to to mimic MySql's InnoDB functionality, which provides
    * an inherent savepoint before any query in a transaction.
    *
+   * @var array<string,Transaction>
+   *
    * @see ::addSavepoint()
    * @see ::releaseSavepoint()
    * @see ::rollbackSavepoint()
-   *
-   * @var array<string,Transaction>
    */
   protected array $savepoints = [];
 

@@ -53,6 +53,8 @@ class WorkflowType extends Plugin {
    * - 'state' (\Drupal\workflows\StateInterface::PLUGIN_FORM_KEY)
    * - 'transition' (\Drupal\workflows\TransitionInterface::PLUGIN_FORM_KEY)
    *
+   * @var array
+   *
    * @see \Drupal\Core\Plugin\PluginWithFormsInterface
    * @see \Drupal\Core\Plugin\PluginFormInterface
    * @see \Drupal\workflows\Plugin\WorkflowTypeConfigureFormBase
@@ -61,8 +63,6 @@ class WorkflowType extends Plugin {
    * @see \Drupal\workflows\WorkflowTypeInterface::PLUGIN_FORM_KEY
    * @see \Drupal\workflows\StateInterface::PLUGIN_FORM_KEY
    * @see \Drupal\workflows\TransitionInterface::PLUGIN_FORM_KEY
-   *
-   * @var array
    */
   public $forms = [];
 

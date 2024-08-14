@@ -13,9 +13,9 @@ class UnmetDependenciesException extends ConfigException {
   /**
    * A list of configuration objects that have unmet dependencies.
    *
+   * @var array
    * The list is keyed by the config object name, and the value is an array of
    * the missing dependencies:
-   *
    * @code
    *
    * self::configObjects = [
@@ -26,8 +26,6 @@ class UnmetDependenciesException extends ConfigException {
    * ];
    *
    * @endcode
-   *
-   * @var array
    */
   protected $configObjects = [];
 

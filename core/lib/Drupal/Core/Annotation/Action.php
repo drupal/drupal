@@ -29,9 +29,9 @@ class Action extends Plugin {
   /**
    * The human-readable name of the action plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $label;
 
@@ -40,18 +40,18 @@ class Action extends Plugin {
    *
    * This property is optional and it does not need to be declared.
    *
-   * @todo Provide a more generic way to allow an action to be confirmed first.
-   *
    * @var string
+   *
+   * @todo Provide a more generic way to allow an action to be confirmed first.
    */
   public $confirm_form_route_name = '';
 
   /**
    * The entity type the action can apply to.
    *
-   * @todo Replace with \Drupal\Core\Plugin\Context\Context.
-   *
    * @var string
+   *
+   * @todo Replace with \Drupal\Core\Plugin\Context\Context.
    */
   public $type = '';
 

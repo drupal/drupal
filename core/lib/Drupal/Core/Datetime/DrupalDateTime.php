@@ -29,6 +29,7 @@ class DrupalDateTime extends DateTimePlus {
   /**
    * Formatted strings translation cache.
    *
+   * @var array
    * Translation cache represents an instance storage for formatted date
    * strings. It contains a multidimensional array where:
    * - first level keys - are drupal language codes;
@@ -53,8 +54,6 @@ class DrupalDateTime extends DateTimePlus {
    *     ],
    *   ]
    * @endcode
-   *
-   * @var array
    */
   protected $formatTranslationCache = [];
 

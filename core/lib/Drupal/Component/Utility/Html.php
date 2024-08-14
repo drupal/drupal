@@ -51,10 +51,10 @@ class Html {
    *   tag. That tag only makes sense in an HTML-served-as-HTML context, in
    *   which case relative URLs are guaranteed to work.
    *
+   * @var string[]
+   *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
    * @see https://stackoverflow.com/questions/2725156/complete-list-of-html-tag-attributes-which-have-a-url-value
-   *
-   * @var string[]
    */
   protected static $uriAttributes = ['href', 'poster', 'src', 'cite', 'data', 'action', 'formaction', 'srcset', 'about'];
 

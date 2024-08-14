@@ -85,9 +85,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * Migration message service.
    *
-   * @todo https://www.drupal.org/node/2822663 Make this protected.
-   *
    * @var \Drupal\migrate\MigrateMessageInterface
+   *
+   * @todo https://www.drupal.org/node/2822663 Make this protected.
    */
   public $message;
 

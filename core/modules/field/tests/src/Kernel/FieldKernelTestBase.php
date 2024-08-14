@@ -40,9 +40,9 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    * - $this->fieldTestData->field[suffix]
    * - $this->fieldTestData->field_definition[suffix]
    *
-   * @see \Drupal\field\Tests\FieldUnitTestBase::createFieldWithStorage()
-   *
    * @var \ArrayObject
+   *
+   * @see \Drupal\field\Tests\FieldUnitTestBase::createFieldWithStorage()
    */
   protected $fieldTestData;
 

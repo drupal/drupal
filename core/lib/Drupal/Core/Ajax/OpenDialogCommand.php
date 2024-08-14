@@ -41,9 +41,9 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *
    * Any jQuery UI option can be used.
    *
-   * @see http://api.jqueryui.com/dialog.
-   *
    * @var array
+   *
+   * @see http://api.jqueryui.com/dialog.
    */
   protected $dialogOptions;
 

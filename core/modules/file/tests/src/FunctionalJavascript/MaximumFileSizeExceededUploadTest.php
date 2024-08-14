@@ -46,10 +46,10 @@ class MaximumFileSizeExceededUploadTest extends WebDriverTestBase {
   /**
    * The original value of the 'display_errors' PHP configuration option.
    *
+   * @var string
+   *
    * @todo Remove this when issue #2905597 is fixed.
    * @see https://www.drupal.org/node/2905597
-   *
-   * @var string
    */
   protected $originalDisplayErrorsValue;
 

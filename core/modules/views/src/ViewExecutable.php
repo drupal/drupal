@@ -40,18 +40,18 @@ class ViewExecutable {
   /**
    * Whether or not the view has been built.
    *
-   * @todo Group with other static properties.
-   *
    * @var bool
+   *
+   * @todo Group with other static properties.
    */
   public $built = FALSE;
 
   /**
    * Whether the view has been executed/query has been run.
    *
-   * @todo Group with other static properties.
-   *
    * @var bool
+   *
+   * @todo Group with other static properties.
    */
   public $executed = FALSE;
 
@@ -372,9 +372,9 @@ class ViewExecutable {
   /**
    * Does this view already have loaded its handlers.
    *
-   * @todo Group with other static properties.
-   *
    * @var bool
+   *
+   * @todo Group with other static properties.
    */
   public $inited;
 

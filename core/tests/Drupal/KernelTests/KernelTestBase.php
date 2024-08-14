@@ -160,10 +160,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * it extends, and so on up the class hierarchy. It is not necessary to
    * include modules in your list that a parent class has already declared.
    *
+   * @var array
+   *
    * @see \Drupal\Tests\KernelTestBase::enableModules()
    * @see \Drupal\Tests\KernelTestBase::bootKernel()
-   *
-   * @var array
    */
   protected static $modules = [];
 
@@ -175,8 +175,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected $vfsRoot;
 
   /**
-   * @todo Move into Config test base class.
    * @var \Drupal\Core\Config\ConfigImporter
+   *
+   * @todo Move into Config test base class.
    */
   protected $configImporter;
 
@@ -197,9 +198,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * Set to TRUE to strict check all configuration saved.
    *
-   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
-   *
    * @var bool
+   *
+   * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
    */
   protected $strictConfigSchema = TRUE;
 
@@ -222,9 +223,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * Set to TRUE to make user 1 a super user.
    *
-   * @see \Drupal\Core\Session\SuperUserAccessPolicy
-   *
    * @var bool
+   *
+   * @see \Drupal\Core\Session\SuperUserAccessPolicy
    */
   protected bool $usesSuperUserAccessPolicy;
 

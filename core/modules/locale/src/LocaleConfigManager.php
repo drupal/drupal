@@ -78,9 +78,9 @@ class LocaleConfigManager {
   /**
    * Whether or not configuration translations are being updated from locale.
    *
-   * @see self::isUpdatingFromLocale()
-   *
    * @var bool
+   *
+   * @see self::isUpdatingFromLocale()
    */
   protected $isUpdatingFromLocale = FALSE;
 

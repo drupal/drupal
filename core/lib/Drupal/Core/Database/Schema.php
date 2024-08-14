@@ -30,9 +30,9 @@ abstract class Schema implements PlaceholderInterface {
    * by defining the defaultSchema variable only MySQL has to re-write the
    * method.
    *
-   * @see DatabaseSchema::getPrefixInfo()
-   *
    * @var string
+   *
+   * @see DatabaseSchema::getPrefixInfo()
    */
   protected $defaultSchema = 'public';
 

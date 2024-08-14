@@ -32,9 +32,9 @@ class RestResource extends Plugin {
   /**
    * The human-readable name of the REST resource plugin.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $label;
 
@@ -43,9 +43,9 @@ class RestResource extends Plugin {
    *
    * This property is optional and it does not need to be declared.
    *
-   * @see \Symfony\Component\Serializer\SerializerInterface's "type" parameter.
-   *
    * @var string
+   *
+   * @see \Symfony\Component\Serializer\SerializerInterface's "type" parameter.
    */
   public $serialization_class;
 
@@ -55,9 +55,9 @@ class RestResource extends Plugin {
    * Key-value pairs, with link relation type plugin IDs as keys, and URL
    * templates as values.
    *
-   * @see core/core.link_relation_types.yml
-   *
    * @var string[]
+   *
+   * @see core/core.link_relation_types.yml
    */
   public $uri_paths = [];
 

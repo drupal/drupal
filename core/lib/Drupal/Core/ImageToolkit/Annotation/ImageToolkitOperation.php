@@ -65,9 +65,9 @@ class ImageToolkitOperation extends Plugin {
    *
    * The string should be wrapped in @Translation().
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $label;
 
@@ -76,9 +76,9 @@ class ImageToolkitOperation extends Plugin {
    *
    * The string should be wrapped in @Translation().
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $description;
 

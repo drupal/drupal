@@ -41,9 +41,9 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
   /**
    * The default allowed elements for filter_html's "allowed_html" setting.
    *
-   * @see \Drupal\filter\Plugin\Filter\FilterHtml
-   *
    * @var string
+   *
+   * @see \Drupal\filter\Plugin\Filter\FilterHtml
    */
   protected $defaultElementsWhenUpdatingNotCkeditor5 = "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id>";
 

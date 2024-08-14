@@ -32,11 +32,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * A format is the combination of a certain normalizer and a certain
    * serializer.
    *
-   * @see https://www.drupal.org/developing/api/8/serialization
-   *
    * (The default is 'json' because that doesn't depend on any module.)
    *
    * @var string
+   *
+   * @see https://www.drupal.org/developing/api/8/serialization
    */
   protected static $format = 'json';
 

@@ -89,7 +89,6 @@
     <!-- Sniff for: DuplicateVar, EmptyVar, IncorrectVarType, InlineVariableName, WrongStyle -->
     <exclude name="Drupal.Commenting.VariableComment.Missing"/>
     <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
-    <exclude name="Drupal.Commenting.VariableComment.VarOrder"/>
   </rule>
   <rule ref="Drupal.ControlStructures.ControlSignature"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>

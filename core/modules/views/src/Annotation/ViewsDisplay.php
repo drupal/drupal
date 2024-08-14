@@ -95,8 +95,6 @@ class ViewsDisplay extends ViewsPluginAnnotationBase {
    * displays of a view. If this is not set or regions have been specified,
    * views will display an option to 'hide contextual links'. Use an empty
    * array to disable.
-   *
-   * @var array
    */
   public $contextual_links_locations;
 

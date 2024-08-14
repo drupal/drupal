@@ -32,9 +32,9 @@ class YamlDiscovery implements DiscoveryInterface {
   /**
    * Contains an array of translatable properties passed along to t().
    *
-   * @see \Drupal\Core\Plugin\Discovery\YamlDiscovery::addTranslatableProperty()
-   *
    * @var array
+   *
+   * @see \Drupal\Core\Plugin\Discovery\YamlDiscovery::addTranslatableProperty()
    */
   protected $translatableProperties = [];
 

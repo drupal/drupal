@@ -28,9 +28,9 @@ class Tables implements TablesInterface {
    * properties. Its keys are unique references to the tables, values are
    * aliases.
    *
-   * @see \Drupal\Core\Entity\Query\Sql\Tables::ensureEntityTable().
-   *
    * @var array
+   *
+   * @see \Drupal\Core\Entity\Query\Sql\Tables::ensureEntityTable().
    */
   protected $entityTables = [];
 

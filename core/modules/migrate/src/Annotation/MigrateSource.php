@@ -47,9 +47,9 @@ class MigrateSource extends Plugin implements MultipleProviderAnnotationInterfac
    * Migrate Drupal's source plugins expect source_module to be the name of a
    * module that must be installed and enabled in the source database.
    *
-   * @see \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase::checkRequirements
-   *
    * @var string
+   *
+   * @see \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase::checkRequirements
    */
   public $source_module;
 

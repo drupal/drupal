@@ -118,6 +118,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * Default field value.
    *
+   * @var array
    * The default value is used when an entity is created, either:
    * - through an entity creation form; the form elements for the field are
    *   prepopulated with the default value.
@@ -141,8 +142,6 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *   ['value' => 2],
    * ]
    * @endcode
-   *
-   * @var array
    */
   protected $default_value = [];
 

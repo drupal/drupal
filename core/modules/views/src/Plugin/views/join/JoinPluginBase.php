@@ -203,9 +203,9 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
    *   - value: Must be set. If an array, operator will be defaulted to IN.
    *   - numeric: If true, the value will not be surrounded in quotes.
    *
-   * @see SelectQueryInterface::addJoin()
-   *
    * @var array
+   *
+   * @see SelectQueryInterface::addJoin()
    */
   public $extra;
 

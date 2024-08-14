@@ -98,10 +98,10 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    * This property is not saved to the language entity, but is needed for
    * detecting when to rebuild the services.
    *
+   * @var bool
+   *
    * @see \Drupal\language\Entity\ConfigurableLanguage::preSave()
    * @see \Drupal\language\Entity\ConfigurableLanguage::postSave()
-   *
-   * @var bool
    */
   protected $preSaveMultilingual;
 

@@ -46,9 +46,9 @@ class MigrateUpgradeImportBatch {
   /**
    * The maximum length in seconds to allow processing in a request.
    *
-   * @see self::run()
-   *
    * @var int
+   *
+   * @see self::run()
    */
   protected static $maxExecTime;
 

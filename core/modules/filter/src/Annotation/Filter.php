@@ -39,9 +39,9 @@ class Filter extends Plugin {
    *
    * This is used as an administrative summary of what the filter does.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $title;
 
@@ -50,9 +50,9 @@ class Filter extends Plugin {
    *
    * This property is optional and it does not need to be declared.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $description = '';
 

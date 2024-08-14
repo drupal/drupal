@@ -103,9 +103,9 @@ class FormState implements FormStateInterface {
    *
    * This property is uncacheable.
    *
-   * @see self::setRebuild()
-   *
    * @var bool
+   *
+   * @see self::setRebuild()
    */
   protected $rebuild = FALSE;
 
@@ -118,9 +118,9 @@ class FormState implements FormStateInterface {
    *
    * This property is uncacheable.
    *
-   * @see self::setInvalidToken()
-   *
    * @var bool
+   *
+   * @see self::setInvalidToken()
    */
   protected $invalidToken = FALSE;
 
@@ -149,11 +149,11 @@ class FormState implements FormStateInterface {
   /**
    * Used to redirect the form on submission.
    *
-   * @see self::getRedirect()
-   *
    * This property is uncacheable.
    *
    * @var \Drupal\Core\Url|\Symfony\Component\HttpFoundation\RedirectResponse|null
+   *
+   * @see self::getRedirect()
    */
   protected $redirect;
 

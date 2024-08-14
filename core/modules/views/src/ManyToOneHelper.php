@@ -24,9 +24,9 @@ class ManyToOneHelper {
   /**
    * Should the field use formula or alias.
    *
-   * @see \Drupal\views\Plugin\views\argument\StringArgument::query()
-   *
    * @var bool
+   *
+   * @see \Drupal\views\Plugin\views\argument\StringArgument::query()
    */
   public bool $formula = FALSE;
 

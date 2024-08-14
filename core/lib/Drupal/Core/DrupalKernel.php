@@ -227,9 +227,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * List of instantiated service provider classes.
    *
-   * @see \Drupal\Core\DrupalKernel::$serviceProviderClasses
-   *
    * @var array
+   *
+   * @see \Drupal\Core\DrupalKernel::$serviceProviderClasses
    */
   protected $serviceProviders;
 

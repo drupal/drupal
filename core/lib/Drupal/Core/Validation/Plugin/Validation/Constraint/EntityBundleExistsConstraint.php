@@ -33,9 +33,9 @@ class EntityBundleExistsConstraint extends SymfonyConstraint {
    *
    * This can contain variable values (e.g., `%parent`) that will be replaced.
    *
-   * @see \Drupal\Core\Config\Schema\TypeResolver::replaceVariable()
-   *
    * @var string
+   *
+   * @see \Drupal\Core\Config\Schema\TypeResolver::replaceVariable()
    */
   public string $entityTypeId;
 

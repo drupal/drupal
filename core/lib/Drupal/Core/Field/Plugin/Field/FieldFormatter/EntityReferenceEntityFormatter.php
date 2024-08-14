@@ -59,9 +59,9 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    * Each counter takes into account all the relevant information about the
    * field and the referenced entity that is being rendered.
    *
-   * @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter::viewElements()
-   *
    * @var array
+   *
+   * @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter::viewElements()
    */
   protected static $recursiveRenderDepth = [];
 

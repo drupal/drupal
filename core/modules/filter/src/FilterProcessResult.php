@@ -66,9 +66,9 @@ class FilterProcessResult extends BubbleableMetadata {
   /**
    * The processed text.
    *
-   * @see \Drupal\filter\Plugin\FilterInterface::process()
-   *
    * @var string
+   *
+   * @see \Drupal\filter\Plugin\FilterInterface::process()
    */
   protected $processedText;
 

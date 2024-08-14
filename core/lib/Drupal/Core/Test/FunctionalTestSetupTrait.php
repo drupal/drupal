@@ -63,9 +63,9 @@ trait FunctionalTestSetupTrait {
   /**
    * Set to TRUE to make user 1 a super user.
    *
-   * @see \Drupal\Core\Session\SuperUserAccessPolicy
-   *
    * @var bool
+   *
+   * @see \Drupal\Core\Session\SuperUserAccessPolicy
    */
   protected bool $usesSuperUserAccessPolicy;
 

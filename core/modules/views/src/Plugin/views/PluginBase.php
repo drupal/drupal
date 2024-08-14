@@ -79,9 +79,9 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *
    * For display plugins this is empty.
    *
-   * @todo find a better description
-   *
    * @var \Drupal\views\Plugin\views\display\DisplayPluginBase
+   *
+   * @todo find a better description
    */
   public $displayHandler;
 

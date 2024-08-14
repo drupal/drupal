@@ -117,11 +117,11 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * The display information coming directly from the view entity.
    *
+   * @var array
+   *
    * @see \Drupal\views\Entity\View::getDisplay()
    *
    * @todo \Drupal\views\Entity\View::duplicateDisplayAsType directly access it.
-   *
-   * @var array
    */
   public $display;
 

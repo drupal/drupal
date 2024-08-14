@@ -64,9 +64,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
   /**
    * Unique machine name of the format.
    *
-   * @todo Rename to $id.
-   *
    * @var string
+   *
+   * @todo Rename to $id.
    */
   protected $format;
 
@@ -77,9 +77,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    * label but different filter configuration would impose a security risk.
    * Therefore, each text format label must be unique.
    *
-   * @todo Rename to $label.
-   *
    * @var string
+   *
+   * @todo Rename to $label.
    */
   protected $name;
 

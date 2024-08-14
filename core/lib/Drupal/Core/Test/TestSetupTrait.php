@@ -42,9 +42,9 @@ trait TestSetupTrait {
   /**
    * The public file directory for the test environment.
    *
-   * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
-   *
    * @var string
+   *
+   * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    */
   protected $publicFilesDirectory;
 
@@ -58,18 +58,18 @@ trait TestSetupTrait {
   /**
    * The private file directory for the test environment.
    *
-   * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
-   *
    * @var string
+   *
+   * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    */
   protected $privateFilesDirectory;
 
   /**
    * Set to TRUE to strict check all configuration saved.
    *
-   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
-   *
    * @var bool
+   *
+   * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
    */
   protected $strictConfigSchema = TRUE;
 
@@ -100,10 +100,10 @@ trait TestSetupTrait {
    * This value has to match the temporary directory created in
    * install_base_system() for test installs.
    *
+   * @var string
+   *
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    * @see install_base_system()
-   *
-   * @var string
    */
   protected $tempFilesDirectory;
 
