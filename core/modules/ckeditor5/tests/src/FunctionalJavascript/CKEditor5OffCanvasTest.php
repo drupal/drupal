@@ -28,7 +28,7 @@ class CKEditor5OffCanvasTest extends CKEditor5TestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $this->addNewTextFormat($page, $assert_session);
+    $this->addNewTextFormat();
 
     $this->drupalGet('/ckeditor5_test/off_canvas');
 
