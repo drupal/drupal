@@ -64,7 +64,7 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
     $libraries_before = $this->removeVendorAssets($libraries_before);
 
     $this->themeManager->setActiveTheme($this->themeInitialization->getActiveThemeByName('stable9'));
-    $this->libraryDiscovery->clearCachedDefinitions();
+    $this->libraryDiscovery->clear();
 
     // Now get the library definitions with Stable 9 as the active theme.
     $libraries_after = $this->getAllLibraries();

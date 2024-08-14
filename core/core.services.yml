@@ -1680,14 +1680,15 @@ services:
     class: Drupal\Core\Asset\AssetDumper
     arguments: ['@file_system']
   library.discovery:
-    class: Drupal\Core\Asset\LibraryDiscovery
-    arguments: ['@library.discovery.collector']
-  Drupal\Core\Asset\LibraryDiscoveryInterface: '@library.discovery'
-  library.discovery.collector:
     class: Drupal\Core\Asset\LibraryDiscoveryCollector
     arguments: ['@cache.discovery', '@lock', '@library.discovery.parser', '@theme.manager']
     tags:
       - { name: needs_destruction }
+  Drupal\Core\Asset\LibraryDiscoveryInterface: '@library.discovery'
+  library.discovery.collector:
+    arguments: ['@cache.discovery', '@lock', '@library.discovery.parser', '@theme.manager']
+    class: Drupal\Core\Asset\LibraryDiscoveryCollector
+    deprecated: The "%service_id%" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use LibraryDiscovery instead. See https://www.drupal.org/node/3462970
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
     arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder', '@extension.path.resolver', '@plugin.manager.sdc']

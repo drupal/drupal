@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\LibraryDependencyResolver;
+use Drupal\Core\Asset\LibraryDiscoveryCollector;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -12,6 +13,14 @@ use Drupal\Tests\UnitTestCase;
  * @group Asset
  */
 class LibraryDependencyResolverTest extends UnitTestCase {
+
+
+  /**
+   * The mock library discovery parser.
+   *
+   * @var \Drupal\Core\Asset\LibraryDiscoveryParser|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $libraryDiscoveryParser;
 
   /**
    * The tested library dependency resolver.
@@ -26,13 +35,6 @@ class LibraryDependencyResolverTest extends UnitTestCase {
    * @var \Drupal\Core\Asset\LibraryDiscoveryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $libraryDiscovery;
-
-  /**
-   * The mocked module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $moduleHandler;
 
   /**
    * Test library data.
@@ -59,7 +61,11 @@ class LibraryDependencyResolverTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->libraryDiscovery = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscovery')
+    $this->libraryDiscoveryParser = $this->getMockBuilder('Drupal\Core\Asset\LibraryDiscoveryParser')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $this->libraryDiscovery = $this->getMockBuilder(LibraryDiscoveryCollector::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['getLibrariesByExtension'])
       ->getMock();

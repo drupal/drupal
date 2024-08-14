@@ -6,6 +6,10 @@ use Drupal\Core\Cache\CacheCollectorInterface;
 
 /**
  * Discovers available asset libraries in Drupal.
+ *
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\Core\Asset\LibraryDiscoveryCollector instead.
+ * @see https://www.drupal.org/node/3462970
  */
 class LibraryDiscovery implements LibraryDiscoveryInterface {
 
@@ -17,22 +21,13 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
   protected $collector;
 
   /**
-   * The final library definitions, statically cached.
-   *
-   * Hooks hook_library_info_alter() and hook_js_settings_alter() allow modules
-   * and themes to dynamically alter a library definition (once per request).
-   *
-   * @var array
-   */
-  protected $libraryDefinitions = [];
-
-  /**
    * Constructs a new LibraryDiscovery instance.
    *
    * @param \Drupal\Core\Cache\CacheCollectorInterface $library_discovery_collector
    *   The library discovery cache collector.
    */
   public function __construct(CacheCollectorInterface $library_discovery_collector) {
+    trigger_error(__CLASS__ . 'is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use LibraryDiscoveryCollector instead. See https://www.drupal.org/node/3462970', E_USER_DEPRECATED);
     $this->collector = $library_discovery_collector;
   }
 
@@ -40,22 +35,14 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    * {@inheritdoc}
    */
   public function getLibrariesByExtension($extension) {
-    if (!isset($this->libraryDefinitions[$extension])) {
-      $libraries = $this->collector->get($extension);
-      $this->libraryDefinitions[$extension] = [];
-      foreach ($libraries as $name => $definition) {
-        $this->libraryDefinitions[$extension][$name] = $definition;
-      }
-    }
-
-    return $this->libraryDefinitions[$extension];
+    return $this->collector->get($extension);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getLibraryByName($extension, $name) {
-    $libraries = $this->getLibrariesByExtension($extension);
+    $libraries = $this->collector->get($extension);
     if (!isset($libraries[$name])) {
       return FALSE;
     }
@@ -70,7 +57,6 @@ class LibraryDiscovery implements LibraryDiscoveryInterface {
    * {@inheritdoc}
    */
   public function clearCachedDefinitions() {
-    $this->libraryDefinitions = [];
     $this->collector->clear();
   }
 

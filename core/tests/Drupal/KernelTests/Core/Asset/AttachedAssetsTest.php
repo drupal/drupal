@@ -422,7 +422,7 @@ class AttachedAssetsTest extends KernelTestBase {
     // Retrieve a dynamic library definition.
     // @see common_test_library_info_build()
     \Drupal::state()->set('common_test.library_info_build_test', TRUE);
-    $library_discovery->clearCachedDefinitions();
+    $library_discovery->clear();
     $dynamic_library = $library_discovery->getLibraryByName('common_test', 'dynamic_library');
     $this->assertIsArray($dynamic_library);
     $this->assertArrayHasKey('version', $dynamic_library);

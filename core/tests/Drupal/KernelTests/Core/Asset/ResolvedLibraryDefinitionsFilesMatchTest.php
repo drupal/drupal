@@ -163,7 +163,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     // and these changes are only applied for the active theme.
     foreach ($this->allThemes as $theme) {
       $this->themeManager->setActiveTheme($this->themeInitialization->getActiveThemeByName($theme));
-      $this->libraryDiscovery->clearCachedDefinitions();
+      $this->libraryDiscovery->clear();
 
       $this->verifyLibraryFilesExist($this->getAllLibraries());
     }

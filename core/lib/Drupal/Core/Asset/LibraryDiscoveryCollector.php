@@ -13,7 +13,7 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 /**
  * A CacheCollector implementation for building library extension info.
  */
-class LibraryDiscoveryCollector extends CacheCollector {
+class LibraryDiscoveryCollector extends CacheCollector implements LibraryDiscoveryInterface {
 
   /**
    * The library discovery parser.
@@ -162,9 +162,43 @@ class LibraryDiscoveryCollector extends CacheCollector {
   /**
    * {@inheritdoc}
    */
+  public function getLibrariesByExtension($extension) {
+    return $this->get($extension);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLibraryByName($extension, $name) {
+    $libraries = $this->getLibrariesByExtension($extension);
+    if (!isset($libraries[$name])) {
+      return FALSE;
+    }
+    if (isset($libraries[$name]['deprecated'])) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+      @trigger_error(str_replace('%library_id%', "$extension/$name", $libraries[$name]['deprecated']), E_USER_DEPRECATED);
+    }
+    return $libraries[$name];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function reset() {
     parent::reset();
     $this->cid = NULL;
+  }
+
+  /**
+   * Clears static and persistent cache.
+   *
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
+   * LibraryDiscoveryCollector::clear() instead.
+   * @see https://www.drupal.org/node/3462970
+   */
+  public function clearCachedDefinitions() {
+    @trigger_error(__METHOD__ . 'is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Use ::clear() instead. See https://www.drupal.org/node/3462970', E_USER_DEPRECATED);
+    $this->clear();
   }
 
 }

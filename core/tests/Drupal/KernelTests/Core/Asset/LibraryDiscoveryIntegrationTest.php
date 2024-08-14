@@ -285,7 +285,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     $theme_manager->setActiveTheme($theme_initializer->getActiveThemeByName($theme_name));
 
-    $this->libraryDiscovery->clearCachedDefinitions();
+    $this->libraryDiscovery->clear();
 
     $this->assertSame($theme_name, $theme_manager->getActiveTheme()->getName());
   }
