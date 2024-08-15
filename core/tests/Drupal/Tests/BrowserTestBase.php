@@ -370,10 +370,6 @@ abstract class BrowserTestBase extends TestCase {
     // Set up the browser test output file.
     $this->initBrowserOutputFile();
 
-    // Ensure that the test is not marked as risky because of no assertions. In
-    // PHPUnit 6 tests that only make assertions using $this->assertSession()
-    // can be marked as risky.
-    $this->addToAssertionCount(1);
   }
 
   /**
