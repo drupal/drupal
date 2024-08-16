@@ -177,7 +177,7 @@ function contact_mail($key, &$message, $params) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for \Drupal\user\ProfileForm.
  *
  * Add the enable personal contact form to an individual user's account page.
  *
@@ -204,7 +204,9 @@ function contact_form_user_form_alter(&$form, FormStateInterface $form_state) {
 }
 
 /**
- * Submit callback for the user profile form to save the contact page setting.
+ * Form submission handler for \Drupal\user\ProfileForm.
+ *
+ * Saves the contact page setting.
  */
 function contact_user_profile_form_submit($form, FormStateInterface $form_state) {
   $account = $form_state->getFormObject()->getEntity();
@@ -214,11 +216,9 @@ function contact_user_profile_form_submit($form, FormStateInterface $form_state)
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements hook_form_FORM_ID_alter() for \Drupal\user\AccountSettingsForm.
  *
- * Add the default personal contact setting on the user settings page.
- *
- * @see \Drupal\user\AccountSettingsForm
+ * Adds the default personal contact setting on the user settings page.
  */
 function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form_state) {
   $form['contact'] = [
@@ -238,7 +238,7 @@ function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form
 }
 
 /**
- * Form submission handler for user_admin_settings().
+ * Form submission handler for \Drupal\user\AccountSettingsForm.
  *
  * @see contact_form_user_admin_settings_alter()
  */
