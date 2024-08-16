@@ -111,11 +111,11 @@ class QueryBatchTest extends KernelTestBase {
         ];
       }
       $tests[$data_set]['expected_data'] = $tests[$data_set]['source_data'][$table];
-      $tests[$data_set][2] = $num_rows;
+      $tests[$data_set]['num_rows'] = $num_rows;
       // Plugin configuration array.
-      $tests[$data_set][3] = ['batch_size' => $batch_size];
+      $tests[$data_set]['configuration'] = ['batch_size' => $batch_size];
       // Expected batch size.
-      $tests[$data_set][4] = $batch_size;
+      $tests[$data_set]['expected_batch_size'] = $batch_size;
       // Expected batch count is 0 unless a batch size is set.
       $expected_batch_count = 0;
       if ($batch_size > 0) {
@@ -126,7 +126,7 @@ class QueryBatchTest extends KernelTestBase {
           $expected_batch_count++;
         }
       }
-      $tests[$data_set][5] = $expected_batch_count;
+      $tests[$data_set]['expected_batch_count'] = $expected_batch_count;
       $data_set++;
     }
     return $tests;
