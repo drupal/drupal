@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Installer;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\DatabaseNotFoundException;
-use Drupal\Core\Database\Schema;
-use Drupal\Core\Installer\InstallerRedirectTrait;
+use Drupal\Tests\Core\Database\Stub\StubConnection;
+use Drupal\Tests\Core\Database\Stub\StubSchema;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -69,70 +68,64 @@ class InstallerRedirectTraitTest extends KernelTestBase {
    * @covers ::shouldRedirectToInstaller
    * @dataProvider providerShouldRedirectToInstaller
    */
-  public function testShouldRedirectToInstaller($expected, $exception, $connection, $connection_info, $sequences_table_exists = TRUE): void {
+  public function testShouldRedirectToInstaller(bool $expected, string $exception, bool $connection, bool $connection_info, bool $sequences_table_exists = TRUE): void {
+    // Mock the trait.
+    $trait = $this->getMockBuilder(InstallerRedirectTraitMockableClass::class)
+      ->onlyMethods(['isCli'])
+      ->getMock();
+
+    // Make sure that the method thinks we are not using the cli.
+    $trait->expects($this->any())
+      ->method('isCli')
+      ->willReturn(FALSE);
+
+    // If testing no connection info, we need to make the 'default' key not
+    // visible.
+    if (!$connection_info) {
+      Database::renameConnection('default', __METHOD__);
+    }
+
+    if ($connection) {
+      // Mock the database connection.
+      $connection = $this->getMockBuilder(StubConnection::class)
+        ->disableOriginalConstructor()
+        ->onlyMethods(['schema'])
+        ->getMock();
+
+      if ($connection_info) {
+        // Mock the database schema class.
+        $schema = $this->getMockBuilder(StubSchema::class)
+          ->disableOriginalConstructor()
+          ->onlyMethods(['tableExists'])
+          ->getMock();
+
+        $schema->expects($this->any())
+          ->method('tableExists')
+          ->with('sequences')
+          ->willReturn($sequences_table_exists);
+
+        $connection->expects($this->any())
+          ->method('schema')
+          ->willReturn($schema);
+      }
+    }
+    else {
+      // Set the database connection if there is none.
+      $connection = NULL;
+    }
+
     try {
       throw new $exception();
     }
     catch (\Exception $e) {
-      // Mock the trait.
-      $trait = $this->getMockBuilder(InstallerRedirectTraitMockableClass::class)
-        ->onlyMethods(['isCli'])
-        ->getMock();
-
-      // Make sure that the method thinks we are not using the cli.
-      $trait->expects($this->any())
-        ->method('isCli')
-        ->willReturn(FALSE);
-
-      // Un-protect the method using reflection.
-      $method_ref = new \ReflectionMethod($trait, 'shouldRedirectToInstaller');
-
-      // Mock the database connection info.
-      $db = $this->getMockForAbstractClass(Database::class);
-      $property_ref = new \ReflectionProperty($db, 'databaseInfo');
-      $property_ref->setValue($db, ['default' => $connection_info]);
-
-      if ($connection) {
-        // Mock the database connection.
-        $connection = $this->getMockBuilder(Connection::class)
-          ->disableOriginalConstructor()
-          ->onlyMethods(['schema'])
-          ->getMockForAbstractClass();
-
-        if ($connection_info) {
-          // Mock the database schema class.
-          $schema = $this->getMockBuilder(Schema::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['tableExists'])
-            ->getMockForAbstractClass();
-
-          $schema->expects($this->any())
-            ->method('tableExists')
-            ->with('sequences')
-            ->willReturn($sequences_table_exists);
-
-          $connection->expects($this->any())
-            ->method('schema')
-            ->willReturn($schema);
-        }
-      }
-      else {
-        // Set the database connection if there is none.
-        $connection = NULL;
-      }
-
       // Call shouldRedirectToInstaller.
+      $method_ref = new \ReflectionMethod($trait, 'shouldRedirectToInstaller');
       $this->assertSame($expected, $method_ref->invoke($trait, $e, $connection));
     }
+
+    if (!$connection_info) {
+      Database::renameConnection(__METHOD__, 'default');
+    }
   }
-
-}
-
-/**
- * A class using the InstallerRedirectTrait for mocking purposes.
- */
-class InstallerRedirectTraitMockableClass {
-
-  use InstallerRedirectTrait;
 
 }
