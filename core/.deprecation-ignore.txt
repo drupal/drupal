@@ -26,3 +26,6 @@
 
 # PHPUnit 10.
 %The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered internal.*You should not extend it from "Drupal\\[^"]+"%
+
+# Twig 3.11.0
+%Since twig/twig 3.11: Changing the value of a "filter" node in a NodeVisitor class is not supported anymore.%
