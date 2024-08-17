@@ -91,7 +91,7 @@ class ContextDefinition implements ContextDefinitionInterface {
    *
    * @param string $data_type
    *   The required data type.
-   * @param string|null $label
+   * @param string|null|\Stringable $label
    *   The label of this context definition for the UI.
    * @param bool $required
    *   Whether the context definition is required.
