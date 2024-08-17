@@ -81,8 +81,8 @@ class ThemeInfoTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('xpath', '//link[contains(@href, "base-add.sub-remove.css")]');
 
     // Verify that CSS files with the same name are loaded from both the base theme and subtheme.
-    $this->assertSession()->elementsCount('xpath', '//link[contains(@href, "' . $base . '/samename.css")]', 1);
-    $this->assertSession()->elementsCount('xpath', '//link[contains(@href, "' . $sub . '/samename.css")]', 1);
+    $this->assertSession()->elementsCount('xpath', '//link[contains(@href, "' . $base . '/same-name.css")]', 1);
+    $this->assertSession()->elementsCount('xpath', '//link[contains(@href, "' . $sub . '/same-name.css")]', 1);
 
   }
 

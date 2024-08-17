@@ -168,7 +168,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     ];
     $account = $this->drupalCreateUser($permissions);
     $this->drupalLogin($account);
-    $webassert = $this->assertSession();
+    $assert_session = $this->assertSession();
 
     // Check that admin is able to edit the node.
     $nodes = $this->container->get('entity_type.manager')
@@ -176,15 +176,15 @@ class DemoUmamiProfileTest extends BrowserTestBase {
       ->loadByProperties(['title' => 'Deep mediterranean quiche']);
     $node = reset($nodes);
     $this->drupalGet($node->toUrl('edit-form'));
-    $webassert->statusCodeEquals(200);
+    $assert_session->statusCodeEquals(200);
 
     $this->submitForm([], 'Preview');
-    $webassert->statusCodeEquals(200);
+    $assert_session->statusCodeEquals(200);
     $this->assertSession()->elementsCount('css', 'h1', 1);
     $this->clickLink('Back to content editing');
 
     $this->submitForm([], "Save");
-    $webassert->pageTextContains('Recipe Deep mediterranean quiche has been updated.');
+    $assert_session->pageTextContains('Recipe Deep mediterranean quiche has been updated.');
   }
 
   /**
@@ -193,10 +193,10 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   protected function testAppearance() {
     $account = $this->drupalCreateUser(['administer themes']);
     $this->drupalLogin($account);
-    $webassert = $this->assertSession();
+    $assert_session = $this->assertSession();
 
     $this->drupalGet('admin/appearance');
-    $webassert->pageTextContains('Umami');
+    $assert_session->pageTextContains('Umami');
   }
 
   /**

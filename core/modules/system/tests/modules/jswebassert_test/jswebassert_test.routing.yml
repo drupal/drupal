@@ -1,0 +1,15 @@
+jswebassert_test.jswebassert_test_form:
+  path: '/jswebassert_test_form'
+  defaults:
+    _form: '\Drupal\jswebassert_test\Form\JsWebAssertTestForm'
+    _title: 'JsWebAssertForm'
+  requirements:
+    _access: 'TRUE'
+
+jswebassert_test.jswebassert_test_page:
+  path: '/jswebassert_test_page'
+  defaults:
+    _controller: '\Drupal\jswebassert_test\Controller\TestController::page'
+    _title: 'JsWebAssertPage'
+  requirements:
+    _access: 'TRUE'

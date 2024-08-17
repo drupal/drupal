@@ -21,7 +21,7 @@ class JSWebAssertTest extends WebDriverTestBase {
    *
    * @var array
    */
-  protected static $modules = ['js_webassert_test'];
+  protected static $modules = ['jswebassert_test'];
 
   /**
    * {@inheritdoc}
@@ -32,7 +32,7 @@ class JSWebAssertTest extends WebDriverTestBase {
    * Tests that JSWebAssert assertions work correctly.
    */
   public function testJsWebAssert(): void {
-    $this->drupalGet('js_webassert_test_form');
+    $this->drupalGet('jswebassert_test_form');
 
     $session = $this->getSession();
     $assert_session = $this->assertSession();
@@ -91,10 +91,10 @@ class JSWebAssertTest extends WebDriverTestBase {
     $this->assertNotEmpty($result);
     $this->assertInstanceOf(NodeElement::class, $result);
 
-    $result = $page->findById('js_webassert_test_field_id');
+    $result = $page->findById('jswebassert_test_field_id');
     $this->assertEmpty($result);
     $test_id->click();
-    $result = $assert_session->waitForId('js_webassert_test_field_id');
+    $result = $assert_session->waitForId('jswebassert_test_field_id');
     $this->assertNotEmpty($result);
     $this->assertInstanceOf(NodeElement::class, $result);
 
@@ -107,7 +107,7 @@ class JSWebAssertTest extends WebDriverTestBase {
     $result = $page->findField('test_assert_wait_on_ajax_input');
     $this->assertNotEmpty($result);
     $this->assertInstanceOf(NodeElement::class, $result);
-    $this->assertEquals('js_webassert_test', $result->getValue());
+    $this->assertEquals('jswebassert_test', $result->getValue());
 
     $result = $page->findButton('Added WaitForElementVisible');
     $this->assertEmpty($result);
@@ -117,7 +117,7 @@ class JSWebAssertTest extends WebDriverTestBase {
     $this->assertInstanceOf(NodeElement::class, $result);
     $this->assertEquals(TRUE, $result->isVisible());
 
-    $this->drupalGet('js_webassert_test_page');
+    $this->drupalGet('jswebassert_test_page');
     // Ensure that the javascript has replaced the element 1100 times.
     $assert_session->waitForText('New Text!! 1100');
     $result = $page->find('named', ['id', 'test_text']);

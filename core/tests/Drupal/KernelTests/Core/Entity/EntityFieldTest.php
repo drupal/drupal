@@ -503,9 +503,9 @@ class EntityFieldTest extends EntityKernelTestBase {
     $name_properties = $entity->name->getFieldDefinition()->getPropertyDefinitions();
     $this->assertEquals('string', $name_properties['value']->getDataType(), $entity_type . ': String value property of the name found.');
 
-    $userref_properties = $entity->user_id->getFieldDefinition()->getPropertyDefinitions();
-    $this->assertEquals('integer', $userref_properties['target_id']->getDataType(), $entity_type . ': Entity id property of the user found.');
-    $this->assertEquals('entity_reference', $userref_properties['entity']->getDataType(), $entity_type . ': Entity reference property of the user found.');
+    $user_ref_properties = $entity->user_id->getFieldDefinition()->getPropertyDefinitions();
+    $this->assertEquals('integer', $user_ref_properties['target_id']->getDataType(), $entity_type . ': Entity id property of the user found.');
+    $this->assertEquals('entity_reference', $user_ref_properties['entity']->getDataType(), $entity_type . ': Entity reference property of the user found.');
 
     $textfield_properties = $entity->field_test_text->getFieldDefinition()->getFieldStorageDefinition()->getPropertyDefinitions();
     $this->assertEquals('string', $textfield_properties['value']->getDataType(), $entity_type . ': String value property of the test-text field found.');

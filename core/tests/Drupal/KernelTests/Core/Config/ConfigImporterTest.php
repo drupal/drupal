@@ -525,9 +525,9 @@ class ConfigImporterTest extends KernelTestBase {
    * Tests the isInstallable method()
    */
   public function testIsInstallable(): void {
-    $config_name = 'config_test.dynamic.isinstallable';
+    $config_name = 'config_test.dynamic.is_installable';
     $this->assertFalse($this->container->get('config.storage')->exists($config_name));
-    \Drupal::state()->set('config_test.isinstallable', TRUE);
+    \Drupal::state()->set('config_test.is_installable', TRUE);
     $this->installConfig(['config_test']);
     $this->assertTrue($this->container->get('config.storage')->exists($config_name));
   }

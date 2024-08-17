@@ -237,13 +237,13 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals('edit-name', 'Test name');
     $this->assertSession()->fieldValueEquals('edit-options', '2');
 
-    $this->assertSession()->elementNotExists('xpath', '//notexisting');
+    $this->assertSession()->elementNotExists('xpath', '//nonexisting');
     $this->assertSession()->fieldValueNotEquals('edit-name', 'wrong value');
 
     // Test that the assertion fails correctly.
     try {
-      $this->assertSession()->fieldExists('notexisting');
-      $this->fail('The "notexisting" field was found.');
+      $this->assertSession()->fieldExists('nonexisting');
+      $this->fail('The "nonexisting" field was found.');
     }
     catch (ExpectationException) {
       // Expected exception; just continue testing.
@@ -299,7 +299,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     }
     // *** 3. assertNoFieldById().
     $this->assertSession()->fieldValueNotEquals('name', 'not the value');
-    $this->assertSession()->fieldNotExists('notexisting');
+    $this->assertSession()->fieldNotExists('nonexisting');
     // Test that the assertion fails correctly if no value is passed in.
     try {
       $this->assertSession()->fieldNotExists('edit-description');

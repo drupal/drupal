@@ -4,5 +4,5 @@ global-styling:
     base:
       base-add.css: {}
       base-add.sub-remove.css: {}
-      samename.css: {}
+      same-name.css: {}
       css/base-libraries-extend.css: {}

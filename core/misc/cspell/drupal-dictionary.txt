@@ -8,6 +8,7 @@ drupalci
 druplicon
 drupalimage
 drush
+jswebassert
 langcode
 langcodes
 lullabot

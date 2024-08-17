@@ -288,7 +288,6 @@ introspectable
 invalidators
 invokable
 isam
-isinstallable
 itok
 javascripts
 jessebeach
@@ -393,7 +392,6 @@ nomask
 nonconfigurable
 noquotes
 nosniff
-notexisting
 notnull
 notsimpletest
 nourriture
@@ -425,7 +423,6 @@ pathauto
 pcre
 pcss
 peast
-permissionless
 persistable
 phpass
 phpcbf
@@ -494,7 +491,6 @@ relname
 relpersistence
 renderable
 renderables
-renderered
 reparenting
 replyto
 resave
@@ -515,8 +511,6 @@ ribisi
 rowspans
 rtsp
 ruleset
-sameline
-samename
 sameorigin
 samesite
 savepoints
@@ -544,7 +538,6 @@ smalldatetime
 smtps
 somecompany
 sortablejs
-specialchars
 splitbutton
 splitbuttons
 squaresmall
@@ -689,14 +682,12 @@ uploadprogress
 upscaling
 urandom
 userinfo
-userref
 vampirize
 versionable
 versionless
 vfsstream
 viewports
 wcag
-webassert
 webcal
 webflo
 webhosting

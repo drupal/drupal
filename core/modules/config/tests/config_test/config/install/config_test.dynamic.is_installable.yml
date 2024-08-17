@@ -1,4 +1,4 @@
-id: isinstallable
+id: is_installable
 label: Default
 weight: 0
 protected_property: Default

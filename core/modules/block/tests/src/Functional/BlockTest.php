@@ -331,11 +331,11 @@ class BlockTest extends BlockTestBase {
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
     $this->drupalPlaceBlock('local_tasks_block');
     // Explicitly set the default and admin themes.
-    $theme = 'block_test_specialchars_theme';
+    $theme = 'block_test_special_chars_theme';
     \Drupal::service('theme_installer')->install([$theme]);
     $this->drupalGet('admin/structure/block');
     $this->assertSession()->assertEscaped('<"Cat" & \'Mouse\'>');
-    $this->drupalGet('admin/structure/block/list/block_test_specialchars_theme');
+    $this->drupalGet('admin/structure/block/list/block_test_special_chars_theme');
     $this->assertSession()->assertEscaped('Demonstrate block regions (<"Cat" & \'Mouse\'>)');
   }
 

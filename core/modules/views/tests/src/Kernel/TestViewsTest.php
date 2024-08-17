@@ -151,7 +151,7 @@ class TestViewsTest extends KernelTestBase {
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_exposed_form_checkboxes.yml
     Vocabulary::create(['vid' => 'test_exposed_checkboxes', 'name' => 'Exposed checkboxes test'])->save();
     // `core.entity_view_mode.node.default` is a config dependency.
-    // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_entity_field_renderered_entity.yml
+    // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_entity_field_rendered_entity.yml
     EntityViewMode::create([
       'id' => 'node.default',
       'label' => 'Default',

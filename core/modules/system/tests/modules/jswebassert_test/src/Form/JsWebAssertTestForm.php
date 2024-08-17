@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\js_webassert_test\Form;
+namespace Drupal\jswebassert_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -17,14 +17,14 @@ class JsWebAssertTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'js_webassert_test_form';
+    return 'jswebassert_test_form';
   }
 
   /**
    * Form for testing the addition of various types of elements via AJAX.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['#prefix'] = '<div id="js_webassert_test_form_wrapper">';
+    $form['#prefix'] = '<div id="jswebassert_test_form_wrapper">';
     $form['#suffix'] = '</div>';
 
     // Button to test for the waitForButton() assertion.
@@ -33,12 +33,12 @@ class JsWebAssertTestForm extends FormBase {
       '#value' => $this->t('Add button'),
       '#button_type' => 'primary',
       '#ajax' => [
-        'callback' => 'Drupal\js_webassert_test\Form\JsWebAssertTestForm::addButton',
+        'callback' => 'Drupal\jswebassert_test\Form\JsWebAssertTestForm::addButton',
         'progress' => [
           'type' => 'throbber',
           'message' => NULL,
         ],
-        'wrapper' => 'js_webassert_test_form_wrapper',
+        'wrapper' => 'jswebassert_test_form_wrapper',
       ],
     ];
     // Button to test for the waitForLink() assertion.
@@ -47,12 +47,12 @@ class JsWebAssertTestForm extends FormBase {
       '#value' => $this->t('Add link'),
       '#button_type' => 'primary',
       '#ajax' => [
-        'callback' => 'Drupal\js_webassert_test\Form\JsWebAssertTestForm::addLink',
+        'callback' => 'Drupal\jswebassert_test\Form\JsWebAssertTestForm::addLink',
         'progress' => [
           'type' => 'throbber',
           'message' => NULL,
         ],
-        'wrapper' => 'js_webassert_test_form_wrapper',
+        'wrapper' => 'jswebassert_test_form_wrapper',
       ],
     ];
     // Button to test for the waitForField() assertion.
@@ -61,12 +61,12 @@ class JsWebAssertTestForm extends FormBase {
       '#value' => $this->t('Add field'),
       '#button_type' => 'primary',
       '#ajax' => [
-        'callback' => 'Drupal\js_webassert_test\Form\JsWebAssertTestForm::addField',
+        'callback' => 'Drupal\jswebassert_test\Form\JsWebAssertTestForm::addField',
         'progress' => [
           'type' => 'throbber',
           'message' => NULL,
         ],
-        'wrapper' => 'js_webassert_test_form_wrapper',
+        'wrapper' => 'jswebassert_test_form_wrapper',
       ],
     ];
     // Button to test for the waitForId() assertion.
@@ -75,12 +75,12 @@ class JsWebAssertTestForm extends FormBase {
       '#value' => $this->t('Add ID'),
       '#button_type' => 'primary',
       '#ajax' => [
-        'callback' => 'Drupal\js_webassert_test\Form\JsWebAssertTestForm::addId',
+        'callback' => 'Drupal\jswebassert_test\Form\JsWebAssertTestForm::addId',
         'progress' => [
           'type' => 'throbber',
           'message' => NULL,
         ],
-        'wrapper' => 'js_webassert_test_form_wrapper',
+        'wrapper' => 'jswebassert_test_form_wrapper',
       ],
     ];
 
@@ -90,12 +90,12 @@ class JsWebAssertTestForm extends FormBase {
       '#value' => $this->t('Test waitForElementVisible'),
       '#button_type' => 'primary',
       '#ajax' => [
-        'callback' => 'Drupal\js_webassert_test\Form\JsWebAssertTestForm::addWaitForElementVisible',
+        'callback' => 'Drupal\jswebassert_test\Form\JsWebAssertTestForm::addWaitForElementVisible',
         'progress' => [
           'type' => 'throbber',
           'message' => NULL,
         ],
-        'wrapper' => 'js_webassert_test_form_wrapper',
+        'wrapper' => 'jswebassert_test_form_wrapper',
       ],
     ];
 
@@ -105,12 +105,12 @@ class JsWebAssertTestForm extends FormBase {
       '#value' => $this->t('Test assertWaitOnAjaxRequest'),
       '#button_type' => 'primary',
       '#ajax' => [
-        'callback' => 'Drupal\js_webassert_test\Form\JsWebAssertTestForm::addAssertWaitOnAjaxRequest',
+        'callback' => 'Drupal\jswebassert_test\Form\JsWebAssertTestForm::addAssertWaitOnAjaxRequest',
         'progress' => [
           'type' => 'throbber',
           'message' => NULL,
         ],
-        'wrapper' => 'js_webassert_test_form_wrapper',
+        'wrapper' => 'jswebassert_test_form_wrapper',
       ],
     ];
 
@@ -119,7 +119,7 @@ class JsWebAssertTestForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Test assertNoElementAfterWait: pass'),
       '#button_type' => 'primary',
-      '#attached' => ['library' => 'js_webassert_test/no_element_after_wait'],
+      '#attached' => ['library' => 'jswebassert_test/no_element_after_wait'],
     ];
 
     // Button to test the assertNoElementAfterWait() assertion, will fail.
@@ -151,7 +151,7 @@ class JsWebAssertTestForm extends FormBase {
     $form['added_link'] = [
       '#title' => 'Added link',
       '#type' => 'link',
-      '#url' => Url::fromRoute('js_webassert_test.js_webassert_test_form'),
+      '#url' => Url::fromRoute('jswebassert_test.jswebassert_test_form'),
     ];
     return $form;
   }
@@ -173,7 +173,7 @@ class JsWebAssertTestForm extends FormBase {
    */
   public static function addId(array $form, FormStateInterface $form_state) {
     $form['added_id'] = [
-      '#id' => 'js_webassert_test_field_id',
+      '#id' => 'jswebassert_test_field_id',
       '#type' => 'submit',
       '#value' => 'Added ID',
       '#button_type' => 'primary',
@@ -186,7 +186,7 @@ class JsWebAssertTestForm extends FormBase {
    */
   public static function addAssertWaitOnAjaxRequest(array $form, FormStateInterface $form_state) {
     // Attach the library necessary for this test.
-    $form['#attached']['library'][] = 'js_webassert_test/wait_for_ajax_request';
+    $form['#attached']['library'][] = 'jswebassert_test/wait_for_ajax_request';
 
     $form['test_assert_wait_on_ajax_input'] = [
       '#type' => 'textfield',
@@ -201,10 +201,10 @@ class JsWebAssertTestForm extends FormBase {
    */
   public static function addWaitForElementVisible(array $form, FormStateInterface $form_state) {
     // Attach the library necessary for this test.
-    $form['#attached']['library'][] = 'js_webassert_test/wait_for_element';
+    $form['#attached']['library'][] = 'jswebassert_test/wait_for_element';
 
     $form['element_invisible'] = [
-      '#id' => 'js_webassert_test_element_invisible',
+      '#id' => 'jswebassert_test_element_invisible',
       '#type' => 'submit',
       '#value' => 'Added WaitForElementVisible',
       '#button_type' => 'primary',

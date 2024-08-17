@@ -5,8 +5,8 @@ dependencies:
     - core.entity_view_mode.node.default
   module:
     - node
-id: test_entity_field_renderered_entity
-label: test_entity_field_renderered_entity
+id: test_entity_field_rendered_entity
+label: test_entity_field_rendered_entity
 module: views
 description: ''
 tag: ''
@@ -119,7 +119,7 @@ display:
     display_options:
       rendering_language: '***LANGUAGE_entity_translation***'
       display_extenders: {  }
-      path: test_entity_field_renderered_entity/entity_translation
+      path: test_entity_field_rendered_entity/entity_translation
     cache_metadata:
       max-age: -1
       contexts:
@@ -134,7 +134,7 @@ display:
     display_options:
       rendering_language: '***LANGUAGE_entity_default***'
       display_extenders: {  }
-      path: test_entity_field_renderered_entity/entity_default
+      path: test_entity_field_rendered_entity/entity_default
     cache_metadata:
       max-age: -1
       contexts:
@@ -149,7 +149,7 @@ display:
     display_options:
       rendering_language: '***LANGUAGE_site_default***'
       display_extenders: {  }
-      path: test_entity_field_renderered_entity/site_default
+      path: test_entity_field_rendered_entity/site_default
     cache_metadata:
       max-age: -1
       contexts:
@@ -164,7 +164,7 @@ display:
     display_options:
       rendering_language: '***LANGUAGE_language_interface***'
       display_extenders: {  }
-      path: test_entity_field_renderered_entity/language_interface
+      path: test_entity_field_rendered_entity/language_interface
     cache_metadata:
       max-age: -1
       contexts:
@@ -179,7 +179,7 @@ display:
     display_options:
       rendering_language: en
       display_extenders: {  }
-      path: test_entity_field_renderered_entity/en
+      path: test_entity_field_rendered_entity/en
     cache_metadata:
       max-age: -1
       contexts:
@@ -194,7 +194,7 @@ display:
     display_options:
       rendering_language: es
       display_extenders: {  }
-      path: test_entity_field_renderered_entity/es
+      path: test_entity_field_rendered_entity/es
     cache_metadata:
       max-age: -1
       contexts:

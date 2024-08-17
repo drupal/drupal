@@ -195,7 +195,7 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
    * {@inheritdoc}
    */
   public function isInstallable() {
-    return $this->id != 'isinstallable' || \Drupal::state()->get('config_test.isinstallable');
+    return $this->id != 'is_installable' || \Drupal::state()->get('config_test.is_installable');
   }
 
   /**

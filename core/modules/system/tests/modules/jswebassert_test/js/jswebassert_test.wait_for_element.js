@@ -10,9 +10,9 @@
    * @prop {Drupal~behaviorAttach} attach
    *   Makes changes in the DOM to be able to test the completion of AJAX in assertWaitOnAjaxRequest.
    */
-  Drupal.behaviors.js_webassert_test_wait_for_element = {
+  Drupal.behaviors.jswebassert_test_wait_for_element = {
     attach(context) {
-      $('#js_webassert_test_element_invisible').show();
+      $('#jswebassert_test_element_invisible').show();
     },
   };
 })(jQuery, Drupal, drupalSettings);

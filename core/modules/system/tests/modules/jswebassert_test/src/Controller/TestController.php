@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\js_webassert_test\Controller;
+namespace Drupal\jswebassert_test\Controller;
 
 use Drupal\Core\Render\Markup;
 

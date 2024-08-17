@@ -3,5 +3,5 @@ global-styling:
   css:
     base:
       css/sub-add.css: {}
-      css/samename.css: {}
+      css/same-name.css: {}
       css/sub-libraries-extend.css: {}
