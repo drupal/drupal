@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This XML file has supported branches for two major releases. The earlier major
+has stable releases but the later major release does not.
+-->
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>Drupal</title>
+<short_name>drupal</short_name>
+<dc:creator>Drupal</dc:creator>
+  <supported_branches>9.2.,10.0.</supported_branches>
+<project_status>published</project_status>
+<link>http://example.com/project/drupal</link>
+  <terms>
+   <term><name>Projects</name><value>Drupal project</value></term>
+  </terms>
+<releases>
+  <release>
+    <name>Drupal 10.0.0-beta1</name>
+    <version>10.0.0-beta1</version>
+    <status>published</status>
+    <release_link>http://example.com/drupal-10-0-0-beta1-release</release_link>
+    <download_link>http://example.com/drupal-10-0-0.tar.gz</download_link>
+    <date>1663358020</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+  <release>
+    <name>Drupal 10.0.0-alpha1</name>
+    <version>10.0.0-alpha1</version>
+    <status>published</status>
+    <release_link>http://example.com/drupal-10-0-0-alpha1-release</release_link>
+    <download_link>http://example.com/drupal-10-0-0.tar.gz</download_link>
+    <date>1643404041</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+  <release>
+    <name>drupal 9.2.2</name>
+    <version>9.2.2</version>
+    <status>published</status>
+    <release_link>http://example.com/drupal-9-2-2-release</release_link>
+    <download_link>http://example.com/drupal-9-2-2.tar.gz</download_link>
+   <date>1674066112</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+  </release>
+  <release>
+    <name>drupal 9.2.0</name>
+    <version>9.2.0</version>
+    <status>published</status>
+    <release_link>http://example.com/drupal-9-2-0-release</release_link>
+    <download_link>http://example.com/drupal-9-2-0.tar.gz</download_link>
+    <date>1671115839</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+</releases>
+</project>
