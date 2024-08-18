@@ -163,7 +163,7 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
 
     // Translate the files view, as this one uses numeric formatters.
     $description = 'Singular form';
-    $field_value = '1 place';
+    $field_value = '@count place';
     $field_value_plural = '@count places';
     $translation_url = 'admin/structure/views/view/files/translate/sl/add';
     $this->drupalGet($translation_url);
