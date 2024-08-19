@@ -160,6 +160,7 @@ variables:
   variables:
     TESTSUITE: PHPUnit-Build
     KUBERNETES_CPU_REQUEST: "2"
+    CONCURRENCY: "4"
   services:
     - <<: *with-database
 
