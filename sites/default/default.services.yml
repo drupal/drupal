@@ -38,6 +38,10 @@ parameters:
     # To maximize compatibility and normalize the behavior across user agents,
     # the cookie domain should start with a dot.
     #
+    # Sessions themselves will only be synchronized across subdomains if they
+    # are all served from the same Drupal installation or if some other session
+    # sharing mechanism is implemented.
+    #
     # @default none
     # cookie_domain: '.example.com'
     #
