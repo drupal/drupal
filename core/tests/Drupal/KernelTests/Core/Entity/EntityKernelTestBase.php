@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\EntityTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Defines an abstract test base for entity kernel tests.
  */
 abstract class EntityKernelTestBase extends KernelTestBase {
+
+  use EntityTrait;
   use UserCreationTrait {
     checkPermissions as drupalCheckPermissions;
     createAdminRole as drupalCreateAdminRole;
@@ -42,13 +44,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
-
-  /**
-   * A list of generated identifiers.
-   *
-   * @var array
-   */
-  protected $generatedIds = [];
 
   /**
    * The state service.
@@ -134,21 +129,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   }
 
   /**
-   * Reloads the given entity from the storage and returns it.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to be reloaded.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   The reloaded entity.
-   */
-  protected function reloadEntity(EntityInterface $entity) {
-    $controller = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
-    $controller->resetCache([$entity->id()]);
-    return $controller->load($entity->id());
-  }
-
-  /**
    * Returns the entity_test hook invocation info.
    *
    * @return array
@@ -191,27 +171,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
-  }
-
-  /**
-   * Generates a random ID avoiding collisions.
-   *
-   * @param bool $string
-   *   (optional) Whether the id should have string type. Defaults to FALSE.
-   *
-   * @return int|string
-   *   The entity identifier.
-   */
-  protected function generateRandomEntityId($string = FALSE) {
-    srand(time());
-    do {
-      // 0x7FFFFFFF is the maximum allowed value for integers that works for all
-      // Drupal supported databases and is known to work for other databases
-      // like SQL Server 2014 and Oracle 10 too.
-      $id = $string ? $this->randomMachineName() : mt_rand(1, 0x7FFFFFFF);
-    } while (isset($this->generatedIds[$id]));
-    $this->generatedIds[$id] = $id;
-    return $id;
   }
 
 }
