@@ -27,6 +27,8 @@
 ################
 
 workflow:
+  auto_cancel:
+    on_job_failure: all
   rules:
   # These 3 rules from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
     # Run on merge requests
@@ -114,6 +116,11 @@ default:
 
 .default-stage: &default-stage
   stage: 🗜️ Test
+  needs:
+    # Start the child jobs as soon as phpcs passes.
+    - "🧹 PHP Coding standards (PHPCS)"
+    - "📔 Spell-checking"
+
   trigger:
     # Rely on the status of the child pipeline.
     strategy: depend
