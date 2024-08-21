@@ -40,30 +40,10 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    */
   protected $revEntityTypeId = 'entity_test_revpub';
 
-  const SKIP_METHODS = [
-    // This test creates published default revisions in Live, which can not be
-    // deleted in a workspace. A test scenario for the case when Content
-    // Moderation and Workspaces are used together is covered in
-    // parent::testContentModerationStateRevisionDataRemoval().
-    'testContentModerationStateDataRemoval',
-    // This test does not assert anything that can be workspace-specific.
-    'testModerationWithFieldConfigOverride',
-    // This test does not assert anything that can be workspace-specific.
-    'testWorkflowDependencies',
-    // This test does not assert anything that can be workspace-specific.
-    'testWorkflowNonConfigBundleDependencies',
-    // This test does not assert anything that can be workspace-specific.
-    'testGetCurrentUserId',
-  ];
-
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    if (in_array($this->name(), static::SKIP_METHODS, TRUE)) {
-      $this->markTestSkipped('Irrelevant for this test');
-    }
-
     parent::setUp();
 
     $this->initializeWorkspacesModule();
@@ -195,6 +175,49 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
         'entity_test_revpub',
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testContentModerationStateDataRemoval($entity_type_id = NULL): void {
+    // This test creates published default revisions in Live, which can not be
+    // deleted in a workspace. A test scenario for the case when Content
+    // Moderation and Workspaces are used together is covered in
+    // parent::testContentModerationStateRevisionDataRemoval().
+    $this->markTestSkipped();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testModerationWithFieldConfigOverride(): void {
+    // This test does not assert anything that can be workspace-specific.
+    $this->markTestSkipped();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testWorkflowDependencies(): void {
+    // This test does not assert anything that can be workspace-specific.
+    $this->markTestSkipped();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testWorkflowNonConfigBundleDependencies(): void {
+    // This test does not assert anything that can be workspace-specific.
+    $this->markTestSkipped();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testGetCurrentUserId(): void {
+    // This test does not assert anything that can be workspace-specific.
+    $this->markTestSkipped();
   }
 
   /**
