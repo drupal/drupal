@@ -25,30 +25,9 @@ use Drupal\Component\Utility\UrlHelper;
  * This class is designed for formatting messages that are mostly text, not as
  * an HTML template language. As such:
  * - The passed in string should contain no (or minimal) HTML.
- * - Variable placeholders should not be used within the "<" and ">" of an
- *   HTML tag, such as in HTML attribute values. This would be a security
- *   risk. Examples:
- *   @code
- *     // Insecure (placeholder within "<" and ">"):
- *     $this->placeholderFormat('<@variable>text</@variable>', ['@variable' => $variable]);
- *     // Insecure (placeholder within "<" and ">"):
- *     $this->placeholderFormat('<a @variable>link text</a>', ['@variable' => $variable]);
- *     // Insecure (placeholder within "<" and ">"):
- *     $this->placeholderFormat('<a title="@variable">link text</a>', ['@variable' => $variable]);
- *   @endcode
- *   Only the "href" attribute is supported via the special ":variable"
- *   placeholder, to allow simple links to be inserted:
- *   @code
- *     // Secure (usage of ":variable" placeholder for href attribute):
- *     $this->placeholderFormat('<a href=":variable">link text</a>', [':variable' , $variable]);
- *     // Secure (usage of ":variable" placeholder for href attribute):
- *     $this->placeholderFormat('<a href=":variable" title="static text">link text</a>', [':variable' => $variable]);
- *     // Insecure (the "@variable" placeholder does not filter dangerous
- *     // protocols):
- *     $this->placeholderFormat('<a href="@variable">link text</a>', ['@variable' => $variable]);
- *     // Insecure ("@variable" placeholder within "<" and ">"):
- *     $this->placeholderFormat('<a href=":url" title="@variable">link text</a>', [':url' => $url, '@variable' => $variable]);
- *   @endcode
+ * - The result from casting an object to a string should not be used within
+ *   the "<" and ">" of an HTML tag, such as in HTML attribute values. This
+ *   would be a security risk.
  * To build non-minimal HTML, use an HTML template language such as Twig,
  * rather than this class.
  *
@@ -83,7 +62,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @param array $arguments
    *   An array with placeholder replacements, keyed by placeholder. See
    *   \Drupal\Component\Render\FormattableMarkup::placeholderFormat() for
-   *   additional information about placeholders.
+   *   additional information about correct and secure use of placeholders.
    *
    * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    */
@@ -122,10 +101,44 @@ class FormattableMarkup implements MarkupInterface, \Countable {
   /**
    * Replaces placeholders in a string with values.
    *
+   * For convenience examples are listed here. Refer to the parameter
+   * description for $args for details of the placeholders "@", "%", and ":".
+   *
+   * Secure examples.
+   * @code
+   * // Returns the HTML string "Prefix $some_variable".
+   * $this->placeholderFormat('Prefix @foo', ['@foo' => $some_variable]);
+   * // Convert object to a sanitized string.
+   * $this->placeholderFormat('Non-sanitized replacement value: @foo', ['@foo' => (string) $safe_string_interface_object]);
+   * // Wraps $some_variable in an <em> tag.
+   * $this->placeholderFormat('Prefix %foo', ['%foo' => $some_variable]);
+   * // The following are using the : placeholder inside an HTML tag.
+   * $this->placeholderFormat('<a href=":foo">link text</a>, ['@foo' => $some_variable]);
+   * $this->placeholderFormat('<a href=":foo" title="static text">link text</a>, ['@foo' => $some_variable]);
+   * $this->placeholderFormat('<a href=":foo">@foo</a>, ['@foo' => $some_variable]);
+   * // Use : placeholder inside an HTML tag.
+   * $this->placeholderFormat('<img src=":foo" />, ['@foo' => '/image.png']);
+   * @endcode
+   * The above are typical examples of using the placeholders correctly.
+   *
+   * Insecure examples.
+   * @code
+   * // The following are using the @ placeholder inside an HTML tag.
+   * $this->placeholderFormat('<@foo>text</@foo>, ['@foo' => $some_variable]);
+   * $this->placeholderFormat('<a @foo>link text</a>, ['@foo' => $some_variable]);
+   * $this->placeholderFormat('<a href="@foo">link text</a>, ['@foo' => $some_variable]);
+   * $this->placeholderFormat('<a title="@foo">link text</a>, ['@foo' => $some_variable]);
+   * // Convert object to a string nad not string that is not sanitized.
+   * $this->placeholderFormat('Non-sanitized replacement value: @foo', ['@foo' => $safe_string_interface_object]);
+   * @endcode
+   * These are the more common mistakes that can be made. Make sure that your
+   * site is not using any insecure usages of these placeholders.
+   *
    * @param string $string
    *   A string containing placeholders. The string itself is expected to be
-   *   safe and correct HTML. Any unsafe content must be in $args and
-   *   inserted via placeholders.
+   *   safe and correct HTML. Any unsafe content must be in $args and inserted
+   *   via placeholders. It is insecure to use the @ or % placeholders within
+   *   the "<"  and ">" of an HTML tag.
    * @param array $args
    *   An associative array of replacements. Each array key should be the same
    *   as a placeholder in $string. The corresponding value should be a string
@@ -133,51 +146,20 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    *   The args[] value replaces the placeholder in $string. Sanitization and
    *   formatting will be done before replacement. The type of sanitization
    *   and formatting depends on the first character of the key:
-   *   - @variable: When the placeholder replacement value is:
-   *     - A string, the replaced value in the returned string will be sanitized
-   *       using \Drupal\Component\Utility\Html::escape().
-   *     - A MarkupInterface object, the replaced value in the returned string
-   *       will not be sanitized.
-   *     - A MarkupInterface object cast to a string, the replaced value in the
-   *       returned string be forcibly sanitized using
-   *       \Drupal\Component\Utility\Html::escape().
-   *       @code
-   *         $this->placeholderFormat('This will force HTML-escaping of the replacement value: @text', ['@text' => (string) $safe_string_interface_object));
-   *       @endcode
-   *     Use this placeholder as the default choice for anything displayed on
-   *     the site, but not within HTML attributes, JavaScript, or CSS. Doing so
-   *     is a security risk.
-   *   - %variable: Use when the replacement value is to be wrapped in <em>
-   *     tags.
-   *     A call like:
-   *     @code
-   *       $string = "%output_text";
-   *       $arguments = ['%output_text' => 'text output here.'];
-   *       $this->placeholderFormat($string, $arguments);
-   *     @endcode
-   *     makes the following HTML code:
-   *     @code
-   *       <em class="placeholder">text output here.</em>
-   *     @endcode
-   *     As with @variable, do not use this within HTML attributes, JavaScript,
-   *     or CSS. Doing so is a security risk.
-   *   - :variable: Return value is escaped with
+   *   - @variable: Use as the default choice for anything displayed on the
+   *     site. Do not use within the "<" and ">" of an HTML tag, such as in
+   *     HTML attribute values. Doing so is a security risk.
+   *   - %variable: Use when @variable would be appropriate, but you want the
+   *     placeholder value to be wrapped in an <em> tag with a placeholder
+   *     class. As with @variable, do not use within the "<" and ">" of an HTML
+   *     tag, such as in HTML attribute values. Doing so is a security risk.
+   *   - :variable: Use when the return value is to be used as a URL value of an
+   *     HTML attribute. Only the "href" attribute is supported. The return
+   *     value is escaped with
    *     \Drupal\Component\Utility\Html::escape() and filtered for dangerous
    *     protocols using UrlHelper::stripDangerousProtocols(). Use this when
-   *     using the "href" attribute, ensuring the attribute value is always
-   *     wrapped in quotes:
-   *     @code
-   *     // Secure (with quotes):
-   *     $this->placeholderFormat('<a href=":url">@variable</a>', [':url' => $url, '@variable' => $variable]);
-   *     // Insecure (without quotes):
-   *     $this->placeholderFormat('<a href=:url>@variable</a>', [':url' => $url, '@variable' => $variable]);
-   *     @endcode
-   *     When ":variable" comes from arbitrary user input, the result is secure,
-   *     but not guaranteed to be a valid URL (which means the resulting output
-   *     could fail HTML validation). To guarantee a valid URL, use
-   *     Url::fromUri($user_input)->toString() (which either throws an exception
-   *     or returns a well-formed URL) before passing the result into a
-   *     ":variable" placeholder.
+   *     using the "href" attribute, ensuring the value is always wrapped in
+   *     quotes.
    *
    * @return string
    *   A formatted HTML string with the placeholders replaced.
