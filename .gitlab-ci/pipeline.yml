@@ -207,7 +207,7 @@ variables:
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
-    KUBERNETES_CPU_REQUEST: "24"
+    KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
     - <<: *with-chrome
