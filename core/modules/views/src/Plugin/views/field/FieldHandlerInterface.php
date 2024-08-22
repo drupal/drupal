@@ -14,7 +14,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * Adds an ORDER BY clause to the query for click sort columns.
    *
    * @param string $order
-   *   Either ASC or DESC
+   *   The sort order, either 'ASC' or 'DESC'.
    */
   public function clickSort($order);
 
@@ -36,11 +36,13 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * Returns an HTML element based upon the field's element type.
    *
    * @param bool $none_supported
-   *   Whether or not this HTML element is supported.
+   *   (optional) Whether or not this HTML element is supported. Defaults to
+   *   FALSE.
    * @param bool $default_empty
-   *   Whether or not this HTML element is empty by default.
+   *   (optional) Whether or not this HTML element is empty by default. Defaults
+   *   to FALSE.
    * @param bool $inline
-   *   Whether or not this HTML element is inline.
+   *   (optional) Whether or not this HTML element is inline. Defaults to FALSE.
    */
   public function elementType($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE);
 
@@ -48,36 +50,41 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * Returns an HTML element for the label based upon the field's element type.
    *
    * @param bool $none_supported
-   *   Whether or not this HTML element is supported.
+   *   (optional) Whether or not this HTML element is supported. Defaults to
+   *   FALSE.
    * @param bool $default_empty
-   *   Whether or not this HTML element is empty by default.
+   *   (optional) Whether or not this HTML element is empty by default. Defaults
+   *   to FALSE.
    */
   public function elementLabelType($none_supported = FALSE, $default_empty = FALSE);
 
   /**
-   * Returns an HTML element for the wrapper based upon the field's element type.
+   * Returns a wrapper HTML element for the field..
    *
    * @param bool $none_supported
-   *   Whether or not this HTML element is supported.
+   *   (optional) Whether or not this HTML element is supported. Defaults to
+   *   FALSE.
    * @param bool $default_empty
-   *   Whether or not this HTML element is empty by default.
+   *   (optional) Whether or not this HTML element is empty by default. Defaults
+   *   to FALSE.
    */
   public function elementWrapperType($none_supported = FALSE, $default_empty = FALSE);
 
   /**
    * Provides a list of elements valid for field HTML.
    *
-   * This function can be overridden by fields that want more or fewer
-   * elements available, though this seems like it would be an incredibly
-   * rare occurrence.
+   * This function can be overridden by fields that want more or fewer elements
+   * available, though this seems like it would be an incredibly rare
+   * occurrence.
    */
   public function getElements();
 
   /**
    * Returns the class of the field.
    *
-   * @param bool $row_index
-   *   The index of current row.
+   * @param int|null $row_index
+   *   (optional) Index of the row element. If NULL the last row is used.
+   *   Defaults to NULL.
    */
   public function elementClasses($row_index = NULL);
 
@@ -89,24 +96,27 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    *
    * @param string $value
    *   The raw string.
-   * @param bool $row_index
-   *   The index of current row.
+   * @param int|null $row_index
+   *   (optional) Index of the row element. If NULL the last row is used.
+   *   Defaults to NULL.
    */
   public function tokenizeValue($value, $row_index = NULL);
 
   /**
    * Returns the class of the field's label.
    *
-   * @param bool $row_index
-   *   The index of current row.
+   * @param int|null $row_index
+   *   (optional) Index of the row element. If NULL the last row is used.
+   *   Defaults to NULL.
    */
   public function elementLabelClasses($row_index = NULL);
 
   /**
    * Returns the class of the field's wrapper.
    *
-   * @param bool $row_index
-   *   The index of current row.
+   * @param int|null $row_index
+   *   (optional) Index of the row element. If NULL the last row is used.
+   *   Defaults to NULL.
    */
   public function elementWrapperClasses($row_index = NULL);
 
@@ -130,8 +140,12 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    *
    * @param \Drupal\views\ResultRow $values
    *   An object containing all retrieved values.
-   * @param string $field
-   *   Optional name of the field where the value is stored.
+   * @param string|null $field
+   *   (optional) Index of the row element. If NULL the last row is used.
+   *   Defaults to NULL.
+   *
+   * @return mixed
+   *   The value to be rendered.
    */
   public function getValue(ResultRow $values, $field = NULL);
 
@@ -146,8 +160,8 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
   /**
    * Runs before any fields are rendered.
    *
-   * This gives the handlers some time to set up before any handler has
-   * been rendered.
+   * This gives the handlers some time to set up before any handler has been
+   * rendered.
    *
    * @param \Drupal\views\ResultRow[] $values
    *   An array of all ResultRow objects returned from the query.
@@ -196,9 +210,9 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   The values retrieved from a single row of a view's query result.
    *
-   * @return string|\Drupal\Component\Render\MarkupInterface
-   *   The advanced rendered output. If the output is safe it will be wrapped in
-   *   an object that implements MarkupInterface. If it is empty or unsafe
+   * @return \Drupal\Component\Render\MarkupInterface|string
+   *   The advanced rendered output. If the output is safe, it will be wrapped
+   *   in an object that implements MarkupInterface. If it is empty or unsafe,
    *   it will be a string.
    */
   public function advancedRender(ResultRow $values);
@@ -211,7 +225,8 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param bool $empty_zero
    *   Whether or not this field is configured to consider 0 as empty.
    * @param bool $no_skip_empty
-   *   Whether or not to use empty() to check the value.
+   *   (optional) Whether or not to use empty() to check the value. Defaults to
+   *   TRUE.
    *
    * @return bool
    *   TRUE if the value is considered empty, FALSE otherwise.
@@ -221,29 +236,28 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
   /**
    * Performs an advanced text render for the item.
    *
-   * This is separated out as some fields may render lists, and this allows
-   * each item to be handled individually.
+   * This is separated out as some fields may render lists, and this allows each
+   * item to be handled individually.
    *
    * @param array $alter
-   *   The alter array of options to use.
-   *     - max_length: Maximum length of the string, the rest gets truncated.
-   *     - word_boundary: Trim only on a word boundary.
-   *     - ellipsis: Show an ellipsis (…) at the end of the trimmed string.
-   *     - html: Make sure that the html is correct.
+   *   The alter array of options to use:
+   *   - max_length: Maximum length of a string, the rest gets truncated.
+   *   - word_boundary: Trim only on a word boundary.
+   *   - ellipsis: Show an ellipsis at the end of the trimmed string.
+   *   - html: Make sure that the HTML is correct.
    *
-   * @return string|\Drupal\Component\Render\MarkupInterface
+   * @return \Drupal\Component\Render\MarkupInterface|string
    *   The rendered output. If the output is safe it will be wrapped in an
-   *   object that implements MarkupInterface. If it is empty or unsafe it
-   *   will be a string.
+   *   object that implements MarkupInterface. If it is empty or unsafe it will
+   *   be a string.
    */
   public function renderText($alter);
 
   /**
    * Gets the 'render' tokens to use for advanced rendering.
    *
-   * This runs through all of the fields and arguments that
-   * are available and gets their values. This will then be
-   * used in one giant str_replace().
+   * This runs through all of the fields and arguments that are available and
+   * gets their values. This will then be used in one giant str_replace().
    *
    * @param mixed $item
    *   The item to render.
@@ -259,10 +273,10 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param \Drupal\views\ResultRow $values
    *   Holds single row of a view's result set.
    *
-   * @return string|\Drupal\Component\Render\MarkupInterface
+   * @return \Drupal\Component\Render\MarkupInterface|string
    *   Returns rendered output of the given theme implementation. If the output
-   *   is safe it will be wrapped in an object that implements
-   *   MarkupInterface. If it is empty or unsafe it will be a string.
+   *   is safe, it will be wrapped in an object that implements MarkupInterface.
+   *   If it is empty or unsafe, it will be a string.
    */
   public function theme(ResultRow $values);
 
