@@ -387,9 +387,10 @@ class WebAssert extends MinkWebAssert {
    *   Link position counting from zero.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
-   *   variables in the message text, not t(). If left blank, a default message
-   *   will be displayed.
+   *   messages with t(). Use double quotes and embed variables directly in
+   *   message text, or use sprintf() if necessary. Avoid the use of
+   *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
+   *   a string. If left blank, a default message will be displayed.
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    *   Thrown when element doesn't exist, or the link label is a different one.
@@ -410,9 +411,10 @@ class WebAssert extends MinkWebAssert {
    *   Link position counting from zero.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
-   *   variables in the message text, not t(). If left blank, a default message
-   *   will be displayed.
+   *   messages with t(). Use double quotes and embed variables directly in
+   *   message text, or use sprintf() if necessary. Avoid the use of
+   *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
+   *   a string. If left blank, a default message will be displayed.
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    *   Thrown when element doesn't exist, or the link label is a different one.
@@ -431,9 +433,10 @@ class WebAssert extends MinkWebAssert {
    *   The full or partial value of the 'href' attribute of the anchor tag.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
-   *   variables in the message text, not t(). If left blank, a default message
-   *   will be displayed.
+   *   messages with t(). Use double quotes and embed variables directly in
+   *   message text, or use sprintf() if necessary. Avoid the use of
+   *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
+   *   a string. If left blank, a default message will be displayed.
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    *   Thrown when element doesn't exist, or the link label is a different one.
@@ -452,9 +455,10 @@ class WebAssert extends MinkWebAssert {
    *   The full value of the 'href' attribute of the anchor tag.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
-   *   variables in the message text, not t(). If left blank, a default message
-   *   will be displayed.
+   *   messages with t(). Use double quotes and embed variables directly in
+   *   message text, or use sprintf() if necessary. Avoid the use of
+   *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
+   *   a string. If left blank, a default message will be displayed.
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    *   Thrown when element doesn't exist, or the link label is a different one.
