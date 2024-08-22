@@ -305,7 +305,7 @@ class ImageDimensionsTest extends BrowserTestBase {
    * method and pass each time a fresh array so that $variables won't get
    * altered and the element is re-rendered each time.
    */
-  protected function getImageTag($variables) {
+  protected function getImageTag($variables): string {
     return str_replace("\n", '', (string) \Drupal::service('renderer')->renderRoot($variables));
   }
 

@@ -95,7 +95,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
   /**
    * Returns the name to be used to store in the config system.
    */
-  protected function getConfigName() {
+  protected function getConfigName(): string {
     return 'layout_builder_test.' . $this->getStorageType() . '.' . $this->getStorageId();
   }
 

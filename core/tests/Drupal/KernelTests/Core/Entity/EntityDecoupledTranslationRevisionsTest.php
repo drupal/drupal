@@ -469,7 +469,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    * @return string
    *   A revision label.
    */
-  protected function generateNewEntityLabel(ContentEntityInterface $revision, $previous_revision_id, $next = FALSE) {
+  protected function generateNewEntityLabel(ContentEntityInterface $revision, $previous_revision_id, $next = FALSE): string {
     $language_label = $revision->language()->getName();
     $revision_type = $revision->isDefaultRevision() ? 'Default' : 'Pending';
     $revision_id = $next ? $this->storage->getLatestRevisionId($revision->id()) + 1 : $revision->getLoadedRevisionId();

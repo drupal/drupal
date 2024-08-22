@@ -218,7 +218,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @return string
    */
-  protected static function getContentHash($composerFileContents)
+  protected static function getContentHash($composerFileContents): string
   {
     $content = json_decode($composerFileContents, true);
 

@@ -172,7 +172,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
    * @return string
    *   The path.
    */
-  protected function getPathForFieldBlock($entity_type_id, $bundle, $view_mode, $field_name) {
+  protected function getPathForFieldBlock($entity_type_id, $bundle, $view_mode, $field_name): string {
     $delta = 0;
     /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface $display */
     $display = $this->container->get('entity_type.manager')->getStorage('entity_view_display')->load("$entity_type_id.$bundle.$view_mode");

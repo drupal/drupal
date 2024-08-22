@@ -37,7 +37,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
   /**
    * Return the build id of the current form.
    */
-  protected function getFormBuildId() {
+  protected function getFormBuildId(): string {
     // Ensure the hidden 'form_build_id' field is unique.
     $this->assertSession()->elementsCount('xpath', '//input[@name="form_build_id"]', 1);
     return (string) $this->assertSession()->hiddenFieldExists('form_build_id')->getAttribute('value');

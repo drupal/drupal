@@ -27,7 +27,7 @@ class PhpArrayContainerTest extends ContainerTest {
   /**
    * Helper function to return a service definition.
    */
-  protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+  protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE): string {
     if ($invalid_behavior !== ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
       return sprintf('@?%s', $id);
     }
@@ -38,7 +38,7 @@ class PhpArrayContainerTest extends ContainerTest {
   /**
    * Helper function to return a service definition.
    */
-  protected function getParameterCall($name) {
+  protected function getParameterCall($name): string {
     return '%' . $name . '%';
   }
 

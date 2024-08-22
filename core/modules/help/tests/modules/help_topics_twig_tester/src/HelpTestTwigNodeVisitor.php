@@ -108,7 +108,7 @@ class HelpTestTwigNodeVisitor implements NodeVisitorInterface {
    * @return string
    *   Text in the node.
    */
-  protected function extractText(TwigNodeTrans $node) {
+  protected function extractText(TwigNodeTrans $node): string {
     // Extract the singular/body and optional plural text from the
     // TwigNodeTrans object.
     $bodies = $node->getNode('body');

@@ -434,7 +434,7 @@ class VariationCacheTest extends UnitTestCase {
    * @return string
    *   The correct cache ID.
    */
-  protected function getSortedCacheId($cache_id_parts) {
+  protected function getSortedCacheId($cache_id_parts): string {
     sort($cache_id_parts);
     array_unshift($cache_id_parts, $this->cacheIdBase);
     return implode(':', $cache_id_parts);
