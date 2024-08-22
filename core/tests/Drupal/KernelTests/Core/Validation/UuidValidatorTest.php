@@ -7,11 +7,11 @@ namespace Drupal\KernelTests\Core\Validation;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests various low level constrains provided by core.
+ * Tests the UUID validator.
  *
  * @group Validation
  */
-class ConstraintsTest extends KernelTestBase {
+class UuidValidatorTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
