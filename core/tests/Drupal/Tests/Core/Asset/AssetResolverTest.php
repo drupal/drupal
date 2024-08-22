@@ -169,15 +169,15 @@ class AssetResolverTest extends UnitTestCase {
    * @dataProvider providerAttachedCssAssets
    */
   public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_css_cache_item_count): void {
-    $this->libraryDiscovery->expects($this->any())
-      ->method('getLibraryByName')
-      ->willReturnOnConsecutiveCalls(
-        $this->libraries['drupal'],
-        $this->libraries['llama'],
-        $this->libraries['llama'],
-        $this->libraries['piggy'],
-        $this->libraries['piggy'],
-      );
+    $map = [
+      ['core', 'drupal', $this->libraries['drupal']],
+      ['core', 'jquery', $this->libraries['jquery']],
+      ['llama', 'css', $this->libraries['llama']],
+      ['piggy', 'css', $this->libraries['piggy']],
+    ];
+    $this->libraryDiscovery->method('getLibraryByName')
+      ->willReturnMap($map);
+
     $this->assetResolver->getCssAssets($assets_a, FALSE, $this->english);
     $this->assetResolver->getCssAssets($assets_b, FALSE, $this->english);
     $this->assertCount($expected_css_cache_item_count, $this->cache->getAllCids());
@@ -204,16 +204,13 @@ class AssetResolverTest extends UnitTestCase {
    * @dataProvider providerAttachedJsAssets
    */
   public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_js_cache_item_count, $expected_multilingual_js_cache_item_count): void {
-    $this->libraryDiscovery->expects($this->any())
-      ->method('getLibraryByName')
-      ->willReturnOnConsecutiveCalls(
-        $this->libraries['drupal'],
-        $this->libraries['drupal'],
-        $this->libraries['jquery'],
-        $this->libraries['drupal'],
-        $this->libraries['drupal'],
-        $this->libraries['jquery'],
-      );
+    $map = [
+      ['core', 'drupal', $this->libraries['drupal']],
+      ['core', 'jquery', $this->libraries['jquery']],
+    ];
+    $this->libraryDiscovery->method('getLibraryByName')
+      ->willReturnMap($map);
+
     $this->assetResolver->getJsAssets($assets_a, FALSE, $this->english);
     $this->assetResolver->getJsAssets($assets_b, FALSE, $this->english);
     $this->assertCount($expected_js_cache_item_count, $this->cache->getAllCids());
@@ -236,7 +233,7 @@ class AssetResolverTest extends UnitTestCase {
         (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal'])->setSettings(['currentTime' => $time]),
         (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal', 'core/jquery'])->setSettings(['currentTime' => $time]),
         2,
-        3,
+        4,
       ],
     ];
   }
