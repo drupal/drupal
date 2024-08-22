@@ -34,7 +34,7 @@ class ImageStyleListBuilder extends ConfigEntityListBuilder {
    */
   public function getDefaultOperations(EntityInterface $entity) {
     $flush = [
-      'title' => t('Flush'),
+      'title' => $this->t('Flush'),
       'weight' => 200,
       'url' => $entity->toUrl('flush-form'),
     ];

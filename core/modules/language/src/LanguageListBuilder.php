@@ -103,8 +103,8 @@ class LanguageListBuilder extends DraggableListBuilder {
    */
   public function buildHeader() {
     $header = [
-      'label' => t('Name'),
-      'default' => t('Default'),
+      'label' => $this->t('Name'),
+      'default' => $this->t('Default'),
     ] + parent::buildHeader();
     return $header;
   }
@@ -117,7 +117,7 @@ class LanguageListBuilder extends DraggableListBuilder {
     $row['default'] = [
       '#type' => 'radio',
       '#parents' => ['site_default_language'],
-      '#title' => t('Set @title as default', ['@title' => $entity->label()]),
+      '#title' => $this->t('Set @title as default', ['@title' => $entity->label()]),
       '#title_display' => 'invisible',
       '#return_value' => $entity->id(),
       '#id' => 'edit-site-default-language-' . $entity->id(),
@@ -136,7 +136,7 @@ class LanguageListBuilder extends DraggableListBuilder {
     $form = parent::buildForm($form, $form_state);
 
     $form[$this->entitiesKey]['#languages'] = $this->entities;
-    $form['actions']['submit']['#value'] = t('Save configuration');
+    $form['actions']['submit']['#value'] = $this->t('Save configuration');
     return $form;
   }
 

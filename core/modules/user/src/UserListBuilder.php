@@ -144,7 +144,7 @@ class UserListBuilder extends EntityListBuilder {
       CacheableMetadata::createFromObject($last_access)->applyTo($row['access']['data']);
     }
     else {
-      $row['access']['data']['#markup'] = t('never');
+      $row['access']['data']['#markup'] = $this->t('never');
     }
     return $row + parent::buildRow($entity);
   }
