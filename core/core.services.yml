@@ -1608,7 +1608,7 @@ services:
   Drupal\Core\Session\AccountProxyInterface: '@current_user'
   session_configuration:
     class: Drupal\Core\Session\SessionConfiguration
-    arguments: ['%session.storage.options%']
+    arguments: ['%session.storage.options%', '@settings']
   Drupal\Core\Session\SessionConfigurationInterface: '@session_configuration'
   session:
     class: Symfony\Component\HttpFoundation\Session\Session
