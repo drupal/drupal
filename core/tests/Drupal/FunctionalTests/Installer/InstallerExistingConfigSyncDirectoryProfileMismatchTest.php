@@ -29,7 +29,7 @@ class InstallerExistingConfigSyncDirectoryProfileMismatchTest extends InstallerC
   /**
    * {@inheritdoc}
    */
-  protected function getConfigLocation() {
+  protected function getConfigLocation(): string {
     return __DIR__ . '/../../../fixtures/config_install/multilingual';
   }
 

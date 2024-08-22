@@ -52,7 +52,7 @@ class PerformanceTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getMinkDriverArgs() {
+  protected function getMinkDriverArgs(): string {
     return $this->doGetMinkDriverArgs();
   }
 

@@ -258,7 +258,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    * @return string
    *   The text secret.
    */
-  protected function getFileSecret(FileInterface $file) {
+  protected function getFileSecret(FileInterface $file): string {
     return "The secret in {$file->label()}";
   }
 

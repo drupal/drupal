@@ -232,7 +232,7 @@ class SessionHttpsTest extends BrowserTestBase {
    * @return string
    *   The internal path from the location header on the response.
    */
-  protected function getPathFromLocationHeader(ResponseInterface $response, $https = FALSE) {
+  protected function getPathFromLocationHeader(ResponseInterface $response, $https = FALSE): string {
     if ($https) {
       $base_url = str_replace('http://', 'https://', $this->baseUrl);
     }
@@ -276,7 +276,7 @@ class SessionHttpsTest extends BrowserTestBase {
    * @return string
    *   URL prepared for the https.php mock front controller.
    */
-  protected function httpsUrl($url) {
+  protected function httpsUrl($url): string {
     return 'core/modules/system/tests/https.php/' . $url;
   }
 
@@ -289,7 +289,7 @@ class SessionHttpsTest extends BrowserTestBase {
    * @return string
    *   URL prepared for the http.php mock front controller.
    */
-  protected function httpUrl($url) {
+  protected function httpUrl($url): string {
     return 'core/modules/system/tests/http.php/' . $url;
   }
 
@@ -314,7 +314,7 @@ class SessionHttpsTest extends BrowserTestBase {
    * @return string
    *   The form build ID for the user login form.
    */
-  protected function getUserLoginFormBuildId() {
+  protected function getUserLoginFormBuildId(): string {
     $this->drupalGet('user/login');
     return (string) $this->getSession()->getPage()->findField('form_build_id');
   }

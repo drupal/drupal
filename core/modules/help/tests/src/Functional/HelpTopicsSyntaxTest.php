@@ -335,7 +335,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @return string
    *   The rendered topic.
    */
-  protected function renderHelpTopic(string $content, string $manner) {
+  protected function renderHelpTopic(string $content, string $manner): string {
     // Set up the special state variables for rendering.
     HelpTestTwigNodeVisitor::setStateValue('manner', $manner);
     HelpTestTwigNodeVisitor::setStateValue('max_chunk', -1);

@@ -509,7 +509,7 @@ trait UiHelperTrait {
    * @return string
    *   The equivalent XPath of a CSS expression.
    */
-  protected function cssSelectToXpath($selector, $html = TRUE, $prefix = 'descendant-or-self::') {
+  protected function cssSelectToXpath($selector, $html = TRUE, $prefix = 'descendant-or-self::'): string {
     return (new CssSelectorConverter($html))->toXPath($selector, $prefix);
   }
 

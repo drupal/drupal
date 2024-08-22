@@ -102,7 +102,7 @@ class CredentialFormTest extends MigrateUpgradeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSourceBasePath() {
+  protected function getSourceBasePath(): string {
     $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
     return __DIR__ . '/d' . $version . '/files';
   }

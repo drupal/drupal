@@ -112,7 +112,7 @@ class TestFilteredPluginManager extends PluginManagerBase implements FilteredPlu
     return $this->themeManager;
   }
 
-  protected function getType() {
+  protected function getType(): string {
     return 'the_type';
   }
 

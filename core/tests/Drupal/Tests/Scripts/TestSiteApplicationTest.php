@@ -299,7 +299,7 @@ class TestSiteApplicationTest extends UnitTestCase {
    * @return string
    *   The database key of the added connection.
    */
-  protected function addTestDatabase($db_prefix) {
+  protected function addTestDatabase($db_prefix): string {
     $database = Database::convertDbUrlToConnectionInfo(getenv('SIMPLETEST_DB'), $this->root);
     $database['prefix'] = $db_prefix;
     $target = __CLASS__ . $db_prefix;
@@ -316,7 +316,7 @@ class TestSiteApplicationTest extends UnitTestCase {
    * @return string
    *   The lock file path.
    */
-  protected function getTestLockFile($db_prefix) {
+  protected function getTestLockFile($db_prefix): string {
     $lock_id = str_replace('test', '', $db_prefix);
     return FileSystem::getOsTemporaryDirectory() . '/test_' . $lock_id;
   }
