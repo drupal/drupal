@@ -7,6 +7,7 @@ namespace Drupal\Core\Render;
  *
  * @see \Drupal\Core\Ajax\AjaxResponse
  * @see \Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor
+ * @see \Drupal\Core\Render\AttachmentsInterface
  * @see \Drupal\Core\Render\HtmlResponse
  * @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor
  */
@@ -14,29 +15,6 @@ interface AttachmentsResponseProcessorInterface {
 
   /**
    * Processes the attachments of a response that has attachments.
-   *
-   * Libraries, JavaScript settings, feeds, HTML <head> tags, HTML <head> links,
-   * HTTP headers, and the HTTP status code are attached to render arrays using
-   * the #attached property. The #attached property is an associative array,
-   * where the keys are the attachment types and the values are the attached
-   * data. For example:
-   *
-   * @code
-   * $build['#attached']['library'][] = [
-   *   'library' => ['core/jquery']
-   * ];
-   * $build['#attached']['http_header'] = [
-   *   ['Content-Type', 'application/rss+xml; charset=utf-8'],
-   * ];
-   * @endcode
-   *
-   * The available keys are:
-   * - 'library' (asset libraries)
-   * - 'drupalSettings' (JavaScript settings)
-   * - 'feed' (RSS feeds)
-   * - 'html_head' (tags in HTML <head>)
-   * - 'html_head_link' (<link> tags in HTML <head>)
-   * - 'http_header' (HTTP headers and status code)
    *
    * Placeholders need to be rendered first in order to have all attachments
    * available for processing. For an example, see
@@ -52,6 +30,8 @@ interface AttachmentsResponseProcessorInterface {
    * @throws \InvalidArgumentException
    *   Thrown when the $response parameter is not the type of response object
    *   the processor expects.
+   *
+   * @see \Drupal\Core\Render\AttachmentsInterface
    */
   public function processAttachments(AttachmentsInterface $response);
 
