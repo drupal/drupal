@@ -198,7 +198,7 @@ trait FunctionalTestSetupTrait {
    *
    * @param string $name
    *   The name of the parameter.
-   * @param string $value
+   * @param string|array|bool $value
    *   The value of the parameter.
    */
   protected function setContainerParameter($name, $value) {

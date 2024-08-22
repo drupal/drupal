@@ -605,7 +605,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
   /**
    * Updates the kernel module list.
    *
-   * @param string[] $module_filenames
+   * @param \Drupal\Core\Extension\Extension[] $module_filenames
    *   The list of installed modules.
    */
   protected function updateKernel($module_filenames) {
