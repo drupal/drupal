@@ -39,7 +39,7 @@ class PoHeader {
   /**
    * Author(s) of the file.
    *
-   * @var string
+   * @var string[]
    */
   protected $authors;
 
