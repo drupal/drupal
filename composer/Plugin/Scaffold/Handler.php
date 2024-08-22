@@ -196,7 +196,7 @@ class Handler {
   /**
    * Gets a consolidated list of file mappings from all allowed packages.
    *
-   * @param \Composer\Package\Package[] $allowed_packages
+   * @param \Composer\Package\PackageInterface[] $allowed_packages
    *   A multidimensional array of file mappings, as returned by
    *   self::getAllowedPackages().
    *

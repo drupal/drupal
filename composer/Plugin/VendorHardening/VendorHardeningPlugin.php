@@ -329,7 +329,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    *
    * @param \Composer\Package\PackageInterface $package
    *   The package to clean.
-   * @param string $paths_for_package
+   * @param string[] $paths_for_package
    *   List of directories in $package_name to remove
    */
   protected function cleanPathsForPackage(PackageInterface $package, $paths_for_package) {

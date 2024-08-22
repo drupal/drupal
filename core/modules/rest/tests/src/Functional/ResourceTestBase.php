@@ -434,7 +434,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @param int $expected_status_code
    *   The expected response status.
-   * @param string $expected_message
+   * @param string|false $expected_message
    *   The expected error message.
    * @param \Psr\Http\Message\ResponseInterface $response
    *   The error response to assert.

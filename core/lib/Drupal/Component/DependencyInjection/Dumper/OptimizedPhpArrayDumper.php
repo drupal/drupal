@@ -353,7 +353,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   /**
    * Gets a private service definition in a suitable format.
    *
-   * @param string $id
+   * @param string|null $id
    *   The ID of the service to get a private definition for.
    * @param \Symfony\Component\DependencyInjection\Definition $definition
    *   The definition to process.
