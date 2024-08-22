@@ -19,7 +19,6 @@ use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
  * Verifies log entries and user access based on permissions.
  *
  * @group dblog
- * @group #slow
  */
 class DbLogTest extends BrowserTestBase {
   use FakeLogEntries;
@@ -105,6 +104,12 @@ class DbLogTest extends BrowserTestBase {
     // Log in the regular user.
     $this->drupalLogin($this->webUser);
     $this->verifyReports(403);
+
+    $this->testLogEventNotFoundPage();
+    $this->testLogEventPageWithMissingInfo();
+    $this->test403LogEventPage();
+    $this->testMessageParsing();
+    $this->testOverviewLinks();
   }
 
   /**
@@ -178,7 +183,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Tests that a 403 event is logged with the exception triggering it.
    */
-  public function test403LogEventPage(): void {
+  protected function test403LogEventPage(): void {
     $assert_session = $this->assertSession();
     $uri = 'admin/reports';
 
@@ -218,7 +223,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Tests not-existing log event page.
    */
-  public function testLogEventNotFoundPage(): void {
+  protected function testLogEventNotFoundPage(): void {
     // Login the admin user.
     $this->drupalLogin($this->adminUser);
 
@@ -237,7 +242,7 @@ class DbLogTest extends BrowserTestBase {
    * - Incorrect location: When location attribute is incorrect uri which can
    *   not be used to generate a valid link.
    */
-  public function testLogEventPageWithMissingInfo(): void {
+  protected function testLogEventPageWithMissingInfo(): void {
     $this->drupalLogin($this->adminUser);
     $connection = Database::getConnection();
 
@@ -280,7 +285,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Test that twig errors are displayed correctly.
    */
-  public function testMessageParsing(): void {
+  protected function testMessageParsing(): void {
     $this->drupalLogin($this->adminUser);
     // Log a common twig error with {{ }} and { } variables.
     \Drupal::service('logger.factory')->get("php")
@@ -433,7 +438,7 @@ class DbLogTest extends BrowserTestBase {
    * @param string $order
    *   The order by which the table should be sorted.
    */
-  public function verifySort($sort = 'asc', $order = 'Date') {
+  protected function verifySort($sort = 'asc', $order = 'Date') {
     $this->drupalGet('admin/reports/dblog', ['query' => ['sort' => $sort, 'order' => $order]]);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Recent log messages');
@@ -859,7 +864,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Make sure HTML tags are filtered out in the log overview links.
    */
-  public function testOverviewLinks(): void {
+  protected function testOverviewLinks(): void {
     $this->drupalLogin($this->adminUser);
     // cSpell:disable-next-line
     $this->generateLogEntries(1, ['message' => "&lt;script&gt;alert('foo');&lt;/script&gt;<strong>Lorem</strong> ipsum dolor sit amet, consectetur adipiscing & elit."]);
