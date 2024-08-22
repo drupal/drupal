@@ -16,9 +16,9 @@ class ContactFormListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['form'] = t('Form');
-    $header['recipients'] = t('Recipients');
-    $header['selected'] = t('Selected');
+    $header['form'] = $this->t('Form');
+    $header['recipients'] = $this->t('Recipients');
+    $header['selected'] = $this->t('Selected');
     return $header + parent::buildHeader();
   }
 
@@ -29,8 +29,8 @@ class ContactFormListBuilder extends ConfigEntityListBuilder {
     // Special case the personal form.
     if ($entity->id() == 'personal') {
       $row['form'] = $entity->label();
-      $row['recipients'] = t('Selected user');
-      $row['selected'] = t('No');
+      $row['recipients'] = $this->t('Selected user');
+      $row['selected'] = $this->t('No');
     }
     else {
       $row['form'] = $entity->toLink(NULL, 'canonical')->toString();
@@ -40,7 +40,7 @@ class ContactFormListBuilder extends ConfigEntityListBuilder {
         '#context' => ['list_style' => 'comma-list'],
       ];
       $default_form = \Drupal::config('contact.settings')->get('default_form');
-      $row['selected'] = ($default_form == $entity->id() ? t('Yes') : t('No'));
+      $row['selected'] = ($default_form == $entity->id() ? $this->t('Yes') : $this->t('No'));
     }
     return $row + parent::buildRow($entity);
   }

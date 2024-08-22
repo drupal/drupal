@@ -14,7 +14,7 @@ class ResponsiveImageStyleListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Label');
+    $header['label'] = $this->t('Label');
     return $header + parent::buildHeader();
   }
 
@@ -32,7 +32,7 @@ class ResponsiveImageStyleListBuilder extends ConfigEntityListBuilder {
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
     $operations['duplicate'] = [
-      'title' => t('Duplicate'),
+      'title' => $this->t('Duplicate'),
       'weight' => 15,
       'url' => $entity->toUrl('duplicate-form'),
     ];

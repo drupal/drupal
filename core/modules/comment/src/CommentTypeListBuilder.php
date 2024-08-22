@@ -58,9 +58,9 @@ class CommentTypeListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['type'] = t('Comment type');
-    $header['description'] = t('Description');
-    $header['target'] = t('Target entity type');
+    $header['type'] = $this->t('Comment type');
+    $header['description'] = $this->t('Description');
+    $header['target'] = $this->t('Target entity type');
     return $header + parent::buildHeader();
   }
 

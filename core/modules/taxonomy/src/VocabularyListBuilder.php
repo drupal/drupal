@@ -109,7 +109,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
     $operations = parent::getDefaultOperations($entity);
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('Edit vocabulary');
+      $operations['edit']['title'] = $this->t('Edit vocabulary');
     }
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = $this->t('Delete vocabulary');
@@ -117,7 +117,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
 
     if ($entity->access('access taxonomy overview')) {
       $operations['list'] = [
-        'title' => t('List terms'),
+        'title' => $this->t('List terms'),
         'weight' => 0,
         'url' => $entity->toUrl('overview-form'),
       ];
@@ -126,7 +126,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
     $taxonomy_term_access_control_handler = $this->entityTypeManager->getAccessControlHandler('taxonomy_term');
     if ($taxonomy_term_access_control_handler->createAccess($entity->id())) {
       $operations['add'] = [
-        'title' => t('Add terms'),
+        'title' => $this->t('Add terms'),
         'weight' => 10,
         'url' => Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $entity->id()]),
       ];
@@ -139,11 +139,11 @@ class VocabularyListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Vocabulary name');
-    $header['description'] = t('Description');
+    $header['label'] = $this->t('Vocabulary name');
+    $header['description'] = $this->t('Description');
 
     if ($this->currentUser->hasPermission('administer vocabularies') && !empty($this->weightKey)) {
-      $header['weight'] = t('Weight');
+      $header['weight'] = $this->t('Weight');
     }
 
     return $header + parent::buildHeader();
@@ -179,12 +179,12 @@ class VocabularyListBuilder extends DraggableListBuilder {
       $create_access = $access_control_handler->createAccess(NULL, NULL, [], TRUE);
       $this->renderer->addCacheableDependency($build['table'], $create_access);
       if ($create_access->isAllowed()) {
-        $build['table']['#empty'] = t('No vocabularies available. <a href=":link">Add vocabulary</a>.', [
+        $build['table']['#empty'] = $this->t('No vocabularies available. <a href=":link">Add vocabulary</a>.', [
           ':link' => Url::fromRoute('entity.taxonomy_vocabulary.add_form')->toString(),
         ]);
       }
       else {
-        $build['table']['#empty'] = t('No vocabularies available.');
+        $build['table']['#empty'] = $this->t('No vocabularies available.');
       }
     }
 
@@ -197,7 +197,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $form['vocabularies']['#attributes'] = ['id' => 'taxonomy'];
-    $form['actions']['submit']['#value'] = t('Save');
+    $form['actions']['submit']['#value'] = $this->t('Save');
 
     return $form;
   }
