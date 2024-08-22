@@ -28,7 +28,7 @@
     "once": true,
     "CKEditor5": true,
     "tabbable": true,
-    "slugify": true,
+    "transliterate": true,
     "bodyScrollLock" : true,
     "FloatingUIDOM": true
   },
