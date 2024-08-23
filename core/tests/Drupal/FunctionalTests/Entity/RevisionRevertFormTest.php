@@ -44,17 +44,27 @@ class RevisionRevertFormTest extends BrowserTestBase {
   }
 
   /**
+   * Test form revision revert.
+   */
+  public function testFormRevisionRevert(): void {
+    foreach (self::providerPageTitle() as $page_title) {
+      $this->testPageTitle($page_title[0], $page_title[1]);
+    }
+    $this->testAccessRevertLatestDefault();
+    $this->testAccessRevertLatestForwardRevision();
+    $this->testAccessRevertNonLatest();
+    $this->testPrepareRevision();
+  }
+
+  /**
    * Tests title by whether entity supports revision creation dates.
    *
    * @param string $entityTypeId
    *   The entity type to test.
    * @param string $expectedQuestion
    *   The expected question/page title.
-   *
-   * @covers ::getQuestion
-   * @dataProvider providerPageTitle
    */
-  public function testPageTitle(string $entityTypeId, string $expectedQuestion): void {
+  protected function testPageTitle(string $entityTypeId, string $expectedQuestion): void {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage($entityTypeId);
 
@@ -88,7 +98,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
   /**
    * Data provider for testPageTitle.
    */
-  public static function providerPageTitle(): array {
+  protected static function providerPageTitle(): array {
     return [
       ['entity_test_rev', 'Are you sure you want to revert the revision?'],
       ['entity_test_revlog', 'Are you sure you want to revert to the revision from Sun, 01/11/2009 - 16:00?'],
@@ -100,7 +110,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
    *
    * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
-  public function testAccessRevertLatestDefault(): void {
+  protected function testAccessRevertLatestDefault(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
     $entity = EntityTestRev::create();
     $entity->setName('revert');
@@ -119,7 +129,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
    *
    * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
-  public function testAccessRevertLatestForwardRevision(): void {
+  protected function testAccessRevertLatestForwardRevision(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
     $entity = EntityTestRevPub::create();
     $entity->setName('revert');
@@ -143,7 +153,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
    *
    * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
-  public function testAccessRevertNonLatest(): void {
+  protected function testAccessRevertNonLatest(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
     $entity = EntityTestRev::create();
     $entity->setName('revert');
@@ -276,7 +286,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
    *
    * @covers ::prepareRevision
    */
-  public function testPrepareRevision(): void {
+  protected function testPrepareRevision(): void {
     $user = $this->createUser();
     $this->drupalLogin($user);
 
