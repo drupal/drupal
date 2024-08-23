@@ -108,7 +108,8 @@
   },
   "resolutions": {
     "glob/jackspeak": "2.1.1",
-    "nightwatch/semver": "~7.5.2"
+    "nightwatch/semver": "~7.5.2",
+    "nightwatch/ejs": "~3.1.10"
   },
   "browserslist": [
     "last 2 Chrome major versions",
