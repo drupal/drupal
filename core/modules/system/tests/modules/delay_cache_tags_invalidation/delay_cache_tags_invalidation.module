@@ -5,6 +5,8 @@
  * Functions to test delayed cache tags invalidation.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Cache\Cache;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\user\Entity\User;

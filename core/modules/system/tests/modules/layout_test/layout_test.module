@@ -5,6 +5,8 @@
  * Provides hook implementations for Layout Test.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_preprocess_HOOK() for layout templates.
  */

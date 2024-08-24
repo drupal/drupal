@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\common_test\Controller;
 
 use Drupal\Component\Utility\Html;

@@ -5,6 +5,8 @@
  * Defines an entity type.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_entity_type_alter().
  */

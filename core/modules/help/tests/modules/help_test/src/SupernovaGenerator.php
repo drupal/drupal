@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\help_test;
 
 use Drupal\Core\Routing\UrlGeneratorInterface;

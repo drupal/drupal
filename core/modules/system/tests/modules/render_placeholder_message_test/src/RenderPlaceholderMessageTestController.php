@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\render_placeholder_message_test;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;

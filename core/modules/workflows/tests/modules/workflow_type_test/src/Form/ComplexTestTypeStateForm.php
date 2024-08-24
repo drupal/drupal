@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\workflow_type_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;

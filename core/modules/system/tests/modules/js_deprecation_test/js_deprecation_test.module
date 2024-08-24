@@ -5,6 +5,8 @@
  * Helper module for the JavaScript deprecation tests.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_js_settings_alter().
  */

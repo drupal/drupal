@@ -5,7 +5,7 @@
  * Implements hooks for the CKEditor 5 read-only mode test module.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Drupal\Core\Form\FormStateInterface;
 

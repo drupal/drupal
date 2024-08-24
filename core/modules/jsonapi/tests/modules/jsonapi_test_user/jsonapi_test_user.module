@@ -5,6 +5,8 @@
  * Support module for JSON:API user hooks testing.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Session\AccountInterface;
 
 /**

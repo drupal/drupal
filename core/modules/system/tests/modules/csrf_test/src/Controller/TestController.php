@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\csrf_test\Controller;
 
 use Symfony\Component\HttpFoundation\Response;

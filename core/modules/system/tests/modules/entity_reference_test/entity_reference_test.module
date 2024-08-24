@@ -5,6 +5,8 @@
  * Helper module for the Entity Reference tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 

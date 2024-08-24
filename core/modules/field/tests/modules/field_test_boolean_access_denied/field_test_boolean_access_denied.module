@@ -5,6 +5,8 @@
  * Module for testing denying access to boolean fields.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;

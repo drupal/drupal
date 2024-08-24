@@ -5,6 +5,8 @@
  * Simulate a Drupal version.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Extension\Extension;
 
 /**

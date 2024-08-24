@@ -5,6 +5,8 @@
  * Image field access for hidden fields.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Field\FieldItemListInterface;

@@ -5,6 +5,8 @@
  * Contains custom contact message functionality for ContactStorageTest.
  */
 
+declare(strict_types=1);
+
 use Drupal\contact\ContactFormInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;

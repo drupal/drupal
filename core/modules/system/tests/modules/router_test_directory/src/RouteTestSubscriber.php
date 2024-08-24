@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\router_test;
 
 use Drupal\Core\Routing\RouteSubscriberBase;

@@ -5,6 +5,8 @@
  * Defines the 8001 db update for the "entity_definition_updates" group.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**

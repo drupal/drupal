@@ -5,6 +5,8 @@
  * Update functions for the update_test_last_removed module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_update_last_removed().
  */

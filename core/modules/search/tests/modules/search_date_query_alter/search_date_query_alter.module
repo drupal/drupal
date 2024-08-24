@@ -5,6 +5,8 @@
  * Adds date conditions to node searches.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Database\Query\AlterableInterface;
 
 /**

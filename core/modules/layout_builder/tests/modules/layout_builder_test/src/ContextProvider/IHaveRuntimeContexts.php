@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_builder_test\ContextProvider;
 
 use Drupal\Core\Plugin\Context\Context;

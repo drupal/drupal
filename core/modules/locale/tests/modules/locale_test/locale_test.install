@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the locale_test module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_uninstall().
  */

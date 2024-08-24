@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\logger_aware_test;
 
 use Psr\Log\AbstractLogger;

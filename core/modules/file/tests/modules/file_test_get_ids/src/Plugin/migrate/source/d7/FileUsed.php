@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file_test_get_ids\Plugin\migrate\source\d7;
 
 use Drupal\file\Plugin\migrate\source\d7\File;

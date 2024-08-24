@@ -5,6 +5,8 @@
  * Provide test blocks.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 

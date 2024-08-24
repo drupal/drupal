@@ -5,7 +5,7 @@
  * Implements hooks for the CKEditor 5 Drupal Element Style Test module.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 

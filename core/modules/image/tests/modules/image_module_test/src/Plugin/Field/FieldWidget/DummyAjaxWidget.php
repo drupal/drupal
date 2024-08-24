@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\image_module_test\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Ajax\AjaxResponse;

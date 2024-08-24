@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_test\ConfigActionErrorEntity;
 
 use Drupal\config_test\Entity\ConfigTest;

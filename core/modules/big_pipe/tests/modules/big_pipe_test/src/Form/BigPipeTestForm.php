@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\big_pipe_test\Form;
 
 use Drupal\Core\Form\FormBase;

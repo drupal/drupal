@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\action_test\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;

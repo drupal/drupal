@@ -5,6 +5,8 @@
  * Update hooks for the update_test_semver_update_n module.
  */
 
+declare(strict_types=1);
+
 /**
  * Update 8001.
  */

@@ -5,6 +5,8 @@
  * A module implementing node related hooks to test API interaction.
  */
 
+declare(strict_types=1);
+
 use Drupal\node\NodeInterface;
 
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\module_installer_config_test\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;

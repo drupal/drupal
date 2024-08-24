@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\advisory_feed_test;
 
 use Drupal\Core\Logger\LoggerChannel;

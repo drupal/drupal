@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate_no_migrate_drupal_test\Controller;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;

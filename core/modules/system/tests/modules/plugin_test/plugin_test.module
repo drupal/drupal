@@ -5,6 +5,8 @@
  * Helper module for the plugin tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\plugin_test\Plugin\plugin_test\fruit\Apple;
 
 /**

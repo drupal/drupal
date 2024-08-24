@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\trusted_hosts_test\Controller;
 
 use Symfony\Component\HttpFoundation\Request;

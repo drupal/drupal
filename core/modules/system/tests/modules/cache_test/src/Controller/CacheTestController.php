@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\cache_test\Controller;
 
 use Drupal\Core\Url;

@@ -5,6 +5,8 @@
  * Contains a failing update hook for testing the update system.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Utility\UpdateException;
 
 /**

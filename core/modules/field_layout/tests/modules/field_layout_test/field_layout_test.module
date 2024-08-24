@@ -5,6 +5,8 @@
  * Contains hook implementations for field_layout_test.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_layout_alter().
  */

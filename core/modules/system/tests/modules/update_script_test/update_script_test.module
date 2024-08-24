@@ -5,6 +5,8 @@
  * This file provides testing functionality for update.php.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Extension\Extension;
 
 /**

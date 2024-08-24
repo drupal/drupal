@@ -5,6 +5,8 @@
  * Experimental Test module to test the Core (Experimental) package.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views_test_data\Form;
 
 use Drupal\Core\Form\FormBase;

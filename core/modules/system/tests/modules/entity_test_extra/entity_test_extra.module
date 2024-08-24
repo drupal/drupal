@@ -5,6 +5,8 @@
  * Test module for the entity API providing several extra fields for testing.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**

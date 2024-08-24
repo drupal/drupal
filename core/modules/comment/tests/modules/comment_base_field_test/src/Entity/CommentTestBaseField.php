@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\comment_base_field_test\Entity;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;

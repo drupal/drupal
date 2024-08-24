@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jqueryui_library_assets_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

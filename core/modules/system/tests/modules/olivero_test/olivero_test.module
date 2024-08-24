@@ -5,6 +5,8 @@
  * Functions to support testing the Olivero theme.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_preprocess_field_multiple_value_form().
  */

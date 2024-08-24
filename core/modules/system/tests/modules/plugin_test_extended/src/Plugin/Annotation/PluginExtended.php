@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\plugin_test_extended\Plugin\Annotation;
 
 use Drupal\Component\Annotation\Plugin;

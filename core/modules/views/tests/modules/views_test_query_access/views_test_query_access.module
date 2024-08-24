@@ -5,6 +5,8 @@
  * Module to test entity query access in Views.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;

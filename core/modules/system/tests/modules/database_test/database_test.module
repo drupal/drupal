@@ -5,6 +5,8 @@
  * Database test module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Database\Query\AlterableInterface;
 
 /**

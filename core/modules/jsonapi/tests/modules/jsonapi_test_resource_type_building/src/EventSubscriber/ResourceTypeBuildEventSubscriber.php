@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jsonapi_test_resource_type_building\EventSubscriber;
 
 use Drupal\jsonapi\ResourceType\ResourceTypeBuildEvents;

@@ -5,6 +5,8 @@
  * Defines a field type and its formatters and widgets.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;

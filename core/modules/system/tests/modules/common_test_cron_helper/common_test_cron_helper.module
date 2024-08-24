@@ -5,6 +5,8 @@
  * Helper module for the testCronExceptions in addition to common_test module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_cron().
  *

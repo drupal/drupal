@@ -5,6 +5,8 @@
  * Helper module for the Batch API tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Form\FormState;
 

@@ -5,6 +5,8 @@
  * Contains the "views_test_config" module main functionality.
  */
 
+declare(strict_types=1);
+
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
 

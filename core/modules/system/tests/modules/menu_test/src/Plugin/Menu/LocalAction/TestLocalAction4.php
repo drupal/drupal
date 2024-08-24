@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\menu_test\Plugin\Menu\LocalAction;
 
 use Drupal\Core\Menu\LocalActionDefault;

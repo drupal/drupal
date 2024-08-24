@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\test_datatype_boolean_emoji_normalizer\Normalizer;
 
 use Drupal\Core\TypedData\Plugin\DataType\BooleanData;

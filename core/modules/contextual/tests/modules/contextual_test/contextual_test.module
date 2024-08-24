@@ -5,6 +5,8 @@
  * Provides test contextual link on blocks.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Block\BlockPluginInterface;
 
 /**

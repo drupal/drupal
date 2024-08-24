@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\element_info_test;
 
 use Drupal\Core\Security\TrustedCallbackInterface;

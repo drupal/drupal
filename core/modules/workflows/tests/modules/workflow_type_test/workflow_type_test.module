@@ -5,6 +5,8 @@
  * Module file for workflow_type_test.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\workflow_type_test\Plugin\WorkflowType\WorkflowCustomAccessType;

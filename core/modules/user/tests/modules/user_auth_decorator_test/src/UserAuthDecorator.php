@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user_auth_decorator_test;
 
 use Drupal\user\UserAuthInterface;

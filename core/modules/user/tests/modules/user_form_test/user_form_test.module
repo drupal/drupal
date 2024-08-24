@@ -5,6 +5,8 @@
  * Support module for user form testing.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_form_FORM_ID_alter() for user_cancel_form().
  */

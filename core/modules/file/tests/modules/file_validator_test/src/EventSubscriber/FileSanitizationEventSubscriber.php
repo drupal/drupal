@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file_validator_test\EventSubscriber;
 
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;

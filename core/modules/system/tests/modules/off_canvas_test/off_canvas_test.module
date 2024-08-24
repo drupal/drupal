@@ -5,6 +5,8 @@
  * Contains hook implementations for testing the off-canvas area.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_page_attachments().
  */

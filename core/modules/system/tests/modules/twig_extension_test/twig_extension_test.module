@@ -5,6 +5,8 @@
  * Helper module for Twig extension tests.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_theme().
  */

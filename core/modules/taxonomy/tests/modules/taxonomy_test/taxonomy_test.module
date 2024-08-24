@@ -5,6 +5,8 @@
  * Provides test hook implementations for taxonomy tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
 

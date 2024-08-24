@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_test;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

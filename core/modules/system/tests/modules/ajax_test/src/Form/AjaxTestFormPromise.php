@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\ajax_test\Form;
 
 use Drupal\ajax_test\Ajax\AjaxTestCommandReturnPromise;

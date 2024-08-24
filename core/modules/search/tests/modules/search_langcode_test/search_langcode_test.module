@@ -8,6 +8,8 @@
  * hook and also when with alternate verb forms for the stemming test.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_search_preprocess().
  */

@@ -5,6 +5,8 @@
  * Provides Image module hook implementations for testing purposes.
  */
 
+declare(strict_types=1);
+
 use Drupal\image\ImageStyleInterface;
 
 function image_module_test_file_download($uri) {

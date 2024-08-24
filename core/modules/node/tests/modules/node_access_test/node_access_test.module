@@ -19,6 +19,8 @@
  * @see \Drupal\node\Tests\NodeAccessBaseTableTest
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\field\Entity\FieldStorageConfig;

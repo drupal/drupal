@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\binary_file_response_test\Controller;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;

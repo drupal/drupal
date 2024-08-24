@@ -5,6 +5,8 @@
  * Mock module for Ajax forms testing.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Ajax\AddCssCommand;
 use Drupal\Core\Ajax\AfterCommand;
 use Drupal\Core\Ajax\AjaxResponse;

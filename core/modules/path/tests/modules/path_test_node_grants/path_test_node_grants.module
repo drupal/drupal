@@ -5,6 +5,8 @@
  * Contains hook implementations for the Path test with node grants module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Session\AccountInterface;
 
 /**

@@ -5,6 +5,8 @@
  * Defines the 8002 db update for the "entity_definition_updates" group.
  */
 
+declare(strict_types=1);
+
 require_once 'entity_definition_updates_8001.inc';
 
 /**

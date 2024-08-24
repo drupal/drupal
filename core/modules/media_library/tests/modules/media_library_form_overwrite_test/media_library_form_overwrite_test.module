@@ -5,6 +5,8 @@
  * Contains.
  */
 
+declare(strict_types=1);
+
 use Drupal\media_library_form_overwrite_test\Form\TestAddForm;
 
 function media_library_form_overwrite_test_media_source_info_alter(array &$sources) {

@@ -5,6 +5,8 @@
  * Element info test.
  */
 
+declare(strict_types=1);
+
 use Drupal\element_info_test\ElementInfoTestNumberBuilder;
 
 /**

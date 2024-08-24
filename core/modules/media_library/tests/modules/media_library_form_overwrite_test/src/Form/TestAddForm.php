@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\media_library_form_overwrite_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;

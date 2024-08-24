@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\editor_test\EditorXssFilter;
 
 use Drupal\filter\FilterFormatInterface;

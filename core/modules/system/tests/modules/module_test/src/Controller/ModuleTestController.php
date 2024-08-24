@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\module_test\Controller;
 
 use Drupal\module_autoload_test\SomeClass;

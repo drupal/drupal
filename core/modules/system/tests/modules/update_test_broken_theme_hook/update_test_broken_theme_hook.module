@@ -5,6 +5,8 @@
  * Hook implementations for the update_test_broken_theme_hook module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_theme().
  */

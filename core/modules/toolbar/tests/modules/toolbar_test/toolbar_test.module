@@ -5,6 +5,8 @@
  * A dummy module to test API interaction with the Toolbar module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 

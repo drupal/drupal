@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\js_interaction_test\Controller;
 
 use Drupal\Core\Form\FormBase;

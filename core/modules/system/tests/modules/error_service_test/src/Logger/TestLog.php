@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\error_service_test\Logger;
 
 use Drupal\Core\Logger\RfcLoggerTrait;

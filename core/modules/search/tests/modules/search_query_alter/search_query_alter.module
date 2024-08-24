@@ -5,6 +5,8 @@
  * Test module that alters search queries.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Database\Query\AlterableInterface;
 
 /**

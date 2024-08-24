@@ -5,6 +5,8 @@
  * Support module for user hooks testing.
  */
 
+declare(strict_types=1);
+
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Session\AccountInterface;
 

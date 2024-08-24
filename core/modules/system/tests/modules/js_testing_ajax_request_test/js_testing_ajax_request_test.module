@@ -5,6 +5,8 @@
  * Helper module for the JavaScript AJAX request tests.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_page_attachments().
  */

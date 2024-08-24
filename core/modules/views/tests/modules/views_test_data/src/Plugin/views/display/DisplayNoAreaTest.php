@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views_test_data\Plugin\views\display;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;

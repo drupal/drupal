@@ -5,6 +5,8 @@
  * This is a test module for deprecated twig templates.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_theme().
  */

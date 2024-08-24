@@ -5,7 +5,7 @@
  * Implements hooks for the CKEditor test module.
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * Implements hook_editor_info_alter().

@@ -5,6 +5,8 @@
  * Hook implementations for requirements1_test module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_requirements_alter().
  */

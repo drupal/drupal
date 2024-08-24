@@ -5,6 +5,8 @@
  * Install hooks for test module.
  */
 
+declare(strict_types=1);
+
 use Drupal\entity_test\Entity\EntityTest;
 
 /**

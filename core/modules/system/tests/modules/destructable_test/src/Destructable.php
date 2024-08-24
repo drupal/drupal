@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\destructable_test;
 
 use Drupal\Core\DestructableInterface;

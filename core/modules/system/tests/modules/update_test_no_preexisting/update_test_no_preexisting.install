@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the update_test_no_preexisting module.
  */
 
+declare(strict_types=1);
+
 /**
  * Dummy update_test_no_preexisting update 8001.
  */

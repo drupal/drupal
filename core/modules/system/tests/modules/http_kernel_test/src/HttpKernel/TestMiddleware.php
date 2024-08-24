@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\http_kernel_test\HttpKernel;
 
 use Symfony\Component\HttpFoundation\Request;

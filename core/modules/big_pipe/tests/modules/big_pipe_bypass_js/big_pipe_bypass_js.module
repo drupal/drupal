@@ -5,6 +5,8 @@
  * Provides a way to bypass Big Pipe JavaScript.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_library_info_alter().
  *

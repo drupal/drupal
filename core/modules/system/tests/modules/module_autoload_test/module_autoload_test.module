@@ -5,6 +5,8 @@
  * Test module.
  */
 
+declare(strict_types=1);
+
 use Drupal\module_autoload_test\SomeClass;
 
 define('MODULE_AUTOLOAD_TEST_CONSTANT', SomeClass::TEST);

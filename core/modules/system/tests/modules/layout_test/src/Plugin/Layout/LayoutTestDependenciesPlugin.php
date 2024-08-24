@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_test\Plugin\Layout;
 
 use Drupal\Component\Plugin\DependentPluginInterface;

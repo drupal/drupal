@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\error_service_test;
 
 use Drupal\Core\Site\Settings;

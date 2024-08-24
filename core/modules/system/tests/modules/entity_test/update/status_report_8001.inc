@@ -5,6 +5,8 @@
  * Defines the 8001 db update for the "status_report" group.
  */
 
+declare(strict_types=1);
+
 /**
  * Test update.
  */

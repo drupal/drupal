@@ -5,6 +5,8 @@
  * Helper module for the form API tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Form\FormStateInterface;
 
 /**

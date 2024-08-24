@@ -5,6 +5,8 @@
  * Implements comment-related hooks to test API interactions.
  */
 
+declare(strict_types=1);
+
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Url;
 

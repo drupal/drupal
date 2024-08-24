@@ -5,6 +5,8 @@
  * Install hooks for page_cache_form_test.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_install().
  */

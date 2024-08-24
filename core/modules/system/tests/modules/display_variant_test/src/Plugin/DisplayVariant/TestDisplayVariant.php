@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\display_variant_test\Plugin\DisplayVariant;
 
 use Drupal\Core\Cache\CacheableMetadata;

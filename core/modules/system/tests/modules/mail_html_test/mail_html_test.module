@@ -5,6 +5,8 @@
  * Helper module for the html mail and URL conversion tests.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_mail().
  */

@@ -5,6 +5,8 @@
  * Test module for the Entity CRUD API.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityInterface;
 
 /**

@@ -5,6 +5,8 @@
  * Contains functions for testing calling deprecated functions in tests.
  */
 
+declare(strict_types=1);
+
 /**
  * A deprecated function.
  *

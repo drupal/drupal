@@ -5,6 +5,8 @@
  * Empty node access hook implementations.
  */
 
+declare(strict_types=1);
+
 use Drupal\node\NodeInterface;
 
 /**

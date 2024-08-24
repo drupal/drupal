@@ -5,6 +5,8 @@
  * Test module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Routing\RouteMatchInterface;
 

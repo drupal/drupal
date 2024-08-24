@@ -5,6 +5,8 @@
  * Test module for the entity API providing a bundle field.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;

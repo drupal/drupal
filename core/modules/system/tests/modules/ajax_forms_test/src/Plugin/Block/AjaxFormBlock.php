@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\ajax_forms_test\Plugin\Block;
 
 use Drupal\Core\Block\Attribute\Block;

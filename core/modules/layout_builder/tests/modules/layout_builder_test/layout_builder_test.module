@@ -5,6 +5,8 @@
  * Provides hook implementations for Layout Builder tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;

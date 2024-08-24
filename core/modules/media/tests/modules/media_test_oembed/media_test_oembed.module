@@ -5,6 +5,8 @@
  * Helper module for the Media oEmbed tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\media\OEmbed\Provider;
 
 /**

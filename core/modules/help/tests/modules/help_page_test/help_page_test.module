@@ -5,6 +5,8 @@
  * Help Page Test module to test the help page.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**

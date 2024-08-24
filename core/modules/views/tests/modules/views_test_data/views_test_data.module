@@ -5,6 +5,8 @@
  * Helper module for Views tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ViewEntityInterface;
 

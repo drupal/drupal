@@ -5,6 +5,8 @@
  * Tests configuration schema functionality.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_config_schema_info_alter().
  */

@@ -5,6 +5,8 @@
  * Support module for testing entity bundle classes.
  */
 
+declare(strict_types=1);
+
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test_bundle_class\Entity\EntityTestAmbiguousBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestBundleClass;

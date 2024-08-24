@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\vocabulary_serialization_test;
 
 use Drupal\taxonomy\VocabularyInterface;

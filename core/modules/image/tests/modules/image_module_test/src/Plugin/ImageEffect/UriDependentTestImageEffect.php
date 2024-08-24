@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\image_module_test\Plugin\ImageEffect;
 
 use Drupal\Core\Image\ImageInterface;

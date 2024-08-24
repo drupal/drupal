@@ -5,6 +5,8 @@
  * Include file for test module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_views_data_alter().
  */

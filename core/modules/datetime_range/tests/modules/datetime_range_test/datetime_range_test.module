@@ -5,6 +5,8 @@
  * Contains datetime_range_test.module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_entity_type_alter().
  */

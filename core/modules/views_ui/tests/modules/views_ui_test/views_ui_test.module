@@ -5,6 +5,8 @@
  * Helper module for Views UI tests.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_views_preview_info_alter().
  *

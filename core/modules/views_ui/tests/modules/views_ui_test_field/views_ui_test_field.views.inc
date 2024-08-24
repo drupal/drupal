@@ -5,6 +5,8 @@
  * Provide views data for testing purposes.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_views_data().
  */

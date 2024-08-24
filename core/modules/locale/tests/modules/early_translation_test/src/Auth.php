@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\early_translation_test;
 
 use Drupal\Core\Authentication\AuthenticationProviderInterface;

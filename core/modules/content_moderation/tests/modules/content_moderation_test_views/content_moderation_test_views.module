@@ -5,6 +5,8 @@
  * Module file for the content moderation test views module.
  */
 
+declare(strict_types=1);
+
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
 

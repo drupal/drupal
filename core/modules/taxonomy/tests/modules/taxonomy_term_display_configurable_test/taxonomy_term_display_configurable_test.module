@@ -5,6 +5,8 @@
  * Tests configurable displays for taxonomy_term base fields.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**

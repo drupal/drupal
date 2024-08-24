@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_transformer_test;
 
 use Drupal\Core\Config\ConfigEvents;

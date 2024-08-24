@@ -5,6 +5,8 @@
  * Module that implements various hooks for menu tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Url;
 

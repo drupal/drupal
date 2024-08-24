@@ -9,6 +9,8 @@
  * config_test entity hooks themselves.
  */
 
+declare(strict_types=1);
+
 use Drupal\config_test\Entity\ConfigTest;
 
 /**

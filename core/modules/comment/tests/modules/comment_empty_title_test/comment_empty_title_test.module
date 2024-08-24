@@ -5,6 +5,8 @@
  * Empties comment titles to test markup in edge case scenarios.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_preprocess_comment().
  */

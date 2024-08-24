@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate_entity_test\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;

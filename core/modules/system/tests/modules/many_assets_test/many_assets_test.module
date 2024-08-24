@@ -5,6 +5,8 @@
  * Helper module for asset load order test.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_library_info_build().
  */

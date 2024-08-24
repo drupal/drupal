@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the update_test_0 module.
  */
 
+declare(strict_types=1);
+
 /**
  * Dummy update_test_0 update 8001.
  */

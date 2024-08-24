@@ -5,6 +5,8 @@
  * Module for testing the display of security advisories.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Extension\Extension;
 
 /**

@@ -5,6 +5,8 @@
  * Contains install functions for the Content moderation test re-save module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_install().
  */

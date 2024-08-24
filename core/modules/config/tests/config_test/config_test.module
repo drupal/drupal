@@ -5,6 +5,8 @@
  * Provides Config module hook implementations for testing purposes.
  */
 
+declare(strict_types=1);
+
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 
 use Drupal\Core\Entity\Query\QueryInterface;

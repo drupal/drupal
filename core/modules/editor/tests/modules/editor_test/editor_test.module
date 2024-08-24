@@ -5,6 +5,8 @@
  * Helper module for the Text Editor tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
 use Drupal\filter\FilterFormatInterface;

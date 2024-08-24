@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\help_topics_test\Plugin\HelpSection;
 
 use Drupal\help\SearchableHelpInterface;

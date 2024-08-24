@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\performance_test;
 
 use Drupal\Core\Database\Connection;

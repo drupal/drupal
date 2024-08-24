@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\nightwatch_theme_install_utility\Controller;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

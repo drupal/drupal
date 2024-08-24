@@ -5,6 +5,8 @@
  * Helper module for the List module tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;

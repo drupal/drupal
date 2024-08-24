@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_override_test;
 
 use Drupal\config_override_test\Cache\PirateDayCacheContext;

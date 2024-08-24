@@ -5,6 +5,8 @@
  * Contains install and update hooks.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 
 /**

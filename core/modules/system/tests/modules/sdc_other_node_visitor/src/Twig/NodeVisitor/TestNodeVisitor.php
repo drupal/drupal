@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\sdc_other_node_visitor\Twig\NodeVisitor;
 
 use Drupal\sdc_other_node_visitor\Twig\Profiler\EnterProfileNode;

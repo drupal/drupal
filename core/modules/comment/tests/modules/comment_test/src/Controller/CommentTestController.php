@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\comment_test\Controller;
 
 use Drupal\comment\CommentInterface;

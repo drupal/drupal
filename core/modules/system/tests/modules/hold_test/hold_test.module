@@ -5,6 +5,8 @@
  * Contains functions for testing hold request/response.
  */
 
+declare(strict_types=1);
+
 use Drupal\hold_test\EventSubscriber\HoldTestSubscriber;
 
 /**

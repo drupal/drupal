@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\dynamic_page_cache_test;
 
 use Drupal\Core\Cache\CacheableResponse;

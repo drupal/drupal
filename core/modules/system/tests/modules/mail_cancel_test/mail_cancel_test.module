@@ -5,6 +5,8 @@
  * Helper module for the catching mail that needs to be cancelled.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_mail_alter().
  *

@@ -5,6 +5,8 @@
  * Provides System module hook implementations for testing purposes.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_page_attachments_alter().
  */

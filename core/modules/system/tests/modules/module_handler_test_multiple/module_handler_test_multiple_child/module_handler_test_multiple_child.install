@@ -8,6 +8,8 @@
  * module_handler_test_multiple_child module.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_install().
  */

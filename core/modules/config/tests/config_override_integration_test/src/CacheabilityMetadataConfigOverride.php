@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_override_integration_test;
 
 use Drupal\Core\Cache\CacheableMetadata;

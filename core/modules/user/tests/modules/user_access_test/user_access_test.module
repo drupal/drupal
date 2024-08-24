@@ -5,6 +5,8 @@
  * Dummy module implementing hook_user_access() to test if entity access is respected.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;

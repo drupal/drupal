@@ -8,6 +8,8 @@
  * interaction with the block_content module.
  */
 
+declare(strict_types=1);
+
 use Drupal\block_content\Entity\BlockContent;
 
 /**

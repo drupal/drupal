@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block_test\PluginForm;
 
 use Drupal\Core\Form\FormStateInterface;

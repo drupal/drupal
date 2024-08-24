@@ -5,6 +5,8 @@
  * Sets up the key value entity storage.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_entity_type_alter().
  */

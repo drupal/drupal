@@ -5,6 +5,8 @@
  * Primary module hooks for Menu Operations Link Test module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Core\Url;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\jswebassert_test\Controller;
 
 use Drupal\Core\Render\Markup;

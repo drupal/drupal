@@ -5,6 +5,8 @@
  * Contains hook implementations for testing the JSON:API module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;

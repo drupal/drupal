@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\dialog_renderer_test\Render\MainContent;
 
 use Drupal\Core\Ajax\AjaxResponse;

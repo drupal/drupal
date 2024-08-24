@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\content_translation_test\Entity;
 
 use Drupal\entity_test\Entity\EntityTest;

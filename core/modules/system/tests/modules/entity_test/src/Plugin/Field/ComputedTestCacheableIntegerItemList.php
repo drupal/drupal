@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\entity_test\Plugin\Field;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;

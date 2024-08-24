@@ -5,6 +5,8 @@
  * Test hook implementations for the REST views test module.
  */
 
+declare(strict_types=1);
+
 use Drupal\views\ViewExecutable;
 
 /**

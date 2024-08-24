@@ -9,6 +9,8 @@
  * individual product (node) listed in the search results.
  */
 
+declare(strict_types=1);
+
 /**
  * Adds the test form to search results.
  */

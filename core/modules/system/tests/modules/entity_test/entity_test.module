@@ -5,6 +5,8 @@
  * Test module for the entity API providing several entity types for testing.
  */
 
+declare(strict_types=1);
+
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Query\AlterableInterface;

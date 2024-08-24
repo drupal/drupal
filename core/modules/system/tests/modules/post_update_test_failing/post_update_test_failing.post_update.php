@@ -5,6 +5,8 @@
  * Post update functions for test module.
  */
 
+declare(strict_types=1);
+
 /**
  * Post update that throws an exception.
  */

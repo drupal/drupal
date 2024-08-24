@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\cron_queue_test\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;

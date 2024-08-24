@@ -5,6 +5,8 @@
  * Field UI test module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\field_ui\Form\FieldStorageConfigEditForm;

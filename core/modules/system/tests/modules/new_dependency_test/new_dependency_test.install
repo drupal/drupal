@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the new_dependency_test module.
  */
 
+declare(strict_types=1);
+
 /**
  * Enable the new_dependency_test_with_service module.
  */

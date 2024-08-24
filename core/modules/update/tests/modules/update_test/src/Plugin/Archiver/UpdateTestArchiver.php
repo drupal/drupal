@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\update_test\Plugin\Archiver;
 
 use Drupal\Core\Archiver\ArchiverInterface;

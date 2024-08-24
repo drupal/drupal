@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\module_install_class_loader_test2;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

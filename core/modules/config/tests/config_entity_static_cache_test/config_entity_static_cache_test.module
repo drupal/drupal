@@ -5,6 +5,8 @@
  * Provides configuration entity static cache test helpers.
  */
 
+declare(strict_types=1);
+
 use Drupal\Component\Utility\Random;
 
 /**

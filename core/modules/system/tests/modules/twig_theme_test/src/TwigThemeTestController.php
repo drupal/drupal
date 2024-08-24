@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\twig_theme_test;
 
 use Drupal\Core\Template\Attribute;

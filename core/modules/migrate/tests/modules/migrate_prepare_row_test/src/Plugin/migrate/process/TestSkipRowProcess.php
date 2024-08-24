@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate_prepare_row_test\Plugin\migrate\process;
 
 use Drupal\migrate\Attribute\MigrateProcess;

@@ -5,6 +5,8 @@
  * Test module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\Extension;
 

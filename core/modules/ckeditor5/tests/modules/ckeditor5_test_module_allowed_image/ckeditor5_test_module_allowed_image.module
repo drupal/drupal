@@ -5,6 +5,8 @@
  * A module to add a custom image type for CKEditor 5.
  */
 
+declare(strict_types=1);
+
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 
 /**

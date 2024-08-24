@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\system_mail_failure_test\Plugin\Mail;
 
 use Drupal\Core\Mail\Attribute\Mail;

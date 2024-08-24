@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\deprecated_twig_template\Controller;
 
 use Drupal\Core\Controller\ControllerBase;

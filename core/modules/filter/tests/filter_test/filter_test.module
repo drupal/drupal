@@ -5,6 +5,8 @@
  * Test module for Filter module hooks and functions not used in core.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */

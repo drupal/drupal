@@ -5,6 +5,8 @@
  * Test support module for entity serialization tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Access\AccessResult;
 
 /**

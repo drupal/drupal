@@ -5,6 +5,8 @@
  * Helper module for the lazy route provider tests.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_menu_links_discovered_alter().
  */

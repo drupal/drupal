@@ -5,6 +5,8 @@
  * Tests the migration source plugin prepareRow() exception handling.
  */
 
+declare(strict_types=1);
+
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrateSourceInterface;

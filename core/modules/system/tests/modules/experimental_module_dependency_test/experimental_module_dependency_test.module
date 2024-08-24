@@ -4,3 +4,5 @@
  * @file
  * Tests dependencies on an experimental module.
  */
+
+declare(strict_types=1);
