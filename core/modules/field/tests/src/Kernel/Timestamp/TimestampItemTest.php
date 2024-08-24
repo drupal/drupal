@@ -88,6 +88,35 @@ class TimestampItemTest extends FieldKernelTestBase {
 
     // Ensure there is sample value a generated for the field.
     $this->assertNotNull($entity->field_timestamp->value);
+
+    // Ensure field type storage allows bigint and so is not affected by the
+    // 2038 bug. First, set the date to -467BC, the possible first siting of
+    // Halley's comet. Then set the date to 2134, an expected return date of
+    // Halley's comet.
+    $new_value = -76904336343;
+    $entity->field_timestamp->value = $new_value;
+    $this->entityValidateAndSave($entity);
+    $entity = EntityTest::load(2);
+    $this->assertEquals($entity->field_timestamp->value, $new_value);
+
+    $new_value = 5182657201;
+    $entity->field_timestamp->value = $new_value;
+    $this->entityValidateAndSave($entity);
+    $entity = EntityTest::load(2);
+    $this->assertEquals($entity->field_timestamp->value, $new_value);
+
+    // Ensure min and max values are accepted.
+    $new_value = -9223372036854775807;
+    $entity->field_timestamp->value = $new_value;
+    $this->entityValidateAndSave($entity);
+    $entity = EntityTest::load(2);
+    $this->assertEquals($entity->field_timestamp->value, $new_value);
+
+    $new_value = 9223372036854775807;
+    $entity->field_timestamp->value = $new_value;
+    $this->entityValidateAndSave($entity);
+    $entity = EntityTest::load(2);
+    $this->assertEquals($entity->field_timestamp->value, $new_value);
   }
 
 }
