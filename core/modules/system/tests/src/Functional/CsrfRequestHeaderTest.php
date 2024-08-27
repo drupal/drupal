@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class CsrfRequestHeaderTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'csrf_test'];
 

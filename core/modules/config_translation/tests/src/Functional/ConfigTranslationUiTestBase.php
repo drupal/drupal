@@ -50,9 +50,7 @@ abstract class ConfigTranslationUiTestBase extends BrowserTestBase {
   protected $localeStorage;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

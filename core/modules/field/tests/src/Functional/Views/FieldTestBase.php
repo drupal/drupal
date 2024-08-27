@@ -22,9 +22,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 abstract class FieldTestBase extends ViewTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'field_test_views'];
 

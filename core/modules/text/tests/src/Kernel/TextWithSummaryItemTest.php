@@ -19,9 +19,7 @@ use Drupal\filter\Entity\FilterFormat;
 class TextWithSummaryItemTest extends FieldKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter'];
 

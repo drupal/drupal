@@ -27,9 +27,7 @@ class FilterDateTest extends ViewTestBase {
   public static $testViews = ['test_filter_date_between'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'views_ui', 'datetime'];
 

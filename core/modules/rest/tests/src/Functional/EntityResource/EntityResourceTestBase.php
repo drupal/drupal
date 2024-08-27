@@ -153,9 +153,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected $entityStorage;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['rest_test', 'text'];
 

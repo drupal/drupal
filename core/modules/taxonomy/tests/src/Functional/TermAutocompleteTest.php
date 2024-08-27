@@ -19,9 +19,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class TermAutocompleteTest extends TaxonomyTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node'];
 

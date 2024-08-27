@@ -30,9 +30,7 @@ class MenuUiTest extends BrowserTestBase {
   use MenuUiTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

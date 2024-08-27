@@ -16,9 +16,7 @@ use Drupal\node\Entity\NodeType;
 class NodeValidationTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node'];
 

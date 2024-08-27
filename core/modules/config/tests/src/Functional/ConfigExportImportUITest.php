@@ -63,9 +63,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
   protected $fieldStorage;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config', 'node', 'field'];
 

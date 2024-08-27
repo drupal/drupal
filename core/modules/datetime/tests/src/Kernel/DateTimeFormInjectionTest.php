@@ -28,9 +28,7 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface 
   protected $logger;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'datetime'];
 

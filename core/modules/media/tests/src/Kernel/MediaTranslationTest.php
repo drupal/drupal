@@ -15,9 +15,7 @@ use Drupal\content_translation\ContentTranslationHandler;
 class MediaTranslationTest extends MediaKernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language' , 'content_translation'];
 

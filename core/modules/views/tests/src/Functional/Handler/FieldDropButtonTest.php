@@ -22,9 +22,7 @@ class FieldDropButtonTest extends ViewTestBase {
   public static $testViews = ['test_dropbutton'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node'];
 

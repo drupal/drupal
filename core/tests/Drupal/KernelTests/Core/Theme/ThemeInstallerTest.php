@@ -22,9 +22,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ThemeInstallerTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

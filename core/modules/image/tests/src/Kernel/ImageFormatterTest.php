@@ -21,9 +21,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 class ImageFormatterTest extends FieldKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file', 'image'];
 

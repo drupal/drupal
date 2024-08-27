@@ -14,9 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class SearchExcerptTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['search', 'search_langcode_test'];
 

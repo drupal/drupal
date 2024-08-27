@@ -19,9 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class StreamWrapperTest extends FileTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file_test'];
 

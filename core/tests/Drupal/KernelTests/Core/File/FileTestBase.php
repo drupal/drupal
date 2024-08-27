@@ -13,9 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
 abstract class FileTestBase extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

@@ -14,9 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ContextualUnitTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['contextual'];
 

@@ -25,9 +25,7 @@ class EntityArgumentTest extends TaxonomyTestBase {
   public static array $testViews = ['test_entity_id_argument'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'taxonomy'];
 

@@ -14,9 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ContentModerationStateAccessControlHandlerTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'content_moderation',

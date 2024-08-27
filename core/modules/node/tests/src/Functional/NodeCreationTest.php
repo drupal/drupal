@@ -20,7 +20,7 @@ class NodeCreationTest extends NodeTestBase {
   use ContentTypeCreationTrait;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * Enable dummy module that implements hook_ENTITY_TYPE_insert() for
    * exceptions (function node_test_exception_node_insert() ).

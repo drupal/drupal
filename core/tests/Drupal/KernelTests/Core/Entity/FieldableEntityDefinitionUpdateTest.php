@@ -79,9 +79,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   protected $testEntities = [];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'content_translation',

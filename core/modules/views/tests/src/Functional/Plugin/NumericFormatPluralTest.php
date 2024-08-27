@@ -17,9 +17,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 class NumericFormatPluralTest extends ViewTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui', 'file', 'language', 'locale'];
 

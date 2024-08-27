@@ -17,9 +17,7 @@ use Drupal\Tests\BrowserTestBase;
 class LocaleExportTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['locale'];
 

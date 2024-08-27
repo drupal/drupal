@@ -17,9 +17,7 @@ use Drupal\KernelTests\KernelTestBase;
 class NodeBodyFieldStorageTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'user',

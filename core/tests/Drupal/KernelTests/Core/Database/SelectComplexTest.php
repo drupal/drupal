@@ -17,9 +17,7 @@ use Drupal\user\Entity\User;
 class SelectComplexTest extends DatabaseTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'node_access_test', 'field'];
 

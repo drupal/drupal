@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class ContentTranslationUISkipTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['content_translation_test', 'user', 'node'];
 

@@ -18,9 +18,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class DatabaseBackendTagTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

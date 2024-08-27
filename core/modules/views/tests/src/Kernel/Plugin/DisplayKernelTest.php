@@ -22,9 +22,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
 class DisplayKernelTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'node', 'field', 'user'];
 

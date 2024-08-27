@@ -19,9 +19,7 @@ use Drupal\node\Entity\NodeType;
 class BulkFormAccessTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node_test_views', 'node_access_test'];
 

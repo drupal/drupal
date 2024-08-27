@@ -37,9 +37,7 @@ class FrontPageTest extends ViewTestBase {
   protected $nodeStorage;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'contextual'];
 

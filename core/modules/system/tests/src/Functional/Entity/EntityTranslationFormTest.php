@@ -18,9 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class EntityTranslationFormTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test', 'language', 'node'];
 

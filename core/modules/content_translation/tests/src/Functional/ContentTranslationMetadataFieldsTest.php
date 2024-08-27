@@ -26,9 +26,7 @@ class ContentTranslationMetadataFieldsTest extends ContentTranslationTestBase {
   protected $bundle = 'article';
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'content_translation', 'node'];
 

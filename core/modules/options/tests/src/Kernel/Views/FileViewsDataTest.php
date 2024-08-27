@@ -17,9 +17,7 @@ use Drupal\views\Views;
 class FileViewsDataTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'file',

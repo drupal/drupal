@@ -14,7 +14,7 @@ use Drupal\field\Entity\FieldConfig;
 class FieldImportChangeTest extends FieldKernelTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * The default configuration provided by field_test_config is imported by
    * \Drupal\Tests\field\Kernel\FieldKernelTestBase::setUp() when it installs

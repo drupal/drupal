@@ -19,9 +19,7 @@ use Drupal\views\Entity\View;
 class BlockXssTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_content', 'menu_ui', 'views'];
 

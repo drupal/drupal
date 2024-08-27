@@ -36,7 +36,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
   protected $keyValueExpirable;
 
   /**
-   * An associative list of modules to enable or disable.
+   * An associative list of modules to install or uninstall.
    *
    * @var array
    */

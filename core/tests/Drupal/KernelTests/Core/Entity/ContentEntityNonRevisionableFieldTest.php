@@ -21,9 +21,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
   use EntityDefinitionTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language'];
 

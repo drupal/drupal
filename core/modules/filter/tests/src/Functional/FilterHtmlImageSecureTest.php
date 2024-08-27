@@ -21,9 +21,7 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
   use TestFileCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'node', 'comment'];
 

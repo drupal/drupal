@@ -23,9 +23,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

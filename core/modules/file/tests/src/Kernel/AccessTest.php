@@ -21,9 +21,7 @@ class AccessTest extends KernelTestBase {
   use TestFileCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file', 'system', 'user'];
 

@@ -22,9 +22,7 @@ class MenuLinkTest extends ViewTestBase {
   public static $testViews = ['test_menu_link'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'views',

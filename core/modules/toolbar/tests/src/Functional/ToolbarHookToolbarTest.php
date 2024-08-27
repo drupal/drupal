@@ -21,9 +21,7 @@ class ToolbarHookToolbarTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['toolbar', 'toolbar_test', 'test_page_test'];
 

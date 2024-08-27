@@ -16,9 +16,7 @@ use Drupal\node\NodeInterface;
 class LocaleContentTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'locale'];
 

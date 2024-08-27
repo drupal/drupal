@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class FieldDefaultValueCallbackTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'field_test', 'field_ui'];
 

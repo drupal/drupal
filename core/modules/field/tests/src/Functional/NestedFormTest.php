@@ -16,9 +16,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class NestedFormTest extends FieldTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field_test', 'entity_test'];
 

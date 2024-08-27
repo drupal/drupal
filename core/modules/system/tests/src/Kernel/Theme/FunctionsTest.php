@@ -20,9 +20,7 @@ use Drupal\KernelTests\KernelTestBase;
 class FunctionsTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['router_test', 'system'];
 

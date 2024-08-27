@@ -24,9 +24,7 @@ class FieldUITest extends FieldTestBase {
   public static $testViews = ['test_view_fieldapi'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui'];
 

@@ -15,9 +15,7 @@ use Drupal\views\Views;
 class ViewsListTest extends UITestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'views_ui'];
 

@@ -22,9 +22,7 @@ use Drupal\KernelTests\KernelTestBase;
 class TwigMarkupInterfaceTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class RenderArrayNonHtmlSubscriberTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['render_array_non_html_subscriber_test'];
 

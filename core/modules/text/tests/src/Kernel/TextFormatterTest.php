@@ -31,9 +31,7 @@ class TextFormatterTest extends EntityKernelTestBase {
   protected $bundle = 'entity_test';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['text'];
 

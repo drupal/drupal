@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class FrontPageTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'system_test', 'views'];
 

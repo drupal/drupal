@@ -20,9 +20,7 @@ use Drupal\Tests\BrowserTestBase;
 class LocaleImportFunctionalTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['locale', 'dblog'];
 

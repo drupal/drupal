@@ -19,9 +19,7 @@ class ModerationFormTest extends ModerationStateTestBase {
   use ContentTranslationTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

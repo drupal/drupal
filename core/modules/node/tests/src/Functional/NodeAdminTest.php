@@ -49,9 +49,7 @@ class NodeAdminTest extends NodeTestBase {
   protected $baseUser3;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views'];
 

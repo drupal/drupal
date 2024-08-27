@@ -21,9 +21,7 @@ use Drupal\Core\Url;
 class RouterTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['router_test'];
 

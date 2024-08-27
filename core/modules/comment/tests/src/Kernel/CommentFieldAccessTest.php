@@ -29,9 +29,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
   use GeneratePermutationsTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['comment', 'entity_test', 'user'];
 

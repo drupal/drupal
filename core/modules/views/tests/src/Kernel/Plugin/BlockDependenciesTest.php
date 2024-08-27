@@ -22,9 +22,7 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
   public static $testViews = ['test_exposed_block'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'block', 'user', 'field'];
 

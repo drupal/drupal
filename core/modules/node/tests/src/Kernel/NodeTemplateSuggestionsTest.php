@@ -18,9 +18,7 @@ class NodeTemplateSuggestionsTest extends KernelTestBase {
   use NodeCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

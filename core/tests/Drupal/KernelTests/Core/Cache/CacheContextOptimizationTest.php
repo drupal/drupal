@@ -18,9 +18,7 @@ class CacheContextOptimizationTest extends KernelTestBase {
   use UserCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'system'];
 

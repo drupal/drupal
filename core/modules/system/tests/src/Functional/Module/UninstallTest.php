@@ -20,9 +20,7 @@ use Drupal\user\RoleInterface;
 class UninstallTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['module_test', 'user', 'views', 'node'];
 

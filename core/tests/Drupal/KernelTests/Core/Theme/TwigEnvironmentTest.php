@@ -24,9 +24,7 @@ use Twig\Error\LoaderError;
 class TwigEnvironmentTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

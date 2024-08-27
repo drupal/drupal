@@ -14,9 +14,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 class ContextualFiltersStringTest extends ViewTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'views_ui',

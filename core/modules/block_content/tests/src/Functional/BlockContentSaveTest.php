@@ -14,9 +14,7 @@ use Drupal\block_content\Entity\BlockContent;
 class BlockContentSaveTest extends BlockContentTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block_content_test'];
 

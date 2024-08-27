@@ -18,9 +18,7 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
 class FieldDisplayTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'entity_test',

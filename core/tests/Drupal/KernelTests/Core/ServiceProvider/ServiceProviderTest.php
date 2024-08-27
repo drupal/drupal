@@ -18,9 +18,7 @@ use Drupal\Core\Cache\CacheFactory;
 class ServiceProviderTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file', 'service_provider_test', 'system'];
 

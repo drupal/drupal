@@ -16,9 +16,7 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'entity_test',

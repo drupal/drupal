@@ -119,9 +119,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
   protected $webUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

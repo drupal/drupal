@@ -18,9 +18,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigEntityQueryTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_test'];
 

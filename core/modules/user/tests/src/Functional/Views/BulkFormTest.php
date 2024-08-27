@@ -18,9 +18,7 @@ use Drupal\views\Views;
 class BulkFormTest extends UserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui'];
 

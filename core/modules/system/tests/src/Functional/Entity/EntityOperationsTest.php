@@ -16,9 +16,7 @@ use Drupal\user\Entity\Role;
 class EntityOperationsTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test'];
 

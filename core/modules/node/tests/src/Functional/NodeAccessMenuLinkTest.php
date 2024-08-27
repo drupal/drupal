@@ -14,9 +14,7 @@ use Drupal\user\RoleInterface;
 class NodeAccessMenuLinkTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['menu_ui', 'block'];
 

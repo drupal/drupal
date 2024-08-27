@@ -26,9 +26,7 @@ class ContactSitewideTest extends BrowserTestBase {
   use AssertMailTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'text',

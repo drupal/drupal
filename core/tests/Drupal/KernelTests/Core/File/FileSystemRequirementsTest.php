@@ -12,9 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
 class FileSystemRequirementsTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

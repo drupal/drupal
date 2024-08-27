@@ -12,9 +12,7 @@ namespace Drupal\Tests\block_content\Functional;
 class BlockContentPageViewTest extends BlockContentTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block_content_test'];
 

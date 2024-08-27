@@ -27,9 +27,7 @@ use Psr\Log\LoggerInterface;
 class CronQueueTest extends KernelTestBase {
 
   /**
-   * The modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'cron_queue_test'];
 

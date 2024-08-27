@@ -41,9 +41,7 @@ class RequestPathTest extends KernelTestBase {
   protected $requestStack;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'field', 'path'];
 

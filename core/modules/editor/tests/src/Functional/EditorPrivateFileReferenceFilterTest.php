@@ -18,9 +18,7 @@ use Drupal\user\RoleInterface;
 class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'editor_test',

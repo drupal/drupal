@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class SessionTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['session_test'];
 

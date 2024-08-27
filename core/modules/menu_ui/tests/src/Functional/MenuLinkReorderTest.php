@@ -21,9 +21,7 @@ class MenuLinkReorderTest extends BrowserTestBase {
   protected $administrator;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['menu_ui', 'test_page_test', 'node', 'block'];
 

@@ -12,9 +12,7 @@ namespace Drupal\Tests\views_ui\Functional;
 class NewViewConfigSchemaTest extends UITestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'views_ui',

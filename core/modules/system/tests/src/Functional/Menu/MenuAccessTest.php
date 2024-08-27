@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class MenuAccessTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'filter', 'toolbar', 'menu_ui'];
 

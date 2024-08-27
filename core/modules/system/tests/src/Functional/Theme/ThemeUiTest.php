@@ -76,9 +76,9 @@ class ThemeUiTest extends BrowserTestBase {
    * @param string $theme_name
    *   The name of the theme being tested.
    * @param string[] $first_modules
-   *   Machine names of first modules to enable.
+   *   Machine names of first modules to install.
    * @param string[] $second_modules
-   *   Machine names of second modules to enable.
+   *   Machine names of second modules to install.
    * @param string[] $required_by_messages
    *   Expected messages when attempting to uninstall $module_names.
    * @param string $base_theme_to_uninstall

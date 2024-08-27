@@ -17,9 +17,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 class MigrateSkipRowTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['migrate', 'migrate_prepare_row_test'];
 

@@ -21,9 +21,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigOverridesPriorityTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

@@ -21,9 +21,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
   use FieldUiTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

@@ -12,9 +12,7 @@ namespace Drupal\KernelTests\Core\File;
 class RemoteFileDeleteTest extends FileDeleteTest {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file_test'];
 

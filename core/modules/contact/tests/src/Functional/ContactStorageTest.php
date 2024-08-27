@@ -20,9 +20,7 @@ use Drupal\user\RoleInterface;
 class ContactStorageTest extends ContactSitewideTest {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

@@ -20,9 +20,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class FieldStorageCrudTest extends FieldKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [];
 

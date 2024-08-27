@@ -27,9 +27,7 @@ class DisplayFeedTest extends ViewTestBase {
   public static $testViews = ['test_display_feed', 'test_attached_disabled', 'test_feed_icon'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'node', 'views', 'views_test_rss'];
 
