@@ -14,9 +14,7 @@ use Drupal\node\Entity\NodeType;
 class NodeAccessTest extends ModerationStateTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'content_moderation',

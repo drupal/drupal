@@ -20,9 +20,7 @@ class PathContentModerationTest extends BrowserTestBase {
   use ContentTranslationTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

@@ -19,9 +19,7 @@ class CommentRssTest extends CommentTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views'];
 

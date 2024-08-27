@@ -56,9 +56,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   protected $notEntityOwner;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

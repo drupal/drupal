@@ -18,9 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class EditorLoadingTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'editor', 'editor_test', 'node'];
 

@@ -15,9 +15,7 @@ use Drupal\user\RoleInterface;
 class FilterHooksTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'filter_test'];
 

@@ -173,7 +173,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected $container;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * The test runner will merge the $modules lists from this class, the class
    * it extends, and so on up the class hierarchy. It is not necessary to
@@ -528,10 +528,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   }
 
   /**
-   * Returns Extension objects for $modules to enable.
+   * Returns Extension objects for $modules to install.
    *
    * @param string[] $modules
-   *   The list of modules to enable.
+   *   The list of modules to install.
    *
    * @return \Drupal\Core\Extension\Extension[]
    *   Extension objects for $modules, keyed by module name.
@@ -846,7 +846,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * to your settings.php.
    *
    * @param string[] $modules
-   *   A list of modules to enable. Dependencies are not resolved; i.e.,
+   *   A list of modules to install. Dependencies are not resolved; i.e.,
    *   multiple modules have to be specified individually. The modules are only
    *   added to the active module list and loaded; i.e., their database schema
    *   is not installed. hook_install() is not invoked. A custom module weight
@@ -1026,7 +1026,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   }
 
   /**
-   * Returns the modules to enable for this test.
+   * Returns the modules to install for this test.
    *
    * @param string $class
    *   The fully-qualified class name of this test.

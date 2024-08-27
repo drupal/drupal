@@ -16,9 +16,7 @@ use PHPUnit\Framework\AssertionFailedError;
 class DrupalMessengerServiceTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system_test'];
 

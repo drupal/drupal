@@ -18,9 +18,7 @@ class UpdatesWith7xTest extends BrowserTestBase {
   use RequirementsPageTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['update_test_with_7x'];
 

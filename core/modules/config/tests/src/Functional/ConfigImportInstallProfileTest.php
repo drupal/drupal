@@ -21,9 +21,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
   protected $profile = 'testing_config_import';
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config'];
 

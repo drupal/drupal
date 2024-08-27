@@ -20,9 +20,7 @@ class ConfigFormOverrideTest extends BrowserTestBase {
   private const OVERRIDE_TEXT = 'These values are overridden. Changes on this form will be saved, but overrides will take precedence. See configuration overrides documentation for more information.';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['update', 'config_override_message_test'];
 

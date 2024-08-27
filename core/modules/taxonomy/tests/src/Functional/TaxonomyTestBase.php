@@ -17,9 +17,7 @@ abstract class TaxonomyTestBase extends BrowserTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy', 'block'];
 

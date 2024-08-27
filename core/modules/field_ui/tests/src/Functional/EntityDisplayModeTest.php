@@ -17,9 +17,7 @@ use Drupal\Tests\BrowserTestBase;
 class EntityDisplayModeTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'entity_test', 'field_ui', 'node'];
 

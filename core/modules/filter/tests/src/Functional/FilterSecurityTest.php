@@ -17,9 +17,7 @@ use Drupal\user\RoleInterface;
 class FilterSecurityTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'filter_test'];
 

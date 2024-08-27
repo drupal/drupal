@@ -17,9 +17,7 @@ use Drupal\workflows\Entity\Workflow;
 class WorkflowUiTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['workflows', 'workflow_type_test', 'block'];
 

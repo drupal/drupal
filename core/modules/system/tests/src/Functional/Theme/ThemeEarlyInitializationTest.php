@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class ThemeEarlyInitializationTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['theme_test'];
 

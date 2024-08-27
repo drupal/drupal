@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class LanguageConfigOverrideImportTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

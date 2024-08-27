@@ -14,9 +14,7 @@ use Drupal\Component\Utility\Unicode;
 class VocabularyPermissionsTest extends TaxonomyTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['help'];
 

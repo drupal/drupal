@@ -15,9 +15,7 @@ use Drupal\shortcut\Entity\ShortcutSet;
 class ShortcutSetsTest extends ShortcutTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = ['block'];
 

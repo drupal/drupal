@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class BlockHookOperationTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'entity_test'];
 

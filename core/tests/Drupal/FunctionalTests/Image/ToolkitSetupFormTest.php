@@ -21,9 +21,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'image', 'image_test'];
 

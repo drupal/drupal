@@ -21,9 +21,7 @@ class BreadcrumbTest extends BrowserTestBase {
   use AssertBreadcrumbTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

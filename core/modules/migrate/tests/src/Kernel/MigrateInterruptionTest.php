@@ -18,9 +18,7 @@ use Drupal\KernelTests\KernelTestBase;
 class MigrateInterruptionTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['migrate', 'migrate_events_test'];
 

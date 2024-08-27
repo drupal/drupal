@@ -13,9 +13,7 @@ namespace Drupal\KernelTests\Core\File;
 class ScanDirectoryTest extends FileTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file_test'];
 

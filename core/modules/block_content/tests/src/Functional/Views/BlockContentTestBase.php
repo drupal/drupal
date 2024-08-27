@@ -32,9 +32,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

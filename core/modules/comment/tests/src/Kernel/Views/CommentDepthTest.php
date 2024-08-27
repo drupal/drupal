@@ -18,9 +18,7 @@ use Drupal\views\Views;
 class CommentDepthTest extends CommentViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test'];
 

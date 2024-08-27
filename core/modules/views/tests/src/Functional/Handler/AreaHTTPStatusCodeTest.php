@@ -23,9 +23,7 @@ class AreaHTTPStatusCodeTest extends ViewTestBase {
   public static $testViews = ['test_http_status_code'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node'];
 

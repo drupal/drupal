@@ -58,9 +58,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
   protected $fieldName = 'field_test';
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_reference_test', 'entity_test_update'];
 

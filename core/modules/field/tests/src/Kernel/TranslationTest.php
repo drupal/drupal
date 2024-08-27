@@ -18,7 +18,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class TranslationTest extends FieldKernelTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * The node module is required because the tests alter the node entity type.
    *

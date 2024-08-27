@@ -22,9 +22,7 @@ class OffCanvasDialogTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['ajax_test'];
 

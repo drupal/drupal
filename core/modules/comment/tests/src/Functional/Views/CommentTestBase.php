@@ -16,9 +16,7 @@ abstract class CommentTestBase extends ViewTestBase {
   use CommentTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'comment', 'comment_test_views'];
 

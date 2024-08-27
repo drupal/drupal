@@ -16,9 +16,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class TranslationStringTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

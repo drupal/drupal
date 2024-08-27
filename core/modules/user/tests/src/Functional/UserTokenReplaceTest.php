@@ -18,9 +18,7 @@ use Drupal\user\Entity\User;
 class UserTokenReplaceTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'user_hooks_test'];
 

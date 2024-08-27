@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class DependencyMissingTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['update_test_0', 'update_test_2'];
 

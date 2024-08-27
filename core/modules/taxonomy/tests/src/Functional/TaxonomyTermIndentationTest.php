@@ -12,9 +12,7 @@ namespace Drupal\Tests\taxonomy\Functional;
 class TaxonomyTermIndentationTest extends TaxonomyTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy'];
 

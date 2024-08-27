@@ -15,9 +15,7 @@ use Twig\TemplateWrapper;
 class TwigNamespaceTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'twig_theme_test',

@@ -14,9 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class FieldTypeCategoryDiscoveryTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'field_plugins_test',

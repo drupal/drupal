@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 abstract class ShortcutTestBase extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'toolbar', 'shortcut'];
 

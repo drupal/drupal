@@ -40,9 +40,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   protected $webUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'views', 'node_block_test'];
 

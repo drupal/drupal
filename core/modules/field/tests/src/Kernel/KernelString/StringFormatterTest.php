@@ -21,9 +21,7 @@ use Drupal\KernelTests\KernelTestBase;
 class StringFormatterTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'field',

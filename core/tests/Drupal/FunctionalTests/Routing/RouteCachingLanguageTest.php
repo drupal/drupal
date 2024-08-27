@@ -21,9 +21,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
   use ContentTranslationTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'path',

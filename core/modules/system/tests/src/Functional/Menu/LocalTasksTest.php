@@ -21,9 +21,7 @@ class LocalTasksTest extends BrowserTestBase {
   use TaxonomyTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'menu_test', 'entity_test', 'node'];
 

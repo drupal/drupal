@@ -19,9 +19,7 @@ use Drupal\Tests\BrowserTestBase;
 class ModuleInstallBatchTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['test_batch_test', 'entity_test'];
 

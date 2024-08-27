@@ -19,9 +19,7 @@ use Drupal\block\Entity\Block;
 class BlockViewBuilderTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_test', 'system', 'user'];
 

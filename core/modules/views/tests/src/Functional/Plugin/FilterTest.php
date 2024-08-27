@@ -24,9 +24,7 @@ class FilterTest extends ViewTestBase {
   public static $testViews = ['test_filter', 'test_filter_in_operator_ui'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui', 'node'];
 

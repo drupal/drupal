@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class UserTimeZoneTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'system_test'];
 

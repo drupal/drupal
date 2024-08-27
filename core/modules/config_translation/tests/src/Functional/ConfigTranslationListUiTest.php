@@ -23,9 +23,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class ConfigTranslationListUiTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

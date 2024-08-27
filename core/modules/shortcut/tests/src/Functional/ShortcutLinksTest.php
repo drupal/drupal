@@ -25,9 +25,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   use PathAliasTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['router_test', 'views', 'block'];
 

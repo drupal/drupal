@@ -15,9 +15,7 @@ use Drupal\system\Entity\Menu;
 class MenuUninstallTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['menu_ui'];
 

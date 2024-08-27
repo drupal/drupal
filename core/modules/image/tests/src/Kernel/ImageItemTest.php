@@ -23,9 +23,7 @@ use Drupal\user\Entity\Role;
 class ImageItemTest extends FieldKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file', 'image'];
 

@@ -15,9 +15,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class FieldAccessTest extends FieldTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'field_test'];
 

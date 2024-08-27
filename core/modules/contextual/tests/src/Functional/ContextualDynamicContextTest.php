@@ -45,9 +45,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
   protected $anonymousUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'contextual',

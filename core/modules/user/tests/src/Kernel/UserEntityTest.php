@@ -17,9 +17,7 @@ use Drupal\user\RoleInterface;
 class UserEntityTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'field'];
 

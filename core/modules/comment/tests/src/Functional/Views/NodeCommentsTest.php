@@ -12,9 +12,7 @@ namespace Drupal\Tests\comment\Functional\Views;
 class NodeCommentsTest extends CommentTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['history'];
 

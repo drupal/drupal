@@ -13,9 +13,7 @@ use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 abstract class MigrateDrupalTestBase extends MigrateTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

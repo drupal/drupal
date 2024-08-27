@@ -12,9 +12,7 @@ namespace Drupal\Tests\views_ui\Functional;
 class XssTest extends UITestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'user', 'views_ui', 'views_ui_test'];
 

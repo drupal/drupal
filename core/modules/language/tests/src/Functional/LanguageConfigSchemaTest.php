@@ -17,9 +17,7 @@ class LanguageConfigSchemaTest extends BrowserTestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'menu_link_content'];
 

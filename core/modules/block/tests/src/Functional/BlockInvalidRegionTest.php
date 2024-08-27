@@ -15,9 +15,7 @@ use Drupal\block\Entity\Block;
 class BlockInvalidRegionTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_test'];
 

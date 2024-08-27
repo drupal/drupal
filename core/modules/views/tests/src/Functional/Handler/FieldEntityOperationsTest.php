@@ -24,9 +24,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
   public static $testViews = ['test_entity_operations'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'language', 'views_ui'];
 

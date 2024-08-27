@@ -16,9 +16,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class TranslatedViewTest extends UITestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'config_translation',

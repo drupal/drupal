@@ -46,9 +46,7 @@ class EntityViewsDataTest extends KernelTestBase {
   protected $commonBaseFields;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'user',

@@ -18,9 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class LocaleJavascriptTranslationTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['locale', 'locale_test'];
 

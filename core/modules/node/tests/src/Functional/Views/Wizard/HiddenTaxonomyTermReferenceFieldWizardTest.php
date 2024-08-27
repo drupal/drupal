@@ -23,9 +23,7 @@ class HiddenTaxonomyTermReferenceFieldWizardTest extends WizardTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy'];
 

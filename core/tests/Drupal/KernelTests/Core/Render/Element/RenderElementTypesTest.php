@@ -16,9 +16,7 @@ use Drupal\KernelTests\KernelTestBase;
 class RenderElementTypesTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'router_test'];
 

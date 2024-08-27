@@ -12,9 +12,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 class ProcessingTest extends WebDriverTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['batch_test', 'test_page_test'];
 

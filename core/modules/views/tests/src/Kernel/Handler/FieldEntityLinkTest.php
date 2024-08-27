@@ -28,9 +28,7 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
   public static $testViews = ['test_entity_test_link'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'entity_test'];
 

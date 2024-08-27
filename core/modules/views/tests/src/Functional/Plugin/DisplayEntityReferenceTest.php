@@ -30,9 +30,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
   public static $testViews = ['test_display_entity_reference'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test', 'field', 'views_ui'];
 

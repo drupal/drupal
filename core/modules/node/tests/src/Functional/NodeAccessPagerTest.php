@@ -27,9 +27,7 @@ class NodeAccessPagerTest extends BrowserTestBase {
   protected User $webUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'node_access_test', 'comment'];
 

@@ -19,9 +19,7 @@ class RouteCachingNonPathLanguageNegotiationTest extends BrowserTestBase {
   use PathAliasTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'block'];
 

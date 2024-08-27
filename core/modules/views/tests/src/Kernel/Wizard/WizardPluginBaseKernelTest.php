@@ -18,9 +18,7 @@ use Drupal\views_ui\ViewUI;
 class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'system', 'user', 'views_ui'];
 

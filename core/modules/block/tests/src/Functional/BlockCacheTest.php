@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class BlockCacheTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_test', 'test_page_test'];
 

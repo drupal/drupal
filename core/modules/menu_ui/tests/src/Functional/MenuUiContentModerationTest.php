@@ -18,9 +18,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
   use ContentModerationTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

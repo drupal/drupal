@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class ResponsiveImageAdminUITest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'responsive_image',

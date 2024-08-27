@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class FieldUIRouteTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'entity_test', 'field_ui'];
 

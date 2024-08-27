@@ -37,9 +37,7 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
   protected $translatedTagName = 'TranslatedTagName';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'content_translation', 'taxonomy'];
 

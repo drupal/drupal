@@ -34,8 +34,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
   protected $defaultTheme = 'olivero';
 
   /**
-   * Modules to enable.
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'big_pipe',

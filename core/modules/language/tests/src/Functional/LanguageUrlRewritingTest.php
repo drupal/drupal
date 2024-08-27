@@ -19,9 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class LanguageUrlRewritingTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'language_test'];
 

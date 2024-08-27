@@ -20,9 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 class PathChangedHelperTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['path_changed_helper_test', 'system'];
 

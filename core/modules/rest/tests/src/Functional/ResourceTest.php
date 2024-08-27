@@ -22,9 +22,7 @@ use GuzzleHttp\RequestOptions;
 class ResourceTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['rest', 'entity_test', 'rest_test'];
 

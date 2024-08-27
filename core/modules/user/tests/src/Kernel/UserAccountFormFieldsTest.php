@@ -17,9 +17,7 @@ use Drupal\user\UserInterface;
 class UserAccountFormFieldsTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'field'];
 

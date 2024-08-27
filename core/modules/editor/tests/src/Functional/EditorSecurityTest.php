@@ -43,9 +43,7 @@ class EditorSecurityTest extends BrowserTestBase {
   protected static $sampleContentSecuredEmbedAllowed = '<p>Hello, Dumbo Octopus!</p>alert(0)<embed type="image/svg+xml" src="image.svg" />';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'editor', 'editor_test', 'node'];
 

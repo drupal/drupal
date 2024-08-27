@@ -25,9 +25,7 @@ abstract class ViewTestBase extends BrowserTestBase {
   use ViewResultAssertionTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views', 'views_test_config'];
 

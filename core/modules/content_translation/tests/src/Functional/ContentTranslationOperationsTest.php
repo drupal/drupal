@@ -37,9 +37,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
   protected $baseUser2;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

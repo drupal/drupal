@@ -24,9 +24,7 @@ use Drupal\user\RoleInterface;
 abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test', 'field_test'];
 

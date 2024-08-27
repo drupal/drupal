@@ -22,9 +22,7 @@ class MediaUiReferenceWidgetTest extends MediaFunctionalTestBase {
   use FieldUiTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

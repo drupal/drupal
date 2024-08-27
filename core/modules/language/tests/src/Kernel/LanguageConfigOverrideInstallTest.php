@@ -19,9 +19,7 @@ use Drupal\KernelTests\KernelTestBase;
 class LanguageConfigOverrideInstallTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'config_events_test', 'language_events_test'];
 

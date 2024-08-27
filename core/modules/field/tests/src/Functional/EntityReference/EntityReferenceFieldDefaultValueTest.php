@@ -20,9 +20,7 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field_ui', 'node'];
 

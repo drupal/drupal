@@ -16,9 +16,7 @@ use Drupal\node\Entity\NodeType;
 class NodeFieldAccessTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node'];
 

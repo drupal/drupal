@@ -30,9 +30,7 @@ use Drupal\Tests\BrowserTestBase;
 class BigPipeTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['big_pipe', 'big_pipe_test', 'dblog'];
 

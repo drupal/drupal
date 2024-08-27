@@ -18,9 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class LanguageListTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language'];
 

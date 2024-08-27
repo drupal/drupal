@@ -20,9 +20,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['navigation', 'shortcut', 'test_page_test'];
 

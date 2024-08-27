@@ -14,9 +14,7 @@ use Drupal\user\Entity\User;
 class NodeContextualLinksTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['contextual'];
 

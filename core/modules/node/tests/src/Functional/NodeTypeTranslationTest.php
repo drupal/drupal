@@ -19,9 +19,7 @@ use Drupal\Tests\BrowserTestBase;
 class NodeTypeTranslationTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

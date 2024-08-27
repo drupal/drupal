@@ -14,9 +14,7 @@ use Drupal\Core\Language\LanguageInterface;
 class NodeTypeInitialLanguageTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'field_ui'];
 

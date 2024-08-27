@@ -14,9 +14,7 @@ use Drupal\media\Entity\Media;
 class MediaTemplateSuggestionsTest extends MediaFunctionalTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['media'];
 

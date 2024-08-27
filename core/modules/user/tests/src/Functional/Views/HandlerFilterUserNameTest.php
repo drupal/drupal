@@ -16,9 +16,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 class HandlerFilterUserNameTest extends ViewTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui', 'user_test_views'];
 

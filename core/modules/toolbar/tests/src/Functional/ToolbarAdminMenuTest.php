@@ -54,9 +54,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   protected $hash;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

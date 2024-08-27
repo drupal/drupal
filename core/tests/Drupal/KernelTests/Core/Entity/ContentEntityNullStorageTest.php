@@ -20,9 +20,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ContentEntityNullStorageTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'contact', 'user'];
 

@@ -25,9 +25,7 @@ use Drupal\user\Entity\Role;
 class EntityDisplayTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = [
     'field_ui',

@@ -15,9 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigSnapshotTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_test', 'system'];
 

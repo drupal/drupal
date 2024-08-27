@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class EntityViewControllerTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test'];
 

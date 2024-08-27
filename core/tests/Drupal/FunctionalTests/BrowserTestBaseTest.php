@@ -29,9 +29,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   use CronRunTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'test_page_test',

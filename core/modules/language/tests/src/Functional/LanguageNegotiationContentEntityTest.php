@@ -24,9 +24,7 @@ use Symfony\Component\Routing\Route;
 class LanguageNegotiationContentEntityTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

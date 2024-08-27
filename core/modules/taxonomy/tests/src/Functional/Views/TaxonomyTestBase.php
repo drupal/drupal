@@ -20,9 +20,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy', 'taxonomy_test_views'];
 

@@ -14,9 +14,7 @@ use Drupal\migrate\MigrateExecutable;
 class MigrateConfigRollbackTest extends MigrateTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'language', 'config_translation'];
 

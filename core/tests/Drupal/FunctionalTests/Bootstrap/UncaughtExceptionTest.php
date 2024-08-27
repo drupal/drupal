@@ -23,9 +23,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   protected $expectedExceptionMessage;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['error_service_test', 'error_test'];
 

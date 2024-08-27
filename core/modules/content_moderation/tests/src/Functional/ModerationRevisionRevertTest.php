@@ -19,9 +19,7 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
   use ContentModerationTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'content_moderation',

@@ -13,9 +13,7 @@ use Drupal\views\Tests\ViewTestData;
 abstract class UserKernelTestBase extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user_test_views', 'user', 'system', 'field'];
 

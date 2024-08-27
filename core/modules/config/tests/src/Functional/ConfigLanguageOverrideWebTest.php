@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class ConfigLanguageOverrideWebTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

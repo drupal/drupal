@@ -14,9 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigDiffTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_test', 'system'];
 

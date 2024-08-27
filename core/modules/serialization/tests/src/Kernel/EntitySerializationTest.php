@@ -22,9 +22,7 @@ use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
 class EntitySerializationTest extends NormalizerTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'serialization',

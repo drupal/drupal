@@ -20,9 +20,7 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
   use UpdateTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'block'];
 

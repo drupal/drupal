@@ -17,9 +17,7 @@ use Drupal\Tests\BrowserTestBase;
 class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language'];
 

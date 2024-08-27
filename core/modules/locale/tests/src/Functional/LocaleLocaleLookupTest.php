@@ -19,9 +19,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   use WaitTerminateTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['locale', 'locale_test'];
 

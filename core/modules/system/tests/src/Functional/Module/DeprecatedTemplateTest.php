@@ -19,9 +19,7 @@ class DeprecatedTemplateTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['deprecated_twig_template'];
 

@@ -12,9 +12,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 abstract class WizardTestBase extends ViewTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'views_ui', 'block', 'rest'];
 

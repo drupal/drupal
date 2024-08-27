@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class BooleanFormatterSettingsTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'field_ui', 'text', 'node', 'user'];
 

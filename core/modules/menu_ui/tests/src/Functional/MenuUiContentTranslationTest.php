@@ -23,9 +23,7 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',
