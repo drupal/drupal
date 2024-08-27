@@ -17,9 +17,7 @@ use Drupal\entity_test\Entity\EntityTestLabel;
 class KeyValueContentEntityStorageTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'entity_test', 'keyvalue_test'];
 

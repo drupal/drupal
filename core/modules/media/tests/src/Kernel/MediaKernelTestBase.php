@@ -20,9 +20,7 @@ abstract class MediaKernelTestBase extends KernelTestBase {
   use MediaTypeCreationTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'media',

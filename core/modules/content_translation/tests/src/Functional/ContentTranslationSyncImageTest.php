@@ -42,9 +42,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   protected $files;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

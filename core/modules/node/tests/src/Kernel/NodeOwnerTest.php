@@ -18,9 +18,7 @@ use Drupal\user\Entity\User;
 class NodeOwnerTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'language'];
 

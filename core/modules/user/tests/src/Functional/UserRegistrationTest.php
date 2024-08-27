@@ -19,9 +19,7 @@ use Drupal\user\UserInterface;
 class UserRegistrationTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field_test'];
 

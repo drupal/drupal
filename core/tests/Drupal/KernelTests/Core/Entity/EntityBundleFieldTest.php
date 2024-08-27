@@ -12,9 +12,7 @@ namespace Drupal\KernelTests\Core\Entity;
 class EntityBundleFieldTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_schema_test', 'entity_test_update'];
 

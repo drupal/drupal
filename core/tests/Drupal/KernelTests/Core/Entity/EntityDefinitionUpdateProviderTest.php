@@ -42,9 +42,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
   protected $database;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test_update', 'language'];
 

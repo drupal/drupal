@@ -17,9 +17,7 @@ use Drupal\user\Entity\User;
 class UserNameFormatterTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'user', 'system'];
 

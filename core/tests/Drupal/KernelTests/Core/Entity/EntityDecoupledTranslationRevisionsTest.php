@@ -20,9 +20,7 @@ use Drupal\user\Entity\User;
 class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

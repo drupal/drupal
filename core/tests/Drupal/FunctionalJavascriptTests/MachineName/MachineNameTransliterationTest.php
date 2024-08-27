@@ -17,9 +17,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class MachineNameTransliterationTest extends WebDriverTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

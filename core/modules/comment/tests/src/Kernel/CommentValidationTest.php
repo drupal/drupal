@@ -23,9 +23,7 @@ class CommentValidationTest extends EntityKernelTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['comment', 'node'];
 

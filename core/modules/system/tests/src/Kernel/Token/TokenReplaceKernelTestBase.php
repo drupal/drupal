@@ -26,9 +26,7 @@ abstract class TokenReplaceKernelTestBase extends EntityKernelTestBase {
   protected $tokenService;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

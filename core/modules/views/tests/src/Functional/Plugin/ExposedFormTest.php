@@ -31,9 +31,7 @@ class ExposedFormTest extends ViewTestBase {
   public static $testViews = ['test_exposed_form_buttons', 'test_exposed_block', 'test_exposed_form_sort_items_per_page', 'test_exposed_form_pager', 'test_remember_selected'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'views_ui', 'block', 'entity_test'];
 

@@ -14,9 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigEntityNormalizeTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_test'];
 

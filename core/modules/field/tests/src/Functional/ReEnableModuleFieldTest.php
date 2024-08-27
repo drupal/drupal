@@ -19,9 +19,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
   use CronRunTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'field',

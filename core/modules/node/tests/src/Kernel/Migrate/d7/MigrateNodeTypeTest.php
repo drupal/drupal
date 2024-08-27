@@ -18,9 +18,7 @@ use Drupal\node\NodeTypeInterface;
 class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'text', 'menu_ui'];
 

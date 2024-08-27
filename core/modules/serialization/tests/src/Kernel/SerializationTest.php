@@ -15,9 +15,7 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 class SerializationTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['serialization', 'serialization_test'];
 

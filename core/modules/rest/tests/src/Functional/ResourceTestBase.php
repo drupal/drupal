@@ -94,9 +94,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected $serializer;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['rest'];
 

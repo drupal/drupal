@@ -26,9 +26,7 @@ abstract class UITestBase extends ViewTestBase {
   protected $fullAdminUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'views_ui', 'block', 'taxonomy'];
 

@@ -36,7 +36,7 @@ class RouteProviderTest extends KernelTestBase {
   use PathAliasTestTrait;
 
   /**
-   * Modules to enable.
+   * {@inheritdoc}
    */
   protected static $modules = [
     'url_alter_test',

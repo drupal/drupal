@@ -12,9 +12,7 @@ namespace Drupal\Tests\views\Functional;
 class ViewsNoResultsBehaviorTest extends ViewTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'user'];
 

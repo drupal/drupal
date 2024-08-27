@@ -20,9 +20,7 @@ class LocalePathTest extends BrowserTestBase {
   use PathAliasTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'locale', 'path', 'views'];
 

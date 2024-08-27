@@ -15,9 +15,7 @@ use Drupal\Tests\field\Functional\FieldTestBase;
 abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['options', 'entity_test', 'options_test'];
 

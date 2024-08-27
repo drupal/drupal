@@ -13,9 +13,7 @@ use Drupal\user_auth_decorator_test\UserAuthDecorator;
  */
 class UserJsonBasicAuthDecoratedTest extends UserJsonBasicAuthTest {
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user_auth_decorator_test'];
 

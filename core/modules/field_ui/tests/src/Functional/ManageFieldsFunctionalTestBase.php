@@ -20,9 +20,7 @@ class ManageFieldsFunctionalTestBase extends BrowserTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

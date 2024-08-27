@@ -27,9 +27,7 @@ class DefaultViewsTest extends ViewTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'views',

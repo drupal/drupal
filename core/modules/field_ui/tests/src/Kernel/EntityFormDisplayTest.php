@@ -18,9 +18,7 @@ use Drupal\KernelTests\KernelTestBase;
 class EntityFormDisplayTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = [
     'field_ui',

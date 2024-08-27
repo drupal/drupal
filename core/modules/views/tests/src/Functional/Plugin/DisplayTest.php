@@ -25,9 +25,7 @@ class DisplayTest extends ViewTestBase {
   public static $testViews = ['test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid', 'test_display_empty', 'test_exposed_relationship_admin_ui', 'test_simple_argument'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui', 'node', 'block'];
 

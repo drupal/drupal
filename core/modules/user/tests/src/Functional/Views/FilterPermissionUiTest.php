@@ -22,9 +22,7 @@ class FilterPermissionUiTest extends ViewTestBase {
   public static $testViews = ['test_filter_permission'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'user_test_views', 'views_ui'];
 

@@ -23,9 +23,7 @@ class UserCancelTest extends BrowserTestBase {
   use CommentTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'comment'];
 

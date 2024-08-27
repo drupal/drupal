@@ -18,9 +18,7 @@ use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
 class ControllerBaseTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system_test', 'system'];
 

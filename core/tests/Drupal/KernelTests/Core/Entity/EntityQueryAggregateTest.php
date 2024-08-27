@@ -16,9 +16,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class EntityQueryAggregateTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [];
 

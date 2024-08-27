@@ -28,9 +28,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   }
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['dblog'];
 

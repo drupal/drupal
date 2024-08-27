@@ -14,7 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class ExperimentalHelpTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * The experimental_module_test module implements hook_help() and is in the
    * Core (Experimental) package.

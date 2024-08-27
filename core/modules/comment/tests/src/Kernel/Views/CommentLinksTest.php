@@ -21,9 +21,7 @@ use Drupal\views\Views;
 class CommentLinksTest extends CommentViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test'];
 

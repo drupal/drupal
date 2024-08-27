@@ -34,9 +34,7 @@ class SessionHttpsTest extends BrowserTestBase {
   protected $secureSessionName;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['session_test'];
 

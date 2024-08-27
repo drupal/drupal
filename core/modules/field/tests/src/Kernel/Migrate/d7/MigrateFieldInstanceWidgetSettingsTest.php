@@ -16,9 +16,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'comment',

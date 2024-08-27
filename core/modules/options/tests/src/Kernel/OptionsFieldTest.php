@@ -17,9 +17,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class OptionsFieldTest extends OptionsFieldUnitTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['options'];
 

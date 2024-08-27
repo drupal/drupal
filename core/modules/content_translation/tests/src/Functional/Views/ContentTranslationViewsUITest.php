@@ -21,9 +21,7 @@ class ContentTranslationViewsUITest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['content_translation'];
 

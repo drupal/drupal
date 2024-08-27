@@ -19,9 +19,7 @@ class AreaOrderTest extends ViewsKernelTestBase {
   use BlockCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'block'];
 

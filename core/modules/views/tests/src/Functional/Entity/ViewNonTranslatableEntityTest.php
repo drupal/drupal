@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class ViewNonTranslatableEntityTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'entity_test',

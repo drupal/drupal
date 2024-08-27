@@ -29,9 +29,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

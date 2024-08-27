@@ -20,9 +20,7 @@ class PathLanguageTest extends PathTestBase {
   use ContentTranslationTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'path',

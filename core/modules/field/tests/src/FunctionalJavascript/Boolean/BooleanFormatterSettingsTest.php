@@ -16,9 +16,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 class BooleanFormatterSettingsTest extends WebDriverTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'field_ui', 'text', 'node', 'user'];
 

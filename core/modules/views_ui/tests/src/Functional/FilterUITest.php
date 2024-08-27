@@ -19,9 +19,7 @@ class FilterUITest extends UITestBase {
   public static $testViews = ['test_filter_in_operator_ui', 'test_filter_groups'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui', 'node'];
 

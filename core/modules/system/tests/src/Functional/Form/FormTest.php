@@ -24,9 +24,7 @@ use Behat\Mink\Element\NodeElement;
 class FormTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'form_test', 'file', 'datetime'];
 

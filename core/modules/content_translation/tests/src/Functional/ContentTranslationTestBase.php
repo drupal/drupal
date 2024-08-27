@@ -17,9 +17,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 abstract class ContentTranslationTestBase extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['text'];
 

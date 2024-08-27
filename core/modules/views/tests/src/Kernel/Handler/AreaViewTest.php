@@ -16,9 +16,7 @@ use Drupal\views\Views;
 class AreaViewTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user'];
 

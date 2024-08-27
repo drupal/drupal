@@ -17,7 +17,7 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 class ConfigDependencyTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * The entity_test module is enabled to provide content entity types.
    *

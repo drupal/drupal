@@ -46,9 +46,7 @@ class BlockContentListTest extends BlockContentTestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_content', 'config_translation'];
 

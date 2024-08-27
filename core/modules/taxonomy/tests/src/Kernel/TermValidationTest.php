@@ -15,9 +15,7 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 class TermValidationTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy'];
 

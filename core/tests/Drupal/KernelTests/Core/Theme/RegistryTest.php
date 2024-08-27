@@ -20,9 +20,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 class RegistryTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['theme_test', 'system'];
 

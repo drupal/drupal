@@ -36,9 +36,7 @@ class MenuLinkTreeTest extends KernelTestBase {
   protected $menuLinkManager;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

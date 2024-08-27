@@ -33,9 +33,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
   use UserCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'comment',

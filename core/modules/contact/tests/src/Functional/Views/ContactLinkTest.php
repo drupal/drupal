@@ -24,9 +24,7 @@ class ContactLinkTest extends ViewTestBase {
   public $userData;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['contact_test_views'];
 

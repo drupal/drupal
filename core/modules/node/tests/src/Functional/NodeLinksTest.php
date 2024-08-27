@@ -14,9 +14,7 @@ use Drupal\node\NodeInterface;
 class NodeLinksTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views'];
 

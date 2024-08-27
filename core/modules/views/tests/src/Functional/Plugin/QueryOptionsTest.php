@@ -21,9 +21,7 @@ class QueryOptionsTest extends ViewTestBase {
   public static $testViews = ['test_view'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'views_ui'];
 

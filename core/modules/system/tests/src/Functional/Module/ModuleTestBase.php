@@ -17,9 +17,7 @@ use Drupal\TestTools\Extension\SchemaInspector;
 abstract class ModuleTestBase extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system_test'];
 

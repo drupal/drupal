@@ -14,9 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigModuleOverridesTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'config', 'config_override_test'];
 

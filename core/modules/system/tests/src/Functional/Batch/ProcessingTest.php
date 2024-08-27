@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class ProcessingTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['batch_test', 'test_page_test'];
 

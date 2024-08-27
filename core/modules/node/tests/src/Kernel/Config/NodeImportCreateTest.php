@@ -17,9 +17,7 @@ use Drupal\KernelTests\KernelTestBase;
 class NodeImportCreateTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'field', 'text', 'system', 'user'];
 

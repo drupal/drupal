@@ -20,9 +20,7 @@ use Drupal\Tests\BrowserTestBase;
 class BlockUiTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

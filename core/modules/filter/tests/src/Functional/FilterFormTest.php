@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class FilterFormTest extends BrowserTestBase {
 
   /**
-   * Modules to enable for this test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'filter_test'];
 

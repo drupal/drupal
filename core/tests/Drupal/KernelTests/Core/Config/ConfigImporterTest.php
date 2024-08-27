@@ -25,9 +25,7 @@ class ConfigImporterTest extends KernelTestBase {
   const FAIL_MESSAGE = 'There were errors validating the config synchronization.';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_test', 'system', 'config_import_test', 'config_events_test'];
 

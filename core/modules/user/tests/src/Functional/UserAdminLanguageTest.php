@@ -29,9 +29,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   protected $regularUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'language', 'language_test', 'user_language_test'];
 

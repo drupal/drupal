@@ -23,9 +23,7 @@ class DisplayAttachmentTest extends ViewTestBase {
   public static $testViews = ['test_display_attachment', 'test_attached_disabled'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'views'];
 

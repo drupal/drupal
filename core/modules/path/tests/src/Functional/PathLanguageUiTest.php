@@ -14,9 +14,7 @@ use Drupal\Core\Language\LanguageInterface;
 class PathLanguageUiTest extends PathTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['path', 'locale', 'locale_test'];
 

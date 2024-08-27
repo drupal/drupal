@@ -22,9 +22,7 @@ class CommentPreviewTest extends CommentTestBase {
   }
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['olivero_test', 'test_user_config'];
 

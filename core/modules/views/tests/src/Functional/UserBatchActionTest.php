@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class UserBatchActionTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'user',

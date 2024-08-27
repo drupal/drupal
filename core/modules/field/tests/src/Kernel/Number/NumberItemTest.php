@@ -22,9 +22,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class NumberItemTest extends FieldKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [];
 

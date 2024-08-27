@@ -53,9 +53,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   ];
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

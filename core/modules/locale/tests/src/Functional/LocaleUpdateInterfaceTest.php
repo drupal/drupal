@@ -14,9 +14,7 @@ use Drupal\Core\Url;
 class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['locale_test_translate'];
 

@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class MigrateAccessTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['migrate_drupal_ui'];
 

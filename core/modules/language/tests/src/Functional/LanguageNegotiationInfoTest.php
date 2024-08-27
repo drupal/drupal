@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class LanguageNegotiationInfoTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'content_translation'];
 

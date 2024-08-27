@@ -24,9 +24,7 @@ class PageCacheTest extends BrowserTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['test_page_test', 'system_test', 'entity_test'];
 

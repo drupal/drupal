@@ -19,9 +19,7 @@ class NodeAccessCacheabilityTest extends NodeTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node_access_test',

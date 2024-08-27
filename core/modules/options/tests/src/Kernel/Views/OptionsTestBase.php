@@ -17,9 +17,7 @@ use Drupal\views\Tests\ViewTestData;
 abstract class OptionsTestBase extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'options',

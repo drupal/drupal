@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class ConfigImportUITest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'config',

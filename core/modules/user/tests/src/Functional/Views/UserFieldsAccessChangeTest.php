@@ -12,9 +12,7 @@ namespace Drupal\Tests\user\Functional\Views;
 class UserFieldsAccessChangeTest extends UserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user_access_test'];
 

@@ -21,9 +21,7 @@ use Drupal\KernelTests\KernelTestBase;
 class DatelistElementFormTest extends KernelTestBase implements FormInterface, TrustedCallbackInterface {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['datetime', 'system'];
 

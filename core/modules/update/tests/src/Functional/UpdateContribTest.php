@@ -27,9 +27,7 @@ class UpdateContribTest extends UpdateTestBase {
   protected $updateProject = 'aaa_update_test';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'aaa_update_test',

@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class BlockAdminThemeTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'contextual'];
 

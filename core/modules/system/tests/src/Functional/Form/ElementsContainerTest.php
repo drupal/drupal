@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class ElementsContainerTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['form_test'];
 

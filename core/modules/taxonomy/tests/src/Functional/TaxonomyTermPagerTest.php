@@ -12,9 +12,7 @@ namespace Drupal\Tests\taxonomy\Functional;
 class TaxonomyTermPagerTest extends TaxonomyTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy', 'taxonomy_test'];
 

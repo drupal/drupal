@@ -24,9 +24,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
   protected $configImporter;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'field', 'text', 'user', 'node'];
 

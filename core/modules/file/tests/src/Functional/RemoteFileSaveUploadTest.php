@@ -12,9 +12,7 @@ namespace Drupal\Tests\file\Functional;
 class RemoteFileSaveUploadTest extends SaveUploadTest {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file_test'];
 

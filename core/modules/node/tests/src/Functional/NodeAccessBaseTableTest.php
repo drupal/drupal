@@ -20,9 +20,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node_access_test',

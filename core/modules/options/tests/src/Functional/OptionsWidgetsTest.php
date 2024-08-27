@@ -17,9 +17,7 @@ use Drupal\Tests\field\Functional\FieldTestBase;
 class OptionsWidgetsTest extends FieldTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

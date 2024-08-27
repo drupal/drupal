@@ -22,9 +22,7 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
   use DependencySerializationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'user'];
 

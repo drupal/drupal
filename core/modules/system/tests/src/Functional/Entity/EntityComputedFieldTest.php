@@ -17,9 +17,7 @@ use Drupal\Tests\BrowserTestBase;
 class EntityComputedFieldTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test'];
 

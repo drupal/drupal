@@ -29,9 +29,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
   use ImageFieldCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

@@ -39,9 +39,7 @@ class TypedDataTest extends KernelTestBase {
   protected $typedDataManager;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'field', 'file', 'user'];
 

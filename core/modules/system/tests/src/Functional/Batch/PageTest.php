@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class PageTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['batch_test'];
 

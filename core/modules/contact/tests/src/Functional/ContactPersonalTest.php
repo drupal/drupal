@@ -23,9 +23,7 @@ class ContactPersonalTest extends BrowserTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['contact', 'dblog', 'mail_html_test'];
 

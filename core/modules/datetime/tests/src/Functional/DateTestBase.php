@@ -19,9 +19,7 @@ use Drupal\Tests\BrowserTestBase;
 abstract class DateTestBase extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'entity_test', 'datetime', 'field_ui'];
 

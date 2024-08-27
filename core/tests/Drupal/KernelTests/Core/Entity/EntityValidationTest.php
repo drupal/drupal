@@ -15,9 +15,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class EntityValidationTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'text', 'language'];
 

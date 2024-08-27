@@ -18,9 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class ImageStyleDownloadAccessControlTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['image'];
 

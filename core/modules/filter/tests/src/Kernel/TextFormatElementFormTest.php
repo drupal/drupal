@@ -26,9 +26,7 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
   protected $testUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

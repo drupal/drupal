@@ -15,9 +15,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class LanguageBrowserDetectionAcceptLanguageTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

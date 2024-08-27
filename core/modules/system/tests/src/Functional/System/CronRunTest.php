@@ -19,9 +19,7 @@ class CronRunTest extends BrowserTestBase {
   use WaitTerminateTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'common_test',

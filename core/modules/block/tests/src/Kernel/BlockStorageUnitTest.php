@@ -19,9 +19,7 @@ use Drupal\block\Entity\Block;
 class BlockStorageUnitTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_test', 'system'];
 

@@ -16,9 +16,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class EarlyDateTest extends TaxonomyTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'datetime'];
 

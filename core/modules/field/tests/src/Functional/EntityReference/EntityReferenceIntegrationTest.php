@@ -42,9 +42,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
   protected $fieldName;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_test', 'entity_test', 'field_ui'];
 

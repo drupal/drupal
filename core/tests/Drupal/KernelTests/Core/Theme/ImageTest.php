@@ -17,9 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 class ImageTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

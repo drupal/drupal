@@ -10,9 +10,7 @@ use Drupal\user\Entity\User;
 abstract class UserTestBase extends ViewTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user_test_views', 'node'];
 

@@ -15,9 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
 class MenuLinkDefaultIntegrationTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'menu_test',

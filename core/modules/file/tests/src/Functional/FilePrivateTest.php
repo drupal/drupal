@@ -16,9 +16,7 @@ use Drupal\user\RoleInterface;
 class FilePrivateTest extends FileFieldTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node_access_test', 'field_test'];
 

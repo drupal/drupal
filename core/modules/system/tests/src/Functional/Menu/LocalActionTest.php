@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class LocalActionTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'menu_test'];
 

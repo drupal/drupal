@@ -12,9 +12,7 @@ namespace Drupal\Tests\path\Functional;
 class PathAdminTest extends PathTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['path'];
 

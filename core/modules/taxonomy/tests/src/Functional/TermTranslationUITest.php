@@ -34,9 +34,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'content_translation', 'taxonomy'];
 

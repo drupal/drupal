@@ -20,9 +20,7 @@ use Drupal\migrate\Plugin\migrate\id_map\Sql;
 class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterface {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['migrate', 'system'];
 

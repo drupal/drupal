@@ -16,9 +16,7 @@ use Drupal\user\Entity\User;
 class BulkFormAccessTest extends UserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user_access_test'];
 

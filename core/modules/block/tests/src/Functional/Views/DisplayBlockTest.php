@@ -27,9 +27,7 @@ class DisplayBlockTest extends ViewTestBase {
   use AssertBlockAppearsTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

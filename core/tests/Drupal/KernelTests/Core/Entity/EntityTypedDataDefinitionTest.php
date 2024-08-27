@@ -33,9 +33,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
   protected $typedDataManager;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'filter', 'text', 'entity_test', 'user'];
 

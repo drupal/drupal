@@ -22,9 +22,7 @@ use Symfony\Component\Routing\Route;
 class EntityUrlLanguageTest extends LanguageTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test', 'user'];
 

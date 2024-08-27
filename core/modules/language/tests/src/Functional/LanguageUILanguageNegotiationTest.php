@@ -62,7 +62,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * We marginally use interface translation functionality here, so need to use
    * the locale module instead of language only, but the 90% of the test is

@@ -17,9 +17,7 @@ use Drupal\KernelTests\KernelTestBase;
 class BaseFieldOverrideTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

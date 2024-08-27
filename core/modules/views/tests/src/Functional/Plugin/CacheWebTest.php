@@ -27,9 +27,7 @@ class CacheWebTest extends ViewTestBase {
   public static $testViews = ['test_display'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy'];
 

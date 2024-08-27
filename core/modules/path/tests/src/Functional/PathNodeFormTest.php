@@ -12,9 +12,7 @@ namespace Drupal\Tests\path\Functional;
 class PathNodeFormTest extends PathTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'path'];
 

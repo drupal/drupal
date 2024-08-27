@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class SessionExistsCacheContextTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['session_exists_cache_context_test'];
 

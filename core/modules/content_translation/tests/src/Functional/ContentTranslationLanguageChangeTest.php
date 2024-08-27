@@ -23,9 +23,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
   }
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

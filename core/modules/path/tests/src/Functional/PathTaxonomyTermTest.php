@@ -14,9 +14,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class PathTaxonomyTermTest extends PathTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy'];
 

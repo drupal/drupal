@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class UserAccountLinksTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['menu_ui', 'block', 'test_page_test'];
 

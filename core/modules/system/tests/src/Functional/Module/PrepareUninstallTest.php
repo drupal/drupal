@@ -37,9 +37,7 @@ class PrepareUninstallTest extends BrowserTestBase {
   protected $terms;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'taxonomy', 'entity_test', 'node_access_test'];
 

@@ -12,9 +12,7 @@ namespace Drupal\Tests\block\Functional;
 class BlockSystemBrandingTest extends BlockTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'system'];
 

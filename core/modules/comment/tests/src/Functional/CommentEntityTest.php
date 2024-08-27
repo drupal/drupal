@@ -21,9 +21,7 @@ class CommentEntityTest extends CommentTestBase {
   use TaxonomyTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

@@ -19,9 +19,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 class RowEntityTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'entity_test',

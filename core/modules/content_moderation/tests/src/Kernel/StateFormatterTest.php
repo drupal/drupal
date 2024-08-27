@@ -19,9 +19,7 @@ class StateFormatterTest extends KernelTestBase {
   use ContentModerationTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'workflows',

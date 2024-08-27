@@ -14,9 +14,7 @@ use Drupal\user\RoleInterface;
 class CommentBlockTest extends CommentTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'views'];
 

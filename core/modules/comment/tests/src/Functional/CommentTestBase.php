@@ -22,9 +22,7 @@ abstract class CommentTestBase extends BrowserTestBase {
   use CommentTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

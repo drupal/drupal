@@ -27,9 +27,7 @@ class StyleSerializerTest extends ViewTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'views_ui',

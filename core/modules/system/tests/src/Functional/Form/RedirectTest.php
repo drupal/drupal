@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class RedirectTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['form_test', 'block'];
 

@@ -26,9 +26,7 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
   use StubTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['migrate', 'user', 'language', 'entity_test'];
 
