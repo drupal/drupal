@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Session;
 
-use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -12,8 +11,6 @@ class SessionConfiguration implements SessionConfigurationInterface {
 
   /**
    * An associative array of session ini settings.
-   *
-   * @var array
    */
   protected $options;
 
@@ -22,14 +19,12 @@ class SessionConfiguration implements SessionConfigurationInterface {
    *
    * @param array $options
    *   An associative array of session ini settings.
-   * @param \Drupal\Core\Site\Settings $settings
-   *   The settings instance.
    *
    * @see \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage::__construct()
    * @see http://php.net/manual/session.configuration.php
    * @see https://www.php.net/manual/session.security.ini.php
    */
-  public function __construct($options = [], protected ?Settings $settings = NULL) {
+  public function __construct($options = []) {
     // Provide sensible defaults for sid_length, sid_bits_per_character and
     // name_suffix.
     // @see core/assets/scaffold/files/default.services.yml
@@ -38,10 +33,6 @@ class SessionConfiguration implements SessionConfigurationInterface {
       'sid_bits_per_character' => 6,
       'name_suffix' => '',
     ];
-    if (!isset($this->settings)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $settings argument is deprecated in drupal:11.1.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3462570', E_USER_DEPRECATED);
-      $this->settings = \Drupal::service('settings');
-    }
   }
 
   /**
@@ -114,9 +105,6 @@ class SessionConfiguration implements SessionConfigurationInterface {
       // Replace "core" out of session_name so core scripts redirect properly,
       // specifically install.php.
       $session_name = preg_replace('#/core$#', '', $session_name);
-      // Create unique session name for different sites served on the same
-      // host name and base path.
-      return substr(hash_hmac('sha256', $session_name, $this->settings->getHashSalt()), 0, 32);
     }
 
     return substr(hash('sha256', $session_name), 0, 32);
