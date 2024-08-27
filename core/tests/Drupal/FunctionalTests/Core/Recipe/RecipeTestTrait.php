@@ -52,17 +52,24 @@ trait RecipeTestTrait {
    * @param int $expected_exit_code
    *   The expected exit code of the `drupal recipe` process. Defaults to 0,
    *   which indicates that no error occurred.
+   * @param string[] $options
+   *   (optional) Additional options to pass to the `drupal recipe` command.
+   * @param string $command
+   *   (optional) The name of the command to run. Defaults to `recipe`.
    *
    * @return \Symfony\Component\Process\Process
    *   The `drupal recipe` command process, after having run.
    */
-  protected function applyRecipe(string $path, int $expected_exit_code = 0): Process {
+  protected function applyRecipe(string $path, int $expected_exit_code = 0, array $options = [], string $command = 'recipe'): Process {
     assert($this instanceof BrowserTestBase);
 
     $arguments = [
       (new PhpExecutableFinder())->find(),
       'core/scripts/drupal',
-      'recipe',
+      $command,
+      // Never apply recipes interactively.
+      '--no-interaction',
+      ...$options,
       $path,
     ];
     $process = (new Process($arguments))
