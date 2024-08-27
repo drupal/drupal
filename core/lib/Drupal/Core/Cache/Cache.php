@@ -17,39 +17,39 @@ class Cache {
   const PERMANENT = CacheBackendInterface::CACHE_PERMANENT;
 
   /**
-   * Merges arrays of cache contexts and removes duplicates.
+   * Merges lists of cache contexts and removes duplicates.
    *
-   * @param string[] ...
-   *   Cache contexts arrays to merge.
+   * @param list<string> ...
+   *   Cache contexts to merge.
    *
-   * @return string[]
-   *   The merged array of cache contexts.
+   * @return list<string>
+   *   The merged list of cache contexts.
    */
   public static function mergeContexts(array ...$cache_contexts) {
-    $cache_contexts = array_unique(array_merge(...$cache_contexts));
+    $cache_contexts = array_values(array_unique(array_merge(...$cache_contexts)));
     assert(\Drupal::service('cache_contexts_manager')->assertValidTokens($cache_contexts), sprintf('Failed to assert that "%s" are valid cache contexts.', implode(', ', $cache_contexts)));
     return $cache_contexts;
   }
 
   /**
-   * Merges arrays of cache tags and removes duplicates.
+   * Merges lists of cache tags and removes duplicates.
    *
-   * The cache tags array is returned in a format that is valid for
+   * The cache tags list is returned in a format that is valid for
    * \Drupal\Core\Cache\CacheBackendInterface::set().
    *
    * When caching elements, it is necessary to collect all cache tags into a
-   * single array, from both the element itself and all child elements. This
+   * single list, from both the element itself and all child elements. This
    * allows items to be invalidated based on all tags attached to the content
    * they're constituted from.
    *
-   * @param string[] ...
-   *   Cache tags arrays to merge.
+   * @param list<string> ...
+   *   Cache tags to merge.
    *
-   * @return string[]
-   *   The merged array of cache tags.
+   * @return list<string>
+   *   The merged list of cache tags.
    */
   public static function mergeTags(array ...$cache_tags) {
-    $cache_tags = array_unique(array_merge(...$cache_tags));
+    $cache_tags = array_values(array_unique(array_merge(...$cache_tags)));
     assert(Inspector::assertAllStrings($cache_tags), 'Cache tags must be valid strings');
     return $cache_tags;
   }
@@ -77,7 +77,7 @@ class Cache {
   }
 
   /**
-   * Build an array of cache tags from a given prefix and an array of suffixes.
+   * Build a list of cache tags from a given prefix and an array of suffixes.
    *
    * Each suffix will be converted to a cache tag by appending it to the prefix,
    * with a colon between them.
@@ -89,8 +89,8 @@ class Cache {
    * @param string $glue
    *   A string to be used as glue for concatenation. Defaults to a colon.
    *
-   * @return string[]
-   *   An array of cache tags.
+   * @return list<string>
+   *   A list of cache tags.
    */
   public static function buildTags($prefix, array $suffixes, $glue = ':') {
     $tags = [];
