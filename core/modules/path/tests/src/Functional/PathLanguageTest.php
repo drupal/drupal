@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path\Functional;
 
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
+use Drupal\user\Entity\User;
+use Drupal\user\Plugin\LanguageNegotiation\LanguageNegotiationUser;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
 /**
@@ -65,9 +69,7 @@ class PathLanguageTest extends PathTestBase {
     static::createLanguageFromLangcode('fr');
 
     // Enable URL language detection and selection.
-    $edit = ['language_interface[enabled][language-url]' => 1];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_URL, [LanguageNegotiationUrl::METHOD_ID => 1]);
 
     // Enable translation for page node.
     static::enableContentTranslation('node', 'page');
@@ -135,19 +137,13 @@ class PathLanguageTest extends PathTestBase {
 
     // Confirm that the alias works even when changing language negotiation
     // options. Enable User language detection and selection over URL one.
-    $edit = [
-      'language_interface[enabled][language-user]' => 1,
-      'language_interface[weight][language-user]' => -9,
-      'language_interface[enabled][language-url]' => 1,
-      'language_interface[weight][language-url]' => -8,
-    ];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_INTERFACE, [LanguageNegotiationUser::METHOD_ID => 1]);
+    $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_URL, [LanguageNegotiationUrl::METHOD_ID => 1]);
 
     // Change user language preference.
-    $edit = ['preferred_langcode' => 'fr'];
-    $this->drupalGet("user/" . $this->webUser->id() . "/edit");
-    $this->submitForm($edit, 'Save');
+    $user = User::load($this->webUser->id());
+    $user->set('preferred_langcode', 'fr');
+    $user->save();
 
     // Check that the English alias works. In this situation French is the
     // current UI and content language, while URL language is English (since we
@@ -165,9 +161,7 @@ class PathLanguageTest extends PathTestBase {
     $this->assertSession()->pageTextContains($english_node_french_translation->body->value);
 
     // Disable URL language negotiation.
-    $edit = ['language_interface[enabled][language-url]' => FALSE];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_URL, [LanguageNegotiationUrl::METHOD_ID => FALSE]);
 
     // Check that the English alias still works.
     $this->drupalGet($english_alias);
