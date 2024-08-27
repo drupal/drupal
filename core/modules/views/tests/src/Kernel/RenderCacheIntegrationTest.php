@@ -16,7 +16,6 @@ use Drupal\views\Entity\View;
  * Tests the general integration between views and the render cache.
  *
  * @group views
- * @group #slow
  */
 class RenderCacheIntegrationTest extends ViewsKernelTestBase {
 

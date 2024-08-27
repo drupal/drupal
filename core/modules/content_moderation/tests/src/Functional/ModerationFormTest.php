@@ -12,7 +12,6 @@ use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
  * Tests the moderation form, specifically on nodes.
  *
  * @group content_moderation
- * @group #slow
  */
 class ModerationFormTest extends ModerationStateTestBase {
 

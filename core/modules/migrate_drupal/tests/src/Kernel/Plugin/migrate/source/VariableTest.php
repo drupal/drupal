@@ -12,7 +12,6 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\migrate_drupal\Plugin\migrate\source\Variable
  *
  * @group migrate_drupal
- * @group #slow
  */
 class VariableTest extends MigrateSqlSourceTestBase {
 

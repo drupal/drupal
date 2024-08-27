@@ -10,7 +10,6 @@ use Drupal\file\Entity\File;
 /**
  * @coversDefaultClass \Drupal\file\Plugin\Field\FieldFormatter\FileVideoFormatter
  * @group file
- * @group #slow
  */
 class FileVideoFormatterTest extends FileMediaFormatterTestBase {
 

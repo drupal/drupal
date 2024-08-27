@@ -15,7 +15,6 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "MenuLinkContent" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class MenuLinkContentTest extends ResourceTestBase {
 

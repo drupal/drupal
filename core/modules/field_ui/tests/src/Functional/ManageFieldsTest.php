@@ -16,7 +16,6 @@ use Drupal\user\Entity\User;
  * Tests the Manage Display page of a fieldable entity type.
  *
  * @group field_ui
- * @group #slow
  */
 class ManageFieldsTest extends BrowserTestBase {
 

@@ -13,7 +13,6 @@ use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
  * Tests the Layout Builder UI.
  *
  * @group layout_builder
- * @group #slow
  */
 class LayoutBuilderTest extends LayoutBuilderTestBase {
 

@@ -15,7 +15,6 @@ use Drupal\Core\Language\LanguageInterface;
  * Tests the validation of translation strings and search results.
  *
  * @group locale
- * @group #slow
  */
 class LocaleTranslationUiTest extends BrowserTestBase {
 

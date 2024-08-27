@@ -13,7 +13,6 @@ use Drupal\Core\Language\LanguageInterface;
  * Tests for updating the interface translations of projects.
  *
  * @group locale
- * @group #slow
  */
 class LocaleUpdateTest extends LocaleUpdateBase {
 

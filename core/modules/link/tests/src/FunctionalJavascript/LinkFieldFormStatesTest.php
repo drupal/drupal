@@ -10,6 +10,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests link field form states functionality.
  *
  * @group link
+ * @group #slow
  */
 class LinkFieldFormStatesTest extends WebDriverTestBase {
 

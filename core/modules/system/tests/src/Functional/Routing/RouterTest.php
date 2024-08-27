@@ -16,7 +16,6 @@ use Drupal\Core\Url;
  * Functional class for the full integrated routing system.
  *
  * @group Routing
- * @group #slow
  */
 class RouterTest extends BrowserTestBase {
 

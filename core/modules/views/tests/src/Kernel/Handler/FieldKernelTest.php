@@ -13,7 +13,6 @@ use Drupal\views\Views;
  * Tests the generic field handler.
  *
  * @group views
- * @group #slow
  * @see \Drupal\views\Plugin\views\field\FieldPluginBase
  */
 class FieldKernelTest extends ViewsKernelTestBase {

@@ -8,7 +8,6 @@ namespace Drupal\Tests\views_ui\Functional;
  * Tests the UI preview functionality.
  *
  * @group views_ui
- * @group #slow
  */
 class PreviewTest extends UITestBase {
 

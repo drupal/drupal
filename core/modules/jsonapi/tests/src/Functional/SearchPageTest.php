@@ -13,7 +13,6 @@ use Drupal\search\Entity\SearchPage;
  * JSON:API integration test for the "SearchPage" config entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class SearchPageTest extends ConfigEntityResourceTestBase {
 

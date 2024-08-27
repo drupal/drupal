@@ -11,7 +11,6 @@ use Drupal\taxonomy\Entity\Vocabulary;
  * JSON:API integration test for the "vocabulary" config entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class VocabularyTest extends ConfigEntityResourceTestBase {
 

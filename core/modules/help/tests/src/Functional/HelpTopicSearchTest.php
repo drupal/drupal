@@ -14,7 +14,6 @@ use Drupal\help\Plugin\Search\HelpSearch;
  * Verifies help topic search.
  *
  * @group help
- * @group #slow
  */
 class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
 

@@ -12,7 +12,6 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests the _file_save_upload_from_form() function.
  *
  * @group file
- * @group #slow
  *
  * @see _file_save_upload_from_form()
  */

@@ -17,7 +17,6 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests the creation of text fields.
  *
  * @group text
- * @group #slow
  */
 class TextFieldTest extends StringFieldTest {
 

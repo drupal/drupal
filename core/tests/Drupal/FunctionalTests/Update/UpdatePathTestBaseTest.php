@@ -11,7 +11,6 @@ use Drupal\Core\Site\Settings;
  * Tests the update path base class.
  *
  * @group Update
- * @group #slow
  */
 class UpdatePathTestBaseTest extends UpdatePathTestBase {
 

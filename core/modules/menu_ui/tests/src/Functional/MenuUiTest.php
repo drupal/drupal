@@ -23,7 +23,6 @@ use Drupal\Tests\menu_ui\Traits\MenuUiTrait;
  * Tools menu, checks their data, and deletes them using the UI.
  *
  * @group menu_ui
- * @group #slow
  */
 class MenuUiTest extends BrowserTestBase {
 

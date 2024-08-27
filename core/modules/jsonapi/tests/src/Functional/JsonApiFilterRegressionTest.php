@@ -20,7 +20,6 @@ use GuzzleHttp\RequestOptions;
  * JSON:API regression tests.
  *
  * @group jsonapi
- * @group #slow
  *
  * @internal
  */

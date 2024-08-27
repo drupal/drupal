@@ -11,7 +11,6 @@ use Drupal\image\Entity\ImageStyle;
  * JSON:API integration test for the "ImageStyle" config entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class ImageStyleTest extends ConfigEntityResourceTestBase {
 

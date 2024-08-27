@@ -11,7 +11,6 @@ use Drupal\user\Entity\User;
  * Tests that node access queries are properly altered by the node module.
  *
  * @group node
- * @group #slow
  */
 class NodeQueryAlterTest extends NodeTestBase {
 

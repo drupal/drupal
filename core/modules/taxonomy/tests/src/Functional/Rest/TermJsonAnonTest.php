@@ -8,7 +8,6 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group rest
- * @group #slow
  */
 class TermJsonAnonTest extends TermResourceTestBase {
 

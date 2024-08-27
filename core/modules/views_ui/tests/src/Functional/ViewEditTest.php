@@ -12,7 +12,6 @@ use Drupal\views\Entity\View;
  * Tests some general functionality of editing views, like deleting a view.
  *
  * @group views_ui
- * @group #slow
  */
 class ViewEditTest extends UITestBase {
 

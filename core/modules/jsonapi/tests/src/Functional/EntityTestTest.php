@@ -14,7 +14,6 @@ use Drupal\user\Entity\User;
  * JSON:API integration test for the "EntityTest" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class EntityTestTest extends ResourceTestBase {
 

@@ -12,7 +12,6 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  * @group path
- * @group #slow
  */
 class PathAliasTest extends ResourceTestBase {
 

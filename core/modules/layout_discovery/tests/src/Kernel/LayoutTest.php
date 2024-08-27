@@ -11,7 +11,6 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests Layout functionality.
  *
  * @group Layout
- * @group #slow
  */
 class LayoutTest extends KernelTestBase {
 

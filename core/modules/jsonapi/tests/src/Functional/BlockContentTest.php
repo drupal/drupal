@@ -14,7 +14,6 @@ use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
  * JSON:API integration test for the "BlockContent" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class BlockContentTest extends ResourceTestBase {
 

@@ -13,7 +13,6 @@ use Drupal\views\ViewExecutable;
  * Tests handler UI for views.
  *
  * @group views_ui
- * @group #slow
  * @see \Drupal\views\Plugin\views\HandlerBase
  */
 class HandlerTest extends UITestBase {

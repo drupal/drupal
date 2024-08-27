@@ -11,7 +11,6 @@ use Drupal\file\Entity\File;
  * Tests the 'managed_file' element type.
  *
  * @group file
- * @group #slow
  * @todo Create a FileTestBase class and move FileFieldTestBase methods
  *   that aren't related to fields into it.
  */

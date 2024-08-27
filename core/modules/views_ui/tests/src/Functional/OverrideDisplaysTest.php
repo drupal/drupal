@@ -8,7 +8,6 @@ namespace Drupal\Tests\views_ui\Functional;
  * Tests that displays can be correctly overridden via the user interface.
  *
  * @group views_ui
- * @group #slow
  */
 class OverrideDisplaysTest extends UITestBase {
 

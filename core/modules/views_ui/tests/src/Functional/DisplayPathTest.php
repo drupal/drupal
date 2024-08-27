@@ -13,7 +13,6 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
  * Tests the UI of generic display path plugin.
  *
  * @group views_ui
- * @group #slow
  * @see \Drupal\views\Plugin\views\display\PathPluginBase
  */
 class DisplayPathTest extends UITestBase {

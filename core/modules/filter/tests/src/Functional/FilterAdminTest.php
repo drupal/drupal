@@ -17,7 +17,6 @@ use Drupal\user\RoleInterface;
  * Thoroughly test the administrative interface of the filter module.
  *
  * @group filter
- * @group #slow
  */
 class FilterAdminTest extends BrowserTestBase {
 

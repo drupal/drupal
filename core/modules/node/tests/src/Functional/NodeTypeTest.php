@@ -14,7 +14,6 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
  * Ensures that node type functions work correctly.
  *
  * @group node
- * @group #slow
  */
 class NodeTypeTest extends NodeTestBase {
 

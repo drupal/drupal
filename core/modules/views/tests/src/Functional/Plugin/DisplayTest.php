@@ -14,7 +14,6 @@ use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin
  * Tests the basic display plugin.
  *
  * @group views
- * @group #slow
  */
 class DisplayTest extends ViewTestBase {
 

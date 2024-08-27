@@ -19,7 +19,6 @@ use Psr\Http\Client\ClientExceptionInterface;
  * @group PHPUnit
  * @group Test
  * @group KernelTests
- * @group #slow
  */
 class KernelTestBaseTest extends KernelTestBase {
 

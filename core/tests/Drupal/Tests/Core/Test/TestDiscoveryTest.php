@@ -64,7 +64,7 @@ class TestDiscoveryTest extends UnitTestCase {
       [
         'name' => 'Drupal\FunctionalTests\BrowserTestBaseTest',
         'group' => 'browsertestbase',
-        'groups' => ['browsertestbase', '#slow'],
+        'groups' => ['browsertestbase'],
         'description' => 'Tests BrowserTestBase functionality.',
         'type' => 'PHPUnit-Functional',
       ],
