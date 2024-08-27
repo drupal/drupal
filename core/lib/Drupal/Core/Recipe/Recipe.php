@@ -9,11 +9,14 @@ use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\RegexConstraint;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\AtLeastOneOf;
 use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotIdenticalTo;
@@ -33,6 +36,30 @@ final class Recipe {
 
   const COMPOSER_PROJECT_TYPE = 'drupal-recipe';
 
+  /**
+   * @param string $name
+   *   The human-readable name of the recipe.
+   * @param string $description
+   *   A short description of the recipe.
+   * @param string $type
+   *   The recipe type.
+   * @param \Drupal\Core\Recipe\RecipeConfigurator $recipes
+   *   The recipe configurator, which lists the recipes that will be applied
+   *   before this one.
+   * @param \Drupal\Core\Recipe\InstallConfigurator $install
+   *   The install configurator, which lists the extensions this recipe will
+   *   install.
+   * @param \Drupal\Core\Recipe\ConfigConfigurator $config
+   *   The config configurator, which lists the config that this recipe will
+   *   install, and what config actions will be taken.
+   * @param \Drupal\Core\Recipe\InputConfigurator $input
+   *   The input configurator, which collects any input values used by the
+   *   recipe.
+   * @param \Drupal\Core\DefaultContent\Finder $content
+   *   The default content finder.
+   * @param string $path
+   *   The recipe's path.
+   */
   public function __construct(
     public readonly string $name,
     public readonly string $description,
@@ -40,10 +67,10 @@ final class Recipe {
     public readonly RecipeConfigurator $recipes,
     public readonly InstallConfigurator $install,
     public readonly ConfigConfigurator $config,
+    public readonly InputConfigurator $input,
     public readonly Finder $content,
     public readonly string $path,
-  ) {
-  }
+  ) {}
 
   /**
    * Creates a recipe object from the provided path.
@@ -60,8 +87,9 @@ final class Recipe {
     $recipes = new RecipeConfigurator(is_array($recipe_data['recipes']) ? $recipe_data['recipes'] : [], dirname($path));
     $install = new InstallConfigurator($recipe_data['install'], \Drupal::service('extension.list.module'), \Drupal::service('extension.list.theme'));
     $config = new ConfigConfigurator($recipe_data['config'], $path, \Drupal::service('config.storage'));
+    $input = new InputConfigurator($recipe_data['input'] ?? [], $recipes, basename($path), \Drupal::typedDataManager());
     $content = new Finder($path . '/content');
-    return new static($recipe_data['name'], $recipe_data['description'], $recipe_data['type'], $recipes, $install, $config, $content, $path);
+    return new static($recipe_data['name'], $recipe_data['description'], $recipe_data['type'], $recipes, $install, $config, $input, $content, $path);
   }
 
   /**
@@ -151,6 +179,65 @@ final class Recipe {
           ]),
         ]),
       ]),
+      'input' => new Optional([
+        new Type('associative_array'),
+        new All([
+          new Collection(
+            fields: [
+              // Every input definition must have a description.
+              'description' => [
+                new Type('string'),
+                new NotBlank(),
+              ],
+              // There can be an optional set of constraints, which is an
+              // associative array of arrays, as in config schema.
+              'constraints' => new Optional([
+                new Type('associative_array'),
+              ]),
+              'data_type' => [
+                // The data type must be known to the typed data system.
+                \Drupal::service('validation.constraint')->createInstance('PluginExists', [
+                  'manager' => 'typed_data_manager',
+                  // Only primitives are supported because it's not always clear
+                  // how to collect, validate, and cast complex structures.
+                  'interface' => PrimitiveInterface::class,
+                ]),
+              ],
+              // If there is a `prompt` element, it has its own set of
+              // constraints.
+              'prompt' => new Optional([
+                new Collection([
+                  'method' => [
+                    new Choice(['ask', 'askHidden', 'confirm', 'choice']),
+                  ],
+                  'arguments' => new Optional([
+                    new Type('associative_array'),
+                  ]),
+                ]),
+              ]),
+              // Every input must define a default value.
+              'default' => new Required([
+                new Collection([
+                  'source' => new Required([
+                    new Choice(['value', 'config']),
+                  ]),
+                  'value' => new Optional(),
+                  'config' => new Optional([
+                    new Sequentially([
+                      new Type('list'),
+                      new Count(2),
+                      new All([
+                        new Type('string'),
+                        new NotBlank(),
+                      ]),
+                    ]),
+                  ]),
+                ]),
+                new Callback(self::validateDefaultValueDefinition(...)),
+              ]),
+            ]),
+        ]),
+      ]),
       'config' => new Optional([
         new Collection([
           // Each entry in the `import` list can either be `*` (import all of
@@ -212,6 +299,24 @@ final class Recipe {
       'content' => [],
     ];
     return $recipe_data;
+  }
+
+  /**
+   * Validates the definition of an input's default value.
+   *
+   * @param array $definition
+   *   The array to validate (part of a single input definition).
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
+   *   The validator execution context.
+   *
+   * @see ::parse()
+   */
+  public static function validateDefaultValueDefinition(array $definition, ExecutionContextInterface $context): void {
+    $source = $definition['source'];
+
+    if (!array_key_exists($source, $definition)) {
+      $context->addViolation("The '$source' key is required.");
+    }
   }
 
   /**

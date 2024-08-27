@@ -34,7 +34,7 @@ final class RecipeRunner {
   public static function processRecipe(Recipe $recipe): void {
     static::processRecipes($recipe->recipes);
     static::processInstall($recipe->install, $recipe->config->getConfigStorage());
-    static::processConfiguration($recipe->config);
+    static::processConfiguration($recipe);
     static::processContent($recipe->content);
     static::triggerEvent($recipe);
   }
@@ -89,10 +89,10 @@ final class RecipeRunner {
   /**
    * Creates configuration and applies configuration actions.
    *
-   * @param \Drupal\Core\Recipe\ConfigConfigurator $config
-   *   The config configurator from the recipe.
+   * @param \Drupal\Core\Recipe\Recipe $recipe
+   *   The recipe being applied.
    */
-  protected static function processConfiguration(ConfigConfigurator $config): void {
+  protected static function processConfiguration(Recipe $recipe): void {
     $config_installer = new RecipeConfigInstaller(
       \Drupal::service('config.factory'),
       \Drupal::service('config.storage'),
@@ -102,17 +102,24 @@ final class RecipeRunner {
       NULL,
       \Drupal::service('extension.path.resolver'));
 
+    $config = $recipe->config;
     // Create configuration that is either supplied by the recipe or listed in
     // the config.import section that does not exist.
     $config_installer->installRecipeConfig($config);
 
     if (!empty($config->config['actions'])) {
+      $values = $recipe->input->getValues();
+      // Wrap the replacement strings with `${` and `}`, which is a fairly
+      // common style of placeholder.
+      $keys = array_map(fn ($k) => sprintf('${%s}', $k), array_keys($values));
+      $replace = array_combine($keys, $values);
+
       // Process the actions.
       /** @var \Drupal\Core\Config\Action\ConfigActionManager $config_action_manager */
       $config_action_manager = \Drupal::service('plugin.manager.config_action');
       foreach ($config->config['actions'] as $config_name => $actions) {
         foreach ($actions as $action_id => $data) {
-          $config_action_manager->applyAction($action_id, $config_name, $data);
+          $config_action_manager->applyAction($action_id, $config_name, static::replaceInputValues($data, $replace));
         }
       }
     }
@@ -297,7 +304,7 @@ final class RecipeRunner {
    *   The batch context if called by a batch.
    */
   public static function installConfig(Recipe $recipe, ?array &$context = NULL): void {
-    static::processConfiguration($recipe->config);
+    static::processConfiguration($recipe);
     $context['message'] = t('Installed configuration for %recipe recipe.', ['%recipe' => $recipe->name]);
     $context['results']['config'][] = $recipe->name;
   }
@@ -314,6 +321,28 @@ final class RecipeRunner {
     static::processContent($recipe->content);
     $context['message'] = t('Created content for %recipe recipe.', ['%recipe' => $recipe->name]);
     $context['results']['content'][] = $recipe->name;
+  }
+
+  /**
+   * @param mixed $data
+   *   The data that will have placeholders replaced.
+   * @param array<string, mixed> $replace
+   *   An array whose keys are the placeholders to be replaced, and whose values
+   *   are the replacements.
+   *
+   * @return mixed
+   *   The passed data, with placeholders replaced.
+   */
+  private static function replaceInputValues(mixed $data, array $replace): mixed {
+    if (is_string($data)) {
+      $data = str_replace(array_keys($replace), $replace, $data);
+    }
+    elseif (is_array($data)) {
+      foreach ($data as $key => $value) {
+        $data[$key] = static::replaceInputValues($value, $replace);
+      }
+    }
+    return $data;
   }
 
 }

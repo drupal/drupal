@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Core\Recipe;
 
+use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Tests\BrowserTestBase;
 
@@ -114,6 +115,42 @@ class RecipeCommandTest extends BrowserTestBase {
     $checkpoints = \Drupal::service('config.checkpoints');
     $labels = array_map(fn (Checkpoint $c) => $c->label, iterator_to_array($checkpoints));
     $this->assertSame($expected_labels, array_values($labels));
+  }
+
+  public function testPassInput(): void {
+    $dir = $this->getDrupalRoot() . '/core/recipes/feedback_contact_form';
+    $this->applyRecipe($dir, options: [
+      '--input=feedback_contact_form.recipient=hello@good.bye',
+    ]);
+    $this->assertSame(['hello@good.bye'], ContactForm::load('feedback')?->getRecipients());
+  }
+
+  public function testPassInvalidInput(): void {
+    $dir = $this->getDrupalRoot() . '/core/recipes/feedback_contact_form';
+    $process = $this->applyRecipe($dir, 1, options: [
+      '--input=feedback_contact_form.recipient=nobody',
+    ]);
+    $this->assertStringContainsString('This value is not a valid email address.', $process->getErrorOutput());
+  }
+
+  public function testDefaultInputValueFromConfig(): void {
+    $this->config('system.site')
+      ->set('mail', 'goodbye@hello.net')
+      ->save();
+
+    $this->applyRecipe($this->getDrupalRoot() . '/core/recipes/feedback_contact_form');
+    $this->assertSame(['goodbye@hello.net'], ContactForm::load('feedback')?->getRecipients());
+  }
+
+  public function testListInputs(): void {
+    $root = $this->getDrupalRoot();
+
+    $output = $this->applyRecipe($root . '/core/recipes/feedback_contact_form', command: 'recipe:info')->getOutput();
+    $this->assertStringContainsString('feedback_contact_form.recipient', $output);
+    $this->assertStringContainsString('The email address that should receive submissions from the feedback form.', $output);
+
+    $output = $this->applyRecipe($root . '/core/recipes/page_content_type', command: 'recipe:info')->getOutput();
+    $this->assertStringContainsString('This recipe does not accept any input.', $output);
   }
 
 }
