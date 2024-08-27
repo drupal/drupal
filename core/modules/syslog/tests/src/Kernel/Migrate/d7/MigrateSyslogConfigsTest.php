@@ -17,9 +17,7 @@ class MigrateSyslogConfigsTest extends MigrateDrupal7TestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['syslog'];
 

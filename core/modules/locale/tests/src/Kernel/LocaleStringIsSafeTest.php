@@ -14,9 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
 class LocaleStringIsSafeTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['locale', 'locale_test'];
 

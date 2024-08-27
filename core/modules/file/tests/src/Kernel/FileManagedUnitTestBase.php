@@ -16,9 +16,7 @@ use Drupal\user\Entity\User;
 abstract class FileManagedUnitTestBase extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['file_test', 'file', 'system', 'field', 'user'];
 

@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class UserCreateFailMailTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system_mail_failure_test'];
 

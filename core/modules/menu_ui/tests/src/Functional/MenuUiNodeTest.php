@@ -29,9 +29,7 @@ class MenuUiNodeTest extends BrowserTestBase {
   protected $editor;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'menu_ui',

@@ -15,9 +15,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class NodeAccessFieldTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node_access_test', 'field_ui'];
 

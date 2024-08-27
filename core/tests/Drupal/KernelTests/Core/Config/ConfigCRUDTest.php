@@ -29,9 +29,7 @@ class ConfigCRUDTest extends KernelTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

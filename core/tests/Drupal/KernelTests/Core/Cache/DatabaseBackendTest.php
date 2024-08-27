@@ -22,9 +22,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
   protected static $maxRows = 100;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

@@ -17,9 +17,7 @@ use Drupal\media\MediaSourceInterface;
 class MediaUiJavascriptTest extends MediaJavascriptTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',

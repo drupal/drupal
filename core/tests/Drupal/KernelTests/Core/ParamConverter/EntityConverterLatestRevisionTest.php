@@ -21,9 +21,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
   use UserCreationTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'entity_test',

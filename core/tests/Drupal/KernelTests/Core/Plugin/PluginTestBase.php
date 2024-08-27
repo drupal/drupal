@@ -19,9 +19,7 @@ use Drupal\Core\Extension\ModuleHandler;
 abstract class PluginTestBase extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['plugin_test'];
 

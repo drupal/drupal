@@ -37,9 +37,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
   protected $field;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['datetime'];
 

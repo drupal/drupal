@@ -18,9 +18,7 @@ use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'filter'];
 

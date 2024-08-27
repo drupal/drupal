@@ -17,9 +17,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ContentTranslationPermissionsTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'language', 'content_translation', 'user', 'entity_test'];
 

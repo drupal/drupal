@@ -15,9 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigEntityStorageTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_test'];
 

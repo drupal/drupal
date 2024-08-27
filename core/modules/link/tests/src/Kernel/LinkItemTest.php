@@ -22,9 +22,7 @@ use Drupal\link\LinkItemInterface;
 class LinkItemTest extends FieldKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['link'];
 

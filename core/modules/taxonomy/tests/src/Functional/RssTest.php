@@ -15,9 +15,7 @@ use Drupal\views\Views;
 class RssTest extends TaxonomyTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'field_ui', 'views'];
 

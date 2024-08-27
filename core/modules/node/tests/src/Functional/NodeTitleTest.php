@@ -19,9 +19,7 @@ class NodeTitleTest extends NodeTestBase {
   use AssertBreadcrumbTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['comment', 'views', 'block'];
 

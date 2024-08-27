@@ -16,9 +16,7 @@ abstract class MediaFunctionalTestBase extends BrowserTestBase {
   use MediaTypeCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

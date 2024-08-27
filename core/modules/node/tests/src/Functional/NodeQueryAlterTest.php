@@ -16,9 +16,7 @@ use Drupal\user\Entity\User;
 class NodeQueryAlterTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node_access_test'];
 

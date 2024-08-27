@@ -21,9 +21,7 @@ class CommentItemTest extends FieldKernelTestBase {
   use CommentTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['comment', 'entity_test', 'user'];
 

@@ -12,9 +12,7 @@ namespace Drupal\Tests\node\Functional;
 class NodeSyndicateBlockTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block'];
 

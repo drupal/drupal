@@ -14,9 +14,7 @@ use PHPUnit\Framework\AssertionFailedError;
 class BrowserWithJavascriptTest extends WebDriverTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['test_page_test'];
 

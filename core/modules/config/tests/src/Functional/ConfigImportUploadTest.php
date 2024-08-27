@@ -25,9 +25,7 @@ class ConfigImportUploadTest extends BrowserTestBase {
   protected $webUser;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config'];
 

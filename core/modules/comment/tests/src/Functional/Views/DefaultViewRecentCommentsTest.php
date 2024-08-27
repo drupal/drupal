@@ -20,9 +20,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
   use CommentTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'comment', 'block'];
 

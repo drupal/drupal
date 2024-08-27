@@ -15,9 +15,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class TestItemWithDependenciesTest extends FieldKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field_test', 'system'];
 

@@ -16,9 +16,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigEventsTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_events_test'];
 

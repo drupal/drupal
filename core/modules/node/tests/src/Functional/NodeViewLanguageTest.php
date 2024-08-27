@@ -14,9 +14,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class NodeViewLanguageTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'datetime', 'language'];
 

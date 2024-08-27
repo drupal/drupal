@@ -29,9 +29,7 @@ class LanguageConditionTest extends KernelTestBase {
   protected $languageManager;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'language'];
 

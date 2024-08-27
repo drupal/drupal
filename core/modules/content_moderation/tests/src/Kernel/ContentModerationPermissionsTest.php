@@ -16,9 +16,7 @@ use Drupal\workflows\Entity\Workflow;
 class ContentModerationPermissionsTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'workflows',

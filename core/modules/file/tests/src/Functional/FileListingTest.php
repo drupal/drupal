@@ -18,9 +18,7 @@ use Drupal\user\Entity\Role;
 class FileListingTest extends FileFieldTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views', 'file', 'image', 'entity_test'];
 

@@ -20,9 +20,7 @@ use Drupal\Core\Language\LanguageInterface;
 class LocaleTranslationUiTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['locale'];
 

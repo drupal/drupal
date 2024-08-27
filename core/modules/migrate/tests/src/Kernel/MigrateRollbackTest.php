@@ -18,9 +18,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class MigrateRollbackTest extends MigrateTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'taxonomy', 'text', 'user', 'system'];
 

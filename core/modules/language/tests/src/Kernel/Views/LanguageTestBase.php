@@ -13,9 +13,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 abstract class LanguageTestBase extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'language'];
 

@@ -19,9 +19,7 @@ class BulkFormTest extends BrowserTestBase {
   use NodeCreationTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'action_bulk_test'];
 

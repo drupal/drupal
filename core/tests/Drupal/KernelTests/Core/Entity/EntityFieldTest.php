@@ -34,9 +34,7 @@ use Drupal\node\Entity\NodeType;
 class EntityFieldTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'text', 'node', 'user', 'field_test'];
 

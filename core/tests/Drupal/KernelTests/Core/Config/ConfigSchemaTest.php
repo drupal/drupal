@@ -24,9 +24,7 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigSchemaTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

@@ -20,9 +20,7 @@ use Drupal\views\Views;
 class HistoryTimestampTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['history', 'node'];
 

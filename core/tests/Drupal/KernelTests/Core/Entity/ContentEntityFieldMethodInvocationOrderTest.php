@@ -14,9 +14,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class ContentEntityFieldMethodInvocationOrderTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'system', 'entity_test'];
 

@@ -15,9 +15,7 @@ use Drupal\user\Entity\User;
 class FastTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['theme_test'];
 

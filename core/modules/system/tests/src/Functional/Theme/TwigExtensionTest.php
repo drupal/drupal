@@ -15,9 +15,7 @@ use Drupal\twig_extension_test\TwigExtension\TestExtension;
 class TwigExtensionTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['theme_test', 'twig_extension_test', 'twig_theme_test'];
 

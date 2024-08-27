@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class UserSearchTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['search'];
 

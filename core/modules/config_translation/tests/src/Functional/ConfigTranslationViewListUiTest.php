@@ -25,9 +25,7 @@ class ConfigTranslationViewListUiTest extends UITestBase {
   public static $testViews = ['node', 'test_view'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_translation', 'views_ui'];
 

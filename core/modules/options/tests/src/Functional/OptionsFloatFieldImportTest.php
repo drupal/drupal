@@ -16,9 +16,7 @@ use Drupal\Tests\field\Functional\FieldTestBase;
 class OptionsFloatFieldImportTest extends FieldTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

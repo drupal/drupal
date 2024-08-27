@@ -19,9 +19,7 @@ class PathAliasTest extends PathTestBase {
   use WaitTerminateTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['path'];
 

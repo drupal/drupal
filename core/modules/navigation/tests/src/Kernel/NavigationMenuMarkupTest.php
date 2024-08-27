@@ -24,9 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
 class NavigationMenuMarkupTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

@@ -15,9 +15,7 @@ use Drupal\KernelTests\ConfigFormTestBase;
 class FormObjectTest extends ConfigFormTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['form_test'];
 

@@ -37,9 +37,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

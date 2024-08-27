@@ -21,9 +21,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
   use EntityDefinitionTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test_update'];
 

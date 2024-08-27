@@ -15,9 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
 class FilterCrudTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['filter', 'filter_test', 'system', 'user'];
 

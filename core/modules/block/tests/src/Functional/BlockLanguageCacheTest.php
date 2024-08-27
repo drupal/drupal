@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class BlockLanguageCacheTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'language', 'menu_ui'];
 

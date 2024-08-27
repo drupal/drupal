@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class WorkflowUiNoTypeTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['workflows', 'block'];
 

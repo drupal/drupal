@@ -15,9 +15,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
   use UpdateTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'aaa_update_test',

@@ -23,9 +23,7 @@ class MiniPagerTest extends ViewTestBase {
   public static $testViews = ['test_mini_pager'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node'];
 

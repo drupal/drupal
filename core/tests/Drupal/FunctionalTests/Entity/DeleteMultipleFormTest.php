@@ -27,9 +27,7 @@ class DeleteMultipleFormTest extends BrowserTestBase {
   protected $account;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test', 'user', 'language'];
 

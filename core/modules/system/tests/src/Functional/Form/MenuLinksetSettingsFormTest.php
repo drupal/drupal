@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class MenuLinksetSettingsFormTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

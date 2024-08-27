@@ -16,9 +16,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class CommentStringIdEntitiesTest extends KernelTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'comment',

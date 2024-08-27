@@ -17,9 +17,7 @@ use Drupal\views\Views;
 class ViewsBlockTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_test_views'];
 

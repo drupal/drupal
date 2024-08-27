@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class NodeHelpTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'node', 'help'];
 

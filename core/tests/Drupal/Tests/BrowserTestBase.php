@@ -101,7 +101,7 @@ abstract class BrowserTestBase extends TestCase {
   protected $configImporter;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * The test runner will merge the $modules lists from this class, the class
    * it extends, and so on up the class hierarchy. It is not necessary to

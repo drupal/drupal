@@ -17,9 +17,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class EntityRevisionsTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

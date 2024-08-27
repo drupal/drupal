@@ -15,9 +15,7 @@ use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 class BlockContentTranslationUITest extends ContentTranslationUITestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

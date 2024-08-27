@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class ImageLoadingAttributeTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['image_lazy_load_test'];
 

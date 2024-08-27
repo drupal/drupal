@@ -15,9 +15,7 @@ use Drupal\Core\KeyValueStore\KeyValueFactory;
 class DatabaseStorageExpirableTest extends StorageTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

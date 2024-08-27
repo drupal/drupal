@@ -16,9 +16,7 @@ use Drupal\views\Views;
 class DbLogViewsTest extends DbLogTest {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'dblog',

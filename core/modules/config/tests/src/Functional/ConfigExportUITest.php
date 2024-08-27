@@ -17,9 +17,7 @@ use Drupal\Tests\BrowserTestBase;
 class ConfigExportUITest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config', 'config_test'];
 

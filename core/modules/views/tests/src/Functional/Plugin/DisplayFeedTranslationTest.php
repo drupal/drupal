@@ -32,9 +32,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
   public static $testViews = ['test_display_feed'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

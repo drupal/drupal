@@ -15,9 +15,7 @@ use Drupal\user\Entity\User;
 class UserSaveStatusTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'field'];
 

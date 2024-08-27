@@ -17,9 +17,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class ConfigEntityListMultilingualTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['config_test', 'language', 'block'];
 

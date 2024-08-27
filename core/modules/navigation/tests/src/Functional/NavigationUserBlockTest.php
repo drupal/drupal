@@ -15,9 +15,7 @@ use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 class NavigationUserBlockTest extends PageCacheTagsTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['navigation', 'test_page_test', 'block'];
 

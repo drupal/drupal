@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class AlterTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'form_test'];
 

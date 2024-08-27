@@ -19,9 +19,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_test', 'search'];
 

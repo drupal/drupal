@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class HtmlResponseAttachmentsTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['render_attached_test'];
 

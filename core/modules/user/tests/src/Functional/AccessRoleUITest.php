@@ -22,9 +22,7 @@ class AccessRoleUITest extends UITestBase {
   public static $testViews = ['test_access_role'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'user_test_views'];
 

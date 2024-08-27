@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class AjaxPageStateTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'views'];
 

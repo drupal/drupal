@@ -17,9 +17,7 @@ class TaxonomyGlossaryTest extends ViewTestBase {
   use TaxonomyTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy'];
 

@@ -19,9 +19,7 @@ class BlockContentRedirectTest extends BlockContentTestBase {
   public static $testViews = ['test_block_content_redirect_destination'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_content', 'views'];
 

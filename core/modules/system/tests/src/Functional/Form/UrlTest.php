@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class UrlTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['form_test'];
 

@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class MenuRouterTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'menu_test', 'test_page_test'];
 

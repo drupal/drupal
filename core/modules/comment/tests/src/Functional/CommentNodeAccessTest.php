@@ -17,9 +17,7 @@ use Drupal\comment\CommentManagerInterface;
 class CommentNodeAccessTest extends CommentTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node_access_test'];
 

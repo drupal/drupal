@@ -21,9 +21,7 @@ class ModerationStateWidgetTest extends KernelTestBase {
   use ContentModerationTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',

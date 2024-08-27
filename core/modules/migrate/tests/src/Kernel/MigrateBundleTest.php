@@ -16,9 +16,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class MigrateBundleTest extends MigrateTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['taxonomy', 'text', 'user', 'system'];
 

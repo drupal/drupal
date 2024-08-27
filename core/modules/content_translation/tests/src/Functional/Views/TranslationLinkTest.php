@@ -25,9 +25,7 @@ class TranslationLinkTest extends ContentTranslationTestBase {
   public static $testViews = ['test_entity_translations_link'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['content_translation_test_views'];
 

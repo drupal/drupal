@@ -18,9 +18,7 @@ use Drupal\views\Entity\View;
 class TagTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views', 'views_ui', 'user'];
 

@@ -17,9 +17,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class StackKernelIntegrationTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['http_kernel_test', 'system'];
 

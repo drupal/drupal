@@ -16,9 +16,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 class LinkViewsTokensTest extends ViewTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['link_test_views'];
 

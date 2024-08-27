@@ -15,9 +15,7 @@ use Drupal\views\Views;
 class FieldCounterTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user'];
 

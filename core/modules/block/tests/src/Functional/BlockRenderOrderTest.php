@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class BlockRenderOrderTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'block'];
 

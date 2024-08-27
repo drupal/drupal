@@ -14,9 +14,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 class BulkOperationsTest extends WebDriverTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'views'];
 

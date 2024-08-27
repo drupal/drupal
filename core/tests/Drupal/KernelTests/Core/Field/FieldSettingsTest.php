@@ -17,9 +17,7 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 class FieldSettingsTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'field_test'];
 

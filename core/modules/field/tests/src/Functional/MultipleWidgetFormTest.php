@@ -18,7 +18,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 class MultipleWidgetFormTest extends FieldTestBase {
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * Locale is installed so that TranslatableMarkup actually does something.
    *

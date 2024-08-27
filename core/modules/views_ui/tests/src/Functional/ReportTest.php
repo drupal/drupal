@@ -12,9 +12,7 @@ namespace Drupal\Tests\views_ui\Functional;
 class ReportTest extends UITestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views', 'views_ui'];
 

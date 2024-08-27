@@ -18,9 +18,7 @@ class PathWithNodeAccessGrantsTest extends PathTestBase {
   use ContentModerationTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'path',

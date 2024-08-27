@@ -20,9 +20,7 @@ class BlockLanguageTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'block', 'content_translation', 'node'];
 

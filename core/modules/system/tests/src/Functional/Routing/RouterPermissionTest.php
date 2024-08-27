@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class RouterPermissionTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['router_test'];
 
