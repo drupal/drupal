@@ -1721,7 +1721,7 @@ function _system_advisories_requirements(array &$requirements): void {
  */
 function system_update_11001(&$sandbox) {
   // Execute only if allowed setting, 'timestamp_field_update_y2038', is true.
-  if (!Settings::get('timestamp_field_update_y2038', FALSE)) {
+  if (Settings::get('timestamp_field_update_y2038', FALSE) === FALSE) {
     return t("Update '11001 - Update TimestampItem field schema size to support dates greater than 2038' skipped due to setting of 'timestamp_field_update_y2038' in settings.php");
   }
   $timeout = Settings::get('timestamp_field_update_y2038_timeout', 0);
