@@ -14,9 +14,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionLifecycle;
-use Drupal\Core\Entity\Schema\DynamicallyFieldableEntityStorageSchemaInterface;
-use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
-use Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Utility\PhpRequirements;
@@ -29,7 +26,6 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
-use Drupal\Core\Utility\UpdateException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -1714,143 +1710,4 @@ function _system_advisories_requirements(array &$requirements): void {
       )->toRenderable();
     }
   }
-}
-
-/**
- * Update TimestampItem field schema size to support dates greater than 2038.
- */
-function system_update_11001(&$sandbox) {
-  // Execute only if allowed setting, 'timestamp_field_update_y2038', is true.
-  if (!Settings::get('timestamp_field_update_y2038', FALSE)) {
-    return t("Update '11001 - Update TimestampItem field schema size to support dates greater than 2038' skipped due to setting of 'timestamp_field_update_y2038' in settings.php");
-  }
-  $timeout = Settings::get('timestamp_field_update_y2038_timeout', 0);
-  if (!isset($sandbox['items'])) {
-    $items = _system_update_get_timestamp_fields();
-    $sandbox['items'] = $items;
-    $sandbox['current'] = 0;
-    $sandbox['num_processed'] = 0;
-    $sandbox['max'] = count($items);
-    $sandbox['start_time'] = \Drupal::time()->getCurrentTime();
-  }
-  elseif ($timeout > 0 && \Drupal::time()->getCurrentTime() > ($sandbox['start_time'] + $timeout)) {
-    // On subsequent runs check if the timeout is exceeded. If it is exceeded
-    // then throw an UpdateException with a helpful message. The exception is
-    // used to ensure that the update is not marked complete.
-    throw new UpdateException(sprintf("Update 10202 failed to complete, stopped after %d seconds", Settings::get('timestamp_field_update_y2038_timeout')));
-  }
-
-  [$entity_type_id, $field_name] = $sandbox['items'][$sandbox['current']] ?? [NULL, NULL];
-  if ($entity_type_id && $field_name) {
-    _system_update_process_timestamp_field($entity_type_id, $field_name);
-  }
-  $sandbox['current']++;
-
-  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['current'] / $sandbox['max']);
-}
-
-/**
- * Gets a list fields that use the TimeStampItem class.
- *
- * @return string[]
- *   An array with two elements, an entity type ID and a field name.
- */
-function _system_update_get_timestamp_fields(): array {
-  $items = [];
-
-  // Get all the field definitions.
-  $field_definitions = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
-
-  // Get all the field types that use the TimestampItem class.
-  $field_types = array_keys(array_filter($field_definitions, function ($definition) {
-    return is_a($definition['class'], TimestampItem::class, TRUE);
-  }));
-
-  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
-  $entity_field_manager = \Drupal::service('entity_field.manager');
-
-  // Build a list of all the timestamp fields.
-  foreach ($field_types as $field_type) {
-    $entity_field_map = $entity_field_manager->getFieldMapByFieldType($field_type);
-    foreach ($entity_field_map as $entity_type_id => $fields) {
-      $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
-      if ($storage instanceof SqlContentEntityStorage) {
-        foreach (array_keys($fields) as $field_name) {
-          $items[] = [$entity_type_id, $field_name];
-        }
-      }
-    }
-  }
-
-  return $items;
-}
-
-/**
- * Update a timestamp field to remove Y2038 limitation.
- *
- * @param string $entity_type_id
- *   The entity type ID.
- * @param string $field_name
- *   The name of the field that needs to be updated.
- *
- * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
- * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
- * @throws \Drupal\Core\Entity\Sql\SqlContentEntityStorageException
- */
-function _system_update_process_timestamp_field(string $entity_type_id, string $field_name): void {
-  /** @var \Drupal\Core\Logger\LoggerChannel $logger */
-  $logger = \Drupal::logger('update');
-
-  $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_storage = $entity_type_manager->getStorage($entity_type_id);
-
-  // Get the table mappings for this field.
-  /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-  $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
-  $table_mapping = $entity_storage->getTableMapping($storage_definitions);
-
-  // Field type column names map to real table column names.
-  $columns = $table_mapping->getColumnNames($field_name);
-  $column_name = $columns['value'] ?? NULL;
-
-  // We are only allowed to change the 'value' column. If that does not exist
-  // due contrib or custom code leave everything unchanged.
-  if (!$column_name) {
-    $logger->notice("Timestamp for entity '$entity_type_id' field '$field_name' not updated because database column was not found.");
-    return;
-  }
-
-  // Get the original storage definition for this field.
-  $last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
-  $original_storage_definitions = $last_installed_schema_repository->getLastInstalledFieldStorageDefinitions($entity_type_id);
-  $original_storage_definition = $original_storage_definitions[$field_name];
-
-  // Get the current storage definition for this field.
-  $storage_definition = $storage_definitions[$field_name];
-  $storage = $entity_type_manager->getStorage($storage_definition->getTargetEntityTypeId());
-
-  if (!($storage instanceof DynamicallyFieldableEntityStorageSchemaInterface
-    && $storage->requiresFieldStorageSchemaChanges($storage_definition, $original_storage_definition))) {
-    $logger->notice("Timestamp for entity '$entity_type_id' field '$field_name' not updated because field size is already 'big'.");
-    return;
-  }
-
-  // Update the table specification for the timestamp field, setting the size to
-  // 'big'.
-  $schema = \Drupal::database()->schema();
-  $field_schema = $original_storage_definitions[$field_name]->getSchema() ?? $storage_definition->getSchema();
-  $specification = $field_schema['columns']['value'];
-  $specification['size'] = 'big';
-  foreach ($table_mapping->getAllFieldTableNames($field_name) as $table) {
-    $schema->changeField($table, $column_name, $column_name, $specification);
-  }
-
-  // Set flag to let EntityDefinitionUpdateManager know the column changes
-  // have been handled.
-  $storage_definition->setSetting('column_changes_handled', TRUE);
-
-  // Update the tracked entity table schema, setting the size to 'big'.
-  \Drupal::service('entity.definition_update_manager')->updateFieldStorageDefinition($storage_definition);
-
-  $logger->notice("Successfully updated entity '$entity_type_id' field '$field_name' to remove year 2038 limitation.");
 }
