@@ -35,7 +35,7 @@
         "open-telemetry/exporter-otlp": "1.0.4",
         "open-telemetry/gen-otlp-protobuf": "1.1.0",
         "open-telemetry/sdk": "1.0.8",
-        "open-telemetry/sem-conv": "1.25.0",
+        "open-telemetry/sem-conv": "1.27.0",
         "phar-io/manifest": "2.0.4",
         "phar-io/version": "3.2.1",
         "php-http/discovery": "1.19.4",
