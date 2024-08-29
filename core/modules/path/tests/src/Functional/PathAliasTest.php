@@ -65,9 +65,9 @@ class PathAliasTest extends PathTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check the path alias whitelist cache.
-    $whitelist = \Drupal::cache('bootstrap')->get('path_alias_whitelist');
-    $this->assertTrue($whitelist->data['node']);
-    $this->assertFalse($whitelist->data['admin']);
+    $prefix_list = \Drupal::cache('bootstrap')->get('path_alias_prefix_list');
+    $this->assertTrue($prefix_list->data['node']);
+    $this->assertFalse($prefix_list->data['admin']);
 
     // Visit the system path for the node and confirm a cache entry is
     // created.

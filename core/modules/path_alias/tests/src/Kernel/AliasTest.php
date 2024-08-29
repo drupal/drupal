@@ -9,7 +9,7 @@ use Drupal\Core\Cache\MemoryCounterBackend;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\path_alias\AliasManager;
-use Drupal\path_alias\AliasWhitelist;
+use Drupal\path_alias\AliasPrefixList;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
@@ -34,7 +34,7 @@ class AliasTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // The alias whitelist expects that the menu path roots are set by a
+    // The alias prefix list expects that the menu path roots are set by a
     // menu router rebuild.
     \Drupal::state()->set('router.path_roots', ['user', 'admin']);
 
@@ -358,114 +358,114 @@ class AliasTest extends KernelTestBase {
   }
 
   /**
-   * Tests the alias whitelist.
+   * Tests the alias prefix.
    */
-  public function testWhitelist(): void {
+  public function testPrefixList(): void {
     $memoryCounterBackend = new MemoryCounterBackend(\Drupal::service(TimeInterface::class));
 
     // Create AliasManager and Path object.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));
-    $aliasManager = new AliasManager($this->container->get('path_alias.repository'), $whitelist, $this->container->get('language_manager'), $memoryCounterBackend, $this->container->get(TimeInterface::class));
+    $prefix_list = new AliasPrefixList('path_alias_prefix_list', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));
+    $aliasManager = new AliasManager($this->container->get('path_alias.repository'), $prefix_list, $this->container->get('language_manager'), $memoryCounterBackend, $this->container->get(TimeInterface::class));
 
     // No alias for user and admin yet, so should be NULL.
-    $this->assertNull($whitelist->get('user'));
-    $this->assertNull($whitelist->get('admin'));
+    $this->assertNull($prefix_list->get('user'));
+    $this->assertNull($prefix_list->get('admin'));
 
     // Non-existing path roots should be NULL too. Use a length of 7 to avoid
     // possible conflict with random aliases below.
-    $this->assertNull($whitelist->get($this->randomMachineName()));
+    $this->assertNull($prefix_list->get($this->randomMachineName()));
 
-    // Add an alias for user/1, user should get whitelisted now.
+    // Add an alias for user/1, user should get cached now.
     $this->createPathAlias('/user/1', '/' . $this->randomMachineName());
     $aliasManager->cacheClear();
-    $this->assertTrue($whitelist->get('user'));
-    $this->assertNull($whitelist->get('admin'));
-    $this->assertNull($whitelist->get($this->randomMachineName()));
+    $this->assertTrue($prefix_list->get('user'));
+    $this->assertNull($prefix_list->get('admin'));
+    $this->assertNull($prefix_list->get($this->randomMachineName()));
 
-    // Add an alias for admin, both should get whitelisted now.
+    // Add an alias for admin, both should get cached now.
     $this->createPathAlias('/admin/something', '/' . $this->randomMachineName());
     $aliasManager->cacheClear();
-    $this->assertTrue($whitelist->get('user'));
-    $this->assertTrue($whitelist->get('admin'));
-    $this->assertNull($whitelist->get($this->randomMachineName()));
+    $this->assertTrue($prefix_list->get('user'));
+    $this->assertTrue($prefix_list->get('admin'));
+    $this->assertNull($prefix_list->get($this->randomMachineName()));
 
-    // Remove the user alias again, whitelist entry should be removed.
+    // Remove the user alias again, prefix list entry should be removed.
     $path_alias_storage = $this->container->get('entity_type.manager')->getStorage('path_alias');
     $entities = $path_alias_storage->loadByProperties(['path' => '/user/1']);
     $path_alias_storage->delete($entities);
     $aliasManager->cacheClear();
-    $this->assertNull($whitelist->get('user'));
-    $this->assertTrue($whitelist->get('admin'));
-    $this->assertNull($whitelist->get($this->randomMachineName()));
+    $this->assertNull($prefix_list->get('user'));
+    $this->assertTrue($prefix_list->get('admin'));
+    $this->assertNull($prefix_list->get($this->randomMachineName()));
 
-    // Destruct the whitelist so that the caches are written.
-    $whitelist->destruct();
-    $this->assertEquals(1, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
+    // Destruct the prefix list so that the caches are written.
+    $prefix_list->destruct();
+    $this->assertEquals(1, $memoryCounterBackend->getCounter('set', 'path_alias_prefix_list'));
     $memoryCounterBackend->resetCounter();
 
-    // Re-initialize the whitelist using the same cache backend, should load
+    // Re-initialize the prefix list using the same cache backend, should load
     // from cache.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));
-    $this->assertNull($whitelist->get('user'));
-    $this->assertTrue($whitelist->get('admin'));
-    $this->assertNull($whitelist->get($this->randomMachineName()));
-    $this->assertEquals(1, $memoryCounterBackend->getCounter('get', 'path_alias_whitelist'));
-    $this->assertEquals(0, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
+    $prefix_list = new AliasPrefixList('path_alias_prefix_list', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));
+    $this->assertNull($prefix_list->get('user'));
+    $this->assertTrue($prefix_list->get('admin'));
+    $this->assertNull($prefix_list->get($this->randomMachineName()));
+    $this->assertEquals(1, $memoryCounterBackend->getCounter('get', 'path_alias_prefix_list'));
+    $this->assertEquals(0, $memoryCounterBackend->getCounter('set', 'path_alias_prefix_list'));
 
-    // Destruct the whitelist, should not attempt to write the cache again.
-    $whitelist->destruct();
-    $this->assertEquals(1, $memoryCounterBackend->getCounter('get', 'path_alias_whitelist'));
-    $this->assertEquals(0, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
+    // Destruct the prefix list, should not attempt to write the cache again.
+    $prefix_list->destruct();
+    $this->assertEquals(1, $memoryCounterBackend->getCounter('get', 'path_alias_prefix_list'));
+    $this->assertEquals(0, $memoryCounterBackend->getCounter('set', 'path_alias_prefix_list'));
   }
 
   /**
-   * Tests situation where the whitelist cache is deleted mid-request.
+   * Tests situation where the prefix list  cache is deleted mid-request.
    */
-  public function testWhitelistCacheDeletionMidRequest(): void {
+  public function testPrefixListCacheDeletionMidRequest() {
     $memoryCounterBackend = new MemoryCounterBackend(\Drupal::service(TimeInterface::class));
 
     // Create AliasManager and Path object.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));
+    $prefix_list = new AliasPrefixList('path_alias_prefix_list', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));
 
-    // Whitelist cache should not exist at all yet.
-    $this->assertFalse($memoryCounterBackend->get('path_alias_whitelist'));
+    // Prefix list cache should not exist at all yet.
+    $this->assertFalse($memoryCounterBackend->get('path_alias_prefix_list'));
 
     // Add some aliases for both menu routes we have.
     $this->createPathAlias('/admin/something', '/' . $this->randomMachineName());
     $this->createPathAlias('/user/something', '/' . $this->randomMachineName());
 
-    // Lookup admin path in whitelist. It will query the DB and figure out
-    // that it indeed has an alias, and add it to the internal whitelist and
+    // Lookup admin path in prefix list. It will query the DB and figure out
+    // that it indeed has an alias, and add it to the internal prefix list and
     // flag it to be persisted to cache.
-    $this->assertTrue($whitelist->get('admin'));
+    $this->assertTrue($prefix_list->get('admin'));
 
-    // Destruct the whitelist so it persists its cache.
-    $whitelist->destruct();
-    $this->assertEquals(1, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
+    // Destruct the prefix list so it persists its cache.
+    $prefix_list->destruct();
+    $this->assertEquals(1, $memoryCounterBackend->getCounter('set', 'path_alias_prefix_list'));
     // Cache data should have data for 'user' and 'admin', even though just
     // 'admin' was looked up. This is because the cache is primed with all
     // menu router base paths.
-    $this->assertEquals(['user' => FALSE, 'admin' => TRUE], $memoryCounterBackend->get('path_alias_whitelist')->data);
+    $this->assertEquals(['user' => FALSE, 'admin' => TRUE], $memoryCounterBackend->get('path_alias_prefix_list')->data);
     $memoryCounterBackend->resetCounter();
 
-    // Re-initialize the whitelist and lookup an alias for the 'user' path.
-    // Whitelist should load data from its cache, see that it hasn't done a
+    // Re-initialize the prefix list and lookup an alias for the 'user' path.
+    // Prefix list should load data from its cache, see that it hasn't done a
     // check for 'user' yet, perform the check, then mark the result to be
     // persisted to cache.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));
-    $this->assertTrue($whitelist->get('user'));
+    $prefix_list = new AliasPrefixList('path_alias_prefix_list', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $this->container->get('path_alias.repository'));
+    $this->assertTrue($prefix_list->get('user'));
 
-    // Delete the whitelist cache. This could happen from an outside process,
+    // Delete the prefix list cache. This could happen from an outside process,
     // like a code deployment that performs a cache rebuild.
-    $memoryCounterBackend->delete('path_alias_whitelist');
+    $memoryCounterBackend->delete('path_alias_prefix_list');
 
-    // Destruct whitelist so it attempts to save the whitelist data to cache.
-    // However it should recognize that the previous cache entry was deleted
-    // from underneath it and not save anything to cache, to protect from
-    // cache corruption.
-    $whitelist->destruct();
-    $this->assertEquals(0, $memoryCounterBackend->getCounter('set', 'path_alias_whitelist'));
-    $this->assertFalse($memoryCounterBackend->get('path_alias_whitelist'));
+    // Destruct prefix list so it attempts to save the prefix list data to
+    // cache. However it should recognize that the previous cache entry was
+    // deleted from underneath it and not save anything to cache, to protect
+    // from cache corruption.
+    $prefix_list->destruct();
+    $this->assertEquals(0, $memoryCounterBackend->getCounter('set', 'path_alias_prefix_list'));
+    $this->assertFalse($memoryCounterBackend->get('path_alias_prefix_list'));
     $memoryCounterBackend->resetCounter();
   }
 
