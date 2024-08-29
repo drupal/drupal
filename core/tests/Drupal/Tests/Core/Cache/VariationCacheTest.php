@@ -397,12 +397,12 @@ class VariationCacheTest extends UnitTestCase {
   }
 
   /**
-   * Tests exception for a cache item that has incompatible variations.
+   * Tests exception for a cache item that has incomplete variations.
    *
    * @covers ::get
    * @covers ::set
    */
-  public function testIncompatibleVariationsException(): void {
+  public function testIncompleteVariationsException(): void {
     // This should never happen. When someone first stores something in the
     // cache using context A and then tries to store something using context B,
     // something is wrong. There should always be at least one shared context at
@@ -420,6 +420,191 @@ class VariationCacheTest extends UnitTestCase {
 
     $this->setVariationCacheItem('You have a nice garden!', $garden_cacheability, $garden_cacheability);
     $this->setVariationCacheItem('You have a nice house!', $house_cacheability, $garden_cacheability);
+  }
+
+  /**
+   * Tests exception for a cache item that has an incomplete redirect.
+   *
+   * @covers ::get
+   * @covers ::set
+   */
+  public function testIncompleteRedirectException(): void {
+    // @todo Remove in Drupal 12.0.0. For more information, see:
+    //   https://www.drupal.org/project/drupal/issues/3468921
+    set_error_handler(static function (int $errno, string $errstr): never {
+      throw new \LogicException($errstr, $errno);
+    }, E_USER_WARNING);
+
+    // This should never happen. When we have a cache redirect at address A,
+    // pointing to 'A,B:foo' and then someone tries to store a cache redirect at
+    // A pointing to 'A,B', something is wrong. The cache contexts leading up to
+    // a cache redirect should always be present on the redirect itself. In this
+    // example, the final cache redirect should be for 'A,B:foo,B'.
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Trying to overwrite a cache redirect with one that has nothing in common, old one at address "house.type" was pointing to "garden.type:zen", new one points to "garden.type".');
+
+    $this->housingType = 'house';
+    $house_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type']);
+
+    $this->gardenType = '1';
+    $calculated_garden_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type', 'garden.type:zen']);
+
+    $this->setVariationCacheItem('You have a house with zen garden!', $calculated_garden_cacheability, $house_cacheability);
+
+    $this->gardenType = 'baroque garden';
+    $garden_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type', 'garden.type']);
+
+    try {
+      $this->setVariationCacheItem('You have a house with a baroque garden!', $garden_cacheability, $house_cacheability);
+    }
+    finally {
+      restore_error_handler();
+    }
+  }
+
+  /**
+   * Tests exception for a cache item that has incompatible cache redirects.
+   *
+   * @covers ::get
+   * @covers ::set
+   */
+  public function testIncompatibleRedirectsException(): void {
+    // @todo Remove in Drupal 12.0.0. For more information, see:
+    //   https://www.drupal.org/project/drupal/issues/3468921
+    set_error_handler(static function (int $errno, string $errstr): never {
+      throw new \LogicException($errstr, $errno);
+    }, E_USER_WARNING);
+
+    // This should never happen. When someone first triggers the storing of a
+    // redirect using context A and then tries to store another redirect in the
+    // same spot using context B, something is wrong. The cache contexts of all
+    // previous redirects should always be present on the next redirect or item
+    // you're trying to store.
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Trying to overwrite a cache redirect with one that has nothing in common, old one at address "house.type" was pointing to "garden.type", new one points to "house.orientation".');
+
+    $this->housingType = 'house';
+    $house_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type']);
+
+    $this->gardenType = 'garden';
+    $garden_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type', 'garden.type']);
+
+    $this->houseOrientation = 'north';
+    $orientation_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type', 'house.orientation']);
+
+    $this->setVariationCacheItem('You have a nice house with a garden!', $garden_cacheability, $house_cacheability);
+    try {
+      $this->setVariationCacheItem('You have a nice north-facing house!', $orientation_cacheability, $house_cacheability);
+    }
+    finally {
+      restore_error_handler();
+    }
+  }
+
+  /**
+   * Tests the same as above, but with more redirects.
+   *
+   * @covers ::get
+   * @covers ::set
+   *
+   * @depends testIncompatibleRedirectsException
+   */
+  public function testIncompatibleChainedRedirectsException(): void {
+    // @todo Remove in Drupal 12.0.0. For more information, see:
+    //   https://www.drupal.org/project/drupal/issues/3468921
+    set_error_handler(static function (int $errno, string $errstr): never {
+      throw new \LogicException($errstr, $errno);
+    }, E_USER_WARNING);
+
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Trying to overwrite a cache redirect with one that has nothing in common, old one at address "house.type, garden.type" was pointing to "house.orientation", new one points to "solar.type".');
+
+    $this->housingType = 'house';
+    $house_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type']);
+
+    $this->gardenType = 'no-garden';
+    $garden_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type', 'garden.type']);
+
+    // This should set a redirect at ht.house specifying garden.type. So the
+    // redirects below should find this redirect to be fine before getting to
+    // the problematic one.
+    $this->setVariationCacheItem('You have a nice house with no garden!', $garden_cacheability, $house_cacheability);
+    $this->gardenType = 'garden';
+
+    $this->houseOrientation = 'north';
+    $orientation_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type', 'garden.type', 'house.orientation']);
+
+    $this->solarType = 'solar';
+    $solar_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type', 'garden.type', 'solar.type']);
+
+    $this->setVariationCacheItem('You have a nice north-facing house with a garden!', $orientation_cacheability, $house_cacheability);
+    try {
+      $this->setVariationCacheItem('You have a nice house with solar panels and a garden!', $solar_cacheability, $house_cacheability);
+    }
+    finally {
+      restore_error_handler();
+    }
+  }
+
+  /**
+   * Tests the same as above, but even more complex.
+   *
+   * @covers ::get
+   * @covers ::set
+   *
+   * @depends testIncompatibleChainedRedirectsException
+   */
+  public function testIncompatibleChainedRedirectsComplexException(): void {
+    // @todo Remove in Drupal 12.0.0. For more information, see:
+    //   https://www.drupal.org/project/drupal/issues/3468921
+    set_error_handler(static function (int $errno, string $errstr): never {
+      throw new \LogicException($errstr, $errno);
+    }, E_USER_WARNING);
+
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Trying to overwrite a cache redirect with one that has nothing in common, old one at address "house.type, garden.type" was pointing to "house.orientation", new one points to "solar.type".');
+
+    $this->housingType = 'house';
+    $house_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type']);
+
+    $this->gardenType = 'garden';
+    $this->houseOrientation = 'north';
+    $orientation_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type', 'garden.type', 'house.orientation']);
+
+    $this->solarType = 'solar';
+    $solar_cacheability = (new CacheableMetadata())
+      ->setCacheContexts(['house.type', 'garden.type', 'solar.type']);
+
+    // This time, nothing primes the redirects so the first set will create a
+    // redirect at ht.house, pointing to house.type, garden.type and solar.type.
+    $this->setVariationCacheItem('You have a nice house with solar panels and a garden!', $solar_cacheability, $house_cacheability);
+
+    // The second set will try to store a redirect at ht.house, pointing to
+    // house.type, garden.type and house.orientation. This will trigger the
+    // creation of a common redirect at ht.house, pointing to garden.type.
+    $this->setVariationCacheItem('You have a nice north-facing house with a garden!', $orientation_cacheability, $house_cacheability);
+
+    // Now we arrive at the same scenario as the test above. We have a redirect
+    // chain at house.type of garden.type and finally house.orientation, but are
+    // trying to set solar.type at that last address.
+    try {
+      $this->setVariationCacheItem('You have a nice house with solar panels and a garden!', $solar_cacheability, $house_cacheability);
+    }
+    finally {
+      restore_error_handler();
+    }
   }
 
   /**

@@ -44,7 +44,10 @@ class VariationCache implements VariationCacheInterface {
     $contexts = $cacheability->getCacheContexts();
 
     if ($missing_contexts = array_diff($initial_contexts, $contexts)) {
-      throw new \LogicException(sprintf('The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts, missing: %s.', implode(', ', $missing_contexts)));
+      throw new \LogicException(sprintf(
+        'The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts, missing: %s.',
+        implode(', ', $missing_contexts)
+      ));
     }
 
     // Don't store uncacheable items.
@@ -94,6 +97,7 @@ class VariationCache implements VariationCacheInterface {
       // the data we're trying to set. Next time someone tries to load the
       // initial AB object, it will restore its redirect path by adding an AB
       // redirect step after A.
+      $previous_step_contexts = $initial_contexts;
       foreach ($chain as $chain_cid => $result) {
         if ($result && $result->data instanceof CacheRedirect) {
           $result_contexts = $result->data->getCacheContexts();
@@ -101,6 +105,44 @@ class VariationCache implements VariationCacheInterface {
             // Check whether we have an overlap scenario as we need to manually
             // create an extra redirect in that case.
             $common_contexts = array_intersect($result_contexts, $contexts);
+
+            // If the only common contexts are those we've seen before, it means
+            // we are trying to set a redirect at an address that is completely
+            // different from the one that was already there. This cannot be
+            // allowed as it completely breaks the redirect system.
+            //
+            // Example: The value for context A is 'foo' and we are trying to
+            // store a redirect with AB at A:foo. Then, for a different value of
+            // B, we are trying to store a redirect at A:foo with AC. This makes
+            // no sense as there would now no longer be a way to find the first
+            // item that triggered the initial redirect.
+            //
+            // This usually occurs when using calculated cache contexts and the
+            // author tried to manually optimize them. E.g.: When using
+            // user.roles:anonymous and in one of the outcomes we end up varying
+            // by user.roles. In that case, both user.roles:anonymous and
+            // user.roles need to be present on the cacheable metadata, even
+            // though they will eventually be optimized into user.roles. The
+            // cache needs all the initial information to do its job and if an
+            // author were to manually optimize this prematurely, it would be
+            // impossible to properly store a redirect chain.
+            //
+            // Another way this might happen is if a new object that can specify
+            // cacheable metadata is instantiated without inheriting the cache
+            // contexts of all the logic that happened up until that point. A
+            // common example of this is when people immediately return the
+            // result of one of the factory methods on AccessResult, without
+            // adding the cacheability from previous access checks that did not
+            // lead to a value being returned.
+            if (!array_diff($common_contexts, $previous_step_contexts)) {
+              trigger_error(sprintf(
+                'Trying to overwrite a cache redirect with one that has nothing in common, old one at address "%s" was pointing to "%s", new one points to "%s".',
+                implode(', ', $previous_step_contexts),
+                implode(', ', array_diff($result_contexts, $previous_step_contexts)),
+                implode(', ', array_diff($contexts, $previous_step_contexts)),
+              ), E_USER_WARNING);
+            }
+
             // != is the most appropriate comparison operator here, since we
             // only want to know if any keys or values don't match.
             if ($common_contexts != $contexts) {
@@ -118,6 +160,7 @@ class VariationCache implements VariationCacheInterface {
             }
             break;
           }
+          $previous_step_contexts = $result_contexts;
         }
       }
 
