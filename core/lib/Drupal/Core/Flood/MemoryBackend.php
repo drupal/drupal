@@ -18,6 +18,8 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
 
   /**
    * An array holding flood events, keyed by event name and identifier.
+   *
+   * @var array
    */
   protected $events = [];
 

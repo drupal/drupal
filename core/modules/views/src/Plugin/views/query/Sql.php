@@ -33,11 +33,15 @@ class Sql extends QueryPluginBase {
 
   /**
    * A list of tables in the order they should be added, keyed by alias.
+   *
+   * @var array
    */
   protected $tableQueue = [];
 
   /**
    * Holds an array of tables and counts added so that we can create aliases.
+   *
+   * @var array
    */
   public $tables = [];
 
@@ -46,6 +50,8 @@ class Sql extends QueryPluginBase {
    *
    * These are aliases of the primary table that represent different ways to
    * join the same table in.
+   *
+   * @var array
    */
   public $relationships = [];
 
@@ -54,6 +60,8 @@ class Sql extends QueryPluginBase {
    *
    * Each section is in itself an array of pieces and a flag as to whether or
    * not it should be AND or OR.
+   *
+   * @var array
    */
 
   public $where = [];
@@ -62,22 +70,30 @@ class Sql extends QueryPluginBase {
    *
    * Each section is in itself an array of pieces and a flag as to whether or
    * not it should be AND or OR.
+   *
+   * @var array
    */
   public $having = [];
 
   /**
    * A simple array of order by clauses.
+   *
+   * @var array
    */
   public $orderby = [];
 
   /**
    * A simple array of group by clauses.
+   *
+   * @var array
    */
   public $groupby = [];
 
 
   /**
    * An array of fields.
+   *
+   * @var array
    */
   public $fields = [];
 
@@ -95,16 +111,22 @@ class Sql extends QueryPluginBase {
 
   /**
    * Should this query be optimized for counts, for example no sorts.
+   *
+   * @var bool|null
    */
   protected $getCountOptimized = NULL;
 
   /**
    * An array mapping table aliases and field names to field aliases.
+   *
+   * @var array
    */
   protected $fieldAliases = [];
 
   /**
    * Query tags which will be passed over to the dbtng query object.
+   *
+   * @var array
    */
   public $tags = [];
 
