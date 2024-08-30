@@ -40,11 +40,15 @@ class HelpTest extends BrowserTestBase {
 
   /**
    * The admin user that will be created.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser;
 
   /**
    * The anonymous user that will be created.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $anyUser;
 

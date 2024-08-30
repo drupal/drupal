@@ -57,6 +57,10 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
   /**
    * A user with administrative privileges to look at test entity and configure views.
+   *
+   * @var \Drupal\user\Entity\User|false
+   *
+   * @see \Drupal\Tests\user\Traits\UserCreationTrait::createUser
    */
   protected $adminUser;
 

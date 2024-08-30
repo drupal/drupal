@@ -54,6 +54,8 @@ class StyleSerializerTest extends ViewTestBase {
 
   /**
    * A user with administrative privileges to look at test entity and configure views.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser;
 

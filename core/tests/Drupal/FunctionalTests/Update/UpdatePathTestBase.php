@@ -50,6 +50,8 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
   /**
    * Modules to install after the database is loaded.
+   *
+   * @var string[]
    */
   protected static $modules = [];
 
