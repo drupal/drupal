@@ -27,7 +27,7 @@
         "lullabot/php-webdriver": "v2.0.5",
         "mglaman/phpstan-drupal": "1.2.12",
         "micheh/phpcs-gitlab": "1.1.0",
-        "mikey179/vfsstream": "v1.6.11",
+        "mikey179/vfsstream": "v1.6.12",
         "myclabs/deep-copy": "1.12.0",
         "nikic/php-parser": "v5.1.0",
         "open-telemetry/api": "1.0.3",
