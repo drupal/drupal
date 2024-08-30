@@ -224,32 +224,6 @@ class FormCacheTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getCache
-   */
-  public function testGetCacheImmutableForm(): void {
-    $form_build_id = 'the_form_build_id';
-    $form_state = (new FormState())
-      ->addBuildInfo('immutable', TRUE);
-    $cached_form = [
-      '#build_id' => 'the_old_build_form_id',
-    ];
-
-    $this->account->expects($this->once())
-      ->method('isAnonymous')
-      ->willReturn(TRUE);
-    $this->formCacheStore->expects($this->once())
-      ->method('get')
-      ->with($form_build_id)
-      ->willReturn($cached_form);
-
-    $form = $this->formCache->getCache($form_build_id, $form_state);
-    $this->assertSame($cached_form['#build_id'], $form['#build_id_old']);
-    $this->assertNotSame($cached_form['#build_id'], $form['#build_id']);
-    $this->assertSame($form['#build_id'], $form['form_build_id']['#value']);
-    $this->assertSame($form['#build_id'], $form['form_build_id']['#id']);
-  }
-
-  /**
    * @covers ::loadCachedFormState
    */
   public function testLoadCachedFormState(): void {

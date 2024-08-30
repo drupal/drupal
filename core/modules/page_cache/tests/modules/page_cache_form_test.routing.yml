@@ -1,6 +1,0 @@
-page_cache_form_test.test_immutability:
-  path: '/page_cache_form_test_immutability'
-  defaults:
-    _form: '\Drupal\page_cache_form_test\Form\TestForm'
-  requirements:
-    _access: 'TRUE'

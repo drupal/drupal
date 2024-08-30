@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\Core\Database\Database;
-use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -143,74 +141,6 @@ class StorageTest extends BrowserTestBase {
     // the values of the updated form storage.
     $this->submitForm(['title' => 'foo', 'value' => 'bar'], 'Save');
     $this->assertSession()->pageTextContains("The thing has been changed.");
-  }
-
-  /**
-   * Tests form build ID regeneration when loading a cached immutable form.
-   */
-  public function testImmutableForm(): void {
-    // Request the form with 'cache' query parameter to enable form caching.
-    $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
-
-    // Ensure the hidden 'form_build_id' field is unique.
-    $this->assertSession()->elementsCount('xpath', '//input[@name="form_build_id"]', 1);
-
-    $buildId = $this->assertSession()->hiddenFieldExists('form_build_id')->getValue();
-
-    // Trigger validation error by submitting an empty title.
-    $edit = ['title' => ''];
-    $this->submitForm($edit, 'Continue submit');
-
-    // Verify that the build-id did change.
-    $this->assertSession()->hiddenFieldValueNotEquals('form_build_id', $buildId);
-
-    // Ensure the hidden 'form_build_id' field is unique.
-    $this->assertSession()->elementsCount('xpath', '//input[@name="form_build_id"]', 1);
-
-    // Retrieve the new build-id.
-    $buildId = (string) $this->assertSession()->hiddenFieldExists('form_build_id')->getValue();
-
-    // Trigger validation error by again submitting an empty title.
-    $edit = ['title' => ''];
-    $this->submitForm($edit, 'Continue submit');
-
-    // Verify that the build-id does not change the second time.
-    $this->assertSession()->hiddenFieldValueEquals('form_build_id', $buildId);
-  }
-
-  /**
-   * Verify that existing contrib code cannot overwrite immutable form state.
-   */
-  public function testImmutableFormLegacyProtection(): void {
-    $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
-    // Ensure the hidden 'form_build_id' field is unique.
-    $this->assertSession()->elementsCount('xpath', '//input[@name="form_build_id"]', 1);
-    $build_id = $this->assertSession()->hiddenFieldExists('form_build_id')->getValue();
-
-    // Try to poison the form cache.
-    $response = $this->drupalGet('form-test/form-storage-legacy/' . $build_id, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With' => 'XMLHttpRequest']);
-    $original = json_decode($response, TRUE);
-
-    $this->assertEquals($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
-    $this->assertNotEquals($original['form']['#build_id'], $build_id, 'New build_id was generated');
-
-    // Assert that a watchdog message was logged by
-    // \Drupal::formBuilder()->setCache().
-    $status = (bool) Database::getConnection()->select('watchdog')
-      ->condition('message', 'Form build-id mismatch detected while attempting to store a form in the cache.')
-      ->range(0, 1)
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-    $this->assertTrue($status, 'A watchdog message was logged by \Drupal::formBuilder()->setCache');
-
-    // Ensure that the form state was not poisoned by the preceding call.
-    $response = $this->drupalGet('form-test/form-storage-legacy/' . $build_id, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With' => 'XMLHttpRequest']);
-    $original = json_decode($response, TRUE);
-    $this->assertEquals($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
-    $this->assertNotEquals($original['form']['#build_id'], $build_id, 'New build_id was generated');
-    $this->assertArrayNotHasKey('#poisoned', $original['form'], 'Original form structure was preserved');
-    $this->assertArrayNotHasKey('poisoned', $original['form_state'], 'Original form state was preserved');
   }
 
 }

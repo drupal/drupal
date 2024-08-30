@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Form;
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
@@ -122,17 +121,6 @@ class FormCache implements FormCacheInterface {
       if ((isset($form['#cache_token']) && $this->csrfToken->validate($form['#cache_token'])) || (!isset($form['#cache_token']) && $this->currentUser->isAnonymous())) {
         $this->loadCachedFormState($form_build_id, $form_state);
 
-        // Generate a new #build_id if the cached form was rendered on a
-        // cacheable page.
-        $build_info = $form_state->getBuildInfo();
-        if (!empty($build_info['immutable'])) {
-          $form['#build_id_old'] = $form['#build_id'];
-          $form['#build_id'] = 'form-' . Crypt::randomBytesBase64();
-          $form['form_build_id']['#value'] = $form['#build_id'];
-          $form['form_build_id']['#id'] = $form['#build_id'];
-          unset($build_info['immutable']);
-          $form_state->setBuildInfo($build_info);
-        }
         return $form;
       }
     }

@@ -459,33 +459,6 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the setting of forms to be immutable.
-   */
-  public function testFormImmutability(): void {
-    // Install the module that provides the test form.
-    $this->container->get('module_installer')
-      ->install(['page_cache_form_test']);
-    // Uninstall the page_cache module to verify that form is immutable
-    // regardless of the internal page cache module.
-    $this->container->get('module_installer')->uninstall(['page_cache']);
-
-    $this->drupalGet('page_cache_form_test_immutability');
-
-    $this->assertSession()->pageTextContains("Immutable: TRUE");
-
-    // The immutable flag is set unconditionally by system_form_alter(), set
-    // a flag to tell page_cache_form_test_module_implements_alter() to disable
-    // that implementation.
-    \Drupal::state()->set('page_cache_bypass_form_immutability', TRUE);
-    \Drupal::moduleHandler()->resetImplementations();
-    Cache::invalidateTags(['rendered']);
-
-    $this->drupalGet('page_cache_form_test_immutability');
-
-    $this->assertSession()->pageTextContains("Immutable: FALSE");
-  }
-
-  /**
    * Tests cacheability of a CacheableResponse.
    *
    * Tests the difference between having a controller return a plain Symfony
