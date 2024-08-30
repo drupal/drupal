@@ -87,7 +87,7 @@ variables:
     - "--allowed-origins=*"
 
 .with-selenium-chrome: &with-selenium-chrome
-  name: selenium/standalone-chrome:latest
+  name: selenium/standalone-chrome:127.0
   alias: selenium
   variables:
     JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
