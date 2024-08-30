@@ -44,8 +44,8 @@ class PathAliasTest extends PathTestBase {
     ]);
     $this->drupalLogin($web_user);
 
-    // The \Drupal\path_alias\AliasWhitelist service performs cache clears after
-    // Drupal has flushed the response to the client. We use
+    // The \Drupal\path_alias\AliasPrefixList service performs cache clears
+    // after Drupal has flushed the response to the client. We use
     // WaitTerminateTestTrait to wait for Drupal to do this before continuing.
     $this->setWaitForTerminate();
   }
@@ -64,7 +64,7 @@ class PathAliasTest extends PathTestBase {
     $this->drupalGet('admin/config/search/path/add');
     $this->submitForm($edit, 'Save');
 
-    // Check the path alias whitelist cache.
+    // Check the path alias prefix list cache.
     $prefix_list = \Drupal::cache('bootstrap')->get('path_alias_prefix_list');
     $this->assertTrue($prefix_list->data['node']);
     $this->assertFalse($prefix_list->data['admin']);

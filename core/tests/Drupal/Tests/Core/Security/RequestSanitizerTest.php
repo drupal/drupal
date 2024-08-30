@@ -56,12 +56,12 @@ class RequestSanitizerTest extends UnitTestCase {
    * @param array|null $expected_errors
    *   An array of expected errors. If set to NULL then error logging is
    *   disabled.
-   * @param array $whitelist
-   *   An array of keys to whitelist and not sanitize.
+   * @param array $allow_list
+   *   An array of keys to allow and not sanitize.
    *
    * @dataProvider providerTestRequestSanitization
    */
-  public function testRequestSanitization(Request $request, array $expected = [], ?array $expected_errors = NULL, array $whitelist = []): void {
+  public function testRequestSanitization(Request $request, array $expected = [], ?array $expected_errors = NULL, array $allow_list = []): void {
     // Set up globals.
     $_GET = $request->query->all();
     $_POST = $request->request->all();
@@ -70,7 +70,7 @@ class RequestSanitizerTest extends UnitTestCase {
     $request->server->set('QUERY_STRING', http_build_query($request->query->all()));
     $_SERVER['QUERY_STRING'] = $request->server->get('QUERY_STRING');
 
-    $request = RequestSanitizer::sanitize($request, $whitelist, is_null($expected_errors) ? FALSE : TRUE);
+    $request = RequestSanitizer::sanitize($request, $allow_list, is_null($expected_errors) ? FALSE : TRUE);
 
     // Normalize the expected data.
     $expected += ['cookies' => [], 'query' => [], 'request' => []];
@@ -160,10 +160,10 @@ class RequestSanitizerTest extends UnitTestCase {
     $tests['recursive sanitization log'] = [$request, ['query' => ['q' => 'index.php', 'foo' => []]], ['Potentially unsafe keys removed from query string parameters (GET): #bar']];
 
     $request = new Request(['q' => 'index.php', 'foo' => ['#bar' => 'foo']]);
-    $tests['recursive no sanitization whitelist'] = [$request, ['query' => ['q' => 'index.php', 'foo' => ['#bar' => 'foo']]], [], ['#bar']];
+    $tests['recursive no sanitization allowed list'] = [$request, ['query' => ['q' => 'index.php', 'foo' => ['#bar' => 'foo']]], [], ['#bar']];
 
     $request = new Request([], ['#field' => 'value']);
-    $tests['no sanitization POST whitelist'] = [$request, ['request' => ['#field' => 'value']], [], ['#field']];
+    $tests['no sanitization POST allowed list'] = [$request, ['request' => ['#field' => 'value']], [], ['#field']];
 
     $request = new Request(['q' => 'index.php', 'foo' => ['#bar' => 'foo', '#foo' => 'bar']]);
     $tests['recursive multiple sanitization log'] = [$request, ['query' => ['q' => 'index.php', 'foo' => []]], ['Potentially unsafe keys removed from query string parameters (GET): #bar, #foo']];
@@ -194,7 +194,7 @@ class RequestSanitizerTest extends UnitTestCase {
     $tests['destination removal subkey'] = [$request];
 
     $request = new Request(['destination' => 'whatever?q[%23test]=value']);
-    $tests['destination whitelist'] = [$request, ['query' => ['destination' => 'whatever?q[%23test]=value']], [], ['#test']];
+    $tests['destination allowed list'] = [$request, ['query' => ['destination' => 'whatever?q[%23test]=value']], [], ['#test']];
 
     $request = new Request(['destination' => "whatever?\x00bar=base&%23test=value"]);
     $tests['destination removal zero byte'] = [$request];

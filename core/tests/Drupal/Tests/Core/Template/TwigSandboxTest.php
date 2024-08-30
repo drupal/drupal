@@ -105,8 +105,8 @@ class TwigSandboxTest extends UnitTestCase {
   /**
    * Tests that valid methods can be called from within Twig templates.
    *
-   * Currently the following methods are whitelisted: id, label, bundle, and
-   * get.
+   * Currently the following methods are in the allowed list: id, label, bundle,
+   * and get.
    */
   public function testEntitySafeMethods(): void {
     $entity = $this->getMockBuilder(ContentEntityBaseMockableClass::class)

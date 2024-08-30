@@ -764,7 +764,7 @@
  * @code
  * path_alias.manager:
  *   class: Drupal\path_alias\AliasManager
- *   arguments: ['@path_alias.repository', '@path_alias.whitelist', '@language_manager']
+ *   arguments: ['@path_alias.repository', '@path_alias.prefix_list', '@language_manager']
  * @endcode
  * Some services use other services as factories; a typical service definition
  * is:

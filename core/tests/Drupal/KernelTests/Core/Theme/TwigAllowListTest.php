@@ -14,11 +14,11 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
- * Tests white-listing of entity properties.
+ * Tests the allowed list of entity properties.
  *
  * @group Theme
  */
-class TwigWhiteListTest extends KernelTestBase {
+class TwigAllowListTest extends KernelTestBase {
 
   /**
    * Term for referencing.
@@ -119,9 +119,9 @@ class TwigWhiteListTest extends KernelTestBase {
   }
 
   /**
-   * Tests white-listing of methods doesn't interfere with chaining.
+   * Tests listing of methods doesn't interfere with chaining.
    */
-  public function testWhiteListChaining(): void {
+  public function testAllowListChaining(): void {
     /** @var \Drupal\Core\Template\TwigEnvironment $environment */
     $environment = \Drupal::service('twig');
     $node = Node::create([

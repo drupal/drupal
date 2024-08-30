@@ -300,7 +300,7 @@ class XssTest extends TestCase {
         'HTML filter attributes removal evasion -- breaking with nulls.',
         ['img'],
       ],
-      // Only whitelisted scheme names allowed in attributes.
+      // Only allowed scheme names allowed in attributes.
       [
         '<img src="javascript:alert(0)">',
         'javascript',
