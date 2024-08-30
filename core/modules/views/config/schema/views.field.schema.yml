@@ -265,3 +265,7 @@ views.field.field:
     field_api_classes:
       type: boolean
       label: 'Use field template'
+
+views.field.field_language:
+  type: views.field.field
+  label: 'Views language field handler'

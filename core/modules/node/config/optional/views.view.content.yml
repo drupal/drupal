@@ -202,7 +202,7 @@ display:
           admin_label: ''
           entity_type: node
           entity_field: langcode
-          plugin_id: field
+          plugin_id: field_language
           label: 'Language'
           exclude: false
           alter:
