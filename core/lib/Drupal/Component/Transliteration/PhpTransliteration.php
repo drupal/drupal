@@ -67,6 +67,8 @@ class PhpTransliteration implements TransliterationInterface {
    * transliterates to more than one ASCII character require special
    * treatment: we want to remove their accent and use the un-
    * transliterated base character.
+   *
+   * @var string[]
    */
   protected $fixTransliterateForRemoveDiacritics = [
     'AE' => 'Æ',

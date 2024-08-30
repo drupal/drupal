@@ -79,7 +79,7 @@ class AssetResolverTest extends UnitTestCase {
   /**
    * An array of library definitions.
    */
-  protected $libraries = [];
+  protected array $libraries = [];
 
   /**
    * {@inheritdoc}

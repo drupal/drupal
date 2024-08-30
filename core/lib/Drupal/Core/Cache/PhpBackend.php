@@ -35,6 +35,8 @@ class PhpBackend implements CacheBackendInterface {
 
   /**
    * Array to store cache objects.
+   *
+   * @var object[]
    */
   protected $cache = [];
 

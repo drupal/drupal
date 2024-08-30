@@ -28,6 +28,8 @@ class LocaleExportTest extends BrowserTestBase {
 
   /**
    * A user able to create languages and export translations.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser = NULL;
 

@@ -39,6 +39,8 @@ class MigrateMessageTestBase extends BrowserTestBase {
 
   /**
    * Migration IDs.
+   *
+   * @var string[]
    */
   protected $migrationIds = ['custom_test'];
 

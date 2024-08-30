@@ -23,6 +23,8 @@ class MysqlDateSql implements DateSqlInterface {
 
   /**
    * An array of PHP-to-MySQL replacement patterns.
+   *
+   * @var string[]
    */
   protected static $replace = [
     'Y' => '%Y',
