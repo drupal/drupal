@@ -8,6 +8,8 @@
  *   see http.php.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Test\TestKernel;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,6 +20,9 @@ $autoloader = require_once 'autoload.php';
 // Change to HTTPS.
 $_SERVER['HTTPS'] = 'on';
 foreach ($_SERVER as &$value) {
+  if (!is_string($value)) {
+    continue;
+  }
   $value = str_replace('core/modules/system/tests/https.php', 'index.php', $value);
   $value = str_replace('http://', 'https://', $value);
 }

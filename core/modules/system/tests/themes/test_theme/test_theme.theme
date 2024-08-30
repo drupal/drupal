@@ -5,6 +5,8 @@
  * Theme to help test the Twig engine.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements THEME_preprocess_twig_theme_test_php_variables().
  */

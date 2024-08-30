@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Config\FileStorage;

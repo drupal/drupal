@@ -5,6 +5,8 @@
  * Test to ensure theme compatibility with managed files.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 

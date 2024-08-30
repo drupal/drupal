@@ -269,16 +269,8 @@
     <properties>
       <property name="spacesCountAroundEqualsSign" value="0" />
     </properties>
-    <!-- @todo Broaden this in https://www.drupal.org/project/drupal/issues/3400434 -->
-    <!-- <include-pattern>*/tests/*</include-pattern> -->
-    <include-pattern>*/tests/modules/*</include-pattern>
-    <include-pattern>*/tests/*_test/*</include-pattern>
-    <include-pattern>*/tests/src/*</include-pattern>
-    <include-pattern>./tests/Drupal/*</include-pattern>
-    <include-pattern>./tests/TestSuites/*</include-pattern>
-    <include-pattern>./modules/system/src/Tests/Routing/*</include-pattern>
-    <exclude-pattern>./tests/Drupal/Tests/*/Fixture/*</exclude-pattern>
-    <exclude-pattern>./tests/Drupal/Tests/*/fixtures/*</exclude-pattern>
+    <include-pattern>*/tests/*</include-pattern>
+    <exclude-pattern>*/fixtures/*</exclude-pattern>
   </rule>
   <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
 

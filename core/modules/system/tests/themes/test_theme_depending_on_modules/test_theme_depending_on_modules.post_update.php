@@ -5,6 +5,8 @@
  * Test theme depending on modules post update hooks.
  */
 
+declare(strict_types=1);
+
 if (\Drupal::state()->get('test_theme_depending_on_modules.post_update')) {
 
   /**

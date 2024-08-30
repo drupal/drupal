@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
@@ -204,7 +203,7 @@ class SortDateTest extends ViewsKernelTestBase {
         // Verify the result.
         $this->assertIdenticalResultset($view, $this->expectedResultSet($granularity, $reverse), [
           'views_test_data_name' => 'name',
-        ], new FormattableMarkup('Result is returned correctly when ordering by granularity @granularity, @reverse.', ['@granularity' => $granularity, '@reverse' => $reverse ? 'reverse' : 'forward']));
+        ], sprintf('Result is returned correctly when ordering by granularity %s, %s.', $granularity, $reverse ? 'reverse' : 'forward'));
         $view->destroy();
         unset($view);
       }

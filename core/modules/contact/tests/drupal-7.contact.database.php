@@ -9,6 +9,8 @@
  * the database structure expected in tests altogether.
  */
 
+declare(strict_types=1);
+
 $connection = \Drupal::database();
 // Update the default category to that it is not selected.
 $connection->update('contact')

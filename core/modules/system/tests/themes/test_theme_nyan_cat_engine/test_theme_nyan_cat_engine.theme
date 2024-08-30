@@ -5,6 +5,8 @@
  * Test theme.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_preprocess_theme_test_template_test().
  */

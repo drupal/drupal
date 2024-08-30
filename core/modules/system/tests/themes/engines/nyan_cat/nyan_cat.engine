@@ -5,6 +5,8 @@
  * Handles integration of Nyan cat templates because we love kittens.
  */
 
+declare(strict_types=1);
+
 use Drupal\Component\Utility\Html;
 
 /**

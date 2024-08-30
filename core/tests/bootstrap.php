@@ -7,6 +7,8 @@
  * @see phpunit.xml.dist
  */
 
+declare(strict_types=1);
+
 use Drupal\TestTools\ErrorHandler\BootstrapErrorHandler;
 use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use PHPUnit\Runner\ErrorHandler as PhpUnitErrorHandler;

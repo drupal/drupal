@@ -5,6 +5,8 @@
  * Changes an exposed "type" filter from a multi-select to checkboxes.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Form\FormStateInterface;
 
 /**

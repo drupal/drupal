@@ -5,6 +5,8 @@
  * Implements Views UI alter hooks in a theme to provide test coverage.
  */
 
+declare(strict_types=1);
+
 use Drupal\views_ui\ViewUI;
 
 /**

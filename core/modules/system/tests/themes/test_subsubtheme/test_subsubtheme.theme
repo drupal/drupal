@@ -5,6 +5,8 @@
  * Add hooks for tests to use.
  */
 
+declare(strict_types=1);
+
 /**
  * Implements hook_preprocess_HOOK() for theme_test_template_test templates.
  */
