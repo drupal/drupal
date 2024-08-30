@@ -58,6 +58,10 @@ class SessionConfiguration implements SessionConfigurationInterface {
     // Set the session cookie name.
     $options['name'] = $this->getName($request);
 
+    if (\PHP_VERSION_ID >= 80400) {
+      // See https://wiki.php.net/rfc/deprecations_php_8_4#sessionsid_length_and_sessionsid_bits_per_character
+      unset($options['sid_length'], $options['sid_bits_per_character']);
+    }
     return $options;
   }
 

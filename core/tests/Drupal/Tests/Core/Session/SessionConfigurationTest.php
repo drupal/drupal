@@ -269,8 +269,14 @@ class SessionConfigurationTest extends UnitTestCase {
   public function testConstructorDefaultSettings(array $options, int $expected_sid_length, int $expected_sid_bits_per_character, string $expected_name_suffix): void {
     $config = $this->createSessionConfiguration($options);
     $options = $config->getOptions(Request::createFromGlobals());
-    $this->assertSame($expected_sid_length, $options['sid_length']);
-    $this->assertSame($expected_sid_bits_per_character, $options['sid_bits_per_character']);
+    if (\PHP_VERSION_ID >= 80400) {
+      $this->assertArrayNotHasKey('sid_length', $options);
+      $this->assertArrayNotHasKey('sid_bits_per_character', $options);
+    }
+    else {
+      $this->assertSame($expected_sid_length, $options['sid_length']);
+      $this->assertSame($expected_sid_bits_per_character, $options['sid_bits_per_character']);
+    }
     $this->assertSame($expected_name_suffix, $options['name_suffix']);
   }
 
