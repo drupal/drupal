@@ -160,9 +160,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
         // The user may only change their own password without their current
         // password if they logged in via a one-time login link.
         if (!$form_state->get('user_pass_reset')) {
-          $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the %mail or %pass below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
-            '%mail' => $form['account']['mail']['#title'],
-            '%pass' => $this->t('Password'),
+          $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the <em>Email address</em> or the <em>Password</em> field below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
             ':request_new_url' => Url::fromRoute('user.pass')->toString(),
           ]);
         }
