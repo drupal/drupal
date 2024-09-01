@@ -131,7 +131,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchIndividual(): void {
+  protected function doTestPatchIndividual(): void {
     // Contact Message entities are not stored, so they cannot be modified.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "jsonapi.contact_message--camelids.individual" does not exist.');
@@ -142,7 +142,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testDeleteIndividual(): void {
+  protected function doTestDeleteIndividual(): void {
     // Contact Message entities are not stored, so they cannot be deleted.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "jsonapi.contact_message--camelids.individual" does not exist.');

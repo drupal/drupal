@@ -229,21 +229,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
-    // Ensure the anonymous user role has no permissions at all.
-    $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
-    foreach ($user_role->getPermissions() as $permission) {
-      $user_role->revokePermission($permission);
-    }
-    $user_role->save();
-    assert([] === $user_role->getPermissions(), 'The anonymous user role has no permissions at all.');
-
-    // Ensure the authenticated user role has no permissions at all.
-    $user_role = Role::load(RoleInterface::AUTHENTICATED_ID);
-    foreach ($user_role->getPermissions() as $permission) {
-      $user_role->revokePermission($permission);
-    }
-    $user_role->save();
-    assert([] === $user_role->getPermissions(), 'The authenticated user role has no permissions at all.');
+    $this->revokePermissions();
 
     // Create an account, which tests will use. Also ensure the @current_user
     // service this account, to ensure certain access check logic in tests works
@@ -338,12 +324,15 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     \Drupal::service('router.builder')->rebuildIfNeeded();
 
+    return $this->resaveEntity($entity, $account);
+  }
+
+  protected function resaveEntity(EntityInterface $entity, AccountInterface $account): EntityInterface {
     // Reload entity so that it has the new field.
     $reloaded_entity = $this->entityLoadUnchanged($entity->id());
     // Some entity types are not stored, hence they cannot be reloaded.
     if ($reloaded_entity !== NULL) {
       $entity = $reloaded_entity;
-
       // Set a default value on the fields.
       $entity->set('field_rest_test', ['value' => 'All the faith he had had had had no effect on the outcome of his life.']);
       $entity->set('field_jsonapi_test_entity_ref', ['user' => $account->id()]);
@@ -1974,9 +1963,24 @@ abstract class ResourceTestBase extends BrowserTestBase {
   }
 
   /**
+   * Tests POST/PATCH/DELETE for an individual resource.
+   */
+  public function testIndividual(): void {
+    $this->doTestPostIndividual();
+    $this->entity = $this->resaveEntity($this->entity, $this->account);
+    $this->revokePermissions();
+    $this->config('jsonapi.settings')->set('read_only', TRUE)->save(TRUE);
+    $this->doTestPatchIndividual();
+    $this->entity = $this->resaveEntity($this->entity, $this->account);
+    $this->revokePermissions();
+    $this->config('jsonapi.settings')->set('read_only', TRUE)->save(TRUE);
+    $this->doTestDeleteIndividual();
+  }
+
+  /**
    * Tests POSTing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testPostIndividual(): void {
+  protected function doTestPostIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('POSTing config entities is not yet supported.');
@@ -2191,7 +2195,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests PATCHing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testPatchIndividual(): void {
+  protected function doTestPatchIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('PATCHing config entities is not yet supported.');
@@ -2519,7 +2523,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests DELETEing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testDeleteIndividual(): void {
+  protected function doTestDeleteIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('DELETEing config entities is not yet supported.');
@@ -3572,6 +3576,25 @@ abstract class ResourceTestBase extends BrowserTestBase {
       unset($expected_document['data']['attributes'][$field_name]);
     }
     return $expected_document;
+  }
+
+  /**
+   * Ensure the anonymous and authenticated roles have no permissions at all.
+   */
+  protected function revokePermissions(): void {
+    $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
+    foreach ($user_role->getPermissions() as $permission) {
+      $user_role->revokePermission($permission);
+    }
+    $user_role->save();
+    assert([] === $user_role->getPermissions(), 'The anonymous user role has no permissions at all.');
+
+    $user_role = Role::load(RoleInterface::AUTHENTICATED_ID);
+    foreach ($user_role->getPermissions() as $permission) {
+      $user_role->revokePermission($permission);
+    }
+    $user_role->save();
+    assert([] === $user_role->getPermissions(), 'The authenticated user role has no permissions at all.');
   }
 
 }
