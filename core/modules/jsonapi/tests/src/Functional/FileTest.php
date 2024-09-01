@@ -201,11 +201,16 @@ class FileTest extends ResourceTestBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Tests POST/PATCH/DELETE for an individual resource.
    */
-  public function testPostIndividual(): void {
+  public function testIndividual(): void {
     // @todo https://www.drupal.org/node/1927648
-    $this->markTestSkipped();
+    // Add doTestPostIndividual().
+    $this->doTestPatchIndividual();
+    $this->entity = $this->resaveEntity($this->entity, $this->account);
+    $this->revokePermissions();
+    $this->config('jsonapi.settings')->set('read_only', TRUE)->save(TRUE);
+    $this->doTestDeleteIndividual();
   }
 
   /**
