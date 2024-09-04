@@ -20,3 +20,10 @@
   padding-bottom: 0.5em;
   font-size: 0.85em;
 }
+
+.permissions tbody tr:has(input[type="checkbox"].js-rid-authenticated:not(:checked)) .js-fake-checkbox {
+  display: none;
+}
+.permissions tbody tr:has(input[type="checkbox"].js-rid-authenticated:checked) .js-real-checkbox {
+  display: none;
+}

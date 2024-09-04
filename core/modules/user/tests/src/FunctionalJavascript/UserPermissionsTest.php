@@ -50,7 +50,7 @@ class UserPermissionsTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests the dummy checkboxes added to the permissions page.
+   * Tests the fake checkboxes added to the permissions page.
    */
   public function testPermissionCheckboxes(): void {
     $this->drupalLogin($this->adminUser);
@@ -58,24 +58,25 @@ class UserPermissionsTest extends WebDriverTestBase {
 
     $page = $this->getSession()->getPage();
     $wrapper = $page->find('css', '.form-item-' . $this->rid . '-administer-modules');
-    $real_checkbox = $wrapper->find('css', '.real-checkbox');
-    $dummy_checkbox = $wrapper->find('css', '.dummy-checkbox');
+    $fake_checkbox = $wrapper->find('css', '.fake-checkbox');
 
-    // The real per-role checkbox is visible and unchecked, the dummy copy is
-    // invisible.
-    $this->assertTrue($real_checkbox->isVisible());
-    $this->assertFalse($real_checkbox->isChecked());
-    $this->assertFalse($dummy_checkbox->isVisible());
+    // The real per-role checkbox is visible and unchecked, the fake copy does
+    // not exist yet.
+    $this->assertNull($fake_checkbox);
 
     // Enable the permission for all authenticated users.
     $page->findField('authenticated[administer modules]')->click();
 
-    // The real and dummy checkboxes switch visibility and the dummy is now both
+    // The checkboxes have been initialized.
+    $real_checkbox = $wrapper->find('css', '.real-checkbox');
+    $fake_checkbox = $wrapper->find('css', '.fake-checkbox');
+
+    // The real and fake checkboxes switch visibility and the fake is now both
     // checked and disabled.
     $this->assertFalse($real_checkbox->isVisible());
-    $this->assertTrue($dummy_checkbox->isVisible());
-    $this->assertTrue($dummy_checkbox->isChecked());
-    $this->assertTrue($dummy_checkbox->hasAttribute('disabled'));
+    $this->assertTrue($fake_checkbox->isVisible());
+    $this->assertTrue($fake_checkbox->isChecked());
+    $this->assertTrue($fake_checkbox->hasAttribute('disabled'));
   }
 
 }
