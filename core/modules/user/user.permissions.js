@@ -13,80 +13,81 @@
    *   Attaches functionality to the permissions table.
    */
   Drupal.behaviors.permissions = {
-    attach(context) {
-      once('permissions', 'table#permissions').forEach((table) => {
-        // On a site with many roles and permissions, this behavior initially
-        // has to perform thousands of DOM manipulations to inject checkboxes
-        // and hide them. By detaching the table from the DOM, all operations
-        // can be performed without triggering internal layout and re-rendering
-        // processes in the browser.
-        const $table = $(table);
-        let $ancestor;
-        let method;
-        if ($table.prev().length) {
-          $ancestor = $table.prev();
-          method = 'after';
-        } else {
-          $ancestor = $table.parent();
-          method = 'append';
-        }
-        $table.detach();
+    attach() {
+      const [table] = once('permissions', 'table#permissions');
+      if (!table) {
+        return;
+      }
 
-        // Create dummy checkboxes. We use dummy checkboxes instead of reusing
-        // the existing checkboxes here because new checkboxes don't alter the
-        // submitted form. If we'd automatically check existing checkboxes, the
-        // permission table would be polluted with redundant entries. This is
-        // deliberate, but desirable when we automatically check them.
-        const $dummy = $(Drupal.theme('checkbox'))
-          .removeClass('form-checkbox')
-          .addClass('dummy-checkbox js-dummy-checkbox')
-          .attr('disabled', 'disabled')
-          .attr('checked', 'checked')
-          .attr(
-            'title',
-            Drupal.t(
-              'This permission is inherited from the authenticated user role.',
-            ),
-          )
-          .hide();
+      // Create fake checkboxes. We use fake checkboxes instead of reusing
+      // the existing checkboxes here because new checkboxes don't alter the
+      // submitted form. If we'd automatically check existing checkboxes, the
+      // permission table would be polluted with redundant entries. This is
+      // deliberate, but desirable when we automatically check them.
+      const $fakeCheckbox = $(Drupal.theme('checkbox'))
+        .removeClass('form-checkbox')
+        .addClass('fake-checkbox js-fake-checkbox')
+        .attr({
+          disabled: 'disabled',
+          checked: 'checked',
+          title: Drupal.t(
+            'This permission is inherited from the authenticated user role.',
+          ),
+        });
+      const $wrapper = $('<div></div>').append($fakeCheckbox);
+      const fakeCheckboxHtml = $wrapper.html();
 
-        $table
-          .find('input[type="checkbox"]')
-          .not('.js-rid-anonymous, .js-rid-authenticated')
-          .addClass('real-checkbox js-real-checkbox')
-          .after($dummy);
+      /**
+       * Process each table row to create fake checkboxes.
+       *
+       * @param {object} object
+       * @param {HTMLElement} object.target
+       */
+      function tableRowProcessing({ target }) {
+        once('permission-checkbox', target).forEach((checkbox) => {
+          checkbox
+            .closest('tr')
+            .querySelectorAll(
+              'input[type="checkbox"]:not(.js-rid-anonymous, .js-rid-authenticated)',
+            )
+            .forEach((check) => {
+              check.classList.add('real-checkbox', 'js-real-checkbox');
+              check.insertAdjacentHTML('beforebegin', fakeCheckboxHtml);
+            });
+        });
+      }
 
-        // Initialize the authenticated user checkbox.
-        $table
-          .find('input[type=checkbox].js-rid-authenticated')
-          .on('click.permissions', this.toggle)
-          // .triggerHandler() cannot be used here, as it only affects the first
-          // element.
-          .each(this.toggle);
+      // An IntersectionObserver object is associated with each of the table
+      // rows to activate checkboxes interactively as users scroll the page
+      // up or down. This prevents processing all checkboxes on page load.
+      const checkedCheckboxObserver = new IntersectionObserver(
+        (entries, thisObserver) => {
+          entries
+            .filter((entry) => entry.isIntersecting)
+            .forEach((entry) => {
+              tableRowProcessing(entry);
+              thisObserver.unobserve(entry.target);
+            });
+        },
+        {
+          rootMargin: '50%',
+        },
+      );
 
-        // Re-insert the table into the DOM.
-        $ancestor[method]($table);
-      });
-    },
+      // Select rows with checked authenticated role and attach an observer
+      // to each.
+      table
+        .querySelectorAll(
+          'tbody tr input[type="checkbox"].js-rid-authenticated:checked',
+        )
+        .forEach((checkbox) => checkedCheckboxObserver.observe(checkbox));
 
-    /**
-     * Toggles all dummy checkboxes based on the checkboxes' state.
-     *
-     * If the "authenticated user" checkbox is checked, the checked and disabled
-     * checkboxes are shown, the real checkboxes otherwise.
-     */
-    toggle() {
-      const authCheckbox = this;
-      const $row = $(this).closest('tr');
-      // jQuery performs too many layout calculations for .hide() and .show(),
-      // leading to a major page rendering lag on sites with many roles and
-      // permissions. Therefore, we toggle visibility directly.
-      $row.find('.js-real-checkbox').each(function () {
-        this.style.display = authCheckbox.checked ? 'none' : '';
-      });
-      $row.find('.js-dummy-checkbox').each(function () {
-        this.style.display = authCheckbox.checked ? '' : 'none';
-      });
+      // Create checkboxes only when necessary on click.
+      $(table).on(
+        'click.permissions',
+        'input[type="checkbox"].js-rid-authenticated',
+        tableRowProcessing,
+      );
     },
   };
 
