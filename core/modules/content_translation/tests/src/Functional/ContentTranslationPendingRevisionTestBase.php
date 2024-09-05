@@ -79,6 +79,11 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
    * Enables content moderation for the test entity type and bundle.
    */
   protected function enableContentModeration() {
+    $perms = array_merge(parent::getAdministratorPermissions(), [
+      'administer workflows',
+      'view latest version',
+    ]);
+    $this->rootUser = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->rootUser);
     $workflow_id = 'editorial';
     $this->drupalGet('/admin/config/workflow/workflows');
