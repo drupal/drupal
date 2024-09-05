@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 
 /**
  * Test enabling content translation module.
@@ -22,14 +23,6 @@ class ContentTranslationEnableTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -37,6 +30,11 @@ class ContentTranslationEnableTest extends BrowserTestBase {
    * Tests that entity schemas are up-to-date after enabling translation.
    */
   public function testEnable(): void {
+    $this->rootUser = $this->drupalCreateUser([
+      'administer modules',
+      'administer site configuration',
+      'administer content types',
+    ]);
     $this->drupalLogin($this->rootUser);
     // Enable modules and make sure the related config entity type definitions
     // are installed.
@@ -46,6 +44,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
+    $this->rebuildContainer();
 
     // Status messages are shown.
     $this->assertSession()->statusMessageContains('This site has only a single language enabled. Add at least one more language in order to translate content.', 'warning');
@@ -55,6 +54,10 @@ class ContentTranslationEnableTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->elementTextEquals('css', "details.system-status-report__entry summary:contains('Entity/field definitions') + div", 'Up to date');
 
+    $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), [
+      'administer content translation',
+      'administer languages',
+    ]);
     $this->drupalGet('admin/config/regional/content-language');
     // The node entity type should not be an option because it has no bundles.
     $this->assertSession()->responseNotContains('entity_types[node]');
