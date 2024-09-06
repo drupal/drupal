@@ -57,13 +57,12 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
     $theme = $this->configFactory->get('system.theme')->get($this->whichTheme);
     $value['theme'] = $theme;
 
-    if (array_key_exists('region', $value)) {
+    if (array_key_exists('region', $value) && is_array($value['region'])) {
       // Since the recipe author might not know ahead of time what theme the
       // block is in, they should supply a map whose keys are theme names and
       // values are region names, so we know where to place this block. If the
       // target theme is not in the map, they should supply the name of a
       // fallback region. If all that fails, give up with an exception.
-      assert(is_array($value['region']));
       $value['region'] = $value['region'][$theme] ?? $value['default_region'] ?? throw new ConfigActionException("Cannot determine which region to place this block into, because no default region was provided.");
     }
 
