@@ -3,20 +3,45 @@
 navigation.settings:
   type: config_object
   label: 'Navigation settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     logo_provider:
       type: string
       label: 'Select Navigation logo handling'
       constraints:
-        NotNull: []
+        Choice:
+          - default
+          - hide
+          - custom
     logo_managed:
-      type: sequence
+      type: integer
       label: 'Custom logo'
-      sequence:
-        type: integer
+      nullable: true
+      constraints:
+        Range:
+          min: 0
     logo_max_filesize:
       type: integer
       label: 'Maximum file sizes (bytes)'
+      constraints:
+        NotNull: [ ]
+        Range:
+          min: 0
+    logo_height:
+      type: integer
+      label: 'Logo expected height'
+      constraints:
+        NotNull: [ ]
+        Range:
+          min: 0
+    logo_width:
+      type: integer
+      label: 'Logo expected width'
+      constraints:
+        NotNull: [ ]
+        Range:
+          min: 0
 
 navigation.block_layout:
   type: config_object

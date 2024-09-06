@@ -26,3 +26,16 @@ function navigation_post_update_update_permissions(array &$sandbox) {
     return $needs_save;
   });
 }
+
+/**
+ * Defines the values for the default logo dimensions.
+ */
+function navigation_post_update_set_logo_dimensions_default(array &$sandbox) {
+  $settings = \Drupal::configFactory()->getEditable('navigation.settings');
+  $settings->set('logo_height', 40)
+    ->set('logo_width', 40);
+  if (is_array($settings->get('logo_managed'))) {
+    $settings->set('logo_managed', current($settings->get('logo_managed')));
+  }
+  $settings->save();
+}
