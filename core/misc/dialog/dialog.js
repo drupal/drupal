@@ -87,13 +87,13 @@ class DrupalDialogEvent extends Event {
       dialog.open = true;
 
       // Locks the body scroll only when it opens in modal.
-      if (settings.modal) {
+      if (event.settings.modal) {
         // Locks the body when the dialog opens.
         bodyScrollLock.lock(domElement);
       }
 
       domElement.dispatchEvent(
-        new DrupalDialogEvent('aftercreate', dialog, settings),
+        new DrupalDialogEvent('aftercreate', dialog, event.settings),
       );
     }
 
