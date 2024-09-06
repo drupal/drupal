@@ -30,11 +30,6 @@ class UserTokenReplaceTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected bool $useOneTimeLoginLinks = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
     ConfigurableLanguage::createFromLangcode('de')->save();
