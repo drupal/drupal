@@ -464,7 +464,7 @@ function user_user_logout(AccountInterface $account) {
  *   they can change their password.
  */
 function user_pass_reset_url($account, $options = []) {
-  $timestamp = \Drupal::time()->getRequestTime();
+  $timestamp = \Drupal::time()->getCurrentTime();
   $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
   return Url::fromRoute('user.reset',
     [
