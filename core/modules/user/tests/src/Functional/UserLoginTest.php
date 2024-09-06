@@ -169,7 +169,13 @@ class UserLoginTest extends BrowserTestBase {
     $this->assertTrue($password_hasher->needsRehash($account->getPassword()));
 
     $account->passRaw = $password;
-    $this->drupalLogin($account);
+    $this->drupalGet('user/login');
+    $edit = [
+      'name' => $account->getAccountName(),
+      'pass' => $account->passRaw,
+    ];
+    $this->submitForm($edit, 'Log in');
+
     // Load the stored user, which should have a different password hash now.
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
