@@ -6,17 +6,30 @@ use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 
 /**
- * Provides a form element for date selection.
+ * Provides a form element for date or time selection.
  *
  * Properties:
- * - #default_value: A string for the default date in 'Y-m-d' format.
+ * - #attributes: An associative array containing:
+ *   - type: The type of date field rendered, valid values include 'date',
+ *     'time', 'datetime', and 'datetime-local'.
+ * - #date_date_format: The date format used in PHP formats.
+ * - #default_value: A string representing the date formatted as Y-m-d, or
+ *   hh:mm for time.
  * - #size: The size of the input element in characters.
  *
  * @code
  * $form['expiration'] = [
  *   '#type' => 'date',
  *   '#title' => $this->t('Content expiration'),
- *   '#default_value' => '2020-02-05',
+ *   '#date_date_format' => 'Y-m-d',
+ *   '#default_value' => '2020-02-15',
+ *   '#size' => 10,
+ * ];
+ *
+ * $form['game_time'] = [
+ *   '#type' => 'date',
+ *   '#title' => $this->t('The game is at'),
+ *   '#attributes' => ['type' => 'time'],
  * ];
  * @endcode
  */
