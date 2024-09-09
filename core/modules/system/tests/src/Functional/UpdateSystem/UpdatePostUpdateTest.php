@@ -8,6 +8,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 
+// cspell:ignore postupdate
+
 /**
  * Tests hook_post_update().
  *

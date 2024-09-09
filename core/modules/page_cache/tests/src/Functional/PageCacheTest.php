@@ -13,6 +13,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 
+// cspell:ignore curlopt returntransfer
+
 /**
  * Enables the page cache and tests it with various HTTP requests.
  *

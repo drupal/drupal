@@ -8,7 +8,7 @@ use Drupal\block_content\Entity\BlockContentType;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
-// cspell:ignore fieldbody
+// cspell:ignore blocknodebundle fieldbody fieldlayout
 
 /**
  * Tests the Layout Builder UI.

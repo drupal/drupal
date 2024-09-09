@@ -1,3 +1,5 @@
+<!-- cspell:ignore skiptags -->
+
 # Running tests
 
 ## Setting up

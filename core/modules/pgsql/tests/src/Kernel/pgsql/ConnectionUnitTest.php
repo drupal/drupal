@@ -6,6 +6,8 @@ namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificConnectionUnitTestBase;
 
+// cspell:ignore processlist
+
 /**
  * PostgreSQL-specific connection unit tests.
  *

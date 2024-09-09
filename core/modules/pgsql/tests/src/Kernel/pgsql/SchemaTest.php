@@ -6,8 +6,8 @@ namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 
-// cSpell:ignore relkind objid refobjid regclass attname attrelid attnum
-// cSpell:ignore refobjsubid
+// cSpell:ignore attname attnum attrelid objid refobjid refobjsubid regclass
+// cspell:ignore relkind relname
 
 /**
  * Tests schema API for the PostgreSQL driver.

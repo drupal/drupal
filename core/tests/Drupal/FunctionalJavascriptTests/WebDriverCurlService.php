@@ -8,6 +8,9 @@ use WebDriver\Service\CurlService;
 use WebDriver\Exception\CurlExec;
 use WebDriver\Exception as WebDriverException;
 
+// cspell:ignore curle curlopt customrequest failonerror postfields
+// cspell:ignore returntransfer
+
 @trigger_error('The \Drupal\FunctionalJavascriptTests\WebDriverCurlService class is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3462152', E_USER_DEPRECATED);
 
 /**

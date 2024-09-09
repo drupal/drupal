@@ -14,6 +14,8 @@ use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
+// cspell:ignore nyans
+
 /**
  * Tests config validation mechanism.
  *

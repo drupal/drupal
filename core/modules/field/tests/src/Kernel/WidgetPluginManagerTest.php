@@ -6,6 +6,8 @@ namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Field\BaseFieldDefinition;
 
+// cspell:ignore onewidgetfield
+
 /**
  * Tests the field widget manager.
  *

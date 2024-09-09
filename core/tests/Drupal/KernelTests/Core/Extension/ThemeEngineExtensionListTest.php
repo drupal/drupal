@@ -6,6 +6,8 @@ namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore nyan
+
 /**
  * @coversDefaultClass \Drupal\Core\Extension\ThemeEngineExtensionList
  * @group Extension

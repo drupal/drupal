@@ -9,6 +9,8 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
+// cspell:ignore postupdate
+
 /**
  * Tests output on the status overview page.
  *

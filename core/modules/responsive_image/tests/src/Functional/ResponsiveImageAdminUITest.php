@@ -7,6 +7,8 @@ namespace Drupal\Tests\responsive_image\Functional;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore modulenarrow
+
 /**
  * Thoroughly test the administrative interface of the Responsive Image module.
  *

@@ -10,6 +10,8 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
 
+// cspell:ignore sisko
+
 /**
  * Tests media source plugins related logic.
  *

@@ -8,7 +8,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
-// cspell:ignore fieldbody fieldlinks
+// cspell:ignore blocknodebundle fieldbody fieldlinks
 
 /**
  * Tests moving blocks via the form.

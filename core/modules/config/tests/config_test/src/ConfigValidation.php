@@ -6,6 +6,8 @@ namespace Drupal\config_test;
 
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
+// cspell:ignore nyans
+
 /**
  * Provides a collection of validation callbacks for testing purposes.
  */

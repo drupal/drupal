@@ -20,6 +20,8 @@ use Drupal\Core\TypedData\Plugin\DataType\StringData;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore sisko
+
 /**
  * @coversDefaultClass \Drupal\Core\Plugin\ContextAwarePluginTrait
  *

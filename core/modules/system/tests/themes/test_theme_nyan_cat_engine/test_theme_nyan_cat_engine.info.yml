@@ -1,3 +1,4 @@
+# cspell:ignore nyan
 name: 'Test theme for Nyan Cat engine'
 type: theme
 description: 'Theme for testing the theme system with the Nyan Cat theme engine'

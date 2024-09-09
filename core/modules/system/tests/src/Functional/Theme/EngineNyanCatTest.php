@@ -6,6 +6,8 @@ namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore nyan
+
 /**
  * Tests the multi theme engine support.
  *

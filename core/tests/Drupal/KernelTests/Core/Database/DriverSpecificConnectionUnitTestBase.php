@@ -7,6 +7,8 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 
+// cspell:ignore processlist
+
 /**
  * Tests management of database connections.
  */

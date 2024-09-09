@@ -6,6 +6,8 @@ namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
 use Drupal\KernelTests\Core\Database\TemporaryQueryTestBase;
 
+// cspell:ignore relname relpersistence
+
 /**
  * Tests the temporary query functionality.
  *

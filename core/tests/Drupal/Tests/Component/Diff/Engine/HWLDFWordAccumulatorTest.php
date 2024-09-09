@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Diff\Engine;
 
+// cspell:ignore HWLDFWordAccumulator
+
 use Drupal\Component\Diff\Engine\HWLDFWordAccumulator;
 use PHPUnit\Framework\TestCase;
 
