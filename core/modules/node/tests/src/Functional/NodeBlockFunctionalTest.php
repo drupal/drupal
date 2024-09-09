@@ -171,10 +171,13 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->pageTextNotContains($label);
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route']);
 
-    // Ensure that a page that does not have a node context can still be cached,
-    // the front page is the user page which is already cached from the login
-    // request above.
+    // Ensure that a page that does not have a node context can still be cached.
+    \Drupal::service('module_installer')->install(['dynamic_page_cache_test']);
+    $this->drupalGet(Url::fromRoute('dynamic_page_cache_test.cacheable_response'));
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
+    $this->drupalGet(Url::fromRoute('dynamic_page_cache_test.cacheable_response'));
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'HIT');
+    \Drupal::service('module_installer')->uninstall(['dynamic_page_cache_test']);
 
     $this->drupalGet('node/add/article');
     // Check that block is displayed on the add article page.

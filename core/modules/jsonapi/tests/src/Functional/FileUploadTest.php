@@ -288,7 +288,7 @@ class FileUploadTest extends ResourceTestBase {
     // This request fails despite the upload succeeding, because we're not
     // allowed to view the entity we're uploading to.
     $response = $this->fileRequest($uri, $this->testFileData);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $uri, $response, FALSE, ['4xx-response', 'http_response'], ['url.query_args', 'url.site', 'user.permissions']);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $uri, $response, FALSE, ['4xx-response', 'http_response'], ['url.query_args', 'url.site', 'user.permissions'], FALSE, 'UNCACHEABLE');
 
     $this->setUpAuthorization('GET');
 

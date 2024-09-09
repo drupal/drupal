@@ -73,3 +73,10 @@ dynamic_page_cache_test.html.uncacheable.tags:
     _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::htmlUncacheableTags'
   requirements:
     _access: 'TRUE'
+
+dynamic_page_cache_test.html.uncacheable.route_access:
+  path: '/dynamic-page-cache-test/html/uncacheable/route-access'
+  defaults:
+    _controller: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::cacheableResponse'
+  requirements:
+    _custom_access: '\Drupal\dynamic_page_cache_test\DynamicPageCacheTestController::uncacheableAccessCheck'
