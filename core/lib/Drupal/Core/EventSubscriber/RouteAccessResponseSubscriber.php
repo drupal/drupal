@@ -40,8 +40,13 @@ class RouteAccessResponseSubscriber implements EventSubscriberInterface {
     }
 
     $request = $event->getRequest();
-    $access_result = $request->attributes->get(AccessAwareRouterInterface::ACCESS_RESULT);
-    $response->addCacheableDependency($access_result);
+    // It is possible that route access checking did not occur, for example,
+    // when an exception was thrown during route matching. This could happen in
+    // an implementation of \Drupal\Core\Routing\EnhancerInterface.
+    // @see \Drupal\jsonapi\Revisions\ResourceVersionRouteEnhancer::enhance()
+    if ($request->attributes->has(AccessAwareRouterInterface::ACCESS_RESULT)) {
+      $response->addCacheableDependency($request->attributes->get(AccessAwareRouterInterface::ACCESS_RESULT));
+    }
   }
 
   /**

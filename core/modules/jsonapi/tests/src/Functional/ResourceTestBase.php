@@ -3230,7 +3230,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_cacheability = $expected_response->getCacheableMetadata();
       // Only add node type check tags for non-default revisions.
       $expected_cache_tags = !in_array($relationship_type, $default_revision_types, TRUE) ? Cache::mergeTags($expected_cacheability->getCacheTags(), $this->getExtraRevisionCacheTags()) : $expected_cacheability->getCacheTags();
-      $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
+      $dynamic_cache = !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE' : 'MISS';
+      $this->assertResourceResponse(200, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts(), FALSE, $dynamic_cache);
       // Request the related route.
       $actual_response = $this->request('GET', $related_url, $request_options);
       $expected_response = $this->getExpectedRelatedResponse('field_jsonapi_test_entity_ref', $request_options, $revision);

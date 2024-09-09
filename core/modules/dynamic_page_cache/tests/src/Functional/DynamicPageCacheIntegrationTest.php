@@ -123,6 +123,11 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
     // Cache.
     $this->drupalGet('dynamic-page-cache-test/html/uncacheable/tags');
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
+
+    // Route access checkers can also bubble up cacheability data.
+    $this->drupalGet('/dynamic-page-cache-test/html/uncacheable/route-access');
+    $this->assertSession()->responseHeaderExists(DynamicPageCacheSubscriber::HEADER);
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'UNCACHEABLE');
   }
 
 }

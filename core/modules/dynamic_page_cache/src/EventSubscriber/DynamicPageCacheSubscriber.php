@@ -276,8 +276,15 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     // that is a no-op when Dynamic Page Cache runs; priority 25).
     $events[KernelEvents::REQUEST][] = ['onRequest', 27];
 
-    // Run before HtmlResponseSubscriber::onRespond(), which has priority 0.
-    $events[KernelEvents::RESPONSE][] = ['onResponse', 100];
+    // Run before:
+    // * HtmlResponseSubscriber::onRespond(), which has priority 0.
+    // * AnonymousUserResponseSubscriber::onRespond(). which has priority 5,
+    // and it bubbles up cacheability information for anonymous users.
+    // Run after:
+    // * RouteAccessResponseSubscriber::onRespond() which has priority 10, and
+    // it adds cacheability information from the access result returned by
+    // the route access checker.
+    $events[KernelEvents::RESPONSE][] = ['onResponse', 7];
 
     return $events;
   }
