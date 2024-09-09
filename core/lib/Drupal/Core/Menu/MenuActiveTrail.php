@@ -42,7 +42,7 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
    *   The lock backend.
    */
   public function __construct(MenuLinkManagerInterface $menu_link_manager, RouteMatchInterface $route_match, CacheBackendInterface $cache, LockBackendInterface $lock) {
-    parent::__construct('', $cache, $lock);
+    parent::__construct(NULL, $cache, $lock);
     $this->menuLinkManager = $menu_link_manager;
     $this->routeMatch = $route_match;
   }
@@ -53,7 +53,7 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
    * @see ::getActiveTrailIds()
    */
   protected function getCid() {
-    if ($this->cid === '') {
+    if (!isset($this->cid)) {
       $route_parameters = $this->routeMatch->getRawParameters()->all();
       ksort($route_parameters);
       $this->cid = 'active-trail:route:' . $this->routeMatch->getRouteName() . ':route_parameters:' . serialize($route_parameters);
