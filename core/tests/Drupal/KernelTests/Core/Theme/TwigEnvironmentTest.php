@@ -10,7 +10,6 @@ use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigPhpStorageCache;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DependencyInjection\Definition;
-use Twig\Environment;
 use Twig\Error\LoaderError;
 
 /**
@@ -216,17 +215,6 @@ TWIG;
     file_put_contents($template_file, $template_after);
     $output = $environment->load(basename($template_file))->render();
     $this->assertEquals($template_before, $output);
-
-    $environment->invalidate();
-    // Manually change $templateClassPrefix to force a different template
-    // classname, as the other class is still loaded. This wouldn't be a problem
-    // on a real site where you reload the page.
-    $reflection = new \ReflectionClass(Environment::class);
-    $property_reflection = $reflection->getProperty('templateClassPrefix');
-    $property_reflection->setValue($environment, 'otherPrefix');
-
-    $output = $environment->load(basename($template_file))->render();
-    $this->assertEquals($template_after, $output);
   }
 
   /**

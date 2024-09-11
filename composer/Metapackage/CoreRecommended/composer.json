@@ -61,6 +61,6 @@
         "symfony/var-dumper": "~v6.4.0",
         "symfony/var-exporter": "~v6.4.1",
         "symfony/yaml": "~v6.4.0",
-        "twig/twig": "~v3.8.0"
+        "twig/twig": "~v3.14.0"
     }
 }

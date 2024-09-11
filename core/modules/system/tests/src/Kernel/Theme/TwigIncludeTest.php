@@ -45,7 +45,7 @@ class TwigIncludeTest extends KernelTestBase {
     $element = [];
     $element['test'] = [
       '#type' => 'inline_template',
-      '#template' => "{% include '@__main__\/core/tests/fixtures/files/sql-2.sql' %}",
+      '#template' => "{% include '@__main__/core/tests/fixtures/files/sql-2.sql' %}",
     ];
     try {
       $renderer->renderRoot($element);

@@ -914,6 +914,18 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Template/TwigEnvironment.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\Core\\\\Template\\\\TwigNodeVisitor extends deprecated class Twig\\\\NodeVisitor\\\\AbstractNodeVisitor\\:
+since 3\\.9 \\(to be removed in 4\\.0\\)$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Template/TwigNodeVisitor.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\Core\\\\Template\\\\TwigNodeVisitorCheckDeprecations extends deprecated class Twig\\\\NodeVisitor\\\\AbstractNodeVisitor\\:
+since 3\\.9 \\(to be removed in 4\\.0\\)$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Template/TwigNodeVisitorCheckDeprecations.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Template/TwigPhpStorageCache.php',
@@ -1431,6 +1443,12 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$vocabulary in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/forum/src/ForumUninstallValidator.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Class Drupal\\\\help_topics_twig_tester\\\\HelpTestTwigNodeVisitor extends deprecated class Twig\\\\NodeVisitor\\\\AbstractNodeVisitor\\:
+since 3\\.9 \\(to be removed in 4\\.0\\)$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/help/tests/modules/help_topics_twig_tester/src/HelpTestTwigNodeVisitor.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
