@@ -34,7 +34,7 @@
         "symfony/process": "^7.1",
         "symfony/polyfill-iconv": "^1.26",
         "symfony/yaml": "^7.1",
-        "twig/twig": "^3.9.3",
+        "twig/twig": "^3.14.0",
         "doctrine/annotations": "^2.0",
         "doctrine/lexer": "^2.0",
         "guzzlehttp/guzzle": "^7.5",
