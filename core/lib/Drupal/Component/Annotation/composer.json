@@ -10,10 +10,10 @@
         "php": ">=8.3.0",
         "doctrine/annotations": "^2.0",
         "doctrine/lexer": "^2.0",
-        "drupal/core-class-finder": "11.0.x-dev",
-        "drupal/core-file-cache": "11.0.x-dev",
-        "drupal/core-plugin": "11.0.x-dev",
-        "drupal/core-utility": "11.0.x-dev"
+        "drupal/core-class-finder": "^11.0",
+        "drupal/core-file-cache": "^11.0",
+        "drupal/core-plugin": "^11.0",
+        "drupal/core-utility": "^11.0"
     },
     "autoload": {
         "psr-4": {
