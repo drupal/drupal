@@ -23,11 +23,11 @@
       // Start by finding all potentially active links.
       const path = drupalSettings.path;
       const queryString = JSON.stringify(path.currentQuery);
-      const querySelector = path.currentQuery
-        ? `[data-drupal-link-query='${queryString}']`
+      const querySelector = queryString
+        ? `[data-drupal-link-query="${CSS.escape(queryString)}"]`
         : ':not([data-drupal-link-query])';
       const originalSelectors = [
-        `[data-drupal-link-system-path="${path.currentPath}"]`,
+        `[data-drupal-link-system-path="${CSS.escape(path.currentPath)}"]`,
       ];
       let selectors;
 
