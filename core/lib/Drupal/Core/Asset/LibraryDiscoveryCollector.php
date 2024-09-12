@@ -43,7 +43,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
    */
   public function __construct(CacheBackendInterface $cache, LockBackendInterface $lock, LibraryDiscoveryParser $discovery_parser, ThemeManagerInterface $theme_manager) {
     $this->themeManager = $theme_manager;
-    parent::__construct('', $cache, $lock, ['library_info']);
+    parent::__construct(NULL, $cache, $lock, ['library_info']);
 
     $this->discoveryParser = $discovery_parser;
   }
@@ -52,7 +52,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
    * {@inheritdoc}
    */
   protected function getCid() {
-    if ($this->cid === '') {
+    if (!isset($this->cid)) {
       $this->cid = 'library_info:' . $this->themeManager->getActiveTheme()->getName();
     }
 
@@ -164,7 +164,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
    */
   public function reset() {
     parent::reset();
-    $this->cid = '';
+    $this->cid = NULL;
   }
 
 }
