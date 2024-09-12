@@ -30,6 +30,14 @@ You can quickly extend Drupal's core feature set by installing any of its
 module ecosystem, you can often build most or all of what your project needs
 before writing a single line of code.
 
+## Self-Hosting Options
+
+### Elestio
+
+You can deploy Drupal on Elestio using one-click deployment.
+
+[![Deploy on Elestio](https://elest.io/images/logos/deploy-to-elestio-btn.png)](https://elest.io/open-source/drupal)
+
 ## Changelog
 
 Drupal keeps detailed [change records][changelog]. You can search Drupal's
