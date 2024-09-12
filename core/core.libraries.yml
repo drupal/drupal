@@ -303,6 +303,7 @@ ckeditor5.showBlocks:
     assets/vendor/ckeditor5/show-blocks/show-blocks.js: { minified: true }
   dependencies:
     - core/ckeditor5
+    - core/ckeditor5.translations
 
 ckeditor5.style:
   remote: https://github.com/ckeditor/ckeditor5
