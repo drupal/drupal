@@ -14,7 +14,11 @@
 }
 .image-style-preview .preview-image {
   position: relative;
-  margin: auto;
+  margin: 0.5em auto auto auto;
+}
+.image-style-preview .preview-image a,
+.image-style-preview .preview-image a img {
+  display: block;
 }
 .image-style-preview .preview-image .width {
   position: absolute;

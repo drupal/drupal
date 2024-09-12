@@ -33,7 +33,7 @@
 <div class="image-style-preview preview clearfix">
   {# Preview of the original image. #}
   <div class="preview-image-wrapper">
-      {{ 'original'|t }} (<a href="{{ original.url }}">{{ 'view actual size'|t }}</a>)
+      {{ 'Source image'|t }}
       <div class="preview-image original-image" style="width: {{ preview.original.width }}px; height: {{ preview.original.height }}px;">
         <a href="{{ original.url }}">
           {{ original.rendered }}
@@ -45,7 +45,7 @@
 
   {# Derivative of the image style. #}
   <div class="preview-image-wrapper">
-    {{ style_name }} (<a href="{{ derivative.url }}?{{ cache_bypass }}">{{ 'view actual size'|t }}</a>)
+    {{ 'Derivative image'|t }}
     <div class="preview-image modified-image" style="width: {{ preview.derivative.width }}px; height: {{ preview.derivative.height }}px;">
       <a href="{{ derivative.url }}?{{ cache_bypass }}">
         {{ derivative.rendered }}
