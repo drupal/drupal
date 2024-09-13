@@ -1,8 +1,15 @@
 drupal.path:
   version: VERSION
   js:
-    path.js: {}
+    js/path.js: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupal.form
+  moved_files:
+    path/path.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        path.js: 'js/path.js'

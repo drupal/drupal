@@ -138,7 +138,7 @@ class EngineTwigTest extends BrowserTestBase {
     $this->drupalGet('/twig-theme-test/file-url');
     /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
     $file_url_generator = \Drupal::service('file_url_generator');
-    $filepath = $file_url_generator->generateString('core/modules/system/tests/modules/twig_theme_test/twig_theme_test.js');
+    $filepath = $file_url_generator->generateString('core/modules/system/tests/modules/twig_theme_test/js/twig_theme_test.js');
     $this->assertSession()->responseContains('<div>file_url: ' . $filepath . '</div>');
   }
 

@@ -1,11 +1,18 @@
 drupal.text:
   version: VERSION
   js:
-    text.js: {}
+    js/text.js: {}
   dependencies:
     - core/jquery
     - core/once
     - core/drupal
+  moved_files:
+    text/text.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        text.js: 'js/text.js'
 
 drupal.text-icon:
   version: VERSION

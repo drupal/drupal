@@ -1,12 +1,19 @@
 drupal.file:
   version: VERSION
   js:
-    file.js: {}
+    js/file.js: {}
   dependencies:
     - core/jquery
     - core/once
     - core/drupal
     - core/drupalSettings
+  moved_files:
+    file/file.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        file.js: 'js/file.js'
 
 drupal.file-icon:
   version: VERSION

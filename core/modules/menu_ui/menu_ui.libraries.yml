@@ -1,19 +1,33 @@
 drupal.menu_ui:
   version: VERSION
   js:
-    menu_ui.js: {}
+    js/menu_ui.js: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupal.form
+  moved_files:
+    menu_uit/menu_ui.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        menu_ui.js: 'js/menu_ui.js'
 
 drupal.menu_ui.admin:
   version: VERSION
   js:
-    menu_ui.admin.js: {}
+    js/menu_ui.admin.js: {}
   dependencies:
     - core/jquery
     - core/drupal
+  moved_files:
+    menu_uit/menu_ui.admin.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        menu_ui.admin.js: 'js/menu_ui.admin.js'
 
 drupal.menu_ui.adminforms:
   version: VERSION

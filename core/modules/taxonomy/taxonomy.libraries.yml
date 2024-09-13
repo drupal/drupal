@@ -1,7 +1,7 @@
 drupal.taxonomy:
   version: VERSION
   js:
-    taxonomy.js: {}
+    js/taxonomy.js: {}
   css:
     component:
       css/taxonomy.theme.css: {}
@@ -10,3 +10,10 @@ drupal.taxonomy:
     - core/drupal
     - core/drupalSettings
     - core/drupal.tabledrag
+  moved_files:
+    taxonomy/taxonomy.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        taxonomy.js: js/taxonomy.js'

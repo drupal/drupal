@@ -4,10 +4,17 @@ drupal.node:
     layout:
       css/node.module.css: {}
   js:
-    node.js: {}
+    js/node.js: {}
   dependencies:
     - core/drupal.entity-form
     - core/drupalSettings
+  moved_files:
+    node/node.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        node.js: 'js/node.js'
 
 drupal.node.preview:
   version: VERSION
@@ -15,22 +22,36 @@ drupal.node.preview:
     theme:
       css/node.preview.css: {}
   js:
-    node.preview.js: {}
+    js/node.preview.js: {}
   dependencies:
     - core/jquery
     - core/once
     - core/drupal
     - core/drupal.dialog
     - core/drupal.form
+  moved_files:
+    node/node.preview.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        node.preview.js: 'js/node.preview.js'
 
 drupal.content_types:
   version: VERSION
   js:
-    content_types.js: {}
+    js/content_types.js: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupal.form
+  moved_files:
+    node/content_types.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        content_types.js: 'js/content_types.js'
 
 form:
   version: VERSION

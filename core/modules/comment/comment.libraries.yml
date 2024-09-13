@@ -1,11 +1,18 @@
 drupal.comment:
   version: VERSION
   js:
-    comment-entity-form.js: {}
+    js/comment-entity-form.js: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupal.form
+  moved_files:
+    comment/drupal.comment:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        comment-entity-form.js: 'js/comment-entity-form.js'
 
 drupal.comment-by-viewer:
   version: VERSION

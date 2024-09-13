@@ -3,4 +3,11 @@ test:
     component:
       views_cache.test.css: {}
   js:
-    views_cache.test.js: {}
+    js/views_cache.test.js: {}
+  moved_files:
+    views_test_data/views_cache.test.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        views_cache.test.js: 'js/views_cache.test.js'

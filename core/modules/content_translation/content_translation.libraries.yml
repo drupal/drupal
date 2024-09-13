@@ -1,7 +1,7 @@
 drupal.content_translation.admin:
   version: VERSION
   js:
-    content_translation.admin.js: {}
+    js/content_translation.admin.js: {}
   css:
     theme:
       css/content_translation.admin.css: {}
@@ -9,3 +9,10 @@ drupal.content_translation.admin:
     - core/jquery
     - core/drupal
     - core/once
+  moved_files:
+    content_translation/content_translation.admin.js:
+      deprecation_version: drupal:11.1.0
+      removed_version: drupal:12.0.0
+      deprecation_link: https://www.drupal.org/node/3471539
+      js:
+        content_translation_admin.js: 'js/content_translation.admin.js'
