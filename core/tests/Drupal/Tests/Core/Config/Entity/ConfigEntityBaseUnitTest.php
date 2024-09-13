@@ -160,7 +160,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $container->set('theme_handler', $this->themeHandler->reveal());
     \Drupal::setContainer($container);
 
-    $this->entity = $this->getMockBuilder(ConfigEntityBaseMockableClass::class)
+    $this->entity = $this->getMockBuilder(StubConfigEntity::class)
       ->setConstructorArgs([$values, $this->entityTypeId])
       ->onlyMethods([])
       ->getMock();
@@ -335,7 +335,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::onDependencyRemoval
    */
   public function testCalculateDependenciesWithThirdPartySettings(): void {
-    $this->entity = $this->getMockBuilder(ConfigEntityBaseMockableClass::class)
+    $this->entity = $this->getMockBuilder(StubConfigEntity::class)
       ->setConstructorArgs([[], $this->entityTypeId])
       ->onlyMethods([])
       ->getMock();
@@ -570,7 +570,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::toArray
    */
   public function testToArrayIdKey(): void {
-    $entity = $this->getMockBuilder(ConfigEntityBaseMockableClass::class)
+    $entity = $this->getMockBuilder(StubConfigEntity::class)
       ->setConstructorArgs([[], $this->entityTypeId])
       ->onlyMethods(['id', 'get'])
       ->getMock();
@@ -746,12 +746,5 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
     }
     return ['the_plugin_collection_config' => $this->pluginCollection];
   }
-
-}
-
-/**
- * A class extending ConfigEntityBase for testing purposes.
- */
-class ConfigEntityBaseMockableClass extends ConfigEntityBase {
 
 }
