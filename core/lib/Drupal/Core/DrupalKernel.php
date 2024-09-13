@@ -1055,8 +1055,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $app_root = static::guessApplicationRoot();
     }
 
-    // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
-    error_reporting(E_STRICT | E_ALL);
+    error_reporting(E_ALL);
 
     // Override PHP settings required for Drupal to work properly.
     // sites/default/default.settings.php contains more runtime settings.
