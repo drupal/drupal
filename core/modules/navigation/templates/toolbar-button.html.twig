@@ -10,7 +10,7 @@ appear after main classes #}
 <{{html_tag|default('button')}}
   {{ attributes.addClass(classes) }}
   data-index-text="{{ text|first|lower }}"
-  data-icon-text={{- text|render|trim|slice(0, 2)|join('') }}
+  data-icon-text="{{- text|render|trim|slice(0, 2)|join('') -}}"
 >
   {% if avatar %}
     <span class="toolbar-button__avatar">{{~ avatar ~}}</span>
