@@ -351,8 +351,6 @@ mojito
 msgctxt
 msgid
 msgstr
-mulrev
-mulrevpub
 multibuys
 multibyte
 multicardinality
@@ -487,8 +485,6 @@ revisionable
 revisioned
 revisionid
 revisioning
-revlog
-revpub
 ribisi
 rowspans
 rtsp
