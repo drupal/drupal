@@ -57,7 +57,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     if ($this->autoCreateBasicBlockType) {
-      $this->createBlockContentType('basic', TRUE);
+      $this->createBlockContentType(['id' => 'basic'], TRUE);
     }
 
     $this->adminUser = $this->drupalCreateUser($this->permissions);
@@ -95,9 +95,11 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    * Creates a block type (bundle).
    *
    * @param array|string $values
-   *   The value to create the block content type. If $values is an array
-   *   it should be like: ['id' => 'foo', 'label' => 'Foo']. If $values
-   *   is a string, it will be considered that it represents the label.
+   *   (deprecated) The variable $values as string is deprecated. Provide as an
+   *   array as parameter. The value to create the block content type. If
+   *   $values is an array it should be like: ['id' => 'foo', 'label' => 'Foo'].
+   *   If $values is a string, it will be considered that it represents the
+   *   label.
    * @param bool $create_body
    *   Whether or not to create the body field
    *
@@ -105,6 +107,9 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    *   Created block type.
    */
   protected function createBlockContentType($values, $create_body = FALSE) {
+    if (is_string($values)) {
+      @trigger_error('Using the variable $values as string is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Provide an array as parameter. See https://www.drupal.org/node/3473739', E_USER_DEPRECATED);
+    }
     if (is_array($values)) {
       if (!isset($values['id'])) {
         do {
