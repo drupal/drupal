@@ -13,13 +13,8 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Provides routes for the entity permissions form.
  *
- * Use this class or EntityPermissionsRouteProviderWithCheck as a route
- * provider for an entity type such as Vocabulary. Either one will provide
- * routes for the entity permissions form. The
- * EntityPermissionsRouteProviderWithCheck class provides a custom access check:
- * it denies access if there are no entity-specific permissions. If you know
- * that each entity has permissions, or if the check is too expensive, then use
- * this class.
+ * Use this class as a route provider for an entity type such as Vocabulary. It
+ * will provide routes for the entity permissions form.
  */
 class EntityPermissionsRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 

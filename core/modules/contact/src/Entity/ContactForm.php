@@ -30,7 +30,7 @@ use Drupal\Core\Url;
  *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
  *     },
  *     "route_provider" = {
- *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProviderWithCheck",
+ *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
  *     }
  *   },
  *   config_prefix = "form",

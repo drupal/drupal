@@ -272,7 +272,8 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Contact form ' . $edit['label'] . ' has been added.');
     $this->drupalGet('admin/structure/contact/manage/test_contact_type/permissions');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('No permissions found.');
 
     // Permissions can be changed using the bundle-specific pages.
     $edit = [];
@@ -322,12 +323,13 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->drupalGet('/admin/structure/comment/manage/comment/display');
     $assert_session->statusCodeEquals(200);
     $this->drupalGet('/admin/structure/comment/manage/comment/permissions');
-    $assert_session->statusCodeEquals(403);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('No permissions found.');
 
     // Ensure there are no warnings in the log.
     $this->drupalGet('/admin/reports/dblog');
     $assert_session->statusCodeEquals(200);
-    $assert_session->pageTextContains('access denied');
+    $assert_session->pageTextContains('Session opened');
     $assert_session->pageTextNotContains("Entity view display 'node.article.default': Component");
   }
 
