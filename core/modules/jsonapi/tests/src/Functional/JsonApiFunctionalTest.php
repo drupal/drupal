@@ -537,6 +537,8 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     // Test that user gets logged out when hitting non-jsonapi route.
     $this->drupalGet('/some/normal/route');
     $this->assertFalse($this->drupalUserIsLoggedIn($this->userCanViewProfiles));
+    $this->assertSession()->statusCodeEquals(503);
+    $this->assertSession()->responseContains('Site under maintenance');
     $this->container->get('state')->set('system.maintenance_mode', FALSE);
     $this->drupalResetSession();
 

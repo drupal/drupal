@@ -5,9 +5,7 @@ namespace Drupal\user\EventSubscriber;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\MaintenanceModeEvents;
 use Drupal\Core\Site\MaintenanceModeInterface;
-use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
@@ -52,10 +50,6 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     // If the site is offline, log out unprivileged users.
     if ($this->account->isAuthenticated()) {
       user_logout();
-      // Redirect to homepage.
-      $event->setResponse(
-        new RedirectResponse(Url::fromRoute('<front>')->toString())
-      );
     }
   }
 
