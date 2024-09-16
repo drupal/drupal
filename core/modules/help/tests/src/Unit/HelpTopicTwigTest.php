@@ -6,8 +6,8 @@ namespace Drupal\Tests\help\Unit;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\help\HelpTopicTwig;
+use Drupal\Tests\Core\Template\StubTwigTemplate;
 use Drupal\Tests\UnitTestCase;
-use Twig\Template;
 use Twig\TemplateWrapper;
 
 /**
@@ -100,7 +100,12 @@ class HelpTopicTwigTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $template = $this->getMockForAbstractClass(Template::class, [$twig], '', TRUE, TRUE, TRUE, ['render']);
+    $template = $this
+      ->getMockBuilder(StubTwigTemplate::class)
+      ->onlyMethods(['render'])
+      ->setConstructorArgs([$twig])
+      ->getMock();
+
     $template
       ->method('render')
       ->willReturn(self::PLUGIN_INFORMATION['body']);

@@ -22,6 +22,7 @@
 
 # The following deprecation is listed for Twig 2 compatibility when unit
 # testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
+%The "Twig\\Template" class is considered internal\. It may change without further notice\. You should not use it from "Drupal\\Tests\\Core\\Template\\StubTwigTemplate"\.%
 %The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
 
 # PHPUnit 10.
