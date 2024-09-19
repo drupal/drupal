@@ -159,43 +159,6 @@ class WorkspaceAssociationTest extends KernelTestBase {
   }
 
   /**
-   * Tests cleanup of sub-workspaces on publishing to Live.
-   */
-  public function testSubWorkspaceCleanupOnPublishToLive(): void {
-    $workspaceName = 'stage';
-    $this->switchToWorkspace($workspaceName);
-
-    // Create and save a node in the 'stage' workspace.
-    $node = $this->createNode([
-      'title' => 'Test article - stage - unpublished',
-      'type' => 'article',
-      'status' => 0,
-    ]);
-    $node->save();
-
-    // Simulate the publishing operation.
-    $node->set('status', 1);
-    $node->save();
-
-    // Manually perform cleanup if no service is available.
-    $database = \Drupal::database();
-    $database->delete('workspace_association')
-      ->condition('workspace', $workspaceName)
-      ->execute();
-
-    // Query database to ensure that the workspace associations were cleaned up.
-    $queryAfter = $database->select('workspace_association', 'wa')
-      ->fields('wa')
-      ->condition('workspace', $workspaceName)
-      ->execute();
-    $resultsAfter = $queryAfter->fetchAll();
-
-    // Assert that the workspace association table is empty for
-    // the 'stage' workspace.
-    $this->assertEmpty($resultsAfter, 'Workspace associations were not cleaned up properly for the stage workspace.');
-  }
-
-  /**
    * Checks the workspace associations for a test scenario.
    *
    * @param string $entity_type_id
