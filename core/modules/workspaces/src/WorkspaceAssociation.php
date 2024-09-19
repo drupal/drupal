@@ -392,18 +392,6 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    */
   public function onPostPublish(WorkspacePublishEvent $event): void {
     $this->deleteAssociations($event->getWorkspace()->id());
-
-    // Cleanup sub-workspaces on deploy to Live (no parent) workspace.
-    if (!$event->getWorkspace()->hasParent()) {
-      foreach ($event->getPublishedRevisionIds() as $target_entity_type_id => $target_entity_ids) {
-        // Extract target entity IDs and revision IDs.
-        $target_entity_ids_list = array_keys($target_entity_ids);
-        $target_entity_revision_ids = array_keys($target_entity_ids);
-
-        $this->deleteAssociations(NULL, $target_entity_type_id, $target_entity_ids_list, $target_entity_revision_ids);
-      }
-    }
-
   }
 
 }
