@@ -138,11 +138,11 @@ variables:
 
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 2
+  parallel: 3
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 8
-    KUBERNETES_CPU_REQUEST: "24"
+    CONCURRENCY: 5
+    KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
@@ -156,8 +156,8 @@ variables:
   parallel: 1
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 15
-    KUBERNETES_CPU_REQUEST: "24"
+    CONCURRENCY: 6
+    KUBERNETES_CPU_REQUEST: "16"
     MINK_DRIVER_ARGS_WEBDRIVER: $MINK_DRIVER_ARGS_WEBDRIVER_CHROMEDRIVER_NON_W3C
   services:
     - <<: *with-database
@@ -172,10 +172,11 @@ variables:
 
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 7
+  parallel: 8
   variables:
     TESTSUITE: PHPUnit-Functional
-    KUBERNETES_CPU_REQUEST: "24"
+    CONCURRENCY: "5"
+    KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
 
@@ -185,6 +186,7 @@ variables:
   variables:
     TESTSUITE: PHPUnit-Kernel
     KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: 12
   services:
     - <<: *with-database
 
@@ -262,7 +264,7 @@ variables:
     - chown -R www-data:www-data ./sites /var/www
     - cd core
     - corepack enable
-    - sudo -u www-data yarn run test:nightwatch --workers=4
+    - sudo -u www-data yarn run test:nightwatch --workers=3
   after_script:
     - cp /builds/chromedriver.log ./
   artifacts:
