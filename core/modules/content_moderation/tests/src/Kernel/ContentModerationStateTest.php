@@ -23,7 +23,6 @@ use Drupal\workflows\Entity\Workflow;
  * Tests links between a content entity and a content_moderation_state entity.
  *
  * @group content_moderation
- * @group #slow
  */
 class ContentModerationStateTest extends KernelTestBase {
 

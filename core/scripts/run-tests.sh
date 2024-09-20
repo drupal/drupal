@@ -25,6 +25,11 @@ use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestRunResultsStorageInterface;
 use Drupal\Core\Test\TestDiscovery;
+use Drupal\BuildTests\Framework\BuildTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\BrowserTestBase;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -922,33 +927,42 @@ function simpletest_script_get_test_list() {
         $slow_tests = array_keys(array_shift($groups));
       }
     }
-    $all_tests = [];
+    $not_slow_tests = [];
     foreach ($groups as $group => $tests) {
-      if ($group === '#slow') {
-        $slow_group = $tests;
-      }
-      else {
-        $all_tests = array_merge($all_tests, array_keys($tests));
-      }
+      $not_slow_tests = array_merge($not_slow_tests, array_keys($tests));
     }
-    // If no type has been set, order the tests alphabetically by test namespace
-    // so that unit tests run last. This takes advantage of the fact that Build,
-    // Functional, Functional JavaScript, Kernel, Unit roughly corresponds to
-    // test time.
-    usort($all_tests, function ($a, $b) {
-      $slice = function ($class) {
-        $parts = explode('\\', $class);
-        return implode('\\', array_slice($parts, 3));
-      };
-      return $slice($a) > $slice($b) ? 1 : -1;
-    });
-    // If the tests are not being run in parallel, then ensure slow tests run all
-    // together first.
-    if ((int) $args['ci-parallel-node-total'] <= 1 && !empty($slow_group)) {
-      $all_tests = array_merge(array_keys($slow_group), $all_tests);
+    // Filter slow tests out of the not slow tests since they may appear in more
+    // than one group.
+    $not_slow_tests = array_diff($not_slow_tests, $slow_tests);
+
+    // If the tests are not being run in parallel, then ensure slow tests run
+    // all together first.
+    if ((int) $args['ci-parallel-node-total'] <= 1 ) {
+      sort_tests_by_type_and_methods($slow_tests);
+      sort_tests_by_type_and_methods($not_slow_tests);
+      $test_list = array_unique(array_merge($slow_tests, $not_slow_tests));
     }
-    $test_list = array_unique($all_tests);
-    $test_list = array_diff($test_list, $slow_tests);
+    else {
+      // Sort all tests by the number of public methods on the test class.
+      // This is a proxy for the approximate time taken to run the test,
+      // which is used in combination with @group #slow to start the slowest tests
+      // first and distribute tests between test runners.
+      sort_tests_by_public_method_count($slow_tests);
+      sort_tests_by_public_method_count($not_slow_tests);
+
+      // Now set up a bin per test runner.
+      $bin_count = (int) $args['ci-parallel-node-total'];
+
+      // Now loop over the slow tests and add them to a bin one by one, this
+      // distributes the tests evenly across the bins.
+      $binned_slow_tests = place_tests_into_bins($slow_tests, $bin_count);
+      $slow_tests_for_job = $binned_slow_tests[$args['ci-parallel-node-index'] - 1];
+
+      // And the same for the rest of the tests.
+      $binned_other_tests = place_tests_into_bins($not_slow_tests, $bin_count);
+      $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
+      $test_list = array_unique(array_merge($slow_tests_for_job, $other_tests_for_job));
+    }
   }
   else {
     if ($args['class']) {
@@ -1028,30 +1042,19 @@ function simpletest_script_get_test_list() {
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
 
-  if ((int) $args['ci-parallel-node-total'] > 1) {
-    // Sort all tests by the number of public methods on the test class.
-    // This is a proxy for the approximate time taken to run the test,
-    // which is used in combination with @group #slow to start the slowest tests
-    // first and distribute tests between test runners.
-    sort_tests_by_public_method_count($slow_tests);
-    sort_tests_by_public_method_count($test_list);
-
-    // Now set up a bin per test runner.
-    $bin_count = (int) $args['ci-parallel-node-total'];
-
-    // Now loop over the slow tests and add them to a bin one by one, this
-    // distributes the tests evenly across the bins.
-    $binned_slow_tests = place_tests_into_bins($slow_tests, $bin_count);
-    $slow_tests_for_job = $binned_slow_tests[$args['ci-parallel-node-index'] - 1];
-
-    // And the same for the rest of the tests.
-    $binned_other_tests = place_tests_into_bins($test_list, $bin_count);
-    $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
-
-    $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
-  }
-
   return $test_list;
+}
+
+/**
+ * Sort tests by test type and number of public methods.
+ */
+function sort_tests_by_type_and_methods(array &$tests) {
+  usort($tests, function ($a, $b) {
+    if (get_test_type_weight($a) === get_test_type_weight($b)) {
+      return get_test_class_method_count($b) <=> get_test_class_method_count($a);
+    }
+    return get_test_type_weight($b) <=> get_test_type_weight($a);
+  });
 }
 
 /**
@@ -1068,12 +1071,49 @@ function simpletest_script_get_test_list() {
  */
 function sort_tests_by_public_method_count(array &$tests): void {
   usort($tests, function ($a, $b) {
-    $method_count = function ($class) {
-      $reflection = new \ReflectionClass($class);
-      return count($reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
-    };
-    return $method_count($b) <=> $method_count($a);
+    return get_test_class_method_count($b) <=> get_test_class_method_count($a);
   });
+}
+
+/**
+ * Weights a test class based on which test base class it extends.
+ *
+ * @param string $class
+ *   The test class name.
+ */
+function get_test_type_weight(string $class): int {
+  return match(TRUE) {
+    is_subclass_of($class, WebDriverTestBase::class) => 3,
+    is_subclass_of($class, BrowserTestBase::class) => 2,
+    is_subclass_of($class, BuildTestBase::class) => 2,
+    is_subclass_of($class, KernelTestBase::class) => 1,
+    default => 0,
+  };
+}
+
+/**
+ * Get an approximate test method count for a test class.
+ *
+ * @param string $class
+ *   The test class name.
+ */
+function get_test_class_method_count(string $class): int {
+  $reflection = new \ReflectionClass($class);
+  $count = 0;
+  foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+    // If a method uses a dataProvider, increase the count by 20 since data
+    // providers result in a single method running multiple times.
+    $comments = $method->getDocComment();
+    preg_match_all('#@(.*?)\n#s', $comments, $annotations);
+    foreach ($annotations[1] as $annotation) {
+      if (str_starts_with($annotation, 'dataProvider')) {
+        $count = $count + 20;
+        continue;
+      }
+    }
+    $count++;
+  }
+  return $count;
 }
 
 /**

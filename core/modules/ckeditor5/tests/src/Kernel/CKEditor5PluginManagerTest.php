@@ -28,7 +28,6 @@ use Symfony\Component\Yaml\Yaml;
  * Tests different ways of enabling CKEditor 5 plugins.
  *
  * @group ckeditor5
- * @group #slow
  * @internal
  */
 class CKEditor5PluginManagerTest extends KernelTestBase {

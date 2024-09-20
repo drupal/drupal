@@ -11,7 +11,6 @@ use Drupal\shortcut\Entity\ShortcutSet;
  * Tests validation of shortcut_set entities.
  *
  * @group shortcut
- * @group #slow
  */
 class ShortcutSetValidationTest extends ConfigEntityValidationTestBase {
 
