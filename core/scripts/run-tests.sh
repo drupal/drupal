@@ -290,8 +290,8 @@ All arguments are long options.
 
   --file      Run tests identified by specific file names, instead of group names.
               Specify the path and the extension
-              (i.e. 'core/modules/user/user.test'). This argument must be last
-              on the command line.
+              (i.e. 'core/modules/user/tests/src/Functional/UserCreateTest.php').
+              This argument must be last on the command line.
 
   --types
 
@@ -360,7 +360,7 @@ Drupal installation as the webserver user (differs per configuration), or root:
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --url http://example.com/ --all
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
-  --url http://example.com/ --class Drupal\block\Tests\BlockTest
+  --url http://example.com/ --class Drupal\Tests\block\Functional\BlockTest
 
 Without a preinstalled Drupal site, specify a SQLite database pathname to create
 and the default database connection info to use in tests:
