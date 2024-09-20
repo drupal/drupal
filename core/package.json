@@ -69,7 +69,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-formatter-gitlab": "^5.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jquery": "^1.5.1",
+    "eslint-plugin-no-jquery": "^3.0.2",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-yml": "^1.14.0",
     "glob": "11.0.0",
