@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -84,8 +85,6 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
 
   /**
    * Tests the integration between Content Moderation and Workspaces.
-   *
-   * @see content_moderation_workspace_access()
    */
   public function testContentModerationIntegrationWithWorkspaces(): void {
     $editorial = $this->createEditorialWorkflow();
@@ -171,6 +170,86 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     $article_draft->moderation_state->value = 'published';
     $article_draft->save();
     $access_handler->resetCache();
+    $this->workspaces['stage']->publish();
+  }
+
+  /**
+   * Publish a workspace with workflows including no tracked default revisions.
+   */
+  public function testContentModerationWithoutDefaultRevisionsInWorkspaces(): void {
+    $access_handler = $this->container->get('entity_type.manager')->getAccessControlHandler('workspace');
+    // Create a workflow which has the same states as the 'editorial' one,
+    // but it doesn't create any default revisions. This covers the case when a
+    // workspace is published containing no tracked types. This has to be the
+    // only workflow.
+    $editorial = $this->createEditorialWorkflow();
+    $type_settings = $editorial->get('type_settings');
+    $type_settings['states']['draft']['default_revision'] = FALSE;
+    $type_settings['states']['archived']['default_revision'] = FALSE;
+    $this->workspaceManager->executeOutsideWorkspace(function () use ($editorial) {
+      $editorial->save();
+    });
+    // Create an node bundle 'note' that uses non-default workflow.
+    $this->createContentType(['type' => 'note']);
+
+    // Create content in all states none with default revisions.
+    $note_archived = Node::create(['type' => 'note', 'title' => 'Test note - archived', 'moderation_state' => 'archived']);
+    $note_archived->save();
+    $note_draft = Node::create(['type' => 'note', 'title' => 'Test note - draft', 'moderation_state' => 'draft']);
+    $note_draft->save();
+    $note_published = Node::create(['type' => 'note', 'title' => 'Test note - published', 'moderation_state' => 'published']);
+    $note_published->save();
+
+    // Check workspace can be published.
+    $access_handler->resetCache();
+    $this->workspaces['stage']->publish();
+  }
+
+  /**
+   * Publish a workspace with multiple entities from different entity types.
+   */
+  public function testContentModerationMultipleEntityTypesWithWorkspaces(): void {
+    $editorial = $this->createEditorialWorkflow();
+    $this->createContentType(['type' => 'page']);
+    $this->addEntityTypeAndBundleToWorkflow($editorial, 'node', 'page');
+    $this->addEntityTypeAndBundleToWorkflow($editorial, 'entity_test_mulrevpub', 'entity_test_mulrevpub');
+
+    // Create an entity with a previous revision that is tracked in unpublished
+    // state.
+    $entity_with_revision = EntityTestMulRevPub::create([
+      'title' => 'Test entity mulrevpub',
+      'type' => 'entity_test_mulrevpub',
+      'moderation_state' => 'draft',
+    ]);
+    $entity_with_revision->save();
+    $entity_with_revision->save();
+    $entity_with_revision = $this->reloadEntity($entity_with_revision);
+    // Confirm unpublished earlier revision.
+    $this->assertEquals('draft', $entity_with_revision->moderation_state->value);
+    $earlier_revision_id = $entity_with_revision->getRevisionId();
+    // Publish.
+    $entity_with_revision->moderation_state->value = 'published';
+    $entity_with_revision->save();
+    $entity_with_revision = $this->reloadEntity($entity_with_revision);
+    // Confirm publish revision.
+    $this->assertEquals('published', $entity_with_revision->moderation_state->value);
+    $published_revision_id = $entity_with_revision->getRevisionId();
+    $this->assertNotEquals($earlier_revision_id, $published_revision_id);
+
+    // Create an entity that has a default revision id the same as the previous
+    // entity's old revision.
+    $entity_without_revision = Node::create([
+      'title' => 'Test node page',
+      'type' => 'page',
+      'moderation_state' => 'published',
+    ]);
+    $entity_without_revision->save();
+    $entity_without_revision = $this->reloadEntity($entity_without_revision);
+    $this->assertEquals('published', $entity_without_revision->moderation_state->value);
+
+    // Current published revisions of second entity has the same revision as
+    // earlier unpublished revision of first entity.
+    $this->assertEquals($entity_without_revision->getRevisionId(), $earlier_revision_id);
     $this->workspaces['stage']->publish();
   }
 
