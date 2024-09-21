@@ -13,7 +13,6 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  * Tests validation of content_language_settings entities.
  *
  * @group language
- * @group #slow
  */
 class ContentLanguageSettingsValidationTest extends ConfigEntityValidationTestBase {
 

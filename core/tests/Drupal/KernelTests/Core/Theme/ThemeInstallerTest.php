@@ -17,7 +17,6 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests installing and uninstalling of themes.
  *
  * @group Extension
- * @group #slow
  */
 class ThemeInstallerTest extends KernelTestBase {
 

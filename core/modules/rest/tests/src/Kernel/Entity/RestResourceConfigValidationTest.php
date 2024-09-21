@@ -12,7 +12,6 @@ use Drupal\rest\RestResourceConfigInterface;
  * Tests validation of rest_resource_config entities.
  *
  * @group rest
- * @group #slow
  */
 class RestResourceConfigValidationTest extends ConfigEntityValidationTestBase {
 

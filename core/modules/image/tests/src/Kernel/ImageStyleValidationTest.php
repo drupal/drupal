@@ -11,7 +11,6 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
  * Tests validation of image_style entities.
  *
  * @group image
- * @group #slow
  */
 class ImageStyleValidationTest extends ConfigEntityValidationTestBase {
 

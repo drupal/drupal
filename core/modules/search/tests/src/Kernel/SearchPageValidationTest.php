@@ -13,7 +13,6 @@ use Drupal\search\SearchPageRepository;
  * Tests validation of search_page entities.
  *
  * @group search
- * @group #slow
  */
 class SearchPageValidationTest extends ConfigEntityValidationTestBase {
 

@@ -11,7 +11,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests validation of configurable_language entities.
  *
  * @group language
- * @group #slow
  */
 class ConfigurableLanguageValidationTest extends ConfigEntityValidationTestBase {
 

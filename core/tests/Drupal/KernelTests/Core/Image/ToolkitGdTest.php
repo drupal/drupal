@@ -16,7 +16,6 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @coversDefaultClass \Drupal\system\Plugin\ImageToolkit\GDToolkit
  * @group Image
- * @group #slow
  * @requires extension gd
  */
 class ToolkitGdTest extends KernelTestBase {

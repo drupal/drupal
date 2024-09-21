@@ -14,7 +14,6 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  * Tests validation of field_config entities.
  *
  * @group field
- * @group #slow
  */
 class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
 

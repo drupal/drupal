@@ -12,6 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests Stable 9's template overrides.
  *
  * @group Theme
+ * @group #slow
  */
 class Stable9TemplateOverrideTest extends KernelTestBase {
 

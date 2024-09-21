@@ -23,7 +23,6 @@ use Drupal\workspaces\WorkspacePublishException;
 /**
  * Tests a complete publishing scenario across different workspaces.
  *
- * @group #slow
  * @group workspaces
  */
 class WorkspaceIntegrationTest extends KernelTestBase {

@@ -13,7 +13,6 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
  * Tests validation of editor entities.
  *
  * @group editor
- * @group #slow
  */
 class EditorValidationTest extends ConfigEntityValidationTestBase {
 
