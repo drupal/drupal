@@ -39,9 +39,6 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
     $workspace = $event->getWorkspace();
 
     $tracked_revisions = $this->workspaceAssociation->getTrackedEntities($workspace->id());
-    // Extract all the second-level keys (revision IDs) of the two-dimensional
-    // array.
-    $tracked_revision_ids = array_reduce(array_map('array_keys', $tracked_revisions), 'array_merge', []);
 
     // Gather a list of moderation states that don't create a default revision.
     $workflow_non_default_states = [];
@@ -57,12 +54,26 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
       }
     }
 
+    // If no tracked revisions are moderated then no status check is necessary.
+    if (empty($workflow_non_default_states)) {
+      return;
+    }
+
     // Check if any revisions that are about to be published are in a
     // non-default revision moderation state.
     $query = $this->entityTypeManager->getStorage('content_moderation_state')->getQuery()
       ->allRevisions()
       ->accessCheck(FALSE);
-    $query->condition('content_entity_revision_id', $tracked_revision_ids, 'IN');
+
+    $tracked_revisions_condition_group = $query->orConditionGroup();
+    foreach ($tracked_revisions as $tracked_type => $tracked_revision_ids) {
+      $entity_type_group = $query->andConditionGroup()
+        ->condition('content_entity_type_id', $tracked_type)
+        ->condition('content_entity_revision_id', array_keys($tracked_revision_ids), 'IN');
+
+      $tracked_revisions_condition_group->condition($entity_type_group);
+    }
+    $query->condition($tracked_revisions_condition_group);
 
     $workflow_condition_group = $query->orConditionGroup();
     foreach ($workflow_non_default_states as $workflow_id => $non_default_states) {
