@@ -10,7 +10,6 @@ use Drupal\views\Entity\View;
  * Tests exposed forms UI functionality.
  *
  * @group views_ui
- * @group #slow
  */
 class ExposedFormUITest extends UITestBase {
 

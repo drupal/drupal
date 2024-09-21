@@ -13,7 +13,6 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  * Create a node and test saving it.
  *
  * @group node
- * @group #slow
  */
 class NodeCreationTest extends NodeTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests basic EntityChangedInterface functionality.
  *
  * @group Entity
+ * @group #slow
  */
 class ContentEntityChangedTest extends EntityKernelTestBase {
 

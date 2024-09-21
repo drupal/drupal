@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
  * @group PHPUnit
  * @group Test
  * @group KernelTests
- * @group #slow
  */
 class KernelTestBaseTest extends KernelTestBase {
 

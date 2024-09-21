@@ -20,7 +20,6 @@ use Behat\Mink\Element\NodeElement;
  * Tests various form element validation mechanisms.
  *
  * @group Form
- * @group #slow
  */
 class FormTest extends BrowserTestBase {
 

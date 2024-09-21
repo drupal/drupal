@@ -36,6 +36,7 @@ use Psr\Log\LogLevel;
  * @covers \Drupal\Core\DefaultContent\Importer
  * @group DefaultContent
  * @group Recipe
+ * @group #slow
  */
 class ContentImportTest extends BrowserTestBase {
 

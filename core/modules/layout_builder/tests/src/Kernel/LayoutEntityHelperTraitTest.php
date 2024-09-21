@@ -24,7 +24,6 @@ use Prophecy\Argument;
  * @coversDefaultClass \Drupal\layout_builder\LayoutEntityHelperTrait
  *
  * @group layout_builder
- * @group #slow
  */
 class LayoutEntityHelperTraitTest extends KernelTestBase {
 

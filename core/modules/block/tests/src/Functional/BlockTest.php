@@ -14,7 +14,6 @@ use Drupal\user\RoleInterface;
  * Tests basic block functionality.
  *
  * @group block
- * @group #slow
  */
 class BlockTest extends BlockTestBase {
 

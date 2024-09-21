@@ -19,6 +19,7 @@ use Drupal\Tests\system\Traits\OffCanvasTestTrait;
  * Tests the Layout Builder disables interactions of rendered blocks.
  *
  * @group layout_builder
+ * @group #slow
  */
 class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
 

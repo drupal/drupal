@@ -12,7 +12,6 @@ use Drupal\layout_builder\SectionListTrait;
  * @coversDefaultClass \Drupal\layout_builder\SectionListTrait
  *
  * @group layout_builder
- * @group #slow
  */
 class SectionListTraitTest extends SectionListTestBase {
 

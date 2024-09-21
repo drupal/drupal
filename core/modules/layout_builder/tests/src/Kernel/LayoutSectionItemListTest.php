@@ -15,7 +15,6 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
  * @coversDefaultClass \Drupal\layout_builder\Field\LayoutSectionItemList
  *
  * @group layout_builder
- * @group #slow
  */
 class LayoutSectionItemListTest extends SectionListTestBase {
 

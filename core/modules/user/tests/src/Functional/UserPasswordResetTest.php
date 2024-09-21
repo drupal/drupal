@@ -16,7 +16,6 @@ use Drupal\user\UserInterface;
  * Ensure that password reset methods work as expected.
  *
  * @group user
- * @group #slow
  */
 class UserPasswordResetTest extends BrowserTestBase {
 

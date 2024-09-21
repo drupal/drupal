@@ -1030,12 +1030,77 @@ function simpletest_script_get_test_list() {
   }
 
   if ((int) $args['ci-parallel-node-total'] > 1) {
-    $slow_tests_per_job = (int) ceil(count($slow_tests) / $args['ci-parallel-node-total']);
-    $tests_per_job = (int) ceil(count($test_list) / $args['ci-parallel-node-total']);
-    $test_list = array_merge(array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job), array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job));
+    // Sort all tests by the number of public methods on the test class.
+    // This is a proxy for the approximate time taken to run the test,
+    // which is used in combination with @group #slow to start the slowest tests
+    // first and distribute tests between test runners.
+    sort_tests_by_public_method_count($slow_tests);
+    sort_tests_by_public_method_count($test_list);
+
+    // Now set up a bin per test runner.
+    $bin_count = (int) $args['ci-parallel-node-total'];
+
+    // Now loop over the slow tests and add them to a bin one by one, this
+    // distributes the tests evenly across the bins.
+    $binned_slow_tests = place_tests_into_bins($slow_tests, $bin_count);
+    $slow_tests_for_job = $binned_slow_tests[$args['ci-parallel-node-index'] - 1];
+
+    // And the same for the rest of the tests.
+    $binned_other_tests = place_tests_into_bins($test_list, $bin_count);
+    $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
+
+    $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
   }
 
   return $test_list;
+}
+
+/**
+ * Sort tests by the number of public methods in the test class.
+ *
+ * Tests with several methods take longer to run than tests with a single
+ * method all else being equal, so this allows tests runs to be sorted by
+ * approximately the slowest to fastest tests. Tests that are exceptionally
+ * slow can be added to the '#slow' group so they are placed first in each
+ * test run regardless of the number of methods.
+ *
+ * @param string[] $tests
+ *   An array of test class names.
+ */
+function sort_tests_by_public_method_count(array &$tests): void {
+  usort($tests, function ($a, $b) {
+    $method_count = function ($class) {
+      $reflection = new \ReflectionClass($class);
+      return count($reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
+    };
+    return $method_count($b) <=> $method_count($a);
+  });
+}
+
+/**
+ * Distribute tests into bins.
+ *
+ * The given array of tests is split into the available bins. The distribution
+ * starts with the first test, placing the first test in the first bin, the
+ * second test in the second bin and so on. This results each bin having a
+ * similar number of test methods to run in total.
+ *
+ * @param string[] $tests
+ *   An array of test class names.
+ * @param int $bin_count
+ *   The number of bins available.
+ *
+ * @return array
+ *   An associative array of bins and the test class names in each bin.
+ */
+ function place_tests_into_bins(array $tests, int $bin_count) {
+  // Create a bin corresponding to each parallel test job.
+  $bins = array_fill(0, $bin_count, []);
+  // Go through each test and add them to one bin at a time.
+  foreach ($tests as $key => $test) {
+    $bins[($key % $bin_count)][] = $test;
+  }
+  return $bins;
 }
 
 /**

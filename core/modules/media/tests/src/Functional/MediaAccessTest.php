@@ -15,7 +15,6 @@ use Drupal\user\RoleInterface;
  * Basic access tests for Media.
  *
  * @group media
- * @group #slow
  */
 class MediaAccessTest extends MediaFunctionalTestBase {
 

@@ -11,7 +11,6 @@ use Drupal\workspaces\Entity\Workspace;
  * Tests permission controls on workspaces.
  *
  * @group workspaces
- * @group #slow
  */
 class WorkspacePermissionsTest extends BrowserTestBase {
 

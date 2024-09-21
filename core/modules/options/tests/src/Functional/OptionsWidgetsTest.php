@@ -13,7 +13,6 @@ use Drupal\Tests\field\Functional\FieldTestBase;
  * Tests the Options widgets.
  *
  * @group options
- * @group #slow
  */
 class OptionsWidgetsTest extends FieldTestBase {
 

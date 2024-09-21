@@ -10,7 +10,6 @@ use Drupal\shortcut\Entity\ShortcutSet;
  * Create, view, edit, delete, and change shortcut sets.
  *
  * @group shortcut
- * @group #slow
  */
 class ShortcutSetsTest extends ShortcutTestBase {
 

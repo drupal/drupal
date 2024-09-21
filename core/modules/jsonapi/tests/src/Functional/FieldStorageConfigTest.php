@@ -11,7 +11,6 @@ use Drupal\field\Entity\FieldStorageConfig;
  * JSON:API integration test for the "FieldStorageConfig" config entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class FieldStorageConfigTest extends ConfigEntityResourceTestBase {
 

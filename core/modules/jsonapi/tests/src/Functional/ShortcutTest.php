@@ -16,7 +16,6 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "Shortcut" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class ShortcutTest extends ResourceTestBase {
 

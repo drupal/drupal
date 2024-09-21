@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
  * Tests BrowserTestBase functionality.
  *
  * @group browsertestbase
- * @group #slow
  */
 class BrowserTestBaseTest extends BrowserTestBase {
   use PathAliasTestTrait;

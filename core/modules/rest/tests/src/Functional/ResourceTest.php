@@ -17,7 +17,6 @@ use GuzzleHttp\RequestOptions;
  * Tests the structure of a REST resource.
  *
  * @group rest
- * @group #slow
  */
 class ResourceTest extends BrowserTestBase {
 

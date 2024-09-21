@@ -12,7 +12,6 @@ use Symfony\Component\Validator\ConstraintViolation;
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
  * @group ckeditor5
- * @group #slow
  * @internal
  */
 class MediaLinkabilityTest extends MediaTestBase {

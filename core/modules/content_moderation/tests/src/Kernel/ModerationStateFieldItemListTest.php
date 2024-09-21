@@ -16,7 +16,6 @@ use Drupal\workflows\Entity\Workflow;
  * @coversDefaultClass \Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList
  *
  * @group content_moderation
- * @group #slow
  */
 class ModerationStateFieldItemListTest extends KernelTestBase {
 

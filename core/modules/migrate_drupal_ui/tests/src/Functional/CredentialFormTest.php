@@ -16,6 +16,7 @@ use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
  * credentials, and incorrect file paths.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class CredentialFormTest extends MigrateUpgradeTestBase {
 

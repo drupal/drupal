@@ -12,7 +12,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests default configuration handling with a foreign default language.
  *
  * @group locale
- * @group #slow
  */
 class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
 

@@ -14,7 +14,6 @@ use Symfony\Component\Routing\Route;
  * Tests low-level theme functions.
  *
  * @group Theme
- * @group #slow
  */
 class ThemeTest extends BrowserTestBase {
 

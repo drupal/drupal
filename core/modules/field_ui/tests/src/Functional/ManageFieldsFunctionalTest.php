@@ -13,7 +13,6 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests the Field UI "Manage fields" screen.
  *
  * @group field_ui
- * @group #slow
  */
 class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
 

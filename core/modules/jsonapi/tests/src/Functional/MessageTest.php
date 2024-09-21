@@ -15,7 +15,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  * JSON:API integration test for the "Message" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class MessageTest extends ResourceTestBase {
 

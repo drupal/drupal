@@ -12,6 +12,7 @@ namespace Drupal\FunctionalTests\Asset;
  * profile.
  *
  * @group asset
+ * @group #slow
  */
 class AssetOptimizationTestUmami extends AssetOptimizationTest {
 

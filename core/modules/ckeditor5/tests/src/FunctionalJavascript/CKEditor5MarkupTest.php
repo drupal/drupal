@@ -20,7 +20,6 @@ use Symfony\Component\Validator\ConstraintViolation;
  * Tests for CKEditor 5.
  *
  * @group ckeditor5
- * @group #slow
  * @internal
  */
 class CKEditor5MarkupTest extends CKEditor5TestBase {

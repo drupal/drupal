@@ -15,7 +15,6 @@ use Drupal\views\Entity\View;
  * Tests the taxonomy index filter handler UI.
  *
  * @group taxonomy
- * @group #slow
  * @see \Drupal\taxonomy\Plugin\views\field\TaxonomyIndexTid
  */
 class TaxonomyIndexTidUiTest extends UITestBase {

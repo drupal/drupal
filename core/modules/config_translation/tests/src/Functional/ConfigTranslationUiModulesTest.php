@@ -16,7 +16,6 @@ use Drupal\node\Entity\NodeType;
  * Translate settings and entities to various languages.
  *
  * @group config_translation
- * @group #slow
  */
 class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
 

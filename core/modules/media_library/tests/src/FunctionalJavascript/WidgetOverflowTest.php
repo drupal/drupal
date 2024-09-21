@@ -10,6 +10,7 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests that uploads in the 'media_library_widget' works as expected.
  *
  * @group media_library
+ * @group #slow
  *
  * @todo This test will occasionally fail with SQLite until
  *   https://www.drupal.org/node/3066447 is addressed.

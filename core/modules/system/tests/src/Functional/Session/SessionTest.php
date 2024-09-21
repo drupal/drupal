@@ -11,7 +11,6 @@ use Drupal\Tests\BrowserTestBase;
  * Drupal session handling tests.
  *
  * @group Session
- * @group #slow
  */
 class SessionTest extends BrowserTestBase {
 

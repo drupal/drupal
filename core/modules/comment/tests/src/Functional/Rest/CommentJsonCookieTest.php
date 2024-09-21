@@ -8,7 +8,6 @@ use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group rest
- * @group #slow
  */
 class CommentJsonCookieTest extends CommentResourceTestBase {
 

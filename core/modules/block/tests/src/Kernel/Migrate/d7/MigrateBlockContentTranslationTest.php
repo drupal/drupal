@@ -10,7 +10,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Tests migration of i18n block translations.
  *
  * @group migrate_drupal_7
- * @group #slow
  */
 class MigrateBlockContentTranslationTest extends MigrateDrupal7TestBase {
 

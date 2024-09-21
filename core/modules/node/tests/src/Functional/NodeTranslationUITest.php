@@ -22,7 +22,6 @@ use Drupal\user\RoleInterface;
  * Tests the Node Translation UI.
  *
  * @group node
- * @group #slow
  */
 class NodeTranslationUITest extends ContentTranslationUITestBase {
 

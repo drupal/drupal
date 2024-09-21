@@ -11,7 +11,6 @@ use Drupal\rest\Entity\RestResourceConfig;
  * JSON:API integration test for the "RestResourceConfig" config entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class RestResourceConfigTest extends ConfigEntityResourceTestBase {
 

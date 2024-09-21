@@ -11,7 +11,6 @@ use Drupal\responsive_image\Entity\ResponsiveImageStyle;
  * JSON:API integration test for the "ResponsiveImageStyle" config entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class ResponsiveImageStyleTest extends ConfigEntityResourceTestBase {
 
