@@ -50,7 +50,13 @@ class Batch extends DatabaseQueue {
   public function getAllItems() {
     $result = [];
     try {
-      $items = $this->connection->query('SELECT [data] FROM {queue} q WHERE [name] = :name ORDER BY [item_id] ASC', [':name' => $this->name])->fetchAll();
+      $items = $this->connection->select('queue', 'q')
+        ->fields('q', ['data'])
+        ->condition('name', $this->name)
+        ->orderBy('item_id', 'ASC')
+        ->execute()
+        ->fetchAll();
+
       foreach ($items as $item) {
         $result[] = unserialize($item->data);
       }

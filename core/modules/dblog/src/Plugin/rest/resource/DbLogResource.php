@@ -40,7 +40,10 @@ class DbLogResource extends ResourceBase {
    */
   public function get($id = NULL) {
     if ($id) {
-      $record = Database::getConnection()->query("SELECT * FROM {watchdog} WHERE [wid] = :wid", [':wid' => $id])
+      $record = Database::getConnection()->select('watchdog', 'w')
+        ->fields('w')
+        ->condition('wid', $id)
+        ->execute()
         ->fetchAssoc();
       if (!empty($record)) {
         return new ResourceResponse($record);

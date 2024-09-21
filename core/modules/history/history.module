@@ -81,10 +81,11 @@ function history_read_multiple($nids) {
     return $return;
   }
 
-  $result = \Drupal::database()->query('SELECT [nid], [timestamp] FROM {history} WHERE [uid] = :uid AND [nid] IN ( :nids[] )', [
-    ':uid' => \Drupal::currentUser()->id(),
-    ':nids[]' => array_keys($nodes_to_read),
-  ]);
+  $result = \Drupal::database()->select('history', 'h')
+    ->fields('h', ['nid', 'timestamp'])
+    ->condition('uid', \Drupal::currentUser()->id())
+    ->condition('nid', array_keys($nodes_to_read), 'IN')
+    ->execute();
   foreach ($result as $row) {
     $nodes_to_read[$row->nid] = (int) $row->timestamp;
   }
