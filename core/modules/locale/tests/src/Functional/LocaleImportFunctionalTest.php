@@ -11,7 +11,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 // cspell:ignore chien chiens deutsch januari lundi montag moutons műveletek
-// cspell:ignore svibanj
+// cspell:ignore svibanj räme
 
 /**
  * Tests the import of locale files.
@@ -250,6 +250,9 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     $this->submitForm($search, 'Filter');
     $this->assertSession()->pageTextNotContains('No strings available.');
 
+    // Try importing a .po file with invalid encoding.
+    $this->importPoFile($this->getInvalidEncodedPoFile(), [], ['Windows-1252']);
+    $this->assertSession()->pageTextContains('The file is encoded with ASCII. It must be encoded with UTF-8');
   }
 
   /**
@@ -402,10 +405,15 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
    *   Contents of the .po file to import.
    * @param array $options
    *   (optional) Additional options to pass to the translation import form.
+   * @param array $encodings
+   *   (optional) The encoding of the file.
    */
-  public function importPoFile($contents, array $options = []) {
+  public function importPoFile($contents, array $options = [], array $encodings = []) {
     $file_system = \Drupal::service('file_system');
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
+    foreach ($encodings as $encoding) {
+      $contents = mb_convert_encoding($contents, $encoding);
+    }
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;
     $this->drupalGet('admin/config/regional/translate/import');
@@ -672,6 +680,24 @@ msgstr "Anonymous German"
 msgid "German"
 msgstr "Deutsch"
 
+EOF;
+  }
+
+  /**
+   * Helper function that returns a .po file with invalid encoding.
+   */
+  public function getInvalidEncodedPoFile() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 8\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=Windows-1252\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+msgid "Swamp"
+msgstr "Räme"
 EOF;
   }
 
