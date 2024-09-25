@@ -19,7 +19,7 @@ class NoProfilesException extends InstallerException {
     $this->stringTranslation = $string_translation;
 
     $title = $this->t('No profiles available');
-    $message = $this->t('We were unable to find any installation profiles. Installation profiles tell us what modules to enable and what schema to install in the database. A profile is necessary to continue with the installation process.');
+    $message = $this->t('We were unable to find any installation profiles. Installation profiles tell us what modules to install and what schema to install in the database. A profile is necessary to continue with the installation process.');
     parent::__construct($message, $title);
   }
 
