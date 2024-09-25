@@ -167,14 +167,6 @@ ol {
   padding: 0;
 }
 
-/**
- * Fix duplicate border caused by normalize.css adding border-bottom without
- * removing the text-decoration.
- */
-abbr[title] {
-  text-decoration: none;
-}
-
 code {
   margin: 0.5em 0;
 }
