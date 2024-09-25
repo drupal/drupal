@@ -503,7 +503,7 @@ abstract class BuildTestBase extends TestCase {
    *
    * @return bool
    */
-  protected function checkPortIsAvailable($port) {
+  protected function checkPortIsAvailable($port): bool {
     $fp = @fsockopen(self::$hostName, $port, $errno, $errstr, 1);
     // If fsockopen() fails to connect, probably nothing is listening.
     // It could be a firewall but that's impossible to detect, so as a

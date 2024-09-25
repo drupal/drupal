@@ -183,7 +183,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
    * @return bool
    *   TRUE if the label is visible, FALSE if it is not.
    */
-  protected function isLabelInputVisible() {
+  protected function isLabelInputVisible(): bool {
     return $this->getSession()->getPage()->find('css', static::LABEL_INPUT_SELECTOR)->isVisible();
   }
 

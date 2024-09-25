@@ -123,7 +123,7 @@ class FilterTest extends WebDriverTestBase {
    * @return bool
    *   TRUE if the required number was matched, FALSE otherwise.
    */
-  protected function waitForVisibleElementCount($count, $locator, $timeout = 10000) {
+  protected function waitForVisibleElementCount($count, $locator, $timeout = 10000): bool {
     $page = $this->getSession()->getPage();
 
     return $page->waitFor($timeout / 1000, function () use ($count, $page, $locator) {
@@ -145,7 +145,7 @@ class FilterTest extends WebDriverTestBase {
    * @return bool
    *   TRUE if the required number was matched, FALSE otherwise.
    */
-  protected function waitForOnlyContentRows($timeout = 10000) {
+  protected function waitForOnlyContentRows($timeout = 10000): bool {
     $page = $this->getSession()->getPage();
 
     return $page->waitFor($timeout / 1000, function () use ($page) {

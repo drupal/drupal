@@ -104,7 +104,7 @@ class FieldTestItem extends FieldItemBase {
    * @return bool
    *   TRUE if the item should be resaved, FALSE otherwise.
    */
-  protected function mustResave() {
+  protected function mustResave(): bool {
     return $this->getValue()['value'] == 'resave';
   }
 

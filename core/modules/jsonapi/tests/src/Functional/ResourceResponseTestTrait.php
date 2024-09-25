@@ -306,7 +306,7 @@ trait ResourceResponseTestTrait {
    * @return bool
    *   TRUE if the needle exists is present in the haystack, FALSE otherwise.
    */
-  protected static function collectionHasResourceIdentifier(array $needle, array $haystack) {
+  protected static function collectionHasResourceIdentifier(array $needle, array $haystack): bool {
     foreach ($haystack as $resource) {
       if ($resource['type'] == $needle['type'] && $resource['id'] == $needle['id']) {
         return TRUE;

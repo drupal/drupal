@@ -199,7 +199,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @return bool
    *   Boolean indicating whether the comment was found.
    */
-  protected function commentExists(?CommentInterface $comment = NULL, $reply = FALSE) {
+  protected function commentExists(?CommentInterface $comment = NULL, $reply = FALSE): bool {
     if ($comment) {
       $comment_element = $this->cssSelect(($reply ? '.indented ' : '') . 'article#comment-' . $comment->id());
       if (empty($comment_element)) {
@@ -347,7 +347,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @return bool
    *   Contact info is available.
    */
-  protected function commentContactInfoAvailable() {
+  protected function commentContactInfoAvailable(): bool {
     return (bool) preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getSession()->getPage()->getContent());
   }
 

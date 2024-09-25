@@ -557,7 +557,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertUniqueText($text, $message = '') {
+  protected function assertUniqueText($text, $message = ''): bool {
     return $this->assertUniqueTextHelper($text, $message, NULL, TRUE);
   }
 
@@ -580,7 +580,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoUniqueText($text, $message = '') {
+  protected function assertNoUniqueText($text, $message = ''): bool {
     return $this->assertUniqueTextHelper($text, $message, NULL, FALSE);
   }
 
@@ -847,7 +847,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByXPath($xpath, $value = NULL, $message = '') {
+  protected function assertFieldByXPath($xpath, $value = NULL, $message = ''): bool {
     $fields = $this->xpath($xpath);
 
     return $this->assertFieldsByValue($fields, $value, $message);
@@ -933,7 +933,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByName($name, $value = NULL, $message = NULL) {
+  protected function assertFieldByName($name, $value = NULL, $message = NULL): bool {
     if (!isset($message)) {
       if (!isset($value)) {
         $message = new FormattableMarkup('Found field with name @name', [
@@ -970,7 +970,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoFieldByName($name, $value = '', $message = '') {
+  protected function assertNoFieldByName($name, $value = '', $message = ''): bool {
     return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : new FormattableMarkup('Did not find field by name @name', ['@name' => $name]));
   }
 
@@ -994,7 +994,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldById($id, $value = '', $message = '') {
+  protected function assertFieldById($id, $value = '', $message = ''): bool {
     // Cast MarkupInterface objects to string.
     if (isset($value)) {
       $value = (string) $value;
@@ -1023,7 +1023,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoFieldById($id, $value = '', $message = '') {
+  protected function assertNoFieldById($id, $value = '', $message = ''): bool {
     return $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : new FormattableMarkup('Did not find field by id @id', ['@id' => $id]));
   }
 
@@ -1246,7 +1246,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertField($field, $message = '') {
+  protected function assertField($field, $message = ''): bool {
     return $this->assertFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), NULL, $message);
   }
 
@@ -1265,7 +1265,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoField($field, $message = '') {
+  protected function assertNoField($field, $message = ''): bool {
     return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), NULL, $message);
   }
 
