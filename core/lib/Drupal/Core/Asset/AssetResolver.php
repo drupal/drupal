@@ -91,31 +91,77 @@ class AssetResolver implements AssetResolverInterface {
    * $assets = new AttachedAssets();
    * $assets->setLibraries(['core/a', 'core/b', 'core/c']);
    * $assets->setAlreadyLoadedLibraries(['core/c']);
-   * $resolver->getLibrariesToLoad($assets) === ['core/a', 'core/b', 'core/d']
+   * $resolver->getLibrariesToLoad($assets, 'js') === ['core/a', 'core/b', 'core/d']
    * @endcode
+   *
+   * The attached assets tend to be in the order that libraries were attached
+   * during a request. To minimize the number of unique aggregated asset URLs
+   * and files, we normalize the list by filtering out libraries that don't
+   * include the asset type being built as well as ensuring a reliable order of
+   * the libraries based on their dependencies.
    *
    * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
    *   The assets attached to the current response.
+   * @param string|null $asset_type
+   *   The asset type to load.
    *
    * @return string[]
    *   A list of libraries and their dependencies, in the order they should be
    *   loaded, excluding any libraries that have already been loaded.
    */
-  protected function getLibrariesToLoad(AttachedAssetsInterface $assets) {
-    // The order of libraries passed in via assets can differ, so to reduce
-    // variation, first normalize the requested libraries to the minimal
-    // representative set before then expanding the list to include all
-    // dependencies.
+  protected function getLibrariesToLoad(AttachedAssetsInterface $assets, ?string $asset_type = NULL) {
     // @see Drupal\FunctionalTests\Core\Asset\AssetOptimizationTestUmami
     // @todo https://www.drupal.org/project/drupal/issues/1945262
-    $libraries = $assets->getLibraries();
-    if ($libraries) {
-      $libraries = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries);
-    }
-    return array_diff(
-      $this->libraryDependencyResolver->getLibrariesWithDependencies($libraries),
+    $libraries_to_load = array_diff(
+      $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getLibraries()),
       $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries())
     );
+    if ($asset_type) {
+      $libraries_to_load = $this->filterLibrariesByType($libraries_to_load, $asset_type);
+    }
+
+    // We now have a complete list of libraries requested. However, this list
+    // could be in any order depending on when libraries were attached during
+    // the page request, which can result in different file contents and URLs
+    // even for an otherwise identical set of libraries. To ensure that any
+    // particular set of libraries results in the same aggregate URL, sort the
+    // libraries, then generate the minimum representative set again.
+    sort($libraries_to_load);
+    $minimum_libraries = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries_to_load);
+    $libraries_to_load = array_diff(
+      $this->libraryDependencyResolver->getLibrariesWithDependencies($minimum_libraries),
+      $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries())
+    );
+
+    // Now remove any libraries without the relevant asset type again, since
+    // they have been brought back in via dependencies.
+    if ($asset_type) {
+      $libraries_to_load = $this->filterLibrariesByType($libraries_to_load, $asset_type);
+    }
+
+    return $libraries_to_load;
+  }
+
+  /**
+   * Filter libraries that don't contain an asset type.
+   *
+   * @param array $libraries
+   *   An array of library definitions.
+   * @param string $asset_type
+   *   The type of asset, either 'js' or 'css'.
+   *
+   * @return array
+   *   The filtered libraries array.
+   */
+  protected function filterLibrariesByType(array $libraries, string $asset_type): array {
+    foreach ($libraries as $key => $library) {
+      [$extension, $name] = explode('/', $library, 2);
+      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
+      if (empty($definition[$asset_type])) {
+        unset($libraries[$key]);
+      }
+    }
+    return $libraries;
   }
 
   /**
@@ -125,15 +171,9 @@ class AssetResolver implements AssetResolverInterface {
     if (!$assets->getLibraries()) {
       return [];
     }
-    $libraries_to_load = $this->getLibrariesToLoad($assets);
-    foreach ($libraries_to_load as $key => $library) {
-      [$extension, $name] = explode('/', $library, 2);
-      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-      if (empty($definition['css'])) {
-        unset($libraries_to_load[$key]);
-      }
-    }
-    $libraries_to_load = array_values($libraries_to_load);
+    // Get the complete list of libraries to load including dependencies.
+    $libraries_to_load = $this->getLibrariesToLoad($assets, 'css');
+
     if (!$libraries_to_load) {
       return [];
     }
@@ -157,7 +197,7 @@ class AssetResolver implements AssetResolverInterface {
       'preprocess' => TRUE,
     ];
 
-    foreach ($libraries_to_load as $key => $library) {
+    foreach ($libraries_to_load as $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       foreach ($definition['css'] as $options) {
@@ -211,7 +251,7 @@ class AssetResolver implements AssetResolverInterface {
   protected function getJsSettingsAssets(AttachedAssetsInterface $assets) {
     $settings = [];
 
-    foreach ($this->getLibrariesToLoad($assets) as $library) {
+    foreach ($this->getLibrariesToLoad($assets, 'js') as $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (isset($definition['drupalSettings'])) {
@@ -233,24 +273,19 @@ class AssetResolver implements AssetResolverInterface {
       $language = $this->languageManager->getCurrentLanguage();
     }
     $theme_info = $this->themeManager->getActiveTheme();
-    $libraries_to_load = $this->getLibrariesToLoad($assets);
+
+    // Get the complete list of libraries to load including dependencies.
+    $libraries_to_load = $this->getLibrariesToLoad($assets, 'js');
 
     // Collect all libraries that contain JS assets and are in the header.
-    // Also remove any libraries with no JavaScript from the libraries to
-    // load.
     $header_js_libraries = [];
     foreach ($libraries_to_load as $key => $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-      if (empty($definition['js'])) {
-        unset($libraries_to_load[$key]);
-        continue;
-      }
       if (!empty($definition['header'])) {
         $header_js_libraries[] = $library;
       }
     }
-    $libraries_to_load = array_values($libraries_to_load);
 
     // If all the libraries to load contained only CSS, there is nothing further
     // to do here, so return early.
