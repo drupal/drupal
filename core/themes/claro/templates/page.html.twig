@@ -41,12 +41,14 @@
 #}
   <main>
     <div class="visually-hidden"><a id="main-content" tabindex="-1"></a></div>
-    <header class="content-header clearfix">
-      <div class="layout-container">
-        {{ page.breadcrumb }}
-        {{ page.header }}
-      </div>
-    </header>
+    {% if page.breadcrumb or page.header %}
+      <header class="content-header clearfix">
+        <div class="layout-container">
+          {{ page.breadcrumb }}
+          {{ page.header }}
+        </div>
+      </header>
+    {% endif %}
 
     <div class="layout-container">
       {{ page.pre_content }}
