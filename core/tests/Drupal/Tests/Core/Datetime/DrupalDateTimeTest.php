@@ -98,38 +98,38 @@ class DrupalDateTimeTest extends UnitTestCase {
         'expected' => $positive_18_hours,
       ],
       [
-        'input1' => DrupalDateTime::createFromFormat('U', 3600, new \DateTimeZone('America/Los_Angeles'), $settings),
-        'input2' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
+        'input1' => DrupalDateTime::createFromFormat('U', '3600', new \DateTimeZone('America/Los_Angeles'), $settings),
+        'input2' => DrupalDateTime::createFromTimestamp(0, $utc_tz, $settings),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
       ],
       [
-        'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
-        'input2' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
+        'input1' => DrupalDateTime::createFromTimestamp(3600, $utc_tz, $settings),
+        'input2' => DrupalDateTime::createFromTimestamp(0, $utc_tz, $settings),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
       ],
       [
-        'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
+        'input1' => DrupalDateTime::createFromTimestamp(3600, $utc_tz, $settings),
         'input2' => \DateTime::createFromFormat('U', '0'),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
       ],
       [
-        'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
-        'input2' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
+        'input1' => DrupalDateTime::createFromTimestamp(3600, $utc_tz, $settings),
+        'input2' => DrupalDateTime::createFromTimestamp(0, $utc_tz, $settings),
         'absolute' => TRUE,
         'expected' => $positive_1_hour,
       ],
       [
-        'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
+        'input1' => DrupalDateTime::createFromTimestamp(3600, $utc_tz, $settings),
         'input2' => \DateTime::createFromFormat('U', '0'),
         'absolute' => TRUE,
         'expected' => $positive_1_hour,
       ],
       [
-        'input1' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
-        'input2' => DrupalDateTime::createFromFormat('U', 0, $utc_tz, $settings),
+        'input1' => DrupalDateTime::createFromTimestamp(0, $utc_tz, $settings),
+        'input2' => DrupalDateTime::createFromTimestamp(0, $utc_tz, $settings),
         'absolute' => FALSE,
         'expected' => $empty_interval,
       ],
@@ -150,12 +150,12 @@ class DrupalDateTimeTest extends UnitTestCase {
     $utc_tz = new \DateTimeZone('UTC');
     return [
       [
-        'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
+        'input1' => DrupalDateTime::createFromTimestamp(3600, $utc_tz, $settings),
         'input2' => '1970-01-01 00:00:00',
         'absolute' => FALSE,
       ],
       [
-        'input1' => DrupalDateTime::createFromFormat('U', 3600, $utc_tz, $settings),
+        'input1' => DrupalDateTime::createFromTimestamp(3600, $utc_tz, $settings),
         'input2' => NULL,
         'absolute' => FALSE,
       ],
