@@ -54,7 +54,7 @@ trait AssertContentTrait {
   /**
    * Sets the raw content (e.g. HTML).
    *
-   * @param string $content
+   * @param string|\Stringable $content
    *   The raw content to set.
    */
   protected function setRawContent($content) {
