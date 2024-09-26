@@ -1,0 +1,4 @@
+name: 'Theme test child theme'
+type: theme
+version: VERSION
+base theme: test_parent_theme

@@ -1,0 +1,3 @@
+theme_parent_provided_layout:
+  class: '\Drupal\Core\Layout\LayoutDefault'
+  label: Parent
