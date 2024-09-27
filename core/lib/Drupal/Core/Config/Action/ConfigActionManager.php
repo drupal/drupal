@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Config\Action;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
@@ -137,8 +138,20 @@ class ConfigActionManager extends DefaultPluginManager {
         $action_id = $this->getShorthandActionIdsForEntityType($entity_type)[$action_id] ?? $action_id;
       }
     }
-    /** @var \Drupal\Core\Config\Action\ConfigActionPluginInterface $action */
-    $action = $this->createInstance($action_id);
+    try {
+      /** @var \Drupal\Core\Config\Action\ConfigActionPluginInterface $action */
+      $action = $this->createInstance($action_id);
+    }
+    catch (PluginNotFoundException $e) {
+      $entity_type = $this->configManager->getEntityTypeIdByName($configName);
+      if ($entity_type) {
+        $action_ids = $this->getShorthandActionIdsForEntityType($entity_type);
+        $valid_ids = implode(', ', array_keys($action_ids));
+        throw new PluginNotFoundException($action_id, sprintf('The "%s" entity does not support the "%s" config action. Valid config actions for %s are: %s', $entity_type, $action_id, $entity_type, $valid_ids));
+      }
+      throw $e;
+    }
+
     foreach ($this->getConfigNamesMatchingExpression($configName) as $name) {
       $action->apply($name, $data);
       $typed_config = $this->typedConfig->createFromNameAndData($name, $this->configFactory->get($name)->getRawData());
