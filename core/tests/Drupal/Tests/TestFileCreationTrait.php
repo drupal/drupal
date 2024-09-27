@@ -113,7 +113,7 @@ trait TestFileCreationTrait {
    *
    * @return int
    */
-  protected function compareFiles($file1, $file2): int {
+  protected function compareFiles($file1, $file2) {
     $compare_size = filesize($file1->uri) - filesize($file2->uri);
     if ($compare_size) {
       // Sort by file size.

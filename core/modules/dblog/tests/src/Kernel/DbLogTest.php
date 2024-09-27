@@ -83,7 +83,7 @@ class DbLogTest extends KernelTestBase {
    * @return int
    *   Number of new watchdog entries.
    */
-  private function runCron(): int {
+  private function runCron() {
     $connection = Database::getConnection();
     // Get last ID to compare against; log entries get deleted, so we can't
     // reliably add the number of newly created log entries to the current count

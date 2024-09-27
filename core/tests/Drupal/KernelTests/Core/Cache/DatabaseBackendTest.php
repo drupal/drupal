@@ -112,7 +112,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    * @return int
    *   The number of rows in the test cache bin database table.
    */
-  protected function getNumRows(): int {
+  protected function getNumRows() {
     $table = 'cache_' . $this->testBin;
     $connection = $this->container->get('database');
     $query = $connection->select($table);

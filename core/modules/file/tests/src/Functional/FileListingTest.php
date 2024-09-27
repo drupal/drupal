@@ -62,7 +62,7 @@ class FileListingTest extends FileFieldTestBase {
    * @return int
    *   Total usage count.
    */
-  protected function sumUsages($usage): int {
+  protected function sumUsages($usage) {
     $count = 0;
     foreach ($usage as $module) {
       foreach ($module as $entity_type) {

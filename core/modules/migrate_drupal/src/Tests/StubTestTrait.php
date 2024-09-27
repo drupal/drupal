@@ -33,7 +33,7 @@ trait StubTestTrait {
    * @return int
    *   ID of the created entity.
    */
-  protected function createEntityStub($entity_type_id): int {
+  protected function createEntityStub($entity_type_id) {
     // Create a dummy migration to pass to the destination plugin.
     $definition = [
       'migration_tags' => ['Stub test'],
