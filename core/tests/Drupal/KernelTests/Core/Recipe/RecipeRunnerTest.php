@@ -207,6 +207,23 @@ install:
   - config_test
 config:
   actions:
+    config_test.system:
+      setFoo: 'Bar'
+YAML;
+
+    $recipe = $this->createRecipe($recipe_data);
+    $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage('The "setFoo" plugin does not exist.');
+    RecipeRunner::processRecipe($recipe);
+  }
+
+  public function testInvalidConfigActionAppliedOnConfigEntity() :void {
+    $recipe_data = <<<YAML
+name: Invalid config action
+install:
+  - config_test
+config:
+  actions:
     config_test.dynamic.recipe:
       createIfNotExists:
         label: 'Created by recipe'
@@ -215,7 +232,7 @@ YAML;
 
     $recipe = $this->createRecipe($recipe_data);
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage('The "setBody" plugin does not exist.');
+    $this->expectExceptionMessage('The "config_test" entity does not support the "setBody" config action.');
     RecipeRunner::processRecipe($recipe);
   }
 
