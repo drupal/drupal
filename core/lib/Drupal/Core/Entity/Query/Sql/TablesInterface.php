@@ -11,10 +11,10 @@ interface TablesInterface {
    * Adds a field to a database query.
    *
    * @param string $field
-   *   If it doesn't contain a dot, then an entity base field name. If it
-   *   contains a dot, then either field name dot field column or field name dot
-   *   delta dot field column. Delta can be a numeric value or a "%delta" for
-   *   any value.
+   *   The field to add to the query.
+   *
+   *   For comprehensive documentation on the format, see
+   *   \Drupal\Core\Entity\Query\QueryInterface::condition().
    * @param string $type
    *   Join type, can either be INNER or LEFT.
    * @param string $langcode
