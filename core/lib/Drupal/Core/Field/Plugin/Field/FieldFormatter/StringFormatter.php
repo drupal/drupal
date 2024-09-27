@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\Attribute\FieldFormatter;
@@ -122,27 +123,33 @@ class StringFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-    $url = NULL;
     $entity = $items->getEntity();
     $entity_type = $entity->getEntityType();
 
+    $render_as_link = FALSE;
     if ($this->getSetting('link_to_entity') && !$entity->isNew() && $entity_type->hasLinkTemplate('canonical')) {
       $url = $this->getEntityUrl($entity);
+      $access = $url->access(return_as_object: TRUE);
+      (new CacheableMetadata())
+        ->addCacheableDependency($access)
+        ->applyTo($elements);
+      $render_as_link = $access->isAllowed();
     }
 
     foreach ($items as $delta => $item) {
-      $view_value = $this->viewValue($item);
-      if ($url) {
+      if ($render_as_link) {
+        assert(isset($url));
         $elements[$delta] = [
           '#type' => 'link',
-          '#title' => $view_value,
+          '#title' => $this->viewValue($item),
           '#url' => $url,
         ];
       }
       else {
-        $elements[$delta] = $view_value;
+        $elements[$delta] = $this->viewValue($item);
       }
     }
+
     return $elements;
   }
 
