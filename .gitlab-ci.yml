@@ -58,6 +58,7 @@ workflow:
 variables:
   _CONFIG_DOCKERHUB_ROOT: "drupalci"
   CACHE_TARGET: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}"
+  CORE_GITLAB_PROJECT_ID: 59858
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
   COMPOSER_ALLOW_SUPERUSER: 1
@@ -102,30 +103,39 @@ default:
   rules:
     - if: $PERFORMANCE_TEST != "1"
 
+.prepare-lint-directory: &prepare-lint-directory
+  # PHPStan and yarn linting use absolute paths to determine cache validity. Because GitLab CI
+  # working directories are not consistent, work around this by running linting in a separate,
+  # stable path.
+  # See https://github.com/phpstan/phpstan/issues/8599
+  - mkdir /build;
+  - cp -Ria $CI_PROJECT_DIR/* /build/
+  - cd /build
+
 .phpstan-cache: &phpstan-cache
   # Get the phpstan cache file from the artifacts of the latest successful
   # job from the target branch. Allow the job to proceed and pass if the file
   # doesn't exist.
   - mkdir core/phpstan-tmp
-  - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming" || true'
 
 .cspell-cache: &cspell-cache
   # Fetch the cspell cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
 
 .eslint-cache: &eslint-cache
   # Fetch the eslint cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Lint%20cache%20warming" || true'
 
 .stylelint-cache: &stylelint-cache
   # Fetch the stylelint cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Lint%20cache%20warming" || true'
 
 .core-spellcheck: &core-spellcheck
   - cd core
@@ -298,6 +308,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
+    - *prepare-lint-directory
     - *phpstan-cache
     - *cspell-cache
     - *eslint-cache
@@ -309,6 +320,10 @@ default:
     - yarn run lint:core-js-passing --cache --cache-strategy content
     - yarn run build:css --check
     - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content
+    - mv -f /build/core/phpstan-tmp $CI_PROJECT_DIR/core
+    - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
+    - mv -f  /build/core/.eslintcache $CI_PROJECT_DIR/core
+    - mv -f  /build/core/.stylelintcache $CI_PROJECT_DIR/core
   artifacts:
     paths:
       - core/phpstan-tmp/resultCache.php
@@ -322,6 +337,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
+    - *prepare-lint-directory
     - *phpstan-cache
     - composer validate
     - composer install --optimize-autoloader
@@ -332,15 +348,15 @@ default:
     - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
-    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json || EXIT_CODE=$?
-    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > phpstan-junit.xml || true
+    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > $CI_PROJECT_DIR/phpstan-quality-report.json || EXIT_CODE=$?
+    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > $CI_PROJECT_DIR/phpstan-junit.xml || true
     - |
       if [ -n "$EXIT_CODE" ]; then
         # Output a copy in plain text for human logs.
         php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
         # Generate a new baseline.
         echo "Generating an PHPStan baseline file (available as job artifact)."
-        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/.phpstan-baseline.php || true
+        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=$CI_PROJECT_DIR/core/.phpstan-baseline.php || true
         exit $EXIT_CODE
       fi
 
@@ -393,6 +409,7 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - *prepare-lint-directory
     - *eslint-cache
     - cd core
     - corepack enable
@@ -420,6 +437,7 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - *prepare-lint-directory
     - *stylelint-cache
     - corepack enable
     - cd core
@@ -436,8 +454,12 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
+    - *prepare-lint-directory
     - *cspell-cache
     - *core-spellcheck
+    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
+    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
+    - mv /build/core/node_modules $CI_PROJECT_DIR/core
   cache:
     key:
       files:
