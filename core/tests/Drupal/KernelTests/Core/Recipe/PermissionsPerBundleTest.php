@@ -124,7 +124,7 @@ config:
 YAML;
 
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage('The "grantPermissionsForEachNodeType" plugin does not exist.');
+    $this->expectExceptionMessage('The "field_storage_config" entity does not support the "grantPermissionsForEachNodeType" config action.');
     $this->applyRecipeFromString($recipe_data);
   }
 

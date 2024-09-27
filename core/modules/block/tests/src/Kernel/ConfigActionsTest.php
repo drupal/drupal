@@ -73,7 +73,7 @@ class ConfigActionsTest extends KernelTestBase {
    */
   public function testPlaceBlockActionOnlyWorksOnBlocks(string $action): void {
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage("The \"$action\" plugin does not exist.");
+    $this->expectExceptionMessage("The \"user_role\" entity does not support the \"$action\" config action.");
     $this->configActionManager->applyAction($action, 'user.role.anonymous', []);
   }
 
