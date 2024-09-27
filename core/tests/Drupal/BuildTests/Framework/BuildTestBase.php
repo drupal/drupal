@@ -466,7 +466,7 @@ abstract class BuildTestBase extends TestCase {
    * @throws \RuntimeException
    *   Thrown when there are no available ports within the range.
    */
-  protected function findAvailablePort() {
+  protected function findAvailablePort(): int {
     $store = new FlockStore(DrupalFilesystem::getOsTemporaryDirectory());
     $lock_factory = new LockFactory($store);
 
@@ -524,7 +524,7 @@ abstract class BuildTestBase extends TestCase {
    *
    * @return int
    */
-  protected function getPortNumber() {
+  protected function getPortNumber(): int {
     if (empty($this->hostPort)) {
       $this->hostPort = $this->findAvailablePort();
     }

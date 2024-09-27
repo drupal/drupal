@@ -255,7 +255,7 @@ abstract class MediaTestBase extends WebDriverTestBase {
    * @return int
    *   The size of the bytes transferred.
    */
-  protected function getLastPreviewRequestTransferSize() {
+  protected function getLastPreviewRequestTransferSize(): int {
     $javascript = <<<JS
 (function(){
   return window.performance

@@ -288,7 +288,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    * @return int
    *   The latest saved revision id.
    */
-  protected function doTestEditSequence($sequence) {
+  protected function doTestEditSequence($sequence): int {
     $revision_id = NULL;
     foreach ($sequence as $index => $step) {
       $this->stepIndex = $index;
