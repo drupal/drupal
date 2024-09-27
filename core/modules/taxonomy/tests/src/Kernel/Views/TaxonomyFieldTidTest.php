@@ -7,6 +7,7 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
@@ -19,6 +20,7 @@ use Drupal\views\Views;
 class TaxonomyFieldTidTest extends ViewsKernelTestBase {
 
   use TaxonomyTestTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -49,7 +51,11 @@ class TaxonomyFieldTidTest extends ViewsKernelTestBase {
     parent::setUp($import_test_views);
 
     $this->installEntitySchema('taxonomy_term');
+    $this->installEntitySchema('user');
     $this->installConfig(['filter']);
+    $this->setUpCurrentUser(permissions: [
+      'access content',
+    ]);
 
     /** @var \Drupal\taxonomy\Entity\Vocabulary $vocabulary */
     $vocabulary = $this->createVocabulary();
