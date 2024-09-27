@@ -151,4 +151,19 @@ class ResourceTypeBuildEvent extends Event {
     }
   }
 
+  /**
+   * Enables the given field on the resource type to be built.
+   *
+   * @param \Drupal\jsonapi\ResourceType\ResourceTypeField $field
+   *   The field for which to set a public name.
+   */
+  public function enableField(ResourceTypeField $field): void {
+    foreach ($this->fields as $index => $value) {
+      if ($field === $value) {
+        $this->fields[$index] = $value->enabled();
+        return;
+      }
+    }
+  }
+
 }
