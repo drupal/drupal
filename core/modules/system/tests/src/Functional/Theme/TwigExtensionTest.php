@@ -126,4 +126,17 @@ class TwigExtensionTest extends BrowserTestBase {
 
   }
 
+  /**
+   * Test if Drupal html strategy is done and the fallback to Twig itself works.
+   */
+  public function testRenderStrategies(): void {
+    /** @var \Drupal\Core\Template\TwigExtension $extension */
+    $extension = \Drupal::service('twig.extension');
+    /** @var \Drupal\Core\Template\TwigEnvironment $twig */
+    $twig = \Drupal::service('twig');
+
+    $this->assertSame('test&amp;', $extension->escapeFilter($twig, 'test&'), 'TwigExtension::escapeFilter() renders escaped & when strategy is html (default).');
+    $this->assertSame('test\u0026', $extension->escapeFilter($twig, 'test&', 'js'), 'TwigExtension::escapeFilter() renders escaped & when strategy is js.');
+  }
+
 }
