@@ -56,7 +56,7 @@ class TwigTransTokenParser extends AbstractTokenParser {
 
     $this->checkTransString($body, $lineno);
 
-    $node = new TwigNodeTrans($body, $plural, $count, $options, $lineno, $this->getTag());
+    $node = new TwigNodeTrans($body, $plural, $count, $options, $lineno);
 
     return $node;
   }

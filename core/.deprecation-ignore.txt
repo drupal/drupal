@@ -68,5 +68,4 @@
 %Since twig/twig 3.12: Not passing an instance of "TwigFunction" when creating a "add_component_context" function of type "Twig\\Node\\Expression\\FunctionExpression" is deprecated.%
 %Since twig/twig 3.12: Not passing an instance of "TwigFunction" when creating a "render_var" function of type "Twig\\Node\\Expression\\FunctionExpression" is deprecated.%
 %Since twig/twig 3.12: Not passing an instance of "TwigFunction" when creating a "validate_component_props" function of type "Twig\\Node\\Expression\\FunctionExpression" is deprecated.%
-%Since twig/twig 3.12: The "tag" constructor argument of the "Drupal\\Core\\Template\\TwigNodeTrans" class is deprecated and ignored%
 %Since twig/twig 3.12: Twig Filter "spaceless" is deprecated%
