@@ -145,7 +145,7 @@ class TwigNodeTrans extends Node {
           // @see TwigExtension::getFilters()
           $argPrefix = '@';
           while ($args instanceof FilterExpression) {
-            switch ($args->getNode('filter')->getAttribute('value')) {
+            switch ($args->getAttribute('twig_callable')->getName()) {
               case 'placeholder':
                 $argPrefix = '%';
                 break;
