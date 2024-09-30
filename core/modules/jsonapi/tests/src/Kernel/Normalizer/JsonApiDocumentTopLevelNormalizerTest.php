@@ -417,7 +417,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertEquals('Lorem', $normalized['errors'][0]['detail']);
     $this->assertEquals([
       'info' => [
-        'href' => 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1',
+        'href' => 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1',
       ],
       'via' => ['href' => 'http://localhost/'],
     ], $normalized['errors'][0]['links']);

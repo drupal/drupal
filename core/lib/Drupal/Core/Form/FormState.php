@@ -662,7 +662,7 @@ class FormState implements FormStateInterface {
    * @return bool
    *
    * @see \Symfony\Component\HttpFoundation\Request::isMethodSafe()
-   * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.1.1
+   * @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.1.1
    */
   protected function isRequestMethodSafe() {
     return in_array($this->requestMethod, ['GET', 'HEAD']);

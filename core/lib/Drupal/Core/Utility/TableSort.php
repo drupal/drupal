@@ -62,7 +62,7 @@ class TableSort {
       if ($cell_content == $context['name']) {
         // aria-sort is a WAI-ARIA property that indicates if items in a table
         // or grid are sorted in ascending or descending order. See
-        // http://www.w3.org/TR/wai-aria/states_and_properties#aria-sort
+        // https://www.w3.org/TR/wai-aria/states_and_properties#aria-sort
         $cell_attributes['aria-sort'] = ($context['sort'] == self::ASC) ? 'ascending' : 'descending';
         $context['sort'] = (($context['sort'] == self::ASC) ? self::DESC : self::ASC);
         $cell_attributes['class'][] = 'is-active';

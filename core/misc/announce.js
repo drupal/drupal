@@ -100,7 +100,7 @@
    * @return {function}
    *   The return of the call to debounce.
    *
-   * @see http://www.w3.org/WAI/PF/aria-practices/#liveprops
+   * @see https://www.w3.org/WAI/PF/aria-practices/#liveprops
    */
   Drupal.announce = function (text, priority) {
     // Save the text and priority into a closure variable. Multiple simultaneous
