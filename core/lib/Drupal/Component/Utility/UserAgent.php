@@ -79,7 +79,7 @@ class UserAgent {
     // In that case, we assume that the lowest value of the specific tags is the
     // value of the generic language to be as close to the HTTP 1.1 spec as
     // possible.
-    // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4 and
+    // See https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4 and
     // http://blogs.msdn.com/b/ie/archive/2006/10/17/accept-language-header-for-internet-explorer-7.aspx
     asort($ua_langcodes);
     foreach ($ua_langcodes as $langcode => $qvalue) {

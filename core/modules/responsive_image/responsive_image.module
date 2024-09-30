@@ -144,7 +144,7 @@ function template_preprocess_responsive_image_formatter(&$variables) {
 function template_preprocess_responsive_image(&$variables) {
   // Make sure that width and height are proper values
   // If they exists we'll output them
-  // @see http://www.w3.org/community/respimg/2012/06/18/florians-compromise/
+  // @see https://www.w3.org/community/respimg/2012/06/18/florians-compromise/
   if (isset($variables['width']) && empty($variables['width'])) {
     unset($variables['width']);
     unset($variables['height']);
@@ -352,7 +352,7 @@ function template_preprocess_responsive_image(&$variables) {
  * @code
  * <source [...] sizes="(min-width: 40em) 80vw, 100vw" srcset="b1.jpeg 250w, a1.jpeg 300w, a2.jpeg 600w, b2.jpeg 680w, a3.jpeg 1200w,  b3.jpeg 1240w" />
  * @endcode
- * See http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#image-candidate-string
+ * See https://www.w3.org/html/wg/drafts/html/master/embedded-content.html#image-candidate-string
  * for further information.
  *
  * @param array $variables

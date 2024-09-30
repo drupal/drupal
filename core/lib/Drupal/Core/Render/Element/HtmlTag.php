@@ -37,8 +37,8 @@ class HtmlTag extends RenderElementBase {
 
   /**
    * Void elements do not contain values or closing tags.
-   * @see http://www.w3.org/TR/html5/syntax.html#syntax-start-tag
-   * @see http://www.w3.org/TR/html5/syntax.html#void-elements
+   * @see https://www.w3.org/TR/html5/syntax.html#syntax-start-tag
+   * @see https://www.w3.org/TR/html5/syntax.html#void-elements
    */
   protected static $voidElements = [
     'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',

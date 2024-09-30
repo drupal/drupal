@@ -346,7 +346,7 @@ class FilterHtml extends FilterBase {
     // added by hand to content, and especially the class attribute can have
     // undesired visual effects by allowing content authors to apply any
     // available style, so specific values should be explicitly allowed.
-    // @see http://www.w3.org/TR/html5/dom.html#global-attributes
+    // @see https://www.w3.org/TR/html5/dom.html#global-attributes
     $restrictions['allowed']['*'] = [
       'style' => FALSE,
       'on*' => FALSE,
@@ -455,7 +455,7 @@ class FilterHtml extends FilterBase {
     $output .= \Drupal::service('renderer')->render($table);
 
     $output .= '<p>' . $this->t('Most unusual characters can be directly entered without any problems.') . '</p>';
-    $output .= '<p>' . $this->t('If you do encounter problems, try using HTML character entities. A common example looks like &amp;amp; for an ampersand &amp; character. For a full list of entities see HTML\'s <a href=":html-entities">entities</a> page. Some of the available characters include:', [':html-entities' => 'http://www.w3.org/TR/html4/sgml/entities.html']) . '</p>';
+    $output .= '<p>' . $this->t('If you do encounter problems, try using HTML character entities. A common example looks like &amp;amp; for an ampersand &amp; character. For a full list of entities see HTML\'s <a href=":html-entities">entities</a> page. Some of the available characters include:', [':html-entities' => 'https://www.w3.org/TR/html4/sgml/entities.html']) . '</p>';
 
     $entities = [
       [$this->t('Ampersand'), '&amp;'],

@@ -526,7 +526,7 @@ function template_preprocess_views_view_table(&$variables) {
       }
       // aria-sort is a WAI-ARIA property that indicates if items in a table
       // or grid are sorted in ascending or descending order. See
-      // http://www.w3.org/TR/wai-aria/states_and_properties#aria-sort
+      // https://www.w3.org/TR/wai-aria/states_and_properties#aria-sort
       if ($active == $field) {
         $variables['header'][$field]['attributes']['aria-sort'] = ($order == 'asc') ? 'ascending' : 'descending';
       }

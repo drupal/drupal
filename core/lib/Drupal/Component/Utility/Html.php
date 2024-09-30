@@ -85,7 +85,7 @@ class Html {
    * Link below shows the syntax for valid CSS identifiers (including element
    * names, classes, and IDs in selectors).
    *
-   * @see http://www.w3.org/TR/CSS21/syndata.html#characters
+   * @see https://www.w3.org/TR/CSS21/syndata.html#characters
    *
    * @param string $identifier
    *   The identifier to clean.
@@ -224,11 +224,11 @@ class Html {
   public static function getId($id) {
     $id = str_replace([' ', '_', '[', ']'], ['-', '-', '-', ''], mb_strtolower($id));
 
-    // As defined in http://www.w3.org/TR/html4/types.html#type-name, HTML IDs can
+    // As defined in https://www.w3.org/TR/html4/types.html#type-name, HTML IDs can
     // only contain letters, digits ([0-9]), hyphens ("-"), underscores ("_"),
     // colons (":"), and periods ("."). We strip out any character not in that
     // list. Note that the CSS spec doesn't allow colons or periods in identifiers
-    // (http://www.w3.org/TR/CSS21/syndata.html#characters), so we strip those two
+    // (https://www.w3.org/TR/CSS21/syndata.html#characters), so we strip those two
     // characters as well.
     $id = preg_replace('/[^A-Za-z0-9\-_]/', '', $id);
 

@@ -53,7 +53,7 @@ class Color extends FormElementBase {
     $value = trim($element['#value']);
 
     // Default to black if no value is given.
-    // @see http://www.w3.org/TR/html5/number-state.html#color-state
+    // @see https://www.w3.org/TR/html5/number-state.html#color-state
     if ($value === '') {
       $form_state->setValueForElement($element, '#000000');
     }

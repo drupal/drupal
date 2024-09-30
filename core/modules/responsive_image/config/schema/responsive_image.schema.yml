@@ -46,7 +46,7 @@ responsive_image.image_mapping_type.sizes:
   type: mapping
   mapping:
     # The value for the sizes attribute as described in the spec:
-    # http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-sizes
+    # https://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-sizes
     sizes:
       type: string
       label: 'Sizes attribute'

@@ -268,7 +268,7 @@ class BigPipe {
     // BigPipe sends responses using "Transfer-Encoding: chunked". To avoid
     // sending already-sent assets, it is necessary to track cumulative assets
     // from all previously rendered/sent chunks.
-    // @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.41
+    // @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.41
     $cumulative_assets = AttachedAssets::createFromRenderArray(['#attached' => $attachments]);
     $cumulative_assets->setAlreadyLoadedLibraries($attachments['library']);
 

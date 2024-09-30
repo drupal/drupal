@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * state by which should varied (the current URL, language, and so on).
  *
  * Note that this maps exactly to HTTP's Vary header semantics:
- * @link http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.44
+ * @link https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.44
  *
  * @see \Drupal\Core\Cache\Context\CacheContextInterface
  * @see \Drupal\Core\Cache\Context\CalculatedCacheContextInterface
