@@ -9,6 +9,7 @@ use Drupal\Core\Render\Component\Exception\ComponentNotFoundException;
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\Theme\ComponentPluginManager;
 use Twig\Environment;
+use Twig\TwigFunction;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\ModuleNode;
@@ -55,17 +56,17 @@ class ComponentNodeVisitor implements NodeVisitorInterface {
       $print_nodes[] = new PrintNode(new ConstantExpression(sprintf('<!-- %s Component start: %s -->', $emoji, $component_id), $line), $line);
     }
     $print_nodes[] = new PrintNode(new FunctionExpression(
-      'attach_library',
+      new TwigFunction('attach_library', [$env->getExtension(TwigExtension::class), 'attachLibrary']),
       new Node([new ConstantExpression($component->getLibraryName(), $line)]),
       $line
     ), $line);
     $print_nodes[] = new PrintNode(new FunctionExpression(
-      'add_component_context',
+      new TwigFunction('add_component_context', [$env->getExtension(ComponentsTwigExtension::class), 'addAdditionalContext'], ['needs_context' => TRUE]),
       new Node([new ConstantExpression($component_id, $line)]),
       $line
     ), $line);
     $print_nodes[] = new PrintNode(new FunctionExpression(
-      'validate_component_props',
+      new TwigFunction('validate_component_props', [$env->getExtension(ComponentsTwigExtension::class), 'validateProps'], ['needs_context' => TRUE]),
       new Node([new ConstantExpression($component_id, $line)]),
       $line
     ), $line);
