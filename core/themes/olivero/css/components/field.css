@@ -32,8 +32,8 @@
    */
 }
 
-[dir="rtl"] .field--label-inline .field__label,
-[dir="rtl"] .field--label-inline .field__items {
+.field--label-inline .field__label:dir(rtl),
+.field--label-inline .field__items:dir(rtl) {
   float: right;
 }
 
