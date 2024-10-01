@@ -78,7 +78,7 @@
          * @see https://github.com/csstools/postcss-plugins/issues/632
          */
   }
-  [dir="rtl"] .rotate .contextual .trigger {
+  .rotate .contextual .trigger:dir(rtl) {
     float: right;
   }
 }

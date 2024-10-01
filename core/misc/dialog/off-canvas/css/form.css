@@ -122,7 +122,7 @@
   background-size: 0.75rem;
 }
 
-[dir="rtl"] #drupal-off-canvas-wrapper select {
+#drupal-off-canvas-wrapper select:dir(rtl) {
   background-position: center left 5px;
 }
 
@@ -149,7 +149,7 @@
   background-image: url(../../../icons/spinner.gif);
 }
 
-[dir="rtl"] #drupal-off-canvas-wrapper .form-autocomplete {
+#drupal-off-canvas-wrapper .form-autocomplete:dir(rtl) {
   background-position: center left 1px;
 }
 

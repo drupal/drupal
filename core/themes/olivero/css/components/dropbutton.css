@@ -89,7 +89,7 @@
   transform: translateY(25%) rotate(225deg);
 }
 
-[dir="rtl"] .dropbutton-toggle button {
+.dropbutton-toggle button:dir(rtl) {
   border-radius: var(--dropbutton--border-radius) 0 0 var(--dropbutton--border-radius);
 }
 
@@ -102,7 +102,7 @@
   background: var(--dropbutton--active-bg-color);
 }
 
-[dir="rtl"] .dropbutton-action:first-child {
+.dropbutton-action:first-child:dir(rtl) {
   border: solid 1px transparent;
   border-radius: 0 var(--dropbutton--border-radius) var(--dropbutton--border-radius) 0;
 }
@@ -134,7 +134,7 @@
   border-radius: var(--dropbutton--border-radius);
 }
 
-[dir="rtl"] .dropbutton-single .dropbutton-action:first-child {
+.dropbutton-single .dropbutton-action:first-child:dir(rtl) {
   border: solid 1px transparent;
 }
 

@@ -24,7 +24,6 @@
   padding: 0;
   list-style-type: none;
   word-wrap: break-word;
-  -webkit-hyphens: auto;
   hyphens: auto;
   gap: var(--admin-toolbar-space-4);
 }
