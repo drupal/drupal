@@ -133,6 +133,7 @@ class GenerateTheme extends Command {
     $mirror_iterator = (new Finder)
       ->in($starterkit->getPath())
       ->files()
+      ->ignoreDotFiles(FALSE)
       ->notName($starterkit_config['ignore'])
       ->notPath($starterkit_config['ignore']);
 
