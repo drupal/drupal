@@ -345,7 +345,7 @@ class NodeTest extends ResourceTestBase {
       '/data',
       ['4xx-response', 'http_response', 'node:1'],
       ['url.query_args', 'url.site', 'user.permissions'],
-      FALSE,
+      'UNCACHEABLE (request policy)',
       'MISS'
     );
 
@@ -356,7 +356,7 @@ class NodeTest extends ResourceTestBase {
     // context to be optimized away.
     $expected_cache_contexts = Cache::mergeContexts($this->getExpectedCacheContexts(), ['user']);
     $expected_cache_contexts = array_diff($expected_cache_contexts, ['user.permissions']);
-    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $expected_cache_contexts, FALSE, 'UNCACHEABLE');
+    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $expected_cache_contexts, 'UNCACHEABLE (request policy)', 'UNCACHEABLE (poor cacheability)');
   }
 
   /**

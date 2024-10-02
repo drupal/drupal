@@ -166,7 +166,7 @@ class ErrorHandlerTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('error-test/trigger-exception');
-    $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'UNCACHEABLE (no cacheability)');
     $this->assertSession()->responseHeaderNotContains('Cache-Control', 'public');
     $this->assertSession()->statusCodeEquals(500);
     $this->assertNoErrorMessage($error_exception);

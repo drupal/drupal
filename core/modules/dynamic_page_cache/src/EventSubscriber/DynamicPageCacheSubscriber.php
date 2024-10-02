@@ -156,11 +156,18 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
   public function onResponse(ResponseEvent $event) {
     $response = $event->getResponse();
 
+    // Don't indicate non-cacheability on responses to uncacheable requests.
+    // @see https://tools.ietf.org/html/rfc7231#section-4.2.3
+    if (!$event->getRequest()->isMethodCacheable()) {
+      return;
+    }
+
     // Dynamic Page Cache only works with cacheable responses. It does not work
     // with plain Response objects. (Dynamic Page Cache needs to be able to
     // access and modify the cacheability metadata associated with the
     // response.)
     if (!$response instanceof CacheableResponseInterface) {
+      $response->headers->set(self::HEADER, 'UNCACHEABLE (no cacheability)');
       return;
     }
 
@@ -172,7 +179,7 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     // There's no work left to be done if this is an uncacheable response.
     if (!$this->shouldCacheResponse($response)) {
       // The response is uncacheable, mark it as such.
-      $response->headers->set(self::HEADER, 'UNCACHEABLE');
+      $response->headers->set(self::HEADER, 'UNCACHEABLE (poor cacheability)');
       return;
     }
 
@@ -195,7 +202,12 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     // Don't cache the response if the Dynamic Page Cache request & response
     // policies are not met.
     // @see onRequest()
-    if ($this->requestPolicyResults[$request] === RequestPolicyInterface::DENY || $this->responsePolicy->check($response, $request) === ResponsePolicyInterface::DENY) {
+    if ($this->requestPolicyResults[$request] === RequestPolicyInterface::DENY) {
+      $response->headers->set(self::HEADER, 'UNCACHEABLE (request policy)');
+      return;
+    }
+    if ($this->responsePolicy->check($response, $request) === ResponsePolicyInterface::DENY) {
+      $response->headers->set(self::HEADER, 'UNCACHEABLE (response policy)');
       return;
     }
 
