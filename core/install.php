@@ -43,6 +43,11 @@ if (OpCodeCache::isEnabled() && !ini_get('opcache.save_comments')) {
   exit();
 }
 
+// Set the Drupal custom error handler.
+require_once $root_path . '/core/includes/errors.inc';
+set_error_handler('_drupal_error_handler');
+set_exception_handler('_drupal_exception_handler');
+
 // Start the installer.
 require_once $root_path . '/core/includes/install.core.inc';
 install_drupal($class_loader);

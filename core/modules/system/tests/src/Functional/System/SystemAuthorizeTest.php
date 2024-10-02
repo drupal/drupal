@@ -68,4 +68,21 @@ class SystemAuthorizeTest extends BrowserTestBase {
     $this->assertSession()->responseContains('core/misc/states.js');
   }
 
+  /**
+   * Tests error handling in authorize.php.
+   */
+  public function testError(): void {
+    $settings_filename = $this->siteDirectory . '/settings.php';
+    chmod($settings_filename, 0777);
+    $settings_php = file_get_contents($settings_filename);
+    $settings_php .= "\ndefine('SIMPLETEST_COLLECT_ERRORS', FALSE);\n";
+    $settings_php .= "\ntrigger_error('Test warning', E_USER_WARNING);\n";
+    file_put_contents($settings_filename, $settings_php);
+
+    $this->drupalGetAuthorizePHP();
+
+    $this->assertSession()->pageTextContains('User warning: Test warning');
+    $this->assertSession()->pageTextMatches('@line \d+ of sites/simpletest@');
+  }
+
 }
