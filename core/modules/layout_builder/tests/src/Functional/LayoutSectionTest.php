@@ -85,7 +85,7 @@ class LayoutSectionTest extends BrowserTestBase {
       ],
       'user',
       'user:2',
-      'UNCACHEABLE',
+      'UNCACHEABLE (poor cacheability)',
     ];
     $data['block_with_entity_context'] = [
       [
@@ -179,7 +179,7 @@ class LayoutSectionTest extends BrowserTestBase {
     $this->assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, $expected_dynamic_cache);
 
     $this->drupalGet($canonical_url->toString() . '/layout');
-    $this->assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, 'UNCACHEABLE');
+    $this->assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, 'UNCACHEABLE (poor cacheability)');
   }
 
   /**
@@ -200,14 +200,14 @@ class LayoutSectionTest extends BrowserTestBase {
     $this->container->get('state')->set('test_block_access', FALSE);
 
     $this->drupalGet($node->toUrl('canonical'));
-    $this->assertLayoutSection('.layout--onecol', NULL, '', '', 'UNCACHEABLE');
+    $this->assertLayoutSection('.layout--onecol', NULL, '', '', 'UNCACHEABLE (poor cacheability)');
     // Ensure the block was not rendered.
     $this->assertSession()->pageTextNotContains('Hello test world');
 
     // Grant access to the block, and ensure it was rendered.
     $this->container->get('state')->set('test_block_access', TRUE);
     $this->drupalGet($node->toUrl('canonical'));
-    $this->assertLayoutSection('.layout--onecol', 'Hello test world', '', '', 'UNCACHEABLE');
+    $this->assertLayoutSection('.layout--onecol', 'Hello test world', '', '', 'UNCACHEABLE (poor cacheability)');
   }
 
   /**
@@ -294,7 +294,8 @@ class LayoutSectionTest extends BrowserTestBase {
    * @param string $expected_cache_tags
    *   A string of cache tags to be found in the header.
    * @param string $expected_dynamic_cache
-   *   The expected dynamic cache header. Either 'HIT', 'MISS' or 'UNCACHEABLE'.
+   *   The expected dynamic cache header. Either 'HIT', 'MISS' or
+   *   'UNCACHEABLE (poor cacheability)'.
    *
    * @internal
    */
