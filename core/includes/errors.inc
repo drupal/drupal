@@ -84,7 +84,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line) {
   }
   // If the site is a test site then fail for user deprecations so they can be
   // caught by the deprecation error handler.
-  elseif (DRUPAL_TEST_IN_CHILD_SITE && $error_level === E_USER_DEPRECATED) {
+  elseif (defined('DRUPAL_TEST_IN_CHILD_SITE') && DRUPAL_TEST_IN_CHILD_SITE && $error_level === E_USER_DEPRECATED) {
     static $seen = [];
     if (array_search($message, $seen, TRUE) === FALSE) {
       // Only report each deprecation once. Too many headers can break some
