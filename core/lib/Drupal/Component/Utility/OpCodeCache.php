@@ -13,7 +13,7 @@ class OpCodeCache {
    * Checks if OpCodeCache is enabled.
    *
    * @return bool
-   *   TRUE if opcache is enabled, FALSE otherwise.
+   *   TRUE if OPcache is enabled, FALSE otherwise.
    */
   public static function isEnabled() {
     return extension_loaded('Zend OPcache') && ini_get('opcache.enable');

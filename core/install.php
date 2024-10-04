@@ -37,7 +37,7 @@ if (version_compare(PHP_VERSION, '8.1.0') < 0) {
 // Initialize the autoloader.
 $class_loader = require_once $root_path . '/autoload.php';
 
-// If OPCache is in use, ensure opcache.save_comments is enabled.
+// If OPcache is in use, ensure opcache.save_comments is enabled.
 if (OpCodeCache::isEnabled() && !ini_get('opcache.save_comments')) {
   print 'Systems with OPcache installed must have <a href="http://php.net/manual/opcache.configuration.php#ini.opcache.save-comments">opcache.save_comments</a> enabled.';
   exit();
