@@ -79,6 +79,7 @@
 @media (min-width: 62.5rem) {
   .breadcrumb__list {
     overflow: visible;
+    width: auto;
     margin-inline-start: 0;
     margin-inline-end: 0;
     padding-block-end: 0;
