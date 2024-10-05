@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @group Utility
- * @group #slow
  *
  * @coversDefaultClass \Drupal\Component\Utility\UrlHelper
  */
