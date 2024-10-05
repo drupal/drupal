@@ -200,9 +200,9 @@
                 // be set to bypass scroll handler actions in just those
                 // instances.
                 const oldScrollTop =
-                  window.pageYOffset || document.documentElement.scrollTop;
+                  window.scrollY || document.documentElement.scrollTop;
                 const scrollLeft =
-                  window.pageXOffset || document.documentElement.scrollLeft;
+                  window.scrollX || document.documentElement.scrollLeft;
                 const rowContainsActiveElement = row.contains(
                   document.activeElement,
                 );
@@ -225,7 +225,7 @@
                 // Will be used to determine if a scroll position change
                 // occurred due to adding the spacer.
                 const newScrollTop =
-                  window.pageYOffset || document.documentElement.scrollTop;
+                  window.scrollY || document.documentElement.scrollTop;
 
                 // If the browser pushed the row back into the viewport after
                 // the spacer was added, return the scroll position to the

@@ -897,7 +897,7 @@ module.exports = {
                   } else if (atOffsets.vertical === 'bottom') {
                     y = document.documentElement.clientHeight - y;
                   } else {
-                    y += window.pageYOffset;
+                    y += window.scrollY;
                   }
                 } else {
                   // Measure the distance of the tip from the reference element.

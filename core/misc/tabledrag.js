@@ -1247,7 +1247,7 @@
         ? de.clientHeight
         : b.offsetHeight);
     this.windowHeight = windowHeight;
-    const scrollY = window.pageYOffset ? window.pageYOffset : window.scrollY;
+    const scrollY = window.scrollY;
     this.scrollY = scrollY;
     const trigger = this.scrollSettings.trigger;
     let delta = 0;
