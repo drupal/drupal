@@ -12,6 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the configure route for core modules.
  *
  * @group Module
+ * @group #slow
  */
 class ModuleConfigureRouteTest extends KernelTestBase {
 
