@@ -13,6 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group #slow
  * @group Module
+ * @group #slow
  */
 class ModuleConfigureRouteTest extends KernelTestBase {
 
