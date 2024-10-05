@@ -14,6 +14,7 @@ use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
  * Checks that all core content/config entity types have JSON:API test coverage.
  *
  * @group jsonapi
+ * @group #slow
  */
 class TestCoverageTest extends KernelTestBase {
 

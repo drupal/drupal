@@ -8,6 +8,7 @@ namespace Drupal\KernelTests\Core\Theme;
  * Tests Stable 9's library overrides.
  *
  * @group Theme
+ * @group #slow
  */
 class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
 
