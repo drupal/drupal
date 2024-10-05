@@ -65,6 +65,7 @@
 
   @media (--lg) {
     overflow: visible;
+    width: auto;
     margin-inline-start: 0;
     margin-inline-end: 0;
     padding-block-end: 0;
