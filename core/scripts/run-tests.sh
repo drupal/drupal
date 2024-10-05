@@ -768,8 +768,8 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
       ];
     }
 
-    // Wait for children every 200ms.
-    usleep(200000);
+    // Wait for children every 2ms.
+    usleep(2000);
 
     // Check if some children finished.
     foreach ($children as $cid => $child) {
@@ -920,12 +920,10 @@ function simpletest_script_get_test_list() {
       echo (string) $e;
       exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
     }
-    // If the tests are run in parallel jobs, ensure that slow tests are
-    // distributed between each job.
-    if ((int) $args['ci-parallel-node-total'] > 1) {
-      if (key($groups) === '#slow') {
-        $slow_tests = array_keys(array_shift($groups));
-      }
+    // Ensure that tests marked explicitly as @group #slow are run at the
+    // beginning of each job.
+    if (key($groups) === '#slow') {
+      $slow_tests = array_keys(array_shift($groups));
     }
     $not_slow_tests = [];
     foreach ($groups as $group => $tests) {
