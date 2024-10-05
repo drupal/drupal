@@ -27,7 +27,6 @@
 }
 #drupal-off-canvas-wrapper .button {
   display: inline-block;
-  width: 100%;
   height: auto;
   margin: 0 0 0.625rem;
   padding: var(--off-canvas-button-padding);
