@@ -21,7 +21,6 @@
 
   & .button {
     display: inline-block;
-    width: 100%;
     height: auto;
     margin: 0 0 10px;
     padding: var(--off-canvas-button-padding);
