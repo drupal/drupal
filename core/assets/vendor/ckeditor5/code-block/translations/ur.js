@@ -1,1 +1,1 @@
-!function(n){const i=n.ur=n.ur||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"کوڈ خانہ نصب کیرں","Plain text":"سادہ متن"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const e=n.ur=n.ur||{};e.dictionary=Object.assign(e.dictionary||{},{"Code block":"","Entering %0 code snippet":"","Entering code snippet":"","Insert code block":"کوڈ خانہ نصب کیرں","Leaving %0 code snippet":"","Leaving code snippet":"","Plain text":"سادہ متن"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

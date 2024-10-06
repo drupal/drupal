@@ -1,1 +1,1 @@
-!function(t){const i=t.sq=t.sq||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"Shto bllokun e kodit","Plain text":"Teksti i thjeshtë"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const e=n.sq=n.sq||{};e.dictionary=Object.assign(e.dictionary||{},{"Code block":"","Entering %0 code snippet":"","Entering code snippet":"","Insert code block":"Shto bllokun e kodit","Leaving %0 code snippet":"","Leaving code snippet":"","Plain text":"Teksti i thjeshtë"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

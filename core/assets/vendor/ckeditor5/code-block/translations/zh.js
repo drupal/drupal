@@ -1,1 +1,1 @@
-!function(n){const i=n.zh=n.zh||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"插入程式碼區塊","Plain text":"純文字"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const e=n.zh=n.zh||{};e.dictionary=Object.assign(e.dictionary||{},{"Code block":"程式碼區塊","Entering %0 code snippet":"進入 %0 程式碼片段","Entering code snippet":"進入程式碼片段","Insert code block":"插入程式碼區塊","Leaving %0 code snippet":"離開 %0 程式碼片段","Leaving code snippet":"離開程式碼片段","Plain text":"純文字"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,1 +1,1 @@
-!function(n){const i=n.hr=n.hr||{};i.dictionary=Object.assign(i.dictionary||{},{"Insert code block":"Umetni blok koda","Plain text":"Običan tekst"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const e=n.hr=n.hr||{};e.dictionary=Object.assign(e.dictionary||{},{"Code block":"","Entering %0 code snippet":"","Entering code snippet":"","Insert code block":"Umetni blok koda","Leaving %0 code snippet":"","Leaving code snippet":"","Plain text":"Običan tekst"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

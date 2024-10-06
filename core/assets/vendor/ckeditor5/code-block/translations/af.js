@@ -1,1 +1,1 @@
-!function(n){const o=n.af=n.af||{};o.dictionary=Object.assign(o.dictionary||{},{"Insert code block":"Voeg bronkodeblok in","Plain text":"Gewone skrif"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+!function(n){const e=n.af=n.af||{};e.dictionary=Object.assign(e.dictionary||{},{"Code block":"","Entering %0 code snippet":"","Entering code snippet":"","Insert code block":"Voeg bronkodeblok in","Leaving %0 code snippet":"","Leaving code snippet":"","Plain text":"Gewone skrif"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
