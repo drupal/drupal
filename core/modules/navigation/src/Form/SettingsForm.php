@@ -108,7 +108,7 @@ final class SettingsForm extends ConfigFormBase {
         NavigationRenderer::LOGO_PROVIDER_HIDE => $this->t('Hide logo'),
         NavigationRenderer::LOGO_PROVIDER_CUSTOM => $this->t('Custom logo'),
       ],
-      '#config_target' => 'navigation.settings:logo_provider',
+      '#config_target' => 'navigation.settings:logo.provider',
     ];
     $form['logo']['image'] = [
       '#type' => 'container',
@@ -119,8 +119,8 @@ final class SettingsForm extends ConfigFormBase {
       ],
     ];
     $allowed = 'png jpg jpeg';
-    $current_logo_managed_fid = $config->get('logo_managed') ? [$config->get('logo_managed')] : NULL;
-    $max_navigation_allowed = $config->get('logo_max_filesize');
+    $current_logo_managed_fid = $config->get('logo.managed') ? [$config->get('logo.managed')] : NULL;
+    $max_navigation_allowed = $config->get('logo.max.filesize');
     $max_system_allowed = Environment::getUploadMaxSize();
     $max_allowed = $max_navigation_allowed < $max_system_allowed ? $max_navigation_allowed : $max_system_allowed;
     $upload_validators = [
@@ -166,8 +166,8 @@ final class SettingsForm extends ConfigFormBase {
     $config = $this->config('navigation.settings');
 
     // Get the previous config settings.
-    $previous_logo_provider = $config->get('logo_provider');
-    $previous_logo_fid = $config->get('logo_managed');
+    $previous_logo_provider = $config->get('logo.provider');
+    $previous_logo_fid = $config->get('logo.managed');
 
     // Get new values from the form.
     $new_logo_provider = $form_state->getValue('logo_provider');
@@ -195,7 +195,7 @@ final class SettingsForm extends ConfigFormBase {
     }
 
     $config
-      ->set('logo_managed', $new_logo_fid)
+      ->set('logo.managed', $new_logo_fid)
       ->save();
     parent::submitForm($form, $form_state);
   }
@@ -215,12 +215,12 @@ final class SettingsForm extends ConfigFormBase {
       return;
     }
 
-    $width = $config->get('logo_width');
-    $height = $config->get('logo_height');
+    $width = $config->get('logo.max.width');
+    $height = $config->get('logo.max.height');
 
     // Skip if the fid has not been modified.
     $fid = reset($logo_managed);
-    if ($fid == $config->get('logo_managed')) {
+    if ($fid == $config->get('logo.managed')) {
       return;
     }
 
@@ -251,8 +251,8 @@ final class SettingsForm extends ConfigFormBase {
       return FALSE;
     }
 
-    $width = $config->get('logo_width');
-    $height = $config->get('logo_height');
+    $width = $config->get('logo.max.width');
+    $height = $config->get('logo.max.height');
 
     if ($image->getWidth() <= $width && $image->getHeight() <= $height) {
       return TRUE;
