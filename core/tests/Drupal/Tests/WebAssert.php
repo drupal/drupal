@@ -517,7 +517,7 @@ class WebAssert extends MinkWebAssert {
       $replacement = function ($matches) use ($value) {
         return $value;
       };
-      $xpath = preg_replace_callback('/' . preg_quote($placeholder) . '\b/', $replacement, $xpath);
+      $xpath = preg_replace_callback('/' . preg_quote($placeholder, NULL) . '\b/', $replacement, $xpath);
     }
     return $xpath;
   }
