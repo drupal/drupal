@@ -6,6 +6,7 @@ version: VERSION
 libraries:
   - umami/classy.base
   - core/normalize
+  - core/drupal.message
   - umami/global
 
 libraries-override:
