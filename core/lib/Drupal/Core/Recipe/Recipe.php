@@ -170,6 +170,16 @@ final class Recipe {
               ]),
             ]),
           ]),
+          'strict' => new Optional([
+            new AtLeastOneOf([
+              new Type('boolean'),
+              new All([
+                new Type('string'),
+                new NotBlank(),
+                new Regex('/^.+\./'),
+              ]),
+            ], message: 'This value must be a boolean, or a list of config names.', includeInternalMessages: FALSE),
+          ]),
           'actions' => new Optional([
             new All([
               new Type('array'),

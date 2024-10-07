@@ -257,6 +257,58 @@ YAML,
         '[config][import][0]' => ['This value should satisfy at least one of the following constraints: [1] This value should be identical to string "*". [2] Each element of this collection should satisfy its own set of constraints.'],
       ],
     ];
+    yield 'config strict is not a boolean or array' => [
+      <<<YAML
+name: Invalid strict flag
+config:
+  strict: 40
+YAML,
+      [
+        '[config][strict]' => ['This value must be a boolean, or a list of config names.'],
+      ],
+    ];
+    yield 'config strict is an array of not-strings' => [
+      <<<YAML
+name: Invalid item in strict list
+config:
+  strict:
+    - 40
+YAML,
+      [
+        '[config][strict]' => ['This value must be a boolean, or a list of config names.'],
+      ],
+    ];
+    yield 'config strict list contains blank strings' => [
+      <<<YAML
+name: Invalid item in strict list
+config:
+  strict:
+    - ''
+YAML,
+      [
+        '[config][strict]' => ['This value must be a boolean, or a list of config names.'],
+      ],
+    ];
+    yield 'config strict list item does not have a period' => [
+      <<<YAML
+name: Invalid item in strict list
+config:
+  strict:
+    - 'something'
+YAML,
+      [
+        '[config][strict]' => ['This value must be a boolean, or a list of config names.'],
+      ],
+    ];
+    yield 'valid strict list' => [
+      <<<YAML
+name: Valid strict list
+config:
+  strict:
+    - system.menu.foo
+YAML,
+      NULL,
+    ];
     yield 'config actions list is valid' => [
       <<<YAML
 name: 'Correct config actions list'
