@@ -6,42 +6,54 @@ navigation.settings:
   constraints:
     FullyValidatable: ~
   mapping:
-    logo_provider:
-      type: string
-      label: 'Select Navigation logo handling'
+    logo:
+      type: mapping
+      label: 'Logo settings'
+      mapping:
+        provider:
+          type: string
+          label: 'Select Navigation logo handling'
+          constraints:
+            Choice:
+              - default
+              - hide
+              - custom
+        managed:
+          type: integer
+          label: 'Custom logo'
+          nullable: true
+          constraints:
+            Range:
+              min: 0
+        max:
+          type: mapping
+          label: 'Logo maximum settings'
+          mapping:
+            filesize:
+              type: integer
+              label: 'Maximum file sizes (bytes)'
+              constraints:
+                NotNull: [ ]
+                Range:
+                  min: 0
+            height:
+              type: integer
+              label: 'Logo expected height'
+              constraints:
+                NotNull: [ ]
+                Range:
+                  min: 0
+            width:
+              type: integer
+              label: 'Logo expected width'
+              constraints:
+                NotNull: [ ]
+                Range:
+                  min: 0
+          constraints:
+            ValidKeys: '<infer>'
       constraints:
-        Choice:
-          - default
-          - hide
-          - custom
-    logo_managed:
-      type: integer
-      label: 'Custom logo'
-      nullable: true
-      constraints:
-        Range:
-          min: 0
-    logo_max_filesize:
-      type: integer
-      label: 'Maximum file sizes (bytes)'
-      constraints:
-        NotNull: [ ]
-        Range:
-          min: 0
-    logo_height:
-      type: integer
-      label: 'Logo expected height'
-      constraints:
-        NotNull: [ ]
-        Range:
-          min: 0
-    logo_width:
-      type: integer
-      label: 'Logo expected width'
-      constraints:
-        NotNull: [ ]
-        Range:
-          min: 0
+        ValidKeys: '<infer>'
 
 navigation.block_layout:
   type: config_object

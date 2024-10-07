@@ -1,5 +1,7 @@
-logo_provider: default
-logo_managed: null
-logo_max_filesize: 1048576
-logo_height: 40
-logo_width: 40
+logo:
+  provider: default
+  managed: null
+  max:
+    filesize: 1048576
+    height: 40
+    width: 40

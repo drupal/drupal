@@ -101,7 +101,7 @@ final class NavigationRenderer {
    */
   public function buildNavigation(array &$page_top): void {
     $logo_settings = $this->configFactory->get('navigation.settings');
-    $logo_provider = $logo_settings->get('logo_provider');
+    $logo_provider = $logo_settings->get('logo.provider');
 
     $cacheability = new CacheableMetadata();
     $contexts = [
@@ -144,7 +144,7 @@ final class NavigationRenderer {
     $page_top['navigation'] = $build;
 
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {
-      $logo_managed = File::load($logo_settings->get('logo_managed'));
+      $logo_managed = File::load($logo_settings->get('logo.managed'));
       if ($logo_managed instanceof FileInterface) {
         $logo_managed_uri = $logo_managed->getFileUri();
         $logo_managed_url = $this->fileUrlGenerator->generateAbsoluteString($logo_managed_uri);

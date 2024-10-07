@@ -92,8 +92,8 @@ class NavigationLogoTest extends BrowserTestBase {
 
     // Preset the configuration to verify a custom image is being seen.
     $config = $this->configFactory->getEditable('navigation.settings');
-    $config->set('logo_provider', 'custom');
-    $config->set('logo_managed', $logo_file->id());
+    $config->set('logo.provider', 'custom');
+    $config->set('logo.managed', $logo_file->id());
     $config->save();
     // Refresh the page to verify custom logo is placed.
     $this->drupalGet('/admin/config/user-interface/navigation/settings');
