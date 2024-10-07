@@ -20,19 +20,21 @@
  */
 #}
 <div data-drupal-messages>
-{% block messages %}
-{% for type, messages in message_list %}
-  {%
-    set classes = [
-      'messages',
-      'messages--' ~ type,
-    ]
-  %}
-  <div role="contentinfo" aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
-    <div class="messages__content container">
-      {% if type == 'error' %}
-        <div role="alert">
-      {% endif %}
+  <div class="messages__wrapper container">
+  {% block messages %}
+  {% for type, messages in message_list %}
+    {%
+      set classes = [
+        'messages',
+        'messages--' ~ type,
+      ]
+    %}
+    <div
+      aria-label="{{ status_headings[type] }}"
+      {{ attributes.addClass(classes)|without('aria-label') }}
+      role={{ type == 'error' or type == 'warning' ? 'alert' : 'status' }}
+    >
+      <div class="messages__content">
         {% if status_headings[type] %}
           <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
         {% endif %}
@@ -45,13 +47,11 @@
         {% else %}
           <span class="messages__item">{{ messages|first }}</span>
         {% endif %}
-      {% if type == 'error' %}
-        </div>
-      {% endif %}
+      </div>
     </div>
+    {# Remove type specific classes. #}
+    {% set attributes = attributes.removeClass(classes) %}
+  {% endfor %}
+  {% endblock messages %}
   </div>
-  {# Remove type specific classes. #}
-  {% set attributes = attributes.removeClass(classes) %}
-{% endfor %}
-{% endblock messages %}
 </div>
