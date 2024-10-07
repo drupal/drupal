@@ -51,7 +51,7 @@ class UserRouteAlterSubscriber implements EventSubscriberInterface {
     ];
     $routes = $event->getRouteCollection();
     foreach ($route_names as $route_name) {
-      if ($route = $routes->get($route_name)) {
+      if (($route = $routes->get($route_name)) && $route->hasRequirement('_format')) {
         $formats = explode('|', $route->getRequirement('_format'));
         $formats = array_unique(array_merge($formats, $this->serializerFormats));
         $route->setRequirement('_format', implode('|', $formats));
