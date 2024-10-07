@@ -34,7 +34,7 @@
     messageWrapper.setAttribute('data-drupal-message-type', type);
 
     messageWrapper.innerHTML = `
-    <div class="messages__content container">
+    <div class="messages__content">
       <h2 class="visually-hidden">
         ${messagesTypes[type]}
       </h2>
