@@ -127,9 +127,14 @@ class ErrorHandlerTest extends BrowserTestBase {
       '%line' => 56,
       '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
+    $select = \Drupal::database()->select('bananas_are_awesome', 'b')->fields('b');
+    $message = \Drupal::database()->prepareStatement((string) $select, [])->getQueryString();
+    $message = str_replace(["\r", "\n"], ' ', $message);
     $error_pdo_exception = [
       '%type' => 'DatabaseExceptionWrapper',
-      '@message' => 'SELECT "b".* FROM {bananas_are_awesome} "b"',
+      '@message' => PHP_VERSION_ID >= 80400 ?
+      $message :
+      'SELECT "b".* FROM {bananas_are_awesome} "b"',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
       '%line' => 64,
       '%file' => $this->getModulePath('error_test') . '/error_test.module',
@@ -137,7 +142,9 @@ class ErrorHandlerTest extends BrowserTestBase {
     $error_renderer_exception = [
       '%type' => 'Exception',
       '@message' => 'This is an exception that occurs during rendering',
-      '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
+      '%function' => PHP_VERSION_ID >= 80400 ?
+      'Drupal\error_test\Controller\ErrorTestController->{closure:Drupal\error_test\Controller\ErrorTestController::triggerRendererException():104}()' :
+      'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
       '%line' => 82,
       '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
