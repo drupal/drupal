@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
@@ -76,6 +77,19 @@ final class InputConfigurator {
   }
 
   /**
+   * Returns the typed data definitions for the inputs defined by this recipe.
+   *
+   * This does NOT return the data definitions for inputs defined by this
+   * recipe's dependencies.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
+   *   The typed data definitions, keyed by input name.
+   */
+  public function getDataDefinitions(): array {
+    return array_map(fn (TypedDataInterface $data) => $data->getDataDefinition(), $this->data);
+  }
+
+  /**
    * Returns the collected input values, keyed by name.
    *
    * @return mixed[]
@@ -98,9 +112,9 @@ final class InputConfigurator {
     foreach ($this->dependencies->recipes as $dependency) {
       $descriptions = array_merge($descriptions, $dependency->input->describeAll());
     }
-    foreach ($this->data as $key => $data) {
+    foreach ($this->getDataDefinitions() as $key => $definition) {
       $name = $this->prefix . '.' . $key;
-      $descriptions[$name] = $data->getDataDefinition()->getDescription();
+      $descriptions[$name] = $definition->getDescription();
     }
     return $descriptions;
   }
