@@ -13,7 +13,7 @@ Drupal community since 2001!
 [Drupal.org][Drupal.org] hosts Drupal's [GitLab repository][GitLab repository],
 its [issue queue][issue queue], and its [documentation][documentation]. Before
 you start working on code, be sure to search the [issue queue][issue queue] and
-create an issue if your aren't able to find an existing issue.
+create an issue if you aren't able to find an existing issue.
 
 Every issue on Drupal.org automatically creates a new community-accessible fork
 that you can contribute to. Learn more about the code contribution process on
