@@ -1,0 +1,1 @@
+!function(i){const n=i.fa=i.fa||{};n.dictionary=Object.assign(n.dictionary||{},{"Revert autoformatting action":"بازیابی فرمت انجام شده"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

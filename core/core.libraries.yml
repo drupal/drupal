@@ -191,10 +191,10 @@ ckeditor5.htmlSupport:
 
 ckeditor5.alignment:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "42.0.2"
+  version: "43.1.1"
   license:
     name: GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v42.0.2/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v43.1.1/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/alignment/alignment.js: { minified: true }
