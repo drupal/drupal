@@ -1,5 +1,5 @@
 const log = require('./log');
-const fs = require('fs');
+const fs = require('node:fs');
 const postcss = require('postcss');
 const postcssImport = require('postcss-import');
 const postcssHeader = require('postcss-header');

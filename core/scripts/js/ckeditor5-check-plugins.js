@@ -14,8 +14,8 @@
 
 const { globSync } = require("glob");
 const log = require("./log");
-const fs = require("fs").promises;
-const child_process = require("child_process");
+const fs = require("node:fs").promises;
+const child_process = require("node:child_process");
 
 async function getContents(files) {
   return Object.fromEntries(

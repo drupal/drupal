@@ -1,5 +1,5 @@
 // cspell:ignore testcases
-const path = require('path');
+const path = require('node:path');
 const { globSync } = require('glob');
 
 // Find directories which have Nightwatch tests in them.

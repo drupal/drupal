@@ -7,8 +7,8 @@
  * build step.
  */
 
-const path = require('path');
-const { copyFile, writeFile, readFile, chmod, mkdir } = require('fs').promises;
+const path = require('node:path');
+const { copyFile, writeFile, readFile, chmod, mkdir } = require('node:fs').promises;
 const ckeditor5Files = require('./assets/ckeditor5Files');
 const jQueryUIProcess = require('./assets/process/jqueryui');
 const mapProcess = require('./assets/process/map');
