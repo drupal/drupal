@@ -119,6 +119,10 @@ abstract class Query implements PlaceholderInterface {
    *
    * @return string
    *   A prepared statement query string for this object.
+   *
+   * @throws \BadMethodCallException
+   *   Thrown when the operation is a Merge or the operation is not implemented,
+   *   as in test.
    */
   abstract public function __toString();
 

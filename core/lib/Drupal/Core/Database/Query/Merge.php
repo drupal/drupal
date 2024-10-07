@@ -333,15 +333,12 @@ class Merge extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements PHP magic __toString method to convert the query to a string.
-   *
-   * In the degenerate case, there is no string-able query as this operation
-   * is potentially two queries.
-   *
-   * @return string
-   *   The prepared query statement.
+   * {@inheritdoc}
    */
   public function __toString() {
+    // In the degenerate case, there is no string-able query as this operation
+    // is potentially two queries.
+    throw new \BadMethodCallException('The merge query can not be converted to a string');
   }
 
   /**
