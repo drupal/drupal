@@ -97,4 +97,22 @@ trait RecipeTestTrait {
     return $process;
   }
 
+  /**
+   * Alters an existing recipe.
+   *
+   * @param string $path
+   *   The recipe directory path.
+   * @param callable $alter
+   *   A function that will receive the decoded contents of recipe.yml as an
+   *   array. This should returned a modified array to be written to recipe.yml.
+   */
+  protected function alterRecipe(string $path, callable $alter): void {
+    $file = $path . '/recipe.yml';
+    $this->assertFileExists($file);
+    $contents = file_get_contents($file);
+    $contents = Yaml::decode($contents);
+    $contents = $alter($contents);
+    file_put_contents($file, Yaml::encode($contents));
+  }
+
 }

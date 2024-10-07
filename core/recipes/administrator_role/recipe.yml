@@ -2,11 +2,5 @@ name: 'Administrator role'
 description: 'Provides the Administrator role.'
 type: 'User role'
 config:
-  actions:
-    user.role.administrator:
-      # If this role already exists, then this action has no effect. If it doesn't exist, we'll create it with the following values.
-      createIfNotExists:
-        id: administrator
-        label: Administrator
-        weight: 3
-        is_admin: true
+  # If the administrator role already exists, we don't really care what it looks like.
+  strict: false
