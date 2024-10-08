@@ -298,7 +298,7 @@ class TestMigration extends Migration {
    * Sets the migration ID (machine name).
    *
    * @param string $plugin_id
-   *   The plugin_id of the plugin instance.
+   *   The plugin ID of the plugin instance.
    */
   public function setPluginId($plugin_id) {
     $this->pluginId = $plugin_id;

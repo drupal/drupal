@@ -89,7 +89,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * An alias for getPluginId() for backwards compatibility reasons.
    *
    * @return string
-   *   The plugin_id of the plugin instance.
+   *   The plugin ID of the plugin instance.
    *
    * @see \Drupal\migrate\Plugin\MigrationInterface::getPluginId()
    */
