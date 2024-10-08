@@ -2153,12 +2153,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/Derivative/ViewsLocalTaskTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/argument_validator/EntityTest.php',

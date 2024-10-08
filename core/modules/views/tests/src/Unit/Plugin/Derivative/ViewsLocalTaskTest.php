@@ -82,7 +82,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $display_plugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
       ->onlyMethods(['getOption'])
       ->disableOriginalConstructor()
-      ->getMockForAbstractClass();
+      ->getMock();
     $display_plugin->expects($this->once())
       ->method('getOption')
       ->with('menu')
@@ -137,7 +137,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $display_plugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
       ->onlyMethods(['getOption'])
       ->disableOriginalConstructor()
-      ->getMockForAbstractClass();
+      ->getMock();
     $display_plugin->expects($this->once())
       ->method('getOption')
       ->with('menu')
@@ -194,7 +194,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $display_plugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
       ->onlyMethods(['getOption'])
       ->disableOriginalConstructor()
-      ->getMockForAbstractClass();
+      ->getMock();
     $display_plugin->expects($this->once())
       ->method('getOption')
       ->with('menu')
@@ -243,7 +243,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $display_plugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
       ->onlyMethods(['getOption'])
       ->disableOriginalConstructor()
-      ->getMockForAbstractClass();
+      ->getMock();
     $display_plugin->expects($this->exactly(2))
       ->method('getOption')
       ->with('menu')
@@ -316,7 +316,7 @@ class ViewsLocalTaskTest extends UnitTestCase {
     $display_plugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
       ->onlyMethods(['getOption', 'getPath'])
       ->disableOriginalConstructor()
-      ->getMockForAbstractClass();
+      ->getMock();
     $display_plugin->expects($this->exactly(2))
       ->method('getOption')
       ->with('menu')
