@@ -137,7 +137,7 @@ default:
       allow_failure: true
 
 # Default configuration.
-'DEFAULT: PHP 8.3 MySQL 8':
+'DEFAULT: PHP 8.3 MySQL 8.0':
   <<: *default-stage
   variables:
     _TARGET_PHP: "8.3"
@@ -155,7 +155,7 @@ default:
     - if: $PERFORMANCE_TEST == "1"
 
 # Re-run the pipeline, but with Composer updates.
-'DEFAULT: Updated dependencies (PHP 8.3 MySQL 8)':
+'DEFAULT: Updated dependencies (PHP 8.3 MySQL 8.0)':
   <<: *default-stage
   # Run daily and allow manual runs on MRs.
   rules:
@@ -170,7 +170,7 @@ default:
     include: .gitlab-ci.yml
 
 # Special job for MRs for test-only checks.
-'DEFAULT: Test-only (PHP 8.3 MySQL 8)':
+'DEFAULT: Test-only (PHP 8.3 MySQL 8.0)':
   <<: [ *default-stage, *with-composer ]
   when: manual
   allow_failure: true
@@ -194,7 +194,7 @@ default:
     _TARGET_PHP: "8.1"
     _TARGET_DB: "mysql-5.7"
 
-'PHP 8.2 MySQL 8':
+'PHP 8.2 MySQL 8.0':
   <<: [ *default-stage, *run-on-mr ]
   variables:
     _TARGET_PHP: "8.2"
@@ -223,6 +223,18 @@ default:
   variables:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "sqlite-3"
+
+'PHP 8.3 MySQL 8.4':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "mysql-8.4"
+
+'PHP 8.3 MySQL 9.0':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "mysql-9"
 
 'PHP 8.3 PostgreSQL 16':
   <<: [ *default-stage, *run-on-mr ]
@@ -258,7 +270,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.1 MySQL 5.7':
   extends: 'PHP 8.1 MySQL 5.7'
-  needs: [ 'DEFAULT: PHP 8.3 MySQL 8' ]
+  needs: [ 'DEFAULT: PHP 8.3 MySQL 8.0' ]
   <<: [ *run-on-commit ]
 
 '[Commit] PHP 8.2 PostgreSQL 16':
@@ -275,7 +287,7 @@ default:
 # The value set in the "needs" property will determine the order in the sequence.
 '[Daily] PHP 8.2 PostgreSQL 14.1':
   extends: 'PHP 8.2 PostgreSQL 14.1'
-  needs: [ 'DEFAULT: PHP 8.3 MySQL 8' ]
+  needs: [ 'DEFAULT: PHP 8.3 MySQL 8.0' ]
   <<: [ *run-daily ]
 
 '[Daily] PHP 8.2 PostgreSQL 15':
@@ -306,6 +318,11 @@ default:
 '[Daily] PHP 8.1 SQLite 3':
   extends: 'PHP 8.1 SQLite 3'
   needs: [ '[Daily] PHP 8.1 PostgreSQL 14.1' ]
+  <<: [ *run-daily ]
+
+'[Daily] PHP 8.3 MySQL 8.4':
+  extends: 'PHP 8.3 MySQL 8.4'
+  needs: [ '[Daily] PHP 8.1 SQLite 3' ]
   <<: [ *run-daily ]
 
 ################
