@@ -18,7 +18,7 @@
         "behat/mink": "^1.11",
         "behat/mink-browserkit-driver": "^2.2",
         "colinodell/psr-testlogger": "^1.2",
-        "composer/composer": "^2.7.7",
+        "composer/composer": "^2.8.1",
         "drupal/coder": "^8.3.10",
         "justinrainbow/json-schema": "^5.2",
         "lullabot/mink-selenium2-driver": "^1.7.3",
