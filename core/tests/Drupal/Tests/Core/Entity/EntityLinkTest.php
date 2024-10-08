@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Link;
+use Drupal\Tests\Core\Config\Entity\StubConfigEntity;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -95,11 +95,10 @@ class EntityLinkTest extends UnitTestCase {
       ->with($entity_type_id)
       ->willReturn($entity_type);
 
-    /** @var \Drupal\Core\Entity\Entity $entity */
-    $entity = $this->getMockForAbstractClass(ConfigEntityBase::class, [
+    $entity = new StubConfigEntity(
       ['id' => $entity_id, 'label' => $entity_label, 'langcode' => 'es'],
       $entity_type_id,
-    ]);
+    );
 
     $expected_link = Link::createFromRoute(
       $expected_text,
