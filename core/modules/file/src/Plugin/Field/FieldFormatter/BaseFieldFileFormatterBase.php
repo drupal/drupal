@@ -26,7 +26,7 @@ abstract class BaseFieldFileFormatterBase extends FormatterBase {
    * Constructs a BaseFieldFileFormatterBase object.
    *
    * @param string $plugin_id
-   *   The plugin_id for the formatter.
+   *   The plugin ID for the formatter.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition

@@ -33,12 +33,12 @@ class FieldType extends Plugin {
    * @param int $weight
    *   (optional) The weight of the field type.
    * @param string|null $default_widget
-   *   (optional) The plugin_id of the default widget for this field type.
+   *   (optional) The plugin ID of the default widget for this field type.
    *   This widget must be available whenever the field type is available (i.e.
    *   provided by the field type module, or by a module the field type module
    *   depends on).
    * @param string|null $default_formatter
-   *   (optional) The plugin_id of the default formatter for this field type.
+   *   (optional) The plugin ID of the default formatter for this field type.
    *   This formatter must be available whenever the field type is available
    *   (i.e. provided by the field type module, or by a module the field type
    *   module depends on).

@@ -13,7 +13,7 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
   const DERIVATIVE_SEPARATOR = ':';
 
   /**
-   * The plugin_id.
+   * The plugin ID.
    *
    * @var string
    */
@@ -46,7 +46,7 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    */
