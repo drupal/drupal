@@ -8,6 +8,7 @@ use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeFileException;
 use Drupal\Core\Recipe\RecipePreExistingConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -15,6 +16,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @group Recipe
  */
 class RecipeTest extends KernelTestBase {
+
+  use RecipeTestTrait;
 
   /**
    * {@inheritdoc}
@@ -78,6 +81,21 @@ class RecipeTest extends KernelTestBase {
     RecipeRunner::processRecipe($recipe);
     // Verify if the 'default_summary_length' value is updated.
     $this->assertSame($this->config('text.settings')->get('default_summary_length'), 700);
+  }
+
+  public function testImplicitlyRequiredModule(): void {
+    $this->disableModules(['user']);
+    $recipe = $this->createRecipe([
+      'name' => 'Actions on config from required module',
+      'config' => [
+        'actions' => [
+          'user.role.authenticated' => [
+            'grantPermission' => 'access administration pages',
+          ],
+        ],
+      ],
+    ]);
+    $this->assertIsObject($recipe);
   }
 
 }
