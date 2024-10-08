@@ -268,14 +268,23 @@ final class Recipe {
 
     $configurator = new RecipeConfigurator($recipe_being_validated['recipes'] ?? [], $include_path);
 
+    /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+    $module_list = \Drupal::service('extension.list.module');
     // The config provider must either be an already-installed module or theme,
     // or an extension being installed by this recipe or a recipe it depends on.
     $all_extensions = [
-      ...array_keys(\Drupal::service('extension.list.module')->getAllInstalledInfo()),
+      ...array_keys($module_list->getAllInstalledInfo()),
       ...array_keys(\Drupal::service('extension.list.theme')->getAllInstalledInfo()),
       ...$recipe_being_validated['install'] ?? [],
       ...$configurator->listAllExtensions(),
     ];
+    // Explicitly treat required modules as installed, even if Drupal isn't
+    // installed yet, because we know they WILL be installed.
+    foreach ($module_list->getAllAvailableInfo() as $name => $info) {
+      if (!empty($info['required'])) {
+        $all_extensions[] = $name;
+      }
+    }
 
     if (!in_array($config_provider, $all_extensions, TRUE)) {
       $context->addViolation('Config actions cannot be applied to %config_name because the %config_provider extension is not installed, and is not installed by this recipe or any of the recipes it depends on.', [
