@@ -14,7 +14,6 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Url;
 use Drupal\Tests\UpdatePathTestTrait;
-use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -236,14 +235,18 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
    * Replace User 1 with the user created here.
    */
   protected function replaceUser1() {
-    /** @var \Drupal\user\UserInterface $account */
-    // @todo Saving the account before the update is problematic.
-    //   https://www.drupal.org/node/2560237
-    $account = User::load(1);
-    $account->setPassword($this->rootUser->pass_raw);
-    $account->setEmail($this->rootUser->getEmail());
-    $account->setUsername($this->rootUser->getAccountName());
-    $account->save();
+    // We try not to save content entities in hook_update_N() because the schema
+    // might be out of sync, or hook invocations might rely on other schemas
+    // that also aren't updated yet. Hence we are directly updating the database
+    // tables with the values.
+    Database::getConnection()->update('users_field_data')
+      ->fields([
+        'name' => $this->rootUser->getAccountName(),
+        'pass' => \Drupal::service('password')->hash($this->rootUser->pass_raw),
+        'mail' => $this->rootUser->getEmail(),
+      ])
+      ->condition('uid', 1)
+      ->execute();
   }
 
   /**
