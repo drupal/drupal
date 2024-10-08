@@ -123,7 +123,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
    * @param array $configuration
    *   Configuration for the plugin.
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Database\Connection $database

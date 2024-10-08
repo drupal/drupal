@@ -35,7 +35,7 @@ class MigrationSourceCacheTest extends MigrateTestBase {
   }
 
   /**
-   * Tests that counts for the same plugin_id are not crossed.
+   * Tests that counts for the same plugin ID are not crossed.
    */
   public function testCacheCountsNotContaminated(): void {
     $migration_1_definition = [
