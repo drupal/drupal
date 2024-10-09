@@ -50,6 +50,9 @@ parameters:
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
     - "#^Plugin definitions cannot be altered.#"
     - "#^Class .* extends @internal class#"
+    - identifier: missingType.iterableValue
 
 rules:
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
+  - PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule
+  - PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
