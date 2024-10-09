@@ -155,6 +155,7 @@ class QuickStartTest extends TestCase {
       'core/scripts/drupal',
       'install',
       'testing',
+      "--password='secret'",
       "--site-name='Test site {$this->testDb->getDatabasePrefix()}'",
     ];
     $install_process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
@@ -162,6 +163,7 @@ class QuickStartTest extends TestCase {
     $result = $install_process->run();
     // The progress bar uses STDERR to write messages.
     $this->assertStringContainsString('Congratulations, you installed Drupal!', $install_process->getErrorOutput());
+    $this->assertStringContainsString("Password: 'secret'", $install_process->getOutput());
     $this->assertSame(0, $result);
 
     // Run the PHP built-in webserver.

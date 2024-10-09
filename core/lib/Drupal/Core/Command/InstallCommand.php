@@ -50,6 +50,7 @@ class InstallCommand extends Command {
       ->setDescription('Installs a Drupal demo site. This is not meant for production and might be too simple for custom development. It is a quick and easy way to get Drupal running.')
       ->addArgument('install-profile-or-recipe', InputArgument::OPTIONAL, 'Install profile or recipe directory from which to install the site.')
       ->addOption('langcode', NULL, InputOption::VALUE_OPTIONAL, 'The language to install the site in.', 'en')
+      ->addOption('password', NULL, InputOption::VALUE_OPTIONAL, 'The password to use for the site. Defaults to random password.')
       ->addOption('site-name', NULL, InputOption::VALUE_OPTIONAL, 'Set the site name.', 'Drupal')
       ->addUsage('demo_umami --langcode fr')
       ->addUsage('standard --site-name QuickInstall')
@@ -115,7 +116,7 @@ class InstallCommand extends Command {
       return 1;
     }
 
-    return $this->install($this->classLoader, $io, $install_profile ?? '', $input->getOption('langcode'), $this->getSitePath(), $input->getOption('site-name'), $recipe ?? '');
+    return $this->install($this->classLoader, $io, $install_profile ?? '', $input->getOption('langcode'), $this->getSitePath(), $input->getOption('site-name'), $recipe ?? '', $input->getOption('password'));
   }
 
   /**
@@ -154,6 +155,8 @@ class InstallCommand extends Command {
    *   The site name.
    * @param string $recipe
    *   The recipe to use for installing.
+   * @param string|null $password
+   *   The password to use for installing.
    *
    * @throws \Exception
    *   Thrown when failing to create the $site_path directory or settings.php.
@@ -161,9 +164,9 @@ class InstallCommand extends Command {
    * @return int
    *   The command exit status.
    */
-  protected function install($class_loader, SymfonyStyle $io, $profile, $langcode, $site_path, $site_name, string $recipe) {
+  protected function install($class_loader, SymfonyStyle $io, $profile, $langcode, $site_path, $site_name, string $recipe, ?string $password = NULL) {
     $sqliteDriverNamespace = 'Drupal\\sqlite\\Driver\\Database\\sqlite';
-    $password = Crypt::randomBytesBase64(12);
+    $password ??= Crypt::randomBytesBase64(12);
     $parameters = [
       'interactive' => FALSE,
       'site_path' => $site_path,

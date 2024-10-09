@@ -30,6 +30,7 @@ class QuickStartCommand extends Command {
       ->setDescription('Installs a Drupal site and runs a web server. This is not meant for production and might be too simple for custom development. It is a quick and easy way to get Drupal running.')
       ->addArgument('install-profile-or-recipe', InputArgument::OPTIONAL, 'Install profile or recipe directory from which to install the site.')
       ->addOption('langcode', NULL, InputOption::VALUE_OPTIONAL, 'The language to install the site in. Defaults to en.', 'en')
+      ->addOption('password', NULL, InputOption::VALUE_OPTIONAL, 'Set the administrator password. Defaults to a randomly generated password.')
       ->addOption('site-name', NULL, InputOption::VALUE_OPTIONAL, 'Set the site name. Defaults to Drupal.', 'Drupal')
       ->addOption('host', NULL, InputOption::VALUE_OPTIONAL, 'Provide a host for the server to run on. Defaults to 127.0.0.1.', '127.0.0.1')
       ->addOption('port', NULL, InputOption::VALUE_OPTIONAL, 'Provide a port for the server to run on. Will be determined automatically if none supplied.')
@@ -52,6 +53,7 @@ class QuickStartCommand extends Command {
       'command' => 'install',
       'install-profile-or-recipe' => $input->getArgument('install-profile-or-recipe'),
       '--langcode' => $input->getOption('langcode'),
+      '--password' => $input->getOption('password'),
       '--site-name' => $input->getOption('site-name'),
     ];
 
