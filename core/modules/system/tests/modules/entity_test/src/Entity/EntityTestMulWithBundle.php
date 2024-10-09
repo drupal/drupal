@@ -37,9 +37,9 @@ namespace Drupal\entity_test\Entity;
  *   links = {
  *     "add-page" = "/entity_test_mul_with_bundle/add",
  *     "add-form" = "/entity_test_mul_with_bundle/add/{type}",
- *     "canonical" = "/entity_test_mul_with_bundle/manage/{entity_test_mul}",
- *     "edit-form" = "/entity_test_mul_with_bundle/manage/{entity_test_mul}/edit",
- *     "delete-form" = "/entity_test/delete/entity_test_mul_with_bundle/{entity_test_mul}",
+ *     "canonical" = "/entity_test_mul_with_bundle/manage/{entity_test_mul_with_bundle}",
+ *     "edit-form" = "/entity_test_mul_with_bundle/manage/{entity_test_mul_with_bundle}/edit",
+ *     "delete-form" = "/entity_test/delete/entity_test_mul_with_bundle/{entity_test_mul_with_bundle}",
  *   },
  *   field_ui_base_route = "entity.entity_test_mul_with_bundle.admin_form",
  * )
