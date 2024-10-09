@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\migrate\process\d6;
 
+use Drupal\Component\Utility\FilterArray;
 use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -27,7 +28,7 @@ class ProfileFieldOptionTranslation extends ProcessPluginBase {
       $allowed_values = [];
       $list = explode("\n", $translation);
       $list = array_map('trim', $list);
-      $list = array_filter($list, 'strlen');
+      $list = FilterArray::removeEmptyStrings($list);
       if ($field_type === 'list_string') {
         foreach ($list as $value) {
           $allowed_values[] = ['label' => $value];

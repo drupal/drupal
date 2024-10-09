@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Datetime\Element;
 
+use Drupal\Component\Utility\FilterArray;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Variable;
 use Drupal\Core\Datetime\DateHelper;
@@ -345,7 +346,7 @@ class Datelist extends DateElementBase {
     // \Drupal\Core\Datetime\Element\Datelist::valueCallback().
     unset($input['object']);
     // Filters out empty array values, any valid value would have a string length.
-    $filtered_input = array_filter($input, 'strlen');
+    $filtered_input = FilterArray::removeEmptyStrings($input);
     return array_diff($parts, array_keys($filtered_input));
   }
 

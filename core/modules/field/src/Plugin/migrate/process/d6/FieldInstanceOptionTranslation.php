@@ -2,6 +2,7 @@
 
 namespace Drupal\field\Plugin\migrate\process\d6;
 
+use Drupal\Component\Utility\FilterArray;
 use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -27,7 +28,7 @@ class FieldInstanceOptionTranslation extends ProcessPluginBase {
     if (isset($global_settings['allowed_values'])) {
       $list = explode("\n", $global_settings['allowed_values']);
       $list = array_map('trim', $list);
-      $list = array_filter($list, 'strlen');
+      $list = FilterArray::removeEmptyStrings($list);
       switch ($field_type) {
         case 'boolean';
           $option = preg_replace('/^option_/', '', $row->getSourceProperty('property'));
