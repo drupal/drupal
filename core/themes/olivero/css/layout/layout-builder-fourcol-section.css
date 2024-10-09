@@ -11,65 +11,23 @@
  */
 
 .layout--fourcol-section {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.layout--fourcol-section > .layout__region {
-  flex: 1 0 100%;
-  margin-block-end: var(--grid-gap);
-}
-
-@media (min-width: 43.75rem) {
-  .layout--fourcol-section > .layout__region {
-    flex-basis: calc(50% - (var(--grid-gap) * 0.5));
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin-block-end: 0;
-  }
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: var(--layout-fourcol-grid);
 }
 
 /* Two column layout. */
 
 @media (min-width: 43.75rem) {
-  .layout--fourcol-section > .layout__region--first,
-  .layout--fourcol-section > .layout__region--second {
-    margin-block-end: var(--grid-gap);
-  }
-
-  .layout--fourcol-section > .layout__region--first,
-  .layout--fourcol-section > .layout__region--third {
-    margin-inline-end: calc(var(--grid-gap) * 0.5);
-  }
-
-  .layout--fourcol-section > .layout__region--second,
-  .layout--fourcol-section > .layout__region--fourth {
-    margin-inline-start: calc(var(--grid-gap) * 0.5);
+  .layout--fourcol-section {
+    --layout-fourcol-grid: repeat(2, minmax(0, 1fr));
   }
 }
 
 /* Four column layout. */
 
 @media (min-width: 62.5rem) {
-  .layout--fourcol-section > .layout__region {
-    flex-basis: calc(25% - (var(--grid-gap) * 0.75));
-  }
-
-  .layout--fourcol-section > .layout__region--first,
-  .layout--fourcol-section > .layout__region--second {
-    margin-block-end: 0;
-  }
-
-  .layout--fourcol-section > .layout__region--first {
-    margin-inline-end: calc(var(--grid-gap) * 0.5);
-  }
-
-  .layout--fourcol-section > .layout__region--second,
-  .layout--fourcol-section > .layout__region--third {
-    margin-inline: calc(var(--grid-gap) * 0.5);
-  }
-
-  .layout--fourcol-section > .layout__region--fourth {
-    margin-inline-start: calc(var(--grid-gap) * 0.5);
+  .layout--fourcol-section {
+    --layout-fourcol-grid: repeat(4, minmax(0, 1fr));
   }
 }
