@@ -2,6 +2,7 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+use Drupal\Component\Utility\FilterArray;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\ExceptionHandler;
@@ -246,7 +247,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    */
   public static function sqlFunctionLeast() {
     // Remove all NULL, FALSE and empty strings values but leaves 0 (zero) values.
-    $values = array_filter(func_get_args(), 'strlen');
+    $values = FilterArray::removeEmptyStrings(func_get_args());
 
     return count($values) < 1 ? NULL : min($values);
   }
