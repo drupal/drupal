@@ -75896,6 +75896,18 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Update/UpdateRegistryTest.php',
 ];
 $ignoreErrors[] = [
+	// identifier: includeOnce.fileNotFound
+	'message' => '#^Path in include_once\\(\\) "vfs\\://drupal/sites/default/modules/module_a/module_a\\.post_update\\.php" is not a file or it does not exist\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Update/UpdateRegistryTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: includeOnce.fileNotFound
+	'message' => '#^Path in include_once\\(\\) "vfs\\://drupal/sites/default/modules/module_b/module_b\\.post_update\\.php" is not a file or it does not exist\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Update/UpdateRegistryTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\TestUrl\\:\\:setAccessManager\\(\\) has no return type specified\\.$#',
 	'count' => 1,
