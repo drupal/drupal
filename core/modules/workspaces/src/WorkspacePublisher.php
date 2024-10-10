@@ -4,6 +4,7 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 use Drupal\workspaces\Event\WorkspacePostPublishEvent;
@@ -119,9 +120,11 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
 
     try {
       $transaction = $this->database->startTransaction();
-      // @todo Handle the publishing of a workspace with a batch operation in
-      //   https://www.drupal.org/node/2958752.
       $this->workspaceManager->executeOutsideWorkspace(function () use ($tracked_entities) {
+        $max_execution_time = ini_get('max_execution_time');
+        $step_size = Settings::get('entity_update_batch_size', 50);
+        $counter = 0;
+
         foreach ($tracked_entities as $entity_type_id => $revision_difference) {
           $entity_revisions = $this->entityTypeManager->getStorage($entity_type_id)
             ->loadMultipleRevisions(array_keys($revision_difference));
@@ -142,6 +145,14 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
 
             $entity->original = $default_revisions[$entity->id()];
             $entity->save();
+            $counter++;
+
+            // Extend the execution time in order to allow processing workspaces
+            // that contain a large number of items.
+            if ((int) ($counter / $step_size) >= 1) {
+              set_time_limit($max_execution_time);
+              $counter = 0;
+            }
           }
         }
       });
