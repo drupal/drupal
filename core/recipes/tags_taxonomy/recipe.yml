@@ -3,9 +3,10 @@ description: 'Provides "Tags" taxonomy vocabulary and related configuration. Use
 type: 'Taxonomy'
 install:
   - taxonomy
+  # Added until the following issue is fixed.
+  # Taxonomy should provide a fallback way to display terms when Views is not enabled.
+  # https://www.drupal.org/project/drupal/issues/3479980
+  - views
 config:
   import:
-    taxonomy:
-      - core.entity_view_mode.taxonomy_term.full
-      - system.action.taxonomy_term_publish_action
-      - system.action.taxonomy_term_unpublish_action
+    taxonomy: '*'
