@@ -5,3 +5,9 @@
 #navigation-layout .layout-builder {
   border: none;
 }
+
+/* Label when "content preview" is disabled. */
+.navigation-layout .layout-builder-block__content-preview-placeholder-label {
+  font-size: 0.79rem;
+  overflow-wrap: anywhere;
+}
