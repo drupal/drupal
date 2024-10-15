@@ -180,7 +180,7 @@ final class Recipe {
         ]),
       ]),
       'input' => new Optional([
-        new Type('associative_array'),
+        new Type('array'),
         new All([
           new Collection(
             fields: [
@@ -192,7 +192,7 @@ final class Recipe {
               // There can be an optional set of constraints, which is an
               // associative array of arrays, as in config schema.
               'constraints' => new Optional([
-                new Type('associative_array'),
+                new Type('array'),
               ]),
               'data_type' => [
                 // The data type must be known to the typed data system.
@@ -211,7 +211,7 @@ final class Recipe {
                     new Choice(['ask', 'askHidden', 'confirm', 'choice']),
                   ],
                   'arguments' => new Optional([
-                    new Type('associative_array'),
+                    new Type('array'),
                   ]),
                 ]),
               ]),
@@ -224,7 +224,7 @@ final class Recipe {
                   'value' => new Optional(),
                   'config' => new Optional([
                     new Sequentially([
-                      new Type('list'),
+                      new Type('array'),
                       new Count(2),
                       new All([
                         new Type('string'),

@@ -351,15 +351,13 @@ YAML,
     yield 'input definitions are an indexed array' => [
       <<<YAML
 name: Bad input definitions
-input:
-  - data_type: string
-    description: A valid enough input, but in an indexed array.
-    default:
-      source: value
-      value: Here be dragons
+input: false
 YAML,
       [
-        '[input]' => ['This value should be of type associative_array.'],
+        '[input]' => [
+          'This value should be of type array.',
+          'This value should be of type iterable.',
+        ],
       ],
     ];
     yield 'input data type is missing' => [
@@ -413,14 +411,13 @@ input:
   foo:
     data_type: string
     description: 'Constraints need to be associative'
-    constraints:
-      - Type: string
+    constraints: false
     default:
       source: value
       value: Here be dragons
 YAML,
       [
-        '[input][foo][constraints]' => ['This value should be of type associative_array.'],
+        '[input][foo][constraints]' => ['This value should be of type array.'],
       ],
     ];
     yield 'input data type is unknown' => [
@@ -499,13 +496,13 @@ input:
     description: 'Prompt arguments must be associative'
     prompt:
       method: ask
-      arguments: [1, 2]
+      arguments: false
     default:
       source: value
       value: Here be dragons
 YAML,
       [
-        '[input][foo][prompt][arguments]' => ['This value should be of type associative_array.'],
+        '[input][foo][prompt][arguments]' => ['This value should be of type array.'],
       ],
     ];
     yield 'input definition without default value' => [
@@ -552,7 +549,7 @@ input:
       config: 'system.site:mail'
 YAML,
       [
-        '[input][foo][default][config]' => ['This value should be of type list.'],
+        '[input][foo][default][config]' => ['This value should be of type array.'],
       ],
     ];
     yield 'default value from config has too few values' => [
@@ -583,12 +580,10 @@ input:
       method: ask
     default:
       source: config
-      config:
-        name: system.site
-        key: mail
+      config: false
 YAML,
       [
-        '[input][foo][default][config]' => ['This value should be of type list.'],
+        '[input][foo][default][config]' => ['This value should be of type array.'],
       ],
     ];
     yield 'default value from config has non-string values' => [
