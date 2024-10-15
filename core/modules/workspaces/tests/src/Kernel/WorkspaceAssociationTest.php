@@ -156,6 +156,14 @@ class WorkspaceAssociationTest extends KernelTestBase {
     $expected_initial_revisions['dev'] = [8];
 
     $this->assertWorkspaceAssociations('node', $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
+
+    // Publish 'stage' and check the workspace associations.
+    /** @var \Drupal\workspaces\WorkspacePublisherInterface $workspace_publisher */
+    $workspace_publisher = \Drupal::service('workspaces.operation_factory')->getPublisher($this->workspaces['stage']);
+    $workspace_publisher->publish();
+
+    $expected_revisions['stage'] = $expected_revisions['dev'] = [];
+    $this->assertWorkspaceAssociations('node', $expected_revisions, $expected_revisions, $expected_revisions);
   }
 
   /**
