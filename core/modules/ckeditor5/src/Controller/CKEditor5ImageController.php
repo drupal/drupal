@@ -137,7 +137,11 @@ class CKEditor5ImageController extends ControllerBase {
    */
   public function upload(Request $request) {
     // Getting the UploadedFile directly from the request.
+    /** @var \Symfony\Component\HttpFoundation\File\UploadedFile|null $upload */
     $upload = $request->files->get('upload');
+    if ($upload === NULL || !$upload->isValid()) {
+      throw new HttpException(500, $upload?->getErrorMessage() ?: 'Invalid file upload');
+    }
     $filename = $upload->getClientOriginalName();
 
     $editor = $request->attributes->get('editor');
