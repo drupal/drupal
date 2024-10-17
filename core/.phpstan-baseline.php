@@ -63167,12 +63167,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/argument_validator/EntityTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/display/PathPluginBaseTest.php',
@@ -74214,18 +74208,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityUrlTest\\:\\:registerLinkTemplate\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityUrlTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: phpunit.mockMethod
-	'message' => '#^Trying to mock an undefined method getRevisionId\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityUrlTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: phpunit.mockMethod
-	'message' => '#^Trying to mock an undefined method isDefaultRevision\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityUrlTest.php',
 ];
