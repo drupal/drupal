@@ -71387,6 +71387,18 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Recipe\\\\EntityCloneConfigActionTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Recipe/EntityCloneConfigActionTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Recipe\\\\EntityCloneConfigActionTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Recipe/EntityCloneConfigActionTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Recipe\\\\PermissionsPerBundleTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Recipe/PermissionsPerBundleTest.php',
