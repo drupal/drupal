@@ -31,7 +31,6 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
-use Drupal\user\UserInterface;
 use Drupal\node\Form\NodePreviewForm;
 
 /**
@@ -611,33 +610,6 @@ function node_ranking() {
     ];
   }
   return $ranking;
-}
-
-/**
- * Implements hook_user_cancel().
- */
-function node_user_cancel($edit, UserInterface $account, $method) {
-  switch ($method) {
-    case 'user_cancel_block_unpublish':
-      // Unpublish nodes (current revisions).
-      $nids = \Drupal::entityQuery('node')
-        ->accessCheck(FALSE)
-        ->condition('uid', $account->id())
-        ->execute();
-      \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
-      node_mass_update($nids, ['status' => 0], NULL, TRUE);
-      break;
-
-    case 'user_cancel_reassign':
-      // Anonymize all of the nodes for this old account.
-      \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
-      $vids = \Drupal::entityTypeManager()->getStorage('node')->userRevisionIds($account);
-      node_mass_update($vids, [
-        'uid' => 0,
-        'revision_uid' => 0,
-      ], NULL, TRUE, TRUE);
-      break;
-  }
 }
 
 /**

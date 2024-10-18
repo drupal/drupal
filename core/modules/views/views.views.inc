@@ -190,7 +190,8 @@ function views_views_data() {
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
       if (_views_field_get_entity_type_storage($field_storage)) {
-        $result = (array) $module_handler->invoke($field_storage->getTypeProvider(), 'field_views_data', [$field_storage]);
+        $provider = $field_storage->getTypeProvider();
+        $result = (array) $module_handler->invoke($provider === 'core' ? 'views' : $provider, 'field_views_data', [$field_storage]);
         if (empty($result)) {
           $result = views_field_default_views_data($field_storage);
         }
@@ -772,7 +773,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
  * is provided by core. This function also provides an argument plugin for
  * entity_reference fields that handles title token replacement.
  */
-function core_field_views_data(FieldStorageConfigInterface $field_storage) {
+function views_field_views_data(FieldStorageConfigInterface $field_storage) {
   $data = views_field_default_views_data($field_storage);
 
   // The code below only deals with the Entity reference field type.

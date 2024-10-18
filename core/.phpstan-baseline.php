@@ -7497,18 +7497,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Extension\\\\ModuleHandler\\:\\:buildHookInfo\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ModuleHandler.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Extension\\\\ModuleHandler\\:\\:destruct\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ModuleHandler.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Extension\\\\ModuleHandler\\:\\:loadAll\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ModuleHandler.php',
@@ -36644,12 +36632,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function node_user_cancel\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/node.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function node_user_predelete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/node.module',
@@ -63617,7 +63599,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function core_field_views_data\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function views_field_views_data\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];

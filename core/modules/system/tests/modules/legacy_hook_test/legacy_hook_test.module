@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Hook\Attribute\LegacyHook;
+
+#[LegacyHook]
+function legacy_hook_test_test1(): void {
+  1 / 0;
+}
+
+function legacy_hook_test_test2(): string {
+  return 'ok';
+}

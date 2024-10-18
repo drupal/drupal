@@ -101,7 +101,8 @@ function _update_fix_missing_schema() {
       // If the module implements hook_update_last_removed() use the
       // value of that if it's higher than the schema versions found so
       // far.
-      if ($last_removed = $module_handler->invoke($module, 'update_last_removed')) {
+      $function = $module . '_update_last_removed';
+      if (function_exists($function) && ($last_removed = $function())) {
         $last_update = max($last_update, $last_removed);
       }
       $update_registry->setInstalledVersion($module, $last_update);

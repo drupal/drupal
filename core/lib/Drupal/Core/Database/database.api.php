@@ -549,6 +549,8 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
 /**
  * Define the current version of the database schema.
  *
+ * Only procedural implementations are supported for this hook.
+ *
  * A Drupal schema definition is an array structure representing one or more
  * tables and their related keys and indexes. A schema is defined by
  * hook_schema() which must live in your module's .install file.

@@ -227,7 +227,7 @@ class CommentAdminOverview extends FormBase {
         'title' => $this->t('Edit'),
         'url' => $comment->toUrl('edit-form', $comment_uri_options),
       ];
-      if ($this->moduleHandler->moduleExists('content_translation') && $this->moduleHandler->invoke('content_translation', 'translate_access', [$comment])->isAllowed()) {
+      if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($comment)->isAllowed()) {
         $links['translate'] = [
           'title' => $this->t('Translate'),
           'url' => $comment->toUrl('drupal:content-translation-overview', $comment_uri_options),

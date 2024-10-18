@@ -642,9 +642,7 @@ services:
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
   module_handler:
     class: Drupal\Core\Extension\ModuleHandler
-    arguments: ['%app.root%', '%container.modules%', '@cache.bootstrap']
-    tags:
-      - { name: needs_destruction }
+    arguments: ['%app.root%', '%container.modules%', '@event_dispatcher', '%hook_implementations_map%']
   Drupal\Core\Extension\ModuleHandlerInterface: '@module_handler'
   module_installer:
     class: Drupal\Core\Extension\ModuleInstaller

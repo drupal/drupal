@@ -1,0 +1,5 @@
+name: 'LegacyHook attribute test'
+type: module
+description: 'LegacyHook attribute test module'
+package: test
+core_version_requirement: ^10 || ^11

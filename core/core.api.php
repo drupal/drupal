@@ -1596,7 +1596,7 @@
  * Define functions that alter the behavior of Drupal core.
  *
  * One way for modules to alter the core behavior of Drupal (or another module)
- * is to use hooks. Hooks are specially-named functions that a module defines
+ * is to use hooks. Hooks are functions or methods that a module defines
  * (this is known as "implementing the hook"), which are discovered and called
  * at specific times to alter or add to the base behavior or data (this is
  * known as "invoking the hook"). Each hook has a name (example:
@@ -1605,15 +1605,73 @@
  * modules that they interact with. Your modules can also define their own
  * hooks, in order to let other modules interact with them.
  *
- * To implement a hook:
- * - Locate the documentation for the hook. Hooks are documented in *.api.php
- *   files, by defining functions whose name starts with "hook_" (these
- *   files and their functions are never loaded by Drupal -- they exist solely
- *   for documentation). The function should have a documentation header, as
- *   well as a sample function body. For example, in the core file form.api.php,
- *   you can find hooks such as hook_batch_alter(). Also, if you are viewing
- *   this documentation on an API reference site, the Core hooks will be listed
- *   in this topic.
+ * @section implementing Implementing a hook
+ *
+ * There are two ways to implement a hook:
+ * - Class method, by adding an attribute to a class or a method. This is the
+ *   preferred method.
+ * - Procedural, by defining a specially-named function. Some hooks can only be
+ *   implemented as procedural.
+ *
+ * In both cases, first locate the documentation for the hook. Hooks are
+ * documented in *.api.php files, by defining functions whose name starts with
+ * "hook_" (these files and their functions are never loaded by Drupal -- they
+ * exist solely for documentation). The function should have a documentation
+ * header, as well as a sample function body. For example, in the core file
+ * form.api.php, you can find hooks such as hook_batch_alter(). Also, if you are
+ * viewing this documentation on an API reference site, the Core hooks will be
+ * listed in this topic.
+ *
+ * @subsection oo-hooks Class method hook implementation
+ *
+ * Class method hooks use the attribute \Drupal\Core\Hook\Attribute\Hook to
+ * declare a method as being the hook implementation. The first parameter to the
+ * attribute is the short hook name, that is, with the 'hook_' prefix removed.
+ *
+ * The Hook attribute can be used in any of the following ways:
+ * - On a method, use the attribute with the hook name:
+ *   @code
+ *   #[Hook('user_cancel')]
+ *   public method userCancel(...)
+ *   @endcode
+ * - On a class, specify the method name as well as the hook name:
+ *   @code
+ *   #[Hook('user_cancel', method: 'userCancel')]
+ *   class Hooks {
+ *     method userCancel(...) {}
+ *   }
+ *   @endcode
+ * - On a class with an __invoke method, which is taken to be the hook
+ *   implementation:
+ *   @code
+ *   #[Hook('user_cancel')]
+ *   class Hooks {
+ *     method __invoke(...) {}
+ *   }
+ *   @endcode
+ *
+ * The following hooks can not be implemented as a class method, and must be
+ * implemented as procedural:
+ *
+ * Install hooks:
+ * - hook_install()
+ * - hook_module_preinstall()
+ * - hook_module_preuninstall()
+ * - hook_modules_installed()
+ * - hook_modules_uninstalled()
+ * - hook_post_update_NAME()
+ * - hook_schema()
+ * - hook_uninstall()
+ * - hook_update_last_removed()
+ * - hook_update_N()
+ *
+ * Theme hooks:
+ * - hook_preprocess_HOOK()
+ * - hook_process_HOOK()
+ *
+ * @subsection procedural-hooks Procedural hook implementation
+ *
+ * Procedural implementation should use the following technique:
  * - Copy the function to your module's .module file.
  * - Change the name of the function, substituting your module's short name
  *   (name of the module's directory, and .info.yml file without the extension)
@@ -1624,6 +1682,8 @@
  * - Edit the body of the function, substituting in what you need your module
  *   to do.
  *
+ * @section defining Defining a hook
+ *
  * To define a hook:
  * - Choose a unique name for your hook. It should start with "hook_", followed
  *   by your module's short name.
@@ -1631,6 +1691,8 @@
  *   directory. See the "implementing" section above for details of what this
  *   should contain (parameters, return value, and sample function body).
  * - Invoke the hook in your module's code.
+ *
+ * @section invoking Invoking a hook
  *
  * To invoke a hook, use methods on
  * \Drupal\Core\Extension\ModuleHandlerInterface such as alter(), invoke(),
@@ -1642,6 +1704,7 @@
  * @see themeable
  * @see callbacks
  * @see \Drupal\Core\Extension\ModuleHandlerInterface
+ * @see \Drupal\Core\Hook\Attribute\Hook
  * @see \Drupal::moduleHandler()
  *
  * @}

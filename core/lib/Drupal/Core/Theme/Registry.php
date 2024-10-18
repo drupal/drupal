@@ -497,9 +497,18 @@ class Registry implements DestructableInterface {
 
     // Invoke the hook_theme() implementation, preprocess what is returned, and
     // merge it into $cache.
-    $function = $name . '_theme';
-    if (function_exists($function)) {
-      $result = $function($cache, $type, $theme, $path);
+    $args = [$cache, $type, $theme, $path];
+    $result = [];
+    if ($type === 'module') {
+      $result = $this->moduleHandler->invoke($name, 'theme', $args);
+    }
+    else {
+      $function = $name . '_theme';
+      if (function_exists($function)) {
+        $result = $function(... $args);
+      }
+    }
+    if ($result) {
       foreach ($result as $hook => $info) {
         // When a theme or engine overrides a module's theme function
         // $result[$hook] will only contain key/value pairs for information being

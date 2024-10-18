@@ -4,8 +4,10 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Hook\HookCollectorPass;
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class that manages modules in a Drupal installation.
@@ -36,47 +38,11 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $loaded = FALSE;
 
   /**
-   * List of hook implementations keyed by hook name.
+   * List of events which implement an alter hook keyed by hook name(s).
    *
    * @var array
    */
-  protected $implementations;
-
-  /**
-   * List of hooks where the implementations have been "verified".
-   *
-   * @var true[]
-   *   Associative array where keys are hook names.
-   */
-  protected $verified;
-
-  /**
-   * Information returned by hook_hook_info() implementations.
-   *
-   * @var array
-   */
-  protected $hookInfo;
-
-  /**
-   * Cache backend for storing module hook implementation information.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
-   * Whether the cache needs to be written.
-   *
-   * @var bool
-   */
-  protected $cacheNeedsWriting = FALSE;
-
-  /**
-   * List of alter hook implementations keyed by hook name(s).
-   *
-   * @var array
-   */
-  protected $alterFunctions;
+  protected array $alterEventListeners = [];
 
   /**
    * The app root.
@@ -93,6 +59,12 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $includeFileKeys = [];
 
   /**
+   * @var array
+   *   hook and module keyed list of listeners.
+   */
+  protected array $invokeMap = [];
+
+  /**
    * Constructs a ModuleHandler object.
    *
    * @param string $root
@@ -101,19 +73,20 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   An associative array whose keys are the names of installed modules and
    *   whose values are Extension class parameters. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   Cache backend for storing module hook implementation information.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   *   The event dispatcher.
+   * @param array $hookImplementationsMap
+   *   An array keyed by hook, classname, method and the value is the module.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list, CacheBackendInterface $cache_backend) {
+  public function __construct($root, array $module_list, protected EventDispatcherInterface $eventDispatcher, protected array $hookImplementationsMap) {
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
     }
-    $this->cacheBackend = $cache_backend;
   }
 
   /**
@@ -212,9 +185,23 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   protected function add($type, $name, $path) {
     $pathname = "$path/$name.info.yml";
-    $filename = file_exists($this->root . "/$path/$name.$type") ? "$name.$type" : NULL;
+    $php_file_path = $this->root . "/$path/$name.$type";
+    $filename = file_exists($php_file_path) ? "$name.$type" : NULL;
     $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
     $this->resetImplementations();
+    $hook_collector = HookCollectorPass::collectAllHookImplementations([$name => ['pathname' => $pathname]]);
+    // A module freshly added will not be registered on the container yet.
+    // ProceduralCall service does not yet know about it.
+    // Note in HookCollectorPass:
+    // - $container->register(ProceduralCall::class, ProceduralCall::class)->addArgument($collector->includes);
+    // Load all includes so the legacy section of invoke can handle hooks in includes.
+    $hook_collector->loadAllIncludes();
+    // Register procedural implementations.
+    foreach ($hook_collector->getImplementations() as $hook => $class_implementations) {
+      foreach ($class_implementations[ProceduralCall::class] ?? [] as $method => $hook_data) {
+        $this->invokeMap[$hook][$hook_data['module']][] = $method;
+      }
+    }
   }
 
   /**
@@ -288,111 +275,32 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getHookInfo() {
-    if (!isset($this->hookInfo)) {
-      if ($cache = $this->cacheBackend->get('hook_info')) {
-        $this->hookInfo = $cache->data;
-      }
-      else {
-        $this->buildHookInfo();
-        $this->cacheBackend->set('hook_info', $this->hookInfo);
-      }
-    }
-    return $this->hookInfo;
-  }
-
-  /**
-   * Builds hook_hook_info() information.
-   *
-   * @see \Drupal\Core\Extension\ModuleHandler::getHookInfo()
-   */
-  protected function buildHookInfo() {
-    $this->hookInfo = [];
-    // Make sure that the modules are loaded before checking.
-    $this->reload();
-    // $this->invokeAll() would cause an infinite recursion.
-    foreach ($this->moduleList as $module => $filename) {
-      $function = $module . '_hook_info';
-      if (function_exists($function)) {
-        $result = $function();
-        if (isset($result) && is_array($result)) {
-          $this->hookInfo = NestedArray::mergeDeep($this->hookInfo, $result);
-        }
-      }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function writeCache() {
-    if ($this->cacheNeedsWriting) {
-      $this->cacheBackend->set('module_implements', $this->implementations);
-      $this->cacheNeedsWriting = FALSE;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function destruct() {
-    $this->writeCache();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function resetImplementations() {
-    $this->implementations = NULL;
-    $this->hookInfo = NULL;
-    $this->alterFunctions = NULL;
-    // We maintain a persistent cache of hook implementations in addition to the
-    // static cache to avoid looping through every module and every hook on each
-    // request. Benchmarks show that the benefit of this caching outweighs the
-    // additional database hit even when using the default database caching
-    // backend and only a small number of modules are enabled. The cost of the
-    // $this->cacheBackend->get() is more or less constant and reduced further
-    // when non-database caching backends are used, so there will be more
-    // significant gains when a large number of modules are installed or hooks
-    // invoked, since this can quickly lead to
-    // \Drupal::moduleHandler()->hasImplementations() being called several
-    // thousand times per request.
-    $this->cacheBackend->set('module_implements', []);
-    $this->cacheBackend->delete('hook_info');
+    $this->alterEventListeners = [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasImplementations(string $hook, $modules = NULL): bool {
-    if ($modules !== NULL) {
-      foreach ((array) $modules as $module) {
-        // Hook implementations usually found in a module's .install file are
-        // not stored in the implementation info cache. In order to invoke hooks
-        // like hook_schema() and hook_requirements() the module's .install file
-        // must be included by the calling code. Additionally, this check avoids
-        // unnecessary work when a hook implementation is present in a module's
-        // .module file.
-        if (function_exists($module . '_' . $hook)) {
-          return TRUE;
-        }
-      }
-    }
-
-    $implementations = $this->getImplementationInfo($hook);
-    if ($modules === NULL && !empty($implementations)) {
-      return TRUE;
-    }
-
-    return !empty(array_intersect((array) $modules, array_keys($implementations)));
+    $implementation_modules = array_keys($this->getHookListeners($hook));
+    return (bool) (isset($modules) ? array_intersect($implementation_modules, (array) $modules) : $implementation_modules);
   }
 
   /**
    * {@inheritdoc}
    */
   public function invokeAllWith(string $hook, callable $callback): void {
-    foreach (array_keys($this->getImplementationInfo($hook)) as $module) {
-      $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
-      $callback($hookInvoker, $module);
+    foreach ($this->getHookListeners($hook) as $module => $listeners) {
+      foreach ($listeners as $listener) {
+        $callback($listener, $module);
+      }
     }
   }
 
@@ -400,11 +308,37 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function invoke($module, $hook, array $args = []) {
-    if (!$this->hasImplementations($hook, $module)) {
-      return;
+    if ($listeners = $this->getHookListeners($hook)[$module] ?? []) {
+      if (count($listeners) > 1) {
+        throw new \LogicException("Module $module should not implement $hook more than once");
+      }
+      return reset($listeners)(... $args);
     }
-    $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
-    return call_user_func_array($hookInvoker, $args);
+
+    return $this->legacyInvoke($module, $hook, $args);
+  }
+
+  /**
+   * Calls a function called $module . '_' . $hook if one exists.
+   *
+   * @param string $module
+   *   The name of the module (without the .module extension).
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param array $args
+   *   Arguments to pass to the hook implementation.
+   *
+   * @return mixed
+   *   The return value of the hook implementation.
+   */
+  protected function legacyInvoke($module, $hook, array $args = []) {
+    $this->load($module);
+    $function = $module . '_' . $hook;
+    if (function_exists($function) && !(new \ReflectionFunction($function))->getAttributes(LegacyHook::class)) {
+      return $function(... $args);
+    }
+
+    return NULL;
   }
 
   /**
@@ -451,7 +385,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   The name of the hook.
    */
   private function triggerDeprecationError($description, $hook) {
-    $modules = array_keys($this->getImplementationInfo($hook));
+    $modules = array_keys($this->getHookListeners($hook));
     if (!empty($modules)) {
       $message = 'The deprecated hook hook_' . $hook . '() is implemented in these functions: ';
       $implementations = array_map(function ($module) use ($hook) {
@@ -487,70 +421,67 @@ class ModuleHandler implements ModuleHandlerInterface {
     // Some alter hooks are invoked many times per page request, so store the
     // list of functions to call, and on subsequent calls, iterate through them
     // quickly.
-    if (!isset($this->alterFunctions[$cid])) {
-      $this->alterFunctions[$cid] = [];
+    if (!isset($this->alterEventListeners[$cid])) {
+      $this->alterEventListeners[$cid] = [];
       $hook = $type . '_alter';
-      $modules = array_keys($this->getImplementationInfo($hook));
-      if (!isset($extra_types)) {
-        // For the more common case of a single hook, we do not need to call
-        // function_exists(), since $this->getImplementationInfo() returns only
-        // modules with implementations.
-        foreach ($modules as $module) {
-          $this->alterFunctions[$cid][] = $module . '_' . $hook;
-        }
-      }
-      else {
+      $hook_listeners = $this->getHookListeners($hook);
+      if (isset($extra_types)) {
         // For multiple hooks, we need $modules to contain every module that
-        // implements at least one of them.
-        $extra_modules = [];
+        // implements at least one of them in the correct order.
         foreach ($extra_types as $extra_type) {
-          $extra_modules[] = array_keys($this->getImplementationInfo($extra_type . '_alter'));
-        }
-        $extra_modules = array_merge(...$extra_modules);
-        // If any modules implement one of the extra hooks that do not implement
-        // the primary hook, we need to add them to the $modules array in their
-        // appropriate order. $this->getImplementationInfo() can only return
-        // ordered implementations of a single hook. To get the ordered
-        // implementations of multiple hooks, we mimic the
-        // $this->getImplementationInfo() logic of first ordering by
-        // $this->getModuleList(), and then calling
-        // $this->alter('module_implements').
-        if (array_diff($extra_modules, $modules)) {
-          // Merge the arrays and order by getModuleList().
-          $modules = array_intersect(array_keys($this->moduleList), array_merge($modules, $extra_modules));
-          // Since $this->getImplementationInfo() already took care of loading the
-          // necessary include files, we can safely pass FALSE for the array
-          // values.
-          $implementations = array_fill_keys($modules, FALSE);
-          // Let modules adjust the order solely based on the primary hook. This
-          // ensures the same module order regardless of whether this if block
-          // runs. Calling $this->alter() recursively in this way does not
-          // result in an infinite loop, because this call is for a single
-          // $type, so we won't end up in this code block again.
-          $this->alter('module_implements', $implementations, $hook);
-          $modules = array_keys($implementations);
-        }
-        foreach ($modules as $module) {
-          // Since $modules is a merged array, for any given module, we do not
-          // know whether it has any particular implementation, so we need a
-          // function_exists().
-          $function = $module . '_' . $hook;
-          if (function_exists($function)) {
-            $this->alterFunctions[$cid][] = $function;
-          }
-          foreach ($extra_types as $extra_type) {
-            $function = $module . '_' . $extra_type . '_alter';
-            if (function_exists($function)) {
-              $this->alterFunctions[$cid][] = $function;
+          foreach ($this->getHookListeners($extra_type . '_alter') as $module => $listeners) {
+            if (isset($hook_listeners[$module])) {
+              $hook_listeners[$module] = array_merge($hook_listeners[$module], $listeners);
+            }
+            else {
+              $hook_listeners[$module] = $listeners;
+              $extra_modules = TRUE;
             }
           }
         }
       }
+      // If any modules implement one of the extra hooks that do not implement
+      // the primary hook, we need to add them to the $modules array in their
+      // appropriate order.
+      $modules = array_keys($hook_listeners);
+      if (isset($extra_modules)) {
+        $modules = $this->reOrderModulesForAlter($modules, $hook);
+      }
+      foreach ($modules as $module) {
+        foreach ($hook_listeners[$module] ?? [] as $listener) {
+          $this->alterEventListeners[$cid][] = $listener;
+        }
+      }
     }
+    foreach ($this->alterEventListeners[$cid] as $listener) {
+      $listener($data, $context1, $context2);
+    }
+  }
 
-    foreach ($this->alterFunctions[$cid] as $function) {
-      $function($data, $context1, $context2);
-    }
+  /**
+   * Reorder modules for alters.
+   *
+   * @param array $modules
+   *   A list of modules.
+   * @param string $hook
+   *   The hook being worked on, for example form_alter.
+   *
+   * @return array
+   *   The list, potentially reordered and changed by
+   *   hook_module_implements_alter().
+   */
+  protected function reOrderModulesForAlter(array $modules, string $hook): array {
+    // Order by module order first.
+    $modules = array_intersect(array_keys($this->moduleList), $modules);
+    // Alter expects the module list to be in the keys.
+    $implementations = array_fill_keys($modules, FALSE);
+    // Let modules adjust the order solely based on the primary hook. This
+    // ensures the same module order regardless of whether this block
+    // runs. Calling $this->alter() recursively in this way does not
+    // result in an infinite loop, because this call is for a single
+    // $type, so we won't end up in this method again.
+    $this->alter('module_implements', $implementations, $hook);
+    return array_keys($implementations);
   }
 
   /**
@@ -558,7 +489,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function alterDeprecated($description, $type, &$data, &$context1 = NULL, &$context2 = NULL) {
     // Invoke the alter hook. This has the side effect of populating
-    // $this->alterFunctions.
+    // $this->alterEventListeners.
     $this->alter($type, $data, $context1, $context2);
     // The $type parameter can be an array. alter() will deal with this
     // internally, but we have to extract the proper $cid in order to discover
@@ -569,144 +500,16 @@ class ModuleHandler implements ModuleHandlerInterface {
       $extra_types = $type;
       $type = array_shift($extra_types);
     }
-    if (!empty($this->alterFunctions[$cid])) {
-      $message = 'The deprecated alter hook hook_' . $type . '_alter() is implemented in these functions: ' . implode(', ', $this->alterFunctions[$cid]) . '.';
+    if (!empty($this->alterEventListeners[$cid])) {
+      $functions = [];
+      foreach ($this->alterEventListeners[$cid] as $listener) {
+        if (is_string($listener)) {
+          $functions[] = substr($listener, 1);
+        }
+      }
+      $message = 'The deprecated alter hook hook_' . $type . '_alter() is implemented in these functions: ' . implode(', ', $functions) . '.';
       @trigger_error($message . ' ' . $description, E_USER_DEPRECATED);
     }
-  }
-
-  /**
-   * Provides information about modules' implementations of a hook.
-   *
-   * @param string $hook
-   *   The name of the hook (e.g. "help" or "menu").
-   *
-   * @return mixed[]
-   *   An array whose keys are the names of the modules which are implementing
-   *   this hook and whose values are either a string identifying a file in
-   *   which the implementation is to be found, or FALSE, if the implementation
-   *   is in the module file.
-   */
-  protected function getImplementationInfo($hook) {
-    if (!isset($this->implementations)) {
-      $this->implementations = [];
-      $this->verified = [];
-      if ($cache = $this->cacheBackend->get('module_implements')) {
-        $this->implementations = $cache->data;
-      }
-    }
-    if (!isset($this->implementations[$hook])) {
-      // The hook is not cached, so ensure that whether or not it has
-      // implementations, the cache is updated at the end of the request.
-      $this->cacheNeedsWriting = TRUE;
-      // Discover implementations.
-      $this->implementations[$hook] = $this->buildImplementationInfo($hook);
-      // Implementations are always "verified" as part of the discovery.
-      $this->verified[$hook] = TRUE;
-    }
-    elseif (!isset($this->verified[$hook])) {
-      if (!$this->verifyImplementations($this->implementations[$hook], $hook)) {
-        // One or more of the implementations did not exist and need to be
-        // removed in the cache.
-        $this->cacheNeedsWriting = TRUE;
-      }
-      $this->verified[$hook] = TRUE;
-    }
-    return $this->implementations[$hook];
-  }
-
-  /**
-   * Builds hook implementation information for a given hook name.
-   *
-   * @param string $hook
-   *   The name of the hook (e.g. "help" or "menu").
-   *
-   * @return mixed[]
-   *   An array whose keys are the names of the modules which are implementing
-   *   this hook and whose values are either a string identifying a file in
-   *   which the implementation is to be found, or FALSE, if the implementation
-   *   is in the module file.
-   *
-   * @throws \RuntimeException
-   *   Exception thrown when an invalid implementation is added by
-   *   hook_module_implements_alter().
-   *
-   * @see \Drupal\Core\Extension\ModuleHandler::getImplementationInfo()
-   */
-  protected function buildImplementationInfo($hook) {
-    $implementations = [];
-    $hook_info = $this->getHookInfo();
-    foreach ($this->moduleList as $module => $extension) {
-      $include_file = isset($hook_info[$hook]['group']) && $this->loadInclude($module, 'inc', $module . '.' . $hook_info[$hook]['group']);
-      // Since $this->implementsHook() may needlessly try to load the include
-      // file again, function_exists() is used directly here.
-      if (function_exists($module . '_' . $hook)) {
-        $implementations[$module] = $include_file ? $hook_info[$hook]['group'] : FALSE;
-      }
-    }
-    // Allow modules to change the weight of specific implementations, but avoid
-    // an infinite loop.
-    if ($hook != 'module_implements_alter') {
-      // Remember the original implementations, before they are modified with
-      // hook_module_implements_alter().
-      $implementations_before = $implementations;
-      // Verify implementations that were added or modified.
-      $this->alter('module_implements', $implementations, $hook);
-      // Verify new or modified implementations.
-      foreach (array_diff_assoc($implementations, $implementations_before) as $module => $group) {
-        // If an implementation of hook_module_implements_alter() changed or
-        // added a group, the respective file needs to be included.
-        if ($group) {
-          $this->loadInclude($module, 'inc', "$module.$group");
-        }
-        // If a new implementation was added, verify that the function exists.
-        if (!function_exists($module . '_' . $hook)) {
-          throw new \RuntimeException("An invalid implementation {$module}_{$hook} was added by hook_module_implements_alter()");
-        }
-      }
-    }
-    return $implementations;
-  }
-
-  /**
-   * Verifies an array of implementations loaded from cache.
-   *
-   * Verification is done by including the lazy-loaded $module.$group.inc file,
-   * and checking function_exists().
-   *
-   * @param string[] $implementations
-   *   Implementation "group" by module name.
-   * @param string $hook
-   *   The hook name.
-   *
-   * @return bool
-   *   TRUE, if all implementations exist.
-   *   FALSE, if one or more implementations don't exist and need to be removed
-   *     from the cache.
-   */
-  protected function verifyImplementations(&$implementations, $hook) {
-    $all_valid = TRUE;
-    foreach ($implementations as $module => $group) {
-      // If this hook implementation is stored in a lazy-loaded file, include
-      // that file first.
-      if ($group) {
-        $this->loadInclude($module, 'inc', "$module.$group");
-      }
-      // It is possible that a module removed a hook implementation without
-      // the implementations cache being rebuilt yet, so we check whether the
-      // function exists on each request to avoid undefined function errors.
-      // Since ModuleHandler::implementsHook() may needlessly try to
-      // load the include file again, function_exists() is used directly here.
-      if (!function_exists($module . '_' . $hook)) {
-        // Clear out the stale implementation from the cache and force a cache
-        // refresh to forget about no longer existing hook implementations.
-        unset($implementations[$module]);
-        // One of the implementations did not exist and needs to be removed in
-        // the cache.
-        $all_valid = FALSE;
-      }
-    }
-    return $all_valid;
   }
 
   /**
@@ -726,6 +529,39 @@ class ModuleHandler implements ModuleHandlerInterface {
   public function getName($module) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Extension\ModuleExtensionList::getName($module) instead. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
     return \Drupal::service('extension.list.module')->getName($module);
+  }
+
+  public function writeCache() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no need to call this method so there is no replacement. See https://www.drupal.org/node/3442349', E_USER_DEPRECATED);
+  }
+
+  /**
+   * @param string $hook
+   *   The name of the hook.
+   *
+   * @return array
+   *   A list of event listeners implementing this hook.
+   */
+  protected function getHookListeners(string $hook): array {
+    if (!isset($this->invokeMap[$hook])) {
+      foreach ($this->eventDispatcher->getListeners("drupal_hook.$hook") as $listener) {
+        if (is_array($listener) && is_object($listener[0])) {
+          $module = $this->hookImplementationsMap[$hook][get_class($listener[0])][$listener[1]];
+          // Inline ProceduralCall::__call() otherwise references get lost.
+          if ($listener[0] instanceof ProceduralCall) {
+            $listener[0]->loadFile($listener[1]);
+            $callable = '\\' . $listener[1];
+          }
+          else {
+            $callable = $listener;
+          }
+          if (isset($this->moduleList[$module])) {
+            $this->invokeMap[$hook][$module][] = $callable;
+          }
+        }
+      }
+    }
+    return $this->invokeMap[$hook] ?? [];
   }
 
 }

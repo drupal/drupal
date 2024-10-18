@@ -1465,10 +1465,14 @@ function system_requirements($phase) {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
     $module_list = [];
-    $module_handler->invokeAllWith(
-      'update_last_removed',
-      function (callable $hook, string $module) use (&$module_list, $update_registry, $module_extension_list) {
-        $last_removed = $hook();
+    // hook_update_last_removed() is a procedural hook hook because we
+    // do not have classes loaded that would be needed.
+    // Simply inlining the old hook mechanism is better than making
+    // ModuleInstaller::invoke() public.
+    foreach ($module_handler->getModuleList() as $module => $extension) {
+      $function = $module . '_update_last_removed';
+      if (function_exists($function)) {
+        $last_removed = $function();
         if ($last_removed && $last_removed > $update_registry->getInstalledVersion($module)) {
 
           /** @var \Drupal\Core\Extension\Extension $module_info */
@@ -1480,7 +1484,7 @@ function system_requirements($phase) {
           ];
         }
       }
-    );
+    }
 
     // If user module is in the list then only show a specific message for
     // Drupal core.
@@ -1659,6 +1663,13 @@ function system_schema() {
  */
 function system_update_last_removed() {
   return 10201;
+}
+
+/**
+ * Invalidate container because the module handler has changed.
+ */
+function system_update_11100(): void {
+  \Drupal::service('kernel')->invalidateContainer();
 }
 
 /**

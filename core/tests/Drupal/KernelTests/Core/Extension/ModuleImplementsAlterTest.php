@@ -65,21 +65,4 @@ class ModuleImplementsAlterTest extends KernelTestBase {
       'The file module_test.implementations.inc was included.');
   }
 
-  /**
-   * Tests adding a non-existing function to hook_module_implements_alter().
-   *
-   * @see \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo()
-   * @see module_test_module_implements_alter()
-   */
-  public function testModuleImplementsAlterNonExistingImplementation(): void {
-
-    // Install the module_test module.
-    \Drupal::service('module_installer')->install(['module_test']);
-
-    // Trigger hook discovery.
-    $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('An invalid implementation module_test_unimplemented_test_hook was added by hook_module_implements_alter()');
-    \Drupal::moduleHandler()->hasImplementations('unimplemented_test_hook');
-  }
-
 }

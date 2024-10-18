@@ -439,6 +439,9 @@ function drupal_flush_all_caches($kernel = NULL) {
   // Rebuild module data that is stored in state.
   \Drupal::service('extension.list.module')->reset();
 
+  // Reload modules.
+  \Drupal::moduleHandler()->reload();
+
   // Rebuild all information based on new module data.
   \Drupal::moduleHandler()->invokeAll('rebuild');
 

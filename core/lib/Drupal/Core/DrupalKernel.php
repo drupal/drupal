@@ -1142,7 +1142,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->moduleList = NULL;
     $this->moduleData = [];
     $this->containerNeedsRebuild = TRUE;
-    return $this->initializeContainer();
+    $container = $this->initializeContainer();
+    // ThemeManager::render() fails without this. Normally ::preHandle() has
+    // a ->loadAll() call.
+    $container->get('module_handler')->loadAll();
+    return $container;
   }
 
   /**

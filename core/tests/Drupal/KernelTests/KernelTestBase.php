@@ -385,10 +385,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
     }
 
-    if ($modules) {
-      $this->container->get('module_handler')->loadAll();
-    }
-
     // Setup the destination to the be frontpage by default.
     \Drupal::destination()->set('/');
 

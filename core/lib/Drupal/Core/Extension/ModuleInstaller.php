@@ -272,7 +272,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
 
         // Allow modules to react prior to the installation of a module.
-        $this->moduleHandler->invokeAll('module_preinstall', [$module, $sync_status]);
+        $this->invokeAll('module_preinstall', [$module, $sync_status]);
 
         // Now install the module's schema if necessary.
         $this->installSchema($module);
@@ -335,7 +335,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // If the module has no current updates, but has some that were
         // previously removed, set the version to the value of
         // hook_update_last_removed().
-        if ($last_removed = $this->moduleHandler->invoke($module, 'update_last_removed')) {
+        if ($last_removed = $this->invoke($module, 'update_last_removed')) {
           $version = max($version, $last_removed);
         }
         $this->updateRegistry->setInstalledVersion($module, $version);
@@ -365,7 +365,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         \Drupal::service('library.discovery')->clear();
 
         // Allow the module to perform install tasks.
-        $this->moduleHandler->invoke($module, 'install', [$sync_status]);
+        $this->invoke($module, 'install', [$sync_status]);
 
         // Record the fact that it was installed.
         \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
@@ -389,7 +389,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         }
       }
 
-      $this->moduleHandler->invokeAll('modules_installed', [$modules_installed, $sync_status]);
+      $this->invokeAll('modules_installed', [$modules_installed, $sync_status]);
     }
 
     return TRUE;
@@ -471,11 +471,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Allow modules to react prior to the uninstallation of a module.
-      $this->moduleHandler->invokeAll('module_preuninstall', [$module, $sync_status]);
+      $this->invokeAll('module_preuninstall', [$module, $sync_status]);
 
       // Uninstall the module.
       $this->moduleHandler->loadInclude($module, 'install');
-      $this->moduleHandler->invoke($module, 'uninstall', [$sync_status]);
+      $this->invoke($module, 'uninstall', [$sync_status]);
 
       // Remove all configuration belonging to the module.
       \Drupal::service('config.manager')->uninstall('module', $module);
@@ -565,12 +565,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
     \Drupal::service('router.builder')->rebuild();
 
     // Let other modules react.
-    $this->moduleHandler->invokeAll('modules_uninstalled', [$module_list, $sync_status]);
+    $this->invokeAll('modules_uninstalled', [$module_list, $sync_status]);
 
     // Flush all persistent caches.
     // Any cache entry might implicitly depend on the uninstalled modules,
     // so clear all of them explicitly.
-    $this->moduleHandler->invokeAll('cache_flush');
+    $this->invokeAll('cache_flush');
     foreach (Cache::getBins() as $cache_backend) {
       $cache_backend->deleteAll();
     }
@@ -675,7 +675,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * @internal
    */
   protected function installSchema(string $module): void {
-    $tables = $this->moduleHandler->invoke($module, 'schema') ?? [];
+    $tables = $this->invoke($module, 'schema') ?? [];
     $schema = $this->connection->schema();
     foreach ($tables as $name => $table) {
       $schema->createTable($name, $table);
@@ -691,13 +691,61 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * @internal
    */
   protected function uninstallSchema(string $module): void {
-    $tables = $this->moduleHandler->invoke($module, 'schema') ?? [];
+    $tables = $this->invoke($module, 'schema') ?? [];
     $schema = $this->connection->schema();
     foreach (array_keys($tables) as $table) {
       if ($schema->tableExists($table)) {
         $schema->dropTable($table);
       }
     }
+  }
+
+  /**
+   * Call procedural hooks in all installed modules during installation.
+   *
+   * Hooks called during install will remain procedural.
+   * - hook_install()
+   * - hook_module_preinstall()
+   * - hook_module_preuninstall()
+   * - hook_modules_installed()
+   * - hook_modules_uninstalled()
+   * - hook_post_update_NAME()
+   * - hook_schema()
+   * - hook_uninstall()
+   * - hook_update_last_removed()
+   * - hook_update_N()
+   *
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param array $args
+   *   Arguments to pass to the hook.
+   *
+   * @return void
+   */
+  protected function invokeAll($hook, $args = []): void {
+    $this->moduleHandler->loadAll();
+    foreach ($this->moduleHandler->getModuleList() as $module => $extension) {
+      $this->invoke($module, $hook, $args);
+    }
+  }
+
+  /**
+   * Call a procedural hook in an installed module during installation.
+   *
+   * Hook_install(), hook_uninstall() etc. will remain procedural.
+   *
+   * @param string $module
+   *   The module (it can be a profile, too).
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param array $args
+   *   Arguments to pass to the hook.
+   *
+   * @return mixed
+   */
+  protected function invoke(string $module, string $hook, array $args = []): mixed {
+    $function = $module . '_' . $hook;
+    return function_exists($function) ? $function(... $args) : NULL;
   }
 
 }

@@ -156,6 +156,10 @@ class RegistryTest extends UnitTestCase {
     include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
     include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
     $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('invoke')
+      ->with('theme_test', 'theme')
+      ->willReturn(theme_test_theme(NULL, NULL, NULL, NULL));
+    $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invokeAllWith')
       ->with('theme')
       ->willReturnCallback(function (string $hook, callable $callback) {

@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Extension;
 
-use Drupal\Core\DestructableInterface;
-
 /**
  * Interface for classes that manage a set of enabled modules.
  *
@@ -11,7 +9,7 @@ use Drupal\Core\DestructableInterface;
  * responsible for loading module files and maintaining information about module
  * dependencies and hook implementations.
  */
-interface ModuleHandlerInterface extends DestructableInterface {
+interface ModuleHandlerInterface {
 
   /**
    * Includes a module's .module file.
@@ -170,12 +168,22 @@ interface ModuleHandlerInterface extends DestructableInterface {
    *   associative array containing a group name. The structure of the array
    *   is the same as the return value of hook_hook_info().
    *
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Not
+   * needed any more.
+   *
+   * @see https://www.drupal.org/node/3442349
+   *
    * @see hook_hook_info()
    */
   public function getHookInfo();
 
   /**
-   * Write the hook implementation info to the cache.
+   * Does not do anything.
+   *
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Not
+   * needed any more.
+   *
+   * @see https://www.drupal.org/node/3442349
    */
   public function writeCache();
 
