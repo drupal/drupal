@@ -242,6 +242,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * If overridden, it is best to call through to the parent,
    * or to at least make sure all of the functions in this form
    * are called.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -283,6 +289,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Simple validate handler.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $this->operatorValidate($form, $form_state);
@@ -297,6 +309,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Simple submit handler.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     // Do not store these values.
@@ -330,6 +348,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * This may be overridden by child classes, and it must
    * define $form['operator'];
    *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
    * @see buildOptionsForm()
    */
   protected function operatorForm(&$form, FormStateInterface $form_state) {
@@ -355,6 +379,11 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Validate the operator form.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   protected function operatorValidate($form, FormStateInterface $form_state) {}
 
@@ -362,11 +391,22 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * Perform any necessary changes to the form values prior to storage.
    *
    * There is no need for this function to actually store the data.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function operatorSubmit($form, FormStateInterface $form_state) {}
 
   /**
    * Shortcut to display the value form.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   protected function showValueForm(&$form, FormStateInterface $form_state) {
     $this->valueForm($form, $form_state);
@@ -382,6 +422,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * This should be overridden by all child classes and it must
    * define $form['value']
    *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
    * @see buildOptionsForm()
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
@@ -390,6 +436,11 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Validate the options form.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   protected function valueValidate($form, FormStateInterface $form_state) {}
 
@@ -397,11 +448,22 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * Perform any necessary changes to the form values prior to storage.
    *
    * There is no need for this function to actually store the data.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   protected function valueSubmit($form, FormStateInterface $form_state) {}
 
   /**
    * Shortcut to display the exposed options form.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function showBuildGroupForm(&$form, FormStateInterface $form_state) {
     if (empty($this->options['is_grouped'])) {
@@ -425,6 +487,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Shortcut to display the build_group/hide button.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   protected function showBuildGroupButton(&$form, FormStateInterface $form_state) {
 
@@ -502,6 +570,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Shortcut to display the expose/hide button.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function showExposeButton(&$form, FormStateInterface $form_state) {
     $form['expose_button'] = [
@@ -551,6 +625,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Options form subform for exposed filter options.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @see buildOptionsForm()
    */
@@ -945,6 +1025,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * Render our chunk of the exposed filter form when selecting.
    *
    * You can override this if it doesn't do what you expect.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function buildExposedForm(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed'])) {
@@ -1041,6 +1127,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * Build the form to let users create the group of exposed filters.
    *
    * This form is displayed when users click on button 'Build group'.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   protected function buildExposedFiltersGroupForm(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed']) || empty($this->options['is_grouped'])) {

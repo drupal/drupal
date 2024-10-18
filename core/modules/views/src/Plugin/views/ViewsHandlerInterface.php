@@ -109,6 +109,11 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
 
   /**
    * Shortcut to display the exposed options form.
+   *
+   * @param array $form
+   *   The form array to alter, passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function showExposeForm(&$form, FormStateInterface $form_state);
 

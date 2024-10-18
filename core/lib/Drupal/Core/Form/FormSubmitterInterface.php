@@ -27,9 +27,9 @@ interface FormSubmitterInterface {
    * Button-specific handlers are checked first. If none exist, the function
    * falls back to form-level handlers.
    *
-   * @param $form
+   * @param array $form
    *   An associative array containing the structure of the form.
-   * @param $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form. If the user submitted the form by clicking
    *   a button with custom handler functions defined, those handlers will be
    *   stored here.

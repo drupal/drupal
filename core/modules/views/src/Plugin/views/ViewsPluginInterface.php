@@ -43,6 +43,12 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
 
   /**
    * Validate the options form.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state);
 
@@ -82,6 +88,12 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
 
   /**
    * Handle any special handling on the validate form.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state);
 
