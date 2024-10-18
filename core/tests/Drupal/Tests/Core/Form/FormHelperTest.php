@@ -120,6 +120,8 @@ class FormHelperTest extends UnitTestCase {
               ':input[name="foo"]' => ['value' => 'bar'],
             ],
           ],
+          '#markup' => '',
+          '#input' => TRUE,
         ],
         '#wrapper_attributes',
       ],
