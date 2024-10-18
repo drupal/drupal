@@ -30,29 +30,65 @@
     {% if menu_level == 0 %}
       {% if item.below is empty %}
         <li id="{{ item_id }}" class="toolbar-block__list-item">
-          {% include '@navigation/toolbar-button.html.twig' with {
+          {% include 'navigation:toolbar-button' with {
             attributes: item_link_attributes.setAttribute('href', item.url|render|default(null)).setAttribute('data-drupal-tooltip', item.title).setAttribute('data-drupal-tooltip-class', 'admin-toolbar__tooltip'),
             icon: item.class|clean_class,
             html_tag: item_link_tag,
             text: item.title,
-            extra_classes: 'toolbar-button--collapsible ' ~ (item_link_tag == 'span' ? 'toolbar-button--non-interactive'),
+            modifiers: [
+              'collapsible',
+              item_link_tag == 'span' ? 'non-interactive' : null
+            ]|filter(v => v is not null),
           } only %}
         </li>
       {% else %}
         <li id="{{ item_id }}" class="toolbar-block__list-item toolbar-popover" data-toolbar-popover>
-          {% include '@navigation/toolbar-button.html.twig' with {
-            action: true,
-            attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': item_id, 'data-toolbar-popover-control': true}),
+          {% include 'navigation:toolbar-button' with {
+            action: 'Extend'|t,
+            attributes: create_attribute({
+              'aria-expanded': 'false',
+              'aria-controls': item_id,
+              'data-toolbar-popover-control': true,
+              'data-has-safe-triangle': true,
+            }),
             icon: item.class|clean_class,
             text: item.title,
-            extra_classes: 'toolbar-button--expand--side toolbar-button--collapsible toolbar-popover__control',
-            has_safe_triangle: TRUE,
+            modifiers: [
+              'expand--side',
+              'collapsible',
+            ],
+            extra_classes: [
+              'toolbar-popover__control',
+            ],
           } only %}
           <div class="toolbar-popover__wrapper" data-toolbar-popover-wrapper inert>
             {% if item.url %}
-              {{ link(item.title, item.url, item_link_attributes.addClass(['toolbar-popover__header', 'toolbar-button', 'toolbar-button--large', 'toolbar-button--dark'])) }}
+              {% include 'navigation:toolbar-button' with {
+                attributes: item_link_attributes.setAttribute('href', item.url|render),
+                html_tag: item_link_tag,
+                text: item.title,
+                modifiers: [
+                  'large',
+                  'dark',
+                ],
+                extra_classes: [
+                  'toolbar-popover__header',
+                ],
+              } only %}
             {% else %}
-              <span class="toolbar-popover__header toolbar-button toolbar-button--large toolbar-button--dark toolbar-button--non-interactive">{{ item.title }}</span>
+              {% include 'navigation:toolbar-button' with {
+                attributes: create_attribute(),
+                modifiers: [
+                  'large',
+                  'dark',
+                  'non-interactive',
+                ],
+                extra_classes: [
+                  'toolbar-popover__header',
+                ],
+                html_tag: 'span',
+                text: item.title,
+              } only %}
             {% endif %}
             <ul class="toolbar-menu toolbar-popover__menu">
               {{ menus.menu_items(item.below, attributes, 1) }}
@@ -64,22 +100,23 @@
     {% elseif menu_level == 1 %}
       <li class="toolbar-menu__item toolbar-menu__item--level-{{ menu_level }}">
         {% if item.below is empty  %}
-          {% include '@navigation/toolbar-button.html.twig' with {
+          {% include 'navigation:toolbar-button' with {
             attributes: item_link_attributes.setAttribute('href', item.url|render|default(null)),
             text: item.title,
             html_tag: item_link_tag,
-            extra_classes: item_link_tag == 'span' ? 'toolbar-button--non-interactive',
+            extra_classes: [
+              item_link_tag == 'span' ? 'toolbar-button--non-interactive'
+            ],
           } only %}
         {% else %}
-          <button
-            class="toolbar-button toolbar-button--expand--down"
-            data-toolbar-menu-trigger="{{ menu_level }}"
-            aria-expanded="false"
-            data-index-text="{{ item.title|first|lower }}"
-          >
-            <span class="toolbar-menu__link-action visually-hidden">{{ 'Extend'|t }}</span>
-            <span class="toolbar-menu__link-title">{{ item.title }}</span>
-          </button>
+          {% include 'navigation:toolbar-button' with {
+            attributes: create_attribute({
+              'aria-expanded': 'false',
+              'data-toolbar-menu-trigger': menu_level,
+            }),
+            text: item.title,
+            modifiers: ['expand--down'],
+          } only %}
           <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>
             {{ menus.menu_items(item.below, attributes, menu_level + 1) }}
           </ul>
@@ -102,7 +139,7 @@
             aria-expanded="false"
             data-index-text="{{ item.title|first|lower }}"
           >
-            <span class="toolbar-menu__link-action visually-hidden">{{ 'Extend'|t }}</span>
+            <span data-toolbar-action class="toolbar-menu__link-action visually-hidden">{{ 'Extend'|t }}</span>
             <span class="toolbar-menu__link-title">{{ item.title }}</span>
           </button>
           <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>

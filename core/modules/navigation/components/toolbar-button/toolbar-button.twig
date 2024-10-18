@@ -1,0 +1,35 @@
+{# Extra classes variable added to be sure that modifiers will
+appear after main classes #}
+{%
+  set classes = [
+    'toolbar-button',
+    icon ? 'toolbar-button--icon--' ~ icon : '',
+  ]
+%}
+
+{% if modifiers is iterable %}
+  {% set classes = classes|merge(modifiers|map(modifier => "toolbar-button--#{modifier}")) %}
+{% endif %}
+
+{% if extra_classes is iterable %}
+  {% set classes = classes|merge(extra_classes) %}
+{% endif %}
+
+{% if text and text|length > 1 %}
+  {# We take the first two letters of the button text to use as a fallback when
+  the toolbar button does not have a pre-assigned icon. #}
+  {% set icon_text = text|slice(0, 2)|join('') %}
+  {% set attributes = attributes.setAttribute('data-index-text', text|first|lower).setAttribute('data-icon-text', icon_text) %}
+{% endif %}
+
+<{{ html_tag|default('button') }} {{ attributes.addClass(classes) }}>
+  {% if action %}
+    <span data-toolbar-action class="visually-hidden">{{ action }}</span>
+  {% endif %}
+  {% block content %}
+    {% if text %}
+      <span class="toolbar-button__label" data-toolbar-text>{{~ text ~}}</span>
+    {% endif %}
+  {% endblock %}
+
+</{{ html_tag|default('button') }}>

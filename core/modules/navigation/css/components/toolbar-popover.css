@@ -5,14 +5,6 @@
  * @preserve
  */
 .toolbar-popover {
-  --safe-triangle-cursor-y: 6.25rem;
-  --safe-triangle-cursor-x: 6.25rem;
-  --safe-triangle-submenu-start-x: var(--admin-toolbar-sidebar-width);
-  --safe-triangle-submenu-start-y: 5vh;
-  --safe-triangle-submenu-end-x: var(--admin-toolbar-sidebar-width);
-  /* TODO: Replace with calculated value of popover content height. */
-  --safe-triangle-submenu-end-y: 66vh;
-
   border-radius: var(--admin-toolbar-space-8);
 }
 .toolbar-popover--expanded {
@@ -20,9 +12,6 @@
 }
 .toolbar-popover__control {
   inline-size: 100%;
-}
-.toolbar-popover__control:hover [data-toolbar-popover-safe-triangle] {
-  display: block;
 }
 [data-toolbar-popover-wrapper] {
   position: fixed;
@@ -65,13 +54,6 @@
     inset-block-start: 0;
     inset-inline-start: 1px;
   }
-}
-[data-toolbar-popover-safe-triangle] {
-  position: fixed;
-  display: none;
-  content: "";
-  inset: 0;
-  clip-path: polygon(var(--safe-triangle-cursor-x, 0) var(--safe-triangle-cursor-y, 0), var(--safe-triangle-submenu-start-x, 0) var(--safe-triangle-submenu-start-y, 0), var(--safe-triangle-submenu-end-x, 0) max(var(--safe-triangle-submenu-end-y, 0), var(--safe-triangle-cursor-y, 0), 66vh));
 }
 [data-toolbar-popover-control][aria-expanded="true"] + [data-toolbar-popover-wrapper] {
   transform: translateX(0);

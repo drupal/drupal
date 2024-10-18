@@ -1,0 +1,67 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+
+# The human readable name.
+name: Toolbar button
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+# Schema for the props. We support www.json-schema.org. Learn more about the
+# syntax there.
+props:
+  # Props are always an object with keys. Each key is a variable in your
+  # component template.
+  type: object
+
+  properties:
+    action:
+      type: string
+      title: Action
+      description: Hidden button action text.
+    modifiers:
+      type: array
+      title: Modifier classes.
+      description:
+        Button modifiers.
+        https://en.bem.info/methodology/css/#modifiers
+      items:
+        type: string
+        enum:
+          - collapsible
+          - dark
+          - expand--down
+          - expand--side
+          - large
+          - non-interactive
+          - small-offset
+          - weight--400
+    extra_classes:
+      type: array
+      title: Extra classes.
+      description:
+        External modifiers added from the placement context.
+        https://en.bem.info/methodology/css/#mixes
+      items:
+        type: string
+    html_tag:
+      type: string
+      title: HTML tag
+      # Limit the available options by using enums.
+      enum:
+        - a
+        - button
+        - span
+      # Provide a default value
+      default: button
+    icon:
+      title: Icon
+      type: string
+    text:
+      title: Text
+      description: Text of button.
+      type: string
+slots:
+  content:
+    title: Content
+    description: Content of button.
