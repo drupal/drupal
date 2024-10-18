@@ -276,7 +276,7 @@ class FileUploadForm extends AddFormBase {
    *   The entity form source field element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current form state.
-   * @param $form
+   * @param array $form
    *   The complete form.
    *
    * @return array

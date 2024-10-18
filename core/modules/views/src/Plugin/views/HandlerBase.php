@@ -334,6 +334,12 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
    * Provide a form for aggregation settings.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function buildGroupByForm(&$form, FormStateInterface $form_state) {
     $display_id = $form_state->get('display_id');
@@ -361,6 +367,12 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Perform any necessary changes to the form values prior to storage.
    *
    * There is no need for this function to actually store the data.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function submitGroupByForm(&$form, FormStateInterface $form_state) {
     $form_state->get('handler')->options['group_type'] = $form_state->getValue(['options', 'group_type']);
@@ -383,11 +395,22 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
    * Provide a form for setting options.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Validate the options form.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function validateExtraOptionsForm($form, FormStateInterface $form_state) {}
 
@@ -395,6 +418,11 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Perform any necessary changes to the form values prior to storage.
    *
    * There is no need for this function to actually store the data.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function submitExtraOptionsForm($form, FormStateInterface $form_state) {}
 
@@ -417,26 +445,55 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
    * Render our chunk of the exposed handler form when selecting.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function buildExposedForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Validate the exposed handler form.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function validateExposed(&$form, FormStateInterface $form_state) {}
 
   /**
    * Submit the exposed handler form.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function submitExposed(&$form, FormStateInterface $form_state) {}
 
   /**
    * Form for exposed handler options.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function buildExposeForm(&$form, FormStateInterface $form_state) {}
 
   /**
    * Validate the options form.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function validateExposeForm($form, FormStateInterface $form_state) {}
 
@@ -444,16 +501,33 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Perform any necessary changes to the form exposes prior to storage.
    *
    * There is no need for this function to actually store the data.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function submitExposeForm($form, FormStateInterface $form_state) {}
 
   /**
    * Shortcut to display the expose/hide button.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function showExposeButton(&$form, FormStateInterface $form_state) {}
 
   /**
    * Shortcut to display the exposed options form.
+   *
+   * @param array $form
+   *   An alterable, associative array containing the structure of the form,
+   *   passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function showExposeForm(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed'])) {
@@ -770,6 +844,11 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
    * Displays the Expose form.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
   public function displayExposedForm($form, FormStateInterface $form_state) {
     $item = &$this->options;
