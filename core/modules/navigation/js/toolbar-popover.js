@@ -30,17 +30,6 @@ const POPOVER_NO_CLICK_DELAY = 500;
 
         if (!button || !tooltip) return;
 
-        const handleMouseMove = (event) => {
-          button.style.setProperty(
-            '--safe-triangle-cursor-x',
-            `${event.clientX}px`,
-          );
-          button.style.setProperty(
-            '--safe-triangle-cursor-y',
-            `${event.clientY}px`,
-          );
-        };
-
         const expandPopover = () => {
           popover.classList.add('toolbar-popover--expanded');
           button.dataset.drupalNoClick = 'true';
@@ -111,8 +100,6 @@ const POPOVER_NO_CLICK_DELAY = 500;
             tooltip.removeEventListener(e, delayedClose);
           });
         };
-
-        button.addEventListener('mousemove', handleMouseMove);
 
         button.addEventListener('mouseover', () => {
           // This is not needed because no hover on mobile.

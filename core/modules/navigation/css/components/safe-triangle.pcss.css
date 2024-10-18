@@ -1,0 +1,23 @@
+[data-has-safe-triangle] {
+  --safe-triangle-cursor-y: 100px;
+  --safe-triangle-cursor-x: 100px;
+  --safe-triangle-submenu-start-x: var(--admin-toolbar-sidebar-width);
+  --safe-triangle-submenu-start-y: 5vh;
+  --safe-triangle-submenu-end-x: var(--admin-toolbar-sidebar-width);
+  /* TODO: Replace with calculated value of popover content height. */
+  --safe-triangle-submenu-end-y: 66vh;
+
+  &:hover {
+    [data-safe-triangle] {
+      display: block;
+    }
+  }
+}
+
+[data-safe-triangle] {
+  position: fixed;
+  display: none;
+  content: "";
+  inset: 0;
+  clip-path: polygon(var(--safe-triangle-cursor-x, 0) var(--safe-triangle-cursor-y, 0), var(--safe-triangle-submenu-start-x, 0) var(--safe-triangle-submenu-start-y, 0), var(--safe-triangle-submenu-end-x, 0) max(var(--safe-triangle-submenu-end-y, 0), var(--safe-triangle-cursor-y, 0), 66vh));
+}

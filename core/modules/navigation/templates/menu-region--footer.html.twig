@@ -28,33 +28,56 @@
   <ul class="toolbar-block__list">
     {% if help %}
       <li class="toolbar-block__list-item">
-        {% include '@navigation/toolbar-button.html.twig' with {
+        {% include 'navigation:toolbar-button' with {
           attributes: create_attribute({ 'href': path('help.main'), 'data-drupal-tooltip': 'Help'|t, 'data-drupal-tooltip-class': 'admin-toolbar__tooltip' }),
           icon: 'help',
           html_tag: 'a',
           text: 'Help'|t,
-          extra_classes: 'toolbar-button--collapsible',
+          modifiers: ['collapsible'],
         } only %}
       </li>
     {% endif %}
     <li id="admin-toolbar-user-menu" class="toolbar-block__list-item toolbar-block__list-item--user toolbar-popover" data-toolbar-popover>
-      {% include '@navigation/toolbar-button.html.twig' with {
-        action: true,
-        attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar-user-menu', 'data-toolbar-popover-control': true}),
+      {% include 'navigation:toolbar-button' with {
+        action: 'Extend'|t,
+        attributes: create_attribute({
+          'aria-expanded': 'false',
+          'aria-controls': 'admin-toolbar-user-menu',
+          'data-toolbar-popover-control': true,
+          'data-has-safe-triangle': true,
+        }),
         icon:  menu_name|clean_class,
         text: title,
-        extra_classes: 'toolbar-button--expand--side toolbar-button--collapsible toolbar-popover__control',
-        has_safe_triangle: TRUE,
+        modifiers: [
+          'expand--side',
+          'collapsible',
+        ],
+        extra_classes: [
+          'toolbar-popover__control',
+        ],
       } only %}
       <div class="toolbar-popover__wrapper" data-toolbar-popover-wrapper>
-        <span class="toolbar-popover__header toolbar-button toolbar-button--large toolbar-button--dark toolbar-button--non-interactive">{{ title }}</span>
+        {% include 'navigation:toolbar-button' with {
+          attributes: create_attribute(),
+          modifiers: [
+            'large',
+            'dark',
+            'non-interactive',
+          ],
+          extra_classes: [
+            'toolbar-popover__header',
+          ],
+          html_tag: 'span',
+          text: title,
+        } only %}
         <ul class="toolbar-menu toolbar-popover__menu">
           {% for item in items %}
             <li class="toolbar-menu__item toolbar-menu__item--level-1">
-              <a
-                href="{{ item.url }}"
-                class="toolbar-button"
-              >{{ item.title }}</a>
+              {% include 'navigation:toolbar-button' with {
+                attributes: create_attribute({ 'href': item.url|render }),
+                html_tag: 'a',
+                text: item.title,
+              } only %}
             </li>
           {% endfor %}
         </ul>
