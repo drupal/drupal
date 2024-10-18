@@ -252,6 +252,12 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "pgsql-16"
 
+'PHP 8.3 PostgreSQL 17':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "pgsql-17"
+
 'PHP 8.3 SQLite 3.45':
   <<: [ *default-stage, *run-on-mr ]
   variables:
@@ -290,6 +296,11 @@ default:
 '[Daily] PHP 8.3 MySQL 8.4':
   extends: 'PHP 8.3 MySQL 8.4'
   needs: [ '[Daily] PHP 8.3 MariaDB 10.6' ]
+  <<: [ *run-daily ]
+
+'[Daily] PHP 8.3 PostgreSQL 17':
+  extends: 'PHP 8.3 PostgreSQL 17'
+  needs: [ '[Daily] PHP 8.3 MySQL 8.4' ]
   <<: [ *run-daily ]
 
 ################
