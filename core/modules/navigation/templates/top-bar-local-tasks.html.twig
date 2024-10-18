@@ -8,7 +8,7 @@
  */
 #}
 {% set dropdown_id = 'admin-local-tasks'|clean_unique_id %}
-{% include '@navigation/toolbar-button.html.twig' with {
+{% include 'navigation:toolbar-button' with {
   attributes: create_attribute(
     {
       'aria-expanded': 'false',
@@ -17,7 +17,11 @@
     }
   ),
   text: 'More actions'|t,
-  extra_classes: 'toolbar-button--expand--down toolbar-button--weight--400 toolbar-button--tertiary--expanded toolbar-button--actions',
+  modifiers: [
+    'expand--down',
+    'weight--400',
+    'small-offset',
+  ],
 } only %}
 <div class="toolbar-dropdown__menu" id={{ dropdown_id }}>
   <ul class="toolbar-dropdown__list">

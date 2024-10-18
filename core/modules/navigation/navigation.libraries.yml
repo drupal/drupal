@@ -12,7 +12,6 @@ internal.navigation:
     theme:
       css/base/fonts.css: {}
       css/base/variables.css: {}
-      css/components/toolbar-button.css: {}
       css/components/admin-toolbar.css: {}
       css/components/top-bar.css: {}
       css/components/admin-toolbar-control-bar.css: {}
@@ -27,6 +26,7 @@ internal.navigation:
     - navigation/internal.dropdown
     - navigation/internal.tooltip
     - navigation/internal.popover
+    - navigation/internal.safe-triangle
 
 admin-reset-styles:
   css:
@@ -82,3 +82,15 @@ navigation.layoutBuilder:
   css:
     base:
       css/base/layout-builder.css: {}
+
+internal.safe-triangle:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
+  js:
+    js/safe-triangle.js: {}
+  css:
+    base:
+      css/components/safe-triangle.css: {}
+  dependencies:
+    - core/drupal
+    - core/once

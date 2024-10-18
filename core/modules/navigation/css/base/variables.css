@@ -88,6 +88,7 @@ We need it root to calculate the size of the displace in .dialog-off-canvas-main
    */
   --admin-toolbar-space-4: var(--drupal-admin-space-4, calc(0.25 * var(--admin-toolbar-rem))); /* 0.25 * 16px = 4px */
   --admin-toolbar-space-8: var(--drupal-admin-space-8, calc(0.5 * var(--admin-toolbar-rem))); /* 0.5 * 16px = 8px */
+  --admin-toolbar-space-10: var(--drupal-admin-space-10, calc(0.625 * var(--admin-toolbar-rem))); /* 0.625 * 16px = 10px */
   --admin-toolbar-space-12: var(--drupal-admin-space-12, calc(0.75 * var(--admin-toolbar-rem))); /* 0.75 * 16px = 12px */
   --admin-toolbar-space-16: var(--drupal-admin-space-16, var(--admin-toolbar-rem)); /* 16px = 16px */
   --admin-toolbar-space-20: var(--drupal-admin-space-20, calc(1.25 * var(--admin-toolbar-rem))); /* 1.25 * 16px = 20px */

@@ -134,7 +134,9 @@
         const toggleTriggers = (toState) => {
           triggers.forEach((trigger) => {
             trigger.setAttribute('aria-expanded', toState);
-            const text = trigger.querySelector('[data-text]');
+            const text =
+              trigger.querySelector('[data-toolbar-text]') ||
+              trigger.querySelector('[data-toolbar-action]');
             if (text) {
               text.textContent = toState
                 ? Drupal.t('Collapse sidebar')
