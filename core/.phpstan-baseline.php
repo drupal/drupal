@@ -36434,12 +36434,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\FunctionalJavascript\\\\NavigationSettingsFormTest\\:\\:testFormSettingsSubmissionHandler\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/tests/src/FunctionalJavascript/NavigationSettingsFormTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\navigation\\\\Kernel\\\\NavigationMenuBlockTest\\:\\:testHtmlMarkup\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/navigation/tests/src/Kernel/NavigationMenuBlockTest.php',
