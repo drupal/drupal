@@ -3,6 +3,7 @@
 namespace Drupal\user\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Url;
@@ -14,7 +15,7 @@ use Drupal\Core\Url;
  *
  * @internal
  */
-class UserPasswordResetForm extends FormBase {
+class UserPasswordResetForm extends FormBase implements WorkspaceSafeFormInterface {
 
   /**
    * {@inheritdoc}
