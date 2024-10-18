@@ -47,7 +47,7 @@ class ExtractTest extends MigrateProcessTestCase {
    */
   public function testExtractFail(): void {
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage("Array index missing, extraction failed for 'array(\n  'bar' => 'foo',\n)'. Consider adding a `default` key to the configuration.");
+    $this->expectExceptionMessage("Array index missing, extraction failed for '[\n  'bar' => 'foo',\n]'. Consider adding a `default` key to the configuration.");
     $this->plugin->transform(['bar' => 'foo'], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
