@@ -70,9 +70,7 @@ final class EntityCreate implements ConfigActionPluginInterface, ContainerFactor
     $id = substr($configName, strlen($entity_type->getConfigPrefix()) + 1);
     $entity_type_manager
       ->getStorage($entity_type->id())
-      ->create($value + [
-        $entity_type->getKey('id') => $id,
-      ])
+      ->create($value + ['id' => $id])
       ->save();
   }
 
