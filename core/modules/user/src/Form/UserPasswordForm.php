@@ -8,6 +8,7 @@ use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element\Email;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class UserPasswordForm extends FormBase {
+class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
 
   use DeprecatedServicePropertyTrait;
 
