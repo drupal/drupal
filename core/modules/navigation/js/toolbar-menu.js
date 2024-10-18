@@ -43,7 +43,7 @@
            *
            * @type {HTMLElement}
            */
-          const text = button.querySelector('.toolbar-menu__link-action');
+          const text = button.querySelector('[data-toolbar-action]');
 
           /**
            * Toggles the button's aria-expanded attribute and updates its text.
