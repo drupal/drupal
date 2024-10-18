@@ -244,9 +244,9 @@ class NodeForm extends ContentEntityForm {
   /**
    * Form submission handler for the 'preview' action.
    *
-   * @param $form
+   * @param array $form
    *   An associative array containing the structure of the form.
-   * @param $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
   public function preview(array $form, FormStateInterface $form_state) {
