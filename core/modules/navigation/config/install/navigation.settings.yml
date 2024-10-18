@@ -1,6 +1,6 @@
 logo:
   provider: default
-  managed: null
+  path: ''
   max:
     filesize: 1048576
     height: 40

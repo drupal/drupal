@@ -18,13 +18,11 @@ navigation.settings:
               - default
               - hide
               - custom
-        managed:
-          type: integer
-          label: 'Custom logo'
-          nullable: true
+        path:
+          type: string
+          label: 'Path'
           constraints:
-            Range:
-              min: 0
+            NotNull: [ ]
         max:
           type: mapping
           label: 'Logo maximum settings'

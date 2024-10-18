@@ -32,13 +32,34 @@ function navigation_update_11001(array &$sandbox): void {
   $settings->setData([
     'logo' => [
       'provider' => $settings->get('logo_provider'),
-      'managed' => $settings->get('logo_managed'),
+      'managed' => is_array($settings->get('logo_managed')) ? current($settings->get('logo_managed')) : $settings->get('logo_managed'),
       'max' => [
         'filesize' => $settings->get('logo_max_filesize'),
-        'height' => $settings->get('logo_height'),
-        'width' => $settings->get('logo_width'),
+        'height' => $settings->get('logo_height') ?? 40,
+        'width' => $settings->get('logo_width') ?? 40,
       ],
     ],
   ]);
   $settings->save(TRUE);
+}
+
+/**
+ * Update for navigation logo to store the file path instead of ID.
+ */
+function navigation_update_11002(array &$sandbox): void {
+  $settings = \Drupal::configFactory()->getEditable('navigation.settings');
+  $logo_path = '';
+  if (!empty($settings->get('logo.managed'))) {
+    $logo_fid = $settings->get('logo.managed');
+    $file = \Drupal::entityTypeManager()->getStorage('file')->load($logo_fid);
+    if (isset($file)) {
+      $logo_path = $file->getFileUri();
+      // Delete file usage reference because they are not being used anymore.
+      \Drupal::service('file.usage')->delete($file, 'navigation');
+    }
+  }
+
+  $settings->set('logo.path', $logo_path);
+  $settings->clear('logo.managed');
+  $settings->save();
 }
