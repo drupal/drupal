@@ -33,7 +33,7 @@ exports.command = function drupalInstall(
     const langcodeOption = langcode ? `--langcode "${langcode}"` : '';
     const dbOption =
       process.env.DRUPAL_TEST_DB_URL.length > 0
-        ? `--db-url ${process.env.DRUPAL_TEST_DB_URL}`
+        ? `--db-url "${process.env.DRUPAL_TEST_DB_URL}"`
         : '';
     const install = execSync(
       commandAsWebserver(
