@@ -8,6 +8,9 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\Media;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\file\Entity\File;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the Media overview page.
@@ -15,6 +18,8 @@ use Drupal\user\RoleInterface;
  * @group media
  */
 class MediaOverviewPageTest extends MediaFunctionalTestBase {
+
+  use TestFileCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -183,6 +188,52 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
     $assert_session->linkByHrefExists('/media/' . $media1->id());
     $assert_session->linkByHrefExists('/media/' . $media2->id());
     $assert_session->linkByHrefExists('/media/' . $media3->id());
+  }
+
+  /**
+   * Tests the display of the alt attribute.
+   */
+  public function testImageAltTextDisplay(): void {
+    $this->drupalLogin($this->adminUser);
+    $media_type = $this->createMediaType('image');
+    $media_type_id = $media_type->id();
+    $media_type->setFieldMap(['name' => 'name']);
+    $media_type->save();
+
+    /** @var \Drupal\field\FieldConfigInterface $field */
+    $field = FieldConfig::load("media.$media_type_id.field_media_image");
+    $settings = $field->getSettings();
+    $settings['alt_field'] = TRUE;
+    $settings['alt_field_required'] = FALSE;
+    $field->set('settings', $settings);
+    $field->save();
+
+    $file = File::create([
+      'uri' => $this->getTestFiles('image')[0]->uri,
+    ]);
+    $file->save();
+
+    // Set the alt text to an empty string.
+    $media = Media::create([
+      'name' => 'Custom name',
+      'bundle' => $media_type_id,
+      'field_media_image' => [
+        [
+          'target_id' => $file->id(),
+          'alt' => '',
+          'title' => 'default title',
+        ],
+      ],
+    ]);
+    $media->save();
+
+    $this->drupalGet('/admin/content/media');
+
+    // Confirm that the alt text attribute is present.
+    $assert_session = $this->assertSession();
+    $element = $assert_session->elementAttributeExists('css', 'td.views-field-thumbnail__target-id img', 'alt');
+    $this->assertSame('', (string) $element->getAttribute('alt'));
+
   }
 
 }
