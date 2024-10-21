@@ -7,6 +7,8 @@ install:
   - dblog
   - views
 config:
+  # Leave existing config as-is.
+  strict: false
   import:
     automated_cron:
       - automated_cron.settings

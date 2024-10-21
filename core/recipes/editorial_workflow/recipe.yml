@@ -7,6 +7,9 @@ install:
   - node
   - views
 config:
+  # If the config we're shipping already exists, we don't really care what
+  # it looks like.
+  strict: false
   import:
     content_moderation:
       - views.view.moderated_content

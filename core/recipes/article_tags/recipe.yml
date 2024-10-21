@@ -7,6 +7,9 @@ recipes:
 install:
   - views
 config:
+  strict:
+    # Treat field storages strictly, since they influence the database layout.
+    - field.storage.node.field_tags
   import:
     taxonomy:
       - views.view.taxonomy_term

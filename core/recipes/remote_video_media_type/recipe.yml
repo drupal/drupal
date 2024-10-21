@@ -6,6 +6,9 @@ install:
   - path
   - views
 config:
+  strict:
+    # Treat field storages strictly, since they influence the database layout.
+    - field.storage.media.field_media_oembed_video
   import:
     media_library:
       - core.entity_view_mode.media.media_library

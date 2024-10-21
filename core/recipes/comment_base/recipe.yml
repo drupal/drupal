@@ -6,6 +6,10 @@ install:
   - node
   - views
 config:
+  strict:
+    # Treat field storages strictly, since they influence the database layout.
+    - field.storage.comment.comment_body
+    - field.storage.node.comment
   import:
     comment:
       - core.entity_view_mode.comment.full

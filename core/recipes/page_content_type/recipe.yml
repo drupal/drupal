@@ -5,6 +5,9 @@ install:
   - node
   - path
 config:
+  strict:
+    # Treat field storages strictly, since they influence the database layout.
+    - field.storage.node.body
   import:
     node:
       - core.entity_view_mode.node.full

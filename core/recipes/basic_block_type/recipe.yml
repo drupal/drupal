@@ -5,6 +5,9 @@ install:
   - block_content
   - views
 config:
+  strict:
+    # Treat field storages strictly, since they influence the database layout.
+    - field.storage.block_content.body
   import:
     block_content:
       - field.storage.block_content.body

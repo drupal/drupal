@@ -17,6 +17,8 @@ input:
       source: config
       config: ['system.site', 'mail']
 config:
+  # Don't conflict with existing configuration.
+  strict: false
   import:
     contact:
       - contact.form.personal
