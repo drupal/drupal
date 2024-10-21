@@ -144,7 +144,7 @@ class Image extends File {
         return $uri;
 
       case 'thumbnail_alt_value':
-        return $media->get($this->configuration['source_field'])->alt ?: parent::getMetadata($media, $name);
+        return $media->get($this->configuration['source_field'])->alt ?? parent::getMetadata($media, $name);
     }
 
     return parent::getMetadata($media, $name);
