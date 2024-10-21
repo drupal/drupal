@@ -12,8 +12,6 @@ config:
       - search.page.node_search
   actions:
     user.role.anonymous:
-      grantPermissions:
-        - 'search content'
+      grantPermission: 'search content'
     user.role.authenticated:
-      grantPermissions:
-        - 'search content'
+      grantPermission: 'search content'

@@ -6,6 +6,10 @@ install:
   - node
   - path
 config:
+  strict:
+    # Treat field storages strictly, since they influence the database layout.
+    - field.storage.node.body
+    - field.storage.node.field_image
   import:
     node:
       # Only import config which is also imported by the Standard profile.

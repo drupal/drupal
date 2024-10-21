@@ -8,5 +8,7 @@ install:
   # https://www.drupal.org/project/drupal/issues/3479980
   - views
 config:
+  # If the `tags` vocabulary already exists, there's no need to conflict with it.
+  strict: false
   import:
     taxonomy: '*'

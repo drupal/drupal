@@ -4,6 +4,8 @@ type: 'Text format'
 install:
   - filter
 config:
+  # If the restricted_html format already exists, leave it as-is.
+  strict: false
   import:
     filter: '*'
   actions:

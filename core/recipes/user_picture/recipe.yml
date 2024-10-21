@@ -5,6 +5,9 @@ install:
   - image
   - user
 config:
+  strict:
+    # Treat field storages strictly, since they influence the database layout.
+    - field.storage.user.user_picture
   import:
     image:
       - image.style.thumbnail

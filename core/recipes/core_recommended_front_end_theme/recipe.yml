@@ -5,6 +5,8 @@ install:
   - olivero
   - block
 config:
+  # Leave existing blocks and menus as-is.
+  strict: false
   import:
     system:
       - system.menu.account

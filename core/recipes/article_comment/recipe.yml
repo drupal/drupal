@@ -5,6 +5,9 @@ recipes:
   - article_content_type
   - comment_base
 config:
+  # If the `comment` field already exists, it is guaranteed to be the right
+  # field type because the comment_base recipe treats the field storage strictly.
+  strict: false
   actions:
     core.entity_form_display.node.article.default:
       setComponent:
