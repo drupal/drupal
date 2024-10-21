@@ -56,7 +56,7 @@ class PasswordItem extends StringItem {
       $this->value = \Drupal::service('password')->hash(trim($this->value));
       // Abort if the hashing failed and returned FALSE.
       if (!$this->value) {
-        throw new EntityMalformedException('The entity does not have a password.');
+        throw new EntityMalformedException(sprintf("Failed to hash the %s password.", $entity->getEntityType()->getLabel()));
       }
     }
 
