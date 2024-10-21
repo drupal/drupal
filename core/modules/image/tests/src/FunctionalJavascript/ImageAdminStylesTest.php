@@ -57,6 +57,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     foreach ($style->getEffects() as $uuid => $effect) {
       $effect_path = $admin_path . '/manage/' . $style_name . '/effects/' . $uuid;
       $this->drupalGet($effect_path);
+      $this->assertSession()->fieldValueEquals('data[test_parameter]', '100');
       $page->findField('data[test_parameter]')->setValue(111);
       $ajax_value = $page->find('css', '#ajax-value')->getText();
       $this->assertSame('Ajax value bar', $ajax_value);
@@ -67,7 +68,32 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       }));
       $page->pressButton('Update effect');
       $assert->statusMessageContains('The image effect was successfully applied.', 'status');
+      $this->drupalGet($effect_path);
+      $this->assertSession()->fieldValueEquals('data[test_parameter]', '111');
     }
+
+    // Edit the 1st effect, multiple AJAX calls before updating.
+    $style = ImageStyle::load($style_name);
+    $uuid = array_values($style->getEffects()->getInstanceIds())[0];
+    $this->drupalGet($admin_path . '/manage/' . $style_name . '/effects/' . $uuid);
+    $this->assertSession()->fieldValueEquals('data[test_parameter]', '111');
+    $field = $page->findField('data[test_parameter]');
+    $field->setValue(200);
+    $page->pressButton('Ajax refresh');
+    $this->assertSession()->assertExpectedAjaxRequest(1);
+    $field->setValue(300);
+    $page->pressButton('Ajax refresh');
+    $this->assertSession()->assertExpectedAjaxRequest(2);
+    $field->setValue(400);
+    $page->pressButton('Ajax refresh');
+    $this->assertSession()->assertExpectedAjaxRequest(3);
+    $page->pressButton('Update effect');
+    $this->assertSession()->statusMessageContains('The image effect was successfully applied.', 'status');
+    $style = ImageStyle::load($style_name);
+    $effectConfiguration = $style->getEffect($uuid)->getConfiguration();
+    $this->assertSame(400, $effectConfiguration['data']['test_parameter']);
+    $this->drupalGet($admin_path . '/manage/' . $style_name . '/effects/' . $uuid);
+    $this->assertSession()->fieldValueEquals('data[test_parameter]', '400');
   }
 
 }
