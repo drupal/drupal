@@ -7,8 +7,27 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\taxonomy\TermInterface;
+
+/**
+ * Implements hook_entity_access().
+ */
+function taxonomy_test_entity_access(EntityInterface $entity, string $operation, AccountInterface $account): AccessResultInterface {
+  if ($entity instanceof TermInterface) {
+    $parts = explode(' ', (string) $entity->label());
+    if (in_array('Inaccessible', $parts, TRUE) && in_array($operation, $parts, TRUE)) {
+      return AccessResult::forbidden();
+    }
+  }
+
+  return AccessResult::neutral();
+}
 
 /**
  * Implements hook_query_alter().

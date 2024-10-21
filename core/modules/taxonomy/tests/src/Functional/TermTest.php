@@ -6,6 +6,7 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
@@ -37,7 +38,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block'];
+  protected static $modules = ['block', 'taxonomy_test'];
 
   /**
    * {@inheritdoc}
@@ -566,6 +567,43 @@ class TermTest extends TaxonomyTestBase {
     // Check that we have the expected parents.
     $term = $this->reloadTermByName($edit['name[0][value]']);
     $this->assertEquals([1, 2], $this->getParentTids($term), 'Term parents (two real) were successfully saved.');
+  }
+
+  /**
+   * Tests destination after saving terms.
+   */
+  public function testRedirects(): void {
+    // Save a new term.
+    $addUrl = Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $this->vocabulary->id()]);
+    $this->drupalGet($addUrl);
+    $this->submitForm([
+      'name[0][value]' => $this->randomMachineName(),
+    ], 'Save');
+
+    // Adding a term reloads the form.
+    $this->assertSession()->addressEquals($addUrl->toString());
+    $this->assertSession()->pageTextContains('Created new term');
+
+    // Update a term.
+    $term = Term::create(['vid' => $this->vocabulary->id(), 'name' => $this->randomMachineName()]);
+    $term->save();
+    $this->drupalGet($term->toUrl('edit-form'));
+    $this->submitForm(edit: [], submit: 'Save');
+
+    // Updating a term sends user to view the term.
+    $this->assertSession()->addressEquals($term->toUrl()->setAbsolute());
+    $this->assertSession()->pageTextContains('Updated term');
+
+    // Unless the term is not accessible to the user.
+    // Label triggers forbidden in taxonomy_test_entity_access().
+    $term = Term::create(['vid' => $this->vocabulary->id(), 'name' => 'Inaccessible view']);
+    $term->save();
+    $this->drupalGet($term->toUrl('edit-form'));
+    $this->submitForm(edit: [], submit: 'Save');
+
+    // In which case, the edit form is reloaded.
+    $this->assertSession()->addressEquals($term->toUrl('edit-form')->setAbsolute());
+    $this->assertSession()->pageTextContains('Updated term');
   }
 
   /**

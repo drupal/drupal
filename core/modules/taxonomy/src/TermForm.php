@@ -207,7 +207,13 @@ class TermForm extends ContentEntityForm {
       case SAVED_UPDATED:
         $this->messenger()->addStatus($this->t('Updated term %term.', ['%term' => $view_link]));
         $this->logger('taxonomy')->info('Updated term %term.', ['%term' => $term->getName(), 'link' => $edit_link]);
-        $form_state->setRedirect('entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()]);
+
+        // Redirect to term view page if user has access, otherwise the form
+        // will be displayed again.
+        $canonicalUrl = $term->toUrl();
+        if ($canonicalUrl->access()) {
+          $form_state->setRedirectUrl($canonicalUrl);
+        }
         break;
     }
 
