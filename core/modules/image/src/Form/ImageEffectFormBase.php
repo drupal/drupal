@@ -122,7 +122,10 @@ abstract class ImageEffectFormBase extends FormBase {
     $this->imageEffect->submitConfigurationForm($form['data'], SubformState::createForSubform($form['data'], $form, $form_state));
 
     $this->imageEffect->setWeight($form_state->getValue('weight'));
-    if (!$this->imageEffect->getUuid()) {
+    if ($uuid = $this->imageEffect->getUuid()) {
+      $this->imageStyle->getEffect($uuid)->setConfiguration($this->imageEffect->getConfiguration());
+    }
+    else {
       $this->imageStyle->addImageEffect($this->imageEffect->getConfiguration());
     }
     $this->imageStyle->save();
