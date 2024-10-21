@@ -770,10 +770,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
               ],
             ],
           ],
-          '#cache' => [
-            'max-age' => 0,
-          ],
         ];
+
+        // If a form hasn't explicitly opted in to caching by setting max-age at
+        // the top level, then make it uncacheable in case it doesn't have the
+        // correct cacheability metadata.
+        // @todo Remove this in the next major version, after the deprecation
+        //   process from https://www.drupal.org/project/drupal/issues/3395157
+        //   has ended.
+        if (!isset($form['#cache']['max-age'])) {
+          $form['form_token']['#cache']['max-age'] = 0;
+        }
       }
     }
 

@@ -206,6 +206,11 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     // Associate the cache tags for the form display.
     $this->renderer->addCacheableDependency($form, $this);
 
+    // The form might not have the correct cacheability metadata, so make it
+    // uncacheable by default.
+    // @todo Remove this in https://www.drupal.org/node/3395524.
+    $form['#cache']['max-age'] = 0;
+
     // Add a process callback so we can assign weights and hide extra fields.
     $form['#process'][] = [$this, 'processForm'];
   }

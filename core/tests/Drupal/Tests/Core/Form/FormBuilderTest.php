@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Form;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\EnforcedResponseException;
@@ -909,7 +910,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @dataProvider providerTestFormTokenCacheability
    */
-  public function testFormTokenCacheability($token, $is_authenticated, $expected_form_cacheability, $expected_token_cacheability, $method): void {
+  public function testFormTokenCacheability($token, $is_authenticated, $method, $opted_in_for_cache): void {
     $user = $this->prophesize(AccountProxyInterface::class);
     $user->isAuthenticated()
       ->willReturn($is_authenticated);
@@ -924,6 +925,10 @@ class FormBuilderTest extends FormTestBase {
       $form['#token'] = $token;
     }
 
+    if ($opted_in_for_cache) {
+      $form['#cache']['max-age'] = Cache::PERMANENT;
+    }
+
     $form_arg = $this->createMock('Drupal\Core\Form\FormInterface');
     $form_arg->expects($this->once())
       ->method('getFormId')
@@ -934,19 +939,45 @@ class FormBuilderTest extends FormTestBase {
 
     $form_state = new FormState();
     $built_form = $this->formBuilder->buildForm($form_arg, $form_state);
-    if (!isset($expected_form_cacheability) || ($method == 'get' && !is_string($token))) {
+
+    // FormBuilder does not set a form token when:
+    // - #token is set to FALSE.
+    // - #method is set to 'GET' and #token is not a string. This means the GET
+    //   form did not get a form token by default, and the form did not
+    //   explicitly opt in.
+    if ($token === FALSE || ($method == 'get' && !is_string($token))) {
       $this->assertEquals($built_form['#cache'], ['tags' => ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form']]);
-    }
-    else {
-      $this->assertTrue(isset($built_form['#cache']));
-      $this->assertEquals($expected_form_cacheability, $built_form['#cache']);
-    }
-    if (!isset($expected_token_cacheability)) {
       $this->assertFalse(isset($built_form['form_token']));
     }
+    // Otherwise, a form token is set, but only if the user is logged in. It is
+    // impossible (and unnecessary) to set a form token if the user is not
+    // logged in, because there is no session, and hence no CSRF token.
     else {
-      $this->assertTrue(isset($built_form['form_token']));
-      $this->assertEquals($expected_token_cacheability, $built_form['form_token']['#cache']);
+      // For forms that are eligible for form tokens, a cache context must be
+      // set that indicates the form token only exists for logged in users.
+      $this->assertTrue(isset($built_form['#cache']));
+      $expected_cacheability_metadata = [
+        'tags' => ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form'],
+        'contexts' => ['user.roles:authenticated'],
+      ];
+      if ($opted_in_for_cache) {
+        $expected_cacheability_metadata['max-age'] = Cache::PERMANENT;
+      }
+      $this->assertEquals($expected_cacheability_metadata, $built_form['#cache']);
+      // Finally, verify that a form token is generated when appropriate, with
+      // the expected cacheability metadata (or lack thereof).
+      if (!$is_authenticated) {
+        $this->assertFalse(isset($built_form['form_token']));
+      }
+      else {
+        $this->assertTrue(isset($built_form['form_token']));
+        if ($opted_in_for_cache) {
+          $this->assertFalse(isset($built_form['form_token']['#cache']));
+        }
+        else {
+          $this->assertEquals(['max-age' => 0], $built_form['form_token']['#cache']);
+        }
+      }
     }
   }
 
@@ -957,12 +988,13 @@ class FormBuilderTest extends FormTestBase {
    */
   public static function providerTestFormTokenCacheability() {
     return [
-      'token:none,authenticated:true' => [NULL, TRUE, ['contexts' => ['user.roles:authenticated'], 'tags' => ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form']], ['max-age' => 0], 'post'],
-      'token:none,authenticated:false' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated'], 'tags' => ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form']], NULL, 'post'],
-      'token:false,authenticated:false' => [FALSE, FALSE, NULL, NULL, 'post'],
-      'token:false,authenticated:true' => [FALSE, TRUE, NULL, NULL, 'post'],
-      'token:none,authenticated:false,method:get' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated'], 'tags' => ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form']], NULL, 'get'],
-      'token:test_form_id,authenticated:false,method:get' => ['test_form_id', TRUE, ['contexts' => ['user.roles:authenticated'], 'tags' => ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form']], ['max-age' => 0], 'get'],
+      'token:none,authenticated:true' => [NULL, TRUE, 'post', FALSE],
+      'token:none,authenticated:true,opted_in_for_cache' => [NULL, TRUE, 'post', TRUE],
+      'token:none,authenticated:false' => [NULL, FALSE, 'post', FALSE],
+      'token:false,authenticated:false' => [FALSE, FALSE, 'post', FALSE],
+      'token:false,authenticated:true' => [FALSE, TRUE, 'post', FALSE],
+      'token:none,authenticated:false,method:get' => [NULL, FALSE, 'get', FALSE],
+      'token:test_form_id,authenticated:false,method:get' => ['test_form_id', TRUE, 'get', FALSE],
     ];
   }
 

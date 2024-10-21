@@ -81,6 +81,12 @@ class ContactController extends ControllerBase {
     $form['#title'] = $contact_form->label();
     $form['#cache']['contexts'][] = 'user.permissions';
     $this->renderer->addCacheableDependency($form, $config);
+
+    // The form might not have the correct cacheability metadata, so make it
+    // uncacheable by default.
+    // @todo Remove this in https://www.drupal.org/node/3395506.
+    $form['#cache']['max-age'] = 0;
+
     return $form;
   }
 
