@@ -117,6 +117,7 @@ class TokenReplaceTest extends KernelTestBase {
     // Generate and test sanitized tokens for term1.
     $tests = [];
     $tests['[term:tid]'] = $term1->id();
+    $tests['[term:uuid]'] = $term1->uuid();
     $tests['[term:name]'] = $term1->getName();
     $tests['[term:description]'] = $term1->description->processed;
     $tests['[term:url]'] = $term1->toUrl('canonical', ['absolute' => TRUE])->toString();
@@ -132,6 +133,7 @@ class TokenReplaceTest extends KernelTestBase {
 
     $metadata_tests = [];
     $metadata_tests['[term:tid]'] = $base_bubbleable_metadata;
+    $metadata_tests['[term:uuid]'] = $base_bubbleable_metadata;
     $metadata_tests['[term:name]'] = $base_bubbleable_metadata;
     $metadata_tests['[term:description]'] = $base_bubbleable_metadata;
     $metadata_tests['[term:url]'] = $base_bubbleable_metadata;
@@ -153,6 +155,7 @@ class TokenReplaceTest extends KernelTestBase {
     // Generate and test sanitized tokens for term2.
     $tests = [];
     $tests['[term:tid]'] = $term2->id();
+    $tests['[term:uuid]'] = $term2->uuid();
     $tests['[term:name]'] = $term2->getName();
     $tests['[term:description]'] = $term2->description->processed;
     $tests['[term:url]'] = $term2->toUrl('canonical', ['absolute' => TRUE])->toString();

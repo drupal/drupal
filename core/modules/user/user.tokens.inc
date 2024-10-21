@@ -28,6 +28,10 @@ function user_token_info() {
     'name' => t('User ID'),
     'description' => t("The unique ID of the user account."),
   ];
+  $user['uuid'] = [
+    'name' => t('UUID'),
+    'description' => t("The UUID of the user account."),
+  ];
   $user['name'] = [
     'name' => t("Deprecated: User Name"),
     'description' => t("Deprecated: Use account-name or display-name instead."),
@@ -95,6 +99,10 @@ function user_tokens($type, $tokens, array $data, array $options, BubbleableMeta
         case 'uid':
           // In the case of hook user_presave uid is not set yet.
           $replacements[$original] = $account->id() ?: t('not yet assigned');
+          break;
+
+        case 'uuid':
+          $replacements[$original] = $account->uuid();
           break;
 
         case 'display-name':

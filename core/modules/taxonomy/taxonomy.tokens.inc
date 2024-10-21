@@ -30,6 +30,10 @@ function taxonomy_token_info() {
     'name' => t("Term ID"),
     'description' => t("The unique ID of the taxonomy term."),
   ];
+  $term['uuid'] = [
+    'name' => t('UUID'),
+    'description' => t("The UUID of the taxonomy term."),
+  ];
   $term['name'] = [
     'name' => t("Name"),
     'description' => t("The name of the taxonomy term."),
@@ -118,6 +122,10 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
       switch ($name) {
         case 'tid':
           $replacements[$original] = $term->id();
+          break;
+
+        case 'uuid':
+          $replacements[$original] = $term->uuid();
           break;
 
         case 'name':

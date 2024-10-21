@@ -25,6 +25,10 @@ function node_token_info() {
     'name' => t("Content ID"),
     'description' => t('The unique ID of the content item, or "node".'),
   ];
+  $node['uuid'] = [
+    'name' => t('UUID'),
+    'description' => t('The UUID of the content item, or "node".'),
+  ];
   $node['vid'] = [
     'name' => t("Revision ID"),
     'description' => t("The unique ID of the node's latest revision."),
@@ -110,6 +114,10 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
         // Simple key values on the node.
         case 'nid':
           $replacements[$original] = $node->id();
+          break;
+
+        case 'uuid':
+          $replacements[$original] = $node->uuid();
           break;
 
         case 'vid':

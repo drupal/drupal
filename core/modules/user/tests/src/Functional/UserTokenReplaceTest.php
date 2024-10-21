@@ -70,6 +70,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     // Generate and test tokens.
     $tests = [];
     $tests['[user:uid]'] = $account->id();
+    $tests['[user:uuid]'] = $account->uuid();
     $tests['[user:name]'] = $account->getAccountName();
     $tests['[user:account-name]'] = $account->getAccountName();
     $tests['[user:display-name]'] = $account->getDisplayName();
@@ -87,6 +88,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($account);
     $metadata_tests = [];
     $metadata_tests['[user:uid]'] = $base_bubbleable_metadata;
+    $metadata_tests['[user:uuid]'] = $base_bubbleable_metadata;
     $metadata_tests['[user:name]'] = $base_bubbleable_metadata;
     $metadata_tests['[user:account-name]'] = $base_bubbleable_metadata;
     $metadata_tests['[user:display-name]'] = $base_bubbleable_metadata;
@@ -122,11 +124,13 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $anonymous_user = User::load(0);
     $tests = [];
     $tests['[user:uid]'] = 'not yet assigned';
+    $tests['[user:uuid]'] = $anonymous_user->uuid();
     $tests['[user:display-name]'] = $anonymous_user->getDisplayName();
 
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($anonymous_user);
     $metadata_tests = [];
     $metadata_tests['[user:uid]'] = $base_bubbleable_metadata;
+    $metadata_tests['[user:uuid]'] = $base_bubbleable_metadata;
     $bubbleable_metadata = clone $base_bubbleable_metadata;
     $bubbleable_metadata->addCacheableDependency(\Drupal::config('user.settings'));
     $metadata_tests['[user:display-name]'] = $bubbleable_metadata;

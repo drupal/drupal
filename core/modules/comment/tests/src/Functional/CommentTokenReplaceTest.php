@@ -78,6 +78,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     // Generate and test tokens.
     $tests = [];
     $tests['[comment:cid]'] = $comment->id();
+    $tests['[comment:uuid]'] = $comment->uuid();
     $tests['[comment:hostname]'] = $comment->getHostname();
     $tests['[comment:author]'] = Html::escape($comment->getAuthorName());
     $tests['[comment:mail]'] = $this->adminUser->getEmail();
@@ -91,6 +92,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:created:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getCreatedTime(), ['langcode' => $language_interface->getId()]);
     $tests['[comment:changed:since]'] = \Drupal::service('date.formatter')->formatTimeDiffSince($comment->getChangedTimeAcrossTranslations(), ['langcode' => $language_interface->getId()]);
     $tests['[comment:parent:cid]'] = $comment->hasParentComment() ? $comment->getParentComment()->id() : NULL;
+    $tests['[comment:parent:uuid]'] = $comment->hasParentComment() ? $comment->getParentComment()->uuid() : NULL;
     $tests['[comment:parent:title]'] = $parent_comment->getSubject();
     $tests['[comment:entity]'] = Html::escape($node->getTitle());
     // Test node specific tokens.
@@ -102,6 +104,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $base_bubbleable_metadata = BubbleableMetadata::createFromObject($comment);
     $metadata_tests = [];
     $metadata_tests['[comment:cid]'] = $base_bubbleable_metadata;
+    $metadata_tests['[comment:uuid]'] = $base_bubbleable_metadata;
     $metadata_tests['[comment:hostname]'] = $base_bubbleable_metadata;
     $bubbleable_metadata = clone $base_bubbleable_metadata;
     $bubbleable_metadata->addCacheableDependency($this->adminUser);
@@ -123,6 +126,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $metadata_tests['[comment:changed:since]'] = $bubbleable_metadata->setCacheMaxAge(0);
     $bubbleable_metadata = clone $base_bubbleable_metadata;
     $metadata_tests['[comment:parent:cid]'] = $bubbleable_metadata->addCacheTags(['comment:1']);
+    $metadata_tests['[comment:parent:uuid]'] = $bubbleable_metadata->addCacheTags(['comment:1']);
     $metadata_tests['[comment:parent:title]'] = $bubbleable_metadata;
     $bubbleable_metadata = clone $base_bubbleable_metadata;
     $metadata_tests['[comment:entity]'] = $bubbleable_metadata->addCacheTags(['node:2']);

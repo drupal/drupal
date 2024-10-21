@@ -49,6 +49,10 @@ function comment_token_info() {
     'name' => t("Comment ID"),
     'description' => t("The unique ID of the comment."),
   ];
+  $comment['uuid'] = [
+    'name' => t('UUID'),
+    'description' => t("The UUID of the comment."),
+  ];
   $comment['hostname'] = [
     'name' => t("IP Address"),
     'description' => t("The IP address of the computer the comment was posted from."),
@@ -142,6 +146,10 @@ function comment_tokens($type, $tokens, array $data, array $options, BubbleableM
         // Simple key values on the comment.
         case 'cid':
           $replacements[$original] = $comment->id();
+          break;
+
+        case 'uuid':
+          $replacements[$original] = $comment->uuid();
           break;
 
         // Poster identity information for comments.

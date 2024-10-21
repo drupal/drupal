@@ -473,6 +473,10 @@ function file_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           $replacements[$original] = $file->id();
           break;
 
+        case 'uuid':
+          $replacements[$original] = $file->uuid();
+          break;
+
         // Essential file data
         case 'name':
           $replacements[$original] = $file->getFilename();
@@ -551,6 +555,10 @@ function file_token_info() {
   $file['fid'] = [
     'name' => t("File ID"),
     'description' => t("The unique ID of the uploaded file."),
+  ];
+  $file['uuid'] = [
+    'name' => t('UUID'),
+    'description' => t('The UUID of the uploaded file.'),
   ];
   $file['name'] = [
     'name' => t("File name"),
