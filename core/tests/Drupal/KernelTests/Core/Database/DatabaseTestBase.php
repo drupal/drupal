@@ -18,6 +18,9 @@ abstract class DatabaseTestBase extends KernelTestBase {
   use DatabaseTestSchemaDataTrait;
   use DatabaseTestSchemaInstallTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['database_test'];
 
   /**

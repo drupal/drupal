@@ -14,6 +14,9 @@ use Drupal\language\Entity\ConfigurableLanguage;
  */
 class TermLanguageTest extends TaxonomyTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['language'];
 
   /**

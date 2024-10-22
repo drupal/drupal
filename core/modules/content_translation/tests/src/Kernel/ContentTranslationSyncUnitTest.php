@@ -56,6 +56,9 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
    */
   protected $unchangedFieldValues;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['language', 'content_translation'];
 
   /**

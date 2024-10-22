@@ -15,6 +15,9 @@ use Drupal\views\Views;
  */
 class AreaTextTokenTest extends ViewsKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system', 'user', 'filter'];
 
   /**

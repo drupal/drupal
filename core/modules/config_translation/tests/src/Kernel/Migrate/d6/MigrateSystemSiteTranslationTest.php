@@ -13,6 +13,9 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  */
 class MigrateSystemSiteTranslationTest extends MigrateDrupal6TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'language',
     'config_translation',

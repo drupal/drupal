@@ -16,6 +16,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class LinkGenerationTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['link_generation_test'];
 
   /**

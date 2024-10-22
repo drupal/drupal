@@ -15,6 +15,9 @@ use Drupal\taxonomy\TermInterface;
  */
 class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'comment',
     'content_translation',

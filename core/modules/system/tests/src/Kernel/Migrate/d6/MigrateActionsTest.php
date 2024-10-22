@@ -14,6 +14,9 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  */
 class MigrateActionsTest extends MigrateDrupal6TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['comment', 'node'];
 
   /**

@@ -13,6 +13,9 @@ use Drupal\user\Entity\Role;
  */
 class UserRoleEntityTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system', 'user', 'user_permissions_test'];
 
   public function testOrderOfPermissions(): void {

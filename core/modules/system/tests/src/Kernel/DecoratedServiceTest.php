@@ -15,6 +15,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class DecoratedServiceTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'decorated_service_test',
   ];

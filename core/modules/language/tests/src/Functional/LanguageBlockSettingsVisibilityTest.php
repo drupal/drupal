@@ -13,6 +13,9 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LanguageBlockSettingsVisibilityTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['block', 'language'];
 
   /**
