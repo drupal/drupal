@@ -20,6 +20,9 @@ class EntityTypeConstraintValidatorTest extends EntityKernelTestBase {
    */
   protected $typedData;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['node', 'field', 'user'];
 
   /**

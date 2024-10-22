@@ -21,6 +21,9 @@ class BundleConstraintValidatorTest extends KernelTestBase {
    */
   protected $typedData;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['node', 'field', 'text', 'user'];
 
   /**

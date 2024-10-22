@@ -17,6 +17,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class BlockInterfaceTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system', 'block', 'block_test', 'user'];
 
   /**

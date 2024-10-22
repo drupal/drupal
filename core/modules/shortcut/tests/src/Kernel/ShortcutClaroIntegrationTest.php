@@ -13,6 +13,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class ShortcutClaroIntegrationTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system'];
 
   /**

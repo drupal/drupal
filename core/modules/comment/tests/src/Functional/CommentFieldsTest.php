@@ -17,9 +17,7 @@ use Drupal\comment\Entity\CommentType;
 class CommentFieldsTest extends CommentTestBase {
 
   /**
-   * Install the field UI.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field_ui'];
 

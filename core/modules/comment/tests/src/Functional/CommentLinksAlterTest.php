@@ -11,6 +11,9 @@ namespace Drupal\Tests\comment\Functional;
  */
 class CommentLinksAlterTest extends CommentTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['comment_test'];
 
   /**

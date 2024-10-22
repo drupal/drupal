@@ -22,6 +22,9 @@ class TextSummaryTest extends KernelTestBase {
 
   use UserCreationTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'system',
     'user',

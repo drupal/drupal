@@ -15,6 +15,9 @@ use Drupal\views\Views;
  */
 class FilterNumericTest extends ViewsKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system'];
 
   /**

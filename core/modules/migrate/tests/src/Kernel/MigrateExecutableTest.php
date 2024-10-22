@@ -13,6 +13,9 @@ use Drupal\migrate\Plugin\MigrationInterface;
  */
 class MigrateExecutableTest extends MigrateTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'entity_test',
     'user',

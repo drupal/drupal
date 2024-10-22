@@ -60,6 +60,9 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   protected $logger;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['migrate'];
 
   /**
