@@ -12,14 +12,14 @@
 }
 
 /* Add responsive side gutters to the outer layout container 'main' at smaller sizes */
-.main {
+.main-content-area {
   padding-inline: 4%;
   padding-block: 0 2.37rem;
 }
 /* Extra large + side margins */
 @media screen and (min-width: 80rem) {
   /* 1200px (large) + 80px (side margins) = 1280px */
-  .main {
+  .main-content-area {
     padding-inline: 0;
   }
 }

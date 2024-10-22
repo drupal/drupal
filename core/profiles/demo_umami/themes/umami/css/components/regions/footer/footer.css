@@ -6,7 +6,7 @@
  * footer items, such as a menu, which are styled by their own CSS files.
  */
 
-.footer {
+.layout-footer {
   padding: 2rem 4%;
   text-align: center;
   color: #fff;
@@ -21,10 +21,10 @@
 /* Large */
 @media screen and (min-width: 60rem) {
   /* 960px */
-  .footer {
+  .layout-footer {
     text-align: left; /* LTR */
   }
-  [dir="rtl"] .footer {
+  [dir="rtl"] .layout-footer {
     text-align: right;
   }
   .region-footer {
@@ -36,20 +36,20 @@
 /* Extra large + side margins */
 @media screen and (min-width: 80rem) {
   /* 1200px (large) + 80px (side margins) = 1280px */
-  .footer {
+  .layout-footer {
     padding: 2rem 0;
   }
 }
 
-:where(.footer) a {
+:where(.layout-footer) a {
   color: #fff;
   background-color: inherit;
   font-weight: 400;
 }
 
-:where(.footer) a:active,
-:where(.footer) a:focus,
-:where(.footer) a:hover {
+:where(.layout-footer) a:active,
+:where(.layout-footer) a:focus,
+:where(.layout-footer) a:hover {
   outline-color: #fff;
   background-color: #000;
 }

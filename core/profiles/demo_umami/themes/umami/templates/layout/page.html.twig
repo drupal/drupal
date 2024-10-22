@@ -58,89 +58,90 @@
     </header>
   {% endif %}
 
-  {% if page.highlighted %}
-    <div class="layout-highlighted">
+  <main>
+
+    {% if page.highlighted %}
+      <div class="layout-highlighted">
+        <div class="container">
+          {{ page.highlighted }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if page.tabs %}
+    <div class="layout-tabs">
       <div class="container">
-        {{ page.highlighted }}
+        {{ page.tabs }}
       </div>
     </div>
-  {% endif %}
+    {% endif %}
 
-  {% if page.tabs %}
-  <div class="layout-tabs">
-    <div class="container">
-      {{ page.tabs }}
-    </div>
-  </div>
-  {% endif %}
-
-  {% if page.banner_top|render|trim is not empty %}
-    <div class="layout-banner-top">
-      {{ page.banner_top }}
-    </div>
-  {% endif %}
-
-  {% if page.breadcrumbs|render|trim is not empty %}
-  <div class="layout-breadcrumbs">
-    <div class="container">
-      {{ page.breadcrumbs }}
-    </div>
-  </div>
-  {% endif %}
-
-  {% if not node %}
-    {% if page.page_title|render|trim is not empty %}
-      <div class="layout-page-title">
-        {% if is_front %}
-          <div class="is-front container">
-            {{ page.page_title }}
-          </div>
-          {% else %}
-          <div class="container">
-            {{ page.page_title }}
-          </div>
-        {% endif %}
+    {% if page.banner_top|render|trim is not empty %}
+      <div class="layout-banner-top">
+        {{ page.banner_top }}
       </div>
     {% endif %}
-  {% endif %}
 
-  <main role="main" class="main container">
-
-    <div class="layout-content">
-      <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
-      {{ page.content }}
-    </div>{# /.layout-content #}
-
-    {% if page.sidebar|render|trim is not empty %}
-      <aside class="layout-sidebar" role="complementary">
-        {{ page.sidebar }}
-      </aside>
+    {% if page.breadcrumbs|render|trim is not empty %}
+    <div class="layout-breadcrumbs">
+      <div class="container">
+        {{ page.breadcrumbs }}
+      </div>
+    </div>
     {% endif %}
 
+    {% if not node %}
+      {% if page.page_title|render|trim is not empty %}
+        <div class="layout-page-title">
+          {% if is_front %}
+            <div class="is-front container">
+              {{ page.page_title }}
+            </div>
+            {% else %}
+            <div class="container">
+              {{ page.page_title }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endif %}
+
+    <div class="main-content-area container">
+      <div class="layout-content">
+        <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
+        {{ page.content }}
+      </div>{# /.layout-content #}
+
+      {% if page.sidebar|render|trim is not empty %}
+        <aside class="layout-sidebar" role="complementary">
+          {{ page.sidebar }}
+        </aside>
+      {% endif %}
+    </div>
+
+    {% if page.content_bottom|render|trim is not empty %}
+      <div class="layout-content-bottom">
+        {{ page.content_bottom }}
+      </div>
+    {% endif %}
   </main>
 
-  {% if page.content_bottom|render|trim is not empty %}
-    <div class="layout-content-bottom">
-      {{ page.content_bottom }}
-    </div>
-  {% endif %}
-
-  {% if page.footer|render|trim is not empty %}
-  <div class="layout-footer">
-    <footer class="footer" role="contentinfo">
+  <footer class="footer" role="contentinfo">
+    {% if page.footer|render|trim is not empty %}
+    <div class="layout-footer">
       <div class="container">
         {{ page.footer }}
       </div>
-    </footer>
-  </div>
-  {% endif %}
-
-  {% if page.bottom|render|trim is not empty %}
-    <div class="layout-bottom">
-      <div class="container">
-        {{ page.bottom }}
-      </div>
     </div>
-  {% endif %}
+    {% endif %}
+
+    {% if page.bottom|render|trim is not empty %}
+      <div class="layout-bottom">
+        <div class="container">
+          {{ page.bottom }}
+        </div>
+      </div>
+    {% endif %}
+  </footer>
 
 </div>{# /.layout-container #}

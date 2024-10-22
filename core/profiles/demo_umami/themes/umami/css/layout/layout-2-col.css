@@ -3,14 +3,14 @@
  * This file is used to create the layout when the theme has 2 columns.
  */
 
-.two-columns .main {
+.two-columns .main-content-area {
   display: grid;
   gap: 14px;
 }
 /* Large */
 @media screen and (min-width: 60rem) {
   /* 960px */
-  .two-columns .main {
+  .two-columns .main-content-area {
     grid-template-columns: 72% 1fr;
     gap: 3%;
   }
