@@ -138,7 +138,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * @return void
    */
   protected function collectModuleHookImplementations($dir, $module, $module_preg): void {
-    $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS);
+    $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
     $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
     $iterator = new \RecursiveIteratorIterator($iterator);
     /** @var \RecursiveDirectoryIterator | \RecursiveIteratorIterator $iterator*/
