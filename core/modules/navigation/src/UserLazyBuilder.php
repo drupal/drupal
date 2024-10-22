@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\navigation;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -22,13 +21,10 @@ final class UserLazyBuilder implements TrustedCallbackInterface {
   /**
    * Constructs an UserLazyBuilder object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler.
    * @param \Drupal\Core\Session\AccountProxyInterface $account
    *   The current user.
    */
   public function __construct(
-    protected readonly ModuleHandlerInterface $moduleHandler,
     protected readonly AccountProxyInterface $account,
   ) {}
 
@@ -40,7 +36,6 @@ final class UserLazyBuilder implements TrustedCallbackInterface {
    */
   public function renderNavigationLinks() {
     return [
-      '#help' => $this->moduleHandler->moduleExists('help'),
       '#theme' => 'menu_region__footer',
       '#items' => $this->userOperationLinks(),
       '#menu_name' => 'user',

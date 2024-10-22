@@ -71,3 +71,23 @@ block.settings.navigation_menu:*:
     depth:
       type: integer
       label: 'Maximum number of levels'
+
+block.settings.navigation_link:
+  type: block_settings
+  label: 'Link block'
+  mapping:
+    title:
+      type: label
+      label: 'Link title'
+    uri:
+      type: string
+      label: 'URL'
+    icon_class:
+      type: string
+      label: 'Icon CSS Class'
+      constraints:
+        Regex:
+          pattern: '/^[a-z0-9_-]+$/'
+          message: "The %value icon CSS class is not valid."
+  constraints:
+    FullyValidatable: ~

@@ -31,5 +31,5 @@ services:
 
   navigation.user_lazy_builder:
     class: Drupal\navigation\UserLazyBuilder
-    arguments: ['@module_handler', '@current_user']
+    arguments: ['@current_user']
   Drupal\navigation\UserLazyBuilders: '@navigation.user_lazy_builder'

@@ -301,11 +301,14 @@ body {
 .admin-toolbar__footer {
   z-index: var(--admin-toolbar-z-index-footer);
   display: grid;
-  gap: var(--admin-toolbar-space-16);
+  gap: var(--admin-toolbar-space-4);
   margin-block-start: auto;
   padding: var(--admin-toolbar-space-16);
   border-block-start: 1px solid var(--admin-toolbar-color-gray-200);
   border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
+}
+.admin-toolbar__footer > .toolbar-block:last-of-type {
+  margin-block-end: var(--admin-toolbar-space-12);
 }
 @media (min-width: 64rem) {
   .admin-toolbar__footer {

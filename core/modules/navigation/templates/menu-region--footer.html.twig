@@ -5,7 +5,6 @@
  *
  * Available variables:
  * - menu_name: The machine name of the user menu.
- * - help: TRUE if "Help" module is enabled.
  * - title: A name of account.
  * - items: A nested list of menu items. Each menu item contains:
  *   - attributes: HTML attributes for the menu item.
@@ -26,17 +25,6 @@
   {# @todo id & aria-labelledby will be brought back via JS in https://www.drupal.org/project/drupal/issues/3452724 #}
   <h4 class="visually-hidden focusable">{{ title }}</h4>
   <ul class="toolbar-block__list">
-    {% if help %}
-      <li class="toolbar-block__list-item">
-        {% include 'navigation:toolbar-button' with {
-          attributes: create_attribute({ 'href': path('help.main'), 'data-drupal-tooltip': 'Help'|t, 'data-drupal-tooltip-class': 'admin-toolbar__tooltip' }),
-          icon: 'help',
-          html_tag: 'a',
-          text: 'Help'|t,
-          modifiers: ['collapsible'],
-        } only %}
-      </li>
-    {% endif %}
     <li id="admin-toolbar-user-menu" class="toolbar-block__list-item toolbar-block__list-item--user toolbar-popover" data-toolbar-popover>
       {% include 'navigation:toolbar-button' with {
         action: 'Extend'|t,

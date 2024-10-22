@@ -132,7 +132,6 @@ function navigation_theme($existing, $type, $theme, $path) {
 
   $items['menu_region__footer'] = [
     'variables' => [
-      'help' => NULL,
       'items' => [],
       'title' => NULL,
       'menu_name' => NULL,
@@ -200,6 +199,7 @@ function navigation_block_alter(&$definitions): void {
     'navigation_user',
     'navigation_shortcuts',
     'navigation_menu',
+    'navigation_link',
   ];
   foreach ($hidden as $block_id) {
     if (isset($definitions[$block_id])) {
