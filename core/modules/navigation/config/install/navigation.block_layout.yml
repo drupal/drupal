@@ -54,4 +54,18 @@ sections:
           view_mode: default
         weight: 0
         additional: { }
+      6d7080a7-abab-4bad-b960-2459ca892a54:
+        uuid: 6d7080a7-abab-4bad-b960-2459ca892a54
+        region: footer
+        configuration:
+          id: navigation_link
+          label: Help
+          label_display: '0'
+          provider: navigation
+          context_mapping: { }
+          title: Help
+          uri: 'internal:/admin/help'
+          icon_class: help
+        weight: -2
+        additional: { }
     third_party_settings: { }
