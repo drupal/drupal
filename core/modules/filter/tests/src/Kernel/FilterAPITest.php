@@ -21,6 +21,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  */
 class FilterAPITest extends EntityKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system', 'filter', 'filter_test', 'user'];
 
   /**

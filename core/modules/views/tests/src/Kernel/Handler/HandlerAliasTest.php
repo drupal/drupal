@@ -14,6 +14,9 @@ use Drupal\views\Views;
  */
 class HandlerAliasTest extends ViewsKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['user'];
 
   /**

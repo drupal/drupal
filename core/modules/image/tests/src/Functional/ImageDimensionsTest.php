@@ -31,6 +31,9 @@ class ImageDimensionsTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected $profile = 'testing';
 
   /**

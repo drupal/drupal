@@ -13,6 +13,9 @@ use Drupal\Tests\BrowserTestBase;
  */
 class ContentTranslationEntityBundleUITest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'language',
     'content_translation',

@@ -16,6 +16,9 @@ use Drupal\language\Entity\ConfigurableLanguage;
  */
 class UpcastingTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['paramconverter_test', 'node', 'language'];
 
   /**

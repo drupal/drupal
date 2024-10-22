@@ -30,6 +30,9 @@ class RequestHandlerTest extends KernelTestBase {
    */
   protected $requestHandler;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['serialization', 'rest'];
 
   /**

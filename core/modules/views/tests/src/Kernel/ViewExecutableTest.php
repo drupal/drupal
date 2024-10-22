@@ -36,6 +36,9 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
   use CommentTestTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'system',
     'node',

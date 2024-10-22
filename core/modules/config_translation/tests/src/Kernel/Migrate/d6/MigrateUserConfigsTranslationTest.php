@@ -16,6 +16,9 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal6TestBase {
 
   use SchemaCheckTestTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'language',
     'locale',

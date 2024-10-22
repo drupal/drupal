@@ -19,6 +19,9 @@ use Drupal\user\Entity\User;
  */
 class ContextPluginTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'system',
     'user',

@@ -14,6 +14,9 @@ use Drupal\Tests\BrowserTestBase;
  */
 class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'language',
     'config_translation',

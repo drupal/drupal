@@ -13,6 +13,9 @@ use Drupal\node\NodeInterface;
  */
 class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'comment',
     'datetime',

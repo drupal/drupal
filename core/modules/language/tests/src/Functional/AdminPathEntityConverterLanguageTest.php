@@ -14,6 +14,9 @@ use Drupal\Tests\BrowserTestBase;
  */
 class AdminPathEntityConverterLanguageTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['language', 'language_test'];
 
   /**

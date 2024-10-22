@@ -22,6 +22,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class UrlTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['common_test', 'url_alter_test'];
 
   /**
