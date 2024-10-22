@@ -15,6 +15,9 @@ use Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass;
  */
 class PhpUnitBridgeTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['deprecation_test'];
 
   public function testDeprecatedClass(): void {

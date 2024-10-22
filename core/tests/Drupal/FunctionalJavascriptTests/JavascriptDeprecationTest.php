@@ -12,6 +12,9 @@ namespace Drupal\FunctionalJavascriptTests;
  */
 class JavascriptDeprecationTest extends WebDriverTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['js_deprecation_test'];
 
   /**

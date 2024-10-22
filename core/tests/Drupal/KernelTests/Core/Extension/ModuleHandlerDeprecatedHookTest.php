@@ -16,6 +16,9 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class ModuleHandlerDeprecatedHookTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['deprecation_test'];
 
   /**

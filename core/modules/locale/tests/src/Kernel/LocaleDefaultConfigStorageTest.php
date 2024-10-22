@@ -13,6 +13,9 @@ use Drupal\locale\LocaleDefaultConfigStorage;
  */
 class LocaleDefaultConfigStorageTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'language',
     'locale',

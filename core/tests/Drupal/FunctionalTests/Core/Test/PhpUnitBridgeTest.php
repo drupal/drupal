@@ -15,6 +15,9 @@ use Drupal\Tests\BrowserTestBase;
  */
 class PhpUnitBridgeTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['deprecation_test'];
 
   /**

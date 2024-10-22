@@ -14,6 +14,9 @@ use Drupal\Tests\BrowserTestBase;
  */
 class UrlTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['common_test'];
 
   /**

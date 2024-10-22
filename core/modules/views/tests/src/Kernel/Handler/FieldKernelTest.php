@@ -17,6 +17,9 @@ use Drupal\views\Views;
  */
 class FieldKernelTest extends ViewsKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['user'];
 
   /**

@@ -14,6 +14,9 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  */
 class ServicesDefaultsTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['services_defaults_test'];
 
   /**
