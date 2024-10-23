@@ -42,7 +42,7 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
   /**
    * Creates the entity type manager mock returning entity type objects.
    */
-  protected function setupEntityTypes() {
+  protected function setupEntityTypes(): void {
     $definition = $this->createMock(EntityTypeInterface::class);
     $definition->expects($this->any())
       ->method('getClass')

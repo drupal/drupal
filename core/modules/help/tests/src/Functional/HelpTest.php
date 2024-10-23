@@ -130,7 +130,7 @@ class HelpTest extends BrowserTestBase {
    * @param int $response
    *   (optional) An HTTP response code. Defaults to 200.
    */
-  protected function verifyHelp($response = 200) {
+  protected function verifyHelp($response = 200): void {
     $this->drupalGet('admin/index');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {

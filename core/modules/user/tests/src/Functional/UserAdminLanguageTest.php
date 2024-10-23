@@ -183,7 +183,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
    * @param bool $admin_first
    *   Whether the admin negotiation should be first.
    */
-  public function setLanguageNegotiation($admin_first = FALSE) {
+  public function setLanguageNegotiation($admin_first = FALSE): void {
     $edit = [
       'language_interface[enabled][language-user-admin]' => TRUE,
       'language_interface[enabled][language-url]' => TRUE,
@@ -197,7 +197,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   /**
    * Helper method for adding a custom language.
    */
-  public function addCustomLanguage() {
+  public function addCustomLanguage(): void {
     $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomMachineName(16);

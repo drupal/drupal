@@ -103,7 +103,7 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    *   The expected bit value returned by
    *   \Symfony\Component\HttpFoundation\Request::getTrustedHeaderSet()
    */
-  protected function trustedHeadersAreSet(Settings $settings, $expected_trusted_header_set) {
+  protected function trustedHeadersAreSet(Settings $settings, $expected_trusted_header_set): void {
     $middleware = new ReverseProxyMiddleware($this->mockHttpKernel, $settings);
     $request = new Request();
 

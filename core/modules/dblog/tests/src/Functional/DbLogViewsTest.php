@@ -41,7 +41,7 @@ class DbLogViewsTest extends DbLogTest {
   /**
    * {@inheritdoc}
    */
-  protected function filterLogsEntries($type = NULL, $severity = NULL) {
+  protected function filterLogsEntries($type = NULL, $severity = NULL): void {
     $query = [];
     if (isset($type)) {
       $query['type[]'] = $type;

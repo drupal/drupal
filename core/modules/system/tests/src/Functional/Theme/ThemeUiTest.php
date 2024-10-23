@@ -171,7 +171,7 @@ class ThemeUiTest extends BrowserTestBase {
    * @param string[] $module_names
    *   An array of module machine names.
    */
-  protected function uninstallModules(array $module_names) {
+  protected function uninstallModules(array $module_names): void {
     $assert_session = $this->assertSession();
     $this->drupalGet('admin/modules/uninstall');
     foreach ($module_names as $attribute) {
@@ -200,7 +200,7 @@ class ThemeUiTest extends BrowserTestBase {
    * @param string $theme_name
    *   The theme name.
    */
-  protected function uninstallTheme($theme_name) {
+  protected function uninstallTheme($theme_name): void {
     $this->drupalGet('admin/appearance');
     $this->clickLink("Uninstall $theme_name theme");
     $this->assertSession()->pageTextContains("The $theme_name theme has been uninstalled.");

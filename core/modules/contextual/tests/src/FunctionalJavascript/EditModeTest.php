@@ -119,7 +119,7 @@ class EditModeTest extends WebDriverTestBase {
   /**
    * Presses the toolbar edit mode.
    */
-  protected function pressToolbarEditButton() {
+  protected function pressToolbarEditButton(): void {
     $edit_button = $this->getSession()->getPage()->find('css', '#toolbar-bar div.contextual-toolbar-tab button');
     $edit_button->press();
   }

@@ -47,7 +47,7 @@ class ThemeUpdateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doSelectionTest() {
+  protected function doSelectionTest(): void {
     // Ensure that the theme's post update appears as expected.
     $this->assertSession()->responseContains('test_theme_depending_on_modules theme');
     $this->assertSession()->responseContains('Install a dependent module.');

@@ -253,7 +253,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
    * @param \Drupal\migrate\Event\MigrateIdMapMessageEvent $event
    *   The migration event.
    */
-  public function mapMessageRecorder(MigrateIdMapMessageEvent $event) {
+  public function mapMessageRecorder(MigrateIdMapMessageEvent $event): void {
     $this->messages[] = implode(',', $event->getSourceIdValues()) . ': ' . $event->getMessage();
   }
 
@@ -266,7 +266,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
    * @throws \Exception
    * @throws \Drupal\migrate\MigrateException
    */
-  protected function runImport(array $definition) {
+  protected function runImport(array $definition): void {
     // Reset the list of messages from a previous migration.
     $this->messages = [];
 

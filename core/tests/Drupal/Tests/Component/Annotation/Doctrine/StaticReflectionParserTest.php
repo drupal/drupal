@@ -34,7 +34,7 @@ class StaticReflectionParserTest extends TestCase {
    *           ["UsedAsQualified", "Drupal\\Tests\\Component\\Annotation\\Doctrine\\Fixtures\\ExtraAttributes\\ExampleParentAttribute", true]
    *           ["Qualified", "Drupal\\Tests\\Component\\Annotation\\Doctrine\\Fixtures\\ExtraAttributes\\ExampleParentAttribute", true]
    */
-  public function testAttribute(string $class, string $attribute_class, bool $expected) {
+  public function testAttribute(string $class, string $attribute_class, bool $expected): void {
     $finder = MockFileFinder::create(__DIR__ . '/Fixtures/Attribute/' . $class . '.php');
     $parser = new StaticReflectionParser('\\Drupal\\Tests\\Component\\Annotation\\Doctrine\\Fixtures\\Attribute\\' . $class, $finder);
     $this->assertSame($expected, $parser->hasClassAttribute($attribute_class), "'$class' has attribute that is a '$attribute_class'");

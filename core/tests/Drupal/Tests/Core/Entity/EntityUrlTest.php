@@ -530,7 +530,7 @@ class EntityUrlTest extends UnitTestCase {
    * @param string $link_template
    *   The link template to register.
    */
-  protected function registerLinkTemplate($link_template) {
+  protected function registerLinkTemplate($link_template): void {
     $link_templates = [
       // The path is actually never used because we never invoke the URL
       // generator but perform assertions on the URL object directly.
@@ -545,7 +545,7 @@ class EntityUrlTest extends UnitTestCase {
    * @param array $bundle_info
    *   The bundle information to register.
    */
-  protected function registerBundleInfo($bundle_info) {
+  protected function registerBundleInfo($bundle_info): void {
     $this->entityTypeBundleInfo
       ->getBundleInfo(static::ENTITY_TYPE_ID)
       ->willReturn([static::ENTITY_TYPE_ID => $bundle_info]);

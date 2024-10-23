@@ -25,7 +25,7 @@ class ServiceProviderTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     // Undo cache_factory override done in parent because it can hide caching
     // issues in container build time.

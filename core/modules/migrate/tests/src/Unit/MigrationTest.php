@@ -269,7 +269,7 @@ class TestMigration extends Migration {
    * @param string $plugin_id
    *   The plugin ID of the plugin instance.
    */
-  public function setPluginId($plugin_id) {
+  public function setPluginId($plugin_id): void {
     $this->pluginId = $plugin_id;
   }
 
@@ -279,7 +279,7 @@ class TestMigration extends Migration {
    * @param array $requirements
    *   The array of requirement values.
    */
-  public function setRequirements(array $requirements) {
+  public function setRequirements(array $requirements): void {
     $this->requirements = $requirements;
   }
 
@@ -289,7 +289,7 @@ class TestMigration extends Migration {
    * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source_plugin
    *   The source Plugin.
    */
-  public function setSourcePlugin(MigrateSourceInterface $source_plugin) {
+  public function setSourcePlugin(MigrateSourceInterface $source_plugin): void {
     $this->sourcePlugin = $source_plugin;
   }
 
@@ -299,7 +299,7 @@ class TestMigration extends Migration {
    * @param \Drupal\migrate\Plugin\MigrateDestinationInterface $destination_plugin
    *   The destination Plugin.
    */
-  public function setDestinationPlugin(MigrateDestinationInterface $destination_plugin) {
+  public function setDestinationPlugin(MigrateDestinationInterface $destination_plugin): void {
     $this->destinationPlugin = $destination_plugin;
   }
 
@@ -309,7 +309,7 @@ class TestMigration extends Migration {
    * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $plugin_manager
    *   The plugin manager service.
    */
-  public function setMigrationPluginManager(MigrationPluginManagerInterface $plugin_manager) {
+  public function setMigrationPluginManager(MigrationPluginManagerInterface $plugin_manager): void {
     $this->migrationPluginManager = $plugin_manager;
   }
 

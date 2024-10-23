@@ -78,7 +78,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
   /**
    * Tests loading configuration entities.
    */
-  protected function loadTests() {
+  protected function loadTests(): void {
     $view = View::load('test_view_storage');
     $data = $this->config('views.view.test_view_storage')->get();
 
@@ -114,7 +114,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
   /**
    * Tests creating configuration entities.
    */
-  protected function createTests() {
+  protected function createTests(): void {
     // Create a new View instance with empty values.
     $created = $this->controller->create([]);
 
@@ -151,7 +151,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
   /**
    * Tests adding, saving, and loading displays on configuration entities.
    */
-  protected function displayTests() {
+  protected function displayTests(): void {
     // Check whether a display can be added and saved to a View.
     $view = View::load('test_view_storage_new');
 
@@ -179,7 +179,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
   /**
    * Tests the display related functions like getDisplaysList().
    */
-  protected function displayMethodTests() {
+  protected function displayMethodTests(): void {
     $config['display'] = [
       'page_1' => [
         'display_options' => ['path' => 'test'],

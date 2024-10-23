@@ -126,7 +126,7 @@ class EntityValidationTest extends EntityKernelTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function checkValidation($entity_type) {
+  protected function checkValidation($entity_type): void {
     $entity = $this->createTestEntity($entity_type);
     $violations = $entity->validate();
     $this->assertEquals(0, $violations->count(), 'Validation passes.');

@@ -388,7 +388,7 @@ class TestViewsLocalTask extends ViewsLocalTask {
   /**
    * Sets applicable views result.
    */
-  public function setApplicableMenuViews($result) {
+  public function setApplicableMenuViews($result): void {
     $this->result = $result;
   }
 

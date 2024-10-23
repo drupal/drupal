@@ -276,7 +276,7 @@ class ConfigInstallTest extends KernelTestBase {
    * @param array $modules
    *   The module names.
    */
-  protected function installModules(array $modules) {
+  protected function installModules(array $modules): void {
     $this->container->get('module_installer')->install($modules);
     $this->container = \Drupal::getContainer();
   }

@@ -455,7 +455,7 @@ class DisplayTest extends ViewTestBase {
    *   Whether the node based view should be expected to support translation
    *   settings.
    */
-  protected function checkTranslationSetting($expected_node_translatability = FALSE) {
+  protected function checkTranslationSetting($expected_node_translatability = FALSE): void {
     $not_supported_text = 'The view is not based on a translatable entity type or the site is not multilingual.';
     $supported_text = 'All content that supports translations will be displayed in the selected language.';
 

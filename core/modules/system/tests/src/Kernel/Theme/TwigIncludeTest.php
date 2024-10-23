@@ -136,7 +136,7 @@ class TwigIncludeTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     if (!empty($this->twigConfig)) {
       $container->setParameter('twig.config', $this->twigConfig);

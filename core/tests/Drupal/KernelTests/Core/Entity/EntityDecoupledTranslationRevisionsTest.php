@@ -544,7 +544,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   An entity object.
    */
-  protected function doTestInternalProperties(ContentEntityInterface $entity) {
+  protected function doTestInternalProperties(ContentEntityInterface $entity): void {
     $this->assertFalse($entity->isValidationRequired());
     $entity->setValidationRequired(TRUE);
     $this->assertTrue($entity->isValidationRequired());

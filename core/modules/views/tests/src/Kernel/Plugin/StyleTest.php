@@ -86,7 +86,7 @@ class StyleTest extends ViewsKernelTestBase {
   /**
    * Provides reusable code for ::testGrouping().
    */
-  protected function doTestGrouping($stripped = FALSE) {
+  protected function doTestGrouping($stripped = FALSE): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
     // Setup grouping by the job and the age field.

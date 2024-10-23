@@ -183,7 +183,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
    * @param array $config
    *   The config keys, keyed by the collection.
    */
-  protected function setRandomFixtureConfig($config) {
+  protected function setRandomFixtureConfig($config): void {
     // Erase previous fixture.
     foreach (array_merge([StorageInterface::DEFAULT_COLLECTION], $this->memory->getAllCollectionNames()) as $collection) {
       $this->memory->createCollection($collection)->deleteAll();

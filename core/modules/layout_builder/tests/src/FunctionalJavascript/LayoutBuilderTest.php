@@ -407,7 +407,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    *
    * @todo Remove this in https://www.drupal.org/project/drupal/issues/2918718.
    */
-  protected function clickContextualLink($selector, $link_locator, $force_visible = TRUE) {
+  protected function clickContextualLink($selector, $link_locator, $force_visible = TRUE): void {
     /** @var \Drupal\FunctionalJavascriptTests\JSWebAssert $assert_session */
     $assert_session = $this->assertSession();
     /** @var \Behat\Mink\Element\DocumentElement $page */
@@ -450,7 +450,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    * @param bool $allow_custom
    *   Whether to allow custom layouts.
    */
-  private function enableLayoutsForBundle($path, $allow_custom = FALSE) {
+  private function enableLayoutsForBundle($path, $allow_custom = FALSE): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet($path);
@@ -470,7 +470,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    * @param string $block_title
    *   The block title which will be the link text.
    */
-  private function openAddBlockForm($block_title) {
+  private function openAddBlockForm($block_title): void {
     $assert_session = $this->assertSession();
     $assert_session->linkExists('Add block');
     $this->clickLink('Add block');
@@ -503,7 +503,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    *
    * @todo Remove in https://www.drupal.org/project/drupal/issues/2909782.
    */
-  private function markCurrentPage() {
+  private function markCurrentPage(): void {
     $this->pageReloadMarker = $this->randomMachineName();
     $this->getSession()->executeScript('document.body.appendChild(document.createTextNode("' . $this->pageReloadMarker . '"));');
   }

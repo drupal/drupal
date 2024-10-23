@@ -363,7 +363,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route with invalid headers.
    */
-  protected function testPostFileUploadInvalidHeaders() {
+  protected function testPostFileUploadInvalidHeaders(): void {
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // The wrong content type header should return a 415 code.
@@ -541,7 +541,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with an invalid file type.
    */
-  protected function testFileUploadInvalidFileType() {
+  protected function testFileUploadInvalidFileType(): void {
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // Test with a JSON file.
@@ -556,7 +556,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with a file size larger than allowed.
    */
-  protected function testFileUploadLargerFileSize() {
+  protected function testFileUploadLargerFileSize(): void {
     // Set a limit of 50 bytes.
     $this->field->setSetting('max_filesize', 50)
       ->save();
@@ -575,7 +575,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route with malicious extensions.
    */
-  protected function testFileUploadMaliciousExtension() {
+  protected function testFileUploadMaliciousExtension(): void {
     // Allow all file uploads but system.file::allow_insecure_uploads is set to
     // FALSE.
     $this->field->setSetting('file_extensions', '')->save();
@@ -846,7 +846,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['view test entity']);

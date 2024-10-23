@@ -143,7 +143,7 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
    * @param string $display_context
    *   Defines which display options should be loaded.
    */
-  protected function checkDisplayOption($entity_type_id, $field_id, BaseFieldDefinition $field_definition, DiscoveryInterface $plugin_manager, $display_context) {
+  protected function checkDisplayOption($entity_type_id, $field_id, BaseFieldDefinition $field_definition, DiscoveryInterface $plugin_manager, $display_context): void {
     $display_options = $field_definition->getDisplayOptions($display_context);
     if (!empty($display_options['type'])) {
       $plugin = $plugin_manager->getDefinition($display_options['type'], FALSE);

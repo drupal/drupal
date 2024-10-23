@@ -149,7 +149,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
   /**
    * Tests building an image style URL.
    */
-  public function doImageStyleUrlAndPathTests($scheme, $clean_url = TRUE, $extra_slash = FALSE, $langcode = FALSE) {
+  public function doImageStyleUrlAndPathTests($scheme, $clean_url = TRUE, $extra_slash = FALSE, $langcode = FALSE): void {
     $this->prepareRequestForGenerator($clean_url);
 
     // Make the default scheme neither "public" nor "private" to verify the

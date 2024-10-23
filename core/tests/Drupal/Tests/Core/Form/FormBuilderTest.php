@@ -1031,7 +1031,7 @@ class TestFormWithPredefinedForm extends TestForm {
    */
   protected $form;
 
-  public function setForm($form) {
+  public function setForm($form): void {
     $this->form = $form;
   }
 

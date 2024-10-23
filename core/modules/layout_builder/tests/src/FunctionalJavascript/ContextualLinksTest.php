@@ -131,7 +131,7 @@ class ContextualLinksTest extends WebDriverTestBase {
    * @param string $block_name
    *   The block name as it appears in the Add block form.
    */
-  protected function addBlock($block_name) {
+  protected function addBlock($block_name): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -189,7 +189,7 @@ class ContextualLinksTest extends WebDriverTestBase {
    *
    * @internal
    */
-  protected function assertCorrectContextualLinks() {
+  protected function assertCorrectContextualLinks(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.block-views-blocktest-block-view-block-2'));

@@ -77,7 +77,7 @@ class MigrateDefaultLanguageTest extends MigrateDrupal7TestBase {
    * @param string $langcode
    *   The langcode of the default language.
    */
-  protected function setDefaultLanguage($langcode) {
+  protected function setDefaultLanguage($langcode): void {
     // The default language of the test fixture is English. Change it to
     // something else before migrating, to be sure that the source site
     // default language is migrated.

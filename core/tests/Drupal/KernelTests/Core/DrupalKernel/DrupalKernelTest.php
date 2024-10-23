@@ -37,7 +37,7 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function bootKernel() {
+  protected function bootKernel(): void {
     // Do not boot the kernel, because we are testing aspects of this process.
   }
 

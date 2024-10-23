@@ -48,7 +48,7 @@ class RedirectDestinationTest extends UnitTestCase {
     $this->redirectDestination = new RedirectDestination($this->requestStack, $this->urlGenerator);
   }
 
-  protected function setupUrlGenerator() {
+  protected function setupUrlGenerator(): void {
     $this->urlGenerator->expects($this->any())
       ->method('generateFromRoute')
       ->willReturnCallback(function ($route, $parameters, $options) {

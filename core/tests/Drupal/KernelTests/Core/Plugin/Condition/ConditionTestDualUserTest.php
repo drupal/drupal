@@ -57,7 +57,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
   /**
    * Tests with both contexts mapped to the same user.
    */
-  protected function doTestIdenticalUser() {
+  protected function doTestIdenticalUser(): void {
     /** @var \Drupal\Core\Condition\ConditionPluginBase $condition */
     $condition = \Drupal::service('plugin.manager.condition')
       ->createInstance('condition_test_dual_user')
@@ -74,7 +74,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
   /**
    * Tests with each context mapped to different users.
    */
-  protected function doTestDifferentUser() {
+  protected function doTestDifferentUser(): void {
     /** @var \Drupal\Core\Condition\ConditionPluginBase $condition */
     $condition = \Drupal::service('plugin.manager.condition')
       ->createInstance('condition_test_dual_user')

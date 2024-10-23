@@ -121,7 +121,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   /**
    * Helper method to test file submissions with missing node titles.
    */
-  protected function doTestNodeWithFileWithoutTitle() {
+  protected function doTestNodeWithFileWithoutTitle(): void {
     $type = 'Article';
     $title = 'Test page';
     $this->createFileField('field_image', 'node', 'article', [], ['file_extensions' => 'txt png']);

@@ -22,7 +22,7 @@ class InstallerIsolationLevelNoDatabaseSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
 
     // The isolation_level option is only available for MySQL.

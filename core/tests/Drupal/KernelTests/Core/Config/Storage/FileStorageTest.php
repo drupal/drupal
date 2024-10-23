@@ -43,15 +43,15 @@ class FileStorageTest extends ConfigStorageTestBase {
     return Yaml::decode($data);
   }
 
-  protected function insert($name, $data) {
+  protected function insert($name, $data): void {
     file_put_contents($this->storage->getFilePath($name), $data);
   }
 
-  protected function update($name, $data) {
+  protected function update($name, $data): void {
     file_put_contents($this->storage->getFilePath($name), $data);
   }
 
-  protected function delete($name) {
+  protected function delete($name): void {
     unlink($this->storage->getFilePath($name));
   }
 

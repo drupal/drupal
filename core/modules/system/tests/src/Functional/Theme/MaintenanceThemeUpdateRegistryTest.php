@@ -24,7 +24,7 @@ class MaintenanceThemeUpdateRegistryTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareSettings() {
+  protected function prepareSettings(): void {
     parent::prepareSettings();
     $this->writeSettings([
       'settings' => [
@@ -39,7 +39,7 @@ class MaintenanceThemeUpdateRegistryTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     $info = [
       'type' => 'profile',

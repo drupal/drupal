@@ -60,7 +60,7 @@ class RenderCacheTest extends KernelTestBase {
    * @param string[] $contexts
    *   List of cache contexts to use.
    */
-  protected function doTestUser1WithContexts($contexts) {
+  protected function doTestUser1WithContexts($contexts): void {
     // Test that user 1 does not share the cache with other users who have the
     // same roles, even when using a role-based cache context.
     $user1 = $this->createUser();

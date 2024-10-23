@@ -168,7 +168,7 @@ class FieldCrudTest extends FieldKernelTestBase {
    *
    * @see field_test_entity_bundle_field_info_alter()
    */
-  protected function doFieldPropertyConstraintsTests() {
+  protected function doFieldPropertyConstraintsTests(): void {
     $field_name = $this->fieldStorage->getName();
 
     // Check that a valid value (not -2 and between 0 and 32) doesn't trigger

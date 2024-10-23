@@ -64,7 +64,7 @@ class ProgrammaticTest extends KernelTestBase {
    *   A boolean indicating whether or not the form submission is expected to
    *   be valid.
    */
-  protected function doSubmitForm($values, $valid_input) {
+  protected function doSubmitForm($values, $valid_input): void {
     // Programmatically submit the given values.
     $form_state = (new FormState())->setValues($values);
     \Drupal::formBuilder()->submitForm('\Drupal\form_test\Form\FormTestProgrammaticForm', $form_state);

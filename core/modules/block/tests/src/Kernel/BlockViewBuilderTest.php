@@ -147,7 +147,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    *
    * @see ::testBlockViewBuilderCache()
    */
-  protected function verifyRenderCacheHandling() {
+  protected function verifyRenderCacheHandling(): void {
     /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $variation_cache_factory */
     $variation_cache_factory = $this->container->get('variation_cache_factory');
     $cache_bin = $variation_cache_factory->get('render');

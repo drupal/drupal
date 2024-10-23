@@ -147,7 +147,7 @@ class EntityViewsDataTest extends KernelTestBase {
    * @param \Drupal\Core\Field\BaseFieldDefinition[] $base_fields
    *   An array of base field definitions
    */
-  protected function setUpEntityType(EntityTypeInterface $definition, array $base_fields = []) {
+  protected function setUpEntityType(EntityTypeInterface $definition, array $base_fields = []): void {
     // Replace the cache backend in the entity type manager so it returns
     // our test entity type in addition to the existing ones.
     $definitions = $this->entityTypeManager->getDefinitions();
@@ -852,7 +852,7 @@ class ViewsTestEntity extends ContentEntityBase {
    *   The array of base field definitions to mock. These are added to the
    *   defaults ones from the parent class.
    */
-  public static function setMockedBaseFieldDefinitions(string $entity_type_id, array $definitions) {
+  public static function setMockedBaseFieldDefinitions(string $entity_type_id, array $definitions): void {
     static::$mockedBaseFieldDefinitions[$entity_type_id] = $definitions;
   }
 

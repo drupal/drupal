@@ -28,7 +28,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     // Some test methods involve ModuleHandler operations, which attempt to
     // rebuild and dump routes.

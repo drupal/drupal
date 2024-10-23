@@ -64,7 +64,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   /**
    * Creates the test image field.
    */
-  protected function setupTestFields() {
+  protected function setupTestFields(): void {
     $this->fieldName = 'field_test_et_ui_image';
     $this->cardinality = 3;
 

@@ -428,7 +428,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests the 'access shortcuts' permission for shortcut set administration.
    */
-  private function verifyAccessShortcutsPermissionForEditPages() {
+  private function verifyAccessShortcutsPermissionForEditPages(): void {
     // Create a user with customize links and switch sets permissions  but
     // without the 'access shortcuts' permission.
     $test_permissions = [

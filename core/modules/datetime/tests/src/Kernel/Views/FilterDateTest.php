@@ -222,7 +222,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
    * @param array $dates
    *   An array of DATETIME_DATE_STORAGE_FORMAT date values.
    */
-  protected function updateNodesDateFieldsValues(array $dates) {
+  protected function updateNodesDateFieldsValues(array $dates): void {
     foreach ($dates as $index => $date) {
       $this->nodes[$index]->{static::$fieldName}->value = $date;
       $this->nodes[$index]->save();

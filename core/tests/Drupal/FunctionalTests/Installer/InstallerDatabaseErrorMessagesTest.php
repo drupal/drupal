@@ -21,7 +21,7 @@ class InstallerDatabaseErrorMessagesTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     // We are creating a table here to force an error in the installer because
     // it will try and create the drupal_install_test table as this is part of
     // the standard database tests performed by the installer in
@@ -43,7 +43,7 @@ class InstallerDatabaseErrorMessagesTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // This step should not appear as we had a failure on the settings screen.
   }
 

@@ -123,7 +123,7 @@ class SqlTest extends UnitTestCase {
    * @param \Drupal\views\ViewsData $views_data
    *   The views data.
    */
-  protected function setupViewsData(ViewsData $views_data) {
+  protected function setupViewsData(ViewsData $views_data): void {
     $container = \Drupal::hasContainer() ? \Drupal::getContainer() : new ContainerBuilder();
     $container->set('views.views_data', $views_data);
     \Drupal::setContainer($container);
@@ -135,7 +135,7 @@ class SqlTest extends UnitTestCase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  protected function setupEntityTypeManager(EntityTypeManagerInterface $entity_type_manager) {
+  protected function setupEntityTypeManager(EntityTypeManagerInterface $entity_type_manager): void {
     $container = \Drupal::hasContainer() ? \Drupal::getContainer() : new ContainerBuilder();
     $container->set('entity_type.manager', $entity_type_manager);
     \Drupal::setContainer($container);
@@ -316,7 +316,7 @@ class SqlTest extends UnitTestCase {
   /**
    * Create a view with a relationship.
    */
-  protected function setupViewWithRelationships(ViewExecutable $view, $base = 'entity_second') {
+  protected function setupViewWithRelationships(ViewExecutable $view, $base = 'entity_second'): void {
     // We don't use prophecy, because prophecy enforces methods.
     $relationship = $this->getMockBuilder(RelationshipPluginBase::class)->disableOriginalConstructor()->getMock();
     $relationship->definition['base'] = $base;

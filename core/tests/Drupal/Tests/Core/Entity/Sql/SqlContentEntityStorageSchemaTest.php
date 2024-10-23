@@ -1337,7 +1337,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *   (optional) An associative array describing the expected entity schema to
    *   be created. Defaults to expecting nothing.
    */
-  protected function setUpStorageSchema(array $expected = []) {
+  protected function setUpStorageSchema(array $expected = []): void {
     $this->entityTypeManager
       ->getDefinition($this->entityType->id())
       ->willReturn($this->entityType);
@@ -1419,7 +1419,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *   The schema array of the field definition, as returned from
    *   FieldStorageDefinitionInterface::getSchema().
    */
-  public function setUpStorageDefinition($field_name, array $schema) {
+  public function setUpStorageDefinition($field_name, array $schema): void {
     $this->storageDefinitions[$field_name] = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('isBaseField')

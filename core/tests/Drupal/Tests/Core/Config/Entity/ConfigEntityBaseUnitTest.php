@@ -733,7 +733,7 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
 
   protected array $the_plugin_collection_config = [];
 
-  public function setPluginManager(PluginManagerInterface $plugin_manager) {
+  public function setPluginManager(PluginManagerInterface $plugin_manager): void {
     $this->pluginManager = $plugin_manager;
   }
 

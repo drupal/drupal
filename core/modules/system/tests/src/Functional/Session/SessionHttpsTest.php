@@ -122,7 +122,7 @@ class SessionHttpsTest extends BrowserTestBase {
    *
    * Note that the parents $session_id and $loggedInUser is not updated.
    */
-  protected function loginHttp(AccountInterface $account) {
+  protected function loginHttp(AccountInterface $account): void {
     $guzzle_cookie_jar = $this->getGuzzleCookieJar();
     $post = [
       'form_id' => 'user_login_form',
@@ -173,7 +173,7 @@ class SessionHttpsTest extends BrowserTestBase {
    *
    * Note that the parents $session_id and $loggedInUser is not updated.
    */
-  protected function loginHttps(AccountInterface $account) {
+  protected function loginHttps(AccountInterface $account): void {
     $guzzle_cookie_jar = $this->getGuzzleCookieJar();
     $post = [
       'form_id' => 'user_login_form',

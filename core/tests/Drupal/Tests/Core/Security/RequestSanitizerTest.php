@@ -356,7 +356,7 @@ class RequestSanitizerTest extends UnitTestCase {
    * @param string $errstr
    *   The error message.
    */
-  public function errorHandler($errno, $errstr) {
+  public function errorHandler($errno, $errstr): void {
     $this->errors[] = compact('errno', 'errstr');
   }
 

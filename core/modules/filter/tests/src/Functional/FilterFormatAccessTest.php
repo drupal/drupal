@@ -335,7 +335,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
   /**
    * Rebuilds text format and permission caches in the thread running the tests.
    */
-  protected function resetFilterCaches() {
+  protected function resetFilterCaches(): void {
     filter_formats_reset();
   }
 

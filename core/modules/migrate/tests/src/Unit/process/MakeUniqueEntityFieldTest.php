@@ -161,7 +161,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
    * @param int $count
    *   The number of unique values to be set up.
    */
-  protected function entityQueryExpects($count) {
+  protected function entityQueryExpects($count): void {
     $this->entityQuery->expects($this->exactly($count + 1))
       ->method('condition')
       ->willReturn($this->entityQuery);

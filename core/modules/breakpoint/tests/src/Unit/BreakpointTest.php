@@ -56,7 +56,7 @@ class BreakpointTest extends UnitTestCase {
   /**
    * Sets up the breakpoint defaults.
    */
-  protected function setupBreakpoint() {
+  protected function setupBreakpoint(): void {
     $this->breakpoint = new Breakpoint([], $this->pluginId, $this->pluginDefinition);
     $this->breakpoint->setStringTranslation($this->stringTranslation);
   }

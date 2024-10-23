@@ -115,7 +115,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setupUsers() {
+  protected function setupUsers(): void {
     $this->entityOwner = $this->drupalCreateUser($this->getEntityOwnerPermissions(), 'entity_owner');
     $this->notEntityOwner = $this->drupalCreateUser();
     $this->notEntityOwner->set('roles', $this->entityOwner->getRoles(TRUE));
@@ -155,7 +155,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    * @param \Drupal\User\UserInterface|null $user
    *   (optional) The entity owner.
    */
-  protected function setupEntity(?UserInterface $user = NULL) {
+  protected function setupEntity(?UserInterface $user = NULL): void {
     $default_langcode = $this->langcodes[0];
 
     // Create a test entity.
@@ -307,7 +307,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    *   The an associative array with the operation name as key and the expected
    *   status as value.
    */
-  protected function doTestWorkflows(UserInterface $user, $expected_status) {
+  protected function doTestWorkflows(UserInterface $user, $expected_status): void {
     $default_langcode = $this->langcodes[0];
     $languages = $this->container->get('language_manager')->getLanguages();
     $options = ['language' => $languages[$default_langcode], 'absolute' => TRUE];

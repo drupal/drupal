@@ -123,7 +123,7 @@ class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
   /**
    * Creates data in the source database.
    */
-  protected function setupDb() {
+  protected function setupDb(): void {
     $this->sourceDatabase->schema()->createTable('system', [
       'fields' => [
         'name' => [

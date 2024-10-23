@@ -61,7 +61,7 @@ class PathPluginBaseTest extends UnitTestCase {
   /**
    * Setup access plugin manager and config factory in the Drupal class.
    */
-  public function setupContainer() {
+  public function setupContainer(): void {
     $this->accessPluginManager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
       ->disableOriginalConstructor()
       ->getMock();

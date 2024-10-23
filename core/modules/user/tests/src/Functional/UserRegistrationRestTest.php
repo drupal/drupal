@@ -238,7 +238,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'POST':
         $this->grantPermissionsToAuthenticatedRole(['restful post user_registration']);

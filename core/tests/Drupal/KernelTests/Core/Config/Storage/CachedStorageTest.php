@@ -60,7 +60,7 @@ class CachedStorageTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function insert($name, $data) {
+  protected function insert($name, $data): void {
     $this->fileStorage->write($name, $data);
     $this->cache->set($name, $data);
   }
@@ -68,7 +68,7 @@ class CachedStorageTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function update($name, $data) {
+  protected function update($name, $data): void {
     $this->fileStorage->write($name, $data);
     $this->cache->set($name, $data);
   }
@@ -76,7 +76,7 @@ class CachedStorageTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function delete($name) {
+  protected function delete($name): void {
     $this->cache->delete($name);
     unlink($this->fileStorage->getFilePath($name));
   }

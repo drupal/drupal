@@ -341,7 +341,7 @@ class CronQueueTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     $container->register('test_logger', get_class($this->logger->reveal()))
       ->addTag('logger');

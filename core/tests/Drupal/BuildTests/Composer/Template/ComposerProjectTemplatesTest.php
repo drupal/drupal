@@ -314,7 +314,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
    * @param string $version
    *   The version under test.
    */
-  protected function makeTestPackage($repository_path, $version) {
+  protected function makeTestPackage($repository_path, $version): void {
     $json = <<<JSON
 {
   "packages": {
@@ -353,7 +353,7 @@ JSON;
    * @param string $repository_path
    *   The path where to create the test package.
    */
-  protected function makeVendorPackage($repository_path) {
+  protected function makeVendorPackage($repository_path): void {
     $root = $this->getDrupalRoot();
     $process = $this->executeCommand("composer --working-dir=$root info --format=json");
     $this->assertCommandSuccessful();

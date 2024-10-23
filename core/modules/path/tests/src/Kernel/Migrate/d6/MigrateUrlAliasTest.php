@@ -93,7 +93,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   /**
    * Checks the migration results.
    */
-  protected function checkUrlMigration() {
+  protected function checkUrlMigration(): void {
     $id_map = $this->getMigration('d6_url_alias')->getIdMap();
     // Test that the field exists.
     $conditions = [

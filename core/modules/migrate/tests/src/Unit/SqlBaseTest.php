@@ -169,7 +169,7 @@ class TestSqlBase extends SqlBase {
    * @param mixed $database
    *   The database mock object.
    */
-  public function setDatabase($database) {
+  public function setDatabase($database): void {
     $this->database = $database;
   }
 
@@ -186,7 +186,7 @@ class TestSqlBase extends SqlBase {
    * @param mixed $migration
    *   The migration mock.
    */
-  public function setMigration($migration) {
+  public function setMigration($migration): void {
     $this->migration = $migration;
   }
 
@@ -210,7 +210,7 @@ class TestSqlBase extends SqlBase {
    * @param array $ids
    *   An array of identifiers.
    */
-  public function setIds($ids) {
+  public function setIds($ids): void {
     $this->ids = $ids;
   }
 

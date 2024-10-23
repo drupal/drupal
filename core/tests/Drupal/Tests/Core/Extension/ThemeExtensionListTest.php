@@ -259,7 +259,7 @@ trait SettableDiscoveryExtensionListTrait {
    * @param \Drupal\Core\Extension\ExtensionDiscovery $discovery
    *   The extension discovery.
    */
-  public function setExtensionDiscovery(ExtensionDiscovery $discovery) {
+  public function setExtensionDiscovery(ExtensionDiscovery $discovery): void {
     $this->extensionDiscovery = $discovery;
   }
 

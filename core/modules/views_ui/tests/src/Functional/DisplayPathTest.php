@@ -53,7 +53,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests basic functionality in configuring a view.
    */
-  protected function doBasicPathUITest() {
+  protected function doBasicPathUITest(): void {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display and check the appearing text.
@@ -77,7 +77,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests that View paths are properly filtered for XSS.
    */
-  public function doPathXssFilterTest() {
+  public function doPathXssFilterTest(): void {
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->submitForm([], 'Add Page');
     $this->drupalGet('admin/structure/views/nojs/display/test_view/page_2/path');
@@ -103,7 +103,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests a couple of invalid path patterns.
    */
-  protected function doAdvancedPathsValidationTest() {
+  protected function doAdvancedPathsValidationTest(): void {
     $url = 'admin/structure/views/nojs/display/test_view/page_1/path';
 
     $this->drupalGet($url);

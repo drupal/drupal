@@ -64,7 +64,7 @@ class AccessAwareRouterTest extends UnitTestCase {
   /**
    * Sets up a chain router with matchRequest.
    */
-  protected function setupRouter() {
+  protected function setupRouter(): void {
     $this->router = $this->getMockBuilder('Drupal\Core\Routing\Router')
       ->disableOriginalConstructor()
       ->getMock();

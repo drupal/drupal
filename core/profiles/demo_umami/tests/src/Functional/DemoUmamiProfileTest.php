@@ -57,7 +57,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests demo_umami profile warnings shown on Status Page.
    */
-  protected function testWarningsOnStatusPage() {
+  protected function testWarningsOnStatusPage(): void {
     $account = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($account);
 
@@ -145,7 +145,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests that the users can log in with the admin password entered at install.
    */
-  protected function testUser() {
+  protected function testUser(): void {
     $password = $this->rootUser->pass_raw;
     $ids = \Drupal::entityQuery('user')
       ->accessCheck(FALSE)
@@ -192,7 +192,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests that the Umami theme is available on the Appearance page.
    */
-  protected function testAppearance() {
+  protected function testAppearance(): void {
     $account = $this->drupalCreateUser(['administer themes']);
     $this->drupalLogin($account);
     $assert_session = $this->assertSession();
@@ -204,7 +204,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   /**
    * Tests that the toolbar warning only appears on the admin pages.
    */
-  protected function testDemonstrationWarningMessage() {
+  protected function testDemonstrationWarningMessage(): void {
     $permissions = [
       'access content overview',
       'access toolbar',
@@ -278,7 +278,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    *
    * @see drupalCreateUser()
    */
-  protected function drupalLoginWithPassword(AccountInterface $account, $password) {
+  protected function drupalLoginWithPassword(AccountInterface $account, $password): void {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }

@@ -65,7 +65,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     $this->containerBuilds++;
   }

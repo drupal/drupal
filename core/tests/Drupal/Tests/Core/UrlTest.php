@@ -829,7 +829,7 @@ class TestUrl extends Url {
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access manager.
    */
-  public function setAccessManager(AccessManagerInterface $access_manager) {
+  public function setAccessManager(AccessManagerInterface $access_manager): void {
     $this->accessManager = $access_manager;
   }
 

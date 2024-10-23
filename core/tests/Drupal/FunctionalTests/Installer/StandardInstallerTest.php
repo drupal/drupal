@@ -28,7 +28,7 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // Test that the correct theme is being used.
     $this->assertSession()->responseNotContains('olivero');
     $this->assertSession()->responseContains('css/theme/install-page.css');

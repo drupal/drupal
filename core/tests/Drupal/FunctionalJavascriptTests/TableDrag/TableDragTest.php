@@ -589,7 +589,7 @@ class TableDragTest extends WebDriverTestBase {
    * @param int $repeat
    *   (optional) How many times to press the arrow button. Defaults to 1.
    */
-  protected function moveRowWithKeyboard(NodeElement $row, $arrow, $repeat = 1) {
+  protected function moveRowWithKeyboard(NodeElement $row, $arrow, $repeat = 1): void {
     $keys = [
       'left' => 37,
       'right' => 39,
@@ -627,7 +627,7 @@ class TableDragTest extends WebDriverTestBase {
    * @throws \Exception
    *   Thrown when the class is not added successfully to the handle.
    */
-  protected function markRowHandleForDragging(NodeElement $handle) {
+  protected function markRowHandleForDragging(NodeElement $handle): void {
     $class = self::DRAGGING_CSS_CLASS;
     $script = <<<JS
 document.evaluate("{$handle->getXpath()}", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
@@ -653,7 +653,7 @@ JS;
    * @throws \Exception
    *   Thrown when the dragging operations are not completed on time.
    */
-  protected function waitUntilDraggingCompleted(NodeElement $handle) {
+  protected function waitUntilDraggingCompleted(NodeElement $handle): void {
     $class_removed = $this->getSession()->getPage()->waitFor(1, function () use ($handle) {
       return !$handle->hasClass($this::DRAGGING_CSS_CLASS);
     });

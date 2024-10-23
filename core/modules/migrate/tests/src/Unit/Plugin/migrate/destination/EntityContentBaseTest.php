@@ -113,7 +113,7 @@ class EntityTestDestination extends EntityContentBase {
 
   private $entity = NULL;
 
-  public function setEntity($entity) {
+  public function setEntity($entity): void {
     $this->entity = $entity;
   }
 

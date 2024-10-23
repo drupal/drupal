@@ -47,7 +47,7 @@ class UuidValidatorTest extends KernelTestBase {
   /**
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\UriHostConstraint
    */
-  public function testUriHost() {
+  public function testUriHost(): void {
     $typed_config_manager = \Drupal::service('config.typed');
     /** @var \Drupal\Core\Config\Schema\TypedConfigInterface $typed_config */
     $typed_config = $typed_config_manager->get('config_test.validation');

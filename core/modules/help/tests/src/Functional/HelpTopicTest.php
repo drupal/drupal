@@ -161,7 +161,7 @@ class HelpTopicTest extends BrowserTestBase {
    *   the test verifies the user sees the help; if it's not, it verifies they
    *   are denied access.
    */
-  protected function verifyHelp($response = 200) {
+  protected function verifyHelp($response = 200): void {
     // Verify access to help topic pages.
     foreach ($this->getTopicList() as $topic => $info) {
       // View help topic page.
@@ -272,7 +272,7 @@ class HelpTopicTest extends BrowserTestBase {
   /**
    * Tests breadcrumb on a help topic page.
    */
-  public function verifyBreadCrumb() {
+  public function verifyBreadCrumb(): void {
     // Verify Help Topics administration breadcrumbs.
     $trail = [
       '' => 'Home',

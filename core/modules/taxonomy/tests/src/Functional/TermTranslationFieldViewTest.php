@@ -77,7 +77,7 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
   /**
    * Creates a test subject node, with translation.
    */
-  protected function setUpNode() {
+  protected function setUpNode(): void {
     /** @var \Drupal\node\Entity\Node $node */
     $node = Node::create([
       'title' => $this->randomMachineName(),
@@ -100,7 +100,7 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
   /**
    * Creates a test subject term, with translation.
    */
-  protected function setUpTerm() {
+  protected function setUpTerm(): void {
     $this->term = $this->createTerm($this->vocabulary, [
       'name' => $this->baseTagName,
       'langcode' => $this->baseLangcode,

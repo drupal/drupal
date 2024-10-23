@@ -61,7 +61,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
     $this->stringTranslation = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
   }
 
-  protected function setupContextualLinkDefault() {
+  protected function setupContextualLinkDefault(): void {
     $this->contextualLinkDefault = new ContextualLinkDefault($this->config, $this->pluginId, $this->pluginDefinition);
   }
 

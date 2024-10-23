@@ -167,7 +167,7 @@ class CronTest extends UnitTestCase {
   /**
    * Resets the testing state.
    */
-  protected function resetTestingState() {
+  protected function resetTestingState(): void {
     $this->queue->deleteQueue();
     $this->state->set('cron_test.message_logged', FALSE);
     $this->state->set('cron_test.requeue_count', NULL);

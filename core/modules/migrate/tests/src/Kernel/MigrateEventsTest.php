@@ -127,7 +127,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function mapSaveEventRecorder(MigrateMapSaveEvent $event, $name) {
+  public function mapSaveEventRecorder(MigrateMapSaveEvent $event, $name): void {
     $this->state->set('migrate_events_test.map_save_event', [
       'event_name' => $name,
       'map' => $event->getMap(),
@@ -143,7 +143,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function mapDeleteEventRecorder(MigrateMapDeleteEvent $event, $name) {
+  public function mapDeleteEventRecorder(MigrateMapDeleteEvent $event, $name): void {
     $this->state->set('migrate_events_test.map_delete_event', [
       'event_name' => $name,
       'map' => $event->getMap(),
@@ -159,7 +159,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function preImportEventRecorder(MigrateImportEvent $event, $name) {
+  public function preImportEventRecorder(MigrateImportEvent $event, $name): void {
     $this->state->set('migrate_events_test.pre_import_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
@@ -174,7 +174,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function postImportEventRecorder(MigrateImportEvent $event, $name) {
+  public function postImportEventRecorder(MigrateImportEvent $event, $name): void {
     $this->state->set('migrate_events_test.post_import_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
@@ -189,7 +189,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function preRowSaveEventRecorder(MigratePreRowSaveEvent $event, $name) {
+  public function preRowSaveEventRecorder(MigratePreRowSaveEvent $event, $name): void {
     $this->state->set('migrate_events_test.pre_row_save_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
@@ -205,7 +205,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function postRowSaveEventRecorder(MigratePostRowSaveEvent $event, $name) {
+  public function postRowSaveEventRecorder(MigratePostRowSaveEvent $event, $name): void {
     $this->state->set('migrate_events_test.post_row_save_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),

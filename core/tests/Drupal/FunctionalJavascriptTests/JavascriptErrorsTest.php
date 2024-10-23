@@ -63,7 +63,7 @@ class JavascriptErrorsTest extends WebDriverTestBase {
    *
    * @postCondition
    */
-  public function clearErrorLog() {
+  public function clearErrorLog(): void {
     $this->getSession()->executeScript("sessionStorage.removeItem('js_testing_log_test.errors')");
   }
 

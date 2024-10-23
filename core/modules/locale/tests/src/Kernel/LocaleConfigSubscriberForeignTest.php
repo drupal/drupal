@@ -18,7 +18,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     $language = Language::$defaultValues;
@@ -30,7 +30,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguages() {
+  protected function setUpLanguages(): void {
     parent::setUpLanguages();
     ConfigurableLanguage::createFromLangcode('hu')->save();
   }
@@ -38,7 +38,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLocale() {
+  protected function setUpLocale(): void {
     parent::setUpLocale();
     $this->setUpTranslation('locale_test.translation', 'test', 'English test', 'Hungarian test', 'hu', TRUE);
   }
@@ -158,7 +158,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
    * @param string $langcode
    *   The language code.
    */
-  protected function saveLanguageActive($config_name, $key, $value, $langcode) {
+  protected function saveLanguageActive($config_name, $key, $value, $langcode): void {
     $this
       ->configFactory
       ->getEditable($config_name)

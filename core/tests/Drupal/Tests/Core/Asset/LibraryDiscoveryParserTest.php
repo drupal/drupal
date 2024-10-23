@@ -875,7 +875,7 @@ class TestLibraryDiscoveryParser extends LibraryDiscoveryParser {
     return $this->validUris[$source] ?? FALSE;
   }
 
-  public function setFileValidUri($source, $valid) {
+  public function setFileValidUri($source, $valid): void {
     $this->validUris[$source] = $valid;
   }
 

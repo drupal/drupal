@@ -148,7 +148,7 @@ class MigrateProcessErrorMessagesTest extends MigrateTestBase {
   /**
    * Prepares and sets the prophesized plugin managers.
    */
-  protected function setPluginManagers() {
+  protected function setPluginManagers(): void {
     $error_plugin_prophecy = $this->prophesize(MigrateProcessInterface::class);
     $error_plugin_prophecy->getPluginDefinition()->willReturn(['plugin_id' => 'test_error']);
     $error_plugin_prophecy->getPluginId()->willReturn('test_error');

@@ -102,7 +102,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'audio'.
    */
-  protected function audioTest() {
+  protected function audioTest(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_audio_file';
@@ -196,7 +196,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'image'.
    */
-  protected function imageTest() {
+  protected function imageTest(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_image';
@@ -293,7 +293,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'document'.
    */
-  protected function documentTest() {
+  protected function documentTest(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_document';
@@ -383,7 +383,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'remote_video'.
    */
-  protected function remoteVideoTest() {
+  protected function remoteVideoTest(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_oembed_video';
@@ -478,7 +478,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   /**
    * Tests the standard profile configuration for media type 'video'.
    */
-  protected function videoTest() {
+  protected function videoTest(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $source_field_id = 'field_media_video_file';

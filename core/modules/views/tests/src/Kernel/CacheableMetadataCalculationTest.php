@@ -108,7 +108,7 @@ class CacheableMetadataCalculationTest extends KernelTestBase {
   /**
    * Resets the state so we are ready for a new test.
    */
-  protected function resetState() {
+  protected function resetState(): void {
     $this->state->set('views_test_cacheable_metadata_has_been_accessed', FALSE);
   }
 

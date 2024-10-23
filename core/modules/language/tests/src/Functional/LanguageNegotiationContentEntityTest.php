@@ -167,7 +167,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
   /**
    * Creates a translated entity.
    */
-  protected function createTranslatableEntity() {
+  protected function createTranslatableEntity(): void {
     $this->entity = EntityTest::create();
     $this->entity->addTranslation('es', ['name' => 'name spanish']);
     $this->entity->addTranslation('fr', ['name' => 'name french']);
@@ -183,7 +183,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
    *   The route name for which the route object for the request should be
    *   created.
    */
-  protected function setCurrentRequestForRoute($path, $route_name) {
+  protected function setCurrentRequestForRoute($path, $route_name): void {
     $request = Request::create($path);
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, $route_name);
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route($path));

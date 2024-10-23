@@ -52,7 +52,7 @@ class ArgumentValidatorTest extends UITestBase {
    * @param bool $specify_validation
    *   The form validation.
    */
-  protected function saveArgumentHandlerWithValidationOptions($specify_validation) {
+  protected function saveArgumentHandlerWithValidationOptions($specify_validation): void {
     $options = [
       'options[validate][type]' => 'entity---node',
       'options[specify_validation]' => $specify_validation,

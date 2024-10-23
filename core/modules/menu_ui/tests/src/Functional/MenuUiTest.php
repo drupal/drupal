@@ -234,7 +234,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Adds a custom menu using CRUD functions.
    */
-  public function addCustomMenuCRUD() {
+  public function addCustomMenuCRUD(): void {
     // Add a new custom menu.
     $menu_name = $this->randomMachineName(MenuStorage::MAX_ID_LENGTH);
     $label = $this->randomMachineName(16);
@@ -322,7 +322,7 @@ class MenuUiTest extends BrowserTestBase {
    * This deletes the custom menu that is stored in $this->menu and performs
    * tests on the menu delete user interface.
    */
-  public function deleteCustomMenu() {
+  public function deleteCustomMenu(): void {
     $menu_name = $this->menu->id();
     $label = $this->menu->label();
 
@@ -350,7 +350,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests menu functionality.
    */
-  public function doMenuTests() {
+  public function doMenuTests(): void {
     // Add a link to the tools menu first, to test cacheability metadata of the
     // destination query string.
     $this->drupalGet('admin/structure/menu/manage/tools');
@@ -634,7 +634,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Ensures that the proper default values are set when adding a menu link.
    */
-  protected function doMenuLinkFormDefaultsTest() {
+  protected function doMenuLinkFormDefaultsTest(): void {
     $this->drupalGet("admin/structure/menu/manage/tools/add");
     $this->assertSession()->statusCodeEquals(200);
 
@@ -789,7 +789,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Attempts to add menu link with invalid path or no access permission.
    */
-  public function addInvalidMenuLink() {
+  public function addInvalidMenuLink(): void {
     foreach (['access' => '/admin/people/permissions'] as $type => $link_path) {
       $edit = [
         'link[0][uri]' => $link_path,
@@ -804,7 +804,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests that parent options are limited by depth when adding menu links.
    */
-  public function checkInvalidParentMenuLinks() {
+  public function checkInvalidParentMenuLinks(): void {
     $last_link = NULL;
     $plugin_ids = [];
 
@@ -866,7 +866,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param object $parent_node
    *   Parent menu link content node.
    */
-  public function verifyMenuLink(MenuLinkContent $item, $item_node, ?MenuLinkContent $parent = NULL, $parent_node = NULL) {
+  public function verifyMenuLink(MenuLinkContent $item, $item_node, ?MenuLinkContent $parent = NULL, $parent_node = NULL): void {
     // View home page.
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
@@ -903,7 +903,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param string $menu_name
    *   The menu the menu link will be moved to.
    */
-  public function moveMenuLink(MenuLinkContent $item, $parent, $menu_name) {
+  public function moveMenuLink(MenuLinkContent $item, $parent, $menu_name): void {
     $menu_link_id = $item->id();
 
     $edit = [
@@ -920,7 +920,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link entity.
    */
-  public function modifyMenuLink(MenuLinkContent $item) {
+  public function modifyMenuLink(MenuLinkContent $item): void {
     $item->title->value = $this->randomMachineName(16);
 
     $menu_link_id = $item->id();
@@ -965,7 +965,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param int $old_weight
    *   Original title for menu link.
    */
-  public function resetMenuLink(MenuLinkInterface $menu_link, $old_weight) {
+  public function resetMenuLink(MenuLinkInterface $menu_link, $old_weight): void {
     // Reset menu link.
     $this->drupalGet("admin/structure/menu/link/{$menu_link->getPluginId()}/reset");
     $this->submitForm([], 'Reset');
@@ -983,7 +983,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link.
    */
-  public function deleteMenuLink(MenuLinkContent $item) {
+  public function deleteMenuLink(MenuLinkContent $item): void {
     $menu_link_id = $item->id();
     $title = $item->getTitle();
 
@@ -1004,7 +1004,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link.
    */
-  public function toggleMenuLink(MenuLinkContent $item) {
+  public function toggleMenuLink(MenuLinkContent $item): void {
     $this->disableMenuLink($item);
 
     // Verify menu link is absent.
@@ -1023,7 +1023,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link.
    */
-  public function disableMenuLink(MenuLinkContent $item) {
+  public function disableMenuLink(MenuLinkContent $item): void {
     $menu_link_id = $item->id();
     $edit['enabled[value]'] = FALSE;
     $this->drupalGet("admin/structure/menu/item/{$menu_link_id}/edit");
@@ -1040,7 +1040,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param \Drupal\menu_link_content\Entity\MenuLinkContent $item
    *   Menu link.
    */
-  public function enableMenuLink(MenuLinkContent $item) {
+  public function enableMenuLink(MenuLinkContent $item): void {
     $menu_link_id = $item->id();
     $edit['enabled[value]'] = TRUE;
     $this->drupalGet("admin/structure/menu/item/{$menu_link_id}/edit");
@@ -1130,7 +1130,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param int $response
    *   (optional) The expected HTTP response code. Defaults to 200.
    */
-  private function verifyAccess($response = 200) {
+  private function verifyAccess($response = 200): void {
     // View menu help page.
     $this->drupalGet('admin/help/menu');
     $this->assertSession()->statusCodeEquals($response);
@@ -1171,7 +1171,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests menu block settings.
    */
-  protected function doTestMenuBlock() {
+  protected function doTestMenuBlock(): void {
     $menu_id = $this->menu->id();
     $block_id = $this->blockPlacements[$menu_id];
     $this->drupalGet('admin/structure/block/manage/' . $block_id);

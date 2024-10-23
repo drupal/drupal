@@ -151,7 +151,7 @@ class DisplayTest extends WebDriverTestBase {
    * @param string $selector
    *   The selector for the element that contains the contextual Rink.
    */
-  protected function toggleContextualTriggerVisibility($selector) {
+  protected function toggleContextualTriggerVisibility($selector): void {
     // Hovering over the element itself with should be enough, but does not
     // work. Manually remove the visually-hidden class.
     $this->getSession()->executeScript("jQuery('{$selector} .contextual .trigger').toggleClass('visually-hidden');");
@@ -190,7 +190,7 @@ class DisplayTest extends WebDriverTestBase {
   /**
    * Helper function for adding interface text translations.
    */
-  private function addTranslation($langcode, $source_string, $translation_string) {
+  private function addTranslation($langcode, $source_string, $translation_string): void {
     $storage = \Drupal::service('locale.storage');
     $string = $storage->findString(['source' => $source_string]);
     if (is_null($string)) {

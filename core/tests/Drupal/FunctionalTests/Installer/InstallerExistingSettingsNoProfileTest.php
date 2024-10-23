@@ -26,7 +26,7 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
    * Configures a preexisting settings.php file without an install_profile
    * setting before invoking the interactive installer.
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
 
     // Pre-configure hash salt.
@@ -57,7 +57,7 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     // This step should not appear, since settings.php is fully configured
     // already.
   }

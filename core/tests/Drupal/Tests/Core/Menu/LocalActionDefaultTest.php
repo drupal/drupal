@@ -72,7 +72,7 @@ class LocalActionDefaultTest extends UnitTestCase {
   /**
    * Setups the local action default.
    */
-  protected function setupLocalActionDefault() {
+  protected function setupLocalActionDefault(): void {
     $this->localActionDefault = new LocalActionDefault($this->config, $this->pluginId, $this->pluginDefinition, $this->routeProvider);
   }
 

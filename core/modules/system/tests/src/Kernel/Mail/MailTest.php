@@ -387,7 +387,7 @@ class MailTest extends KernelTestBase {
    * @param string $mail_interface
    *   The mail interface to configure.
    */
-  protected function configureDefaultMailInterface($mail_interface) {
+  protected function configureDefaultMailInterface($mail_interface): void {
     $GLOBALS['config']['system.mail']['interface']['default'] = $mail_interface;
   }
 

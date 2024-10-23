@@ -65,7 +65,7 @@ class EntityConverterTest extends UnitTestCase {
    * @param object[] $service_map
    *   An associative array of service instances keyed by service name.
    */
-  protected function setUpMocks($service_map = []) {
+  protected function setUpMocks($service_map = []): void {
     $entity = $this->createMock(ContentEntityInterface::class);
     $entity->expects($this->any())
       ->method('getEntityTypeId')

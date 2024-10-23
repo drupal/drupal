@@ -302,7 +302,7 @@ class SearchCommentTest extends BrowserTestBase {
   /**
    * Set permissions for role.
    */
-  public function setRolePermissions($rid, $access_comments = FALSE, $search_content = TRUE) {
+  public function setRolePermissions($rid, $access_comments = FALSE, $search_content = TRUE): void {
     $permissions = [
       'access comments' => $access_comments,
       'search content' => $search_content,

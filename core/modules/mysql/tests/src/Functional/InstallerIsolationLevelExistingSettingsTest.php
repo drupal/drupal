@@ -17,7 +17,7 @@ class InstallerIsolationLevelExistingSettingsTest extends InstallerExistingSetti
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
 
     $connection_info = Database::getConnectionInfo();

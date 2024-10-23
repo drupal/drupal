@@ -251,7 +251,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    *   An associative array mapping the columns of the result set from the view
    *   (as keys) and the expected result set (as values).
    */
-  protected function executeAndAssertIdenticalResultset(ViewEntityInterface $view_entity, $expected, $column_map) {
+  protected function executeAndAssertIdenticalResultset(ViewEntityInterface $view_entity, $expected, $column_map): void {
     $executable = $this->container->get('views.executable')->get($view_entity);
     $this->executeView($executable);
     $this->assertIdenticalResultset($executable, $expected, $column_map);

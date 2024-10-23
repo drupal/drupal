@@ -70,7 +70,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @param array $map
    *   The row to save.
    */
-  protected function saveMap(array $map) {
+  protected function saveMap(array $map): void {
     $table = 'migrate_map_sql_idmap_test';
 
     $schema = $this->database->schema();

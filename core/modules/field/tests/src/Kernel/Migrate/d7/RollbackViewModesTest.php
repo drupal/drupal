@@ -46,7 +46,7 @@ class RollbackViewModesTest extends MigrateViewModesTest {
    * @param string|\Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to rollback, or its ID.
    */
-  protected function executeRollback($migration) {
+  protected function executeRollback($migration): void {
     if (is_string($migration)) {
       $this->migration = $this->getMigration($migration);
     }

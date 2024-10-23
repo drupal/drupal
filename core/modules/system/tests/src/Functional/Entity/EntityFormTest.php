@@ -133,7 +133,7 @@ class EntityFormTest extends BrowserTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestFormCRUD($entity_type) {
+  protected function doTestFormCRUD($entity_type): void {
     $name1 = $this->randomMachineName(8);
     $name2 = $this->randomMachineName(10);
 
@@ -169,7 +169,7 @@ class EntityFormTest extends BrowserTestBase {
    * @param string $entity_type_id
    *   The ID of entity type to run the tests with.
    */
-  protected function doTestMultilingualFormCRUD($entity_type_id) {
+  protected function doTestMultilingualFormCRUD($entity_type_id): void {
     $name1 = $this->randomMachineName(8);
     $name1_ro = $this->randomMachineName(9);
     $name2_ro = $this->randomMachineName(11);

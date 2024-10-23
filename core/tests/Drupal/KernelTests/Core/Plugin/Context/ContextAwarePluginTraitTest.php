@@ -119,7 +119,7 @@ class TestContextAwarePlugin extends PluginBase implements ContextAwarePluginInt
   /**
    * {@inheritdoc}
    */
-  public function setContext($name, ComponentContextInterface $context) {
+  public function setContext($name, ComponentContextInterface $context): void {
     $this->setContextTrait($name, $context);
     $this->setContextCalled = TRUE;
   }

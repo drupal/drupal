@@ -147,7 +147,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestReadWrite($entity_type) {
+  protected function doTestReadWrite($entity_type): void {
     $entity = $this->createTestEntity($entity_type);
 
     $langcode = 'en';
@@ -413,7 +413,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestSave($entity_type) {
+  protected function doTestSave($entity_type): void {
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $entity = $this->createTestEntity($entity_type);
     $entity->save();
@@ -450,7 +450,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestIntrospection($entity_type) {
+  protected function doTestIntrospection($entity_type): void {
     // Test getting metadata upfront. The entity types used for this test have
     // a default bundle that is the same as the entity type.
     $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($entity_type, $entity_type);
@@ -554,7 +554,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestIterator($entity_type) {
+  protected function doTestIterator($entity_type): void {
     $entity = $this->createTestEntity($entity_type);
 
     foreach ($entity as $name => $field) {
@@ -593,7 +593,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestDataStructureInterfaces($entity_type) {
+  protected function doTestDataStructureInterfaces($entity_type): void {
     $entity = $this->createTestEntity($entity_type);
 
     // Test using the whole tree of typed data by navigating through the tree of
@@ -628,7 +628,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   /**
    * Gets all contained strings recursively.
    */
-  public function getContainedStrings(TypedDataInterface $wrapper, $depth, array &$strings) {
+  public function getContainedStrings(TypedDataInterface $wrapper, $depth, array &$strings): void {
 
     if ($wrapper instanceof StringInterface) {
       $strings[] = $wrapper->getValue();
@@ -943,7 +943,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestComputedProperties($entity_type) {
+  protected function doTestComputedProperties($entity_type): void {
     $entity = $this->createTestEntity($entity_type);
     $entity->field_test_text->value = "The <strong>text</strong> text to filter.";
     $entity->field_test_text->format = filter_default_format();

@@ -35,7 +35,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
    * @param \Drupal\migrate\Plugin\MigrateIdMapInterface $id_map
    *   The migration ID map plugin.
    */
-  public function assertMessages(array $role_data, MigrateIdMapInterface $id_map) {
+  public function assertMessages(array $role_data, MigrateIdMapInterface $id_map): void {
     foreach ($id_map->getMessages() as $message) {
       $permissions = implode("', '", $role_data[$message->dest_id]['invalid']);
       $expected_message = "Permission(s) '" . $permissions . "' not found.";
@@ -48,7 +48,7 @@ class MigrateUserRoleTest extends MigrateDrupal6TestBase {
   /**
    * Asserts there are no duplicate roles.
    */
-  public function assertNoDuplicateRoles() {
+  public function assertNoDuplicateRoles(): void {
     $roles = [
       'anonymous1',
       'authenticated1',

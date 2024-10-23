@@ -212,7 +212,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
    * @param array $updated_blocks
    *   The updated blocks order.
    */
-  protected function moveBlockWithKeyboard($direction, $block_label, array $updated_blocks) {
+  protected function moveBlockWithKeyboard($direction, $block_label, array $updated_blocks): void {
     $keys = [
       'up' => 38,
       'down' => 40,
@@ -285,7 +285,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
    * @param array $initial_blocks
    *   The initial blocks that should be shown in the draggable table.
    */
-  protected function openBodyMoveForm($delta, $region, array $initial_blocks) {
+  protected function openBodyMoveForm($delta, $region, array $initial_blocks): void {
     $assert_session = $this->assertSession();
 
     $body_field_locator = "[data-layout-delta=\"$delta\"] [data-region=\"$region\"] .block-field-blocknodebundle-with-section-fieldbody";

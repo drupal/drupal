@@ -54,7 +54,7 @@ class TriggeringElementProgrammedTest extends KernelTestBase implements FormInte
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     // Verify that the only submit button was recognized as triggering_element.
     $this->assertEquals($form['actions']['submit']['#array_parents'], $form_state->getTriggeringElement()['#array_parents']);
   }

@@ -65,7 +65,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
   /**
    * Set up default expectations on the mocks.
    */
-  protected function setupDefaultExpectations() {
+  protected function setupDefaultExpectations(): void {
     $key = Crypt::randomBytesBase64();
     $this->privateKey->expects($this->any())
       ->method('get')

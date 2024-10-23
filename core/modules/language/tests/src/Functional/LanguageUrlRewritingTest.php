@@ -89,7 +89,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
    * @param string $message
    *   Message to display in assertion that language prefixes are not added.
    */
-  private function checkUrl(LanguageInterface $language, $message) {
+  private function checkUrl(LanguageInterface $language, $message): void {
     $options = ['language' => $language, 'script' => ''];
     $base_path = trim(base_path(), '/');
     $rewritten_path = trim(str_replace($base_path, '', Url::fromRoute('<front>', [], $options)->toString()), '/');

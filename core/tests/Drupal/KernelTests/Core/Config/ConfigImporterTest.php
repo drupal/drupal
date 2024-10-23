@@ -1056,7 +1056,7 @@ class ConfigImporterTest extends KernelTestBase {
    * @param \Drupal\Core\Config\ConfigImporter $importer
    *   The config importer.
    */
-  public static function customStep(array &$context, ConfigImporter $importer) {
+  public static function customStep(array &$context, ConfigImporter $importer): void {
     $context['is_syncing'] = \Drupal::isConfigSyncing();
   }
 

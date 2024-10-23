@@ -118,7 +118,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
    *
    * With link 6 being the only external link.
    */
-  protected function mockTree() {
+  protected function mockTree(): void {
     $this->links = [
       1 => MenuLinkMock::create(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'foo', 'parent' => '']),
       2 => MenuLinkMock::create(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'bar', 'parent' => 'test.example1', 'route_parameters' => ['foo' => 'bar']]),

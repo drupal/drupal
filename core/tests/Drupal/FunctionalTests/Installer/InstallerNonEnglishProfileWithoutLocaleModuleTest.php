@@ -33,7 +33,7 @@ class InstallerNonEnglishProfileWithoutLocaleModuleTest extends InstallerTestBas
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
 
     // Create a self::PROFILE testing profile that depends on the 'language'

@@ -56,7 +56,7 @@ class ViewsHandlerManagerTest extends UnitTestCase {
   /**
    * Setups of the plugin factory.
    */
-  protected function setupMockedFactory() {
+  protected function setupMockedFactory(): void {
     $this->factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
 
     $reflection = new \ReflectionClass($this->handlerManager);

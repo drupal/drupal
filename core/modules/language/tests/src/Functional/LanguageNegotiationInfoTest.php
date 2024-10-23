@@ -59,7 +59,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    * @param array $values
    *   The key/value pairs to set in state.
    */
-  protected function stateSet(array $values) {
+  protected function stateSet(array $values): void {
     // Set the new state values.
     $this->container->get('state')->setMultiple($values);
     // Refresh in-memory static state/config caches and static variables.
@@ -168,7 +168,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
   /**
    * Check that language negotiation for fixed types matches the stored one.
    */
-  protected function checkFixedLanguageTypes() {
+  protected function checkFixedLanguageTypes(): void {
     $configurable = $this->languageManager()->getLanguageTypes();
     foreach ($this->languageManager()->getDefinedLanguageTypesInfo() as $type => $info) {
       if (!in_array($type, $configurable) && isset($info['fixed'])) {

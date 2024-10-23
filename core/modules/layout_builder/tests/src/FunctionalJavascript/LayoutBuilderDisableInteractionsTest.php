@@ -156,7 +156,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    * @param string $rendered_locator
    *   The CSS locator to confirm the block was rendered.
    */
-  protected function addBlock($block_link_text, $rendered_locator) {
+  protected function addBlock($block_link_text, $rendered_locator): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -331,7 +331,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    *
    * @see https://www.drupal.org/node/3460567
    */
-  protected function movePointerTo($selector) {
+  protected function movePointerTo($selector): void {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use $this->getSession()->getDriver()->mouseOver() instead. See https://www.drupal.org/node/3460567', E_USER_DEPRECATED);
     $driver_session = $this->getSession()->getDriver()->getWebDriverSession();
     $element = $driver_session->element('css selector', $selector);

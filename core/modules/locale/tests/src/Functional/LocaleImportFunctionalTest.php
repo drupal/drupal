@@ -408,7 +408,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
    * @param array $encodings
    *   (optional) The encoding of the file.
    */
-  public function importPoFile($contents, array $options = [], array $encodings = []) {
+  public function importPoFile($contents, array $options = [], array $encodings = []): void {
     $file_system = \Drupal::service('file_system');
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
     foreach ($encodings as $encoding) {

@@ -339,7 +339,7 @@ class TestRouteBuilder extends RouteBuilder {
    * @param \Drupal\Core\Discovery\YamlDiscovery $yaml_discovery
    *   The YAML discovery to set.
    */
-  public function setYamlDiscovery(YamlDiscovery $yaml_discovery) {
+  public function setYamlDiscovery(YamlDiscovery $yaml_discovery): void {
     $this->yamlDiscovery = $yaml_discovery;
   }
 

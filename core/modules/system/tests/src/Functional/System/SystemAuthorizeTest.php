@@ -46,7 +46,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
    *
    * @see system_authorized_init()
    */
-  public function drupalGetAuthorizePHP($page_title = 'system-test-auth') {
+  public function drupalGetAuthorizePHP($page_title = 'system-test-auth'): void {
     $this->drupalGet('system-test/authorize-init/' . $page_title);
   }
 

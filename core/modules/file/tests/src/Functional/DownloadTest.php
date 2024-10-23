@@ -79,7 +79,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Tests the private file transfer system.
    */
-  protected function doPrivateFileTransferTest() {
+  protected function doPrivateFileTransferTest(): void {
     // Set file downloads to private so handler functions get called.
 
     // Create a file.
@@ -196,7 +196,7 @@ class DownloadTest extends FileManagedTestBase {
    * @param string $expected_url
    *   The expected URL.
    */
-  private function checkUrl($scheme, $directory, $filename, $expected_url) {
+  private function checkUrl($scheme, $directory, $filename, $expected_url): void {
     // Convert $filename to a valid filename, i.e. strip characters not
     // supported by the filesystem, and create the file in the specified
     // directory.

@@ -127,7 +127,7 @@ class LayoutBuilderFieldBlockEntityReferenceCacheTagsTest extends BrowserTestBas
    *   This tests whether all expected tags are in the page cache tags, not that
    *   expected tags and page cache tags are identical.
    */
-  protected function verifyPageCacheContainsTags(Url $url, $hit_or_miss, $tags = FALSE) {
+  protected function verifyPageCacheContainsTags(Url $url, $hit_or_miss, $tags = FALSE): void {
     $this->drupalGet($url);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', $hit_or_miss);
 

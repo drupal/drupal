@@ -34,7 +34,7 @@ class SuperUserAccessInstallTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     $info = [
       'type' => 'profile',
@@ -56,7 +56,7 @@ class SuperUserAccessInstallTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     if ($this->providedData()['super_user_policy'] === FALSE && empty($this->providedData()['expected_roles'])) {
       $this->assertSession()->pageTextContains('Site account');
       $this->assertSession()->pageTextNotContains('Site maintenance account');

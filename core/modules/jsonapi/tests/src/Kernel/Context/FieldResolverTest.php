@@ -354,7 +354,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @param string $name
    *   The name of the bundle to create.
    */
-  protected function makeBundle($name) {
+  protected function makeBundle($name): void {
     EntityTestBundle::create([
       'id' => $name,
     ])->save();
@@ -376,7 +376,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @param array $config_settings
    *   Custom configuration settings for the field.
    */
-  protected function makeField($type, $name, $entity_type, array $bundles, array $storage_settings = [], array $config_settings = []) {
+  protected function makeField($type, $name, $entity_type, array $bundles, array $storage_settings = [], array $config_settings = []): void {
     $storage_config = [
       'field_name' => $name,
       'type' => $type,

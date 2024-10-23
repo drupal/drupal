@@ -723,7 +723,7 @@ class FieldTest extends UnitTestCase {
    * @param $definition
    *   An array with entity type definition data.
    */
-  protected function setupLanguageRenderer(EntityField $handler, $definition) {
+  protected function setupLanguageRenderer(EntityField $handler, $definition): void {
     $display_handler = $this->getMockBuilder('\Drupal\views\Plugin\views\display\DisplayPluginBase')
       ->disableOriginalConstructor()
       ->getMock();

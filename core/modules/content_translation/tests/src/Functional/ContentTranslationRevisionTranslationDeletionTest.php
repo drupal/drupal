@@ -50,7 +50,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
    * @param int $index
    *   The test run index.
    */
-  public function doTestOverview($index) {
+  public function doTestOverview($index): void {
     $this->drupalLogin($this->currentAccount);
 
     // Create a test node.

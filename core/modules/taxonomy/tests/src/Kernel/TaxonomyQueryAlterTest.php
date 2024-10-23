@@ -119,7 +119,7 @@ class TaxonomyQueryAlterTest extends KernelTestBase {
   /**
    * Sets up the hooks in the test module.
    */
-  protected function setupQueryTagTestHooks() {
+  protected function setupQueryTagTestHooks(): void {
     $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->resetCache();
     $state = $this->container->get('state');
     $state->set('taxonomy_test_query_alter', 0);

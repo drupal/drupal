@@ -240,7 +240,7 @@ class LocalTaskManagerTest extends UnitTestCase {
   /**
    * Setups the local task manager for the test.
    */
-  protected function setupLocalTaskManager() {
+  protected function setupLocalTaskManager(): void {
     $request_stack = new RequestStack();
     $request_stack->push($this->request);
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
@@ -324,7 +324,7 @@ class LocalTaskManagerTest extends UnitTestCase {
    * @param \PHPUnit\Framework\MockObject\MockObject $mock_plugin
    *   The mock plugin.
    */
-  protected function setupFactory($mock_plugin) {
+  protected function setupFactory($mock_plugin): void {
     $map = [];
     foreach ($this->getLocalTaskFixtures() as $info) {
       $map[] = [$info['id'], [], $mock_plugin];
@@ -433,7 +433,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->assertEqualsCanonicalizing(['context.example1', 'context.example2', 'route', 'user.permissions'], $cacheability->getCacheContexts());
   }
 
-  protected function setupFactoryAndLocalTaskPlugins(array $definitions, $active_plugin_id) {
+  protected function setupFactoryAndLocalTaskPlugins(array $definitions, $active_plugin_id): void {
     $map = [];
     $access_manager_map = [];
 
@@ -466,7 +466,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->willReturnMap($map);
   }
 
-  protected function setupNullCacheabilityMetadataValidation() {
+  protected function setupNullCacheabilityMetadataValidation(): void {
     $container = \Drupal::hasContainer() ? \Drupal::getContainer() : new ContainerBuilder();
 
     $cache_context_manager = $this->prophesize(CacheContextsManager::class);

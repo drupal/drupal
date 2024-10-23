@@ -74,7 +74,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
   /**
    * Setups the local task default.
    */
-  protected function setupLocalTaskDefault() {
+  protected function setupLocalTaskDefault(): void {
     $this->localTaskBase = new TestLocalTaskDefault($this->config, $this->pluginId, $this->pluginDefinition);
     $this->localTaskBase
       ->setRouteProvider($this->routeProvider);

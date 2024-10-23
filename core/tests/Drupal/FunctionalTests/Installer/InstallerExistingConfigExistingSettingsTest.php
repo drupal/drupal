@@ -19,7 +19,7 @@ class InstallerExistingConfigExistingSettingsTest extends InstallerExistingConfi
    * Partially configures a preexisting settings.php file before invoking the
    * interactive installer.
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     // Pre-configure hash salt.
     // Any string is valid, so simply use the class name of this test.

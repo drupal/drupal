@@ -132,14 +132,14 @@ class StubThemeHandler extends ThemeHandler {
   /**
    * {@inheritdoc}
    */
-  protected function clearCssCache() {
+  protected function clearCssCache(): void {
     $this->clearedCssCache = TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function themeRegistryRebuild() {
+  protected function themeRegistryRebuild(): void {
     $this->registryRebuild = TRUE;
   }
 

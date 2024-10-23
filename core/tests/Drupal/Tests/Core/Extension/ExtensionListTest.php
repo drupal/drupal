@@ -337,11 +337,11 @@ class TestExtension extends ExtensionList {
    * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
    *   The extension discovery class.
    */
-  public function setExtensionDiscovery(ExtensionDiscovery $extension_discovery) {
+  public function setExtensionDiscovery(ExtensionDiscovery $extension_discovery): void {
     $this->extensionDiscovery = $extension_discovery;
   }
 
-  public function setInstalledExtensions(array $extension_names) {
+  public function setInstalledExtensions(array $extension_names): void {
     $this->installedExtensions = $extension_names;
   }
 

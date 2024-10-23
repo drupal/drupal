@@ -192,7 +192,7 @@ class ImageUploadTest extends BrowserTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createBasicFormat() {
+  protected function createBasicFormat(): void {
     $basic_html_format = FilterFormat::create([
       'format' => 'basic_html',
       'name' => 'Basic HTML',

@@ -63,7 +63,7 @@ class FileTransferTest extends BrowserTestBase {
     return $location;
   }
 
-  public function _writeDirectory($base, $files = []) {
+  public function _writeDirectory($base, $files = []): void {
     mkdir($base);
     foreach ($files as $key => $file) {
       if (is_array($file)) {

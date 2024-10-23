@@ -134,7 +134,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
    * @param string $expected_save_message
    *   The message that should be displayed after successful layout save.
    */
-  protected function addFormBlock($label, $path, $expected_save_message) {
+  protected function addFormBlock($label, $path, $expected_save_message): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

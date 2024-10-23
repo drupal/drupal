@@ -338,7 +338,7 @@ class UserLoginTest extends BrowserTestBase {
    * @param object $user
    *   A user object.
    */
-  public function resetUserPassword($user) {
+  public function resetUserPassword($user): void {
     $this->drupalGet('user/password');
     $edit['name'] = $user->getDisplayName();
     $this->submitForm($edit, 'Submit');

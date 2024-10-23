@@ -42,7 +42,7 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpFixtures() {
+  protected function setUpFixtures(): void {
     parent::setUpFixtures();
 
     // Create the anonymous user account and set it as current user.
@@ -85,7 +85,7 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
    * @param bool[] $expected_results
    *   An associative array of expected results keyed by link template name.
    */
-  protected function doTestEntityLink(AccountInterface $account, $expected_results) {
+  protected function doTestEntityLink(AccountInterface $account, $expected_results): void {
     \Drupal::currentUser()->setAccount($account);
 
     $view = Views::getView('test_entity_test_link');

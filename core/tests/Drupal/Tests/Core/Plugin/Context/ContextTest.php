@@ -136,7 +136,7 @@ class ContextTest extends UnitTestCase {
    * @param mixed $default_value
    *   The default value to assign to the mock context definition.
    */
-  protected function setUpDefaultValue($default_value = NULL) {
+  protected function setUpDefaultValue($default_value = NULL): void {
     $mock_data_definition = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
 
     $this->contextDefinition = $this->createMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');

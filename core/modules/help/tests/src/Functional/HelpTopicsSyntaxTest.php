@@ -98,7 +98,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @param int $response
    *   Expected response from visiting the page for the topic.
    */
-  protected function verifyTopic($id, $definitions, $response = 200) {
+  protected function verifyTopic($id, $definitions, $response = 200): void {
     $definition = $definitions[$id];
     HelpTestTwigNodeVisitor::setStateValue('manner', 0);
 
@@ -191,7 +191,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @param string $id
    *   ID of help topic (for error messages).
    */
-  protected function validateHtml(string $body, string $id) {
+  protected function validateHtml(string $body, string $id): void {
     $doc = new \DOMDocument();
     $doc->strictErrorChecking = TRUE;
     $doc->validateOnParse = FALSE;
@@ -232,7 +232,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @param array $definitions
    *   Array of all topic definitions, keyed by ID.
    */
-  protected function verifyBadTopic($id, $definitions) {
+  protected function verifyBadTopic($id, $definitions): void {
     $bad_topic_type = substr($id, 16);
     // Topics should fail verifyTopic() in specific ways.
     $found_error = FALSE;

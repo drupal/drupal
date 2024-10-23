@@ -92,7 +92,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     'parent_views',
   ];
 
-  protected function setUpFixtures() {
+  protected function setUpFixtures(): void {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
