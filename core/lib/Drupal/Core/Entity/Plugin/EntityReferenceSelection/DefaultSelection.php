@@ -164,6 +164,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     $entity_type_id = $configuration['target_type'];
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+    $selected_bundles = [];
 
     if ($entity_type->hasKey('bundle')) {
       $bundle_options = [];
@@ -200,6 +201,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
           'class' => ['js-hide'],
         ],
         '#submit' => [[EntityReferenceItem::class, 'settingsAjaxSubmit']],
+        '#element_validate' => [[static::class, 'validateTargetBundlesUpdate']],
       ];
     }
     else {
@@ -208,6 +210,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#value' => [],
       ];
     }
+    $form['target_bundles']['#element_validate'][] = [static::class, 'validateTargetBundles'];
 
     if ($entity_type->entityClassImplements(FieldableEntityInterface::class)) {
       $options = $entity_type->hasKey('bundle') ? $selected_bundles : $bundles;
@@ -224,7 +227,11 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
           // @todo Use property labels instead of the column name.
           if (count($columns) > 1) {
             foreach ($columns as $column_name => $column_info) {
-              $fields[$field_name . '.' . $column_name] = $this->t('@label (@column)', ['@label' => $field_definition->getLabel(), '@column' => $column_name]);
+              $fields[$field_name . '.' . $column_name] = $this->t('@label (@column)',
+               [
+                 '@label' => $field_definition->getLabel(),
+                 '@column' => $column_name,
+               ]);
             }
           }
           else {
@@ -314,22 +321,25 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
   }
 
   /**
-   * {@inheritdoc}
+   * Validates a target_bundles element.
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    parent::validateConfigurationForm($form, $form_state);
-
+  public static function validateTargetBundles($element, FormStateInterface $form_state, $form) {
     // If no checkboxes were checked for 'target_bundles', store NULL ("all
     // bundles are referenceable") rather than empty array ("no bundle is
     // referenceable" - typically happens when all referenceable bundles have
     // been deleted).
-    if ($form_state->getValue(['settings', 'handler_settings', 'target_bundles']) === []) {
-      $form_state->setValue(['settings', 'handler_settings', 'target_bundles'], NULL);
+    if ($form_state->getValue($element['#parents']) === []) {
+      $form_state->setValueForElement($element, NULL);
     }
+  }
 
+  /**
+   * Validates a target_bundles_update element.
+   */
+  public static function validateTargetBundlesUpdate($element, FormStateInterface $form_state, $form) {
     // Don't store the 'target_bundles_update' button value into the field
     // config settings.
-    $form_state->unsetValue(['settings', 'handler_settings', 'target_bundles_update']);
+    $form_state->unsetValue($element['#parents']);
   }
 
   /**
@@ -341,7 +351,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
   }
 
   /**
-   * {@inheritdoc}
+   * Validates a target_bundles element.
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     $target_type = $this->getConfiguration()['target_type'];
