@@ -6,3 +6,28 @@ services:
     tags:
       - { name: needs_destruction }
     arguments: ['@state']
+  # Used to test destructable service order.
+  service_provider_test_class_1:
+    parent: service_provider_test_class
+    tags:
+      - { name: needs_destruction, priority: 50 }
+  service_provider_test_class_2:
+    parent: service_provider_test_class
+    tags:
+      - { name: needs_destruction, priority: -10 }
+  service_provider_test_class_3:
+    parent: service_provider_test_class
+    tags:
+      - { name: needs_destruction, priority: 0 }
+  service_provider_test_class_4:
+    parent: service_provider_test_class
+    tags:
+      - { name: needs_destruction, priority: -100 }
+  service_provider_test_class_5:
+    parent: service_provider_test_class
+    tags:
+      - { name: needs_destruction, priority: 100 }
+  service_provider_test_class_6:
+    parent: service_provider_test_class
+    tags:
+      - { name: needs_destruction, priority: -50 }
