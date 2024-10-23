@@ -60,7 +60,6 @@ class StyleGridResponsiveTest extends PluginKernelTestBase {
     // markup structure is correct.
     $result = $this->xpath('//div[contains(@class, "views-view-responsive-grid")]/div[contains(@class, "views-view-responsive-grid__item")]/div[contains(@class, "views-view-responsive-grid__item-inner")]');
     // There are five results for this test view. See ViewTestData::dataSet().
-    $expected_count = 5;
     $this->assertCount(5, $result, "The expected number of items are rendered in the correct structure.");
   }
 

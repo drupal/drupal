@@ -247,7 +247,7 @@ function entity_test_entity_bundle_info_alter(&$bundles) {
   foreach ($bundles as $entity_type_id => &$all_bundle_info) {
     if ($entity_info[$entity_type_id]->getProvider() == 'entity_test') {
       if ($state->get('entity_test.translation') && $entity_info[$entity_type_id]->isTranslatable()) {
-        foreach ($all_bundle_info as $bundle_name => &$bundle_info) {
+        foreach ($all_bundle_info as &$bundle_info) {
           $bundle_info['translatable'] = TRUE;
           if ($state->get('entity_test.untranslatable_fields.default_translation_affected')) {
             $bundle_info['untranslatable_fields.default_translation_affected'] = TRUE;

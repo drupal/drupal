@@ -30,7 +30,7 @@ class DatabaseExceptionWrapperTest extends DriverSpecificKernelTestBase {
     Database::addConnectionInfo('default', 'foo', $connection_info['default']);
     $foo_connection = Database::getConnection('foo', 'default');
     $this->expectException(DatabaseExceptionWrapper::class);
-    $stmt = $foo_connection->prepareStatement('bananas', []);
+    $foo_connection->prepareStatement('bananas', []);
   }
 
   /**

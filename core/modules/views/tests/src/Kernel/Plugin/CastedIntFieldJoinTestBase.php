@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
-use Drupal\Core\Database\Database;
 use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\join\CastedIntFieldJoin;
@@ -99,8 +98,6 @@ abstract class CastedIntFieldJoinTestBase extends DriverSpecificKernelTestBase {
     $view = Views::getView('test_view');
     $view->initDisplay();
     $view->initQuery();
-
-    $connection = Database::getConnection();
 
     // First define a simple join without an extra condition.
     // Set the various options on the join object.

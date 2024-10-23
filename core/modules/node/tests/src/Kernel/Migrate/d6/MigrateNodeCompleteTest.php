@@ -1048,7 +1048,7 @@ class MigrateNodeCompleteTest extends MigrateNodeTestBase {
    */
   protected function expectedRevisionEntityData(): array {
     return [
-      $revision_data = [
+      [
         // Node 1, revision 1, und.
         0 =>
           [

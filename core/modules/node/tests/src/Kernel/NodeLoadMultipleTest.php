@@ -96,7 +96,7 @@ class NodeLoadMultipleTest extends NodeAccessTestBase {
       'field_first' => '1234',
       'field_second' => 'test_value_1',
     ]);
-    $node2 = $this->drupalCreateNode([
+    $this->drupalCreateNode([
       'type' => 'page',
       'field_first' => '1234',
       'field_second' => 'test_value_2',
@@ -106,7 +106,7 @@ class NodeLoadMultipleTest extends NodeAccessTestBase {
       'field_first' => '5678',
       'field_second' => 'test_value_1',
     ]);
-    $node4 = $this->drupalCreateNode([
+    $this->drupalCreateNode([
       'type' => 'page',
       'field_first' => '5678',
       'field_second' => 'test_value_2',

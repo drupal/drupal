@@ -69,7 +69,7 @@ class AddFeedTest extends KernelTestBase {
     // Glean the content from the response object.
     $this->setRawContent($response->getContent());
     // Assert that the content contains the RSS links we specified.
-    foreach ($urls as $description => $feed_info) {
+    foreach ($urls as $feed_info) {
       $this->assertPattern($this->urlToRSSLinkPattern($feed_info['url'], $feed_info['title']));
     }
   }

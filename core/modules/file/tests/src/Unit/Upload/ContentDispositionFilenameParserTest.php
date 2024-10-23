@@ -56,7 +56,7 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
     $this->expectException(BadRequestHttpException::class);
     $this->expectExceptionMessage('The extended "filename*" format is currently not supported in the "Content-Disposition" header.');
     $request = $this->createRequest('filename*="UTF-8 \' \' example.txt"');
-    $filename = ContentDispositionFilenameParser::parseFilename($request);
+    ContentDispositionFilenameParser::parseFilename($request);
   }
 
   /**

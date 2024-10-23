@@ -287,7 +287,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
     $this->assertSame(['employee', 'page', 'story', 'test_page', 'test_planet'], $actual_node_types);
     $this->assertCount(25, $actual_fields['node']['story']);
     foreach ($actual_fields['node'] as $bundle => $fields) {
-      foreach ($fields as $field_name => $field_info) {
+      foreach ($fields as $field_info) {
         $this->assertArrayHasKey('type', $field_info);
         $this->assertCount(22, $field_info);
         $this->assertEquals($bundle, $field_info['type_name']);

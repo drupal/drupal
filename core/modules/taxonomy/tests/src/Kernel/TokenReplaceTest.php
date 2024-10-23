@@ -109,7 +109,7 @@ class TokenReplaceTest extends KernelTestBase {
     ]);
 
     // Create node with term2.
-    $node = $this->createNode([
+    $this->createNode([
       'type' => 'article',
       $this->fieldName => $term2->id(),
     ]);

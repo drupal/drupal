@@ -162,7 +162,7 @@ class CopyTest extends FileManagedUnitTestBase {
     // Clone the object so we don't have to worry about the function changing
     // our reference copy.
     try {
-      $result = $this->fileRepository->copy(clone $source, $target->getFileUri(), FileExists::Error);
+      $this->fileRepository->copy(clone $source, $target->getFileUri(), FileExists::Error);
       $this->fail('expected FileExistsException');
     }
     // FileExistsException is a subclass of FileException.

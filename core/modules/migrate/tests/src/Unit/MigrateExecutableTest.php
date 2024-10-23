@@ -109,10 +109,6 @@ class MigrateExecutableTest extends MigrateTestCase {
   public function testImportWithValidRow(): void {
     $source = $this->getMockSource();
 
-    $row = $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
-
     $this->executable->setSource($source);
 
     $this->migration->expects($this->once())
@@ -133,10 +129,6 @@ class MigrateExecutableTest extends MigrateTestCase {
    */
   public function testImportWithValidRowWithoutDestinationId(): void {
     $source = $this->getMockSource();
-
-    $row = $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
 
     $this->executable->setSource($source);
 
@@ -162,10 +154,6 @@ class MigrateExecutableTest extends MigrateTestCase {
   public function testImportWithValidRowNoDestinationValues(): void {
     $source = $this->getMockSource();
 
-    $row = $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
-
     $this->executable->setSource($source);
 
     $this->migration->expects($this->once())
@@ -187,12 +175,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    * The MigrationException in this case is being thrown from the destination.
    */
   public function testImportWithValidRowWithDestinationMigrateException(): void {
-    $exception_message = $this->getRandomGenerator()->string();
     $source = $this->getMockSource();
-
-    $row = $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
 
     $this->executable->setSource($source);
 
@@ -261,12 +244,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    * Tests the import method with a regular Exception being thrown.
    */
   public function testImportWithValidRowWithException(): void {
-    $exception_message = $this->getRandomGenerator()->string();
     $source = $this->getMockSource();
-
-    $row = $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
 
     $this->executable->setSource($source);
 
