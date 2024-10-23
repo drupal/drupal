@@ -57,4 +57,34 @@ class ServiceDestructionTest extends KernelTestBase {
     $this->assertNull(\Drupal::state()->get('service_provider_test.destructed'));
   }
 
+  /**
+   * @covers \Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass::process
+   */
+  public function testDestructableServicesOrder(): void {
+    // Destructable services before the module is enabled.
+    $core_services = $this->container->getParameter('kernel.destructable_services');
+
+    $this->enableModules(['service_provider_test']);
+    $services = $this->container->getParameter('kernel.destructable_services');
+    // Remove the core registered services for clarity.
+    $testable_services = array_values(array_diff($services, $core_services));
+
+    $this->assertSame([
+      // Priority 100.
+      'service_provider_test_class_5',
+      // Priority 50.
+      'service_provider_test_class_1',
+      // The following two services are both with priority 0 and their order is
+      // determined by the order they were registered.
+      'service_provider_test_class',
+      'service_provider_test_class_3',
+      // Priority -10.
+      'service_provider_test_class_2',
+      // Priority -50.
+      'service_provider_test_class_6',
+      // Priority -100.
+      'service_provider_test_class_4',
+    ], $testable_services);
+  }
+
 }
