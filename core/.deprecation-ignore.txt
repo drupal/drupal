@@ -19,6 +19,7 @@
 # Indirect deprecations. These are not in Drupal's remit to fix, but it is
 # worth keeping track of dependencies' issues.
 %Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "org\\bovigo\\vfs\\[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
+%Method "[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "OpenTelemetry\\[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%
 
 # The following deprecation is listed for Twig 2 compatibility when unit
 # testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
