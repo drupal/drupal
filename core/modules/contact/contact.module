@@ -98,7 +98,7 @@ function contact_entity_extra_field_info() {
  * email address configured.
  */
 function contact_menu_local_tasks_alter(&$data, $route_name) {
-  if ($route_name == 'entity.user.canonical') {
+  if ($route_name == 'entity.user.canonical' && isset($data['tabs'][0])) {
     foreach ($data['tabs'][0] as $href => $tab_data) {
       if ($href == 'entity.user.contact_form') {
         $link_params = $tab_data['#link']['url']->getRouteParameters();
