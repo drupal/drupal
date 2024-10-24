@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
@@ -73,7 +74,7 @@ class EntityValidationTest extends EntityKernelTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The created test entity.
    */
-  protected function createTestEntity($entity_type) {
+  protected function createTestEntity($entity_type): EntityInterface {
     $this->entityName = $this->randomMachineName();
     $this->entityUser = $this->createUser();
 

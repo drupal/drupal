@@ -260,7 +260,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function setUpFields(EntityInterface $entity, UserInterface $account) {
+  protected function setUpFields(EntityInterface $entity, UserInterface $account): EntityInterface {
     if (!$entity instanceof FieldableEntityInterface) {
       return $entity;
     }

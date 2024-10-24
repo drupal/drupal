@@ -79,7 +79,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    *
    * @return \Drupal\Core\Entity\EntityInterface
    */
-  protected function createTestEntity($entity_type) {
+  protected function createTestEntity($entity_type): EntityInterface {
     $this->entityName = $this->randomMachineName();
     $this->entityUser = $this->createUser();
     $this->entityFieldText = $this->randomMachineName();

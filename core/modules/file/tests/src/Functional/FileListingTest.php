@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Functional;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 use Drupal\entity_test\Entity\EntityTestConstraints;
@@ -259,7 +260,7 @@ class FileListingTest extends FileFieldTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   A file entity.
    */
-  protected function createFile() {
+  protected function createFile(): EntityInterface {
     // Create a new file entity.
     $file = File::create([
       'uid' => 1,

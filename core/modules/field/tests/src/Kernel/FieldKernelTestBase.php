@@ -139,7 +139,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The entity, freshly reloaded from storage.
    */
-  protected function entitySaveReload(EntityInterface $entity) {
+  protected function entitySaveReload(EntityInterface $entity): EntityInterface {
     $entity->save();
     $controller = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $controller->resetCache();

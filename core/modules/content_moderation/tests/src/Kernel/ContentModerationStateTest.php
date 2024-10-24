@@ -834,7 +834,7 @@ class ContentModerationStateTest extends KernelTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The reloaded entity.
    */
-  protected function reloadEntity(EntityInterface $entity, $revision_id = FALSE) {
+  protected function reloadEntity(EntityInterface $entity, $revision_id = FALSE): EntityInterface {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
     $storage->resetCache([$entity->id()]);

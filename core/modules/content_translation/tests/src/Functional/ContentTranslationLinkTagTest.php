@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Functional;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -70,7 +71,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   An entity with translations.
    */
-  protected function createTranslatableEntity() {
+  protected function createTranslatableEntity(): EntityInterface {
     $entity = EntityTestMul::create(['label' => $this->randomString()]);
 
     // Create translations for non default languages.
