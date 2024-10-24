@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Unit\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\RevisionableInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
+use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityRevision as RealEntityRevision;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Tests entity revision destination.
@@ -25,29 +30,27 @@ class EntityRevisionTest extends UnitTestCase {
   /**
    * @var \Drupal\migrate\Plugin\MigrationInterface
    */
-  protected $migration;
+  protected MigrationInterface $migration;
 
   /**
-   * @var \Drupal\Core\Entity\RevisionableStorageInterface
+   * @var \Prophecy\Prophecy\ObjectProphecy
    */
-  protected $storage;
+  protected ObjectProphecy $storage;
 
   /**
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
-  protected $entityFieldManager;
+  protected EntityFieldManagerInterface $entityFieldManager;
 
   /**
    * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
    */
-  protected $fieldTypeManager;
+  protected FieldTypePluginManagerInterface $fieldTypeManager;
 
   /**
-   * A mock account switcher.
-   *
-   * @var \Prophecy\Prophecy\ObjectProphecy|\Drupal\Core\Session\AccountSwitcherInterface
+   * @var \Drupal\Core\Session\AccountSwitcherInterface
    */
-  protected $accountSwitcher;
+  protected AccountSwitcherInterface $accountSwitcher;
 
   /**
    * {@inheritdoc}
@@ -56,17 +59,19 @@ class EntityRevisionTest extends UnitTestCase {
     parent::setUp();
 
     // Setup mocks to be used when creating a revision destination.
-    $this->migration = $this->prophesize(MigrationInterface::class);
-    $this->storage = $this->prophesize('\Drupal\Core\Entity\RevisionableStorageInterface');
+    $this->migration = $this->prophesize(MigrationInterface::class)->reveal();
+    $this->storage = $this->prophesize(RevisionableStorageInterface::class);
 
     $entity_type = $this->prophesize(EntityTypeInterface::class);
     $entity_type->getSingularLabel()->willReturn('crazy');
     $entity_type->getPluralLabel()->willReturn('craziness');
+    $entity_type->getKey('id')->willReturn('nid');
+    $entity_type->getKey('revision')->willReturn('vid');
     $this->storage->getEntityType()->willReturn($entity_type->reveal());
 
-    $this->entityFieldManager = $this->prophesize('\Drupal\Core\Entity\EntityFieldManagerInterface');
-    $this->fieldTypeManager = $this->prophesize('\Drupal\Core\Field\FieldTypePluginManagerInterface');
-    $this->accountSwitcher = $this->prophesize(AccountSwitcherInterface::class);
+    $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class)->reveal();
+    $this->fieldTypeManager = $this->prophesize(FieldTypePluginManagerInterface::class)->reveal();
+    $this->accountSwitcher = $this->prophesize(AccountSwitcherInterface::class)->reveal();
   }
 
   /**
@@ -77,7 +82,7 @@ class EntityRevisionTest extends UnitTestCase {
   public function testGetEntityDestinationValues(): void {
     $destination = $this->getEntityRevisionDestination([]);
     // Return a dummy because we don't care what gets called.
-    $entity = $this->prophesize('\Drupal\Core\Entity\RevisionableInterface');
+    $entity = $this->prophesize(RevisionableInterface::class);
     // Assert that the first ID from the destination values is used to load the
     // entity.
     $this->storage->loadRevision(12)
@@ -94,12 +99,7 @@ class EntityRevisionTest extends UnitTestCase {
    */
   public function testGetEntityUpdateRevision(): void {
     $destination = $this->getEntityRevisionDestination([]);
-    $entity = $this->prophesize('\Drupal\Core\Entity\RevisionableInterface');
-
-    $entity_type = $this->prophesize('\Drupal\Core\Entity\EntityTypeInterface');
-    $entity_type->getKey('id')->willReturn('nid');
-    $entity_type->getKey('revision')->willReturn('vid');
-    $this->storage->getEntityType()->willReturn($entity_type->reveal());
+    $entity = $this->prophesize(RevisionableInterface::class);
 
     // Assert we load the correct revision.
     $this->storage->loadRevision(2)
@@ -121,12 +121,7 @@ class EntityRevisionTest extends UnitTestCase {
    */
   public function testGetEntityNewRevision(): void {
     $destination = $this->getEntityRevisionDestination([]);
-    $entity = $this->prophesize('\Drupal\Core\Entity\RevisionableInterface');
-
-    $entity_type = $this->prophesize('\Drupal\Core\Entity\EntityTypeInterface');
-    $entity_type->getKey('id')->willReturn('nid');
-    $entity_type->getKey('revision')->willReturn('vid');
-    $this->storage->getEntityType()->willReturn($entity_type->reveal());
+    $entity = $this->prophesize(RevisionableInterface::class);
 
     // Enforce is new should be disabled.
     $entity->enforceIsNew(FALSE)->shouldBeCalled();
@@ -152,11 +147,6 @@ class EntityRevisionTest extends UnitTestCase {
   public function testGetEntityLoadFailure(): void {
     $destination = $this->getEntityRevisionDestination([]);
 
-    $entity_type = $this->prophesize('\Drupal\Core\Entity\EntityTypeInterface');
-    $entity_type->getKey('id')->willReturn('nid');
-    $entity_type->getKey('revision')->willReturn('vid');
-    $this->storage->getEntityType()->willReturn($entity_type->reveal());
-
     // Return a failed load and make sure we don't fail and we return FALSE.
     $this->storage->load(1)
       ->shouldBeCalled()
@@ -173,7 +163,7 @@ class EntityRevisionTest extends UnitTestCase {
    * @covers ::save
    */
   public function testSave(): void {
-    $entity = $this->prophesize('\Drupal\Core\Entity\ContentEntityInterface');
+    $entity = $this->prophesize(ContentEntityInterface::class);
     $entity->save()
       ->shouldBeCalled();
     // Syncing should be set once.
@@ -203,12 +193,12 @@ class EntityRevisionTest extends UnitTestCase {
    */
   protected function getEntityRevisionDestination(array $configuration = [], $plugin_id = 'entity_revision', array $plugin_definition = []) {
     return new EntityRevision($configuration, $plugin_id, $plugin_definition,
-      $this->migration->reveal(),
+      $this->migration,
       $this->storage->reveal(),
       [],
-      $this->entityFieldManager->reveal(),
-      $this->fieldTypeManager->reveal(),
-      $this->accountSwitcher->reveal()
+      $this->entityFieldManager,
+      $this->fieldTypeManager,
+      $this->accountSwitcher,
     );
   }
 
