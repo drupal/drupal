@@ -12,8 +12,7 @@
         "composer/installers": "^2.3",
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
-        "drupal/core-vendor-hardening": "self.version",
-        "revolt/event-loop": "^1.0"
+        "drupal/core-vendor-hardening": "self.version"
     },
     "require-dev": {
         "behat/mink": "^1.11",
