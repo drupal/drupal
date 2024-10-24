@@ -161,6 +161,10 @@ tr .form-item,
   align-self: center;
 }
 
+.form-actions > .form-wrapper {
+  margin-inline: 0 var(--space-s);
+}
+
 /**
  * Password module.
  *
