@@ -6,7 +6,7 @@ base theme: false
 hidden: true
 
 libraries:
-  - test_basetheme/global-styling
+  - test_base_theme/global-styling
 libraries-override:
   core/drupal.dialog:
     js:
@@ -21,4 +21,4 @@ libraries-override:
 
 libraries-extend:
   starterkit_theme/base:
-    - test_basetheme/global-styling
+    - test_base_theme/global-styling

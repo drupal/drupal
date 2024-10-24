@@ -135,7 +135,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   public function testLibrariesOverridesMultiple(): void {
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
-    $theme_installer->install(['test_basetheme']);
+    $theme_installer->install(['test_base_theme']);
     $theme_installer->install(['test_subtheme']);
     $theme_installer->install(['test_subsubtheme']);
 
@@ -145,7 +145,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     $libraries_override = $active_theme->getLibrariesOverride();
     $expected_order = [
-      'core/modules/system/tests/themes/test_basetheme',
+      'core/modules/system/tests/themes/test_base_theme',
       'core/modules/system/tests/themes/test_subtheme',
       'core/modules/system/tests/themes/test_subsubtheme',
     ];
@@ -183,7 +183,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     // Assert that libraries-override specified in the base theme still applies
     // in the sub theme.
     $this->assertNoAssetInLibrary('core/misc/dialog/dialog.js', 'core', 'drupal.dialog', 'js');
-    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_basetheme/js/loadjs.min.js', 'core', 'loadjs', 'js');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_base_theme/js/loadjs.min.js', 'core', 'loadjs', 'js');
   }
 
   /**
@@ -218,10 +218,10 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     // Activate a sub theme and confirm that it inherits the library assets
     // extended in the base theme as well as its own.
-    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_basetheme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
     $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'starterkit_theme', 'base', 'css');
     $this->activateTheme('test_subtheme');
-    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_basetheme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
     $this->assertAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'starterkit_theme', 'base', 'css');
 
     // Activate test theme that extends with a non-existent library. An

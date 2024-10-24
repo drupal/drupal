@@ -357,7 +357,7 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
    * {@inheritdoc}
    */
   public function prepareFormDisplay(MediaTypeInterface $type, EntityFormDisplayInterface $display) {
-    // Make sure the source field is placed just after the "name" basefield.
+    // Make sure the source field is placed just after the "name" base field.
     $name_component = $display->getComponent('name');
     $source_field_weight = ($name_component && isset($name_component['weight'])) ? $name_component['weight'] + 5 : -50;
     $display->setComponent($this->getSourceFieldDefinition($type)->getName(), [

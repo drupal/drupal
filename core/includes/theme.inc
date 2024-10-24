@@ -103,10 +103,10 @@ function drupal_find_theme_templates($cache, $extension, $path) {
       $theme_paths[$theme_info->base_theme][$theme_info->getName()] = $theme_info->getPath();
     }
   }
-  foreach ($theme_paths as $basetheme => $subthemes) {
+  foreach ($theme_paths as $base_theme => $subthemes) {
     foreach ($subthemes as $subtheme => $subtheme_path) {
       if (isset($theme_paths[$subtheme])) {
-        $theme_paths[$basetheme] = array_merge($theme_paths[$basetheme], $theme_paths[$subtheme]);
+        $theme_paths[$base_theme] = array_merge($theme_paths[$base_theme], $theme_paths[$subtheme]);
       }
     }
   }

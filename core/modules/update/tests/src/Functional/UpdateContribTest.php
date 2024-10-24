@@ -216,9 +216,9 @@ class UpdateContribTest extends UpdateTestBase {
 
     // Define the initial state for core and the subtheme.
     $this->mockInstalledExtensionsInfo([
-      // Show the update_test_basetheme.
-      'update_test_basetheme' => [
-        'project' => 'update_test_basetheme',
+      // Show the update_test_base_theme.
+      'update_test_base_theme' => [
+        'project' => 'update_test_base_theme',
         'version' => '8.x-1.0',
         'hidden' => FALSE,
       ],
@@ -232,11 +232,11 @@ class UpdateContribTest extends UpdateTestBase {
     $xml_mapping = [
       'drupal' => '8.0.0',
       'update_test_subtheme' => '1_0',
-      'update_test_basetheme' => '1_1-sec',
+      'update_test_base_theme' => '1_1-sec',
     ];
     $this->refreshUpdateStatus($xml_mapping);
     $this->assertSession()->pageTextContains('Security update required!');
-    $this->updateProject = 'update_test_basetheme';
+    $this->updateProject = 'update_test_base_theme';
     $this->assertVersionUpdateLinks('Security update', '8.x-1.1');
   }
 
@@ -351,9 +351,9 @@ class UpdateContribTest extends UpdateTestBase {
 
     // Define the initial state for core and the test contrib themes.
     $this->mockInstalledExtensionsInfo([
-      // The update_test_basetheme should be visible and up to date.
-      'update_test_basetheme' => [
-        'project' => 'update_test_basetheme',
+      // The update_test_base_theme should be visible and up to date.
+      'update_test_base_theme' => [
+        'project' => 'update_test_base_theme',
         'version' => '8.x-1.1',
         'hidden' => FALSE,
       ],
@@ -372,7 +372,7 @@ class UpdateContribTest extends UpdateTestBase {
     $xml_mapping = [
       'drupal' => '8.0.0',
       'update_test_subtheme' => '1_0',
-      'update_test_basetheme' => '1_1-sec',
+      'update_test_base_theme' => '1_1-sec',
     ];
     foreach ([TRUE, FALSE] as $check_disabled) {
       $update_settings->set('check.disabled_extensions', $check_disabled)->save();
@@ -384,14 +384,14 @@ class UpdateContribTest extends UpdateTestBase {
       if ($check_disabled) {
         $this->assertSession()->pageTextContains('Uninstalled themes');
         $this->assertSession()->linkExists('Update test base theme');
-        $this->assertSession()->linkByHrefExists('http://example.com/project/update_test_basetheme');
+        $this->assertSession()->linkByHrefExists('http://example.com/project/update_test_base_theme');
         $this->assertSession()->linkExists('Update test subtheme');
         $this->assertSession()->linkByHrefExists('http://example.com/project/update_test_subtheme');
       }
       else {
         $this->assertSession()->pageTextNotContains('Uninstalled themes');
         $this->assertSession()->linkNotExists('Update test base theme');
-        $this->assertSession()->linkByHrefNotExists('http://example.com/project/update_test_basetheme');
+        $this->assertSession()->linkByHrefNotExists('http://example.com/project/update_test_base_theme');
         $this->assertSession()->linkNotExists('Update test subtheme');
         $this->assertSession()->linkByHrefNotExists('http://example.com/project/update_test_subtheme');
       }
@@ -409,9 +409,9 @@ class UpdateContribTest extends UpdateTestBase {
 
     // Add a project and initial state for base theme and subtheme.
     $this->mockInstalledExtensionsInfo([
-      // Hide the update_test_basetheme.
-      'update_test_basetheme' => [
-        'project' => 'update_test_basetheme',
+      // Hide the update_test_base_theme.
+      'update_test_base_theme' => [
+        'project' => 'update_test_base_theme',
         'hidden' => TRUE,
       ],
       // Show the update_test_subtheme.
@@ -425,7 +425,7 @@ class UpdateContribTest extends UpdateTestBase {
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE);
 
-    $this->assertNotEmpty($projects['update_test_basetheme'], 'Valid base theme (update_test_basetheme) was found.');
+    $this->assertNotEmpty($projects['update_test_base_theme'], 'Valid base theme (update_test_base_theme) was found.');
   }
 
   /**

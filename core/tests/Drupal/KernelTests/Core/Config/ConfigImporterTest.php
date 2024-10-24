@@ -696,25 +696,25 @@ class ConfigImporterTest extends KernelTestBase {
   public function testInstallBaseAndSubThemes(): void {
     $sync = $this->container->get('config.storage.sync');
     $extensions = $sync->read('core.extension');
-    $extensions['theme']['test_basetheme'] = 0;
+    $extensions['theme']['test_base_theme'] = 0;
     $extensions['theme']['test_subtheme'] = 0;
     $extensions['theme']['test_subsubtheme'] = 0;
     $sync->write('core.extension', $extensions);
     $config_importer = $this->configImporter();
     $config_importer->import();
-    $this->assertTrue($this->container->get('theme_handler')->themeExists('test_basetheme'));
+    $this->assertTrue($this->container->get('theme_handler')->themeExists('test_base_theme'));
     $this->assertTrue($this->container->get('theme_handler')->themeExists('test_subsubtheme'));
     $this->assertTrue($this->container->get('theme_handler')->themeExists('test_subtheme'));
 
     // Test uninstalling them.
     $extensions = $sync->read('core.extension');
-    unset($extensions['theme']['test_basetheme']);
+    unset($extensions['theme']['test_base_theme']);
     unset($extensions['theme']['test_subsubtheme']);
     unset($extensions['theme']['test_subtheme']);
     $sync->write('core.extension', $extensions);
     $config_importer = $this->configImporter();
     $config_importer->import();
-    $this->assertFalse($this->container->get('theme_handler')->themeExists('test_basetheme'));
+    $this->assertFalse($this->container->get('theme_handler')->themeExists('test_base_theme'));
     $this->assertFalse($this->container->get('theme_handler')->themeExists('test_subsubtheme'));
     $this->assertFalse($this->container->get('theme_handler')->themeExists('test_subtheme'));
   }
@@ -909,7 +909,7 @@ class ConfigImporterTest extends KernelTestBase {
   public function testUninstallThemeIncrementsCount(): void {
     $theme_installer = $this->container->get('theme_installer');
     // Install our theme.
-    $theme = 'test_basetheme';
+    $theme = 'test_base_theme';
     $theme_installer->install([$theme]);
 
     $this->assertTrue($this->container->get('theme_handler')->themeExists($theme));

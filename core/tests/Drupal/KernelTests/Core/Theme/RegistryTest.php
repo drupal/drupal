@@ -69,7 +69,7 @@ class RegistryTest extends KernelTestBase {
    */
   public function testMultipleSubThemes(): void {
     $theme_handler = \Drupal::service('theme_handler');
-    \Drupal::service('theme_installer')->install(['test_basetheme', 'test_subtheme', 'test_subsubtheme']);
+    \Drupal::service('theme_installer')->install(['test_base_theme', 'test_subtheme', 'test_subsubtheme']);
 
     $module_list = $this->container->get('extension.list.module');
     assert($module_list instanceof ModuleExtensionList);
@@ -78,13 +78,13 @@ class RegistryTest extends KernelTestBase {
     $registry_subsub_theme->setThemeManager(\Drupal::theme());
     $registry_sub_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $module_list, \Drupal::service('kernel'), 'test_subtheme',);
     $registry_sub_theme->setThemeManager(\Drupal::theme());
-    $registry_base_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $module_list, \Drupal::service('kernel'), 'test_basetheme');
+    $registry_base_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), $module_list, \Drupal::service('kernel'), 'test_base_theme');
     $registry_base_theme->setThemeManager(\Drupal::theme());
 
     $preprocess_functions = $registry_subsub_theme->get()['theme_test_template_test']['preprocess functions'];
     $this->assertSame([
       'template_preprocess',
-      'test_basetheme_preprocess_theme_test_template_test',
+      'test_base_theme_preprocess_theme_test_template_test',
       'test_subtheme_preprocess_theme_test_template_test',
       'test_subsubtheme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
@@ -92,14 +92,14 @@ class RegistryTest extends KernelTestBase {
     $preprocess_functions = $registry_sub_theme->get()['theme_test_template_test']['preprocess functions'];
     $this->assertSame([
       'template_preprocess',
-      'test_basetheme_preprocess_theme_test_template_test',
+      'test_base_theme_preprocess_theme_test_template_test',
       'test_subtheme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
 
     $preprocess_functions = $registry_base_theme->get()['theme_test_template_test']['preprocess functions'];
     $this->assertSame([
       'template_preprocess',
-      'test_basetheme_preprocess_theme_test_template_test',
+      'test_base_theme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
   }
 

@@ -515,9 +515,9 @@ class ConfigImportUITest extends BrowserTestBase {
     unset($core['module']['text']);
     $module_data = $this->container->get('extension.list.module')->getList();
     $this->assertTrue(isset($module_data['node']->requires['text']), 'The Node module depends on the Text module.');
-    unset($core['theme']['test_basetheme']);
+    unset($core['theme']['test_base_theme']);
     $theme_data = \Drupal::service('extension.list.theme')->reset()->getList();
-    $this->assertTrue(isset($theme_data['test_subtheme']->requires['test_basetheme']), 'The Test Subtheme theme depends on the Test Basetheme theme.');
+    $this->assertTrue(isset($theme_data['test_subtheme']->requires['test_base_theme']), 'The Test Subtheme theme depends on the Test Base_theme theme.');
     // This module does not exist.
     $core['module']['does_not_exist'] = 0;
     // This theme does not exist.

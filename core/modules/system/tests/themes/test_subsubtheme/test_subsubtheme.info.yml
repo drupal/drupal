@@ -4,7 +4,7 @@ description: 'Test theme which uses test_subtheme as the base theme.'
 version: VERSION
 base theme: test_subtheme
 libraries-override:
-  test_basetheme/global-styling:
+  test_base_theme/global-styling:
     css:
       base:
         css/sub-sub-last-override.css: false

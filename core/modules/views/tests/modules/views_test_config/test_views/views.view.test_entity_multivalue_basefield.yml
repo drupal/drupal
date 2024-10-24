@@ -1,3 +1,4 @@
+# cspell:ignore basefield
 langcode: en
 status: true
 dependencies:

@@ -6,6 +6,8 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 
+// cspell:ignore basefield
+
 /**
  * Defines an entity type with a multivalue base field.
  *
@@ -26,7 +28,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *   }
  * )
  */
-class EntityTestMultiValueBasefield extends EntityTest {
+class EntityTestMultiValueBaseField extends EntityTest {
 
   /**
    * {@inheritdoc}

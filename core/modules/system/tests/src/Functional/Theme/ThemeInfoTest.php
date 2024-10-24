@@ -59,12 +59,12 @@ class ThemeInfoTest extends BrowserTestBase {
    * Tests libraries-override.
    */
   public function testStylesheets(): void {
-    $this->themeInstaller->install(['test_basetheme', 'test_subtheme']);
+    $this->themeInstaller->install(['test_base_theme', 'test_subtheme']);
     $this->config('system.theme')
       ->set('default', 'test_subtheme')
       ->save();
 
-    $base = $this->getThemePath('test_basetheme');
+    $base = $this->getThemePath('test_base_theme');
     $sub = $this->getThemePath('test_subtheme') . '/css';
 
     // All removals are expected to be based on a file's path and name and

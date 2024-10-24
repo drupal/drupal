@@ -47969,30 +47969,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function test_basetheme_preprocess_theme_test_function_suggestions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/themes/test_basetheme/test_basetheme.theme',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function test_basetheme_preprocess_theme_test_template_test\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/themes/test_basetheme/test_basetheme.theme',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function test_basetheme_views_post_render\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/themes/test_basetheme/test_basetheme.theme',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function test_basetheme_views_pre_render\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/themes/test_basetheme/test_basetheme.theme',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function test_subsubtheme_preprocess_theme_test_template_test\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/themes/test_subsubtheme/test_subsubtheme.theme',

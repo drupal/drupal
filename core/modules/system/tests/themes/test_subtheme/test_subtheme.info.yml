@@ -1,8 +1,8 @@
 name: 'Theme test subtheme'
 type: theme
-description: 'Test theme which uses test_basetheme as the base theme.'
+description: 'Test theme which uses test_base_theme as the base theme.'
 version: VERSION
-base theme: test_basetheme
+base theme: test_base_theme
 libraries:
   - test_subtheme/global-styling
 libraries-override:
@@ -10,7 +10,7 @@ libraries-override:
     css:
       base:
         css/sub-remove.css: false
-  test_basetheme/global-styling:
+  test_base_theme/global-styling:
     css:
       base:
         base-add.sub-remove.css: false

@@ -6,7 +6,7 @@ status: true
 dependencies:
   enforced:
     theme:
-      - test_basetheme
+      - test_base_theme
 id: fancy
 label: 'Fancy date'
 locked: false

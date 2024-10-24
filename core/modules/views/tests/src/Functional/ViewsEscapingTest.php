@@ -26,7 +26,7 @@ class ViewsEscapingTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    *
-   * We need theme_test for testing against test_basetheme and test_subtheme.
+   * We need theme_test for testing against test_base_theme and test_subtheme.
    *
    * @var array
    *
