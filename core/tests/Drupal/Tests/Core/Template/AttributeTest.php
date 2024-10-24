@@ -452,7 +452,7 @@ class AttributeTest extends UnitTestCase {
    * @return int
    *   The number of results that are found.
    */
-  protected function getXPathResultCount($query, $html) {
+  protected function getXPathResultCount($query, $html): int {
     $document = Html::load($html);
     $xpath = new \DOMXPath($document);
 
