@@ -37,11 +37,10 @@
       mask-position: right center;
       mask-size: 40px;
     }
-  }
 
-  @nest [dir="rtl"] & {
-    border-inline-end: 1px solid #e6e4df;
-    border-inline-start: 0;
+    @nest [dir="rtl"] & {
+      background-position: left center;
+    }
   }
 }
 
