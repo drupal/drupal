@@ -47,6 +47,9 @@ tr .form-item,
 .form-item__label {
   display: block;
   margin-block: var(--sp0-5);
+  font-size: var(--font-size-s);
+  font-weight: bold;
+  line-height: var(--line-height-s);
 }
 
 .container-inline .form-item__label {
