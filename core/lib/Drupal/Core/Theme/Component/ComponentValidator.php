@@ -81,6 +81,28 @@ class ComponentValidator {
     if (($schema['properties'] ?? NULL) === []) {
       $schema['properties'] = new \stdClass();
     }
+
+    // Ensure that all property types are strings. For example, a null value
+    // will not automatically convert to 'null', which will lead to a PHP error
+    // that is hard to trace back to the property.
+    $non_string_props = [];
+    \array_walk($prop_names, function (string $prop) use (&$non_string_props, $schema) {
+      $type = $schema['properties'][$prop]['type'];
+      $types = !\is_array($type) ? [$type] : $type;
+      $non_string_types = \array_filter($types, static fn (mixed $type) => !\is_string($type));
+      if ($non_string_types) {
+        $non_string_props[] = $prop;
+      }
+    });
+
+    if ($non_string_props) {
+      throw new InvalidComponentException(\sprintf(
+        'The component "%s" uses non-string types for properties: %s.',
+        $definition['id'],
+        \implode(', ', $non_string_props),
+      ));
+    }
+
     $classes_per_prop = $this->getClassProps($schema);
     $missing_class_errors = [];
     foreach ($classes_per_prop as $prop_name => $class_types) {
