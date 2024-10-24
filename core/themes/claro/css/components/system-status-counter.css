@@ -44,9 +44,8 @@
     mask-size: 2.5rem;
   }
 }
-[dir="rtl"] .system-status-counter__status-icon {
-  border-inline-end: 1px solid #e6e4df;
-  border-inline-start: 0;
+[dir="rtl"] .system-status-counter__status-icon::before {
+  background-position: left center;
 }
 .system-status-counter__status-icon--error::before {
   background-image: var(--system-status-counter-status-icon-error);
