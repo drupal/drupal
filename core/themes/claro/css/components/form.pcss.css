@@ -140,6 +140,10 @@ tr .form-item,
   }
 }
 
+.form-actions > .form-wrapper {
+  margin-inline: 0 var(--space-s);
+}
+
 /**
  * Password module.
  *

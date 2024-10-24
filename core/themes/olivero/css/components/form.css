@@ -158,6 +158,10 @@ tr .form-item,
   margin-block: var(--sp0-5);
 }
 
+.form-actions > .form-wrapper {
+  margin-inline-end: var(--sp1);
+}
+
 .form-actions .ajax-progress--throbber {
   align-self: center;
 }
