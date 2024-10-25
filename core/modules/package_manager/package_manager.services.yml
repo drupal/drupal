@@ -20,8 +20,6 @@ services:
   Drupal\package_manager\TranslatableStringFactory:
     public: false
     decorates: 'PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface'
-  PhpTuf\ComposerStager\API\FileSyncer\Service\FileSyncerInterface:
-    factory: ['@PhpTuf\ComposerStager\API\FileSyncer\Factory\FileSyncerFactoryInterface', 'create']
   Drupal\package_manager\LoggingBeginner:
     public: false
     decorates: 'PhpTuf\ComposerStager\API\Core\BeginnerInterface'
@@ -105,3 +103,101 @@ services:
       $update_fetcher: '@update.fetcher'
       $key_value_factory: '@keyvalue'
       $key_value_expirable_factory: '@keyvalue.expirable'
+
+  # Services from php-tuf/composer-stager package.
+  PhpTuf\ComposerStager\API\Core\BeginnerInterface:
+    class: PhpTuf\ComposerStager\Internal\Core\Beginner
+  PhpTuf\ComposerStager\API\Core\CleanerInterface:
+    class: PhpTuf\ComposerStager\Internal\Core\Cleaner
+  PhpTuf\ComposerStager\API\Core\CommitterInterface:
+    class: PhpTuf\ComposerStager\Internal\Core\Committer
+  PhpTuf\ComposerStager\API\Core\StagerInterface:
+    class: PhpTuf\ComposerStager\Internal\Core\Stager
+  PhpTuf\ComposerStager\API\Environment\Service\EnvironmentInterface:
+    class: PhpTuf\ComposerStager\Internal\Environment\Service\Environment
+  PhpTuf\ComposerStager\API\FileSyncer\Service\FileSyncerInterface:
+    class: PhpTuf\ComposerStager\Internal\FileSyncer\Service\FileSyncer
+  PhpTuf\ComposerStager\API\Filesystem\Service\FilesystemInterface:
+    class: PhpTuf\ComposerStager\Internal\Filesystem\Service\Filesystem
+  PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface:
+    class: PhpTuf\ComposerStager\Internal\Finder\Service\ExecutableFinder
+  PhpTuf\ComposerStager\API\Finder\Service\FileFinderInterface:
+    class: PhpTuf\ComposerStager\Internal\Finder\Service\FileFinder
+  PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface:
+    class: PhpTuf\ComposerStager\Internal\Path\Factory\PathFactory
+  PhpTuf\ComposerStager\API\Path\Factory\PathListFactoryInterface:
+    class: PhpTuf\ComposerStager\Internal\Path\Factory\PathListFactory
+  PhpTuf\ComposerStager\API\Precondition\Service\ActiveAndStagingDirsAreDifferentInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\ActiveAndStagingDirsAreDifferent
+  PhpTuf\ComposerStager\API\Precondition\Service\ActiveDirExistsInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\ActiveDirExists
+  PhpTuf\ComposerStager\API\Precondition\Service\ActiveDirIsReadyInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\ActiveDirIsReady
+  PhpTuf\ComposerStager\API\Precondition\Service\ActiveDirIsWritableInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\ActiveDirIsWritable
+  PhpTuf\ComposerStager\API\Precondition\Service\BeginnerPreconditionsInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\BeginnerPreconditions
+  PhpTuf\ComposerStager\API\Precondition\Service\CleanerPreconditionsInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\CleanerPreconditions
+  PhpTuf\ComposerStager\API\Precondition\Service\CommitterPreconditionsInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\CommitterPreconditions
+  PhpTuf\ComposerStager\API\Precondition\Service\CommonPreconditionsInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\CommonPreconditions
+  PhpTuf\ComposerStager\API\Precondition\Service\ComposerIsAvailableInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\ComposerIsAvailable
+  PhpTuf\ComposerStager\API\Precondition\Service\HostSupportsRunningProcessesInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\HostSupportsRunningProcesses
+  PhpTuf\ComposerStager\API\Precondition\Service\NoAbsoluteSymlinksExistInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\NoAbsoluteSymlinksExist
+  PhpTuf\ComposerStager\API\Precondition\Service\NoHardLinksExistInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\NoHardLinksExist
+  PhpTuf\ComposerStager\API\Precondition\Service\NoLinksExistOnWindowsInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\NoLinksExistOnWindows
+  PhpTuf\ComposerStager\API\Precondition\Service\NoNestingOnWindowsInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\NoNestingOnWindows
+  PhpTuf\ComposerStager\API\Precondition\Service\NoSymlinksPointOutsideTheCodebaseInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\NoSymlinksPointOutsideTheCodebase
+  PhpTuf\ComposerStager\API\Precondition\Service\NoUnsupportedLinksExistInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\NoUnsupportedLinksExist
+  PhpTuf\ComposerStager\API\Precondition\Service\RsyncIsAvailableInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\RsyncIsAvailable
+  PhpTuf\ComposerStager\API\Precondition\Service\StagerPreconditionsInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\StagerPreconditions
+  PhpTuf\ComposerStager\API\Precondition\Service\StagingDirDoesNotExistInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\StagingDirDoesNotExist
+  PhpTuf\ComposerStager\API\Precondition\Service\StagingDirExistsInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\StagingDirExists
+  PhpTuf\ComposerStager\API\Precondition\Service\StagingDirIsReadyInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\StagingDirIsReady
+  PhpTuf\ComposerStager\API\Precondition\Service\StagingDirIsWritableInterface:
+    class: PhpTuf\ComposerStager\Internal\Precondition\Service\StagingDirIsWritable
+  PhpTuf\ComposerStager\API\Process\Factory\ProcessFactoryInterface:
+    class: PhpTuf\ComposerStager\Internal\Process\Factory\ProcessFactory
+  PhpTuf\ComposerStager\API\Process\Service\ComposerProcessRunnerInterface:
+    class: PhpTuf\ComposerStager\Internal\Process\Service\ComposerProcessRunner
+  PhpTuf\ComposerStager\API\Process\Service\OutputCallbackInterface:
+    class: PhpTuf\ComposerStager\Internal\Process\Service\OutputCallback
+  PhpTuf\ComposerStager\API\Process\Service\ProcessInterface:
+    class: PhpTuf\ComposerStager\Internal\Process\Service\Process
+  PhpTuf\ComposerStager\API\Process\Service\RsyncProcessRunnerInterface:
+    class: PhpTuf\ComposerStager\Internal\Process\Service\RsyncProcessRunner
+  PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface:
+    class: PhpTuf\ComposerStager\Internal\Translation\Factory\TranslatableFactory
+  PhpTuf\ComposerStager\API\Translation\Service\DomainOptionsInterface:
+    class: PhpTuf\ComposerStager\Internal\Translation\Service\DomainOptions
+  PhpTuf\ComposerStager\API\Translation\Service\LocaleOptionsInterface:
+    class: PhpTuf\ComposerStager\Internal\Translation\Service\LocaleOptions
+  PhpTuf\ComposerStager\API\Translation\Service\TranslatorInterface:
+    class: PhpTuf\ComposerStager\Internal\Translation\Service\Translator
+  PhpTuf\ComposerStager\Internal\Path\Service\PathHelperInterface:
+    class: PhpTuf\ComposerStager\Internal\Path\Service\PathHelper
+    public: false
+  PhpTuf\ComposerStager\Internal\Process\Factory\SymfonyProcessFactoryInterface:
+    class: PhpTuf\ComposerStager\Internal\Process\Factory\SymfonyProcessFactory
+    public: false
+  PhpTuf\ComposerStager\Internal\Process\Service\OutputCallbackAdapterInterface:
+    class: PhpTuf\ComposerStager\Internal\Process\Service\OutputCallbackAdapter
+    public: false
+  PhpTuf\ComposerStager\Internal\Translation\Service\SymfonyTranslatorProxyInterface:
+    class: PhpTuf\ComposerStager\Internal\Translation\Service\SymfonyTranslatorProxy
+    public: false

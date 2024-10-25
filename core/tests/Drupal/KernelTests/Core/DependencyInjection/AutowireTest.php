@@ -104,6 +104,11 @@ class AutowireTest extends KernelTestBase {
         continue;
       }
 
+      // Skip IDs that are interfaces already.
+      if (interface_exists($id)) {
+        continue;
+      }
+
       // Expect standalone classes to be aliased.
       $implements = class_implements($class);
       if (!$implements) {
