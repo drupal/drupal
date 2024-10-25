@@ -34,6 +34,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Process\Process;
 
 // cspell:ignore exitcode wwwrun
 
@@ -754,9 +755,12 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
       $test_class = array_shift($test_classes);
       // Fork a child process.
       $command = simpletest_script_command($test_run, $test_class);
-      $process = proc_open($command, [], $pipes, NULL, NULL, ['bypass_shell' => TRUE]);
-
-      if (!is_resource($process)) {
+      try {
+        $process = new Process($command);
+        $process->start();
+      }
+      catch (\Exception $e) {
+        echo get_class($e) . ": " . $e->getMessage() . "\n";
         echo "Unable to fork test process. Aborting.\n";
         exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
       }
@@ -766,7 +770,6 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
         'process' => $process,
         'test_run' => $test_run,
         'class' => $test_class,
-        'pipes' => $pipes,
       ];
     }
 
@@ -775,15 +778,18 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
 
     // Check if some children finished.
     foreach ($children as $cid => $child) {
-      $status = proc_get_status($child['process']);
-      if (empty($status['running'])) {
-        // The child exited, unregister it.
-        proc_close($child['process']);
-        if ($status['exitcode'] === SIMPLETEST_SCRIPT_EXIT_FAILURE) {
-          $total_status = max($status['exitcode'], $total_status);
+      if ($child['process']->isTerminated()) {
+        // The child exited.
+        echo $child['process']->getOutput();
+        $errorOutput = $child['process']->getErrorOutput();
+        if ($errorOutput) {
+          echo 'ERROR: ' . $errorOutput;
         }
-        elseif ($status['exitcode']) {
-          $message = 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').';
+        if ($child['process']->getExitCode() === SIMPLETEST_SCRIPT_EXIT_FAILURE) {
+          $total_status = max($child['process']->getExitCode(), $total_status);
+        }
+        elseif ($child['process']->getExitCode()) {
+          $message = 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $child['process']->getExitCode() . ').';
           echo $message . "\n";
           // @todo Return SIMPLETEST_SCRIPT_EXIT_EXCEPTION instead, when
           // DrupalCI supports this.
@@ -866,29 +872,38 @@ function simpletest_script_run_one_test(TestRun $test_run, $test_class) {
  * @param string $test_class
  *   The name of the test class to run.
  *
- * @return string
- *   The assembled command string.
+ * @return list<string>
+ *   The list of command-line elements.
  */
-function simpletest_script_command(TestRun $test_run, $test_class) {
+function simpletest_script_command(TestRun $test_run, string $test_class): array {
   global $args, $php;
 
-  $command = escapeshellarg($php) . ' ' . escapeshellarg('./core/scripts/' . $args['script']);
-  $command .= ' --url ' . escapeshellarg($args['url']);
+  $command = [];
+  $command[] = $php;
+  $command[] = './core/scripts/' . $args['script'];
+  $command[] = '--url';
+  $command[] = $args['url'];
   if (!empty($args['sqlite'])) {
-    $command .= ' --sqlite ' . escapeshellarg($args['sqlite']);
+    $command[] = '--sqlite';
+    $command[] = $args['sqlite'];
   }
   if (!empty($args['dburl'])) {
-    $command .= ' --dburl ' . escapeshellarg($args['dburl']);
+    $command[] = '--dburl';
+    $command[] = $args['dburl'];
   }
-  $command .= ' --php ' . escapeshellarg($php);
-  $command .= " --test-id {$test_run->id()}";
+  $command[] = '--php';
+  $command[] = $php;
+  $command[] = '--test-id';
+  $command[] = $test_run->id();
   foreach (['verbose', 'keep-results', 'color', 'die-on-fail', 'suppress-deprecations'] as $arg) {
     if ($args[$arg]) {
-      $command .= ' --' . $arg;
+      $command[] = '--' . $arg;
     }
   }
   // --execute-test and class name needs to come last.
-  $command .= ' --execute-test ' . escapeshellarg($test_class);
+  $command[] = '--execute-test';
+  $command[] = $test_class;
+
   return $command;
 }
 
@@ -1130,7 +1145,7 @@ function get_test_class_method_count(string $class): int {
  * @return array
  *   An associative array of bins and the test class names in each bin.
  */
- function place_tests_into_bins(array $tests, int $bin_count) {
+function place_tests_into_bins(array $tests, int $bin_count) {
   // Create a bin corresponding to each parallel test job.
   $bins = array_fill(0, $bin_count, []);
   // Go through each test and add them to one bin at a time.
