@@ -17,7 +17,7 @@ class FileReadOnlyStorage implements PhpStorageInterface {
   /**
    * Constructs this FileStorage object.
    *
-   * @param $configuration
+   * @param string[] $configuration
    *   An associative array, containing at least two keys (the rest are ignored):
    *   - directory: The directory where the files should be stored.
    *   - bin: The storage bin. Multiple storage objects can be instantiated with

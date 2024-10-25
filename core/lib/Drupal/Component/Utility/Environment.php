@@ -14,7 +14,7 @@ class Environment {
    *   The memory required for the operation, expressed as a number of bytes with
    *   optional SI or IEC binary unit prefix (e.g. 2, 3K, 5MB, 10G, 6GiB, 8bytes,
    *   9mbytes).
-   * @param $memory_limit
+   * @param string|null $memory_limit
    *   (optional) The memory limit for the operation, expressed as a number of
    *   bytes with optional SI or IEC binary unit prefix (e.g. 2, 3K, 5MB, 10G,
    *   6GiB, 8bytes, 9mbytes). If no value is passed, the current PHP

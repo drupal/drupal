@@ -17,7 +17,7 @@ class Timer {
    * If you start and stop the same timer multiple times, the measured intervals
    * will be accumulated.
    *
-   * @param $name
+   * @param string $name
    *   The name of the timer.
    */
   public static function start($name) {

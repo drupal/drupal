@@ -20,7 +20,7 @@ interface PoWriterInterface extends PoMetadataInterface {
    *
    * @param PoReaderInterface $reader
    *   Reader to read PoItems from.
-   * @param $count
+   * @param int $count
    *   Amount of items to read from $reader to write. If -1, all items are
    *   read from $reader.
    */

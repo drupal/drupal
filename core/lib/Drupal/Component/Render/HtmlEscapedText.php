@@ -24,7 +24,7 @@ class HtmlEscapedText implements MarkupInterface, \Countable {
   /**
    * Constructs an HtmlEscapedText object.
    *
-   * @param $string
+   * @param string $string
    *   The string to escape. This value will be cast to a string.
    */
   public function __construct($string) {

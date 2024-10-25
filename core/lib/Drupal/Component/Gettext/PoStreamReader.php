@@ -541,7 +541,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   /**
    * Parses a string in quotes.
    *
-   * @param $string
+   * @param string $string
    *   A string specified with enclosing quotes.
    *
    * @return bool|string
@@ -572,7 +572,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   /**
    * Generates a short, one-string version of the passed comment array.
    *
-   * @param $comment
+   * @param string[] $comment
    *   An array of strings containing a comment.
    *
    * @return string

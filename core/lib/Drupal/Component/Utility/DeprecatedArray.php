@@ -19,7 +19,7 @@ class DeprecatedArray extends \ArrayObject {
    *
    * @param array $values
    *   The array values.
-   * @param $message
+   * @param string $message
    *   The deprecation message.
    */
   public function __construct(array $values, $message) {

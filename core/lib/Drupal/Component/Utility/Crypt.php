@@ -54,7 +54,7 @@ class Crypt {
   /**
    * Returns a URL-safe, base64 encoded string of highly randomized bytes.
    *
-   * @param $count
+   * @param int $count
    *   The number of random bytes to fetch and base64 encode.
    *
    * @return string
