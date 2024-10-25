@@ -42,8 +42,14 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
   /**
    * {@inheritdoc}
    */
-  public function apply(string $configName, mixed $duplicate_id): void {
-    assert(is_string($duplicate_id));
+  public function apply(string $configName, mixed $value): void {
+    if (!is_array($value)) {
+      $value = ['id' => $value];
+    }
+    assert(is_string($value['id']));
+
+    $value += ['fail_if_exists' => FALSE];
+    assert(is_bool($value['fail_if_exists']));
 
     // If the original doesn't exist, there's nothing to clone.
     $original = $this->configManager->loadConfigEntityByName($configName);
@@ -51,11 +57,12 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
       throw new ConfigActionException("Cannot clone '$configName' because it does not exist.");
     }
     $clone = $original->createDuplicate();
-    $clone->set($original->getEntityType()->getKey('id'), $duplicate_id);
+    $clone->set($original->getEntityType()->getKey('id'), $value['id']);
 
-    // Use the config action manager to invoke the `entity_create` action on
-    // the clone, so that it will be validated.
-    $this->configActionManager->applyAction('entity_create:createIfNotExists', $clone->getConfigDependencyName(), $clone->toArray());
+    $create_action = 'entity_create:' . ($value['fail_if_exists'] ? 'create' : 'createIfNotExists');
+    // Use the config action manager to invoke the create action on the clone,
+    // so that it will be validated.
+    $this->configActionManager->applyAction($create_action, $clone->getConfigDependencyName(), $clone->toArray());
   }
 
 }

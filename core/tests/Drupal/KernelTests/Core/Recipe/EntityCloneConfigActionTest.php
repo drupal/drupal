@@ -74,6 +74,25 @@ class EntityCloneConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests that the action can be configured to fail if the clone exists.
+   */
+  public function testFailIfEntityExists(): void {
+    $this->container->get('plugin.manager.config_action')
+      ->applyAction('cloneAs', 'user.role.test', [
+        'id' => 'cloned',
+        'fail_if_exists' => TRUE,
+      ]);
+
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage('Entity user.role.cloned exists');
+    $this->container->get('plugin.manager.config_action')
+      ->applyAction('cloneAs', 'user.role.test', [
+        'id' => 'cloned',
+        'fail_if_exists' => TRUE,
+      ]);
+  }
+
+  /**
    * Tests cloning entity displays, which have specialized logic for that.
    */
   public function testCloneEntityDisplay(): void {
