@@ -1,0 +1,85 @@
+{
+    "packages": [
+        {
+            "name": "drupal/core",
+            "version": "9.8.0",
+            "version_normalized": "9.8.0.0",
+            "dist": {
+                "type": "path",
+                "url": "../path_repos/drupal--core",
+                "reference": "31fd2270701526555acae45a3601c777e35508d5"
+            },
+            "type": "drupal-core",
+            "extra": {
+                "_readme": [
+                    "The 'drupal-scaffold' section below is needed because 'Drupal\\auto_updates\\Validator\\ScaffoldFilePermissionsValidator'",
+                    "uses this section to determine which files to check. The actual composer.json file for drupal/core will have more files listed",
+                    "but this limited list is used in '\\Drupal\\Tests\\auto_updates\\Kernel\\StatusCheck\\ScaffoldFilePermissionsValidatorTest'",
+                    "to ensure this section determines the file list."
+                ],
+                "drupal-scaffold": {
+                    "file-mapping": {
+                        "[project-root]/.editorconfig": "assets/scaffold/files/editorconfig",
+                        "[project-root]/.gitattributes": "assets/scaffold/files/gitattributes",
+                        "[project-root]/recipes/README.txt": "assets/scaffold/files/recipes.README.txt",
+                        "[web-root]/.csslintrc": "assets/scaffold/files/csslintrc",
+                        "[web-root]/.eslintignore": "assets/scaffold/files/eslintignore",
+                        "[web-root]/.eslintrc.json": "assets/scaffold/files/eslintrc.json",
+                        "[web-root]/.ht.router.php": "assets/scaffold/files/ht.router.php",
+                        "[web-root]/.htaccess": "assets/scaffold/files/htaccess",
+                        "[web-root]/example.gitignore": "assets/scaffold/files/example.gitignore",
+                        "[web-root]/index.php": "assets/scaffold/files/index.php",
+                        "[web-root]/INSTALL.txt": "assets/scaffold/files/drupal.INSTALL.txt",
+                        "[web-root]/README.md": "assets/scaffold/files/drupal.README.md",
+                        "[web-root]/robots.txt": "assets/scaffold/files/robots.txt",
+                        "[web-root]/update.php": "assets/scaffold/files/update.php",
+                        "[web-root]/sites/README.txt": "assets/scaffold/files/sites.README.txt",
+                        "[web-root]/sites/development.services.yml": "assets/scaffold/files/development.services.yml",
+                        "[web-root]/sites/example.settings.local.php": "assets/scaffold/files/example.settings.local.php",
+                        "[web-root]/sites/example.sites.php": "assets/scaffold/files/example.sites.php",
+                        "[web-root]/sites/default/default.services.yml": "assets/scaffold/files/default.services.yml",
+                        "[web-root]/sites/default/default.settings.php": "assets/scaffold/files/default.settings.php",
+                        "[web-root]/modules/README.txt": "assets/scaffold/files/modules.README.txt",
+                        "[web-root]/profiles/README.txt": "assets/scaffold/files/profiles.README.txt",
+                        "[web-root]/themes/README.txt": "assets/scaffold/files/themes.README.txt"
+                    }
+                }
+            },
+            "installation-source": "dist",
+            "description": "A fake version of drupal/core",
+            "install-path": "../drupal/core"
+        },
+        {
+            "name": "drupal/core-dev",
+            "version": "9.8.0",
+            "version_normalized": "9.8.0.0",
+            "dist": {
+                "type": "path",
+                "url": "../path_repos/drupal--core-dev",
+                "reference": "b99a99a11ff2779b5e4c5787dc43575382a3548c"
+            },
+            "type": "package",
+            "installation-source": "dist",
+            "description": "A fake version of drupal/core-dev",
+            "install-path": "../drupal/core-dev"
+        },
+        {
+            "name": "drupal/core-recommended",
+            "version": "9.8.0",
+            "version_normalized": "9.8.0.0",
+            "dist": {
+                "type": "path",
+                "url": "../path_repos/drupal--core-recommended",
+                "reference": "112e4f7cfe8312457cd0eb58dcbffebc148850d8"
+            },
+            "type": "project",
+            "installation-source": "dist",
+            "description": "A fake version of drupal/core-recommended",
+            "install-path": "../drupal/core-recommended"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": [
+        "drupal/core-dev"
+    ]
+}

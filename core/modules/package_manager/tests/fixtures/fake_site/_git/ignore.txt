@@ -1,0 +1,4 @@
+This file should never be staged.
+
+The parent directory will be renamed to .git.
+@see \Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase::createTestProject()

@@ -1,0 +1,33 @@
+package_name:
+  type: string
+  label: 'Package name'
+  constraints:
+    Regex:
+      # @see https://getcomposer.org/schema.json
+      pattern: '/^[a-z0-9]([_.-]?[a-z0-9]+)*\/[a-z0-9](([_.]|-{1,2})?[a-z0-9]+)*$/'
+
+package_manager.settings:
+  type: config_object
+  label: 'Package Manager settings'
+  mapping:
+    executables:
+      type: sequence
+      label: 'Absolute paths to required executables, or NULL to rely on PATH'
+      sequence:
+        type: string
+        label: 'Absolute path to executable, or NULL'
+    additional_trusted_composer_plugins:
+      type: sequence
+      label: 'Additional trusted composer plugins'
+      sequence:
+        type: package_name
+        label: 'Trusted composer plugin'
+    include_unknown_files_in_project_root:
+      type: boolean
+      label: 'Include unrecognized files and directories in the project root in staging operations'
+    log:
+      type: string
+      label: 'Path of a file to which Composer Stager process output should be logged'
+      constraints:
+        NotBlank: []
+      requiredKey: false

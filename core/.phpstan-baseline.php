@@ -36326,6 +36326,342 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\ComposerInspector\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/ComposerInspector.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\ComposerInspector\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/ComposerInspector.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\EventSubscriber\\\\ChangeLogger\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/EventSubscriber/ChangeLogger.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\EventSubscriber\\\\ChangeLogger\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/EventSubscriber/ChangeLogger.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\PackageManagerUninstallValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/PackageManagerUninstallValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\PackageManagerUninstallValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/PackageManagerUninstallValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\PathExcluder\\\\UnknownPathExcluder\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/PathExcluder/UnknownPathExcluder.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\PathExcluder\\\\UnknownPathExcluder\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/PathExcluder/UnknownPathExcluder.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\StageBase\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/StageBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\StageBase\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/StageBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\AllowedScaffoldPackagesValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/AllowedScaffoldPackagesValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\AllowedScaffoldPackagesValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/AllowedScaffoldPackagesValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerMinimumStabilityValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerMinimumStabilityValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerMinimumStabilityValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerMinimumStabilityValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerPatchesValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerPatchesValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerPatchesValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerPatchesValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerPluginsValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerPluginsValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerPluginsValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerPluginsValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\ComposerValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/ComposerValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\DiskSpaceValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/DiskSpaceValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\DiskSpaceValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/DiskSpaceValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\DuplicateInfoFileValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/DuplicateInfoFileValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\DuplicateInfoFileValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/DuplicateInfoFileValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\EnabledExtensionsValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/EnabledExtensionsValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\EnabledExtensionsValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/EnabledExtensionsValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\EnvironmentSupportValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/EnvironmentSupportValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\EnvironmentSupportValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/EnvironmentSupportValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\LockFileValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/LockFileValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\LockFileValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/LockFileValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\MultisiteValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/MultisiteValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\MultisiteValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/MultisiteValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\OverwriteExistingPackagesValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/OverwriteExistingPackagesValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\OverwriteExistingPackagesValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/OverwriteExistingPackagesValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PendingUpdatesValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/PendingUpdatesValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PendingUpdatesValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/PendingUpdatesValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PhpExtensionsValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/PhpExtensionsValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PhpExtensionsValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/PhpExtensionsValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PhpTufValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/PhpTufValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\PhpTufValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/PhpTufValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\RsyncValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/RsyncValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\RsyncValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/RsyncValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\SettingsValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/SettingsValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\SettingsValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/SettingsValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\StageNotInActiveValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/StageNotInActiveValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\StageNotInActiveValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/StageNotInActiveValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\StagedDBUpdateValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/StagedDBUpdateValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\StagedDBUpdateValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/StagedDBUpdateValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\SupportedReleaseValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/SupportedReleaseValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\SupportedReleaseValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/SupportedReleaseValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\WritableFileSystemValidator\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/WritableFileSystemValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\Validator\\\\WritableFileSystemValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/src/Validator/WritableFileSystemValidator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\Functional\\\\FailureMarkerRequirementTest\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/tests/src/Functional/FailureMarkerRequirementTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\Functional\\\\FailureMarkerRequirementTest\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/tests/src/Functional/FailureMarkerRequirementTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\Kernel\\\\StageOwnershipTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/tests/src/Kernel/StageOwnershipTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\Kernel\\\\StageOwnershipTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/package_manager/tests/src/Kernel/StageOwnershipTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Function page_cache_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/page_cache/page_cache.module',

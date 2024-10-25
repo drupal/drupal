@@ -1,0 +1,7 @@
+services:
+  _defaults:
+    autowire: true
+  Drupal\package_manager_bypass\LoggingBeginner:
+    decorates: 'PhpTuf\ComposerStager\API\Core\BeginnerInterface'
+  Drupal\package_manager_bypass\LoggingCommitter:
+    decorates: 'PhpTuf\ComposerStager\API\Core\CommitterInterface'

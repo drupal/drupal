@@ -1,0 +1,6 @@
+name: 'Package Manager Test API'
+description: 'Provides API endpoints for doing stage operations in functional tests.'
+type: module
+package: Testing
+dependencies:
+  - auto_updates:package_manager

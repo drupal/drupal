@@ -23,6 +23,7 @@
         "pear/console_getopt": "~v1.4.3",
         "pear/pear-core-minimal": "~v1.10.15",
         "pear/pear_exception": "~v1.0.2",
+        "php-tuf/composer-stager": "~v2.0.0-rc5",
         "psr/cache": "~3.0.0",
         "psr/container": "~2.0.2",
         "psr/event-dispatcher": "~1.0.0",

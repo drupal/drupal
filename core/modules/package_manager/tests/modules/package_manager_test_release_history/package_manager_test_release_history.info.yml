@@ -1,0 +1,7 @@
+name: 'Package Manager Test Release history'
+type: module
+description: 'Provides a mechanism for serving fake release history metadata in functional tests.'
+package: Testing
+dependencies:
+  - drupal:update
+  - drupal:update_test

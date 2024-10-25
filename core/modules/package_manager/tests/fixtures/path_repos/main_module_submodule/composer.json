@@ -1,0 +1,8 @@
+{
+  "name": "drupal/main_module_submodule",
+  "type": "metapackage",
+  "version": "1.0.0",
+  "require": {
+    "drupal/main_module": "*"
+  }
+}

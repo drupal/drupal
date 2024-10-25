@@ -1,0 +1,47 @@
+{
+  "name": "fake/site",
+  "description": "bull shit",
+  "version": "1.2.4",
+  "require": {
+    "drupal/core-recommended": "9.8.0",
+    "drupal/core": "9.8.0"
+  },
+  "require-dev": {
+    "drupal/core-dev": "^9"
+  },
+  "extra": {
+    "boo": "boo boo",
+    "foo": {
+        "dev": "2.x-dev"
+    },
+    "foo-bar": true,
+    "boo-far": {
+        "foo": 1.23,
+        "bar": 134,
+        "foo-bar": null
+    },
+    "baz": null,
+    "installer-paths": {
+      "modules/contrib/{$name}": ["type:drupal-module"],
+      "profiles/contrib/{$name}": ["type:drupal-profile"],
+      "themes/contrib/{$name}": ["type:drupal-theme"]
+    }
+  },
+  "repositories": {
+    "fake-packages": {
+      "type": "composer",
+      "url": "./"
+    },
+    "custom-package": {
+      "type": "path",
+      "url": "custom/package"
+    },
+    "packagist.org": false
+  },
+  "minimum-stability": "stable",
+  "config": {
+    "allow-plugins": {
+      "drupal/core-composer-scaffold": false
+    }
+  }
+}

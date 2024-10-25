@@ -1,0 +1,21 @@
+package_manager_test_api:
+  path: '/package-manager-test-api'
+  defaults:
+    _controller: 'Drupal\package_manager_test_api\ApiController::run'
+  requirements:
+    _access: 'TRUE'
+package_manager_test_api.finish:
+  path: '/package-manager-test-api/finish/{id}'
+  defaults:
+    _controller: 'Drupal\package_manager_test_api\ApiController::finish'
+  requirements:
+    _access: 'TRUE'
+package_manager_test_api.check_setup:
+  path: '/package-manager-test-api/check-setup'
+  defaults:
+    _controller: 'Drupal\package_manager_test_api\ApiController::checkSetup'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
+    no_cache: TRUE

@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Contains global functions for testing updates to a .module file.
+ */
+
+/**
+ * Page controller that says hello.
+ *
+ * @return string[]
+ *   A renderable array of the page content.
+ */
+function updated_module_hello(): array {
+  return [
+    '#markup' => 'Hello!',
+  ];
+}

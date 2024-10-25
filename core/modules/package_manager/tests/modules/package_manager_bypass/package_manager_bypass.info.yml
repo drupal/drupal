@@ -1,0 +1,7 @@
+name: 'Package Manager Bypass'
+description: 'Mocks PathLocator service, decorates Beginner & Committer services (adds logging) and by default bypasses the Stager service (to minimize I/O during tests).'
+type: module
+package: Testing
+dependencies:
+  - auto_updates:package_manager
+  - auto_updates:fixture_manipulator

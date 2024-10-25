@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This fixture is used by:
+- \Drupal\Tests\package_manager\Kernel\ProjectInfoTest
+- \Drupal\Tests\auto_updates\Functional\UpdaterFormTest
+
+Contains metadata about the following (fake) releases of Drupal core, all of which are secure, in order:
+- 10.0.0
+- 9.7.2
+- 9.7.1
+- 9.7.0
+- 9.6.1
+- 9.6.0
+- 9.5.1
+- 9.5.0
+- 9.4.0, which is in an unsupported branch
+- 9.7.x-dev
+-->
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <title>Drupal</title>
+    <short_name>drupal</short_name>
+    <dc:creator>Drupal</dc:creator>
+    <supported_branches>9.5.,9.6.,9.7.,10.0.</supported_branches>
+    <project_status>published</project_status>
+    <link>http://example.com/project/drupal</link>
+    <terms>
+        <term>
+            <name>Projects</name>
+            <value>Drupal project</value>
+        </term>
+    </terms>
+    <releases>
+        <release>
+          <name>Drupal 10.0.0</name>
+          <version>10.0.0</version>
+          <status>published</status>
+          <release_link>http://example.com/drupal-10-0-0-release</release_link>
+          <download_link>http://example.com/drupal-10-0-0.tar.gz</download_link>
+          <date>1250425521</date>
+          <terms>
+            <term>
+              <name>Release type</name>
+              <value>New features</value>
+            </term>
+            <term>
+              <name>Release type</name>
+              <value>Bug fixes</value>
+            </term>
+          </terms>
+        </release>
+        <release>
+            <name>Drupal 9.7.2</name>
+            <version>9.7.2</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-7-2-release</release_link>
+            <download_link>http://example.com/drupal-9-7-2.tar.gz</download_link>
+            <date>1250425521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+        <release>
+            <name>Drupal 9.7.1</name>
+            <version>9.7.1</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-7-1-release</release_link>
+            <download_link>http://example.com/drupal-9-7-1.tar.gz</download_link>
+            <date>1250425521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+        <release>
+            <name>Drupal 9.7.0</name>
+            <version>9.7.0</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-7-0-release</release_link>
+            <download_link>http://example.com/drupal-9-7-0.tar.gz</download_link>
+            <date>1250424521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+        <release>
+            <name>Drupal 9.6.1</name>
+            <version>9.6.1</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-6-1-release</release_link>
+            <download_link>http://example.com/drupal-9-6-1.tar.gz</download_link>
+            <date>1250425521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+        <release>
+            <name>Drupal 9.6.0</name>
+            <version>9.6.0</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-6-0-release</release_link>
+            <download_link>http://example.com/drupal-9-6-0.tar.gz</download_link>
+            <date>1250424521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+        <release>
+            <name>Drupal 9.5.1</name>
+            <version>9.5.1</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-5-1-release</release_link>
+            <download_link>http://example.com/drupal-9-5-1.tar.gz</download_link>
+            <date>1250425521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+        <release>
+            <name>Drupal 9.5.0</name>
+            <version>9.5.0</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-5-0-release</release_link>
+            <download_link>http://example.com/drupal-9-5-0.tar.gz</download_link>
+            <date>1250424521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+        <release>
+          <name>Drupal 9.4.0</name>
+          <version>9.4.0</version>
+          <status>published</status>
+          <release_link>http://example.com/drupal-9-4-0-release</release_link>
+          <download_link>http://example.com/drupal-9-4-0.tar.gz</download_link>
+          <date>1240424421</date>
+          <terms>
+            <term>
+              <name>Release type</name>
+              <value>New features</value>
+            </term>
+            <term>
+              <name>Release type</name>
+              <value>Bug fixes</value>
+            </term>
+          </terms>
+        </release>
+        <release>
+            <name>Drupal 9.7.x-dev</name>
+            <version>9.7.x-dev</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-7-x-dex-release</release_link>
+            <download_link>http://example.com/drupal-9-7-x-dex.tar.gz</download_link>
+            <date>1250424521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+    </releases>
+</project>

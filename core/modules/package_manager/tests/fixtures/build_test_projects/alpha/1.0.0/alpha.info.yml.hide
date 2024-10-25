@@ -1,0 +1,4 @@
+name: Alpha
+type: module
+core_version_requirement: ^9.7 || ^10
+project: alpha

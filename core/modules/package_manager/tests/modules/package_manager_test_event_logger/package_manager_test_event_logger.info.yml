@@ -1,0 +1,6 @@
+name: 'Package Manager Test Event Logger'
+description: 'Provides an event subscriber to test logging during events in Package Manager'
+type: module
+package: Testing
+dependencies:
+  - auto_updates:package_manager

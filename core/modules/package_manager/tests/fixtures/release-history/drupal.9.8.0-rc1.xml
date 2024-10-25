@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This fixture is used by \Drupal\Tests\auto_updates\Functional\UpdaterFormTest.
+
+Contains metadata about the following (fake) releases of Drupal core, in order:
+- 9.8.0-rc1
+- 9.7.0
+- 9.8.x-dev
+-->
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <title>Drupal</title>
+    <short_name>drupal</short_name>
+    <dc:creator>Drupal</dc:creator>
+    <supported_branches>9.8.,9.7.</supported_branches>
+    <project_status>published</project_status>
+    <link>http://example.com/project/drupal</link>
+    <terms>
+        <term>
+            <name>Projects</name>
+            <value>Drupal project</value>
+        </term>
+    </terms>
+    <releases>
+        <release>
+          <name>Drupal 9.8.0-rc1</name>
+          <version>9.8.0-rc1</version>
+          <status>published</status>
+          <release_link>http://example.com/drupal-9-8-0-rc1-release</release_link>
+          <download_link>http://example.com/drupal-9-8-0-rc1-.tar.gz</download_link>
+          <date>1250424521</date>
+          <terms>
+            <term>
+              <name>Release type</name>
+              <value>New features</value>
+            </term>
+            <term>
+              <name>Release type</name>
+              <value>Bug fixes</value>
+            </term>
+          </terms>
+        </release>
+        <release>
+            <name>Drupal 9.7.0</name>
+            <version>9.7.0</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-7-0-release</release_link>
+            <download_link>http://example.com/drupal-9-7-0.tar.gz</download_link>
+            <date>1250424521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+        <release>
+            <name>Drupal 9.8.x-dev</name>
+            <version>9.8.x-dev</version>
+            <status>published</status>
+            <release_link>http://example.com/drupal-9-8-x-dex-release</release_link>
+            <download_link>http://example.com/drupal-9-8-x-dex.tar.gz</download_link>
+            <date>1250424521</date>
+            <terms>
+                <term>
+                    <name>Release type</name>
+                    <value>New features</value>
+                </term>
+                <term>
+                    <name>Release type</name>
+                    <value>Bug fixes</value>
+                </term>
+            </terms>
+        </release>
+    </releases>
+</project>

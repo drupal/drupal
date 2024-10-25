@@ -1,0 +1,8 @@
+name: 'Package Manager'
+type: module
+description: 'API module providing functionality to stage package installs and updates with Composer.'
+package: Core
+version: VERSION
+lifecycle: experimental
+dependencies:
+  - drupal:update

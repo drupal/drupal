@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This fixture is used by:
+- \Drupal\Tests\package_manager\Kernel\SupportedReleaseValidatorTest
+- \Drupal\Tests\package_manager\Kernel\ProjectInfoTest
+
+Contains metadata about the following (fake) releases of package_manager_test_update module, all of which are secure, in order:
+- 7.0.1
+- 7.0.0
+- 7.0.0-alpha1
+- 8.x-6.2
+- 8.x-6.1
+- 8.x-6.0
+- 8.x-6.0-alpha1
+- 7.0.x-dev
+- 8.x-6.x-dev
+- 8.x-5.x - An invalid release to ensure invalid releases do not affect processing other releases.
+-->
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>Package Manager Test Update</title>
+<short_name>package_manager_test_update</short_name>
+<dc:creator>Package Manager</dc:creator>
+<supported_branches>7.0.,8.x-6.</supported_branches>
+<project_status>published</project_status>
+<link>http://example.com/project/package_manager_test_update</link>
+  <terms>
+   <term><name>Projects</name><value>Package Manager Test Update project</value></term>
+  </terms>
+<releases>
+    <release>
+        <name>Package Manager Test Update 7.0.1</name>
+        <version>7.0.1</version>
+        <status>published</status>
+        <release_link>http://example.com/package_manager_test_update-9-7-1-release</release_link>
+        <download_link>http://example.com/package_manager_test_update-9-7-1.tar.gz</download_link>
+        <date>1250425521</date>
+        <terms>
+            <term><name>Release type</name><value>New features</value></term>
+            <term><name>Release type</name><value>Bug fixes</value></term>
+        </terms>
+    </release>
+    <release>
+        <name>Package Manager Test Update 7.0.0</name>
+        <version>7.0.0</version>
+        <status>published</status>
+        <release_link>http://example.com/package_manager_test_update-9-7-0-release</release_link>
+        <download_link>http://example.com/package_manager_test_update-9-7-0.tar.gz</download_link>
+        <date>1250424521</date>
+        <terms>
+            <term><name>Release type</name><value>New features</value></term>
+            <term><name>Release type</name><value>Bug fixes</value></term>
+        </terms>
+    </release>
+    <release>
+        <name>Package Manager Test Update 7.0.0-alpha1</name>
+        <version>7.0.0-alpha1</version>
+        <status>published</status>
+        <release_link>http://example.com/package_manager_test_update-9-7-0-alpha1-release</release_link>
+        <download_link>http://example.com/package_manager_test_update-9-7-0-alpha1.tar.gz</download_link>
+        <date>1250424521</date>
+        <terms>
+            <term><name>Release type</name><value>New features</value></term>
+            <term><name>Release type</name><value>Bug fixes</value></term>
+        </terms>
+    </release>
+  <release>
+    <name>Package Manager Test Update 8.x-6.2</name>
+    <version>8.x-6.2</version>
+    <status>published</status>
+    <release_link>http://example.com/package_manager_test_update-9-8-2-release</release_link>
+    <download_link>http://example.com/package_manager_test_update-9-8-2.tar.gz</download_link>
+    <date>1250425521</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+ <release>
+  <name>Package Manager Test Update 8.x-6.1</name>
+  <version>8.x-6.1</version>
+  <status>published</status>
+  <release_link>http://example.com/package_manager_test_update-9-8-1-release</release_link>
+  <download_link>http://example.com/package_manager_test_update-9-8-1.tar.gz</download_link>
+  <date>1250425521</date>
+  <terms>
+    <term><name>Release type</name><value>New features</value></term>
+    <term><name>Release type</name><value>Bug fixes</value></term>
+  </terms>
+ </release>
+ <release>
+   <name>Package Manager Test Update 8.x-6.0</name>
+   <version>8.x-6.0</version>
+   <status>published</status>
+   <release_link>http://example.com/package_manager_test_update-9-8-0-release</release_link>
+   <download_link>http://example.com/package_manager_test_update-9-8-0.tar.gz</download_link>
+   <date>1250424521</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+  <release>
+    <name>Package Manager Test Update 8.x-6.0-alpha1</name>
+    <version>8.x-6.0-alpha1</version>
+    <status>published</status>
+    <release_link>http://example.com/package_manager_test_update-9-8-0-alpha1-release</release_link>
+    <download_link>http://example.com/package_manager_test_update-9-8-0-alpha1.tar.gz</download_link>
+    <date>1250424521</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+    <release>
+        <name>Package Manager Test Update 7.0.0-dev</name>
+        <version>7.0.x-dev</version>
+        <status>published</status>
+        <release_link>http://example.com/package_manager_test_update-9-7-0-dev-release</release_link>
+        <download_link>http://example.com/package_manager_test_update-9-7-0-dev.tar.gz</download_link>
+        <date>1250424521</date>
+        <terms>
+            <term><name>Release type</name><value>New features</value></term>
+            <term><name>Release type</name><value>Bug fixes</value></term>
+        </terms>
+    </release>
+    <release>
+        <name>Package Manager Test Update 8.x-6.x-dev</name>
+        <version>8.x-6.x-dev</version>
+        <status>published</status>
+        <release_link>http://example.com/package_manager_test_update-9-8-0-dev-release</release_link>
+        <download_link>http://example.com/package_manager_test_update-9-8-0-dev.tar.gz</download_link>
+        <date>1250424521</date>
+        <terms>
+            <term><name>Release type</name><value>New features</value></term>
+            <term><name>Release type</name><value>Bug fixes</value></term>
+        </terms>
+    </release>
+    <release>
+        <name>Package Manager Test Update 8.x-5.x</name>
+        <version>8.x-5.x</version>
+        <status>published</status>
+        <release_link>http://example.com/package_manager_test_update-9-5-0-dev-release</release_link>
+        <download_link/>
+        <date/>
+        <filesize/>
+        <files>
+            <file>
+                <url/>
+                <archive_type/>
+                <md5/>
+                <size/>
+            </file>
+            <file>
+                <url/>
+                <archive_type/>
+                <md5/>
+                <size/>
+            </file>
+        </files>
+        <terms>
+            <term><name>Release type</name><value>New features</value></term>
+            <term><name>Release type</name><value>Bug fixes</value></term>
+        </terms>
+    </release>
+</releases>
+</project>

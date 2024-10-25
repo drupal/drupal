@@ -1,0 +1,6 @@
+name: 'Package Manager Validation Test'
+description: 'Provides an event subscriber to test Package Manager validation.'
+type: module
+package: Testing
+dependencies:
+  - auto_updates:package_manager

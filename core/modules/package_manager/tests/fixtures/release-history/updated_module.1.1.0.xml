@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This fixture is used by \Drupal\Tests\package_manager\Build\PackageUpdateTest.
+
+Contains metadata about the following (fake) releases of updated_module, all of which are secure, in order:
+- 1.1.0
+- 1.0.0
+-->
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>Updated Module</title>
+<short_name>updated_module</short_name>
+<dc:creator>Drupal</dc:creator>
+<supported_branches>1.1.,1.0.</supported_branches>
+<project_status>published</project_status>
+<link>http://example.com/project/alpha</link>
+  <terms>
+   <term><name>Projects</name><value>Updated Module project</value></term>
+  </terms>
+<releases>
+  <release>
+    <name>Updated Module 1.1.0</name>
+    <version>1.1.0</version>
+    <tag>1.1.0</tag>
+    <status>published</status>
+    <release_link>http://example.com/updated_module-1-1-0-release</release_link>
+    <download_link>http://example.com/updated_module-1-1-0.tar.gz</download_link>
+    <date>1584195300</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+  </release>
+ <release>
+   <name>Updated Module 1.0.0</name>
+   <version>1.0.0</version>
+   <tag>1.0.0</tag>
+   <status>published</status>
+   <release_link>http://example.com/updated_module-1-0-0-release</release_link>
+   <download_link>http://example.com/updated_module-1-0-0.tar.gz</download_link>
+   <date>1581603300</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+</releases>
+</project>

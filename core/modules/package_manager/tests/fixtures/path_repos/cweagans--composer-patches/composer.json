@@ -1,0 +1,15 @@
+{
+    "name": "cweagans/composer-patches",
+    "description": "A fake version of cweagans/composer-patches",
+    "type": "composer-plugin",
+    "version": "1.7.333",
+    "extra": {
+        "class": "\\cweagans\\Fake\\ComposerPatches"
+    },
+    "require": {
+        "composer-plugin-api": "^1.0 || ^2.0"
+    },
+    "autoload": {
+        "psr-4": {"cweagans\\Fake\\": "src"}
+    }
+}

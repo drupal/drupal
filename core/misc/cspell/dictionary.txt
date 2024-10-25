@@ -256,6 +256,7 @@ guzzlehttp
 hande
 hateoas
 hexcode
+hhvm
 hilited
 hmac
 hookname
@@ -568,6 +569,7 @@ subvalues
 subview
 supercede
 svgz
+syncer
 synchronizable
 syrop
 tabbingmanager

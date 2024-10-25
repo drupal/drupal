@@ -1,0 +1,5 @@
+{
+  "name": "drupal/main_module",
+  "type": "drupal-module",
+  "version": "1.0.0"
+}

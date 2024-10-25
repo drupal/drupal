@@ -1,0 +1,107 @@
+services:
+  _defaults:
+    autoconfigure: true
+    autowire: true
+
+  # Underlying Symfony utilities for Composer Stager.
+  Symfony\Component\Filesystem\Filesystem:
+    public: false
+  Symfony\Component\Process\ExecutableFinder:
+    public: false
+
+  # Basic infrastructure services for Composer Stager, overridden by us to
+  # provide additional functionality.
+  Drupal\package_manager\ExecutableFinder:
+    public: false
+    decorates: 'PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface'
+  Drupal\package_manager\ProcessFactory:
+    public: false
+    decorates: 'PhpTuf\ComposerStager\API\Process\Factory\ProcessFactoryInterface'
+  Drupal\package_manager\TranslatableStringFactory:
+    public: false
+    decorates: 'PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface'
+  PhpTuf\ComposerStager\API\FileSyncer\Service\FileSyncerInterface:
+    factory: ['@PhpTuf\ComposerStager\API\FileSyncer\Factory\FileSyncerFactoryInterface', 'create']
+  Drupal\package_manager\LoggingBeginner:
+    public: false
+    decorates: 'PhpTuf\ComposerStager\API\Core\BeginnerInterface'
+  Drupal\package_manager\LoggingStager:
+    public: false
+    decorates: 'PhpTuf\ComposerStager\API\Core\StagerInterface'
+  Drupal\package_manager\LoggingCommitter:
+    public: false
+    decorates: 'PhpTuf\ComposerStager\API\Core\CommitterInterface'
+  logger.channel.package_manager:
+    parent: logger.channel_base
+    arguments:
+      - 'package_manager'
+  logger.channel.package_manager_change_log:
+    parent: logger.channel_base
+    arguments:
+      - 'package_manager_change_log'
+
+  # Services provided to Drupal by Package Manager.
+  Drupal\package_manager\PathLocator:
+    arguments:
+      $appRoot: '%app.root%'
+  Drupal\package_manager\FailureMarker: {}
+  Drupal\package_manager\EventSubscriber\UpdateDataSubscriber: {}
+  Drupal\package_manager\EventSubscriber\ChangeLogger:
+    calls:
+      - [setLogger, ['@logger.channel.package_manager_change_log']]
+  Drupal\package_manager\ComposerInspector: {}
+
+  # Validators.
+  Drupal\package_manager\Validator\EnvironmentSupportValidator: {}
+  Drupal\package_manager\Validator\ComposerValidator: {}
+  Drupal\package_manager\Validator\DiskSpaceValidator: {}
+  Drupal\package_manager\Validator\PendingUpdatesValidator:
+    arguments:
+      - '%app.root%'
+      - '@update.post_update_registry'
+    autowire: false
+  Drupal\package_manager\Validator\LockFileValidator:
+    arguments:
+      $keyValueFactory: '@keyvalue'
+  Drupal\package_manager\Validator\WritableFileSystemValidator: {}
+  Drupal\package_manager\Validator\ComposerMinimumStabilityValidator: {}
+  Drupal\package_manager\Validator\MultisiteValidator: {}
+  Drupal\package_manager\Validator\SymlinkValidator: {}
+  Drupal\package_manager\Validator\DuplicateInfoFileValidator: {}
+  Drupal\package_manager\Validator\EnabledExtensionsValidator: {}
+  Drupal\package_manager\Validator\OverwriteExistingPackagesValidator: {}
+  Drupal\package_manager\Validator\AllowedScaffoldPackagesValidator: {}
+  Drupal\package_manager\Validator\StagedDBUpdateValidator: {}
+  Drupal\package_manager\PathExcluder\TestSiteExcluder: {}
+  Drupal\package_manager\PathExcluder\VendorHardeningExcluder: {}
+  Drupal\package_manager\PathExcluder\SiteFilesExcluder:
+    arguments:
+      $wrappers: [public, private, assets]
+  Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder: {}
+  Drupal\package_manager\PathExcluder\GitExcluder: {}
+  Drupal\package_manager\PathExcluder\UnknownPathExcluder: {}
+  Drupal\package_manager\PathExcluder\SiteConfigurationExcluder:
+    arguments:
+      $sitePath: '%site.path%'
+  Drupal\package_manager\PathExcluder\NodeModulesExcluder: {}
+  Drupal\package_manager\PackageManagerUninstallValidator:
+    arguments:
+      $eventDispatcher: '@event_dispatcher'
+  Drupal\package_manager\Validator\SettingsValidator: {}
+  Drupal\package_manager\Validator\RsyncValidator: {}
+  Drupal\package_manager\Validator\ComposerPluginsValidator: {}
+  Drupal\package_manager\Validator\ComposerPatchesValidator: {}
+  Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator: {}
+  Drupal\package_manager\Validator\SupportedReleaseValidator: {}
+  Drupal\package_manager\Validator\StageNotInActiveValidator: {}
+  Drupal\package_manager\Validator\PhpExtensionsValidator: {}
+  Drupal\package_manager\Validator\PhpTufValidator:
+    arguments:
+      $repositories:
+        - 'https://packages.drupal.org/8'
+  Drupal\package_manager\PackageManagerUpdateProcessor:
+    arguments:
+      # @todo Autowire $update_fetcher when https://drupal.org/i/3325557 lands.
+      $update_fetcher: '@update.fetcher'
+      $key_value_factory: '@keyvalue'
+      $key_value_expirable_factory: '@keyvalue.expirable'

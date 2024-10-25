@@ -1,0 +1,4 @@
+name: 'Fixture manipulator'
+description: 'Manipulate fixtures for tests.'
+type: module
+package: Testing

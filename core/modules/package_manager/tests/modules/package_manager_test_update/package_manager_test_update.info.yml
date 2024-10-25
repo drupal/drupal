@@ -1,0 +1,4 @@
+name: 'Package Manager Test Update'
+description: 'A module to test updates'
+type: module
+package: Testing

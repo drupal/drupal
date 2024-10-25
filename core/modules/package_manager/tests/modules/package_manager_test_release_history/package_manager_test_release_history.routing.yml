@@ -1,0 +1,9 @@
+package_manager_test_release_history.metadata:
+  path: '/test-release-history/{project_name}/{version}'
+  defaults:
+    _title: 'Update test'
+    _controller: '\Drupal\package_manager_test_release_history\TestController::metadata'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE
