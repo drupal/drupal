@@ -10,6 +10,8 @@
 
 use Drupal\file\Entity\File;
 
+// cspell:ignore garply tarz
+
 const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
 const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';
 
@@ -292,9 +294,15 @@ function file_test_file_mimetype_mapping_alter(&$mapping) {
   $mapping['mimetypes']['file_test_mimetype_1'] = 'made_up/file_test_1';
   $mapping['mimetypes']['file_test_mimetype_2'] = 'made_up/file_test_2';
   $mapping['mimetypes']['file_test_mimetype_3'] = 'made_up/doc';
+  $mapping['mimetypes']['application-x-compress'] = 'application/x-compress';
+  $mapping['mimetypes']['application-x-tarz'] = 'application/x-tarz';
+  $mapping['mimetypes']['application-x-garply-waldo'] = 'application/x-garply-waldo';
   $mapping['extensions']['file_test_1'] = 'file_test_mimetype_1';
   $mapping['extensions']['file_test_2'] = 'file_test_mimetype_2';
   $mapping['extensions']['file_test_3'] = 'file_test_mimetype_2';
+  $mapping['extensions']['z'] = 'application-x-compress';
+  $mapping['extensions']['tar.z'] = 'application-x-tarz';
+  $mapping['extensions']['garply.waldo'] = 'application-x-garply-waldo';
   // Override existing mapping.
   $mapping['extensions']['doc'] = 'file_test_mimetype_3';
 }
