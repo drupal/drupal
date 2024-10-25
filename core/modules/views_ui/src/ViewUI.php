@@ -90,8 +90,6 @@ class ViewUI implements ViewEntityInterface {
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $live_preview;
 
-  public $renderPreview = FALSE;
-
   /**
    * The View storage object.
    *

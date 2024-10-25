@@ -16,8 +16,6 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
   use CronRunTrait;
 
-  protected $batchOutput = [];
-
   /**
    * {@inheritdoc}
    */

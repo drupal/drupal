@@ -27,7 +27,6 @@ class PageTitleTest extends BrowserTestBase {
   protected $defaultTheme = 'starterkit_theme';
 
   protected $contentUser;
-  protected $savedTitle;
 
   /**
    * Implement setUp().

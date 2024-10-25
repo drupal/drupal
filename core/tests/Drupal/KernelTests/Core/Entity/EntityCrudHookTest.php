@@ -52,8 +52,6 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     'comment',
   ];
 
-  protected $ids = [];
-
   /**
    * {@inheritdoc}
    */

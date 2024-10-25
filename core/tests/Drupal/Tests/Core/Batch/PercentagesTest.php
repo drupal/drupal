@@ -16,7 +16,6 @@ use Drupal\Tests\UnitTestCase;
  * @group Batch
  */
 class PercentagesTest extends UnitTestCase {
-  protected $testCases = [];
 
   /**
    * @dataProvider providerTestPercentages
