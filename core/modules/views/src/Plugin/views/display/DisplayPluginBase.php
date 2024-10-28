@@ -2148,10 +2148,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $parts['fragment'] = $this->viewsTokenReplace($parts['fragment'], $tokens);
 
       // Handle query parameters where the key is part of an array.
-      // For example, f[0] for facets.
-      array_walk_recursive($parts['query'], function (&$value) use ($tokens) {
-        $value = $this->viewsTokenReplace($value, $tokens);
-      });
+      // For example, f[0] for facets or field_name[id]=id for exposed filters.
+      $parts['query'] = $this->recursiveReplaceTokens($parts['query'], $tokens);
       $options = $parts;
     }
 
@@ -2168,6 +2166,34 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $url->mergeOptions(['query' => $this->view->exposed_raw_input]);
     }
     return $url;
+  }
+
+  /**
+   * Replace the query parameters recursively, both key and value.
+   *
+   * @param array $parts
+   *   Query parts of the request.
+   * @param array $tokens
+   *   Tokens for replacement.
+   *
+   * @return array
+   *   The parameters with replacements done.
+   */
+  protected function recursiveReplaceTokens(array $parts, array $tokens): array {
+    foreach ($parts as $key => $value) {
+      if (is_array($value)) {
+        $value = $this->recursiveReplaceTokens($value, $tokens);
+      }
+      else {
+        $value = $this->viewsTokenReplace($value, $tokens);
+      }
+      if (!is_int($key)) {
+        unset($parts[$key]);
+        $key = $this->viewsTokenReplace($key, $tokens);
+      }
+      $parts[$key] = $value;
+    }
+    return $parts;
   }
 
   /**

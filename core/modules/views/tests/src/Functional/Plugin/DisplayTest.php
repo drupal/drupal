@@ -300,6 +300,14 @@ class DisplayTest extends ViewTestBase {
     $output = (string) $renderer->renderRoot($output);
     $this->assertStringContainsString('/node/22?date=22&amp;foo=bar', $output, 'The read more link with href "/node/22?date=22&foo=bar" was found.');
 
+    // Test more link with array arguments in path.
+    $view->display_handler->setOption('link_url', 'node/{{ raw_arguments.age }}?date[{{ raw_arguments.age }}]={{ raw_arguments.age }}&foo=bar');
+    $view->setArguments([22]);
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = (string) $renderer->renderRoot($output);
+    $this->assertStringContainsString('/node/22?date%5B22%5D=22&amp;foo=bar', $output, 'The read more link with href "/node/22?date[22]=22&foo=bar" was found.');
+
     // Test more link with arguments in fragment.
     $view->display_handler->setOption('link_url', 'node?date={{ raw_arguments.age }}&foo=bar#{{ raw_arguments.age }}');
     $view->setArguments([22]);
