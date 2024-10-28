@@ -56,7 +56,6 @@ class FieldDefaultValueCallbackTest extends BrowserTestBase {
 
   public function testDefaultValueCallbackForm(): void {
     // Create a field and storage for checking.
-    /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',

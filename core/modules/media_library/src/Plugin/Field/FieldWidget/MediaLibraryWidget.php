@@ -934,7 +934,6 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       $ids = explode(',', $value['media_library_selection']);
       $ids = array_filter($ids, 'is_numeric');
       if (!empty($ids)) {
-        /** @var \Drupal\media\MediaInterface[] $media */
         return Media::loadMultiple($ids);
       }
     }

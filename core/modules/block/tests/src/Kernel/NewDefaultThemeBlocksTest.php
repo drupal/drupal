@@ -44,7 +44,6 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
     parent::setUp();
 
     $this->installConfig(['system']);
-    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $themeInstaller */
     $this->themeInstaller = $this->container->get('theme_installer');
     $this->defaultTheme = $this->config('system.theme')->get('default');
   }

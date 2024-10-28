@@ -118,7 +118,6 @@ class WorkflowUiTest extends BrowserTestBase {
    */
   public function testWorkflowCreation(): void {
     $workflow_storage = $this->container->get('entity_type.manager')->getStorage('workflow');
-    /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $this->drupalLogin($this->createUser(['access administration pages', 'administer workflows']));
     $this->drupalGet('admin/config/workflow');
     $this->assertSession()->linkByHrefExists('admin/config/workflow/workflows');
@@ -135,6 +134,7 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->clickLink('Add a new state');
     $this->submitForm(['label' => 'Published', 'id' => 'published'], 'Save');
     $this->assertSession()->pageTextContains('Created Published state.');
+    /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertFalse($workflow->getTypePlugin()->getState('published')->canTransitionTo('published'), 'No default transition from published to published exists.');
 

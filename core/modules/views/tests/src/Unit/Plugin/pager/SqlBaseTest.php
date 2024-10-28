@@ -43,7 +43,6 @@ class SqlBaseTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMockForAbstractClass();
 
-    /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     $this->view = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->getMock();

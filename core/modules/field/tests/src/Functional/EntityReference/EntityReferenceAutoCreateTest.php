@@ -188,7 +188,6 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       'auto_create_bundle' => $vocabularies[1]->id(),
     ];
     $this->createEntityReferenceField('node', $this->referencingType, $field_name, $this->randomString(), 'taxonomy_term', 'default', $handler_settings);
-    /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $fd */
     \Drupal::service('entity_display.repository')
       ->getFormDisplay('node', $this->referencingType)
       ->setComponent($field_name, ['type' => 'entity_reference_autocomplete'])

@@ -92,7 +92,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function loadParents($tid) {
     $terms = [];
-    /** @var \Drupal\taxonomy\TermInterface $term */
     if ($tid && $term = $this->load($tid)) {
       foreach ($this->getParents($term) as $id => $parent) {
         // This method currently doesn't return the <root> parent.
