@@ -81,7 +81,7 @@ class Node extends FieldableEntity {
   }
 
   /**
-   * The join options between the node and the node_revisions table.
+   * The join options between the node and the node_revision table.
    */
   const JOIN = '[n].[vid] = [nr].[vid]';
 
