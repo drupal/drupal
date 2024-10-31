@@ -13,7 +13,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_install().
  */
-function locale_install() {
+function locale_install(): void {
   // Create the interface translations directory and ensure it's writable.
   if (!$directory = \Drupal::config('locale.settings')->get('translation.path')) {
     $site_path = \Drupal::getContainer()->getParameter('site.path');
@@ -32,7 +32,7 @@ function locale_install() {
 /**
  * Implements hook_uninstall().
  */
-function locale_uninstall() {
+function locale_uninstall(): void {
   $config = \Drupal::config('locale.settings');
   // Delete all JavaScript translation files.
   $locale_js_directory = 'public://' . $config->get('javascript.directory');

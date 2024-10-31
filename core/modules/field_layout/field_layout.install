@@ -14,7 +14,7 @@ use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
 /**
  * Implements hook_install().
  */
-function field_layout_install() {
+function field_layout_install(): void {
   // Ensure each entity display has a layout.
   $entity_save = function (EntityDisplayInterface $entity) {
     if ($entity instanceof EntityDisplayWithLayoutInterface) {
@@ -31,7 +31,7 @@ function field_layout_install() {
 /**
  * Implements hook_uninstall().
  */
-function field_layout_uninstall() {
+function field_layout_uninstall(): void {
   // Reset each entity display to use the one-column layout to best approximate
   // the absence of layouts.
   $entity_save = function (EntityDisplayInterface $entity) {

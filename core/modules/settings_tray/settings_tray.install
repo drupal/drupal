@@ -8,7 +8,7 @@
 /**
  * Implements hook_install().
  */
-function settings_tray_install() {
+function settings_tray_install(): void {
   // \Drupal\Core\Menu\ContextualLinkManager caches per-group definitions
   // without associating the cache tag that would allow them to be cleared
   // by its clearCachedDefinitions() implementation that is automatically

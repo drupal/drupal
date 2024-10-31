@@ -1618,7 +1618,7 @@ function system_requirements($phase) {
 /**
  * Implements hook_install().
  */
-function system_install() {
+function system_install(): void {
   // Populate the cron key state variable.
   $cron_key = Crypt::randomBytesBase64(55);
   \Drupal::state()->set('system.cron_key', $cron_key);

@@ -31,7 +31,7 @@ function module_test_schema() {
 /**
  * Implements hook_install().
  */
-function module_test_install() {
+function module_test_install(): void {
   $schema = module_test_schema()['module_test'];
   Database::getConnection()->insert('module_test')
     ->fields([

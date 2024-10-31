@@ -11,7 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 /**
  * Implements hook_uninstall().
  */
-function comment_uninstall() {
+function comment_uninstall(): void {
   // Remove the comment fields.
   $storage = \Drupal::entityTypeManager()->getStorage('field_storage_config');
   $fields = $storage->loadByProperties(['type' => 'comment']);
@@ -24,7 +24,7 @@ function comment_uninstall() {
 /**
  * Implements hook_install().
  */
-function comment_install() {
+function comment_install(): void {
   // By default, maintain entity statistics for comments.
   // @see \Drupal\comment\CommentStatisticsInterface
   \Drupal::state()->set('comment.maintain_entity_statistics', TRUE);

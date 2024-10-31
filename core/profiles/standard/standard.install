@@ -14,7 +14,7 @@ use Drupal\shortcut\Entity\Shortcut;
  *
  * @see system_install()
  */
-function standard_install() {
+function standard_install(): void {
   // Populate the default shortcut set.
   $shortcut = Shortcut::create([
     'shortcut_set' => 'default',

@@ -10,7 +10,7 @@ use Drupal\media\Entity\MediaType;
 /**
  * Implements hook_install().
  */
-function media_library_install($is_syncing) {
+function media_library_install($is_syncing): void {
   if (!$is_syncing) {
     foreach (MediaType::loadMultiple() as $type) {
       _media_library_configure_form_display($type);

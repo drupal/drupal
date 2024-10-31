@@ -10,7 +10,7 @@ use Drupal\Core\Cache\Cache;
 /**
  * Implements hook_install().
  */
-function block_install() {
+function block_install(): void {
   // Because the Block module upon installation unconditionally overrides all
   // HTML output by selecting a different page display variant, we must
   // invalidate all cached HTML output.

@@ -8,7 +8,7 @@
 /**
  * Implements hook_install().
  */
-function testing_site_config_install() {
+function testing_site_config_install(): void {
   // Set the site email address to something that is not sendmail_from.
   \Drupal::configFactory()->getEditable('system.site')
     ->set('mail', 'profile-testing-site-config@example.com')

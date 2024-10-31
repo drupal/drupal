@@ -11,7 +11,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_install().
  */
-function content_translation_install() {
+function content_translation_install(): void {
   // Assign a fairly low weight to ensure our implementation of
   // hook_module_implements_alter() is run among the last ones.
   module_set_weight('content_translation', 10);

@@ -49,7 +49,7 @@ function workspaces_module_preinstall($module) {
 /**
  * Implements hook_install().
  */
-function workspaces_install() {
+function workspaces_install(): void {
   // Set the owner of these default workspaces to be first user which has the
   // 'administrator' role. This way we avoid hard coding user ID 1 for sites
   // that prefer to not give it any special meaning.

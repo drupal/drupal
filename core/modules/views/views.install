@@ -8,7 +8,7 @@
 /**
  * Implements hook_install().
  */
-function views_install() {
+function views_install(): void {
   module_set_weight('views', 10);
 }
 

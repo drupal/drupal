@@ -255,7 +255,7 @@ function hook_modules_installed($modules, $is_syncing) {
  * @see hook_uninstall()
  * @see hook_modules_installed()
  */
-function hook_install($is_syncing) {
+function hook_install($is_syncing): void {
   // Set general module variables.
   \Drupal::state()->set('my_module.foo', 'bar');
 }
@@ -345,7 +345,7 @@ function hook_modules_uninstalled($modules, $is_syncing) {
  * @see hook_modules_uninstalled()
  * @see \Drupal\Core\Extension\ModuleUninstallValidatorInterface
  */
-function hook_uninstall($is_syncing) {
+function hook_uninstall($is_syncing): void {
   // Delete remaining general module variables.
   \Drupal::state()->delete('my_module.foo');
 }

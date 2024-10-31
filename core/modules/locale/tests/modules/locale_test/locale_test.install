@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_uninstall().
  */
-function locale_test_uninstall() {
+function locale_test_uninstall(): void {
   // Clear variables.
   \Drupal::state()->delete('locale.test_system_info_alter');
   \Drupal::state()->delete('locale.test_projects_alter');

@@ -120,7 +120,7 @@ function node_schema() {
 /**
  * Implements hook_install().
  */
-function node_install() {
+function node_install(): void {
   // Enable default permissions for system roles.
   // IMPORTANT: Modules SHOULD NOT automatically grant any user role access
   // permissions in hook_install().
@@ -149,7 +149,7 @@ function node_install() {
 /**
  * Implements hook_uninstall().
  */
-function node_uninstall() {
+function node_uninstall(): void {
   // Delete remaining general module variables.
   \Drupal::state()->delete('node.node_access_needs_rebuild');
 }

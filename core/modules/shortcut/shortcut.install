@@ -49,7 +49,7 @@ function shortcut_schema() {
 /**
  * Implements hook_install().
  */
-function shortcut_install() {
+function shortcut_install(): void {
   // Theme settings are not configuration entities and cannot depend on modules
   // so to set a module-specific setting, we need to set it with logic.
   if (\Drupal::service('theme_handler')->themeExists('claro')) {
@@ -63,7 +63,7 @@ function shortcut_install() {
 /**
  * Implements hook_uninstall().
  */
-function shortcut_uninstall() {
+function shortcut_uninstall(): void {
   // Theme settings are not configuration entities and cannot depend on modules
   // so to unset a module-specific setting, we need to unset it with logic.
   if (\Drupal::service('theme_handler')->themeExists('claro')) {

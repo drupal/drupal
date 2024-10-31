@@ -10,7 +10,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_install().
  */
-function jsonapi_install() {
+function jsonapi_install(): void {
   $module_handler = \Drupal::moduleHandler();
   $potential_conflicts = [
     'content_translation',

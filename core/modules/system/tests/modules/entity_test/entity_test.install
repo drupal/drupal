@@ -13,7 +13,7 @@ use Drupal\field\Entity\FieldConfig;
 /**
  * Implements hook_install().
  */
-function entity_test_install() {
+function entity_test_install(): void {
   foreach (entity_test_entity_types() as $entity_type) {
     // Auto-create fields for testing.
     FieldStorageConfig::create([

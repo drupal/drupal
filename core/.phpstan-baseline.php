@@ -12534,12 +12534,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function block_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/block.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function block_update_last_removed\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/block.install',
@@ -14394,19 +14388,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function comment_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/comment.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function comment_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/comment.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function comment_uninstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/comment.install',
 ];
@@ -16764,12 +16746,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function contact_storage_test_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/tests/modules/contact_storage_test/contact_storage_test.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function contact_storage_test_contact_form_form_builder\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contact/tests/modules/contact_storage_test/contact_storage_test.module',
@@ -17730,12 +17706,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function content_moderation_test_resave_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/modules/content_moderation_test_resave/content_moderation_test_resave.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function content_moderation_test_resave_entity_insert\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/modules/content_moderation_test_resave/content_moderation_test_resave.module',
@@ -18363,12 +18333,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$locked_languages might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/content_translation.admin.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function content_translation_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/content_translation.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -21033,18 +20997,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Unit\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FieldSettingsTest\\:\\:getSettingsProvider\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/src/Unit/Plugin/migrate/process/d6/FieldSettingsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function field_layout_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_layout/field_layout.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function field_layout_uninstall\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_layout/field_layout.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -23928,19 +23880,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function image_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/image.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function image_requirements\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/image.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function image_uninstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/image.install',
 ];
@@ -24741,12 +24681,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\inline_form_errors\\\\RenderElementHelper\\:\\:alterElementInfo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/inline_form_errors/src/RenderElementHelper.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function jsonapi_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/jsonapi.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -26790,12 +26724,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function layout_builder_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/layout_builder.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function layout_builder_schema\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/layout_builder.install',
@@ -28638,12 +28566,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function locale_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/locale.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function locale_requirements\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/locale.install',
@@ -28651,12 +28573,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function locale_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/locale.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function locale_uninstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/locale.install',
 ];
@@ -29346,12 +29262,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function locale_test_uninstall\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/tests/modules/locale_test/locale_test.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function locale_test_countries_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/tests/modules/locale_test/locale_test.module',
@@ -29649,12 +29559,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\locale\\\\Unit\\\\Menu\\\\LocaleLocalTasksTest\\:\\:getLocalePageRoutes\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/tests/src/Unit/Menu/LocaleLocalTasksTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function media_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/media.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -30729,12 +30633,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Unit\\\\ResourceTest\\:\\:setDimensionsTestCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Unit/ResourceTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function media_library_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/media_library.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -33638,12 +33536,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function migrate_drupal_ui_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/migrate_drupal_ui.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function migrate_drupal_ui_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/migrate_drupal_ui.module',
@@ -34406,12 +34298,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function node_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/node.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function node_requirements\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/node.install',
@@ -34419,12 +34305,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function node_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/node.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function node_uninstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/node.install',
 ];
@@ -39146,12 +39026,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function settings_tray_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/settings_tray/settings_tray.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function settings_tray_block_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/settings_tray/settings_tray.module',
@@ -39308,19 +39182,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function shortcut_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/shortcut.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function shortcut_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/shortcut.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function shortcut_uninstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/shortcut/shortcut.install',
 ];
@@ -39917,12 +39779,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\syslog\\\\Logger\\\\SysLog\\:\\:syslogWrapper\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/syslog/src/Logger/SysLog.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function syslog_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/syslog/syslog.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -40751,12 +40607,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function template_preprocess_system_themes_page\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/system.admin.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function system_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -42427,12 +42277,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function entity_schema_test_entity_type_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_schema_test/entity_schema_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function entity_test_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -44440,12 +44284,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function hold_test_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/hold_test/hold_test.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function hold_test_request\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/hold_test/hold_test.module',
@@ -44739,18 +44577,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function module_handler_test_multiple_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/module_handler_test_multiple/module_handler_test_multiple.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function module_handler_test_multiple_child_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/module_handler_test_multiple/module_handler_test_multiple_child/module_handler_test_multiple_child.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function module_required_test_system_info_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/module_required_test/module_required_test.module',
@@ -44766,12 +44592,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function module_test_altered_test_hook\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/module_test/module_test.implementations.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function module_test_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/module_test/module_test.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -45203,12 +45023,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function router_test_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/router_test.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function router_test_preprocess_page\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/router_test.module',
@@ -45467,12 +45281,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function system_module_test_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/system_module_test/system_module_test.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function system_module_test_page_attachments_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/system_module_test/system_module_test.module',
@@ -45642,12 +45450,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function _test_batch_test_callback\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/test_batch_test/test_batch_test.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function test_batch_test_install\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/test_batch_test/test_batch_test.install',
 ];
@@ -50243,19 +50045,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function update_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/update.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function update_requirements\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/update.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function update_uninstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/update.install',
 ];
@@ -52016,12 +51806,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -59117,12 +58901,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_test_data_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/views_test_data.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function views_test_data_schema\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/views_test_data.install',
@@ -60614,12 +60392,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function views_test_checkboxes_theme_form_views_exposed_form_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/themes/views_test_checkboxes_theme/views_test_checkboxes_theme.theme',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function views_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/views.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -63839,12 +63611,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function workspaces_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/workspaces.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function workspaces_module_preinstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/workspaces.install',
@@ -63989,12 +63755,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function demo_umami_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/demo_umami.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function demo_umami_requirements\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/demo_umami/demo_umami.install',
@@ -64031,19 +63791,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function demo_umami_content_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function demo_umami_content_module_preinstall\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function demo_umami_content_uninstall\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.install',
 ];
@@ -64253,12 +64001,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function standard_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/standard/standard.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function standard_form_install_configure_form_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/standard/standard.profile',
@@ -64328,12 +64070,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function testing_requirements_requirements\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/testing_requirements/testing_requirements.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function testing_site_config_install\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/testing_site_config/testing_site_config.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
