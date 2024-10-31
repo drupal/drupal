@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
-use Drupal\Tests\Core\Theme\Component\ComponentKernelTestBase;
 
 /**
  * Tests invalid render options for components.
