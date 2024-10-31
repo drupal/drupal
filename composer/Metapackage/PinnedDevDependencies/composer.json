@@ -8,7 +8,7 @@
     },
     "require": {
         "drupal/core": "11.x-dev",
-        "behat/mink": "v1.11.0",
+        "behat/mink": "v1.12.0",
         "behat/mink-browserkit-driver": "v2.2.0",
         "colinodell/psr-testlogger": "v1.3.0",
         "composer/ca-bundle": "1.5.2",
