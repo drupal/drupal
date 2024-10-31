@@ -201,10 +201,6 @@ variables:
 
 '⚡️ PHPUnit Unit':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  services:
-    # There are some unit tests that need a database.
-    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
-    - <<: *with-database
   variables:
     TESTSUITE: PHPUnit-Unit
     KUBERNETES_CPU_REQUEST: "1"

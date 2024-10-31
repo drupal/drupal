@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\Theme\Component;
+namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\Component\Exception\ComponentNotFoundException;
 

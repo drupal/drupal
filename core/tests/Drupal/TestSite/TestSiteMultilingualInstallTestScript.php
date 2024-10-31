@@ -9,7 +9,7 @@ namespace Drupal\TestSite;
 /**
  * Setup file used by TestSiteApplicationTest.
  *
- * @see \Drupal\Tests\Scripts\TestSiteApplicationTest
+ * @see \Drupal\KernelTests\Scripts\TestSiteApplicationTest
  */
 class TestSiteMultilingualInstallTestScript implements TestSetupInterface, TestPreinstallInterface {
 
