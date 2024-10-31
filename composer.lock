@@ -491,7 +491,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "10.4.x-dev",
+            "version": "10.5.x-dev",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -652,7 +652,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "10.4.x-dev",
+            "version": "10.5.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -685,7 +685,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "10.4.x-dev",
+            "version": "10.5.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -9623,8 +9623,8 @@
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": {},
-    "platform-dev": {},
+    "platform": [],
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.1.0"
     },
