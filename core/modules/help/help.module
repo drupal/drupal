@@ -65,7 +65,7 @@ function help_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function help_theme($existing, $type, $theme, $path) {
+function help_theme($existing, $type, $theme, $path): array {
   return [
     'help_section' => [
       'variables' => [

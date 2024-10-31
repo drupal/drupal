@@ -10,6 +10,6 @@ declare(strict_types=1);
 /**
  * Implements hook_theme().
  */
-function update_test_broken_theme_hook_theme($existing, $type, $theme, $path) {
+function update_test_broken_theme_hook_theme($existing, $type, $theme, $path): array {
   throw new \Exception('This mimics an exception caused by unstable dependencies.');
 }

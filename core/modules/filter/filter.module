@@ -55,7 +55,7 @@ function filter_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function filter_theme() {
+function filter_theme(): array {
   return [
     'filter_tips' => [
       'variables' => ['tips' => NULL, 'long' => FALSE],

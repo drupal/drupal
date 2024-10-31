@@ -90,7 +90,7 @@ function file_get_content_headers(FileInterface $file) {
 /**
  * Implements hook_theme().
  */
-function file_theme() {
+function file_theme(): array {
   return [
     // From file.module.
     'file_link' => [

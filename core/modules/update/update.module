@@ -132,7 +132,7 @@ function _update_manager_access() {
 /**
  * Implements hook_theme().
  */
-function update_theme() {
+function update_theme(): array {
   return [
     'update_last_check' => [
       'variables' => ['last' => 0],

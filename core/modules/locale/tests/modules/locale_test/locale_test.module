@@ -162,7 +162,7 @@ function locale_test_language_fallback_candidates_locale_lookup_alter(array &$ca
 /**
  * Implements hook_theme().
  */
-function locale_test_theme() {
+function locale_test_theme(): array {
   $return = [];
 
   $return['locale_test_tokenized'] = [

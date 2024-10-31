@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_theme().
  */
-function twig_theme_test_theme($existing, $type, $theme, $path) {
+function twig_theme_test_theme($existing, $type, $theme, $path): array {
   $items['twig_theme_test_filter'] = [
     'variables' => ['quote' => [], 'attributes' => []],
     'template' => 'twig_theme_test.filter',

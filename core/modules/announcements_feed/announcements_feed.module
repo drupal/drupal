@@ -87,7 +87,7 @@ function announcements_feed_toolbar_alter(&$items) {
 /**
  * Implements hook_theme().
  */
-function announcements_feed_theme($existing, $type, $theme, $path) {
+function announcements_feed_theme($existing, $type, $theme, $path): array {
   return [
     'announcements_feed' => [
       'variables' => [

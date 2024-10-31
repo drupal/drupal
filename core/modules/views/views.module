@@ -80,7 +80,7 @@ function views_views_pre_render($view) {
  * Register views theming functions and those that are defined via views plugin
  * definitions.
  */
-function views_theme($existing, $type, $theme, $path) {
+function views_theme($existing, $type, $theme, $path): array {
   \Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
 
   // Some quasi clever array merging here.

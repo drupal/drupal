@@ -66,7 +66,7 @@ function image_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function image_theme() {
+function image_theme(): array {
   return [
     // Theme functions in image.module.
     'image_style' => [

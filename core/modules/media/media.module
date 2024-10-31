@@ -67,7 +67,7 @@ function media_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function media_theme() {
+function media_theme(): array {
   return [
     'media' => [
       'render element' => 'elements',

@@ -49,7 +49,7 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function taxonomy_theme() {
+function taxonomy_theme(): array {
   return [
     'taxonomy_term' => [
       'render element' => 'elements',

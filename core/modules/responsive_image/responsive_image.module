@@ -52,7 +52,7 @@ function responsive_image_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function responsive_image_theme() {
+function responsive_image_theme(): array {
   return [
     'responsive_image' => [
       'variables' => [

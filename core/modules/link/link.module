@@ -41,7 +41,7 @@ function link_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function link_theme() {
+function link_theme(): array {
   return [
     'link_formatter_link_separate' => [
       'variables' => ['title' => NULL, 'url_title' => NULL, 'url' => NULL],

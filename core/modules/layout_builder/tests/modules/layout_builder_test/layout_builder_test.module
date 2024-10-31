@@ -182,7 +182,7 @@ function layout_builder_test_module_implements_alter(&$implementations, $hook) {
 /**
  * Implements hook_theme().
  */
-function layout_builder_test_theme() {
+function layout_builder_test_theme(): array {
   return [
     'block__preview_aware_block' => [
       'base hook' => 'block',

@@ -275,7 +275,7 @@ function content_moderation_entity_field_access($operation, FieldDefinitionInter
 /**
  * Implements hook_theme().
  */
-function content_moderation_theme() {
+function content_moderation_theme(): array {
   return ['entity_moderation_form' => ['render element' => 'form']];
 }
 

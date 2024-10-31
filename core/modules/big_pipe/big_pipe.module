@@ -80,7 +80,7 @@ function big_pipe_page_attachments(array &$page) {
 /**
  * Implements hook_theme().
  */
-function big_pipe_theme() {
+function big_pipe_theme(): array {
   return [
     'big_pipe_interface_preview' => [
       'variables' => [

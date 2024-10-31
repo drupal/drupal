@@ -110,7 +110,7 @@ function comment_entity_extra_field_info() {
 /**
  * Implements hook_theme().
  */
-function comment_theme() {
+function comment_theme(): array {
   return [
     'comment' => [
       'render element' => 'elements',

@@ -104,7 +104,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function node_theme() {
+function node_theme(): array {
   return [
     'node' => [
       'render element' => 'elements',

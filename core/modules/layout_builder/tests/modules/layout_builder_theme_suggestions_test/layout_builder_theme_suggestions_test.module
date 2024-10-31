@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_theme().
  */
-function layout_builder_theme_suggestions_test_theme() {
+function layout_builder_theme_suggestions_test_theme(): array {
   // It is necessary to explicitly register the template via hook_theme()
   // because it is added via a module, not a theme.
   return [

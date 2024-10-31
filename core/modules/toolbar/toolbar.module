@@ -36,7 +36,7 @@ function toolbar_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function toolbar_theme($existing, $type, $theme, $path) {
+function toolbar_theme($existing, $type, $theme, $path): array {
   $items['toolbar'] = [
     'render element' => 'element',
   ];

@@ -63,7 +63,7 @@ function views_ui_entity_type_build(array &$entity_types) {
 /**
  * Implements hook_theme().
  */
-function views_ui_theme() {
+function views_ui_theme(): array {
   return [
     // Edit a view
     'views_ui_display_tab_setting' => [

@@ -40,7 +40,7 @@ function config_translation_help($route_name, RouteMatchInterface $route_match) 
 /**
  * Implements hook_theme().
  */
-function config_translation_theme() {
+function config_translation_theme(): array {
   return [
     'config_translation_manage_form_element' => [
       'render element' => 'element',

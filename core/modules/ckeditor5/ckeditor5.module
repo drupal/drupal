@@ -78,7 +78,7 @@ function ckeditor5_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function ckeditor5_theme() {
+function ckeditor5_theme(): array {
   return [
     // The theme hook is used for rendering the CKEditor 5 toolbar settings in
     // the Drupal admin UI. The toolbar settings UI is internal, and utilizing

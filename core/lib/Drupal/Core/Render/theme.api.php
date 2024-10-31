@@ -1248,7 +1248,7 @@ function hook_page_bottom(array &$page_bottom) {
  * @see themeable
  * @see hook_theme_registry_alter()
  */
-function hook_theme($existing, $type, $theme, $path) {
+function hook_theme($existing, $type, $theme, $path): array {
   return [
     'my_module_display' => [
       'variables' => [

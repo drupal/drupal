@@ -87,7 +87,7 @@ function navigation_module_implements_alter(&$implementations, $hook) {
 /**
  * Implements hook_theme().
  */
-function navigation_theme($existing, $type, $theme, $path) {
+function navigation_theme($existing, $type, $theme, $path): array {
   $items['top_bar'] = [
     'variables' => [
       'local_tasks' => [],

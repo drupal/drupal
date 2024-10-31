@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_theme().
  */
-function deprecated_twig_template_theme() {
+function deprecated_twig_template_theme(): array {
   return [
     'deprecated_template' => [
       'variables' => [

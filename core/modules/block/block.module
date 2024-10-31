@@ -54,7 +54,7 @@ function block_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function block_theme() {
+function block_theme(): array {
   return [
     'block' => [
       'render element' => 'elements',

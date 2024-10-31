@@ -100,7 +100,7 @@ function media_library_media_source_info_alter(array &$sources) {
 /**
  * Implements hook_theme().
  */
-function media_library_theme() {
+function media_library_theme(): array {
   return [
     'media__media_library' => [
       'base hook' => 'media',

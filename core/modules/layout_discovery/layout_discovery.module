@@ -24,7 +24,7 @@ function layout_discovery_help($route_name) {
 /**
  * Implements hook_theme().
  */
-function layout_discovery_theme() {
+function layout_discovery_theme(): array {
   return \Drupal::service('plugin.manager.core.layout')->getThemeImplementations();
 }
 

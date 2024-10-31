@@ -40,7 +40,7 @@ function block_content_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function block_content_theme($existing, $type, $theme, $path) {
+function block_content_theme($existing, $type, $theme, $path): array {
   return [
     'block_content_add_list' => [
       'variables' => ['content' => NULL],

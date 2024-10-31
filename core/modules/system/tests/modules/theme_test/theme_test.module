@@ -13,7 +13,7 @@ use Drupal\Core\Extension\Extension;
 /**
  * Implements hook_theme().
  */
-function theme_test_theme($existing, $type, $theme, $path) {
+function theme_test_theme($existing, $type, $theme, $path): array {
   $items['theme_test'] = [
     'file' => 'theme_test.inc',
     'variables' => ['foo' => ''],

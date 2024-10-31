@@ -50,7 +50,7 @@ function field_ui_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function field_ui_theme() {
+function field_ui_theme(): array {
   return [
     'field_ui_table' => [
       'variables' => [

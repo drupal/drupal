@@ -12,7 +12,7 @@ declare(strict_types=1);
  *
  * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testBigPipeLargeContent
  */
-function big_pipe_regression_test_theme() {
+function big_pipe_regression_test_theme(): array {
   return [
     'big_pipe_test_large_content' => [
       'variables' => [],
