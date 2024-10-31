@@ -25,12 +25,9 @@ class SessionConfiguration implements SessionConfigurationInterface {
    * @see https://www.php.net/manual/session.security.ini.php
    */
   public function __construct($options = []) {
-    // Provide sensible defaults for sid_length, sid_bits_per_character and
-    // name_suffix.
+    // Provide sensible defaults for name_suffix.
     // @see core/assets/scaffold/files/default.services.yml
     $this->options = $options + [
-      'sid_length' => 48,
-      'sid_bits_per_character' => 6,
       'name_suffix' => '',
     ];
   }
@@ -58,10 +55,6 @@ class SessionConfiguration implements SessionConfigurationInterface {
     // Set the session cookie name.
     $options['name'] = $this->getName($request);
 
-    if (\PHP_VERSION_ID >= 80400) {
-      // See https://wiki.php.net/rfc/deprecations_php_8_4#sessionsid_length_and_sessionsid_bits_per_character
-      unset($options['sid_length'], $options['sid_bits_per_character']);
-    }
     return $options;
   }
 
