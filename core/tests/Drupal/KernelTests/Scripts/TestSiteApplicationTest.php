@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Scripts;
+namespace Drupal\KernelTests\Scripts;
 
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\TestDatabase;
-use Drupal\Tests\UnitTestCase;
+use Drupal\KernelTests\KernelTestBase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -18,19 +18,18 @@ use Symfony\Component\Process\Process;
 /**
  * Tests core/scripts/test-site.php.
  *
- * @group Setup
- *
- * This test uses the Drupal\Core\Database\Database class which has a static.
- * Therefore run in a separate process to avoid side effects.
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
+ * This test uses the Drupal\Core\Database\Database class which has a static,
+ * and the CI database services. Therefore it is defined as KernelTest so that
+ * it can also run in a separate process to avoid side effects.
  *
  * @see \Drupal\TestSite\TestSiteApplication
  * @see \Drupal\TestSite\Commands\TestSiteInstallCommand
  * @see \Drupal\TestSite\Commands\TestSiteTearDownCommand
+ *
+ * @group Setup
+ * @preserveGlobalState disabled
  */
-class TestSiteApplicationTest extends UnitTestCase {
+class TestSiteApplicationTest extends KernelTestBase {
 
   /**
    * The PHP executable path.
@@ -81,7 +80,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process = Process::fromShellCommandline($command_line, $this->root, ['COLUMNS' => PHP_INT_MAX]);
     $process->run();
 
-    $this->assertStringContainsString('The class Drupal\Tests\Scripts\TestSiteApplicationTest contained in', $process->getErrorOutput());
+    $this->assertStringContainsString('The class Drupal\KernelTests\Scripts\TestSiteApplicationTest contained in', $process->getErrorOutput());
     $this->assertStringContainsString('needs to implement \Drupal\TestSite\TestSetupInterface', $process->getErrorOutput());
   }
 
@@ -90,9 +89,6 @@ class TestSiteApplicationTest extends UnitTestCase {
    */
   public function testInstallScript(): void {
     $simpletest_path = $this->root . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . 'simpletest';
-    if (!is_writable($simpletest_path)) {
-      $this->markTestSkipped("Requires the directory $simpletest_path to exist and be writable");
-    }
 
     // Install a site using the JSON output.
     $command_line = $this->php . ' core/scripts/test-site.php install --json --setup-file core/tests/Drupal/TestSite/TestSiteInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
@@ -190,9 +186,6 @@ class TestSiteApplicationTest extends UnitTestCase {
    */
   public function testInstallInDifferentLanguage(): void {
     $simpletest_path = $this->root . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . 'simpletest';
-    if (!is_writable($simpletest_path)) {
-      $this->markTestSkipped("Requires the directory $simpletest_path to exist and be writable");
-    }
 
     $command_line = $this->php . ' core/scripts/test-site.php install --json --langcode fr --setup-file core/tests/Drupal/TestSite/TestSiteMultilingualInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
     $process = Process::fromShellCommandline($command_line, $this->root);
@@ -240,9 +233,6 @@ class TestSiteApplicationTest extends UnitTestCase {
   public function testUserLogin(): void {
     $this->markTestIncomplete('Fix this test in https://www.drupal.org/project/drupal/issues/2962157.');
     $simpletest_path = $this->root . DIRECTORY_SEPARATOR . 'sites' . DIRECTORY_SEPARATOR . 'simpletest';
-    if (!is_writable($simpletest_path)) {
-      $this->markTestSkipped("Requires the directory $simpletest_path to exist and be writable");
-    }
 
     // Install a site using the JSON output.
     $command_line = $this->php . ' core/scripts/test-site.php install --json --setup-file core/tests/Drupal/TestSite/TestSiteInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';

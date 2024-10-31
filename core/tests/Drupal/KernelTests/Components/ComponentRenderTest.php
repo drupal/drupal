@@ -9,7 +9,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ComponentPluginManager;
 use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
-use Drupal\Tests\Core\Theme\Component\ComponentKernelTestBase;
 
 /**
  * Tests the correct rendering of components.
