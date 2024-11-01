@@ -68,6 +68,18 @@ class HookCollectorPass implements CompilerPassInterface {
   protected int $priority = 0;
 
   /**
+   * A list of functions implementing hook_hook_info().
+   *
+   * (This is required only for BC.)
+   */
+  private array $hookInfo = [];
+
+  /**
+   * A list of .inc files.
+   */
+  private array $groupIncludes = [];
+
+  /**
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container): void {
@@ -75,6 +87,16 @@ class HookCollectorPass implements CompilerPassInterface {
     $map = [];
     $container->register(ProceduralCall::class, ProceduralCall::class)
       ->addArgument($collector->includes);
+    $groupIncludes = [];
+    foreach ($collector->hookInfo as $function) {
+      foreach ($function() as $hook => $info) {
+        if (isset($collector->groupIncludes[$info['group']])) {
+          $groupIncludes[$hook] = $collector->groupIncludes[$info['group']];
+        }
+      }
+    }
+    $definition = $container->getDefinition('module_handler');
+    $definition->setArgument('$groupIncludes', $groupIncludes);
     foreach ($collector->implementations as $hook => $class_implementations) {
       foreach ($class_implementations as $class => $method_hooks) {
         if ($container->has($class)) {
@@ -152,7 +174,7 @@ class HookCollectorPass implements CompilerPassInterface {
       }
       if ($extension === 'php') {
         $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
-        $class = $namespace . '/' . basename($fileinfo->getFilename(), '.php');
+        $class = $namespace . '/' . $fileinfo->getBasename('.php');
         $class = str_replace('/', '\\', $class);
         foreach (static::getHookAttributesInClass($class) as $attribute) {
           $this->addFromAttribute($attribute, $class, $module);
@@ -165,6 +187,12 @@ class HookCollectorPass implements CompilerPassInterface {
           if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
             $this->addProceduralImplementation($fileinfo, $matches['hook'], $matches['module'], $matches['function']);
           }
+        }
+      }
+      if ($extension === 'inc') {
+        $parts = explode('.', $fileinfo->getFilename());
+        if (count($parts) === 3 && $parts[0] === $module) {
+          $this->groupIncludes[$parts[1]][] = $fileinfo->getPathname();
         }
       }
     }
@@ -266,6 +294,9 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   protected function addProceduralImplementation(\SplFileInfo $fileinfo, string $hook, string $module, string $function) {
     $this->proceduralHooks[$hook][$module] = FALSE;
+    if ($hook === 'hook_info') {
+      $this->hookInfo[] = $function;
+    }
     if ($hook === 'module_implements_alter') {
       $this->moduleImplementsAlters[] = $function;
     }
@@ -330,6 +361,7 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   public static function checkForProceduralOnlyHooks(Hook $hook, string $class): void {
     $staticDenyHooks = [
+      'hook_info',
       'install',
       'module_preinstall',
       'module_preuninstall',

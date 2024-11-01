@@ -9,6 +9,8 @@ use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\Core\GroupIncludesTestTrait;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -18,6 +20,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @group Extension
  */
 class ModuleHandlerTest extends UnitTestCase {
+
+  use GroupIncludesTestTrait;
 
   /**
    * @var \PHPUnit\Framework\MockObject\MockObject|\Symfony\Component\EventDispatcher\EventDispatcherInterface
@@ -376,6 +380,17 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->setModuleList([]);
     $module_handler->addModule('node', 'core/modules/node');
     $this->assertEquals(['node' => $this->root . '/core/modules/node'], $module_handler->getModuleDirectories());
+  }
+
+  /**
+   * @covers ::getHookListeners
+   */
+  public function testGroupIncludes(): void {
+    self::setupGroupIncludes();
+    $moduleHandler = new ModuleHandler('', [], new EventDispatcher(), [], self::GROUP_INCLUDES);
+    $this->assertFalse(function_exists('_test_module_helper'));
+    $moduleHandler->invokeAll('token_info');
+    $this->assertTrue(function_exists('_test_module_helper'));
   }
 
 }

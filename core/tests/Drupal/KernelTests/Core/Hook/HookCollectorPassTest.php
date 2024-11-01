@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Hook;
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPass
@@ -36,6 +37,7 @@ class HookCollectorPassTest extends KernelTestBase {
       'user_hooks_test' => ['pathname' => "$this->siteDirectory/user_hooks_test.info.yml"],
     ];
     $container->setParameter('container.modules', $module_filenames);
+    $container->setDefinition('module_handler', new Definition());
     (new HookCollectorPass())->process($container);
     $implementations = [
       'user_format_name_alter' => [

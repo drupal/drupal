@@ -9,14 +9,18 @@ use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Tests\Core\GroupIncludesTestTrait;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @coversDefaultClass \Drupal\Core\Hook\HookCollectorPass
  * @group Hook
  */
 class HookCollectorPassTest extends UnitTestCase {
+
+  use GroupIncludesTestTrait;
 
   /**
    * @covers ::collectAllHookImplementations
@@ -61,9 +65,24 @@ __EOF__
 
     $container = new ContainerBuilder();
     $container->setParameter('container.modules', $module_filenames);
+    $container->setDefinition('module_handler', new Definition());
     (new HookCollectorPass())->process($container);
     $this->assertSame($implementations, $container->getParameter('hook_implementations_map'));
     $this->assertSame($includes, $container->getDefinition(ProceduralCall::class)->getArguments()[0]);
+  }
+
+  /**
+   * @covers ::process
+   * @covers ::collectModuleHookImplementations
+   */
+  public function testGroupIncludes(): void {
+    $module_filenames = self::setupGroupIncludes();
+    $container = new ContainerBuilder();
+    $container->setParameter('container.modules', $module_filenames);
+    $container->setDefinition('module_handler', new Definition());
+    (new HookCollectorPass())->process($container);
+    $argument = $container->getDefinition('module_handler')->getArgument('$groupIncludes');
+    $this->assertSame(self::GROUP_INCLUDES, $argument);
   }
 
   /**

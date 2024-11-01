@@ -62,6 +62,9 @@ namespace Drupal\Core\Hook\Attribute;
  *
  * The following hooks can only have procedural hook implementations:
  *
+ * Legacy meta hooks:
+ * - hook_hook_info()
+ *
  * Install hooks:
  * - hook_install()
  * - hook_module_preinstall()
