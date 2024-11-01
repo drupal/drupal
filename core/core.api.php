@@ -1653,6 +1653,9 @@
  * The following hooks can not be implemented as a class method, and must be
  * implemented as procedural:
  *
+ * Legacy meta hooks:
+ * - hook_hook_info()
+ *
  * Install hooks:
  * - hook_install()
  * - hook_module_preinstall()
