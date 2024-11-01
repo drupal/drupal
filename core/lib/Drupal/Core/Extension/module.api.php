@@ -96,6 +96,8 @@ function hook_hook_info() {
 /**
  * Alter the registry of modules implementing a hook.
  *
+ * Only procedural implementations are supported for this hook.
+ *
  * This hook is invoked in \Drupal::moduleHandler()->getImplementationInfo().
  * A module may implement this hook in order to reorder the implementing
  * modules, which are otherwise ordered by the module's system weight.
