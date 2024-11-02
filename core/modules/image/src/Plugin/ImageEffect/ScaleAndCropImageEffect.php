@@ -2,6 +2,7 @@
 
 namespace Drupal\image\Plugin\ImageEffect;
 
+use Drupal\Component\Utility\Image;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\image\Attribute\ImageEffect;
@@ -20,13 +21,13 @@ class ScaleAndCropImageEffect extends CropImageEffect {
    * {@inheritdoc}
    */
   public function applyEffect(ImageInterface $image) {
-    $width = $this->configuration['width'];
-    $height = $this->configuration['height'];
+    $width = (int) $this->configuration['width'];
+    $height = (int) $this->configuration['height'];
     $scale = max($width / $image->getWidth(), $height / $image->getHeight());
 
     [$x, $y] = explode('-', $this->configuration['anchor']);
-    $x = image_filter_keyword($x, $image->getWidth() * $scale, $width);
-    $y = image_filter_keyword($y, $image->getHeight() * $scale, $height);
+    $x = Image::getKeywordOffset($x, (int) round($image->getWidth() * $scale), $width);
+    $y = Image::getKeywordOffset($y, (int) round($image->getHeight() * $scale), $height);
 
     if (!$image->apply('scale_and_crop', ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height])) {
       $this->logger->error('Image scale and crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()]);
