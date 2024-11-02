@@ -726,18 +726,14 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
  * @param $display_id
  *   The display id to embed. If unsure, use 'default', as it will always be
  *   valid. But things like 'page' or 'block' should work here.
- * @param ...
+ * @param ...$args
  *   Any additional parameters will be passed as arguments.
  *
  * @return array|null
  *   A renderable array containing the view output or NULL if the display ID
  *   of the view to be executed doesn't exist.
  */
-function views_embed_view($name, $display_id = 'default') {
-  $args = func_get_args();
-  // Remove $name and $display_id from the arguments.
-  unset($args[0], $args[1]);
-
+function views_embed_view($name, $display_id = 'default', ...$args) {
   $view = Views::getView($name);
   if (!$view || !$view->access($display_id)) {
     return;
@@ -763,17 +759,13 @@ function views_embed_view($name, $display_id = 'default') {
  *   want to use. A URL will appear in the status bar of your browser. This is
  *   usually at the bottom of the window, in the chrome. Everything after
  *   #views-tab- is the display ID, e.g. page_1.
- * @param ...
+ * @param ...$args
  *   Any additional parameters will be passed as arguments.
  *
  * @return array
  *   An array containing an object for each view item.
  */
-function views_get_view_result($name, $display_id = NULL) {
-  $args = func_get_args();
-  // Remove $name and $display_id from the arguments.
-  unset($args[0], $args[1]);
-
+function views_get_view_result($name, $display_id = NULL, ...$args) {
   $view = Views::getView($name);
   if (is_object($view)) {
     if (is_array($args)) {

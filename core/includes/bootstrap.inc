@@ -441,7 +441,7 @@ function drupal_static_reset($name = NULL) {
  *
  * @param callable $callback
  *   The shutdown function to register.
- * @param ...
+ * @param ...$args
  *   Additional arguments to pass to the shutdown function.
  *
  * @return array
@@ -450,7 +450,7 @@ function drupal_static_reset($name = NULL) {
  * @see register_shutdown_function()
  * @ingroup php_wrappers
  */
-function &drupal_register_shutdown_function($callback = NULL) {
+function &drupal_register_shutdown_function($callback = NULL, ...$args) {
   // We cannot use drupal_static() here because the static cache is reset during
   // batch processing, which breaks batch handling.
   static $callbacks = [];
@@ -460,9 +460,6 @@ function &drupal_register_shutdown_function($callback = NULL) {
     if (empty($callbacks)) {
       register_shutdown_function('_drupal_shutdown_function');
     }
-    $args = func_get_args();
-    // Remove $callback from the arguments.
-    unset($args[0]);
     // Save callback and arguments
     $callbacks[] = ['callback' => $callback, 'arguments' => $args];
   }

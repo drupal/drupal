@@ -184,7 +184,7 @@ class Inspector {
    *
    * @param mixed $traversable
    *   Variable to be examined.
-   * @param string ...
+   * @param ...$keys
    *   Keys to be searched for.
    *
    * @return bool
@@ -370,7 +370,7 @@ class Inspector {
    *
    * @param mixed $traversable
    *   Variable to be examined.
-   * @param string ...
+   * @param ...$classes
    *   Classes and interfaces to test objects against.
    *
    * @return bool

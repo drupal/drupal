@@ -563,7 +563,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return string
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding route.
    */
   public function getRouteName() {
@@ -579,7 +579,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return array
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding route.
    */
   public function getRouteParameters() {
@@ -598,7 +598,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return $this
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding route.
    */
   public function setRouteParameters($parameters) {
@@ -619,7 +619,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return $this
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding route.
    */
   public function setRouteParameter($key, $value) {
@@ -777,7 +777,7 @@ class Url implements TrustedCallbackInterface {
    * @return string
    *   The internal path for this route.
    *
-   * @throws \UnexpectedValueException.
+   * @throws \UnexpectedValueException
    *   If this is a URI with no corresponding system path.
    */
   public function getInternalPath() {

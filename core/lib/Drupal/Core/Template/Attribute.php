@@ -174,13 +174,12 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   /**
    * Adds classes or merges them on to array of existing CSS classes.
    *
-   * @param string|array ...
+   * @param string|array ...$args
    *   CSS classes to add to the class attribute array.
    *
    * @return $this
    */
-  public function addClass() {
-    $args = func_get_args();
+  public function addClass(...$args) {
     if ($args) {
       $classes = [];
       foreach ($args as $arg) {
@@ -237,13 +236,12 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   /**
    * Removes an attribute from an Attribute object.
    *
-   * @param string|array ...
+   * @param string|array ...$args
    *   Attributes to remove from the attribute array.
    *
    * @return $this
    */
-  public function removeAttribute() {
-    $args = func_get_args();
+  public function removeAttribute(...$args) {
     foreach ($args as $arg) {
       // Support arrays or multiple arguments.
       if (is_array($arg)) {
@@ -262,15 +260,14 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   /**
    * Removes argument values from array of existing CSS classes.
    *
-   * @param string|array ...
+   * @param string|array ...$args
    *   CSS classes to remove from the class attribute array.
    *
    * @return $this
    */
-  public function removeClass() {
+  public function removeClass(...$args) {
     // With no class attribute, there is no need to remove.
     if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
-      $args = func_get_args();
       $classes = [];
       foreach ($args as $arg) {
         // Merge the values passed in from the classes array.
