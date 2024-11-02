@@ -19,6 +19,7 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Provides helper methods for the JSON:API module's functional tests.
@@ -218,7 +219,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request
    */
-  protected function request($method, Url $url, array $request_options) {
+  protected function request($method, Url $url, array $request_options): ResponseInterface {
     try {
       $response = $this->httpClient->request($method, $url->toString(), $request_options);
     }

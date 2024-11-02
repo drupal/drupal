@@ -769,7 +769,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
    *
    * @return \Psr\Http\Message\ResponseInterface
    */
-  protected function fileRequest(Url $url, $file_contents, array $headers = []) {
+  protected function fileRequest(Url $url, $file_contents, array $headers = []): ResponseInterface {
     // Set the format for the response.
     $url->setOption('query', ['_format' => static::$format]);
 

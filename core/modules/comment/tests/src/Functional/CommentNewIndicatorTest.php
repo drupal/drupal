@@ -9,6 +9,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Url;
 use Drupal\comment\Entity\Comment;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Tests the 'new' indicator posted on comments.
@@ -40,7 +41,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The HTTP response.
    */
-  protected function renderNewCommentsNodeLinks(array $node_ids) {
+  protected function renderNewCommentsNodeLinks(array $node_ids): ResponseInterface {
     $client = $this->getHttpClient();
     $url = Url::fromRoute('comment.new_comments_node_links');
 

@@ -10,6 +10,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Tests contextual link display on the front page based on permissions.
@@ -264,7 +265,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  protected function renderContextualLinks($ids, $current_path) {
+  protected function renderContextualLinks($ids, $current_path): ResponseInterface {
     $tokens = array_map([$this, 'createContextualIdToken'], $ids);
     $http_client = $this->getHttpClient();
     $url = Url::fromRoute('contextual.render', [], [

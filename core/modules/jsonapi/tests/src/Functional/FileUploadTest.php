@@ -824,7 +824,7 @@ class FileUploadTest extends ResourceTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function fileRequest(Url $url, $file_contents, array $headers = []) {
+  protected function fileRequest(Url $url, $file_contents, array $headers = []): ResponseInterface {
     $request_options = [];
     $headers = $headers + [
       // Set the required (and only accepted) content type for the request.
