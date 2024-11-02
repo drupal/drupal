@@ -92,7 +92,7 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function request($method, Url $url, array $request_options = []) {
+  protected function request($method, Url $url, array $request_options = []): ResponseInterface {
     $request_options[RequestOptions::HEADERS] = [
       'Content-Type' => static::$mimeType,
     ];

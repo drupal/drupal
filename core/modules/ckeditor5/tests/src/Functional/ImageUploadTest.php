@@ -13,6 +13,7 @@ use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Test image upload.
@@ -161,7 +162,7 @@ class ImageUploadTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response.
    */
-  protected function uploadRequest(Url $url, string $file_contents, string $file_name) {
+  protected function uploadRequest(Url $url, string $file_contents, string $file_name): ResponseInterface {
     $request_options[RequestOptions::HEADERS] = [
       'Accept' => 'application/json',
     ];
