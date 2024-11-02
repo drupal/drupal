@@ -18,7 +18,6 @@ use Drupal\Tests\BrowserTestBase;
  * - image.module:
  *   image_style_options()
  *   \Drupal\image\ImageStyleInterface::flush()
- *   image_filter_keyword()
  */
 
 /**

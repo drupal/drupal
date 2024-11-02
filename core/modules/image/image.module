@@ -336,8 +336,14 @@ function template_preprocess_image_style(&$variables) {
  * @return int|string
  *   The offset from the anchor, in pixels, or the anchor itself, if its value
  *   isn't one of the accepted values.
+ *
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\Component\Utility\Image::getKeywordOffset() instead.
+ *
+ * @see https://www.drupal.org/node/3268441
  */
 function image_filter_keyword($anchor, $current_size, $new_size) {
+  @trigger_error('image_filter_keyword() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Component\Utility\Image::getKeywordOffset() instead. See https://www.drupal.org/node/3268441', E_USER_DEPRECATED);
   switch ($anchor) {
     case 'top':
     case 'left':
