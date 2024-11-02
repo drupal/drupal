@@ -8276,12 +8276,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\File\\\\FileSystem\\:\\:__get\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/File/FileSystem.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\File\\\\FileSystem\\:\\:basename\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/File/FileSystem.php',
@@ -50393,12 +50387,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\access\\\\Permission\\:\\:__get\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Plugin/views/access/Permission.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\access\\\\Permission\\:\\:alterRouteDefinition\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/views/access/Permission.php',
@@ -50600,12 +50588,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\filter\\\\Name\\:\\:valueValidate\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/views/filter/Name.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\filter\\\\Permissions\\:\\:__get\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Plugin/views/filter/Permissions.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
