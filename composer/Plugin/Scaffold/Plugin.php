@@ -47,7 +47,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface, Capable {
   /**
    * Record whether the 'require' command was called.
    *
-   * @param bool
+   * @var bool
    */
   protected $requireWasCalled;
 

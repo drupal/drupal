@@ -19,7 +19,7 @@ class Cache {
   /**
    * Merges lists of cache contexts and removes duplicates.
    *
-   * @param list<string> ...
+   * @param list<string> ...$cache_contexts
    *   Cache contexts to merge.
    *
    * @return list<string>
@@ -42,7 +42,7 @@ class Cache {
    * allows items to be invalidated based on all tags attached to the content
    * they're constituted from.
    *
-   * @param list<string> ...
+   * @param list<string> ...$cache_tags
    *   Cache tags to merge.
    *
    * @return list<string>
@@ -59,7 +59,7 @@ class Cache {
    *
    * Ensures infinite max-age (Cache::PERMANENT) is taken into account.
    *
-   * @param int ...
+   * @param int ...$max_ages
    *   Max age values to merge.
    *
    * @return int

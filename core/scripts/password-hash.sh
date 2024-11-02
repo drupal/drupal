@@ -5,7 +5,7 @@
  * @file
  * Drupal hash script - to generate a hash from a plaintext password
  *
- * @param password1 [password2 [password3 ...]]
+ * @param string[] ...$password
  *  Plain-text passwords in quotes (or with spaces backslash escaped).
  *
  * @todo Port to a console command. https://www.drupal.org/node/2289409

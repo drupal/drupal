@@ -68,14 +68,14 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   /**
    * The mocked stream wrapper manager.
    *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface||\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $streamWrapperManager;
 
   /**
    * The mocked libraries directory file finder.
    *
-   * @var \Drupal\Core\Asset\LibrariesDirectoryFileFinder||\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Asset\LibrariesDirectoryFileFinder|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $librariesDirectoryFileFinder;
 

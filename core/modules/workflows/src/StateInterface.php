@@ -60,7 +60,7 @@ interface StateInterface {
    * @return \Drupal\workflows\TransitionInterface
    *   The Transition object for the provided state ID.
    *
-   * @throws \InvalidArgumentException()
+   * @throws \InvalidArgumentException
    *   Exception thrown when the provided state ID can not be transitioned to.
    */
   public function getTransitionTo($to_state_id);
