@@ -130,7 +130,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: property.notFound
 	'message' => '#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$xchanged\\.$#',
-	'count' => 6,
+	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Component/Diff/Engine/DiffEngine.php',
 ];
 $ignoreErrors[] = [
@@ -148,7 +148,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: property.notFound
 	'message' => '#^Access to an undefined property Drupal\\\\Component\\\\Diff\\\\Engine\\\\DiffEngine\\:\\:\\$ychanged\\.$#',
-	'count' => 5,
+	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Component/Diff/Engine/DiffEngine.php',
 ];
 $ignoreErrors[] = [
@@ -3016,6 +3016,18 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: includeOnce.fileNotFound
+	'message' => '#^Path in include_once\\(\\) "vfs\\://drupal/sites/default/modules/module_a/module_a\\.post_update\\.php" is not a file or it does not exist\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Update/UpdateRegistryTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: includeOnce.fileNotFound
+	'message' => '#^Path in include_once\\(\\) "vfs\\://drupal/sites/default/modules/module_b/module_b\\.post_update\\.php" is not a file or it does not exist\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Update/UpdateRegistryTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: class.implementsDeprecatedInterface
