@@ -498,7 +498,7 @@ abstract class BuildTestBase extends TestCase {
   /**
    * Checks whether a port is available.
    *
-   * @param $port
+   * @param int $port
    *   A number between 1024 and 65536.
    *
    * @return bool

@@ -123,11 +123,11 @@ abstract class ConfigTranslationUiTestBase extends BrowserTestBase {
   /**
    * Gets translation from locale storage.
    *
-   * @param $config_name
+   * @param string $config_name
    *   Configuration object.
-   * @param $key
+   * @param string $key
    *   Translation configuration field key.
-   * @param $langcode
+   * @param string $langcode
    *   String language code to load translation.
    *
    * @return bool|mixed

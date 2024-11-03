@@ -58,9 +58,9 @@ class ProgrammaticTest extends KernelTestBase {
   /**
    * Programmatically submits the form_test.module form with the given values.
    *
-   * @param $values
+   * @param array $values
    *   An array of field values to be submitted.
-   * @param $valid_input
+   * @param bool $valid_input
    *   A boolean indicating whether or not the form submission is expected to
    *   be valid.
    */

@@ -30,9 +30,9 @@ class MigrateMenuTest extends MigrateDrupal7TestBase {
    *   The menu ID.
    * @param string $language
    *   The menu language.
-   * @param $label
+   * @param string $label
    *   The menu label.
-   * @param $description
+   * @param string $description
    *   The menu description.
    *
    * @internal

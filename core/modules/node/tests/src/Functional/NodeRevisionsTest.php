@@ -467,7 +467,7 @@ class NodeRevisionsTest extends NodeTestBase {
    *
    * @param \Drupal\node\NodeInterface $node
    *   The node object.
-   * @param $count
+   * @param int $count
    *   The number of revisions to be created.
    */
   protected function createRevisions(NodeInterface $node, $count): void {

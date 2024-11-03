@@ -220,7 +220,7 @@ class ProcessingTest extends BrowserTestBase {
   /**
    * Triggers a pass if the texts were found in order in the raw content.
    *
-   * @param $texts
+   * @param array $texts
    *   Array of raw strings to look for.
    *
    * @internal

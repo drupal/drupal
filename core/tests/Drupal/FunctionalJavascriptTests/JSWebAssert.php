@@ -528,7 +528,7 @@ JS;
    * quotes respectively therefore we can not escape them when testing for
    * escaped HTML.
    *
-   * @param $raw
+   * @param string $raw
    *   The raw string to escape.
    *
    * @return string

@@ -117,9 +117,9 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
   /**
    * Tests integration for local tasks.
    *
-   * @param $route_name
+   * @param string $route_name
    *   Route name to base task building on.
-   * @param $expected_tasks
+   * @param array $expected_tasks
    *   A list of tasks groups by level expected at the given route
    * @param array $route_params
    *   (optional) A list of route parameters used to resolve tasks.

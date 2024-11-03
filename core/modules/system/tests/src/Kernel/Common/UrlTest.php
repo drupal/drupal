@@ -168,11 +168,11 @@ class UrlTest extends KernelTestBase {
   /**
    * Checks for class existence in link.
    *
-   * @param $attribute
+   * @param string $attribute
    *   Attribute to be checked.
-   * @param $link
+   * @param string $link
    *   URL to search.
-   * @param $class
+   * @param string $class
    *   Element class to search for.
    *
    * @return bool
