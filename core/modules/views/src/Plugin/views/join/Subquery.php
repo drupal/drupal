@@ -24,7 +24,7 @@ class Subquery extends JoinPluginBase {
   /**
    * The left join query.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public string $left_query;
 
   /**

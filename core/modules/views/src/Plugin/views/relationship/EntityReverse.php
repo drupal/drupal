@@ -23,7 +23,7 @@ class EntityReverse extends RelationshipPluginBase {
   /**
    * The alias for the left table.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public string $first_alias;
 
   /**

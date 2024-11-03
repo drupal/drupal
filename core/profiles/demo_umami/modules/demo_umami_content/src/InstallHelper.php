@@ -94,7 +94,7 @@ class InstallHelper implements ContainerInjectionInterface {
   /**
    * The module's path.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected string $module_path;
 
   /**

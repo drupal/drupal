@@ -27,7 +27,7 @@ class TaxonomyIndexTid extends ManyToOne {
    *
    * @var array|null
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $validated_exposed_input = NULL;
 
   /**
