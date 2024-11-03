@@ -69,6 +69,8 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    *   [{"item_name": "sourceEditing"}, ["heading", "bold", "italic", "sourceEditing"]]
    *   [{"item_name": "sourceEditing", "position": 1}, ["heading", "sourceEditing", "bold", "italic"]]
    *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "sourceEditing", "italic"]]
+   *   [{"item_name": "bold"}, ["heading", "bold", "italic"]]
+   *   [{"item_name": "bold", "allow_duplicate": true}, ["heading", "bold", "italic", "bold"]]
    */
   public function testAddItemToToolbar(string|array $action, array $expected_toolbar_items): void {
     $recipe = $this->createRecipe([
@@ -86,8 +88,11 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
     /** @var array{toolbar: array{items: string[]}, plugins: array<string, array<mixed>>} $settings */
     $settings = Editor::load('filter_test')?->getSettings();
     $this->assertSame($expected_toolbar_items, $settings['toolbar']['items']);
+
     // The plugin's default settings should have been added.
-    $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
+    if (in_array('sourceEditing', $expected_toolbar_items, TRUE)) {
+      $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
+    }
   }
 
   public function testAddNonExistentItem(): void {
