@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -349,6 +350,13 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $renderer = $this->container->get('renderer');
     $formatter = 'entity_reference_label';
 
+    // We need to create an anonymous user for access checks in the formatter.
+    $this->createUser(values: [
+      'uid' => 0,
+      'status' => 0,
+      'name' => '',
+    ]);
+
     // The 'link' settings is TRUE by default.
     $build = $this->buildRenderArray([$this->referencedEntity, $this->unsavedReferencedEntity], $formatter);
 
@@ -405,6 +413,15 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
 
     $build = $this->buildRenderArray([$referenced_entity_with_no_link_template], $formatter, ['link' => TRUE]);
     $this->assertEquals($referenced_entity_with_no_link_template->label(), $build[0]['#plain_text'], sprintf('The markup returned by the %s formatter is correct for an entity type with no valid link template.', $formatter));
+
+    // Test link visibility if the URL is not accessible.
+    $entity_with_user = EntityTest::create([
+      'name' => $this->randomMachineName(),
+      'user_id' => $this->createUser(),
+    ]);
+    $entity_with_user->save();
+    $build = $entity_with_user->get('user_id')->view(['type' => $formatter, 'settings' => ['link' => TRUE]]);
+    $this->assertEquals($build[0]['#plain_text'], $entity_with_user->get('user_id')->entity->label(), 'For inaccessible links, the label should be displayed in plain text.');
   }
 
   /**

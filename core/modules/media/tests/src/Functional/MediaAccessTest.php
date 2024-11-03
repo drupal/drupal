@@ -220,6 +220,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $mediaOverviewRole = $this->createRole(['access content overview', 'access media overview']);
     $this->nonAdminUser->addRole($mediaOverviewRole)->save();
 
+    $this->grantPermissions($role, ['access user profiles']);
     $this->drupalGet('admin/content');
     $assert_session->linkByHrefExists('/admin/content/media');
     $this->clickLink('Media');
