@@ -72,7 +72,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
    * Module entity_crud_hook_test implements all core entity CRUD hooks and
    * stores a message for each in $GLOBALS['entity_crud_hook_test'].
    *
-   * @param array $messages
+   * @param string[] $messages
    *   An array of plain-text messages in the order they should appear.
    *
    * @internal

@@ -100,7 +100,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    * This is necessary because the container clone does not clone the parameter
    * bag so the setParameter() call effects the parent container as well.
    *
-   * @param $service
+   * @param \Symfony\Component\DependencyInjection\Definition $service
    *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
@@ -120,7 +120,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    * This is necessary because the container clone does not clone the parameter
    * bag so the setParameter() call effects the parent container as well.
    *
-   * @param $service
+   * @param \Symfony\Component\DependencyInjection\Definition $service
    *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
@@ -138,7 +138,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    * This is necessary because the container clone does not clone the parameter
    * bag so the setParameter() call effects the parent container as well.
    *
-   * @param $service
+   * @param \Symfony\Component\DependencyInjection\Definition $service
    *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder

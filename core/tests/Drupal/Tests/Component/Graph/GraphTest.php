@@ -84,7 +84,7 @@ class GraphTest extends TestCase {
   /**
    * Normalizes a graph.
    *
-   * @param $graph
+   * @param array $graph
    *   A graph array processed by \Drupal\Component\Graph\Graph::searchAndSort()
    *
    * @return array
@@ -186,9 +186,9 @@ class GraphTest extends TestCase {
   /**
    * Helper function to output vertices as comma-separated list.
    *
-   * @param $paths
+   * @param array $paths
    *   An array containing a list of vertices.
-   * @param $keys
+   * @param bool $keys
    *   (optional) Whether to output the keys of $paths instead of the values.
    */
   protected function displayArray($paths, $keys = FALSE): string {

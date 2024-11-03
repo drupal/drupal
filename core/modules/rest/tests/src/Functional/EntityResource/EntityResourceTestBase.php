@@ -1445,9 +1445,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * A response may include more properties, we only need to ensure that all
    * items in the request exist in the response.
    *
-   * @param $expected
+   * @param array $expected
    *   An array of expected values, may contain further nested arrays.
-   * @param $actual
+   * @param array $actual
    *   The object to test.
    */
   protected function assertEntityArraySubset($expected, $actual) {

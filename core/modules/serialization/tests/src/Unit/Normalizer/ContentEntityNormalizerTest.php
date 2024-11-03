@@ -122,7 +122,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
   /**
    * Creates a mock content entity.
    *
-   * @param $definitions
+   * @param array $definitions
    *   The properties the will be returned.
    *
    * @return \PHPUnit\Framework\MockObject\MockObject

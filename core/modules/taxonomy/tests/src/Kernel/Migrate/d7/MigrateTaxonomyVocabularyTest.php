@@ -33,11 +33,11 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
    *
    * @param string $id
    *   Entity ID to load and check.
-   * @param $expected_label
+   * @param string $expected_label
    *   The label the migrated entity should have.
-   * @param $expected_description
+   * @param string $expected_description
    *   The description the migrated entity should have.
-   * @param $expected_weight
+   * @param string $expected_weight
    *   The weight the migrated entity should have.
    *
    * @internal

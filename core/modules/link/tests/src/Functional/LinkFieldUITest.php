@@ -243,7 +243,7 @@ class LinkFieldUITest extends BrowserTestBase {
   /**
    * Returns the raw HTML for the given field.
    *
-   * @param $field_name
+   * @param string $field_name
    *   The name of the field for which to return the HTML.
    *
    * @return string

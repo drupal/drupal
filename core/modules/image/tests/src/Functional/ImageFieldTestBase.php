@@ -94,13 +94,13 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
   /**
    * Upload an image to a node.
    *
-   * @param $image
+   * @param \stdClass $image
    *   A file object representing the image to upload.
-   * @param $field_name
+   * @param string $field_name
    *   Name of the image field the image should be attached to.
-   * @param $type
+   * @param string $type
    *   The type of node to create.
-   * @param $alt
+   * @param string $alt
    *   The alt text for the image. Use if the field settings require alt text.
    */
   public function uploadNodeImage($image, $field_name, $type, $alt = '') {

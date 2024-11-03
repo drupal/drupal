@@ -54,11 +54,11 @@ class BulkDeleteTest extends FieldKernelTestBase {
   /**
    * Tests that the expected hooks have been invoked on the expected entities.
    *
-   * @param $expected_hooks
+   * @param string[] $expected_hooks
    *   An array keyed by hook name, with one entry per expected invocation.
    *   Each entry is the value of the "$entity" parameter the hook is expected
    *   to have been passed.
-   * @param $actual_hooks
+   * @param array $actual_hooks
    *   The array of actual hook invocations recorded by field_test_memorize().
    */
   public function checkHooksInvocations($expected_hooks, $actual_hooks): void {

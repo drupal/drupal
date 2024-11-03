@@ -43,10 +43,10 @@ trait TestFileCreationTrait {
    * is prefixed with one of the above types, it will get returned as well, even
    * on subsequent calls.
    *
-   * @param $type
+   * @param string $type
    *   File type, possible values: 'binary', 'html', 'image', 'javascript',
    *   'php', 'sql', 'text'.
-   * @param $size
+   * @param int|null $size
    *   (optional) File size in bytes to match. Defaults to NULL, which will not
    *   filter the returned list by size.
    *

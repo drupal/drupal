@@ -268,7 +268,7 @@ class SessionHttpsTest extends BrowserTestBase {
   /**
    * Builds a URL for submitting a mock HTTPS request to HTTP test environments.
    *
-   * @param $url
+   * @param string $url
    *   A Drupal path such as 'user/login'.
    *
    * @return string
@@ -281,7 +281,7 @@ class SessionHttpsTest extends BrowserTestBase {
   /**
    * Builds a URL for submitting a mock HTTP request to HTTPS test environments.
    *
-   * @param $url
+   * @param string $url
    *   A Drupal path such as 'user/login'.
    *
    * @return string

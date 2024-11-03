@@ -154,7 +154,7 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
    *
    * @param string[] $statements
    *   A list of query statements.
-   * @param $table_name
+   * @param string $table_name
    *   The name of the table to filter by.
    *
    * @return string[]
