@@ -27,10 +27,16 @@ use Drupal\views\Plugin\views\PluginBase;
  */
 abstract class PagerPluginBase extends PluginBase {
 
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  /**
+   * The current page.
+   */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $current_page = NULL;
 
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  /**
+   * The total number of lines.
+   */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $total_items = 0;
 
   /**

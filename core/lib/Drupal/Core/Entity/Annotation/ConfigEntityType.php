@@ -20,7 +20,7 @@ class ConfigEntityType extends EntityType {
   /**
    * {@inheritdoc}
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $entity_type_class = 'Drupal\Core\Config\Entity\ConfigEntityType';
 
   /**

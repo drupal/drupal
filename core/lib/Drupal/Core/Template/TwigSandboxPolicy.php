@@ -22,7 +22,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $allowed_methods;
 
   /**
@@ -32,7 +32,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $allowed_prefixes;
 
   /**
@@ -40,7 +40,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $allowed_classes;
 
   /**

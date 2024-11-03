@@ -29,7 +29,7 @@ class Rss extends StylePluginBase {
   /**
    * The channel elements.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public array $channel_elements;
 
   /**

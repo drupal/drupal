@@ -85,7 +85,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $group_info = NULL;
 
   /**
@@ -100,7 +100,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *
    * @var bool
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $no_operator = FALSE;
 
   /**
@@ -108,7 +108,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *
    * @var bool
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $always_required = FALSE;
 
   /**

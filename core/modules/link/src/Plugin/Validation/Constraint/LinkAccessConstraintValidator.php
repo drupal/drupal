@@ -18,7 +18,7 @@ class LinkAccessConstraintValidator extends ConstraintValidator implements Conta
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $current_user;
 
   /**

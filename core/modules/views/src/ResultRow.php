@@ -13,7 +13,7 @@ class ResultRow {
    *
    * @var \Drupal\Core\Entity\EntityInterface
    */
-  // phpcs:ignore Drupal.Classes.PropertyDeclaration, Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.Classes.PropertyDeclaration, Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $_entity = NULL;
 
   /**
@@ -21,7 +21,7 @@ class ResultRow {
    *
    * @var \Drupal\Core\Entity\EntityInterface[]
    */
-  // phpcs:ignore Drupal.Classes.PropertyDeclaration, Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  // phpcs:ignore Drupal.Classes.PropertyDeclaration, Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $_relationship_entities = [];
 
   /**
