@@ -127,7 +127,7 @@ class HookCollectorPass implements CompilerPassInterface {
    *   An associative array. Keys are the module names, values are relevant
    *   info yml file path.
    *
-   * @return \Drupal\Core\Extension\HookCollectorPass
+   * @return static
    *   A HookCollectorPass instance holding all hook implementations and
    *   include file information.
    *
