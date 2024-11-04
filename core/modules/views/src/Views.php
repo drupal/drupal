@@ -127,7 +127,7 @@ class Views {
   }
 
   /**
-   * Fetches a list of all base tables available.
+   * Fetches a list of plugin names for a given type.
    *
    * @param string $type
    *   Either 'display', 'style' or 'row'.
@@ -138,7 +138,8 @@ class Views {
    *   An array of possible base tables.
    *
    * @return array
-   *   A keyed array of in the form of 'base_table' => 'Description'.
+   *   A sorted associative array of in the form 'plugin_id' => 'Plugin title'.
+   *   If no plugins are found, an empty array is returned.
    */
   public static function fetchPluginNames($type, $key = NULL, array $base = []) {
     $definitions = static::pluginManager($type)->getDefinitions();
