@@ -627,7 +627,7 @@ function views_disable_view(View $view) {
 }
 
 /**
- * Implements hook_form_alter() for the exposed form.
+ * Implements hook_form_FORM_ID_alter() for the exposed form.
  *
  * Since the exposed form is a GET form, we don't want it to send a wide
  * variety of information.
