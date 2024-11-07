@@ -23,6 +23,7 @@ th {
   height: var(--space-xl);
   padding: var(--space-xs) var(--space-m);
   text-align: start;
+  vertical-align: top;
   color: var(--color-text);
   background: var(--color-gray-050);
   line-height: 1.25rem; /* 20px */
@@ -138,6 +139,7 @@ td {
   height: 4rem;
   padding: var(--space-xs) var(--space-m);
   text-align: start;
+  vertical-align: top;
 
   & .item-list ul {
     margin: 0;
