@@ -64,8 +64,7 @@
             "drupal/core-project-message": true,
             "drupal/core-vendor-hardening": true,
             "php-http/discovery": true,
-            "phpstan/extension-installer": true,
-            "tbachert/spi": true
+            "phpstan/extension-installer": true
         }
     },
     "extra": {
