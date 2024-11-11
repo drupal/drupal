@@ -1658,12 +1658,7 @@
  * - hook_module_implements_alter()
  *
  * Install hooks:
- * - hook_cache_flush()
  * - hook_install()
- * - hook_module_preinstall()
- * - hook_module_preuninstall()
- * - hook_modules_installed()
- * - hook_modules_uninstalled()
  * - hook_post_update_NAME()
  * - hook_schema()
  * - hook_uninstall()
@@ -2254,8 +2249,6 @@ function hook_layout_alter(&$definitions) {
 
 /**
  * Flush all persistent and static caches.
- *
- * Only procedural implementations are supported for this hook.
  *
  * This hook asks your module to clear all of its static caches,
  * in order to ensure a clean environment for subsequently
