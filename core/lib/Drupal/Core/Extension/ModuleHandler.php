@@ -200,9 +200,11 @@ class ModuleHandler implements ModuleHandlerInterface {
     // Load all includes so the legacy section of invoke can handle hooks in includes.
     $hook_collector->loadAllIncludes();
     // Register procedural implementations.
-    foreach ($hook_collector->getImplementations() as $hook => $class_implementations) {
-      foreach ($class_implementations[ProceduralCall::class] ?? [] as $method => $hook_data) {
-        $this->invokeMap[$hook][$hook_data['module']][] = $method;
+    foreach ($hook_collector->getImplementations() as $hook => $moduleImplements) {
+      foreach ($moduleImplements as $module => $classImplements) {
+        foreach ($classImplements[ProceduralCall::class] ?? [] as $method) {
+          $this->invokeMap[$hook][$module][] = $method;
+        }
       }
     }
   }
