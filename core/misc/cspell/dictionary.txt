@@ -388,6 +388,7 @@ nourriture
 nplurals
 nproc
 ntfs
+nyholm
 oembed
 omittable
 onecol
@@ -584,6 +585,7 @@ tablesorts
 tabset
 tabwidth
 taskless
+tbachert
 testbot
 testbots
 testgroups
