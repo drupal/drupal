@@ -13,3 +13,15 @@ declare(strict_types=1);
 function module_handler_test_all1_hook($arg) {
   return [$arg];
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function module_handler_test_all1_module_implements_alter(&$implementations, $hook): void {
+  if ($hook === 'order1') {
+    // Run module_handler_test_all1 hooks after all other implementations.
+    $group = $implementations['module_handler_test_all1'];
+    unset($implementations['module_handler_test_all1']);
+    $implementations['module_handler_test_all1'] = $group;
+  }
+}
