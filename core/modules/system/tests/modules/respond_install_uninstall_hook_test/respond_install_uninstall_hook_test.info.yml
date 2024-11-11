@@ -1,0 +1,5 @@
+name: 'Hooks in ModuleInstaller'
+type: module
+description: 'Test hooks invoked when modules are installed or uninstalled.'
+package: Testing
+version: VERSION
