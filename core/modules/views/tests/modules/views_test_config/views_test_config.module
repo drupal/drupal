@@ -41,26 +41,44 @@ function _views_test_config_disable_broken_handler(array &$definitions, string $
   }
 }
 
+/**
+ * Implements hook_views_plugins_area_alter().
+ */
 function views_test_config_views_plugins_area_alter(array &$definitions): void {
   _views_test_config_disable_broken_handler($definitions, 'area');
 }
 
+/**
+ * Implements hook_views_plugins_argument_alter().
+ */
 function views_test_config_views_plugins_argument_alter(array &$definitions): void {
   _views_test_config_disable_broken_handler($definitions, 'argument');
 }
 
+/**
+ * Implements hook_views_plugins_field_alter().
+ */
 function views_test_config_views_plugins_field_alter(array &$definitions): void {
   _views_test_config_disable_broken_handler($definitions, 'field');
 }
 
+/**
+ * Implements hook_views_plugins_filter_alter().
+ */
 function views_test_config_views_plugins_filter_alter(array &$definitions): void {
   _views_test_config_disable_broken_handler($definitions, 'filter');
 }
 
+/**
+ * Implements hook_views_plugins_relationship_alter().
+ */
 function views_test_config_views_plugins_relationship_alter(array &$definitions): void {
   _views_test_config_disable_broken_handler($definitions, 'relationship');
 }
 
+/**
+ * Implements hook_views_plugins_sort_alter().
+ */
 function views_test_config_views_plugins_sort_alter(array &$definitions): void {
   _views_test_config_disable_broken_handler($definitions, 'sort');
 }

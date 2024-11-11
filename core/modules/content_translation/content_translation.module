@@ -76,7 +76,7 @@ function content_translation_module_implements_alter(&$implementations, $hook) {
 }
 
 /**
- * Implements hook_language_type_info_alter().
+ * Implements hook_language_types_info_alter().
  */
 function content_translation_language_types_info_alter(array &$language_types) {
   // Make content language negotiation configurable by removing the 'locked'
