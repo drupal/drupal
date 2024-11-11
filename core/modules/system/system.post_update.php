@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function system_removed_post_updates() {
+function system_removed_post_updates(): array {
   return [
     'system_post_update_recalculate_configuration_entity_dependencies' => '9.0.0',
     'system_post_update_add_region_to_entity_displays' => '9.0.0',

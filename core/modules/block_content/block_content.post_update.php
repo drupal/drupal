@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function block_content_removed_post_updates() {
+function block_content_removed_post_updates(): array {
   return [
     'block_content_post_update_add_views_reusable_filter' => '9.0.0',
     'block_content_post_update_entity_changed_constraint' => '11.0.0',

@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function taxonomy_removed_post_updates() {
+function taxonomy_removed_post_updates(): array {
   return [
     'taxonomy_post_update_clear_views_data_cache' => '9.0.0',
     'taxonomy_post_update_clear_entity_bundle_field_definitions_cache' => '9.0.0',

@@ -12,7 +12,7 @@ use Drupal\views\ViewsConfigUpdater;
 /**
  * Implements hook_removed_post_updates().
  */
-function views_removed_post_updates() {
+function views_removed_post_updates(): array {
   return [
     'views_post_update_update_cacheability_metadata' => '9.0.0',
     'views_post_update_cleanup_duplicate_views_data' => '9.0.0',

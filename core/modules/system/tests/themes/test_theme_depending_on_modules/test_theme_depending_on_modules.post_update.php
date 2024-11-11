@@ -22,9 +22,9 @@ if (\Drupal::state()->get('test_theme_depending_on_modules.post_update')) {
 if (\Drupal::state()->get('test_theme_depending_on_modules.removed_post_updates')) {
 
   /**
-   * Implements HOOK_removed_post_updates().
+   * Implements hook_removed_post_updates().
    */
-  function test_theme_depending_on_modules_removed_post_updates() {
+  function test_theme_depending_on_modules_removed_post_updates(): array {
     return [
       'test_theme_depending_on_modules_post_update_foo' => '3.1',
     ];

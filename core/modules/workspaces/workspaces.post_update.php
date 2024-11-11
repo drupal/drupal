@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function workspaces_removed_post_updates() {
+function workspaces_removed_post_updates(): array {
   return [
     'workspaces_post_update_access_clear_caches' => '9.0.0',
     'workspaces_post_update_remove_default_workspace' => '9.0.0',

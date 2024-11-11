@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function layout_builder_removed_post_updates() {
+function layout_builder_removed_post_updates(): array {
   return [
     'layout_builder_post_update_rebuild_plugin_dependencies' => '9.0.0',
     'layout_builder_post_update_add_extra_fields' => '9.0.0',
