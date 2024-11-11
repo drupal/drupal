@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
@@ -261,14 +262,14 @@ class ViewListBuilder extends ConfigEntityListBuilder {
           $path = $display->getPath();
           if ($view->status() && !str_contains($path, '%')) {
             // Wrap this in a try/catch as trying to generate links to some
-            // routes may throw a NotAcceptableHttpException if they do not
+            // routes may throw an exception, for example if they do not
             // respond to HTML, such as RESTExports.
             try {
               // @todo Views should expect and store a leading /. See:
               //   https://www.drupal.org/node/2423913
               $rendered_path = Link::fromTextAndUrl('/' . $path, Url::fromUserInput('/' . $path))->toString();
             }
-            catch (NotAcceptableHttpException $e) {
+            catch (BadRequestException | NotAcceptableHttpException $e) {
               $rendered_path = '/' . $path;
             }
           }
