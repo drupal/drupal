@@ -458,6 +458,7 @@ ntfs
 nyan
 nyancat
 nyans
+nyholm
 oembed
 omittable
 onecol
@@ -699,6 +700,7 @@ tabset
 tabwidth
 tappable
 taskless
+tbachert
 tcomment
 templating
 testbot

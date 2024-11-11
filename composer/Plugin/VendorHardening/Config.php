@@ -78,6 +78,7 @@ class Config {
     'symfony/var-dumper' => ['Tests'],
     'symfony/validator' => ['Tests', 'Resources'],
     'symfony/yaml' => ['Tests'],
+    'tbachert/spi' => ['tests'],
     'theseer/tokenizer' => ['tests'],
     'twig/twig' => ['doc', 'ext', 'test', 'tests'],
   ];
