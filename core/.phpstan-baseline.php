@@ -12342,12 +12342,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function big_pipe_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/big_pipe/big_pipe.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\big_pipe\\\\EventSubscriber\\\\HtmlResponseBigPipeSubscriber\\:\\:onRespond\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/big_pipe/src/EventSubscriber/HtmlResponseBigPipeSubscriber.php',
@@ -12585,12 +12579,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function template_preprocess_block\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/block.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function block_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/block.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -13047,12 +13035,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function template_preprocess_block_content_add_list\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/block_content.pages.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function block_content_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/block_content.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -13629,12 +13611,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function ckeditor5_module_implements_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/ckeditor5.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function ckeditor5_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/ckeditor5.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -14523,12 +14499,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function template_preprocess_comment\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/comment.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function comment_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/comment.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -16530,12 +16500,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function contact_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/contact.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function contact_views_data_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contact/contact.views.inc',
@@ -17175,12 +17139,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function content_moderation_workflow_update\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/content_moderation.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function content_moderation_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/content_moderation.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -19020,12 +18978,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function contextual_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/contextual.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function contextual_views_data_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contextual/contextual.views.inc',
@@ -19254,12 +19206,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function datetime_range_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime_range/datetime_range.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function datetime_range_field_views_data\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/datetime_range/datetime_range.views.inc',
@@ -19365,12 +19311,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/dblog/dblog.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function dblog_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/dblog/dblog.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -19638,12 +19578,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function editor_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/editor/editor.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\editor\\\\Ajax\\\\EditorDialogSave\\:\\:render\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/editor/src/Ajax/EditorDialogSave.php',
@@ -19893,12 +19827,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function field_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/field.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function field_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/field.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -21852,12 +21780,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function file_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/file.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function file_field_views_data\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/file.views.inc',
@@ -23070,12 +22992,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function filter_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/filter/filter.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\filter\\\\Element\\\\TextFormat\\:\\:currentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/src/Element/TextFormat.php',
@@ -23457,12 +23373,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function help_themes_uninstalled\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/help.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function help_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/help.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -23871,12 +23781,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function template_preprocess_image_style\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/image.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function image_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/image.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -25692,12 +25596,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function language_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/language.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\language\\\\Config\\\\LanguageConfigFactoryOverride\\:\\:addCollections\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/Config/LanguageConfigFactoryOverride.php',
@@ -26769,12 +26667,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function layout_builder_theme_suggestions_field_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/layout_builder.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function layout_builder_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/layout_builder.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -28170,12 +28062,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function layout_discovery_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_discovery/layout_discovery.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\layout_discovery\\\\Kernel\\\\LayoutTest\\:\\:processCallback\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_discovery/tests/src/Kernel/LayoutTest.php',
@@ -28683,12 +28569,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function template_preprocess_locale_translation_update_info\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/locale.pages.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function locale_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/locale.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -29535,12 +29415,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function template_preprocess_media\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/media.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function media_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/media.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -30600,12 +30474,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function media_library_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/media_library.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function media_library_views_data\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/media_library.views.inc',
@@ -31077,12 +30945,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function menu_link_content_path_alias_update\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/menu_link_content.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function menu_link_content_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/menu_link_content.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -31617,12 +31479,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function migrate_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/migrate.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function migrate_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/migrate.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -32761,12 +32617,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function migrate_drupal_migration_plugins_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal/migrate_drupal.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function migrate_drupal_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal/migrate_drupal.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -34331,12 +34181,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function template_preprocess_node_add_list\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/node.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function node_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/node.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -36518,12 +36362,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function path_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/path.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\path\\\\Form\\\\PathFilterForm\\:\\:resetForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/src/Form/PathFilterForm.php',
@@ -36689,12 +36527,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Kernel\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\UrlAliasTest\\:\\:providerSource\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/tests/src/Kernel/Plugin/migrate/source/d7/UrlAliasTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function path_alias_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path_alias/path_alias.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -37159,12 +36991,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/responsive_image/responsive_image.module',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function responsive_image_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/responsive_image/responsive_image.post_update.php',
-];
-$ignoreErrors[] = [
 	// identifier: empty.variable
 	'message' => '#^Variable \\$responsive_image_styles in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
@@ -37301,12 +37127,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function rest_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/rest/rest.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function rest_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/rest.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -38054,12 +37874,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function search_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/search.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\search\\\\Entity\\\\SearchPage\\:\\:postCreate\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/src/Entity/SearchPage.php',
@@ -38723,12 +38537,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function serialization_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/serialization/serialization.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function serialization_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/serialization.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -40677,12 +40485,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function system_post_update_sdc_uninstall\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function system_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/system.post_update.php',
 ];
@@ -45863,12 +45665,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function update_test_postupdate_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/update_test_postupdate/update_test_postupdate.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function update_test_schema_requirements\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/update_test_schema/update_test_schema.install',
@@ -48011,12 +47807,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function test_theme_depending_on_modules_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/themes/test_theme_depending_on_modules/test_theme_depending_on_modules.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function test_theme_nyan_cat_engine_preprocess_theme_test_template_test\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/themes/test_theme_nyan_cat_engine/test_theme_nyan_cat_engine.theme',
@@ -48578,12 +48368,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function template_preprocess_taxonomy_term\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function taxonomy_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/taxonomy.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -49322,12 +49106,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function text_help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/text/text.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function text_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/text/text.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -51782,12 +51560,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function user_user_view_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -60293,12 +60065,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/views.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function template_preprocess_views_exposed_form\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.theme.inc',
@@ -63482,12 +63248,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function workspaces_views_query_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/workspaces.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function workspaces_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/workspaces.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -71287,12 +71047,6 @@ $ignoreErrors[] = [
 	'message' => '#^Function twig_render_template\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/themes/engines/twig/twig.engine',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function olivero_removed_post_updates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/olivero/olivero.post_update.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return

@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function media_removed_post_updates() {
+function media_removed_post_updates(): array {
   return [
     'media_post_update_collection_route' => '9.0.0',
     'media_post_update_storage_handler' => '9.0.0',

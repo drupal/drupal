@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function content_moderation_removed_post_updates() {
+function content_moderation_removed_post_updates(): array {
   return [
     'content_moderation_post_update_update_cms_default_revisions' => '9.0.0',
     'content_moderation_post_update_set_default_moderation_state' => '9.0.0',

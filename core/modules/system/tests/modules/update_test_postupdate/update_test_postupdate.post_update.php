@@ -75,7 +75,7 @@ function update_test_postupdate_post_update_test_batch(&$sandbox = NULL) {
 /**
  * Implements hook_removed_post_updates().
  */
-function update_test_postupdate_removed_post_updates() {
+function update_test_postupdate_removed_post_updates(): array {
   return [
     'update_test_postupdate_post_update_foo' => '8.x-1.0',
     'update_test_postupdate_post_update_bar' => '8.x-2.0',

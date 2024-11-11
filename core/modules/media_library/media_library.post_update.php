@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function media_library_removed_post_updates() {
+function media_library_removed_post_updates(): array {
   return [
     'media_library_post_update_display_modes' => '9.0.0',
     'media_library_post_update_table_display' => '9.0.0',
