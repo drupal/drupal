@@ -15,7 +15,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Implements hook_entity_bundle_field_info().
+ * Implements hook_entity_base_field_info().
  */
 function views_entity_test_entity_base_field_info(EntityTypeInterface $entity_type) {
   if ($entity_type->id() == 'entity_test') {
