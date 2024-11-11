@@ -16,6 +16,7 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -464,7 +465,7 @@ class ViewEditForm extends ViewFormBase {
 
           if ($path && (!str_contains($path, '%'))) {
             // Wrap this in a try/catch as trying to generate links to some
-            // routes may throw a NotAcceptableHttpException if they do not
+            // routes may throw an exception, for example if they do not
             // respond to HTML, such as RESTExports.
             try {
               if (!parse_url($path, PHP_URL_SCHEME)) {
@@ -476,7 +477,7 @@ class ViewEditForm extends ViewFormBase {
                 $url = Url::fromUri("base:$path");
               }
             }
-            catch (NotAcceptableHttpException $e) {
+            catch (BadRequestException | NotAcceptableHttpException $e) {
               $url = '/' . $path;
             }
 
