@@ -71,6 +71,7 @@ function entity_test_entity_types($filter = NULL) {
   if ($filter === ENTITY_TEST_TYPES_ROUTING) {
     $types[] = 'entity_test_base_field_display';
     $types[] = 'entity_test_string_id';
+    $types[] = 'entity_test_uuid_id';
     $types[] = 'entity_test_no_id';
     $types[] = 'entity_test_mul_with_bundle';
   }
