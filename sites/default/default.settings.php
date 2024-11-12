@@ -730,6 +730,8 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
  * Provide a fully qualified class name here if you would like to provide an
  * alternate implementation YAML parser. The class must implement the
  * \Drupal\Component\Serialization\SerializationInterface interface.
+ *
+ * This setting is deprecated in Drupal 10.3 and removed in Drupal 11.
  */
 # $settings['yaml_parser_class'] = NULL;
 
