@@ -9,6 +9,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
+// cspell:ignore testdox
+
 /**
  * Run PHPUnit-based tests.
  *
@@ -100,16 +102,24 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *   A fully qualified test class name.
    * @param string $log_junit_file_path
    *   A filepath to use for PHPUnit's --log-junit option.
-   * @param int $status
+   * @param int|null $status
    *   (optional) The exit status code of the PHPUnit process will be assigned
    *   to this variable.
-   * @param string[] $output
+   * @param string[]|null $output
    *   (optional) The output by running the phpunit command. If provided, this
    *   array will contain the lines output by the command.
+   * @param bool $colors
+   *   (optional) Whether to use colors in output. Defaults to FALSE.
    *
    * @internal
    */
-  protected function runCommand(string $test_class_name, string $log_junit_file_path, ?int &$status = NULL, ?array &$output = NULL): void {
+  protected function runCommand(
+    string $test_class_name,
+    string $log_junit_file_path,
+    ?int &$status = NULL,
+    ?array &$output = NULL,
+    bool $colors = FALSE,
+  ): void {
     global $base_url;
     // Setup an environment variable containing the database connection so that
     // functional tests can connect to the database.
@@ -130,9 +140,13 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     // Build the command line for the PHPUnit CLI invocation.
     $command = [
       $phpunit_bin,
+      '--testdox',
       '--log-junit',
       $log_junit_file_path,
     ];
+    if ($colors) {
+      $command[] = '--colors=always';
+    }
 
     // If the deprecation handler bridge is active, we need to fail when there
     // are deprecations that get reported (i.e. not ignored or expected).
@@ -159,9 +173,11 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *   The test run object.
    * @param string $test_class_name
    *   A fully qualified test class name.
-   * @param int $status
+   * @param int|null $status
    *   (optional) The exit status code of the PHPUnit process will be assigned
    *   to this variable.
+   * @param bool $colors
+   *   (optional) Whether to use colors in output. Defaults to FALSE.
    *
    * @return array
    *   The parsed results of PHPUnit's JUnit XML output, in the format of
@@ -169,11 +185,16 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @internal
    */
-  public function execute(TestRun $test_run, string $test_class_name, ?int &$status = NULL): array {
+  public function execute(
+    TestRun $test_run,
+    string $test_class_name,
+    ?int &$status = NULL,
+    bool $colors = FALSE,
+  ): array {
     $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
     // Store output from our test run.
     $output = [];
-    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output);
+    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output, $colors);
 
     if ($status == TestStatus::PASS) {
       return JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
