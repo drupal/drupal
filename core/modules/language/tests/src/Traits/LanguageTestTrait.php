@@ -62,7 +62,7 @@ trait LanguageTestTrait {
    * @param string $bundle
    *   The bundle name.
    */
-  public static function disableBundleTranslation(string $entity_type_id, string $bundle) {
+  public static function disableBundleTranslation(string $entity_type_id, string $bundle): void {
     // @todo Move to API call when it exists, to be added at
     // https://www.drupal.org/project/drupal/issues/3408046
     $content_language_settings = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
