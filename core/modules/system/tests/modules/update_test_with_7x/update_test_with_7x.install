@@ -22,6 +22,6 @@ function update_test_with_7x_update_7201() {
 /**
  * Implements hook_update_last_removed().
  */
-function update_test_with_7x_update_last_removed() {
+function update_test_with_7x_update_last_removed(): int {
   return 7110;
 }

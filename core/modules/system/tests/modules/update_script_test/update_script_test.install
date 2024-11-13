@@ -52,7 +52,7 @@ function update_script_test_requirements_alter(array &$requirements): void {
 /**
  * Implements hook_update_last_removed().
  */
-function update_script_test_update_last_removed() {
+function update_script_test_update_last_removed(): int {
   return 7110;
 }
 

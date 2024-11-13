@@ -8,6 +8,6 @@
 /**
  * Implements hook_update_last_removed().
  */
-function menu_link_content_update_last_removed() {
+function menu_link_content_update_last_removed(): int {
   return 8601;
 }

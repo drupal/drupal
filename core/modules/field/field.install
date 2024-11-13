@@ -8,6 +8,6 @@
 /**
  * Implements hook_update_last_removed().
  */
-function field_update_last_removed() {
+function field_update_last_removed(): int {
   return 8500;
 }

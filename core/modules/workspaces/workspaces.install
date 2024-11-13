@@ -123,6 +123,6 @@ function workspaces_schema() {
 /**
  * Implements hook_update_last_removed().
  */
-function workspaces_update_last_removed() {
+function workspaces_update_last_removed(): int {
   return 8803;
 }

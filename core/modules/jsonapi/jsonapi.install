@@ -79,6 +79,6 @@ function jsonapi_requirements($phase) {
 /**
  * Implements hook_update_last_removed().
  */
-function jsonapi_update_last_removed() {
+function jsonapi_update_last_removed(): int {
   return 9401;
 }

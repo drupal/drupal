@@ -178,6 +178,6 @@ function media_requirements($phase) {
 /**
  * Implements hook_update_last_removed().
  */
-function media_update_last_removed() {
+function media_update_last_removed(): int {
   return 8700;
 }

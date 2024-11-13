@@ -157,6 +157,6 @@ function node_uninstall(): void {
 /**
  * Implements hook_update_last_removed().
  */
-function node_update_last_removed() {
+function node_update_last_removed(): int {
   return 8700;
 }
