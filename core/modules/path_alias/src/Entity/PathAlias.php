@@ -2,6 +2,7 @@
 
 namespace Drupal\path_alias\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -10,40 +11,41 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\path_alias\PathAliasInterface;
+use Drupal\path_alias\PathAliasStorage;
+use Drupal\path_alias\PathAliasStorageSchema;
 
 /**
  * Defines the path_alias entity class.
- *
- * @ContentEntityType(
- *   id = "path_alias",
- *   label = @Translation("URL alias"),
- *   label_collection = @Translation("URL aliases"),
- *   label_singular = @Translation("URL alias"),
- *   label_plural = @Translation("URL aliases"),
- *   label_count = @PluralTranslation(
- *     singular = "@count URL alias",
- *     plural = "@count URL aliases"
- *   ),
- *   handlers = {
- *     "storage" = "Drupal\path_alias\PathAliasStorage",
- *     "storage_schema" = "Drupal\path_alias\PathAliasStorageSchema",
- *   },
- *   base_table = "path_alias",
- *   revision_table = "path_alias_revision",
- *   entity_keys = {
- *     "id" = "id",
- *     "revision" = "revision_id",
- *     "langcode" = "langcode",
- *     "uuid" = "uuid",
- *     "published" = "status",
- *   },
- *   admin_permission = "administer url aliases",
- *   list_cache_tags = { "route_match" },
- *   constraints = {
- *     "UniquePathAlias" = {}
- *   }
- * )
  */
+#[ContentEntityType(
+  id: 'path_alias',
+  label: new TranslatableMarkup('URL alias'),
+  label_collection: new TranslatableMarkup('URL aliases'),
+  label_singular: new TranslatableMarkup('URL alias'),
+  label_plural: new TranslatableMarkup('URL aliases'),
+  entity_keys: [
+    'id' => 'id',
+    'revision' => 'revision_id',
+    'langcode' => 'langcode',
+    'uuid' => 'uuid',
+    'published' => 'status',
+  ],
+  handlers: [
+    'storage' => PathAliasStorage::class,
+    'storage_schema' => PathAliasStorageSchema::class,
+  ],
+  admin_permission: 'administer url aliases',
+  base_table: 'path_alias',
+  revision_table: 'path_alias_revision',
+  label_count: [
+    'singular' => '@count URL alias',
+    'plural' => '@count URL aliases',
+  ],
+  list_cache_tags: ['route_match'],
+  constraints: [
+    'UniquePathAlias' => [],
+  ],
+)]
 class PathAlias extends ContentEntityBase implements PathAliasInterface {
 
   use EntityPublishedTrait;

@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test_update\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test_update\EntityTestUpdateStorage;
+use Drupal\entity_test_update\EntityTestUpdateStorageSchema;
 
 /**
  * Defines the test entity class for testing definition and schema updates.
@@ -17,26 +20,27 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * an update test it can be made revisionable and translatable using the helper
  * methods from
  * \Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait.
- *
- * @ContentEntityType(
- *   id = "entity_test_update",
- *   label = @Translation("Test entity update"),
- *   handlers = {
- *     "storage_schema" = "Drupal\entity_test_update\EntityTestUpdateStorageSchema",
- *     "storage" = "Drupal\entity_test_update\EntityTestUpdateStorage",
- *   },
- *   base_table = "entity_test_update",
- *   persistent_cache = FALSE,
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *     "bundle" = "type",
- *     "label" = "name",
- *     "langcode" = "langcode",
- *   },
- *   content_translation_ui_skip = TRUE,
- * )
  */
+#[ContentEntityType(
+  id: 'entity_test_update',
+  label: new TranslatableMarkup('Test entity update'),
+  persistent_cache: FALSE,
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+    'label' => 'name',
+    'langcode' => 'langcode',
+  ],
+  handlers: [
+    'storage_schema' => EntityTestUpdateStorageSchema::class,
+    'storage' => EntityTestUpdateStorage::class,
+  ],
+  base_table: 'entity_test_update',
+  additional: [
+    'content_translation_ui_skip' => TRUE,
+  ],
+)]
 class EntityTestUpdate extends ContentEntityBase {
 
   /**

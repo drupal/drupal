@@ -2,6 +2,8 @@
 
 namespace Drupal\field\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -11,49 +13,55 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
+use Drupal\field\FieldStorageConfigAccessControlHandler;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\field\FieldStorageConfigStorage;
 
 /**
  * Defines the Field storage configuration entity.
- *
- * @ConfigEntityType(
- *   id = "field_storage_config",
- *   label = @Translation("Field storage"),
- *   label_collection = @Translation("Field storages"),
- *   label_singular = @Translation("field storage"),
- *   label_plural = @Translation("field storages"),
- *   label_count = @PluralTranslation(
- *     singular = "@count field storage",
- *     plural = "@count field storages",
- *   ),
- *   handlers = {
- *     "access" = "Drupal\field\FieldStorageConfigAccessControlHandler",
- *     "storage" = "Drupal\field\FieldStorageConfigStorage"
- *   },
- *   config_prefix = "storage",
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "id"
- *   },
- *   config_export = {
- *     "id",
- *     "field_name",
- *     "entity_type",
- *     "type",
- *     "settings",
- *     "module",
- *     "locked",
- *     "cardinality",
- *     "translatable",
- *     "indexes",
- *     "persist_with_no_fields",
- *     "custom_storage",
- *   },
- *   constraints = {
- *     "ImmutableProperties" = {"id", "entity_type", "field_name", "type"},
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'field_storage_config',
+  label: new TranslatableMarkup('Field storage'),
+  label_collection: new TranslatableMarkup('Field storages'),
+  label_singular: new TranslatableMarkup('field storage'),
+  label_plural: new TranslatableMarkup('field storages'),
+  config_prefix: 'storage',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'id',
+  ],
+  handlers: [
+    'access' => FieldStorageConfigAccessControlHandler::class,
+    'storage' => FieldStorageConfigStorage::class,
+  ],
+  label_count: [
+    'singular' => '@count field storage',
+    'plural' => '@count field storages',
+  ],
+  constraints: [
+    'ImmutableProperties' => [
+      'id',
+      'entity_type',
+      'field_name',
+      'type',
+    ],
+  ],
+  config_export: [
+    'id',
+    'field_name',
+    'entity_type',
+    'type',
+    'settings',
+    'module',
+    'locked',
+    'cardinality',
+    'translatable',
+    'indexes',
+    'persist_with_no_fields',
+    'custom_storage',
+  ],
+)]
 class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigInterface {
 
   /**

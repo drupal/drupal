@@ -2,53 +2,59 @@
 
 namespace Drupal\shortcut\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\shortcut\Form\SetCustomize;
+use Drupal\shortcut\Form\ShortcutSetDeleteForm;
+use Drupal\shortcut\ShortcutSetAccessControlHandler;
+use Drupal\shortcut\ShortcutSetForm;
 use Drupal\shortcut\ShortcutSetInterface;
+use Drupal\shortcut\ShortcutSetListBuilder;
+use Drupal\shortcut\ShortcutSetStorage;
 
 /**
  * Defines the Shortcut set configuration entity.
- *
- * @ConfigEntityType(
- *   id = "shortcut_set",
- *   label = @Translation("Shortcut set"),
- *   label_collection = @Translation("Shortcut sets"),
- *   label_singular = @Translation("shortcut set"),
- *   label_plural = @Translation("shortcut sets"),
- *   label_count = @PluralTranslation(
- *     singular = "@count shortcut set",
- *     plural = "@count shortcut sets",
- *   ),
- *   handlers = {
- *     "storage" = "Drupal\shortcut\ShortcutSetStorage",
- *     "access" = "Drupal\shortcut\ShortcutSetAccessControlHandler",
- *     "list_builder" = "Drupal\shortcut\ShortcutSetListBuilder",
- *     "form" = {
- *       "default" = "Drupal\shortcut\ShortcutSetForm",
- *       "add" = "Drupal\shortcut\ShortcutSetForm",
- *       "edit" = "Drupal\shortcut\ShortcutSetForm",
- *       "customize" = "Drupal\shortcut\Form\SetCustomize",
- *       "delete" = "Drupal\shortcut\Form\ShortcutSetDeleteForm"
- *     }
- *   },
- *   config_prefix = "set",
- *   bundle_of = "shortcut",
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "label"
- *   },
- *   links = {
- *     "customize-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}/customize",
- *     "delete-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete",
- *     "edit-form" = "/admin/config/user-interface/shortcut/manage/{shortcut_set}",
- *     "collection" = "/admin/config/user-interface/shortcut",
- *   },
- *   config_export = {
- *     "id",
- *     "label",
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'shortcut_set',
+  label: new TranslatableMarkup('Shortcut set'),
+  label_collection: new TranslatableMarkup('Shortcut sets'),
+  label_singular: new TranslatableMarkup('shortcut set'),
+  label_plural: new TranslatableMarkup('shortcut sets'),
+  config_prefix: 'set',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+  ], handlers: [
+    'storage' => ShortcutSetStorage::class,
+    'access' => ShortcutSetAccessControlHandler::class,
+    'list_builder' => ShortcutSetListBuilder::class,
+    'form' => [
+      'default' => ShortcutSetForm::class,
+      'add' => ShortcutSetForm::class,
+      'edit' => ShortcutSetForm::class,
+      'customize' => SetCustomize::class,
+      'delete' => ShortcutSetDeleteForm::class,
+    ],
+  ],
+  links: [
+    'customize-form' => '/admin/config/user-interface/shortcut/manage/{shortcut_set}/customize',
+    'delete-form' => '/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete',
+    'edit-form' => '/admin/config/user-interface/shortcut/manage/{shortcut_set}',
+    'collection' => '/admin/config/user-interface/shortcut',
+  ],
+  bundle_of: 'shortcut',
+  label_count: [
+    'singular' => '@count shortcut set',
+    'plural' => '@count shortcut sets',
+  ],
+  config_export: [
+    'id',
+    'label',
+  ],
+)]
 class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface {
 
   /**

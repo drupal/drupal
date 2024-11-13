@@ -2,85 +2,98 @@
 
 namespace Drupal\taxonomy\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\EntityListBuilder;
+use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
+use Drupal\Core\Entity\Form\RevisionRevertForm;
+use Drupal\Core\Entity\Form\RevisionDeleteForm;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\taxonomy\Form\TermDeleteForm;
+use Drupal\taxonomy\TermAccessControlHandler;
+use Drupal\taxonomy\TermForm;
 use Drupal\taxonomy\TermInterface;
+use Drupal\taxonomy\TermStorage;
+use Drupal\taxonomy\TermStorageSchema;
+use Drupal\taxonomy\TermTranslationHandler;
+use Drupal\taxonomy\TermViewsData;
 use Drupal\user\StatusItem;
 
 /**
  * Defines the taxonomy term entity.
- *
- * @ContentEntityType(
- *   id = "taxonomy_term",
- *   label = @Translation("Taxonomy term"),
- *   label_collection = @Translation("Taxonomy terms"),
- *   label_singular = @Translation("taxonomy term"),
- *   label_plural = @Translation("taxonomy terms"),
- *   label_count = @PluralTranslation(
- *     singular = "@count taxonomy term",
- *     plural = "@count taxonomy terms",
- *   ),
- *   bundle_label = @Translation("Vocabulary"),
- *   handlers = {
- *     "storage" = "Drupal\taxonomy\TermStorage",
- *     "storage_schema" = "Drupal\taxonomy\TermStorageSchema",
- *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
- *     "access" = "Drupal\taxonomy\TermAccessControlHandler",
- *     "views_data" = "Drupal\taxonomy\TermViewsData",
- *     "form" = {
- *       "default" = "Drupal\taxonomy\TermForm",
- *       "delete" = "Drupal\taxonomy\Form\TermDeleteForm",
- *       "revision-delete" = \Drupal\Core\Entity\Form\RevisionDeleteForm::class,
- *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
- *     },
- *     "route_provider" = {
- *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
- *     },
- *     "translation" = "Drupal\taxonomy\TermTranslationHandler"
- *   },
- *   base_table = "taxonomy_term_data",
- *   data_table = "taxonomy_term_field_data",
- *   revision_table = "taxonomy_term_revision",
- *   revision_data_table = "taxonomy_term_field_revision",
- *   show_revision_ui = TRUE,
- *   translatable = TRUE,
- *   entity_keys = {
- *     "id" = "tid",
- *     "revision" = "revision_id",
- *     "bundle" = "vid",
- *     "label" = "name",
- *     "langcode" = "langcode",
- *     "uuid" = "uuid",
- *     "published" = "status",
- *   },
- *   revision_metadata_keys = {
- *     "revision_user" = "revision_user",
- *     "revision_created" = "revision_created",
- *     "revision_log_message" = "revision_log_message",
- *   },
- *   bundle_entity_type = "taxonomy_vocabulary",
- *   field_ui_base_route = "entity.taxonomy_vocabulary.overview_form",
- *   common_reference_target = TRUE,
- *   links = {
- *     "canonical" = "/taxonomy/term/{taxonomy_term}",
- *     "delete-form" = "/taxonomy/term/{taxonomy_term}/delete",
- *     "edit-form" = "/taxonomy/term/{taxonomy_term}/edit",
- *     "create" = "/taxonomy/term",
- *     "revision" = "/taxonomy/term/{taxonomy_term}/revision/{taxonomy_term_revision}/view",
- *     "revision-delete-form" = "/taxonomy/term/{taxonomy_term}/revision/{taxonomy_term_revision}/delete",
- *     "revision-revert-form" = "/taxonomy/term/{taxonomy_term}/revision/{taxonomy_term_revision}/revert",
- *     "version-history" = "/taxonomy/term/{taxonomy_term}/revisions",
- *   },
- *   permission_granularity = "bundle",
- *   collection_permission = "access taxonomy overview",
- *   constraints = {
- *     "TaxonomyHierarchy" = {}
- *   }
- * )
  */
+#[ContentEntityType(
+  id: 'taxonomy_term',
+  label: new TranslatableMarkup('Taxonomy term'),
+  label_collection: new TranslatableMarkup('Taxonomy terms'),
+  label_singular: new TranslatableMarkup('taxonomy term'),
+  label_plural: new TranslatableMarkup('taxonomy terms'),
+  entity_keys: [
+    'id' => 'tid',
+    'revision' => 'revision_id',
+    'bundle' => 'vid',
+    'label' => 'name',
+    'langcode' => 'langcode',
+    'uuid' => 'uuid',
+    'published' => 'status',
+  ],
+  handlers: [
+    'storage' => TermStorage::class,
+    'storage_schema' => TermStorageSchema::class,
+    'view_builder' => EntityViewBuilder::class,
+    'list_builder' => EntityListBuilder::class,
+    'access' => TermAccessControlHandler::class,
+    'views_data' => TermViewsData::class,
+    'form' => [
+      'default' => TermForm::class,
+      'delete' => TermDeleteForm::class,
+      'revision-delete' => RevisionDeleteForm::class,
+      'revision-revert' => RevisionRevertForm::class,
+    ],
+    'route_provider' => [
+      'revision' => RevisionHtmlRouteProvider::class,
+    ],
+    'translation' => TermTranslationHandler::class,
+  ],
+  links: [
+    'canonical' => '/taxonomy/term/{taxonomy_term}',
+    'delete-form' => '/taxonomy/term/{taxonomy_term}/delete',
+    'edit-form' => '/taxonomy/term/{taxonomy_term}/edit',
+    'create' => '/taxonomy/term',
+    'revision' => '/taxonomy/term/{taxonomy_term}/revision/{taxonomy_term_revision}/view',
+    'revision-delete-form' => '/taxonomy/term/{taxonomy_term}/revision/{taxonomy_term_revision}/delete',
+    'revision-revert-form' => '/taxonomy/term/{taxonomy_term}/revision/{taxonomy_term_revision}/revert',
+    'version-history' => '/taxonomy/term/{taxonomy_term}/revisions',
+  ],
+  collection_permission: 'access taxonomy overview',
+  permission_granularity: 'bundle',
+  bundle_entity_type: 'taxonomy_vocabulary',
+  bundle_label: new TranslatableMarkup('Vocabulary'),
+  base_table: 'taxonomy_term_data',
+  data_table: 'taxonomy_term_field_data',
+  revision_table: 'taxonomy_term_revision',
+  revision_data_table: 'taxonomy_term_field_revision',
+  translatable: TRUE,
+  show_revision_ui: TRUE,
+  label_count: [
+    'singular' => '@count taxonomy term',
+    'plural' => '@count taxonomy terms',
+  ],
+  field_ui_base_route: 'entity.taxonomy_vocabulary.overview_form',
+  common_reference_target: TRUE,
+  constraints: [
+    'TaxonomyHierarchy' => [],
+  ],
+  revision_metadata_keys: [
+    'revision_user' => 'revision_user',
+    'revision_created' => 'revision_created',
+    'revision_log_message' => 'revision_log_message',
+  ],
+)]
 class Term extends EditorialContentEntityBase implements TermInterface {
 
   /**

@@ -4,55 +4,60 @@ namespace Drupal\user\Entity;
 
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\user\RoleAccessControlHandler;
+use Drupal\user\RoleForm;
 use Drupal\user\RoleInterface;
+use Drupal\user\RoleListBuilder;
+use Drupal\user\RoleStorage;
 
 /**
  * Defines the user role entity class.
- *
- * @ConfigEntityType(
- *   id = "user_role",
- *   label = @Translation("Role"),
- *   label_collection = @Translation("Roles"),
- *   label_singular = @Translation("role"),
- *   label_plural = @Translation("roles"),
- *   label_count = @PluralTranslation(
- *     singular = "@count role",
- *     plural = "@count roles",
- *   ),
- *   handlers = {
- *     "storage" = "Drupal\user\RoleStorage",
- *     "access" = "Drupal\user\RoleAccessControlHandler",
- *     "list_builder" = "Drupal\user\RoleListBuilder",
- *     "form" = {
- *       "default" = "Drupal\user\RoleForm",
- *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
- *     }
- *   },
- *   admin_permission = "administer permissions",
- *   config_prefix = "role",
- *   static_cache = TRUE,
- *   entity_keys = {
- *     "id" = "id",
- *     "weight" = "weight",
- *     "label" = "label"
- *   },
- *   links = {
- *     "delete-form" = "/admin/people/roles/manage/{user_role}/delete",
- *     "edit-form" = "/admin/people/roles/manage/{user_role}",
- *     "edit-permissions-form" = "/admin/people/permissions/{user_role}",
- *     "collection" = "/admin/people/roles",
- *   },
- *   config_export = {
- *     "id",
- *     "label",
- *     "weight",
- *     "is_admin",
- *     "permissions",
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'user_role',
+  label: new TranslatableMarkup('Role'),
+  label_collection: new TranslatableMarkup('Roles'),
+  label_singular: new TranslatableMarkup('role'),
+  label_plural: new TranslatableMarkup('roles'),
+  config_prefix: 'role',
+  static_cache: TRUE,
+  entity_keys: [
+    'id' => 'id',
+    'weight' => 'weight',
+    'label' => 'label',
+  ],
+  handlers: [
+    'storage' => RoleStorage::class,
+    'access' => RoleAccessControlHandler::class,
+    'list_builder' => RoleListBuilder::class,
+    'form' => [
+      'default' => RoleForm::class,
+      'delete' => EntityDeleteForm::class,
+    ],
+  ],
+  links: [
+    'delete-form' => '/admin/people/roles/manage/{user_role}/delete',
+    'edit-form' => '/admin/people/roles/manage/{user_role}',
+    'edit-permissions-form' => '/admin/people/permissions/{user_role}',
+    'collection' => '/admin/people/roles',
+  ],
+  admin_permission: 'administer permissions',
+  label_count: [
+    'singular' => '@count role',
+    'plural' => '@count roles',
+  ],
+  config_export: [
+    'id',
+    'label',
+    'weight',
+    'is_admin',
+    'permissions',
+  ],
+)]
 class Role extends ConfigEntityBase implements RoleInterface {
 
   /**

@@ -2,62 +2,68 @@
 
 namespace Drupal\search\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\EntityDeleteForm;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+use Drupal\search\Form\SearchPageAddForm;
+use Drupal\search\Form\SearchPageEditForm;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\Plugin\SearchPluginCollection;
+use Drupal\search\SearchPageAccessControlHandler;
 use Drupal\search\SearchPageInterface;
+use Drupal\search\SearchPageListBuilder;
 
 /**
  * Defines a configured search page.
- *
- * @ConfigEntityType(
- *   id = "search_page",
- *   label = @Translation("Search page"),
- *   label_collection = @Translation("Search pages"),
- *   label_singular = @Translation("search page"),
- *   label_plural = @Translation("search pages"),
- *   label_count = @PluralTranslation(
- *     singular = "@count search page",
- *     plural = "@count search pages",
- *   ),
- *   handlers = {
- *     "access" = "Drupal\search\SearchPageAccessControlHandler",
- *     "list_builder" = "Drupal\search\SearchPageListBuilder",
- *     "form" = {
- *       "add" = "Drupal\search\Form\SearchPageAddForm",
- *       "edit" = "Drupal\search\Form\SearchPageEditForm",
- *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
- *     }
- *   },
- *   admin_permission = "administer search",
- *   links = {
- *     "edit-form" = "/admin/config/search/pages/manage/{search_page}",
- *     "delete-form" = "/admin/config/search/pages/manage/{search_page}/delete",
- *     "enable" = "/admin/config/search/pages/manage/{search_page}/enable",
- *     "disable" = "/admin/config/search/pages/manage/{search_page}/disable",
- *     "set-default" = "/admin/config/search/pages/manage/{search_page}/set-default",
- *     "collection" = "/admin/config/search/pages",
- *   },
- *   config_prefix = "page",
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "label",
- *     "weight" = "weight",
- *     "status" = "status"
- *   },
- *   config_export = {
- *     "id",
- *     "label",
- *     "path",
- *     "weight",
- *     "plugin",
- *     "configuration",
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'search_page',
+  label: new TranslatableMarkup('Search page'),
+  label_collection: new TranslatableMarkup('Search pages'),
+  label_singular: new TranslatableMarkup('search page'),
+  label_plural: new TranslatableMarkup('search pages'),
+  config_prefix: 'page',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+    'weight' => 'weight',
+    'status' => 'status',
+  ],
+  handlers: [
+    'access' => SearchPageAccessControlHandler::class,
+    'list_builder' => SearchPageListBuilder::class,
+    'form' => [
+      'add' => SearchPageAddForm::class,
+      'edit' => SearchPageEditForm::class,
+      'delete' => EntityDeleteForm::class,
+    ],
+  ],
+  links: [
+    'edit-form' => '/admin/config/search/pages/manage/{search_page}',
+    'delete-form' => '/admin/config/search/pages/manage/{search_page}/delete',
+    'enable' => '/admin/config/search/pages/manage/{search_page}/enable',
+    'disable' => '/admin/config/search/pages/manage/{search_page}/disable',
+    'set-default' => '/admin/config/search/pages/manage/{search_page}/set-default',
+    'collection' => '/admin/config/search/pages',
+  ],
+  admin_permission: 'administer search',
+  label_count: [
+    'singular' => '@count search page',
+    'plural' => '@count search pages',
+  ],
+  config_export: [
+    'id',
+    'label',
+    'path',
+    'weight',
+    'plugin',
+    'configuration',
+  ],
+)]
 class SearchPage extends ConfigEntityBase implements SearchPageInterface, EntityWithPluginCollectionInterface {
 
   /**

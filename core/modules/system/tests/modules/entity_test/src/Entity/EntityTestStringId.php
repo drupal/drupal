@@ -4,40 +4,44 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestForm;
 
 /**
  * Defines a test entity class with a string ID.
- *
- * @ContentEntityType(
- *   id = "entity_test_string_id",
- *   label = @Translation("Test entity with string_id"),
- *   handlers = {
- *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
- *     "form" = {
- *       "default" = "Drupal\entity_test\EntityTestForm"
- *     },
- *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
- *     },
- *   },
- *   base_table = "entity_test_string",
- *   admin_permission = "administer entity_test content",
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *     "bundle" = "type",
- *     "label" = "name",
- *   },
- *   links = {
- *     "canonical" = "/entity_test_string_id/manage/{entity_test_string_id}",
- *     "add-form" = "/entity_test_string_id/add",
- *     "edit-form" = "/entity_test_string_id/manage/{entity_test_string_id}",
- *   },
- *   field_ui_base_route = "entity.entity_test_string_id.admin_form",
- * )
  */
+#[ContentEntityType(
+  id: 'entity_test_string_id',
+  label: new TranslatableMarkup('Test entity with string_id'),
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+    'label' => 'name',
+  ],
+  handlers: [
+    'access' => EntityTestAccessControlHandler::class,
+    'form' => [
+      'default' => EntityTestForm::class,
+    ],
+    'route_provider' => [
+      'html' => DefaultHtmlRouteProvider::class,
+    ],
+  ],
+  links: [
+    'canonical' => '/entity_test_string_id/manage/{entity_test_string_id}',
+    'add-form' => '/entity_test_string_id/add',
+    'edit-form' => '/entity_test_string_id/manage/{entity_test_string_id}',
+  ],
+  admin_permission: 'administer entity_test content',
+  base_table: 'entity_test_string',
+  field_ui_base_route: 'entity.entity_test_string_id.admin_form',
+)]
 class EntityTestStringId extends EntityTest {
 
   /**

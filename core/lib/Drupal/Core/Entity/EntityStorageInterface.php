@@ -8,8 +8,9 @@ namespace Drupal\Core\Entity;
  * For common default implementations, see
  * \Drupal\Core\Entity\Sql\SqlContentEntityStorage for content entities and
  * \Drupal\Core\Config\Entity\ConfigEntityStorage for config entities. Those
- * implementations are used by default when the @ContentEntityType or
- * @ConfigEntityType annotations are used.
+ * implementations are used by default when the
+ * \Drupal\Core\Entity\Attribute\ContentEntityType or
+ * \Drupal\Core\Entity\Attribute\ConfigEntityType attributes are used.
  *
  * @ingroup entity_api
  */

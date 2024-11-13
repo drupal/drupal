@@ -2,67 +2,78 @@
 
 namespace Drupal\workflows\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\workflows\Exception\RequiredStateMissingException;
+use Drupal\workflows\Form\WorkflowAddForm;
+use Drupal\workflows\Form\WorkflowDeleteForm;
+use Drupal\workflows\Form\WorkflowEditForm;
+use Drupal\workflows\Form\WorkflowStateAddForm;
+use Drupal\workflows\Form\WorkflowStateDeleteForm;
+use Drupal\workflows\Form\WorkflowStateEditForm;
+use Drupal\workflows\Form\WorkflowTransitionAddForm;
+use Drupal\workflows\Form\WorkflowTransitionDeleteForm;
+use Drupal\workflows\Form\WorkflowTransitionEditForm;
+use Drupal\workflows\WorkflowAccessControlHandler;
 use Drupal\workflows\WorkflowInterface;
+use Drupal\workflows\WorkflowListBuilder;
 
 /**
  * Defines the workflow entity.
- *
- * @ConfigEntityType(
- *   id = "workflow",
- *   label = @Translation("Workflow"),
- *   label_collection = @Translation("Workflows"),
- *   label_singular = @Translation("workflow"),
- *   label_plural = @Translation("workflows"),
- *   label_count = @PluralTranslation(
- *     singular = "@count workflow",
- *     plural = "@count workflows",
- *   ),
- *   handlers = {
- *     "access" = "Drupal\workflows\WorkflowAccessControlHandler",
- *     "list_builder" = "Drupal\workflows\WorkflowListBuilder",
- *     "form" = {
- *       "add" = "Drupal\workflows\Form\WorkflowAddForm",
- *       "edit" = "Drupal\workflows\Form\WorkflowEditForm",
- *       "delete" = "Drupal\workflows\Form\WorkflowDeleteForm",
- *       "add-state" = "Drupal\workflows\Form\WorkflowStateAddForm",
- *       "edit-state" = "Drupal\workflows\Form\WorkflowStateEditForm",
- *       "delete-state" = "Drupal\workflows\Form\WorkflowStateDeleteForm",
- *       "add-transition" = "Drupal\workflows\Form\WorkflowTransitionAddForm",
- *       "edit-transition" = "Drupal\workflows\Form\WorkflowTransitionEditForm",
- *       "delete-transition" = "Drupal\workflows\Form\WorkflowTransitionDeleteForm",
- *     },
- *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
- *     },
- *   },
- *   config_prefix = "workflow",
- *   admin_permission = "administer workflows",
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid",
- *   },
- *   links = {
- *     "add-form" = "/admin/config/workflow/workflows/add",
- *     "edit-form" = "/admin/config/workflow/workflows/manage/{workflow}",
- *     "delete-form" = "/admin/config/workflow/workflows/manage/{workflow}/delete",
- *     "add-state-form" = "/admin/config/workflow/workflows/manage/{workflow}/add_state",
- *     "add-transition-form" = "/admin/config/workflow/workflows/manage/{workflow}/add_transition",
- *     "collection" = "/admin/config/workflow/workflows",
- *   },
- *   config_export = {
- *     "id",
- *     "label",
- *     "type",
- *     "type_settings",
- *   },
- * )
  */
+#[ConfigEntityType(
+  id: 'workflow',
+  label: new TranslatableMarkup('Workflow'),
+  label_collection: new TranslatableMarkup('Workflows'),
+  label_singular: new TranslatableMarkup('workflow'),
+  label_plural: new TranslatableMarkup('workflows'),
+  config_prefix: 'workflow',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+    'uuid' => 'uuid',
+  ],
+  handlers: [
+    'access' => WorkflowAccessControlHandler::class,
+    'list_builder' => WorkflowListBuilder::class,
+    'form' => [
+      'add' => WorkflowAddForm::class,
+      'edit' => WorkflowEditForm::class,
+      'delete' => WorkflowDeleteForm::class,
+      'add-state' => WorkflowStateAddForm::class,
+      'edit-state' => WorkflowStateEditForm::class,
+      'delete-state' => WorkflowStateDeleteForm::class,
+      'add-transition' => WorkflowTransitionAddForm::class,
+      'edit-transition' => WorkflowTransitionEditForm::class,
+      'delete-transition' => WorkflowTransitionDeleteForm::class,
+    ],
+    'route_provider' => ['html' => AdminHtmlRouteProvider::class],
+  ],
+  links: [
+    'add-form' => '/admin/config/workflow/workflows/add',
+    'edit-form' => '/admin/config/workflow/workflows/manage/{workflow}',
+    'delete-form' => '/admin/config/workflow/workflows/manage/{workflow}/delete',
+    'add-state-form' => '/admin/config/workflow/workflows/manage/{workflow}/add_state',
+    'add-transition-form' => '/admin/config/workflow/workflows/manage/{workflow}/add_transition',
+    'collection' => '/admin/config/workflow/workflows',
+  ],
+  admin_permission: 'administer workflows',
+  label_count: [
+    'singular' => '@count workflow',
+    'plural' => '@count workflows',
+  ],
+  config_export: [
+    'id',
+    'label',
+    'type',
+    'type_settings',
+  ],
+)]
 class Workflow extends ConfigEntityBase implements WorkflowInterface, EntityWithPluginCollectionInterface {
 
   /**
