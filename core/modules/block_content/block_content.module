@@ -52,7 +52,7 @@ function block_content_theme($existing, $type, $theme, $path): array {
 /**
  * Implements hook_entity_type_alter().
  */
-function block_content_entity_type_alter(array &$entity_types) {
+function block_content_entity_type_alter(array &$entity_types): void {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Add a translation handler for fields if the language module is enabled.
   if (\Drupal::moduleHandler()->moduleExists('language')) {

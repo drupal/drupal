@@ -70,7 +70,7 @@ function workspaces_entity_type_build(array &$entity_types) {
 /**
  * Implements hook_entity_type_alter().
  */
-function workspaces_entity_type_alter(array &$entity_types) {
+function workspaces_entity_type_alter(array &$entity_types): void {
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityTypeInfo::class)
     ->entityTypeAlter($entity_types);

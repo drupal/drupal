@@ -86,7 +86,7 @@ function entity_test_entity_types($filter = NULL) {
 /**
  * Implements hook_entity_type_alter().
  */
-function entity_test_entity_type_alter(array &$entity_types) {
+function entity_test_entity_type_alter(array &$entity_types): void {
   $state = \Drupal::state();
 
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */

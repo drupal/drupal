@@ -42,7 +42,7 @@ function entity_test_update_entity_field_storage_info(EntityTypeInterface $entit
 /**
  * Implements hook_entity_type_alter().
  */
-function entity_test_update_entity_type_alter(array &$entity_types) {
+function entity_test_update_entity_type_alter(array &$entity_types): void {
   // Allow entity_test_update tests to override the entity type definition.
   $entity_type = \Drupal::state()->get('entity_test_update.entity_type', $entity_types['entity_test_update']);
   if ($entity_type !== 'null') {

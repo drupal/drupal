@@ -23,7 +23,7 @@ function config_translation_test_system_info_alter(array &$info, Extension $file
 /**
  * Implements hook_entity_type_alter().
  */
-function config_translation_test_entity_type_alter(array &$entity_types) {
+function config_translation_test_entity_type_alter(array &$entity_types): void {
   // Remove entity definition for these entity types from config_test module.
   unset($entity_types['config_test_no_status']);
   unset($entity_types['config_query_test']);

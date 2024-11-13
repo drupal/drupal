@@ -845,7 +845,7 @@ function hook_entity_type_build(array &$entity_types) {
  * @see \Drupal\Core\Entity\Entity
  * @see \Drupal\Core\Entity\EntityTypeInterface
  */
-function hook_entity_type_alter(array &$entity_types) {
+function hook_entity_type_alter(array &$entity_types): void {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageInterface interface.
