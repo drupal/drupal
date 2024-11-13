@@ -22,7 +22,7 @@ function field_ui_test_field_config_access(FieldConfigInterface $field) {
 /**
  * Implements hook_form_FORM_BASE_ID_alter().
  */
-function field_ui_test_form_entity_view_display_edit_form_alter(&$form, FormStateInterface $form_state) {
+function field_ui_test_form_entity_view_display_edit_form_alter(&$form, FormStateInterface $form_state): void {
   $table = &$form['fields'];
 
   foreach (Element::children($table) as $name) {

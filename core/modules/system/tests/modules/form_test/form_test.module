@@ -12,14 +12,14 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function block_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {
+function block_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state): void {
   \Drupal::messenger()->addStatus('block_form_form_test_alter_form_alter() executed.');
 }
 
 /**
  * Implements hook_form_alter().
  */
-function form_test_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function form_test_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   if ($form_id == 'form_test_alter_form') {
     \Drupal::messenger()->addStatus('form_test_form_alter() executed.');
   }
@@ -28,14 +28,14 @@ function form_test_form_alter(&$form, FormStateInterface $form_state, $form_id) 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function form_test_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {
+function form_test_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state): void {
   \Drupal::messenger()->addStatus('form_test_form_form_test_alter_form_alter() executed.');
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function system_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state) {
+function system_form_form_test_alter_form_alter(&$form, FormStateInterface $form_state): void {
   \Drupal::messenger()->addStatus('system_form_form_test_alter_form_alter() executed.');
 }
 
@@ -80,7 +80,7 @@ function _form_test_tableselect_get_data() {
 /**
  * Implements hook_form_FORM_ID_alter() for the registration form.
  */
-function form_test_form_user_register_form_alter(&$form, FormStateInterface $form_state) {
+function form_test_form_user_register_form_alter(&$form, FormStateInterface $form_state): void {
   $form['test_rebuild'] = [
     '#type' => 'submit',
     '#value' => t('Rebuild'),
@@ -99,7 +99,7 @@ function form_test_user_register_form_rebuild($form, FormStateInterface $form_st
 /**
  * Implements hook_form_FORM_ID_alter() for form_test_vertical_tabs_access_form().
  */
-function form_test_form_form_test_vertical_tabs_access_form_alter(&$form, &$form_state, $form_id) {
+function form_test_form_form_test_vertical_tabs_access_form_alter(&$form, &$form_state, $form_id): void {
   $form['vertical_tabs1']['#access'] = FALSE;
   $form['vertical_tabs2']['#access'] = FALSE;
   $form['tabs3']['#access'] = TRUE;

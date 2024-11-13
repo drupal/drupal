@@ -412,7 +412,7 @@ function claro_preprocess_details(&$variables) {
 /**
  * Implements hook_form_alter().
  */
-function claro_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function claro_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
   $build_info = $form_state->getBuildInfo();
   $form_object = $form_state->getFormObject();
 
@@ -669,7 +669,7 @@ function _claro_convert_link_to_action_link(array $link, $icon_name = NULL, $siz
  *
  * Changes vertical tabs to container.
  */
-function claro_form_node_form_alter(&$form, FormStateInterface $form_state) {
+function claro_form_node_form_alter(&$form, FormStateInterface $form_state): void {
   $form['#theme'] = ['node_edit_form'];
   $form['#attached']['library'][] = 'claro/form-two-columns';
 
@@ -689,7 +689,7 @@ function claro_form_node_form_alter(&$form, FormStateInterface $form_state) {
  * Alters the menu_link_content_form by organizing form elements into different
  * 'details' sections.
  */
-function claro_form_menu_link_content_form_alter(&$form, FormStateInterface $form_state) {
+function claro_form_menu_link_content_form_alter(&$form, FormStateInterface $form_state): void {
   $form['#theme'] = ['menu_link_form'];
   $form['#attached']['library'][] = 'claro/form-two-columns';
   $form['advanced'] = [
@@ -739,14 +739,14 @@ function claro_form_menu_link_content_form_alter(&$form, FormStateInterface $for
  * Alters the menu_link_edit form by organizing form elements into different
  * 'details' sections.
  */
-function claro_form_menu_link_edit_alter(&$form, FormStateInterface $form_state) {
+function claro_form_menu_link_edit_alter(&$form, FormStateInterface $form_state): void {
   claro_form_menu_link_content_form_alter($form, $form_state);
 }
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\media\MediaForm.
  */
-function claro_form_media_form_alter(&$form, FormStateInterface $form_state) {
+function claro_form_media_form_alter(&$form, FormStateInterface $form_state): void {
   // Only attach CSS from core if this form comes from Media core, and not from
   // the contrib Media Entity 1.x branch.
   if (\Drupal::moduleHandler()->moduleExists('media') && $form_state->getFormObject() instanceof MediaForm) {
@@ -898,7 +898,7 @@ function claro_preprocess_views_exposed_form(&$variables) {
 /**
  * Implements hook_form_FORM_ID_alter() for views_exposed_form.
  */
-function claro_form_views_exposed_form_alter(&$form, FormStateInterface $form_state) {
+function claro_form_views_exposed_form_alter(&$form, FormStateInterface $form_state): void {
   $view = $form_state->getStorage()['view'];
   $view_title = $view->getTitle();
 
@@ -910,7 +910,7 @@ function claro_form_views_exposed_form_alter(&$form, FormStateInterface $form_st
 /**
  * Implements hook_form_FORM_ID_alter() for the system_modules form.
  */
-function claro_form_system_modules_alter(&$form, FormStateInterface $form_state) {
+function claro_form_system_modules_alter(&$form, FormStateInterface $form_state): void {
   if (isset($form['filters'])) {
     $form['filters']['#attributes']['class'][] = 'modules-table-filter';
     if (isset($form['filters']['text'])) {
@@ -1489,7 +1489,7 @@ function claro_preprocess_views_view_fields__media_library(array &$variables) {
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function claro_form_media_library_add_form_alter(array &$form, FormStateInterface $form_state) {
+function claro_form_media_library_add_form_alter(array &$form, FormStateInterface $form_state): void {
   $form['#attributes']['class'][] = 'media-library-add-form';
   $form['#attached']['library'][] = 'claro/media_library.theme';
 
@@ -1510,7 +1510,7 @@ function claro_form_media_library_add_form_alter(array &$form, FormStateInterfac
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function claro_form_media_library_add_form_upload_alter(array &$form, FormStateInterface $form_state) {
+function claro_form_media_library_add_form_upload_alter(array &$form, FormStateInterface $form_state): void {
   $form['#attributes']['class'][] = 'media-library-add-form--upload';
   if (isset($form['container']['upload'])) {
     // Set this flag so we can prevent the details element from being added
@@ -1525,7 +1525,7 @@ function claro_form_media_library_add_form_upload_alter(array &$form, FormStateI
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function claro_form_media_library_add_form_oembed_alter(array &$form, FormStateInterface $form_state) {
+function claro_form_media_library_add_form_oembed_alter(array &$form, FormStateInterface $form_state): void {
   $form['#attributes']['class'][] = 'media-library-add-form--oembed';
 
   // If no media items have been added yet, add a couple of styling classes
@@ -1675,7 +1675,7 @@ function claro_preprocess_links__media_library_menu(array &$variables) {
 /**
  * Implements hook_form_FORM_ID_alter() for the Views UI rearrange filter form.
  */
-function claro_preprocess_views_ui_rearrange_filter_form(array &$variables) {
+function claro_preprocess_views_ui_rearrange_filter_form(array &$variables): void {
   foreach ($variables['table']['#rows'] as &$row) {
     // Remove the container-inline class from the operator table cell.
     if (isset($row['data'][0]['class'])) {
@@ -1687,7 +1687,7 @@ function claro_preprocess_views_ui_rearrange_filter_form(array &$variables) {
 /**
  * Implements hook_form_FORM_ID_alter() for the Views UI config form.
  */
-function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInterface $form_state) {
+function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInterface $form_state): void {
   $type = $form_state->get('type');
 
   if ($type === 'filter') {
@@ -1757,7 +1757,7 @@ function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInter
 /**
  * Implements hook_form_FORM_ID_alter() for Views UI add handler form.
  */
-function claro_form_views_ui_add_handler_form_alter(array &$form, FormStateInterface $form_state) {
+function claro_form_views_ui_add_handler_form_alter(array &$form, FormStateInterface $form_state): void {
   // Remove container-inline class to allow more control over styling.
   if (isset($form['selected']['#attributes']['class'])) {
     $form['selected']['#attributes']['class'] = array_diff($form['selected']['#attributes']['class'], ['container-inline']);
@@ -1844,7 +1844,7 @@ function claro_system_module_invoked_theme_registry_alter(array &$theme_registry
 /**
  * Implements hook_form_FORM_ID_alter() for the user_admin_permissions form.
  */
-function claro_form_user_admin_permissions_alter(&$form, FormStateInterface $form_state) {
+function claro_form_user_admin_permissions_alter(&$form, FormStateInterface $form_state): void {
   if (isset($form['filters'])) {
     $form['filters']['#attributes']['class'][] = 'permissions-table-filter';
     if (isset($form['filters']['text'])) {
@@ -1857,7 +1857,7 @@ function claro_form_user_admin_permissions_alter(&$form, FormStateInterface $for
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function claro_form_node_preview_form_select_alter(array &$form, FormStateInterface $form_state) {
+function claro_form_node_preview_form_select_alter(array &$form, FormStateInterface $form_state): void {
   if (isset($form['backlink'])) {
     $form['backlink']['#options']['attributes']['class'][] = 'action-link';
     $form['backlink']['#options']['attributes']['class'][] = 'action-link--icon-chevron-left';

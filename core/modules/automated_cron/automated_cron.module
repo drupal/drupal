@@ -32,7 +32,7 @@ function automated_cron_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_form_FORM_ID_alter() for the system_cron_settings() form.
  */
-function automated_cron_form_system_cron_settings_alter(&$form, &$form_state) {
+function automated_cron_form_system_cron_settings_alter(&$form, &$form_state): void {
   $automated_cron_settings = \Drupal::config('automated_cron.settings');
 
   $options = [3600, 10800, 21600, 43200, 86400, 604800];

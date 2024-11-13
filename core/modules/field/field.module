@@ -313,7 +313,7 @@ function field_config_import_steps_alter(&$sync_steps, ConfigImporter $config_im
  *
  * @see \Drupal\field\ConfigImporterFieldPurger
  */
-function field_form_config_admin_import_form_alter(&$form, FormStateInterface $form_state) {
+function field_form_config_admin_import_form_alter(&$form, FormStateInterface $form_state): void {
   // Only display the message when core.extension is available in the source
   // storage and the form is not submitted.
   $user_input = $form_state->getUserInput();

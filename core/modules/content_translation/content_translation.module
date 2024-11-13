@@ -383,7 +383,7 @@ function content_translation_translate_access(EntityInterface $entity) {
 /**
  * Implements hook_form_alter().
  */
-function content_translation_form_alter(array &$form, FormStateInterface $form_state) {
+function content_translation_form_alter(array &$form, FormStateInterface $form_state): void {
   $form_object = $form_state->getFormObject();
   if (!($form_object instanceof ContentEntityFormInterface)) {
     return;
@@ -483,7 +483,7 @@ function content_translation_entity_extra_field_info() {
 /**
  * Implements hook_form_FORM_ID_alter() for 'field_config_edit_form'.
  */
-function content_translation_form_field_config_edit_form_alter(array &$form, FormStateInterface $form_state) {
+function content_translation_form_field_config_edit_form_alter(array &$form, FormStateInterface $form_state): void {
   $field = $form_state->getFormObject()->getEntity();
   $bundle_is_translatable = \Drupal::service('content_translation.manager')->isEnabled($field->getTargetEntityTypeId(), $field->getTargetBundle());
 
@@ -649,7 +649,7 @@ function content_translation_language_configuration_element_submit(array $form, 
 /**
  * Implements hook_form_FORM_ID_alter() for language_content_settings_form().
  */
-function content_translation_form_language_content_settings_form_alter(array &$form, FormStateInterface $form_state) {
+function content_translation_form_language_content_settings_form_alter(array &$form, FormStateInterface $form_state): void {
   \Drupal::moduleHandler()->loadInclude('content_translation', 'inc', 'content_translation.admin');
   _content_translation_form_language_content_settings_form_alter($form, $form_state);
 }

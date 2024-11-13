@@ -1094,7 +1094,7 @@ function file_field_find_file_reference_column(FieldDefinitionInterface $field) 
  * @see \Drupal\Core\File\Event\FileUploadSanitizeNameEvent
  * @see \Drupal\file\EventSubscriber\FileEventSubscriber
  */
-function file_form_system_file_system_settings_alter(array &$form, FormStateInterface $form_state) {
+function file_form_system_file_system_settings_alter(array &$form, FormStateInterface $form_state): void {
   $config = \Drupal::config('file.settings');
   $form['filename_sanitization'] = [
     '#type' => 'details',

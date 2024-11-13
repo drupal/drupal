@@ -192,7 +192,7 @@ function olivero_theme_suggestions_form_alter(array &$suggestions, array $variab
 /**
  * Implements hook_form_alter() for adding classes and placeholder text to the search forms.
  */
-function olivero_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function olivero_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   if (isset($form['actions']['submit']) && (count($form['actions'])) <= 2) {
     $form['actions']['submit']['#attributes']['class'][] = 'button--primary';
   }
@@ -503,7 +503,7 @@ function olivero_preprocess_filter_caption(&$variables) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function olivero_form_node_preview_form_select_alter(&$form, FormStateInterface $form_state, $form_id) {
+function olivero_form_node_preview_form_select_alter(&$form, FormStateInterface $form_state, $form_id): void {
   $form['backlink']['#options']['attributes']['class'][] = 'button';
   $form['backlink']['#options']['attributes']['class'][] = 'button--small';
   $form['backlink']['#options']['attributes']['class'][] = 'button--icon-back';
@@ -620,7 +620,7 @@ function olivero_preprocess_table(&$variables) {
 /**
  * Implements hook_form_views_exposed_form_alter().
  */
-function olivero_form_views_exposed_form_alter(&$form) {
+function olivero_form_views_exposed_form_alter(&$form): void {
   $form['#attributes']['class'][] = 'form--inline';
 }
 

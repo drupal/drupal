@@ -632,7 +632,7 @@ function views_disable_view(View $view) {
  * Since the exposed form is a GET form, we don't want it to send a wide
  * variety of information.
  */
-function views_form_views_exposed_form_alter(&$form, FormStateInterface $form_state) {
+function views_form_views_exposed_form_alter(&$form, FormStateInterface $form_state): void {
   $form['form_build_id']['#access'] = FALSE;
   $form['form_token']['#access'] = FALSE;
   $form['form_id']['#access'] = FALSE;

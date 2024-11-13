@@ -117,7 +117,7 @@ function template_preprocess_views_view_mapping_test(&$variables) {
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function views_test_data_form_views_form_test_form_multiple_default_alter(&$form, FormStateInterface $form_state, $form_id) {
+function views_test_data_form_views_form_test_form_multiple_default_alter(&$form, FormStateInterface $form_state, $form_id): void {
   \Drupal::messenger()->addStatus(t('Test base form ID with Views forms and arguments.'));
 }
 

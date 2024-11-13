@@ -128,7 +128,7 @@ function umami_preprocess_menu_local_task(&$variables) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function umami_form_search_block_form_alter(&$form, FormStateInterface $form_state) {
+function umami_form_search_block_form_alter(&$form, FormStateInterface $form_state): void {
   $form['keys']['#attributes']['placeholder'] = t('Search by keyword, ingredient, dish');
 }
 
@@ -152,7 +152,7 @@ function umami_preprocess_links__media_library_menu(array &$variables) {
  *
  * @todo revisit in https://drupal.org/node/3110132
  */
-function umami_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function umami_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
   $form_object = $form_state->getFormObject();
 
   if ($form_object instanceof ViewsForm && str_starts_with($form_object->getBaseFormId(), 'views_form_media_library')) {

@@ -213,7 +213,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
  *
  * @see menu_ui_form_node_form_submit()
  */
-function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
+function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state): void {
   // Generate a list of possible parents (not including this link or descendants).
   // @todo This must be handled in a #process handler.
   $node = $form_state->getFormObject()->getEntity();
@@ -359,7 +359,7 @@ function menu_ui_form_node_form_submit($form, FormStateInterface $form_state) {
  * @see NodeTypeForm::form()
  * @see menu_ui_form_node_type_form_builder()
  */
-function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
+function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_state): void {
   /** @var \Drupal\Core\Menu\MenuParentFormSelectorInterface $menu_parent_selector */
   $menu_parent_selector = \Drupal::service('menu.parent_form_selector');
   $menu_options = array_map(function (MenuInterface $menu) {

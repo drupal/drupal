@@ -183,7 +183,7 @@ function node_test_node_insert(NodeInterface $node) {
 /**
  * Implements hook_form_alter().
  */
-function node_test_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function node_test_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   if (!$form_state->get('node_test_form_alter')) {
     \Drupal::messenger()->addStatus('Storage is not set');
     $form_state->set('node_test_form_alter', TRUE);

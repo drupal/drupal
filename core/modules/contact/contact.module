@@ -183,7 +183,7 @@ function contact_mail($key, &$message, $params) {
  *
  * @see \Drupal\user\ProfileForm::form()
  */
-function contact_form_user_form_alter(&$form, FormStateInterface $form_state) {
+function contact_form_user_form_alter(&$form, FormStateInterface $form_state): void {
   $form['contact'] = [
     '#type' => 'details',
     '#title' => t('Contact settings'),
@@ -220,7 +220,7 @@ function contact_user_profile_form_submit($form, FormStateInterface $form_state)
  *
  * Adds the default personal contact setting on the user settings page.
  */
-function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form_state) {
+function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form_state): void {
   $form['contact'] = [
     '#type' => 'details',
     '#title' => t('Contact settings'),

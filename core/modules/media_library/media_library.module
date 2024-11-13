@@ -272,7 +272,7 @@ function media_library_preprocess_views_view_fields(&$variables) {
  *
  * @todo Remove in https://www.drupal.org/node/2983454
  */
-function media_library_form_views_form_media_library_page_alter(array &$form, FormStateInterface $form_state) {
+function media_library_form_views_form_media_library_page_alter(array &$form, FormStateInterface $form_state): void {
   if (isset($form['media_bulk_form']) && isset($form['output'])) {
     /** @var \Drupal\views\ViewExecutable $view */
     $view = $form['output'][0]['#view'];
@@ -288,7 +288,7 @@ function media_library_form_views_form_media_library_page_alter(array &$form, Fo
 /**
  * Implements hook_form_alter().
  */
-function media_library_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function media_library_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
   // Add a process callback to ensure that the media library view's exposed
   // filters submit button is not moved to the modal dialog's button area.
   if ($form_id === 'views_exposed_form' && str_starts_with($form['#id'], 'views-exposed-form-media-library-widget')) {
