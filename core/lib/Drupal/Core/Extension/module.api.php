@@ -989,7 +989,7 @@ function hook_update_dependencies() {
  *
  * @see hook_update_N()
  */
-function hook_update_last_removed() {
+function hook_update_last_removed(): int {
   // We've removed the 8.x-1.x version of my_module, including database updates.
   // The next update function is my_module_update_8200().
   return 8103;

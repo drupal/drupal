@@ -108,6 +108,6 @@ function file_requirements($phase) {
 /**
  * Implements hook_update_last_removed().
  */
-function file_update_last_removed() {
+function file_update_last_removed(): int {
   return 8700;
 }

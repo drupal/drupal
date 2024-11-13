@@ -53,6 +53,6 @@ function help_schema() {
 /**
  * Implements hook_update_last_removed().
  */
-function help_update_last_removed() {
+function help_update_last_removed(): int {
   return 10200;
 }

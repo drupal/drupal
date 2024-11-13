@@ -122,6 +122,6 @@ function user_requirements($phase): array {
 /**
  * Implements hook_update_last_removed().
  */
-function user_update_last_removed() {
+function user_update_last_removed(): int {
   return 10000;
 }
