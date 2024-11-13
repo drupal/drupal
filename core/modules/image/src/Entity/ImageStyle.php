@@ -2,6 +2,7 @@
 
 namespace Drupal\image\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
@@ -15,57 +16,62 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\image\Form\ImageStyleAddForm;
+use Drupal\image\Form\ImageStyleDeleteForm;
+use Drupal\image\Form\ImageStyleEditForm;
+use Drupal\image\Form\ImageStyleFlushForm;
 use Drupal\image\ImageEffectPluginCollection;
 use Drupal\image\ImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\image\ImageStyleListBuilder;
+use Drupal\image\ImageStyleStorage;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
  * Defines an image style configuration entity.
- *
- * @ConfigEntityType(
- *   id = "image_style",
- *   label = @Translation("Image style"),
- *   label_collection = @Translation("Image styles"),
- *   label_singular = @Translation("image style"),
- *   label_plural = @Translation("image styles"),
- *   label_count = @PluralTranslation(
- *     singular = "@count image style",
- *     plural = "@count image styles",
- *   ),
- *   handlers = {
- *     "form" = {
- *       "add" = "Drupal\image\Form\ImageStyleAddForm",
- *       "edit" = "Drupal\image\Form\ImageStyleEditForm",
- *       "delete" = "Drupal\image\Form\ImageStyleDeleteForm",
- *       "flush" = "Drupal\image\Form\ImageStyleFlushForm"
- *     },
- *     "list_builder" = "Drupal\image\ImageStyleListBuilder",
- *     "storage" = "Drupal\image\ImageStyleStorage",
- *   },
- *   admin_permission = "administer image styles",
- *   config_prefix = "style",
- *   entity_keys = {
- *     "id" = "name",
- *     "label" = "label"
- *   },
- *   links = {
- *     "flush-form" = "/admin/config/media/image-styles/manage/{image_style}/flush",
- *     "edit-form" = "/admin/config/media/image-styles/manage/{image_style}",
- *     "delete-form" = "/admin/config/media/image-styles/manage/{image_style}/delete",
- *     "collection" = "/admin/config/media/image-styles",
- *   },
- *   config_export = {
- *     "name",
- *     "label",
- *     "effects",
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'image_style',
+  label: new TranslatableMarkup('Image style'),
+  label_collection: new TranslatableMarkup('Image styles'),
+  label_singular: new TranslatableMarkup('image style'),
+  label_plural: new TranslatableMarkup('image styles'),
+  config_prefix: 'style',
+  entity_keys: [
+    'id' => 'name',
+    'label' => 'label',
+  ],
+  handlers: [
+    'form' => [
+      'add' => ImageStyleAddForm::class,
+      'edit' => ImageStyleEditForm::class,
+      'delete' => ImageStyleDeleteForm::class,
+      'flush' => ImageStyleFlushForm::class,
+    ],
+    'list_builder' => ImageStyleListBuilder::class,
+    'storage' => ImageStyleStorage::class,
+  ],
+  links: [
+    'flush-form' => '/admin/config/media/image-styles/manage/{image_style}/flush',
+    'edit-form' => '/admin/config/media/image-styles/manage/{image_style}',
+    'delete-form' => '/admin/config/media/image-styles/manage/{image_style}/delete',
+    'collection' => '/admin/config/media/image-styles',
+  ],
+  admin_permission: 'administer image styles',
+  label_count: [
+    'singular' => '@count image style',
+    'plural' => '@count image styles',
+  ],
+  config_export: [
+    'name',
+    'label',
+    'effects',
+  ],
+)]
 class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginCollectionInterface {
 
   /**

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestViewsData;
 use Drupal\entity_test\FieldStorageDefinition;
 use Drupal\entity_test\Plugin\Field\ComputedReferenceTestFieldItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestBundleFieldItemList;
@@ -16,23 +18,22 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 
 /**
  * An entity used for testing computed bundle field values.
- *
- * @ContentEntityType(
- *   id = "entity_test_comp_bund_fld",
- *   label = @Translation("Entity Test computed bundle field"),
- *   base_table = "entity_test_comp_bund_fld",
- *   handlers = {
- *     "views_data" = "Drupal\entity_test\EntityTestViewsData"
- *   },
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *     "label" = "name",
- *     "bundle" = "type",
- *   },
- *   admin_permission = "administer entity_test content",
- * )
  */
+#[ContentEntityType(
+  id: 'entity_test_comp_bund_fld',
+  label: new TranslatableMarkup('Entity Test computed bundle field'),
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'label' => 'name',
+    'bundle' => 'type',
+  ],
+  handlers: [
+    'views_data' => EntityTestViewsData::class,
+  ],
+  admin_permission: 'administer entity_test content',
+  base_table: 'entity_test_comp_bund_fld',
+)]
 class EntityTestComputedBundleField extends EntityTest {
 
   /**

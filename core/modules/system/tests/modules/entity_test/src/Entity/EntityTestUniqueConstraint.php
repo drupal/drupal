@@ -4,31 +4,36 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\content_translation\ContentTranslationHandler;
+use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestForm;
+use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
 
 /**
  * Defines a test entity class for unique constraint.
- *
- * @ContentEntityType(
- *   id = "entity_test_unique_constraint",
- *   label = @Translation("unique field entity"),
- *   handlers = {
- *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
- *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
- *     "form" = {
- *       "default" = "Drupal\entity_test\EntityTestForm"
- *     },
- *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
- *   },
- *   base_table = "entity_test_unique_constraint",
- *   data_table = "entity_test_unique_constraint_data",
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *   },
- * )
  */
+#[ContentEntityType(
+  id: 'entity_test_unique_constraint',
+  label: new TranslatableMarkup('unique field entity'),
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+  ],
+  handlers: [
+    'view_builder' => TestViewBuilder::class,
+    'access' => EntityTestAccessControlHandler::class,
+    'form' => [
+      'default' => EntityTestForm::class,
+    ],
+    'translation' => ContentTranslationHandler::class,
+  ],
+  base_table: 'entity_test_unique_constraint',
+  data_table: 'entity_test_unique_constraint_data',
+)]
 class EntityTestUniqueConstraint extends EntityTest {
 
   /**

@@ -2,65 +2,75 @@
 
 namespace Drupal\taxonomy\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\taxonomy\Entity\Routing\VocabularyRouteProvider;
+use Drupal\taxonomy\Form\OverviewTerms;
+use Drupal\taxonomy\Form\VocabularyDeleteForm;
+use Drupal\taxonomy\Form\VocabularyResetForm;
+use Drupal\taxonomy\VocabularyAccessControlHandler;
+use Drupal\taxonomy\VocabularyForm;
 use Drupal\taxonomy\VocabularyInterface;
+use Drupal\taxonomy\VocabularyListBuilder;
+use Drupal\taxonomy\VocabularyStorage;
+use Drupal\user\Entity\EntityPermissionsRouteProvider;
 
 /**
  * Defines the taxonomy vocabulary entity.
- *
- * @ConfigEntityType(
- *   id = "taxonomy_vocabulary",
- *   label = @Translation("Taxonomy vocabulary"),
- *   label_singular = @Translation("vocabulary"),
- *   label_plural = @Translation("vocabularies"),
- *   label_collection = @Translation("Taxonomy"),
- *   label_count = @PluralTranslation(
- *     singular = "@count vocabulary",
- *     plural = "@count vocabularies"
- *   ),
- *   handlers = {
- *     "storage" = "Drupal\taxonomy\VocabularyStorage",
- *     "list_builder" = "Drupal\taxonomy\VocabularyListBuilder",
- *     "access" = "Drupal\taxonomy\VocabularyAccessControlHandler",
- *     "form" = {
- *       "default" = "Drupal\taxonomy\VocabularyForm",
- *       "reset" = "Drupal\taxonomy\Form\VocabularyResetForm",
- *       "delete" = "Drupal\taxonomy\Form\VocabularyDeleteForm",
- *       "overview" = "Drupal\taxonomy\Form\OverviewTerms"
- *     },
- *     "route_provider" = {
- *       "html" = "Drupal\taxonomy\Entity\Routing\VocabularyRouteProvider",
- *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
- *     }
- *   },
- *   admin_permission = "administer taxonomy",
- *   collection_permission = "access taxonomy overview",
- *   config_prefix = "vocabulary",
- *   bundle_of = "taxonomy_term",
- *   entity_keys = {
- *     "id" = "vid",
- *     "label" = "name",
- *     "weight" = "weight"
- *   },
- *   links = {
- *     "add-form" = "/admin/structure/taxonomy/add",
- *     "delete-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete",
- *     "reset-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset",
- *     "overview-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview",
- *     "edit-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}",
- *     "entity-permissions-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview/permissions",
- *     "collection" = "/admin/structure/taxonomy",
- *   },
- *   config_export = {
- *     "name",
- *     "vid",
- *     "description",
- *     "weight",
- *     "new_revision",
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'taxonomy_vocabulary',
+  label: new TranslatableMarkup('Taxonomy vocabulary'),
+  label_collection: new TranslatableMarkup('Taxonomy'),
+  label_singular: new TranslatableMarkup('vocabulary'),
+  label_plural: new TranslatableMarkup('vocabularies'),
+  config_prefix: 'vocabulary',
+  entity_keys: [
+    'id' => 'vid',
+    'label' => 'name',
+    'weight' => 'weight',
+  ],
+  handlers: [
+    'storage' => VocabularyStorage::class,
+    'list_builder' => VocabularyListBuilder::class,
+    'access' => VocabularyAccessControlHandler::class,
+    'form' => [
+      'default' => VocabularyForm::class,
+      'reset' => VocabularyResetForm::class,
+      'delete' => VocabularyDeleteForm::class,
+      'overview' => OverviewTerms::class,
+    ],
+    'route_provider' => [
+      'html' => VocabularyRouteProvider::class,
+      'permissions' => EntityPermissionsRouteProvider::class,
+    ],
+  ],
+  links: [
+    'add-form' => '/admin/structure/taxonomy/add',
+    'delete-form' => '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete',
+    'reset-form' => '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset',
+    'overview-form' => '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview',
+    'edit-form' => '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}',
+    'entity-permissions-form' => '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview/permissions',
+    'collection' => '/admin/structure/taxonomy',
+  ],
+  admin_permission: 'administer taxonomy',
+  collection_permission: 'access taxonomy overview',
+  bundle_of: 'taxonomy_term',
+  label_count: [
+    'singular' => '@count vocabulary',
+    'plural' => '@count vocabularies',
+  ],
+  config_export: [
+    'name',
+    'vid',
+    'description',
+    'weight',
+    'new_revision',
+  ],
+)]
 class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
 
   /**

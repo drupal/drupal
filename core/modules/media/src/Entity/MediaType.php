@@ -4,69 +4,77 @@ namespace Drupal\media\Entity;
 
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\media\Form\MediaTypeDeleteConfirmForm;
+use Drupal\media\MediaTypeAccessControlHandler;
+use Drupal\media\MediaTypeForm;
 use Drupal\media\MediaTypeInterface;
+use Drupal\media\MediaTypeListBuilder;
+use Drupal\user\Entity\EntityPermissionsRouteProvider;
 
 /**
  * Defines the Media type configuration entity.
- *
- * @ConfigEntityType(
- *   id = "media_type",
- *   label = @Translation("Media type"),
- *   label_collection = @Translation("Media types"),
- *   label_singular = @Translation("media type"),
- *   label_plural = @Translation("media types"),
- *   label_count = @PluralTranslation(
- *     singular = "@count media type",
- *     plural = "@count media types"
- *   ),
- *   handlers = {
- *     "access" = "Drupal\media\MediaTypeAccessControlHandler",
- *     "form" = {
- *       "add" = "Drupal\media\MediaTypeForm",
- *       "edit" = "Drupal\media\MediaTypeForm",
- *       "delete" = "Drupal\media\Form\MediaTypeDeleteConfirmForm"
- *     },
- *     "list_builder" = "Drupal\media\MediaTypeListBuilder",
- *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
- *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
- *     }
- *   },
- *   admin_permission = "administer media types",
- *   config_prefix = "type",
- *   bundle_of = "media",
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "label",
- *     "status" = "status",
- *   },
- *   config_export = {
- *     "id",
- *     "label",
- *     "description",
- *     "source",
- *     "queue_thumbnail_downloads",
- *     "new_revision",
- *     "source_configuration",
- *     "field_map",
- *     "status",
- *   },
- *   links = {
- *     "add-form" = "/admin/structure/media/add",
- *     "edit-form" = "/admin/structure/media/manage/{media_type}",
- *     "delete-form" = "/admin/structure/media/manage/{media_type}/delete",
- *     "entity-permissions-form" = "/admin/structure/media/manage/{media_type}/permissions",
- *     "collection" = "/admin/structure/media",
- *   },
- *   constraints = {
- *     "ImmutableProperties" = {"id", "source"},
- *     "MediaMappingsConstraint" = { },
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'media_type',
+  label: new TranslatableMarkup('Media type'),
+  label_collection: new TranslatableMarkup('Media types'),
+  label_singular: new TranslatableMarkup('media type'),
+  label_plural: new TranslatableMarkup('media types'),
+  config_prefix: 'type',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+    'status' => 'status',
+  ],
+  handlers: [
+    'access' => MediaTypeAccessControlHandler::class,
+    'form' => [
+      'add' => MediaTypeForm::class,
+      'edit' => MediaTypeForm::class,
+      'delete' => MediaTypeDeleteConfirmForm::class,
+    ],
+    'list_builder' => MediaTypeListBuilder::class,
+    'route_provider' => [
+      'html' => DefaultHtmlRouteProvider::class,
+      'permissions' => EntityPermissionsRouteProvider::class,
+    ],
+  ],
+  links: [
+    'add-form' => '/admin/structure/media/add',
+    'edit-form' => '/admin/structure/media/manage/{media_type}',
+    'delete-form' => '/admin/structure/media/manage/{media_type}/delete',
+    'entity-permissions-form' => '/admin/structure/media/manage/{media_type}/permissions',
+    'collection' => '/admin/structure/media',
+  ],
+  admin_permission: 'administer media types',
+  bundle_of: 'media',
+  label_count: [
+    'singular' => '@count media type',
+    'plural' => '@count media types',
+  ],
+  constraints: [
+    'ImmutableProperties' => [
+      'id',
+      'source',
+    ],
+    'MediaMappingsConstraint' => [],
+  ],
+  config_export: [
+    'id',
+    'label',
+    'description',
+    'source',
+    'queue_thumbnail_downloads',
+    'new_revision',
+    'source_configuration',
+    'field_map',
+    'status',
+  ])]
 class MediaType extends ConfigEntityBundleBase implements MediaTypeInterface, EntityWithPluginCollectionInterface {
 
   /**

@@ -2,6 +2,8 @@
 
 namespace Drupal\language\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -10,35 +12,39 @@ use Drupal\language\ContentLanguageSettingsInterface;
 
 /**
  * Defines the ContentLanguageSettings entity.
- *
- * @ConfigEntityType(
- *   id = "language_content_settings",
- *   label = @Translation("Content language settings"),
- *   label_collection = @Translation("Content language settings"),
- *   label_singular = @Translation("content language setting"),
- *   label_plural = @Translation("content languages settings"),
- *   label_count = @PluralTranslation(
- *     singular = "@count content language setting",
- *     plural = "@count content languages settings",
- *   ),
- *   admin_permission = "administer languages",
- *   config_prefix = "content_settings",
- *   entity_keys = {
- *     "id" = "id"
- *   },
- *   config_export = {
- *     "id",
- *     "target_entity_type_id",
- *     "target_bundle",
- *     "default_langcode",
- *     "language_alterable",
- *   },
- *   list_cache_tags = { "rendered" },
- *   constraints = {
- *     "ImmutableProperties" = {"id", "target_entity_type_id", "target_bundle"},
- *   },
- * )
  */
+#[ConfigEntityType(
+  id: 'language_content_settings',
+  label: new TranslatableMarkup('Content language settings'),
+  label_collection: new TranslatableMarkup('Content language settings'),
+  label_singular: new TranslatableMarkup('content language setting'),
+  label_plural: new TranslatableMarkup('content languages settings'),
+  config_prefix: 'content_settings',
+  entity_keys: [
+    'id' => 'id',
+  ],
+  admin_permission: 'administer languages',
+  label_count: [
+    'singular' => '@count content language setting',
+    'plural' => '@count content languages settings',
+  ],
+  list_cache_tags: [
+    'rendered',
+  ],
+  constraints: [
+    'ImmutableProperties' => [
+      'id',
+      'target_entity_type_id',
+      'target_bundle',
+    ],
+  ],
+  config_export: [
+    'id',
+    'target_entity_type_id',
+    'target_bundle',
+    'default_langcode',
+    'language_alterable',
+  ])]
 class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguageSettingsInterface {
 
   /**

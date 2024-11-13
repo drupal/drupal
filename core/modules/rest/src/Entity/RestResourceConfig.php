@@ -2,6 +2,8 @@
 
 namespace Drupal\rest\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
@@ -9,30 +11,29 @@ use Drupal\rest\RestResourceConfigInterface;
 
 /**
  * Defines a RestResourceConfig configuration entity class.
- *
- * @ConfigEntityType(
- *   id = "rest_resource_config",
- *   label = @Translation("REST resource configuration"),
- *   label_collection = @Translation("REST resource configurations"),
- *   label_singular = @Translation("REST resource configuration"),
- *   label_plural = @Translation("REST resource configurations"),
- *   label_count = @PluralTranslation(
- *     singular = "@count REST resource configuration",
- *     plural = "@count REST resource configurations",
- *   ),
- *   config_prefix = "resource",
- *   admin_permission = "administer rest resources",
- *   entity_keys = {
- *     "id" = "id"
- *   },
- *   config_export = {
- *     "id",
- *     "plugin_id",
- *     "granularity",
- *     "configuration"
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'rest_resource_config',
+  label: new TranslatableMarkup('REST resource configuration'),
+  label_collection: new TranslatableMarkup('REST resource configurations'),
+  label_singular: new TranslatableMarkup('REST resource configuration'),
+  label_plural: new TranslatableMarkup('REST resource configurations'),
+  config_prefix: 'resource',
+  entity_keys: [
+    'id' => 'id',
+  ],
+  admin_permission: 'administer rest resources',
+  label_count: [
+    'singular' => '@count REST resource configuration',
+    'plural' => '@count REST resource configurations',
+  ],
+  config_export: [
+    'id',
+    'plugin_id',
+    'granularity',
+    'configuration',
+  ],
+)]
 class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigInterface {
 
   /**

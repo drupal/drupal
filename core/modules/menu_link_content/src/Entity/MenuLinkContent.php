@@ -2,69 +2,75 @@
 
 namespace Drupal\menu_link_content\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\link\LinkItemInterface;
+use Drupal\menu_link_content\Form\MenuLinkContentDeleteForm;
+use Drupal\menu_link_content\Form\MenuLinkContentForm;
+use Drupal\menu_link_content\MenuLinkContentAccessControlHandler;
 use Drupal\menu_link_content\MenuLinkContentInterface;
+use Drupal\menu_link_content\MenuLinkContentStorage;
+use Drupal\menu_link_content\MenuLinkContentStorageSchema;
+use Drupal\menu_link_content\MenuLinkListBuilder;
 
 /**
  * Defines the menu link content entity class.
  *
  * @property \Drupal\Core\Field\FieldItemList $link
  * @property \Drupal\Core\Field\FieldItemList $rediscover
- *
- * @ContentEntityType(
- *   id = "menu_link_content",
- *   label = @Translation("Custom menu link"),
- *   label_collection = @Translation("Custom menu links"),
- *   label_singular = @Translation("custom menu link"),
- *   label_plural = @Translation("custom menu links"),
- *   label_count = @PluralTranslation(
- *     singular = "@count custom menu link",
- *     plural = "@count custom menu links",
- *   ),
- *   handlers = {
- *     "storage" = "\Drupal\menu_link_content\MenuLinkContentStorage",
- *     "storage_schema" = "Drupal\menu_link_content\MenuLinkContentStorageSchema",
- *     "access" = "Drupal\menu_link_content\MenuLinkContentAccessControlHandler",
- *     "form" = {
- *       "default" = "Drupal\menu_link_content\Form\MenuLinkContentForm",
- *       "delete" = "Drupal\menu_link_content\Form\MenuLinkContentDeleteForm"
- *     },
- *     "list_builder" = "Drupal\menu_link_content\MenuLinkListBuilder"
- *   },
- *   admin_permission = "administer menu",
- *   base_table = "menu_link_content",
- *   data_table = "menu_link_content_data",
- *   revision_table = "menu_link_content_revision",
- *   revision_data_table = "menu_link_content_field_revision",
- *   translatable = TRUE,
- *   entity_keys = {
- *     "id" = "id",
- *     "revision" = "revision_id",
- *     "label" = "title",
- *     "langcode" = "langcode",
- *     "uuid" = "uuid",
- *     "bundle" = "bundle",
- *     "published" = "enabled",
- *   },
- *   revision_metadata_keys = {
- *     "revision_user" = "revision_user",
- *     "revision_created" = "revision_created",
- *     "revision_log_message" = "revision_log_message",
- *   },
- *   links = {
- *     "canonical" = "/admin/structure/menu/item/{menu_link_content}/edit",
- *     "edit-form" = "/admin/structure/menu/item/{menu_link_content}/edit",
- *     "delete-form" = "/admin/structure/menu/item/{menu_link_content}/delete",
- *   },
- *   constraints = {
- *     "MenuTreeHierarchy" = {}
- *   },
- * )
  */
+#[ContentEntityType(
+  id: 'menu_link_content',
+  label: new TranslatableMarkup('Custom menu link'),
+  label_collection: new TranslatableMarkup('Custom menu links'),
+  label_singular: new TranslatableMarkup('custom menu link'),
+  label_plural: new TranslatableMarkup('custom menu links'),
+  entity_keys: [
+    'id' => 'id',
+    'revision' => 'revision_id',
+    'label' => 'title',
+    'langcode' => 'langcode',
+    'uuid' => 'uuid',
+    'bundle' => 'bundle',
+    'published' => 'enabled',
+  ],
+  handlers: [
+    'storage' => MenuLinkContentStorage::class,
+    'storage_schema' => MenuLinkContentStorageSchema::class,
+    'access' => MenuLinkContentAccessControlHandler::class,
+    'form' => [
+      'default' => MenuLinkContentForm::class,
+      'delete' => MenuLinkContentDeleteForm::class,
+    ],
+    'list_builder' => MenuLinkListBuilder::class,
+  ],
+  links: [
+    'canonical' => '/admin/structure/menu/item/{menu_link_content}/edit',
+    'edit-form' => '/admin/structure/menu/item/{menu_link_content}/edit',
+    'delete-form' => '/admin/structure/menu/item/{menu_link_content}/delete',
+  ],
+  admin_permission: 'administer menu',
+  base_table: 'menu_link_content',
+  data_table: 'menu_link_content_data',
+  revision_table: 'menu_link_content_revision',
+  revision_data_table: 'menu_link_content_field_revision',
+  translatable: TRUE,
+  label_count: [
+    'singular' => '@count custom menu link',
+    'plural' => '@count custom menu links',
+  ],
+  constraints: [
+    'MenuTreeHierarchy' => [],
+  ],
+  revision_metadata_keys: [
+    'revision_user' => 'revision_user',
+    'revision_created' => 'revision_created',
+    'revision_log_message' => 'revision_log_message',
+  ])]
 class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkContentInterface {
 
   /**

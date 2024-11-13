@@ -62,8 +62,8 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
   public function __construct($definition) {
     // Ensure a default list cache tag is set; do this before calling the parent
     // constructor, because we want "Configuration System style" cache tags.
-    if (empty($this->list_cache_tags)) {
-      $this->list_cache_tags = ['config:' . $definition['id'] . '_list'];
+    if (empty($definition['list_cache_tags'])) {
+      $definition['list_cache_tags'] = ['config:' . $definition['id'] . '_list'];
     }
 
     parent::__construct($definition);

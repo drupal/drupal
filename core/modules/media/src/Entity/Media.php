@@ -2,14 +2,28 @@
 
 namespace Drupal\media\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\ContentEntityDeleteForm;
+use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Core\Entity\Form\DeleteMultipleForm;
+use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
+use Drupal\Core\Entity\Form\RevisionRevertForm;
+use Drupal\Core\Entity\Form\RevisionDeleteForm;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\media\MediaAccessControlHandler;
+use Drupal\media\MediaForm;
 use Drupal\media\MediaInterface;
+use Drupal\media\MediaListBuilder;
 use Drupal\media\MediaSourceEntityConstraintsInterface;
 use Drupal\media\MediaSourceFieldConstraintsInterface;
+use Drupal\media\MediaStorage;
+use Drupal\media\MediaViewsData;
+use Drupal\media\Routing\MediaRouteProvider;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -17,78 +31,76 @@ use Drupal\user\EntityOwnerTrait;
  *
  * @todo Remove default/fallback entity form operation when #2006348 is done.
  * @see https://www.drupal.org/node/2006348.
- *
- * @ContentEntityType(
- *   id = "media",
- *   label = @Translation("Media"),
- *   label_singular = @Translation("media item"),
- *   label_plural = @Translation("media items"),
- *   label_count = @PluralTranslation(
- *     singular = "@count media item",
- *     plural = "@count media items"
- *   ),
- *   bundle_label = @Translation("Media type"),
- *   handlers = {
- *     "storage" = "Drupal\media\MediaStorage",
- *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\media\MediaListBuilder",
- *     "access" = "Drupal\media\MediaAccessControlHandler",
- *     "form" = {
- *       "default" = "Drupal\media\MediaForm",
- *       "add" = "Drupal\media\MediaForm",
- *       "edit" = "Drupal\media\MediaForm",
- *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
- *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
- *       "revision-delete" = \Drupal\Core\Entity\Form\RevisionDeleteForm::class,
- *       "revision-revert" = \Drupal\Core\Entity\Form\RevisionRevertForm::class,
- *     },
- *     "views_data" = "Drupal\media\MediaViewsData",
- *     "route_provider" = {
- *       "html" = "Drupal\media\Routing\MediaRouteProvider",
- *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class,
- *     }
- *   },
- *   base_table = "media",
- *   data_table = "media_field_data",
- *   revision_table = "media_revision",
- *   revision_data_table = "media_field_revision",
- *   translatable = TRUE,
- *   show_revision_ui = TRUE,
- *   entity_keys = {
- *     "id" = "mid",
- *     "revision" = "vid",
- *     "bundle" = "bundle",
- *     "label" = "name",
- *     "langcode" = "langcode",
- *     "uuid" = "uuid",
- *     "published" = "status",
- *     "owner" = "uid",
- *   },
- *   revision_metadata_keys = {
- *     "revision_user" = "revision_user",
- *     "revision_created" = "revision_created",
- *     "revision_log_message" = "revision_log_message",
- *   },
- *   bundle_entity_type = "media_type",
- *   permission_granularity = "bundle",
- *   admin_permission = "administer media",
- *   field_ui_base_route = "entity.media_type.edit_form",
- *   common_reference_target = TRUE,
- *   links = {
- *     "add-page" = "/media/add",
- *     "add-form" = "/media/add/{media_type}",
- *     "canonical" = "/media/{media}/edit",
- *     "collection" = "/admin/content/media",
- *     "delete-form" = "/media/{media}/delete",
- *     "delete-multiple-form" = "/media/delete",
- *     "edit-form" = "/media/{media}/edit",
- *     "revision" = "/media/{media}/revisions/{media_revision}/view",
- *     "revision-delete-form" = "/media/{media}/revision/{media_revision}/delete",
- *     "revision-revert-form" = "/media/{media}/revision/{media_revision}/revert",
- *     "version-history" = "/media/{media}/revisions",
- *   }
- * )
  */
+#[ContentEntityType(
+  id: 'media',
+  label: new TranslatableMarkup('Media'),
+  label_singular: new TranslatableMarkup('media item'),
+  label_plural: new TranslatableMarkup('media items'),
+  entity_keys: [
+    'id' => 'mid',
+    'revision' => 'vid',
+    'bundle' => 'bundle',
+    'label' => 'name',
+    'langcode' => 'langcode',
+    'uuid' => 'uuid',
+    'published' => 'status',
+    'owner' => 'uid',
+  ],
+  handlers: [
+    'storage' => MediaStorage::class,
+    'view_builder' => EntityViewBuilder::class,
+    'list_builder' => MediaListBuilder::class,
+    'access' => MediaAccessControlHandler::class,
+    'form' => [
+      'default' => MediaForm::class,
+      'add' => MediaForm::class,
+      'edit' => MediaForm::class,
+      'delete' => ContentEntityDeleteForm::class,
+      'delete-multiple-confirm' => DeleteMultipleForm::class,
+      'revision-delete' => RevisionDeleteForm::class,
+      'revision-revert' => RevisionRevertForm::class,
+    ],
+    'views_data' => MediaViewsData::class,
+    'route_provider' => [
+      'html' => MediaRouteProvider::class,
+      'revision' => RevisionHtmlRouteProvider::class,
+    ],
+  ],
+  links: [
+    'add-page' => '/media/add',
+    'add-form' => '/media/add/{media_type}',
+    'canonical' => '/media/{media}/edit',
+    'collection' => '/admin/content/media',
+    'delete-form' => '/media/{media}/delete',
+    'delete-multiple-form' => '/media/delete',
+    'edit-form' => '/media/{media}/edit',
+    'revision' => '/media/{media}/revisions/{media_revision}/view',
+    'revision-delete-form' => '/media/{media}/revision/{media_revision}/delete',
+    'revision-revert-form' => '/media/{media}/revision/{media_revision}/revert',
+    'version-history' => '/media/{media}/revisions',
+  ],
+  admin_permission: 'administer media',
+  permission_granularity: 'bundle',
+  bundle_entity_type: 'media_type',
+  bundle_label: new TranslatableMarkup('Media type'),
+  base_table: 'media',
+  data_table: 'media_field_data',
+  revision_table: 'media_revision',
+  revision_data_table: 'media_field_revision',
+  translatable: TRUE,
+  show_revision_ui: TRUE,
+  label_count: [
+    'singular' => '@count media item',
+    'plural' => '@count media items',
+  ],
+  field_ui_base_route: 'entity.media_type.edit_form',
+  common_reference_target: TRUE,
+  revision_metadata_keys: [
+    'revision_user' => 'revision_user',
+    'revision_created' => 'revision_created',
+    'revision_log_message' => 'revision_log_message',
+  ])]
 class Media extends EditorialContentEntityBase implements MediaInterface {
 
   use EntityOwnerTrait;

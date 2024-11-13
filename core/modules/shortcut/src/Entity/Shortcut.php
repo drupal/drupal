@@ -2,58 +2,64 @@
 
 namespace Drupal\shortcut\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\link\LinkItemInterface;
+use Drupal\shortcut\Form\ShortcutDeleteForm;
+use Drupal\shortcut\ShortcutAccessControlHandler;
+use Drupal\shortcut\ShortcutForm;
 use Drupal\shortcut\ShortcutInterface;
 
 /**
  * Defines the shortcut entity class.
  *
  * @property \Drupal\link\LinkItemInterface $link
- *
- * @ContentEntityType(
- *   id = "shortcut",
- *   label = @Translation("Shortcut link"),
- *   label_collection = @Translation("Shortcut links"),
- *   label_singular = @Translation("shortcut link"),
- *   label_plural = @Translation("shortcut links"),
- *   label_count = @PluralTranslation(
- *     singular = "@count shortcut link",
- *     plural = "@count shortcut links",
- *   ),
- *   bundle_label = @Translation("Shortcut set"),
- *   handlers = {
- *     "access" = "Drupal\shortcut\ShortcutAccessControlHandler",
- *     "form" = {
- *       "default" = "Drupal\shortcut\ShortcutForm",
- *       "add" = "Drupal\shortcut\ShortcutForm",
- *       "edit" = "Drupal\shortcut\ShortcutForm",
- *       "delete" = "Drupal\shortcut\Form\ShortcutDeleteForm"
- *     },
- *   },
- *   base_table = "shortcut",
- *   data_table = "shortcut_field_data",
- *   translatable = TRUE,
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *     "bundle" = "shortcut_set",
- *     "label" = "title",
- *     "langcode" = "langcode",
- *   },
- *   links = {
- *     "canonical" = "/admin/config/user-interface/shortcut/link/{shortcut}",
- *     "delete-form" = "/admin/config/user-interface/shortcut/link/{shortcut}/delete",
- *     "edit-form" = "/admin/config/user-interface/shortcut/link/{shortcut}",
- *   },
- *   list_cache_tags = { "config:shortcut_set_list" },
- *   bundle_entity_type = "shortcut_set"
- * )
  */
+#[ContentEntityType(
+  id: 'shortcut',
+  label: new TranslatableMarkup('Shortcut link'),
+  label_collection: new TranslatableMarkup('Shortcut links'),
+  label_singular: new TranslatableMarkup('shortcut link'),
+  label_plural: new TranslatableMarkup('shortcut links'),
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'shortcut_set',
+    'label' => 'title',
+    'langcode' => 'langcode',
+  ],
+  handlers: [
+    'access' => ShortcutAccessControlHandler::class,
+    'form' => [
+      'default' => ShortcutForm::class,
+      'add' => ShortcutForm::class,
+      'edit' => ShortcutForm::class,
+      'delete' => ShortcutDeleteForm::class,
+    ],
+  ],
+  links: [
+    'canonical' => '/admin/config/user-interface/shortcut/link/{shortcut}',
+    'delete-form' => '/admin/config/user-interface/shortcut/link/{shortcut}/delete',
+    'edit-form' => '/admin/config/user-interface/shortcut/link/{shortcut}',
+  ],
+  bundle_entity_type: 'shortcut_set',
+  bundle_label: new TranslatableMarkup('Shortcut set'),
+  base_table: 'shortcut',
+  data_table: 'shortcut_field_data',
+  translatable: TRUE,
+  label_count: [
+    'singular' => '@count shortcut link',
+    'plural' => '@count shortcut links',
+  ],
+  list_cache_tags: [
+    'config:shortcut_set_list',
+  ],
+)]
 class Shortcut extends ContentEntityBase implements ShortcutInterface {
 
   /**

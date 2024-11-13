@@ -2,6 +2,9 @@
 
 namespace Drupal\Core\Entity\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityDisplayPluginCollection;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -17,30 +20,33 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * Contains widget options for all components of an entity form in a given
  * form mode.
- *
- * @ConfigEntityType(
- *   id = "entity_form_display",
- *   label = @Translation("Entity form display"),
- *   entity_keys = {
- *     "id" = "id",
- *     "status" = "status"
- *   },
- *   handlers = {
- *     "access" = "\Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler",
- *   },
- *   config_export = {
- *     "id",
- *     "targetEntityType",
- *     "bundle",
- *     "mode",
- *     "content",
- *     "hidden",
- *   },
- *   constraints = {
- *     "ImmutableProperties" = {"id", "targetEntityType", "bundle", "mode"},
- *   }
- * )
  */
+#[ConfigEntityType(
+  id: 'entity_form_display',
+  label: new TranslatableMarkup('Entity form display'),
+  entity_keys: [
+    'id' => 'id',
+    'status' => 'status',
+  ],
+  handlers: [
+    'access' => EntityFormDisplayAccessControlHandler::class,
+  ],
+  constraints: [
+    'ImmutableProperties' => [
+      'id',
+      'targetEntityType',
+      'bundle',
+      'mode',
+    ],
+  ],
+  config_export: [
+    'id',
+    'targetEntityType',
+    'bundle',
+    'mode',
+    'content',
+    'hidden',
+  ])]
 class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayInterface {
 
   /**

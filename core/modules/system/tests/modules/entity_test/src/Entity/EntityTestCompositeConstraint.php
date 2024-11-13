@@ -4,33 +4,35 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\entity_test\EntityTestForm;
 
 /**
  * Defines a test class for testing composite constraints.
- *
- * @ContentEntityType(
- *   id = "entity_test_composite_constraint",
- *   label = @Translation("Test entity constraints with composite constraint"),
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *     "bundle" = "type",
- *     "label" = "name"
- *   },
- *   handlers = {
- *     "form" = {
- *       "default" = "Drupal\entity_test\EntityTestForm"
- *     }
- *   },
- *   base_table = "entity_test_composite_constraint",
- *   persistent_cache = FALSE,
- *   constraints = {
- *     "EntityTestComposite" = {},
- *     "EntityTestEntityLevel" = {},
- *   }
- * )
  */
+#[ContentEntityType(
+  id: 'entity_test_composite_constraint',
+  label: new TranslatableMarkup('Test entity constraints with composite constraint'),
+  persistent_cache: FALSE,
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+    'label' => 'name',
+  ],
+  handlers: [
+    'form' => [
+      'default' => EntityTestForm::class,
+    ],
+  ],
+  base_table: 'entity_test_composite_constraint',
+  constraints: [
+    'EntityTestComposite' => [],
+    'EntityTestEntityLevel' => [],
+  ],
+)]
 class EntityTestCompositeConstraint extends EntityTest {
 
   /**
