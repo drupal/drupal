@@ -15,6 +15,6 @@ use Drupal\Core\Form\FormStateInterface;
  * Changes the label for one of the tests fields to validate this label is not
  * searched on.
  */
-function views_ui_test_field_form_views_ui_add_handler_form_alter(&$form, FormStateInterface $form_state) {
+function views_ui_test_field_form_views_ui_add_handler_form_alter(&$form, FormStateInterface $form_state): void {
   $form['options']['name']['#options']['views.views_test_field_1']['title']['data']['#title'] .= ' FIELD_1_LABEL';
 }

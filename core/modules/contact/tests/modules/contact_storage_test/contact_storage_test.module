@@ -46,7 +46,7 @@ function contact_storage_test_entity_type_alter(array &$entity_types): void {
 /**
  * Implements hook_form_FORM_ID_alter() for contact_form_form().
  */
-function contact_storage_test_form_contact_form_form_alter(&$form, FormStateInterface $form_state) {
+function contact_storage_test_form_contact_form_form_alter(&$form, FormStateInterface $form_state): void {
   /** @var \Drupal\contact\ContactFormInterface $contact_form */
   $contact_form = $form_state->getFormObject()->getEntity();
   $form['send_a_pony'] = [

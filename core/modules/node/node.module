@@ -660,7 +660,7 @@ function node_page_top(array &$page_top) {
  *
  * @see node_form_system_themes_admin_form_submit()
  */
-function node_form_system_themes_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function node_form_system_themes_admin_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   $form['admin_theme']['use_admin_theme'] = [
     '#type' => 'checkbox',
     '#title' => t('Use the administration theme when editing or creating content'),

@@ -221,7 +221,7 @@ function field_ui_local_tasks_alter(&$local_tasks) {
 /**
  * Implements hook_form_FORM_ID_alter() for 'field_ui_field_storage_add_form'.
  */
-function field_ui_form_field_ui_field_storage_add_form_alter(array &$form) {
+function field_ui_form_field_ui_field_storage_add_form_alter(array &$form): void {
   $optgroup = (string) t('Reference');
   // Move the "Entity reference" option to the end of the list and rename it to
   // "Other".
@@ -249,7 +249,7 @@ function field_ui_preprocess_form_element__new_storage_type(&$variables) {
  * @see \Drupal\block_content\BlockContentTypeForm
  * @see field_ui_form_manage_field_form_submit()
  */
-function field_ui_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function field_ui_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   $forms = [
     'node_type_add_form',
     'comment_type_add_form',

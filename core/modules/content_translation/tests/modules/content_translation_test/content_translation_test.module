@@ -46,7 +46,7 @@ function content_translation_test_entity_access(EntityInterface $entity, $operat
  *
  * Adds a textfield to node forms based on a request parameter.
  */
-function content_translation_test_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function content_translation_test_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   $langcode = $form_state->getFormObject()->getFormLangcode($form_state);
   if (in_array($langcode, ['en', 'fr']) && \Drupal::request()->get('test_field_only_en_fr')) {
     $form['test_field_only_en_fr'] = [

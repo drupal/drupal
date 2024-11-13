@@ -71,7 +71,7 @@ function editor_element_info_alter(&$types) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $form_state) {
+function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $form_state): void {
   // @todo Cleanup column injection: https://www.drupal.org/node/1876718.
   // Splice in the column for "Text editor" into the header.
   $position = array_search('name', $form['formats']['#header']) + 1;
@@ -93,7 +93,7 @@ function editor_form_filter_admin_overview_alter(&$form, FormStateInterface $for
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\filter\FilterFormatEditForm.
  */
-function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_state) {
+function editor_form_filter_format_form_alter(&$form, FormStateInterface $form_state): void {
   $editor = $form_state->get('editor');
   if ($editor === NULL) {
     $format = $form_state->getFormObject()->getEntity();

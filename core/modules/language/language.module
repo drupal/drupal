@@ -370,7 +370,7 @@ function language_get_browser_drupal_langcode_mappings() {
 /**
  * Implements hook_form_alter().
  */
-function language_form_alter(&$form, FormStateInterface $form_state) {
+function language_form_alter(&$form, FormStateInterface $form_state): void {
   // Content entity forms may have added a langcode field. But content language
   // configuration should decide if it should be exposed or not in the forms.
   $form_object = $form_state->getFormObject();

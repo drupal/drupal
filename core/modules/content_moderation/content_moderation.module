@@ -159,7 +159,7 @@ function content_moderation_entity_prepare_form(EntityInterface $entity, $operat
 /**
  * Implements hook_form_alter().
  */
-function content_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function content_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityTypeInfo::class)
     ->formAlter($form, $form_state, $form_id);

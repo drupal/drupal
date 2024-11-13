@@ -232,7 +232,7 @@ function comment_node_view_alter(array &$build, EntityInterface $node, EntityVie
 /**
  * Implements hook_form_FORM_ID_alter() for field_ui_field_storage_add_form.
  */
-function comment_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state) {
+function comment_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state): void {
   $route_match = \Drupal::routeMatch();
   if ($form_state->get('entity_type_id') == 'comment' && $route_match->getParameter('commented_entity_type')) {
     $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($route_match->getParameter('commented_entity_type'), $route_match->getParameter('field_name'));
@@ -251,7 +251,7 @@ function comment_field_info_entity_type_ui_definitions_alter(array &$ui_definiti
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function comment_form_field_ui_form_display_overview_form_alter(&$form, FormStateInterface $form_state) {
+function comment_form_field_ui_form_display_overview_form_alter(&$form, FormStateInterface $form_state): void {
   $route_match = \Drupal::routeMatch();
   if ($form['#entity_type'] == 'comment' && $route_match->getParameter('commented_entity_type')) {
     $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($route_match->getParameter('commented_entity_type'), $route_match->getParameter('field_name'));
@@ -261,7 +261,7 @@ function comment_form_field_ui_form_display_overview_form_alter(&$form, FormStat
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function comment_form_field_ui_display_overview_form_alter(&$form, FormStateInterface $form_state) {
+function comment_form_field_ui_display_overview_form_alter(&$form, FormStateInterface $form_state): void {
   $route_match = \Drupal::routeMatch();
   if ($form['#entity_type'] == 'comment' && $route_match->getParameter('commented_entity_type')) {
     $form['#title'] = \Drupal::service('comment.manager')->getFieldUIPageTitle($route_match->getParameter('commented_entity_type'), $route_match->getParameter('field_name'));

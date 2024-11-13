@@ -335,7 +335,7 @@ function entity_test_entity_extra_field_info() {
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function entity_test_form_entity_test_form_alter(&$form) {
+function entity_test_form_entity_test_form_alter(&$form): void {
   switch (\Drupal::state()->get('entity_test.form.validate.test')) {
     case 'form-level':
       $form['#validate'][] = 'entity_test_form_entity_test_form_validate';
@@ -366,7 +366,7 @@ function entity_test_form_entity_test_form_validate_check(array &$form, FormStat
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function entity_test_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function entity_test_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   $langcode = $form_state->getFormObject()->getFormLangcode($form_state);
   \Drupal::state()->set('entity_test.form_langcode', $langcode);
 }

@@ -414,7 +414,7 @@ function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NU
  *
  * @see \Drupal\search\Form\SearchBlockForm
  */
-function search_form_search_block_form_alter(&$form, FormStateInterface $form_state) {
+function search_form_search_block_form_alter(&$form, FormStateInterface $form_state): void {
   $form['form_build_id']['#access'] = FALSE;
   $form['form_token']['#access'] = FALSE;
   $form['form_id']['#access'] = FALSE;

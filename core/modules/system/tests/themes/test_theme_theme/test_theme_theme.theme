@@ -13,7 +13,7 @@ use Drupal\file\Entity\File;
 /**
  * Implements hook_form_system_theme_settings_alter().
  */
-function test_theme_theme_form_system_theme_settings_alter(&$form, FormStateInterface $form_state) {
+function test_theme_theme_form_system_theme_settings_alter(&$form, FormStateInterface $form_state): void {
 
   $form['custom_logo'] = [
     '#type' => 'managed_file',

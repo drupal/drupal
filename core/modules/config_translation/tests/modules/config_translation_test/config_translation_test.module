@@ -50,7 +50,7 @@ function config_translation_test_config_translation_info_alter(&$info) {
  *
  * @see \Drupal\config_translation\Form\ConfigTranslationFormBase
  */
-function config_translation_test_form_config_translation_form_alter(&$form, FormStateInterface $form_state) {
+function config_translation_test_form_config_translation_form_alter(&$form, FormStateInterface $form_state): void {
   if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
     $form['#base_altered'] = TRUE;
   }
@@ -63,7 +63,7 @@ function config_translation_test_form_config_translation_form_alter(&$form, Form
  *
  * @see \Drupal\config_translation\Form\ConfigTranslationAddForm
  */
-function config_translation_test_form_config_translation_add_form_alter(&$form, FormStateInterface $form_state) {
+function config_translation_test_form_config_translation_add_form_alter(&$form, FormStateInterface $form_state): void {
   if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
     $form['#altered'] = TRUE;
   }
@@ -80,7 +80,7 @@ function config_translation_test_form_config_translation_add_form_alter(&$form, 
  *
  * @see \Drupal\config_translation\Form\ConfigTranslationEditForm
  */
-function config_translation_test_form_config_translation_edit_form_alter(&$form, FormStateInterface $form_state) {
+function config_translation_test_form_config_translation_edit_form_alter(&$form, FormStateInterface $form_state): void {
   if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
     $form['#altered'] = TRUE;
   }

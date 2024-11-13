@@ -585,7 +585,7 @@ function locale_library_info_alter(array &$libraries, $module) {
 /**
  * Implements hook_form_FORM_ID_alter() for language_admin_overview_form().
  */
-function locale_form_language_admin_overview_form_alter(&$form, FormStateInterface $form_state) {
+function locale_form_language_admin_overview_form_alter(&$form, FormStateInterface $form_state): void {
   $languages = $form['languages']['#languages'];
 
   $total_strings = \Drupal::service('locale.storage')->countStrings();
@@ -635,7 +635,7 @@ function locale_form_language_admin_overview_form_alter(&$form, FormStateInterfa
 /**
  * Implements hook_form_FORM_ID_alter() for language_admin_add_form().
  */
-function locale_form_language_admin_add_form_alter(&$form, FormStateInterface $form_state) {
+function locale_form_language_admin_add_form_alter(&$form, FormStateInterface $form_state): void {
   $form['predefined_submit']['#submit'][] = 'locale_form_language_admin_add_form_alter_submit';
   $form['custom_language']['submit']['#submit'][] = 'locale_form_language_admin_add_form_alter_submit';
 }
@@ -676,7 +676,7 @@ function locale_form_language_admin_add_form_alter_submit($form, FormStateInterf
 /**
  * Implements hook_form_FORM_ID_alter() for language_admin_edit_form().
  */
-function locale_form_language_admin_edit_form_alter(&$form, FormStateInterface $form_state) {
+function locale_form_language_admin_edit_form_alter(&$form, FormStateInterface $form_state): void {
   if ($form['langcode']['#type'] == 'value' && $form['langcode']['#value'] == 'en') {
     $form['locale_translate_english'] = [
       '#title' => t('Enable interface translation to English'),
@@ -712,7 +712,7 @@ function locale_is_translatable($langcode) {
  *
  * Add interface translation directory setting to directories configuration.
  */
-function locale_form_system_file_system_settings_alter(&$form, FormStateInterface $form_state) {
+function locale_form_system_file_system_settings_alter(&$form, FormStateInterface $form_state): void {
   $form['translation_path'] = [
     '#type' => 'textfield',
     '#title' => t('Interface translations directory'),

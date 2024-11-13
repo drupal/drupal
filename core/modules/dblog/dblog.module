@@ -99,7 +99,7 @@ function _dblog_get_message_types() {
 /**
  * Implements hook_form_FORM_ID_alter() for system_logging_settings().
  */
-function dblog_form_system_logging_settings_alter(&$form, FormStateInterface $form_state) {
+function dblog_form_system_logging_settings_alter(&$form, FormStateInterface $form_state): void {
   $row_limits = [100, 1000, 10000, 100000, 1000000];
   $form['dblog_row_limit'] = [
     '#type' => 'select',

@@ -10,7 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_form_FORM_ID_alter() for system_theme_settings.
  */
-function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $form_state) {
+function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $form_state): void {
   $form['#attached']['library'][] = 'olivero/color-picker';
 
   $color_config = [

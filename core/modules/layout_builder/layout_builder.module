@@ -87,7 +87,7 @@ function layout_builder_entity_type_alter(array &$entity_types): void {
 /**
  * Implements hook_form_FORM_ID_alter() for \Drupal\field_ui\Form\EntityFormDisplayEditForm.
  */
-function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state) {
+function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormStateInterface $form_state): void {
   // Hides the Layout Builder field. It is rendered directly in
   // \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::buildMultiple().
   unset($form['fields'][OverridesSectionStorage::FIELD_NAME]);

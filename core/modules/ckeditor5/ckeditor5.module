@@ -119,7 +119,7 @@ function ckeditor5_module_implements_alter(&$implementations, $hook) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
   $editor = $form_state->get('editor');
 
   // CKEditor 5 plugin config determines the available HTML tags. If an HTML

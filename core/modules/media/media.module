@@ -193,7 +193,7 @@ function media_field_ui_preconfigured_options_alter(array &$options, $field_type
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
   // Provide some help text to aid users decide whether they need a Media,
   // File, or Image reference field.
   $description_text = t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before installing the Media module.');
@@ -365,7 +365,7 @@ function media_entity_type_alter(array &$entity_types): void {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function media_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function media_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
   // Add an additional validate callback so we can ensure the order of filters
   // is correct.
   $form['#validate'][] = 'media_filter_format_edit_form_validate';
@@ -374,7 +374,7 @@ function media_form_filter_format_edit_form_alter(array &$form, FormStateInterfa
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function media_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+function media_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id): void {
   // Add an additional validate callback so we can ensure the order of filters
   // is correct.
   $form['#validate'][] = 'media_filter_format_edit_form_validate';

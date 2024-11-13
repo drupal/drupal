@@ -81,7 +81,7 @@ function layout_builder_test_node_view(array &$build, EntityInterface $entity, E
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for layout_builder_configure_block.
  */
-function layout_builder_test_form_layout_builder_configure_block_alter(&$form, FormStateInterface $form_state, $form_id) {
+function layout_builder_test_form_layout_builder_configure_block_alter(&$form, FormStateInterface $form_state, $form_id): void {
   /** @var \Drupal\layout_builder\Form\ConfigureBlockFormBase $form_object */
   $form_object = $form_state->getFormObject();
 
@@ -102,7 +102,7 @@ function layout_builder_test_form_layout_builder_configure_block_alter(&$form, F
 /**
  * Implements hook_form_BASE_FORM_ID_alter() for layout_builder_configure_section.
  */
-function layout_builder_test_form_layout_builder_configure_section_alter(&$form, FormStateInterface $form_state, $form_id) {
+function layout_builder_test_form_layout_builder_configure_section_alter(&$form, FormStateInterface $form_state, $form_id): void {
   /** @var \Drupal\layout_builder\Form\ConfigureSectionForm $form_object */
   $form_object = $form_state->getFormObject();
 

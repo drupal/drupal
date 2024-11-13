@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_form_FORM_ID_alter() for user_cancel_form().
  */
-function user_form_test_form_user_cancel_form_alter(&$form, &$form_state) {
+function user_form_test_form_user_cancel_form_alter(&$form, &$form_state): void {
   $form['user_cancel_confirm']['#default_value'] = FALSE;
   $form['access']['#value'] = \Drupal::currentUser()->hasPermission('cancel other accounts');
 }
