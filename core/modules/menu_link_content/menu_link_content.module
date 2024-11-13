@@ -34,7 +34,7 @@ function menu_link_content_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_entity_type_alter().
  */
-function menu_link_content_entity_type_alter(array &$entity_types) {
+function menu_link_content_entity_type_alter(array &$entity_types): void {
   // @todo Moderation is disabled for custom menu links until when we have an UI
   //   for them.
   //   @see https://www.drupal.org/project/drupal/issues/2350939

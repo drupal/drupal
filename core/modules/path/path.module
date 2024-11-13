@@ -46,7 +46,7 @@ function path_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_entity_type_alter().
  */
-function path_entity_type_alter(array &$entity_types) {
+function path_entity_type_alter(array &$entity_types): void {
   // @todo Remove the conditional once core fully supports "path_alias" as an
   //   optional module. See https://drupal.org/node/3092090.
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */

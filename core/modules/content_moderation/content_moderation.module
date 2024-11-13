@@ -87,7 +87,7 @@ function content_moderation_entity_bundle_field_info(EntityTypeInterface $entity
 /**
  * Implements hook_entity_type_alter().
  */
-function content_moderation_entity_type_alter(array &$entity_types) {
+function content_moderation_entity_type_alter(array &$entity_types): void {
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityTypeInfo::class)
     ->entityTypeAlter($entity_types);

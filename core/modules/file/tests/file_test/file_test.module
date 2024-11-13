@@ -353,9 +353,9 @@ function file_test_file_scan_callback_reset() {
 }
 
 /**
- * Implements hook_entity_info_alter().
+ * Implements hook_entity_type_alter().
  */
-function file_test_entity_type_alter(&$entity_types) {
+function file_test_entity_type_alter(&$entity_types): void {
   if (\Drupal::state()->get('file_test_alternate_access_handler', FALSE)) {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     $entity_types['file']

@@ -130,7 +130,7 @@ function content_translation_language_types_info_alter(array &$language_types) {
  *
  * @see \Drupal\Core\Entity\Annotation\EntityType
  */
-function content_translation_entity_type_alter(array &$entity_types) {
+function content_translation_entity_type_alter(array &$entity_types): void {
   // Provide defaults for translation info.
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   foreach ($entity_types as $entity_type) {

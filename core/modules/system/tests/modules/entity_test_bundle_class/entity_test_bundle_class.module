@@ -56,7 +56,7 @@ function entity_test_bundle_class_entity_bundle_info_alter(&$bundles) {
 /**
  * Implements hook_entity_type_alter().
  */
-function entity_test_bundle_class_entity_type_alter(&$entity_types) {
+function entity_test_bundle_class_entity_type_alter(&$entity_types): void {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   if (\Drupal::state()->get('entity_test_bundle_class_override_base_class', FALSE) && isset($entity_types['entity_test'])) {
     $entity_types['entity_test']->setClass(EntityTestVariant::class);
