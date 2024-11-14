@@ -32,7 +32,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
    *
    * @see https://getcomposer.org/doc/04-schema.md#minimum-stability
    */
-  protected const MINIMUM_STABILITY = 'beta';
+  protected const MINIMUM_STABILITY = 'RC';
 
   /**
    * The order of stability strings from least stable to most stable.
