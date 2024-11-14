@@ -236,4 +236,62 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
 
   }
 
+  /**
+   * Tests the author views filter uses the user_name plugin.
+   */
+  public function testMediaOverviewAuthorFilter(): void {
+    $this->drupalLogin($this->adminUser);
+    // Create some content for the view.
+    $media_type1 = $this->createMediaType('test');
+    $media1 = Media::create([
+      'bundle' => $media_type1->id(),
+      'name' => 'Media 1',
+      'uid' => $this->adminUser->id(),
+    ]);
+    $media1->save();
+    $media2 = Media::create([
+      'bundle' => $media_type1->id(),
+      'name' => 'Media 2',
+      'uid' => $this->adminUser->id(),
+    ]);
+    $media2->save();
+    $media3 = Media::create([
+      'bundle' => $media_type1->id(),
+      'name' => 'Media 3',
+      'uid' => $this->nonAdminUser->id(),
+    ]);
+    $media3->save();
+
+    // Add the media author filter to the media overview view.
+    $this->drupalGet('admin/structure/views/nojs/add-handler/media/media_page_list/filter');
+    $edit = [
+      'name[media_field_data.user_name]' => 1,
+    ];
+    $this->submitForm($edit, 'Add and configure filter criteria');
+
+    $edit = [
+      'options[expose_button][checkbox][checkbox]' => 1,
+    ];
+    $this->submitForm($edit, 'Expose filter');
+    $edit = [
+      'options[expose_button][checkbox][checkbox]' => 1,
+      'options[group_button][radios][radios]' => 0,
+    ];
+    $this->submitForm($edit, 'Apply');
+    $this->submitForm([], 'Save');
+
+    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
+    $this->grantPermissions($role, ['access media overview']);
+    $this->drupalGet('/admin/content/media');
+    $this->assertSession()->statusCodeEquals(200);
+    // Assert we are using the user_name filter.
+    $this->assertSession()->pageTextContains('Authored by');
+    $this->submitForm([
+      'user_name' => $this->adminUser->getAccountName() . ' (' . $this->adminUser->id() . ')',
+    ], 'Filter');
+    $this->assertSession()->linkByHrefExists('/media/' . $media1->id());
+    $this->assertSession()->linkByHrefExists('/media/' . $media2->id());
+    $this->assertSession()->linkByHrefNotExists('/media/' . $media3->id());
+  }
+
 }
