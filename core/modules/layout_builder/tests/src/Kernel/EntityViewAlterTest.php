@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Route;
+use Drupal\layout_builder\Hook\LayoutBuilderHooks;
 
 /**
  * @covers layout_builder_entity_view_alter
@@ -57,7 +58,8 @@ class EntityViewAlterTest extends KernelTestBase {
     $request->setSession(new Session(new MockArraySessionStorage()));
     \Drupal::requestStack()->push($request);
     // Assert the contextual links are removed.
-    layout_builder_entity_view_alter($build, $entity, $display);
+    $layoutBuilderEntityViewAlter = new LayoutBuilderHooks();
+    $layoutBuilderEntityViewAlter->entityViewAlter($build, $entity, $display);
     $this->assertArrayNotHasKey('#contextual_links', $build);
   }
 

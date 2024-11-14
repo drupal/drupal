@@ -2,12 +2,6 @@
 
 /**
  * @file
- * Callbacks and related functions invoked by authorize.php to update projects.
- *
- * We use the Batch API to actually update each individual project on the site.
- * All of the code in this file is run at a low bootstrap level (modules are not
- * loaded), so these functions cannot assume access to the rest of the code of
- * the Update Manager module.
  */
 
 use Drupal\Core\Batch\BatchBuilder;

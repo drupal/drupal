@@ -7,6 +7,7 @@ namespace Drupal\Tests\layout_builder\Kernel;
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Routing\NullRouteMatch;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\layout_builder\Hook\LayoutBuilderHooks;
 
 /**
  * Tests layout_builder_system_breadcrumb_alter().
@@ -29,7 +30,8 @@ class LayoutBuilderBreadcrumbAlterTest extends EntityKernelTestBase {
   public function testBreadcrumbAlterNullRouteMatch(): void {
     $breadcrumb = new Breadcrumb();
     $route_match = new NullRouteMatch();
-    layout_builder_system_breadcrumb_alter($breadcrumb, $route_match, []);
+    $layoutBuilderSystemBreadcrumbAlter = new LayoutBuilderHooks();
+    $layoutBuilderSystemBreadcrumbAlter->systemBreadcrumbAlter($breadcrumb, $route_match, []);
   }
 
 }

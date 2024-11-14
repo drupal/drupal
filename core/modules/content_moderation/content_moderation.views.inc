@@ -2,19 +2,9 @@
 
 /**
  * @file
- * Provide views data for content_moderation.module.
- *
- * @ingroup views_module_handlers
  */
 
 use Drupal\content_moderation\ViewsData;
-
-/**
- * Implements hook_views_data().
- */
-function content_moderation_views_data() {
-  return _content_moderation_views_data_object()->getViewsData();
-}
 
 /**
  * Creates a ViewsData object to respond to views hooks.

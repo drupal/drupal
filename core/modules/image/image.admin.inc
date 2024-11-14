@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Administration pages for image settings.
  */
 
 use Drupal\Core\Render\Element;

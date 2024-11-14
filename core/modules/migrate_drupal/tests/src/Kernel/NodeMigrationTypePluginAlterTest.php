@@ -7,6 +7,7 @@ namespace Drupal\Tests\migrate_drupal\Kernel;
 use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
+use Drupal\migrate_drupal\Hook\MigrateDrupalHooks;
 
 /**
  * Tests the assignment of the node migration type in migrations_plugin_alter.
@@ -46,7 +47,8 @@ class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
    */
   public function testMigrationPluginAlter($type, array $migration_definitions, array $expected): void {
     $this->makeNodeMigrateMapTable($type, '7');
-    migrate_drupal_migration_plugins_alter($migration_definitions);
+    $migrateDrupalMigrationPluginsAlter = new MigrateDrupalHooks();
+    $migrateDrupalMigrationPluginsAlter->migrationPluginsAlter($migration_definitions);
     $this->assertSame($expected, $migration_definitions);
   }
 

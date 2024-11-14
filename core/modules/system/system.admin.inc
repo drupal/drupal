@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Admin page callbacks for the system module.
  */
 
 use Drupal\Component\Utility\Html;

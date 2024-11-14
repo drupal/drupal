@@ -62,7 +62,7 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
 
     // Add the bare minimum of attachments from the system module and the
     // current maintenance theme.
-    system_page_attachments($html['page']);
+    _system_page_attachments($html['page']);
     $this->renderer->renderRoot($html);
 
     $response = new HtmlResponse();

@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Provides page callbacks for content blocks.
  */
 
 use Drupal\Core\Link;

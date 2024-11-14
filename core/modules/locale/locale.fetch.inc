@@ -2,7 +2,6 @@
 
 /**
  * @file
- * The API for download and import of translations from remote and local sources.
  */
 
 use Drupal\Core\Batch\BatchBuilder;

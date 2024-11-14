@@ -12,7 +12,7 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 class MediaEmbedFilterConfigurationUiAddTest extends MediaEmbedFilterTestBase {
 
   /**
-   * @covers ::media_form_filter_format_add_form_alter
+   * @covers \Drupal\media\Hook\MediaHooks::formFilterFormatAddFormAlter
    * @dataProvider providerTestValidations
    */
   public function testValidationWhenAdding($filter_html_status, $filter_align_status, $filter_caption_status, $filter_html_image_secure_status, $media_embed, $allowed_html, $expected_error_message): void {

@@ -8,6 +8,7 @@ use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Core\Database\Database;
 use Drupal\Core\KeyValueStore\DatabaseStorageExpirable;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\system\Hook\SystemHooks;
 
 /**
  * Tests garbage collection for the expirable key-value database storage.
@@ -50,7 +51,8 @@ class GarbageCollectionTest extends KernelTestBase {
 
     // Perform a new set operation and then trigger garbage collection.
     $store->setWithExpire('autumn', 'winter', rand(500, 1000000));
-    system_cron();
+    $systemCron = new SystemHooks();
+    $systemCron->cron();
 
     // Query the database and confirm that the stale records were deleted.
     $result = $connection->select('key_value_expire', 'kvp')

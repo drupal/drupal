@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Preprocess functions for the System module.
  */
 
 use Drupal\Core\Url;

@@ -2,6 +2,12 @@
 
 /**
  * @file
+ */
+
+use Drupal\media\OEmbed\Provider;
+
+/**
+ * @file
  * Hooks related to Media and its plugins.
  */
 
@@ -30,7 +36,7 @@ function hook_media_source_info_alter(array &$sources) {
  *
  * @see \Drupal\media\OEmbed\UrlResolverInterface::getResourceUrl()
  */
-function hook_oembed_resource_url_alter(array &$parsed_url, \Drupal\media\OEmbed\Provider $provider) {
+function hook_oembed_resource_url_alter(array &$parsed_url, Provider $provider) {
   // Always serve YouTube videos from youtube-nocookie.com.
   if ($provider->getName() === 'YouTube') {
     $parsed_url['path'] = str_replace('://youtube.com/', '://youtube-nocookie.com/', $parsed_url['path']);

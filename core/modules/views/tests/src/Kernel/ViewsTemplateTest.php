@@ -45,7 +45,7 @@ class ViewsTemplateTest extends ViewsKernelTestBase {
   }
 
   /**
-   * @covers views_theme_suggestions_container_alter
+   * @covers \Drupal\views\Hook\ViewsHooks::themeSuggestionsContainerAlter
    * @throws \Exception
    */
   public function testThemeSuggestionsContainerAlter(): void {

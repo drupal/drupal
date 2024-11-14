@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Administration functions for editor.module.
  */
 
 use Drupal\Component\Utility\Environment;

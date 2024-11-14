@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Common;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\system_test\Hook\SystemTestHooks;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -46,7 +47,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
     sort($container_modules);
     $this->assertSame($module_list, $container_modules);
     $this->assertSame(1, $this->containerBuilds);
-    $this->assertTrue(function_exists('system_test_help'));
+    $this->assertTrue(method_exists(SystemTestHooks::class, 'help'));
 
     $core_extension->clear('module.system_test')->save();
     $this->containerBuilds = 0;

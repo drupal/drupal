@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Implement an image field, based on the file module's file field.
  */
 
 use Drupal\Core\Render\Element;

@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Interface translation summary, editing and deletion user interfaces.
  */
 
 use Drupal\Core\Link;

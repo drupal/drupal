@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\contact\Unit;
 
 use Drupal\Tests\UnitTestCase;
+use Drupal\contact\Hook\ContactHooks;
 
 /**
  * @group contact
@@ -17,7 +18,8 @@ class ContactTest extends UnitTestCase {
   public function testLocalTasksAlter(): void {
     require_once $this->root . '/core/modules/contact/contact.module';
     $data = [];
-    \contact_menu_local_tasks_alter($data, 'entity.user.canonical');
+    $contactMenuLocalTasksAlter = new ContactHooks();
+    $contactMenuLocalTasksAlter->menuLocalTasksAlter($data, 'entity.user.canonical');
     $this->assertTrue(TRUE, 'No warning thrown');
   }
 

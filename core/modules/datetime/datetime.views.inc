@@ -2,17 +2,9 @@
 
 /**
  * @file
- * Provides views data for the datetime module.
  */
 
 use Drupal\field\FieldStorageConfigInterface;
-
-/**
- * Implements hook_field_views_data().
- */
-function datetime_field_views_data(FieldStorageConfigInterface $field_storage) {
-  return datetime_type_field_views_data_helper($field_storage, [], $field_storage->getMainPropertyName());
-}
 
 /**
  * Provides Views integration for any datetime-based fields.

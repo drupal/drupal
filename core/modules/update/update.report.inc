@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Code required only when rendering the available updates report.
  */
 
 use Drupal\Core\Template\Attribute;

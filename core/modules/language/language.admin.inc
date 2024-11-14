@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Administration functions for language.module.
  */
 
 use Drupal\Core\Render\Element;

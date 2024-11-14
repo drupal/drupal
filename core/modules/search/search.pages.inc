@@ -2,7 +2,6 @@
 
 /**
  * @file
- * User page callbacks for the Search module.
  */
 
 use Drupal\Component\Utility\UrlHelper;

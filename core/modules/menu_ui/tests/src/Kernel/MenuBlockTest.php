@@ -9,6 +9,7 @@ use Drupal\system\Entity\Menu;
 use Drupal\block\Entity\Block;
 use Drupal\system\MenuInterface;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\menu_ui\Hook\MenuUiHooks;
 
 /**
  * Tests SystemMenuBlock.
@@ -70,17 +71,18 @@ class MenuBlockTest extends KernelTestBase {
     ]);
 
     // Test when user does have "administer menu" permission.
+    $menuUiEntityOperation = new MenuUiHooks();
     $this->assertEquals([
       'menu-edit' => [
         'title' => 'Edit menu',
         'url' => $this->menu->toUrl('edit-form'),
         'weight' => 50,
       ],
-    ], menu_ui_entity_operation($block));
+    ], $menuUiEntityOperation->entityOperation($block));
 
     $this->setUpCurrentUser();
     // Test when user doesn't have "administer menu" permission.
-    $this->assertEmpty(menu_ui_entity_operation($block));
+    $this->assertEmpty($menuUiEntityOperation->entityOperation($block));
   }
 
 }

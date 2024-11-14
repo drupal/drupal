@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
+use Drupal\block\Hook\BlockHooks;
 
 /**
  * Tests migration of i18n block translations.
@@ -52,7 +53,8 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal7TestBase {
       'd7_block',
       'd7_block_translation',
     ]);
-    block_rebuild();
+    $blockRebuild = new BlockHooks();
+    $blockRebuild->rebuild();
   }
 
   /**

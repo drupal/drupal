@@ -38,7 +38,7 @@ class TestController extends ControllerBase {
     else {
       $module_message .= 'not installed';
     }
-    $function_message = $function . ': ' . var_export(function_exists($function), TRUE);
+    $function_message = $function . ': ' . var_export(\Drupal::moduleHandler()->hasImplementations($function, $module), TRUE);
 
     return [
       '#theme' => 'item_list',
