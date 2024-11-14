@@ -83,7 +83,15 @@ function workspaces_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
+        'default' => 0,
         'description' => 'The ID of the associated entity.',
+      ],
+      'target_entity_id_string' => [
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The string ID of the associated entity.',
       ],
       'target_entity_revision_id' => [
         'type' => 'int',
@@ -92,10 +100,10 @@ function workspaces_schema() {
         'description' => 'The revision ID of the associated entity.',
       ],
     ],
+    'primary key' => ['workspace', 'target_entity_type_id', 'target_entity_id', 'target_entity_id_string'],
     'indexes' => [
       'target_entity_revision_id' => ['target_entity_revision_id'],
     ],
-    'primary key' => ['workspace', 'target_entity_type_id', 'target_entity_id'],
   ];
 
   return $schema;
@@ -106,4 +114,31 @@ function workspaces_schema() {
  */
 function workspaces_update_last_removed(): int {
   return 8803;
+}
+
+/**
+ * Update workspace associations to support entity types with string IDs.
+ */
+function workspaces_update_11101(): void {
+  $schema = \Drupal::database()->schema();
+
+  $target_id_spec = [
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => 'The ID of the associated entity.',
+  ];
+  $schema->changeField('workspace_association', 'target_entity_id', 'target_entity_id', $target_id_spec);
+
+  $target_id_string_spec = [
+    'type' => 'varchar_ascii',
+    'length' => 128,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The string ID of the associated entity.',
+  ];
+  $schema->addField('workspace_association', 'target_entity_id_string', $target_id_string_spec, [
+    'primary key' => ['workspace', 'target_entity_type_id', 'target_entity_id', 'target_entity_id_string'],
+  ]);
 }

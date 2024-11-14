@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\workspaces\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
 
@@ -19,8 +17,6 @@ use Drupal\workspaces\Entity\Workspace;
  */
 class WorkspaceAssociationTest extends KernelTestBase {
 
-  use ContentTypeCreationTrait;
-  use NodeCreationTrait;
   use UserCreationTrait;
   use WorkspaceTestTrait;
 
@@ -35,13 +31,11 @@ class WorkspaceAssociationTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'field',
-    'filter',
-    'node',
-    'text',
+    'entity_test',
     'user',
     'system',
     'workspaces',
+    'workspaces_test',
   ];
 
   /**
@@ -52,16 +46,14 @@ class WorkspaceAssociationTest extends KernelTestBase {
 
     $this->entityTypeManager = \Drupal::entityTypeManager();
 
-    $this->installEntitySchema('node');
+    $this->installEntitySchema('entity_test_mulrevpub');
+    $this->installEntitySchema('entity_test_mulrevpub_string_id');
     $this->installEntitySchema('user');
     $this->installEntitySchema('workspace');
 
-    $this->installConfig(['filter', 'node', 'system']);
+    $this->installConfig(['system']);
 
-    $this->installSchema('node', ['node_access']);
     $this->installSchema('workspaces', ['workspace_association']);
-
-    $this->createContentType(['type' => 'article']);
 
     $permissions = array_intersect([
       'administer nodes',
@@ -80,27 +72,33 @@ class WorkspaceAssociationTest extends KernelTestBase {
   /**
    * Tests the revisions tracked by a workspace.
    *
+   * @param string $entity_type_id
+   *   The ID of the entity type to test.
+   * @param array $entity_values
+   *   An array of values for the entities created in this test.
+   *
    * @covers ::getTrackedEntities
    * @covers ::getAssociatedRevisions
+   *
+   * @dataProvider getEntityTypeIds
    */
-  public function testWorkspaceAssociation(): void {
-    $this->createNode(['title' => 'Test article 1 - live - unpublished', 'type' => 'article', 'status' => 0]);
-    $this->createNode(['title' => 'Test article 2 - live - published', 'type' => 'article']);
+  public function testWorkspaceAssociation(string $entity_type_id, array $entity_values): void {
+    $entity_1 = $this->createEntity($entity_type_id, $entity_values[1]);
+    $this->createEntity($entity_type_id, $entity_values[2]);
 
     // Edit one of the existing nodes in 'stage'.
     $this->switchToWorkspace('stage');
-    $node = $this->entityTypeManager->getStorage('node')->load(1);
-    $node->setTitle('Test article 1 - stage - published');
-    $node->setPublished();
+    $entity_1->set('name', 'Test entity 1 - stage - published');
+    $entity_1->setPublished();
     // This creates rev. 3.
-    $node->save();
+    $entity_1->save();
 
     // Generate content with the following structure:
     // Stage:
-    // - Test article 3 - stage - unpublished (rev. 4)
-    // - Test article 4 - stage - published (rev. 5 and 6)
-    $this->createNode(['title' => 'Test article 3 - stage - unpublished', 'type' => 'article', 'status' => 0]);
-    $this->createNode(['title' => 'Test article 4 - stage - published', 'type' => 'article']);
+    // - Test entity 3 - stage - unpublished (rev. 4)
+    // - Test entity 4 - stage - published (rev. 5 and 6)
+    $this->createEntity($entity_type_id, $entity_values[3]);
+    $this->createEntity($entity_type_id, $entity_values[4]);
 
     $expected_latest_revisions = [
       'stage' => [3, 4, 6],
@@ -111,17 +109,17 @@ class WorkspaceAssociationTest extends KernelTestBase {
     $expected_initial_revisions = [
       'stage' => [4, 5],
     ];
-    $this->assertWorkspaceAssociations('node', $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
+    $this->assertWorkspaceAssociations($entity_type_id, $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
 
     // Dev:
-    // - Test article 1 - stage - published (rev. 3)
-    // - Test article 3 - stage - unpublished (rev. 4)
-    // - Test article 4 - stage - published (rev. 5 and 6)
-    // - Test article 5 - dev - unpublished (rev. 7)
-    // - Test article 6 - dev - published (rev. 8 and 9)
+    // - Test entity 1 - stage - published (rev. 3)
+    // - Test entity 3 - stage - unpublished (rev. 4)
+    // - Test entity 4 - stage - published (rev. 5 and 6)
+    // - Test entity 5 - dev - unpublished (rev. 7)
+    // - Test entity 6 - dev - published (rev. 8 and 9)
     $this->switchToWorkspace('dev');
-    $this->createNode(['title' => 'Test article 5 - dev - unpublished', 'type' => 'article', 'status' => 0]);
-    $this->createNode(['title' => 'Test article 6 - dev - published', 'type' => 'article']);
+    $this->createEntity($entity_type_id, $entity_values[5]);
+    $this->createEntity($entity_type_id, $entity_values[6]);
 
     $expected_latest_revisions += [
       'dev' => [3, 4, 6, 7, 9],
@@ -134,7 +132,7 @@ class WorkspaceAssociationTest extends KernelTestBase {
     $expected_initial_revisions += [
       'dev' => [7, 8],
     ];
-    $this->assertWorkspaceAssociations('node', $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
+    $this->assertWorkspaceAssociations($entity_type_id, $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
 
     // Merge 'dev' into 'stage' and check the workspace associations.
     /** @var \Drupal\workspaces\WorkspaceMergerInterface $workspace_merger */
@@ -155,7 +153,7 @@ class WorkspaceAssociationTest extends KernelTestBase {
     // Which leaves revision 8 as the only remaining initial revision in 'dev'.
     $expected_initial_revisions['dev'] = [8];
 
-    $this->assertWorkspaceAssociations('node', $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
+    $this->assertWorkspaceAssociations($entity_type_id, $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
 
     // Publish 'stage' and check the workspace associations.
     /** @var \Drupal\workspaces\WorkspacePublisherInterface $workspace_publisher */
@@ -163,7 +161,37 @@ class WorkspaceAssociationTest extends KernelTestBase {
     $workspace_publisher->publish();
 
     $expected_revisions['stage'] = $expected_revisions['dev'] = [];
-    $this->assertWorkspaceAssociations('node', $expected_revisions, $expected_revisions, $expected_revisions);
+    $this->assertWorkspaceAssociations($entity_type_id, $expected_revisions, $expected_revisions, $expected_revisions);
+  }
+
+  /**
+   * The data provider for ::testWorkspaceAssociation().
+   */
+  public static function getEntityTypeIds(): array {
+    return [
+      [
+        'entity_type_id' => 'entity_test_mulrevpub',
+        'entity_values' => [
+          1 => ['name' => 'Test entity 1 - live - unpublished', 'status' => FALSE],
+          2 => ['name' => 'Test entity 2 - live - published', 'status' => TRUE],
+          3 => ['name' => 'Test entity 3 - stage - unpublished', 'status' => FALSE],
+          4 => ['name' => 'Test entity 4 - stage - published', 'status' => TRUE],
+          5 => ['name' => 'Test entity 5 - dev - unpublished', 'status' => FALSE],
+          6 => ['name' => 'Test entity 6 - dev - published', 'status' => TRUE],
+        ],
+      ],
+      [
+        'entity_type_id' => 'entity_test_mulrevpub_string_id',
+        'entity_values' => [
+          1 => ['id' => 'test_1', 'name' => 'Test entity 1 - live - unpublished', 'status' => FALSE],
+          2 => ['id' => 'test_2', 'name' => 'Test entity 2 - live - published', 'status' => TRUE],
+          3 => ['id' => 'test_3', 'name' => 'Test entity 3 - stage - unpublished', 'status' => FALSE],
+          4 => ['id' => 'test_4', 'name' => 'Test entity 4 - stage - published', 'status' => TRUE],
+          5 => ['id' => 'test_5', 'name' => 'Test entity 5 - dev - unpublished', 'status' => FALSE],
+          6 => ['id' => 'test_6', 'name' => 'Test entity 6 - dev - published', 'status' => TRUE],
+        ],
+      ],
+    ];
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -60,6 +61,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     if (isset($tracked[$entity->getEntityTypeId()])) {
       $tracked_revision_id = key($tracked[$entity->getEntityTypeId()]);
     }
+    $id_field = static::getIdField($entity->getEntityTypeId());
 
     try {
       $transaction = $this->database->startTransaction();
@@ -72,7 +74,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
           ])
           ->condition('workspace', $affected_workspaces, 'IN')
           ->condition('target_entity_type_id', $entity->getEntityTypeId())
-          ->condition('target_entity_id', $entity->id())
+          ->condition($id_field, $entity->id())
           // Only update descendant workspaces if they have the same initial
           // revision, which means they are currently inheriting content.
           ->condition('target_entity_revision_id', $tracked_revision_id)
@@ -86,15 +88,15 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
         $insert_query = $this->database->insert(static::TABLE)
           ->fields([
             'workspace',
-            'target_entity_revision_id',
             'target_entity_type_id',
-            'target_entity_id',
+            $id_field,
+            'target_entity_revision_id',
           ]);
         foreach ($missing_workspaces as $workspace_id) {
           $insert_query->values([
             'workspace' => $workspace_id,
             'target_entity_type_id' => $entity->getEntityTypeId(),
-            'target_entity_id' => $entity->id(),
+            $id_field => $entity->id(),
             'target_entity_revision_id' => $entity->getRevisionId(),
           ]);
         }
@@ -128,8 +130,13 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    */
   public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL) {
     $query = $this->database->select(static::TABLE);
+    $query->fields(static::TABLE, [
+      'target_entity_type_id',
+      'target_entity_id',
+      'target_entity_id_string',
+      'target_entity_revision_id',
+    ]);
     $query
-      ->fields(static::TABLE, ['target_entity_type_id', 'target_entity_id', 'target_entity_revision_id'])
       ->orderBy('target_entity_revision_id', 'ASC')
       ->condition('workspace', $workspace_id);
 
@@ -137,13 +144,14 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition('target_entity_type_id', $entity_type_id, '=');
 
       if ($entity_ids) {
-        $query->condition('target_entity_id', $entity_ids, 'IN');
+        $query->condition(static::getIdField($entity_type_id), $entity_ids, 'IN');
       }
     }
 
     $tracked_revisions = [];
     foreach ($query->execute() as $record) {
-      $tracked_revisions[$record->target_entity_type_id][$record->target_entity_revision_id] = $record->target_entity_id;
+      $target_id = $record->{static::getIdField($record->target_entity_type_id)};
+      $tracked_revisions[$record->target_entity_type_id][$record->target_entity_revision_id] = $target_id;
     }
 
     return $tracked_revisions;
@@ -160,15 +168,21 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->element($pager_id);
     }
 
+    $query->fields(static::TABLE, [
+      'target_entity_type_id',
+      'target_entity_id',
+      'target_entity_id_string',
+      'target_entity_revision_id',
+    ]);
     $query
-      ->fields(static::TABLE, ['target_entity_type_id', 'target_entity_id', 'target_entity_revision_id'])
       ->orderBy('target_entity_type_id', 'ASC')
       ->orderBy('target_entity_revision_id', 'DESC')
       ->condition('workspace', $workspace_id);
 
     $tracked_revisions = [];
     foreach ($query->execute() as $record) {
-      $tracked_revisions[$record->target_entity_type_id][$record->target_entity_revision_id] = $record->target_entity_id;
+      $target_id = $record->{static::getIdField($record->target_entity_type_id)};
+      $tracked_revisions[$record->target_entity_type_id][$record->target_entity_revision_id] = $target_id;
     }
 
     return $tracked_revisions;
@@ -291,17 +305,18 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * {@inheritdoc}
    */
   public function getEntityTrackingWorkspaceIds(RevisionableInterface $entity, bool $latest_revision = FALSE) {
+    $id_field = static::getIdField($entity->getEntityTypeId());
     $query = $this->database->select(static::TABLE, 'wa')
       ->fields('wa', ['workspace'])
       ->condition('[wa].[target_entity_type_id]', $entity->getEntityTypeId())
-      ->condition('[wa].[target_entity_id]', $entity->id());
+      ->condition("[wa].[$id_field]", $entity->id());
 
     // Use a self-join to get only the workspaces in which the latest revision
     // of the entity is tracked.
     if ($latest_revision) {
       $inner_select = $this->database->select(static::TABLE, 'wai')
         ->condition('[wai].[target_entity_type_id]', $entity->getEntityTypeId())
-        ->condition('[wai].[target_entity_id]', $entity->id());
+        ->condition("[wai].[$id_field]", $entity->id());
       $inner_select->addExpression('MAX([wai].[target_entity_revision_id])', 'max_revision_id');
 
       $query->join($inner_select, 'waj', '[wa].[target_entity_revision_id] = [waj].[max_revision_id]');
@@ -341,7 +356,18 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition('target_entity_type_id', $entity_type_id, '=');
 
       if ($entity_ids) {
-        $query->condition('target_entity_id', $entity_ids, 'IN');
+        try {
+          $query->condition(static::getIdField($entity_type_id), $entity_ids, 'IN');
+        }
+        catch (PluginNotFoundException) {
+          // When an entity type is being deleted, we no longer have the ability
+          // to retrieve its identifier field type, so we try both.
+          $query->condition(
+            $query->orConditionGroup()
+              ->condition('target_entity_id', $entity_ids, 'IN')
+              ->condition('target_entity_id_string', $entity_ids, 'IN')
+          );
+        }
       }
 
       if ($revision_ids) {
@@ -366,6 +392,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $indexed_rows->fields(static::TABLE, [
         'target_entity_type_id',
         'target_entity_id',
+        'target_entity_id_string',
         'target_entity_revision_id',
       ]);
       $indexed_rows->condition('workspace', $parent_id);
@@ -397,6 +424,33 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     foreach ($affected_workspaces as $workspace_id) {
       $this->deleteAssociations($workspace_id);
     }
+  }
+
+  /**
+   * Determines the target ID field name for an entity type.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   *
+   * @return string
+   *   The name of the workspace association target ID field.
+   *
+   * @internal
+   */
+  public static function getIdField(string $entity_type_id): string {
+    static $id_field_map = [];
+
+    if (!isset($id_field_map[$entity_type_id])) {
+      $id_field = \Drupal::entityTypeManager()->getDefinition($entity_type_id)
+        ->getKey('id');
+      $field_map = \Drupal::service('entity_field.manager')->getFieldMap()[$entity_type_id];
+
+      $id_field_map[$entity_type_id] = $field_map[$id_field]['type'] !== 'integer'
+        ? 'target_entity_id_string'
+        : 'target_entity_id';
+    }
+
+    return $id_field_map[$entity_type_id];
   }
 
 }

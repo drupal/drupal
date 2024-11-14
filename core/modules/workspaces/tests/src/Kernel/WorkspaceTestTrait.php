@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
 use Drupal\workspaces\Entity\Workspace;
 
@@ -161,6 +162,26 @@ trait WorkspaceTestTrait {
     $entity_type->setHandlerClass('workspace', IgnoredWorkspaceHandler::class);
     \Drupal::state()->set("$entity_type_id.entity_type", $entity_type);
     \Drupal::entityTypeManager()->clearCachedDefinitions();
+  }
+
+  /**
+   * Creates an entity.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param array $values
+   *   An array of values for the entity.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The created entity.
+   */
+  protected function createEntity(string $entity_type_id, array $values = []): EntityInterface {
+    $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
+
+    $entity = $storage->create($values);
+    $entity->save();
+
+    return $entity;
   }
 
 }
