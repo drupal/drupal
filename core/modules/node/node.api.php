@@ -5,6 +5,7 @@
  * Hooks specific to the Node module.
  */
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
@@ -73,7 +74,7 @@ use Drupal\Component\Utility\Xss;
  * @see node_access_rebuild()
  * @ingroup node_access
  */
-function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $operation) {
+function hook_node_grants(AccountInterface $account, $operation) {
   if ($account->hasPermission('access private content')) {
     $grants['example'] = [1];
   }
@@ -148,7 +149,7 @@ function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $opera
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
-function hook_node_access_records(\Drupal\node\NodeInterface $node) {
+function hook_node_access_records(NodeInterface $node) {
   // We only care about the node if it has been marked private. If not, it is
   // treated just like any other node and we completely ignore it.
   if ($node->private->value) {
@@ -216,7 +217,7 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
  * @see hook_node_grants_alter()
  * @ingroup node_access
  */
-function hook_node_access_records_alter(&$grants, \Drupal\node\NodeInterface $node) {
+function hook_node_access_records_alter(&$grants, NodeInterface $node) {
   // Our module allows editors to mark specific articles with the 'is_preview'
   // field. If the node being saved has a TRUE value for that field, then only
   // our grants are retained, and other grants are removed. Doing so ensures
@@ -261,7 +262,7 @@ function hook_node_access_records_alter(&$grants, \Drupal\node\NodeInterface $no
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
-function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface $account, $operation) {
+function hook_node_grants_alter(&$grants, AccountInterface $account, $operation) {
   // Our sample module never allows certain roles to edit or delete
   // content. Since some other node access modules might allow this
   // permission, we expressly remove it by returning an empty $grants
@@ -300,7 +301,7 @@ function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface 
  *
  * @ingroup entity_crud
  */
-function hook_node_search_result(\Drupal\node\NodeInterface $node) {
+function hook_node_search_result(NodeInterface $node) {
   $rating = \Drupal::database()->query('SELECT SUM([points]) FROM {my_rating} WHERE [nid] = :nid', ['nid' => $node->id()])->fetchField();
   return ['rating' => \Drupal::translation()->formatPlural($rating, '1 point', '@count points')];
 }
@@ -319,7 +320,7 @@ function hook_node_search_result(\Drupal\node\NodeInterface $node) {
  *
  * @ingroup entity_crud
  */
-function hook_node_update_index(\Drupal\node\NodeInterface $node) {
+function hook_node_update_index(NodeInterface $node) {
   $text = '';
   $ratings = \Drupal::database()->query('SELECT [title], [description] FROM {my_ratings} WHERE [nid] = :nid', [':nid' => $node->id()]);
   foreach ($ratings as $rating) {

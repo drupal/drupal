@@ -7,15 +7,20 @@
 
 namespace Drupal\views_ui\ProxyClass\ParamConverter {
 
+    use Drupal\Core\ParamConverter\ParamConverterInterface;
+    use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+    use Symfony\Component\DependencyInjection\ContainerInterface;
+    use Symfony\Component\Routing\Route;
+
     /**
      * Provides a proxy class for \Drupal\views_ui\ParamConverter\ViewUIConverter.
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class ViewUIConverter implements \Drupal\Core\ParamConverter\ParamConverterInterface
+    class ViewUIConverter implements ParamConverterInterface
     {
 
-        use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
+        use DependencySerializationTrait;
 
         /**
          * The id of the original proxied service.
@@ -46,7 +51,7 @@ namespace Drupal\views_ui\ProxyClass\ParamConverter {
          * @param string $drupal_proxy_original_service_id
          *   The service ID of the original service.
          */
-        public function __construct(\Symfony\Component\DependencyInjection\ContainerInterface $container, $drupal_proxy_original_service_id)
+        public function __construct(ContainerInterface $container, $drupal_proxy_original_service_id)
         {
             $this->container = $container;
             $this->drupalProxyOriginalServiceId = $drupal_proxy_original_service_id;
@@ -78,7 +83,7 @@ namespace Drupal\views_ui\ProxyClass\ParamConverter {
         /**
          * {@inheritdoc}
          */
-        public function applies($definition, $name, \Symfony\Component\Routing\Route $route)
+        public function applies($definition, $name, Route $route)
         {
             return $this->lazyLoadItself()->applies($definition, $name, $route);
         }

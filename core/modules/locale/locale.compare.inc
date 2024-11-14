@@ -2,7 +2,6 @@
 
 /**
  * @file
- * The API for comparing project translation status with available translation.
  */
 
 use Drupal\Core\Batch\BatchBuilder;

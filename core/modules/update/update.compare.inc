@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Code required only when comparing available updates to existing data.
  */
 
 use Drupal\Core\Extension\ExtensionVersion;

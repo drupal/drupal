@@ -2,7 +2,6 @@
 
 /**
  * @file
- * The content translation administration forms.
  */
 
 use Drupal\content_translation\BundleTranslationSettingsInterface;

@@ -13,20 +13,6 @@ use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 
 /**
- * Implements hook_query_TAG_alter() for the 'media_access' query tag.
- */
-function views_test_query_access_query_media_access_alter(AlterableInterface $query) {
-  _views_test_query_access_restrict_by_uuid($query);
-}
-
-/**
- * Implements hook_query_TAG_alter() for the 'block_content_access' query tag.
- */
-function views_test_query_access_query_block_content_access_alter(AlterableInterface $query) {
-  _views_test_query_access_restrict_by_uuid($query);
-}
-
-/**
  * Excludes entities with the 'hidden-ENTITY_TYPE_ID' UUID from a query.
  *
  * @param \Drupal\Core\Database\Query\AlterableInterface $query

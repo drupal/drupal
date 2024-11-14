@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\image_module_test\Hook;
+
+use Drupal\image\ImageStyleInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+
+/**
+ * Hook implementations for image_module_test.
+ */
+class ImageModuleTestHooks {
+
+  /**
+   * Implements hook_image_effect_info_alter().
+   */
+  #[Hook('image_effect_info_alter')]
+  public function imageEffectInfoAlter(&$effects) {
+    $state = \Drupal::state();
+    // The 'image_module_test.counter' state variable value is set and accessed
+    // from the ImageEffectsTest::testImageEffectsCaching() test and used to
+    // signal if the image effect plugin definitions were computed or were
+    // retrieved from the cache.
+    // @see \Drupal\Tests\image\Kernel\ImageEffectsTest::testImageEffectsCaching()
+    $counter = $state->get('image_module_test.counter');
+    // Increase the test counter, signaling that image effects were processed,
+    // rather than being served from the cache.
+    $state->set('image_module_test.counter', ++$counter);
+  }
+
+  /**
+   * Implements hook_image_style_presave().
+   *
+   * Used to save test third party settings in the image style entity.
+   */
+  #[Hook('image_style_presave')]
+  public function imageStylePresave(ImageStyleInterface $style) {
+    $style->setThirdPartySetting('image_module_test', 'foo', 'bar');
+  }
+
+  /**
+   * Implements hook_image_style_flush().
+   */
+  #[Hook('image_style_flush')]
+  public function imageStyleFlush($style, $path = NULL) {
+    $state = \Drupal::state();
+    $state->set('image_module_test_image_style_flush.called', $path);
+  }
+
+}

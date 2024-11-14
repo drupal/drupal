@@ -8,16 +8,6 @@
 declare(strict_types=1);
 
 /**
- * Implements hook_entity_type_alter().
- */
-function field_test_entity_type_alter(array &$entity_types): void {
-  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-  foreach (field_test_entity_info_translatable() as $entity_type => $translatable) {
-    $entity_types[$entity_type]->set('translatable', $translatable);
-  }
-}
-
-/**
  * Helper function to enable entity translations.
  */
 function field_test_entity_info_translatable($entity_type_id = NULL, $translatable = NULL) {

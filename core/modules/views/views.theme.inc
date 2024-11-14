@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Preprocessors and helper functions to make theming easier.
  */
 
 use Drupal\Component\Utility\Html;

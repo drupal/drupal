@@ -2,7 +2,6 @@
 
 /**
  * @file
- * Preprocessors and theme functions for the Views UI.
  */
 
 use Drupal\Component\Render\FormattableMarkup;

@@ -2,6 +2,16 @@
 
 /**
  * @file
+ */
+
+use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
+
+/**
+ * @file
  * Field API documentation.
  */
 
@@ -124,14 +134,14 @@ function hook_field_ui_preconfigured_options_alter(array &$options, $field_type)
  *
  * @see entity_crud
  */
-function hook_field_storage_config_update_forbid(\Drupal\field\FieldStorageConfigInterface $field_storage, \Drupal\field\FieldStorageConfigInterface $prior_field_storage) {
+function hook_field_storage_config_update_forbid(FieldStorageConfigInterface $field_storage, FieldStorageConfigInterface $prior_field_storage) {
   if ($field_storage->getTypeProvider() == 'options' && $field_storage->hasData()) {
     // Forbid any update that removes allowed values with actual data.
     $allowed_values = $field_storage->getSetting('allowed_values');
     $prior_allowed_values = $prior_field_storage->getSetting('allowed_values');
     $lost_keys = array_keys(array_diff_key($prior_allowed_values, $allowed_values));
     if (_options_values_in_use($field_storage->getTargetEntityTypeId(), $field_storage->getName(), $lost_keys)) {
-      throw new \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException("A list field '{$field_storage->getName()}' with existing data cannot have its keys changed.");
+      throw new FieldStorageDefinitionUpdateForbiddenException("A list field '{$field_storage->getName()}' with existing data cannot have its keys changed.");
     }
   }
 }
@@ -210,7 +220,7 @@ function hook_field_widget_info_alter(array &$info) {
  * @see hook_field_widget_complete_form_alter()
  * @see https://www.drupal.org/node/3180429
  */
-function hook_field_widget_single_element_form_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
+function hook_field_widget_single_element_form_alter(array &$element, FormStateInterface $form_state, array $context) {
   // Add a css class to widget form elements for all fields of type my_type.
   $field_definition = $context['items']->getFieldDefinition();
   if ($field_definition->getType() == 'my_type') {
@@ -247,7 +257,7 @@ function hook_field_widget_single_element_form_alter(array &$element, \Drupal\Co
  * @see hook_field_widget_single_element_form_alter()
  * @see hook_field_widget_complete_WIDGET_TYPE_form_alter()
  */
-function hook_field_widget_single_element_WIDGET_TYPE_form_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
+function hook_field_widget_single_element_WIDGET_TYPE_form_alter(array &$element, FormStateInterface $form_state, array $context) {
   // Code here will only act on widgets of type WIDGET_TYPE.  For example,
   // hook_field_widget_single_element_my_module_autocomplete_form_alter() will
   // only act on widgets of type 'my_module_autocomplete'.
@@ -278,7 +288,7 @@ function hook_field_widget_single_element_WIDGET_TYPE_form_alter(array &$element
  * @see hook_field_widget_complete_WIDGET_TYPE_form_alter()
  * @see https://www.drupal.org/node/3180429
  */
-function hook_field_widget_complete_form_alter(&$field_widget_complete_form, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function hook_field_widget_complete_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
   $field_widget_complete_form['#attributes']['class'][] = 'my-class';
 }
 
@@ -310,7 +320,7 @@ function hook_field_widget_complete_form_alter(&$field_widget_complete_form, \Dr
  * @see hook_field_widget_complete_form_alter()
  * @see https://www.drupal.org/node/3180429
  */
-function hook_field_widget_complete_WIDGET_TYPE_form_alter(&$field_widget_complete_form, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function hook_field_widget_complete_WIDGET_TYPE_form_alter(&$field_widget_complete_form, FormStateInterface $form_state, $context) {
   $field_widget_complete_form['#attributes']['class'][] = 'my-class';
 }
 
@@ -407,7 +417,7 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
  * @param $field_storage \Drupal\field\Entity\FieldStorageConfig
  *   The field storage being purged.
  */
-function hook_field_purge_field_storage(\Drupal\field\Entity\FieldStorageConfig $field_storage) {
+function hook_field_purge_field_storage(FieldStorageConfig $field_storage) {
   \Drupal::database()->delete('my_module_field_storage_info')
     ->condition('uuid', $field_storage->uuid())
     ->execute();
@@ -424,7 +434,7 @@ function hook_field_purge_field_storage(\Drupal\field\Entity\FieldStorageConfig 
  * @param $field
  *   The field being purged.
  */
-function hook_field_purge_field(\Drupal\field\Entity\FieldConfig $field) {
+function hook_field_purge_field(FieldConfig $field) {
   \Drupal::database()->delete('my_module_field_info')
     ->condition('id', $field->id())
     ->execute();
