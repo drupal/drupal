@@ -9,11 +9,11 @@ use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
-use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
@@ -215,8 +215,8 @@ class EntityUrlTest extends UnitTestCase {
    */
   public function testToUrlLinkTemplateRevision(bool $is_default_revision, string $link_template, string $expected_route_name, array $expected_route_parameters): void {
     $values = ['id' => static::ENTITY_ID, 'langcode' => $this->langcode];
-    $entity = $this->getEntity(RevisionableEntity::class, $values, ['getRevisionId', 'isDefaultRevision']);
-    assert($entity instanceof RevisionableEntity);
+    $entity = $this->getEntity(StubRevisionableEntity::class, $values, ['getRevisionId', 'isDefaultRevision']);
+    assert($entity instanceof StubRevisionableEntity);
     $entity->method('getRevisionId')->willReturn(static::REVISION_ID);
     $entity->method('isDefaultRevision')->willReturn($is_default_revision);
     $this->registerLinkTemplate($link_template);
@@ -462,18 +462,18 @@ class EntityUrlTest extends UnitTestCase {
   /**
    * Returns a mock entity for testing.
    *
-   * @param string $class
+   * @param class-string<\Drupal\Tests\Core\Entity\StubEntityBase> $class
    *   The class name to mock. Should be \Drupal\Tests\Core\Entity\StubEntityBase
    *   or a subclass.
-   * @param array $values
+   * @param array<string,int|string> $values
    *   An array of entity values to construct the mock entity with.
-   * @param array $methods
-   *   (optional) An array of additional methods to mock on the entity object.
+   * @param list<string> $methods
+   *   (optional) A list of additional methods to mock on the entity object.
    *   The getEntityType() and entityTypeBundleInfo() methods are always mocked.
    *
-   * @return \Drupal\Tests\Core\Entity\StubEntityBase|\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\Tests\Core\Entity\StubEntityBase&\PHPUnit\Framework\MockObject\MockObject
    */
-  protected function getEntity($class, array $values, array $methods = []) {
+  protected function getEntity(string $class, array $values, array $methods = []): StubEntityBase&MockObject {
     $methods = array_merge($methods, ['getEntityType', 'entityTypeBundleInfo']);
 
     // Prophecy does not allow prophesizing abstract classes while actually
@@ -482,7 +482,7 @@ class EntityUrlTest extends UnitTestCase {
     $entity = $this->getMockBuilder($class)
       ->setConstructorArgs([$values, static::ENTITY_TYPE_ID])
       ->onlyMethods($methods)
-      ->getMockForAbstractClass();
+      ->getMock();
 
     $this->entityType = $this->prophesize(EntityTypeInterface::class);
     $this->entityType->getLinkTemplates()->willReturn([]);
@@ -549,24 +549,6 @@ class EntityUrlTest extends UnitTestCase {
     $this->entityTypeBundleInfo
       ->getBundleInfo(static::ENTITY_TYPE_ID)
       ->willReturn([static::ENTITY_TYPE_ID => $bundle_info]);
-  }
-
-}
-
-abstract class RevisionableEntity extends StubEntityBase implements RevisionableInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRevisionId(): int|string|NULL {
-    return NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isDefaultRevision($new_value = NULL): bool {
-    return FALSE;
   }
 
 }
