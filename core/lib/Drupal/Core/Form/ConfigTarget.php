@@ -74,8 +74,8 @@ final class ConfigTarget {
    *   return an array with the transformed values, also keyed by property path.
    *   The callback will receive the form state object as its second argument.
    *   The callback may return a special values:
-   *   - ToConfig::NoMapping, to indicate that the given form value does not
-   *     need to be mapped onto the Config object
+   *   - ToConfig::NoOp, to indicate that the given form value does not need to
+   *     be mapped onto the Config object
    *   - ToConfig::DeleteKey to indicate that the targeted property path should
    *     be deleted from config.
    *   Defaults to NULL.
@@ -237,7 +237,7 @@ final class ConfigTarget {
     }
 
     // Set the returned value, or if a special value (one of the cases in the
-    // ConfigTargetValue enum): apply the appropriate action.
+    // ToConfig enum): apply the appropriate action.
     array_walk($value, fn (mixed $value, string $property) => match ($value) {
       // No-op.
       ToConfig::NoOp => NULL,
