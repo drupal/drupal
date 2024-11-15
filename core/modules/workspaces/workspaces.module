@@ -45,6 +45,13 @@ function workspaces_module_implements_alter(&$implementations, $hook): void {
   if ($hook === 'entity_presave') {
     $implementation = $implementations['workspaces'];
     $implementations = ['workspaces' => $implementation] + $implementations;
+
+    // Move Content Moderation's implementation before Workspaces, so we can
+    // alter the publishing status for the default revision.
+    if (isset($implementations['content_moderation'])) {
+      $implementation = $implementations['content_moderation'];
+      $implementations = ['content_moderation' => $implementation] + $implementations;
+    }
   }
 
   // Move our 'hook_entity_insert' implementation at the end to ensure that
