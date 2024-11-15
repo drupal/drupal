@@ -11,6 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Provides test methods for user creation and authentication.
@@ -45,7 +46,7 @@ trait UserCreationTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   If the user could not be saved.
    */
-  protected function setUpCurrentUser(array $values = [], array $permissions = [], $admin = FALSE) {
+  protected function setUpCurrentUser(array $values = [], array $permissions = [], $admin = FALSE): UserInterface {
     $values += [
       'name' => $this->randomMachineName(),
     ];
@@ -124,7 +125,7 @@ trait UserCreationTrait {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account object.
    */
-  protected function setCurrentUser(AccountInterface $account) {
+  protected function setCurrentUser(AccountInterface $account): void {
     \Drupal::currentUser()->setAccount($account);
   }
 
@@ -149,7 +150,7 @@ trait UserCreationTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   If the user creation fails.
    */
-  protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []) {
+  protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []): UserInterface|false {
     // Create a role with the given permission set, if any.
     $rid = FALSE;
     if ($permissions) {
@@ -207,10 +208,10 @@ trait UserCreationTrait {
    *   (optional) The weight for the role. Defaults to NULL which sets the
    *   weight to maximum + 1.
    *
-   * @return string
+   * @return string|false
    *   Role ID of newly created role, or FALSE if role creation failed.
    */
-  protected function createAdminRole($rid = NULL, $name = NULL, $weight = NULL) {
+  protected function createAdminRole($rid = NULL, $name = NULL, $weight = NULL): string|false {
     $rid = $this->createRole([], $rid, $name, $weight);
     if ($rid) {
       /** @var \Drupal\user\RoleInterface $role */
@@ -234,10 +235,10 @@ trait UserCreationTrait {
    *   (optional) The weight for the role. Defaults to NULL which sets the
    *   weight to maximum + 1.
    *
-   * @return string
+   * @return string|false
    *   Role ID of newly created role, or FALSE if role creation failed.
    */
-  protected function createRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL) {
+  protected function createRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL): string|false {
     // Generate a random, lowercase machine name if none was passed.
     if (!isset($rid)) {
       $rid = $this->randomMachineName(8);
@@ -310,7 +311,7 @@ trait UserCreationTrait {
    * @param array $permissions
    *   (optional) A list of permission names to grant.
    */
-  protected function grantPermissions(RoleInterface $role, array $permissions) {
+  protected function grantPermissions(RoleInterface $role, array $permissions): void {
     foreach ($permissions as $permission) {
       $role->grantPermission($permission);
     }
