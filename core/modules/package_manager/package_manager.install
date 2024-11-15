@@ -7,6 +7,7 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Site\Settings;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Exception\StageFailureMarkerException;
 use Drupal\package_manager\FailureMarker;
@@ -18,6 +19,16 @@ use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
  */
 function package_manager_requirements(string $phase): array {
   $requirements = [];
+
+  if (Settings::get('testing_package_manager', FALSE) === FALSE) {
+    $requirements['testing_package_manager'] = [
+      'title' => 'Package Manager',
+      'description' => t("Package Manager is available for early testing. To install the module set the value of 'testing_package_manager' to TRUE in your settings.php file."),
+      'severity' => REQUIREMENT_ERROR,
+    ];
+    return $requirements;
+  }
+
   // If we're able to check for the presence of the failure marker at all, do it
   // irrespective of the current run phase. If the failure marker is there, the
   // site is in an indeterminate state and should be restored from backup ASAP.

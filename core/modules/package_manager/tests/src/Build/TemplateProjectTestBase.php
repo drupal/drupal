@@ -186,9 +186,11 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
   public function installQuickStart($profile, $working_dir = NULL): void {
     parent::installQuickStart("$profile --no-ansi", $working_dir ?: $this->webRoot);
 
+    // Allow package_manager to be installed, since it is hidden by default.
     // Always allow test modules to be installed in the UI and, for easier
     // debugging, always display errors in their dubious glory.
     $php = <<<END
+\$settings['testing_package_manager'] = TRUE;
 \$settings['extension_discovery_scan_tests'] = TRUE;
 \$config['system.logging']['error_level'] = 'verbose';
 END;
