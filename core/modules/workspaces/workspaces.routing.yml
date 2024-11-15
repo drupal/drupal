@@ -1,9 +1,11 @@
+# Access to these routes is enabled by the Workspaces UI module.
 entity.workspace.collection:
   path: '/admin/config/workflow/workspaces'
   defaults:
     _title: 'Workspaces'
     _entity_list: 'workspace'
   requirements:
+    _access: 'FALSE'
     _permission: 'administer workspaces+edit any workspace'
 
 entity.workspace.activate_form:
@@ -14,6 +16,7 @@ entity.workspace.activate_form:
   options:
     _admin_route: TRUE
   requirements:
+    _access: 'FALSE'
     _entity_access: 'workspace.view'
     _custom_access: '\Drupal\workspaces\Form\WorkspaceActivateForm::checkAccess'
 
@@ -28,6 +31,7 @@ entity.workspace.publish_form:
       workspace:
         type: entity:workspace
   requirements:
+    _access: 'FALSE'
     _permission: 'administer workspaces'
 
 entity.workspace.merge_form:
@@ -43,6 +47,7 @@ entity.workspace.merge_form:
       target_workspace:
         type: entity:workspace
   requirements:
+    _access: 'FALSE'
     _permission: 'administer workspaces'
 
 workspaces.switch_to_live:
@@ -51,5 +56,6 @@ workspaces.switch_to_live:
     _form: '\Drupal\workspaces\Form\SwitchToLiveForm'
     _title: 'Switch to Live'
   requirements:
+    _access: 'FALSE'
     _user_is_logged_in: 'TRUE'
     _has_active_workspace: 'TRUE'

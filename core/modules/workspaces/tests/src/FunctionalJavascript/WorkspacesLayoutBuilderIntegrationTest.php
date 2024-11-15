@@ -32,6 +32,7 @@ class WorkspacesLayoutBuilderIntegrationTest extends InlineBlockTestBase {
   protected static $modules = [
     'field_ui',
     'workspaces',
+    'workspaces_ui',
   ];
 
   /**

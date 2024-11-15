@@ -32,6 +32,7 @@ class WorkspaceTest extends BrowserTestBase {
     'toolbar',
     'user',
     'workspaces',
+    'workspaces_ui',
   ];
 
   /**

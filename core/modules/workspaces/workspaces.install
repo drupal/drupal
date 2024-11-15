@@ -142,3 +142,10 @@ function workspaces_update_11101(): void {
     'primary key' => ['workspace', 'target_entity_type_id', 'target_entity_id', 'target_entity_id_string'],
   ]);
 }
+
+/**
+ * Install the new Workspaces UI module.
+ */
+function workspaces_update_11102(): void {
+  \Drupal::service('module_installer')->install(['workspaces_ui']);
+}

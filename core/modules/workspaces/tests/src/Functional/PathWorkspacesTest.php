@@ -30,6 +30,7 @@ class PathWorkspacesTest extends BrowserTestBase {
     'node',
     'path',
     'workspaces',
+    'workspaces_ui',
   ];
 
   /**
