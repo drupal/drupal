@@ -1,0 +1,8 @@
+name: 'Workspaces UI'
+type: module
+description: 'Provides a user interface for creating and managing workspaces.'
+version: VERSION
+package: Core
+configure: entity.workspace.collection
+dependencies:
+  - drupal:workspaces

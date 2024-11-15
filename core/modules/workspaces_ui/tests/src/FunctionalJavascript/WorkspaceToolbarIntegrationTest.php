@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\workspaces\FunctionalJavascript;
+namespace Drupal\Tests\workspaces_ui\FunctionalJavascript;
 
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 
 /**
  * Tests workspace settings stray integration.
  *
- * @group workspaces
+ * @group workspaces_ui
  */
 class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['toolbar', 'workspaces'];
+  protected static $modules = ['toolbar', 'workspaces', 'workspaces_ui'];
 
   /**
    * {@inheritdoc}

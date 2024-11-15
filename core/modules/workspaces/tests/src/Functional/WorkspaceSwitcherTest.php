@@ -27,6 +27,7 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
     'node',
     'toolbar',
     'workspaces',
+    'workspaces_ui',
   ];
 
   /**

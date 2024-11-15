@@ -18,7 +18,7 @@ class WorkspacesUninstallTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['workspaces', 'node'];
+  protected static $modules = ['workspaces', 'node', 'workspaces_ui'];
 
   /**
    * {@inheritdoc}
@@ -51,6 +51,8 @@ class WorkspacesUninstallTest extends BrowserTestBase {
     $this->drupalGet('/admin/modules/uninstall/entity/workspace');
     $this->submitForm([], 'Delete all workspaces');
     $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm(['uninstall[workspaces_ui]' => TRUE], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
     $this->submitForm(['uninstall[workspaces]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $session->pageTextContains('The selected modules have been uninstalled.');
