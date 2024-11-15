@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\package_manager\Functional;
 
 use Drupal\package_manager\ComposerInspector;
-use Drupal\Tests\BrowserTestBase;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 
 /**
@@ -14,17 +13,12 @@ use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
  * @group package_manager
  * @internal
  */
-class ComposerRequirementTest extends BrowserTestBase {
+class ComposerRequirementTest extends PackageManagerTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['package_manager'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Tests that Composer version and path are listed on the status report.

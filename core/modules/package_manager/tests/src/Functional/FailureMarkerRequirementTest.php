@@ -8,7 +8,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\FailureMarker;
 use Drupal\package_manager\PathLocator;
 use Drupal\package_manager\StageBase;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
 
 /**
@@ -17,7 +16,7 @@ use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
  * @group package_manager
  * @internal
  */
-class FailureMarkerRequirementTest extends BrowserTestBase {
+class FailureMarkerRequirementTest extends PackageManagerTestBase {
   use StringTranslationTrait;
 
   use AssertPreconditionsTrait;
@@ -29,11 +28,6 @@ class FailureMarkerRequirementTest extends BrowserTestBase {
     'package_manager',
     'package_manager_bypass',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Tests that error is shown if failure marker already exists.

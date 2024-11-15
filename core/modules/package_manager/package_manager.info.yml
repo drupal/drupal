@@ -6,3 +6,4 @@ version: VERSION
 lifecycle: experimental
 dependencies:
   - drupal:update
+hidden: true
