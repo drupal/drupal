@@ -4,6 +4,7 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -189,6 +190,7 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
+    assert($entity instanceof RevisionableInterface && $entity instanceof EntityPublishedInterface);
     $this->workspaceAssociation->trackEntity($entity, $this->workspaceManager->getActiveWorkspace());
 
     // When a published entity is created in a workspace, it should remain
@@ -200,6 +202,12 @@ class EntityOperations implements ContainerInjectionInterface {
     // entities where there is already a valid default revision for the live
     // workspace.
     if (isset($entity->_initialPublished)) {
+      // Ensure that the default revision of an entity saved in a workspace is
+      // unpublished.
+      if ($entity->isPublished()) {
+        throw new \RuntimeException('The default revision of an entity created in a workspace cannot be published.');
+      }
+
       $entity->setPublished();
       $entity->isDefaultRevision(FALSE);
       $entity->save();
