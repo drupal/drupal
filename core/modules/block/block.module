@@ -120,7 +120,7 @@ function block_theme_suggestions_block(array $variables) {
  *   - elements: An associative array containing the properties of the element.
  *     Properties used: #block, #configuration, #children, #plugin_id.
  */
-function template_preprocess_block(&$variables) {
+function template_preprocess_block(&$variables): void {
   $variables['configuration'] = $variables['elements']['#configuration'];
   $variables['plugin_id'] = $variables['elements']['#plugin_id'];
   $variables['base_plugin_id'] = $variables['elements']['#base_plugin_id'];

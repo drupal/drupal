@@ -28,7 +28,7 @@ use Drupal\Core\Template\Attribute;
  *   - description_separator: A boolean indicating a separator colon should be
  *     appended to the setting's description.
  */
-function template_preprocess_views_ui_display_tab_setting(&$variables) {
+function template_preprocess_views_ui_display_tab_setting(&$variables): void {
   // Put the primary link to the left side.
   array_unshift($variables['settings_links'], $variables['link']);
 
@@ -54,7 +54,7 @@ function template_preprocess_views_ui_display_tab_setting(&$variables) {
  *   - rows: An associative array containing the rows data for the view
  *     listing table.
  */
-function template_preprocess_views_ui_views_listing_table(&$variables) {
+function template_preprocess_views_ui_views_listing_table(&$variables): void {
   // Convert the attributes to valid attribute objects.
   foreach ($variables['headers'] as $key => $header) {
     $variables['headers'][$key]['attributes'] = new Attribute($header['#attributes']);
@@ -77,7 +77,7 @@ function template_preprocess_views_ui_views_listing_table(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #name, #overridden, #children, #title, #actions.
  */
-function template_preprocess_views_ui_display_tab_bucket(&$variables) {
+function template_preprocess_views_ui_display_tab_bucket(&$variables): void {
   $element = $variables['element'];
 
   if (!empty($element['#overridden'])) {
@@ -100,7 +100,7 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
  *   An associative array containing:
  *   - form: A render element representing the form.
  */
-function template_preprocess_views_ui_build_group_filter_form(&$variables) {
+function template_preprocess_views_ui_build_group_filter_form(&$variables): void {
   $form = $variables['form'];
 
   // Prepare table of options.
@@ -200,7 +200,7 @@ function template_preprocess_views_ui_build_group_filter_form(&$variables) {
  *   An associative array containing:
  *   - form: A render element representing the form.
  */
-function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
+function template_preprocess_views_ui_rearrange_filter_form(&$variables): void {
   $form = &$variables['form'];
   $rows = $ungroupable_rows = [];
   // Enable grouping only if > 1 group.
@@ -393,7 +393,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
  *   An associative array containing:
  *   - form: A render element representing the form.
  */
-function template_preprocess_views_ui_style_plugin_table(&$variables) {
+function template_preprocess_views_ui_style_plugin_table(&$variables): void {
   $form = $variables['form'];
 
   $header = [
@@ -488,7 +488,7 @@ function template_preprocess_views_ui_style_plugin_table(&$variables) {
  *   - view: The view object.
  *   - section: The section name of a View (e.g. title, rows or pager).
  */
-function template_preprocess_views_ui_view_preview_section(&$variables) {
+function template_preprocess_views_ui_view_preview_section(&$variables): void {
   switch ($variables['section']) {
     case 'title':
       $variables['title'] = t('Title');

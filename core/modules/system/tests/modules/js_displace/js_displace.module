@@ -10,6 +10,6 @@ declare(strict_types=1);
 /**
  * Implements hook_preprocess_html().
  */
-function js_displace_preprocess_html(&$variables) {
+function js_displace_preprocess_html(&$variables): void {
   $variables['#attached']['library'][] = 'core/drupal.displace';
 }

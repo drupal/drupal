@@ -21,7 +21,7 @@ use Drupal\toolbar\Controller\ToolbarController;
  *   - element: An associative array containing the properties and children of
  *     the tray. Properties used: #children, #attributes and #bar.
  */
-function template_preprocess_toolbar(&$variables) {
+function template_preprocess_toolbar(&$variables): void {
   $element = $variables['element'];
 
   // Prepare the toolbar attributes.
@@ -120,7 +120,7 @@ function toolbar_menu_navigation_links(array $tree) {
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  */
-function toolbar_preprocess_html(&$variables) {
+function toolbar_preprocess_html(&$variables): void {
   if (!\Drupal::currentUser()->hasPermission('access toolbar')) {
     return;
   }

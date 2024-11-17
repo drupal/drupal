@@ -18,7 +18,7 @@ use Drupal\Core\Url;
  *
  * @see block_content_add_page()
  */
-function template_preprocess_block_content_add_list(&$variables) {
+function template_preprocess_block_content_add_list(&$variables): void {
   $variables['types'] = [];
   $query = \Drupal::request()->query->all();
   foreach ($variables['content'] as $type) {

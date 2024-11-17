@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_preprocess_HOOK() for region templates.
  */
-function theme_region_test_preprocess_region(&$variables) {
+function theme_region_test_preprocess_region(&$variables): void {
   if ($variables['region'] == 'sidebar_first') {
     $variables['attributes']['class'][] = 'new_class';
   }

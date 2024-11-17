@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *     #multiple, #required, #name, #attributes, #size, #sort_options,
  *     #sort_start.
  */
-function template_preprocess_select(&$variables) {
+function template_preprocess_select(&$variables): void {
   $element = $variables['element'];
   Element::setAttributes($element, ['id', 'name', 'size']);
   RenderElementBase::setAttributes($element, ['form-select']);
@@ -191,7 +191,7 @@ function form_get_options($element, $key) {
  *     Properties used: #attributes, #children, #description, #id, #title,
  *     #value.
  */
-function template_preprocess_fieldset(&$variables) {
+function template_preprocess_fieldset(&$variables): void {
   $element = $variables['element'];
   Element::setAttributes($element, ['id']);
   RenderElementBase::setAttributes($element);
@@ -245,7 +245,7 @@ function template_preprocess_fieldset(&$variables) {
  *     Properties used: #attributes, #children, #description, #required,
  *     #summary_attributes, #title, #value.
  */
-function template_preprocess_details(&$variables) {
+function template_preprocess_details(&$variables): void {
   $element = $variables['element'];
   $variables['attributes'] = $element['#attributes'];
   $variables['summary_attributes'] = new Attribute($element['#summary_attributes']);
@@ -282,7 +282,7 @@ function template_preprocess_details(&$variables) {
  *     Properties used: #title, #value, #options, #description, #required,
  *     #attributes, #children.
  */
-function template_preprocess_radios(&$variables) {
+function template_preprocess_radios(&$variables): void {
   $element = $variables['element'];
   $variables['attributes'] = [];
   if (isset($element['#id'])) {
@@ -304,7 +304,7 @@ function template_preprocess_radios(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #children, #attributes.
  */
-function template_preprocess_checkboxes(&$variables) {
+function template_preprocess_checkboxes(&$variables): void {
   $element = $variables['element'];
   $variables['attributes'] = [];
   if (isset($element['#id'])) {
@@ -326,7 +326,7 @@ function template_preprocess_checkboxes(&$variables) {
  *   - element: An associative array containing the properties and children of
  *     the details element. Properties used: #children.
  */
-function template_preprocess_vertical_tabs(&$variables) {
+function template_preprocess_vertical_tabs(&$variables): void {
   $element = $variables['element'];
   $variables['children'] = (!empty($element['#children'])) ? $element['#children'] : '';
 }
@@ -341,7 +341,7 @@ function template_preprocess_vertical_tabs(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #attributes.
  */
-function template_preprocess_input(&$variables) {
+function template_preprocess_input(&$variables): void {
   $element = $variables['element'];
   // Remove name attribute if empty, for W3C compliance.
   if (isset($variables['attributes']['name']) && empty((string) $variables['attributes']['name'])) {
@@ -360,7 +360,7 @@ function template_preprocess_input(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #action, #method, #attributes, #children
  */
-function template_preprocess_form(&$variables) {
+function template_preprocess_form(&$variables): void {
   $element = $variables['element'];
   if (isset($element['#action'])) {
     $element['#attributes']['action'] = UrlHelper::stripDangerousProtocols($element['#action']);
@@ -384,7 +384,7 @@ function template_preprocess_form(&$variables) {
  *     Properties used: #title, #value, #description, #rows, #cols, #maxlength,
  *     #placeholder, #required, #attributes, #resizable.
  */
-function template_preprocess_textarea(&$variables) {
+function template_preprocess_textarea(&$variables): void {
   $element = $variables['element'];
   $attributes = ['id', 'name', 'rows', 'cols', 'maxlength', 'placeholder'];
   Element::setAttributes($element, $attributes);
@@ -439,7 +439,7 @@ function template_preprocess_textarea(&$variables) {
  *     Properties used: #title, #title_display, #description, #id, #required,
  *     #children, #type, #name, #label_for.
  */
-function template_preprocess_form_element(&$variables) {
+function template_preprocess_form_element(&$variables): void {
   $element = &$variables['element'];
 
   // This function is invoked as theme wrapper, but the rendered form element
@@ -532,7 +532,7 @@ function template_preprocess_form_element(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #required, #title, #id, #value, #description, #for.
  */
-function template_preprocess_form_element_label(&$variables) {
+function template_preprocess_form_element_label(&$variables): void {
   $element = $variables['element'];
   // If title and required marker are both empty, output no label.
   if (isset($element['#title']) && $element['#title'] !== '') {

@@ -19,7 +19,7 @@ use Drupal\Core\Utility\TableSort;
  *   An associative array containing:
  *   - view: The ViewExecutable object.
  */
-function template_preprocess_views_view(&$variables) {
+function template_preprocess_views_view(&$variables): void {
   $view = $variables['view'];
   $id = $view->storage->id();
 
@@ -87,7 +87,7 @@ function template_preprocess_views_view(&$variables) {
  *       visually distinct.
  *   - row: An array containing information about the current row.
  */
-function template_preprocess_views_view_fields(&$variables) {
+function template_preprocess_views_view_fields(&$variables): void {
   $view = $variables['view'];
 
   // Loop through the fields for this view.
@@ -210,7 +210,7 @@ function template_preprocess_views_view_fields(&$variables) {
  *   - content: The content to be grouped.
  *   - title: The group heading.
  */
-function template_preprocess_views_view_grouping(&$variables) {
+function template_preprocess_views_view_grouping(&$variables): void {
   $variables['content'] = $variables['view']->style_plugin->renderGroupingSets($variables['rows'], $variables['grouping_level']);
 }
 
@@ -226,7 +226,7 @@ function template_preprocess_views_view_grouping(&$variables) {
  *     field.
  *   - view: Instance of the ViewExecutable object for the parent view.
  */
-function template_preprocess_views_view_field(&$variables) {
+function template_preprocess_views_view_field(&$variables): void {
   $variables['output'] = $variables['field']->advancedRender($variables['row']);
 }
 
@@ -242,7 +242,7 @@ function template_preprocess_views_view_field(&$variables) {
  *   - view: A ViewExecutable object.
  *   - rows: The raw row data.
  */
-function template_preprocess_views_view_summary(&$variables) {
+function template_preprocess_views_view_summary(&$variables): void {
   /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
@@ -330,7 +330,7 @@ function template_preprocess_views_view_summary(&$variables) {
  *     - separator: A string to be placed between inline fields to keep them
  *       visually distinct.
  */
-function template_preprocess_views_view_summary_unformatted(&$variables) {
+function template_preprocess_views_view_summary_unformatted(&$variables): void {
   /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
@@ -413,7 +413,7 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
  *   - view: A ViewExecutable object.
  *   - rows: The raw row data.
  */
-function template_preprocess_views_view_table(&$variables) {
+function template_preprocess_views_view_table(&$variables): void {
   $view = $variables['view'];
 
   // We need the raw data for this grouping, which is passed in
@@ -702,7 +702,7 @@ function template_preprocess_views_view_table(&$variables) {
  *   - view: The view object.
  *   - rows: An array of row items. Each row is an array of content.
  */
-function template_preprocess_views_view_grid(&$variables) {
+function template_preprocess_views_view_grid(&$variables): void {
   $options = $variables['options'] = $variables['view']->style_plugin->options;
   $horizontal = ($options['alignment'] === 'horizontal');
 
@@ -803,7 +803,7 @@ function template_preprocess_views_view_grid(&$variables) {
  *   - view: The view object.
  *   - rows: An array of row items. Each row is an array of content.
  */
-function template_preprocess_views_view_grid_responsive(&$variables) {
+function template_preprocess_views_view_grid_responsive(&$variables): void {
   $variables['options'] = $variables['view']->style_plugin->options;
   $view = $variables['view'];
 
@@ -834,7 +834,7 @@ function template_preprocess_views_view_grid_responsive(&$variables) {
  *   - view: The view object.
  *   - rows: An array of row items. Each row is an array of content.
  */
-function template_preprocess_views_view_unformatted(&$variables) {
+function template_preprocess_views_view_unformatted(&$variables): void {
   $view = $variables['view'];
   $rows = $variables['rows'];
   $style = $view->style_plugin;
@@ -860,7 +860,7 @@ function template_preprocess_views_view_unformatted(&$variables) {
  *   An associative array containing:
  *   - view: A View object.
  */
-function template_preprocess_views_view_list(&$variables) {
+function template_preprocess_views_view_list(&$variables): void {
   $handler = $variables['view']->style_plugin;
 
   // Fetch classes from handler options.
@@ -893,7 +893,7 @@ function template_preprocess_views_view_list(&$variables) {
  *   - view: A ViewExecutable object.
  *   - rows: The raw row data.
  */
-function template_preprocess_views_view_rss(&$variables) {
+function template_preprocess_views_view_rss(&$variables): void {
   $view = $variables['view'];
   $items = $variables['rows'];
   $style = $view->style_plugin;
@@ -931,7 +931,7 @@ function template_preprocess_views_view_rss(&$variables) {
  *   An associative array containing:
  *   - row: The raw results rows.
  */
-function template_preprocess_views_view_row_rss(&$variables) {
+function template_preprocess_views_view_row_rss(&$variables): void {
   $item = $variables['row'];
   $variables['title'] = $item->title;
   $variables['link'] = $item->link;
@@ -963,7 +963,7 @@ function template_preprocess_views_view_row_rss(&$variables) {
  *   - view: A ViewExecutable object.
  *   - rows: The raw row data.
  */
-function template_preprocess_views_view_opml(&$variables) {
+function template_preprocess_views_view_opml(&$variables): void {
   $view = $variables['view'];
   $items = $variables['rows'];
 
@@ -992,7 +992,7 @@ function template_preprocess_views_view_opml(&$variables) {
  *   An associative array containing:
  *   - row: The raw results rows.
  */
-function template_preprocess_views_view_row_opml(&$variables) {
+function template_preprocess_views_view_row_opml(&$variables): void {
   $item = $variables['row'];
 
   $variables['attributes'] = new Attribute($item);
@@ -1007,7 +1007,7 @@ function template_preprocess_views_view_row_opml(&$variables) {
  *   An associative array containing:
  *   - form: A render element representing the form.
  */
-function template_preprocess_views_exposed_form(&$variables) {
+function template_preprocess_views_exposed_form(&$variables): void {
   $form = &$variables['form'];
 
   if (!empty($form['q'])) {
@@ -1037,7 +1037,7 @@ function template_preprocess_views_exposed_form(&$variables) {
  *   - parameters: Any extra GET parameters that should be retained, such as
  *     exposed input.
  */
-function template_preprocess_views_mini_pager(&$variables) {
+function template_preprocess_views_mini_pager(&$variables): void {
   /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
   $pager_manager = \Drupal::service('pager.manager');
 

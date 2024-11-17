@@ -115,7 +115,7 @@ function user_is_blocked($name) {
 /**
  * Implements hook_preprocess_HOOK() for block templates.
  */
-function user_preprocess_block(&$variables) {
+function user_preprocess_block(&$variables): void {
   if ($variables['configuration']['provider'] == 'user') {
     switch ($variables['elements']['#plugin_id']) {
       case 'user_login_block':
@@ -137,7 +137,7 @@ function user_preprocess_block(&$variables) {
  *   An associative array containing:
  *   - account: The user account (\Drupal\Core\Session\AccountInterface).
  */
-function template_preprocess_username(&$variables) {
+function template_preprocess_username(&$variables): void {
   $account = $variables['account'] ?: new AnonymousUserSession();
 
   $variables['extra'] = '';
@@ -760,7 +760,7 @@ function user_logout() {
  *       profile being viewed.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_user(&$variables) {
+function template_preprocess_user(&$variables): void {
   $variables['user'] = $variables['elements']['#user'];
   // Helpful $content variable for templates.
   foreach (Element::children($variables['elements']) as $key) {

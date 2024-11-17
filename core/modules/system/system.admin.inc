@@ -25,7 +25,7 @@ use Drupal\Core\Url;
  *     - description: Description of the administrative menu item.
  *     - options: URL options. See \Drupal\Core\Url::fromUri() for details.
  */
-function template_preprocess_admin_block_content(&$variables) {
+function template_preprocess_admin_block_content(&$variables): void {
   if (!empty($variables['content'])) {
     $variables['compact'] = system_admin_compact_mode();
     foreach ($variables['content'] as $key => $item) {
@@ -52,7 +52,7 @@ function template_preprocess_admin_block_content(&$variables) {
  *     will control which container it will be in. This is usually 'left' or
  *     'right'.
  */
-function template_preprocess_admin_page(&$variables) {
+function template_preprocess_admin_page(&$variables): void {
   $variables['system_compact_link'] = [
     '#type' => 'system_compact_link',
   ];
@@ -81,7 +81,7 @@ function template_preprocess_admin_page(&$variables) {
  *   An associative array containing:
  *   - menu_items: An array of modules to be displayed.
  */
-function template_preprocess_system_admin_index(&$variables) {
+function template_preprocess_system_admin_index(&$variables): void {
   $variables['system_compact_link'] = [
     '#type' => 'system_compact_link',
   ];
@@ -131,7 +131,7 @@ function template_preprocess_system_admin_index(&$variables) {
  *
  * @see \Drupal\system\Form\ModulesListForm
  */
-function template_preprocess_system_modules_details(&$variables) {
+function template_preprocess_system_modules_details(&$variables): void {
   $form = $variables['form'];
 
   // Identify modules that are depended on by themes.
@@ -219,7 +219,7 @@ function template_preprocess_system_modules_details(&$variables) {
  *
  * @ingroup themeable
  */
-function template_preprocess_system_modules_uninstall(&$variables) {
+function template_preprocess_system_modules_uninstall(&$variables): void {
   $form = $variables['form'];
   $variables['modules'] = [];
 
@@ -256,7 +256,7 @@ function template_preprocess_system_modules_uninstall(&$variables) {
  *   - theme_groups: An associative array containing groups of themes.
  *   - theme_group_titles: An associative array containing titles of themes.
  */
-function template_preprocess_system_themes_page(&$variables) {
+function template_preprocess_system_themes_page(&$variables): void {
   $groups = [];
   $theme_groups = $variables['theme_groups'];
   $variables['attributes']['id'] = 'system-themes-page';

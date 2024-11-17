@@ -8,7 +8,7 @@
 /**
  * Implements hook_preprocess_image_widget().
  */
-function starterkit_theme_preprocess_image_widget(array &$variables) {
+function starterkit_theme_preprocess_image_widget(array &$variables): void {
   $data = &$variables['data'];
 
   // This prevents image widget templates from rendering preview container HTML

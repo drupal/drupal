@@ -16,7 +16,7 @@ use Drupal\Core\Template\Attribute;
  *   An associative array containing:
  *   - form: A render element representing the form.
  */
-function template_preprocess_language_negotiation_configure_form(&$variables) {
+function template_preprocess_language_negotiation_configure_form(&$variables): void {
   $form =& $variables['form'];
   $variables['language_types'] = [];
 
@@ -102,7 +102,7 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #bundle_label, #title.
  */
-function template_preprocess_language_content_settings_table(&$variables) {
+function template_preprocess_language_content_settings_table(&$variables): void {
   // Add a render element representing the bundle language settings table.
   $element = $variables['element'];
 

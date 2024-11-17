@@ -210,7 +210,7 @@ function node_is_page(NodeInterface $node) {
  *
  * @see \Drupal\node\Controller\NodeController::addPage()
  */
-function template_preprocess_node_add_list(&$variables) {
+function template_preprocess_node_add_list(&$variables): void {
   $variables['types'] = [];
   if (!empty($variables['content'])) {
     foreach ($variables['content'] as $type) {
@@ -228,7 +228,7 @@ function template_preprocess_node_add_list(&$variables) {
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  */
-function node_preprocess_html(&$variables) {
+function node_preprocess_html(&$variables): void {
   // If on an individual node page or node preview page, add the node type to
   // the body classes.
   if (($node = \Drupal::routeMatch()->getParameter('node')) || ($node = \Drupal::routeMatch()->getParameter('node_preview'))) {
@@ -241,7 +241,7 @@ function node_preprocess_html(&$variables) {
 /**
  * Implements hook_preprocess_HOOK() for block templates.
  */
-function node_preprocess_block(&$variables) {
+function node_preprocess_block(&$variables): void {
   if ($variables['configuration']['provider'] == 'node') {
     switch ($variables['elements']['#plugin_id']) {
       case 'node_syndicate_block':
@@ -254,7 +254,7 @@ function node_preprocess_block(&$variables) {
 /**
  * Implements hook_preprocess_HOOK() for node field templates.
  */
-function node_preprocess_field__node(&$variables) {
+function node_preprocess_field__node(&$variables): void {
   // Set a variable 'is_inline' in cases where inline markup is required,
   // without any block elements such as <div>.
 
@@ -319,7 +319,7 @@ function node_theme_suggestions_node(array $variables) {
  * @see hook_entity_type_build()
  * @see \Drupal\Core\Field\BaseFieldDefinition::setDisplayConfigurable()
  */
-function template_preprocess_node(&$variables) {
+function template_preprocess_node(&$variables): void {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
 
   // The teaser variable is deprecated.

@@ -173,7 +173,7 @@ YAML
 
     // Confirm new .theme file.
     $dot_theme_file = $this->getWorkspaceDirectory() . '/themes/generated_from_another_theme/generated_from_another_theme.theme';
-    $this->assertStringContainsString('function generated_from_another_theme_preprocess_image_widget(array &$variables) {', file_get_contents($dot_theme_file));
+    $this->assertStringContainsString('function generated_from_another_theme_preprocess_image_widget(array &$variables): void {', file_get_contents($dot_theme_file));
   }
 
   /**

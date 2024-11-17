@@ -23,7 +23,7 @@ use Drupal\Core\Language\LanguageInterface;
  *   - title_attributes: HTML attributes for the title.
  *   - content_attributes: HTML attributes for the content.
  */
-function template_preprocess_search_result(&$variables) {
+function template_preprocess_search_result(&$variables): void {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   $result = $variables['result'];

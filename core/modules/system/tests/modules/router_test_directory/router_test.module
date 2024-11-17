@@ -17,7 +17,7 @@ use Drupal\Core\Url;
  *
  * @see \Drupal\FunctionalTests\Routing\RouteCachingQueryAlteredTest
  */
-function router_test_preprocess_page(&$variables) {
+function router_test_preprocess_page(&$variables): void {
   $request = \Drupal::request();
   if ($request->getPathInfo() === '/router-test/rejects-query-strings') {
     // Create a URL from the request, e.g. for a breadcrumb or other contextual

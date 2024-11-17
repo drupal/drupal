@@ -24,7 +24,7 @@ use Drupal\breakpoint\BreakpointInterface;
  *   - responsive_image_style_id: A responsive image style.
  *   - url: An optional \Drupal\Core\Url object.
  */
-function template_preprocess_responsive_image_formatter(&$variables) {
+function template_preprocess_responsive_image_formatter(&$variables): void {
   // Provide fallback to standard image if valid responsive image style is not
   // provided in the responsive image formatter.
   $responsive_image_style = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
@@ -76,7 +76,7 @@ function template_preprocess_responsive_image_formatter(&$variables) {
  *   - attributes: Associative array of attributes to be placed in the img tag.
  *   - responsive_image_style_id: The ID of the responsive image style.
  */
-function template_preprocess_responsive_image(&$variables) {
+function template_preprocess_responsive_image(&$variables): void {
   // Make sure that width and height are proper values
   // If they exists we'll output them
   // @see https://www.w3.org/community/respimg/2012/06/18/florians-compromise/

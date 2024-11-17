@@ -15,7 +15,7 @@ use Drupal\Core\Render\Element;
  *   An associative array containing:
  *   - style: \Drupal\image\ImageStyleInterface image style being previewed.
  */
-function template_preprocess_image_style_preview(&$variables) {
+function template_preprocess_image_style_preview(&$variables): void {
 
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
   $file_url_generator = \Drupal::service('file_url_generator');
@@ -120,7 +120,7 @@ function template_preprocess_image_style_preview(&$variables) {
  *   An associative array containing:
  *   - element: An associative array containing the image.
  */
-function template_preprocess_image_anchor(&$variables) {
+function template_preprocess_image_anchor(&$variables): void {
   $element = $variables['element'];
 
   $rows = [];
