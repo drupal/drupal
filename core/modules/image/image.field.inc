@@ -15,7 +15,7 @@ use Drupal\Core\Render\Element;
  *   An associative array containing:
  *   - element: A render element representing the image field widget.
  */
-function template_preprocess_image_widget(&$variables) {
+function template_preprocess_image_widget(&$variables): void {
   $element = $variables['element'];
 
   $variables['attributes'] = ['class' => ['image-widget', 'js-form-managed-file', 'form-managed-file', 'clearfix']];
@@ -40,7 +40,7 @@ function template_preprocess_image_widget(&$variables) {
  *   - image_style: An optional image style.
  *   - url: An optional \Drupal\Core\Url object.
  */
-function template_preprocess_image_formatter(&$variables) {
+function template_preprocess_image_formatter(&$variables): void {
   if ($variables['image_style']) {
     $variables['image'] = [
       '#theme' => 'image_style',

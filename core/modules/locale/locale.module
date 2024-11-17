@@ -439,7 +439,7 @@ function locale_system_file_system_settings_submit(&$form, FormStateInterface $f
 /**
  * Implements hook_preprocess_HOOK() for node templates.
  */
-function locale_preprocess_node(&$variables) {
+function locale_preprocess_node(&$variables): void {
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
   if ($node->language()->getId() != LanguageInterface::LANGCODE_NOT_SPECIFIED) {

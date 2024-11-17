@@ -333,7 +333,7 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
  *   - timestamp:
  *   - text:
  */
-function template_preprocess_time(&$variables) {
+function template_preprocess_time(&$variables): void {
   /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
   $date_formatter = \Drupal::service('date.formatter');
   // Format the 'datetime' attribute based on the timestamp.
@@ -371,7 +371,7 @@ function template_preprocess_time(&$variables) {
  *
  * @see form_process_datetime()
  */
-function template_preprocess_datetime_form(&$variables) {
+function template_preprocess_datetime_form(&$variables): void {
   $element = $variables['element'];
 
   $variables['attributes'] = [];
@@ -397,7 +397,7 @@ function template_preprocess_datetime_form(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #children, #required, #attributes.
  */
-function template_preprocess_datetime_wrapper(&$variables) {
+function template_preprocess_datetime_wrapper(&$variables): void {
   $element = $variables['element'];
 
   if (!empty($element['#title'])) {
@@ -490,7 +490,7 @@ function template_preprocess_datetime_wrapper(&$variables) {
  * @see \Drupal\Core\Utility\LinkGenerator::generate()
  * @see system_page_attachments()
  */
-function template_preprocess_links(&$variables) {
+function template_preprocess_links(&$variables): void {
   $links = $variables['links'];
   $heading = &$variables['heading'];
 
@@ -621,7 +621,7 @@ function template_preprocess_links(&$variables) {
  *   - sizes: The sizes attribute for viewport-based selection of images.
  *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
  */
-function template_preprocess_image(&$variables) {
+function template_preprocess_image(&$variables): void {
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
   $file_url_generator = \Drupal::service('file_url_generator');
 
@@ -757,7 +757,7 @@ function template_preprocess_image(&$variables) {
  *   - empty: The message to display in an extra row if table does not have any
  *     rows.
  */
-function template_preprocess_table(&$variables) {
+function template_preprocess_table(&$variables): void {
   // Format the table columns:
   if (!empty($variables['colgroups'])) {
     foreach ($variables['colgroups'] as &$colgroup) {
@@ -938,7 +938,7 @@ function template_preprocess_table(&$variables) {
  *
  * @see https://www.drupal.org/node/1842756
  */
-function template_preprocess_item_list(&$variables) {
+function template_preprocess_item_list(&$variables): void {
   $variables['wrapper_attributes'] = new Attribute($variables['wrapper_attributes']);
   foreach ($variables['items'] as &$item) {
     $attributes = [];
@@ -997,7 +997,7 @@ function template_preprocess_item_list(&$variables) {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #id, #attributes, #children.
  */
-function template_preprocess_container(&$variables) {
+function template_preprocess_container(&$variables): void {
   $variables['has_parent'] = FALSE;
   $element = $variables['element'];
   // Ensure #attributes is set.
@@ -1028,7 +1028,7 @@ function template_preprocess_container(&$variables) {
  *     dangerous HTML such as <script> tags.
  *   - active: The key for the currently active maintenance task.
  */
-function template_preprocess_maintenance_task_list(&$variables) {
+function template_preprocess_maintenance_task_list(&$variables): void {
   $items = $variables['items'];
   $active = $variables['active'];
 
@@ -1118,7 +1118,7 @@ function _template_preprocess_default_variables() {
  *   An associative array containing:
  *   - page: A render element representing the page.
  */
-function template_preprocess_html(&$variables) {
+function template_preprocess_html(&$variables): void {
   $variables['page'] = $variables['html']['page'];
   unset($variables['html']['page']);
   $variables['page_top'] = NULL;
@@ -1208,7 +1208,7 @@ function template_preprocess_html(&$variables) {
  *
  * See the page.html.twig template for the list of variables.
  */
-function template_preprocess_page(&$variables) {
+function template_preprocess_page(&$variables): void {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   foreach (\Drupal::theme()->getActiveTheme()->getRegions() as $region) {
@@ -1318,7 +1318,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
  *
  * @see system_page_attachments()
  */
-function template_preprocess_maintenance_page(&$variables) {
+function template_preprocess_maintenance_page(&$variables): void {
   // @todo Rename the templates to page--maintenance + page--install.
   template_preprocess_page($variables);
 
@@ -1348,7 +1348,7 @@ function template_preprocess_maintenance_page(&$variables) {
  *
  * @see template_preprocess_maintenance_page()
  */
-function template_preprocess_install_page(&$variables) {
+function template_preprocess_install_page(&$variables): void {
   $installer_active_task = NULL;
   if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE === 'install' && InstallerKernel::installationAttempted()) {
     $installer_active_task = $GLOBALS['install_state']['active_task'];
@@ -1376,7 +1376,7 @@ function template_preprocess_install_page(&$variables) {
  *   An associative array containing:
  *   - elements: An associative array containing properties of the region.
  */
-function template_preprocess_region(&$variables) {
+function template_preprocess_region(&$variables): void {
   // Create the $content variable that templates expect.
   $variables['content'] = $variables['elements']['#children'];
   $variables['region'] = $variables['elements']['#region'];
@@ -1393,7 +1393,7 @@ function template_preprocess_region(&$variables) {
  *   - attributes: A string containing the attributes for the wrapping div.
  *   - title_attributes: A string containing the attributes for the title.
  */
-function template_preprocess_field(&$variables, $hook) {
+function template_preprocess_field(&$variables, $hook): void {
   $element = $variables['element'];
 
   // Creating variables for the template.
@@ -1454,7 +1454,7 @@ function template_preprocess_field(&$variables, $hook) {
  *   An associative array containing:
  *   - element: A render element representing the form element.
  */
-function template_preprocess_field_multiple_value_form(&$variables) {
+function template_preprocess_field_multiple_value_form(&$variables): void {
   $element = $variables['element'];
   $variables['multiple'] = $element['#cardinality_multiple'];
   $variables['attributes'] = $element['#attributes'];
@@ -1569,7 +1569,7 @@ function template_preprocess_field_multiple_value_form(&$variables) {
  *   An associative array containing:
  *   - links: A list of \Drupal\Core\Link objects which should be rendered.
  */
-function template_preprocess_breadcrumb(&$variables) {
+function template_preprocess_breadcrumb(&$variables): void {
   $variables['breadcrumb'] = [];
   /** @var \Drupal\Core\Link $link */
   foreach ($variables['links'] as $key => $link) {
@@ -1598,7 +1598,7 @@ function template_preprocess_breadcrumb(&$variables) {
  *     - #route_parameters: An associative array of the route parameters.
  *     - #quantity: The number of pages in the list.
  */
-function template_preprocess_pager(&$variables) {
+function template_preprocess_pager(&$variables): void {
   $element = $variables['pager']['#element'];
   $parameters = $variables['pager']['#parameters'];
   $quantity = empty($variables['pager']['#quantity']) ? 0 : $variables['pager']['#quantity'];
@@ -1742,7 +1742,7 @@ function template_preprocess_pager(&$variables) {
  *       'localized_options' keys.
  *     - #active: A boolean indicating whether the local task is active.
  */
-function template_preprocess_menu_local_task(&$variables) {
+function template_preprocess_menu_local_task(&$variables): void {
   $link = $variables['element']['#link'];
   $link += [
     'localized_options' => [],
@@ -1774,7 +1774,7 @@ function template_preprocess_menu_local_task(&$variables) {
  *     - #link: A menu link array with 'title', 'url', and (optionally)
  *       'localized_options' keys.
  */
-function template_preprocess_menu_local_action(&$variables) {
+function template_preprocess_menu_local_action(&$variables): void {
   $link = $variables['element']['#link'];
   $link += [
     'localized_options' => [],

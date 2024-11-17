@@ -17,14 +17,14 @@ use Drupal\field_ui\FieldUI;
  *   - elements: An associative array containing a Form API structure to be
  *     rendered as a table.
  */
-function template_preprocess_field_ui_table(&$variables) {
+function template_preprocess_field_ui_table(&$variables): void {
   template_preprocess_table($variables);
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
-function field_ui_preprocess_form_element__new_storage_type(&$variables) {
+function field_ui_preprocess_form_element__new_storage_type(&$variables): void {
   // Add support for a variant string so radios in the add field form can be
   // programmatically distinguished.
   $variables['variant'] = $variables['element']['#variant'] ?? NULL;

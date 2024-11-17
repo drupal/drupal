@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  */
-function theme_test_preprocess_html(&$variables) {
+function theme_test_preprocess_html(&$variables): void {
   $variables['html_attributes']['theme_test_html_attribute'] = 'theme test html attribute value';
   $variables['attributes']['theme_test_body_attribute'] = 'theme test body attribute value';
 
@@ -27,14 +27,14 @@ function theme_test_theme_suggestions_theme_test_preprocess_suggestions($variabl
 /**
  * Implements hook_preprocess_HOOK().
  */
-function theme_test_preprocess_theme_test_preprocess_suggestions(&$variables) {
+function theme_test_preprocess_theme_test_preprocess_suggestions(&$variables): void {
   $variables['foo'] = 'Theme hook implementor=theme_theme_test_preprocess_suggestions().';
 }
 
 /**
  * Tests a module overriding a default hook with a suggestion.
  */
-function theme_test_preprocess_theme_test_preprocess_suggestions__monkey(&$variables) {
+function theme_test_preprocess_theme_test_preprocess_suggestions__monkey(&$variables): void {
   $variables['foo'] = 'Monkey';
 }
 
@@ -47,7 +47,7 @@ function theme_test_preprocess_theme_test_preprocess_suggestions__monkey(&$varia
  *   An associative array containing:
  *   - elements: An associative array containing the properties of the element.
  */
-function template_preprocess_theme_test_render_element(&$variables) {
+function template_preprocess_theme_test_render_element(&$variables): void {
   $variables['attributes']['data-variables-are-preprocessed'] = TRUE;
 }
 
@@ -71,7 +71,7 @@ function theme_test_theme_suggestions_node(array $variables) {
 /**
  * Implements template_preprocess_HOOK() for theme_test_registered_by_module.
  */
-function template_preprocess_theme_test_registered_by_module() {
+function template_preprocess_theme_test_registered_by_module(): void {
 }
 
 /**
@@ -82,6 +82,6 @@ function template_preprocess_theme_test_registered_by_module() {
  * @param array $variables
  *   An associative array of variables.
  */
-function template_preprocess_theme_test_deprecations_preprocess(array &$variables) {
+function template_preprocess_theme_test_deprecations_preprocess(array &$variables): void {
   $variables = array_merge($variables, \Drupal::state()->get('theme_test.theme_test_deprecations_preprocess'));
 }

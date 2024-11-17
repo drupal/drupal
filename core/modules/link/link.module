@@ -20,6 +20,6 @@ use Drupal\Core\Link;
  *   - url_title: The anchor text for the link.
  *   - url: A \Drupal\Core\Url object.
  */
-function template_preprocess_link_formatter_link_separate(&$variables) {
+function template_preprocess_link_formatter_link_separate(&$variables): void {
   $variables['link'] = Link::fromTextAndUrl($variables['url_title'], $variables['url'])->toString();
 }

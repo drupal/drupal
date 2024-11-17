@@ -261,7 +261,7 @@ function system_theme_suggestions_field(array $variables) {
  *   - add_bundle_message: The message shown when there are no bundles. Only
  *     available if the entity type uses bundle entities.
  */
-function template_preprocess_entity_add_list(&$variables) {
+function template_preprocess_entity_add_list(&$variables): void {
   foreach ($variables['bundles'] as $bundle_name => $bundle_info) {
     $variables['bundles'][$bundle_name]['description'] = [
       '#markup' => $bundle_info['description'],
@@ -515,7 +515,7 @@ function _system_page_attachments(array &$page) {
 /**
  * Implements hook_preprocess_HOOK() for block templates.
  */
-function system_preprocess_block(&$variables) {
+function system_preprocess_block(&$variables): void {
   switch ($variables['base_plugin_id']) {
     case 'system_branding_block':
       $variables['site_logo'] = '';
@@ -683,7 +683,7 @@ function _system_is_claro_admin_and_not_active() {
 /**
  * Implements hook_preprocess_toolbar().
  */
-function system_preprocess_toolbar(array &$variables, $hook, $info) {
+function system_preprocess_toolbar(array &$variables, $hook, $info): void {
   // When Claro is the admin theme, Claro overrides the active theme's if that
   // active theme is not Claro. Because of these potential overrides, the
   // toolbar cache should be invalidated any time the default or admin theme

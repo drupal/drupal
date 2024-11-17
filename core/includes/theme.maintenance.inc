@@ -108,7 +108,7 @@ function _drupal_maintenance_theme() {
  *   An associative array containing:
  *   - messages: An array of result messages.
  */
-function template_preprocess_authorize_report(&$variables) {
+function template_preprocess_authorize_report(&$variables): void {
   $messages = [];
   if (!empty($variables['messages'])) {
     foreach ($variables['messages'] as $heading => $logs) {

@@ -23,7 +23,7 @@ use Drupal\media\MediaTypeInterface;
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #menu, #content.
  */
-function template_preprocess_media_library_wrapper(array &$variables) {
+function template_preprocess_media_library_wrapper(array &$variables): void {
   $variables['menu'] = &$variables['element']['menu'];
   $variables['content'] = &$variables['element']['content'];
 }
@@ -38,7 +38,7 @@ function template_preprocess_media_library_wrapper(array &$variables) {
  *   - element: An associative array containing the properties and children of
  *     the element.
  */
-function template_preprocess_media_library_item(array &$variables) {
+function template_preprocess_media_library_item(array &$variables): void {
   $element = &$variables['element'];
   foreach (Element::children($element) as $key) {
     $variables['content'][$key] = $element[$key];
@@ -48,7 +48,7 @@ function template_preprocess_media_library_item(array &$variables) {
 /**
  * Implements hook_preprocess_media().
  */
-function media_library_preprocess_media(&$variables) {
+function media_library_preprocess_media(&$variables): void {
   if ($variables['view_mode'] === 'media_library') {
     /** @var \Drupal\media\MediaInterface $media */
     $media = $variables['media'];
@@ -68,14 +68,14 @@ function media_library_preprocess_media(&$variables) {
 /**
  * Implements hook_preprocess_views_view() for the 'media_library' view.
  */
-function media_library_preprocess_views_view__media_library(array &$variables) {
+function media_library_preprocess_views_view__media_library(array &$variables): void {
   $variables['attributes']['data-view-display-id'] = $variables['view']->current_display;
 }
 
 /**
  * Implements hook_preprocess_views_view_fields().
  */
-function media_library_preprocess_views_view_fields(&$variables) {
+function media_library_preprocess_views_view_fields(&$variables): void {
   // Add classes to media rendered entity field so it can be targeted for
   // JavaScript mouseover and click events.
   if ($variables['view']->id() === 'media_library' && isset($variables['fields']['rendered_entity'])) {

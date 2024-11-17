@@ -11,7 +11,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Implements hook_preprocess_HOOK() for views templates.
  */
-function views_ui_preprocess_views_view(&$variables) {
+function views_ui_preprocess_views_view(&$variables): void {
   $view = $variables['view'];
 
   // Render title for the admin preview.

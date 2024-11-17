@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements THEME_preprocess_twig_theme_test_php_variables().
  */
-function test_theme_preprocess_twig_theme_test_php_variables(&$variables) {
+function test_theme_preprocess_twig_theme_test_php_variables(&$variables): void {
   $variables['php_values'] = _test_theme_twig_php_values();
 }
 
@@ -92,42 +92,42 @@ function test_theme_theme_registry_alter(&$registry) {
  *
  * Implements hook_preprocess_HOOK().
  */
-function test_theme_preprocess_theme_test_preprocess_suggestions(&$variables) {
+function test_theme_preprocess_theme_test_preprocess_suggestions(&$variables): void {
   $variables['foo'] = 'Theme hook implementor=test_theme_preprocess_theme_test_preprocess_suggestions().';
 }
 
 /**
  * Tests a theme overriding a default hook with a suggestion.
  */
-function test_theme_preprocess_theme_test_preprocess_suggestions__suggestion(&$variables) {
+function test_theme_preprocess_theme_test_preprocess_suggestions__suggestion(&$variables): void {
   $variables['foo'] = 'Suggestion';
 }
 
 /**
  * Tests a theme overriding a default hook with a suggestion.
  */
-function test_theme_preprocess_theme_test_preprocess_suggestions__kitten(&$variables) {
+function test_theme_preprocess_theme_test_preprocess_suggestions__kitten(&$variables): void {
   $variables['foo'] = 'Kitten';
 }
 
 /**
  * Tests a theme overriding a default hook with a suggestion.
  */
-function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__flamingo(&$variables) {
+function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__flamingo(&$variables): void {
   $variables['bar'] = 'Flamingo';
 }
 
 /**
  * Tests a preprocess function with suggestions.
  */
-function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__meerkat__tarsier__moose(&$variables) {
+function test_theme_preprocess_theme_test_preprocess_suggestions__kitten__meerkat__tarsier__moose(&$variables): void {
   $variables['bar'] = 'Moose';
 }
 
 /**
  * Tests that a class can be loaded within a .theme file.
  */
-function test_theme_preprocess_theme_test_theme_class(&$variables) {
+function test_theme_preprocess_theme_test_theme_class(&$variables): void {
   if (class_exists('\Drupal\test_theme\ThemeClass')) {
     $variables['message'] = 'Loading ThemeClass was successful.';
   }

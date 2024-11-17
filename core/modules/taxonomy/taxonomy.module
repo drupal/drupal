@@ -47,7 +47,7 @@ function taxonomy_theme_suggestions_taxonomy_term(array $variables) {
  *       'full' or 'teaser'.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_taxonomy_term(&$variables) {
+function template_preprocess_taxonomy_term(&$variables): void {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   $variables['term'] = $variables['elements']['#taxonomy_term'];
   /** @var \Drupal\taxonomy\TermInterface $term */

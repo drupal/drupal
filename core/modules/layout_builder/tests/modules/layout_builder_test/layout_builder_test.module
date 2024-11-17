@@ -29,7 +29,7 @@ function layout_builder_test_node_view(array &$build, EntityInterface $entity, E
 /**
  * Implements hook_preprocess_HOOK() for one-column layout template.
  */
-function layout_builder_test_preprocess_layout__onecol(&$vars) {
+function layout_builder_test_preprocess_layout__onecol(&$vars): void {
   if (!empty($vars['content']['#entity'])) {
     $vars['content']['content'][\Drupal::service('uuid')->generate()] = [
       '#type' => 'markup',
@@ -41,7 +41,7 @@ function layout_builder_test_preprocess_layout__onecol(&$vars) {
 /**
  * Implements hook_preprocess_HOOK() for two-column layout template.
  */
-function layout_builder_test_preprocess_layout__twocol_section(&$vars) {
+function layout_builder_test_preprocess_layout__twocol_section(&$vars): void {
   if (!empty($vars['content']['#entity'])) {
     $vars['content']['first'][\Drupal::service('uuid')->generate()] = [
       '#type' => 'markup',

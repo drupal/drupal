@@ -18,7 +18,7 @@ function search_theme_suggestions_search_result(array $variables) {
 /**
  * Implements hook_preprocess_HOOK() for block templates.
  */
-function search_preprocess_block(&$variables) {
+function search_preprocess_block(&$variables): void {
   if ($variables['plugin_id'] == 'search_form_block') {
     $variables['attributes']['role'] = 'search';
   }

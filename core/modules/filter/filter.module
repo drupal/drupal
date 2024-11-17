@@ -294,7 +294,7 @@ function _filter_tips($format_id, $long = FALSE) {
  *   An associative array containing:
  *   - format: An object representing a text format.
  */
-function template_preprocess_filter_guidelines(&$variables) {
+function template_preprocess_filter_guidelines(&$variables): void {
   $format = $variables['format'];
   $variables['tips'] = [
     '#theme' => 'filter_tips',
@@ -314,7 +314,7 @@ function template_preprocess_filter_guidelines(&$variables) {
  *   An associative array containing:
  *   - attributes: An associative array containing properties of the element.
  */
-function template_preprocess_text_format_wrapper(&$variables) {
+function template_preprocess_text_format_wrapper(&$variables): void {
   $variables['aria_description'] = FALSE;
   // Add element class and id for screen readers.
   if (isset($variables['attributes']['aria-describedby'])) {
@@ -350,7 +350,7 @@ function template_preprocess_text_format_wrapper(&$variables) {
  *     (TRUE), or are in a short format, i.e. suitable to be displayed below a
  *     form element. Defaults to FALSE.
  */
-function template_preprocess_filter_tips(&$variables) {
+function template_preprocess_filter_tips(&$variables): void {
   $tips = $variables['tips'];
 
   foreach ($variables['tips'] as $name => $tip_list) {

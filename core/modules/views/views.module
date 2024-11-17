@@ -17,7 +17,7 @@ use Drupal\views\Views;
  * we haven't got a chance to load that file before Drupal builds the
  * node portion of the theme registry.
  */
-function views_preprocess_node(&$variables) {
+function views_preprocess_node(&$variables): void {
   // The 'view' attribute of the node is added in
   // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['node']->view) && $variables['node']->view->storage->id()) {
@@ -40,7 +40,7 @@ function views_preprocess_node(&$variables) {
 /**
  * Allows view-based comment templates if called from a view.
  */
-function views_preprocess_comment(&$variables) {
+function views_preprocess_comment(&$variables): void {
   // The view data is added to the comment in
   // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['comment']->view) && $variables['comment']->view->storage->id()) {

@@ -10,7 +10,7 @@
  *
  * Converts the markup of #empty for search results.
  */
-function stable9_preprocess_item_list__search_results(&$variables) {
+function stable9_preprocess_item_list__search_results(&$variables): void {
   if (isset($variables['empty']['#tag'])) {
     $variables['empty']['#tag'] = 'h3';
   }
@@ -21,7 +21,7 @@ function stable9_preprocess_item_list__search_results(&$variables) {
  *
  * Adds BC classes that were previously added by the Views module.
  */
-function stable9_preprocess_views_view(&$variables) {
+function stable9_preprocess_views_view(&$variables): void {
   if (!empty($variables['attributes']['class'])) {
     $bc_classes = preg_replace('/[^a-zA-Z0-9- ]/', '-', $variables['attributes']['class']);
     $variables['attributes']['class'] = array_merge($variables['attributes']['class'], $bc_classes);

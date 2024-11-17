@@ -46,7 +46,7 @@ function views_test_data_handler_test_access_callback_argument($argument = FALSE
 /**
  * Implements hook_preprocess_HOOK() for views table templates.
  */
-function views_test_data_preprocess_views_view_table(&$variables) {
+function views_test_data_preprocess_views_view_table(&$variables): void {
   if ($variables['view']->storage->id() == 'test_view_render') {
     $views_render_test = \Drupal::state()->get('views_render.test');
     $views_render_test++;
@@ -65,7 +65,7 @@ function views_test_data_preprocess_views_view_table(&$variables) {
  *   - options: Various view options, including the row style mapping.
  *   - view: The view object.
  */
-function template_preprocess_views_view_mapping_test(&$variables) {
+function template_preprocess_views_view_mapping_test(&$variables): void {
   $variables['element'] = [];
 
   foreach ($variables['rows'] as $delta => $row) {

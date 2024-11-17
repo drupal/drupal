@@ -113,7 +113,7 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
 /**
  * Implements hook_preprocess_HOOK() for block templates.
  */
-function comment_preprocess_block(&$variables) {
+function comment_preprocess_block(&$variables): void {
   if ($variables['configuration']['provider'] == 'comment') {
     $variables['attributes']['role'] = 'navigation';
   }
@@ -138,7 +138,7 @@ function comment_preprocess_block(&$variables) {
  *   - elements: An associative array containing the comment and entity objects.
  *     Array keys: #comment, #commented_entity.
  */
-function template_preprocess_comment(&$variables) {
+function template_preprocess_comment(&$variables): void {
   /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
   $date_formatter = \Drupal::service('date.formatter');
   /** @var \Drupal\comment\CommentInterface $comment */
@@ -278,7 +278,7 @@ function template_preprocess_comment(&$variables) {
  * @todo Rename to template_preprocess_field__comment() once
  *   https://www.drupal.org/node/939462 is resolved.
  */
-function comment_preprocess_field(&$variables) {
+function comment_preprocess_field(&$variables): void {
   $element = $variables['element'];
   if ($element['#field_type'] == 'comment') {
     // Provide contextual information.
