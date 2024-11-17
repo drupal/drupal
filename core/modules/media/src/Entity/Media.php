@@ -100,7 +100,8 @@ use Drupal\user\EntityOwnerTrait;
     'revision_user' => 'revision_user',
     'revision_created' => 'revision_created',
     'revision_log_message' => 'revision_log_message',
-  ])]
+  ],
+  )]
 class Media extends EditorialContentEntityBase implements MediaInterface {
 
   use EntityOwnerTrait;

@@ -44,7 +44,8 @@ use Drupal\language\ContentLanguageSettingsInterface;
     'target_bundle',
     'default_langcode',
     'language_alterable',
-  ])]
+  ],
+  )]
 class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguageSettingsInterface {
 
   /**

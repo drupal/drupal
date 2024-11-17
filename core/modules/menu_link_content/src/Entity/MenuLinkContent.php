@@ -70,7 +70,8 @@ use Drupal\menu_link_content\MenuLinkListBuilder;
     'revision_user' => 'revision_user',
     'revision_created' => 'revision_created',
     'revision_log_message' => 'revision_log_message',
-  ])]
+  ],
+  )]
 class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkContentInterface {
 
   /**

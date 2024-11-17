@@ -74,7 +74,8 @@ use Drupal\user\Entity\EntityPermissionsRouteProvider;
     'source_configuration',
     'field_map',
     'status',
-  ])]
+  ],
+  )]
 class MediaType extends ConfigEntityBundleBase implements MediaTypeInterface, EntityWithPluginCollectionInterface {
 
   /**
