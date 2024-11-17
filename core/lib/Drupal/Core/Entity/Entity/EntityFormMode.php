@@ -44,7 +44,8 @@ use Drupal\Core\Entity\EntityFormModeInterface;
     'description',
     'targetEntityType',
     'cache',
-  ])]
+  ],
+  )]
 class EntityFormMode extends EntityDisplayModeBase implements EntityFormModeInterface {
 
 }

@@ -27,7 +27,8 @@ use Drupal\system\DateFormatAccessControlHandler;
     'label',
     'locked',
     'pattern',
-  ])]
+  ],
+  )]
 class DateFormat extends ConfigEntityBase implements DateFormatInterface {
 
   /**

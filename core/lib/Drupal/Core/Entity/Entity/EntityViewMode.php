@@ -46,7 +46,8 @@ use Drupal\Core\Entity\EntityViewModeInterface;
     'description',
     'targetEntityType',
     'cache',
-  ])]
+  ],
+  )]
 class EntityViewMode extends EntityDisplayModeBase implements EntityViewModeInterface {
 
 }

@@ -54,7 +54,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'size_value',
     'protected_property',
     'array_property',
-  ])]
+  ],
+  )]
 class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
 
   /**

@@ -45,7 +45,8 @@ use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
     'mode',
     'content',
     'hidden',
-  ])]
+  ],
+  )]
 class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayInterface {
 
   /**

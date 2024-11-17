@@ -46,7 +46,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
     'mode',
     'content',
     'hidden',
-  ])]
+  ],
+  )]
 class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayInterface {
 
   /**
