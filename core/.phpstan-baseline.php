@@ -26465,18 +26465,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/locale/locale.bulk.inc',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function locale_config_batch_refresh_name\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/locale.bulk.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function locale_config_batch_set_config_langcodes\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/locale.bulk.inc',
-];
-$ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Function locale_config_batch_update_components\\(\\) should return array but return statement is missing\\.$#',
 	'count' => 1,
