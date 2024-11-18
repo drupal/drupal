@@ -13,7 +13,8 @@ use Drupal\Component\Serialization\Yaml as ComponentYaml;
 class Yaml extends ComponentYaml {
 
   public static function decode($raw) {
-    if ($class = Settings::get('yaml_parser_class')) {
+    $class = Settings::get('yaml_parser_class');
+    if ($class && $class !== TRUE) {
       return $class::decode($raw);
     }
 
