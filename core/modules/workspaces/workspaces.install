@@ -61,7 +61,7 @@ function workspaces_install(): void {
 /**
  * Implements hook_schema().
  */
-function workspaces_schema() {
+function workspaces_schema(): array {
   $schema['workspace_association'] = [
     'description' => 'Stores the association between entity revisions and their workspace.',
     'fields' => [

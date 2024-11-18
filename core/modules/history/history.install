@@ -8,7 +8,7 @@
 /**
  * Implements hook_schema().
  */
-function history_schema() {
+function history_schema(): array {
   $schema['history'] = [
     'description' => 'A record of which {users} have read which {node}s.',
     'fields' => [

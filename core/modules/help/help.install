@@ -8,7 +8,7 @@
 /**
  * Implements hook_schema().
  */
-function help_schema() {
+function help_schema(): array {
   $schema['help_search_items'] = [
     'description' => 'Stores information about indexed help search items',
     'fields' => [

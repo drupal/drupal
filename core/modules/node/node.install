@@ -40,7 +40,7 @@ function node_requirements($phase) {
 /**
  * Implements hook_schema().
  */
-function node_schema() {
+function node_schema(): array {
   $schema['node_access'] = [
     'description' => 'Identifies which realm/grant pairs a user must possess in order to view, update, or delete specific nodes.',
     'fields' => [

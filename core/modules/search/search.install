@@ -8,7 +8,7 @@
 /**
  * Implements hook_schema().
  */
-function search_schema() {
+function search_schema(): array {
   $schema['search_dataset'] = [
     'description' => 'Stores items that will be searched.',
     'fields' => [

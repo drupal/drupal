@@ -577,7 +577,7 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  *
  * @ingroup schemaapi
  */
-function hook_schema() {
+function hook_schema(): array {
   $schema['users_data'] = [
     'description' => 'Stores module data as key/value pairs per user.',
     'fields' => [

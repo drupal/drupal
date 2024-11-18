@@ -8,7 +8,7 @@
 /**
  * Implements hook_schema().
  */
-function file_schema() {
+function file_schema(): array {
   $schema['file_usage'] = [
     'description' => 'Track where a file is used.',
     'fields' => [

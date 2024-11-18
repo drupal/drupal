@@ -43,7 +43,7 @@ function layout_builder_install(): void {
 /**
  * Implements hook_schema().
  */
-function layout_builder_schema() {
+function layout_builder_schema(): array {
   $schema['inline_block_usage'] = [
     'description' => 'Track where a block_content entity is used.',
     'fields' => [

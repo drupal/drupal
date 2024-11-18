@@ -35,7 +35,7 @@ function update_test_schema_requirements($phase) {
  *
  * The schema defined here will vary on state to allow for update hook testing.
  */
-function update_test_schema_schema() {
+function update_test_schema_schema(): array {
   $schema_version = \Drupal::state()->get('update_test_schema_version', 8000);
   $table = [
     'fields' => [
