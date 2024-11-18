@@ -149,16 +149,16 @@ class TestDrupal6SqlBase extends DrupalSqlBase {
    */
   public function fields() {
     return [
-      'filename' => $this->t('The path of the primary file for this item.'),
-      'name' => $this->t('The name of the item; e.g. node.'),
-      'type' => $this->t('The type of the item, either module, theme, or theme_engine.'),
-      'owner' => $this->t("A theme's 'parent'. Can be either a theme or an engine."),
-      'status' => $this->t('Boolean indicating whether or not this item is enabled.'),
-      'throttle' => $this->t('Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.'),
-      'bootstrap' => $this->t("Boolean indicating whether this module is loaded during Drupal's early bootstrapping phase (e.g. even before the page cache is consulted)."),
-      'schema_version' => $this->t("The module's database schema version number."),
-      'weight' => $this->t("The order in which this module's hooks should be invoked."),
-      'info' => $this->t("A serialized array containing information from the module's .info file."),
+      'filename' => 'The path of the primary file for this item.',
+      'name' => 'The name of the item; e.g. node.',
+      'type' => 'The type of the item, either module, theme, or theme_engine.',
+      'owner' => "A theme's 'parent'. Can be either a theme or an engine.",
+      'status' => 'Boolean indicating whether or not this item is enabled.',
+      'throttle' => 'Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.',
+      'bootstrap' => "Boolean indicating whether this module is loaded during Drupal's early bootstrapping phase (e.g. even before the page cache is consulted).",
+      'schema_version' => "The module's database schema version number.",
+      'weight' => "The order in which this module's hooks should be invoked.",
+      'info' => "A serialized array containing information from the module's .info file.",
     ];
   }
 

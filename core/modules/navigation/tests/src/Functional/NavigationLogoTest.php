@@ -77,7 +77,7 @@ class NavigationLogoTest extends BrowserTestBase {
     $edit = [
       'logo_provider' => 'hide',
     ];
-    $this->submitForm($edit, t('Save configuration'));
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->assertSession()->elementNotExists('css', 'a.admin-toolbar__logo');
 

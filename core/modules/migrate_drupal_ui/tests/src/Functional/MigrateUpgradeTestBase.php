@@ -239,7 +239,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    */
   protected function assertUpgrade(array $entity_counts) {
     $session = $this->assertSession();
-    $session->pageTextContains(t('Congratulations, you upgraded Drupal!'));
+    $session->pageTextContains('Congratulations, you upgraded Drupal!');
 
     // Assert the count of entities after the upgrade. First, reset all the
     // statics after migration to ensure entities are loadable.

@@ -180,12 +180,11 @@ class BlockContentListTest extends BlockContentTestBase {
     // Create test block for other user tests.
     $test_block = $this->createBlockContent($label);
 
-    $link_text = t('Add content block');
     // Test as a user with view only permissions.
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkNotExists($link_text);
+    $this->assertSession()->linkNotExists('Add content block');
     $this->assertSession()->linkByHrefNotExists('admin/content/block/' . $test_block->id());
     $this->assertSession()->linkByHrefNotExists('admin/content/block/' . $test_block->id() . '/delete');
 
@@ -195,7 +194,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->linkExists($link_text);
+    $this->assertSession()->linkExists('Add content block');
     $this->assertSession()->linkByHrefExists('admin/content/block/' . $test_block->id());
     $this->assertSession()->linkByHrefExists('admin/content/block/' . $test_block->id() . '/delete');
   }

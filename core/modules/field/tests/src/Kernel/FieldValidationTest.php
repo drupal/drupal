@@ -83,7 +83,7 @@ class FieldValidationTest extends FieldKernelTestBase {
       }
       else {
         $value = -1;
-        $expected_violations[$delta . '.value'][] = t('%name does not accept the value -1.', ['%name' => $this->fieldTestData->field->getLabel()]);
+        $expected_violations[$delta . '.value'][] = $this->fieldTestData->field->getLabel() . ' does not accept the value -1.';
       }
       $entity->{$this->fieldTestData->field_name}[] = $value;
     }

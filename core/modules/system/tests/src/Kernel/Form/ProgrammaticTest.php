@@ -73,7 +73,7 @@ class ProgrammaticTest extends KernelTestBase {
     $errors = $form_state->getErrors();
     $valid_form = empty($errors);
     $input_values = print_r($values, TRUE);
-    $validation_errors = $valid_form ? t('None') : implode(' ', $errors);
+    $validation_errors = $valid_form ? 'None' : implode(' ', $errors);
     $this->assertSame($valid_form, $valid_input, sprintf('Input values: %s<br />Validation handler errors: %s', $input_values, $validation_errors));
 
     // We check submitted values only if we have a valid input.

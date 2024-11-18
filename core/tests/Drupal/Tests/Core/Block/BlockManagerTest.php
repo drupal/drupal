@@ -13,7 +13,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Psr\Log\LoggerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Core\Block\BlockManager
@@ -21,8 +20,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * @group block
  */
 class BlockManagerTest extends UnitTestCase {
-
-  use StringTranslationTrait;
 
   /**
    * The block manager under test.
@@ -61,22 +58,22 @@ class BlockManagerTest extends UnitTestCase {
     // that are purposefully not in alphabetical order.
     $discovery->getDefinitions()->willReturn([
       'broken' => [
-        'admin_label' => $this->t('Broken/Missing'),
-        'category' => $this->t('Block'),
+        'admin_label' => 'Broken/Missing',
+        'category' => 'Block',
         'class' => Broken::class,
         'provider' => 'core',
       ],
       'block1' => [
-        'admin_label' => $this->t('Coconut'),
-        'category' => $this->t('Group 2'),
+        'admin_label' => 'Coconut',
+        'category' => 'Group 2',
       ],
       'block2' => [
-        'admin_label' => $this->t('Apple'),
-        'category' => $this->t('Group 1'),
+        'admin_label' => 'Apple',
+        'category' => 'Group 1',
       ],
       'block3' => [
-        'admin_label' => $this->t('Banana'),
-        'category' => $this->t('Group 2'),
+        'admin_label' => 'Banana',
+        'category' => 'Group 2',
       ],
     ]);
     // Force the discovery object onto the block manager.

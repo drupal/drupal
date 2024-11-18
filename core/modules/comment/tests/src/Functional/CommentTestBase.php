@@ -64,7 +64,7 @@ abstract class CommentTestBase extends BrowserTestBase {
     // child classes may specify the standard profile.
     $types = NodeType::loadMultiple();
     if (empty($types['article'])) {
-      $this->drupalCreateContentType(['type' => 'article', 'name' => t('Article')]);
+      $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     }
 
     // Create two test users.
