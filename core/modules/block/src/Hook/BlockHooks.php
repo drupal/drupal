@@ -186,7 +186,7 @@ class BlockHooks {
    * Implements hook_block_build_BASE_BLOCK_ID_alter().
    */
   #[Hook('block_build_local_actions_block_alter')]
-  public function blockBuildLocalActionsBlockAlter(array &$build, BlockPluginInterface $block) {
+  public function blockBuildLocalActionsBlockAlter(array &$build, BlockPluginInterface $block): void {
     $build['#lazy_builder_preview'] = [
       '#type' => 'container',
       '#attributes' => [

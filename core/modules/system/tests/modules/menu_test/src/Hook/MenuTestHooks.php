@@ -17,7 +17,7 @@ class MenuTestHooks {
    * Implements hook_menu_links_discovered_alter().
    */
   #[Hook('menu_links_discovered_alter')]
-  public function menuLinksDiscoveredAlter(&$links) {
+  public function menuLinksDiscoveredAlter(&$links): void {
     // Many of the machine names here are slightly different from the route name.
     // Since the machine name is arbitrary, this helps ensure that core does not
     // add mistaken assumptions about the correlation.
@@ -36,7 +36,7 @@ class MenuTestHooks {
    * Implements hook_menu_local_tasks_alter().
    */
   #[Hook('menu_local_tasks_alter')]
-  public function menuLocalTasksAlter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
+  public function menuLocalTasksAlter(&$data, $route_name, RefinableCacheableDependencyInterface &$cacheability): void {
     if (in_array($route_name, ['menu_test.tasks_default'])) {
       $data['tabs'][0]['foo'] = [
         '#theme' => 'menu_local_task',

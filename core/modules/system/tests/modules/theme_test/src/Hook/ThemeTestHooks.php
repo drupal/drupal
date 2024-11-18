@@ -60,7 +60,7 @@ class ThemeTestHooks {
    * Implements hook_theme_registry_alter().
    */
   #[Hook('theme_registry_alter')]
-  public function themeRegistryAlter(&$registry) {
+  public function themeRegistryAlter(&$registry): void {
     $registry['theme_test_preprocess_callback']['preprocess functions'][] = ['\Drupal\theme_test\ThemeTestPreprocess', 'preprocess'];
   }
 
@@ -76,7 +76,7 @@ class ThemeTestHooks {
    * Implements hook_theme_suggestions_alter().
    */
   #[Hook('theme_suggestions_alter')]
-  public function themeSuggestionsAlter(array &$suggestions, array $variables, $hook) {
+  public function themeSuggestionsAlter(array &$suggestions, array $variables, $hook): void {
     \Drupal::messenger()->addStatus('theme_test_theme_suggestions_alter' . '() executed for ' . $hook . '.');
   }
 
@@ -84,7 +84,7 @@ class ThemeTestHooks {
    * Implements hook_theme_suggestions_HOOK_alter().
    */
   #[Hook('theme_suggestions_theme_test_suggestions_alter')]
-  public function themeSuggestionsThemeTestSuggestionsAlter(array &$suggestions, array $variables) {
+  public function themeSuggestionsThemeTestSuggestionsAlter(array &$suggestions, array $variables): void {
     \Drupal::messenger()->addStatus('theme_test_theme_suggestions_theme_test_suggestions_alter' . '() executed.');
   }
 
@@ -94,7 +94,7 @@ class ThemeTestHooks {
    * @see \Drupal\system\Tests\Theme\ThemeInfoTest::testChanges()
    */
   #[Hook('system_info_alter')]
-  public function systemInfoAlter(array &$info, Extension $file, $type) {
+  public function systemInfoAlter(array &$info, Extension $file, $type): void {
     if ($type == 'theme' && $file->getName() == 'test_theme' && \Drupal::state()->get('theme_test.modify_info_files')) {
       // Add a library to see if the system picks it up.
       $info += ['libraries' => []];

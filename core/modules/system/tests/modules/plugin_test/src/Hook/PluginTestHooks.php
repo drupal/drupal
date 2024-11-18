@@ -29,7 +29,7 @@ class PluginTestHooks {
    * Implements hook_plugin_test_alter().
    */
   #[Hook('plugin_test_alter')]
-  public function pluginTestAlter(&$definitions) {
+  public function pluginTestAlter(&$definitions): void {
     foreach ($definitions as &$definition) {
       $definition['altered'] = TRUE;
     }

@@ -105,7 +105,7 @@ class NavigationHooks {
    * Implements hook_menu_links_discovered_alter().
    */
   #[Hook('menu_links_discovered_alter')]
-  public function menuLinksDiscoveredAlter(&$links) {
+  public function menuLinksDiscoveredAlter(&$links): void {
     $navigation_links = \Drupal::classResolver(NavigationContentLinks::class);
     assert($navigation_links instanceof NavigationContentLinks);
     $navigation_links->addMenuLinks($links);
@@ -117,7 +117,7 @@ class NavigationHooks {
    * Implements hook_block_build_BASE_BLOCK_ID_alter().
    */
   #[Hook('block_build_local_tasks_block_alter')]
-  public function blockBuildLocalTasksBlockAlter(array &$build, BlockPluginInterface $block) {
+  public function blockBuildLocalTasksBlockAlter(array &$build, BlockPluginInterface $block): void {
     $navigation_renderer = \Drupal::service('navigation.renderer');
     assert($navigation_renderer instanceof NavigationRenderer);
     $navigation_renderer->removeLocalTasks($build, $block);
@@ -129,7 +129,7 @@ class NavigationHooks {
    * Curate the blocks available in the Layout Builder "Add Block" UI.
    */
   #[Hook('plugin_filter_block__layout_builder_alter')]
-  public function pluginFilterBlockLayoutBuilderAlter(array &$definitions, array $extra) {
+  public function pluginFilterBlockLayoutBuilderAlter(array &$definitions, array $extra): void {
     if (($extra['section_storage'] ?? NULL) instanceof NavigationSectionStorage) {
       // Remove all blocks other than the ones we support.
       $navigation_safe = ['navigation_user', 'navigation_shortcuts', 'navigation_menu'];
@@ -144,7 +144,7 @@ class NavigationHooks {
    * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
    */
   #[Hook('plugin_filter_layout__layout_builder_alter')]
-  public function pluginFilterLayoutLayoutBuilderAlter(array &$definitions, array $extra) {
+  public function pluginFilterLayoutLayoutBuilderAlter(array &$definitions, array $extra): void {
     if (($extra['section_storage'] ?? NULL) instanceof NavigationSectionStorage) {
       // We don't allow adding a new section.
       $definitions = [];
@@ -168,7 +168,7 @@ class NavigationHooks {
    * Implements hook_element_info_alter().
    */
   #[Hook('element_info_alter')]
-  public function elementInfoAlter(array &$info) {
+  public function elementInfoAlter(array &$info): void {
     if (array_key_exists('layout_builder', $info)) {
       $info['layout_builder']['#pre_render'][] = [RenderCallbacks::class, 'alterLayoutBuilder'];
     }

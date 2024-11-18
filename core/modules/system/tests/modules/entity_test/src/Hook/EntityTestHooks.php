@@ -95,7 +95,7 @@ class EntityTestHooks {
    * Implements hook_entity_base_field_info_alter().
    */
   #[Hook('entity_base_field_info_alter')]
-  public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type): void {
     $state = \Drupal::state();
     if ($entity_type->id() == 'entity_test_mulrev' && ($names = $state->get('entity_test.field_definitions.translatable'))) {
       foreach ($names as $name => $value) {
@@ -136,7 +136,7 @@ class EntityTestHooks {
    * Implements hook_entity_bundle_info_alter().
    */
   #[Hook('entity_bundle_info_alter')]
-  public function entityBundleInfoAlter(&$bundles) {
+  public function entityBundleInfoAlter(&$bundles): void {
     $entity_info = \Drupal::entityTypeManager()->getDefinitions();
     $state = \Drupal::state();
     foreach ($bundles as $entity_type_id => &$all_bundle_info) {
@@ -157,7 +157,7 @@ class EntityTestHooks {
    * Implements hook_entity_view_mode_info_alter().
    */
   #[Hook('entity_view_mode_info_alter')]
-  public function entityViewModeInfoAlter(&$view_modes) {
+  public function entityViewModeInfoAlter(&$view_modes): void {
     $entity_info = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_info as $entity_type => $info) {
       if ($entity_info[$entity_type]->getProvider() == 'entity_test' && !isset($view_modes[$entity_type])) {
@@ -181,7 +181,7 @@ class EntityTestHooks {
    * Implements hook_entity_form_mode_info_alter().
    */
   #[Hook('entity_form_mode_info_alter')]
-  public function entityFormModeInfoAlter(&$form_modes) {
+  public function entityFormModeInfoAlter(&$form_modes): void {
     $entity_info = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_info as $entity_type => $info) {
       if ($entity_info[$entity_type]->getProvider() == 'entity_test') {
@@ -322,7 +322,7 @@ class EntityTestHooks {
    * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
    */
   #[Hook('entity_field_access_alter')]
-  public function entityFieldAccessAlter(array &$grants, array $context) {
+  public function entityFieldAccessAlter(array &$grants, array $context): void {
     if ($context['field_definition']->getName() == 'field_test_text' && $context['items']->value == 'access alter value') {
       $grants[':default'] = AccessResult::forbidden()->inheritCacheability($grants[':default'])->addCacheableDependency($context['items']->getEntity());
     }
@@ -332,7 +332,7 @@ class EntityTestHooks {
    * Implements hook_entity_form_mode_alter().
    */
   #[Hook('entity_form_mode_alter')]
-  public function entityFormModeAlter(&$form_mode, EntityInterface $entity) {
+  public function entityFormModeAlter(&$form_mode, EntityInterface $entity): void {
     if ($entity->getEntityTypeId() === 'entity_test' && $entity->get('name')->value === 'compact_form_mode') {
       $form_mode = 'compact';
     }
@@ -342,7 +342,7 @@ class EntityTestHooks {
    * Implements hook_entity_form_display_alter().
    */
   #[Hook('entity_form_display_alter')]
-  public function entityFormDisplayAlter(EntityFormDisplay $form_display, $context) {
+  public function entityFormDisplayAlter(EntityFormDisplay $form_display, $context): void {
     // Make the field_test_text field 42 characters for entity_test_mul.
     if ($context['entity_type'] == 'entity_test') {
       if ($component_options = $form_display->getComponent('field_test_text')) {
@@ -379,7 +379,7 @@ class EntityTestHooks {
    * Implements hook_entity_operation_alter().
    */
   #[Hook('entity_operation_alter')]
-  public function entityOperationAlter(array &$operations, EntityInterface $entity) {
+  public function entityOperationAlter(array &$operations, EntityInterface $entity): void {
     $valid_entity_type_ids = ['user_role', 'block'];
     if (in_array($entity->getEntityTypeId(), $valid_entity_type_ids)) {
       if (\Drupal::service('router.route_provider')->getRouteByName("entity.{$entity->getEntityTypeId()}.test_operation")) {
@@ -598,7 +598,7 @@ class EntityTestHooks {
    * Implements hook_entity_display_build_alter().
    */
   #[Hook('entity_display_build_alter')]
-  public function entityDisplayBuildAlter(&$build, $context) {
+  public function entityDisplayBuildAlter(&$build, $context): void {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $context['entity'];
     if ($entity->getEntityTypeId() == 'entity_test' && $entity->bundle() == 'display_build_alter_bundle') {
@@ -677,7 +677,7 @@ class EntityTestHooks {
    * Implements hook_query_entity_test_access_alter().
    */
   #[Hook('query_entity_test_access_alter')]
-  public function queryEntityTestAccessAlter(AlterableInterface $query) {
+  public function queryEntityTestAccessAlter(AlterableInterface $query): void {
     if (!\Drupal::state()->get('entity_test_query_access')) {
       return;
     }

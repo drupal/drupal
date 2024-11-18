@@ -82,7 +82,7 @@ class ContentTranslationHooks {
    * Implements hook_language_types_info_alter().
    */
   #[Hook('language_types_info_alter')]
-  public function languageTypesInfoAlter(array &$language_types) {
+  public function languageTypesInfoAlter(array &$language_types): void {
     // Make content language negotiation configurable by removing the 'locked'
     // flag.
     $language_types[LanguageInterface::TYPE_CONTENT]['locked'] = FALSE;
@@ -217,7 +217,7 @@ class ContentTranslationHooks {
    * Implements hook_entity_bundle_info_alter().
    */
   #[Hook('entity_bundle_info_alter')]
-  public function entityBundleInfoAlter(&$bundles) {
+  public function entityBundleInfoAlter(&$bundles): void {
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager */
     $content_translation_manager = \Drupal::service('content_translation.manager');
     foreach ($bundles as $entity_type_id => &$info) {
@@ -279,7 +279,7 @@ class ContentTranslationHooks {
    * @see Drupal\image\Plugin\Field\FieldType\ImageItem
    */
   #[Hook('field_info_alter')]
-  public function fieldInfoAlter(&$info) {
+  public function fieldInfoAlter(&$info): void {
     foreach ($info as $key => $settings) {
       // Supply the column_groups key if it's not there.
       if (empty($settings['column_groups'])) {
@@ -308,7 +308,7 @@ class ContentTranslationHooks {
    * Implements hook_views_data_alter().
    */
   #[Hook('views_data_alter')]
-  public function viewsDataAlter(array &$data) {
+  public function viewsDataAlter(array &$data): void {
     // Add the content translation entity link definition to Views data for entity
     // types having translation enabled.
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();
@@ -333,7 +333,7 @@ class ContentTranslationHooks {
    * Implements hook_menu_links_discovered_alter().
    */
   #[Hook('menu_links_discovered_alter')]
-  public function menuLinksDiscoveredAlter(array &$links) {
+  public function menuLinksDiscoveredAlter(array &$links): void {
     // Clarify where translation settings are located.
     $links['language.content_settings_page']['title'] = new TranslatableMarkup('Content language and translation');
     $links['language.content_settings_page']['description'] = new TranslatableMarkup('Configure language and translation support for content.');
@@ -385,7 +385,7 @@ class ContentTranslationHooks {
    * Performs language fallback for inaccessible translations.
    */
   #[Hook('language_fallback_candidates_entity_view_alter')]
-  public function languageFallbackCandidatesEntityViewAlter(&$candidates, $context) {
+  public function languageFallbackCandidatesEntityViewAlter(&$candidates, $context): void {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $context['data'];
     $entity_type_id = $entity->getEntityTypeId();
@@ -486,7 +486,7 @@ class ContentTranslationHooks {
    * Implements hook_element_info_alter().
    */
   #[Hook('element_info_alter')]
-  public function elementInfoAlter(&$type) {
+  public function elementInfoAlter(&$type): void {
     if (isset($type['language_configuration'])) {
       $type['language_configuration']['#process'][] = 'content_translation_language_configuration_element_process';
     }

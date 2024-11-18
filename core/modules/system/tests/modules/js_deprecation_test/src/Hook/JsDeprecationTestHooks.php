@@ -15,7 +15,7 @@ class JsDeprecationTestHooks {
    * Implements hook_js_settings_alter().
    */
   #[Hook('js_settings_alter')]
-  public function jsSettingsAlter(&$settings) {
+  public function jsSettingsAlter(&$settings): void {
     $settings['suppressDeprecationErrors'] = FALSE;
   }
 

@@ -16,7 +16,7 @@ class MediaTestOembedHooks {
    * Implements hook_oembed_resource_url_alter().
    */
   #[Hook('oembed_resource_url_alter')]
-  public function oembedResourceUrlAlter(array &$parsed_url, Provider $provider) {
+  public function oembedResourceUrlAlter(array &$parsed_url, Provider $provider): void {
     if ($provider->getName() === 'Vimeo') {
       $parsed_url['query']['altered'] = 1;
     }

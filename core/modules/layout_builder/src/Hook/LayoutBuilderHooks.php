@@ -147,7 +147,7 @@ class LayoutBuilderHooks {
    * @see layout_builder_module_implements_alter()
    */
   #[Hook('entity_view_alter')]
-  public function entityViewAlter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  public function entityViewAlter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
     // Only replace extra fields when Layout Builder has been used to alter the
     // build. See \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::buildMultiple().
     if (isset($build['_layout_builder']) && !Element::isEmpty($build['_layout_builder'])) {
@@ -180,7 +180,7 @@ class LayoutBuilderHooks {
    * Implements hook_entity_build_defaults_alter().
    */
   #[Hook('entity_build_defaults_alter')]
-  public function entityBuildDefaultsAlter(array &$build, EntityInterface $entity, $view_mode) {
+  public function entityBuildDefaultsAlter(array &$build, EntityInterface $entity, $view_mode): void {
     // Contextual links are removed for entities viewed in Layout Builder's UI.
     // The route.name.is_layout_builder_ui cache context accounts for this
     // difference.
@@ -229,7 +229,7 @@ class LayoutBuilderHooks {
    * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
    */
   #[Hook('plugin_filter_block__layout_builder_alter')]
-  public function pluginFilterBlockLayoutBuilderAlter(array &$definitions, array $extra) {
+  public function pluginFilterBlockLayoutBuilderAlter(array &$definitions, array $extra): void {
     // Remove blocks that are not useful within Layout Builder.
     unset($definitions['system_messages_block']);
     unset($definitions['help_block']);
@@ -245,7 +245,7 @@ class LayoutBuilderHooks {
    * Implements hook_plugin_filter_TYPE_alter().
    */
   #[Hook('plugin_filter_block_alter')]
-  public function pluginFilterBlockAlter(array &$definitions, array $extra, $consumer) {
+  public function pluginFilterBlockAlter(array &$definitions, array $extra, $consumer): void {
     // @todo Determine the 'inline_block' blocks should be allowed outside
     //   of layout_builder https://www.drupal.org/node/2979142.
     if ($consumer !== 'layout_builder' || !isset($extra['list']) || $extra['list'] !== 'inline_blocks') {
@@ -278,7 +278,7 @@ class LayoutBuilderHooks {
    * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
    */
   #[Hook('plugin_filter_block__block_ui_alter')]
-  public function pluginFilterBlockBlockUiAlter(array &$definitions, array $extra) {
+  public function pluginFilterBlockBlockUiAlter(array &$definitions, array $extra): void {
     foreach ($definitions as $id => $definition) {
       // Filter out any layout_builder-provided block that has required context
       // definitions.
@@ -298,7 +298,7 @@ class LayoutBuilderHooks {
    * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
    */
   #[Hook('plugin_filter_layout__layout_builder_alter')]
-  public function pluginFilterLayoutLayoutBuilderAlter(array &$definitions, array $extra) {
+  public function pluginFilterLayoutLayoutBuilderAlter(array &$definitions, array $extra): void {
     // Remove layouts provide by layout discovery that are not needed because of
     // layouts provided by this module.
     $duplicate_layouts = [
@@ -327,7 +327,7 @@ class LayoutBuilderHooks {
    * Implements hook_plugin_filter_TYPE_alter().
    */
   #[Hook('plugin_filter_layout_alter')]
-  public function pluginFilterLayoutAlter(array &$definitions, array $extra, $consumer) {
+  public function pluginFilterLayoutAlter(array &$definitions, array $extra, $consumer): void {
     // Hide the blank layout plugin from listings.
     unset($definitions['layout_builder_blank']);
   }
@@ -336,7 +336,7 @@ class LayoutBuilderHooks {
    * Implements hook_system_breadcrumb_alter().
    */
   #[Hook('system_breadcrumb_alter')]
-  public function systemBreadcrumbAlter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
+  public function systemBreadcrumbAlter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context): void {
     // Remove the extra 'Manage display' breadcrumb for Layout Builder defaults.
     if ($route_match->getRouteObject() && $route_match->getRouteObject()->hasOption('_layout_builder') && $route_match->getParameter('section_storage_type') === 'defaults') {
       $links = array_filter($breadcrumb->getLinks(), function (Link $link) use ($route_match) {
@@ -372,7 +372,7 @@ class LayoutBuilderHooks {
    * Implements hook_theme_registry_alter().
    */
   #[Hook('theme_registry_alter')]
-  public function themeRegistryAlter(&$theme_registry) {
+  public function themeRegistryAlter(&$theme_registry): void {
     // Move our preprocess to run after
     // content_translation_preprocess_language_content_settings_table().
     if (!empty($theme_registry['language_content_settings_table']['preprocess functions'])) {
@@ -389,13 +389,12 @@ class LayoutBuilderHooks {
    * Implements hook_theme_suggestions_HOOK_alter().
    */
   #[Hook('theme_suggestions_field_alter')]
-  public function themeSuggestionsFieldAlter(&$suggestions, array $variables) {
+  public function themeSuggestionsFieldAlter(&$suggestions, array $variables): void {
     $element = $variables['element'];
     if (isset($element['#third_party_settings']['layout_builder']['view_mode'])) {
       // See system_theme_suggestions_field().
       $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'] . '__' . $element['#third_party_settings']['layout_builder']['view_mode'];
     }
-    return $suggestions;
   }
 
 }

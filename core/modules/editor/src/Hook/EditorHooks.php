@@ -61,7 +61,7 @@ class EditorHooks {
    * of text editors.
    */
   #[Hook('menu_links_discovered_alter')]
-  public function menuLinksDiscoveredAlter(array &$links) {
+  public function menuLinksDiscoveredAlter(array &$links): void {
     $links['filter.admin_overview']['title'] = new TranslatableMarkup('Text formats and editors');
     $links['filter.admin_overview']['description'] = new TranslatableMarkup('Select and configure text editors, and how content is filtered when displayed.');
   }
@@ -76,7 +76,7 @@ class EditorHooks {
    * @see \Drupal\filter\Element\TextFormat
    */
   #[Hook('element_info_alter')]
-  public function elementInfoAlter(&$types) {
+  public function elementInfoAlter(&$types): void {
     $types['text_format']['#pre_render'][] = 'element.editor:preRenderTextFormat';
   }
 

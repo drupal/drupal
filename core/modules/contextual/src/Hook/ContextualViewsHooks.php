@@ -17,7 +17,7 @@ class ContextualViewsHooks {
    * Implements hook_views_data_alter().
    */
   #[Hook('views_data_alter')]
-  public function viewsDataAlter(&$data) {
+  public function viewsDataAlter(&$data): void {
     $data['views']['contextual_links'] = [
       'title' => t('Contextual Links'),
       'help' => t('Display fields in a contextual links menu.'),

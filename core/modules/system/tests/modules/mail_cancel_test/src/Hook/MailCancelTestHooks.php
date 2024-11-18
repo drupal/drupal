@@ -19,7 +19,7 @@ class MailCancelTestHooks {
    * @see MailTestCase::testCancelMessage()
    */
   #[Hook('mail_alter')]
-  public function mailAlter(&$message) {
+  public function mailAlter(&$message): void {
     if ($message['id'] == 'mail_cancel_test_cancel_test') {
       $message['send'] = FALSE;
     }

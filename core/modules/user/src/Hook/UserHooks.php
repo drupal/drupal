@@ -109,7 +109,7 @@ class UserHooks {
    * Implements hook_js_settings_alter().
    */
   #[Hook('js_settings_alter')]
-  public function jsSettingsAlter(&$settings, AttachedAssetsInterface $assets) {
+  public function jsSettingsAlter(&$settings, AttachedAssetsInterface $assets): void {
     // Provide the user ID in drupalSettings to allow JavaScript code to customize
     // the experience for the end user, rather than the server side, which would
     // break the render cache.
@@ -184,7 +184,7 @@ class UserHooks {
    * accessibility.
    */
   #[Hook('user_view_alter')]
-  public function userViewAlter(array &$build, UserInterface $account, EntityViewDisplayInterface $display) {
+  public function userViewAlter(array &$build, UserInterface $account, EntityViewDisplayInterface $display): void {
     if (!empty($build['user_picture']) && user_picture_enabled()) {
       foreach (Element::children($build['user_picture']) as $key) {
         if (!isset($build['user_picture'][$key]['#item']) || !$build['user_picture'][$key]['#item'] instanceof ImageItem) {
@@ -209,7 +209,7 @@ class UserHooks {
    * @see user_user_logout()
    */
   #[Hook('template_preprocess_default_variables_alter')]
-  public function templatePreprocessDefaultVariablesAlter(&$variables) {
+  public function templatePreprocessDefaultVariablesAlter(&$variables): void {
     $user = \Drupal::currentUser();
     $variables['user'] = clone $user;
     // Remove password and session IDs, since themes should not need nor see them.
@@ -337,7 +337,7 @@ class UserHooks {
    * Implements hook_element_info_alter().
    */
   #[Hook('element_info_alter')]
-  public function elementInfoAlter(array &$types) {
+  public function elementInfoAlter(array &$types): void {
     if (isset($types['password_confirm'])) {
       $types['password_confirm']['#process'][] = 'user_form_process_password_confirm';
     }

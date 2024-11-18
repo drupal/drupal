@@ -19,7 +19,7 @@ class LocaleTestDevelopmentReleaseHooks {
    * 8.0.0-alpha102-dev is the simulated version.
    */
   #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type) {
+  public function systemInfoAlter(&$info, Extension $file, $type): void {
     if (isset($info['package']) && $info['package'] == 'Core') {
       $info['version'] = '8.0.0-alpha102-dev';
     }
@@ -31,7 +31,7 @@ class LocaleTestDevelopmentReleaseHooks {
    * Add a contrib module with a dev release to list of translatable modules.
    */
   #[Hook('locale_translation_projects_alter')]
-  public function localeTranslationProjectsAlter(&$projects) {
+  public function localeTranslationProjectsAlter(&$projects): void {
     $projects['contrib'] = [
       'name' => 'contrib',
       'info' => [

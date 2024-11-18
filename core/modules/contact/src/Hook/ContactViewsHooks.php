@@ -17,7 +17,7 @@ class ContactViewsHooks {
    * Implements hook_views_data_alter().
    */
   #[Hook('views_data_alter')]
-  public function viewsDataAlter(&$data) {
+  public function viewsDataAlter(&$data): void {
     $data['users']['contact'] = [
       'field' => [
         'title' => t('Contact link'),

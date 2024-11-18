@@ -15,7 +15,7 @@ class ConfigSchemaTestHooks {
    * Implements hook_config_schema_info_alter().
    */
   #[Hook('config_schema_info_alter')]
-  public function configSchemaInfoAlter(&$definitions) {
+  public function configSchemaInfoAlter(&$definitions): void {
     if (\Drupal::state()->get('config_schema_test_exception_add')) {
       $definitions['config_schema_test.hook_added_definition'] = $definitions['config_schema_test.hook'];
     }

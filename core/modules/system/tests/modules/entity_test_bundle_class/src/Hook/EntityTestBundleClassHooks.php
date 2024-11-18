@@ -23,7 +23,7 @@ class EntityTestBundleClassHooks {
    * Implements hook_entity_bundle_info_alter().
    */
   #[Hook('entity_bundle_info_alter')]
-  public function entityBundleInfoAlter(&$bundles) {
+  public function entityBundleInfoAlter(&$bundles): void {
     if (!empty($bundles['entity_test']['bundle_class'])) {
       $bundles['entity_test']['bundle_class']['class'] = EntityTestBundleClass::class;
     }

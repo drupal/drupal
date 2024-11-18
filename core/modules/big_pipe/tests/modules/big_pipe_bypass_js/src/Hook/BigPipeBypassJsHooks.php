@@ -17,7 +17,7 @@ class BigPipeBypassJsHooks {
    * Disables Big Pipe JavaScript by removing the js file from the library.
    */
   #[Hook('library_info_alter')]
-  public function libraryInfoAlter(&$libraries, $extension) {
+  public function libraryInfoAlter(&$libraries, $extension): void {
     if ($extension === 'big_pipe') {
       unset($libraries['big_pipe']['js']);
     }

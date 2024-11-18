@@ -158,7 +158,7 @@ class LanguageHooks {
    * @see \Drupal\Core\Render\Element\Select
    */
   #[Hook('element_info_alter')]
-  public function elementInfoAlter(&$type) {
+  public function elementInfoAlter(&$type): void {
     // Alter the language_select element so that it will be rendered like a select
     // field.
     if (isset($type['language_select'])) {
@@ -190,7 +190,7 @@ class LanguageHooks {
    * Implements hook_entity_base_field_info_alter().
    */
   #[Hook('entity_base_field_info_alter')]
-  public function entityBaseFieldInfoAlter(&$fields) {
+  public function entityBaseFieldInfoAlter(&$fields): void {
     foreach ($fields as $definition) {
       // Set configurable form display for language fields with display options.
       if ($definition->getType() == 'language') {
@@ -291,7 +291,7 @@ class LanguageHooks {
    * Implements hook_field_info_alter().
    */
   #[Hook('field_info_alter')]
-  public function fieldInfoAlter(&$info) {
+  public function fieldInfoAlter(&$info): void {
     // Change the default behavior of language field.
     $info['language']['class'] = '\Drupal\language\DefaultLanguageItem';
   }
@@ -321,7 +321,7 @@ class LanguageHooks {
    * Implements hook_tour_tips_alter().
    */
   #[Hook('tour_tips_alter')]
-  public function tourTipsAlter(array &$tour_tips, EntityInterface $entity) {
+  public function tourTipsAlter(array &$tour_tips, EntityInterface $entity): void {
     $module_extension_list = \Drupal::service('extension.list.module');
     foreach ($tour_tips as $tour_tip) {
       if ($tour_tip->get('id') == 'language-overview') {
@@ -366,7 +366,7 @@ class LanguageHooks {
    * enabled and we can't be sure of that in the LanguageManager.
    */
   #[Hook('language_types_info_alter')]
-  public function languageTypesInfoAlter(array &$language_types) {
+  public function languageTypesInfoAlter(array &$language_types): void {
     $language_types[LanguageInterface::TYPE_CONTENT]['fixed'] = [LanguageNegotiationUI::METHOD_ID];
     $language_types[LanguageInterface::TYPE_URL]['fixed'] = [
       LanguageNegotiationUrl::METHOD_ID,

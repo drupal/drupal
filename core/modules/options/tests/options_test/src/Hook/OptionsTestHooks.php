@@ -26,7 +26,7 @@ class OptionsTestHooks {
    * Implements hook_options_list_alter().
    */
   #[Hook('options_list_alter')]
-  public function optionsListAlter(array &$options, array $context) {
+  public function optionsListAlter(array &$options, array $context): void {
     if ($context['fieldDefinition']->getName() === 'card_4' && $context['widget']->getPluginId() === 'options_select') {
       // Rename _none option.
       $options['_none'] = '- Select something -';

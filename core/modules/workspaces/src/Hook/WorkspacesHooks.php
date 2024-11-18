@@ -89,7 +89,7 @@ class WorkspacesHooks {
    * Implements hook_field_info_alter().
    */
   #[Hook('field_info_alter')]
-  public function fieldInfoAlter(&$definitions) {
+  public function fieldInfoAlter(&$definitions): void {
     \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityTypeInfo::class)->fieldInfoAlter($definitions);
   }
 
@@ -220,8 +220,8 @@ class WorkspacesHooks {
    * Implements hook_views_query_alter().
    */
   #[Hook('views_query_alter')]
-  public function viewsQueryAlter(ViewExecutable $view, QueryPluginBase $query) {
-    return \Drupal::service('class_resolver')->getInstanceFromDefinition(ViewsQueryAlter::class)->alterQuery($view, $query);
+  public function viewsQueryAlter(ViewExecutable $view, QueryPluginBase $query): void {
+    \Drupal::service('class_resolver')->getInstanceFromDefinition(ViewsQueryAlter::class)->alterQuery($view, $query);
   }
 
   /**

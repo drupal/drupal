@@ -176,7 +176,7 @@ class CommentHooks {
    * Implements hook_node_links_alter().
    */
   #[Hook('node_links_alter')]
-  public function nodeLinksAlter(array &$links, NodeInterface $node, array &$context) {
+  public function nodeLinksAlter(array &$links, NodeInterface $node, array &$context): void {
     // Comment links are only added to node entity type for backwards
     // compatibility. Should you require comment links for other entity types you
     // can do so by implementing a new field formatter.
@@ -213,7 +213,7 @@ class CommentHooks {
    * Implements hook_ENTITY_TYPE_view_alter() for node entities.
    */
   #[Hook('node_view_alter')]
-  public function nodeViewAlter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display) {
+  public function nodeViewAlter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display): void {
     if (\Drupal::moduleHandler()->moduleExists('history')) {
       $build['#attributes']['data-history-node-id'] = $node->id();
     }
@@ -234,7 +234,7 @@ class CommentHooks {
    * Implements hook_field_info_entity_type_ui_definitions_alter().
    */
   #[Hook('field_info_entity_type_ui_definitions_alter')]
-  public function fieldInfoEntityTypeUiDefinitionsAlter(array &$ui_definitions, string $entity_type_id) {
+  public function fieldInfoEntityTypeUiDefinitionsAlter(array &$ui_definitions, string $entity_type_id): void {
     if (!_comment_entity_uses_integer_id($entity_type_id)) {
       unset($ui_definitions['comment']);
     }
@@ -521,7 +521,7 @@ class CommentHooks {
    * Implements hook_field_type_category_info_alter().
    */
   #[Hook('field_type_category_info_alter')]
-  public function fieldTypeCategoryInfoAlter(&$definitions) {
+  public function fieldTypeCategoryInfoAlter(&$definitions): void {
     // The `comment` field type belongs in the `general` category, so the
     // libraries need to be attached using an alter hook.
     $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'comment/drupal.comment-icon';

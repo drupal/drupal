@@ -31,7 +31,7 @@ class CommentTestHooks {
    * Implements hook_comment_links_alter().
    */
   #[Hook('comment_links_alter')]
-  public function commentLinksAlter(array &$links, CommentInterface &$entity, array &$context) {
+  public function commentLinksAlter(array &$links, CommentInterface &$entity, array &$context): void {
     // Allow tests to enable or disable this alter hook.
     if (!\Drupal::state()->get('comment_test_links_alter_enabled', FALSE)) {
       return;

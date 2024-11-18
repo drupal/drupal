@@ -54,7 +54,7 @@ class NodeTestHooks {
    * Implements hook_ENTITY_TYPE_build_defaults_alter() for node entities.
    */
   #[Hook('node_build_defaults_alter')]
-  public function nodeBuildDefaultsAlter(array &$build, NodeInterface &$node, $view_mode = 'full') {
+  public function nodeBuildDefaultsAlter(array &$build, NodeInterface &$node, $view_mode = 'full'): void {
     if ($view_mode == 'rss') {
       $node->rss_namespaces['xmlns:test'] = 'http://example.com/test-namespace';
     }
@@ -108,7 +108,7 @@ class NodeTestHooks {
    * Implements hook_node_access_records_alter().
    */
   #[Hook('node_access_records_alter')]
-  public function nodeAccessRecordsAlter(&$grants, NodeInterface $node) {
+  public function nodeAccessRecordsAlter(&$grants, NodeInterface $node): void {
     if (!empty($grants)) {
       foreach ($grants as $key => $grant) {
         // Alter grant from test_page_realm to test_alter_realm and modify the gid.
@@ -124,7 +124,7 @@ class NodeTestHooks {
    * Implements hook_node_grants_alter().
    */
   #[Hook('node_grants_alter')]
-  public function nodeGrantsAlter(&$grants, AccountInterface $account, $operation) {
+  public function nodeGrantsAlter(&$grants, AccountInterface $account, $operation): void {
     // Return an empty array of grants to prove that we can alter by reference.
     $grants = [];
   }
@@ -165,7 +165,7 @@ class NodeTestHooks {
    * Implements hook_entity_view_mode_alter().
    */
   #[Hook('entity_view_mode_alter')]
-  public function entityViewModeAlter(&$view_mode, EntityInterface $entity) {
+  public function entityViewModeAlter(&$view_mode, EntityInterface $entity): void {
     // Only alter the view mode if we are on the test callback.
     $change_view_mode = \Drupal::state()->get('node_test_change_view_mode', '');
     if ($change_view_mode) {

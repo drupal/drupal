@@ -203,7 +203,7 @@ class Ckeditor5Hooks {
    * Implements hook_library_info_alter().
    */
   #[Hook('library_info_alter')]
-  public function libraryInfoAlter(&$libraries, $extension) {
+  public function libraryInfoAlter(&$libraries, $extension): void {
     if ($extension === 'filter') {
       $libraries['drupal.filter.admin']['dependencies'][] = 'ckeditor5/internal.drupal.ckeditor5.filter.admin';
     }
@@ -301,7 +301,7 @@ class Ckeditor5Hooks {
    * Implements hook_js_alter().
    */
   #[Hook('js_alter')]
-  public function jsAlter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language) {
+  public function jsAlter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language): void {
     // This file means CKEditor 5 translations are in use on the page.
     // @see locale_js_alter()
     $placeholder_file = 'core/assets/vendor/ckeditor5/translation.js';
@@ -347,7 +347,7 @@ class Ckeditor5Hooks {
    * Implements hook_config_schema_info_alter().
    */
   #[Hook('config_schema_info_alter')]
-  public function configSchemaInfoAlter(&$definitions) {
+  public function configSchemaInfoAlter(&$definitions): void {
     // In \Drupal\Tests\config\Functional\ConfigImportAllTest, this hook may be
     // called without ckeditor5.pair.schema.yml being active.
     if (!isset($definitions['ckeditor5_valid_pair__format_and_editor'])) {

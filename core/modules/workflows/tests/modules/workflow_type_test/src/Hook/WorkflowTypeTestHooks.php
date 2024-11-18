@@ -19,7 +19,7 @@ class WorkflowTypeTestHooks {
    * Implements hook_workflow_type_info_alter().
    */
   #[Hook('workflow_type_info_alter')]
-  public function workflowTypeInfoAlter(&$definitions) {
+  public function workflowTypeInfoAlter(&$definitions): void {
     // Allow tests to override the workflow type definitions.
     $state = \Drupal::state();
     if ($state->get('workflow_type_test.plugin_definitions') !== NULL) {

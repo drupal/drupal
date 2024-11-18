@@ -195,7 +195,7 @@ class ViewsViewsHooks {
    * in views_views_data().
    */
   #[Hook('views_data_alter')]
-  public function viewsDataAlter(&$data) {
+  public function viewsDataAlter(&$data): void {
     $entity_type_manager = \Drupal::entityTypeManager();
     if (!$entity_type_manager->hasDefinition('field_storage_config')) {
       return;

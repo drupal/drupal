@@ -112,7 +112,7 @@ class HelpHooks {
    * Implements hook_block_view_BASE_BLOCK_ID_alter().
    */
   #[Hook('block_view_help_block_alter')]
-  public function blockViewHelpBlockAlter(array &$build, BlockPluginInterface $block) {
+  public function blockViewHelpBlockAlter(array &$build, BlockPluginInterface $block): void {
     // Assume that most users do not need or want to perform contextual actions on
     // the help block, so don't needlessly draw attention to it.
     unset($build['#contextual_links']);

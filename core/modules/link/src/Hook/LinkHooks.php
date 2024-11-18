@@ -73,7 +73,7 @@ class LinkHooks {
    * Implements hook_field_type_category_info_alter().
    */
   #[Hook('field_type_category_info_alter')]
-  public function fieldTypeCategoryInfoAlter(&$definitions) {
+  public function fieldTypeCategoryInfoAlter(&$definitions): void {
     // The `link` field type belongs in the `general` category, so the libraries
     // need to be attached using an alter hook.
     $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'link/drupal.link-icon';

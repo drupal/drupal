@@ -81,7 +81,7 @@ class PathHooks {
    * Implements hook_entity_base_field_info_alter().
    */
   #[Hook('entity_base_field_info_alter')]
-  public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type): void {
     /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
     if ($entity_type->id() === 'path_alias') {
       $fields['langcode']->setDisplayOptions('form', [
@@ -126,7 +126,7 @@ class PathHooks {
    * Implements hook_field_widget_single_element_form_alter().
    */
   #[Hook('field_widget_single_element_form_alter')]
-  public function fieldWidgetSingleElementFormAlter(&$element, FormStateInterface $form_state, $context) {
+  public function fieldWidgetSingleElementFormAlter(&$element, FormStateInterface $form_state, $context): void {
     $field_definition = $context['items']->getFieldDefinition();
     $field_name = $field_definition->getName();
     $entity_type = $field_definition->getTargetEntityTypeId();

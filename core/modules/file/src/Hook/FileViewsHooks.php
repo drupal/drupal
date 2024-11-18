@@ -42,7 +42,7 @@ class FileViewsHooks {
    * Views integration to provide reverse relationships on file fields.
    */
   #[Hook('field_views_data_views_data_alter')]
-  public function fieldViewsDataViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage) {
+  public function fieldViewsDataViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage): void {
     $entity_type_id = $field_storage->getTargetEntityTypeId();
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_type = $entity_type_manager->getDefinition($entity_type_id);

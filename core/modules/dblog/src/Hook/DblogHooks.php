@@ -44,7 +44,7 @@ class DblogHooks {
    * Implements hook_menu_links_discovered_alter().
    */
   #[Hook('menu_links_discovered_alter')]
-  public function menuLinksDiscoveredAlter(&$links) {
+  public function menuLinksDiscoveredAlter(&$links): void {
     if (\Drupal::moduleHandler()->moduleExists('search')) {
       $links['dblog.search'] = [
         'title' => new TranslatableMarkup('Top search phrases'),
@@ -53,7 +53,6 @@ class DblogHooks {
         'parent' => 'system.admin_reports',
       ];
     }
-    return $links;
   }
 
   /**

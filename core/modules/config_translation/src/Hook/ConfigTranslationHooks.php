@@ -197,7 +197,7 @@ class ConfigTranslationHooks {
    * Implements hook_config_schema_info_alter().
    */
   #[Hook('config_schema_info_alter')]
-  public function configSchemaInfoAlter(&$definitions) {
+  public function configSchemaInfoAlter(&$definitions): void {
     $map = [
       'label' => '\Drupal\config_translation\FormElement\Textfield',
       'text' => '\Drupal\config_translation\FormElement\Textarea',

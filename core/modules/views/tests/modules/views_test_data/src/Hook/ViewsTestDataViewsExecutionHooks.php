@@ -47,7 +47,7 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_field_views_data_alter().
    */
   #[Hook('field_views_data_alter')]
-  public function fieldViewsDataAlter(&$data, FieldStorageConfigInterface $field_storage, $module) {
+  public function fieldViewsDataAlter(&$data, FieldStorageConfigInterface $field_storage, $module): void {
     \Drupal::state()->set('views_hook_test_field_views_data_alter', TRUE);
   }
 
@@ -139,7 +139,7 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_views_query_alter().
    */
   #[Hook('views_query_alter')]
-  public function viewsQueryAlter(ViewExecutable $view) {
+  public function viewsQueryAlter(ViewExecutable $view): void {
     \Drupal::state()->set('views_hook_test_views_query_alter', TRUE);
   }
 

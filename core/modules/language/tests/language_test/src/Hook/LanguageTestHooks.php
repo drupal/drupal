@@ -52,7 +52,7 @@ class LanguageTestHooks {
    * Implements hook_language_types_info_alter().
    */
   #[Hook('language_types_info_alter')]
-  public function languageTypesInfoAlter(array &$language_types) {
+  public function languageTypesInfoAlter(array &$language_types): void {
     if (\Drupal::state()->get('language_test.content_language_type')) {
       $language_types[LanguageInterface::TYPE_CONTENT]['locked'] = FALSE;
       unset($language_types[LanguageInterface::TYPE_CONTENT]['fixed']);
@@ -71,7 +71,7 @@ class LanguageTestHooks {
    * Implements hook_language_negotiation_info_alter().
    */
   #[Hook('language_negotiation_info_alter')]
-  public function languageNegotiationInfoAlter(array &$negotiation_info) {
+  public function languageNegotiationInfoAlter(array &$negotiation_info): void {
     if (\Drupal::state()->get('language_test.language_negotiation_info_alter')) {
       unset($negotiation_info[LanguageNegotiationUI::METHOD_ID]);
     }
@@ -81,7 +81,7 @@ class LanguageTestHooks {
    * Implements hook_language_fallback_candidates_alter().
    */
   #[Hook('language_fallback_candidates_alter')]
-  public function languageFallbackCandidatesAlter(array &$candidates, array $context) {
+  public function languageFallbackCandidatesAlter(array &$candidates, array $context): void {
     if (\Drupal::state()->get('language_test.fallback_alter.candidates')) {
       unset($candidates[LanguageInterface::LANGCODE_NOT_SPECIFIED]);
     }
@@ -91,7 +91,7 @@ class LanguageTestHooks {
    * Implements hook_language_fallback_candidates_OPERATION_alter().
    */
   #[Hook('language_fallback_candidates_test_alter')]
-  public function languageFallbackCandidatesTestAlter(array &$candidates, array $context) {
+  public function languageFallbackCandidatesTestAlter(array &$candidates, array $context): void {
     if (\Drupal::state()->get('language_test.fallback_operation_alter.candidates')) {
       $langcode = LanguageInterface::LANGCODE_NOT_APPLICABLE;
       $candidates[$langcode] = $langcode;
@@ -110,7 +110,7 @@ class LanguageTestHooks {
    * Implements hook_language_switch_links_alter().
    */
   #[Hook('language_switch_links_alter')]
-  public function languageSwitchLinksAlter(array &$links, $type, Url $url) {
+  public function languageSwitchLinksAlter(array &$links, $type, Url $url): void {
     // Record which languages had links passed in.
     \Drupal::state()->set('language_test.language_switch_link_ids', array_keys($links));
   }

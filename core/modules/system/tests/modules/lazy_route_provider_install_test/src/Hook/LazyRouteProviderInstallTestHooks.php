@@ -15,7 +15,7 @@ class LazyRouteProviderInstallTestHooks {
    * Implements hook_menu_links_discovered_alter().
    */
   #[Hook('menu_links_discovered_alter')]
-  public function menuLinksDiscoveredAlter(&$links) {
+  public function menuLinksDiscoveredAlter(&$links): void {
     $message = \Drupal::state()->get('lazy_route_provider_install_test_menu_links_discovered_alter', 'success');
     try {
       // Ensure that calling this does not cause a recursive rebuild.

@@ -50,7 +50,7 @@ class EditorTestHooks {
    * Implements hook_editor_js_settings_alter().
    */
   #[Hook('editor_js_settings_alter')]
-  public function editorJsSettingsAlter(&$settings) {
+  public function editorJsSettingsAlter(&$settings): void {
     // Allow tests to enable or disable this alter hook.
     if (!\Drupal::state()->get('editor_test_js_settings_alter_enabled', FALSE)) {
       return;
@@ -64,7 +64,7 @@ class EditorTestHooks {
    * Implements hook_editor_xss_filter_alter().
    */
   #[Hook('editor_xss_filter_alter')]
-  public function editorXssFilterAlter(&$editor_xss_filter_class, FilterFormatInterface $format, ?FilterFormatInterface $original_format = NULL) {
+  public function editorXssFilterAlter(&$editor_xss_filter_class, FilterFormatInterface $format, ?FilterFormatInterface $original_format = NULL): void {
     // Allow tests to enable or disable this alter hook.
     if (!\Drupal::state()->get('editor_test_editor_xss_filter_alter_enabled', FALSE)) {
       return;
@@ -79,7 +79,7 @@ class EditorTestHooks {
    * Implements hook_editor_info_alter().
    */
   #[Hook('editor_info_alter')]
-  public function editorInfoAlter(&$items) {
+  public function editorInfoAlter(&$items): void {
     if (!\Drupal::state()->get('editor_test_give_me_a_trex_thanks', FALSE)) {
       unset($items['trex']);
     }

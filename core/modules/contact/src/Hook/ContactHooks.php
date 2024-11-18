@@ -89,7 +89,7 @@ class ContactHooks {
    * email address configured.
    */
   #[Hook('menu_local_tasks_alter')]
-  public function menuLocalTasksAlter(&$data, $route_name) {
+  public function menuLocalTasksAlter(&$data, $route_name): void {
     if ($route_name == 'entity.user.canonical' && isset($data['tabs'][0])) {
       foreach ($data['tabs'][0] as $href => $tab_data) {
         if ($href == 'entity.user.contact_form') {
@@ -223,7 +223,7 @@ class ContactHooks {
    * Implements hook_rest_resource_alter().
    */
   #[Hook('rest_resource_alter')]
-  public function restResourceAlter(&$definitions) {
+  public function restResourceAlter(&$definitions): void {
     $definitions['entity:contact_message']['class'] = ContactMessageResource::class;
   }
 

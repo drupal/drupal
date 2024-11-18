@@ -17,7 +17,7 @@ class ConfigTranslationTestHooks {
    * Implements hook_system_info_alter().
    */
   #[Hook('system_info_alter')]
-  public function systemInfoAlter(array &$info, Extension $file, $type) {
+  public function systemInfoAlter(array &$info, Extension $file, $type): void {
     // @see \Drupal\config_translation\Tests\ConfigTranslationUiThemeTest
     if ($file->getType() == 'theme' && $file->getName() == 'config_translation_test_theme') {
       $info['hidden'] = FALSE;
@@ -38,7 +38,7 @@ class ConfigTranslationTestHooks {
    * Implements hook_config_translation_info_alter().
    */
   #[Hook('config_translation_info_alter')]
-  public function configTranslationInfoAlter(&$info) {
+  public function configTranslationInfoAlter(&$info): void {
     if (\Drupal::state()->get('config_translation_test_config_translation_info_alter')) {
       // Limit account settings config files to only one of them.
       $info['entity.user.admin_form']['names'] = ['user.settings'];

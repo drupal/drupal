@@ -49,7 +49,7 @@ class TelephoneHooks {
    * Implements hook_field_formatter_info_alter().
    */
   #[Hook('field_formatter_info_alter')]
-  public function fieldFormatterInfoAlter(&$info) {
+  public function fieldFormatterInfoAlter(&$info): void {
     $info['string']['field_types'][] = 'telephone';
   }
 
@@ -57,7 +57,7 @@ class TelephoneHooks {
    * Implements hook_field_type_category_info_alter().
    */
   #[Hook('field_type_category_info_alter')]
-  public function fieldTypeCategoryInfoAlter(&$definitions) {
+  public function fieldTypeCategoryInfoAlter(&$definitions): void {
     // The `telephone` field type belongs in the `general` category, so the
     // libraries need to be attached using an alter hook.
     $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'telephone/drupal.telephone-icon';

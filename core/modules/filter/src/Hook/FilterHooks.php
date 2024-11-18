@@ -103,7 +103,7 @@ class FilterHooks {
    * @see _filter_html_image_secure_process()
    */
   #[Hook('filter_secure_image_alter')]
-  public function filterSecureImageAlter(&$image) {
+  public function filterSecureImageAlter(&$image): void {
     // Turn an invalid image into an error indicator.
     $image->setAttribute('src', base_path() . 'core/misc/icons/e32700/error.svg');
     $image->setAttribute('alt', t('Image removed.'));
