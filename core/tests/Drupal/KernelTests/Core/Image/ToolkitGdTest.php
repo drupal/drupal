@@ -515,11 +515,9 @@ class ToolkitGdTest extends KernelTestBase {
   public function testGetRequirements(): void {
     $this->assertEquals([
       'version' => [
-        'title' => t('GD library'),
+        'title' => 'GD library',
         'value' => gd_info()['GD Version'],
-        'description' => t("Supported image file formats: %formats.", [
-          '%formats' => implode(', ', ['GIF', 'JPEG', 'PNG', 'WEBP']),
-        ]),
+        'description' => sprintf("Supported image file formats: %s.", implode(', ', ['GIF', 'JPEG', 'PNG', 'WEBP'])),
       ],
     ], $this->imageFactory->get()->getToolkit()->getRequirements());
   }

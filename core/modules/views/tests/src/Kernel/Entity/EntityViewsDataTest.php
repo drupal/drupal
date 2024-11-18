@@ -89,19 +89,19 @@ class EntityViewsDataTest extends KernelTestBase {
 
     // Base fields for the test entity types.
     $this->commonBaseFields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The name of the test entity.'))
+      ->setLabel('Name')
+      ->setDescription('The name of the test entity.')
       ->setTranslatable(TRUE)
       ->setSetting('max_length', 32);
 
     $this->commonBaseFields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Authored on'))
-      ->setDescription(t('Time the entity was created'))
+      ->setLabel('Authored on')
+      ->setDescription('Time the entity was created')
       ->setTranslatable(TRUE);
 
     $this->commonBaseFields['user_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('User ID'))
-      ->setDescription(t('The ID of the associated user.'))
+      ->setLabel('User ID')
+      ->setDescription('The ID of the associated user.')
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
       // Default EntityTest entities to have the root user as the owner, to
@@ -539,16 +539,16 @@ class EntityViewsDataTest extends KernelTestBase {
     $base_field_definitions['user_id']->setRevisionable(TRUE);
 
     $base_field_definitions['non_rev_field'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Non Revisionable Field'))
-      ->setDescription(t('A non-revisionable test field.'))
+      ->setLabel('Non Revisionable Field')
+      ->setDescription('A non-revisionable tes field.')
       ->setRevisionable(FALSE)
       ->setTranslatable(TRUE)
       ->setCardinality(1)
       ->setReadOnly(TRUE);
 
     $base_field_definitions['non_mul_field'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Non translatable'))
-      ->setDescription(t('A non-translatable string field'))
+      ->setLabel('Non translatable')
+      ->setDescription('A non-translatable string field')
       ->setRevisionable(TRUE);
 
     $this->setUpEntityType($entity_type, $base_field_definitions);

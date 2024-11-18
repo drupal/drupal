@@ -63329,18 +63329,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Block\\\\BlockManagerTest\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Block/BlockManagerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Block\\\\BlockManagerTest\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Block/BlockManagerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Cache\\\\CacheCollectorHelper\\:\\:set\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Cache/CacheCollectorHelper.php',

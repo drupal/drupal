@@ -108,7 +108,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => 'Submit',
     ];
 
     return $form;

@@ -219,7 +219,7 @@ class FilterDateTest extends ViewTestBase {
   public function testExposedFilterWithPager(): void {
     // Expose the empty and not empty operators in a grouped filter.
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_datetime/default/filter/' . $this->fieldName . '_value');
-    $this->submitForm([], t('Expose filter'));
+    $this->submitForm([], 'Expose filter');
 
     $edit = [];
     $edit['options[operator]'] = '>';
@@ -234,7 +234,7 @@ class FilterDateTest extends ViewTestBase {
     $this->submitForm(['path' => $path], 'Apply');
     $this->drupalGet('admin/structure/views/nojs/display/test_filter_datetime/default/pager_options');
     $this->submitForm(['pager_options[items_per_page]' => 2], 'Apply');
-    $this->submitForm([], t('Save'));
+    $this->submitForm([], 'Save');
 
     // Assert the page without filters.
     $this->drupalGet($path);
