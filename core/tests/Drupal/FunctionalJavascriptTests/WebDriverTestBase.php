@@ -16,6 +16,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Drupal\Tests\your_module\FunctionalJavascript namespace and live in the
  * modules/your_module/tests/src/FunctionalJavascript directory.
  *
+ * Tests for core/lib/Drupal classes extending WebDriverTestBase must exist in
+ * the \Drupal\FunctionalJavascriptTests\Core namespace and live in the
+ * core/tests/Drupal/FunctionalJavascriptTests directory.
+ *
  * Base class for testing browser interaction implemented in JavaScript.
  *
  * @ingroup testing
