@@ -8,7 +8,7 @@
 /**
  * Implements hook_schema().
  */
-function dblog_schema() {
+function dblog_schema(): array {
   $schema['watchdog'] = [
     'description' => 'Table that contains logs of all system events.',
     'fields' => [

@@ -40,7 +40,7 @@ function entity_test_install(): void {
 /**
  * Implements hook_schema().
  */
-function entity_test_schema() {
+function entity_test_schema(): array {
   // Schema for simple entity.
   $schema['entity_test_example'] = [
     'description' => 'Stores entity_test items.',

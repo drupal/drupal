@@ -8,7 +8,7 @@
 /**
  * Implements hook_schema().
  */
-function shortcut_schema() {
+function shortcut_schema(): array {
   $schema['shortcut_set_users'] = [
     'description' => 'Maps users to shortcut sets.',
     'fields' => [

@@ -12,7 +12,7 @@ use Drupal\Core\Database\Database;
 /**
  * Implements hook_schema().
  */
-function module_test_schema() {
+function module_test_schema(): array {
   $schema['module_test'] = [
     'description' => 'Dummy table to test the behavior of hook_schema() during module installation.',
     'fields' => [

@@ -8,7 +8,7 @@
 /**
  * Implements hook_schema().
  */
-function user_schema() {
+function user_schema(): array {
   $schema['users_data'] = [
     'description' => 'Stores module data as key/value pairs per user.',
     'fields' => [

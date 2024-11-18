@@ -15,7 +15,7 @@ declare(strict_types=1);
  * Therefore, the schema must actually be declared in a normal module
  * like any other, not directly in the test file.
  */
-function database_test_schema() {
+function database_test_schema(): array {
   $schema['test'] = [
     'description' => 'Basic test table for the database unit tests.',
     'fields' => [

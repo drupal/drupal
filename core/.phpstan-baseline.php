@@ -12012,12 +12012,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function ban_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/ban.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\ban\\\\BanIpManager\\:\\:banIp\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ban/src/BanIpManager.php',
@@ -14043,12 +14037,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\ckeditor5\\\\Kernel\\\\ValidatorsTest\\:\\:assertConfigSchemaByName\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/ValidatorsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function comment_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/comment.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -18624,12 +18612,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function dblog_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/dblog/dblog.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\dblog\\\\Form\\\\DblogClearLogConfirmForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/dblog/src/Form/DblogClearLogConfirmForm.php',
@@ -20910,12 +20892,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function file_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/file.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function file_managed_file_submit\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/file.module',
@@ -22434,12 +22410,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function help_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/help.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\help\\\\HelpSectionManager\\:\\:clearCachedDefinitions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/src/HelpSectionManager.php',
@@ -22617,12 +22587,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\help\\\\Unit\\\\HelpTopicTwigTest\\:\\:getTwigMock\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/tests/src/Unit/HelpTopicTwigTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function history_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/history/history.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -25470,12 +25434,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function layout_builder_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/layout_builder.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function layout_builder_module_implements_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/layout_builder.module',
@@ -27205,12 +27163,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function locale_requirements\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/locale.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function locale_schema\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/locale.install',
 ];
@@ -32492,12 +32444,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function node_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/node.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function _node_access_rebuild_batch_finished\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/node.module',
@@ -36068,12 +36014,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function search_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/search.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function search_theme_suggestions_search_result\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/search.module',
@@ -37025,12 +36965,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\settings_tray\\\\Unit\\\\Access\\\\BlockPluginHasSettingsTrayFormAccessCheckTest\\:\\:providerTestAccess\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/settings_tray/tests/src/Unit/Access/BlockPluginHasSettingsTrayFormAccessCheckTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function shortcut_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/shortcut.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -38527,12 +38461,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/system.install',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function system_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.install',
-];
-$ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$directories might not be defined\\.$#',
 	'count' => 1,
@@ -39410,12 +39338,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function database_test_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/database_test/database_test.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\database_test\\\\Form\\\\DatabaseTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/database_test/src/Form/DatabaseTestForm.php',
@@ -40009,12 +39931,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_schema_test\\\\Hook\\\\EntitySchemaTestHooks\\:\\:entityFieldStorageInfo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_schema_test/src/Hook/EntitySchemaTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function entity_test_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -42231,12 +42147,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function module_test_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/module_test/module_test.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function module_test_hook_info\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/module_test/module_test.module',
@@ -42431,12 +42341,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\performance_test\\\\PerformanceDataCollector\\:\\:addCacheTagOperation\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/PerformanceDataCollector.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function pgsql_test_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/pgsql_test/pgsql_test.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -43596,12 +43500,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function update_test_schema_requirements\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/update_test_schema/update_test_schema.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function update_test_schema_schema\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/update_test_schema/update_test_schema.install',
 ];
@@ -48956,12 +48854,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -56111,12 +56003,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_test_data_schema\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/views_test_data.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\views_test_entity_reference\\\\Hook\\\\ViewsTestEntityReferenceHooks\\:\\:viewsDataAlter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_entity_reference/src/Hook/ViewsTestEntityReferenceHooks.php',
@@ -60174,12 +60060,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function workspaces_requirements\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/workspaces.install',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function workspaces_schema\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/workspaces.install',
 ];

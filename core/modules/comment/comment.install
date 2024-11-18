@@ -33,7 +33,7 @@ function comment_install(): void {
 /**
  * Implements hook_schema().
  */
-function comment_schema() {
+function comment_schema(): array {
   $schema['comment_entity_statistics'] = [
     'description' => 'Maintains statistics of entity and comments posts to show "new" and "updated" flags.',
     'fields' => [

@@ -68,7 +68,7 @@ function locale_uninstall(): void {
 /**
  * Implements hook_schema().
  */
-function locale_schema() {
+function locale_schema(): array {
   $schema['locales_source'] = [
     'description' => 'List of English source strings.',
     'fields' => [
