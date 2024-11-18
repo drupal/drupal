@@ -14,7 +14,7 @@ class CommentViewsHooks {
    * Implements hook_views_data_alter().
    */
   #[Hook('views_data_alter')]
-  public function viewsDataAlter(&$data) {
+  public function viewsDataAlter(&$data): void {
     // New comments are only supported for node table because it requires the
     // history table.
     $data['node']['new_comments'] = [

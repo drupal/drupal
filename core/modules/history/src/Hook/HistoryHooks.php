@@ -44,7 +44,7 @@ class HistoryHooks {
    * Implements hook_ENTITY_TYPE_view_alter() for node entities.
    */
   #[Hook('node_view_alter')]
-  public function nodeViewAlter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display) {
+  public function nodeViewAlter(array &$build, EntityInterface $node, EntityViewDisplayInterface $display): void {
     if ($node->isNew() || isset($node->in_preview)) {
       return;
     }

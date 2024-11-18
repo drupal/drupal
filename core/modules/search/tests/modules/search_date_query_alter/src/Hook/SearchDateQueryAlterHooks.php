@@ -18,7 +18,7 @@ class SearchDateQueryAlterHooks {
    * Tags search_$type with $type node_search.
    */
   #[Hook('query_search_node_search_alter')]
-  public function querySearchNodeSearchAlter(AlterableInterface $query) {
+  public function querySearchNodeSearchAlter(AlterableInterface $query): void {
     // Start date Sat, 19 Mar 2016 00:00:00 GMT.
     $query->condition('n.created', 1458345600, '>=');
     // End date Sun, 20 Mar 2016 00:00:00 GMT.

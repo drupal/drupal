@@ -35,7 +35,7 @@ class ViewsTestDataViewsHooks {
    * Implements hook_views_data_alter().
    */
   #[Hook('views_data_alter')]
-  public function viewsDataAlter(array &$data) {
+  public function viewsDataAlter(array &$data): void {
     \Drupal::state()->set('views_hook_test_views_data_alter', TRUE);
     \Drupal::state()->set('views_hook_test_views_data_alter_data', $data);
   }

@@ -42,7 +42,7 @@ class ImageViewsHooks {
    * Views integration to provide reverse relationships on image fields.
    */
   #[Hook('field_views_data_views_data_alter')]
-  public function fieldViewsDataViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage) {
+  public function fieldViewsDataViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage): void {
     $entity_type_id = $field_storage->getTargetEntityTypeId();
     $field_name = $field_storage->getName();
     $entity_type_manager = \Drupal::entityTypeManager();

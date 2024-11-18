@@ -18,7 +18,7 @@ class MenuOperationsLinkTestHooks {
    * Implements hook_entity_operation_alter().
    */
   #[Hook('entity_operation_alter')]
-  public function entityOperationAlter(array &$operations, EntityInterface $entity) {
+  public function entityOperationAlter(array &$operations, EntityInterface $entity): void {
     if (!$entity instanceof MenuLinkContent) {
       return;
     }

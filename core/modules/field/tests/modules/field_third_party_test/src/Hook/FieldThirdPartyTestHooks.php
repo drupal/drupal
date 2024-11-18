@@ -32,9 +32,8 @@ class FieldThirdPartyTestHooks {
    * Implements hook_field_widget_settings_summary_alter().
    */
   #[Hook('field_widget_settings_summary_alter')]
-  public function fieldWidgetSettingsSummaryAlter(&$summary, $context) {
+  public function fieldWidgetSettingsSummaryAlter(&$summary, $context): void {
     $summary[] = 'field_test_field_widget_settings_summary_alter';
-    return $summary;
   }
 
   /**
@@ -54,9 +53,8 @@ class FieldThirdPartyTestHooks {
    * Implements hook_field_formatter_settings_summary_alter().
    */
   #[Hook('field_formatter_settings_summary_alter')]
-  public function fieldFormatterSettingsSummaryAlter(&$summary, $context) {
+  public function fieldFormatterSettingsSummaryAlter(&$summary, $context): void {
     $summary[] = 'field_test_field_formatter_settings_summary_alter';
-    return $summary;
   }
 
 }

@@ -17,7 +17,7 @@ class CommonTestHooks {
    * Implements hook_TYPE_alter().
    */
   #[Hook('drupal_alter_alter')]
-  public function drupalAlterAlter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+  public function drupalAlterAlter(&$data, &$arg2 = NULL, &$arg3 = NULL): void {
     // Alter first argument.
     if (is_array($data)) {
       $data['foo'] = 'Drupal';
@@ -92,7 +92,7 @@ class CommonTestHooks {
    * Implements hook_library_info_alter().
    */
   #[Hook('library_info_alter')]
-  public function libraryInfoAlter(&$libraries, $module) {
+  public function libraryInfoAlter(&$libraries, $module): void {
     if ($module === 'core' && isset($libraries['loadjs'])) {
       // Change the version of loadjs to 0.0.
       $libraries['loadjs']['version'] = '0.0';
@@ -148,7 +148,7 @@ class CommonTestHooks {
    * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
    */
   #[Hook('page_attachments_alter')]
-  public function pageAttachmentsAlter(array &$page) {
+  public function pageAttachmentsAlter(array &$page): void {
     // Remove a library that was added in common_test_page_attachments(), to test
     // that this hook can do what it claims to do.
     if (isset($page['#attached']['library']) && ($index = array_search('core/bar', $page['#attached']['library'])) && $index !== FALSE) {
@@ -171,7 +171,7 @@ class CommonTestHooks {
    * @see \Drupal\KernelTests\Core\Asset\AttachedAssetsTest::testAlter()
    */
   #[Hook('js_alter')]
-  public function jsAlter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language) {
+  public function jsAlter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language): void {
     // Attach alter.js above tableselect.js.
     $alter_js = \Drupal::service('extension.list.module')->getPath('common_test') . '/alter.js';
     if (array_key_exists($alter_js, $javascript) && array_key_exists('core/misc/tableselect.js', $javascript)) {
@@ -185,7 +185,7 @@ class CommonTestHooks {
    * @see \Drupal\system\Tests\Common\JavaScriptTest::testHeaderSetting()
    */
   #[Hook('js_settings_alter')]
-  public function jsSettingsAlter(&$settings, AttachedAssetsInterface $assets) {
+  public function jsSettingsAlter(&$settings, AttachedAssetsInterface $assets): void {
     // Modify an existing setting.
     if (array_key_exists('pluralDelimiter', $settings)) {
       $settings['pluralDelimiter'] = '☃';

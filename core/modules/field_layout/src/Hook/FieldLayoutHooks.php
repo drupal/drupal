@@ -55,7 +55,7 @@ class FieldLayoutHooks {
    * Implements hook_entity_view_alter().
    */
   #[Hook('entity_view_alter')]
-  public function entityViewAlter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  public function entityViewAlter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
     if ($display instanceof EntityDisplayWithLayoutInterface) {
       \Drupal::classResolver(FieldLayoutBuilder::class)->buildView($build, $display);
     }

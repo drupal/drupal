@@ -21,7 +21,7 @@ class LocaleTestHooks {
    * a regular custom module.
    */
   #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type) {
+  public function systemInfoAlter(&$info, Extension $file, $type): void {
     // Only modify the system info if required.
     // By default the locale_test modules are hidden and have a project specified.
     // To test the module detection process by locale_project_list() the
@@ -55,7 +55,7 @@ class LocaleTestHooks {
    * test script in order for this hook to take effect.
    */
   #[Hook('locale_translation_projects_alter')]
-  public function localeTranslationProjectsAlter(&$projects) {
+  public function localeTranslationProjectsAlter(&$projects): void {
     // Drupal core should not be translated. By overriding the server pattern we
     // make sure that no translation for drupal core will be found and that the
     // translation update system will not go out to l.d.o to check.
@@ -155,7 +155,7 @@ class LocaleTestHooks {
    * Implements hook_language_fallback_candidates_OPERATION_alter().
    */
   #[Hook('language_fallback_candidates_locale_lookup_alter')]
-  public function languageFallbackCandidatesLocaleLookupAlter(array &$candidates, array $context) {
+  public function languageFallbackCandidatesLocaleLookupAlter(array &$candidates, array $context): void {
     \Drupal::state()->set('locale.test_language_fallback_candidates_locale_lookup_alter_candidates', $candidates);
     \Drupal::state()->set('locale.test_language_fallback_candidates_locale_lookup_alter_context', $context);
   }
@@ -208,7 +208,7 @@ class LocaleTestHooks {
    * Implements hook_countries_alter().
    */
   #[Hook('countries_alter')]
-  public function countriesAlter(&$countries) {
+  public function countriesAlter(&$countries): void {
     $countries['EB'] = 'Elbonia';
   }
 

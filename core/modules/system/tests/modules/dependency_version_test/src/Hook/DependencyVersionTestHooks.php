@@ -16,7 +16,7 @@ class DependencyVersionTestHooks {
    * Implements hook_system_info_alter().
    */
   #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type) {
+  public function systemInfoAlter(&$info, Extension $file, $type): void {
     // Simulate that the core version for Views module contains the string '8.x'.
     if ($file->getName() == 'views') {
       $info['version'] = '9.8.x-dev';

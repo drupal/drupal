@@ -16,7 +16,7 @@ class ImageModuleTestHooks {
    * Implements hook_image_effect_info_alter().
    */
   #[Hook('image_effect_info_alter')]
-  public function imageEffectInfoAlter(&$effects) {
+  public function imageEffectInfoAlter(&$effects): void {
     $state = \Drupal::state();
     // The 'image_module_test.counter' state variable value is set and accessed
     // from the ImageEffectsTest::testImageEffectsCaching() test and used to

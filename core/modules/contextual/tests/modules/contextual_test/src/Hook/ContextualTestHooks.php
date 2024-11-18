@@ -16,7 +16,7 @@ class ContextualTestHooks {
    * Implements hook_block_view_alter().
    */
   #[Hook('block_view_alter')]
-  public function blockViewAlter(array &$build, BlockPluginInterface $block) {
+  public function blockViewAlter(array &$build, BlockPluginInterface $block): void {
     $build['#contextual_links']['contextual_test'] = ['route_parameters' => []];
   }
 
@@ -28,7 +28,7 @@ class ContextualTestHooks {
    * Is that a problem? Should the contextual module itself do the attaching?
    */
   #[Hook('contextual_links_view_alter')]
-  public function contextualLinksViewAlter(&$element, $items) {
+  public function contextualLinksViewAlter(&$element, $items): void {
     if (isset($element['#links']['contextual-test-ajax'])) {
       $element['#attached']['library'][] = 'core/drupal.dialog.ajax';
     }
@@ -38,7 +38,7 @@ class ContextualTestHooks {
    * Implements hook_page_attachments_alter().
    */
   #[Hook('page_attachments_alter')]
-  public function pageAttachmentsAlter(array &$attachments) {
+  public function pageAttachmentsAlter(array &$attachments): void {
     $attachments['#attached']['library'][] = 'core/drupal.dialog.ajax';
   }
 

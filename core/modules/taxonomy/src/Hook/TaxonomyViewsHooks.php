@@ -14,7 +14,7 @@ class TaxonomyViewsHooks {
    * Implements hook_views_data_alter().
    */
   #[Hook('views_data_alter')]
-  public function viewsDataAlter(&$data) {
+  public function viewsDataAlter(&$data): void {
     $data['node_field_data']['term_node_tid'] = [
       'title' => t('Taxonomy terms on node'),
       'help' => t('Relate nodes to taxonomy terms, specifying which vocabulary or vocabularies to use. This relationship will cause duplicated records if there are multiple terms.'),
@@ -62,7 +62,7 @@ class TaxonomyViewsHooks {
    * @see views_field_default_views_data()
    */
   #[Hook('field_views_data_alter')]
-  public function fieldViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage) {
+  public function fieldViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage): void {
     if ($field_storage->getType() == 'entity_reference' && $field_storage->getSetting('target_type') == 'taxonomy_term') {
       foreach ($data as $table_name => $table_data) {
         foreach ($table_data as $field_name => $field_data) {

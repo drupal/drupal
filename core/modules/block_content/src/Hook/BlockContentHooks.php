@@ -100,7 +100,7 @@ class BlockContentHooks {
    * @see \Drupal\block_content\BlockContentAccessControlHandler
    */
   #[Hook('query_entity_reference_alter')]
-  public function queryEntityReferenceAlter(AlterableInterface $query) {
+  public function queryEntityReferenceAlter(AlterableInterface $query): void {
     if ($query instanceof SelectInterface && $query->getMetaData('entity_type') === 'block_content' && $query->hasTag('block_content_access')) {
       $data_table = \Drupal::entityTypeManager()->getDefinition('block_content')->getDataTable();
       if (array_key_exists($data_table, $query->getTables()) && !_block_content_has_reusable_condition($query->conditions(), $query->getTables())) {
@@ -113,7 +113,7 @@ class BlockContentHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for block templates.
    */
   #[Hook('theme_suggestions_block_alter')]
-  public function themeSuggestionsBlockAlter(array &$suggestions, array $variables) {
+  public function themeSuggestionsBlockAlter(array &$suggestions, array $variables): void {
     $suggestions_new = [];
     $content = $variables['elements']['content'];
     $block_content = $variables['elements']['content']['#block_content'] ?? NULL;
@@ -131,7 +131,6 @@ class BlockContentHooks {
       $suggestions = array_unique($suggestions);
       array_splice($suggestions, 1, 0, $suggestions_new);
     }
-    return $suggestions;
   }
 
   /**

@@ -154,7 +154,7 @@ class ViewsUiHooks {
    * Implements hook_views_plugins_display_alter().
    */
   #[Hook('views_plugins_display_alter')]
-  public function viewsPluginsDisplayAlter(&$plugins) {
+  public function viewsPluginsDisplayAlter(&$plugins): void {
     // Attach contextual links to each display plugin. The links will point to
     // paths underneath "admin/structure/views/view/{$view->id()}" (i.e., paths
     // for editing and performing other contextual actions on the view).
@@ -172,7 +172,7 @@ class ViewsUiHooks {
    * Implements hook_contextual_links_view_alter().
    */
   #[Hook('contextual_links_view_alter')]
-  public function contextualLinksViewAlter(&$element, $items) {
+  public function contextualLinksViewAlter(&$element, $items): void {
     // Remove contextual links from being rendered, when so desired, such as
     // within a View preview.
     if (views_ui_contextual_links_suppress()) {

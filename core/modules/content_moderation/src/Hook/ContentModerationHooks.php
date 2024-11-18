@@ -191,7 +191,7 @@ class ContentModerationHooks {
    * Implements hook_entity_form_display_alter().
    */
   #[Hook('entity_form_display_alter')]
-  public function entityFormDisplayAlter(EntityFormDisplayInterface $form_display, array $context) {
+  public function entityFormDisplayAlter(EntityFormDisplayInterface $form_display, array $context): void {
     if ($context['form_mode'] === 'layout_builder') {
       $form_display->setComponent('moderation_state', ['type' => 'moderation_state_default', 'weight' => -900, 'settings' => []]);
     }
@@ -266,7 +266,7 @@ class ContentModerationHooks {
    * Implements hook_action_info_alter().
    */
   #[Hook('action_info_alter')]
-  public function actionInfoAlter(&$definitions) {
+  public function actionInfoAlter(&$definitions): void {
     // The publish/unpublish actions are not valid on moderated entities. So swap
     // their implementations out for alternates that will become a no-op on a
     // moderated entity. If another module has already swapped out those classes,
@@ -285,7 +285,7 @@ class ContentModerationHooks {
    * Implements hook_entity_bundle_info_alter().
    */
   #[Hook('entity_bundle_info_alter')]
-  public function entityBundleInfoAlter(&$bundles) {
+  public function entityBundleInfoAlter(&$bundles): void {
     $translatable = FALSE;
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {

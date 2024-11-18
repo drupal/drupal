@@ -37,7 +37,7 @@ class InlineFormErrorsHooks {
    * Implements hook_element_info_alter().
    */
   #[Hook('element_info_alter')]
-  public function elementInfoAlter(array &$info) {
+  public function elementInfoAlter(array &$info): void {
     \Drupal::classResolver(RenderElementHelper::class)->alterElementInfo($info);
   }
 

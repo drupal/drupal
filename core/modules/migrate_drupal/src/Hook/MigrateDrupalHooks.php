@@ -39,7 +39,7 @@ class MigrateDrupalHooks {
    * Implements hook_migration_plugins_alter().
    */
   #[Hook('migration_plugins_alter')]
-  public function migrationPluginsAlter(array &$definitions) {
+  public function migrationPluginsAlter(array &$definitions): void {
     $module_handler = \Drupal::service('module_handler');
     $migration_plugin_manager = \Drupal::service('plugin.manager.migration');
     // This is why the deriver can't do this: the 'd6_taxonomy_vocabulary'

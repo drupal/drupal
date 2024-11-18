@@ -28,7 +28,7 @@ class UserHooksTest {
    * @return void
    */
   #[Hook('user_format_name_alter')]
-  public function userFormatNameAlter(&$name, AccountInterface $account) {
+  public function userFormatNameAlter(&$name, AccountInterface $account): void {
     if ($this->state->get('user_hooks_test_user_format_name_alter', FALSE)) {
       if ($this->state->get('user_hooks_test_user_format_name_alter_safe', FALSE)) {
         $name = new FormattableMarkup('<em>@uid</em>', ['@uid' => $account->id()]);

@@ -86,7 +86,7 @@ class FileTestHooks {
    * Implements hook_file_url_alter().
    */
   #[Hook('file_url_alter')]
-  public function fileUrlAlter(&$uri) {
+  public function fileUrlAlter(&$uri): void {
     /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     // Only run this hook when this variable is set. Otherwise, we'd have to add
@@ -168,7 +168,7 @@ class FileTestHooks {
    * Implements hook_file_mimetype_mapping_alter().
    */
   #[Hook('file_mimetype_mapping_alter')]
-  public function fileMimetypeMappingAlter(&$mapping) {
+  public function fileMimetypeMappingAlter(&$mapping): void {
     // Add new mappings.
     $mapping['mimetypes']['file_test_mimetype_1'] = 'made_up/file_test_1';
     $mapping['mimetypes']['file_test_mimetype_2'] = 'made_up/file_test_2';

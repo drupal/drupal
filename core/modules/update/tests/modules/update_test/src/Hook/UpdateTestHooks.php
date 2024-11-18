@@ -24,7 +24,7 @@ class UpdateTestHooks {
    * just for that module or theme.
    */
   #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file) {
+  public function systemInfoAlter(&$info, Extension $file): void {
     $setting = \Drupal::config('update_test.settings')->get('system_info');
     foreach (['#all', $file->getName()] as $id) {
       if (!empty($setting[$id])) {
@@ -47,7 +47,7 @@ class UpdateTestHooks {
    * module or theme.
    */
   #[Hook('update_status_alter')]
-  public function updateStatusAlter(&$projects) {
+  public function updateStatusAlter(&$projects): void {
     $setting = \Drupal::config('update_test.settings')->get('update_status');
     if (!empty($setting)) {
       foreach ($projects as $project_name => &$project) {

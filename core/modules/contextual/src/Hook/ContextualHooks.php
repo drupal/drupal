@@ -110,7 +110,7 @@ class ContextualHooks {
    * @see \Drupal\contextual\Plugin\views\field\ContextualLinks::render()
    */
   #[Hook('contextual_links_view_alter')]
-  public function contextualLinksViewAlter(&$element, $items) {
+  public function contextualLinksViewAlter(&$element, $items): void {
     if (isset($element['#contextual_links']['contextual'])) {
       $encoded_links = $element['#contextual_links']['contextual']['metadata']['contextual-views-field-links'];
       $element['#links'] = Json::decode(rawurldecode($encoded_links));

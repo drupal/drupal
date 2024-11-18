@@ -18,7 +18,7 @@ class SearchQueryAlterHooks {
    * Tags search_$type with $type node_search.
    */
   #[Hook('query_search_node_search_alter')]
-  public function querySearchNodeSearchAlter(AlterableInterface $query) {
+  public function querySearchNodeSearchAlter(AlterableInterface $query): void {
     // For testing purposes, restrict the query to node type 'article' only.
     $query->condition('n.type', 'article');
   }

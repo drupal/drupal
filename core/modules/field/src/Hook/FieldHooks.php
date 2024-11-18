@@ -253,7 +253,7 @@ class FieldHooks {
    * Implements hook_config_import_steps_alter().
    */
   #[Hook('config_import_steps_alter')]
-  public function configImportStepsAlter(&$sync_steps, ConfigImporter $config_importer) {
+  public function configImportStepsAlter(&$sync_steps, ConfigImporter $config_importer): void {
     $field_storages = ConfigImporterFieldPurger::getFieldStoragesToPurge($config_importer->getStorageComparer()->getSourceStorage()->read('core.extension'), $config_importer->getStorageComparer()->getChangelist('delete'));
     if ($field_storages) {
       // Add a step to the beginning of the configuration synchronization process

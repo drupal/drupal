@@ -54,7 +54,7 @@ class SettingsTrayHooks {
    * Change Configure Blocks into off_canvas links.
    */
   #[Hook('contextual_links_view_alter')]
-  public function contextualLinksViewAlter(&$element, $items) {
+  public function contextualLinksViewAlter(&$element, $items): void {
     if (isset($element['#links']['settings-trayblock-configure'])) {
       // Place settings_tray link first.
       $settings_tray_link = $element['#links']['settings-trayblock-configure'];
@@ -72,7 +72,7 @@ class SettingsTrayHooks {
    * Implements hook_block_view_alter().
    */
   #[Hook('block_view_alter')]
-  public function blockViewAlter(array &$build) {
+  public function blockViewAlter(array &$build): void {
     if (isset($build['#contextual_links']['block'])) {
       // Ensure that contextual links vary by whether the block has config overrides
       // or not.
@@ -106,7 +106,7 @@ class SettingsTrayHooks {
    * @see contextual_toolbar()
    */
   #[Hook('toolbar_alter')]
-  public function toolbarAlter(&$items) {
+  public function toolbarAlter(&$items): void {
     $items['contextual']['#cache']['contexts'][] = 'user.permissions';
     if (isset($items['contextual']['tab']) && \Drupal::currentUser()->hasPermission('administer blocks')) {
       $items['contextual']['#weight'] = -1000;
@@ -132,7 +132,7 @@ class SettingsTrayHooks {
    * @see \Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
    */
   #[Hook('block_alter')]
-  public function blockAlter(&$definitions) {
+  public function blockAlter(&$definitions): void {
     foreach ($definitions as &$definition) {
       // If a block plugin does not define its own 'settings_tray' form, use the
       // plugin class itself.
@@ -146,7 +146,7 @@ class SettingsTrayHooks {
    * Implements hook_css_alter().
    */
   #[Hook('css_alter')]
-  public function cssAlter(&$css, AttachedAssetsInterface $assets, LanguageInterface $language) {
+  public function cssAlter(&$css, AttachedAssetsInterface $assets, LanguageInterface $language): void {
     // @todo Remove once conditional ordering is introduced in
     //   https://www.drupal.org/node/1945262.
     $path = \Drupal::service('extension.list.module')->getPath('settings_tray') . '/css/settings_tray.theme.css';

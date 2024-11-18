@@ -18,7 +18,7 @@ class ModuleRequiredTestHooks {
    * Manipulate module dependencies to test dependency chains.
    */
   #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type) {
+  public function systemInfoAlter(&$info, Extension $file, $type): void {
     if ($file->getName() == 'module_required_test' && \Drupal::state()->get('module_required_test.hook_system_info_alter')) {
       $info['required'] = TRUE;
       $info['explanation'] = 'Testing hook_system_info_alter()';

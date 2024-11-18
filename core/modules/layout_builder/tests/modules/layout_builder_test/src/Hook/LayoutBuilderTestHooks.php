@@ -21,7 +21,7 @@ class LayoutBuilderTestHooks {
    * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
    */
   #[Hook('plugin_filter_block__layout_builder_alter')]
-  public function pluginFilterBlockLayoutBuilderAlter(array &$definitions, array $extra) {
+  public function pluginFilterBlockLayoutBuilderAlter(array &$definitions, array $extra): void {
     // Explicitly remove the "Help" blocks from the list.
     unset($definitions['help_block']);
     // Explicitly remove the "Sticky at top of lists field_block".
@@ -116,7 +116,7 @@ class LayoutBuilderTestHooks {
    * Implements hook_system_breadcrumb_alter().
    */
   #[Hook('system_breadcrumb_alter')]
-  public function systemBreadcrumbAlter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
+  public function systemBreadcrumbAlter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context): void {
     $breadcrumb->addLink(Link::fromTextAndUrl('External link', Url::fromUri('http://www.example.com')));
   }
 

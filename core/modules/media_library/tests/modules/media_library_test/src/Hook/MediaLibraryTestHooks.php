@@ -55,7 +55,7 @@ class MediaLibraryTestHooks {
    * Implements hook_field_widget_info_alter().
    */
   #[Hook('field_widget_info_alter')]
-  public function fieldWidgetInfoAlter(array &$info) {
+  public function fieldWidgetInfoAlter(array &$info): void {
     $info['media_library_widget']['field_types'][] = 'entity_reference_subclass';
   }
 

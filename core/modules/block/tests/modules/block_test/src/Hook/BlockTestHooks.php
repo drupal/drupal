@@ -17,7 +17,7 @@ class BlockTestHooks {
    * Implements hook_block_alter().
    */
   #[Hook('block_alter')]
-  public function blockAlter(&$block_info) {
+  public function blockAlter(&$block_info): void {
     if (\Drupal::state()->get('block_test_info_alter') && isset($block_info['test_block_instantiation'])) {
       $block_info['test_block_instantiation']['category'] = t('Custom category');
     }
@@ -27,7 +27,7 @@ class BlockTestHooks {
    * Implements hook_block_view_BASE_BLOCK_ID_alter().
    */
   #[Hook('block_view_test_cache_alter')]
-  public function blockViewTestCacheAlter(array &$build, BlockPluginInterface $block) {
+  public function blockViewTestCacheAlter(array &$build, BlockPluginInterface $block): void {
     if (\Drupal::state()->get('block_test_view_alter_suffix') !== NULL) {
       $build['#attributes']['foo'] = 'bar';
     }
@@ -40,7 +40,7 @@ class BlockTestHooks {
    * Implements hook_block_build_BASE_BLOCK_ID_alter().
    */
   #[Hook('block_build_test_cache_alter')]
-  public function blockBuildTestCacheAlter(array &$build, BlockPluginInterface $block) {
+  public function blockBuildTestCacheAlter(array &$build, BlockPluginInterface $block): void {
     // Test altering cache keys, contexts, tags and max-age.
     if (\Drupal::state()->get('block_test_block_alter_cache_key') !== NULL) {
       $build['#cache']['keys'][] = \Drupal::state()->get('block_test_block_alter_cache_key');

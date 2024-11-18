@@ -99,7 +99,7 @@ class ResponsiveImageHooks {
    * Load responsive_image.js whenever ajax is added.
    */
   #[Hook('library_info_alter')]
-  public function libraryInfoAlter(array &$libraries, $module) {
+  public function libraryInfoAlter(array &$libraries, $module): void {
     if ($module === 'core' && isset($libraries['drupal.ajax'])) {
       $libraries['drupal.ajax']['dependencies'][] = 'responsive_image/ajax';
     }

@@ -141,7 +141,7 @@ class NodeHooks1 {
    * Implements hook_entity_view_display_alter().
    */
   #[Hook('entity_view_display_alter')]
-  public function entityViewDisplayAlter(EntityViewDisplayInterface $display, $context) {
+  public function entityViewDisplayAlter(EntityViewDisplayInterface $display, $context): void {
     if ($context['entity_type'] == 'node') {
       // Hide field labels in search index.
       if ($context['view_mode'] == 'search_index') {
@@ -402,7 +402,7 @@ class NodeHooks1 {
    * @endcode
    */
   #[Hook('query_node_access_alter')]
-  public function queryNodeAccessAlter(AlterableInterface $query) {
+  public function queryNodeAccessAlter(AlterableInterface $query): void {
     // Read meta-data from query, if provided.
     if (!($account = $query->getMetaData('account'))) {
       $account = \Drupal::currentUser();
@@ -547,7 +547,7 @@ class NodeHooks1 {
    * Implements hook_config_translation_info_alter().
    */
   #[Hook('config_translation_info_alter')]
-  public function configTranslationInfoAlter(&$info) {
+  public function configTranslationInfoAlter(&$info): void {
     $info['node_type']['class'] = 'Drupal\node\ConfigTranslation\NodeTypeMapper';
   }
 

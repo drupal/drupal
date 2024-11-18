@@ -239,7 +239,7 @@ class SystemHooks {
    * as well as theme_token ajax state.
    */
   #[Hook('js_settings_alter')]
-  public function jsSettingsAlter(&$settings, AttachedAssetsInterface $assets) {
+  public function jsSettingsAlter(&$settings, AttachedAssetsInterface $assets): void {
     // As this is being output in the final response always use the main request.
     $request = \Drupal::requestStack()->getMainRequest();
     $current_query = $request->query->all();
@@ -302,7 +302,7 @@ class SystemHooks {
    * Implements hook_system_info_alter().
    */
   #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type) {
+  public function systemInfoAlter(&$info, Extension $file, $type): void {
     // Remove page-top and page-bottom from the blocks UI since they are reserved for
     // modules to populate from outside the blocks system.
     if ($type == 'theme') {
@@ -375,7 +375,7 @@ class SystemHooks {
    * Implements hook_block_view_BASE_BLOCK_ID_alter().
    */
   #[Hook('block_view_system_main_block_alter')]
-  public function blockViewSystemMainBlockAlter(array &$build, BlockPluginInterface $block) {
+  public function blockViewSystemMainBlockAlter(array &$build, BlockPluginInterface $block): void {
     // Contextual links on the system_main block would basically duplicate the
     // tabs/local tasks, so reduce the clutter.
     unset($build['#contextual_links']);
@@ -385,7 +385,7 @@ class SystemHooks {
    * Implements hook_query_TAG_alter() for entity reference selection handlers.
    */
   #[Hook('query_entity_reference_alter')]
-  public function queryEntityReferenceAlter(AlterableInterface $query) {
+  public function queryEntityReferenceAlter(AlterableInterface $query): void {
     $handler = $query->getMetadata('entity_reference_selection_handler');
     $handler->entityQueryAlter($query);
   }
@@ -394,7 +394,7 @@ class SystemHooks {
    * Implements hook_element_info_alter().
    */
   #[Hook('element_info_alter')]
-  public function elementInfoAlter(&$type) {
+  public function elementInfoAlter(&$type): void {
     if (isset($type['page'])) {
       $type['page']['#theme_wrappers']['off_canvas_page_wrapper'] = ['#weight' => -1000];
     }
@@ -424,7 +424,7 @@ class SystemHooks {
    * Implements hook_library_info_alter().
    */
   #[Hook('library_info_alter')]
-  public function libraryInfoAlter(&$libraries, $extension) {
+  public function libraryInfoAlter(&$libraries, $extension): void {
     // If Claro is the admin theme but not the active theme, grant Claro the
     // ability to override the toolbar library with its own assets.
     if ($extension === 'toolbar' && _system_is_claro_admin_and_not_active()) {
@@ -437,7 +437,7 @@ class SystemHooks {
    * Implements hook_theme_registry_alter().
    */
   #[Hook('theme_registry_alter')]
-  public function themeRegistryAlter(array &$theme_registry) {
+  public function themeRegistryAlter(array &$theme_registry): void {
     // If Claro is the admin theme but not the active theme, use Claro's toolbar
     // templates.
     if (_system_is_claro_admin_and_not_active()) {
@@ -530,7 +530,7 @@ class SystemHooks {
    * Implements hook_archiver_info_alter().
    */
   #[Hook('archiver_info_alter')]
-  public function archiverInfoAlter(&$info) {
+  public function archiverInfoAlter(&$info): void {
     if (!class_exists(\ZipArchive::class)) {
       // PHP Zip extension is missing.
       unset($info['Zip']);

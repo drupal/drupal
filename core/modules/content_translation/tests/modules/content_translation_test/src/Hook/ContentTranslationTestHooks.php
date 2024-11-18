@@ -19,7 +19,7 @@ class ContentTranslationTestHooks {
    * Implements hook_entity_bundle_info_alter().
    */
   #[Hook('entity_bundle_info_alter')]
-  public function entityBundleInfoAlter(&$bundles) {
+  public function entityBundleInfoAlter(&$bundles): void {
     // Store the initial status of the "translatable" property for the
     // "entity_test_mul" bundle.
     $translatable = !empty($bundles['entity_test_mul']['entity_test_mul']['translatable']);

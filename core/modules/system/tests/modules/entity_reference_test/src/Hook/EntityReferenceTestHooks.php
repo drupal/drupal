@@ -29,7 +29,7 @@ class EntityReferenceTestHooks {
    * Implements hook_entity_base_field_info_alter().
    */
   #[Hook('entity_base_field_info_alter')]
-  public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type): void {
     if ($entity_type->id() === 'entity_test') {
       // Allow user_id field to use configurable widget.
       $fields['user_id']->setSetting('handler', 'default')->setDisplayOptions('form', ['type' => 'entity_reference_autocomplete', 'weight' => 0])->setDisplayConfigurable('form', TRUE);

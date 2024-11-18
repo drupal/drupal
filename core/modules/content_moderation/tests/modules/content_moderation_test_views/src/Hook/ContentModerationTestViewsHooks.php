@@ -19,7 +19,7 @@ class ContentModerationTestViewsHooks {
    * @see \Drupal\Tests\content_moderation\Kernel\ViewsModerationStateSortTest::testSortRevisionBaseTable()
    */
   #[Hook('views_query_alter')]
-  public function viewsQueryAlter(ViewExecutable $view, QueryPluginBase $query) {
+  public function viewsQueryAlter(ViewExecutable $view, QueryPluginBase $query): void {
     // Add a secondary sort order to ensure consistent builds when testing click
     // and table sorting.
     if ($view->id() === 'test_content_moderation_state_sort_revision_table') {
@@ -33,7 +33,7 @@ class ContentModerationTestViewsHooks {
    * @see \Drupal\Tests\content_moderation\Kernel\ViewsModerationStateFilterTest
    */
   #[Hook('views_data_alter')]
-  public function viewsDataAlter(array &$data) {
+  public function viewsDataAlter(array &$data): void {
     if (isset($data['users_field_data'])) {
       $data['users_field_data']['uid_revision_test'] = [
         'help' => t('Relate the content revision to the user who created it.'),

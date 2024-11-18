@@ -15,7 +15,7 @@ class LinkGenerationTestHooks {
    * Implements hook_link_alter().
    */
   #[Hook('link_alter')]
-  public function linkAlter(&$variables) {
+  public function linkAlter(&$variables): void {
     if (\Drupal::state()->get('link_generation_test_link_alter', FALSE)) {
       // Add a text to the end of links.
       if (\Drupal::state()->get('link_generation_test_link_alter_safe', FALSE)) {

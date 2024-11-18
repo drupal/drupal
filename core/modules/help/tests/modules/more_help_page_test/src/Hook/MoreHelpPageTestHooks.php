@@ -28,7 +28,7 @@ class MoreHelpPageTestHooks {
    * Implements hook_help_section_info_alter().
    */
   #[Hook('help_section_info_alter')]
-  public function helpSectionInfoAlter(array &$info) {
+  public function helpSectionInfoAlter(array &$info): void {
     $info['hook_help']['weight'] = 500;
   }
 

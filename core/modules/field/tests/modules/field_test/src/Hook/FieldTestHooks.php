@@ -19,7 +19,7 @@ class FieldTestHooks {
    * Implements hook_entity_display_build_alter().
    */
   #[Hook('entity_display_build_alter')]
-  public function entityDisplayBuildAlter(&$output, $context) {
+  public function entityDisplayBuildAlter(&$output, $context): void {
     $display_options = $context['display']->getComponent('test_field');
     if (isset($display_options['settings']['alter'])) {
       $output['test_field'][] = ['#markup' => 'field_test_entity_display_build_alter'];
@@ -33,7 +33,7 @@ class FieldTestHooks {
    * Implements hook_field_widget_single_element_form_alter().
    */
   #[Hook('field_widget_single_element_form_alter')]
-  public function fieldWidgetSingleElementFormAlter(&$element, FormStateInterface $form_state, $context) {
+  public function fieldWidgetSingleElementFormAlter(&$element, FormStateInterface $form_state, $context): void {
     // Set a message if this is for the form displayed to set default value for
     // the field.
     if ($context['default']) {
@@ -45,7 +45,7 @@ class FieldTestHooks {
    * Implements hook_field_widget_complete_form_alter().
    */
   #[Hook('field_widget_complete_form_alter')]
-  public function fieldWidgetCompleteFormAlter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  public function fieldWidgetCompleteFormAlter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context): void {
     _field_test_alter_widget("hook_field_widget_complete_form_alter", $field_widget_complete_form, $form_state, $context);
   }
 
@@ -53,7 +53,7 @@ class FieldTestHooks {
    * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
    */
   #[Hook('field_widget_complete_test_field_widget_multiple_form_alter')]
-  public function fieldWidgetCompleteTestFieldWidgetMultipleFormAlter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  public function fieldWidgetCompleteTestFieldWidgetMultipleFormAlter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context): void {
     _field_test_alter_widget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
   }
 
@@ -61,7 +61,7 @@ class FieldTestHooks {
    * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
    */
   #[Hook('field_widget_complete_test_field_widget_multiple_single_value_form_alter')]
-  public function fieldWidgetCompleteTestFieldWidgetMultipleSingleValueFormAlter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  public function fieldWidgetCompleteTestFieldWidgetMultipleSingleValueFormAlter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context): void {
     _field_test_alter_widget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
   }
 
@@ -71,7 +71,7 @@ class FieldTestHooks {
    * @see \Drupal\system\Tests\Entity\EntityFieldQueryTest::testTablePrefixing()
    */
   #[Hook('query_efq_table_prefixing_test_alter')]
-  public function queryEfqTablePrefixingTestAlter(&$query) {
+  public function queryEfqTablePrefixingTestAlter(&$query): void {
     // Add an additional join onto the entity base table. This will cause an
     // exception if the EFQ does not properly prefix the base table.
     $query->join('entity_test', 'et2', '[%alias].[id] = [entity_test].[id]');
@@ -83,7 +83,7 @@ class FieldTestHooks {
    * @see \Drupal\system\Tests\Entity\EntityQueryTest::testMetaData()
    */
   #[Hook('query_efq_metadata_test_alter')]
-  public function queryEfqMetadataTestAlter(&$query) {
+  public function queryEfqMetadataTestAlter(&$query): void {
     field_test_memorize('field_test_query_efq_metadata_test_alter', $query->getMetadata('foo'));
   }
 
@@ -91,7 +91,7 @@ class FieldTestHooks {
    * Implements hook_entity_extra_field_info_alter().
    */
   #[Hook('entity_extra_field_info_alter')]
-  public function entityExtraFieldInfoAlter(&$info) {
+  public function entityExtraFieldInfoAlter(&$info): void {
     // Remove all extra fields from the 'no_fields' content type;
     unset($info['node']['no_fields']);
   }
@@ -100,7 +100,7 @@ class FieldTestHooks {
    * Implements hook_entity_bundle_field_info_alter().
    */
   #[Hook('entity_bundle_field_info_alter')]
-  public function entityBundleFieldInfoAlter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  public function entityBundleFieldInfoAlter(&$fields, EntityTypeInterface $entity_type, $bundle): void {
     if (($field_name = \Drupal::state()->get('field_test_constraint', FALSE)) && $entity_type->id() == 'entity_test' && $bundle == 'entity_test' && !empty($fields[$field_name])) {
       // Set a property constraint using
       // \Drupal\Core\Field\FieldConfigInterface::setPropertyConstraints().
@@ -123,7 +123,7 @@ class FieldTestHooks {
    * Implements hook_field_ui_preconfigured_options_alter().
    */
   #[Hook('field_ui_preconfigured_options_alter')]
-  public function fieldUiPreconfiguredOptionsAlter(array &$options, $field_type) {
+  public function fieldUiPreconfiguredOptionsAlter(array &$options, $field_type): void {
     if ($field_type === 'test_field_with_preconfigured_options') {
       $options['custom_options']['entity_view_display']['settings'] = ['test_formatter_setting_multiple' => 'altered dummy test string'];
     }
@@ -133,7 +133,7 @@ class FieldTestHooks {
    * Implements hook_field_info_entity_type_ui_definitions_alter().
    */
   #[Hook('field_info_entity_type_ui_definitions_alter')]
-  public function fieldInfoEntityTypeUiDefinitionsAlter(array &$ui_definitions, string $entity_type_id) {
+  public function fieldInfoEntityTypeUiDefinitionsAlter(array &$ui_definitions, string $entity_type_id): void {
     if ($entity_type_id === 'node') {
       $ui_definitions['boolean']['label'] = new TranslatableMarkup('Boolean (overridden by alter)');
     }

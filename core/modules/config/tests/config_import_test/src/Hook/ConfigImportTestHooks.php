@@ -15,7 +15,7 @@ class ConfigImportTestHooks {
    * Implements hook_config_import_steps_alter().
    */
   #[Hook('config_import_steps_alter')]
-  public function configImportStepsAlter(&$sync_steps) {
+  public function configImportStepsAlter(&$sync_steps): void {
     $sync_steps[] = '_config_import_test_config_import_steps_alter';
   }
 

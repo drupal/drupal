@@ -222,7 +222,7 @@ class FieldUiHooks {
    * Implements hook_local_tasks_alter().
    */
   #[Hook('local_tasks_alter')]
-  public function localTasksAlter(&$local_tasks) {
+  public function localTasksAlter(&$local_tasks): void {
     $container = \Drupal::getContainer();
     $local_task = FieldUiLocalTask::create($container, 'field_ui.fields');
     $local_task->alterLocalTasks($local_tasks);
