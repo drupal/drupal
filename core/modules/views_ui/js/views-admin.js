@@ -1332,8 +1332,7 @@
     attach(context) {
       // Only act on the rearrange filter form.
       if (
-        typeof Drupal.tableDrag === 'undefined' ||
-        typeof Drupal.tableDrag['views-rearrange-filters'] === 'undefined'
+        typeof Drupal?.tableDrag?.['views-rearrange-filters'] === 'undefined'
       ) {
         return;
       }
