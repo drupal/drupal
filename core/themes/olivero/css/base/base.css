@@ -27,7 +27,6 @@ html {
 body {
   margin: 0;
   word-wrap: break-word;
-  -webkit-hyphens: auto;
   hyphens: auto;
   color: var(--color-text-neutral-medium);
   background-color: var(--color--gray-100);

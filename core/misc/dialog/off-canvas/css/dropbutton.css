@@ -52,7 +52,7 @@
   border-right: solid 1px var(--off-canvas-dropbutton-border-color); /* LTR */
   border-radius: var(--off-canvas-dropbutton-border-radius);
 }
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child {
+#drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child:dir(rtl) {
   border: solid 1px var(--off-canvas-dropbutton-border-color);
 }
 #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action a {
@@ -107,7 +107,7 @@
   border-right: solid 2px var(--off-canvas-dropbutton-text-color);
   border-bottom: solid 2px var(--off-canvas-dropbutton-text-color);
 }
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-toggle button {
+#drupal-off-canvas-wrapper .dropbutton-toggle button:dir(rtl) {
   border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius);
 }
 /* This is the first <li> element in the list of actions. */
@@ -117,7 +117,7 @@
   border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius); /* LTR */
   background: var(--off-canvas-dropbutton-primary-background-color);
 }
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-action:first-child {
+#drupal-off-canvas-wrapper .dropbutton-action:first-child:dir(rtl) {
   border: solid var(--off-canvas-dropbutton-border-width) var(--off-canvas-dropbutton-border-color);
   border-radius: 0 var(--off-canvas-dropbutton-border-radius) var(--off-canvas-dropbutton-border-radius) 0;
 }
