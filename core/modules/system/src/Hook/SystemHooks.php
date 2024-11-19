@@ -318,7 +318,7 @@ class SystemHooks {
    * ensure files directories have .htaccess files.
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     // Clean up the flood.
     \Drupal::flood()->garbageCollection();
     foreach (Cache::getBins() as $cache_backend) {

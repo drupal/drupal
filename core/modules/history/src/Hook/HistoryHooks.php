@@ -36,7 +36,7 @@ class HistoryHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     \Drupal::database()->delete('history')->condition('timestamp', HISTORY_READ_LIMIT, '<')->execute();
   }
 

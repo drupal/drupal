@@ -382,7 +382,7 @@ class CommentHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     // Store the maximum possible comments per thread (used for node search
     // ranking by reply count).
     \Drupal::state()->set('comment.node_comment_statistics_scale', 1.0 / max(1, \Drupal::service('comment.statistics')->getMaximumCount('node')));

@@ -196,7 +196,7 @@ class LocaleHooks {
    * @see \Drupal\locale\Plugin\QueueWorker\LocaleTranslation
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     // Update translations only when an update frequency was set by the admin
     // and a translatable language was set.
     // Update tasks are added to the queue here but processed by Drupal's cron.

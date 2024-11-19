@@ -189,7 +189,7 @@ class NodeHooks1 {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     // Calculate the oldest and newest node created times, for use in search
     // rankings. (Note that field aliases have to be variables passed by
     // reference.)

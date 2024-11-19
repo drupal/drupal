@@ -93,7 +93,7 @@ class SearchHooks {
    * and cleans up dirty words.
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     /** @var \Drupal\search\SearchPageRepositoryInterface $search_page_repository */
     $search_page_repository = \Drupal::service('search.search_page_repository');
     foreach ($search_page_repository->getIndexableSearchPages() as $entity) {

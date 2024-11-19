@@ -123,7 +123,7 @@ class AnnouncementsFeedHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     $config = \Drupal::config('announcements_feed.settings');
     $interval = $config->get('cron_interval');
     $last_check = \Drupal::state()->get('announcements_feed.last_fetch', 0);
