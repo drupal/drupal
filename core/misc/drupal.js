@@ -370,12 +370,7 @@ window.Drupal = { behaviors: {}, locale: {} };
     options.context = options.context || '';
 
     // Fetch the localized version of the string.
-    if (
-      typeof drupalTranslations !== 'undefined' &&
-      drupalTranslations.strings &&
-      drupalTranslations.strings[options.context] &&
-      drupalTranslations.strings[options.context][str]
-    ) {
+    if (drupalTranslations?.strings?.[options.context]?.[str]) {
       str = drupalTranslations.strings[options.context][str];
     }
 
@@ -518,10 +513,7 @@ window.Drupal = { behaviors: {}, locale: {} };
     let index = 0;
 
     // Determine the index of the plural form.
-    if (
-      typeof drupalTranslations !== 'undefined' &&
-      drupalTranslations.pluralFormula
-    ) {
+    if (drupalTranslations?.pluralFormula) {
       index =
         count in drupalTranslations.pluralFormula
           ? drupalTranslations.pluralFormula[count]
@@ -562,11 +554,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    * @see https://www.drupal.org/core/deprecation#javascript
    */
   Drupal.deprecationError = ({ message }) => {
-    if (
-      drupalSettings.suppressDeprecationErrors === false &&
-      typeof console !== 'undefined' &&
-      console.warn
-    ) {
+    if (drupalSettings.suppressDeprecationErrors === false && console?.warn) {
       console.warn(`[Deprecation] ${message}`);
     }
   };
