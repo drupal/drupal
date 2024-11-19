@@ -138,6 +138,10 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Log out');
     $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
 
+    // Try to save without entering password.
+    $this->submitForm([], 'Save');
+    $this->assertSession()->pageTextContains('Password field is required.');
+
     // Change the forgotten password.
     $password = \Drupal::service('password_generator')->generate();
     $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
