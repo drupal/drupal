@@ -114,7 +114,7 @@ class CommonTestHooks {
    * @see common_test_cron_helper()
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     throw new \Exception('Uncaught exception');
   }
 

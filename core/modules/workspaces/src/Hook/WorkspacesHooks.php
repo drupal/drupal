@@ -228,7 +228,7 @@ class WorkspacesHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     \Drupal::service('workspaces.manager')->purgeDeletedWorkspacesBatch();
   }
 

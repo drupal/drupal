@@ -217,7 +217,7 @@ class LayoutBuilderHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     if (\Drupal::moduleHandler()->moduleExists('block_content')) {
       /** @var \Drupal\layout_builder\InlineBlockEntityOperations $entity_operations */
       $entity_operations = \Drupal::classResolver(InlineBlockEntityOperations::class);

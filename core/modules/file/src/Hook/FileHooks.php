@@ -163,7 +163,7 @@ class FileHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     $age = \Drupal::config('system.file')->get('temporary_maximum_age');
     $file_storage = \Drupal::entityTypeManager()->getStorage('file');
     /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */

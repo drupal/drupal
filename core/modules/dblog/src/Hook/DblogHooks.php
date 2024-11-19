@@ -61,7 +61,7 @@ class DblogHooks {
    * Controls the size of the log table, paring it to 'dblog_row_limit' messages.
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     // Cleanup the watchdog table.
     $row_limit = \Drupal::config('dblog.settings')->get('row_limit');
     // For row limit n, get the wid of the nth row in descending wid order.

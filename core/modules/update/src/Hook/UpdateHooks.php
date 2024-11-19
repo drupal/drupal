@@ -165,7 +165,7 @@ class UpdateHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     $update_config = \Drupal::config('update.settings');
     $frequency = $update_config->get('check.interval_days');
     $interval = 60 * 60 * 24 * $frequency;

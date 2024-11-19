@@ -161,7 +161,7 @@ class FieldHooks {
    * Implements hook_cron().
    */
   #[Hook('cron')]
-  public function cron() {
+  public function cron(): void {
     // Do a pass of purging on deleted Field API data, if any exists.
     $limit = \Drupal::config('field.settings')->get('purge_batch_size');
     field_purge_batch($limit);
