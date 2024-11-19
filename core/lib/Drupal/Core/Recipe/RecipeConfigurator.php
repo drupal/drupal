@@ -16,6 +16,13 @@ final class RecipeConfigurator {
   public readonly array $recipes;
 
   /**
+   * A cache of already-loaded recipes, keyed by path.
+   *
+   * @var \Drupal\Core\Recipe\Recipe[]
+   */
+  private static array $cache = [];
+
+  /**
    * @param string[] $recipes
    *   A list of recipes for a recipe to apply. The recipes will be applied in
    *   the order listed.
@@ -56,8 +63,11 @@ final class RecipeConfigurator {
       $path = $include_path . "/$name/recipe.yml";
     }
 
+    if (array_key_exists($path, static::$cache)) {
+      return static::$cache[$path];
+    }
     if (file_exists($path)) {
-      return Recipe::createFromDirectory(dirname($path));
+      return static::$cache[$path] = Recipe::createFromDirectory(dirname($path));
     }
     $search_path = dirname($path, 2);
     throw new UnknownRecipeException($name, $search_path, sprintf("Can not find the %s recipe, search path: %s", $name, $search_path));
