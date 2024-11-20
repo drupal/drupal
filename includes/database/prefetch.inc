@@ -293,6 +293,15 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
             $class_name = $this->fetchOptions['class'];
           }
           if (count($this->fetchOptions['constructor_args'])) {
+            // Verify the current db connection to avoid this code being called
+            // in an inappropriate context.
+            $db_connection_options = Database::getConnection()->getConnectionOptions();
+            $defaults = array('sqlite', 'oracle');
+            $extras = variable_get('database_statement_prefetch_valid_db_drivers', array());
+            $valid_db_drivers = array_merge($defaults, $extras);
+            if (!in_array($db_connection_options['driver'], $valid_db_drivers)) {
+              throw new BadMethodCallException();
+            }
             $reflector = new ReflectionClass($class_name);
             $result = $reflector->newInstanceArgs($this->fetchOptions['constructor_args']);
           }

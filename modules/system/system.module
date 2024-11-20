@@ -4139,3 +4139,11 @@ function system_file_download($uri) {
     }
   }
 }
+
+/**
+ * Implements hook_registry_files_alter
+ */
+function system_registry_files_alter(&$files, $modules) {
+  // Database drivers that use DatabaseStatementPrefetch must include this file.
+  unset($files['includes/database/prefetch.inc']);
+}

@@ -229,7 +229,7 @@ Drupal.overlay.destroy = function () {
  */
 Drupal.overlay.redirect = function (url) {
   // Create a native Link object, so we can use its object methods.
-  var link = $(url.link(url)).get(0);
+  var link = $("<a>").attr("href", url).get(0);
 
   // If the link is already open, force the hashchange event to simulate reload.
   if (window.location.href == link.href) {
@@ -865,7 +865,7 @@ Drupal.overlay.resetActiveClass = function(activePath) {
 Drupal.overlay.getPath = function (link, ignorePathFromQueryString) {
   if (typeof link == 'string') {
     // Create a native Link object, so we can use its object methods.
-    link = $(link.link(link)).get(0);
+    link = $("<a>").attr("href", link).get(0);
   }
 
   var path = link.pathname;
