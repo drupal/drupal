@@ -1190,6 +1190,15 @@ class UpdateQuery extends Query implements QueryConditionInterface {
    *   The prepared statement.
    */
   public function __toString() {
+    if (!is_array($this->expressionFields) || !is_array($this->fields)) {
+      if (version_compare(PHP_VERSION, '7.4', '>=')) {
+        throw new UnexpectedValueException();
+      }
+      else {
+        drupal_trigger_fatal_error('Unexpected Value');
+      }
+    }
+
     // Create a sanitized comment string to prepend to the query.
     $comments = $this->connection->makeComment($this->comments);
 

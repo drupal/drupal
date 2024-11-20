@@ -63,6 +63,14 @@ class InsertQuery_mysql extends InsertQuery {
 
     $max_placeholder = 0;
     $values = array();
+    if (!is_array($this->insertValues)) {
+      if (version_compare(PHP_VERSION, '7.4', '>=')) {
+        throw new UnexpectedValueException();
+      }
+      else {
+        drupal_trigger_fatal_error('Unexpected Value');
+      }
+    }
     if (count($this->insertValues)) {
       foreach ($this->insertValues as $insert_values) {
         $placeholders = array();
@@ -96,6 +104,14 @@ class TruncateQuery_mysql extends TruncateQuery { }
 class UpdateQuery_mysql extends UpdateQuery {
   public function __toString() {
     if (method_exists($this->connection, 'escapeField')) {
+      if (!is_array($this->fields)) {
+        if (version_compare(PHP_VERSION, '7.4', '>=')) {
+          throw new UnexpectedValueException();
+        }
+        else {
+          drupal_trigger_fatal_error('Unexpected Value');
+        }
+      }
       $escapedFields = array();
       foreach ($this->fields as $field => $data) {
         $field = $this->connection->escapeField($field);

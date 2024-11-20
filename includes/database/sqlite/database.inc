@@ -134,6 +134,9 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    */
   public function __destruct() {
     if ($this->tableDropped && !empty($this->attachedDatabases)) {
+      if (!is_array($this->attachedDatabases)) {
+        throw new UnexpectedValueException();
+      }
       foreach ($this->attachedDatabases as $prefix) {
         // Check if the database is now empty, ignore the internal SQLite tables.
         try {
