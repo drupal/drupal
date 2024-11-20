@@ -17,7 +17,7 @@ trait DependencySerializationTrait {
    * @var array
    */
   // phpcs:ignore Drupal.Classes.PropertyDeclaration, Drupal.NamingConventions.ValidVariableName.LowerCamelName
-  protected $_serviceIds = [];
+  protected array $_serviceIds = [];
 
   /**
    * An array of entity type IDs keyed by the property name of their storages.
@@ -25,7 +25,7 @@ trait DependencySerializationTrait {
    * @var array
    */
   // phpcs:ignore Drupal.Classes.PropertyDeclaration, Drupal.NamingConventions.ValidVariableName.LowerCamelName
-  protected $_entityStorages = [];
+  protected array $_entityStorages = [];
 
   /**
    * {@inheritdoc}

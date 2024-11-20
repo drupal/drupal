@@ -164,6 +164,12 @@ class Update extends Query implements ConditionInterface {
    *   The prepared statement.
    */
   public function __toString() {
+    if (!is_array($this->fields) ||
+      !is_array($this->arguments) ||
+      !is_array($this->expressionFields)) {
+      throw new \UnexpectedValueException();
+    }
+
     // Create a sanitized comment string to prepend to the query.
     $comments = $this->connection->makeComment($this->comments);
 

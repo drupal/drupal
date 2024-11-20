@@ -6,6 +6,7 @@ namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\Site\Settings;
 
 /**
  * An implementation of StatementInterface that pre-fetches all data.
@@ -344,6 +345,15 @@ class StatementPrefetch implements \Iterator, StatementInterface {
             $class_name = $this->fetchOptions['class'];
           }
           if (count($this->fetchOptions['constructor_args'])) {
+            // Verify the current db connection to avoid this code being called
+            // in an inappropriate context.
+            $defaults = ['sqlite', 'oracle'];
+            $extras = Settings::get('database_statement_prefetch_valid_db_drivers', []);
+            $valid_db_drivers = array_merge($defaults, $extras);
+            $db_connection_options = Database::getConnection()->getConnectionOptions();
+            if (!in_array($db_connection_options['driver'], $valid_db_drivers)) {
+              throw new \BadMethodCallException();
+            }
             $reflector = new \ReflectionClass($class_name);
             $result = $reflector->newInstanceArgs($this->fetchOptions['constructor_args']);
           }
