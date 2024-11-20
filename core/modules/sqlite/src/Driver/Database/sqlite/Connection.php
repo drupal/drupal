@@ -58,7 +58,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    *
    * @var array
    */
-  protected $attachedDatabases = [];
+  protected array $attachedDatabases = [];
 
   /**
    * Whether or not a table has been dropped this request.

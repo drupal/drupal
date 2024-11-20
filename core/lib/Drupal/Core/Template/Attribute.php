@@ -73,7 +73,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    *
    * @var \Drupal\Core\Template\AttributeValueBase[]
    */
-  protected $storage = [];
+  protected array $storage = [];
 
   /**
    * Constructs a \Drupal\Core\Template\Attribute object.
