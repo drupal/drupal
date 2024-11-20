@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -79,7 +80,7 @@ class StorageComparer implements StorageComparerInterface {
    *
    * @var \Drupal\Core\Cache\MemoryBackend
    */
-  protected $targetCacheStorage;
+  protected CacheBackendInterface $targetCacheStorage;
 
   /**
    * Constructs the Configuration storage comparer.
