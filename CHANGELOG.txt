@@ -1,3 +1,9 @@
+Drupal 7.102, 2024-11-20
+------------------------
+- Fixed security issues:
+   - SA-CORE-2024-005
+   - SA-CORE-2024-008
+
 Drupal 7.101, 2024-06-05
 -----------------------
 - Various security improvements
