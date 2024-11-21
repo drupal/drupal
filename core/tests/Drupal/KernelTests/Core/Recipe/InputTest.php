@@ -11,6 +11,7 @@ use Drupal\Core\Recipe\InputCollectorInterface;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\Core\TypedData\DataDefinitionInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Console\Input\InputInterface;
@@ -79,7 +80,9 @@ class InputTest extends KernelTestBase {
       $this->fail('Expected an exception due to validation failure, but none was thrown.');
     }
     catch (ValidationFailedException $e) {
-      $this->assertSame('not-an-email-address', $e->getValue());
+      $value = $e->getValue();
+      $this->assertInstanceOf(TypedDataInterface::class, $value);
+      $this->assertSame('not-an-email-address', $value->getValue());
       $this->assertSame('This value is not a valid email address.', (string) $e->getViolations()->get(0)->getMessage());
     }
   }
