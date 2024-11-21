@@ -301,6 +301,13 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
     foreach ($properties as $property) {
       $property_name = $property->getName();
 
+      // Only modify properties that will accept strings as default values.
+      if ($property->hasType()) {
+        if ($property->getType()->getName() !== 'string') {
+          continue;
+        }
+      }
+
       // Modify each entity property on the clone and assert that the change is
       // not propagated to the original entity.
       $property->setValue($entity, 'default-value');
