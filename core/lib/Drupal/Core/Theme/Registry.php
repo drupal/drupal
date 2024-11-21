@@ -391,9 +391,16 @@ class Registry implements DestructableInterface {
       $cache = $cached->data;
     }
     else {
-      $this->moduleHandler->invokeAllWith('theme', function (callable $callback, string $module) use (&$cache) {
-        $this->processExtension($cache, $module, 'module', $module, $this->moduleList->getPath($module));
-      });
+      if (defined('MAINTENANCE_MODE') && constant('MAINTENANCE_MODE') === 'install') {
+        // System is still set here so preprocess can be updated in install.
+        $this->processExtension($cache, 'system', 'install', 'system', $this->moduleList->getPath('system'));
+      }
+      else {
+        $this->moduleHandler->invokeAllWith('theme', function (callable $callback, string $module) use (&$cache) {
+          $this->processExtension($cache, $module, 'module', $module, $this->moduleList->getPath($module));
+        });
+      }
+
       // Only cache this registry if all modules are loaded.
       if ($this->moduleHandler->isLoaded()) {
         $this->cache->set("theme_registry:build:modules", $cache);
@@ -464,12 +471,12 @@ class Registry implements DestructableInterface {
    *   The name of the module, theme engine, base theme engine, theme or base
    *   theme implementing hook_theme().
    * @param string $type
-   *   One of 'module', 'theme_engine', 'base_theme_engine', 'theme', or
-   *   'base_theme'. Unlike regular hooks that can only be implemented by
-   *   modules, each of these can implement hook_theme(). This function is
-   *   called in aforementioned order and new entries override older ones. For
-   *   example, if a theme hook is both defined by a module and a theme, then
-   *   the definition in the theme will be used.
+   *   One of 'module', 'theme_engine', 'base_theme_engine', 'theme',
+   *   'base_theme', or 'install'. Unlike regular hooks that can only be
+   *   implemented by modules, each of these can implement hook_theme(). This
+   *   function is called in aforementioned order and new entries override
+   *   older ones. For example, if a theme hook is both defined by a module and
+   *   a theme, then the definition in the theme will be used.
    * @param string $theme
    *   The actual name of theme, module, etc. that is being processed.
    * @param string $path
@@ -501,6 +508,12 @@ class Registry implements DestructableInterface {
     $result = [];
     if ($type === 'module') {
       $result = $this->moduleHandler->invoke($name, 'theme', $args);
+    }
+    elseif ($type === 'install') {
+      $result = ThemeCommonElements::commonElements();
+      // Reset to module so that preprocess hooks are handled in install.
+      $type = 'module';
+      $args = [$cache, $type, $theme, $path];
     }
     else {
       $function = $name . '_theme';
