@@ -76,6 +76,14 @@ namespace Drupal\Core\ProxyClass\Render {
             return $this->lazyLoadItself()->renderBarePage($content, $title, $page_theme_property, $page_additions);
         }
 
+        /**
+         * {@inheritdoc}
+         */
+        public function systemPageAttachments(array &$page): void
+        {
+            $this->lazyLoadItself()->systemPageAttachments($page);
+        }
+
     }
 
 }
