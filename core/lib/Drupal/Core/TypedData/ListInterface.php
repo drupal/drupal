@@ -92,6 +92,14 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
   public function first();
 
   /**
+   * Returns the last item in this list.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface|null
+   *   The last item in this list, or NULL if there are no items.
+   */
+  public function last(): ?TypedDataInterface;
+
+  /**
    * Appends a new item to the list.
    *
    * @param mixed $value
