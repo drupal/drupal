@@ -564,10 +564,3 @@ form_test.incorrect_config_target:
     _admin_route: TRUE
   requirements:
     _access: 'TRUE'
-
-form_test.recipe_input:
-  path: '/form-test/recipe-input'
-  defaults:
-    _form: '\Drupal\form_test\Form\FormTestRecipeInputForm'
-  requirements:
-    _access: 'TRUE'

@@ -72,7 +72,7 @@ final class InputConfigurator {
         $definition['constraints'],
       );
       $data_definition->setSettings($definition);
-      $this->data[$name] = $typedDataManager->create($data_definition, name: "$prefix.$name");
+      $this->data[$name] = $typedDataManager->create($data_definition);
     }
   }
 
@@ -112,9 +112,9 @@ final class InputConfigurator {
     foreach ($this->dependencies->recipes as $dependency) {
       $descriptions = array_merge($descriptions, $dependency->input->describeAll());
     }
-    foreach ($this->data as $data) {
-      $name = $data->getName();
-      $descriptions[$name] = $data->getDataDefinition()->getDescription();
+    foreach ($this->getDataDefinitions() as $key => $definition) {
+      $name = $this->prefix . '.' . $key;
+      $descriptions[$name] = $definition->getDescription();
     }
     return $descriptions;
   }
@@ -153,7 +153,7 @@ final class InputConfigurator {
       $definition = $data->getDataDefinition();
 
       $value = $collector->collectValue(
-        $data->getName(),
+        $this->prefix . '.' . $key,
         $definition,
         $this->getDefaultValue($definition),
       );
@@ -161,7 +161,7 @@ final class InputConfigurator {
 
       $violations = $data->validate();
       if (count($violations) > 0) {
-        throw new ValidationFailedException($data, $violations);
+        throw new ValidationFailedException($value, $violations);
       }
       $this->values[$key] = $data->getCastedValue();
     }

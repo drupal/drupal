@@ -9,7 +9,6 @@ use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\Render\Element;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\RegexConstraint;
 use Symfony\Component\Validator\Constraints\All;
@@ -204,8 +203,8 @@ final class Recipe {
                   'interface' => PrimitiveInterface::class,
                 ]),
               ],
-              // The `prompt` and `form` elements, though optional, have their
-              // own sets of constraints,
+              // If there is a `prompt` element, it has its own set of
+              // constraints.
               'prompt' => new Optional([
                 new Collection([
                   'method' => [
@@ -214,19 +213,6 @@ final class Recipe {
                   'arguments' => new Optional([
                     new Type('array'),
                   ]),
-                ]),
-              ]),
-              'form' => new Optional([
-                new Sequentially([
-                  new Type('associative_array'),
-                  // Every element in the `form` array has to be a form API
-                  // property, prefixed with `#`. Because recipe inputs can only
-                  // be primitive data types, child elements aren't allowed.
-                  new Callback(function (array $element, ExecutionContextInterface $context): void {
-                    if (Element::children($element)) {
-                      $context->addViolation('Form elements for recipe inputs cannot have child elements.');
-                    }
-                  }),
                 ]),
               ]),
               // Every input must define a default value.
