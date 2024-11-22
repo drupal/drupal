@@ -163,4 +163,28 @@ class ConfigActionsTest extends KernelTestBase {
     $this->assertSame('last', end($blocks));
   }
 
+  /**
+   * Tests using the PlaceBlock action in an empty region.
+   */
+  public function testPlaceBlockInEmptyRegion(): void {
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
+    $query = $this->container->get(EntityTypeManagerInterface::class)
+      ->getStorage('block')
+      ->getQuery()
+      ->count()
+      ->condition('theme', 'olivero')
+      ->condition('region', 'footer_top');
+    $this->assertSame(0, $query->execute());
+
+    // Place a block in that region.
+    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.test', [
+      'plugin' => 'system_powered_by_block',
+      'region' => [
+        'olivero' => 'footer_top',
+      ],
+      'position' => 'first',
+    ]);
+    $this->assertSame(1, $query->execute());
+  }
+
 }

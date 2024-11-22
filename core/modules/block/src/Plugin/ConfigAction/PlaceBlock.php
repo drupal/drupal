@@ -74,15 +74,17 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
         'theme' => $theme,
         'region' => $value['region'],
       ]);
-      // Sort the blocks by weight. Don't use \Drupal\block\Entity\Block::sort()
-      // here because it seems to be intended to sort blocks in the UI, where
-      // we really just want to get the weights right in this situation.
-      uasort($blocks, fn (BlockInterface $a, BlockInterface $b) => $a->getWeight() <=> $b->getWeight());
+      if ($blocks) {
+        // Sort the blocks by weight. Don't use \Drupal\block\Entity\Block::sort()
+        // here because it seems to be intended to sort blocks in the UI, where
+        // we really just want to get the weights right in this situation.
+        uasort($blocks, fn (BlockInterface $a, BlockInterface $b) => $a->getWeight() <=> $b->getWeight());
 
-      $value['weight'] = match ($value['position']) {
-        'first' => reset($blocks)->getWeight() - 1,
-        'last' => end($blocks)->getWeight() + 1,
-      };
+        $value['weight'] = match ($value['position']) {
+          'first' => reset($blocks)->getWeight() - 1,
+          'last' => end($blocks)->getWeight() + 1,
+        };
+      }
     }
     // Remove values that are not valid properties of block entities.
     unset($value['position'], $value['default_region']);
