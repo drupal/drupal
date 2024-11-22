@@ -131,12 +131,10 @@ class NavigationHooks {
   #[Hook('plugin_filter_block__layout_builder_alter')]
   public function pluginFilterBlockLayoutBuilderAlter(array &$definitions, array $extra): void {
     if (($extra['section_storage'] ?? NULL) instanceof NavigationSectionStorage) {
-      // Remove all blocks other than the ones we support.
-      $navigation_safe = ['navigation_user', 'navigation_shortcuts', 'navigation_menu'];
-      $definitions = array_filter($definitions, static function (array $definition, string $plugin_id) use ($navigation_safe) : bool {
-          [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin_id);
-          return in_array($base_plugin_id, $navigation_safe, TRUE);
-      }, ARRAY_FILTER_USE_BOTH);
+      // Include only blocks explicitly indicated as Navigation allowed.
+      $definitions = array_filter($definitions,
+        fn (array $definition): bool => ($definition['allow_in_navigation'] ?? FALSE) === TRUE
+      );
     }
   }
 
@@ -156,12 +154,28 @@ class NavigationHooks {
    */
   #[Hook('block_alter')]
   public function blockAlter(&$definitions) : void {
+    // Hide Navigation specific blocks from the generic UI.
     $hidden = ['navigation_user', 'navigation_shortcuts', 'navigation_menu', 'navigation_link'];
     foreach ($hidden as $block_id) {
       if (isset($definitions[$block_id])) {
         $definitions[$block_id]['_block_ui_hidden'] = TRUE;
       }
     }
+
+    // Add the allow_in_navigation attribute to those blocks valid for Navigation.
+    // @todo Refactor to use actual block Attribute once
+    //   https://www.drupal.org/project/drupal/issues/3443882 is merged.
+    array_walk($definitions, function (&$definition, $block_id) {
+      $allow_in_navigation = [
+        'navigation_user',
+        'navigation_shortcuts',
+        'navigation_menu',
+      ];
+      [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $block_id);
+      if (in_array($base_plugin_id, $allow_in_navigation, TRUE)) {
+        $definition['allow_in_navigation'] = TRUE;
+      }
+    });
   }
 
   /**
