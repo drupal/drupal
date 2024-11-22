@@ -61354,12 +61354,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/ContentEntityBaseUnitTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityFormTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityFormTest\\:\\:providerTestFormIds\\(\\) has no return type specified\\.$#',
 	'count' => 1,
