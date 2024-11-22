@@ -75,12 +75,9 @@ class UpdateSemverCoreSecurityCoverageTest extends UpdateSemverCoreTestBase {
    * - drupal.sec.8.2.0_9.0.0.xml
    *   - 8.2.0
    *   - 9.0.0
-   * - drupal.sec.9.5.0.xml
-   *   - 9.4.0
-   *   - 9.5.0
-   * - drupal.sec.10.5.0.xml
-   *   - 10.4.0
+   * - drupal.sec.10.6.0.xml
    *   - 10.5.0
+   *   - 10.6.0
    */
   protected static function securityCoverageMessageProvider() {
     $release_coverage_message = 'Visit the release cycle overview for more information on supported releases.';
@@ -160,88 +157,88 @@ class UpdateSemverCoreSecurityCoverageTest extends UpdateSemverCoreTestBase {
       ],
     ];
 
-    // Drupal 9.4.x test cases.
+    // Drupal 10.5.x test cases.
     $test_cases += [
-      // Ensure that a message is displayed during 9.4's active support.
-      '9.4.0, supported' => [
-        'installed_version' => '9.4.0',
-        'fixture' => 'sec.9.5.0',
+      // Ensure that a message is displayed during 10.5's active support.
+      '10.5.0, supported' => [
+        'installed_version' => '10.5.0',
+        'fixture' => 'sec.10.6.0',
         'requirements_section_heading' => 'Checked',
-        'message' => "Covered until 2023-Jun-21 $release_coverage_message",
-        'mock_date' => '2022-12-13',
+        'message' => "Covered until 2026-Jun-17 $release_coverage_message",
+        'mock_date' => '2025-06-25',
       ],
       // Ensure a warning is displayed if less than six months remain until the
-      // end of 9.4's security coverage.
-      '9.4.0, supported, 6 months warn' => [
-        'installed_version' => '9.4.0',
-        'fixture' => 'sec.9.5.0',
+      // end of 10.5's security coverage.
+      '10.5.0, supported, 6 months warn' => [
+        'installed_version' => '10.5.0',
+        'fixture' => 'sec.10.6.0',
         'requirements_section_heading' => 'Warnings found',
-        'message' => "Covered until 2023-Jun-21 $update_soon_message $release_coverage_message",
-        'mock_date' => '2022-12-14',
+        'message' => "Covered until 2026-Jun-17 $update_soon_message $release_coverage_message",
+        'mock_date' => '2025-12-10',
       ],
     ];
     // Ensure that the message does not change, including on the last day of
     // security coverage.
-    $test_cases['9.4.0, supported, last day warn'] = $test_cases['9.4.0, supported, 6 months warn'];
-    $test_cases['9.4.0, supported, last day warn']['mock_date'] = '2023-06-20';
+    $test_cases['10.5.0, supported, last day warn'] = $test_cases['10.5.0, supported, 6 months warn'];
+    $test_cases['10.5.0, supported, last day warn']['mock_date'] = '2026-06-16';
 
-    // Ensure that if the 9.4 support window is finished a message is
+    // Ensure that if the 10.5 support window is finished a message is
     // displayed.
-    $test_cases['9.4.0, support over'] = [
-      'installed_version' => '9.4.0',
-      'fixture' => 'sec.9.5.0',
+    $test_cases['10.5.0, support over'] = [
+      'installed_version' => '10.5.0',
+      'fixture' => 'sec.10.6.0',
       'requirements_section_heading' => 'Errors found',
       'message' => "$coverage_ended_message $update_asap_message $release_coverage_message",
-      'mock_date' => '2023-06-22',
+      'mock_date' => '2026-06-18',
     ];
 
-    // Drupal 9.5 test cases.
-    $test_cases['9.5.0, supported'] = [
-      'installed_version' => '9.5.0',
-      'fixture' => 'sec.9.5.0',
+    // Drupal 10.6 test cases.
+    $test_cases['10.6.0, supported'] = [
+      'installed_version' => '10.6.0',
+      'fixture' => 'sec.10.6.0',
       'requirements_section_heading' => 'Checked',
-      'message' => "Covered until 2023-Nov $release_coverage_message",
-      'mock_date' => '2023-01-01',
+      'message' => "Covered until 2026-Dec-09 $release_coverage_message",
+      'mock_date' => '2026-01-01',
     ];
     // Ensure a warning is displayed if less than six months remain until the
-    // end of 9.5's security coverage.
-    $test_cases['9.5.0, supported, 6 months warn'] = [
-      'installed_version' => '9.5.0',
-      'fixture' => 'sec.9.5.0',
+    // end of 10.6's security coverage.
+    $test_cases['10.6.0, supported, 6 months warn'] = [
+      'installed_version' => '10.6.0',
+      'fixture' => 'sec.10.6.0',
       'requirements_section_heading' => 'Warnings found',
-      'message' => "Covered until 2023-Nov $update_soon_message $release_coverage_message",
-      'mock_date' => '2023-05-15',
+      'message' => "Covered until 2026-Dec-09 $update_soon_message $release_coverage_message",
+      'mock_date' => '2026-06-17',
     ];
 
     // Ensure that the message does not change, including on the last day of
     // security coverage.
-    $test_cases['9.5.0, supported, last day warn'] = $test_cases['9.5.0, supported, 6 months warn'];
-    $test_cases['9.5.0, supported, last day warn']['mock_date'] = '2023-10-31';
+    $test_cases['10.6.0, supported, last day warn'] = $test_cases['10.6.0, supported, 6 months warn'];
+    $test_cases['10.6.0, supported, last day warn']['mock_date'] = '2026-12-08';
 
     // Ensure that if the support window is finished a message is displayed.
-    $test_cases['9.5.0, support over'] = [
-      'installed_version' => '9.5.0',
-      'fixture' => 'sec.9.5.0',
+    $test_cases['10.6.0, support over'] = [
+      'installed_version' => '10.6.0',
+      'fixture' => 'sec.10.6.0',
       'requirements_section_heading' => 'Errors found',
       'message' => "$coverage_ended_message $update_asap_message $release_coverage_message",
-      'mock_date' => '2023-11-01',
+      'mock_date' => '2026-12-10',
     ];
 
-    // Drupal 9 test cases.
+    // Drupal 11 test cases.
     $test_cases += [
-      // Ensure the end dates for 9.4 and 9.5 only apply to major version 9.
-      '10.5.0' => [
-        'installed_version' => '10.5.0',
-        'fixture' => 'sec.10.5.0',
+      // Ensure the end dates for 10.5 and 10.6 only apply to major version 10.
+      '11.6.0' => [
+        'installed_version' => '11.6.0',
+        'fixture' => 'sec.11.6.0',
         'requirements_section_heading' => 'Checked',
-        'message' => "Covered until 10.7.0 $release_coverage_message",
+        'message' => "Covered until 11.8.0 $release_coverage_message",
         'mock_date' => '',
       ],
-      '10.4.0' => [
-        'installed_version' => '10.4.0',
-        'fixture' => 'sec.10.5.0',
+      '11.5.0' => [
+        'installed_version' => '11.5.0',
+        'fixture' => 'sec.11.6.0',
         'requirements_section_heading' => 'Warnings found',
-        'message' => "Covered until 10.6.0 Update to 10.5 or higher soon to continue receiving security updates. $release_coverage_message",
+        'message' => "Covered until 11.7.0 Update to 11.6 or higher soon to continue receiving security updates. $release_coverage_message",
         'mock_date' => '',
       ],
     ];
