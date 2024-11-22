@@ -159,17 +159,16 @@ class EntityTypeTest extends UnitTestCase {
    * Tests the getHandler() method.
    */
   public function testGetHandler(): void {
-    $controller = $this->getTestHandlerClass();
     $entity_type = $this->setUpEntityType([
       'handlers' => [
-        'storage' => $controller,
+        'storage' => StubEntityHandlerBase::class,
         'form' => [
-          'default' => $controller,
+          'default' => StubEntityHandlerBase::class,
         ],
       ],
     ]);
-    $this->assertSame($controller, $entity_type->getHandlerClass('storage'));
-    $this->assertSame($controller, $entity_type->getHandlerClass('form', 'default'));
+    $this->assertSame(StubEntityHandlerBase::class, $entity_type->getHandlerClass('storage'));
+    $this->assertSame(StubEntityHandlerBase::class, $entity_type->getHandlerClass('form', 'default'));
     $this->assertNull($entity_type->getHandlerClass('foo'));
     $this->assertNull($entity_type->getHandlerClass('foo', 'bar'));
   }
@@ -178,76 +177,70 @@ class EntityTypeTest extends UnitTestCase {
    * Tests the getStorageClass() method.
    */
   public function testGetStorageClass(): void {
-    $controller = $this->getTestHandlerClass();
     $entity_type = $this->setUpEntityType([
       'handlers' => [
-        'storage' => $controller,
+        'storage' => StubEntityHandlerBase::class,
       ],
     ]);
-    $this->assertSame($controller, $entity_type->getStorageClass());
+    $this->assertSame(StubEntityHandlerBase::class, $entity_type->getStorageClass());
   }
 
   /**
    * Tests the setStorageClass() method.
    */
   public function testSetStorageClass(): void {
-    $controller = $this->getTestHandlerClass();
     $entity_type = $this->setUpEntityType([]);
-    $this->assertSame($entity_type, $entity_type->setStorageClass($controller));
+    $this->assertSame($entity_type, $entity_type->setStorageClass(StubEntityHandlerBase::class));
   }
 
   /**
    * Tests the getListBuilderClass() method.
    */
   public function testGetListBuilderClass(): void {
-    $controller = $this->getTestHandlerClass();
     $entity_type = $this->setUpEntityType([
       'handlers' => [
-        'list_builder' => $controller,
+        'list_builder' => StubEntityHandlerBase::class,
       ],
     ]);
-    $this->assertSame($controller, $entity_type->getListBuilderClass());
+    $this->assertSame(StubEntityHandlerBase::class, $entity_type->getListBuilderClass());
   }
 
   /**
    * Tests the getAccessControlClass() method.
    */
   public function testGetAccessControlClass(): void {
-    $controller = $this->getTestHandlerClass();
     $entity_type = $this->setUpEntityType([
       'handlers' => [
-        'access' => $controller,
+        'access' => StubEntityHandlerBase::class,
       ],
     ]);
-    $this->assertSame($controller, $entity_type->getAccessControlClass());
+    $this->assertSame(StubEntityHandlerBase::class, $entity_type->getAccessControlClass());
   }
 
   /**
    * Tests the getFormClass() method.
    */
   public function testGetFormClass(): void {
-    $controller = $this->getTestHandlerClass();
     $operation = 'default';
     $entity_type = $this->setUpEntityType([
       'handlers' => [
         'form' => [
-          $operation => $controller,
+          $operation => StubEntityHandlerBase::class,
         ],
       ],
     ]);
-    $this->assertSame($controller, $entity_type->getFormClass($operation));
+    $this->assertSame(StubEntityHandlerBase::class, $entity_type->getFormClass($operation));
   }
 
   /**
    * Tests the hasFormClasses() method.
    */
   public function testHasFormClasses(): void {
-    $controller = $this->getTestHandlerClass();
     $operation = 'default';
     $entity_type1 = $this->setUpEntityType([
       'handlers' => [
         'form' => [
-          $operation => $controller,
+          $operation => StubEntityHandlerBase::class,
         ],
       ],
     ]);
@@ -262,13 +255,12 @@ class EntityTypeTest extends UnitTestCase {
    * Tests the getViewBuilderClass() method.
    */
   public function testGetViewBuilderClass(): void {
-    $controller = $this->getTestHandlerClass();
     $entity_type = $this->setUpEntityType([
       'handlers' => [
-        'view_builder' => $controller,
+        'view_builder' => StubEntityHandlerBase::class,
       ],
     ]);
-    $this->assertSame($controller, $entity_type->getViewBuilderClass());
+    $this->assertSame(StubEntityHandlerBase::class, $entity_type->getViewBuilderClass());
   }
 
   /**
@@ -438,16 +430,6 @@ class EntityTypeTest extends UnitTestCase {
       [['label' => 'Entity Label Foo'], 'Entity Label Foo bundle'],
       [['bundle_label' => 'Bundle Label Bar'], 'Bundle Label Bar'],
     ];
-  }
-
-  /**
-   * Gets a mock controller class name.
-   *
-   * @return string
-   *   A mock controller class name.
-   */
-  protected function getTestHandlerClass(): string {
-    return get_class($this->getMockForAbstractClass('Drupal\Core\Entity\EntityHandlerBase'));
   }
 
   /**
