@@ -3,7 +3,7 @@
 module.exports = {
   '@tags': ['core', 'ckeditor5'],
   before(browser) {
-    browser.drupalInstall({ installProfile: 'minimal' });
+    browser.drupalInstall({ installProfile: 'testing' });
   },
   after(browser) {
     browser.drupalUninstall();
@@ -14,6 +14,7 @@ module.exports = {
         // Enable required modules.
         .drupalRelativeURL('/admin/modules')
         .click('[name="modules[ckeditor5][enable]"]')
+        .click('[name="modules[node][enable]"]')
         .click('[name="modules[field_ui][enable]"]')
         .submitForm('input[type="submit"]') // Submit module form.
         .waitForElementVisible(
