@@ -424,6 +424,11 @@ JSON;
    */
   protected function getCoreStability() {
     $version = \Drupal::VERSION;
+    // If the current version is x.y-dev then this is the equivalent of the main
+    // branch and should be treated as a dev release.
+    if (preg_match('/^(\d)+\.(\d)+-dev$/', $version)) {
+      return 'dev';
+    }
     $stability = VersionParser::parseStability($version);
     if ($stability === 'dev') {
       // Strip off "-dev";
