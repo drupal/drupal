@@ -1,0 +1,1 @@
+!function(i){const e=i.fa=i.fa||{};e.dictionary=Object.assign(e.dictionary||{},{"Disable editing":"غیرفعال کردن ویرایش","Enable editing":"فعال کردن ویرایش","Navigate editable regions":"","Next editable region":"","Previous editable region":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

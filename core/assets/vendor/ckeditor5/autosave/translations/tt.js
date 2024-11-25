@@ -1,0 +1,1 @@
+!function(n){const i=n.tt=n.tt||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"Үзгәрешләрне саклау"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(o){const n=o.sr=o.sr||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"Велико",Default:"Основни","Document colors":"Боје документа","Font Background Color":"Боја позадине слова","Font Color":"Боја слова","Font Family":"Фонт","Font Size":"Величина фонта",Huge:"Огромно",Small:"Мало",Tiny:"Ситно"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

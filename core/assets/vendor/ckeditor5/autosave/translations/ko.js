@@ -1,0 +1,1 @@
+!function(n){const i=n.ko=n.ko||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"변경된 내용을 저장하고 있습니다"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

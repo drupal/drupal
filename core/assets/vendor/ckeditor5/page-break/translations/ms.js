@@ -1,0 +1,1 @@
+!function(a){const i=a.ms=a.ms||{};i.dictionary=Object.assign(i.dictionary||{},{"Page break":"Pemisah halaman"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(n){const i=n.ku=n.ku||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"گۆڕانکاریەکان پاشکەوتدەکرێت"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(i){const t=i.ti=i.ti||{};t.dictionary=Object.assign(t.dictionary||{},{"Edit source":"","Empty snippet content":"","HTML snippet":"","Insert HTML":"","No preview available":"","Paste raw HTML here...":"","Save changes":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

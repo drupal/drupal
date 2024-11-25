@@ -1,0 +1,1 @@
+!function(o){const n=o.ug=o.ug||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"چوڭ",Default:"سۈكۈتتىكى","Document colors":"پۈتۈك رەڭگى","Font Background Color":"خەت تەگلىك رەڭگى","Font Color":"خەت رەڭگى","Font Family":"خەت نۇسخىسى","Font Size":"خەت چوڭلۇقى",Huge:"زور",Small:"كىچىك",Tiny:"ئەڭ كىچىك"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(n){const i=n.bn=n.bn||{};i.dictionary=Object.assign(i.dictionary||{},{"Characters: %0":"অক্ষরসমূহঃ %0","Words: %0":"শব্দগুলোঃ %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

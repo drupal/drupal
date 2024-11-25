@@ -1,0 +1,1 @@
+!function(n){const i=n["sr-latn"]=n["sr-latn"]||{};i.dictionary=Object.assign(i.dictionary||{},{"Page break":"Prelom stranice"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

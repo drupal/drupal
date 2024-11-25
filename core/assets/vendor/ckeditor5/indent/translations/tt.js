@@ -1,0 +1,1 @@
+!function(n){const t=n.tt=n.tt||{};t.dictionary=Object.assign(t.dictionary||{},{"Decrease indent":"","Increase indent":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

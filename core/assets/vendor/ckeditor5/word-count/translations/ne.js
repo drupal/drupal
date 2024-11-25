@@ -1,0 +1,1 @@
+!function(n){const i=n.ne=n.ne||{};i.dictionary=Object.assign(i.dictionary||{},{"Characters: %0":"क्यारेक्टरहरू: %0","Words: %0":"शब्दहरू: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

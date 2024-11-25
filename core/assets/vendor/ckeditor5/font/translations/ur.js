@@ -1,0 +1,1 @@
+!function(o){const n=o.ur=o.ur||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"بڑا",Default:"طے شدہ","Document colors":"دستاویز کے رنگ","Font Background Color":"فانٹ کے پس منظر کا رنگ","Font Color":"فانٹ کا رنگ","Font Family":"فانٹ خاندان","Font Size":"فانٹ کا حجم",Huge:"جسيم",Small:"چھوٹا",Tiny:"ننھا"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

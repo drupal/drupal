@@ -1,0 +1,1 @@
+!function(n){const a=n["en-au"]=n["en-au"]||{};a.dictionary=Object.assign(a.dictionary||{},{"Characters: %0":"Characters: %0","Words: %0":"Words: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
