@@ -29,7 +29,7 @@ class FieldInstanceOptionTranslation extends ProcessPluginBase {
     if (isset($data['settings']['allowed_values'])) {
       $allowed_values = $data['settings']['allowed_values'];
       switch ($type) {
-        case 'boolean';
+        case 'boolean':
           if (isset($allowed_values[$property])) {
             $translation = $row->getSourceProperty('translation');
             break;

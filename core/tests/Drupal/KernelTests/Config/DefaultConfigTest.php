@@ -86,7 +86,7 @@ class DefaultConfigTest extends KernelTestBase {
         $file_name = DRUPAL_ROOT . '/core/modules/system/tests/modules/' . $name . '/' . $name . '.info.yml';
         break;
 
-      default;
+      default:
         $file_name = DRUPAL_ROOT . '/core/' . $type . 's/' . $name . '/' . $name . '.info.yml';
     }
 

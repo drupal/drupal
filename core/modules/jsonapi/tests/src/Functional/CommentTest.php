@@ -293,10 +293,10 @@ class CommentTest extends ResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     switch ($method) {
-      case 'GET';
+      case 'GET':
         return "The 'access comments' permission is required and the comment must be published.";
 
-      case 'POST';
+      case 'POST':
         return "The 'post comments' permission is required.";
 
       case 'PATCH':
