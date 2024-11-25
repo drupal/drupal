@@ -454,10 +454,10 @@ default:
     - cd core
     - yarn install
     - yarn run build:css --check
-    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color  --custom-formatter=@gitlab-formatters/stylelint-formatter-gitlab --output-file=$CI_PROJECT_DIR/gl-codequality.json
   artifacts:
     reports:
-      codequality: stylelint-quality-report.json
+      codequality: gl-codequality.json
 
 '📔 Spell-checking':
   <<: [ *default-job-settings-lint ]
