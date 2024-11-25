@@ -30,7 +30,7 @@ class FieldInstanceOptionTranslation extends ProcessPluginBase {
       $list = array_map('trim', $list);
       $list = FilterArray::removeEmptyStrings($list);
       switch ($field_type) {
-        case 'boolean';
+        case 'boolean':
           $option = preg_replace('/^option_/', '', $row->getSourceProperty('property'));
           for ($i = 0; $i < 2; $i++) {
             $value = $list[$i];
