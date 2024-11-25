@@ -324,7 +324,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Copy to another mode'), pluralize: FALSE)]
   public function createCopy($mode) {
     $display = $this->createDuplicate();
     $display->mode = $display->originalMode = $mode;
