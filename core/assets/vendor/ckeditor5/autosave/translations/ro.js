@@ -1,0 +1,1 @@
+!function(i){const n=i.ro=i.ro||{};n.dictionary=Object.assign(n.dictionary||{},{"Saving changes":"Se salvează modificările"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

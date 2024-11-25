@@ -1,0 +1,1 @@
+!function(i){const n=i.zh=i.zh||{};n.dictionary=Object.assign(n.dictionary||{},{"Characters: %0":"字元數: %0","Words: %0":"字數: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

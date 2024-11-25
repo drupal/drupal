@@ -1,0 +1,1 @@
+!function(o){const n=o.th=o.th||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"ใหญ่",Default:"ค่าเริ่มต้น","Document colors":"สีเอกสาร","Font Background Color":"สีพื้นหลังข้อความ","Font Color":"สีข้อความ","Font Family":"แบบอักษร","Font Size":"ขนาดข้อความ",Huge:"ใหญ่มาก",Small:"เล็ก",Tiny:"เล็กมาก"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(n){const i=n.jv=n.jv||{};i.dictionary=Object.assign(i.dictionary||{},{"Saving changes":"Nyimpen perubahan"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

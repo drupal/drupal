@@ -1,0 +1,1 @@
+!function(i){const n=i.af=i.af||{};n.dictionary=Object.assign(n.dictionary||{},{"Page break":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

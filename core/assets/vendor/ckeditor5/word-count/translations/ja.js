@@ -1,0 +1,1 @@
+!function(i){const n=i.ja=i.ja||{};n.dictionary=Object.assign(n.dictionary||{},{"Characters: %0":"文字数: %0","Words: %0":"単語数: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

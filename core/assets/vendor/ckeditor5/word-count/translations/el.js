@@ -1,0 +1,1 @@
+!function(i){const n=i.el=i.el||{};n.dictionary=Object.assign(n.dictionary||{},{"Characters: %0":"Χαρακτήρες: %0","Words: %0":"Λέξεις: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(i){const n=i.th=i.th||{};n.dictionary=Object.assign(n.dictionary||{},{"Page break":"ตัวแบ่งหน้า"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

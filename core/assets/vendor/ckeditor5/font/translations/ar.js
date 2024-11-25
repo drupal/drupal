@@ -1,0 +1,1 @@
+!function(o){const n=o.ar=o.ar||{};n.dictionary=Object.assign(n.dictionary||{},{Big:"كبير",Default:"افتراضي","Document colors":"ألوان المستند","Font Background Color":"لون خلفية الخط","Font Color":"لون الخط","Font Family":"نوع الخط","Font Size":"حجم الخط",Huge:"ضخم",Small:"صغير",Tiny:"ضئيل"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

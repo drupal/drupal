@@ -1,0 +1,1 @@
+!function(e){const n=e.ja=e.ja||{};n.dictionary=Object.assign(n.dictionary||{},{"Edit source":"ソースを編集","Empty snippet content":"スニペットのコンテンツを空にする","HTML snippet":"HTMLスニペット","Insert HTML":"HTMLを挿入","No preview available":"プレビューは使用できません","Paste raw HTML here...":"ここにRaw HTMLを貼り付ける...","Save changes":"変更を保存"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

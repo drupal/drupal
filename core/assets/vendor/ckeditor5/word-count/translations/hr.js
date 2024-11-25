@@ -1,0 +1,1 @@
+!function(i){const n=i.hr=i.hr||{};n.dictionary=Object.assign(n.dictionary||{},{"Characters: %0":"Znakova: %0","Words: %0":"Riječi: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

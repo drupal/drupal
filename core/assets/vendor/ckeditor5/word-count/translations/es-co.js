@@ -1,0 +1,1 @@
+!function(a){const c=a["es-co"]=a["es-co"]||{};c.dictionary=Object.assign(c.dictionary||{},{"Characters: %0":"Caracteres: %0","Words: %0":"Palabras: %0"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

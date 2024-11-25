@@ -1,0 +1,1 @@
+!function(i){const n=i.ku=i.ku||{};n.dictionary=Object.assign(n.dictionary||{},{"Page break":"کۆتایهێنانی پەڕە"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

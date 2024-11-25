@@ -1,0 +1,1 @@
+!function(i){const n=i.ru=i.ru||{};n.dictionary=Object.assign(n.dictionary||{},{"Page break":"Разрыв страницы"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

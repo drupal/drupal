@@ -1,0 +1,1 @@
+!function(i){const n=i.lt=i.lt||{};n.dictionary=Object.assign(n.dictionary||{},{"Page break":"Puslapio lūžis"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(s){const t=s.sl=s.sl||{};t.dictionary=Object.assign(t.dictionary||{},{"Block styles":"","Multiple styles":"",Styles:"","Text styles":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

@@ -1,0 +1,1 @@
+!function(e){const i=e.ja=e.ja||{};i.dictionary=Object.assign(i.dictionary||{},{"Blue marker":"青のマーカー","Green marker":"緑のマーカー","Green pen":"緑のペン",Highlight:"ハイライト","Pink marker":"ピンクのマーカー","Red pen":"赤のマーカー","Remove highlight":"ハイライトの削除","Text highlight toolbar":"テキストのハイライト","Yellow marker":"黄色のマーカー"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

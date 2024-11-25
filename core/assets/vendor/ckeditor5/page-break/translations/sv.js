@@ -1,0 +1,1 @@
+!function(i){const n=i.sv=i.sv||{};n.dictionary=Object.assign(n.dictionary||{},{"Page break":"Sidbrytning"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

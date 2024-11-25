@@ -1,0 +1,1 @@
+!function(i){const e=i.ko=i.ko||{};e.dictionary=Object.assign(e.dictionary||{},{"Disable editing":"편집 비활성화","Enable editing":"편집 활성화","Navigate editable regions":"편집 가능한 구역 탐색","Next editable region":"다음 편집 가능한 구역","Previous editable region":"이전 편집 가능한 구역"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

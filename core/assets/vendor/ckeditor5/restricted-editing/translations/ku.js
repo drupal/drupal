@@ -1,0 +1,1 @@
+!function(i){const e=i.ku=i.ku||{};e.dictionary=Object.assign(e.dictionary||{},{"Disable editing":"لەکارخستنی جاکسازی","Enable editing":"بەکارخستنی چاکسازی","Navigate editable regions":"چوون بۆ ناوچەی چاکسازی","Next editable region":"ناوچەی چاکسازی داهاتوو","Previous editable region":"ناوچەی چاکسازی پێشوو"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

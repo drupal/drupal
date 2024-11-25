@@ -1,0 +1,1 @@
+!function(e){const i=e.eu=e.eu||{};i.dictionary=Object.assign(i.dictionary||{},{"Blue marker":"","Green marker":"","Green pen":"",Highlight:"","Pink marker":"","Red pen":"","Remove highlight":"","Text highlight toolbar":"","Yellow marker":""})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

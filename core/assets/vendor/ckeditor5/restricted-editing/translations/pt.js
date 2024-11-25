@@ -1,0 +1,1 @@
+!function(e){const i=e.pt=e.pt||{};i.dictionary=Object.assign(i.dictionary||{},{"Disable editing":"Desativar edição","Enable editing":"Ativar edição","Navigate editable regions":"Navegar regiões editáveis","Next editable region":"Região editável seguinte","Previous editable region":"Região editável anterior"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

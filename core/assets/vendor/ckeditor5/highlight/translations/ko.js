@@ -1,0 +1,1 @@
+!function(e){const i=e.ko=e.ko||{};i.dictionary=Object.assign(i.dictionary||{},{"Blue marker":"파란색 마커","Green marker":"초록색 마커","Green pen":"초록색 펜",Highlight:"강조","Pink marker":"분홍색 마커","Red pen":"빨간색 펜","Remove highlight":"강조 제거","Text highlight toolbar":"글자 강조 툴바","Yellow marker":"노란색 마커"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));

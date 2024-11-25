@@ -1,0 +1,1 @@
+!function(i){const a=i.az=i.az||{};a.dictionary=Object.assign(a.dictionary||{},{"Page break":"Səhifə qırılması"})}(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
