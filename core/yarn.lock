@@ -1872,6 +1872,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@gitlab-formatters/stylelint-formatter-gitlab@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@gitlab-formatters/stylelint-formatter-gitlab@npm:1.0.2"
+  peerDependencies:
+    stylelint: ">=14"
+  checksum: 10c0/c9a13612168ce0b587806f088b5749464d2ca5bfb64725360374c917d1cb78bfe1aef11005fb7c312aea8c9e1fbbe40e760b3ad5f6249a444f941c52574556b0
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.14":
   version: 0.11.14
   resolution: "@humanwhocodes/config-array@npm:0.11.14"
@@ -2397,6 +2406,7 @@ __metadata:
     "@ckeditor/ckeditor5-table": "npm:~43.3.1"
     "@drupal/once": "npm:^1.0.1"
     "@floating-ui/dom": "npm:^1.6.8"
+    "@gitlab-formatters/stylelint-formatter-gitlab": "npm:^1.0.2"
     backbone: "npm:^1.6.0"
     chokidar: "npm:^3.6.0"
     ckeditor5: "npm:~43.3.1"
@@ -2432,7 +2442,6 @@ __metadata:
     stylelint: "npm:^15.11.0"
     stylelint-checkstyle-formatter: "npm:^0.1.2"
     stylelint-config-standard: "npm:^34.0.0"
-    stylelint-formatter-gitlab: "npm:^1.0.2"
     stylelint-order: "npm:^6.0.4"
     stylelint-prettier: "npm:^4.1.0"
     tabbable: "npm:^6.2.0"
@@ -2656,15 +2665,6 @@ __metadata:
     tar-stream: "npm:^2.2.0"
     zip-stream: "npm:^4.1.0"
   checksum: 10c0/973384d749b3fa96f44ceda1603a65aaa3f24a267230d69a4df9d7b607d38d3ebc6c18c358af76eb06345b6b331ccb9eca07bd079430226b5afce95de22dfade
-  languageName: node
-  linkType: hard
-
-"argparse@npm:^1.0.7":
-  version: 1.0.10
-  resolution: "argparse@npm:1.0.10"
-  dependencies:
-    sprintf-js: "npm:~1.0.2"
-  checksum: 10c0/b2972c5c23c63df66bca144dbc65d180efa74f25f8fd9b7d9a0a6c88ae839db32df3d54770dcb6460cf840d232b60695d1a6b1053f599d84e73f7437087712de
   languageName: node
   linkType: hard
 
@@ -4514,7 +4514,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esprima@npm:^4.0.0, esprima@npm:^4.0.1":
+"esprima@npm:^4.0.1":
   version: 4.0.1
   resolution: "esprima@npm:4.0.1"
   bin:
@@ -4798,17 +4798,6 @@ __metadata:
   version: 1.0.0
   resolution: "fs-constants@npm:1.0.0"
   checksum: 10c0/a0cde99085f0872f4d244e83e03a46aa387b74f5a5af750896c6b05e9077fac00e9932fdf5aef84f2f16634cd473c63037d7a512576da7d5c2b9163d1909f3a8
-  languageName: node
-  linkType: hard
-
-"fs-extra@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "fs-extra@npm:8.1.0"
-  dependencies:
-    graceful-fs: "npm:^4.2.0"
-    jsonfile: "npm:^4.0.0"
-    universalify: "npm:^0.1.0"
-  checksum: 10c0/259f7b814d9e50d686899550c4f9ded85c46c643f7fe19be69504888e007fcbc08f306fae8ec495b8b998635e997c9e3e175ff2eeed230524ef1c1684cc96423
   languageName: node
   linkType: hard
 
@@ -5105,7 +5094,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.11, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6":
+"graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.11, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6":
   version: 4.2.11
   resolution: "graceful-fs@npm:4.2.11"
   checksum: 10c0/386d011a553e02bc594ac2ca0bd6d9e4c22d7fa8cfbfc448a6d148c59ea881b092db9dbe3547ae4b88e55f1b01f7c4a2ecc53b310c042793e63aa44cf6c257f2
@@ -5879,18 +5868,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:^3.13.1":
-  version: 3.14.1
-  resolution: "js-yaml@npm:3.14.1"
-  dependencies:
-    argparse: "npm:^1.0.7"
-    esprima: "npm:^4.0.0"
-  bin:
-    js-yaml: bin/js-yaml.js
-  checksum: 10c0/6746baaaeac312c4db8e75fa22331d9a04cccb7792d126ed8ce6a0bbcfef0cedaddd0c5098fade53db067c09fe00aa1c957674b4765610a8b06a5a189e46433b
-  languageName: node
-  linkType: hard
-
 "jsbn@npm:1.1.0":
   version: 1.1.0
   resolution: "jsbn@npm:1.1.0"
@@ -5975,18 +5952,6 @@ __metadata:
   bin:
     json5: lib/cli.js
   checksum: 10c0/9ee316bf21f000b00752e6c2a3b79ecf5324515a5c60ee88983a1910a45426b643a4f3461657586e8aeca87aaf96f0a519b0516d2ae527a6c3e7eed80f68717f
-  languageName: node
-  linkType: hard
-
-"jsonfile@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "jsonfile@npm:4.0.0"
-  dependencies:
-    graceful-fs: "npm:^4.1.6"
-  dependenciesMeta:
-    graceful-fs:
-      optional: true
-  checksum: 10c0/7dc94b628d57a66b71fb1b79510d460d662eb975b5f876d723f81549c2e9cd316d58a2ddf742b2b93a4fa6b17b2accaf1a738a0e2ea114bdfb13a32e5377e480
   languageName: node
   linkType: hard
 
@@ -8353,13 +8318,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sprintf-js@npm:~1.0.2":
-  version: 1.0.3
-  resolution: "sprintf-js@npm:1.0.3"
-  checksum: 10c0/ecadcfe4c771890140da5023d43e190b7566d9cf8b2d238600f31bec0fc653f328da4450eb04bd59a431771a8e9cc0e118f0aa3974b683a4981b4e07abc2a5bb
-  languageName: node
-  linkType: hard
-
 "ssri@npm:^10.0.0":
   version: 10.0.5
   resolution: "ssri@npm:10.0.5"
@@ -8534,19 +8492,6 @@ __metadata:
   peerDependencies:
     stylelint: ^15.10.0
   checksum: 10c0/2494468af2359490b6ebb9723d9653f9e31db3a0772b8d9f0e081018b0079ef84ae6f90dcf94c879a3c374f299e334941e3dcff1afb603c2284d3103085b71fb
-  languageName: node
-  linkType: hard
-
-"stylelint-formatter-gitlab@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "stylelint-formatter-gitlab@npm:1.0.2"
-  dependencies:
-    fs-extra: "npm:^8.1.0"
-    is-glob: "npm:^4.0.1"
-    js-yaml: "npm:^3.13.1"
-  peerDependencies:
-    stylelint: ">=9"
-  checksum: 10c0/fcfc5c83ca39b23300a746c9a7e2327893955670bbb51636becd40b8a58d78ff38abf771ba6464ef79d859663e61deb8e6b9039eb5acae4565c13d1dec84f0d9
   languageName: node
   linkType: hard
 
@@ -9033,13 +8978,6 @@ __metadata:
   dependencies:
     imurmurhash: "npm:^0.1.4"
   checksum: 10c0/cb811d9d54eb5821b81b18205750be84cb015c20a4a44280794e915f5a0a70223ce39066781a354e872df3572e8155c228f43ff0cce94c7cbf4da2cc7cbdd635
-  languageName: node
-  linkType: hard
-
-"universalify@npm:^0.1.0":
-  version: 0.1.2
-  resolution: "universalify@npm:0.1.2"
-  checksum: 10c0/e70e0339f6b36f34c9816f6bf9662372bd241714dc77508d231d08386d94f2c4aa1ba1318614f92015f40d45aae1b9075cd30bd490efbe39387b60a76ca3f045
   languageName: node
   linkType: hard
 
