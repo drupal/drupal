@@ -37,6 +37,7 @@ global-styling:
       css/components/header-sticky-toggle.css: {}
       css/components/hero.css: {}
       css/components/links.css: {}
+      css/components/layout-field.css: {}
       css/components/messages.css: {}
       css/components/navigation/nav-button-mobile.css: {}
       css/components/node.css: {}
