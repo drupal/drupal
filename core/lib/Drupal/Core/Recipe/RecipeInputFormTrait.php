@@ -76,9 +76,12 @@ trait RecipeInputFormTrait {
           $element += [
             '#description' => $definition->getDescription(),
             '#default_value' => $default_value,
+            '#type' => 'value',
           ];
-          // Recipe inputs are always required.
-          $element['#required'] = TRUE;
+          // Recipe inputs are required by default, unless they are single
+          // checkboxes, in which case the `#required` behavior doesn't make
+          // a lot of sense because it forces the user to check the box.
+          $element['#required'] ??= ($element['#type'] !== 'checkbox');
           NestedArray::setValue($this->form, explode('.', $name, 2), $element);
 
           // Always return the input elements as a tree.
