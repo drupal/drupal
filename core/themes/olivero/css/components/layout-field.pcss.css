@@ -1,0 +1,8 @@
+/**
+ * @file
+ * Visual styles for fields.
+ */
+
+.block-layout-builder:not(:last-child) .field {
+  margin-block-end: var(--sp2);
+}
