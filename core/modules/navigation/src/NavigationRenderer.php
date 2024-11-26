@@ -18,6 +18,7 @@ use Drupal\Core\Menu\LocalTaskManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -71,6 +72,7 @@ final class NavigationRenderer {
     private SectionStorageManagerInterface $sectionStorageManager,
     private RequestStack $requestStack,
     private ModuleExtensionList $moduleExtensionList,
+    private AccountInterface $currentUser,
   ) {}
 
   /**
@@ -170,32 +172,13 @@ final class NavigationRenderer {
     }
 
     $page_top['top_bar'] = [
-      '#theme' => 'top_bar',
-      '#attached' => [
-        'library' => [
-          'navigation/internal.navigation',
-        ],
-      ],
+      '#type' => 'top_bar',
+      '#access' => $this->currentUser->hasPermission('access navigation'),
       '#cache' => [
-        'contexts' => [
-          'url.path',
-          'user.permissions',
-        ],
+        'keys' => ['top_bar'],
+        'contexts' => ['user.permissions'],
       ],
     ];
-
-    // Local tasks for content entities.
-    if ($this->hasLocalTasks()) {
-      $local_tasks = $this->getLocalTasks();
-      $page_top['top_bar']['#local_tasks'] = [
-        '#theme' => 'top_bar_local_tasks',
-        '#local_tasks' => $local_tasks['tasks'],
-      ];
-      assert($local_tasks['cacheability'] instanceof CacheableMetadata);
-      CacheableMetadata::createFromRenderArray($page_top['top_bar'])
-        ->addCacheableDependency($local_tasks['cacheability'])
-        ->applyTo($page_top['top_bar']);
-    }
   }
 
   /**
@@ -227,7 +210,7 @@ final class NavigationRenderer {
    * @return array
    *   Local tasks keyed by route name.
    */
-  private function getLocalTasks(): array {
+  public function getLocalTasks(): array {
     if (isset($this->localTasks)) {
       return $this->localTasks;
     }
@@ -279,7 +262,7 @@ final class NavigationRenderer {
    * @return bool
    *   TRUE if there are local tasks available for the top bar, FALSE otherwise.
    */
-  private function hasLocalTasks(): bool {
+  public function hasLocalTasks(): bool {
     $local_tasks = $this->getLocalTasks();
     return !empty($local_tasks['tasks']);
   }

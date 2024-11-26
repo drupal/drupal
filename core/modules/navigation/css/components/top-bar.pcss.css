@@ -8,16 +8,17 @@
   position: relative;
   z-index: var(--admin-toolbar-z-index-top-bar);
   display: flex;
-  padding-inline: var(--admin-toolbar-space-4);
-  padding-block: var(--admin-toolbar-space-4);
+  display: none;
   background-color: white;
   box-shadow: 0 0 8px 0 var(--admin-toolbar-color-shadow-15);
   font-family: var(--admin-toolbar-font-family);
+  padding-inline: var(--admin-toolbar-space-4);
+  padding-block: var(--admin-toolbar-space-4);
 
   @media (--admin-toolbar-desktop) {
     block-size: var(--admin-toolbar-top-bar-height);
     position: fixed;
-    inset-block-start: 0;
+    inset-block-start: var(--drupal-displace-offset-top, 0);
     inset-inline-start: 0;
     width: 100vw;
     padding-block: var(--admin-toolbar-space-12);
@@ -32,23 +33,23 @@
   }
 }
 
-/* When only one burger button hide top bar on desktop. */
-.top-bar:has(.top-bar__burger:only-child) {
-  @media (--admin-toolbar-desktop) {
-    display: none;
+.top-bar:has(.top-bar__tools:not(:empty), .top-bar__context:not(:empty), .top-bar__actions:not(:empty)) {
+  display: block;
+
+  ~ .dialog-off-canvas-main-canvas {
+    @media (--admin-toolbar-desktop) {
+      margin-block-start: var(--admin-toolbar-top-bar-height);
+    }
   }
 }
 
-.top-bar:not(:has(.top-bar__burger:only-child)) ~ .dialog-off-canvas-main-canvas {
-  @media (--admin-toolbar-desktop) {
-    margin-block-start: var(--admin-toolbar-top-bar-height);
-  }
-}
+.top-bar__actions {
+  display: flex;
+  gap: 0.5rem;
 
-.top-bar__burger {
-  align-self: start;
   @media (--admin-toolbar-desktop) {
-    display: none;
+    justify-content: end;
+    gap: var(--admin-toolbar-space-4);
   }
 }
 
@@ -68,4 +69,16 @@
     display: flex;
     gap: var(--admin-toolbar-space-8);
   }
+}
+
+.top-bar__context {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: start;
+}
+
+.top-bar__tools {
+  display: flex;
+  gap: 0.5rem;
 }

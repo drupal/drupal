@@ -14,7 +14,8 @@ services:
         '@file_url_generator',
         '@plugin.manager.layout_builder.section_storage',
         '@request_stack',
-        '@extension.list.module'
+        '@extension.list.module',
+        '@current_user',
       ]
   Drupal\navigation\NavigationRenderer: '@navigation.renderer'
 
@@ -33,3 +34,8 @@ services:
     class: Drupal\navigation\UserLazyBuilder
     arguments: ['@current_user']
   Drupal\navigation\UserLazyBuilders: '@navigation.user_lazy_builder'
+
+  plugin.manager.top_bar_item:
+    class: Drupal\navigation\TopBarItemManager
+    parent: default_plugin_manager
+  Drupal\navigation\TopBarItemManagerInterface: '@plugin.manager.top_bar_item'

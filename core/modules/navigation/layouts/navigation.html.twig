@@ -18,7 +18,7 @@
 #}
 {% set control_bar_attributes = create_attribute() %}
 
-<div {{ control_bar_attributes.addClass('admin-toolbar-control-bar').setAttribute('data-drupal-admin-styles', '').setAttribute('data-offset-top', '') }}>
+<div {{ control_bar_attributes.addClass('admin-toolbar-control-bar').setAttribute('data-drupal-admin-styles', '') }}>
   <div class="admin-toolbar-control-bar__content">
     {% include 'navigation:toolbar-button' with {
       attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar', 'type': 'button'}),

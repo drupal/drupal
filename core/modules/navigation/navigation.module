@@ -4,6 +4,8 @@
  * @file
  */
 
+use Drupal\navigation\TopBarRegion;
+
 /**
  * Implements hook_module_implements_alter().
  */
@@ -16,5 +18,23 @@ function navigation_module_implements_alter(&$implementations, $hook) {
   if ($hook == 'help') {
     // We take over the layout_builder hook_help().
     unset($implementations['layout_builder']);
+  }
+}
+
+/**
+ * Prepares variables for navigation top bar template.
+ *
+ * Default template: top-bar.html.twig
+ *
+ * @param $variables
+ *   An associative array containing:
+ *    - element: An associative array containing the properties and children of
+ *      the top bar.
+ */
+function template_preprocess_top_bar(&$variables): void {
+  $element = $variables['element'];
+
+  foreach (TopBarRegion::cases() as $region) {
+    $variables[$region->value] = $element[$region->value] ?? NULL;
   }
 }
