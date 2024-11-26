@@ -946,16 +946,16 @@ function simpletest_script_get_test_list() {
     foreach ($groups as $group => $tests) {
       $not_slow_tests = array_merge($not_slow_tests, array_keys($tests));
     }
-    // Filter slow tests out of the not slow tests since they may appear in more
-    // than one group.
-    $not_slow_tests = array_diff($not_slow_tests, $slow_tests);
+    // Filter slow tests out of the not slow tests and ensure a unique list
+    // since tests may appear in more than one group.
+    $not_slow_tests = array_unique(array_diff($not_slow_tests, $slow_tests));
 
     // If the tests are not being run in parallel, then ensure slow tests run
     // all together first.
     if ((int) $args['ci-parallel-node-total'] <= 1 ) {
       sort_tests_by_type_and_methods($slow_tests);
       sort_tests_by_type_and_methods($not_slow_tests);
-      $test_list = array_unique(array_merge($slow_tests, $not_slow_tests));
+      $test_list = array_merge($slow_tests, $not_slow_tests);
     }
     else {
       // Sort all tests by the number of public methods on the test class.
@@ -976,7 +976,7 @@ function simpletest_script_get_test_list() {
       // And the same for the rest of the tests.
       $binned_other_tests = place_tests_into_bins($not_slow_tests, $bin_count);
       $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
-      $test_list = array_unique(array_merge($slow_tests_for_job, $other_tests_for_job));
+      $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
     }
   }
   else {
