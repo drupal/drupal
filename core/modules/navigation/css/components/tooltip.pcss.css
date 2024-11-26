@@ -4,6 +4,8 @@
  * Tooltip styles.
  */
 
+@import "../base/media-queries.pcss.css";
+
 .toolbar-tooltip {
   position: fixed;
   z-index: var(--admin-toolbar-z-index-tooltip);
@@ -18,9 +20,11 @@
   line-height: var(--admin-toolbar-line-height-info-sm);
 }
 
-[data-drupal-tooltip]:hover + .toolbar-tooltip,
-[data-drupal-tooltip]:focus + .toolbar-tooltip {
-  display: block;
+@media (--admin-toolbar-desktop) {
+  [data-drupal-tooltip]:hover + .toolbar-tooltip,
+  [data-drupal-tooltip]:focus + .toolbar-tooltip {
+    display: block;
+  }
 }
 
 [data-admin-toolbar="expanded"] [data-drupal-tooltip]:hover + .toolbar-block__title-tooltip {

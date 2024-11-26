@@ -63,7 +63,7 @@ body {
   z-index: var(--admin-toolbar-z-index);
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  block-size: 100vh;
   transform: translateX(-100%);
   background-color: var(--admin-toolbar-color-white);
   font-family: var(--admin-toolbar-font-family);
@@ -93,7 +93,9 @@ body {
   }
 
   @media (--admin-toolbar-desktop) {
+    block-size: calc(100vh - var(--drupal-displace-offset-top, 0px));
     transform: none;
+    inset-block-start: var(--drupal-displace-offset-top, 0);
   }
 
   @media only screen and (max-height: 300px) {

@@ -76,7 +76,7 @@ class NavigationHooks {
    */
   #[Hook('theme')]
   public function theme($existing, $type, $theme, $path) : array {
-    $items['top_bar'] = ['variables' => ['local_tasks' => []]];
+    $items['top_bar'] = ['render element' => 'element'];
     $items['top_bar_local_tasks'] = ['variables' => ['local_tasks' => []]];
     $items['top_bar_local_task'] = ['variables' => ['link' => []]];
     $items['big_pipe_interface_preview__navigation_shortcut_lazy_builder_lazyLinks__Shortcuts'] = [
