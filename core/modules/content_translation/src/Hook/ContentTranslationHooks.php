@@ -505,7 +505,7 @@ class ContentTranslationHooks {
    * Implements hook_page_attachments().
    */
   #[Hook('page_attachments')]
-  public function pageAttachments(&$page) {
+  public function pageAttachments(&$page): void {
     $cache = CacheableMetadata::createFromRenderArray($page);
     $route_match = \Drupal::routeMatch();
     // If the current route has no parameters, return.

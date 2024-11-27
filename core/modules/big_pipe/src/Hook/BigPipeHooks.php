@@ -38,7 +38,7 @@ class BigPipeHooks {
    * @see \Drupal\big_pipe\Controller\BigPipeController::setNoJsCookie()
    */
   #[Hook('page_attachments')]
-  public function pageAttachments(array &$page) {
+  public function pageAttachments(array &$page): void {
     // Routes that don't use BigPipe also don't need no-JS detection.
     if (\Drupal::routeMatch()->getRouteObject()->getOption('_no_big_pipe')) {
       return;

@@ -124,7 +124,7 @@ class CommonTestHooks {
    * @see \Drupal\system\Tests\Common\PageRenderTest::assertPageRenderHookExceptions()
    */
   #[Hook('page_attachments')]
-  public function pageAttachments(array &$page) {
+  public function pageAttachments(array &$page): void {
     $page['#attached']['library'][] = 'core/foo';
     $page['#attached']['library'][] = 'core/bar';
     $page['#cache']['tags'] = ['example'];

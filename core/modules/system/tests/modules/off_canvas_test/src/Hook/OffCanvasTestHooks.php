@@ -15,7 +15,7 @@ class OffCanvasTestHooks {
    * Implements hook_page_attachments().
    */
   #[Hook('page_attachments')]
-  public function pageAttachments(array &$attachments) {
+  public function pageAttachments(array &$attachments): void {
     // This library wraps around the Drupal.offCanvas.resetSize() method and adds
     // a special data-resize-done attribute to help functional JavaScript tests
     // use the off-canvas area when it is fully loaded and ready to be interacted

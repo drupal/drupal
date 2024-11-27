@@ -44,7 +44,7 @@ class NavigationHooks {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop(array &$page_top) {
+  public function pageTop(array &$page_top): void {
     if (!\Drupal::currentUser()->hasPermission('access navigation')) {
       return;
     }

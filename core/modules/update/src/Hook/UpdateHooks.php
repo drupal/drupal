@@ -63,7 +63,7 @@ class UpdateHooks {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop() {
+  public function pageTop(): void {
     /** @var \Drupal\Core\Routing\AdminContext $admin_context */
     $admin_context = \Drupal::service('router.admin_context');
     $route_match = \Drupal::routeMatch();

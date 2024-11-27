@@ -266,7 +266,7 @@ class NodeHooks1 {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop(array &$page_top) {
+  public function pageTop(array &$page_top): void {
     // Add 'Back to content editing' link on preview page.
     $route_match = \Drupal::routeMatch();
     if ($route_match->getRouteName() == 'entity.node.preview') {

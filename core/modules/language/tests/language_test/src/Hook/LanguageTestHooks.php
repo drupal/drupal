@@ -18,7 +18,7 @@ class LanguageTestHooks {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop() {
+  public function pageTop(): void {
     if (\Drupal::moduleHandler()->moduleExists('language')) {
       language_test_store_language_negotiation();
       \Drupal::messenger()->addStatus(t('Language negotiation method: @name', [
