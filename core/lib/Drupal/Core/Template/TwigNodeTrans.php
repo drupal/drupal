@@ -13,7 +13,9 @@ use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TempNameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 
 /**
@@ -178,7 +180,7 @@ class TwigNodeTrans extends Node {
             if (!is_null($args)) {
               $argName = $args->getAttribute('name');
             }
-            $expr = new NameExpression($argName, $n->getTemplateLine());
+            $expr = new ContextVariable($argName, $n->getTemplateLine());
           }
           $placeholder = sprintf('%s%s', $argPrefix, $argName);
           $text .= $placeholder;
@@ -198,7 +200,7 @@ class TwigNodeTrans extends Node {
     }
 
     return [
-      new Node([new ConstantExpression(trim($text), $body->getTemplateLine())]),
+      new Nodes([new ConstantExpression(trim($text), $body->getTemplateLine())]),
       $tokens,
     ];
   }
