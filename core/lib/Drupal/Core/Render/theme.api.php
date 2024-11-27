@@ -1093,7 +1093,7 @@ function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $asset
  *
  * @see hook_page_attachments_alter()
  */
-function hook_page_attachments(array &$attachments) {
+function hook_page_attachments(array &$attachments): void {
   // Unconditionally attach an asset to the page.
   $attachments['#attached']['library'][] = 'core/drupalSettings';
 
@@ -1119,7 +1119,7 @@ function hook_page_attachments(array &$attachments) {
  *
  * @see hook_page_attachments()
  */
-function hook_page_attachments_alter(array &$attachments) {
+function hook_page_attachments_alter(array &$attachments): void {
   // Conditionally remove an asset.
   if (in_array('core/jquery', $attachments['#attached']['library'])) {
     $index = array_search('core/jquery', $attachments['#attached']['library']);
@@ -1133,7 +1133,7 @@ function hook_page_attachments_alter(array &$attachments) {
  * @param array $page_top
  *   A renderable array representing the top of the page.
  */
-function hook_page_top(array &$page_top) {
+function hook_page_top(array &$page_top): void {
   $page_top['my_module'] = ['#markup' => 'This is the top.'];
 }
 
@@ -1143,7 +1143,7 @@ function hook_page_top(array &$page_top) {
  * @param array $page_bottom
  *   A renderable array representing the bottom of the page.
  */
-function hook_page_bottom(array &$page_bottom) {
+function hook_page_bottom(array &$page_bottom): void {
   $page_bottom['my_module'] = ['#markup' => 'This is the bottom.'];
 }
 

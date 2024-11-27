@@ -99,7 +99,7 @@ class SystemTestHooks {
    * Implements hook_page_attachments().
    */
   #[Hook('page_attachments')]
-  public function pageAttachments(array &$page) {
+  public function pageAttachments(array &$page): void {
     // Used by FrontPageTestCase to get the results of
     // \Drupal::service('path.matcher')->isFrontPage().
     $frontpage = \Drupal::state()->get('system_test.front_page_output', 0);

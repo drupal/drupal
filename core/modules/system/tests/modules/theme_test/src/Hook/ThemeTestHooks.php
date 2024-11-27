@@ -68,7 +68,7 @@ class ThemeTestHooks {
    * Implements hook_page_bottom().
    */
   #[Hook('page_bottom')]
-  public function pageBottom(array &$page_bottom) {
+  public function pageBottom(array &$page_bottom): void {
     $page_bottom['theme_test_page_bottom'] = ['#markup' => 'theme test page bottom markup'];
   }
 

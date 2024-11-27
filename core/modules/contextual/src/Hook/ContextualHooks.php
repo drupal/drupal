@@ -61,7 +61,7 @@ class ContextualHooks {
    * @see contextual_preprocess()
    */
   #[Hook('page_attachments')]
-  public function pageAttachments(array &$page) {
+  public function pageAttachments(array &$page): void {
     if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
       return;
     }

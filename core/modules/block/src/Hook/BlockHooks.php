@@ -65,7 +65,7 @@ class BlockHooks {
    * Implements hook_page_top().
    */
   #[Hook('page_top')]
-  public function pageTop(array &$page_top) {
+  public function pageTop(array &$page_top): void {
     if (\Drupal::routeMatch()->getRouteName() === 'block.admin_demo') {
       $theme = \Drupal::theme()->getActiveTheme()->getName();
       $page_top['backlink'] = [
