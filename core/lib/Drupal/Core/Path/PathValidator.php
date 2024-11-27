@@ -10,6 +10,7 @@ use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -118,7 +119,12 @@ class PathValidator implements PathValidatorInterface {
       return Url::fromUri($path);
     }
 
-    $request = Request::create('/' . $path);
+    try {
+      $request = Request::create('/' . $path);
+    }
+    catch (BadRequestException) {
+      return FALSE;
+    }
     $attributes = $this->getPathAttributes($path, $request, $access_check);
 
     if (!$attributes) {
@@ -170,6 +176,9 @@ class PathValidator implements PathValidatorInterface {
       $result = FALSE;
     }
     catch (MethodNotAllowedException $e) {
+      $result = FALSE;
+    }
+    catch (BadRequestException) {
       $result = FALSE;
     }
 
