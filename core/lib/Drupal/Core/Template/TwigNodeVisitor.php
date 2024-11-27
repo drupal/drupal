@@ -3,7 +3,6 @@
 namespace Drupal\Core\Template;
 
 use Twig\Environment;
-use Twig\Node\Nodes;
 use Twig\TwigFunction;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
@@ -51,7 +50,7 @@ class TwigNodeVisitor implements NodeVisitorInterface {
       return new $class(
         new FunctionExpression(
           new TwigFunction('render_var', [$env->getExtension(TwigExtension::class), 'renderVar']),
-          new Nodes([$node->getNode('expr')]),
+          new Node([$node->getNode('expr')]),
           $line
         ),
         $line
