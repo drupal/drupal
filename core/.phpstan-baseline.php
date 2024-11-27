@@ -1372,12 +1372,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
-	'message' => '#^Variable \\$dynamic_cache might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
 	'message' => '#^Variable \\$parseable_invalid_request_body might not be defined\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
