@@ -16,6 +16,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeHelper;
+use Drupal\Core\Theme\ThemeCommonElements;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
@@ -1800,4 +1801,17 @@ function _field_multiple_value_form_sort_helper($a, $b) {
   $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
   $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
   return $a_weight - $b_weight;
+}
+
+/**
+ * Provides theme registration for themes across .inc files.
+ *
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\Core\Theme\ThemeCommonElements::commonElements() instead,
+ *
+ * @see https://www.drupal.org/node/3488470
+ */
+function drupal_common_theme(): array {
+  @trigger_error('drupal_common_theme() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Theme\ThemeCommonElements::commonElements() instead. See https://www.drupal.org/node/3488470', E_USER_DEPRECATED);
+  return ThemeCommonElements::commonElements();
 }
