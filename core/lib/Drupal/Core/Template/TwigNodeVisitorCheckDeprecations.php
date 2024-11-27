@@ -7,6 +7,7 @@ use Twig\Node\Expression\AssignNameExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
@@ -59,7 +60,7 @@ class TwigNodeVisitorCheckDeprecations implements NodeVisitorInterface {
     // At the end of the template, check the used variables are not deprecated.
     if ($node instanceof ModuleNode) {
       if (!empty($this->usedNames)) {
-        $checkNode = new Node([new TwigNodeCheckDeprecations($this->usedNames), $node->getNode('display_end')]);
+        $checkNode = new Nodes([new TwigNodeCheckDeprecations($this->usedNames), $node->getNode('display_end')]);
         $node->setNode('display_end', $checkNode);
       }
     }
