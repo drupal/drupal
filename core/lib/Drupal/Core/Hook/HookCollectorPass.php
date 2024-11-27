@@ -6,7 +6,6 @@ namespace Drupal\Core\Hook;
 
 use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
-use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\LegacyHook;
@@ -157,9 +156,6 @@ class HookCollectorPass implements CompilerPassInterface {
    * @return void
    */
   protected function collectModuleHookImplementations($dir, $module, $module_preg): void {
-    $hook_file_cache = FileCacheFactory::get('hook_implementations');
-    $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:' . $module_preg);
-
     $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
     $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
     $iterator = new \RecursiveIteratorIterator($iterator);
@@ -167,51 +163,32 @@ class HookCollectorPass implements CompilerPassInterface {
     foreach ($iterator as $fileinfo) {
       assert($fileinfo instanceof \SplFileInfo);
       $extension = $fileinfo->getExtension();
-      $filename = $fileinfo->getPathname();
-
       if ($extension === 'module' && !$iterator->getDepth()) {
         // There is an expectation for all modules to be loaded. However,
         // .module files are not supposed to be in subdirectories.
-        include_once $filename;
+        include_once $fileinfo->getPathname();
       }
       if ($extension === 'php') {
-        $cached = $hook_file_cache->get($filename);
-        if ($cached) {
-          $class = $cached['class'];
-          $attributes = $cached['attributes'];
-        }
-        else {
-          $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
-          $class = $namespace . '/' . $fileinfo->getBasename('.php');
-          $class = str_replace('/', '\\', $class);
-          $attributes = static::getHookAttributesInClass($class);
-          $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
-        }
-        foreach ($attributes as $attribute) {
+        $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
+        $class = $namespace . '/' . $fileinfo->getBasename('.php');
+        $class = str_replace('/', '\\', $class);
+        foreach (static::getHookAttributesInClass($class) as $attribute) {
           $this->addFromAttribute($attribute, $class, $module);
         }
       }
       else {
-        $implementations = $procedural_hook_file_cache->get($filename);
-        if ($implementations === NULL) {
-          $finder = MockFileFinder::create($filename);
-          $parser = new StaticReflectionParser('', $finder);
-          $implementations = [];
-          foreach ($parser->getMethodAttributes() as $function => $attributes) {
-            if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
-              $implementations[] = ['function' => $function, 'module' => $matches['module'], 'hook' => $matches['hook']];
-            }
+        $finder = MockFileFinder::create($fileinfo->getPathName());
+        $parser = new StaticReflectionParser('', $finder);
+        foreach ($parser->getMethodAttributes() as $function => $attributes) {
+          if (!StaticReflectionParser::hasAttribute($attributes, LegacyHook::class) && preg_match($module_preg, $function, $matches)) {
+            $this->addProceduralImplementation($fileinfo, $matches['hook'], $matches['module'], $matches['function']);
           }
-          $procedural_hook_file_cache->set($filename, $implementations);
-        }
-        foreach ($implementations as $implementation) {
-          $this->addProceduralImplementation($fileinfo, $implementation['hook'], $implementation['module'], $implementation['function']);
         }
       }
       if ($extension === 'inc') {
         $parts = explode('.', $fileinfo->getFilename());
         if (count($parts) === 3 && $parts[0] === $module) {
-          $this->groupIncludes[$parts[1]][] = $filename;
+          $this->groupIncludes[$parts[1]][] = $fileinfo->getPathname();
         }
       }
     }
