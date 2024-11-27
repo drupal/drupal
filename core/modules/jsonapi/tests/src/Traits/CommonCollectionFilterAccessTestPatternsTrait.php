@@ -109,7 +109,7 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
       'url.site',
       'user.permissions',
     ];
-    $this->assertResourceErrorResponse(403, $message, $collection_filter_url, $response, FALSE, $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
+    $this->assertResourceErrorResponse(403, $message, $collection_filter_url, $response, FALSE, $expected_cache_tags, $expected_cache_contexts, NULL, 'MISS');
     // And ensure the it is allowed when the proper permission is granted.
     $this->grantPermissionsToTestedRole(['filter by spotlight field']);
     $response = $this->request('GET', $collection_filter_url, $request_options);
