@@ -52,7 +52,7 @@ namespace Drupal\Core\Hook\Attribute;
  *   form ID without modifying any existing implementations.
  *
  * The following hooks may not have multiple implementations by a single module:
- * - hook_library_build_info()
+ * - hook_library_info_build()
  * - hook_mail()
  * - hook_help()
  * - hook_node_update_index()
