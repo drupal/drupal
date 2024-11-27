@@ -37,7 +37,7 @@
  * the element to be focusable when navigated to via the keyboard.
  */
 .visually-hidden.focusable:active,
-.visually-hidden.focusable:focus {
+.visually-hidden.focusable:focus-within {
   position: static !important;
   overflow: visible;
   clip: auto;
