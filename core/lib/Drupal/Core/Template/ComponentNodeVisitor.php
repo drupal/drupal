@@ -9,6 +9,7 @@ use Drupal\Core\Render\Component\Exception\ComponentNotFoundException;
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\Theme\ComponentPluginManager;
 use Twig\Environment;
+use Twig\Node\Nodes;
 use Twig\TwigFunction;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
@@ -57,24 +58,24 @@ class ComponentNodeVisitor implements NodeVisitorInterface {
     }
     $print_nodes[] = new PrintNode(new FunctionExpression(
       new TwigFunction('attach_library', [$env->getExtension(TwigExtension::class), 'attachLibrary']),
-      new Node([new ConstantExpression($component->getLibraryName(), $line)]),
+      new Nodes([new ConstantExpression($component->getLibraryName(), $line)]),
       $line
     ), $line);
     $print_nodes[] = new PrintNode(new FunctionExpression(
       new TwigFunction('add_component_context', [$env->getExtension(ComponentsTwigExtension::class), 'addAdditionalContext'], ['needs_context' => TRUE]),
-      new Node([new ConstantExpression($component_id, $line)]),
+      new Nodes([new ConstantExpression($component_id, $line)]),
       $line
     ), $line);
     $print_nodes[] = new PrintNode(new FunctionExpression(
       new TwigFunction('validate_component_props', [$env->getExtension(ComponentsTwigExtension::class), 'validateProps'], ['needs_context' => TRUE]),
-      new Node([new ConstantExpression($component_id, $line)]),
+      new Nodes([new ConstantExpression($component_id, $line)]),
       $line
     ), $line);
 
     // Append the print nodes to the display_start node.
     $node->setNode(
       'display_start',
-      new Node([
+      new Nodes([
         $node->getNode('display_start'),
         ...$print_nodes,
       ]),
@@ -84,7 +85,7 @@ class ComponentNodeVisitor implements NodeVisitorInterface {
       // Append the closing comment to the display_end node.
       $node->setNode(
         'display_end',
-        new Node([
+        new Nodes([
           new PrintNode(new ConstantExpression(sprintf('<!-- %s Component end: %s -->', $emoji, $component_id), $line), $line),
           $node->getNode('display_end'),
         ])
