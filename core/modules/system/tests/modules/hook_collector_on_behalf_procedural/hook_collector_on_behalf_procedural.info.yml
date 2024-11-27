@@ -1,0 +1,5 @@
+name: 'Test Hooks on behalf of other modules'
+type: module
+description: 'Test hooks invoked on behalf of other modules when installed later.'
+package: Testing
+version: VERSION
