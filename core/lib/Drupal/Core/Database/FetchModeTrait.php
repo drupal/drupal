@@ -99,11 +99,17 @@ trait FetchModeTrait {
    * @param int $columnIndex
    *   The index of the column to fetch the value of.
    *
-   * @return string|false
-   *   The value of the column, or FALSE if the column is not defined.
+   * @return string
+   *   The value of the column.
+   *
+   * @throws \ValueError
+   *   If the column index is not defined.
    */
   protected function assocToColumn(array $rowAssoc, array $columnNames, int $columnIndex): mixed {
-    return $rowAssoc[$columnNames[$columnIndex]] ?? FALSE;
+    if (!isset($columnNames[$columnIndex])) {
+      throw new \ValueError('Invalid column index');
+    }
+    return $rowAssoc[$columnNames[$columnIndex]];
   }
 
 }

@@ -108,6 +108,9 @@ interface StatementInterface extends \Traversable {
    *
    * @return mixed
    *   A single field from the next record, or FALSE if there is no next record.
+   *
+   * @throws \ValueError
+   *   If there is a record and the column index is not defined.
    */
   public function fetchField($index = 0);
 

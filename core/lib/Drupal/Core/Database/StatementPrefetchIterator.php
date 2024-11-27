@@ -260,7 +260,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function fetchColumn($index = 0) {
     if ($row = $this->fetch(\PDO::FETCH_ASSOC)) {
-      return $row[$this->columnNames[$index]];
+      return $this->assocToColumn($row, $this->columnNames, $index);
     }
     return FALSE;
   }

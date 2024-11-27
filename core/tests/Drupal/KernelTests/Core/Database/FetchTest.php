@@ -231,6 +231,69 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests ::fetchField() for edge values returned.
+   */
+  public function testQueryFetchFieldEdgeCases(): void {
+    $this->connection->insert('test_null')
+      ->fields([
+        'name' => 'Foo',
+        'age' => 0,
+      ])
+      ->execute();
+
+    $this->connection->insert('test_null')
+      ->fields([
+        'name' => 'Bar',
+        'age' => NULL,
+      ])
+      ->execute();
+
+    $this->connection->insert('test_null')
+      ->fields([
+        'name' => 'Qux',
+        'age' => (int) FALSE,
+      ])
+      ->execute();
+
+    $statement = $this->connection->select('test_null')
+      ->fields('test_null', ['age'])
+      ->orderBy('id')
+      ->execute();
+
+    // First fetch returns '0' since an existing value is always a string.
+    $this->assertSame('0', $statement->fetchField());
+
+    // Second fetch returns NULL since NULL was inserted.
+    $this->assertNull($statement->fetchField());
+
+    // Third fetch returns '0' since a FALSE bool cast to int was inserted.
+    $this->assertSame('0', $statement->fetchField());
+
+    // Fourth fetch returns FALSE since no row was available.
+    $this->assertFalse($statement->fetchField());
+  }
+
+  /**
+   * Confirms that an out of range index throws an error.
+   */
+  public function testQueryFetchFieldIndexOutOfRange(): void {
+    $this->expectException(\ValueError::class);
+    $this->expectExceptionMessage('Invalid column index');
+    $this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25])
+      ->fetchField(200);
+  }
+
+  /**
+   * Confirms that empty result set prevails on out of range index.
+   */
+  public function testQueryFetchFieldIndexOutOfRangeOnEmptyResultSet(): void {
+    $this->assertFalse($this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 255])
+      ->fetchField(200));
+  }
+
+  /**
    * Tests that rowCount() throws exception on SELECT query.
    */
   public function testRowCount(): void {
