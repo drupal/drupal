@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Implement hooks.
+ */
+
+declare(strict_types=1);
+
+/**
+ * This implements a hook on behalf of another module.
+ *
+ * We do not have implements so this does not get converted.
+ */
+function respond_install_uninstall_hook_test_cache_flush(): void {
+  // Set a global value we can check in test code.
+  $GLOBALS['on_behalf_procedural'] = 'on_behalf_procedural';
+}
