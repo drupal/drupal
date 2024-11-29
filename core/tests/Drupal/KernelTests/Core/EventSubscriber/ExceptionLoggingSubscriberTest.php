@@ -9,6 +9,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Tests that HTTP exceptions are logged correctly.
@@ -31,36 +32,11 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
 
   /**
    * Tests \Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber::onException().
+   *
+   * @dataProvider exceptionDataProvider
    */
-  public function testExceptionLogging(): void {
+  public function testExceptionLogging(int $error_code, string $channel, int $log_level, string $exception = ''): void {
     $http_kernel = \Drupal::service('http_kernel');
-
-    $channel_map = [
-      400 => 'client error',
-      401 => 'client error',
-      403 => 'access denied',
-      404 => 'page not found',
-      405 => 'client error',
-      408 => 'client error',
-      // Do not check the 500 status code here because it would be caught by
-      // Drupal\Core\EventSubscriberExceptionTestSiteSubscriber which has lower
-      // priority.
-      501 => 'php',
-      502 => 'php',
-      503 => 'php',
-    ];
-
-    $level_map = [
-      400 => RfcLogLevel::WARNING,
-      401 => RfcLogLevel::WARNING,
-      403 => RfcLogLevel::WARNING,
-      404 => RfcLogLevel::WARNING,
-      405 => RfcLogLevel::WARNING,
-      408 => RfcLogLevel::WARNING,
-      501 => RfcLogLevel::ERROR,
-      502 => RfcLogLevel::ERROR,
-      503 => RfcLogLevel::ERROR,
-    ];
 
     // Ensure that noting is logged.
     $this->assertEmpty($this->container->get($this->testLogServiceName)->cleanLogs());
@@ -68,25 +44,41 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     // Temporarily disable error log as the ExceptionLoggingSubscriber logs 5xx
     // HTTP errors using error_log().
     $error_log = ini_set('error_log', '/dev/null');
-    foreach ($channel_map as $code => $channel) {
-      $request = Request::create('/test-http-response-exception/' . $code);
-      $http_kernel->handle($request);
+    $request = Request::create('/test-http-response-exception/' . $error_code);
+
+    if ($exception) {
+      $this->expectException($exception);
     }
+    $http_kernel->handle($request);
     ini_set('error_log', $error_log);
 
-    $expected_channels = array_values($channel_map);
-    $expected_levels = array_values($level_map);
-
     $logs = $this->container->get($this->testLogServiceName)->cleanLogs();
-    foreach ($expected_channels as $key => $expected_channel) {
-      $this->assertEquals($expected_channel, $logs[$key][2]['channel']);
-      $this->assertEquals($expected_levels[$key], $logs[$key][0]);
+    $this->assertEquals($channel, $logs[0][2]['channel']);
+    $this->assertEquals($log_level, $logs[0][0]);
 
-      // Verify that @backtrace_string is removed from client error.
-      if ($logs[$key][2]['channel'] === 'client error') {
-        $this->assertArrayNotHasKey('@backtrace_string', $logs[$key][2]);
-      }
+    // Verify that @backtrace_string is removed from client error.
+    if ($logs[0][2]['channel'] === 'client error') {
+      $this->assertArrayNotHasKey('@backtrace_string', $logs[0][2]);
     }
+  }
+
+  public static function exceptionDataProvider(): array {
+    return [
+      // When a BadRequestException is thrown, DefaultHttpExceptionSubscriber
+      // will rethrow the exception.
+      [400, 'client error', RfcLogLevel::WARNING, HttpException::class],
+      [401, 'client error', RfcLogLevel::WARNING],
+      [403, 'access denied', RfcLogLevel::WARNING],
+      [404, 'page not found', RfcLogLevel::WARNING],
+      [405, 'client error', RfcLogLevel::WARNING],
+      [408, 'client error', RfcLogLevel::WARNING],
+      // Do not check the 500 status code here because it would be caught by
+      // Drupal\Core\EventSubscriberExceptionTestSiteSubscriber which has lower
+      // priority.
+      [501, 'php', RfcLogLevel::ERROR],
+      [502, 'php', RfcLogLevel::ERROR],
+      [503, 'php', RfcLogLevel::ERROR],
+    ];
   }
 
   /**
