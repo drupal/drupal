@@ -41,7 +41,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
 
     // Retrieving the location of a profile. Profiles are a special case with
     // a fixed location and naming.
-    $this->assertSame('core/profiles/testing/testing.info.yml', \Drupal::service('extension.list.profile')
+    $this->assertSame('core/profiles/tests/testing/testing.info.yml', \Drupal::service('extension.list.profile')
       ->getPathname('testing'));
   }
 
