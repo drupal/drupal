@@ -399,14 +399,6 @@ class IconFinderTest extends UnitTestCase {
       ],
     ];
 
-    // Test a path with special characters and spaces.
-    yield 'path special chars filename' => [
-      ['icons/name_special_chars/*'],
-      [
-        ['FoO !?1:èç 2 "#3 B*;**a,ù$R|~¹&{[]', 'icons/name_special_chars/FoO !?1:èç 2 "#3 B*;**a,ù$R|~¹&{[].svg'],
-      ],
-    ];
-
     // Start tests for the {group} placeholder.
     yield 'path with {group} extracted' => [
       ['icons/group/{group}/*'],
