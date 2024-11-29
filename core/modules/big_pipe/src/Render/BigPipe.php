@@ -416,7 +416,7 @@ class BigPipe {
           throw $e;
         }
         else {
-          trigger_error($e, E_USER_ERROR);
+          trigger_error($e, E_USER_WARNING);
           continue;
         }
       }
@@ -452,7 +452,7 @@ class BigPipe {
           throw $e;
         }
         else {
-          trigger_error($e, E_USER_ERROR);
+          trigger_error($e, E_USER_WARNING);
           continue;
         }
       }
@@ -603,7 +603,7 @@ EOF;
             throw $e;
           }
           else {
-            trigger_error($e, E_USER_ERROR);
+            trigger_error($e, E_USER_WARNING);
           }
         }
       }

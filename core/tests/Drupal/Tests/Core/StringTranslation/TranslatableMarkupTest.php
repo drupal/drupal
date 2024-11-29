@@ -79,7 +79,7 @@ class TranslatableMarkupTest extends UnitTestCase {
     (string) $text;
     restore_error_handler();
 
-    $this->assertEquals(E_USER_ERROR, $this->lastErrorNumber);
+    $this->assertEquals(E_USER_WARNING, $this->lastErrorNumber);
     $this->assertMatchesRegularExpression('/Exception thrown while calling __toString on a .*Mock_TranslatableMarkup_.* object in .*TranslatableMarkupTest.php on line [0-9]+: Yes you may./', $this->lastErrorMessage);
   }
 
