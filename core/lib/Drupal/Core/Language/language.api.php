@@ -125,7 +125,7 @@ use Drupal\Core\Language\LanguageInterface;
  *
  * // *.routing.yml file
  * my.route.name:
- *   pattern: '/something'
+ *   path: '/something'
  *   defaults:
  *     _title: 'May'
  *     _title_context: 'Long month name'
