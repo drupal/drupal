@@ -1720,6 +1720,10 @@ services:
     arguments: ['@plugin.manager.sdc', '@Drupal\Core\Theme\Component\ComponentValidator']
     tags:
       - { name: twig.extension, priority: 101 }
+  Drupal\Core\Template\IconsTwigExtension:
+    arguments: ['@plugin.manager.icon_pack']
+    tags:
+      - { name: twig.extension, priority: 101 }
   twig.extension.debug:
     class: Twig\Extension\DebugExtension
     tags:
@@ -1884,3 +1888,39 @@ services:
     tags:
       - { name: twig.loader, priority: 5 }
   Drupal\Core\EventSubscriber\CsrfExceptionSubscriber: ~
+  plugin.manager.icon_pack:
+    class: Drupal\Core\Theme\Icon\Plugin\IconPackManager
+    calls:
+      - [setValidator, []]
+    arguments:
+      [
+        '@module_handler',
+        '@theme_handler',
+        '@cache.discovery',
+        '@plugin.manager.icon_extractor',
+        '@Drupal\Core\Theme\Icon\IconCollector',
+        '%app.root%',
+      ]
+  Drupal\Core\Theme\Icon\Plugin\IconPackManagerInterface: '@plugin.manager.icon_pack'
+  plugin.manager.icon_extractor:
+    class: Drupal\Core\Theme\Icon\IconExtractorPluginManager
+    parent: default_plugin_manager
+    arguments: ['@plugin_form.factory']
+  Drupal\Core\Theme\Icon\IconExtractorInterface: '@plugin.manager.icon_extractor'
+  Drupal\Core\Theme\Icon\IconFinder:
+    autowire: true
+    arguments:
+      [
+        '@file_url_generator',
+        '@logger.channel.default',
+        '%app.root%',
+      ]
+  Drupal\Core\Theme\Icon\IconCollector:
+    arguments:
+      [
+        '@plugin.manager.icon_extractor',
+        '@cache.default',
+        '@lock',
+      ]
+    tags:
+      - { name: needs_destruction }

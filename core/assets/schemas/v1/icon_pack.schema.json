@@ -1,0 +1,99 @@
+{
+  "type": "object",
+  "required": [
+    "extractor",
+    "template"
+  ],
+  "properties": {
+    "label": {
+      "title": "Label",
+      "description": "Translatable label",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "description": "Translatable description",
+      "type": "string"
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "links": {
+      "title": "External links",
+      "description": "Both compact and full syntaxes are available",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "iri-reference"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "iri-reference"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "license": {
+      "title": "License",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "iri-reference"
+        },
+        "gpl-compatible": {
+          "type": "boolean"
+        }
+      }
+    },
+    "extractor": {
+      "title": "Extractor ID",
+      "description": "The plugin ID of the extractor",
+      "type": "string",
+      "pattern": "^[A-Za-z]+\\w*$"
+    },
+    "config": {
+      "title": "Extractor configuration",
+      "description": "The structure is specific to the extractor plugin",
+      "type": "object"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Used to build the settings form. Each setting is a JSON schema",
+      "type": "object",
+      "patternProperties": {
+        "^\\w+$": {
+          "$ref": "http://json-schema.org/draft-04/schema#"
+        }
+      },
+      "additionalProperties": false
+    },
+    "template": {
+      "title": "Twig template",
+      "type": "string"
+    },
+    "library": {
+      "title": "Asset library",
+      "description": "The ID of an asset library",
+      "type": "string",
+      "pattern": "^\\w+/[A-Za-z]+\\w*$"
+    }
+  }
+}

@@ -1,0 +1,90 @@
+icon.icon_pack_options.test_path:
+  type: mapping
+  label: 'Test path settings'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    width:
+      type: integer
+      label: 'Width'
+      constraints:
+        Range:
+          min: 0
+    height:
+      type: integer
+      label: 'Height'
+      constraints:
+        Range:
+          min: 0
+
+icon.icon_pack_options.test_svg:
+  type: mapping
+  label: 'Test svg settings'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    size:
+      type: integer
+      label: 'Size'
+      constraints:
+        Range:
+          min: 0
+
+icon.icon_pack_options.test_svg_sprite:
+  type: mapping
+  label: 'Test sprite settings'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    width:
+      type: integer
+      label: 'Width'
+      constraints:
+        Range:
+          min: 0
+    height:
+      type: integer
+      label: 'Height'
+      constraints:
+        Range:
+          min: 0
+    alt:
+      type: label
+      label: 'Alt'
+
+icon.icon_pack_options.test_settings:
+  type: mapping
+  label: 'Test settings'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    width:
+      type: integer
+      label: 'Width'
+      constraints:
+        Range:
+          min: 0
+    height:
+      type: integer
+      label: 'Height'
+      constraints:
+        Range:
+          min: 0
+    title:
+      type: label
+      label: 'Title'
+    alt:
+      type: label
+      label: 'Alt'
+    select:
+      title: "Test select"
+      type: "integer"
+    boolean:
+      title: "Test boolean"
+      type: "boolean"
+    decimal:
+      title: "Test decimal"
+      type: "number"
+    number:
+      title: "Test number min/max/step"
+      type: "integer"

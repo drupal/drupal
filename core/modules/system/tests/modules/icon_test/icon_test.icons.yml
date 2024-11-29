@@ -1,0 +1,261 @@
+test_minimal:
+  extractor: path
+  config:
+    sources:
+      - icons/flat/foo.png
+  template: >-
+    {{ icon_id }}: <img src="{{ source }}" width="32" height="32">
+
+test_path:
+  enabled: true
+  label: Test path
+  description: Local png files available for test with all metadata.
+  links:
+    - https://www.drupal.org
+    - https://www.drupal.org
+  version: 1.0.0
+  license:
+    name: GPL-3.0-or-later
+    url: https://www.gnu.org/licenses/gpl-3.0.html
+    gpl-compatible: true
+  extractor: path
+  config:
+    sources:
+      - icons/flat/*.png
+      - icons/group/{group}/*.png
+      - icons/group/*/{group}/*.png
+  # For tests keep same name attribute as HTML for IconPluginTest.
+  settings:
+    width:
+      title: "Width"
+      type: "integer"
+      default: 32
+    height:
+      title: "Height"
+      type: "integer"
+      default: 33
+    title:
+      title: "Title"
+      type: "string"
+      default: 'Default title'
+  # Template class is important for tests.
+  template: >-
+    {{ icon_id }}: <img
+      class="icon icon-{{ icon_id|clean_class }}"
+      src="{{ source }}"
+      width="{{ width|default(32) }}"
+      height="{{ height|default(33) }}"
+      title="{{ title }}"
+    >
+
+test_svg:
+  enabled: true
+  label: Test svg
+  extractor: svg
+  config:
+    sources:
+      - icons/flat/*.svg
+      - icons/group/{group}/*.svg
+      - icons/group/*/{group}/*.svg
+      - icons/prefix_suffix/prefix_{icon_id}_suffix.svg
+  settings:
+    size:
+      title: "Size"
+      type: "integer"
+  template: >-
+    {{ icon_id }}: <svg
+      xmlns="https://www.w3.org/2000/svg"
+      viewBox="0 0 50 50"
+      width="{{ size|default(32) }}"
+      height="{{ size|default(32) }}"
+      aria-hidden="true"
+    >
+      {{ content }}
+    </svg>
+
+test_svg_sprite:
+  enabled: true
+  label: Test sprite
+  extractor: svg_sprite
+  config:
+    sources:
+      - icons/sprite/foo_sprite.svg
+  settings:
+    width:
+      title: "Width"
+      type: "integer"
+      default: 32
+    height:
+      title: "Height"
+      type: "integer"
+      default: 32
+  template: >-
+    {{ icon_id }}: <svg
+      {{ attributes
+          .setAttribute('viewBox', attributes.viewBox|default('0 0 50 50'))
+          .setAttribute('width', width|default('32'))
+          .setAttribute('height', height|default('32'))
+      }}
+    >
+      {{ content }}
+    </svg>
+
+test_settings:
+  enabled: true
+  label: Test settings
+  extractor: path
+  config:
+    sources:
+      - icons/settings/*
+  settings:
+    width:
+      title: "Width"
+      description: "Set a width for this icon."
+      type: "integer"
+      default: 32
+    height:
+      title: "Height"
+      description: "Set a height for this icon."
+      type: "integer"
+      default: 33
+    title:
+      title: "Title"
+      type: "string"
+      description: "Set a title on hover for this icon."
+      default: "Default title"
+    alt:
+      title: "Alt text"
+      type: "string"
+      description: "Accessibility alternative text, leave empty for decorative icon."
+      default: "Default alt"
+    select:
+      title: "Test select"
+      description: "Test for a select with enum property."
+      type: "integer"
+      enum: [100, 200, 300, 400, 500, 600, 700, 800, 900]
+      default: 400
+    select_string:
+      title: "Test select"
+      description: "Test for a select with enum property."
+      type: "string"
+      enum: ['foo', 'bar']
+    boolean:
+      title: "Test boolean"
+      description: "Test for a boolean property."
+      type: "boolean"
+      default: true
+    decimal:
+      title: "Test decimal"
+      description: "Test for a decimal with step property."
+      type: "number"
+      default: 66.66
+      multipleOf: 0.01
+    number:
+      title: "Test number min/max/step"
+      description: "Test for number with constraints."
+      type: "integer"
+      default: 30
+      minimum: 10
+      maximum: 100
+      multipleOf: 10
+  template: >-
+    {{ icon_id }}: <img
+      class="icon icon-{{ icon_id|clean_class }}"
+      src="{{ source }}"
+      title="{{ title }}"
+      alt="{{ alt }}"
+      width="{{ width|default(32) }}"
+      height="{{ height|default(32) }}"
+      data-select="{{ select }}"
+      data-boolean="{{ boolean }}"
+      data-decimal="{{ decimal }}"
+      data-number="{{ number }}"
+    >
+    <ul>
+      <li>width: {{ width }}</li>
+      <li>height: {{ height }}</li>
+      <li>title: {{ title }}</li>
+      <li>alt: {{ alt }}</li>
+      <li>select: {{ select }}</li>
+      <li>select_string: {{ select_string }}</li>
+      <li>boolean: {{ boolean }}</li>
+      <li>decimal: {{ decimal }}</li>
+      <li>number: {{ number }}</li>
+    </ul>
+
+test_no_settings:
+  enabled: true
+  extractor: path
+  config:
+    sources:
+      - icons/no_settings/*.svg
+  template: >-
+    {{ icon_id }}: <img
+      src="{{ source }}"
+      width="32"
+      height="32"
+    >
+
+test_url_path:
+  enabled: true
+  label: Test url path
+  extractor: path
+  config:
+    sources:
+      - https://www.drupal.org/files/D10-logo.png
+      - https://www.drupal.org/files/drupal-wordmark.png
+      - htp://test.com/invalid.jpg
+  template: >-
+    {{ icon_id }}: <img src="{{ source }}" width="32" height="32">
+
+test_url_svg:
+  enabled: true
+  label: Test url svg empty
+  extractor: svg
+  config:
+    sources:
+      # This will be ignored.
+      - https://www.drupal.org/files/drupal-wordmark.svg
+  template: >-
+    {{ icon_id }}: <svg xmlns="https://www.w3.org/2000/svg">
+      {{ content }}
+    </svg>
+
+test_url_svg_sprite:
+  enabled: false
+  label: Test url svg sprite disabled and empty
+  extractor: svg_sprite
+  config:
+    sources:
+      - https://test.com/ignored.png
+      - https://test.com/ignored.gif
+  template: >-
+    <svg xmlns="https://www.w3.org/2000/svg">
+      <use xlink:href="{{ source }}#{{ icon_id }}"/>
+    </svg>
+
+test_no_icons:
+  enabled: true
+  label: No Icons
+  extractor: path
+  config:
+    sources:
+      - icons/empty/*
+  template: '{{ icon_id }}'
+
+# @todo enable and log error instead.
+test_invalid_path:
+  enabled: false
+  extractor: path
+  config:
+    sources:
+      - invalid_path/*.png
+  template: '{{ icon_id }}'
+
+test_disabled:
+  enabled: false
+  extractor: path
+  config:
+    sources:
+      - icons/png/*
+  template: '{{ icon_id }}'

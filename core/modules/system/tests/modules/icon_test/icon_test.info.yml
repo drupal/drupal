@@ -1,0 +1,4 @@
+name: 'Icon Tests'
+type: module
+description: 'Provides test for icons and settings.'
+package: 'Testing'
