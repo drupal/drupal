@@ -40,7 +40,8 @@ use Drupal\views\EntityViewsData;
     'route_provider' => ['html' => DefaultHtmlRouteProvider::class],
   ],
   links: [
-    'add-form' => '/entity_test_mulrev/add',
+    'add-form' => '/entity_test_mulrev/add/{type}',
+    'add-page' => '/entity_test_mulrev/add',
     'canonical' => '/entity_test_mulrev/manage/{entity_test_mulrev}',
     'delete-form' => '/entity_test/delete/entity_test_mulrev/{entity_test_mulrev}',
     'edit-form' => '/entity_test_mulrev/manage/{entity_test_mulrev}/edit',

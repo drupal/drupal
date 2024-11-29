@@ -21,7 +21,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'storage' => ContentEntityNullStorage::class,
   ],
   links: [
-    'add-form' => '/entity_test_no_id/add',
+    'add-form' => '/entity_test_no_id/add/{type}',
+    'add-page' => '/entity_test_no_id/add',
   ],
   admin_permission: 'administer entity_test content',
   field_ui_base_route: 'entity.entity_test_no_id.admin_form',

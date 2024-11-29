@@ -51,6 +51,7 @@ use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
   ],
   links: [
     'add-form' => '/entity_test_revpub/add',
+    'add-page' => '/entity_test_revpub/add/{type}',
     'canonical' => '/entity_test_revpub/manage/{entity_test_revpub}',
     'delete-form' => '/entity_test/delete/entity_test_revpub/{entity_test_revpub}',
     'delete-multiple-form' => '/entity_test_revpub/delete_multiple',

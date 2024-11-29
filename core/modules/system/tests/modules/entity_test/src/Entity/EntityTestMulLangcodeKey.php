@@ -40,7 +40,8 @@ use Drupal\views\EntityViewsData;
     ],
   ],
   links: [
-    'add-form' => '/entity_test_mul_langcode_key/add',
+    'add-form' => '/entity_test_mul_langcode_key/add/{type}',
+    'add-page' => '/entity_test_mul_langcode_key/add',
     'canonical' => '/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}',
     'edit-form' => '/entity_test_mul_langcode_key/manage/{entity_test_mul_langcode_key}/edit',
     'delete-form' => '/entity_test/delete/entity_test_mul_langcode_key/{entity_test_mul_langcode_key}',

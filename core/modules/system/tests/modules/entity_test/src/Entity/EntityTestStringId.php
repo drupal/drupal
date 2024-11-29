@@ -35,7 +35,8 @@ use Drupal\entity_test\EntityTestForm;
   ],
   links: [
     'canonical' => '/entity_test_string_id/manage/{entity_test_string_id}',
-    'add-form' => '/entity_test_string_id/add',
+    'add-form' => '/entity_test_string_id/add/{type}',
+    'add-page' => '/entity_test_string_id/add',
     'edit-form' => '/entity_test_string_id/manage/{entity_test_string_id}',
   ],
   admin_permission: 'administer entity_test content',

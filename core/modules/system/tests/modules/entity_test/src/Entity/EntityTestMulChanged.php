@@ -43,7 +43,8 @@ use Drupal\views\EntityViewsData;
     'views_data' => EntityViewsData::class,
   ],
   links: [
-    'add-form' => '/entity_test_mul_changed/add',
+    'add-form' => '/entity_test_mul_changed/add/{type}',
+    'add-page' => '/entity_test_mul_changed/add',
     'canonical' => '/entity_test_mul_changed/manage/{entity_test_mul_changed}',
     'edit-form' => '/entity_test_mul_changed/manage/{entity_test_mul_changed}/edit',
     'delete-form' => '/entity_test/delete/entity_test_mul_changed/{entity_test_mul_changed}',

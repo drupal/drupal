@@ -37,7 +37,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *   },
  *   links = {
  *     "canonical" = "/entity_test_uuid_id/manage/{entity_test_uuid_id}",
- *     "add-form" = "/entity_test_uuid_id/add",
+ *     "add-form" = "/entity_test_uuid_id/add/{type}",
+ *     "add-page" = "/entity_test_uuid_id/add",
  *     "edit-form" = "/entity_test_uuid_id/manage/{entity_test_uuid_id}/edit",
  *   },
  * )

@@ -32,7 +32,7 @@ use Drupal\entity_test\EntityTestForm;
   ],
   links: [
     'add-page' => '/entity_test_add_page/{user}/add',
-    'add-form' => '/entity_test_add_page/add/{user}/form',
+    'add-form' => '/entity_test_add_page/add/{type}/{user}/form',
   ],
   admin_permission: 'administer entity_test content',
   base_table: 'entity_test_add_page',

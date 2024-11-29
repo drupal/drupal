@@ -46,7 +46,8 @@ use Drupal\views\EntityViewsData;
     ],
   ],
   links: [
-    'add-form' => '/entity_test_mulrevpub/add',
+    'add-form' => '/entity_test_mulrevpub/add/{type}',
+    'add-page' => '/entity_test_mulrevpub/add',
     'canonical' => '/entity_test_mulrevpub/manage/{entity_test_mulrevpub}',
     'delete-form' => '/entity_test/delete/entity_test_mulrevpub/{entity_test_mulrevpub}',
     'delete-multiple-form' => '/entity_test/delete',

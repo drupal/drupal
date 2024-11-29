@@ -154,11 +154,7 @@ class DefaultHtmlRouteProvider implements EntityRouteProviderInterface, EntityHa
 
       // If the entity has bundles, we can provide a bundle-specific title
       // and access requirements.
-      $expected_parameter = $entity_type->getBundleEntityType() ?: $entity_type->getKey('bundle');
-      // @todo We have to check if a route contains a bundle in its path as
-      //   test entities have inconsistent usage of "add-form" link templates.
-      //   Fix it in https://www.drupal.org/node/2699959.
-      if (($bundle_key = $entity_type->getKey('bundle')) && str_contains($route->getPath(), '{' . $expected_parameter . '}')) {
+      if ($bundle_key = $entity_type->getKey('bundle')) {
         $route->setDefault('_title_callback', EntityController::class . '::addBundleTitle');
         // If the bundles are entities themselves, we can add parameter
         // information to the route options.
