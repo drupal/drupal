@@ -54,7 +54,7 @@ class InstallerLanguageTest extends KernelTestBase {
     // @todo Remove as part of https://www.drupal.org/node/2186491
     $profile_list = \Drupal::service('extension.list.profile');
     assert($profile_list instanceof ProfileExtensionList);
-    $profile_list->setPathname('testing', 'core/profiles/testing/testing.info.yml');
+    $profile_list->setPathname('testing', 'core/profiles/tests/testing/testing.info.yml');
 
     $info_en = install_profile_info('testing', 'en');
     $info_nl = install_profile_info('testing', 'nl');

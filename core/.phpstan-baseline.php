@@ -56269,13 +56269,13 @@ $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\drupal_system_listing_compatible_test\\\\Kernel\\\\SystemListingCrossProfileCompatibleTest\\:\\:testSystemListing\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/profiles/testing/modules/drupal_system_listing_compatible_test/tests/src/Kernel/SystemListingCrossProfileCompatibleTest.php',
+	'path' => __DIR__ . '/profiles/tests/testing/modules/drupal_system_listing_compatible_test/tests/src/Kernel/SystemListingCrossProfileCompatibleTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function testing_requirements_requirements\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/profiles/testing_requirements/testing_requirements.install',
+	'path' => __DIR__ . '/profiles/tests/testing_requirements/testing_requirements.install',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return

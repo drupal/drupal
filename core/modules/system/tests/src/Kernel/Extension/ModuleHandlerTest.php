@@ -179,7 +179,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // @todo Remove as part of https://www.drupal.org/node/2186491
     $profile_list = \Drupal::service('extension.list.profile');
     assert($profile_list instanceof ProfileExtensionList);
-    $profile_list->setPathname($profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
+    $profile_list->setPathname($profile, 'core/profiles/tests/' . $profile . '/' . $profile . '.info.yml');
     $this->enableModules(['module_test', $profile]);
 
     $data = \Drupal::service('extension.list.module')->reset()->getList();
@@ -238,7 +238,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // @todo Remove as part of https://www.drupal.org/node/2186491
     $profile_list = \Drupal::service('extension.list.profile');
     assert($profile_list instanceof ProfileExtensionList);
-    $profile_list->setPathname($profile, 'core/profiles/' . $profile . '/' . $profile . '.info.yml');
+    $profile_list->setPathname($profile, 'core/profiles/tests/' . $profile . '/' . $profile . '.info.yml');
     $this->enableModules(['module_test', $profile]);
 
     $data = \Drupal::service('extension.list.module')->reset()->getList();

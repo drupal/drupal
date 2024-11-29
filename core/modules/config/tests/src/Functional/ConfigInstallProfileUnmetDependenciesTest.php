@@ -75,7 +75,7 @@ class ConfigInstallProfileUnmetDependenciesTest extends InstallerTestBase {
   protected function copyTestingOverrides(): void {
     $dest = $this->siteDirectory . '/profiles/testing_config_overrides';
     mkdir($dest, 0777, TRUE);
-    $source = DRUPAL_ROOT . '/core/profiles/testing_config_overrides';
+    $source = DRUPAL_ROOT . '/core/profiles/tests/testing_config_overrides';
     $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
     foreach ($iterator as $item) {
       if ($item->isDir()) {
