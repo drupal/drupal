@@ -34,7 +34,7 @@ class WorkflowStateTransitionOperationsAccessCheck implements AccessInterface {
    * "/test-workflow/foo-state/delete" the 'delete-state:foo-state' operation
    * will be checked:
    * @code
-   * pattern: '/{workflow}/{workflow_state}/delete'
+   * path: '/{workflow}/{workflow_state}/delete'
    * requirements:
    *   _workflow_access: 'delete-state'
    * @endcode

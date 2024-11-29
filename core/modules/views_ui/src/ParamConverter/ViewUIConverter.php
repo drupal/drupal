@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Route;
  *
  * Example:
  *
- * pattern: '/some/{view}/and/{bar}'
+ * path: '/some/{view}/and/{bar}'
  * options:
  *   parameters:
  *     view:
