@@ -192,7 +192,7 @@ EOS;
     $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
     $theme_handler->listInfo()->willReturn([
       'theme_d' => [
-        'type' => 'theme_d',
+        'type' => 'theme',
         'pathname' => 'core/themes/theme_d/theme_d.info.yml',
       ],
     ]);
@@ -275,7 +275,7 @@ EOS;
     $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
     $theme_handler->listInfo()->willReturn([
       'theme_d' => [
-        'type' => 'theme_d',
+        'type' => 'theme',
         'pathname' => 'core/themes/theme_d/theme_d.info.yml',
       ],
     ]);
@@ -318,7 +318,7 @@ EOS;
     $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
     $theme_handler->listInfo()->willReturn([
       'theme_d' => [
-        'type' => 'theme_d',
+        'type' => 'theme',
         'pathname' => 'core/themes/theme_d/theme_d.info.yml',
       ],
     ]);
@@ -370,7 +370,7 @@ EOS;
     $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
     $theme_handler->listInfo()->willReturn([
       'theme_d' => [
-        'type' => 'theme_d',
+        'type' => 'theme',
         'pathname' => 'core/themes/theme_d/theme_d.info.yml',
       ],
     ]);
@@ -440,7 +440,7 @@ EOS;
     $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
     $theme_handler->listInfo()->willReturn([
       'theme_d' => [
-        'type' => 'theme_d',
+        'type' => 'theme',
         'pathname' => 'core/themes/theme_d/theme_d.info.yml',
       ],
     ]);
@@ -483,7 +483,7 @@ EOS;
     $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
     $theme_handler->listInfo()->willReturn([
       'theme_d' => [
-        'type' => 'theme_d',
+        'type' => 'theme',
         'pathname' => 'core/themes/theme_d/theme_d.info.yml',
       ],
     ]);
@@ -523,7 +523,7 @@ EOS;
     $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
     $theme_handler->listInfo()->willReturn([
       'theme_d' => [
-        'type' => 'theme_d',
+        'type' => 'theme',
         'pathname' => 'core/themes/theme_d/theme_d.info.yml',
       ],
     ]);
@@ -598,7 +598,7 @@ EOS;
     $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
     $theme_handler->listInfo()->willReturn([
       'theme_d' => [
-        'type' => 'theme_d',
+        'type' => 'theme',
         'pathname' => 'core/themes/theme_d/theme_d.info.yml',
       ],
     ]);
@@ -685,7 +685,7 @@ EOS;
     $theme_handler = $this->prophesize(ThemeHandlerInterface::class);
     $theme_handler->listInfo()->willReturn([
       'theme_d' => [
-        'type' => 'theme_d',
+        'type' => 'theme',
         'pathname' => 'core/themes/theme_d/theme_d.info.yml',
       ],
     ]);
