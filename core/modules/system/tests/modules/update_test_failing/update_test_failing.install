@@ -12,13 +12,13 @@ use Drupal\Core\Utility\UpdateException;
 /**
  * This update will fail.
  */
-function update_test_failing_update_8001() {
+function update_test_failing_update_8001(): void {
   throw new UpdateException('This update hook is failing.');
 }
 
 /**
  * A further update.
  */
-function update_test_failing_update_8002() {
+function update_test_failing_update_8002(): void {
   // This hook won't ever run.
 }

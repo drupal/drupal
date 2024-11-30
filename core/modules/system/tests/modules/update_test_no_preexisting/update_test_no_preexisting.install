@@ -10,6 +10,6 @@ declare(strict_types=1);
 /**
  * Dummy update_test_no_preexisting update 8001.
  */
-function update_test_no_preexisting_update_8001() {
+function update_test_no_preexisting_update_8001(): void {
   \Drupal::state()->set('update_test_no_preexisting_update_8001', TRUE);
 }

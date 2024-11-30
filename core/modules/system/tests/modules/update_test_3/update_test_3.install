@@ -12,7 +12,7 @@ declare(strict_types=1);
  *
  * @see update_test_2_update_dependencies()
  */
-function update_test_3_update_dependencies() {
+function update_test_3_update_dependencies(): array {
   $dependencies['update_test_3'][8001] = [
     'update_test_2' => 8001,
   ];
@@ -22,5 +22,5 @@ function update_test_3_update_dependencies() {
 /**
  * Dummy update_test_3 update 8001.
  */
-function update_test_3_update_8001() {
+function update_test_3_update_8001(): void {
 }

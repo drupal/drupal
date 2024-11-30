@@ -12,7 +12,7 @@ declare(strict_types=1);
 /**
  * First update.
  */
-function update_test_postupdate_post_update_first() {
+function update_test_postupdate_post_update_first(): string {
   $execution = \Drupal::state()->get('post_update_test_execution', []);
   $execution[] = __FUNCTION__;
   \Drupal::state()->set('post_update_test_execution', $execution);
@@ -23,7 +23,7 @@ function update_test_postupdate_post_update_first() {
 /**
  * Second update.
  */
-function update_test_postupdate_post_update_second() {
+function update_test_postupdate_post_update_second(): string {
   $execution = \Drupal::state()->get('post_update_test_execution', []);
   $execution[] = __FUNCTION__;
   \Drupal::state()->set('post_update_test_execution', $execution);
@@ -34,7 +34,7 @@ function update_test_postupdate_post_update_second() {
 /**
  * Test1 update.
  */
-function update_test_postupdate_post_update_test1() {
+function update_test_postupdate_post_update_test1(): string {
   $execution = \Drupal::state()->get('post_update_test_execution', []);
   $execution[] = __FUNCTION__;
   \Drupal::state()->set('post_update_test_execution', $execution);
@@ -45,7 +45,7 @@ function update_test_postupdate_post_update_test1() {
 /**
  * Test0 update.
  */
-function update_test_postupdate_post_update_test0() {
+function update_test_postupdate_post_update_test0(): string {
   $execution = \Drupal::state()->get('post_update_test_execution', []);
   $execution[] = __FUNCTION__;
   \Drupal::state()->set('post_update_test_execution', $execution);
@@ -56,7 +56,7 @@ function update_test_postupdate_post_update_test0() {
 /**
  * Testing batch processing in post updates update.
  */
-function update_test_postupdate_post_update_test_batch(&$sandbox = NULL) {
+function update_test_postupdate_post_update_test_batch(&$sandbox = NULL): string {
   if (!isset($sandbox['steps'])) {
     $sandbox['current_step'] = 0;
     $sandbox['steps'] = 3;

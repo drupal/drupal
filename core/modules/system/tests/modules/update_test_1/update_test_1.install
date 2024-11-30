@@ -12,7 +12,7 @@ declare(strict_types=1);
  *
  * @see update_test_2_update_dependencies()
  */
-function update_test_1_update_dependencies() {
+function update_test_1_update_dependencies(): array {
   \Drupal::state()->set('update_test_1_update_dependencies_run', TRUE);
   // These dependencies are used in combination with those declared in
   // update_test_2_update_dependencies() for the sole purpose of testing that
@@ -41,17 +41,17 @@ function update_test_1_update_dependencies() {
 /**
  * Dummy update_test_1 update 8001.
  */
-function update_test_1_update_8001() {
+function update_test_1_update_8001(): void {
 }
 
 /**
  * Dummy update_test_1 update 8002.
  */
-function update_test_1_update_8002() {
+function update_test_1_update_8002(): void {
 }
 
 /**
  * Dummy update_test_1 update 8003.
  */
-function update_test_1_update_8003() {
+function update_test_1_update_8003(): void {
 }

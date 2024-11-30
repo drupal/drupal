@@ -14,7 +14,7 @@ use Drupal\Component\Render\FormattableMarkup;
 /**
  * Implements hook_requirements().
  */
-function update_test_schema_requirements($phase) {
+function update_test_schema_requirements($phase): array {
   $requirements = [];
   if ($phase === 'runtime') {
     $requirements['path_alias_test'] = [
@@ -60,7 +60,7 @@ if ($schema_version >= 8001) {
   /**
    * Schema version 8001.
    */
-  function update_test_schema_update_8001() {
+  function update_test_schema_update_8001(): void {
     $table = [
       'fields' => [
         'a' => ['type' => 'int', 'not null' => TRUE],
@@ -79,7 +79,7 @@ if ($schema_version >= 8002) {
   /**
    * Schema version 8002.
    */
-  function update_test_schema_update_8002() {
+  function update_test_schema_update_8002(): FormattableMarkup {
     // Return a message that contains a system path with an alias.
     // @see \Drupal\FunctionalTests\Update\UpdatePathTestBaseTest::testPathAliasProcessing()
     return new FormattableMarkup('Visit <a href=":link">the structure page</a> to do many useful things.', [
@@ -94,7 +94,7 @@ if ($schema_version >= 8003) {
   /**
    * Schema version 8003.
    */
-  function update_test_schema_update_8003() {
+  function update_test_schema_update_8003(): void {
     // Uninstall a module with no dependencies installed by the Standard
     // profile.
     \Drupal::service('module_installer')->uninstall(['page_cache']);

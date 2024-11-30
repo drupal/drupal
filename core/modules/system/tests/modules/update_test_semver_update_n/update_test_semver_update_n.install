@@ -10,6 +10,6 @@ declare(strict_types=1);
 /**
  * Update 8001.
  */
-function update_test_semver_update_n_update_8001() {
+function update_test_semver_update_n_update_8001(): void {
   \Drupal::state()->set('update_test_semver_update_n_update_8001', 'Yes, I was run. Thanks for testing!');
 }

@@ -17,6 +17,6 @@ function update_test_last_removed_update_last_removed(): int {
 /**
  * Dummy update function to run during the tests.
  */
-function update_test_last_removed_update_8003() {
+function update_test_last_removed_update_8003(): string {
   return 'The update_test_last_removed_update_8003() update was executed successfully.';
 }

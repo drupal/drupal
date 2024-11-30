@@ -10,5 +10,5 @@ declare(strict_types=1);
 /**
  * Hook implementation using the reserved schema version 8000.
  */
-function update_test_invalid_hook_update_8000() {
+function update_test_invalid_hook_update_8000(): void {
 }

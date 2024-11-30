@@ -10,13 +10,13 @@ declare(strict_types=1);
 /**
  * Dummy update_test_with_7x update 7200.
  */
-function update_test_with_7x_update_7200() {
+function update_test_with_7x_update_7200(): void {
 }
 
 /**
  * Dummy update_test_with_7x update 7201.
  */
-function update_test_with_7x_update_7201() {
+function update_test_with_7x_update_7201(): void {
 }
 
 /**
