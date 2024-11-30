@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Update test of slash in description and/or.
  */
-function update_test_description_update_8001() {
+function update_test_description_update_8001(): void {
 }
 
 // phpcs:disable Drupal.Commenting.DocComment.ShortSingleLine
@@ -19,5 +19,5 @@ function update_test_description_update_8001() {
  * lazy dog.
  */
 // phpcs:enable
-function update_test_description_update_8002() {
+function update_test_description_update_8002(): void {
 }

@@ -10,17 +10,17 @@ declare(strict_types=1);
 /**
  * Dummy update_test_0 update 8001.
  */
-function update_test_0_update_8001() {
+function update_test_0_update_8001(): void {
 }
 
 /**
  * Dummy update_test_0 update 8002.
  */
-function update_test_0_update_8002() {
+function update_test_0_update_8002(): void {
 }
 
 /**
  * Dummy update_test_0 update 8003.
  */
-function update_test_0_update_8003() {
+function update_test_0_update_8003(): void {
 }

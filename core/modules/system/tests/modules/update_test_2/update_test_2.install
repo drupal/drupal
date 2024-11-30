@@ -13,7 +13,7 @@ declare(strict_types=1);
  * @see update_test_1_update_dependencies()
  * @see update_test_3_update_dependencies()
  */
-function update_test_2_update_dependencies() {
+function update_test_2_update_dependencies(): array {
   // Combined with update_test_3_update_dependencies(), we are declaring here
   // that these two modules run updates in the following order:
   // 1. update_test_2_update_8001()
@@ -39,17 +39,17 @@ function update_test_2_update_dependencies() {
 /**
  * Dummy update_test_2 update 8001.
  */
-function update_test_2_update_8001() {
+function update_test_2_update_8001(): void {
 }
 
 /**
  * Dummy update_test_2 update 8002.
  */
-function update_test_2_update_8002() {
+function update_test_2_update_8002(): void {
 }
 
 /**
  * Dummy update_test_2 update 8003.
  */
-function update_test_2_update_8003() {
+function update_test_2_update_8003(): void {
 }
