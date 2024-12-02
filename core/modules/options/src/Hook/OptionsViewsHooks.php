@@ -18,7 +18,7 @@ class OptionsViewsHooks {
    * the list.
    */
   #[Hook('field_views_data')]
-  public function fieldViewsData(FieldStorageConfigInterface $field) {
+  public function fieldViewsData(FieldStorageConfigInterface $field): array {
     $data = views_field_default_views_data($field);
     foreach ($data as $table_name => $table_data) {
       foreach ($table_data as $field_name => $field_data) {

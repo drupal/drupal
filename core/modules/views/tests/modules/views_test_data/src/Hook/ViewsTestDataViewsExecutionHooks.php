@@ -39,8 +39,9 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_field_views_data().
    */
   #[Hook('field_views_data')]
-  public function fieldViewsData(FieldStorageConfigInterface $field_storage) {
+  public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {
     \Drupal::state()->set('views_hook_test_field_views_data', TRUE);
+    return [];
   }
 
   /**

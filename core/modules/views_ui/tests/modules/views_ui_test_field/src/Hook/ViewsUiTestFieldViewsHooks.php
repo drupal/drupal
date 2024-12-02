@@ -15,7 +15,7 @@ class ViewsUiTestFieldViewsHooks {
    * Implements hook_views_data().
    */
   #[Hook('views_data')]
-  public function viewsData() {
+  public function viewsData(): array {
     $data['views']['views_test_field_1'] = [
       'title' => t('Views test field 1 - FIELD_1_TITLE'),
       'help' => t('Field 1 for testing purposes - FIELD_1_DESCRIPTION'),

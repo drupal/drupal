@@ -17,7 +17,7 @@ class ViewsTestDataViewsHooks {
    * Implements hook_views_data().
    */
   #[Hook('views_data')]
-  public function viewsData() {
+  public function viewsData(): array {
     $state = \Drupal::service('state');
     $state->set('views_hook_test_views_data', TRUE);
     // We use a state variable to keep track of how many times this function is

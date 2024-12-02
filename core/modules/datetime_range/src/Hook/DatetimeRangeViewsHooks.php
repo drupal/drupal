@@ -14,7 +14,7 @@ class DatetimeRangeViewsHooks {
    * Implements hook_field_views_data().
    */
   #[Hook('field_views_data')]
-  public function fieldViewsData(FieldStorageConfigInterface $field_storage) {
+  public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {
     // Include datetime.views.inc file in order for helper function
     // datetime_type_field_views_data_helper() to be available.
     \Drupal::moduleHandler()->loadInclude('datetime', 'inc', 'datetime.views');

@@ -15875,12 +15875,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_moderation/src/Hook/ContentModerationViewsExecutionHooks.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\content_moderation\\\\Hook\\\\ContentModerationViewsHooks\\:\\:viewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/Hook/ContentModerationViewsHooks.php',
-];
-$ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getAffectedRevisionTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#',
 	'count' => 1,
@@ -17160,12 +17154,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\datetime\\\\Hook\\\\DatetimeViewsHooks\\:\\:fieldViewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime/src/Hook/DatetimeViewsHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldFormatter\\\\DateTimeFormatterBase\\:\\:setTimeZone\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldFormatter/DateTimeFormatterBase.php',
@@ -17303,12 +17291,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/datetime_range/src/Hook/DatetimeRangeHooks.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\datetime_range\\\\Hook\\\\DatetimeRangeViewsHooks\\:\\:fieldViewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime_range/src/Hook/DatetimeRangeViewsHooks.php',
-];
-$ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\datetime_range\\\\Plugin\\\\Field\\\\FieldType\\\\DateRangeFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#',
 	'count' => 1,
@@ -17403,12 +17385,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/dblog/src/Hook/DblogHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\dblog\\\\Hook\\\\DblogViewsHooks\\:\\:viewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/dblog/src/Hook/DblogViewsHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -19643,12 +19619,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/src/Hook/FileHooks.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\file\\\\Hook\\\\FileViewsHooks\\:\\:fieldViewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/src/Hook/FileViewsHooks.php',
-];
-$ignoreErrors[] = [
 	// identifier: empty.variable
 	'message' => '#^Variable \\$rows in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
@@ -21042,12 +21012,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\history\\\\Hook\\\\HistoryViewsHooks\\:\\:viewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/history/src/Hook/HistoryViewsHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/history/src/Plugin/views/field/HistoryUserTimestamp.php',
@@ -21369,12 +21333,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Hook\\\\ImageHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Hook/ImageHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\image\\\\Hook\\\\ImageViewsHooks\\:\\:fieldViewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/Hook/ImageViewsHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -27102,12 +27060,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\media_library\\\\Hook\\\\MediaLibraryViewsHooks\\:\\:viewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/src/Hook/MediaLibraryViewsHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\media_library\\\\MediaLibraryServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/src/MediaLibraryServiceProvider.php',
@@ -31637,12 +31589,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\options\\\\Hook\\\\OptionsHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/options/src/Hook/OptionsHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\options\\\\Hook\\\\OptionsViewsHooks\\:\\:fieldViewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/options/src/Hook/OptionsViewsHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
@@ -45533,18 +45479,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views\\\\Hook\\\\ViewsViewsHooks\\:\\:fieldViewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Hook/ViewsViewsHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views\\\\Hook\\\\ViewsViewsHooks\\:\\:viewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Hook/ViewsViewsHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\views\\\\ManyToOneHelper\\:\\:addFilter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/ManyToOneHelper.php',
@@ -51653,12 +51587,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Hook\\\\ViewsTestDataViewsExecutionHooks\\:\\:fieldViewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataViewsExecutionHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\views_test_data\\\\Hook\\\\ViewsTestDataViewsExecutionHooks\\:\\:viewsFormSubstitutions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataViewsExecutionHooks.php',
@@ -51720,12 +51648,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\views_test_data\\\\Hook\\\\ViewsTestDataViewsHooks\\:\\:viewsAnalyze\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataViewsHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Hook\\\\ViewsTestDataViewsHooks\\:\\:viewsData\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataViewsHooks.php',
 ];
@@ -53816,12 +53738,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewUI\\:\\:submitItemAdd\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/src/ViewUI.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views_ui_test_field\\\\Hook\\\\ViewsUiTestFieldViewsHooks\\:\\:viewsData\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/modules/views_ui_test_field/src/Hook/ViewsUiTestFieldViewsHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return

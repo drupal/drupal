@@ -13,7 +13,7 @@ class ContentModerationViewsHooks {
    * Implements hook_views_data().
    */
   #[Hook('views_data')]
-  public function viewsData() {
+  public function viewsData(): array {
     return _content_moderation_views_data_object()->getViewsData();
   }
 
