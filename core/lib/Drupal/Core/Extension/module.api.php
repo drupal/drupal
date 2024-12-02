@@ -349,6 +349,8 @@ function hook_uninstall($is_syncing): void {
 /**
  * Return an array of tasks to be performed by an installation profile.
  *
+ * Only procedural implementations are supported for this hook.
+ *
  * Any tasks you define here will be run, in order, after the installer has
  * finished the site configuration step but before it has moved on to the
  * final import of languages and the end of the installation. This is invoked
@@ -512,6 +514,8 @@ function hook_install_tasks(&$install_state) {
 
 /**
  * Alter the full list of installation tasks.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * You can use this hook to change or replace any part of the Drupal
  * installation process that occurs after the installation profile is selected.

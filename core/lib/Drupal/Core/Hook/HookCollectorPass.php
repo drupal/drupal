@@ -366,6 +366,8 @@ class HookCollectorPass implements CompilerPassInterface {
       'schema',
       'uninstall',
       'update_last_removed',
+      'hook_install_tasks',
+      'hook_install_tasks_alter',
     ];
 
     if (in_array($hook->hook, $staticDenyHooks) || preg_match('/^(post_update_|preprocess_|process_|update_\d+$)/', $hook->hook)) {
