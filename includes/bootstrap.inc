@@ -807,8 +807,8 @@ function drupal_settings_initialize() {
     // Otherwise use $base_url as session name, without the protocol
     // to use the same session identifiers across HTTP and HTTPS.
     list( , $session_name) = explode('://', $base_url, 2);
-    // HTTP_HOST can be modified by a visitor, but we already sanitized it
-    // in drupal_settings_initialize().
+    // HTTP_HOST can be modified by a visitor, but we already sanitized it in
+    // drupal_environment_initialize().
     if (!empty($_SERVER['HTTP_HOST'])) {
       $cookie_domain = _drupal_get_cookie_domain($_SERVER['HTTP_HOST']);
     }
