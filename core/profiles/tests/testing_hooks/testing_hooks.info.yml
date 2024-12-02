@@ -1,0 +1,10 @@
+name: Testing Hooks in profile
+type: profile
+description: 'Minimal profile for running tests. Includes absolutely required modules only.'
+version: VERSION
+hidden: true
+install:
+  # Enable page_cache and dynamic_page_cache in testing, to ensure that as many
+  # tests as possible run with them enabled.
+  - drupal:page_cache
+  - dynamic_page_cache

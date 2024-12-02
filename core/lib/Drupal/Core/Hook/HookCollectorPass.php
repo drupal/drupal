@@ -169,9 +169,9 @@ class HookCollectorPass implements CompilerPassInterface {
       $extension = $fileinfo->getExtension();
       $filename = $fileinfo->getPathname();
 
-      if ($extension === 'module' && !$iterator->getDepth()) {
-        // There is an expectation for all modules to be loaded. However,
-        // .module files are not supposed to be in subdirectories.
+      if (($extension === 'module' || $extension === 'profile') && !$iterator->getDepth()) {
+        // There is an expectation for all modules and profiles to be loaded.
+        // .module and .profile files are not supposed to be in subdirectories.
         include_once $filename;
       }
       if ($extension === 'php') {
