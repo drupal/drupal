@@ -20,6 +20,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -211,7 +212,12 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     if (!empty($exclude[$path])) {
       return NULL;
     }
-    $request = Request::create($path);
+    try {
+      $request = Request::create($path);
+    }
+    catch (BadRequestException) {
+      return NULL;
+    }
     // Performance optimization: set a short accept header to reduce overhead in
     // AcceptHeaderMatcher when matching the request.
     $request->headers->set('Accept', 'text/html');
