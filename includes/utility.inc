@@ -26,7 +26,7 @@ function drupal_var_export($var, $prefix = '') {
       // Don't export keys if the array is non associative.
       $export_keys = array_values($var) != $var;
       foreach ($var as $key => $value) {
-        $output .= '  ' . ($export_keys ? drupal_var_export($key) . ' => ' : '') . drupal_var_export($value, '  ', FALSE) . ",\n";
+        $output .= '  ' . ($export_keys ? drupal_var_export($key) . ' => ' : '') . drupal_var_export($value, '  ') . ",\n";
       }
       $output .= ')';
     }
