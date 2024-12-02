@@ -5,7 +5,7 @@ navigation_layout:
   library: navigation/navigation.layout
   category: 'Navigation'
   class: \Drupal\navigation\NavigationLayout
-  default_region: first
+  default_region: content
   icon_map:
     - [ content ]
     - [ footer ]
