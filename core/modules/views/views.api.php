@@ -127,7 +127,7 @@ function hook_views_analyze(ViewExecutable $view) {
  *
  * @see hook_views_data_alter()
  */
-function hook_views_data() {
+function hook_views_data(): array {
   // This example describes how to write hook_views_data() for a table defined
   // like this:
   // @code
@@ -549,7 +549,7 @@ function hook_views_data_alter(array &$data) {
  * @see hook_field_views_data_alter()
  * @see hook_field_views_data_views_data_alter()
  */
-function hook_field_views_data(FieldStorageConfigInterface $field_storage) {
+function hook_field_views_data(FieldStorageConfigInterface $field_storage): array {
   $data = views_field_default_views_data($field_storage);
   foreach ($data as $table_name => $table_data) {
     // Add the relationship only on the target_id field.

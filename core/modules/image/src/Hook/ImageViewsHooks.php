@@ -19,7 +19,7 @@ class ImageViewsHooks {
    * @see views_field_default_views_data()
    */
   #[Hook('field_views_data')]
-  public function fieldViewsData(FieldStorageConfigInterface $field_storage) {
+  public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {
     $data = views_field_default_views_data($field_storage);
     foreach ($data as $table_name => $table_data) {
       // Add the relationship only on the target_id field.

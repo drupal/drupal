@@ -17,7 +17,7 @@ class HistoryViewsHooks {
    * Implements hook_views_data().
    */
   #[Hook('views_data')]
-  public function viewsData() {
+  public function viewsData(): array {
     // History table
     // We're actually defining a specific instance of the table, so let's
     // alias it so that we can later add the real table for other purposes if we

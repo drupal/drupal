@@ -17,7 +17,7 @@ class ViewsViewsHooks {
    * Implements hook_views_data().
    */
   #[Hook('views_data')]
-  public function viewsData() {
+  public function viewsData(): array {
     $data['views']['table']['group'] = t('Global');
     $data['views']['table']['join'] = ['#global' => []];
     $data['views']['random'] = [
@@ -217,7 +217,7 @@ class ViewsViewsHooks {
    * entity_reference fields that handles title token replacement.
    */
   #[Hook('field_views_data')]
-  public function fieldViewsData(FieldStorageConfigInterface $field_storage) {
+  public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {
     $data = views_field_default_views_data($field_storage);
     // The code below only deals with the Entity reference field type.
     if ($field_storage->getType() != 'entity_reference') {
