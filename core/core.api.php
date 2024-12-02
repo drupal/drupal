@@ -1659,6 +1659,8 @@
  *
  * Install hooks:
  * - hook_install()
+ * - hook_install_tasks()
+ * - hook_install_tasks_alter()
  * - hook_post_update_NAME()
  * - hook_schema()
  * - hook_uninstall()
