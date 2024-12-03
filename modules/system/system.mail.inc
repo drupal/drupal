@@ -21,10 +21,8 @@ class DefaultMailSystem implements MailSystemInterface {
   public function format(array $message) {
     // Join the body array into one string.
     $message['body'] = implode("\n\n", $message['body']);
-    // Convert any HTML to plain-text.
+    // Convert any HTML to plain-text and wrap the mail body for sending.
     $message['body'] = drupal_html_to_text($message['body']);
-    // Wrap the mail body for sending.
-    $message['body'] = drupal_wrap_mail($message['body']);
     return $message;
   }
 
