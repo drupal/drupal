@@ -35,7 +35,6 @@ function drupal_var_export($var, $prefix = '') {
     $output = $var ? 'TRUE' : 'FALSE';
   }
   elseif (is_string($var)) {
-    $line_safe_var = str_replace("\n", '\n', $var);
     if (strpos($var, "\n") !== FALSE || strpos($var, "'") !== FALSE) {
       // If the string contains a line break or a single quote, use the
       // double quote export mode. Encode backslash and double quotes and
