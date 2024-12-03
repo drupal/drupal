@@ -15,6 +15,9 @@ media.settings:
     standalone_url:
       type: boolean
       label: 'Allow media items to be viewed standalone at /media/{id}'
+    oembed_discovery:
+      type: boolean
+      label: 'Allow oEmbed discovery'
 
 media.type.*:
   type: config_entity

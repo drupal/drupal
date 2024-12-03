@@ -9,7 +9,7 @@ services:
     parent: default_plugin_manager
   media.oembed.url_resolver:
     class: Drupal\media\OEmbed\UrlResolver
-    arguments: ['@media.oembed.provider_repository', '@media.oembed.resource_fetcher', '@http_client', '@module_handler', '@cache.default']
+    arguments: ['@media.oembed.provider_repository', '@media.oembed.resource_fetcher', '@http_client', '@module_handler', '@cache.default', '@config.factory']
   Drupal\media\OEmbed\UrlResolverInterface: '@media.oembed.url_resolver'
   media.oembed.provider_repository:
     class: Drupal\media\OEmbed\ProviderRepository

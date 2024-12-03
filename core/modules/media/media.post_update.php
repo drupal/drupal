@@ -27,3 +27,10 @@ function media_removed_post_updates(): array {
 function media_post_update_media_author_views_filter_update(): void {
   // Empty update function to clear the Views data cache.
 }
+
+/**
+ * Set the oembed_discovery setting.
+ */
+function media_post_update_set_oembed_discovery(): void {
+  \Drupal::configFactory()->getEditable('media.settings')->set('oembed_discovery', TRUE)->save(TRUE);
+}
