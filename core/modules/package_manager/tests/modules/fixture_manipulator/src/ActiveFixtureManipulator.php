@@ -14,12 +14,13 @@ final class ActiveFixtureManipulator extends FixtureManipulator {
   /**
    * {@inheritdoc}
    */
-  public function commitChanges(?string $dir = NULL): void {
+  public function commitChanges(?string $dir = NULL, bool $validate_composer = FALSE): self {
     if ($dir) {
       throw new \UnexpectedValueException("$dir cannot be specific for a ActiveFixtureManipulator instance");
     }
     $dir = \Drupal::service(PathLocator::class)->getProjectRoot();
     parent::doCommitChanges($dir);
+    return $this;
   }
 
 }

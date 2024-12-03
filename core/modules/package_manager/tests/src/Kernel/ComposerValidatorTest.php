@@ -98,7 +98,7 @@ class ComposerValidatorTest extends PackageManagerKernelTestBase {
    * @dataProvider providerComposerSettingsValidation
    */
   public function testComposerSettingsValidation(array $config, array $expected_results): void {
-    (new ActiveFixtureManipulator())->addConfig($config)->commitChanges();
+    (new ActiveFixtureManipulator())->addConfig($config)->commitChanges()->updateLock();
     $this->assertStatusCheckResults($expected_results);
     $this->assertResults($expected_results, PreCreateEvent::class);
   }
@@ -114,7 +114,7 @@ class ComposerValidatorTest extends PackageManagerKernelTestBase {
    * @dataProvider providerComposerSettingsValidation
    */
   public function testComposerSettingsValidationDuringPreApply(array $config, array $expected_results): void {
-    $this->getStageFixtureManipulator()->addConfig($config);
+    $this->getStageFixtureManipulator()->addConfig($config, TRUE);
     $this->assertResults($expected_results, PreApplyEvent::class);
   }
 

@@ -303,8 +303,10 @@ class FixtureManipulator {
    *
    * @param array $additional_config
    *   The configuration to add.
+   * @param bool $update_lock
+   *   Whether to run composer update --lock. Defaults to FALSE.
    */
-  public function addConfig(array $additional_config): self {
+  public function addConfig(array $additional_config, bool $update_lock = FALSE): self {
     if (empty($additional_config)) {
       throw new \InvalidArgumentException('No config to add.');
     }
@@ -330,17 +332,23 @@ class FixtureManipulator {
       $command[] = $value;
       $this->runComposerCommand($command);
     }
-    $this->runComposerCommand(['update', '--lock']);
+    if ($update_lock) {
+      $this->runComposerCommand(['update', '--lock']);
+    }
 
     return $this;
   }
 
   /**
    * Commits the changes to the directory.
+   *
+   * @param string $dir
+   *   The directory to commit the changes to.
    */
-  public function commitChanges(string $dir): void {
+  public function commitChanges(string $dir): self {
     $this->doCommitChanges($dir);
     $this->committed = TRUE;
+    return $this;
   }
 
   /**
@@ -367,7 +375,11 @@ class FixtureManipulator {
     }
     $this->committed = TRUE;
     $this->committingChanges = FALSE;
-    $this->validateComposer();
+  }
+
+  public function updateLock(): self {
+    $this->runComposerCommand(['update', '--lock']);
+    return $this;
   }
 
   /**
@@ -623,8 +635,12 @@ class FixtureManipulator {
 
   /**
    * Sets up the path repos at absolute paths.
+   *
+   * @param bool $composer_refresh
+   *   Whether to run composer update --lock && composer install. Defaults to
+   *   FALSE.
    */
-  public function setUpRepos(): void {
+  public function setUpRepos($composer_refresh = FALSE): void {
     $fs = new SymfonyFileSystem();
     $path_repo_base = \Drupal::state()->get(self::PATH_REPO_STATE_KEY);
     if (empty($path_repo_base)) {
@@ -638,8 +654,10 @@ class FixtureManipulator {
     // repos at the absolute path.
     $composer_json = file_get_contents($this->dir . '/packages.json');
     assert(file_put_contents($this->dir . '/packages.json', str_replace('../path_repos/', "$path_repo_base/", $composer_json)) !== FALSE);
-    $this->runComposerCommand(['update', '--lock']);
-    $this->runComposerCommand(['install']);
+    if ($composer_refresh) {
+      $this->runComposerCommand(['update', '--lock']);
+      $this->runComposerCommand(['install']);
+    }
   }
 
 }
