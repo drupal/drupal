@@ -41,6 +41,7 @@ function path_permission() {
   return array(
     'administer url aliases' => array(
       'title' => t('Administer URL aliases'),
+      'restrict access' => TRUE,
     ),
     'create url aliases' => array(
       'title' => t('Create and edit URL aliases'),
