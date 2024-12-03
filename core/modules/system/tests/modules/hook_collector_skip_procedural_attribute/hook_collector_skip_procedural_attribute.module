@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Implement hooks.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+
+/**
+ * This implements a hook and should be picked up.
+ *
+ * We have set procedural_hooks: scan.
+ */
+function hook_collector_skip_procedural_attribute_cache_flush(): void {
+  // Set a global value we can check in test code.
+  $GLOBALS['procedural_attribute_skip_find'] = 'procedural_attribute_skip_find';
+}
+
+/**
+ * This implements a hook but should not be picked up.
+ *
+ * This attribute should stop all procedural hooks after.
+ * We implement on behalf of other modules so we can pick them up.
+ */
+#[StopProceduralHookScan]
+function hook_collector_on_behalf_procedural_cache_flush(): void {
+  // Set a global value we can check in test code.
+  $GLOBALS['procedural_attribute_skip_has_attribute'] = 'procedural_attribute_skip_has_attribute';
+}
+
+/**
+ * This implements a hook but should not be picked up.
+ *
+ * The attribute above should prevent this from being found.
+ */
+function hook_collector_on_behalf_cache_flush(): void {
+  // Set a global value we can check in test code.
+  $GLOBALS['procedural_attribute_skip_after_attribute'] = 'procedural_attribute_skip_after_attribute';
+}

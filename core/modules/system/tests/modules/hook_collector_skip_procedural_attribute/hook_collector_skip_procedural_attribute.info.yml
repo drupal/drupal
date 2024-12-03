@@ -1,0 +1,6 @@
+name: 'Test skipping procedural for part of the module'
+type: module
+description: 'Test skipping procedural for part of the module.'
+package: Testing
+version: VERSION
+procedural_hooks: scan

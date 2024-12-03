@@ -1,0 +1,5 @@
+name: 'Test skipping procedural for whole module'
+type: module
+description: 'Test skipping procedural for whole module.'
+package: Testing
+version: VERSION
