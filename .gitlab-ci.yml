@@ -264,6 +264,12 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "sqlite-3"
 
+'PHP 8.4 MySQL 8.4':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.4-ubuntu"
+    _TARGET_DB: "mysql-8.4"
+
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.3 PostgreSQL 16':
