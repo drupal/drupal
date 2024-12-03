@@ -1515,14 +1515,26 @@ function _filter_url($text, $filter) {
   // re-split after each task, since all injected HTML tags must be correctly
   // protected before the next task.
   foreach ($tasks as $task => $pattern) {
+    // Store the current text in case any of the preg_* functions fail.
+    $saved_text = $text;
+
     // HTML comments need to be handled separately, as they may contain HTML
     // markup, especially a '>'. Therefore, remove all comment contents and add
     // them back later.
     _filter_url_escape_comments('', TRUE);
     $text = preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text);
+    if (preg_last_error()) {
+      $text = $saved_text;
+      continue 1;
+    }
 
     // Split at all tags; ensures that no tags or attributes are processed.
     $chunks = preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+    if (preg_last_error()) {
+      $text = $saved_text;
+      continue 1;
+    }
+
     // PHP ensures that the array consists of alternating delimiters and
     // literals, and begins and ends with a literal (inserting NULL as
     // required). Therefore, the first chunk is always text:
@@ -1539,6 +1551,10 @@ function _filter_url($text, $filter) {
           // If there is a match, inject a link into this chunk via the callback
           // function contained in $task.
           $chunks[$i] = preg_replace_callback($pattern, $task, $chunks[$i]);
+          if (preg_last_error()) {
+            $text = $saved_text;
+            continue 2;
+          }
         }
         // Text chunk is done, so next chunk must be a tag.
         $chunk_type = 'tag';
@@ -1566,6 +1582,10 @@ function _filter_url($text, $filter) {
     // Revert back to the original comment contents
     _filter_url_escape_comments('', FALSE);
     $text = preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text);
+    if (preg_last_error()) {
+      $text = $saved_text;
+      continue 1;
+    }
   }
 
   return $text;

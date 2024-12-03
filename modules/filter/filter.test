@@ -1637,6 +1637,7 @@ www.example.com with a newline in comments -->
    *   comments.
    * - Empty HTML tags (BR, IMG).
    * - Mix of absolute and partial URLs, and e-mail addresses in one content.
+   * - Input that exceeds PCRE backtracking limit.
    */
   function testUrlFilterContent() {
     // Setup dummy filter object.
@@ -1650,6 +1651,16 @@ www.example.com with a newline in comments -->
     $expected = file_get_contents($path . '/filter.url-output.txt');
     $result = _filter_url($input, $filter);
     $this->assertIdentical($result, $expected, 'Complex HTML document was correctly processed.');
+
+    // Case of a small and simple HTML document.
+    $input = $expected = '<p>www.test.com</p>';
+    $result = $this->filterUrlWithPcreErrors($input, $filter);
+    $this->assertIdentical($expected, $result, 'Simple HTML document was left intact when PCRE errors occurred.');
+
+    // Case of a complex HTML document.
+    $input = $expected = file_get_contents($path . '/filter.url-input.txt');
+    $result = $this->filterUrlWithPcreErrors($input, $filter);
+    $this->assertIdentical($expected, $result, 'Complex HTML document was left intact when PCRE errors occurred.');
   }
 
   /**
@@ -1889,6 +1900,28 @@ body {color:red}
    */
   function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
     return $this->assertTrue(strpos(strtolower(decode_entities($haystack)), $needle) === FALSE, $message, $group);
+  }
+
+  /**
+   * Calls filter_url with pcre.backtrack_limit set to 1.
+   *
+   * When PCRE errors occur, _filter_url() returns the input text unchanged.
+   *
+   * @param $input
+   *   Text to pass on to _filter_url().
+   * @param $filter
+   *   Filter to pass on to _filter_url().
+   * @return
+   *   The processed $input.
+   */
+  protected function filterUrlWithPcreErrors($input, $filter) {
+    $pcre_backtrack_limit = ini_get('pcre.backtrack_limit');
+    // Setting this limit to the smallest possible value should cause PCRE
+    // errors and break the various preg_* functions used by _filter_url().
+    ini_set('pcre.backtrack_limit', 1);
+    $result = _filter_url($input, $filter);
+    ini_set('pcre.backtrack_limit', $pcre_backtrack_limit);
+    return $result;
   }
 }
 
