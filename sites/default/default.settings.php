@@ -640,6 +640,41 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
 # $conf['allow_authorize_operations'] = FALSE;
 
 /**
+ * Trusted host configuration.
+ *
+ * Drupal can attempt to prevent HTTP Host header spoofing.
+ *
+ * To enable the trusted host mechanism, you enable your allowable hosts in
+ * $conf['trusted_host_patterns']. This should be an array of regular expression
+ * patterns, without delimiters, representing the hosts you would like to allow.
+ *
+ * For example, this code will allow the site to only run from www.example.com.
+ *
+ * @code
+ * $conf['trusted_host_patterns'] = array(
+ *   '^www\.example\.com$',
+ * );
+ * @endcode
+ *
+ * If you are running multisite, or if you are running your site from different
+ * domain names (for example, you don't redirect http://www.example.com to
+ * http://example.com), you should specify all of the host patterns that are
+ * allowed by your site.
+ *
+ * For example, this code will allow the site to run off of all variants of
+ * example.com and example.org, with all subdomains included.
+ *
+ * @code
+ * $conf['trusted_host_patterns'] = array(
+ *   '^example\.com$',
+ *   '^.+\.example\.com$',
+ *   '^example\.org',
+ *   '^.+\.example\.org',
+ * );
+ * @endcode
+ */
+
+/**
  * Theme debugging:
  *
  * When debugging is enabled:

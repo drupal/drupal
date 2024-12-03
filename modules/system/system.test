@@ -2937,6 +2937,21 @@ class SystemAdminTestCase extends DrupalWebTestCase {
     $this->drupalGet('');
     $this->assertTrue($this->cookies['Drupal.visitor.admin_compact_mode']['value'], 'Compact mode persists on new requests.');
   }
+
+  /**
+   * Test Trusted Host Settings message on the status report page.
+   */
+  function testTrustedHostSettingsMessage() {
+    $this->drupalGet('admin/reports/status');
+    $this->assertText('The trusted_host_patterns setting is not configured in settings.php.');
+    $this->assertNoText('The trusted_host_patterns setting is set to allow');
+
+    variable_set('trusted_host_patterns', array('a_trusted_pattern', 'another_trusted_pattern'));
+    $this->drupalGet('admin/reports/status');
+    $this->assertNoText('The trusted_host_patterns setting is not configured in settings.php.');
+    $this->assertText('The trusted_host_patterns setting is set to allow a_trusted_pattern, another_trusted_pattern');
+  }
+
 }
 
 /**

@@ -963,3 +963,62 @@ class BootstrapDrupalCacheArrayTestCase extends DrupalWebTestCase {
     $this->assertTrue(is_string($payload2) && (strpos($payload2, 'phpinfo') !== FALSE), 'DrupalCacheArray persisted data to cache_form.');
   }
 }
+
+/**
+ * Test the trusted HTTP host configuration.
+ */
+class BootstrapTrustedHostsTestCase extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Trusted HTTP host test',
+      'description' => 'Tests the trusted_host_patterns configuration.',
+      'group' => 'Bootstrap',
+    );
+  }
+
+  /**
+   * Tests hostname validation.
+   *
+   * @see drupal_check_trusted_hosts()
+   */
+  function testTrustedHosts() {
+    $trusted_host_patterns = array(
+      '^example\.com$',
+      '^.+\.example\.com$',
+      '^example\.org',
+      '^.+\.example\.org',
+    );
+
+    foreach ($this->providerTestTrustedHosts() as $data) {
+      $test = array_combine(array('host', 'message', 'expected'), $data);
+      $valid_host = drupal_check_trusted_hosts($test['host'], $trusted_host_patterns);
+      $this->assertEqual($test['expected'], $valid_host, $test['message']);
+    }
+  }
+
+  /**
+   * Provides test data for testTrustedHosts().
+   */
+  public function providerTestTrustedHosts() {
+    $data = array();
+
+    // Tests canonical URL.
+    $data[] = array('www.example.com', 'canonical URL is trusted', TRUE);
+
+    // Tests missing hostname for HTTP/1.0 compatability where the Host
+    // header is optional.
+    $data[] = array(NULL, 'empty Host is valid', TRUE);
+
+    // Tests the additional patterns from the settings.
+    $data[] = array('example.com', 'host from settings is trusted', TRUE);
+    $data[] = array('subdomain.example.com', 'host from settings is trusted', TRUE);
+    $data[] = array('www.example.org', 'host from settings is trusted', TRUE);
+    $data[] = array('example.org', 'host from settings is trusted', TRUE);
+
+    // Tests mismatch.
+    $data[] = array('www.blackhat.com', 'unspecified host is untrusted', FALSE);
+
+    return $data;
+  }
+}
