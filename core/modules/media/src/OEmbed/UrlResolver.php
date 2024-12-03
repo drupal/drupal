@@ -5,7 +5,6 @@ namespace Drupal\media\OEmbed;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -64,24 +63,24 @@ class UrlResolver implements UrlResolverInterface {
 
   /**
    * Constructs a UrlResolver object.
+   *
+   * @param \Drupal\media\OEmbed\ProviderRepositoryInterface $providers
+   *   The oEmbed provider repository service.
+   * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resource_fetcher
+   *   The OEmbed resource fetcher service.
+   * @param \GuzzleHttp\ClientInterface $http_client
+   *   The HTTP client.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend.
    */
-  public function __construct(
-    ProviderRepositoryInterface $providers,
-    ResourceFetcherInterface $resource_fetcher,
-    ClientInterface $http_client,
-    ModuleHandlerInterface $module_handler,
-    CacheBackendInterface $cache_backend,
-    protected ?ConfigFactoryInterface $configFactory = NULL,
-  ) {
+  public function __construct(ProviderRepositoryInterface $providers, ResourceFetcherInterface $resource_fetcher, ClientInterface $http_client, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend) {
     $this->providers = $providers;
     $this->resourceFetcher = $resource_fetcher;
     $this->httpClient = $http_client;
     $this->moduleHandler = $module_handler;
     $this->cacheBackend = $cache_backend;
-    if ($configFactory === NULL) {
-      $this->configFactory = \Drupal::configFactory();
-      @trigger_error('Calling ' . __METHOD__ . ' without the $configFactory argument is deprecated in drupal:11.1.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3481570', E_USER_DEPRECATED);
-    }
   }
 
   /**
@@ -137,12 +136,9 @@ class UrlResolver implements UrlResolverInterface {
       }
     }
 
-    if ($this->configFactory->get('media.settings')->get('oembed_discovery')) {
-      $resource_url = $this->discoverResourceUrl($url);
-      if ($resource_url) {
-        return $this->resourceFetcher->fetchResource($resource_url)
-          ->getProvider();
-      }
+    $resource_url = $this->discoverResourceUrl($url);
+    if ($resource_url) {
+      return $this->resourceFetcher->fetchResource($resource_url)->getProvider();
     }
 
     throw new ResourceException('No matching provider found.', $url);

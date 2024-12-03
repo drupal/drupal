@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional;
 
-use Drupal\media\OEmbed\ResourceException;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
 // cspell:ignore dailymotion
@@ -116,11 +115,6 @@ class UrlResolverTest extends MediaFunctionalTestBase {
         'video_dailymotion.html',
         'https://www.dailymotion.com/services/oembed?url=video_dailymotion.html',
       ],
-      'Discovery disabled' => [
-        'video_dailymotion.html',
-        'https://www.dailymotion.com/services/oembed?url=video_dailymotion.html',
-        FALSE,
-      ],
     ];
   }
 
@@ -131,8 +125,6 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    *   The asset URL to resolve.
    * @param string $resource_url
    *   The expected oEmbed resource URL of the asset.
-   * @param bool $discovery_enabled
-   *   Whether to enable oEmbed resource discovery.
    *
    * @covers ::discoverResourceUrl
    * @covers ::getProviderByUrl
@@ -140,11 +132,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    *
    * @dataProvider providerUrlDiscovery
    */
-  public function testUrlDiscovery($url, $resource_url, bool $discovery_enabled = TRUE): void {
-    \Drupal::configFactory()->getEditable('media.settings')->set('oembed_discovery', $discovery_enabled)->save();
-    if (!$discovery_enabled) {
-      $this->expectException(ResourceException::class);
-    }
+  public function testUrlDiscovery($url, $resource_url): void {
     $this->assertSame(
       $this->container->get('media.oembed.url_resolver')->getResourceUrl($url),
       $resource_url
