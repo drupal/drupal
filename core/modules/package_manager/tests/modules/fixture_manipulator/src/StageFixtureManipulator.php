@@ -61,7 +61,7 @@ final class StageFixtureManipulator extends FixtureManipulator implements Beginn
   /**
    * {@inheritdoc}
    */
-  public function commitChanges(string $dir): void {
+  public function commitChanges(string $dir, bool $validate_composer = FALSE): self {
     throw new \BadMethodCallException('::commitChanges() should not be called directly in StageFixtureManipulator().');
   }
 

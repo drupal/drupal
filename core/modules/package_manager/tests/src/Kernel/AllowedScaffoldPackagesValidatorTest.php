@@ -25,7 +25,7 @@ class AllowedScaffoldPackagesValidatorTest extends PackageManagerKernelTestBase 
         "drupal/dummy_scaffolding",
         "drupal/dummy_scaffolding_2",
       ],
-    ])->commitChanges();
+    ])->commitChanges()->updateLock();
 
     $result = ValidationResult::createError(
       [
@@ -47,7 +47,7 @@ class AllowedScaffoldPackagesValidatorTest extends PackageManagerKernelTestBase 
         'extra.drupal-scaffold.allowed-packages' => [
           "drupal/dummy_scaffolding",
         ],
-      ]);
+      ], TRUE);
 
     $result = ValidationResult::createError(
       [

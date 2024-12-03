@@ -204,6 +204,7 @@ class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
     }
     if ($in_active !== static::ABSENT) {
       $active_manipulator->commitChanges();
+      $active_manipulator->updateLock();
     }
 
     // Simulate in stage.

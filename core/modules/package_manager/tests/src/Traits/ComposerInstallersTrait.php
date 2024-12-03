@@ -69,7 +69,8 @@ trait ComposerInstallersTrait {
       ->addConfig([
         'extra.installer-paths' => $installer_paths + $existing_installer_paths,
       ])
-      ->commitChanges($directory);
+      ->commitChanges($directory)
+      ->updateLock();
   }
 
 }
