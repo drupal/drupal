@@ -377,6 +377,15 @@ class TextSummaryTestCase extends DrupalWebTestCase {
     // Test text_summary() for different sizes.
     for ($i = 0; $i <= 37; $i++) {
       $this->callTextSummary($text, $expected[$i],    NULL, $i);
+
+      // libxml2 library changed parsing behavior on version 2.9.14. Skip
+      // specific edge-case testing for all further versions.
+      // @see https://gitlab.gnome.org/GNOME/libxml2/-/issues/474
+      // @see https://www.drupal.org/project/drupal/issues/3397882
+      if ($i == 1 && defined('LIBXML_VERSION') && LIBXML_VERSION >= 20914) {
+        continue;
+      }
+
       $this->callTextSummary($text, $expected_lb[$i], 'plain_text', $i);
       $this->callTextSummary($text, $expected_lb[$i], 'filtered_html', $i);
     }
