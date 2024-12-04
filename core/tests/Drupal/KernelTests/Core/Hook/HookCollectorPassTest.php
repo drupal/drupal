@@ -114,12 +114,13 @@ class HookCollectorPassTest extends KernelTestBase {
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_has_attribute']));
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_after_attribute']));
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_find']));
+    $this->assertFalse(isset($GLOBALS['skipped_procedural_oop_cache_flush']));
     drupal_flush_all_caches();
     $this->assertFalse(isset($GLOBALS['skip_procedural_all']));
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_has_attribute']));
     $this->assertFalse(isset($GLOBALS['procedural_attribute_skip_after_attribute']));
-    // This is the only one that should be found.
     $this->assertTrue(isset($GLOBALS['procedural_attribute_skip_find']));
+    $this->assertTrue(isset($GLOBALS['skipped_procedural_oop_cache_flush']));
 
   }
 

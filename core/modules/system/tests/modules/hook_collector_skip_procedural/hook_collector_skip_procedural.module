@@ -16,3 +16,8 @@ function hook_collector_skip_procedural_cache_flush(): void {
   // Set a global value we can check in test code.
   $GLOBALS['skip_procedural_all'] = 'skip_procedural_all';
 }
+
+function hook_collector_skip_procedural_custom_function(): void {
+  // Set a global value we can check in test code.
+  $GLOBALS['test_run'] = 'test_run';
+}
