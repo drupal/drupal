@@ -346,13 +346,17 @@ class NodeTest extends ResourceTestBase {
       ['4xx-response', 'http_response', 'node:1'],
       ['url.query_args', 'url.site', 'user.permissions'],
       'UNCACHEABLE (request policy)',
-      TRUE
+      'MISS'
     );
 
     // 200 after granting permission.
     $this->grantPermissionsToTestedRole(['view own unpublished content']);
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $this->getExpectedCacheContexts(), 'UNCACHEABLE (request policy)', TRUE);
+    // The response varies by 'user', causing the 'user.permissions' cache
+    // context to be optimized away.
+    $expected_cache_contexts = Cache::mergeContexts($this->getExpectedCacheContexts(), ['user']);
+    $expected_cache_contexts = array_diff($expected_cache_contexts, ['user.permissions']);
+    $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $expected_cache_contexts, 'UNCACHEABLE (request policy)', 'UNCACHEABLE (poor cacheability)');
   }
 
   /**
@@ -407,29 +411,6 @@ class NodeTest extends ResourceTestBase {
         $cached_fields[$field_name]
       );
     });
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
-    // \Drupal\Tests\jsonapi\Functional\ResourceTestBase::testRevisions()
-    // loads different revisions via query parameters, we do our best
-    // here to react to those directly, or indirectly.
-    $cache_contexts = parent::getExpectedCacheContexts($sparse_fieldset);
-
-    // This is bubbled up by
-    // \Drupal\node\NodeAccessControlHandler::checkAccess() directly.
-    if ($this->entity->isPublished()) {
-      return $cache_contexts;
-    }
-    if (!\Drupal::currentUser()->isAuthenticated()) {
-      return Cache::mergeContexts($cache_contexts, ['user.roles:authenticated']);
-    }
-    if (\Drupal::currentUser()->hasPermission('view own unpublished content')) {
-      return Cache::mergeContexts($cache_contexts, ['user']);
-    }
-    return $cache_contexts;
   }
 
   /**

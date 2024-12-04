@@ -66,19 +66,15 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
     // If no module implements the hook or the node does not have an id there is
     // no point in querying the database for access grants.
-    if (!$this->moduleHandler->hasImplementations('node_grants') || $node->isNew()) {
+    if (!$this->moduleHandler->hasImplementations('node_grants') || !$node->id()) {
       // Return the equivalent of the default grant, defined by
       // self::writeDefault().
       if ($operation === 'view') {
-        $result = AccessResult::allowedIf($node->isPublished());
-        if (!$node->isNew()) {
-          $result->addCacheableDependency($node);
-        }
-
-        return $result;
+        return AccessResult::allowedIf($node->isPublished());
       }
-
-      return AccessResult::neutral();
+      else {
+        return AccessResult::neutral();
+      }
     }
 
     // Check the database for potential access grants.
