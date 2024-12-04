@@ -1,3 +1,6 @@
+Drupal 7.xxx, xxxx-xx-xx (development version)
+------------------------
+
 Drupal 7.103, 2024-12-04
 ------------------------
 - So Long, and Thanks for All the Fish
