@@ -103,6 +103,15 @@ class DrupalErrorHandlerTestCase extends DrupalWebTestCase {
   function assertErrorMessage(array $error) {
     $message = t('%type: !message in %function (line ', $error);
     $this->assertRaw($message, format_string('Found error message: !message.', array('!message' => $message)));
+
+    // Also check that no full path from the error is displayed.
+    $this->assertNoRaw($error['%file'], format_string('Full path from error not displayed: %file.', array('%file' => $error['%file'])));
+
+    // Check that the path was displayed with the DRUPAL_ROOT hidden.
+    $root_length = strlen(DRUPAL_ROOT);
+    $stripped_path = substr($error['%file'], $root_length + 1);
+    $sanitized_path = t('of %path)', array('%path' => $stripped_path));
+    $this->assertRaw($sanitized_path, 'Path in error message was sanitized.');
   }
 
   /**
@@ -111,5 +120,8 @@ class DrupalErrorHandlerTestCase extends DrupalWebTestCase {
   function assertNoErrorMessage(array $error) {
     $message = t('%type: !message in %function (line ', $error);
     $this->assertNoRaw($message, format_string('Did not find error message: !message.', array('!message' => $message)));
+
+    // Also check that no full path from the error is displayed.
+    $this->assertNoRaw($error['%file'], format_string('Full path from error not displayed: %file.', array('%file' => $error['%file'])));
   }
 }

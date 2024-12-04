@@ -224,7 +224,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     if ($fatal) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.
-        print t('%type: !message in %function (line %line of %file).', $error);
+        print t('%type: !message in %function (line %line of %file).', _drupal_strip_error_file_path($error));
       }
       exit;
     }
@@ -242,7 +242,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         $class = 'status';
       }
 
-      drupal_set_message(t('%type: !message in %function (line %line of %file).', $error), $class);
+      drupal_set_message(t('%type: !message in %function (line %line of %file).', _drupal_strip_error_file_path($error)), $class);
     }
 
     if ($fatal) {
@@ -290,4 +290,29 @@ function _drupal_get_last_caller($backtrace) {
     $call['function'] = 'main()';
   }
   return $call;
+}
+
+/**
+ * Strip full path information from error details.
+ *
+ * @param $error
+ *   An array with the following keys: %type, !message, %function, %file, %line
+ *   and severity_level.
+ *
+ * @return
+ *   An array with the same keys as the $error param but with full paths
+ *   stripped from the %file element
+ */
+function _drupal_strip_error_file_path($error) {
+  if (!empty($error['%file'])) {
+    if (($drupal_root_position = strpos($error['%file'], DRUPAL_ROOT)) === 0) {
+      $root_length = strlen(DRUPAL_ROOT);
+      $error['%file'] = substr($error['%file'], $root_length + 1);
+    }
+    elseif ($drupal_root_position !== FALSE) {
+      // As a fallback, make sure DRUPAL_ROOT's value is not in the path.
+      $error['%file'] = str_replace(DRUPAL_ROOT, 'DRUPAL_ROOT', $error['%file']);
+    }
+  }
+  return $error;
 }
