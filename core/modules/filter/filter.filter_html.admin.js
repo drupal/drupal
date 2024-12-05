@@ -159,7 +159,7 @@
           .forEach((tag) => {
             userTagsWithoutOverrides[tag] = this.userTags[tag];
           });
-
+        // eslint-disable-next-line no-jquery/no-val
         this.$allowedHTMLFormItem.val(
           `${this._generateSetting(
             userTagsWithoutOverrides,
@@ -168,6 +168,7 @@
       }
       // Restore to original state.
       else {
+        // eslint-disable-next-line no-jquery/no-val
         this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
       }
     },

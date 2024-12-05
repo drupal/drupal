@@ -1525,7 +1525,7 @@
      *   The XMLHttpRequest status.
      */
     css(ajax, response, status) {
-      // eslint-disable-next-line jquery/no-css
+      // eslint-disable-next-line no-jquery/no-css
       $(response.selector).css(response.argument);
     },
 

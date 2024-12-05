@@ -5,7 +5,7 @@
 window.drupalCumulativeXhrCount = 0;
 (function ($) {
   // jQuery.active alone is unable to detect whether an XHR request ever occurred.
-  /* eslint-disable jquery/no-ajax-events */
+  /* eslint-disable no-jquery/no-ajax-events */
   $(document)
     .on('ajaxSend', function () {
       window.drupalCumulativeXhrCount++;

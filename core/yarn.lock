@@ -3032,10 +3032,10 @@ eslint-plugin-import@^2.25.4:
     semver "^6.3.1"
     tsconfig-paths "^3.15.0"
 
-eslint-plugin-jquery@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jquery/-/eslint-plugin-jquery-1.5.1.tgz#d6bac643acf9484ce76394e27e2b07baca06662e"
-  integrity sha512-L7v1eaK5t80C0lvUXPFP9MKnBOqPSKhCOYyzy4LZ0+iK+TJwN8S9gAkzzP1AOhypRIwA88HF6phQ9C7jnOpW8w==
+eslint-plugin-no-jquery@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-no-jquery/-/eslint-plugin-no-jquery-3.0.2.tgz#34693874c260634cc06fdfd1896b2cc77c252e7e"
+  integrity sha512-n/+6p6PFhWDNPVLJj1463hw4OTIRBbROGcbhmtOHTgw7yihSKzkwZiQ00EJTneyeR3jRiw5lpWSMCCBhtb8t2g==
 
 eslint-plugin-prettier@^5.0.1:
   version "5.1.3"
