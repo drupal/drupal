@@ -14,11 +14,9 @@
  * @ingroup themeable
  */
 #}
-{% apply spaceless %}
-  <dl>
-    {% for type in types %}
-      <dt>{{ type.link }}</dt>
-      <dd>{{ type.description }}</dd>
-    {% endfor %}
-  </dl>
-{% endapply %}
+<dl>
+  {% for type in types %}
+    <dt>{{ type.link }}</dt>
+    <dd>{{ type.description }}</dd>
+  {% endfor %}
+</dl>

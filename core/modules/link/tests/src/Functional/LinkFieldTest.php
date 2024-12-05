@@ -813,7 +813,7 @@ class LinkFieldTest extends BrowserTestBase {
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
-            $expected .= '</div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
 
             $url = $url2;
@@ -822,7 +822,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
-            $expected .= '</div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
 
             $url = $url3;
@@ -831,7 +831,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
-            $expected .= '</div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
             break;
 

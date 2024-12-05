@@ -60,7 +60,7 @@
   <div class="search-result__meta">
     {% if info_split.user %}
       <span>
-        {{ 'By'|t }} {% apply spaceless %}<span class="search-result__author">{{ info_split.user }}</span>{% endapply %}
+        {{ 'By'|t }} <span class="search-result__author">{{- info_split.user -}}</span>
       </span>
     {% endif %}
     {% if info_date %}

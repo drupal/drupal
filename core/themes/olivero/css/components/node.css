@@ -10,6 +10,10 @@
  * Node specific styles.
  */
 
+.node__author {
+  display: inline-flex;
+}
+
 .node__meta {
   display: flex;
   align-items: center;
