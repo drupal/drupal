@@ -90,7 +90,7 @@
         </div>
       {% endif %}
         <span{{ author_attributes }}>
-          {{ 'By'|t }} {% apply spaceless %}{{ author_name }}{% endapply %}, {{ date }}
+          {{ 'By'|t }} <span class="node__author">{{- author_name -}}</span>, {{ date }}
         </span>
         {{ metadata }}
       </div>

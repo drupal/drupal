@@ -183,10 +183,10 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
       $expected = $access ? "<a href=\"$node_url/delete?destination=/\" hreflang=\"en\">delete</a>" : "";
       $output = $view->style_plugin->getField($index, 'delete_node');
       $this->assertSame($expected, (string) $output);
-      $expected = $access ? '  <div class="dropbutton-wrapper" data-drupal-ajax-container><div class="dropbutton-widget"><ul class="dropbutton">' .
+      $expected = $access ? '  <div class="dropbutton-wrapper" data-drupal-ajax-container>' . PHP_EOL . '    <div class="dropbutton-widget"><ul class="dropbutton">' .
         '<li><a href="' . $node_url . '/edit?destination=/" aria-label="Edit ' . $node->label() . '" hreflang="en">Edit</a></li>' .
         '<li><a href="' . $node_url . '/delete?destination=/" aria-label="Delete ' . $node->label() . '" class="use-ajax" data-dialog-type="modal" data-dialog-options="' . Html::escape(Json::encode(['width' => 880])) . '" hreflang="en">Delete</a></li>' .
-        '</ul></div></div>' : '';
+        '</ul></div>' . PHP_EOL . '  </div>' : '';
       $output = $view->style_plugin->getField($index, 'operations');
       $this->assertSame($expected, (string) $output);
 

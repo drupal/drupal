@@ -95,7 +95,7 @@
     {% if display_submitted %}
       <div class="node__meta">
         <span{{ author_attributes }}>
-          {{ 'By'|t }} {% apply spaceless %}<span class="node__author">{{ author_name }}</span>{% endapply %}, {{ date }}
+          {{ 'By'|t }} <span class="node__author">{{- author_name -}}</span>, {{ date }}
         </span>
         {{ metadata }}
       </div>

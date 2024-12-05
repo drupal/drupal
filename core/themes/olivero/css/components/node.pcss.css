@@ -5,6 +5,10 @@
 
 @import "../base/media-queries.pcss.css";
 
+.node__author {
+  display: inline-flex;
+}
+
 .node__meta {
   display: flex;
   align-items: center;

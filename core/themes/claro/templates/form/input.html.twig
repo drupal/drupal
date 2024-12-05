@@ -11,14 +11,11 @@
  * @see claro_preprocess_input()
  */
 #}
-{% apply spaceless %}
 {% if autocomplete_message %}
   <div class="claro-autocomplete">
-    <input{{ attributes }}/>
-    <div class="claro-autocomplete__message hidden" data-drupal-selector="autocomplete-message">{{ autocomplete_message }}</div>
+    <input{{ attributes }}/><div class="claro-autocomplete__message hidden" data-drupal-selector="autocomplete-message">{{ autocomplete_message }}</div>
   </div>
-  {{ children }}
+  {{- children -}}
 {% else %}
-  <input{{ attributes }}/>{{ children }}
+  <input{{ attributes }}/>{{- children -}}
 {% endif %}
-{% endapply %}

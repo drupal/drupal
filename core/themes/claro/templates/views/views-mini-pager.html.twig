@@ -23,13 +23,11 @@
     <{{ pagination_heading_level }} id="{{ heading_id }}" class="visually-hidden">{{ 'Pagination'|t }}</{{ pagination_heading_level }}>
     <ul{{ content_attributes.addClass('pager__items', 'js-pager__items') }}>
       {% if items.previous %}
-        {% apply spaceless %}
-          <li class="pager__item pager__item--mini pager__item--action pager__item--previous">
-            <a{{ items.previous.attributes.addClass(pager_action_classes).setAttribute('title', 'Go to previous page'|t).setAttribute('href', items.previous.href) }}>
-              <span class="visually-hidden">{{ 'Previous page'|t }}</span>
-            </a>
-          </li>
-        {% endapply %}
+        <li class="pager__item pager__item--mini pager__item--action pager__item--previous">
+          <a{{ items.previous.attributes.addClass(pager_action_classes).setAttribute('title', 'Go to previous page'|t).setAttribute('href', items.previous.href) }}>
+            <span class="visually-hidden">{{ 'Previous page'|t }}</span>
+          </a>
+        </li>
       {% endif %}
 
       {% if items.current %}
@@ -42,13 +40,11 @@
       {% endif %}
 
       {% if items.next %}
-        {% apply spaceless %}
-          <li class="pager__item pager__item--mini pager__item--action pager__item--next">
-            <a{{ items.next.attributes.addClass(pager_action_classes).setAttribute('title', 'Go to next page'|t).setAttribute('href', items.next.href) }}>
-              <span class="visually-hidden">{{ 'Next page'|t }}</span>
-            </a>
-          </li>
-        {% endapply %}
+        <li class="pager__item pager__item--mini pager__item--action pager__item--next">
+          <a{{ items.next.attributes.addClass(pager_action_classes).setAttribute('title', 'Go to next page'|t).setAttribute('href', items.next.href) }}>
+            <span class="visually-hidden">{{ 'Next page'|t }}</span>
+          </a>
+        </li>
       {% endif %}
     </ul>
   </nav>
