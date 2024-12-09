@@ -955,6 +955,8 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       ],
     ] + $plugin_config;
 
+    $settings['config']['licenseKey'] ??= 'GPL';
+
     if ($this->moduleHandler->moduleExists('locale')) {
       $language_interface = $this->languageManager->getCurrentLanguage();
       $settings['language']['ui'] = _ckeditor5_get_langcode_mapping($language_interface->getId());
