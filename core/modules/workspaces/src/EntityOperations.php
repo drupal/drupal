@@ -130,7 +130,7 @@ class EntityOperations implements ContainerInjectionInterface {
     // Disallow any change to an unsupported entity when we are not in the
     // default workspace.
     if (!$this->workspaceInfo->isEntitySupported($entity)) {
-      throw new \RuntimeException('This entity can only be saved in the default workspace.');
+      throw new \RuntimeException(sprintf('The "%s" entity type can only be saved in the default workspace.', $entity->getEntityTypeId()));
     }
 
     /** @var \Drupal\Core\Entity\ContentEntityInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
