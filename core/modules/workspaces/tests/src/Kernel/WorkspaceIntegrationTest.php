@@ -690,7 +690,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     if (!$allowed) {
       $this->expectException(EntityStorageException::class);
-      $this->expectExceptionMessage('This entity can only be saved in the default workspace.');
+      $this->expectExceptionMessage("The \"$entity_type_id\" entity type can only be saved in the default workspace.");
     }
     $entity->save();
   }
@@ -721,7 +721,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     if (!$allowed) {
       $this->expectException(EntityStorageException::class);
-      $this->expectExceptionMessage('This entity can only be saved in the default workspace.');
+      $this->expectExceptionMessage("The \"$entity_type_id\" entity type can only be saved in the default workspace.");
     }
     $entity->save();
   }
