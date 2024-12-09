@@ -7,3 +7,4 @@ dependencies:
   - drupal:node
   - drupal:text
 configure: entity.taxonomy_vocabulary.collection
+container_rebuild_required: false

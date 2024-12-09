@@ -3,4 +3,5 @@ type: module
 description: 'Allows importing and exporting configuration changes.'
 package: Core
 version: VERSION
+container_rebuild_required: false
 configure: config.sync

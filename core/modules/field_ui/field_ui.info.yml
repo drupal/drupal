@@ -5,3 +5,4 @@ package: Core
 version: VERSION
 dependencies:
   - drupal:field
+container_rebuild_required: false

@@ -3,4 +3,5 @@ type: module
 description: 'Allows users to configure blocks (containing content, forms, etc.) and to place them in the regions of a theme.'
 package: Core
 version: VERSION
+container_rebuild_required: false
 configure: block.admin_display

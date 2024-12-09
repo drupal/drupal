@@ -571,6 +571,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $this->keyValue = new KeyValueMemoryFactory();
     }
     $container->set('keyvalue', $this->keyValue);
+    $container->getDefinition('keyvalue')->setSynthetic(TRUE);
 
     // Set the default language on the minimal container.
     $container->setParameter('language.default_values', Language::$defaultValues);

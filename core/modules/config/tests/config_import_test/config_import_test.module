@@ -25,3 +25,10 @@ function _config_import_test_config_import_steps_alter(&$context, ConfigImporter
   }
   $context['finished'] = 1;
 }
+
+/**
+ * Implements hook_modules_installed().
+ */
+function config_import_test_modules_installed($modules, $is_syncing): void {
+  \Drupal::state()->set('config_import_test_modules_installed.list', $modules);
+}

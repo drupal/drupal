@@ -27,10 +27,14 @@ interface ConfigInstallerInterface {
    *   The extension type; e.g., 'module' or 'theme'.
    * @param string $name
    *   The name of the module or theme to install default configuration for.
+   * @param \Drupal\Core\Config\DefaultConfigMode $mode
+   *   The default value DefaultConfigMode::All means create install, optional
+   *   and site optional configuration. The other modes create a single type
+   *   config.
    *
    * @see \Drupal\Core\Config\ExtensionInstallStorage
    */
-  public function installDefaultConfig($type, $name);
+  public function installDefaultConfig($type, $name, DefaultConfigMode $mode = DefaultConfigMode::All);
 
   /**
    * Installs optional configuration.
@@ -108,8 +112,8 @@ interface ConfigInstallerInterface {
    *
    * @param string $type
    *   Type of extension to install.
-   * @param string $name
-   *   Name of extension to install.
+   * @param string|array $name
+   *   Name or names of extensions to install.
    *
    * @throws \Drupal\Core\Config\UnmetDependenciesException
    * @throws \Drupal\Core\Config\PreExistingConfigException

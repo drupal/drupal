@@ -6,3 +6,4 @@ version: VERSION
 configure: entity.shortcut_set.collection
 dependencies:
   - drupal:link
+container_rebuild_required: false

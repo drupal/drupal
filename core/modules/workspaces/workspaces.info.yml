@@ -5,3 +5,4 @@ version: VERSION
 package: Core
 dependencies:
   - drupal:user
+container_rebuild_required: false

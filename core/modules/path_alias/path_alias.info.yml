@@ -5,3 +5,4 @@ package: Core
 version: VERSION
 required: true
 hidden: true
+container_rebuild_required: false

@@ -7,3 +7,4 @@ dependencies:
   - drupal:breakpoint
   - drupal:image
 configure: entity.responsive_image_style.collection
+container_rebuild_required: false

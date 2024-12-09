@@ -131,13 +131,6 @@ class ThemeManager implements ThemeManagerInterface {
 
     $active_theme = $this->getActiveTheme();
 
-    // If called before all modules are loaded, we do not necessarily have a
-    // full theme registry to work with, and therefore cannot process the theme
-    // request properly. See also \Drupal\Core\Theme\Registry::get().
-    if (!$this->moduleHandler->isLoaded() && !defined('MAINTENANCE_MODE')) {
-      throw new \Exception('The theme implementations may not be rendered until all modules are loaded.');
-    }
-
     $theme_registry = $this->themeRegistry->getRuntime();
 
     // If an array of hook candidates were passed, use the first one that has an

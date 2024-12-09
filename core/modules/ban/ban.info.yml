@@ -3,4 +3,5 @@ type: module
 description: 'Allows banning visits from specific IP addresses.'
 package: Core
 version: VERSION
+container_rebuild_required: false
 configure: ban.admin_page

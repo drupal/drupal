@@ -12,6 +12,7 @@ use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -366,11 +367,12 @@ class ConfigImporter {
    *   The type of extension, either 'theme' or 'module'.
    * @param string $op
    *   The change operation performed, either install or uninstall.
-   * @param string $name
-   *   The name of the extension processed.
+   * @param string|array $name
+   *   The name or names of the extension(s) processed.
    */
   protected function setProcessedExtension($type, $op, $name) {
-    $this->processedExtensions[$type][$op][] = $name;
+    $name = (array) $name;
+    $this->processedExtensions[$type][$op] = array_merge($this->processedExtensions[$type][$op], $name);
   }
 
   /**
@@ -627,7 +629,11 @@ class ConfigImporter {
     $operation = $this->getNextExtensionOperation();
     if (!empty($operation)) {
       $this->processExtension($operation['type'], $operation['op'], $operation['name']);
-      $context['message'] = $this->t('Synchronizing extensions: @op @name.', ['@op' => $operation['op'], '@name' => $operation['name']]);
+      $names = implode(', ', (array) $operation['name']);
+      $context['message'] = match ($operation['op']) {
+        'install' => $this->t('Synchronizing extensions: installed @name.', ['@name' => $names]),
+        'uninstall' => $this->t('Synchronizing extensions: uninstalled @name.', ['@name' => $names]),
+      };
       $processed_count = count($this->processedExtensions['module']['install']) + count($this->processedExtensions['module']['uninstall']);
       $processed_count += count($this->processedExtensions['theme']['uninstall']) + count($this->processedExtensions['theme']['install']);
       $context['finished'] = $processed_count / $this->totalExtensionsToProcess;
@@ -750,10 +756,16 @@ class ConfigImporter {
       foreach ($types as $type) {
         $unprocessed = $this->getUnprocessedExtensions($type);
         if (!empty($unprocessed[$op])) {
+          if ($type === 'module' && $op === 'install') {
+            $name = array_slice($unprocessed[$op], 0, Settings::get('core.multi_module_install_batch_size', 20));
+          }
+          else {
+            $name = array_shift($unprocessed[$op]);
+          }
           return [
             'op' => $op,
             'type' => $type,
-            'name' => array_shift($unprocessed[$op]),
+            'name' => $name,
           ];
         }
       }
@@ -865,16 +877,17 @@ class ConfigImporter {
    *   The type of extension, either 'module' or 'theme'.
    * @param string $op
    *   The change operation.
-   * @param string $name
-   *   The name of the extension to process.
+   * @param string|array $names
+   *   The name or names of the extension(s) to process.
    */
-  protected function processExtension($type, $op, $name) {
+  protected function processExtension(string $type, string $op, string|array $names): void {
+    $names = (array) $names;
     // Set the config installer to use the sync directory instead of the
     // extensions own default config directories.
     \Drupal::service('config.installer')
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
-      $this->moduleInstaller->$op([$name], FALSE);
+      $this->moduleInstaller->$op($names, FALSE);
       // Installing a module can cause a kernel boot therefore inject all the
       // services again.
       $this->reInjectMe();
@@ -893,10 +906,9 @@ class ConfigImporter {
         $this->configManager->getConfigFactory()->reset('system.theme');
         $this->processedSystemTheme = TRUE;
       }
-      \Drupal::service('theme_installer')->$op([$name]);
+      \Drupal::service('theme_installer')->$op($names);
     }
-
-    $this->setProcessedExtension($type, $op, $name);
+    $this->setProcessedExtension($type, $op, $names);
   }
 
   /**

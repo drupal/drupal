@@ -166,6 +166,44 @@ class ModuleInstallerTest extends KernelTestBase {
   }
 
   /**
+   * Tests container rebuilding due to the container_rebuild_required info key.
+   *
+   * @covers ::install
+   *
+   * @param array $modules
+   *   The modules to install.
+   * @param int $count
+   *   The number of times the container should have been rebuilt.
+   *
+   * @dataProvider containerRebuildRequiredProvider
+   */
+  public function testContainerRebuildRequired(array $modules, int $count): void {
+    $this->container->get('module_installer')->install(['module_test']);
+    $GLOBALS['container_rebuilt'] = 0;
+    $this->container->get('module_installer')->install($modules);
+    $this->assertSame($count, $GLOBALS['container_rebuilt']);
+  }
+
+  /**
+   * Data provider for ::testContainerRebuildRequired().
+   */
+  public static function containerRebuildRequiredProvider(): array {
+    return [
+      [['container_rebuild_required_true'], 1],
+      [['container_rebuild_required_false'], 1],
+      [['container_rebuild_required_false', 'container_rebuild_required_false_2'], 1],
+      [['container_rebuild_required_false', 'container_rebuild_required_false_2', 'container_rebuild_required_true'], 1],
+      [['container_rebuild_required_false', 'container_rebuild_required_false_2', 'container_rebuild_required_true', 'container_rebuild_required_true_2'], 2],
+      [['container_rebuild_required_true', 'container_rebuild_required_false', 'container_rebuild_required_false_2'], 2],
+      [['container_rebuild_required_false', 'container_rebuild_required_true', 'container_rebuild_required_false_2'], 2],
+      [['container_rebuild_required_false', 'container_rebuild_required_true', 'container_rebuild_required_false_2', 'container_rebuild_required_true_2'], 2],
+      [['container_rebuild_required_true', 'container_rebuild_required_false', 'container_rebuild_required_true_2', 'container_rebuild_required_false_2'], 3],
+      [['container_rebuild_required_false_2', 'container_rebuild_required_dependency_false'], 2],
+      [['container_rebuild_required_false_2', 'container_rebuild_required_dependency_false', 'container_rebuild_required_true'], 2],
+    ];
+  }
+
+  /**
    * Tests trying to install a deprecated module.
    *
    * @covers ::install

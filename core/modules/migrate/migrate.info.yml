@@ -3,3 +3,4 @@ type: module
 description: 'Provides a framework for migrating data to Drupal.'
 package: Migration
 version: VERSION
+container_rebuild_required: false

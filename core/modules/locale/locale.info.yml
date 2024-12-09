@@ -7,3 +7,4 @@ version: VERSION
 dependencies:
   - drupal:language
   - drupal:file
+container_rebuild_required: false

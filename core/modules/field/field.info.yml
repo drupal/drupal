@@ -3,3 +3,4 @@ type: module
 description: 'Provides the capabilities to add fields to entities.'
 package: Core
 version: VERSION
+container_rebuild_required: false

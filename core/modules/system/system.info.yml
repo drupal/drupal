@@ -4,4 +4,5 @@ description: 'Provides user interfaces for core systems.'
 package: Core
 version: VERSION
 required: true
+container_rebuild_required: false
 configure: system.admin_config_system

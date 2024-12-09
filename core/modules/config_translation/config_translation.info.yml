@@ -3,6 +3,7 @@ type: module
 description: 'Allows users to translate configuration text.'
 package: Multilingual
 version: VERSION
+container_rebuild_required: false
 configure: config_translation.mapper_list
 dependencies:
   - drupal:locale

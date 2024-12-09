@@ -3,3 +3,4 @@ type: module
 description: 'Provides a service for converting data to and from formats such as JSON and XML.'
 package: Web services
 version: VERSION
+container_rebuild_required: false

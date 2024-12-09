@@ -3,3 +3,4 @@ type: module
 description: 'Generates help pages and provides a Help block with page-level help.'
 package: Core
 version: VERSION
+container_rebuild_required: false

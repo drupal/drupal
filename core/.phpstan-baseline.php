@@ -3243,12 +3243,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\ConfigImporter\\:\\:processExtension\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Config/ConfigImporter.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\ConfigImporter\\:\\:processExtensions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Config/ConfigImporter.php',

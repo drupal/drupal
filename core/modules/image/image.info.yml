@@ -6,3 +6,4 @@ version: VERSION
 dependencies:
   - drupal:file
 configure: entity.image_style.collection
+container_rebuild_required: false

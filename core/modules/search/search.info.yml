@@ -4,3 +4,4 @@ description: 'Allows users to create search pages based on plugins provided by o
 package: Core
 version: VERSION
 configure: entity.search_page.collection
+container_rebuild_required: false

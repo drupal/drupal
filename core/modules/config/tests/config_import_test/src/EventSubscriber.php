@@ -103,7 +103,7 @@ class EventSubscriber implements EventSubscriberInterface {
       $data = $config->get('module');
       $install = array_diff_key($data, $original);
       if (!empty($install)) {
-        $installed[] = key($install);
+        $installed = array_merge($installed, $install);
       }
       $uninstall = array_diff_key($original, $data);
       if (!empty($uninstall)) {

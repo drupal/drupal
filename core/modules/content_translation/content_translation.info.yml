@@ -3,6 +3,8 @@ type: module
 description: 'Allows users to translate content.'
 dependencies:
   - drupal:language
+  - drupal:path_alias
 package: Multilingual
 version: VERSION
+container_rebuild_required: false
 configure: language.content_settings_page

@@ -5,3 +5,4 @@ package: Web services
 version: VERSION
 dependencies:
   - drupal:serialization
+container_rebuild_required: false

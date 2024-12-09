@@ -162,9 +162,9 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertTrue(\Drupal::service('theme_handler')->themeExists('olivero'), 'Olivero theme installed during import.');
 
     // Ensure installations and uninstallation occur as expected.
-    $installed = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_installed', []);
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
     $expected = ['automated_cron', 'ban', 'text', 'options'];
+    $installed = \Drupal::state()->get('config_import_test_modules_installed.list');
     $this->assertSame($expected, $installed, 'Automated Cron, Ban, Text and Options modules installed in the correct order.');
     $this->assertEmpty($uninstalled, 'No modules uninstalled during import');
 

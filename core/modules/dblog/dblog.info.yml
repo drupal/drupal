@@ -3,4 +3,5 @@ type: module
 description: 'Logs system events in the database.'
 package: Core
 version: VERSION
+container_rebuild_required: false
 configure: system.logging_settings

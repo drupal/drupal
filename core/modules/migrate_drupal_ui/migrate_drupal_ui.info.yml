@@ -8,3 +8,4 @@ dependencies:
   - drupal:migrate
   - drupal:migrate_drupal
   - drupal:dblog
+container_rebuild_required: false

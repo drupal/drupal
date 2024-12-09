@@ -105,7 +105,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
   /**
    * {@inheritdoc}
    */
-  public function installDefaultConfig($type, $name) {
+  public function installDefaultConfig($type, $name, DefaultConfigMode $mode = DefaultConfigMode::All) {
     $extension_path = $this->extensionPathResolver->getPath($type, $name);
     // Refresh the schema cache if the extension provides configuration schema
     // or is a theme.
@@ -113,61 +113,97 @@ class ConfigInstaller implements ConfigInstallerInterface {
       $this->typedConfig->clearCachedDefinitions();
     }
 
-    $default_install_path = $this->getDefaultConfigDirectory($type, $name);
-    if (is_dir($default_install_path)) {
-      if (!$this->isSyncing()) {
-        $storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
-        $prefix = '';
-      }
-      else {
-        // The configuration importer sets the source storage on the config
-        // installer. The configuration importer handles all of the
-        // configuration entity imports. We only need to ensure that simple
-        // configuration is created when the extension is installed.
-        $storage = $this->getSourceStorage();
-        $prefix = $name . '.';
-      }
-
-      // Gets profile storages to search for overrides if necessary.
-      $profile_storages = $this->getProfileStorages($name);
-
-      // Gather information about all the supported collections.
-      $collection_info = $this->configManager->getConfigCollectionInfo();
-      foreach ($collection_info->getCollectionNames() as $collection) {
-        $config_to_create = $this->getConfigToCreate($storage, $collection, $prefix, $profile_storages);
-        if ($name == $this->drupalGetProfile()) {
-          // If we're installing a profile ensure simple configuration that
-          // already exists is excluded as it will have already been written.
-          // This means that if the configuration is changed by something else
-          // during the install it will not be overwritten again.
-          $existing_configuration = array_filter($this->getActiveStorages($collection)->listAll(), function ($config_name) {
-            return !$this->configManager->getEntityTypeIdByName($config_name);
-          });
-          $config_to_create = array_diff_key($config_to_create, array_flip($existing_configuration));
+    if ($mode->createInstallConfig()) {
+      $default_install_path = $this->getDefaultConfigDirectory($type, $name);
+      if (is_dir($default_install_path)) {
+        if (!$this->isSyncing()) {
+          $storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
+          $prefix = '';
         }
-        if (!empty($config_to_create)) {
-          $this->createConfiguration($collection, $config_to_create);
+        else {
+          // The configuration importer sets the source storage on the config
+          // installer. The configuration importer handles all of the
+          // configuration entity imports. We only need to ensure that simple
+          // configuration is created when the extension is installed.
+          $storage = $this->getSourceStorage();
+          $prefix = $name . '.';
+        }
+
+        // Gets profile storages to search for overrides if necessary.
+        $profile_storages = $this->getProfileStorages($name);
+
+        if ($mode === DefaultConfigMode::InstallEntities) {
+          // This is an optimization. If we're installing only config entities
+          // then we're only interested in the default collection.
+          $collections = [StorageInterface::DEFAULT_COLLECTION];
+        }
+        else {
+          // Gather information about all the supported collections.
+          $collections = $this->configManager->getConfigCollectionInfo()->getCollectionNames();
+        }
+
+        foreach ($collections as $collection) {
+          $config_to_create = $this->getConfigToCreate($storage, $collection, $prefix, $profile_storages);
+
+          if ($collection === StorageInterface::DEFAULT_COLLECTION && ($mode === DefaultConfigMode::InstallEntities || $mode === DefaultConfigMode::InstallSimple)) {
+            // Filter out config depending on the mode. The mode can be used to
+            // only install simple config or config entities.
+            $config_to_create = array_filter($config_to_create, function ($config_name) use ($mode) {
+              $is_config_entity = $this->configManager->getEntityTypeIdByName($config_name) !== NULL;
+              if ($is_config_entity) {
+                return $mode === DefaultConfigMode::InstallEntities;
+              }
+              return $mode === DefaultConfigMode::InstallSimple;
+            }, ARRAY_FILTER_USE_KEY);
+          }
+
+          if ($name === $this->drupalGetProfile()) {
+            // If we're installing a profile ensure simple configuration that
+            // already exists is excluded as it will have already been written.
+            // This means that if the configuration is changed by something else
+            // during the install it will not be overwritten again.
+            $existing_configuration = array_filter($this->getActiveStorages($collection)->listAll(), function ($config_name) {
+              return !$this->configManager->getEntityTypeIdByName($config_name);
+            });
+            $config_to_create = array_diff_key($config_to_create, array_flip($existing_configuration));
+          }
+
+          if (!empty($config_to_create)) {
+            $this->createConfiguration($collection, $config_to_create);
+          }
         }
       }
     }
 
-    // During a drupal installation optional configuration is installed at the
-    // end of the installation process. Once the install profile is installed
-    // optional configuration should be installed as usual.
-    // @see install_install_profile()
-    $profile_installed = in_array($this->drupalGetProfile(), $this->getEnabledExtensions(), TRUE);
-    if (!$this->isSyncing() && (!InstallerKernel::installationAttempted() || $profile_installed)) {
-      $optional_install_path = $extension_path . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
-      if (is_dir($optional_install_path)) {
-        // Install any optional config the module provides.
-        $storage = new FileStorage($optional_install_path, StorageInterface::DEFAULT_COLLECTION);
-        $this->installOptionalConfig($storage, '');
+    if ($mode->createOptionalConfig()) {
+      // During a drupal installation optional configuration is installed at the
+      // end of the installation process. Once the install profile is installed
+      // optional configuration should be installed as usual.
+      // @see install_install_profile()
+      $profile_installed = in_array($this->drupalGetProfile(), $this->getEnabledExtensions(), TRUE);
+      if (!$this->isSyncing() && (!InstallerKernel::installationAttempted() || $profile_installed)) {
+        $optional_install_path = $extension_path . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
+        if (is_dir($optional_install_path)) {
+          // Install any optional config the module provides.
+          $storage = new FileStorage($optional_install_path, StorageInterface::DEFAULT_COLLECTION);
+          $this->installOptionalConfig($storage, '');
+        }
       }
-      // Install any optional configuration entities whose dependencies can now
-      // be met. This searches all the installed modules config/optional
-      // directories.
-      $storage = new ExtensionInstallStorage($this->getActiveStorages(StorageInterface::DEFAULT_COLLECTION), InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION, FALSE, $this->installProfile);
-      $this->installOptionalConfig($storage, [$type => $name]);
+    }
+
+    if ($mode->createSiteOptionalConfig()) {
+      // During a drupal installation optional configuration is installed at the
+      // end of the installation process. Once the install profile is installed
+      // optional configuration should be installed as usual.
+      // @see install_install_profile()
+      $profile_installed = in_array($this->drupalGetProfile(), $this->getEnabledExtensions(), TRUE);
+      if (!$this->isSyncing() && (!InstallerKernel::installationAttempted() || $profile_installed)) {
+        // Install any optional configuration entities whose dependencies can now
+        // be met. This searches all the installed modules config/optional
+        // directories.
+        $storage = new ExtensionInstallStorage($this->getActiveStorages(StorageInterface::DEFAULT_COLLECTION), InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION, FALSE, $this->installProfile);
+        $this->installOptionalConfig($storage, [$type => $name]);
+      }
     }
 
     // Reset all the static caches and list caches.
@@ -370,6 +406,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         if ($this->isSyncing()) {
           continue;
         }
+
         /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $entity_storage */
         $entity_storage = $this->configManager
           ->getEntityTypeManager()
@@ -478,11 +515,16 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   it and the extension has been uninstalled and is about to the
    *   reinstalled.
    *
+   * @param \Drupal\Core\Config\StorageInterface $storage
+   *   The storage containing the default configuration.
+   * @param $previous_config_names
+   *   An array of configuration names that have previously been checked.
+   *
    * @return array
    *   Array of configuration object names that already exist keyed by
    *   collection.
    */
-  protected function findPreExistingConfiguration(StorageInterface $storage) {
+  protected function findPreExistingConfiguration(StorageInterface $storage, array $previous_config_names = []) {
     $existing_configuration = [];
     // Gather information about all the supported collections.
     $collection_info = $this->configManager->getConfigCollectionInfo();
@@ -491,7 +533,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       $config_to_create = array_keys($this->getConfigToCreate($storage, $collection));
       $active_storage = $this->getActiveStorages($collection);
       foreach ($config_to_create as $config_name) {
-        if ($active_storage->exists($config_name)) {
+        if ($active_storage->exists($config_name) || array_search($config_name, $previous_config_names[$collection] ?? [], TRUE) !== FALSE) {
           $existing_configuration[$collection][] = $config_name;
         }
       }
@@ -508,34 +550,55 @@ class ConfigInstaller implements ConfigInstallerInterface {
       // validation events.
       return;
     }
-    $config_install_path = $this->getDefaultConfigDirectory($type, $name);
-    if (!is_dir($config_install_path)) {
-      return;
-    }
-
-    $storage = new FileStorage($config_install_path, StorageInterface::DEFAULT_COLLECTION);
-
+    $names = (array) $name;
     $enabled_extensions = $this->getEnabledExtensions();
-    // Add the extension that will be enabled to the list of enabled extensions.
-    $enabled_extensions[] = $name;
-    // Gets profile storages to search for overrides if necessary.
-    $profile_storages = $this->getProfileStorages($name);
+    $previous_config_names = [];
 
-    // Check the dependencies of configuration provided by the module.
-    [$invalid_default_config, $missing_dependencies] = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $profile_storages);
-    if (!empty($invalid_default_config)) {
-      throw UnmetDependenciesException::create($name, array_unique($missing_dependencies, SORT_REGULAR));
-    }
+    foreach ($names as $name) {
+      // Add the extension that will be enabled to the list of enabled extensions.
+      $enabled_extensions[] = $name;
 
-    // Install profiles can not have config clashes. Configuration that
-    // has the same name as a module's configuration will be used instead.
-    if ($name != $this->drupalGetProfile()) {
-      // Throw an exception if the module being installed contains configuration
-      // that already exists. Additionally, can not continue installing more
-      // modules because those may depend on the current module being installed.
-      $existing_configuration = $this->findPreExistingConfiguration($storage);
-      if (!empty($existing_configuration)) {
-        throw PreExistingConfigException::create($name, $existing_configuration);
+      $config_install_path = $this->getDefaultConfigDirectory($type, $name);
+      if (!is_dir($config_install_path)) {
+        continue;
+      }
+
+      $storage = new FileStorage($config_install_path, StorageInterface::DEFAULT_COLLECTION);
+
+      // Gets profile storages to search for overrides if necessary.
+      $profile_storages = $this->getProfileStorages($name);
+
+      // Check the dependencies of configuration provided by the module.
+      [
+        $invalid_default_config,
+        $missing_dependencies,
+      ] = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $profile_storages, $previous_config_names);
+      if (!empty($invalid_default_config)) {
+        throw UnmetDependenciesException::create($name, array_unique($missing_dependencies, SORT_REGULAR));
+      }
+
+      // Install profiles can not have config clashes. Configuration that
+      // has the same name as a module's configuration will be used instead.
+      if ($name !== $this->drupalGetProfile()) {
+        // Throw an exception if the module being installed contains configuration
+        // that already exists. Additionally, can not continue installing more
+        // modules because those may depend on the current module being installed.
+        $existing_configuration = $this->findPreExistingConfiguration($storage, $previous_config_names);
+        if (!empty($existing_configuration)) {
+          throw PreExistingConfigException::create($name, $existing_configuration);
+        }
+      }
+
+      // Store the config names for the checked module in order to add them to
+      // the list of active configuration for the next module.
+      foreach ($this->configManager->getConfigCollectionInfo()->getCollectionNames() as $collection) {
+        $config_to_create = array_keys($this->getConfigToCreate($storage, $collection));
+        if (!isset($previous_config_names[$collection])) {
+          $previous_config_names[$collection] = $config_to_create;
+        }
+        else {
+          $previous_config_names[$collection] = array_merge($previous_config_names[$collection], $config_to_create);
+        }
       }
     }
   }
@@ -550,6 +613,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @param \Drupal\Core\Config\StorageInterface[] $profile_storages
    *   An array of storage interfaces containing profile configuration to check
    *   for overrides.
+   * @param string[][] $previously_checked_config
+   *   A list of previously checked configuration. Keyed by collection name.
    *
    * @return array
    *   An array containing:
@@ -557,10 +622,10 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *     - An array that will be filled with the missing dependency names, keyed
    *       by the dependents' names.
    */
-  protected function findDefaultConfigWithUnmetDependencies(StorageInterface $storage, array $enabled_extensions, array $profile_storages = []) {
+  protected function findDefaultConfigWithUnmetDependencies(StorageInterface $storage, array $enabled_extensions, array $profile_storages = [], array $previously_checked_config = []) {
     $missing_dependencies = [];
     $config_to_create = $this->getConfigToCreate($storage, StorageInterface::DEFAULT_COLLECTION, '', $profile_storages);
-    $all_config = array_merge($this->configFactory->listAll(), array_keys($config_to_create));
+    $all_config = array_merge($this->configFactory->listAll(), array_keys($config_to_create), $previously_checked_config[StorageInterface::DEFAULT_COLLECTION] ?? []);
     foreach ($config_to_create as $config_name => $config) {
       if ($missing = $this->getMissingDependencies($config_name, $config, $enabled_extensions, $all_config)) {
         $missing_dependencies[$config_name] = $missing;

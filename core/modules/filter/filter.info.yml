@@ -6,3 +6,4 @@ version: VERSION
 configure: filter.admin_overview
 dependencies:
   - drupal:user
+container_rebuild_required: false

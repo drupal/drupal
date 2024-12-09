@@ -2,4 +2,5 @@ name: Announcements
 type: module
 description: Displays announcements from the Drupal community.
 version: VERSION
+container_rebuild_required: false
 package: Core

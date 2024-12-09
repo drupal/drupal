@@ -3,3 +3,4 @@ type: module
 description: 'Provides the password checking algorithm for user accounts created with Drupal prior to version 10.1.0.'
 package: Core
 version: VERSION
+container_rebuild_required: false

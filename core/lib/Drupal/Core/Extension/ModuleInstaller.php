@@ -4,6 +4,7 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\DefaultConfigMode;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
@@ -120,6 +121,17 @@ class ModuleInstaller implements ModuleInstallerInterface {
    */
   public function install(array $module_list, $enable_dependencies = TRUE) {
     $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+
+    // Remove any modules that are already installed.
+    $installed_modules = $extension_config->get('module') ?: [];
+    // Only process currently uninstalled modules.
+    $module_list = array_diff($module_list, array_keys($installed_modules));
+
+    if (empty($module_list)) {
+      // Nothing to do. All modules already installed.
+      return TRUE;
+    }
+
     // Get all module data so we can find dependencies and sort and find the
     // core requirements. The module list needs to be reset so that it can
     // re-scan and include any new modules that may have been added directly
@@ -142,13 +154,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if ($missing_modules = array_diff_key($module_list, $module_data)) {
         // One or more of the given modules doesn't exist.
         throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', $missing_modules)));
-      }
-
-      // Only process currently uninstalled modules.
-      $installed_modules = $extension_config->get('module') ?: [];
-      if (!$module_list = array_diff_key($module_list, $installed_modules)) {
-        // Nothing to do. All modules already installed.
-        return TRUE;
       }
 
       // Add dependencies to the list. The new modules will be processed as
@@ -186,213 +191,291 @@ class ModuleInstaller implements ModuleInstallerInterface {
     /** @var \Drupal\Core\Config\ConfigInstaller $config_installer */
     $config_installer = \Drupal::service('config.installer');
     $sync_status = $config_installer->isSyncing();
-    $modules_installed = [];
     foreach ($module_list as $module) {
-      $enabled = $extension_config->get("module.$module") !== NULL;
-      if (!$enabled) {
-        // Throw an exception if the module name is too long.
-        if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
-          throw new ExtensionNameLengthException("Module name '$module' is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters');
-        }
+      // Throw an exception if the module name is too long.
+      if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
+        throw new ExtensionNameLengthException("Module name '$module' is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters');
+      }
 
-        // Throw an exception if a theme with the same name is enabled.
-        $installed_themes = $extension_config->get('theme') ?: [];
-        if (isset($installed_themes[$module])) {
-          throw new ExtensionNameReservedException("Module name $module is already in use by an installed theme.");
-        }
+      // Throw an exception if a theme with the same name is enabled.
+      $installed_themes = $extension_config->get('theme') ?: [];
+      if (isset($installed_themes[$module])) {
+        throw new ExtensionNameReservedException("Module name $module is already in use by an installed theme.");
+      }
+    }
 
-        // Load a new config object for each iteration, otherwise changes made
-        // in hook_install() are not reflected in $extension_config.
-        $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+    // Check the validity of the default configuration. This will throw
+    // exceptions if the configuration is not valid.
+    $config_installer->checkConfigurationToInstall('module', $module_list);
 
-        // Check the validity of the default configuration. This will throw
-        // exceptions if the configuration is not valid.
-        $config_installer->checkConfigurationToInstall('module', $module);
+    // Some modules require a container rebuild immediately after install.
+    // Group modules such that as many are installed together as possible until
+    // one needs a container rebuild.
+    $module_groups = [];
+    $index = 0;
+    foreach ($module_list as $module) {
+      $module_groups[$index][] = $module;
+      // @todo Consider reversing the behavior when the info key is not set.
+      // See https://www.drupal.org/project/drupal/issues/3492235
+      if (!isset($module_data[$module]->info['container_rebuild_required']) || $module_data[$module]->info['container_rebuild_required']) {
+        $index++;
+      }
+    }
+    foreach ($module_groups as $modules) {
+      $this->doInstall($modules, $installed_modules, $sync_status);
+      // Refresh the installed modules list from configuration to preserve
+      // module weight.
+      $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+      $installed_modules = $extension_config->get('module') ?: [];
+    }
+    if (!InstallerKernel::installationAttempted()) {
+      // If the container was rebuilt during hook_install() it might not have
+      // the 'router.route_provider.old' service.
+      if (\Drupal::hasService('router.route_provider.old')) {
+        \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
+      }
+      if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
+        // Rebuild routes after installing module. This is done here on top of
+        // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
+        // fastCGI which executes ::destruct() after the module installation
+        // page was sent already.
+        \Drupal::service('router.builder')->rebuild();
+      }
+      else {
+        // Rebuild the router immediately if it is marked as needing a rebuild.
+        // @todo Work this through a bit more. This fixes
+        //   \Drupal\Tests\standard\Functional\StandardTest::testStandard()
+        //   after separately out the optional configuration install.
+        \Drupal::service('router.builder')->rebuildIfNeeded();
+      }
+    }
 
-        // Save this data without checking schema. This is a performance
-        // improvement for module installation.
-        $extension_config
-          ->set("module.$module", 0)
-          ->set('module', module_config_sort($extension_config->get('module')))
-          ->save(TRUE);
+    $this->moduleHandler->invokeAll('modules_installed', [$module_list, $sync_status]);
+    return TRUE;
+  }
 
-        // Prepare the new module list, sorted by weight, including filenames.
-        // This list is used for both the ModuleHandler and DrupalKernel. It
-        // needs to be kept in sync between both. A DrupalKernel reboot or
-        // rebuild will automatically re-instantiate a new ModuleHandler that
-        // uses the new module list of the kernel. However, DrupalKernel does
-        // not cause any modules to be loaded.
-        // Furthermore, the currently active (fixed) module list can be
-        // different from the configured list of enabled modules. For all active
-        // modules not contained in the configured enabled modules, we assume a
-        // weight of 0.
-        $current_module_filenames = $this->moduleHandler->getModuleList();
-        $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
-        $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
-        $module_filenames = [];
-        foreach ($current_modules as $name => $weight) {
-          if (isset($current_module_filenames[$name])) {
-            $module_filenames[$name] = $current_module_filenames[$name];
+  /**
+   * Installs a set of modules.
+   *
+   * @param array $module_list
+   *   The list of modules to install.
+   * @param array $installed_modules
+   *   An array of the already installed modules.
+   * @param bool $sync_status
+   *   The config sync status.
+   */
+  private function doInstall(array $module_list, array $installed_modules, bool $sync_status): void {
+    $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+
+    // Save this data without checking schema. This is a performance
+    // improvement for module installation.
+    $extension_config
+      ->set('module', module_config_sort(array_merge(
+        array_fill_keys($module_list, 0),
+        $installed_modules
+      )))
+      ->save(TRUE);
+
+    // Prepare the new module list, sorted by weight, including filenames.
+    // This list is used for both the ModuleHandler and DrupalKernel. It
+    // needs to be kept in sync between both. A DrupalKernel reboot or
+    // rebuild will automatically re-instantiate a new ModuleHandler that
+    // uses the new module list of the kernel. However, DrupalKernel does
+    // not cause any modules to be loaded.
+    // Furthermore, the currently active (fixed) module list can be
+    // different from the configured list of enabled modules. For all active
+    // modules not contained in the configured enabled modules, we assume a
+    // weight of 0.
+    $current_module_filenames = $this->moduleHandler->getModuleList();
+    $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
+    $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
+    $module_filenames = [];
+    foreach ($current_modules as $name => $weight) {
+      if (isset($current_module_filenames[$name])) {
+        $module_filenames[$name] = $current_module_filenames[$name];
+      }
+      else {
+        $module_path = \Drupal::service('extension.list.module')
+          ->getPath($name);
+        $pathname = "$module_path/$name.info.yml";
+        $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
+        $module_filenames[$name] = new Extension($this->root, 'module', $pathname, $filename);
+      }
+    }
+
+    // Update the module handler in order to have the correct module list
+    // for the kernel update.
+    $this->moduleHandler->setModuleList($module_filenames);
+
+    // Clear the static cache of the "extension.list.module" service to pick
+    // up the new module, since it merges the installation status of modules
+    // into its statically cached list.
+    \Drupal::service('extension.list.module')->reset();
+
+    // Update the kernel to include it.
+    $this->updateKernel($module_filenames);
+
+    if (!InstallerKernel::installationAttempted()) {
+      // Replace the route provider service with a version that will rebuild
+      // if routes are used during installation. This ensures that a module's
+      // routes are available during installation. This has to occur before
+      // any services that depend on it are instantiated otherwise those
+      // services will have the old route provider injected. Note that, since
+      // the container is rebuilt by updating the kernel, the route provider
+      // service is the regular one even though we are in a loop and might
+      // have replaced it before.
+      \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
+      \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.lazy_builder'));
+    }
+
+    foreach ($module_list as $module) {
+      // Load the module's .module and .install files. Do this for all modules
+      // prior to calling hook_module_preinstall() in order to not pollute the
+      // cache.
+      $this->moduleHandler->load($module);
+      $this->moduleHandler->loadInclude($module, 'install');
+    }
+
+    foreach ($module_list as $module) {
+      // Allow modules to react prior to the installation of a module.
+      $this->moduleHandler->invokeAll('module_preinstall', [$module, $sync_status]);
+
+      // Now install the module's schema if necessary.
+      $this->installSchema($module);
+    }
+
+    // Clear plugin manager caches.
+    // @todo should this be in the loop?
+    \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
+
+    foreach ($module_list as $module) {
+      // Set the schema version to the number of the last update provided by
+      // the module, or the minimum core schema version.
+      $version = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
+      $versions = $this->updateRegistry->getAvailableUpdates($module);
+      if ($versions) {
+        $version = max(max($versions), $version);
+      }
+
+      // Notify interested components that this module's entity types and
+      // field storage definitions are new. For example, a SQL-based storage
+      // handler can use this as an opportunity to create the necessary
+      // database tables.
+      // @todo Clean this up in https://www.drupal.org/node/2350111.
+      $entity_type_manager = \Drupal::entityTypeManager();
+      $update_manager = \Drupal::entityDefinitionUpdateManager();
+      /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+      $entity_field_manager = \Drupal::service('entity_field.manager');
+      foreach ($entity_type_manager->getDefinitions() as $entity_type) {
+        $is_fieldable_entity_type = $entity_type->entityClassImplements(FieldableEntityInterface::class);
+
+        if ($entity_type->getProvider() == $module) {
+          if ($is_fieldable_entity_type) {
+            $update_manager->installFieldableEntityType($entity_type, $entity_field_manager->getFieldStorageDefinitions($entity_type->id()));
           }
           else {
-            $module_path = \Drupal::service('extension.list.module')->getPath($name);
-            $pathname = "$module_path/$name.info.yml";
-            $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
-            $module_filenames[$name] = new Extension($this->root, 'module', $pathname, $filename);
+            $update_manager->installEntityType($entity_type);
           }
         }
-
-        // Update the module handler in order to have the correct module list
-        // for the kernel update.
-        $this->moduleHandler->setModuleList($module_filenames);
-
-        // Clear the static cache of the "extension.list.module" service to pick
-        // up the new module, since it merges the installation status of modules
-        // into its statically cached list.
-        \Drupal::service('extension.list.module')->reset();
-
-        // Update the kernel to include it.
-        $this->updateKernel($module_filenames);
-
-        // Load the module's .module and .install files.
-        $this->moduleHandler->load($module);
-        $this->moduleHandler->loadInclude($module, 'install');
-
-        if (!InstallerKernel::installationAttempted()) {
-          // Replace the route provider service with a version that will rebuild
-          // if routes used during installation. This ensures that a module's
-          // routes are available during installation. This has to occur before
-          // any services that depend on it are instantiated otherwise those
-          // services will have the old route provider injected. Note that, since
-          // the container is rebuilt by updating the kernel, the route provider
-          // service is the regular one even though we are in a loop and might
-          // have replaced it before.
-          \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));
-          \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.lazy_builder'));
-        }
-
-        // Allow modules to react prior to the installation of a module.
-        $this->invokeAll('module_preinstall', [$module, $sync_status]);
-
-        // Now install the module's schema if necessary.
-        $this->installSchema($module);
-
-        // Clear plugin manager caches.
-        \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
-
-        // Set the schema version to the number of the last update provided by
-        // the module, or the minimum core schema version.
-        $version = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
-        $versions = $this->updateRegistry->getAvailableUpdates($module);
-        if ($versions) {
-          $version = max(max($versions), $version);
-        }
-
-        // Notify interested components that this module's entity types and
-        // field storage definitions are new. For example, a SQL-based storage
-        // handler can use this as an opportunity to create the necessary
-        // database tables.
-        // @todo Clean this up in https://www.drupal.org/node/2350111.
-        $entity_type_manager = \Drupal::entityTypeManager();
-        $update_manager = \Drupal::entityDefinitionUpdateManager();
-        /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
-        $entity_field_manager = \Drupal::service('entity_field.manager');
-        foreach ($entity_type_manager->getDefinitions() as $entity_type) {
-          $is_fieldable_entity_type = $entity_type->entityClassImplements(FieldableEntityInterface::class);
-
-          if ($entity_type->getProvider() == $module) {
-            if ($is_fieldable_entity_type) {
-              $update_manager->installFieldableEntityType($entity_type, $entity_field_manager->getFieldStorageDefinitions($entity_type->id()));
-            }
-            else {
-              $update_manager->installEntityType($entity_type);
-            }
-          }
-          elseif ($is_fieldable_entity_type) {
-            // The module being installed may be adding new fields to existing
-            // entity types. Field definitions for any entity type defined by
-            // the module are handled in the if branch.
-            foreach ($entity_field_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
-              if ($storage_definition->getProvider() == $module) {
-                // If the module being installed is also defining a storage key
-                // for the entity type, the entity schema may not exist yet. It
-                // will be created later in that case.
-                try {
-                  $update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type->id(), $module, $storage_definition);
-                }
-                catch (EntityStorageException $e) {
-                  Error::logException($this->logger, $e, 'An error occurred while notifying the creation of the @name field storage definition: "@message" in %function (line %line of %file).', ['@name' => $storage_definition->getName()]);
-                }
+        elseif ($is_fieldable_entity_type) {
+          // The module being installed may be adding new fields to existing
+          // entity types. Field definitions for any entity type defined by
+          // the module are handled in the if branch.
+          foreach ($entity_field_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
+            if ($storage_definition->getProvider() == $module) {
+              // If the module being installed is also defining a storage key
+              // for the entity type, the entity schema may not exist yet. It
+              // will be created later in that case.
+              try {
+                $update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type->id(), $module, $storage_definition);
+              }
+              catch (EntityStorageException $e) {
+                Error::logException($this->logger, $e, 'An error occurred while notifying the creation of the @name field storage definition: "@message" in %function (line %line of %file).', ['@name' => $storage_definition->getName()]);
               }
             }
           }
         }
-
-        // Install default configuration of the module.
-        $config_installer = \Drupal::service('config.installer');
-        $config_installer->installDefaultConfig('module', $module);
-
-        // If the module has no current updates, but has some that were
-        // previously removed, set the version to the value of
-        // hook_update_last_removed().
-        if ($last_removed = $this->invoke($module, 'update_last_removed')) {
-          $version = max($version, $last_removed);
-        }
-        $this->updateRegistry->setInstalledVersion($module, $version);
-
-        // Record the fact that it was installed.
-        $modules_installed[] = $module;
-
-        // Drupal's stream wrappers needs to be re-registered in case a
-        // module-provided stream wrapper is used later in the same request. In
-        // particular, this happens when installing Drupal via Drush, as the
-        // 'translations' stream wrapper is provided by Interface Translation
-        // module and is later used to import translations.
-        \Drupal::service('stream_wrapper_manager')->register();
-
-        // Update the theme registry to include it.
-        \Drupal::service('theme.registry')->reset();
-
-        // Modules can alter theme info, so refresh theme data.
-        // @todo ThemeHandler cannot be injected into ModuleHandler, since that
-        //   causes a circular service dependency.
-        // @see https://www.drupal.org/node/2208429
-        \Drupal::service('theme_handler')->refreshInfo();
-
-        // Modules may provide single directory components which are added to
-        // the core library definitions rather than the module itself, this
-        // requires the library discovery cache to be rebuilt.
-        \Drupal::service('library.discovery')->clear();
-
-        // Allow the module to perform install tasks.
-        $this->invoke($module, 'install', [$sync_status]);
-
-        // Record the fact that it was installed.
-        \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
-      }
-    }
-
-    // If any modules were newly installed, invoke hook_modules_installed().
-    if (!empty($modules_installed)) {
-      if (!InstallerKernel::installationAttempted()) {
-        // If the container was rebuilt during hook_install() it might not have
-        // the 'router.route_provider.old' service.
-        if (\Drupal::hasService('router.route_provider.old')) {
-          \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
-        }
-        if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
-          // Rebuild routes after installing module. This is done here on top of
-          // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
-          // fastCGI which executes ::destruct() after the module installation
-          // page was sent already.
-          \Drupal::service('router.builder')->rebuild();
-        }
       }
 
-      $this->invokeAll('modules_installed', [$modules_installed, $sync_status]);
+      // Install default configuration of the module.
+      $config_installer = \Drupal::service('config.installer');
+      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::InstallSimple);
+
+      // If the module has no current updates, but has some that were
+      // previously removed, set the version to the value of
+      // hook_update_last_removed().
+      if ($last_removed = $this->invoke($module, 'update_last_removed')) {
+        $version = max($version, $last_removed);
+      }
+      $this->updateRegistry->setInstalledVersion($module, $version);
     }
 
-    return TRUE;
+    // Drupal's stream wrappers needs to be re-registered in case a
+    // module-provided stream wrapper is used later in the same request. In
+    // particular, this happens when installing Drupal via Drush, as the
+    // 'translations' stream wrapper is provided by Interface Translation
+    // module and is later used to import translations.
+    \Drupal::service('stream_wrapper_manager')->register();
+
+    // Update the theme registry to include it.
+    \Drupal::service('theme.registry')->reset();
+
+    // Modules can alter theme info, so refresh theme data.
+    // @todo ThemeHandler cannot be injected into ModuleHandler, since that
+    //   causes a circular service dependency.
+    // @see https://www.drupal.org/node/2208429
+    \Drupal::service('theme_handler')->refreshInfo();
+
+    // Modules may provide single directory components which are added to
+    // the core library definitions rather than the module itself, this
+    // requires the library discovery cache to be rebuilt.
+    \Drupal::service('library.discovery')->clear();
+
+    $config_installer = \Drupal::service('config.installer');
+    foreach ($module_list as $module) {
+      // Create config entities a module has in the /install directory.
+      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::InstallEntities);
+
+      // Allow the module to perform install tasks.
+      $this->invoke($module, 'install', [$sync_status]);
+
+      // Record the fact that it was installed.
+      \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
+    }
+
+    // Install optional configuration from modules once all the modules have
+    // been properly installed. This is often where soft dependencies lie.
+    // @todo This code fixes \Drupal\Tests\help\Functional\HelpTest::testHelp().
+    foreach ($module_list as $module) {
+      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::Optional);
+    }
+    // Install optional configuration from other modules once all the modules
+    // have been properly installed. This is often where soft dependencies lie.
+    // @todo This code fixes
+    //   \Drupal\Tests\forum\Functional\Module\DependencyTest::testUninstallDependents().
+    foreach ($module_list as $module) {
+      $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::SiteOptional);
+    }
+
+    if (count($module_list) > 1) {
+      // Reset the container so static caches are rebuilt. This prevents static
+      // caches like those in \Drupal\views\ViewsData() from having stale data.
+      // @todo Adding this code fixed
+      //   \Drupal\KernelTests\Config\DefaultConfigTest::testModuleConfig().
+      //   \Drupal\Component\DependencyInjection\Container::reset() seems to
+      //   offer a way to do this but was broken for the following reasons:
+      //   1. Needs to set itself to 'service_container' like the constructor.
+      //   2. Needs to persist services, user and session like
+      //      DrupalKernel::initializeContainer()
+      //   3. Needs to work out how to work with things like
+      //      KernelTestBase::register() which set synthetic like services.
+      $this->updateKernel([]);
+
+      // Refresh anything cached with core.extension. This prevents caches in
+      // things like \Drupal\views\ViewsData() from having stale data.
+      // @todo This fixes \Drupal\Tests\views\Functional\ViewsFormAlterTest().
+      Cache::invalidateTags(['config:core.extension']);
+    }
   }
 
   /**
@@ -627,14 +710,20 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $sync_status = $config_installer->isSyncing();
     $source_storage = $config_installer->getSourceStorage();
 
-    // This reboots the kernel to register the module's bundle and its services
-    // in the service container. The $module_filenames argument is taken over as
-    // %container.modules% parameter, which is passed to a fresh ModuleHandler
-    // instance upon first retrieval.
-    $this->kernel->updateModules($module_filenames, $module_filenames);
+    if (!empty($module_filenames)) {
+      // This reboots the kernel to register the module's bundle and its services
+      // in the service container. The $module_filenames argument is taken over as
+      // %container.modules% parameter, which is passed to a fresh ModuleHandler
+      // instance upon first retrieval.
+      $this->kernel->updateModules($module_filenames, $module_filenames);
+      $container = $this->kernel->getContainer();
+    }
+    else {
+      $container = $this->kernel->resetContainer();
+    }
+
     // After rebuilding the container we need to update the injected
     // dependencies.
-    $container = $this->kernel->getContainer();
     $this->moduleHandler = $container->get('module_handler');
     $this->connection = $container->get('database');
     $this->updateRegistry = $container->get('update.update_hook_registry');

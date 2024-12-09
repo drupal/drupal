@@ -4,6 +4,7 @@ description: 'API module providing functionality to stage package installs and u
 package: Core
 version: VERSION
 lifecycle: experimental
+container_rebuild_required: false
 dependencies:
   - drupal:update
 hidden: true

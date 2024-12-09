@@ -4,6 +4,7 @@ description: 'When enabled, this module provides relevant administrative informa
 package: Core (Experimental)
 lifecycle: experimental
 version: VERSION
+container_rebuild_required: false
 dependencies:
   - navigation:navigation
 hidden: true

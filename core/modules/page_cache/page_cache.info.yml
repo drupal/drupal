@@ -3,3 +3,4 @@ type: module
 description: 'Caches pages for anonymous users and can be used when external page cache is not available.'
 package: Core
 version: VERSION
+container_rebuild_required: false

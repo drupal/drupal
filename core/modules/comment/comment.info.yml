@@ -3,6 +3,7 @@ type: module
 description: 'Allows users to comment on content.'
 package: Core
 version: VERSION
+container_rebuild_required: false
 dependencies:
   - drupal:text
 configure: comment.admin

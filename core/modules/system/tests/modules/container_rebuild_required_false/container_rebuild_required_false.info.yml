@@ -1,0 +1,6 @@
+name: 'Container rebuild required false'
+type: module
+description: 'Support module for ModuleInstaller testing.'
+container_rebuild_required: false
+package: Testing
+version: VERSION

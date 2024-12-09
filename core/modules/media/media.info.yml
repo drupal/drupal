@@ -8,3 +8,4 @@ dependencies:
   - drupal:image
   - drupal:user
 configure: media.settings
+container_rebuild_required: false

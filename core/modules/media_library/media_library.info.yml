@@ -8,3 +8,4 @@ dependencies:
   - drupal:media
   - drupal:views
   - drupal:user
+container_rebuild_required: false

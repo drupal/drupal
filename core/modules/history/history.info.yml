@@ -5,3 +5,4 @@ package: Core
 version: VERSION
 dependencies:
   - drupal:node
+container_rebuild_required: false
