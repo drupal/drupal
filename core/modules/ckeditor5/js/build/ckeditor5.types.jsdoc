@@ -197,9 +197,51 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-bookmark/src/bookmark.js
+ *
+ * @typedef {module:bookmark/bookmark} module:bookmark/bookmark~Bookmark
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-bookmark/src/bookmarkediting.js
+ *
+ * @typedef {module:bookmark/bookmarkediting} module:bookmark/bookmarkediting~BookmarkEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-bookmark/src/bookmarkui.js
+ *
+ * @typedef {module:bookmark/bookmarkui} module:bookmark/bookmarkui~BookmarkUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-bookmark/src/ui/bookmarkactionsview.js
+ *
+ * @typedef {module:bookmark/ui/bookmarkactionsview} module:bookmark/ui/bookmarkactionsview~BookmarkActionsView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-bookmark/src/ui/bookmarkformview.js
+ *
+ * @typedef {module:bookmark/ui/bookmarkformview} module:bookmark/ui/bookmarkformview~BookmarkFormView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-bookmark/src/updatebookmarkcommand.js
+ *
+ * @typedef {module:bookmark/updatebookmarkcommand} module:bookmark/updatebookmarkcommand~UpdateBookmarkCommand
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ckbox/src/ckbox.js
  *
  * @typedef {module:ckbox/ckbox} module:ckbox/ckbox~CKBox
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ckbox/src/ckboxediting.js
+ *
+ * @typedef {module:ckbox/ckboxediting} module:ckbox/ckboxediting~CKBoxEditing
  */
 
 /**
@@ -356,6 +398,12 @@
  * Declared in file @ckeditor/ckeditor5-code-block/src/codeblock.js
  *
  * @typedef {module:code-block/codeblock} module:code-block/codeblock~CodeBlock
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-code-block/src/codeblockediting.js
+ *
+ * @typedef {module:code-block/codeblockediting} module:code-block/codeblockediting~CodeBlockEditing
  */
 
 /**
@@ -2339,9 +2387,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-special-characters/src/ui/specialcharactersnavigationview.js
+ * Declared in file @ckeditor/ckeditor5-special-characters/src/ui/specialcharacterscategoriesview.js
  *
- * @typedef {module:special-characters/ui/specialcharactersnavigationview} module:special-characters/ui/specialcharactersnavigationview~SpecialCharactersNavigationView
+ * @typedef {module:special-characters/ui/specialcharacterscategoriesview} module:special-characters/ui/specialcharacterscategoriesview~SpecialCharactersCategoriesView
  */
 
 /**
@@ -2837,6 +2885,24 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/menu/dropdownmenubuttonview.js
+ *
+ * @typedef {module:ui/dropdown/menu/dropdownmenubuttonview} module:ui/dropdown/menu/dropdownmenubuttonview~DropdownMenuButtonView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/menu/dropdownmenunestedmenuview.js
+ *
+ * @typedef {module:ui/dropdown/menu/dropdownmenunestedmenuview} module:ui/dropdown/menu/dropdownmenunestedmenuview~DropdownMenuNestedMenuView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/dropdown/menu/dropdownmenurootlistview.js
+ *
+ * @typedef {module:ui/dropdown/menu/dropdownmenurootlistview} module:ui/dropdown/menu/dropdownmenurootlistview~DropdownMenuRootListView
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/src/editableui/editableuiview.js
  *
  * @typedef {module:ui/editableui/editableuiview} module:ui/editableui/editableuiview~EditableUIView
@@ -2900,6 +2966,12 @@
  * Declared in file @ckeditor/ckeditor5-ui/src/highlightedtext/highlightedtextview.js
  *
  * @typedef {module:ui/highlightedtext/highlightedtextview} module:ui/highlightedtext/highlightedtextview~HighlightedTextView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/src/highlightedtext/labelwithhighlightview.js
+ *
+ * @typedef {module:ui/highlightedtext/labelwithhighlightview} module:ui/highlightedtext/labelwithhighlightview~LabelWithHighlightView
  */
 
 /**
@@ -3221,6 +3293,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/crc32.js
+ *
+ * @typedef {module:utils/crc32} module:utils/crc32~crc32
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/delay.js
  *
  * @typedef {module:utils/delay} module:utils/delay~delay
@@ -3284,6 +3362,12 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/getpositionedancestor.js
  *
  * @typedef {module:utils/dom/getpositionedancestor} module:utils/dom/getpositionedancestor~getPositionedAncestor
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/src/dom/getrangefrommouseevent.js
+ *
+ * @typedef {module:utils/dom/getrangefrommouseevent} module:utils/dom/getrangefrommouseevent~getRangeFromMouseEvent
  */
 
 /**
@@ -3461,6 +3545,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/src/parsebase64encodedobject.js
+ *
+ * @typedef {module:utils/parsebase64encodedobject} module:utils/parsebase64encodedobject~parseBase64EncodedObject
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/src/retry.js
  *
  * @typedef {module:utils/retry} module:utils/retry~async
@@ -3488,12 +3578,6 @@
  * Declared in file @ckeditor/ckeditor5-utils/src/uid.js
  *
  * @typedef {module:utils/uid} module:utils/uid~uid
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-utils/src/verifylicense.js
- *
- * @typedef {module:utils/verifylicense} module:utils/verifylicense~verifyLicense
  */
 
 /**
