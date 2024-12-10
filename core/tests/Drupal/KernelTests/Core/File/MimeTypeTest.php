@@ -44,6 +44,8 @@ class MimeTypeTest extends FileTestBase {
       'foobar.z' => 'application/x-compress',
       'foobar.tar' => 'application/x-tar',
       'foobar.tar.z' => 'application/x-tarz',
+      'foobar.0.zip' => 'application/zip',
+      'foobar..zip' => 'application/zip',
     ];
 
     $guesser = $this->container->get('file.mime_type.guesser');
