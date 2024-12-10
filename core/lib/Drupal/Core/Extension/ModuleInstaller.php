@@ -208,16 +208,22 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // exceptions if the configuration is not valid.
     $config_installer->checkConfigurationToInstall('module', $module_list);
 
-    // Some modules require a container rebuild immediately after install.
+    // Some modules require a container rebuild before and after install.
     // Group modules such that as many are installed together as possible until
     // one needs a container rebuild.
     $module_groups = [];
     $index = 0;
     foreach ($module_list as $module) {
-      $module_groups[$index][] = $module;
+      // Ensure the container is rebuilt both before and after a module that
+      // requires a container rebuild is installed.
       // @todo Consider reversing the behavior when the info key is not set.
       // See https://www.drupal.org/project/drupal/issues/3492235
-      if (!isset($module_data[$module]->info['container_rebuild_required']) || $module_data[$module]->info['container_rebuild_required']) {
+      $container_rebuild_required = !isset($module_data[$module]->info['container_rebuild_required']) || $module_data[$module]->info['container_rebuild_required'];
+      if ($container_rebuild_required && !empty($module_groups[$index])) {
+        $index++;
+      }
+      $module_groups[$index][] = $module;
+      if ($container_rebuild_required) {
         $index++;
       }
     }

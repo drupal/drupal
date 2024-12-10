@@ -192,14 +192,14 @@ class ModuleInstallerTest extends KernelTestBase {
       [['container_rebuild_required_true'], 1],
       [['container_rebuild_required_false'], 1],
       [['container_rebuild_required_false', 'container_rebuild_required_false_2'], 1],
-      [['container_rebuild_required_false', 'container_rebuild_required_false_2', 'container_rebuild_required_true'], 1],
-      [['container_rebuild_required_false', 'container_rebuild_required_false_2', 'container_rebuild_required_true', 'container_rebuild_required_true_2'], 2],
+      [['container_rebuild_required_false', 'container_rebuild_required_false_2', 'container_rebuild_required_true'], 2],
+      [['container_rebuild_required_false', 'container_rebuild_required_false_2', 'container_rebuild_required_true', 'container_rebuild_required_true_2'], 3],
       [['container_rebuild_required_true', 'container_rebuild_required_false', 'container_rebuild_required_false_2'], 2],
-      [['container_rebuild_required_false', 'container_rebuild_required_true', 'container_rebuild_required_false_2'], 2],
-      [['container_rebuild_required_false', 'container_rebuild_required_true', 'container_rebuild_required_false_2', 'container_rebuild_required_true_2'], 2],
-      [['container_rebuild_required_true', 'container_rebuild_required_false', 'container_rebuild_required_true_2', 'container_rebuild_required_false_2'], 3],
-      [['container_rebuild_required_false_2', 'container_rebuild_required_dependency_false'], 2],
-      [['container_rebuild_required_false_2', 'container_rebuild_required_dependency_false', 'container_rebuild_required_true'], 2],
+      [['container_rebuild_required_false', 'container_rebuild_required_true', 'container_rebuild_required_false_2'], 3],
+      [['container_rebuild_required_false', 'container_rebuild_required_true', 'container_rebuild_required_false_2', 'container_rebuild_required_true_2'], 4],
+      [['container_rebuild_required_true', 'container_rebuild_required_false', 'container_rebuild_required_true_2', 'container_rebuild_required_false_2'], 4],
+      [['container_rebuild_required_false_2', 'container_rebuild_required_dependency_false'], 3],
+      [['container_rebuild_required_false_2', 'container_rebuild_required_dependency_false', 'container_rebuild_required_true'], 3],
     ];
   }
 
