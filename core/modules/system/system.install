@@ -1939,3 +1939,12 @@ function system_update_10201(&$sandbox) {
 
   $sandbox['#finished'] = $sandbox['current_key'] == $sandbox['max'];
 }
+
+/**
+ * Equivalent update to 11102.
+ */
+function system_update_10400(): void {
+  // This is a no-op that exists to prevent an upgrade from 10.4+ to 11.0. That
+  // path is actually a downgrade.
+  \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(11102, '11.1.0');
+}
