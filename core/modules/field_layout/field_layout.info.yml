@@ -6,4 +6,3 @@ lifecycle: experimental
 version: VERSION
 dependencies:
   - drupal:layout_discovery
-container_rebuild_required: false

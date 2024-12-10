@@ -1616,10 +1616,7 @@ function install_profile_modules(&$install_state) {
   foreach (array_keys($required + $non_required) as $module) {
     // If the container needs to be rebuilt, ensure this happens both before and
     // after the module is installed.
-    // @todo Consider reversing this logic so that modules must explicitly
-    // state that they need a container build.
-    // @see https://www.drupal.org/project/drupal/issues/3492235
-    $container_rebuild_required = !isset($files[$module]->info['container_rebuild_required']) || $files[$module]->info['container_rebuild_required'];
+    $container_rebuild_required = !empty($files[$module]->info['container_rebuild_required']);
     if ($container_rebuild_required && !empty($module_groups[$index])) {
       $index++;
     }

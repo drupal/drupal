@@ -4,4 +4,3 @@ description: 'Provides an interface to create workflows with transitions between
 version: VERSION
 package: Core
 configure: entity.workflow.collection
-container_rebuild_required: false

@@ -3,4 +3,3 @@ type: module
 description: 'Provides the MySQL database driver.'
 package: Core
 version: VERSION
-container_rebuild_required: false

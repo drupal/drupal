@@ -4,4 +4,3 @@ description: "Logs events to the web server's system log."
 package: Core
 version: VERSION
 configure: system.logging_settings
-container_rebuild_required: false

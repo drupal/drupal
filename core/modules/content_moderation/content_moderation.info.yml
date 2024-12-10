@@ -2,7 +2,6 @@ name: 'Content Moderation'
 type: module
 description: 'Provides additional publication states that can be used by other modules to moderate content.'
 version: VERSION
-container_rebuild_required: false
 package: Core
 configure: entity.workflow.collection
 dependencies:

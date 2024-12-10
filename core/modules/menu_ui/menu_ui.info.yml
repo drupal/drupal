@@ -6,4 +6,3 @@ version: VERSION
 configure: entity.menu.collection
 dependencies:
   - drupal:menu_link_content
-container_rebuild_required: false

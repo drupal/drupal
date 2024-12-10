@@ -3,6 +3,5 @@ type: module
 description: 'Provides an HTTP Basic authentication provider.'
 package: Web services
 version: VERSION
-container_rebuild_required: false
 dependencies:
   - drupal:user

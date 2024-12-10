@@ -216,9 +216,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     foreach ($module_list as $module) {
       // Ensure the container is rebuilt both before and after a module that
       // requires a container rebuild is installed.
-      // @todo Consider reversing the behavior when the info key is not set.
-      // See https://www.drupal.org/project/drupal/issues/3492235
-      $container_rebuild_required = !isset($module_data[$module]->info['container_rebuild_required']) || $module_data[$module]->info['container_rebuild_required'];
+      $container_rebuild_required = !empty($module_data[$module]->info['container_rebuild_required']);
       if ($container_rebuild_required && !empty($module_groups[$index])) {
         $index++;
       }

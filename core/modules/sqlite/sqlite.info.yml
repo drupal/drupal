@@ -3,4 +3,3 @@ type: module
 description: 'Provides the SQLite database driver.'
 package: Core
 version: VERSION
-container_rebuild_required: false

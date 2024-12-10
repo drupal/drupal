@@ -6,4 +6,3 @@ version: VERSION
 configure: entity.view.collection
 dependencies:
   - drupal:views
-container_rebuild_required: false

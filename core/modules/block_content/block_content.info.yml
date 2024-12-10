@@ -3,7 +3,6 @@ type: module
 description: 'Allows the creation of content blocks and block types.'
 package: Core
 version: VERSION
-container_rebuild_required: false
 dependencies:
   - drupal:block
   - drupal:text

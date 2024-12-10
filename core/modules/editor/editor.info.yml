@@ -7,4 +7,3 @@ dependencies:
   - drupal:filter
   - drupal:file
 configure: filter.admin_overview
-container_rebuild_required: false

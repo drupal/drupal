@@ -6,4 +6,3 @@ version: VERSION
 configure: entity.node_type.collection
 dependencies:
   - drupal:text
-container_rebuild_required: false

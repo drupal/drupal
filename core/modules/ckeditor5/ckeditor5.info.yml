@@ -2,7 +2,6 @@ name: CKEditor 5
 type: module
 description: "Provides the CKEditor 5 rich text editor."
 version: VERSION
-container_rebuild_required: false
 package: Core
 dependencies:
   - drupal:editor

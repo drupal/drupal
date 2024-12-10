@@ -6,4 +6,3 @@ version: VERSION
 dependencies:
   - drupal:field
   - drupal:filter
-container_rebuild_required: false

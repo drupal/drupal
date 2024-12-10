@@ -7,4 +7,3 @@ dependencies:
   - drupal:block
   - drupal:toolbar
   - drupal:contextual
-container_rebuild_required: false

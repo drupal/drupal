@@ -7,4 +7,3 @@ required: true
 configure: user.admin_index
 dependencies:
   - drupal:system
-container_rebuild_required: false

@@ -8,4 +8,3 @@ dependencies:
   - drupal:contextual
   # @todo Discuss removing in https://www.drupal.org/project/drupal/issues/3003610.
   - drupal:block
-container_rebuild_required: false

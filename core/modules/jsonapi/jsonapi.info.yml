@@ -7,4 +7,3 @@ configure: jsonapi.settings
 dependencies:
   - drupal:serialization
   - drupal:file
-container_rebuild_required: false

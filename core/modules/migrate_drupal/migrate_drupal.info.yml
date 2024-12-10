@@ -6,4 +6,3 @@ version: VERSION
 dependencies:
   - drupal:migrate
   - drupal:phpass
-container_rebuild_required: false

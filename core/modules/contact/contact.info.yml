@@ -3,5 +3,4 @@ type: module
 description: 'Provides site-wide contact forms and forms to contact individual users.'
 package: Core
 version: VERSION
-container_rebuild_required: false
 configure: entity.contact_form.collection

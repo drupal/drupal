@@ -6,4 +6,3 @@ version: VERSION
 configure: entity.path_alias.collection
 dependencies:
   - drupal:path_alias
-container_rebuild_required: false

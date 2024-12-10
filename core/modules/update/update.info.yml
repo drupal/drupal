@@ -4,4 +4,3 @@ description: 'Checks for updates and allows users to manage them through a user 
 version: VERSION
 package: Core
 configure: update.settings
-container_rebuild_required: false
