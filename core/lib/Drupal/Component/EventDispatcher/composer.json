@@ -10,7 +10,7 @@
         "php": ">=8.1.0",
         "symfony/dependency-injection": "^6.4",
         "symfony/event-dispatcher": "^6.4",
-        "symfony/event-dispatcher-contracts": "v3.5.0"
+        "symfony/event-dispatcher-contracts": "v3.5.1"
     },
     "autoload": {
         "psr-4": {
