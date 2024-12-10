@@ -30,7 +30,7 @@ final class LibrariesBCLayerTest extends BrowserTestBase {
    * Tests libraryOverrides.
    */
   public function testLibraryBCLayer(): void {
-    $this->expectDeprecation('The module \'sdc\' is deprecated. See https://www.drupal.org/docs/core-modules-and-themes/deprecated-and-obsolete#s-understanding-deprecated-extensions');
+    $this->expectDeprecation('The module \'sdc\' is deprecated. See https://www.drupal.org/docs/core-modules-and-themes/deprecated-and-obsolete#s-single-directory-components-sdc');
     $this->expectDeprecation('The sdc/sdc_theme_test--my-card asset library is deprecated in Drupal 10.3.0 and will be removed in Drupal 11.0.0. Use the core/components.[component-id] library instead. See https://www.drupal.org/node/3410260');
     $build = [
       '#type' => 'inline_template',
