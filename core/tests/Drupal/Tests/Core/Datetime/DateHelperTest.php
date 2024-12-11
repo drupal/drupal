@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Datetime;
 use Drupal\Core\Datetime\DateHelper;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\Language;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -31,6 +32,7 @@ class DateHelperTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $config = ['system.date' => ['first_day' => 'Sunday']];
     $container->set('config.factory', $this->getConfigFactoryStub($config));
+    $container->set('string_translation', $this->getStringTranslationStub());
 
     $this->languageManager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
     $language = new Language(['langcode' => 'en']);
@@ -244,6 +246,9 @@ class DateHelperTest extends UnitTestCase {
     $this->assertNotNull(DateHelper::dayOfWeekName());
     $this->assertNotNull(DateHelper::dayOfWeekName(FALSE));
     $this->assertNotNull(DateHelper::dayOfWeekName(''));
+
+    // Ensure proper return value type.
+    $this->assertInstanceOf(TranslatableMarkup::class, DateHelper::dayOfWeekName());
 
     // Pass nothing and expect to get NULL.
     $this->assertNull(DateHelper::dayOfWeekName(0));
