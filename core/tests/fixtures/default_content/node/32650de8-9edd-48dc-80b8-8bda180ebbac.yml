@@ -1,0 +1,60 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 32650de8-9edd-48dc-80b8-8bda180ebbac
+  bundle: page
+  default_langcode: en
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'Layout override'
+  created:
+    -
+      value: 1733930395
+  promote:
+    -
+      value: true
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  layout_builder__layout:
+    -
+      section:
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+        components:
+          199f7eea-3e6e-4a91-bf5e-7b1d6f13fecd:
+            uuid: 199f7eea-3e6e-4a91-bf5e-7b1d6f13fecd
+            region: content
+            configuration:
+              id: 'extra_field_block:node:test:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 1
+            additional: {  }
+          03b45f14-cf74-469a-8398-edf3383ce7fa:
+            uuid: 03b45f14-cf74-469a-8398-edf3383ce7fa
+            region: content
+            configuration:
+              id: system_powered_by_block
+              label: 'Powered by Drupal'
+              label_display: 0
+              provider: system
+              context_mapping: {  }
+            weight: 0
+            additional: {  }
+        third_party_settings: {  }

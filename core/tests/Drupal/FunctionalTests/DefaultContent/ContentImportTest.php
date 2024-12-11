@@ -13,6 +13,7 @@ use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\DefaultContent\Importer;
 use Drupal\Core\DefaultContent\ImportException;
 use Drupal\Core\DefaultContent\InvalidEntityException;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\Url;
@@ -22,6 +23,7 @@ use Drupal\file\FileInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
+use Drupal\layout_builder\Section;
 use Drupal\media\MediaInterface;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Drupal\node\NodeInterface;
@@ -57,6 +59,7 @@ class ContentImportTest extends BrowserTestBase {
     'block_content',
     'content_translation',
     'entity_test',
+    'layout_builder',
     'media',
     'menu_link_content',
     'node',
@@ -108,6 +111,13 @@ class ContentImportTest extends BrowserTestBase {
 
     $this->contentDir = $this->getDrupalRoot() . '/core/tests/fixtures/default_content';
     \Drupal::service('file_system')->copy($this->contentDir . '/file/druplicon_copy.png', $this->publicFilesDirectory . '/druplicon_copy.png', FileExists::Error);
+
+    // Enable Layout Builder for the Page content type, with custom overrides.
+    \Drupal::service(EntityDisplayRepositoryInterface::class)
+      ->getViewDisplay('node', 'page')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
   }
 
   /**
@@ -259,6 +269,15 @@ class ContentImportTest extends BrowserTestBase {
     $translation = $node->getTranslation('fr');
     $this->assertSame('Perdu en traduction', $translation->label());
     $this->assertSame("Içi c'est la version français.", $translation->body->value);
+
+    // Layout data should be imported.
+    $node = $entity_repository->loadEntityByUuid('node', '32650de8-9edd-48dc-80b8-8bda180ebbac');
+    $this->assertInstanceOf(NodeInterface::class, $node);
+    $section = $node->layout_builder__layout[0]->section;
+    $this->assertInstanceOf(Section::class, $section);
+    $this->assertCount(2, $section->getComponents());
+    $this->assertSame('system_powered_by_block', $section->getComponent('03b45f14-cf74-469a-8398-edf3383ce7fa')->getPluginId());
+
   }
 
 }
