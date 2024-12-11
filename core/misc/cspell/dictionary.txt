@@ -178,7 +178,6 @@ egulias
 elbonia
 elems
 encapsed
-endapply
 endautoescape
 endcode
 endembed
@@ -190,6 +189,7 @@ enoki
 entityviewedit
 errmode
 eslintcache
+español
 eurozone
 evenodd
 eventhandler
@@ -224,6 +224,8 @@ fods
 fodt
 fouc
 fourcol
+francais
+français
 fraîche
 frontpage
 fudgy
@@ -257,6 +259,7 @@ iframeupload
 imagecache
 imagetextalternative
 indexname
+inglés
 inited
 inlines
 inno
@@ -355,7 +358,6 @@ newfieldinitial
 newwin
 nids
 nightwatch
-nightwatchjs
 nikic
 nntp
 nocase
@@ -563,7 +565,6 @@ taskless
 tbachert
 testbot
 testbots
-testgroups
 testlogger
 textareas
 textboxes
