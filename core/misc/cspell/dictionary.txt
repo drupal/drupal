@@ -205,6 +205,7 @@ endtrans
 enoki
 entityviewedit
 errmode
+español
 eurozone
 evenodd
 eventhandler
@@ -244,6 +245,8 @@ fods
 fodt
 fouc
 fourcol
+francais
+français
 fraîche
 frontpage
 fudgy
@@ -280,6 +283,7 @@ iframeupload
 imagecache
 imagetextalternative
 indexname
+inglés
 inited
 inno
 instantiator
@@ -299,7 +303,6 @@ jsonlint
 jssdk
 justinrainbow
 kangarookitten
-kernighan
 keyevent
 keypresses
 keyvalue
@@ -394,7 +397,6 @@ newfieldinitial
 newwin
 nids
 nightwatch
-nightwatchjs
 nikic
 nntp
 noadd
@@ -529,7 +531,6 @@ revisioning
 revlog
 revpub
 ribisi
-ritchie
 rowspans
 rtsp
 ruleset
@@ -635,7 +636,6 @@ tbachert
 tcomment
 testbot
 testbots
-testgroups
 testlogger
 textareas
 textboxes
