@@ -521,7 +521,7 @@ class DateHelper {
    *   (optional) Whether to return the abbreviated name for that day.
    *   Defaults to TRUE.
    *
-   * @return string|null
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   The name of the day in the week for that date, or null if the $date has
    *   errors.
    */
@@ -533,7 +533,7 @@ class DateHelper {
     if (!$date->hasErrors()) {
       $dow = self::dayOfWeek($date);
       $days = $abbr ? self::weekDaysAbbr() : self::weekDays();
-      return $days[$dow]->getUntranslatedString();
+      return $days[$dow];
     }
     return NULL;
   }
