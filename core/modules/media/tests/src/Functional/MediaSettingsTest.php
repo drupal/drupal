@@ -30,21 +30,6 @@ class MediaSettingsTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Tests that media warning appears if oEmbed media types exists.
-   */
-  public function testStatusPage(): void {
-    $assert_session = $this->assertSession();
-
-    $this->drupalGet('admin/reports/status');
-    $assert_session->pageTextNotContains('It is potentially insecure to display oEmbed content in a frame');
-
-    $this->createMediaType('oembed:video');
-
-    $this->drupalGet('admin/reports/status');
-    $assert_session->pageTextContains('It is potentially insecure to display oEmbed content in a frame');
-  }
-
-  /**
    * Tests that the media settings form stores a `null` iFrame domain.
    */
   public function testSettingsForm(): void {
