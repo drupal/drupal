@@ -1,5 +1,5 @@
 /*!
- * jQuery UI Legacy jQuery Core patches 1.14.0
+ * jQuery UI Legacy jQuery Core patches 1.14.1
  * https://jqueryui.com
  *
  * Copyright OpenJS Foundation and other contributors
