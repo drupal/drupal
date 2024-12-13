@@ -739,10 +739,10 @@ drupal.vertical-tabs:
 
 internal.floating-ui:
   remote: https://github.com/floating-ui/floating-ui
-  version: "1.6.8"
+  version: "1.6.12"
   license:
     name: MIT
-    url: https://github.com/floating-ui/floating-ui/blob/@floating-ui/dom@1.6.8/LICENSE
+    url: https://github.com/floating-ui/floating-ui/blob/@floating-ui/dom@1.6.12/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/floating-ui/floating-ui.core.umd.min.js: { minified: true }
@@ -803,10 +803,10 @@ once:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.15.2"
+  version: "1.15.6"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.2/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.6/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }
