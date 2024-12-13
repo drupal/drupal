@@ -62,7 +62,7 @@
     "backbone": "^1.5.0",
     "chokidar": "^3.3.1",
     "ckeditor5": "~44.0.0",
-    "cspell": "^8.16.0",
+    "cspell": "^8.16.1",
     "dotenv": "^16.4.5",
     "dotenv-safe": "^9.1.0",
     "eslint": "^8.53.0",
