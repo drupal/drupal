@@ -21,4 +21,5 @@ drupal.block.admin:
     - core/drupal.debounce
     - core/drupal.dialog.ajax
     - core/drupal.tabledrag
+    - core/drupal.vertical-tabs
     - core/once
