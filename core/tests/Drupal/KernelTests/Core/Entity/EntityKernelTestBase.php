@@ -76,6 +76,9 @@ abstract class EntityKernelTestBase extends KernelTestBase {
           foreach (array_intersect(['node', 'comment'], $class::$modules) as $module) {
             $this->installEntitySchema($module);
           }
+          if (in_array('taxonomy', $class::$modules, TRUE)) {
+            $this->installEntitySchema('taxonomy_term');
+          }
         }
       }
       $class = get_parent_class($class);

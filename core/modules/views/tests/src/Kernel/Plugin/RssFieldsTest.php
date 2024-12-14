@@ -36,9 +36,9 @@ class RssFieldsTest extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
-    $this->installConfig(['node', 'filter']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
+    $this->installConfig(['node', 'filter']);
     $this->createContentType(['type' => 'article']);
   }
 

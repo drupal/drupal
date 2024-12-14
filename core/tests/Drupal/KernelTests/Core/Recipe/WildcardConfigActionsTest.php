@@ -49,11 +49,13 @@ class WildcardConfigActionsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('node');
     $this->installConfig('node');
 
     $this->createContentType(['type' => 'one', 'name' => 'Type A']);
     $this->createContentType(['type' => 'two', 'name' => 'Type B']);
 
+    $this->installEntitySchema('entity_test_with_bundle');
     EntityTestBundle::create(['id' => 'one'])->save();
     EntityTestBundle::create(['id' => 'two'])->save();
 

@@ -37,6 +37,7 @@ class CommentUninstallTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
     $this->installConfig(['comment']);
     $this->installSchema('user', ['users_data']);

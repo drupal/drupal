@@ -35,6 +35,7 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installEntitySchema('node');
     NodeType::create([
       'type' => 'one',
       'name' => 'One',

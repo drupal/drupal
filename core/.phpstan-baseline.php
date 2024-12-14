@@ -26910,7 +26910,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method class@anonymous/core/modules/media/tests/src/Kernel/OEmbedResourceConstraintValidatorTest\\.php\\:107\\:\\:getEntity\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method class@anonymous/core/modules/media/tests/src/Kernel/OEmbedResourceConstraintValidatorTest\\.php\\:108\\:\\:getEntity\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Kernel/OEmbedResourceConstraintValidatorTest.php',
 ];

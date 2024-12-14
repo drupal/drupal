@@ -127,6 +127,7 @@ class TestViewsTest extends KernelTestBase {
     // `field.storage.node.body` config entity is a config dependency. It is one
     // of the default config of the Node module.
     // @see core/modules/node/tests/modules/node_test_views/test_views/views.view.test_node_tokens.yml
+    $this->installEntitySchema('node');
     $this->installConfig('node');
     // `user.role.authenticated` is a config dependency. It is one of the
     // default config of the User module.
@@ -175,6 +176,7 @@ class TestViewsTest extends KernelTestBase {
     // `field.storage.entity_test.field_test` is a config dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_field_field_attachment_test.yml
     // @see \Drupal\Tests\views\Kernel\Handler\FieldFieldTest::setUp()
+    $this->installEntitySchema('entity_test');
     FieldStorageConfig::create([
       'field_name' => 'field_test',
       'entity_type' => 'entity_test',

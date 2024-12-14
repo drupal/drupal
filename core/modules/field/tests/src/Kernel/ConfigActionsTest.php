@@ -18,7 +18,7 @@ class ConfigActionsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'field'];
+  protected static $modules = ['entity_test', 'field', 'user'];
 
   private readonly ConfigActionManager $configActionManager;
 
@@ -28,6 +28,8 @@ class ConfigActionsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('entity_test_with_bundle');
     EntityTestBundle::create([
       'id' => 'test',
       'label' => $this->randomString(),

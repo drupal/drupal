@@ -256,6 +256,7 @@ class TextSummaryTest extends KernelTestBase {
    * Tests required summary.
    */
   public function testRequiredSummary(): void {
+    $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
     $this->setUpCurrentUser();
     $field_definition = FieldStorageConfig::create([

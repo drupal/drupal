@@ -26,6 +26,7 @@ class FieldEntitySettingsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('entity_test_with_bundle');
     EntityTestBundle::create(['id' => 'test', 'label' => 'Test'])->save();
   }
 

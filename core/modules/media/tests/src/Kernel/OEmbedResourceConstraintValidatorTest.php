@@ -36,6 +36,7 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('file');
     $this->installEntitySchema('user');
+    $this->installEntitySchema('media');
   }
 
   /**

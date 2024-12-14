@@ -48,6 +48,7 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('entity_test_with_bundle');
     // Create an entity bundle that has a media reference field.
     $entity_test_bundle = EntityTestBundle::create([
       'id' => $this->testEntityBundleId,
