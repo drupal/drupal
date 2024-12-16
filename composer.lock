@@ -1460,16 +1460,16 @@
         },
         {
             "name": "php-tuf/composer-stager",
-            "version": "v2.0.0-rc6",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-tuf/composer-stager.git",
-                "reference": "5ab70d1529d6e7d64598a7c473d5044dce4de87e"
+                "reference": "abaf3e26110199d999e5bf8f6086ddeeef011c22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-tuf/composer-stager/zipball/5ab70d1529d6e7d64598a7c473d5044dce4de87e",
-                "reference": "5ab70d1529d6e7d64598a7c473d5044dce4de87e",
+                "url": "https://api.github.com/repos/php-tuf/composer-stager/zipball/abaf3e26110199d999e5bf8f6086ddeeef011c22",
+                "reference": "abaf3e26110199d999e5bf8f6086ddeeef011c22",
                 "shasum": ""
             },
             "require": {
@@ -1485,16 +1485,11 @@
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-                "infection/infection": "^0.27.0 || ^0.28.0 || ^0.29.0",
-                "phpbench/phpbench": "^1.2",
-                "phpro/grumphp-shim": "^2.0",
+                "ext-simplexml": "*",
                 "phpspec/prophecy": "^1.17",
                 "phpspec/prophecy-phpunit": "^2.0",
-                "phpstan/extension-installer": "^1.3",
                 "phpstan/phpstan": "^1.10",
-                "phpstan/phpstan-strict-rules": "^1.5",
-                "phpunit/phpunit": "^9.6",
-                "rector/rector": "^0.17.5 || ^0.18.0 || ^0.19.0 || ^1.0.0",
+                "phpunit/phpunit": "^10.5.19",
                 "slevomat/coding-standard": "^8.13",
                 "squizlabs/php_codesniffer": "^3.7",
                 "symfony/config": "^6.3",
@@ -1508,9 +1503,6 @@
             },
             "type": "library",
             "extra": {
-                "grumphp": {
-                    "disable-plugin": true
-                },
                 "branch-alias": {
                     "dev-develop": "2.x-dev"
                 }
@@ -1537,7 +1529,7 @@
                 "issues": "https://github.com/php-tuf/composer-stager/issues",
                 "source": "https://github.com/php-tuf/composer-stager"
             },
-            "time": "2024-11-19T18:37:52+00:00"
+            "time": "2024-12-16T11:15:45+00:00"
         },
         {
             "name": "psr/cache",
