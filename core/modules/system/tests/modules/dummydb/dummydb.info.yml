@@ -1,0 +1,7 @@
+name: 'DummyDB'
+type: module
+description: 'Fake database driver for DummyDB.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:mysql
