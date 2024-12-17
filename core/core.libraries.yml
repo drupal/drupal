@@ -930,10 +930,10 @@ picturefill:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.15.2"
+  version: "1.15.6"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.2/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.6/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }
@@ -976,10 +976,10 @@ internal.underscore:
   #  - https://www.drupal.org/project/drupal/issues/3204011
   #  - https://www.drupal.org/project/drupal/issues/3204015
   remote: https://github.com/jashkenas/underscore
-  version: "1.13.6"
+  version: "1.13.7"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.6/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.7/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }

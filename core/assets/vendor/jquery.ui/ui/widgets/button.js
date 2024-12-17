@@ -1,5 +1,5 @@
 /*!
- * jQuery UI Button 1.14.0
+ * jQuery UI Button 1.14.1
  * https://jqueryui.com
  *
  * Copyright OpenJS Foundation and other contributors
@@ -42,7 +42,7 @@
 "use strict";
 
 $.widget( "ui.button", {
-	version: "1.14.0",
+	version: "1.14.1",
 	defaultElement: "<button>",
 	options: {
 		classes: {
