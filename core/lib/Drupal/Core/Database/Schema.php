@@ -118,6 +118,31 @@ abstract class Schema implements PlaceholderInterface {
   }
 
   /**
+   * Executes a data definition language (DDL) statement.
+   *
+   * This method allows to void an active transaction when the driver does
+   * not support transactional DDL.
+   *
+   * @param string $sql
+   *   The DDL statement to execute. This is a SQL string that may contain
+   *   placeholders.
+   * @param array $arguments
+   *   (Optional) The associative array of arguments for the prepared
+   *   statement.
+   * @param array $options
+   *   (Optional) An associative array of options to control how the query is
+   *   run. The given options will be merged with self::defaultOptions().
+   */
+  protected function executeDdlStatement(string $sql, array $arguments = [], array $options = []): void {
+    $this->connection->query($sql, $arguments, $options);
+    // DDL statements when in a transaction force a commit in some databases.
+    // Void the transaction in that case.
+    if (!$this->connection->supportsTransactionalDDL() && $this->connection->transactionManager()->inTransaction()) {
+      $this->connection->transactionManager()->voidClientTransaction();
+    }
+  }
+
+  /**
    * Build a condition to match a table name against a standard information_schema.
    *
    * The information_schema is a SQL standard that provides information about the
@@ -616,7 +641,7 @@ abstract class Schema implements PlaceholderInterface {
     }
     $statements = $this->createTableSql($name, $table);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->executeDdlStatement($statement);
     }
   }
 

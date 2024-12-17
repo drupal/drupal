@@ -272,7 +272,7 @@ class Schema extends DatabaseSchema {
     // the table with curly braces in case the db_prefix contains a reference
     // to a database outside of our existing database.
     $info = $this->getPrefixInfo($new_name);
-    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO [' . $info['table'] . ']');
+    $this->executeDdlStatement('ALTER TABLE {' . $table . '} RENAME TO [' . $info['table'] . ']');
 
     // Drop the indexes, there is no RENAME INDEX command in SQLite.
     if (!empty($schema['unique keys'])) {
@@ -289,7 +289,7 @@ class Schema extends DatabaseSchema {
     // Recreate the indexes.
     $statements = $this->createIndexSql($new_name, $schema);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->executeDdlStatement($statement);
     }
   }
 
@@ -301,7 +301,7 @@ class Schema extends DatabaseSchema {
       return FALSE;
     }
     $this->connection->tableDropped = TRUE;
-    $this->connection->query('DROP TABLE {' . $table . '}');
+    $this->executeDdlStatement('DROP TABLE {' . $table . '}');
     return TRUE;
   }
 
@@ -326,7 +326,7 @@ class Schema extends DatabaseSchema {
       // When we don't have to create new keys and we are not creating a
       // NOT NULL column without a default value, we can use the quicker version.
       $query = 'ALTER TABLE {' . $table . '} ADD ' . $this->createFieldSql($field, $this->processField($specification));
-      $this->connection->query($query);
+      $this->executeDdlStatement($query);
 
       // Apply the initial value if set.
       if (isset($specification['initial_from_field'])) {
@@ -683,7 +683,7 @@ class Schema extends DatabaseSchema {
     $schema['indexes'][$name] = $fields;
     $statements = $this->createIndexSql($table, $schema);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->executeDdlStatement($statement);
     }
   }
 
@@ -706,7 +706,7 @@ class Schema extends DatabaseSchema {
 
     $info = $this->getPrefixInfo($table);
 
-    $this->connection->query('DROP INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $name . ']');
+    $this->executeDdlStatement('DROP INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $name . ']');
     return TRUE;
   }
 
@@ -724,7 +724,7 @@ class Schema extends DatabaseSchema {
     $schema['unique keys'][$name] = $fields;
     $statements = $this->createIndexSql($table, $schema);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->executeDdlStatement($statement);
     }
   }
 
@@ -738,7 +738,7 @@ class Schema extends DatabaseSchema {
 
     $info = $this->getPrefixInfo($table);
 
-    $this->connection->query('DROP INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $name . ']');
+    $this->executeDdlStatement('DROP INDEX [' . $info['schema'] . '].[' . $info['table'] . '_' . $name . ']');
     return TRUE;
   }
 

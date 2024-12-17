@@ -424,24 +424,50 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       unset($transaction);
       $this->assertRowAbsent('row');
     }
-    else {
-      // For database servers that do not support transactional DDL,
-      // the DDL statement should commit the transaction stack.
-      $this->cleanUp();
-      $transaction = $this->createRootTransaction('', FALSE);
-      $this->insertRow('row');
-      $this->executeDDLStatement();
+  }
 
-      // Try to rollback the outer transaction. It should fail and void
-      // the transaction stack.
-      $transaction->rollBack();
-      $manager = $this->connection->transactionManager();
-      $reflectedTransactionState = new \ReflectionMethod($manager, 'getConnectionTransactionState');
-      $this->assertSame(ClientConnectionTransactionState::Voided, $reflectedTransactionState->invoke($manager));
-
-      unset($transaction);
-      $this->assertRowPresent('row');
+  /**
+   * Tests rollback after a DDL statement when no transactional DDL supported.
+   *
+   * @todo In drupal:12.0.0, rollBack will throw a
+   *   TransactionOutOfOrderException. Adjust the test accordingly.
+   */
+  public function testRollbackAfterDdlStatementForNonTransactionalDdlDatabase(): void {
+    if ($this->connection->supportsTransactionalDDL()) {
+      $this->markTestSkipped('This test only works for database that do not support transactional DDL.');
     }
+
+    // For database servers that do not support transactional DDL,
+    // the DDL statement should commit the transaction stack.
+    $this->cleanUp();
+    $transaction = $this->createRootTransaction('', FALSE);
+    $reflectionMethod = new \ReflectionMethod(get_class($this->connection->transactionManager()), 'getConnectionTransactionState');
+    $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
+    $this->assertEquals(ClientConnectionTransactionState::Active, $reflectionMethod->invoke($this->connection->transactionManager()));
+    $this->insertRow('row');
+    $this->executeDDLStatement();
+
+    // Try to rollback the root transaction. Since the DDL already committed
+    // it, it should fail.
+    set_error_handler(static function (int $errno, string $errstr): bool {
+      throw new \ErrorException($errstr);
+    });
+    try {
+      $transaction->rollBack();
+    }
+    catch (\ErrorException $e) {
+      $this->assertSame('Transaction::rollBack() failed because of a prior execution of a DDL statement.', $e->getMessage());
+    }
+    finally {
+      restore_error_handler();
+    }
+
+    unset($transaction);
+    $manager = $this->connection->transactionManager();
+    $this->assertSame(0, $manager->stackDepth());
+    $reflectedTransactionState = new \ReflectionMethod($manager, 'getConnectionTransactionState');
+    $this->assertSame(ClientConnectionTransactionState::RollbackFailed, $reflectedTransactionState->invoke($manager));
+    $this->assertRowPresent('row');
   }
 
   /**
@@ -767,6 +793,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
     $this->insertRow('row');
     $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
     unset($transaction);
     $this->assertSame('rtcCommit', $this->postTransactionCallbackAction);
     $this->assertRowPresent('row');
@@ -829,6 +856,111 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertSame('rtcCommit', $this->postTransactionCallbackAction);
     $this->assertRowPresent('rtcCommit');
     $this->assertRowAbsent('rtcRollback');
+    $this->assertRowPresent('row');
+  }
+
+  /**
+   * Tests post-transaction rollback executes after a DDL statement.
+   *
+   * For database servers that support transactional DDL, a rollback of a
+   * transaction including DDL statements is possible.
+   */
+  public function testRootTransactionEndCallbackCalledAfterDdlAndRollbackForTransactionalDdlDatabase(): void {
+    if (!$this->connection->supportsTransactionalDDL()) {
+      $this->markTestSkipped('This test only works for database supporting transactional DDL.');
+    }
+
+    $transaction = $this->createRootTransaction('', FALSE);
+    $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
+    $this->insertRow('row');
+    $this->assertNull($this->postTransactionCallbackAction);
+
+    // Callbacks are processed only when destructing the transaction.
+    // Executing a DDL statement is not sufficient itself.
+    // We cannot use truncate here, since it has protective code to fall back
+    // to a transactional delete when in transaction. We drop an unrelated
+    // table instead.
+    $this->connection->schema()->dropTable('test_people');
+    $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+    $this->assertRowAbsent('rtcRollback');
+    $this->assertRowPresent('row');
+
+    // Callbacks are processed only when destructing the transaction.
+    // Executing the rollback is not sufficient by itself.
+    $transaction->rollBack();
+    $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+    $this->assertRowAbsent('rtcRollback');
+    $this->assertRowAbsent('row');
+
+    // Destruct the transaction.
+    unset($transaction);
+
+    // The post-transaction callback should now have inserted a 'rtcRollback'
+    // row.
+    $this->assertSame('rtcRollback', $this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+    $this->assertRowPresent('rtcRollback');
+    $this->assertRowAbsent('row');
+  }
+
+  /**
+   * Tests post-transaction rollback failure after a DDL statement.
+   *
+   * For database servers that support transactional DDL, a rollback of a
+   * transaction including DDL statements is not possible, since a commit
+   * happened already. We cannot decide what should be the status of the
+   * callback, an exception is thrown.
+   *
+   * @todo In drupal:12.0.0, rollBack will throw a
+   *   TransactionOutOfOrderException. Adjust the test accordingly.
+   */
+  public function testRootTransactionEndCallbackFailureUponDdlAndRollbackForNonTransactionalDdlDatabase(): void {
+    if ($this->connection->supportsTransactionalDDL()) {
+      $this->markTestSkipped('This test only works for database that do not support transactional DDL.');
+    }
+
+    $transaction = $this->createRootTransaction('', FALSE);
+    $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
+    $this->insertRow('row');
+    $this->assertNull($this->postTransactionCallbackAction);
+
+    // Callbacks are processed only when destructing the transaction.
+    // Executing a DDL statement is not sufficient itself.
+    // We cannot use truncate here, since it has protective code to fall back
+    // to a transactional delete when in transaction. We drop an unrelated
+    // table instead.
+    $this->connection->schema()->dropTable('test_people');
+    $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+    $this->assertRowAbsent('rtcRollback');
+    $this->assertRowPresent('row');
+
+    set_error_handler(static function (int $errno, string $errstr): bool {
+      throw new \ErrorException($errstr);
+    });
+    try {
+      $transaction->rollBack();
+    }
+    catch (\ErrorException $e) {
+      $this->assertSame('Transaction::rollBack() failed because of a prior execution of a DDL statement.', $e->getMessage());
+    }
+    finally {
+      restore_error_handler();
+    }
+
+    unset($transaction);
+
+    // The post-transaction callback should now have inserted a 'rtcRollback'
+    // row.
+    $this->assertSame('rtcRollback', $this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+    $this->assertRowPresent('rtcRollback');
+    $manager = $this->connection->transactionManager();
+    $this->assertSame(0, $manager->stackDepth());
+    $reflectedTransactionState = new \ReflectionMethod($manager, 'getConnectionTransactionState');
+    $this->assertSame(ClientConnectionTransactionState::RollbackFailed, $reflectedTransactionState->invoke($manager));
     $this->assertRowPresent('row');
   }
 
