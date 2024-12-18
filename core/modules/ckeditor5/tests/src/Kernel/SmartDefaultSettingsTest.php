@@ -7,7 +7,6 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 // cspell:ignore arta codesnippet
 
 use Drupal\ckeditor5\HTMLRestrictions;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
@@ -526,9 +525,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     ];
     $db_logs = [];
     foreach ($db_logged as $log) {
-      $variables = unserialize($log->variables);
-      $message = new FormattableMarkup($log->message, $variables);
-      $db_logs[$type_to_status[$log->severity]][] = (string) $message;
+      $db_logs[$type_to_status[$log->severity]][] = [$log->message, $log->variables];
     }
 
     // Transforms TranslatableMarkup objects to string.
@@ -616,8 +613,14 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => [],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Basic HTML</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Basic HTML</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:10:"Basic HTML";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:10:"Basic HTML";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
         ],
       ],
       'expected_messages' => [],
@@ -628,7 +631,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       [
         'expected_db_logs' => [
           'status' => [
-            'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+            [
+              'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+              'a:2:{s:12:"%text_format";s:10:"Basic HTML";s:19:"@missing_attributes";s:90:"<a hreflang> <blockquote cite> <ul type> <ol type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+            ],
           ],
         ],
         'expected_messages' => [
@@ -667,7 +673,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_db_logs' => [
         'status' => [
           ...$basic_html_test_case['expected_db_logs']['status'],
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;img data-caption&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:10:"Basic HTML";s:19:"@missing_attributes";s:109:"<a hreflang> <blockquote cite> <ul type> <ol type> <img data-caption> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -705,7 +714,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_db_logs' => [
         'status' => [
           ...$basic_html_test_case['expected_db_logs']['status'],
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;img data-align&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:10:"Basic HTML";s:19:"@missing_attributes";s:107:"<a hreflang> <blockquote cite> <ul type> <ol type> <img data-align> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -740,9 +752,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Basic HTML (without image uploads)</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Basic HTML (without image uploads)</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML (without image uploads)</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;img data-entity-type data-entity-uuid&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:34:"Basic HTML (without image uploads)";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:34:"Basic HTML (without image uploads)";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:34:"Basic HTML (without image uploads)";s:19:"@missing_attributes";s:130:"<a hreflang> <blockquote cite> <ul type> <ol type> <img data-entity-type data-entity-uuid> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -790,9 +811,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Basic HTML (without H4 and H6)</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Basic HTML (without H4 and H6)</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML (without H4 and H6)</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h5 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:30:"Basic HTML (without H4 and H6)";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:30:"Basic HTML (without H4 and H6)";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:30:"Basic HTML (without H4 and H6)";s:19:"@missing_attributes";s:74:"<a hreflang> <blockquote cite> <ul type> <ol type> <h2 id> <h3 id> <h5 id>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -841,9 +871,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Basic HTML (with &lt;h1&gt;)</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Basic HTML (with &lt;h1&gt;)</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt; &lt;h1&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML (with &lt;h1&gt;)</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:22:"Basic HTML (with <h1>)";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:22:"Basic HTML (with <h1>)";s:19:"@unsupported_string";s:33:"<cite> <dl> <dt> <dd> <span> <h1>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:22:"Basic HTML (with <h1>)";s:19:"@missing_attributes";s:90:"<a hreflang> <blockquote cite> <ul type> <ol type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -885,9 +924,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Basic HTML (without H*)</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Basic HTML (without H*)</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML (without H*)</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:23:"Basic HTML (without H*)";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:23:"Basic HTML (without H*)";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:23:"Basic HTML (without H*)";s:19:"@missing_attributes";s:50:"<a hreflang> <blockquote cite> <ul type> <ol type>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -936,9 +984,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Basic HTML (with &lt;pre&gt;)</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;) Code Block (for tags: &lt;pre&gt;)</em>. The text format must be saved to make these changes active.',
-          str_replace('Basic HTML', 'Basic HTML (with &lt;pre&gt;)', $basic_html_test_case['expected_db_logs']['status'][1]),
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML (with &lt;pre&gt;)</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:23:"Basic HTML (with <pre>)";s:25:"%enabling_message_content";s:164:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>) Code Block (for tags: <pre>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:23:"Basic HTML (with <pre>)";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:23:"Basic HTML (with <pre>)";s:19:"@missing_attributes";s:90:"<a hreflang> <blockquote cite> <ul type> <ol type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -989,10 +1046,22 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Basic HTML (with alignable paragraph support)</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Basic HTML (with alignable paragraph support)</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;. The text format must be saved to make these changes active.',
-          'The CKEditor 5 migration process enabled the following plugins to support specific attributes that are allowed by the <em class="placeholder">Basic HTML (with alignable paragraph support)</em> text format: <em class="placeholder">Alignment ( for tag: &lt;p&gt; to support: class with value(s):  text-align-center, text-align-justify)</em>.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML (with alignable paragraph support)</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:45:"Basic HTML (with alignable paragraph support)";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:45:"Basic HTML (with alignable paragraph support)";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
+          [
+            'The CKEditor 5 migration process enabled the following plugins to support specific attributes that are allowed by the %text_format text format: %enabled_for_attributes_message_content.',
+            'a:2:{s:12:"%text_format";s:45:"Basic HTML (with alignable paragraph support)";s:39:"%enabled_for_attributes_message_content";s:97:"Alignment ( for tag: <p> to support: class with value(s):  text-align-center, text-align-justify)";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:45:"Basic HTML (with alignable paragraph support)";s:19:"@missing_attributes";s:90:"<a hreflang> <blockquote cite> <ul type> <ol type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -1018,9 +1087,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Basic HTML (with Media Embed support)</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Basic HTML (with Media Embed support)</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML (with Media Embed support)</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:37:"Basic HTML (with Media Embed support)";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:37:"Basic HTML (with Media Embed support)";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:37:"Basic HTML (with Media Embed support)";s:19:"@missing_attributes";s:90:"<a hreflang> <blockquote cite> <ul type> <ol type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -1057,9 +1135,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">(with Media Embed support, view mode enabled but no view modes configured)</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">(with Media Embed support, view mode enabled but no view modes configured)</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">(with Media Embed support, view mode enabled but no view modes configured)</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt; &lt;drupal-media data-view-mode&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:74:"(with Media Embed support, view mode enabled but no view modes configured)";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:74:"(with Media Embed support, view mode enabled but no view modes configured)";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:74:"(with Media Embed support, view mode enabled but no view modes configured)";s:19:"@missing_attributes";s:120:"<a hreflang> <blockquote cite> <ul type> <ol type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <drupal-media data-view-mode>";}',
+          ],
         ],
       ],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
@@ -1100,9 +1187,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">(with Media Embed support, view mode enabled and two view modes configured )</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">(with Media Embed support, view mode enabled and two view modes configured )</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">(with Media Embed support, view mode enabled and two view modes configured )</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt; &lt;drupal-media data-view-mode&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:76:"(with Media Embed support, view mode enabled and two view modes configured )";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:76:"(with Media Embed support, view mode enabled and two view modes configured )";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:76:"(with Media Embed support, view mode enabled and two view modes configured )";s:19:"@missing_attributes";s:120:"<a hreflang> <blockquote cite> <ul type> <ol type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <drupal-media data-view-mode>";}',
+          ],
         ],
       ],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
@@ -1141,9 +1237,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Basic HTML (with any data-* attribute on images)</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;) Image (for tags: &lt;img&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Basic HTML (with any data-* attribute on images)</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;span&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Basic HTML (with any data-* attribute on images)</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;img data-*&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:48:"Basic HTML (with any data-* attribute on images)";s:25:"%enabling_message_content";s:135:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>) Image (for tags: <img>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:48:"Basic HTML (with any data-* attribute on images)";s:19:"@unsupported_string";s:28:"<cite> <dl> <dt> <dd> <span>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:48:"Basic HTML (with any data-* attribute on images)";s:19:"@missing_attributes";s:103:"<a hreflang> <blockquote cite> <ul type> <ol type> <img data-*> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -1225,12 +1330,24 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Restricted HTML</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Restricted HTML</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Restricted HTML</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:15:"Restricted HTML";s:25:"%enabling_message_content";s:111:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:15:"Restricted HTML";s:19:"@unsupported_string";s:21:"<cite> <dl> <dt> <dd>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:15:"Restricted HTML";s:19:"@missing_attributes";s:90:"<a hreflang> <blockquote cite> <ul type> <ol type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
         'warning' => [
-          'As part of migrating the <em class="placeholder">Restricted HTML</em> text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : &lt;br&gt; &lt;p&gt;. The text format must be saved to make these changes active.',
+          [
+            'As part of migrating the %text_format text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:15:"Restricted HTML";s:13:"@missing_tags";s:8:"<br> <p>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -1344,12 +1461,24 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Only the &quot;filter_html&quot; filter and its default settings</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;)</em>. The text format must be saved to make these changes active.',
-          'The following tags were permitted by the <em class="placeholder">Only the &quot;filter_html&quot; filter and its default settings</em> text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt;. The text format must be saved to make these changes active.',
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">Only the &quot;filter_html&quot; filter and its default settings</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type=&quot;1 A I&quot;&gt; &lt;h2 id=&quot;jump-*&quot;&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:54:"Only the "filter_html" filter and its default settings";s:25:"%enabling_message_content";s:111:"Link (for tags: <a>) Block quote (for tags: <blockquote>) Code (for tags: <code>) List (for tags: <ul><ol><li>)";}',
+          ],
+          [
+            'The following tags were permitted by the %text_format text format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:54:"Only the "filter_html" filter and its default settings";s:19:"@unsupported_string";s:21:"<cite> <dl> <dt> <dd>";}',
+          ],
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:54:"Only the "filter_html" filter and its default settings";s:19:"@missing_attributes";s:107:"<a hreflang> <blockquote cite> <ul type> <ol type="1 A I"> <h2 id="jump-*"> <h3 id> <h4 id> <h5 id> <h6 id>";}',
+          ],
         ],
         'warning' => [
-          'As part of migrating the <em class="placeholder">Only the &quot;filter_html&quot; filter and its default settings</em> text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : &lt;br&gt; &lt;p&gt;. The text format must be saved to make these changes active.',
+          [
+            'As part of migrating the %text_format text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:54:"Only the "filter_html" filter and its default settings";s:13:"@missing_tags";s:8:"<br> <p>";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -1398,7 +1527,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => [],
       'expected_db_logs' => [
         'status' => [
-          'As part of migrating to CKEditor 5, it was found that the <em class="placeholder">A CKEditor 4 configured to have span styles</em> text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;span class=&quot;llama&quot;&gt;. The text format must be saved to make these changes active.',
+          [
+            'As part of migrating to CKEditor 5, it was found that the %text_format text format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:43:"A CKEditor 4 configured to have span styles";s:19:"@missing_attributes";s:20:"<span class="llama">";}',
+          ],
         ],
       ],
       'expected_messages' => [
@@ -1441,7 +1573,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_fundamental_compatibility_violations' => [],
       'expected_db_logs' => [
         'status' => [
-          'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the <em class="placeholder">Most basic HTML, but with allowed_html misconfigured</em> text format: <em class="placeholder">Link (for tags: &lt;a&gt;)</em>. The text format must be saved to make these changes active.',
+          [
+            'The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+            'a:2:{s:12:"%text_format";s:52:"Most basic HTML, but with allowed_html misconfigured";s:25:"%enabling_message_content";s:20:"Link (for tags: <a>)";}',
+          ],
         ],
       ],
       'expected_messages' => [
