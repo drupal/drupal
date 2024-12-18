@@ -576,7 +576,7 @@ class PathPluginBaseTest extends UnitTestCase {
 
     $access_plugin = $this->getMockBuilder('Drupal\views\Plugin\views\access\AccessPluginBase')
       ->disableOriginalConstructor()
-      ->getMockForAbstractClass();
+      ->getMock();
     $this->accessPluginManager->expects($this->any())
       ->method('createInstance')
       ->willReturn($access_plugin);
