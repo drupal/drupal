@@ -12,7 +12,7 @@ require_once 'entity_definition_updates_8001.inc';
 /**
  * Makes the 'user_id' field single and migrate its data.
  */
-function entity_test_update_8002() {
+function entity_test_update_8002(): void {
   // To update the field schema we need to have no field data in the storage,
   // thus we retrieve it, delete it from storage, and write it back to the
   // storage after updating the schema.

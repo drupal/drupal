@@ -59,20 +59,20 @@ function update_script_test_update_last_removed(): int {
 /**
  * Dummy update_script_test update 7200.
  */
-function update_script_test_update_7200() {
+function update_script_test_update_7200(): string {
   return 'The update_script_test_update_7200() update was executed successfully.';
 }
 
 /**
  * Dummy update_script_test update 7201.
  */
-function update_script_test_update_7201() {
+function update_script_test_update_7201(): string {
   return 'The update_script_test_update_7201() update was executed successfully.';
 }
 
 /**
  * Dummy update function to run during the tests.
  */
-function update_script_test_update_8001() {
+function update_script_test_update_8001(): string {
   return 'The update_script_test_update_8001() update was executed successfully.';
 }

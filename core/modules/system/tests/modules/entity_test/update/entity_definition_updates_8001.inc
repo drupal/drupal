@@ -12,7 +12,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 /**
  * Makes the 'user_id' field multiple and migrate its data.
  */
-function entity_test_update_8001() {
+function entity_test_update_8001(): void {
   // To update the field schema we need to have no field data in the storage,
   // thus we retrieve it, delete it from storage, and write it back to the
   // storage after updating the schema.
