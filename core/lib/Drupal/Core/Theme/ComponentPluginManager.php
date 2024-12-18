@@ -4,6 +4,7 @@ namespace Drupal\Core\Theme;
 
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Discovery\YamlDirectoryDiscovery;
+use Drupal\Component\Plugin\CategorizingPluginManagerInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -11,6 +12,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Theme\Component\ComponentValidator;
@@ -28,7 +30,9 @@ use Drupal\Core\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
  *
  * @see plugin_api
  */
-class ComponentPluginManager extends DefaultPluginManager {
+class ComponentPluginManager extends DefaultPluginManager implements CategorizingPluginManagerInterface {
+
+  use CategorizingPluginManagerTrait;
 
   /**
    * {@inheritdoc}
@@ -230,6 +234,21 @@ class ComponentPluginManager extends DefaultPluginManager {
    */
   protected function providerExists($provider) {
     return $this->moduleHandler->moduleExists($provider) || $this->themeHandler->themeExists($provider);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processDefinition(&$definition, $plugin_id): void {
+    parent::processDefinition($definition, $plugin_id);
+    $this->processDefinitionCategory($definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function processDefinitionCategory(&$definition): void {
+    $definition['category'] = $definition['group'] ?? $this->t('Other');
   }
 
   /**
