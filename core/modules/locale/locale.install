@@ -326,7 +326,7 @@ function locale_update_last_removed(): int {
 /**
  * Add an index on locales_location on type and name.
  */
-function locale_update_10300() {
+function locale_update_10300(): void {
   $spec = [];
   $spec['locales_location'] = [
     'description' => 'Location information for source strings.',

@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Enable the new_dependency_test_with_service module.
  */
-function new_dependency_test_update_8001() {
+function new_dependency_test_update_8001(): void {
   $services = [
     'new_dependency_test.hard_dependency',
     'new_dependency_test.optional_dependency',
