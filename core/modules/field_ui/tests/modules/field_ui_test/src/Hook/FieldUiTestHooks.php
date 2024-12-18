@@ -42,7 +42,7 @@ class FieldUiTestHooks {
         'id' => 'indent-id',
       ],
       '#row_type' => 'group',
-      '#region_callback' => 'field_ui_test_region_callback',
+      '#region_callback' => [$this, 'regionCallback'],
       '#js_settings' => [
         'rowHandler' => 'group',
       ],
@@ -91,6 +91,10 @@ class FieldUiTestHooks {
         ],
       ],
     ];
+  }
+
+  public function regionCallback($row): string {
+    return 'content';
   }
 
 }
