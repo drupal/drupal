@@ -1502,18 +1502,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Action/ActionInterface.php',
 ];
 $ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Action/ActionManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Action/ActionManager.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Action\\\\ActionManager\\:\\:processDefinitionCategory\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -2042,14 +2030,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Block/BlockBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Block/BlockManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
+	// identifier: arguments.count
+	'message' => '#^Method Drupal\\\\Core\\\\Block\\\\BlockManager\\:\\:getSortedDefinitions\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Block/BlockManager.php',
 ];
@@ -3048,18 +3030,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Condition\\\\ConditionInterface\\:\\:summary\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Condition/ConditionInterface.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Condition/ConditionManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Condition/ConditionManager.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -7385,18 +7355,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionListenerInterface\\:\\:onFieldStorageDefinitionUpdate\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Field/FieldStorageDefinitionListenerInterface.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Field/FieldTypePluginManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Field/FieldTypePluginManager.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -61557,18 +61515,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\PathProcessor\\\\PathProcessorFrontTest\\:\\:providerProcessInbound\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/PathProcessor/PathProcessorFrontTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
