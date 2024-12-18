@@ -194,8 +194,8 @@ variables:
   <<: [ *with-composer, *run-tests, *default-job-settings ]
   variables:
     TESTSUITE: PHPUnit-Build
-    KUBERNETES_CPU_REQUEST: "2"
-    CONCURRENCY: "4"
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: "5"
   services:
     - <<: *with-database
 

@@ -22,7 +22,6 @@ use Drupal\Composer\Composer;
  * This is because Composer only uses the packages.json file to resolve the
  * project template and not any other dependencies.
  *
- * @group #slow
  * @group Template
  */
 class ComposerProjectTemplatesTest extends ComposerBuildTestBase {

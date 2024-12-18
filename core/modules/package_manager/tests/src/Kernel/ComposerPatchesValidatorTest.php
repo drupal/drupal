@@ -13,6 +13,7 @@ use Drupal\package_manager\ValidationResult;
 /**
  * @covers \Drupal\package_manager\Validator\ComposerPatchesValidator
  * @group package_manager
+ * @group #slow
  * @internal
  */
 class ComposerPatchesValidatorTest extends PackageManagerKernelTestBase {
