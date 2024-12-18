@@ -1669,7 +1669,6 @@
  *
  * Theme hooks:
  * - hook_preprocess_HOOK()
- * - hook_process_HOOK()
  *
  * @subsection procedural-hooks Procedural hook implementation
  *
