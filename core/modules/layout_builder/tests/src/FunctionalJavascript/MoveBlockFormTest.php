@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
@@ -236,7 +237,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement
    *   The row handle element.
    */
-  protected function findRowHandle($block_label) {
+  protected function findRowHandle($block_label): NodeElement {
     $assert_session = $this->assertSession();
     return $assert_session->elementExists('css', "[data-drupal-selector=\"edit-components\"] td:contains(\"$block_label\") a.tabledrag-handle");
   }

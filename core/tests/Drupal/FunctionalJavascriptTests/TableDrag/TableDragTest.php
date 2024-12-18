@@ -556,7 +556,7 @@ class TableDragTest extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement
    *   The row element.
    */
-  protected function findRowById($id, $table_id = 'tabledrag-test-table') {
+  protected function findRowById($id, $table_id = 'tabledrag-test-table'): NodeElement {
     $xpath = "//table[@id='$table_id']/tbody/tr[.//input[@name='table[$id][id]']]";
     $row = $this->getSession()->getPage()->find('xpath', $xpath);
     $this->assertNotEmpty($row);
@@ -572,7 +572,7 @@ class TableDragTest extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement
    *   The toggle element.
    */
-  protected function findWeightsToggle($expected_text) {
+  protected function findWeightsToggle($expected_text): NodeElement {
     $toggle = $this->getSession()->getPage()->findButton($expected_text);
     $this->assertNotEmpty($toggle);
     return $toggle;
