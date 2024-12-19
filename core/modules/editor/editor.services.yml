@@ -1,3 +1,6 @@
+parameters:
+  editor.hooks_converted: true
+
 services:
   _defaults:
     autoconfigure: true

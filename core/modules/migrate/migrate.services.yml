@@ -1,3 +1,6 @@
+parameters:
+  migrate.hooks_converted: true
+
 services:
   _defaults:
     autoconfigure: true

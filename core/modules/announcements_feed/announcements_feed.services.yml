@@ -1,6 +1,7 @@
 parameters:
   announcements_feed.feed_json_url: https://www.drupal.org/announcements.json
   announcements_feed.feed_link: https://www.drupal.org/about/announcements
+  announcements_feed.hooks_converted: true
 
 services:
   _defaults:

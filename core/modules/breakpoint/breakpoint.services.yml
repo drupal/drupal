@@ -1,3 +1,6 @@
+parameters:
+  breakpoint.hooks_converted: true
+
 services:
   _defaults:
     autoconfigure: true

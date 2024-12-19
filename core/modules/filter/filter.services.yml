@@ -1,3 +1,6 @@
+parameters:
+  filter.hooks_converted: true
+
 services:
   _defaults:
     autoconfigure: true

@@ -1,3 +1,6 @@
+parameters:
+  config_translation.hooks_converted: true
+
 services:
   _defaults:
     autoconfigure: true

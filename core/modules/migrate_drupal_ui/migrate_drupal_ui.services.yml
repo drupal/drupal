@@ -1,3 +1,6 @@
+parameters:
+  migrate_drupal_ui.hooks_converted: true
+
 services:
   _defaults:
     autoconfigure: true

@@ -1,3 +1,6 @@
+parameters:
+  automated_cron.hooks_converted: true
+
 services:
   _defaults:
     autoconfigure: true
