@@ -193,7 +193,7 @@ class UrlTest extends UnitTestCase {
    */
   public function testFromInvalidUserInput($path): void {
     $this->expectException(\InvalidArgumentException::class);
-    $url = Url::fromUserInput($path);
+    Url::fromUserInput($path);
   }
 
   /**

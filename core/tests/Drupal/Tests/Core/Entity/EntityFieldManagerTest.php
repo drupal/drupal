@@ -313,7 +313,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->moduleHandler->invokeAllWith('entity_base_field_info', Argument::any());
     $this->moduleHandler->invokeAllWith('entity_field_storage_info', Argument::any())
       ->will(function ($arguments) use ($definitions) {
-        [$hook, $callback] = $arguments;
+        [, $callback] = $arguments;
         $callback(
           function () use ($definitions) {
             return $definitions;
@@ -486,7 +486,7 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $this->moduleHandler->invokeAllWith('entity_field_storage_info', Argument::any())
       ->will(function ($arguments) use ($definitions) {
-        [$hook, $callback] = $arguments;
+        [, $callback] = $arguments;
         $callback(
           function () use ($definitions) {
             return $definitions;
@@ -562,7 +562,7 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $this->moduleHandler->invokeAllWith(Argument::type('string'), Argument::any())
       ->will(function ($arguments) use ($field_definition, $module) {
-        [$hook, $callback] = $arguments;
+        [, $callback] = $arguments;
         $callback(
           function () use ($field_definition) {
             return [$field_definition->reveal()];

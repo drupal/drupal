@@ -229,7 +229,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   protected function assertEntityData(bool $revisionable, bool $translatable): void {
     $entities = $this->entityTypeManager->getStorage($this->entityTypeId)->loadMultiple();
     $this->assertCount(3, $entities);
-    foreach ($entities as $entity_id => $entity) {
+    foreach ($entities as $entity) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $this->assertEquals("test entity - {$entity->id()} - en", $entity->label());
       $this->assertEquals("bundle field - {$entity->id()} - en", $entity->new_bundle_field->value);

@@ -503,7 +503,7 @@ trait PerformanceTestTrait {
       $collection = \Drupal::keyValue('performance_test');
       $performance_test_data = $collection->get('performance_test_data');
       $query_events = $performance_test_data['database_events'] ?? [];
-      foreach ($query_events as $key => $event) {
+      foreach ($query_events as $event) {
         if (static::isDatabaseCache($event)) {
           continue;
         }

@@ -43,7 +43,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    */
   public function testGenerateMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
-    $result = $this->fileUrlGenerator->generate("foo://bar");
+    $this->fileUrlGenerator->generate("foo://bar");
   }
 
   /**
@@ -53,7 +53,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    */
   public function testGenerateStringMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
-    $result = $this->fileUrlGenerator->generateString("foo://bar");
+    $this->fileUrlGenerator->generateString("foo://bar");
   }
 
   /**
@@ -63,7 +63,7 @@ class FileUrlGeneratorTest extends FileTestBase {
    */
   public function testGenerateAbsoluteStringMissingStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
-    $result = $this->fileUrlGenerator->generateAbsoluteString("foo://bar");
+    $this->fileUrlGenerator->generateAbsoluteString("foo://bar");
   }
 
   /**

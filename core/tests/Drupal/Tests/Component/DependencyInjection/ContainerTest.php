@@ -72,7 +72,7 @@ class ContainerTest extends TestCase {
     $container_definition = $this->getMockContainerDefinition();
     $container_definition['machine_format'] = !$this->machineFormat;
     $this->expectException(InvalidArgumentException::class);
-    $container = new $this->containerClass($container_definition);
+    new $this->containerClass($container_definition);
   }
 
   /**

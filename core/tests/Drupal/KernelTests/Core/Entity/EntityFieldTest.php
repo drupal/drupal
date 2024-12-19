@@ -884,7 +884,7 @@ class EntityFieldTest extends EntityKernelTestBase {
 
     // Test \Drupal\Core\TypedData\ComputedItemListTrait::getIterator().
     $entity = EntityTestComputedField::create([]);
-    foreach ($entity->computed_string_field as $delta => $item) {
+    foreach ($entity->computed_string_field as $item) {
       $this->assertSame('foo computed', $item->value);
     }
 

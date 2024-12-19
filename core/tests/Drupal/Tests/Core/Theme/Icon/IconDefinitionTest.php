@@ -222,8 +222,6 @@ class IconDefinitionTest extends UnitTestCase {
    * Test the IconDefinition::getRenderable method.
    */
   public function testGetRenderable(): void {
-    $icon = IconDefinition::create('foo', 'bar', '_template_');
-
     $expected = [
       '#type' => 'icon',
       '#pack_id' => 'foo',

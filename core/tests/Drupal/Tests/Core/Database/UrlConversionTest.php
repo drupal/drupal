@@ -487,7 +487,7 @@ class UrlConversionTest extends UnitTestCase {
     Database::addConnectionInfo('default', 'default', $connection_options);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);
-    $url = Database::getConnectionInfoAsUrl();
+    Database::getConnectionInfoAsUrl();
   }
 
   /**

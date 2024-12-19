@@ -91,7 +91,7 @@ class MultiFormTest extends WebDriverTestBase {
 
     for ($i = 0; $i < 2; $i++) {
       $forms = $page->findAll('xpath', $form_xpath);
-      foreach ($forms as $offset => $form) {
+      foreach ($forms as $form) {
         $button = $form->findButton('Add another item');
         $this->assertNotNull($button, 'Add Another Item button exists');
         $button->press();

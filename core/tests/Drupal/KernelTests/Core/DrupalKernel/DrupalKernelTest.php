@@ -318,7 +318,7 @@ class DrupalKernelTest extends KernelTestBase {
     // Test environment locale should be UTF-8.
     $this->assertSame($utf8_string, escapeshellcmd($utf8_string));
     $request = Request::createFromGlobals();
-    $kernel = $this->getTestKernel($request);
+    $this->getTestKernel($request);
     // Kernel environment locale should be UTF-8.
     $this->assertSame($utf8_string, escapeshellcmd($utf8_string));
   }

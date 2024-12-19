@@ -30,7 +30,7 @@ class QueryTest extends DatabaseTestBase {
    */
   public function testScalarSubstitution(): void {
     try {
-      $names = $this->connection->query('SELECT [name] FROM {test} WHERE [age] IN ( :ages[] ) ORDER BY [age]', [':ages[]' => 25])->fetchAll();
+      $this->connection->query('SELECT [name] FROM {test} WHERE [age] IN ( :ages[] ) ORDER BY [age]', [':ages[]' => 25])->fetchAll();
       $this->fail('Array placeholder with scalar argument should result in an exception.');
     }
     catch (\Exception $e) {

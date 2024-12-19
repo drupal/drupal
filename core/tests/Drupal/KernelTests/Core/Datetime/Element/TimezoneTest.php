@@ -342,7 +342,7 @@ class TimezoneTest extends EntityKernelTestBase implements FormInterface {
 
     // Check the #date_timezone property on each processed test element.
     $wrongTimezones = [];
-    foreach ($form_state->getCompleteForm() as $elementName => $element) {
+    foreach ($form_state->getCompleteForm() as $element) {
       if (isset($element['#type']) && $element['#type'] === $this->elementType) {
         // Check the correct timezone is set on the value object.
         $actualTimezone = array_search($element['#date_timezone'], $this->timezones, TRUE);

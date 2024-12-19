@@ -77,6 +77,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan(0, $num_records_before, 'The table is not empty.');
 
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
     $transaction = $this->connection->startTransaction('test_truncate_in_transaction');
     $this->connection->insert('test')
       ->fields([
@@ -98,6 +99,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
 
     // Close the transaction, and check that there are still no records in the
     // table.
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
     $transaction = NULL;
     $this->assertFalse($this->connection->inTransaction());
     $num_records_after = $this->connection->select('test')->countQuery()->execute()->fetchField();
@@ -111,6 +113,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan(0, $num_records_before, 'The table is not empty.');
 
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
     $transaction = $this->connection->startTransaction('test_truncate_in_transaction');
     $this->connection->insert('test')
       ->fields([

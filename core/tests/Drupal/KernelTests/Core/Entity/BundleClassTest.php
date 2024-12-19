@@ -151,7 +151,7 @@ class BundleClassTest extends EntityKernelTestBase {
       $entity_test_1->id(),
       $entity_test_2->id(),
     ];
-    $entities = $this->storage->loadMultiple($entity_ids);
+    $this->storage->loadMultiple($entity_ids);
     // postLoad() should only have been called once more so far.
     $this->assertEquals(2, EntityTestBundleClass::$postLoadCount);
     $this->assertCount(2, EntityTestBundleClass::$postLoadEntitiesCount);
@@ -165,7 +165,7 @@ class BundleClassTest extends EntityKernelTestBase {
     // Reset the storage cache and try loading again.
     $this->storage->resetCache();
 
-    $entities = $this->storage->loadMultiple($entity_ids);
+    $this->storage->loadMultiple($entity_ids);
     $this->assertEquals(3, EntityTestBundleClass::$postLoadCount);
     $this->assertCount(3, EntityTestBundleClass::$postLoadEntitiesCount);
     // This time, all 3 bundle_class entities should be included.
@@ -244,7 +244,7 @@ class BundleClassTest extends EntityKernelTestBase {
     // Now that we have an entity bundle class that's shared by two entirely
     // different entity types, we expect an exception to be thrown.
     $this->expectException(AmbiguousBundleClassException::class);
-    $entity_type = $this->container->get('entity_type.repository')->getEntityTypeFromClass(EntityTestAmbiguousBundleClass::class);
+    $this->container->get('entity_type.repository')->getEntityTypeFromClass(EntityTestAmbiguousBundleClass::class);
   }
 
   /**

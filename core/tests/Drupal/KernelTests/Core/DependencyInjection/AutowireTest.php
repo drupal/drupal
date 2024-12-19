@@ -137,7 +137,6 @@ class AutowireTest extends KernelTestBase {
    * Tests that core controllers are autowired where possible.
    */
   public function testCoreControllerAutowiring(): void {
-    $services = [];
     $aliases = [];
 
     $filenames = array_map(fn($module) => "core/modules/{$module[0]}/{$module[0]}.services.yml", $this->coreModuleListDataProvider());
@@ -173,7 +172,7 @@ class AutowireTest extends KernelTestBase {
         continue;
       }
       $constructor = new \ReflectionMethod($controller, '__construct');
-      foreach ($constructor->getParameters() as $pos => $parameter) {
+      foreach ($constructor->getParameters() as $parameter) {
         $interface = (string) $parameter->getType();
         if (!isset($aliases[$interface])) {
           continue 2;

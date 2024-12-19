@@ -149,7 +149,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     // Note the absence of '#create_placeholder', presence of max-age=0 created
     // by the #lazy_builder callback.
     // @todo in https://www.drupal.org/node/2559847
-    $base_element_a5 = [];
+    //   $base_element_a5 = [];
     // Note the absence of '#create_placeholder', presence of high cardinality
     // cache context created by the #lazy_builder callback.
     // @see \Drupal\Tests\Core\Render\PlaceholdersTest::callbackPerUser()
@@ -1074,8 +1074,8 @@ HTML;
 
     $element1 = $element2 = $test_element;
     // Render the element twice so that it is in the render cache.
-    $result = $this->renderer->renderRoot($element1);
-    $result = $this->renderer->renderRoot($element2);
+    $this->renderer->renderRoot($element1);
+    $this->renderer->renderRoot($element2);
     $placeholder_string = (string) $this->renderCache->placeholderElements[0]['#markup'];
     $this->assertSame($this->renderCache->placeholderElements[0]['#attached']['placeholders'][$placeholder_string]['#preview'], ['#markup' => 'Lazy Builder Preview']);
   }

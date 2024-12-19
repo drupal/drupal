@@ -946,7 +946,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity = $storage->load($entity->id());
     $this->assertEquals(TranslationStatusInterface::TRANSLATION_EXISTING, $entity->getTranslationStatus($entity->language()->getId()));
 
-    foreach ($this->langcodes as $key => $langcode) {
+    foreach ($this->langcodes as $langcode) {
       // Test that after adding a new translation it has the translation status
       // TRANSLATION_CREATED.
       $entity->addTranslation($langcode, $values);

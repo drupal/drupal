@@ -106,7 +106,7 @@ class UnroutedUrlTest extends UnitTestCase {
    */
   public function testFromInvalidUri($uri): void {
     $this->expectException(\InvalidArgumentException::class);
-    $url = Url::fromUri($uri);
+    Url::fromUri($uri);
   }
 
   /**

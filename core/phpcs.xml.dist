@@ -158,7 +158,6 @@
   <rule ref="DrupalPractice.CodeAnalysis.VariableAnalysis">
     <exclude-pattern>*/Functional/*</exclude-pattern>
     <exclude-pattern>*/FunctionalJavascript/*</exclude-pattern>
-    <exclude-pattern>*/core/tests/*</exclude-pattern>
     <exclude-pattern>*/core/profiles/*/tests/*</exclude-pattern>
     <!-- Do not run this sniff on API files or transliteration data. -->
     <exclude-pattern>*.api.php</exclude-pattern>
