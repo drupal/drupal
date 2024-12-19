@@ -303,7 +303,7 @@ function hook_jsonapi_entity_filter_access(EntityTypeInterface $entity_type, Acc
  *
  * @see hook_jsonapi_entity_filter_access()
  */
-function hook_jsonapi_ENTITY_TYPE_filter_access(EntityTypeInterface $entity_type, AccountInterface $account) {
+function hook_jsonapi_ENTITY_TYPE_filter_access(EntityTypeInterface $entity_type, AccountInterface $account): array {
   return ([
     JSONAPI_FILTER_AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'administer llamas'),
     JSONAPI_FILTER_AMONG_PUBLISHED => AccessResult::allowedIfHasPermission($account, 'view all published llamas'),
