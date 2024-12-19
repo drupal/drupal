@@ -44,7 +44,7 @@ class ViewsTestDataViewsHooks {
    * Implements hook_views_analyze().
    */
   #[Hook('views_analyze')]
-  public function viewsAnalyze(ViewExecutable $view) {
+  public function viewsAnalyze(ViewExecutable $view): array {
     \Drupal::state()->set('views_hook_test_views_analyze', TRUE);
     $ret = [];
     $ret[] = Analyzer::formatMessage(t('Test ok message'), 'ok');

@@ -176,7 +176,7 @@ class ConfigTranslationHooks {
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
-  public function entityOperation(EntityInterface $entity) {
+  public function entityOperation(EntityInterface $entity): array {
     $operations = [];
     $entity_type = $entity->getEntityType();
     if ($entity_type->entityClassImplements(ConfigEntityInterface::class) && $entity->hasLinkTemplate('config-translation-overview') && \Drupal::currentUser()->hasPermission('translate configuration')) {

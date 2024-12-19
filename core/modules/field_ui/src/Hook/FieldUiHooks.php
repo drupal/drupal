@@ -148,7 +148,7 @@ class FieldUiHooks {
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
-  public function entityOperation(EntityInterface $entity) {
+  public function entityOperation(EntityInterface $entity): array {
     $operations = [];
     $info = $entity->getEntityType();
     // Add manage fields and display links if this entity type is the bundle

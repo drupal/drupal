@@ -11334,12 +11334,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\announcements_feed\\\\Hook\\\\AnnouncementsFeedHooks\\:\\:toolbar\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/announcements_feed/src/Hook/AnnouncementsFeedHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function automated_cron_settings_submit\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/automated_cron/automated_cron.module',
@@ -13452,19 +13446,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\comment\\\\Hook\\\\CommentHooks\\:\\:nodeSearchResult\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/Hook/CommentHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\comment\\\\Hook\\\\CommentHooks\\:\\:nodeUpdateIndex\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/Hook/CommentHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\comment\\\\Hook\\\\CommentHooks\\:\\:ranking\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/Hook/CommentHooks.php',
 ];
@@ -13477,12 +13459,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\comment\\\\Hook\\\\CommentTokensHooks\\:\\:tokenInfo\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/Hook/CommentTokensHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\comment\\\\Hook\\\\CommentTokensHooks\\:\\:tokens\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/Hook/CommentTokensHooks.php',
 ];
@@ -14862,12 +14838,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\config_translation\\\\Hook\\\\ConfigTranslationHooks\\:\\:entityOperation\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/src/Hook/ConfigTranslationHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\config_translation\\\\Hook\\\\ConfigTranslationHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config_translation/src/Hook/ConfigTranslationHooks.php',
@@ -15737,12 +15707,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_moderation/src/Hook/ContentModerationHooks.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\content_moderation\\\\Hook\\\\ContentModerationViewsExecutionHooks\\:\\:viewsQuerySubstitutions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/Hook/ContentModerationViewsExecutionHooks.php',
-];
-$ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getAffectedRevisionTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#',
 	'count' => 1,
@@ -16590,12 +16554,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\content_translation\\\\Hook\\\\ContentTranslationHooks\\:\\:entityOperation\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/src/Hook/ContentTranslationHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\content_translation\\\\Hook\\\\ContentTranslationHooks\\:\\:entityPresave\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/src/Hook/ContentTranslationHooks.php',
@@ -16951,12 +16909,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\contextual\\\\Hook\\\\ContextualHooks\\:\\:help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/src/Hook/ContextualHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\contextual\\\\Hook\\\\ContextualHooks\\:\\:toolbar\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contextual/src/Hook/ContextualHooks.php',
 ];
@@ -17847,18 +17799,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_test_boolean_access_denied\\\\Hook\\\\FieldTestBooleanAccessDeniedHooks\\:\\:entityFieldAccess\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/modules/field_test_boolean_access_denied/src/Hook/FieldTestBooleanAccessDeniedHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\field_third_party_test\\\\Hook\\\\FieldThirdPartyTestHooks\\:\\:fieldFormatterThirdPartySettingsForm\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/modules/field_third_party_test/src/Hook/FieldThirdPartyTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\field_third_party_test\\\\Hook\\\\FieldThirdPartyTestHooks\\:\\:fieldWidgetThirdPartySettingsForm\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/modules/field_third_party_test/src/Hook/FieldThirdPartyTestHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -18990,12 +18930,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\field_ui\\\\Hook\\\\FieldUiHooks\\:\\:entityOperation\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Hook/FieldUiHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\field_ui\\\\Hook\\\\FieldUiHooks\\:\\:entityViewModeDelete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/src/Hook/FieldUiHooks.php',
@@ -19447,12 +19381,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\file\\\\Hook\\\\FileHooks\\:\\:tokenInfo\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/src/Hook/FileHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\file\\\\Hook\\\\FileHooks\\:\\:tokens\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/src/Hook/FileHooks.php',
 ];
@@ -25506,12 +25434,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\locale_test\\\\Hook\\\\LocaleTestHooks\\:\\:tokens\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/tests/modules/locale_test/src/Hook/LocaleTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\locale\\\\Functional\\\\LocaleExportTest\\:\\:getCustomPoFile\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/tests/src/Functional/LocaleExportTest.php',
@@ -25849,12 +25771,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\media\\\\Hook\\\\MediaHooks\\:\\:help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/Hook/MediaHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\media\\\\Hook\\\\MediaHooks\\:\\:viewsQuerySubstitutions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/src/Hook/MediaHooks.php',
 ];
@@ -27135,12 +27051,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_link_content_dynamic_route\\\\Routes\\:\\:dynamic\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/tests/menu_link_content_dynamic_route/src/Routes.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\menu_operations_link_test\\\\Hook\\\\MenuOperationsLinkTestHooks\\:\\:entityOperation\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/menu_operations_link_test/src/Hook/MenuOperationsLinkTestHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -30062,12 +29972,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node\\\\Hook\\\\NodeHooks1\\:\\:ranking\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Hook/NodeHooks1.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\node\\\\Hook\\\\NodeHooks1\\:\\:userPredelete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Hook/NodeHooks1.php',
@@ -30077,24 +29981,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Hook\\\\NodeTokensHooks\\:\\:tokenInfo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Hook/NodeTokensHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node\\\\Hook\\\\NodeTokensHooks\\:\\:tokens\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Hook/NodeTokensHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node\\\\Hook\\\\NodeViewsExecutionHooks\\:\\:viewsQuerySubstitutions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Hook/NodeViewsExecutionHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node\\\\Hook\\\\NodeViewsHooks\\:\\:viewsAnalyze\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Hook/NodeViewsHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -30485,54 +30371,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node_access_test\\\\Hook\\\\NodeAccessTestHooks\\:\\:nodeAccess\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/modules/node_access_test/src/Hook/NodeAccessTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node_access_test\\\\Hook\\\\NodeAccessTestHooks\\:\\:nodeAccessRecords\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/modules/node_access_test/src/Hook/NodeAccessTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node_access_test\\\\Hook\\\\NodeAccessTestHooks\\:\\:nodeGrants\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/modules/node_access_test/src/Hook/NodeAccessTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node_access_test_empty\\\\Hook\\\\NodeAccessTestEmptyHooks\\:\\:nodeAccessRecords\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/modules/node_access_test_empty/src/Hook/NodeAccessTestEmptyHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node_access_test_empty\\\\Hook\\\\NodeAccessTestEmptyHooks\\:\\:nodeGrants\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/modules/node_access_test_empty/src/Hook/NodeAccessTestEmptyHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node_access_test_language\\\\Hook\\\\NodeAccessTestLanguageHooks\\:\\:nodeAccessRecords\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/modules/node_access_test_language/src/Hook/NodeAccessTestLanguageHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node_access_test_language\\\\Hook\\\\NodeAccessTestLanguageHooks\\:\\:nodeGrants\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/modules/node_access_test_language/src/Hook/NodeAccessTestLanguageHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node_test\\\\Hook\\\\NodeTestHooks\\:\\:nodeAccessRecords\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/modules/node_test/src/Hook/NodeTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\node_test\\\\Hook\\\\NodeTestHooks\\:\\:nodeGrants\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/modules/node_test/src/Hook/NodeTestHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -33812,12 +33650,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\shortcut\\\\Hook\\\\ShortcutHooks\\:\\:toolbar\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/src/Hook/ShortcutHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\shortcut\\\\Hook\\\\ShortcutHooks\\:\\:userDelete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/shortcut/src/Hook/ShortcutHooks.php',
@@ -34874,12 +34706,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemTokensHooks\\:\\:tokens\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Hook/SystemTokensHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\system\\\\PhpStorage\\\\MockPhpStorage\\:\\:getConfiguration\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/PhpStorage/MockPhpStorage.php',
@@ -35759,12 +35585,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\common_test\\\\Controller\\\\CommonTestController\\:\\:typeLinkActiveClass\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/common_test/src/Controller/CommonTestController.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\common_test\\\\Hook\\\\CommonTestHooks\\:\\:libraryInfoBuild\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/common_test/src/Hook/CommonTestHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -37414,12 +37234,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\entity_test_operation\\\\Hook\\\\EntityTestOperationHooks\\:\\:entityOperation\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_operation/src/Hook/EntityTestOperationHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\entity_test_update\\\\Entity\\\\EntityTestUpdate\\:\\:preCreate\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_update/src/Entity/EntityTestUpdate.php',
@@ -38265,12 +38079,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\many_assets_test\\\\Hook\\\\ManyAssetsTestHooks\\:\\:libraryInfoBuild\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/many_assets_test/src/Hook/ManyAssetsTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\menu_test\\\\Access\\\\AccessCheck\\:\\:create\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/menu_test/src/Access/AccessCheck.php',
@@ -38507,12 +38315,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\performance_test\\\\PerformanceDataCollector\\:\\:addCacheTagOperation\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/PerformanceDataCollector.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\plugin_test\\\\Hook\\\\PluginTestHooks\\:\\:testPluginInfo\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/plugin_test/src/Hook/PluginTestHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -41315,12 +41117,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\taxonomy\\\\Hook\\\\TaxonomyHooks\\:\\:entityOperation\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Hook/TaxonomyHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Hook\\\\TaxonomyHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Hook/TaxonomyHooks.php',
@@ -41352,12 +41148,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Hook\\\\TaxonomyTokensHooks\\:\\:tokenInfo\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Hook/TaxonomyTokensHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\taxonomy\\\\Hook\\\\TaxonomyTokensHooks\\:\\:tokens\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Hook/TaxonomyTokensHooks.php',
 ];
@@ -42347,18 +42137,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\toolbar\\\\Hook\\\\ToolbarHooks\\:\\:toolbar\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/src/Hook/ToolbarHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\toolbar_test\\\\Hook\\\\ToolbarTestHooks\\:\\:toolbar\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/modules/toolbar_test/src/Hook/ToolbarTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\Functional\\\\ToolbarCacheContextsTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/toolbar/tests/src/Functional/ToolbarCacheContextsTest.php',
@@ -42438,12 +42216,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\update\\\\Hook\\\\UpdateHooks\\:\\:help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/src/Hook/UpdateHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\update\\\\Hook\\\\UpdateHooks\\:\\:verifyUpdateArchive\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/src/Hook/UpdateHooks.php',
 ];
@@ -43037,19 +42809,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:entityOperation\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:toolbar\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
@@ -43082,18 +42842,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserTokensHooks\\:\\:tokenInfo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Hook/UserTokensHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserTokensHooks\\:\\:tokens\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Hook/UserTokensHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserViewsExecutionHooks\\:\\:viewsQuerySubstitutions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Hook/UserViewsExecutionHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -44792,24 +44540,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Hook\\\\ViewsTokensHooks\\:\\:tokenInfo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Hook/ViewsTokensHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views\\\\Hook\\\\ViewsTokensHooks\\:\\:tokens\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Hook/ViewsTokensHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views\\\\Hook\\\\ViewsViewsExecutionHooks\\:\\:viewsFormSubstitutions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Hook/ViewsViewsExecutionHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views\\\\Hook\\\\ViewsViewsExecutionHooks\\:\\:viewsQuerySubstitutions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Hook/ViewsViewsExecutionHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -50902,28 +50632,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataHooks.php',
 ];
 $ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Hook\\\\ViewsTestDataViewsExecutionHooks\\:\\:viewsFormSubstitutions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataViewsExecutionHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Hook\\\\ViewsTestDataViewsExecutionHooks\\:\\:viewsQuerySubstitutions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataViewsExecutionHooks.php',
-];
-$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataViewsExecutionHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Hook\\\\ViewsTestDataViewsHooks\\:\\:viewsAnalyze\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataViewsHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -52613,12 +52325,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\views_ui\\\\Hook\\\\ViewsUiHooks\\:\\:viewsAnalyze\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/src/Hook/ViewsUiHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewAddForm\\:\\:cancel\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/src/ViewAddForm.php',
@@ -53850,12 +53556,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\workspaces\\\\Hook\\\\WorkspacesHooks\\:\\:entityPredelete\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/src/Hook/WorkspacesHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\workspaces\\\\Hook\\\\WorkspacesHooks\\:\\:entityPreload\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/Hook/WorkspacesHooks.php',
 ];

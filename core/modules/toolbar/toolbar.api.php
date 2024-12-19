@@ -44,7 +44,7 @@ use Drupal\Core\Url;
  * @see \Drupal\toolbar\Element\Toolbar::preRenderToolbar()
  * @ingroup toolbar_tabs
  */
-function hook_toolbar() {
+function hook_toolbar(): array {
   $items = [];
 
   // Add a search field to the toolbar. The search field employs no toolbar

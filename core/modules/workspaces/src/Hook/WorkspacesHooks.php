@@ -105,7 +105,7 @@ class WorkspacesHooks {
    * Implements hook_entity_preload().
    */
   #[Hook('entity_preload')]
-  public function entityPreload(array $ids, $entity_type_id) {
+  public function entityPreload(array $ids, $entity_type_id): array {
     return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityPreload($ids, $entity_type_id);
   }
 

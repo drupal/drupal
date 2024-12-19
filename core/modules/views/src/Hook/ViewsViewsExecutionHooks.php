@@ -21,7 +21,7 @@ class ViewsViewsExecutionHooks {
    *   \Drupal\views\Plugin\views\PluginBase::listLanguages().
    */
   #[Hook('views_query_substitutions')]
-  public function viewsQuerySubstitutions(ViewExecutable $view) {
+  public function viewsQuerySubstitutions(ViewExecutable $view): array {
     $substitutions = [
       '***CURRENT_VERSION***' => \Drupal::VERSION,
       '***CURRENT_TIME***' => \Drupal::time()->getRequestTime(),
@@ -33,7 +33,7 @@ class ViewsViewsExecutionHooks {
    * Implements hook_views_form_substitutions().
    */
   #[Hook('views_form_substitutions')]
-  public function viewsFormSubstitutions() {
+  public function viewsFormSubstitutions(): array {
     $select_all = [
       '#type' => 'checkbox',
       '#default_value' => FALSE,

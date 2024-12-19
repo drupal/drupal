@@ -17,7 +17,7 @@ class NodeViewsHooks {
    * Implements hook_views_analyze().
    */
   #[Hook('views_analyze')]
-  public function viewsAnalyze(ViewExecutable $view) {
+  public function viewsAnalyze(ViewExecutable $view): array {
     $ret = [];
     // Check for something other than the default display:
     if ($view->storage->get('base_table') == 'node') {

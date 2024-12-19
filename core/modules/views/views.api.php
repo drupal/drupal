@@ -89,7 +89,7 @@ use Drupal\views\ViewExecutable;
  *   Array of warning messages built by Analyzer::formatMessage to be displayed
  *   to the user following analysis of the view.
  */
-function hook_views_analyze(ViewExecutable $view) {
+function hook_views_analyze(ViewExecutable $view): array {
   $messages = [];
 
   if ($view->display_handler->options['pager']['type'] == 'none') {
@@ -685,7 +685,7 @@ function hook_field_views_data_views_data_alter(array &$data, FieldStorageConfig
  *   surrounded with '***', as illustrated in the example implementation, to
  *   avoid collisions with other values in the query.
  */
-function hook_views_query_substitutions(ViewExecutable $view) {
+function hook_views_query_substitutions(ViewExecutable $view): array {
   // Example from views_views_query_substitutions().
   return [
     '***CURRENT_VERSION***' => \Drupal::VERSION,

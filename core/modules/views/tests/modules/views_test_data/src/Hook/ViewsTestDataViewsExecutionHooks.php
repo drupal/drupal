@@ -18,15 +18,16 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_views_query_substitutions().
    */
   #[Hook('views_query_substitutions')]
-  public function viewsQuerySubstitutions(ViewExecutable $view) {
+  public function viewsQuerySubstitutions(ViewExecutable $view): array {
     \Drupal::state()->set('views_hook_test_views_query_substitutions', TRUE);
+    return [];
   }
 
   /**
    * Implements hook_views_form_substitutions().
    */
   #[Hook('views_form_substitutions')]
-  public function viewsFormSubstitutions() {
+  public function viewsFormSubstitutions(): array {
     \Drupal::state()->set('views_hook_test_views_form_substitutions', TRUE);
     $render = ['#markup' => '<em>unescaped</em>'];
     return [

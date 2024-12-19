@@ -904,7 +904,7 @@ function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface 
  * @see core.libraries.yml
  * @see hook_library_info_alter()
  */
-function hook_library_info_build() {
+function hook_library_info_build(): array {
   $libraries = [];
   // Add a library whose information changes depending on certain conditions.
   $libraries['zombie'] = [

@@ -16,7 +16,7 @@ class NodeAccessTestEmptyHooks {
    * Implements hook_node_grants().
    */
   #[Hook('node_grants')]
-  public function nodeGrants($account, $operation) {
+  public function nodeGrants($account, $operation): array {
     return [];
   }
 
@@ -24,7 +24,7 @@ class NodeAccessTestEmptyHooks {
    * Implements hook_node_access_records().
    */
   #[Hook('node_access_records')]
-  public function nodeAccessRecords(NodeInterface $node) {
+  public function nodeAccessRecords(NodeInterface $node): array {
     return [];
   }
 

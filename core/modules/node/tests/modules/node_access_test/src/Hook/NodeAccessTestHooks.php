@@ -38,7 +38,7 @@ class NodeAccessTestHooks {
    * @see node_access_test_node_access_records()
    */
   #[Hook('node_grants')]
-  public function nodeGrants($account, $operation) {
+  public function nodeGrants($account, $operation): array {
     $grants = [];
     $grants['node_access_test_author'] = [$account->id()];
     if ($operation == 'view' && $account->hasPermission('node test view')) {
@@ -65,7 +65,7 @@ class NodeAccessTestHooks {
    * @see node_access_test.permissions.yml
    */
   #[Hook('node_access_records')]
-  public function nodeAccessRecords(NodeInterface $node) {
+  public function nodeAccessRecords(NodeInterface $node): array {
     $grants = [];
     // For NodeAccessBaseTableTestCase, only set records for private nodes.
     if (!\Drupal::state()->get('node_access_test.private') || isset($node->private) && $node->private->value) {

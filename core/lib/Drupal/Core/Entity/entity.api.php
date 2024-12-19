@@ -1041,7 +1041,7 @@ function hook_ENTITY_TYPE_revision_create(\Drupal\Core\Entity\EntityInterface $n
  *
  * @ingroup entity_crud
  */
-function hook_entity_preload(array $ids, $entity_type_id) {
+function hook_entity_preload(array $ids, $entity_type_id): array {
   $entities = [];
 
   foreach ($ids as $id) {
@@ -2109,7 +2109,7 @@ function hook_entity_field_storage_info_alter(&$fields, \Drupal\Core\Entity\Enti
  *
  * @see \Drupal\Core\Entity\EntityListBuilderInterface::getOperations()
  */
-function hook_entity_operation(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_operation(\Drupal\Core\Entity\EntityInterface $entity): array {
   $operations = [];
   $operations['translate'] = [
     'title' => t('Translate'),

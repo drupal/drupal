@@ -17,7 +17,7 @@ class ToolbarTestHooks {
    * Implements hook_toolbar().
    */
   #[Hook('toolbar')]
-  public function toolbar() {
+  public function toolbar(): array {
     $items['testing'] = [
       '#type' => 'toolbar_item',
       'tab' => [

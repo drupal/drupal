@@ -38,7 +38,7 @@ use Drupal\Core\Field\WidgetInterface;
  *
  * @see \Drupal\field_ui\Form\EntityViewDisplayEditForm::thirdPartySettingsForm()
  */
-function hook_field_formatter_third_party_settings_form(FormatterInterface $plugin, FieldDefinitionInterface $field_definition, $view_mode, array $form, FormStateInterface $form_state) {
+function hook_field_formatter_third_party_settings_form(FormatterInterface $plugin, FieldDefinitionInterface $field_definition, $view_mode, array $form, FormStateInterface $form_state): array {
   $element = [];
   // Add a 'my_setting' checkbox to the settings form for 'foo_formatter' field
   // formatters.
@@ -71,7 +71,7 @@ function hook_field_formatter_third_party_settings_form(FormatterInterface $plug
  *
  * @see \Drupal\field_ui\Form\EntityFormDisplayEditForm::thirdPartySettingsForm()
  */
-function hook_field_widget_third_party_settings_form(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, array $form, FormStateInterface $form_state) {
+function hook_field_widget_third_party_settings_form(WidgetInterface $plugin, FieldDefinitionInterface $field_definition, $form_mode, array $form, FormStateInterface $form_state): array {
   $element = [];
   // Add a 'my_setting' checkbox to the settings form for 'foo_widget' field
   // widgets.

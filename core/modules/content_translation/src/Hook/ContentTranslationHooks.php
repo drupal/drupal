@@ -292,7 +292,7 @@ class ContentTranslationHooks {
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
-  public function entityOperation(EntityInterface $entity) {
+  public function entityOperation(EntityInterface $entity): array {
     $operations = [];
     if ($entity->hasLinkTemplate('drupal:content-translation-overview') && content_translation_translate_access($entity)->isAllowed()) {
       $operations['translate'] = [

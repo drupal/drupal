@@ -356,7 +356,7 @@ class UserHooks {
    * Implements hook_toolbar().
    */
   #[Hook('toolbar')]
-  public function toolbar() {
+  public function toolbar(): array {
     $user = \Drupal::currentUser();
     $items['user'] = [
       '#type' => 'toolbar_item',
@@ -495,7 +495,7 @@ class UserHooks {
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
-  public function entityOperation(EntityInterface $entity) {
+  public function entityOperation(EntityInterface $entity): array {
     // Add Manage permissions link if this entity type defines the permissions
     // link template.
     if (!$entity->hasLinkTemplate('entity-permissions-form')) {

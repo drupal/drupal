@@ -193,7 +193,7 @@ class ViewsUiHooks {
    * node.views.inc as well.
    */
   #[Hook('views_analyze')]
-  public function viewsAnalyze(ViewExecutable $view) {
+  public function viewsAnalyze(ViewExecutable $view): array {
     $ret = [];
     // Check for something other than the default display:
     if (count($view->displayHandlers) < 2) {

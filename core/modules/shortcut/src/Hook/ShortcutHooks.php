@@ -59,7 +59,7 @@ class ShortcutHooks {
    * Implements hook_toolbar().
    */
   #[Hook('toolbar')]
-  public function toolbar() {
+  public function toolbar(): array {
     $user = \Drupal::currentUser();
     $items = [];
     $items['shortcuts'] = ['#cache' => ['contexts' => ['user.permissions']]];

@@ -71,7 +71,7 @@ use Drupal\user\Entity\User;
  * @see hook_token_info()
  * @see hook_tokens_alter()
  */
-function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata) {
+function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata): array {
   $token_service = \Drupal::token();
 
   $url_options = ['absolute' => TRUE];

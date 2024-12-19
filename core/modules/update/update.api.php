@@ -121,7 +121,7 @@ function hook_update_status_alter(&$projects) {
  * @see update_manager_archive_verify()
  * @ingroup update_manager_file
  */
-function hook_verify_update_archive($project, $archive_file, $directory) {
+function hook_verify_update_archive($project, $archive_file, $directory): array {
   $errors = [];
   if (!file_exists($directory)) {
     $errors[] = t('The %directory does not exist.', ['%directory' => $directory]);

@@ -14,7 +14,7 @@ class NodeViewsExecutionHooks {
    * Implements hook_views_query_substitutions().
    */
   #[Hook('views_query_substitutions')]
-  public function viewsQuerySubstitutions(ViewExecutable $view) {
+  public function viewsQuerySubstitutions(ViewExecutable $view): array {
     $account = \Drupal::currentUser();
     return [
       '***ADMINISTER_NODES***' => intval($account->hasPermission('administer nodes')),

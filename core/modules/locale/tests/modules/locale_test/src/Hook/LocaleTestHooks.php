@@ -186,7 +186,7 @@ class LocaleTestHooks {
    * Implements hook_tokens().
    */
   #[Hook('tokens')]
-  public function tokens($type, $tokens, array $data = [], array $options = []) {
+  public function tokens($type, $tokens, array $data = [], array $options = []): array {
     $return = [];
     if ($type == 'locale_test') {
       foreach ($tokens as $name => $original) {

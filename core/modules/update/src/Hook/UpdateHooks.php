@@ -282,7 +282,7 @@ class UpdateHooks {
    * @see \Drupal\Core\Extension\ExtensionDiscovery
    */
   #[Hook('verify_update_archive')]
-  public function verifyUpdateArchive($project, $archive_file, $directory) {
+  public function verifyUpdateArchive($project, $archive_file, $directory): array {
     $errors = [];
     // Make sure this isn't a tarball of Drupal core.
     if (file_exists("{$directory}/{$project}/index.php") && file_exists("{$directory}/{$project}/core/install.php") && file_exists("{$directory}/{$project}/core/includes/bootstrap.inc") && file_exists("{$directory}/{$project}/core/modules/node/node.module") && file_exists("{$directory}/{$project}/core/modules/system/system.module")) {

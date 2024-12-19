@@ -16,7 +16,7 @@ class PluginTestHooks {
    * Implements hook_test_plugin_info().
    */
   #[Hook('test_plugin_info')]
-  public function testPluginInfo() {
+  public function testPluginInfo(): array {
     return [
       'apple' => [
         'id' => 'apple',

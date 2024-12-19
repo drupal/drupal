@@ -85,7 +85,7 @@ class TaxonomyTokensHooks {
    * Implements hook_tokens().
    */
   #[Hook('tokens')]
-  public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata): array {
     $token_service = \Drupal::token();
     if (isset($options['langcode'])) {
       $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);

@@ -209,7 +209,7 @@ class NodeHooks1 {
    * Implements hook_ranking().
    */
   #[Hook('ranking')]
-  public function ranking() {
+  public function ranking(): array {
     // Create the ranking array and add the basic ranking options.
     $ranking = [
       'relevance' => [

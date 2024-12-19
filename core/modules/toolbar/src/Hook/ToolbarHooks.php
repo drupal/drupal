@@ -74,7 +74,7 @@ class ToolbarHooks {
    * Implements hook_toolbar().
    */
   #[Hook('toolbar')]
-  public function toolbar() {
+  public function toolbar(): array {
     // The 'Home' tab is a simple link, with no corresponding tray.
     $items['home'] = [
       '#type' => 'toolbar_item',

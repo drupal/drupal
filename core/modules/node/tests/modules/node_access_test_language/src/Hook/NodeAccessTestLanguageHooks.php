@@ -18,7 +18,7 @@ class NodeAccessTestLanguageHooks {
    * This module defines a single grant realm. All users belong to this group.
    */
   #[Hook('node_grants')]
-  public function nodeGrants($account, $operation) {
+  public function nodeGrants($account, $operation): array {
     $grants['node_access_language_test'] = [7888];
     return $grants;
   }
@@ -27,7 +27,7 @@ class NodeAccessTestLanguageHooks {
    * Implements hook_node_access_records().
    */
   #[Hook('node_access_records')]
-  public function nodeAccessRecords(NodeInterface $node) {
+  public function nodeAccessRecords(NodeInterface $node): array {
     $grants = [];
     // Create grants for each translation of the node.
     foreach ($node->getTranslationLanguages() as $langcode => $language) {

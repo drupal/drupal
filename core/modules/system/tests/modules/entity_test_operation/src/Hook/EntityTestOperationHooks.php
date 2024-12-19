@@ -17,7 +17,7 @@ class EntityTestOperationHooks {
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
-  public function entityOperation(EntityInterface $entity) {
+  public function entityOperation(EntityInterface $entity): array {
     return [
       'test' => [
         'title' => t('Front page'),

@@ -278,7 +278,7 @@ class MediaHooks {
    * Implements hook_views_query_substitutions().
    */
   #[Hook('views_query_substitutions')]
-  public function viewsQuerySubstitutions(ViewExecutable $view) {
+  public function viewsQuerySubstitutions(ViewExecutable $view): array {
     $account = \Drupal::currentUser();
     return [
       '***VIEW_OWN_UNPUBLISHED_MEDIA***' => (int) $account->hasPermission('view own unpublished media'),

@@ -14,7 +14,7 @@ class ContentModerationViewsExecutionHooks {
    * Implements hook_views_query_substitutions().
    */
   #[Hook('views_query_substitutions')]
-  public function viewsQuerySubstitutions(ViewExecutable $view) {
+  public function viewsQuerySubstitutions(ViewExecutable $view): array {
     $account = \Drupal::currentUser();
     return [
       '***VIEW_ANY_UNPUBLISHED_NODES***' => intval($account->hasPermission('view any unpublished content')),

@@ -395,7 +395,7 @@ class CommentHooks {
    * results.
    */
   #[Hook('node_search_result')]
-  public function nodeSearchResult(EntityInterface $node) {
+  public function nodeSearchResult(EntityInterface $node): array {
     $comment_fields = \Drupal::service('comment.manager')->getFields('node');
     $comments = 0;
     $open = FALSE;
@@ -421,6 +421,7 @@ class CommentHooks {
         'comment' => \Drupal::translation()->formatPlural($comments, '1 comment', '@count comments'),
       ];
     }
+    return [];
   }
 
   /**
@@ -473,7 +474,7 @@ class CommentHooks {
    * Implements hook_ranking().
    */
   #[Hook('ranking')]
-  public function ranking() {
+  public function ranking(): array {
     return \Drupal::service('comment.statistics')->getRankingInfo();
   }
 

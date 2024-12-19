@@ -30,9 +30,9 @@ class MenuOperationsLinkTestHooks {
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
-  public function entityOperation(EntityInterface $entity) {
+  public function entityOperation(EntityInterface $entity): array {
     if (!$entity instanceof MenuLinkContent) {
-      return;
+      return [];
     }
     $operations['custom_operation'] = [
       'title' => t('Custom Home'),
