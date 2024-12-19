@@ -74,6 +74,7 @@ class ListStringItem extends ListItemBase {
     if (mb_strlen($option) > 255) {
       return new TranslatableMarkup('Allowed values list: each key must be a string at most 255 characters long.');
     }
+    return NULL;
   }
 
   /**

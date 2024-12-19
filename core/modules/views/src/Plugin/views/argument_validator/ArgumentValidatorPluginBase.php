@@ -123,7 +123,9 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
    *   A context definition that represents the argument or NULL if that is
    *   not possible.
    */
-  public function getContextDefinition() {}
+  public function getContextDefinition() {
+    return NULL;
+  }
 
 }
 

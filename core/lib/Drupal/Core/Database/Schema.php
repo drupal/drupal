@@ -547,6 +547,7 @@ abstract class Schema implements PlaceholderInterface {
    * @throws \RuntimeException
    *   If the driver does not implement this method.
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
   protected function introspectIndexSchema($table) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("The table $table doesn't exist.");
@@ -667,6 +668,7 @@ abstract class Schema implements PlaceholderInterface {
    *   make it private for each driver, and ::createTable actually an abstract
    *   method here for implementation in each driver.
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
   protected function createTableSql($name, $table) {
     throw new \BadMethodCallException(get_class($this) . '::createTableSql() not implemented.');
   }

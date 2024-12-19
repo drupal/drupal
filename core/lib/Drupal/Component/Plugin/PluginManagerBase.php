@@ -124,6 +124,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    * @throws \BadMethodCallException
    *   If the method is not implemented in the concrete plugin manager class.
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
   protected function getFallbackPluginId($plugin_id, array $configuration = []) {
     throw new \BadMethodCallException(static::class . '::getFallbackPluginId() not implemented.');
   }

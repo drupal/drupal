@@ -70,6 +70,7 @@ class ListIntegerItem extends ListItemBase {
     if (!preg_match('/^-?\d+$/', $option)) {
       return new TranslatableMarkup('Allowed values list: keys must be integers.');
     }
+    return NULL;
   }
 
   /**
