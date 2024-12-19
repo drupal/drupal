@@ -16,7 +16,7 @@ views.area.entity:
       label: 'View mode'
     tokenize:
       type: boolean
-      label: 'Should replacement tokens be used from the first row'
+      label: 'Use replacement tokens from the first row'
     bypass_access:
       type: boolean
       label: 'Bypass access checks'
@@ -30,7 +30,7 @@ views.area.text:
       label: 'The formatted text of the area'
     tokenize:
       type: boolean
-      label: 'Should replacement tokens be used from the first row'
+      label: 'Use replacement tokens from the first row'
 
 views.area.text_custom:
   type: views_area
@@ -41,7 +41,7 @@ views.area.text_custom:
       label: 'The shown text of the area'
     tokenize:
       type: boolean
-      label: 'Should replacement tokens be used from the first row'
+      label: 'Use replacement tokens from the first row'
 
 views.area.result:
   type: views_area

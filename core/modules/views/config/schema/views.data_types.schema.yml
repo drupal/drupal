@@ -321,7 +321,7 @@ views_area:
       label: 'A string to identify the area instance in the admin UI.'
     empty:
       type: boolean
-      label: 'Should the area be displayed on empty results.'
+      label: 'Display even if view has no result'
     plugin_id:
       type: string
       label: 'Plugin ID'
