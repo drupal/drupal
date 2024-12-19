@@ -99,6 +99,15 @@ class NavigationTopBarTest extends BrowserTestBase {
       $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/button/span", 'More actions');
       $this->assertSession()->elementNotExists('xpath', '//div[@id="block-tabs"]');
     }
+
+    // Regular tabs are visible for user that cannot access to navigation.
+    $this->drupalLogin($this->drupalCreateUser([
+      'bypass node access',
+    ]));
+
+    $this->drupalGet($this->node->toUrl());
+    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button/span");
+    $this->assertSession()->elementExists('xpath', '//div[@id="block-tabs"]');
   }
 
 }
