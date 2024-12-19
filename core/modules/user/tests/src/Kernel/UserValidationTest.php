@@ -137,6 +137,14 @@ class UserValidationTest extends KernelTestBase {
     $this->assertCount(1, $violations, 'Violation found when email already exists.');
     $this->assertEquals('mail', $violations[0]->getPropertyPath());
     $this->assertEquals('The email address existing@example.com is already taken.', $violations[0]->getMessage());
+
+    // Ensure case-insensitive uniqueness of email.
+    $user->set('mail', 'EXISTING@example.com');
+    $violations = $user->validate();
+    $this->assertCount(1, $violations, 'Violation found when email already exists.');
+    $this->assertEquals('mail', $violations[0]->getPropertyPath());
+    $this->assertEquals('The email address EXISTING@example.com is already taken.', $violations[0]->getMessage());
+
     $user->set('mail', NULL);
     $violations = $user->validate();
     $this->assertCount(1, $violations, 'Email addresses may not be removed');
