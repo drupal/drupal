@@ -171,6 +171,7 @@ abstract class StorableConfigBase extends ConfigBase {
    * should be reset.
    *
    * @return \Drupal\Core\Config\Schema\Element
+   *   A configuration element.
    */
   protected function getSchemaWrapper() {
     if (!isset($this->schemaWrapper)) {

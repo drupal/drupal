@@ -273,6 +273,7 @@ class ApcuBackend implements CacheBackendInterface {
    *   The type to list. Either pass in APC_LIST_ACTIVE or APC_LIST_DELETED.
    *
    * @return \APCUIterator
+   *   An APCUIterator class.
    */
   protected function getIterator($search = NULL, $format = APC_ITER_ALL, $chunk_size = 100, $list = APC_LIST_ACTIVE) {
     return new \APCUIterator($search, $format, $chunk_size, $list);

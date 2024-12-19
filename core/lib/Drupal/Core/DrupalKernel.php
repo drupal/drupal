@@ -845,7 +845,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Returns the kernel parameters.
    *
-   * @return array An array of kernel parameters
+   * @return array
+   *   An associative array of kernel parameters
    */
   protected function getKernelParameters() {
     return [
@@ -857,6 +858,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Initializes the service container.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface
+   *   An initialized container object.
    */
   protected function initializeContainer() {
     $this->containerNeedsDumping = FALSE;
@@ -1256,6 +1258,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   Container object
    *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface
+   *   The container object with the kernel and the class loader added.
    */
   protected function attachSynthetic(ContainerInterface $container) {
     $persist = [];
@@ -1278,7 +1281,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Compiles a new service container.
    *
-   * @return \Drupal\Core\DependencyInjection\ContainerBuilder The compiled service container
+   * @return \Drupal\Core\DependencyInjection\ContainerBuilder
+   *   The compiled service container
    */
   protected function compileContainer() {
     // We are forcing a container build so it is reasonable to assume that the
@@ -1408,6 +1412,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Gets a new ContainerBuilder instance used to build the service container.
    *
    * @return \Drupal\Core\DependencyInjection\ContainerBuilder
+   *   The Drupal dependency injection container builder.
    */
   protected function getContainerBuilder() {
     return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
@@ -1441,6 +1446,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Gets a http kernel from the container.
    *
    * @return \Symfony\Component\HttpKernel\HttpKernelInterface
+   *   The Symfony HTTP kernel service.
    */
   protected function getHttpKernel() {
     return $this->container->get('http_kernel');
@@ -1450,6 +1456,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Returns the active configuration storage to use during building the container.
    *
    * @return \Drupal\Core\Config\StorageInterface
+   *   The configuration storage.
    */
   protected function getConfigStorage() {
     if (!isset($this->configStorage)) {
@@ -1469,6 +1476,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Returns an array of Extension class parameters for all enabled modules.
    *
    * @return array
+   *   An associated array of module class parameters, keyed by module name, for
+   *   all enabled modules.
    */
   protected function getModulesParameter() {
     $extensions = [];

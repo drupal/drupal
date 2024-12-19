@@ -123,6 +123,7 @@ class InstallCommand extends Command {
    * Returns whether there is already an existing Drupal installation.
    *
    * @return bool
+   *   Returns TRUE if Drupal is installed, FALSE otherwise.
    */
   protected function isDrupalInstalled() {
     try {

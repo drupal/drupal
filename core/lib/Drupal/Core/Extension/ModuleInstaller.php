@@ -810,8 +810,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The name of the hook to invoke.
    * @param array $args
    *   Arguments to pass to the hook.
-   *
-   * @return void
    */
   protected function invokeAll($hook, $args = []): void {
     $this->moduleHandler->loadAll();
@@ -831,6 +829,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   Arguments to pass to the hook.
    *
    * @return mixed
+   *   The return value of the procedural hook. Defaults to NULL if a hook
+   *   function does not exist.
    */
   protected function invoke(string $module, string $hook, array $args = []): mixed {
     $function = $module . '_' . $hook;

@@ -155,6 +155,7 @@ class ContextDefinition extends Plugin {
    * Returns the value of an annotation.
    *
    * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
+   *   The context definition object.
    */
   public function get() {
     return $this->definition;

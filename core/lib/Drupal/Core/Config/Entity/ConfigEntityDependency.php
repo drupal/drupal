@@ -81,6 +81,8 @@ class ConfigEntityDependency {
    *   the full configuration object name.
    *
    * @return bool
+   *   TRUE when this entity is dependency on any extension or entity. False
+   *   otherwise.
    */
   public function hasDependency($type, $name) {
     // Add a dependency on the provider module (which defines this config

@@ -173,6 +173,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    *   Name of the key/value collection to return.
    *
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   *   The key/value storage.
    */
   protected function keyValue($collection) {
     if (!$this->keyValue) {
@@ -191,6 +192,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * (for example, the system maintenance message) should use config() instead.
    *
    * @return \Drupal\Core\State\StateInterface
+   *   The state storage service.
    */
   protected function state() {
     if (!$this->stateService) {
@@ -203,6 +205,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * Returns the module handler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    */
   protected function moduleHandler() {
     if (!$this->moduleHandler) {
@@ -215,6 +218,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * Returns the form builder service.
    *
    * @return \Drupal\Core\Form\FormBuilderInterface
+   *   The form builder service.
    */
   protected function formBuilder() {
     if (!$this->formBuilder) {

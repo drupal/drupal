@@ -43,6 +43,7 @@ class ConfigCrudEvent extends Event {
    *   The configuration key to check if it has changed.
    *
    * @return bool
+   *   TRUE if the value of the given key has changed, FALSE otherwise.
    */
   public function isChanged($key) {
     return $this->config->get($key) !== $this->config->getOriginal($key);

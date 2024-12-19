@@ -22,6 +22,7 @@ class ConditionPluginCollection extends DefaultLazyPluginCollection {
    *
    * @return \Drupal\Core\Condition\ConditionInterface
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function &get($instance_id) {
     return parent::get($instance_id);
   }

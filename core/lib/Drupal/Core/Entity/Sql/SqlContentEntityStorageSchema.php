@@ -131,6 +131,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    * Gets the keyvalue collection for tracking the installed schema.
    *
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   *   The key-value collection storage.
    *
    * @todo Inject this dependency in the constructor once this class can be
    *   instantiated as a regular entity handler:

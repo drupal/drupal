@@ -34,6 +34,7 @@ class BootstrapConfigStorageFactory {
    * Returns a Database configuration storage implementation.
    *
    * @return \Drupal\Core\Config\DatabaseStorage
+   *   The database storage object.
    */
   public static function getDatabaseStorage() {
     return new DatabaseStorage(Database::getConnection(), 'config');

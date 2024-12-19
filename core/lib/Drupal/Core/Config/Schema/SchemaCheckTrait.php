@@ -132,6 +132,8 @@ trait SchemaCheckTrait {
    *   A validation constraint violation for a Config object.
    *
    * @return bool
+   *   TRUE when the violation is for an ignored configuration property path,
+   *   FALSE otherwise.
    */
   protected static function isViolationForIgnoredPropertyPath(ConstraintViolation $v): bool {
     // When the validated object is a config entity wrapped in a

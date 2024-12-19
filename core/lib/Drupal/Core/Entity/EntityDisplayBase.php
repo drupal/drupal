@@ -433,6 +433,10 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    *   A field definition.
    *
    * @return array|null
+   *   The array of display options for the field, or NULL if the field is not
+   *   displayed.
+   *
+   * @see \Drupal\Core\Field\FieldDefinitionInterface::getDisplayOptions
    */
   private function fieldHasDisplayOptions(FieldDefinitionInterface $definition) {
     // The display only cares about fields that specify display options.

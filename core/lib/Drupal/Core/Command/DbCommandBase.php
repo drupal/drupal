@@ -28,6 +28,7 @@ class DbCommandBase extends Command {
    *   Input object.
    *
    * @return \Drupal\Core\Database\Connection
+   *   The database connection.
    */
   protected function getDatabaseConnection(InputInterface $input) {
     // Load connection from a URL.

@@ -42,6 +42,7 @@ class EntityRouteEnhancer implements EnhancerInterface {
    *   The current route.
    *
    * @return bool
+   *   TRUE when the route enhancer runs on the current route, FALSE otherwise.
    */
   protected function applies(Route $route) {
     return !$route->hasDefault('_controller') &&

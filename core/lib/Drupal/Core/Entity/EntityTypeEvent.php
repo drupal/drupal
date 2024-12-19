@@ -41,6 +41,7 @@ class EntityTypeEvent extends Event {
    * The entity type the event refers to.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface
+   *   The entity type.
    */
   public function getEntityType() {
     return $this->entityType;
@@ -50,6 +51,7 @@ class EntityTypeEvent extends Event {
    * The original entity type.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface
+   *   The original entity type.
    */
   public function getOriginal() {
     return $this->original;

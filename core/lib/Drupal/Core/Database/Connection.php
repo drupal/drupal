@@ -325,7 +325,8 @@ abstract class Connection {
   /**
    * Returns the prefix of the tables.
    *
-   * @return string $prefix
+   * @return string
+   *   The table prefix.
    */
   public function getPrefix(): string {
     return $this->prefix;
@@ -395,6 +396,7 @@ abstract class Connection {
    *   The name of the table in question.
    *
    * @return string
+   *   The fully qualified table name.
    */
   public function getFullQualifiedTableName($table) {
     $options = $this->getConnectionOptions();
@@ -1186,6 +1188,7 @@ abstract class Connection {
    * override this method.
    *
    * @return string
+   *   The version of the database server.
    */
   public function version() {
     return $this->connection->getAttribute(\PDO::ATTR_SERVER_VERSION);
@@ -1198,6 +1201,7 @@ abstract class Connection {
    * override this method.
    *
    * @return string
+   *   The version of the database client.
    */
   public function clientVersion() {
     return $this->connection->getAttribute(\PDO::ATTR_CLIENT_VERSION);
@@ -1220,6 +1224,7 @@ abstract class Connection {
    * Returns the name of the database engine accessed by this driver.
    *
    * @return string
+   *   The database engine name.
    */
   abstract public function databaseType();
 

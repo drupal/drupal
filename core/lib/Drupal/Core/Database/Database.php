@@ -303,6 +303,7 @@ abstract class Database {
    *   (optional) The connection key for which to return information.
    *
    * @return array|null
+   *   An associative array of database information. Defaults to an empty array.
    */
   final public static function getConnectionInfo($key = 'default') {
     if (!empty(self::$databaseInfo[$key])) {
@@ -314,6 +315,8 @@ abstract class Database {
    * Gets connection information for all available databases.
    *
    * @return array
+   *   An associative array of database information for all available database,
+   *   keyed by the database name. Defaults to an empty array.
    */
   final public static function getAllConnectionInfo() {
     return self::$databaseInfo;
@@ -616,8 +619,6 @@ abstract class Database {
    * @param bool $shutdown
    *   Internal param to denote that the method is being called by
    *   _drupal_shutdown_function().
-   *
-   * @return void
    *
    * @internal
    *   This method exists only to work around a bug caused by Drupal incorrectly

@@ -566,9 +566,10 @@ class DatabaseBackend implements CacheBackendInterface {
   }
 
   /**
-   * The maximum number of rows that this cache bin table is allowed to store.
+   * Gets the maximum number of rows for this cache bin table.
    *
    * @return int
+   *   The maximum number of rows that this cache bin table is allowed to store.
    */
   public function getMaxRows() {
     return $this->maxRows;

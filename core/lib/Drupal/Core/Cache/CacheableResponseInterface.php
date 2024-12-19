@@ -31,6 +31,7 @@ interface CacheableResponseInterface {
    * Returns the cacheability metadata for this response.
    *
    * @return \Drupal\Core\Cache\CacheableMetadata
+   *   The cacheable metadata.
    */
   public function getCacheableMetadata();
 

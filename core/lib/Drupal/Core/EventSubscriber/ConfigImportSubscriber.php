@@ -340,6 +340,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    * Gets theme data.
    *
    * @return \Drupal\Core\Extension\Extension[]
+   *   Processed extension objects, keyed by machine name.
    */
   protected function getThemeData() {
     if (!isset($this->themeData)) {

@@ -135,6 +135,8 @@ interface ThemeHandlerInterface {
    * directories.
    *
    * @return array
+   *   An associative array containing the directory path for all installed
+   *   themes. The array is keyed by the theme name.
    */
   public function getThemeDirectories();
 

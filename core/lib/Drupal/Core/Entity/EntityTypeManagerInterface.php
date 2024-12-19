@@ -79,6 +79,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    *   The entity type ID for the route providers.
    *
    * @return \Drupal\Core\Entity\Routing\EntityRouteProviderInterface[]
+   *   An array of all the route providers for this entity type.
    */
   public function getRouteProviders($entity_type_id);
 
@@ -139,6 +140,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface|null
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getDefinition($entity_type_id, $exception_on_invalid = TRUE);
 
   /**
@@ -146,6 +148,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface[]
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getDefinitions();
 
 }

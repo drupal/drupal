@@ -178,6 +178,7 @@ class Datelist extends DateElementBase {
    *   The complete form structure.
    *
    * @return array
+   *   An expanded DateList element.
    */
   public static function processDatelist(&$element, FormStateInterface $form_state, &$complete_form) {
     // Load translated date part labels from the appropriate calendar plugin.
@@ -359,6 +360,9 @@ class Datelist extends DateElementBase {
    *   The value to round to.
    *
    * @return \Drupal\Core\Datetime\DrupalDateTime
+   *   The Drupal date time object with the minutes and seconds rounded when the
+   *   input date is a DrupalDateTime instance. Otherwise the date is returned
+   *   unchanged.
    */
   protected static function incrementRound(&$date, $increment) {
     // Round minutes and seconds, if necessary.

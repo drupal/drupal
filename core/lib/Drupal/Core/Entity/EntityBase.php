@@ -80,6 +80,7 @@ abstract class EntityBase implements EntityInterface {
    * Gets the entity type manager.
    *
    * @return \Drupal\Core\Entity\EntityTypeManagerInterface
+   *   The entity type manager.
    */
   protected function entityTypeManager() {
     return \Drupal::entityTypeManager();
@@ -89,6 +90,7 @@ abstract class EntityBase implements EntityInterface {
    * Gets the entity type bundle info service.
    *
    * @return \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   *   The entity type bundle info service.
    */
   protected function entityTypeBundleInfo() {
     return \Drupal::service('entity_type.bundle.info');
@@ -98,6 +100,7 @@ abstract class EntityBase implements EntityInterface {
    * Gets the language manager.
    *
    * @return \Drupal\Core\Language\LanguageManagerInterface
+   *   The language manager service.
    */
   protected function languageManager() {
     return \Drupal::languageManager();
@@ -107,6 +110,7 @@ abstract class EntityBase implements EntityInterface {
    * Gets the UUID generator.
    *
    * @return \Drupal\Component\Uuid\UuidInterface
+   *   The UUID service.
    */
   protected function uuidGenerator() {
     return \Drupal::service('uuid');

@@ -231,6 +231,7 @@ class EntityResolverManager {
    * Gets the list of all entity types.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface[]
+   *   An array of the entity types.
    */
   protected function getEntityTypes() {
     if (!isset($this->entityTypes)) {

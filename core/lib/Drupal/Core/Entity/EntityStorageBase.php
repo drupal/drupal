@@ -248,6 +248,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   An array of values to set, keyed by property name.
    *
    * @return \Drupal\Core\Entity\EntityInterface
+   *   The created entity.
    */
   protected function doCreate(array $values) {
     $entity_class = $this->getEntityClass();

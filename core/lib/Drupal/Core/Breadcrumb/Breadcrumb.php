@@ -25,6 +25,7 @@ class Breadcrumb implements RenderableInterface, RefinableCacheableDependencyInt
    * Gets the breadcrumb links.
    *
    * @return \Drupal\Core\Link[]
+   *   An ordered list of the links for the breadcrumb.
    */
   public function getLinks() {
     return $this->links;

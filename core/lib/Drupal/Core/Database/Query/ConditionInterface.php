@@ -215,6 +215,7 @@ interface ConditionInterface {
    * Creates a new group of conditions ANDed together.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   An object holding a group of conditions.
    */
   public function andConditionGroup();
 
@@ -222,6 +223,7 @@ interface ConditionInterface {
    * Creates a new group of conditions ORed together.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   An object holding a group of conditions.
    */
   public function orConditionGroup();
 

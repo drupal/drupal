@@ -58,6 +58,7 @@ interface CheckProviderInterface {
    * A list of checks that needs the request.
    *
    * @return array
+   *   Array of access checks which will only be run on the incoming request.
    */
   public function getChecksNeedRequest();
 

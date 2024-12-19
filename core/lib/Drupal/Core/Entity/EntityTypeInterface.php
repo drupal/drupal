@@ -136,6 +136,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * Indicates whether the rendered output of entities should be cached.
    *
    * @return bool
+   *   TRUE if the rendered output can be cached, FALSE otherwise.
    */
   public function isRenderCacheable();
 
@@ -148,6 +149,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * persistent cache is available for the entity type.
    *
    * @return bool
+   *   TRUE if the persistent cache of field data is used, FALSE otherwise.
    */
   public function isPersistentlyCacheable();
 
@@ -266,6 +268,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * Indicates if this entity type has any route provider.
    *
    * @return bool
+   *   TRUE when this entity type has any route provider, FALSE otherwise.
    */
   public function hasRouteProviders();
 
@@ -275,6 +278,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * Much like forms you can define multiple route provider handlers.
    *
    * @return string[]
+   *   An array of all the route provider handlers.
    */
   public function getRouteProviderClasses();
 
@@ -380,6 +384,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * checks.
    *
    * @return string|bool
+   *   The name of the administrative permission. Defaults to FALSE, if the
+   *   permission does not exist.
    */
   public function getAdminPermission();
 
@@ -429,6 +435,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @link http://tools.ietf.org/html/rfc6570 @endlink
    *
    * @return array
+   *   An array of link templates using the URI template syntax.
    */
   public function getLinkTemplates();
 
@@ -534,6 +541,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * this indicates translation support.
    *
    * @return bool
+   *   TRUE if the entity can be translated, FALSE otherwise.
    */
   public function isTranslatable();
 
@@ -549,6 +557,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * Indicates whether entities of this type have revision support.
    *
    * @return bool
+   *   TRUE if the entity has revision support, FALSE otherwise.
    */
   public function isRevisionable();
 
@@ -685,6 +694,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *    managed as part of the site's configuration.
    *
    * @return string
+   *   The machine name of the entity type group.
    */
   public function getGroup();
 
@@ -706,6 +716,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * entities listed than users of role B.
    *
    * @return string[]
+   *   An array of cache contexts associated with this entity type.
    */
   public function getListCacheContexts();
 
@@ -716,6 +727,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * entities show up immediately.
    *
    * @return string[]
+   *   An array of the cache tags for this entity type.
    */
   public function getListCacheTags();
 

@@ -283,6 +283,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * Gets the typed config manager.
    *
    * @return \Drupal\Core\Config\TypedConfigManagerInterface
+   *   The typed configuration plugin manager.
    */
   protected function getTypedConfig() {
     return \Drupal::service('config.typed');
