@@ -131,7 +131,7 @@ class User extends ContentEntityBase implements UserInterface {
       $session_manager = \Drupal::service('session_manager');
       // If the password has been changed, delete all open sessions for the
       // user and recreate the current one.
-      if ($this->pass->value != $this->original->pass->value) {
+      if ($this->pass->value != $this->getOriginal()->pass->value) {
         $session_manager->delete($this->id());
         if ($this->id() == \Drupal::currentUser()->id()) {
           \Drupal::service('session')->migrate();
@@ -151,12 +151,12 @@ class User extends ContentEntityBase implements UserInterface {
       }
 
       // If the user was blocked, delete the user's sessions to force a logout.
-      if ($this->original->status->value != $this->status->value && $this->status->value == 0) {
+      if ($this->getOriginal()->status->value != $this->status->value && $this->status->value == 0) {
         $session_manager->delete($this->id());
       }
 
       // Send emails after we have the new user object.
-      if ($this->status->value != $this->original->status->value) {
+      if ($this->status->value != $this->getOriginal()->status->value) {
         // The user's status is changing; conditionally send notification email.
         $op = $this->status->value == 1 ? 'status_activated' : 'status_blocked';
         _user_mail_notify($op, $this);

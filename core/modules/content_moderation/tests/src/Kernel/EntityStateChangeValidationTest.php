@@ -175,7 +175,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $node->moderation_state->value = 'deleted_state';
     $node->save();
 
-    // Delete the state so $node->original contains an invalid state when
+    // Delete the state so the original entity contains an invalid state when
     // validating.
     $workflow->getTypePlugin()->deleteState('deleted_state');
     $workflow->save();

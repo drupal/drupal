@@ -48,6 +48,18 @@ abstract class EntityBase implements EntityInterface {
   protected $typedData;
 
   /**
+   * The original unchanged entity.
+   *
+   * This property will be set and used during the saving process.
+   *
+   * This is named originalEntity to not clash with the deprecated magic
+   * property "original".
+   *
+   * @var static|null
+   */
+  protected ?EntityInterface $originalEntity = NULL;
+
+  /**
    * Constructs an Entity object.
    *
    * @param array $values
@@ -663,6 +675,44 @@ abstract class EntityBase implements EntityInterface {
     // For content entities, use the UUID for the config target identifier.
     // This ensures that references to the target can be deployed reliably.
     return $this->uuid();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOriginal(): ?static {
+    return $this->originalEntity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOriginal(?EntityInterface $original): static {
+    $this->originalEntity = $original;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __get($name) {
+    if ($name == 'original') {
+      @trigger_error("Getting the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::getOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
+      return $this->getOriginal();
+    }
+    return $this->$name ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __set($name, $value) {
+    if ($name == 'original') {
+      @trigger_error("Setting the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::setOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
+      $this->setOriginal($value);
+      return;
+    }
+    $this->$name = $value;
   }
 
 }

@@ -141,8 +141,8 @@ class NodeTestHooks {
       $node->changed = 979534800;
     }
     // Determine changes.
-    if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
-      if ($node->original->getTitle() != $node->getTitle()) {
+    if ($node->getOriginal()?->getTitle() == 'test_changes') {
+      if ($node->getOriginal()->getTitle() != $node->getTitle()) {
         $node->title->value .= '_presave';
       }
     }
@@ -154,8 +154,8 @@ class NodeTestHooks {
   #[Hook('node_update')]
   public function nodeUpdate(NodeInterface $node) {
     // Determine changes on update.
-    if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
-      if ($node->original->getTitle() != $node->getTitle()) {
+    if ($node->getOriginal()?->getTitle() == 'test_changes') {
+      if ($node->getOriginal()->getTitle() != $node->getTitle()) {
         $node->title->value .= '_update';
       }
     }

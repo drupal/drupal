@@ -513,23 +513,13 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::sort
    */
   public function testSort(): void {
-    $this->entityTypeManager->expects($this->any())
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn([
-        'entity_keys' => [
-          'label' => 'label',
-        ],
-      ]);
+    $this->entityType->expects($this->atLeastOnce())
+      ->method('getKey')
+      ->with('label')
+      ->willReturn('label');
 
-    $entity_a = $this->createMock(ConfigEntityBase::class);
-    $entity_a->expects($this->atLeastOnce())
-      ->method('label')
-      ->willReturn('foo');
-    $entity_b = $this->createMock(ConfigEntityBase::class);
-    $entity_b->expects($this->atLeastOnce())
-      ->method('label')
-      ->willReturn('bar');
+    $entity_a = new SortTestConfigEntityWithWeight(['label' => 'foo'], $this->entityTypeId);
+    $entity_b = new SortTestConfigEntityWithWeight(['label' => 'bar'], $this->entityTypeId);
 
     // Test sorting by label.
     $list = [$entity_a, $entity_b];
@@ -746,5 +736,26 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
     }
     return ['the_plugin_collection_config' => $this->pluginCollection];
   }
+
+}
+
+/**
+ * Test entity class to test sorting.
+ */
+class SortTestConfigEntityWithWeight extends ConfigEntityBase {
+
+  /**
+   * The label.
+   *
+   * @var string
+   */
+  public string $label;
+
+  /**
+   * The weight.
+   *
+   * @var int
+   */
+  public int $weight;
 
 }

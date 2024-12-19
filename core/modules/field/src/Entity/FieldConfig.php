@@ -85,11 +85,6 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
   protected $fieldStorage;
 
   /**
-   * The original FieldConfig entity.
-   */
-  public FieldConfig $original;
-
-  /**
    * Constructs a FieldConfig object.
    *
    * In most cases, Field entities are created via
@@ -184,17 +179,17 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     }
     else {
       // Some updates are always disallowed.
-      if ($this->entity_type != $this->original->entity_type) {
+      if ($this->entity_type != $this->getOriginal()->entity_type) {
         throw new FieldException("Cannot change an existing field's entity_type.");
       }
-      if ($this->bundle != $this->original->bundle) {
+      if ($this->bundle != $this->getOriginal()->bundle) {
         throw new FieldException("Cannot change an existing field's bundle.");
       }
-      if ($storage_definition->uuid() != $this->original->getFieldStorageDefinition()->uuid()) {
+      if ($storage_definition->uuid() != $this->getOriginal()->getFieldStorageDefinition()->uuid()) {
         throw new FieldException("Cannot change an existing field's storage.");
       }
       // Notify the entity storage.
-      \Drupal::service('field_definition.listener')->onFieldDefinitionUpdate($this, $this->original);
+      \Drupal::service('field_definition.listener')->onFieldDefinitionUpdate($this, $this->getOriginal());
     }
 
     parent::preSave($storage);

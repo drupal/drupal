@@ -443,9 +443,9 @@ class CommentHooks {
         $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
         foreach ($comments as $comment) {
           $langcodes = array_keys($comment->getTranslationLanguages());
-          // For efficiency manually save the original comment before applying any
-          // changes.
-          $comment->original = clone $comment;
+          // For efficiency manually set the original comment before applying
+          // any changes.
+          $comment->setOriginal(clone $comment);
           foreach ($langcodes as $langcode) {
             $comment_translated = $comment->getTranslation($langcode);
             $comment_translated->setOwnerId(0);

@@ -5,6 +5,7 @@ namespace Drupal\views_ui;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\TempStore\Lock;
@@ -1376,6 +1377,21 @@ class ViewUI implements ViewEntityInterface {
    */
   public function unsetLock() {
     $this->lock = NULL;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOriginal(): ?static {
+    return $this->storage->getOriginal();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOriginal(?EntityInterface $original): static {
+    $this->storage->setOriginal($original);
     return $this;
   }
 

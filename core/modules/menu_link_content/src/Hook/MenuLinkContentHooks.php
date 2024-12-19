@@ -74,11 +74,11 @@ class MenuLinkContentHooks {
    */
   #[Hook('path_alias_update')]
   public function pathAliasUpdate(PathAliasInterface $path_alias) {
-    if ($path_alias->getAlias() != $path_alias->original->getAlias()) {
+    if ($path_alias->getAlias() != $path_alias->getOriginal()->getAlias()) {
       _menu_link_content_update_path_alias($path_alias->getAlias());
-      _menu_link_content_update_path_alias($path_alias->original->getAlias());
+      _menu_link_content_update_path_alias($path_alias->getOriginal()->getAlias());
     }
-    elseif ($path_alias->getPath() != $path_alias->original->getPath()) {
+    elseif ($path_alias->getPath() != $path_alias->getOriginal()->getPath()) {
       _menu_link_content_update_path_alias($path_alias->getAlias());
     }
   }

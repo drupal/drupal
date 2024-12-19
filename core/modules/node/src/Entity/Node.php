@@ -137,12 +137,12 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
   public function preSaveRevision(EntityStorageInterface $storage, \stdClass $record) {
     parent::preSaveRevision($storage, $record);
 
-    if (!$this->isNewRevision() && isset($this->original) && (!isset($record->revision_log) || $record->revision_log === '')) {
+    if (!$this->isNewRevision() && $this->getOriginal() && (!isset($record->revision_log) || $record->revision_log === '')) {
       // If we are updating an existing node without adding a new revision, we
       // need to make sure $entity->revision_log is reset whenever it is empty.
       // Therefore, this code allows us to avoid clobbering an existing log
       // entry with an empty one.
-      $record->revision_log = $this->original->revision_log->value;
+      $record->revision_log = $this->getOriginal()->revision_log->value;
     }
   }
 

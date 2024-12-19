@@ -49,9 +49,9 @@ class PasswordItem extends StringItem {
     elseif (!$entity->isNew() && empty($this->value)) {
       // If the password is empty, that means it was not changed, so use the
       // original password.
-      $this->value = $entity->original->{$this->getFieldDefinition()->getName()}->value;
+      $this->value = $entity->getOriginal()->{$this->getFieldDefinition()->getName()}->value;
     }
-    elseif ($entity->isNew() || (strlen(trim($this->value)) > 0 && $this->value != $entity->original->{$this->getFieldDefinition()->getName()}->value)) {
+    elseif ($entity->isNew() || (strlen(trim($this->value)) > 0 && $this->value != $entity->getOriginal()->{$this->getFieldDefinition()->getName()}->value)) {
       // Allow alternate password hashing schemes.
       $this->value = \Drupal::service('password')->hash(trim($this->value));
       // Abort if the hashing failed and returned FALSE.

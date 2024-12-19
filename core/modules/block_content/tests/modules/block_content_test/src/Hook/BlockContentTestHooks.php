@@ -30,8 +30,8 @@ class BlockContentTestHooks {
       $block_content->setInfo($block_content->label() . '_presave');
     }
     // Determine changes.
-    if (!empty($block_content->original) && $block_content->original->label() == 'test_changes') {
-      if ($block_content->original->label() != $block_content->label()) {
+    if ($block_content->getOriginal() && $block_content->getOriginal()->label() == 'test_changes') {
+      if ($block_content->getOriginal()->label() != $block_content->label()) {
         $block_content->setInfo($block_content->label() . '_presave');
         // Drupal 1.0 release.
         $block_content->changed = 979534800;
@@ -45,8 +45,8 @@ class BlockContentTestHooks {
   #[Hook('block_content_update')]
   public function blockContentUpdate(BlockContent $block_content) {
     // Determine changes on update.
-    if (!empty($block_content->original) && $block_content->original->label() == 'test_changes') {
-      if ($block_content->original->label() != $block_content->label()) {
+    if ($block_content->getOriginal() && $block_content->getOriginal()->label() == 'test_changes') {
+      if ($block_content->getOriginal()->label() != $block_content->label()) {
         $block_content->setInfo($block_content->label() . '_update');
       }
     }

@@ -1296,12 +1296,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $vid = $id;
     }
 
-    $original = !empty($entity->original) ? $entity->original : NULL;
-
-    // Use the loaded revision instead of default one to check for data change.
-    if ($original && !$entity->isNewRevision() && !$entity->isDefaultRevision()) {
-      $original = $this->loadRevision($entity->getLoadedRevisionId());
-    }
+    $original = $entity->getOriginal();
 
     // Determine which fields should be actually stored.
     $definitions = $this->entityFieldManager->getFieldDefinitions($entity_type, $bundle);

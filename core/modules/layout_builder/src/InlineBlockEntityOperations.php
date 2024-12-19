@@ -79,12 +79,12 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    *   The parent entity.
    */
   protected function removeUnusedForEntityOnSave(EntityInterface $entity) {
-    // If the entity is new or '$entity->original' is not set then there will
+    // If the entity is new or there is no original entity then there will
     // not be any unused inline blocks to remove.
     // If this is a revisionable entity then do not remove inline blocks. They
     // could be referenced in previous revisions even if this is not a new
     // revision.
-    if ($entity->isNew() || !isset($entity->original) || $entity instanceof RevisionableInterface) {
+    if ($entity->isNew() || !$entity->getOriginal() || $entity instanceof RevisionableInterface) {
       return;
     }
     // If the original entity used the default storage then we cannot remove
@@ -110,7 +110,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    *   The block content IDs that were removed.
    */
   protected function getRemovedBlockIds(EntityInterface $entity) {
-    $original_sections = $this->getEntitySections($entity->original);
+    $original_sections = $this->getEntitySections($entity->getOriginal());
     $current_sections = $this->getEntitySections($entity);
     // Avoid un-needed conversion from revision IDs to block content IDs by
     // first determining if there are any revisions in the original that are not

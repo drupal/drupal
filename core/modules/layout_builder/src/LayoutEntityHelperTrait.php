@@ -127,7 +127,7 @@ trait LayoutEntityHelperTrait {
    * Determines if the original entity used the default section storage.
    *
    * This method can be used during the entity save process to determine whether
-   * $entity->original is set and used the default section storage plugin as
+   * the original entity is set and used the default section storage plugin as
    * determined by ::getSectionStorageForEntity().
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -138,8 +138,8 @@ trait LayoutEntityHelperTrait {
    */
   protected function originalEntityUsesDefaultStorage(EntityInterface $entity) {
     $section_storage = $this->getSectionStorageForEntity($entity);
-    if ($section_storage instanceof OverridesSectionStorageInterface && !$entity->isNew() && isset($entity->original)) {
-      $original_section_storage = $this->getSectionStorageForEntity($entity->original);
+    if ($section_storage instanceof OverridesSectionStorageInterface && !$entity->isNew() && $entity->getOriginal()) {
+      $original_section_storage = $this->getSectionStorageForEntity($entity->getOriginal());
       return $original_section_storage instanceof DefaultsSectionStorageInterface;
     }
     return FALSE;

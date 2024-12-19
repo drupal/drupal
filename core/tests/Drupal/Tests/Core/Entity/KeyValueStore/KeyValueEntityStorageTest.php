@@ -637,7 +637,6 @@ class EntityBaseTest extends EntityBase {
   public $langcode;
   public $uuid;
   public $label;
-  public $original;
 
 }
 

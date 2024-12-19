@@ -25,7 +25,7 @@ class BlockUser extends ActionBase {
     if ($account !== FALSE && $account->isActive()) {
       // For efficiency manually save the original account before applying any
       // changes.
-      $account->original = clone $account;
+      $account->setOriginal(clone $account);
       $account->block();
       $account->save();
     }
