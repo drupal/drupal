@@ -22,10 +22,16 @@ class Random extends SortPluginBase implements CacheableDependencyInterface {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->query->addOrderBy('rand');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['order']['#access'] = FALSE;

@@ -66,6 +66,9 @@ class Time extends CachePluginBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['results_lifespan'] = ['default' => 3600];
@@ -76,6 +79,9 @@ class Time extends CachePluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $options = [60, 300, 1800, 3600, 21600, 518400];
@@ -124,6 +130,9 @@ class Time extends CachePluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $custom_fields = ['output_lifespan', 'results_lifespan'];
     foreach ($custom_fields as $field) {
@@ -134,17 +143,26 @@ class Time extends CachePluginBase {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryTitle() {
     $results_lifespan = $this->getLifespan('results');
     $output_lifespan = $this->getLifespan('output');
     return $this->dateFormatter->formatInterval($results_lifespan, 1) . '/' . $this->dateFormatter->formatInterval($output_lifespan, 1);
   }
 
+  /**
+   * Gets the value for the lifespan of the given type.
+   */
   protected function getLifespan($type) {
     $lifespan = $this->options[$type . '_lifespan'] == 'custom' ? $this->options[$type . '_lifespan_custom'] : $this->options[$type . '_lifespan'];
     return $lifespan;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function cacheExpire($type) {
     $lifespan = $this->getLifespan($type);
     if ($lifespan) {

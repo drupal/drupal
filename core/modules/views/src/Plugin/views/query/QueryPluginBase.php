@@ -115,10 +115,19 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    */
   public function getAggregationInfo() {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryTitle() {
     return $this->t('Settings');
   }

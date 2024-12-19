@@ -66,15 +66,17 @@
   <rule ref="Drupal.Commenting.DocCommentStar"/>
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.Commenting.FunctionComment">
-    <exclude name="Drupal.Commenting.FunctionComment.Missing"/>
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentFullStop"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
-    <rule ref="Drupal.Commenting.FunctionComment.Missing">
-      <include-pattern>core/modules/*/Plugin/views/filter/*</include-pattern>
-      <exclude-pattern>*/tests/*</exclude-pattern>
-    </rule>
-
+  <rule ref="Drupal.Commenting.FunctionComment.Missing">
+    <include-pattern>core/modules/*/Plugin/views/filter/*</include-pattern>
+    <include-pattern>core/modules/*/Plugin/views/access/*</include-pattern>
+    <include-pattern>core/modules/*/Plugin/views/cache/*</include-pattern>
+    <include-pattern>core/modules/*/Plugin/views/query/*</include-pattern>
+    <include-pattern>core/modules/*/Plugin/views/sort/*</include-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+  </rule>
   <rule ref="Drupal.Commenting.FunctionComment.MissingParamType">
     <include-pattern>core/lib/Component/*</include-pattern>
   </rule>
