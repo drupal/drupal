@@ -58,6 +58,10 @@
    *   Current state of the sticky header button.
    */
   function setStickyHeaderStorage(expandedState) {
+    if (!expandedState) {
+      localStorage.removeItem('Drupal.olivero.stickyHeaderState');
+      return;
+    }
     const now = new Date();
 
     const item = {
@@ -71,6 +75,22 @@
   }
 
   /**
+   * Update the expiration date if the sticky header expanded state is set.
+   *
+   * @param {boolean} expandedState
+   *   Current state of the sticky header button.
+   */
+  function updateStickyHeaderStorage(expandedState) {
+    const stickyHeaderState = localStorage.getItem(
+      'Drupal.olivero.stickyHeaderState',
+    );
+
+    if (stickyHeaderState !== null) {
+      setStickyHeaderStorage(expandedState);
+    }
+  }
+
+  /**
    * Toggle the state of the sticky header between always pinned and
    * only pinned when scrolled to the top of the viewport.
    *
@@ -81,7 +101,6 @@
     if (isDesktopNav()) {
       siteHeaderFixable.classList.toggle('is-expanded', pinnedState);
       stickyHeaderToggleButton.setAttribute('aria-checked', pinnedState);
-      setStickyHeaderStorage(pinnedState);
     }
   }
 
@@ -182,7 +201,9 @@
 
     if (stickyHeaderToggleButton) {
       stickyHeaderToggleButton.addEventListener('click', () => {
-        toggleStickyHeaderState(!stickyHeaderIsEnabled());
+        const pinnedState = !stickyHeaderIsEnabled();
+        toggleStickyHeaderState(pinnedState);
+        setStickyHeaderStorage(pinnedState);
       });
     }
 
@@ -209,7 +230,7 @@
     }
 
     monitorNavPosition();
-    setStickyHeaderStorage(getStickyHeaderStorage());
+    updateStickyHeaderStorage(getStickyHeaderStorage());
     toggleStickyHeaderState(getStickyHeaderStorage());
   }
 })(Drupal);
