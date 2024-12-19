@@ -27,8 +27,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides destination class for all content entities lacking a specific class.
  *
  * Available configuration keys:
- * - translations: (optional) Boolean, indicates if the entity is translatable,
- *   defaults to FALSE.
+ * - translations: (optional) A boolean that indicates if the entity is
+ *   translatable. When TRUE, migration rows will be considered as translations.
+ *   This means the migration will attempt to load an existing entity and, if
+ *   found, save the row data into it as a new translation rather than creating
+ *   a new entity. For this functionality, the migration process definition must
+ *   include mappings for the entity ID and the entity language field. If this
+ *   property is TRUE, the migration will also have an additional destination ID
+ *   for the language code.
  * - overwrite_properties: (optional) A list of properties that will be
  *   overwritten if an entity with the same ID already exists. Any properties
  *   that are not listed will not be overwritten.
