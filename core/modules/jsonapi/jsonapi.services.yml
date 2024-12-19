@@ -46,7 +46,9 @@ services:
       - { name: jsonapi_normalizer }
   serializer.normalizer.resource_object.jsonapi:
     class: Drupal\jsonapi\Normalizer\ResourceObjectNormalizer
-    arguments: ['@jsonapi.normalization_cacher']
+    arguments:
+      - '@jsonapi.normalization_cacher'
+      - '@event_dispatcher'
     tags:
       - { name: jsonapi_normalizer }
   jsonapi.normalization_cacher:
@@ -196,6 +198,7 @@ services:
       - '@jsonapi.serializer'
       - '@datetime.time'
       - '@current_user'
+      - '@event_dispatcher'
   Drupal\jsonapi\Controller\EntityResource: '@jsonapi.entity_resource'
   jsonapi.file_upload:
     class: Drupal\jsonapi\Controller\FileUpload

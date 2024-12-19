@@ -60,6 +60,13 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
   protected $user;
 
   /**
+   * Test admin user.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected $adminUser;
+
+  /**
    * Test user with access to view profiles.
    *
    * @var \Drupal\user\Entity\User
@@ -185,6 +192,14 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
       'edit any article content',
       'delete any article content',
     ]);
+    $this->adminUser = $this->drupalCreateUser([
+      'create article content',
+      'edit any article content',
+      'delete any article content',
+    ],
+      'jsonapi_admin_user',
+      TRUE,
+    );
 
     // Create a user that can.
     $this->userCanViewProfiles = $this->drupalCreateUser([
