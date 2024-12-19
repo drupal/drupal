@@ -14,6 +14,9 @@ use Drupal\views\Plugin\views\filter\InOperator;
 #[ViewsFilter("file_status")]
 class Status extends InOperator {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getValueOptions() {
     if (!isset($this->valueOptions)) {
       $this->valueOptions = [

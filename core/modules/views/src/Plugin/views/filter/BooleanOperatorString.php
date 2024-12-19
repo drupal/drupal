@@ -18,6 +18,9 @@ use Drupal\views\Attribute\ViewsFilter;
 #[ViewsFilter("boolean_string")]
 class BooleanOperatorString extends BooleanOperator {
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->ensureMyTable();
     $where = "$this->tableAlias.$this->realField ";

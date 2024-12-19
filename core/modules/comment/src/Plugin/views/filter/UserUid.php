@@ -14,6 +14,9 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
 #[ViewsFilter("comment_user_uid")]
 class UserUid extends FilterPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->ensureMyTable();
 

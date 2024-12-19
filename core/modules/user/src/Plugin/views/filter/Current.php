@@ -24,6 +24,9 @@ class Current extends BooleanOperator {
     $this->value_value = $this->t('Is the logged in user');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->ensureMyTable();
 

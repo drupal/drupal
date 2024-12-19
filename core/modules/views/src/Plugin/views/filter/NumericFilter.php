@@ -18,6 +18,9 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
    */
   protected $alwaysMultiple = TRUE;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -192,6 +195,9 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     return $options;
   }
 
+  /**
+   * Gets the operators that have a given number of values.
+   */
   protected function operatorValues($values = 1) {
     $options = [];
     foreach ($this->operators() as $id => $info) {
@@ -333,6 +339,9 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->ensureMyTable();
     $field = "$this->tableAlias.$this->realField";
@@ -364,10 +373,16 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     }
   }
 
+  /**
+   * Filters by a simple operator.
+   */
   protected function opSimple($field) {
     $this->query->addWhere($this->options['group'], $field, $this->value['value'], $this->operator);
   }
 
+  /**
+   * Adds a where clause for the operation, 'EMPTY'.
+   */
   protected function opEmpty($field) {
     if ($this->operator == 'empty') {
       $operator = "IS NULL";
@@ -399,6 +414,9 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     $this->query->addWhere($this->options['group'], $field, $this->value['value'], 'NOT REGEXP');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminSummary() {
     if ($this->isAGroup()) {
       return $this->t('grouped');

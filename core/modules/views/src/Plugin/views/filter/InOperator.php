@@ -83,11 +83,17 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     return $this->valueOptions;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function defaultExposeOptions() {
     parent::defaultExposeOptions();
     $this->options['expose']['reduce'] = FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
     parent::buildExposeForm($form, $form_state);
     $form['expose']['reduce'] = [
@@ -99,6 +105,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -162,6 +171,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     return $options;
   }
 
+  /**
+   * Gets the operators that have a given number of values.
+   */
   protected function operatorValues($values = 1) {
     $options = [];
     foreach ($this->operators() as $id => $info) {
@@ -173,6 +185,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value'] = [];
     $options = [];
@@ -310,6 +325,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     return parent::acceptExposedInput($input);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function valueSubmit($form, FormStateInterface $form_state) {
     // Drupal's FAPI system automatically puts '0' in for any checkbox that
     // was not set, and the key to the checkbox if it is set.
@@ -323,6 +341,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     $form_state->setValue(['options', 'value'], $form['value']['#value']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminSummary() {
     if ($this->isAGroup()) {
       return $this->t('grouped');
@@ -387,6 +408,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     return $operator . (($values !== '') ? ' ' . $values : '');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {
@@ -394,6 +418,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     }
   }
 
+  /**
+   * Filters by a simple operator.
+   */
   protected function opSimple() {
     if (empty($this->value)) {
       return;
@@ -405,6 +432,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", array_values($this->value), $this->operator);
   }
 
+  /**
+   * Filters by operator 'empty'.
+   */
   protected function opEmpty() {
     $this->ensureMyTable();
     if ($this->operator == 'empty') {
@@ -417,6 +447,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     $this->query->addWhere($this->options['group'], "$this->tableAlias.$this->realField", NULL, $operator);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validate() {
     $this->getValueOptions();
     $errors = parent::validate();

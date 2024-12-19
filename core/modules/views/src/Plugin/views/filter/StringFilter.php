@@ -65,6 +65,9 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -219,6 +222,9 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminSummary() {
     if ($this->isAGroup()) {
       return $this->t('grouped');
@@ -238,6 +244,9 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
     return $output;
   }
 
+  /**
+   * Gets the operators that have a given number of values.
+   */
   protected function operatorValues($values = 1) {
     $options = [];
     foreach ($this->operators() as $id => $info) {
@@ -357,11 +366,17 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
     $this->query->addWhere($this->options['group'], $field, $this->value, $this->operator());
   }
 
+  /**
+   * Adds a where clause for the operation, 'LIKE'.
+   */
   protected function opContains($field) {
     $operator = $this->getConditionOperator('LIKE');
     $this->query->addWhere($this->options['group'], $field, '%' . $this->connection->escapeLike($this->value) . '%', $operator);
   }
 
+  /**
+   * Adds a where clause for the operation, 'contains'.
+   */
   protected function opContainsWord($field) {
     $where = $this->operator == 'word' ? $this->query->getConnection()->condition('OR') : $this->query->getConnection()->condition('AND');
 
@@ -395,31 +410,49 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
     $this->query->addWhere($this->options['group'], $where);
   }
 
+  /**
+   * Adds a where clause for the operation, 'starts with'.
+   */
   protected function opStartsWith($field) {
     $operator = $this->getConditionOperator('LIKE');
     $this->query->addWhere($this->options['group'], $field, $this->connection->escapeLike($this->value) . '%', $operator);
   }
 
+  /**
+   * Adds a where clause for the operation, 'not starts with'.
+   */
   protected function opNotStartsWith($field) {
     $operator = $this->getConditionOperator('NOT LIKE');
     $this->query->addWhere($this->options['group'], $field, $this->connection->escapeLike($this->value) . '%', $operator);
   }
 
+  /**
+   * Adds a where clause for the operation, 'ends with'.
+   */
   protected function opEndsWith($field) {
     $operator = $this->getConditionOperator('LIKE');
     $this->query->addWhere($this->options['group'], $field, '%' . $this->connection->escapeLike($this->value), $operator);
   }
 
+  /**
+   * Adds a where clause for the operation, 'not ends with'.
+   */
   protected function opNotEndsWith($field) {
     $operator = $this->getConditionOperator('NOT LIKE');
     $this->query->addWhere($this->options['group'], $field, '%' . $this->connection->escapeLike($this->value), $operator);
   }
 
+  /**
+   * Adds a where clause for the operation, 'not LIKE'.
+   */
   protected function opNotLike($field) {
     $operator = $this->getConditionOperator('NOT LIKE');
     $this->query->addWhere($this->options['group'], $field, '%' . $this->connection->escapeLike($this->value) . '%', $operator);
   }
 
+  /**
+   * Adds a where clause for the operation, 'shorter than'.
+   */
   protected function opShorterThan($field) {
     $placeholder = $this->placeholder();
     // Type cast the argument to an integer because the SQLite database driver
@@ -427,6 +460,9 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
     $this->query->addWhereExpression($this->options['group'], "LENGTH($field) < $placeholder", [$placeholder => (int) $this->value]);
   }
 
+  /**
+   * Adds a where clause for the operation, 'longer than'.
+   */
   protected function opLongerThan($field) {
     $placeholder = $this->placeholder();
     // Type cast the argument to an integer because the SQLite database driver
@@ -454,6 +490,9 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
     $this->query->addWhere($this->options['group'], $field, $this->value, 'NOT REGEXP');
   }
 
+  /**
+   * Adds a where clause for the operation, 'EMPTY'.
+   */
   protected function opEmpty($field) {
     if ($this->operator == 'empty') {
       $operator = "IS NULL";

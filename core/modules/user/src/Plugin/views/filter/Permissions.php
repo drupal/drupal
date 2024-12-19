@@ -77,6 +77,9 @@ class Permissions extends ManyToOne {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getValueOptions() {
     if (!isset($this->valueOptions)) {
       $permissions = $this->permissionHandler->getPermissions();

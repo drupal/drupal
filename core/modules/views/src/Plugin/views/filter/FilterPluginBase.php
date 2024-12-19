@@ -151,6 +151,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -1645,6 +1648,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function storeExposedInput($input, $status) {
     if (empty($this->options['exposed']) || empty($this->options['expose']['identifier'])) {
       return TRUE;

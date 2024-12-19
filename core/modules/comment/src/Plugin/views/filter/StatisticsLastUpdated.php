@@ -19,6 +19,9 @@ class StatisticsLastUpdated extends Date {
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected ?string $node_table;
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->ensureMyTable();
     $this->node_table = $this->query->ensureTable('node', $this->relationship);

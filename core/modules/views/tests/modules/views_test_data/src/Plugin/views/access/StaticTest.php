@@ -20,6 +20,9 @@ use Symfony\Component\Routing\Route;
 )]
 class StaticTest extends AccessPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['access'] = ['default' => FALSE];

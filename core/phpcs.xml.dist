@@ -73,6 +73,11 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentFullStop"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
+    <rule ref="Drupal.Commenting.FunctionComment.Missing">
+      <include-pattern>core/modules/*/Plugin/views/filter/*</include-pattern>
+      <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
   <rule ref="Drupal.Commenting.FunctionComment.MissingParamType">
     <include-pattern>core/lib/Component/*</include-pattern>
   </rule>
