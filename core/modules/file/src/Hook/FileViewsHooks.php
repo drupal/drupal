@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file\Hook;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 
@@ -9,6 +12,10 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for file.
  */
 class FileViewsHooks {
+
+  public function __construct(
+    private readonly EntityTypeManagerInterface $entityTypeManager,
+  ) {}
 
   /**
    * Implements hook_field_views_data().
@@ -44,12 +51,11 @@ class FileViewsHooks {
   #[Hook('field_views_data_views_data_alter')]
   public function fieldViewsDataViewsDataAlter(array &$data, FieldStorageConfigInterface $field_storage): void {
     $entity_type_id = $field_storage->getTargetEntityTypeId();
-    $entity_type_manager = \Drupal::entityTypeManager();
-    $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $field_name = $field_storage->getName();
     $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-    $table_mapping = $entity_type_manager->getStorage($entity_type_id)->getTableMapping();
+    $table_mapping = $this->entityTypeManager->getStorage($entity_type_id)->getTableMapping();
     [$label] = views_entity_field_label($entity_type_id, $field_name);
     $data['file_managed'][$pseudo_field_name]['relationship'] = [
       'title' => t('@entity using @field', [

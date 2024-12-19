@@ -9,6 +9,7 @@ services:
     arguments: ['@config.factory', '@database', 'file_usage']
     tags:
       - { name: backend_overridable }
+  Drupal\file\FileUsage\FileUsageInterface: '@file.usage'
   file.upload_handler:
     class: Drupal\file\Upload\FileUploadHandler
     arguments: ['@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository', '@file.validator', '@lock', '@validation.basic_recursive_validator_factory']
