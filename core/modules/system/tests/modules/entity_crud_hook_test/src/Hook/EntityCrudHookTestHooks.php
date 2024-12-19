@@ -208,7 +208,7 @@ class EntityCrudHookTestHooks {
    * Implements hook_entity_preload().
    */
   #[Hook('entity_preload')]
-  public function entityPreload(array $entities, $type) {
+  public function entityPreload(array $entities, $type): void {
     $GLOBALS['entity_crud_hook_test'][] = 'entity_crud_hook_test_entity_preload' . ' called for type ' . $type;
   }
 

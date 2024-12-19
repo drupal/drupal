@@ -75,7 +75,7 @@ use Drupal\file\FileInterface;
  *
  * @see \Drupal\file\FileRepositoryInterface::copy()
  */
-function hook_file_copy(FileInterface $file, FileInterface $source) {
+function hook_file_copy(FileInterface $file, FileInterface $source): void {
   // Make sure that the file name starts with the owner's user name.
   if (!str_starts_with($file->getFilename(), $file->getOwner()->name)) {
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
@@ -95,7 +95,7 @@ function hook_file_copy(FileInterface $file, FileInterface $source) {
  *
  * @see \Drupal\file\FileRepositoryInterface::move()
  */
-function hook_file_move(FileInterface $file, FileInterface $source) {
+function hook_file_move(FileInterface $file, FileInterface $source): void {
   // Make sure that the file name starts with the owner's user name.
   if (!str_starts_with($file->getFilename(), $file->getOwner()->name)) {
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());

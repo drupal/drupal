@@ -73,7 +73,7 @@ class HistoryHooks {
    * Implements hook_user_cancel().
    */
   #[Hook('user_cancel')]
-  public function userCancel($edit, UserInterface $account, $method) {
+  public function userCancel($edit, UserInterface $account, $method): void {
     switch ($method) {
       case 'user_cancel_reassign':
         \Drupal::database()->delete('history')->condition('uid', $account->id())->execute();

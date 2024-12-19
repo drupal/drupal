@@ -89,7 +89,7 @@ class SettingsTrayHooks {
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
-  public function entityTypeBuild(array &$entity_types) {
+  public function entityTypeBuild(array &$entity_types): void {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     $entity_types['block']->setFormClass('settings_tray', BlockEntitySettingTrayForm::class)->setLinkTemplate('settings_tray-form', '/admin/structure/block/manage/{block}/settings-tray');
   }

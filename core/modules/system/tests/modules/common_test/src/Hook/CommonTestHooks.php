@@ -54,7 +54,7 @@ class CommonTestHooks {
    * implementations are executed.
    */
   #[Hook('drupal_alter_foo_alter', module: 'block')]
-  public function blockDrupalAlterFooAlter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+  public function blockDrupalAlterFooAlter(&$data, &$arg2 = NULL, &$arg3 = NULL): void {
     $data['foo'] .= ' block';
   }
 

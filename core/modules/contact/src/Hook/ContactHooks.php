@@ -107,7 +107,7 @@ class ContactHooks {
    * Implements hook_mail().
    */
   #[Hook('mail')]
-  public function mail($key, &$message, $params) {
+  public function mail($key, &$message, $params): void {
     $contact_message = $params['contact_message'];
     /** @var \Drupal\user\UserInterface $sender */
     $sender = $params['sender'];

@@ -15,7 +15,7 @@ class EntityTestConstraintsHooks {
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
-  public function entityTypeBuild(array &$entity_types) {
+  public function entityTypeBuild(array &$entity_types): void {
     if ($extra = \Drupal::state()->get('entity_test_constraints.build')) {
       foreach ($extra as $id => $option) {
         $entity_types['entity_test_constraints']->addConstraint($id, $option);

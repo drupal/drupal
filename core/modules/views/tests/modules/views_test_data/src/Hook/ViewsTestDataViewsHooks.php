@@ -57,7 +57,7 @@ class ViewsTestDataViewsHooks {
    * Implements hook_views_invalidate_cache().
    */
   #[Hook('views_invalidate_cache')]
-  public function viewsInvalidateCache() {
+  public function viewsInvalidateCache(): void {
     \Drupal::state()->set('views_hook_test_views_invalidate_cache', TRUE);
   }
 

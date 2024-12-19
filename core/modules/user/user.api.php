@@ -39,7 +39,7 @@ use Drupal\user\UserInterface;
  * @see user_cancel_methods()
  * @see hook_user_cancel_methods_alter()
  */
-function hook_user_cancel($edit, UserInterface $account, $method) {
+function hook_user_cancel($edit, UserInterface $account, $method): void {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).
@@ -146,7 +146,7 @@ function hook_user_format_name_alter(&$name, AccountInterface $account) {
  * @param \Drupal\user\UserInterface $account
  *   The user object on which the operation was just performed.
  */
-function hook_user_login(UserInterface $account) {
+function hook_user_login(UserInterface $account): void {
   $config = \Drupal::config('system.date');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
@@ -167,7 +167,7 @@ function hook_user_login(UserInterface $account) {
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user object on which the operation was just performed.
  */
-function hook_user_logout(AccountInterface $account) {
+function hook_user_logout(AccountInterface $account): void {
   \Drupal::database()->insert('logouts')
     ->fields([
       'uid' => $account->id(),

@@ -201,7 +201,7 @@ class SystemHooks {
    * active theme but no other request-dependent values.
    */
   #[Hook('js_settings_build')]
-  public function jsSettingsBuild(&$settings, AttachedAssetsInterface $assets) {
+  public function jsSettingsBuild(&$settings, AttachedAssetsInterface $assets): void {
     // Generate the values for the core/drupal.ajax library.
     // We need to send ajaxPageState settings for core/drupal.ajax if:
     // - ajaxPageState is being loaded in this Response, in which case it will
@@ -342,7 +342,7 @@ class SystemHooks {
    * Implements hook_mail().
    */
   #[Hook('mail')]
-  public function mail($key, &$message, $params) {
+  public function mail($key, &$message, $params): void {
     $token_service = \Drupal::token();
     $context = $params['context'];
     $subject = PlainTextOutput::renderFromHtml($token_service->replace($context['subject'], $context));
@@ -355,7 +355,7 @@ class SystemHooks {
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
-  public function entityTypeBuild(array &$entity_types) {
+  public function entityTypeBuild(array &$entity_types): void {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     $entity_types['date_format']->setFormClass('add', 'Drupal\system\Form\DateFormatAddForm')->setFormClass('edit', 'Drupal\system\Form\DateFormatEditForm')->setFormClass('delete', 'Drupal\system\Form\DateFormatDeleteForm')->setListBuilderClass('Drupal\system\DateFormatListBuilder')->setLinkTemplate('edit-form', '/admin/config/regional/date-time/formats/manage/{date_format}')->setLinkTemplate('delete-form', '/admin/config/regional/date-time/formats/manage/{date_format}/delete')->setLinkTemplate('collection', '/admin/config/regional/date-time/formats');
   }

@@ -27,7 +27,7 @@ class TaxonomyTermDisplayConfigurableTestHooks {
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
-  public function entityTypeBuild(array &$entity_types) {
+  public function entityTypeBuild(array &$entity_types): void {
     // Allow skipping of extra preprocessing for configurable display.
     $entity_types['taxonomy_term']->set('enable_base_field_custom_preprocess_skipping', TRUE);
   }

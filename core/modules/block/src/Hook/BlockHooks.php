@@ -112,7 +112,7 @@ class BlockHooks {
    * Implements hook_rebuild().
    */
   #[Hook('rebuild')]
-  public function rebuild() {
+  public function rebuild(): void {
     foreach (\Drupal::service('theme_handler')->listInfo() as $theme => $data) {
       if ($data->status) {
         $regions = system_region_list($theme);

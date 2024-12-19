@@ -100,7 +100,7 @@ class FieldUiHooks {
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
-  public function entityTypeBuild(array &$entity_types) {
+  public function entityTypeBuild(array &$entity_types): void {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     $entity_types['field_config']->setFormClass('edit', 'Drupal\field_ui\Form\FieldConfigEditForm');
     $entity_types['field_config']->setFormClass('default', FieldConfigEditForm::class);

@@ -249,7 +249,7 @@ class UpdateHooks {
    * @see \Drupal\update\UpdateManagerInterface
    */
   #[Hook('mail')]
-  public function mail($key, &$message, $params) {
+  public function mail($key, &$message, $params): void {
     $langcode = $message['langcode'];
     $language = \Drupal::languageManager()->getLanguage($langcode);
     $message['subject'] .= t('New release(s) available for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name')], ['langcode' => $langcode]);

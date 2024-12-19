@@ -16,7 +16,7 @@ class ConfigTestHooks {
    * Implements hook_cache_flush().
    */
   #[Hook('cache_flush')]
-  public function cacheFlush() {
+  public function cacheFlush(): void {
     // Set a global value we can check in test code.
     $GLOBALS['hook_cache_flush'] = 'config_test_cache_flush';
   }

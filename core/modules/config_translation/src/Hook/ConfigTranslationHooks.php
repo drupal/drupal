@@ -129,7 +129,7 @@ class ConfigTranslationHooks {
    * Implements hook_config_translation_info().
    */
   #[Hook('config_translation_info')]
-  public function configTranslationInfo(&$info) {
+  public function configTranslationInfo(&$info): void {
     $entity_type_manager = \Drupal::entityTypeManager();
     // If field UI is not enabled, the base routes of the type
     // "entity.field_config.{$entity_type}_field_edit_form" are not defined.

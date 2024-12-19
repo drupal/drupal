@@ -268,7 +268,7 @@ class CommentHooks {
    * @see \Drupal\comment\Plugin\Field\FieldType\CommentItem::propertyDefinitions()
    */
   #[Hook('entity_storage_load')]
-  public function entityStorageLoad($entities, $entity_type) {
+  public function entityStorageLoad($entities, $entity_type): void {
     // Comments can only be attached to content entities, so skip others.
     if (!\Drupal::entityTypeManager()->getDefinition($entity_type)->entityClassImplements(FieldableEntityInterface::class)) {
       return;
@@ -427,7 +427,7 @@ class CommentHooks {
    * Implements hook_user_cancel().
    */
   #[Hook('user_cancel')]
-  public function userCancel($edit, UserInterface $account, $method) {
+  public function userCancel($edit, UserInterface $account, $method): void {
     switch ($method) {
       case 'user_cancel_block_unpublish':
         $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);

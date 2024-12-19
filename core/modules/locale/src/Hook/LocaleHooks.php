@@ -210,7 +210,7 @@ class LocaleHooks {
    * Implements hook_cache_flush().
    */
   #[Hook('cache_flush')]
-  public function cacheFlush() {
+  public function cacheFlush(): void {
     \Drupal::state()->delete('system.javascript_parsed');
   }
 

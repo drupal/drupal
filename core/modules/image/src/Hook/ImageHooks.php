@@ -220,7 +220,7 @@ class ImageHooks {
    * Implements hook_file_move().
    */
   #[Hook('file_move')]
-  public function fileMove(FileInterface $file, FileInterface $source) {
+  public function fileMove(FileInterface $file, FileInterface $source): void {
     // Delete any image derivatives at the original image path.
     image_path_flush($source->getFileUri());
   }

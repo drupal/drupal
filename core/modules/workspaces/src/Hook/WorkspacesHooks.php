@@ -62,8 +62,8 @@ class WorkspacesHooks {
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
-  public function entityTypeBuild(array &$entity_types) {
-    return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityTypeInfo::class)->entityTypeBuild($entity_types);
+  public function entityTypeBuild(array &$entity_types): void {
+    \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityTypeInfo::class)->entityTypeBuild($entity_types);
   }
 
   /**

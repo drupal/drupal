@@ -62,7 +62,7 @@ class FileTestHooks {
    * Implements hook_file_copy().
    */
   #[Hook('file_copy')]
-  public function fileCopy(File $file, $source) {
+  public function fileCopy(File $file, $source): void {
     _file_test_log_call('copy', [$file->id(), $source->id()]);
   }
 
@@ -70,7 +70,7 @@ class FileTestHooks {
    * Implements hook_file_move().
    */
   #[Hook('file_move')]
-  public function fileMove(File $file, File $source) {
+  public function fileMove(File $file, File $source): void {
     _file_test_log_call('move', [$file->id(), $source->id()]);
   }
 

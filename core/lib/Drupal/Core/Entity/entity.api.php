@@ -816,7 +816,7 @@ function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $a
  * @see \Drupal\Core\Entity\EntityTypeInterface
  * @see hook_entity_type_alter()
  */
-function hook_entity_type_build(array &$entity_types) {
+function hook_entity_type_build(array &$entity_types): void {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Add a form for a custom node form without overriding the default
   // node form. To override the default node form, use hook_entity_type_alter().
@@ -1101,7 +1101,7 @@ function hook_ENTITY_TYPE_load($entities) {
  *
  * @see hook_entity_load()
  */
-function hook_entity_storage_load(array $entities, $entity_type) {
+function hook_entity_storage_load(array $entities, $entity_type): void {
   foreach ($entities as $entity) {
     $entity->foo = my_module_add_something_uncached($entity);
   }

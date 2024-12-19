@@ -37,7 +37,7 @@ class FieldTestFieldHooks {
    * Implements hook_field_storage_config_update_forbid().
    */
   #[Hook('field_storage_config_update_forbid')]
-  public function fieldStorageConfigUpdateForbid(FieldStorageConfigInterface $field_storage, FieldStorageConfigInterface $prior_field_storage) {
+  public function fieldStorageConfigUpdateForbid(FieldStorageConfigInterface $field_storage, FieldStorageConfigInterface $prior_field_storage): void {
     if ($field_storage->getType() == 'test_field' && $field_storage->getSetting('unchangeable') != $prior_field_storage->getSetting('unchangeable')) {
       throw new FieldStorageDefinitionUpdateForbiddenException("field_test 'unchangeable' setting cannot be changed'");
     }

@@ -2159,7 +2159,7 @@ function hook_mail_alter(&$message) {
  *
  * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  */
-function hook_mail($key, &$message, $params) {
+function hook_mail($key, &$message, $params): void {
   $account = $params['account'];
   $context = $params['context'];
   $variables = [
@@ -2268,7 +2268,7 @@ function hook_layout_alter(&$definitions) {
  * @see drupal_flush_all_caches()
  * @see hook_rebuild()
  */
-function hook_cache_flush() {
+function hook_cache_flush(): void {
   if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
     _update_cache_clear();
   }
@@ -2289,7 +2289,7 @@ function hook_cache_flush() {
  * @see hook_cache_flush()
  * @see drupal_flush_all_caches()
  */
-function hook_rebuild() {
+function hook_rebuild(): void {
   $themes = \Drupal::service('theme_handler')->listInfo();
   foreach ($themes as $theme) {
     _block_rehash($theme->getName());

@@ -960,7 +960,7 @@ function hook_views_preview_info_alter(array &$rows, ViewExecutable $view) {
  *
  * @see views_invalidate_cache()
  */
-function hook_views_invalidate_cache() {
+function hook_views_invalidate_cache(): void {
   Cache::invalidateTags(['views']);
 }
 

@@ -21,7 +21,7 @@ class UpdateScriptTestHooks {
    * @see UpdateScriptFunctionalTest::testRequirements()
    */
   #[Hook('cache_flush')]
-  public function cacheFlush() {
+  public function cacheFlush(): void {
     \Drupal::messenger()->addStatus(t('hook_cache_flush() invoked for update_script_test.module.'));
   }
 

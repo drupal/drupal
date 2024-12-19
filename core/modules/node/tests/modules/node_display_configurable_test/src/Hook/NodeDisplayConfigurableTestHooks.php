@@ -29,7 +29,7 @@ class NodeDisplayConfigurableTestHooks {
    * Implements hook_entity_type_build().
    */
   #[Hook('entity_type_build')]
-  public function entityTypeBuild(array &$entity_types) {
+  public function entityTypeBuild(array &$entity_types): void {
     // Allow skipping of extra preprocessing for configurable display.
     $entity_types['node']->set('enable_base_field_custom_preprocess_skipping', TRUE);
     $entity_types['node']->set('enable_page_title_template', TRUE);
