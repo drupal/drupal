@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\Functional;
 
+use Drupal\Core\Url;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 
 /**
  * Tests the top bar functionality.
  *
  * @group navigation
  */
-class NavigationTopBarTest extends BrowserTestBase {
+class NavigationTopBarTest extends PageCacheTagsTestBase {
 
   /**
    * {@inheritdoc}
@@ -23,6 +24,7 @@ class NavigationTopBarTest extends BrowserTestBase {
     'layout_builder',
     'field_ui',
     'file',
+    'test_page_test',
   ];
 
   /**
@@ -76,16 +78,29 @@ class NavigationTopBarTest extends BrowserTestBase {
    * Tests the top bar visibility.
    */
   public function testTopBarVisibility(): void {
-    $this->drupalGet($this->node->toUrl());
+    // Test page does not include the Top Bar.
+    $test_page_url = Url::fromRoute('test_page_test.test_page');
+    $this->verifyDynamicPageCache($test_page_url, 'MISS');
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button/span");
 
+    $this->verifyDynamicPageCache($this->node->toUrl(), 'MISS');
+    $this->verifyDynamicPageCache($this->node->toUrl(), 'HIT');
     // Top Bar is not visible if the feature flag module is disabled.
     $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button/span");
     $this->assertSession()->elementExists('xpath', '//div[@id="block-tabs"]');
 
     \Drupal::service('module_installer')->install(['navigation_top_bar']);
 
+    // Test page does not include the Top Bar.
+    $test_page_url = Url::fromRoute('test_page_test.test_page');
+    $this->verifyDynamicPageCache($test_page_url, 'MISS');
+    $this->verifyDynamicPageCache($test_page_url, 'HIT');
+    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button/span");
+
     // Top Bar is visible once the feature flag module is enabled.
-    $this->drupalGet($this->node->toUrl());
+    $this->verifyDynamicPageCache($this->node->toUrl(), 'MISS');
+    $this->verifyDynamicPageCache($this->node->toUrl(), 'HIT');
     $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button/span");
     $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button/span", 'More actions');
     $this->assertSession()->elementNotExists('xpath', '//div[@id="block-tabs"]');
