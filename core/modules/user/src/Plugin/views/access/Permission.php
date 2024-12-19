@@ -110,7 +110,7 @@ class Permission extends AccessPluginBase implements CacheableDependencyInterfac
     if (isset($permissions[$this->options['perm']])) {
       return $permissions[$this->options['perm']]['title'];
     }
-
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     return $this->t($this->options['perm']);
   }
 

@@ -81,6 +81,7 @@ class Translation extends AnnotationBase {
         'context' => $values['context'],
       ];
     }
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $this->translation = new TranslatableMarkup($string, $arguments, $options);
   }
 

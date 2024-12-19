@@ -23,6 +23,7 @@ class PluralVariants extends FormElementBase {
       '#type' => 'fieldset',
       '#title' => new FormattableMarkup('@label <span class="visually-hidden">(@source_language)</span>', [
         // Labels originate from configuration schema and are translatable.
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         '@label' => $this->t($this->definition->getLabel()),
         '@source_language' => $source_language->getName(),
       ]),
@@ -52,6 +53,7 @@ class PluralVariants extends FormElementBase {
       '#type' => 'fieldset',
       '#title' => new FormattableMarkup('@label <span class="visually-hidden">(@translation_language)</span>', [
         // Labels originate from configuration schema and are translatable.
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         '@label' => $this->t($this->definition->getLabel()),
         '@translation_language' => $translation_language->getName(),
       ]),

@@ -78,6 +78,7 @@ class ProfileFieldValues extends DrupalSqlBase {
     $query->fields('pf', ['name', 'title']);
     $results = $query->execute();
     foreach ($results as $profile) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $fields[$profile['name']] = $this->t($profile['title']);
     }
 

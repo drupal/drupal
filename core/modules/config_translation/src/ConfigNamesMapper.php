@@ -180,6 +180,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   public function getTitle() {
     // A title from a *.config_translation.yml. Should be translated for
     // display in the current page language.
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     return $this->t($this->pluginDefinition['title']);
   }
 

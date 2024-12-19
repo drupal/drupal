@@ -102,6 +102,7 @@ function template_preprocess_system_admin_index(&$variables): void {
             '#theme' => 'admin_block_content',
             '#content' => $items,
           ],
+          // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
           'description' => t($description),
         ],
       ];
@@ -297,6 +298,7 @@ function template_preprocess_system_themes_page(&$variables): void {
       }
 
       // Localize the theme description.
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $current_theme['description'] = Markup::create(Xss::filterAdmin(t($theme->info['description'])));
 
       $current_theme['attributes'] = new Attribute();

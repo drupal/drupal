@@ -77,6 +77,7 @@ class TitleResolver implements TitleResolverInterface {
       }
 
       // Fall back to a static string from the route.
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $route_title = $this->t($title, $args, $options);
     }
     return $route_title;

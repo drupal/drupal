@@ -59,6 +59,7 @@ class Alignment extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
       $name = $alignment_option['name'];
       $form['enabled_alignments'][$name] = [
         '#type' => 'checkbox',
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         '#title' => $this->t($name),
         '#return_value' => $name,
         '#default_value' => in_array($name, $this->configuration['enabled_alignments'], TRUE) ? $name : NULL,

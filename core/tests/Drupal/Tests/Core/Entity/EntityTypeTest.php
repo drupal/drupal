@@ -307,6 +307,7 @@ class EntityTypeTest extends UnitTestCase {
    * @covers ::getLabel
    */
   public function testGetLabel(): void {
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $translatable_label = new TranslatableMarkup($this->randomMachineName());
     $entity_type = $this->setUpEntityType(['label' => $translatable_label]);
     $this->assertSame($translatable_label, $entity_type->getLabel());
@@ -320,6 +321,7 @@ class EntityTypeTest extends UnitTestCase {
    * @covers ::getGroupLabel
    */
   public function testGetGroupLabel(): void {
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $translatable_group_label = new TranslatableMarkup($this->randomMachineName());
     $entity_type = $this->setUpEntityType(['group_label' => $translatable_group_label]);
     $this->assertSame($translatable_group_label, $entity_type->getGroupLabel());

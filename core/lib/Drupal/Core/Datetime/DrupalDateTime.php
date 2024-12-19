@@ -153,6 +153,7 @@ class DrupalDateTime extends DateTimePlus {
               $this->formatTranslationCache[$langcode][$code][$string] = $string;
             }
             else {
+              // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
               $this->formatTranslationCache[$langcode][$code][$string] = $this->t($string, [], $options);
             }
           }

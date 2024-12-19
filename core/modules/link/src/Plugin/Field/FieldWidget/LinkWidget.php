@@ -445,6 +445,7 @@ class LinkWidget extends WidgetBase {
       if (isset($parameters['@uri'])) {
         $parameters['@uri'] = static::getUriAsDisplayableString($parameters['@uri']);
         $violations->set($offset, new ConstraintViolation(
+          // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
           $this->t($violation->getMessageTemplate(), $parameters),
           $violation->getMessageTemplate(),
           $parameters,

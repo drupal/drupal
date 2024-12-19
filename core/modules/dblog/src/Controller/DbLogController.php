@@ -186,6 +186,7 @@ class DbLogController extends ControllerBase {
         'data' => [
           // Cells.
           ['class' => ['icon']],
+          // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
           $this->t($dblog->type),
           $this->dateFormatter->format($dblog->timestamp, 'short'),
           $message,
@@ -248,6 +249,7 @@ class DbLogController extends ControllerBase {
     $rows = [
       [
         ['data' => $this->t('Type'), 'header' => TRUE],
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $this->t($dblog->type),
       ],
       [
@@ -379,6 +381,7 @@ class DbLogController extends ControllerBase {
             $row->backtrace = $variables['@backtrace_string'];
           }
         }
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $message = $this->t(Xss::filterAdmin($row->message), $variables);
       }
     }

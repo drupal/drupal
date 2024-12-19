@@ -165,6 +165,7 @@ class ModulesUninstallForm extends FormBase {
       $name = $module->info['name'] ?: $module->getName();
       $form['modules'][$module->getName()]['#module_name'] = $name;
       $form['modules'][$module->getName()]['name']['#markup'] = $name;
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $form['modules'][$module->getName()]['description']['#markup'] = $this->t($module->info['description']);
 
       $lifecycle = $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];

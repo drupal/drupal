@@ -74,6 +74,7 @@ class LocaleStringIsSafeTest extends KernelTestBase {
       );
 
       // Pass the original string to the t() function to get it marked as safe.
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $safe_string = t($original_string);
       $rendered_safe_string = \Drupal::theme()->render('locale_test_tokenized', ['content' => $safe_string]);
       // t() function always marks the string as safe so it won't be escaped,

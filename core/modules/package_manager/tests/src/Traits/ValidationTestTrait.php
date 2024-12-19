@@ -109,6 +109,7 @@ trait ValidationTestTrait {
       $messages = array_map(static function ($message) use ($string_translation_stub): string {
         // Support data providers in unit tests using TranslatableMarkup.
         if ($message instanceof TranslatableMarkup && is_a(get_called_class(), UnitTestCase::class, TRUE)) {
+          // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
           $message = new TranslatableMarkup($message->getUntranslatedString(), $message->getArguments(), $message->getOptions(), $string_translation_stub);
         }
         return (string) $message;

@@ -11,6 +11,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Language\LanguageInterface;
 
+// phpcs:disable Drupal.Semantics.FunctionT.NotLiteralString
+
 /**
  * Tests the validation of translation strings and search results.
  *

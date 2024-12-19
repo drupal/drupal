@@ -22,6 +22,7 @@ class ValidationResultTest extends UnitTestCase {
    * @dataProvider providerValidConstructorArguments
    */
   public function testCreateWarningResult(array $messages, ?string $summary): void {
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $summary = $summary ? t($summary) : NULL;
     $result = ValidationResult::createWarning($messages, $summary);
     $this->assertResultValid($result, $messages, $summary, SystemManager::REQUIREMENT_WARNING);
@@ -54,6 +55,7 @@ class ValidationResultTest extends UnitTestCase {
    * @dataProvider providerValidConstructorArguments
    */
   public function testCreateErrorResult(array $messages, ?string $summary): void {
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $summary = $summary ? t($summary) : NULL;
     $result = ValidationResult::createError($messages, $summary);
     $this->assertResultValid($result, $messages, $summary, SystemManager::REQUIREMENT_ERROR);

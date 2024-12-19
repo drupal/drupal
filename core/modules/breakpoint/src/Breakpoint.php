@@ -16,6 +16,8 @@ class Breakpoint extends PluginBase implements BreakpointInterface {
    * {@inheritdoc}
    */
   public function getLabel() {
+    // Translate the plugin label defined in the *.breakpoints.yml file.
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     return $this->t($this->pluginDefinition['label'], [], ['context' => 'breakpoint']);
   }
 

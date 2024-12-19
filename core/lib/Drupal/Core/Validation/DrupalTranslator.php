@@ -28,6 +28,7 @@ class DrupalTranslator implements TranslatorInterface {
     if ($id instanceof TranslatableMarkup) {
       return $id;
     }
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     return new TranslatableMarkup($id, $this->processParameters($parameters), $this->getOptions($domain, $locale));
   }
 

@@ -183,7 +183,9 @@ class PermissionHandler implements PermissionHandlerInterface {
             'title' => $permission,
           ];
         }
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $permission['title'] = $this->t($permission['title']);
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $permission['description'] = isset($permission['description']) ? $this->t($permission['description']) : NULL;
         $permission['provider'] = !empty($permission['provider']) ? $permission['provider'] : $provider;
       }

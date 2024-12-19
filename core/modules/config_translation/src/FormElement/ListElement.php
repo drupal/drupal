@@ -125,6 +125,7 @@ class ListElement implements ElementInterface {
         }
       }
     }
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     return (!empty($title) ? (strip_tags($title) . ' ') : '') . $this->t($definition['label']);
   }
 

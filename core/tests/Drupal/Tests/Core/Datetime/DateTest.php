@@ -117,7 +117,7 @@ class DateTest extends UnitTestCase {
     else {
       $result = $this->dateFormatter->formatInterval($interval);
     }
-
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $this->assertEquals(new TranslatableMarkup($expected, [], ['langcode' => $langcode], $this->stringTranslation), $result);
   }
 
@@ -266,9 +266,11 @@ class DateTest extends UnitTestCase {
       });
 
     if (isset($options['langcode'])) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $expected_markup = new TranslatableMarkup($expected, [], ['langcode' => $options['langcode']], $this->stringTranslation);
     }
     else {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $expected_markup = new TranslatableMarkup($expected, [], [], $this->stringTranslation);
     }
     $this->assertEquals($expected_markup, $this->dateFormatter->formatDiff($timestamp1, $timestamp2, $options));

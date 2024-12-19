@@ -50,6 +50,7 @@ final class AllowedScaffoldPackagesValidator implements EventSubscriberInterface
     $extra_packages = array_diff($allowed_packages, $implicitly_allowed_packages);
     if (!empty($extra_packages)) {
       $event->addError(
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         array_map($this->t(...), $extra_packages),
         $this->t('Any packages other than the implicitly allowed packages are not allowed to scaffold files. See <a href=":url">the scaffold documentation</a> for more information.', [
           ':url' => 'https://www.drupal.org/docs/develop/using-composer/using-drupals-composer-scaffold',

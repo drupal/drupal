@@ -40,5 +40,6 @@ function menu_test_menu_name($new_name = '') {
  * @see menu_test_menu()
  */
 function menu_test_title_callback($title, $case_number = 3) {
+  // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
   return t($title) . ' - Case ' . $case_number;
 }

@@ -28,6 +28,7 @@ class TimeZoneFormHelper {
     $zone_list = \DateTimeZone::listIdentifiers();
     $zones = $blank ? ['' => new TranslatableMarkup('- None selected -')] : [];
     foreach ($zone_list as $zone) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $zones[$zone] = new TranslatableMarkup(str_replace('_', ' ', $zone));
     }
     // Sort the translated time zones alphabetically.

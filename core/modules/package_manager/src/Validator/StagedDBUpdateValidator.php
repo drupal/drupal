@@ -44,6 +44,7 @@ class StagedDBUpdateValidator implements EventSubscriberInterface {
     $stage_dir = $event->stage->getStageDirectory();
     $extensions_with_updates = $this->getExtensionsWithDatabaseUpdates($stage_dir);
     if ($extensions_with_updates) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $extensions_with_updates = array_map($this->t(...), $extensions_with_updates);
       $event->addWarning($extensions_with_updates, $this->t('Database updates have been detected in the following extensions.'));
     }

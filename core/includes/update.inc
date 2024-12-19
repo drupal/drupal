@@ -188,6 +188,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
       \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
 
       unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $ret['#abort'] = ['success' => FALSE, 'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables)];
     }
   }
@@ -258,6 +259,7 @@ function update_invoke_post_update($function, &$context) {
       unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
       $ret['#abort'] = [
         'success' => FALSE,
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables),
       ];
     }

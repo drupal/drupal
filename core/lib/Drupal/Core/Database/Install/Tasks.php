@@ -206,9 +206,11 @@ abstract class Tasks {
   protected function runTestQuery($query, $pass, $fail, $fatal = FALSE) {
     try {
       Database::getConnection()->query($query);
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $this->pass(t($pass));
     }
     catch (\Exception $e) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $this->fail(t($fail, ['%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name()]));
       return !$fatal;
     }
@@ -368,6 +370,7 @@ abstract class Tasks {
    * @see \Drupal\Core\StringTranslation\TranslatableMarkup::__construct()
    */
   protected function t($string, array $args = [], array $options = []) {
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     return new TranslatableMarkup($string, $args, $options);
   }
 

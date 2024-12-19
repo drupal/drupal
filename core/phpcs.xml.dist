@@ -131,9 +131,7 @@
   <rule ref="Drupal.Scope.MethodScope"/>
   <rule ref="Drupal.Semantics.EmptyInstall"/>
   <rule ref="Drupal.Semantics.FunctionAlias"/>
-  <rule ref="Drupal.Semantics.FunctionT">
-    <exclude name="Drupal.Semantics.FunctionT.NotLiteralString"/>
-  </rule>
+  <rule ref="Drupal.Semantics.FunctionT"/>
   <rule ref="Drupal.Semantics.FunctionTriggerError"/>
   <rule ref="Drupal.Semantics.FunctionWatchdog"/>
   <rule ref="Drupal.Semantics.InstallHooks"/>

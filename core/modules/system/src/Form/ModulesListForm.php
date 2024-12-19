@@ -209,6 +209,7 @@ class ModulesListForm extends FormBase {
     foreach (Element::children($form['modules']) as $package) {
       $form['modules'][$package] += [
         '#type' => 'details',
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         '#title' => Markup::create(Xss::filterAdmin($this->t($package))),
         '#open' => TRUE,
         '#theme' => 'system_modules_details',
@@ -274,6 +275,7 @@ class ModulesListForm extends FormBase {
           ])
         )->toString();
     }
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $row['description']['#markup'] = (string) $this->t($module->info['description']);
     $row['version']['#markup'] = $module->info['version'];
 

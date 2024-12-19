@@ -353,6 +353,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
   public function label(): TranslatableMarkup {
     $label = $this->drupal['label'];
     if (!$label instanceof TranslatableMarkup) {
+      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $label = new TranslatableMarkup($label);
     }
     return $label;

@@ -270,6 +270,7 @@ class LocalTaskDefaultTest extends UnitTestCase {
    */
   public function testGetTitleWithContext(): void {
     $title = 'Example';
+    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $this->pluginDefinition['title'] = (new TranslatableMarkup($title, [], ['context' => 'context'], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')

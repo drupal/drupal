@@ -88,6 +88,7 @@ class_alias(TranslatableMarkup::class, '\Drupal\Core\StringTranslation\Translati
  * @ingroup sanitization
  */
 function t($string, array $args = [], array $options = []) {
+  // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
   return new TranslatableMarkup($string, $args, $options);
 }
 

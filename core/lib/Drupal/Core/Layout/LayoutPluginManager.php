@@ -149,6 +149,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
     $regions = array_map(function ($region) {
       if (!$region['label'] instanceof TranslatableMarkup) {
         // Region labels from YAML discovery needs translation.
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $region['label'] = new TranslatableMarkup($region['label'], [], ['context' => 'layout_region']);
       }
       return $region;
