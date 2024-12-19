@@ -23,6 +23,7 @@ use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileInterface;
 use Drupal\file\IconMimeTypes;
+use Drupal\file\Upload\FileUploadHandlerInterface;
 use Drupal\file\Upload\FormUploadedFile;
 
 /**
@@ -205,8 +206,8 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     $destination = 'temporary://';
   }
 
-  /** @var \Drupal\file\Upload\FileUploadHandler $file_upload_handler */
-  $file_upload_handler = \Drupal::service('file.upload_handler');
+  /** @var \Drupal\file\Upload\FileUploadHandlerInterface $file_upload_handler */
+  $file_upload_handler = \Drupal::service(FileUploadHandlerInterface::class);
   /** @var \Drupal\Core\Render\RendererInterface $renderer */
   $renderer = \Drupal::service('renderer');
   $files = [];

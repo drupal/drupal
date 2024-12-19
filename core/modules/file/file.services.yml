@@ -13,7 +13,10 @@ services:
   file.upload_handler:
     class: Drupal\file\Upload\FileUploadHandler
     arguments: ['@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository', '@file.validator', '@lock', '@validation.basic_recursive_validator_factory']
-  Drupal\file\Upload\FileUploadHandler: '@file.upload_handler'
+  Drupal\file\Upload\FileUploadHandler:
+    alias: 'file.upload_handler'
+    deprecated: 'The "%alias_id%" service alias is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use Drupal\file\Upload\FileUploadHandlerInterface instead.'
+  Drupal\file\Upload\FileUploadHandlerInterface: '@file.upload_handler'
   file.repository:
     class: Drupal\file\FileRepository
     arguments: [ '@file_system', '@stream_wrapper_manager', '@entity_type.manager', '@module_handler', '@file.usage', '@current_user' ]

@@ -7,7 +7,7 @@ use Drupal\Component\EventDispatcher\Event;
 /**
  * An event during file upload that lets subscribers sanitize the filename.
  *
- * @see \Drupal\file\Upload\FileUploadHandler::handleFileUpload()
+ * @see \Drupal\file\Upload\FileUploadHandlerInterface::handleFileUpload()
  * @see \Drupal\file\Plugin\rest\resource\FileUploadResource::prepareFilename()
  * @see \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber::sanitizeName()
  */

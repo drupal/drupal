@@ -17,7 +17,7 @@ use Drupal\Core\Lock\LockAcquiringException;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\file\Upload\ContentDispositionFilenameParser;
-use Drupal\file\Upload\FileUploadHandler;
+use Drupal\file\Upload\FileUploadHandlerInterface;
 use Drupal\file\Upload\FileUploadLocationTrait;
 use Drupal\file\Upload\FileUploadResult;
 use Drupal\file\Upload\InputStreamFileWriterInterface;
@@ -63,7 +63,7 @@ class FileUpload {
   public function __construct(
     protected AccountInterface $currentUser,
     protected EntityFieldManagerInterface $fieldManager,
-    protected FileUploadHandler $fileUploadHandler,
+    protected FileUploadHandlerInterface $fileUploadHandler,
     protected HttpKernelInterface $httpKernel,
     protected InputStreamFileWriterInterface $inputStreamFileWriter,
     protected FileSystemInterface $fileSystem,
