@@ -31,7 +31,7 @@ class ViewsTestConfigHooks {
    * Implements hook_views_post_render().
    */
   #[Hook('views_post_render')]
-  public function viewsPostRender(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  public function viewsPostRender(ViewExecutable $view, &$output, CachePluginBase $cache): void {
     if (\Drupal::state()->get('views_test_config.views_post_render_cache_tag')) {
       \Drupal::state()->set('views_test_config.views_post_render_called', TRUE);
       // Set a cache key on output to ensure ViewsSelection::stripAdminAndAnchorTagsFromResults

@@ -57,7 +57,7 @@ class ViewsHooks {
    * Implements hook_views_pre_render().
    */
   #[Hook('views_pre_render')]
-  public function viewsPreRender($view) {
+  public function viewsPreRender($view): void {
     // If using AJAX, send identifying data about this view.
     if ($view->ajaxEnabled() && empty($view->is_attachment) && empty($view->live_preview)) {
       $view->element['#attached']['drupalSettings']['views'] = [
@@ -78,7 +78,6 @@ class ViewsHooks {
       ];
       $view->element['#attached']['library'][] = 'views/views.ajax';
     }
-    return $view;
   }
 
   /**

@@ -360,7 +360,7 @@ class ContentModerationHooks {
    * Implements hook_views_post_execute().
    */
   #[Hook('views_post_execute')]
-  public function viewsPostExecute(ViewExecutable $view) {
+  public function viewsPostExecute(ViewExecutable $view): void {
     // @todo Remove this once broken handlers in views configuration result in
     //   a view no longer returning results. https://www.drupal.org/node/2907954.
     foreach ($view->filter as $id => $filter) {

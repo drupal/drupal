@@ -117,7 +117,7 @@ class MediaLibraryHooks {
    * Implements hook_views_pre_render().
    */
   #[Hook('views_pre_render')]
-  public function viewsPreRender(ViewExecutable $view) {
+  public function viewsPreRender(ViewExecutable $view): void {
     $add_classes = function (&$option, array $classes_to_add) {
       $classes = $option ? preg_split('/\s+/', trim($option)) : [];
       $classes = array_filter($classes);
@@ -151,7 +151,7 @@ class MediaLibraryHooks {
    * Implements hook_views_post_render().
    */
   #[Hook('views_post_render')]
-  public function viewsPostRender(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  public function viewsPostRender(ViewExecutable $view, &$output, CachePluginBase $cache): void {
     if ($view->id() === 'media_library') {
       $output['#attached']['library'][] = 'media_library/view';
       if (str_starts_with($view->current_display, 'widget')) {

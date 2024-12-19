@@ -59,7 +59,7 @@ class ViewsTestDataViewsExecutionHooks {
    * @see \Drupal\views\Tests\Plugin\RenderTest
    */
   #[Hook('views_pre_render')]
-  public function viewsPreRender(ViewExecutable $view) {
+  public function viewsPreRender(ViewExecutable $view): void {
     \Drupal::state()->set('views_hook_test_views_pre_render', TRUE);
     if (isset($view) && $view->storage->id() == 'test_cache_header_storage') {
       $view->element['#attached']['library'][] = 'views_test_data/test';
@@ -79,7 +79,7 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_views_post_render().
    */
   #[Hook('views_post_render')]
-  public function viewsPostRender(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  public function viewsPostRender(ViewExecutable $view, &$output, CachePluginBase $cache): void {
     \Drupal::state()->set('views_hook_test_views_post_render', TRUE);
     if ($view->storage->id() === 'test_page_display' && $view->current_display === 'empty_row') {
       for ($i = 0; $i < 5; $i++) {
@@ -92,7 +92,7 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_views_pre_build().
    */
   #[Hook('views_pre_build')]
-  public function viewsPreBuild(ViewExecutable $view) {
+  public function viewsPreBuild(ViewExecutable $view): void {
     \Drupal::state()->set('views_hook_test_views_pre_build', TRUE);
   }
 
@@ -100,7 +100,7 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_views_post_build().
    */
   #[Hook('views_post_build')]
-  public function viewsPostBuild(ViewExecutable $view) {
+  public function viewsPostBuild(ViewExecutable $view): void {
     \Drupal::state()->set('views_hook_test_views_post_build', TRUE);
     if (isset($view) && $view->storage->id() == 'test_page_display') {
       if ($view->current_display == 'page_1') {
@@ -116,7 +116,7 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_views_pre_view().
    */
   #[Hook('views_pre_view')]
-  public function viewsPreView(ViewExecutable $view) {
+  public function viewsPreView(ViewExecutable $view): void {
     \Drupal::state()->set('views_hook_test_views_pre_view', TRUE);
   }
 
@@ -124,7 +124,7 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_views_pre_execute().
    */
   #[Hook('views_pre_execute')]
-  public function viewsPreExecute(ViewExecutable $view) {
+  public function viewsPreExecute(ViewExecutable $view): void {
     \Drupal::state()->set('views_hook_test_views_pre_execute', TRUE);
   }
 
@@ -132,7 +132,7 @@ class ViewsTestDataViewsExecutionHooks {
    * Implements hook_views_post_execute().
    */
   #[Hook('views_post_execute')]
-  public function viewsPostExecute(ViewExecutable $view) {
+  public function viewsPostExecute(ViewExecutable $view): void {
     \Drupal::state()->set('views_hook_test_views_post_execute', TRUE);
   }
 
