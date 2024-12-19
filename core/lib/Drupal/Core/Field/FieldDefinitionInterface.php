@@ -185,7 +185,8 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    *
    * @return array
    *   The default value for the field, as a numerically indexed array of items,
-   *   each item being a property/value array (array() for no default value).
+   *   each item being a property/value array. An empty array when there is no
+   *   default value.
    *
    * @see FieldDefinitionInterface::getDefaultValue()
    * @see FieldDefinitionInterface::getDefaultValueCallback()
@@ -220,7 +221,8 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    *
    * @return array
    *   The default value for the field, as a numerically indexed array of items,
-   *   each item being a property/value array (array() for no default value).
+   *   each item being a property/value array. An empty array when there is no
+   *    default value.
    *
    * @see FieldDefinitionInterface::getDefaultValueLiteral()
    * @see FieldDefinitionInterface::getDefaultValueCallback()

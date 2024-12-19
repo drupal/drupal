@@ -486,7 +486,8 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * @return array
    *   The initial value for the field, as a numerically indexed array of items,
-   *   each item being a property/value array (array() for no default value).
+   *   each item being a property/value array. An empty array when there is no
+   *   default value.
    */
   public function getInitialValue() {
     return $this->normalizeValue($this->definition['initial_value'], $this->getMainPropertyName());

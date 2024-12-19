@@ -30,12 +30,12 @@ class PercentagesTest extends UnitTestCase {
    * Provide data for batch unit tests.
    *
    * @return array
-   *   An array of data used by the test.
+   *   An array of data used by the test. The array values, in order, are the
+   *   total count, the current count, and the expected percentage.
    */
   public static function providerTestPercentages() {
     // Set up an array of test cases.
     return [
-      // array(total, current, expected).
       // 1/2 is 50%.
       [2, 1, '50'],
       // Though we should never encounter a case where the current set is set

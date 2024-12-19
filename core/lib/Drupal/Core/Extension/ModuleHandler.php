@@ -404,7 +404,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     // Most of the time, $type is passed as a string, so for performance,
     // normalize it to that. When passed as an array, usually the first item in
     // the array is a generic type, and additional items in the array are more
-    // specific variants of it, as in the case of array('form', 'form_FORM_ID').
+    // specific variants of it, as in the case of ['form', 'form_FORM_ID'].
     if (is_array($type)) {
       $cid = implode(',', $type);
       $extra_types = $type;

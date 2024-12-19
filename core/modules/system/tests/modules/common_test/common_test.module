@@ -48,7 +48,7 @@ function olivero_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
  */
 function common_test_module_implements_alter(&$implementations, $hook) {
   // For
-  // \Drupal::moduleHandler()->alter(array('drupal_alter', 'drupal_alter_foo'), ...),
+  // \Drupal::moduleHandler()->alter(['drupal_alter', 'drupal_alter_foo'], ...),
   // make the block module implementations run after all the other modules. Note
   // that when \Drupal::moduleHandler->alter() is called with an array of types,
   // the first type is considered primary and controls the module order.

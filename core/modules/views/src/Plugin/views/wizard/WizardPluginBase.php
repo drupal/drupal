@@ -508,8 +508,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   this form element was actually submitted). In a simple case (assuming
    *   #tree is TRUE throughout the form), if the select element is located in
    *   $form['wrapper']['select'], so that the submitted form values would
-   *   normally be found in $form_state->getValue(array('wrapper', 'select')),
-   *   you would pass array('wrapper', 'select') for this parameter.
+   *   normally be found in $form_state->getValue(['wrapper', 'select']),
+   *   you would pass ['wrapper', 'select'] for this parameter.
    * @param $default_value
    *   The default value to return if the #select element does not currently have
    *   a proper value set based on the submitted input.

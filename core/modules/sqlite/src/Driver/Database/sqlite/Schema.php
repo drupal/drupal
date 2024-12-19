@@ -656,7 +656,7 @@ class Schema extends DatabaseSchema {
    */
   protected function mapKeyDefinition(array $key_definition, array $mapping) {
     foreach ($key_definition as &$field) {
-      // The key definition can be an array($field, $length).
+      // The key definition can be an array such as [$field, $length].
       if (is_array($field)) {
         $field = &$field[0];
       }

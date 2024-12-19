@@ -93,7 +93,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
       $remaining = 3;
       // Test clicking each "Remove" button. For extra robustness, test them out
       // of sequential order. They are 0-indexed, and get renumbered after each
-      // iteration, so array(1, 1, 0) means:
+      // iteration, so [1, 1, 0] means:
       // - First remove the 2nd file.
       // - Then remove what is then the 2nd file (was originally the 3rd file).
       // - Then remove the first file.

@@ -249,8 +249,8 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertFalse(isset($entity->name[0]->value), "$entity_type: Name is not set.");
     $this->assertFalse(isset($entity->name->value), "$entity_type: Name is not set.");
 
-    // Test emptying a field by assigning an empty value. NULL and array()
-    // behave the same.
+    // Test emptying a field by assigning an empty value, NULL and an empty
+    // array behave the same.
     foreach ([NULL, [], 'unset'] as $empty) {
       // Make sure a value is present
       $entity->name->value = 'a value';

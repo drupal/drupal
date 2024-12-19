@@ -165,10 +165,10 @@ class Element {
    *   The renderable element to process. Passed by reference.
    * @param array $map
    *   An associative array whose keys are element property names and whose
-   *   values are the HTML attribute names to set on the corresponding
-   *   property; e.g., array('#property_name' => 'attribute_name'). If both
-   *   names are identical except for the leading '#', then an attribute name
-   *   value is sufficient and no property name needs to be specified.
+   *   values are the HTML attribute names to set on the corresponding property.
+   *   for example, ['#property_name' => 'attribute_name']. If both names are
+   *   identical except for the leading '#', then an attribute name value is
+   *   sufficient and no property name needs to be specified.
    */
   public static function setAttributes(array &$element, array $map) {
     foreach ($map as $property => $attribute) {

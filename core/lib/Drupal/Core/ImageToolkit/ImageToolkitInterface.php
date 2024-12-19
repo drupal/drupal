@@ -162,9 +162,8 @@ interface ImageToolkitInterface extends ContainerFactoryPluginInterface, PluginI
    * @param string $operation
    *   The toolkit operation to be processed.
    * @param array $arguments
-   *   An associative array of arguments to be passed to the toolkit
-   *   operation, e.g. array('width' => 50, 'height' => 100,
-   *   'upscale' => TRUE).
+   *   An associative array of arguments to be passed to the toolkit operation.
+   *   For example, ['width' => 50, 'height' => 100, 'upscale' => TRUE].
    *
    * @return bool
    *   TRUE if the operation was performed successfully, FALSE otherwise.

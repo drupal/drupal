@@ -124,7 +124,7 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    *     array.
    *   - a non-numerically indexed array, in which case the array is assumed to
    *     be a property/value array and used as the first item
-   *   - NULL or array() for no default value.
+   *   - NULL or [] for no default value.
    *
    * @return $this
    */

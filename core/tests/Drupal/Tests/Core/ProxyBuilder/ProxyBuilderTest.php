@@ -39,7 +39,7 @@ class ProxyBuilderTest extends UnitTestCase {
 
     $result = $this->proxyBuilder->build($class);
 
-    // @todo Solve the silly linebreak for array()
+    // @todo Solve the silly linebreak for an empty array.
     $method_body = <<<'EOS'
 
 /**
