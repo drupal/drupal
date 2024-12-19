@@ -106,6 +106,9 @@ class ManyToOne extends InOperator {
     return $operators;
   }
 
+  /**
+   * The default form type.
+   */
   protected $valueFormType = 'select';
 
   protected function valueForm(&$form, FormStateInterface $form_state) {

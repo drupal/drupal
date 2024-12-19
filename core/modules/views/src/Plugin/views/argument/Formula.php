@@ -21,6 +21,9 @@ use Drupal\views\ViewExecutable;
 )]
 class Formula extends ArgumentPluginBase {
 
+  /**
+   * An appropriate SQL string for the DB type and field type.
+   */
   public $formula = NULL;
 
   /**

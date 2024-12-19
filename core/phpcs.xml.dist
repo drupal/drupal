@@ -89,8 +89,11 @@
   <rule ref="Drupal.Commenting.TodoComment" />
   <rule ref="Drupal.Commenting.VariableComment">
     <!-- Sniff for: DuplicateVar, EmptyVar, IncorrectVarType, InlineVariableName, WrongStyle -->
-    <exclude name="Drupal.Commenting.VariableComment.Missing"/>
     <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
+  </rule>
+  <rule ref="Drupal.Commenting.VariableComment.Missing">
+    <exclude-pattern>./core/tests/*</exclude-pattern>
+    <exclude-pattern>./core/*/tests/*</exclude-pattern>
   </rule>
   <rule ref="Drupal.ControlStructures.ControlSignature"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>

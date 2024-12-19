@@ -22,6 +22,9 @@ use Drupal\Core\Form\OptGroup;
 #[ViewsFilter("in_operator")]
 class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
 
+  /**
+   * The default form type.
+   */
   protected $valueFormType = 'checkboxes';
 
   /**

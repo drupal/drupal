@@ -78,6 +78,10 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $field_alias = 'unknown';
+
+  /**
+   * An array of aliases.
+   */
   public $aliases = [];
 
   /**

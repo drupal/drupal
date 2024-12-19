@@ -16,6 +16,9 @@ use Drupal\views\Plugin\views\filter\InOperator;
 #[ViewsFilter("user_name")]
 class Name extends InOperator {
 
+  /**
+   * This filter is always considered multiple-valued.
+   */
   protected $alwaysMultiple = TRUE;
 
   /**

@@ -13,6 +13,9 @@ use Drupal\views\Attribute\ViewsFilter;
 #[ViewsFilter("numeric")]
 class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface {
 
+  /**
+   * Exposed filter options.
+   */
   protected $alwaysMultiple = TRUE;
 
   protected function defineOptions() {

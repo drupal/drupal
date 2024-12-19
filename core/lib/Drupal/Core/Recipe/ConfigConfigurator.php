@@ -14,8 +14,14 @@ use Drupal\Core\Config\StorageInterface;
  */
 final class ConfigConfigurator {
 
+  /**
+   * The configuration directory for the recipe.
+   */
   public readonly ?string $recipeConfigDirectory;
 
+  /**
+   * Indicates how the shipped and active config are compared.
+   */
   private readonly bool|array $strict;
 
   /**

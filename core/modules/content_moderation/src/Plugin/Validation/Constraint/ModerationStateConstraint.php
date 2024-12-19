@@ -15,8 +15,19 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 )]
 class ModerationStateConstraint extends SymfonyConstraint {
 
+  /**
+   * The default violation message.
+   */
   public $message = 'Invalid state transition from %from to %to';
+
+  /**
+   * The violation message when there is an invalid stated.
+   */
   public $invalidStateMessage = 'State %state does not exist on %workflow workflow';
+
+  /**
+   * The violation message when there is an invalid transition.
+   */
   public $invalidTransitionAccess = 'You do not have access to transition from %original_state to %new_state';
 
 }
