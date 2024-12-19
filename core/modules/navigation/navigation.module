@@ -158,7 +158,9 @@ function navigation_menu_links_discovered_alter(&$links) {
 function navigation_block_build_local_tasks_block_alter(array &$build, BlockPluginInterface $block) {
   $navigation_renderer = \Drupal::service('navigation.renderer');
   assert($navigation_renderer instanceof NavigationRenderer);
-  $navigation_renderer->removeLocalTasks($build, $block);
+  if (\Drupal::currentUser()->hasPermission('access navigation')) {
+    $navigation_renderer->removeLocalTasks($build, $block);
+  }
 }
 
 /**
