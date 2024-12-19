@@ -35,6 +35,7 @@ class Email extends FormElementBase {
    * specifies a total length of 320 characters, but mentions that
    * addresses longer than 256 characters are not normally useful. Erratum
    * 1690 was then released which corrected this value to 254 characters.
+   *
    * @see http://tools.ietf.org/html/rfc3696#section-3
    * @see http://www.rfc-editor.org/errata_search.php?rfc=3696&eid=1690
    */

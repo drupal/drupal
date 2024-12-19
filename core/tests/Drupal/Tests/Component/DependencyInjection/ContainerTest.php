@@ -238,6 +238,7 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::get() for circular dependencies works properly.
+   *
    * @covers ::get
    * @covers ::createService
    */
@@ -357,6 +358,7 @@ class ContainerTest extends TestCase {
 
   /**
    * Tests that Container::get() for NULL service works properly.
+   *
    * @covers ::get
    * @covers ::createService
    */

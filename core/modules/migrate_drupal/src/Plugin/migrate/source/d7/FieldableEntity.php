@@ -10,6 +10,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Field values are collected from the Field API.
  *
  * Refer to the existing implementations for examples:
+ *
  * @see \Drupal\node\Plugin\migrate\source\d7\Node
  * @see \Drupal\user\Plugin\migrate\source\d7\User
  *

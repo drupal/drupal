@@ -13,7 +13,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines the ConfigQueryTest configuration entity used by the query test.
  *
- *
  * @see \Drupal\system\Tests\Entity\ConfigEntityQueryTest
  */
 #[ConfigEntityType(

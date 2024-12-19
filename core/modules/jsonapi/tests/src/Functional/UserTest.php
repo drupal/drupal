@@ -690,6 +690,7 @@ class UserTest extends ResourceTestBase {
 
   /**
    * Tests if JSON:API respects user.settings.cancel_method: user_cancel_block_unpublish.
+   *
    * @group jsonapi
    */
   public function testDeleteRespectsUserCancelBlockUnpublishAndProcessesBatches(): void {

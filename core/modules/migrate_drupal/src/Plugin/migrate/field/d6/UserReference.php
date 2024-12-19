@@ -10,6 +10,7 @@ use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 
 /**
  * MigrateField Plugin for Drupal 6 user reference fields.
+ *
  * @internal
  */
 #[MigrateField(

@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Tests the language of entity URLs.
+ *
  * @group language
  */
 class EntityUrlLanguageTest extends LanguageTestBase {

@@ -25,6 +25,7 @@ class JUnitConverterTest extends UnitTestCase {
 
   /**
    * Tests errors reported.
+   *
    * @covers ::xmlToRows
    */
   public function testXmlToRowsWithErrors(): void {

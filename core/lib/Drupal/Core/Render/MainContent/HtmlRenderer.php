@@ -22,7 +22,10 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Default main content renderer for HTML requests.
  *
- * For attachment handling of HTML responses:
+ * Attachments in HTML responses are handled by
+ * \Drupal\Core\Render\AttachmentsResponseProcessorInterface and
+ * \Drupal\Core\Render\HtmlResponseAttachmentsProcessor
+ *
  * @see template_preprocess_html()
  * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface
  * @see \Drupal\Core\Render\BareHtmlPageRenderer

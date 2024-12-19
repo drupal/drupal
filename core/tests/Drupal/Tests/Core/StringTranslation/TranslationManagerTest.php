@@ -32,6 +32,7 @@ class TranslationManagerTest extends UnitTestCase {
 
   /**
    * Provides some test data for formatPlural()
+   *
    * @return array
    */
   public static function providerTestFormatPlural() {

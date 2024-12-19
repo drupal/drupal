@@ -8,6 +8,7 @@ use Drupal\migrate\Attribute\MigrateDestination;
  * Provides entity view mode destination plugin.
  *
  * See EntityConfigBase for the available configuration options.
+ *
  * @see \Drupal\migrate\Plugin\migrate\destination\EntityConfigBase
  *
  * Example:

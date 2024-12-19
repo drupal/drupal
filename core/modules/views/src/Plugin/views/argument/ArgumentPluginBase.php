@@ -72,6 +72,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
   /**
    * The table to use for the name, should it not be in the same table as the argument.
+   *
    * @var string
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing

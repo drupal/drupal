@@ -28,6 +28,7 @@ class Html {
 
   /**
    * An array of IDs, including incremented versions when an ID is duplicated.
+   *
    * @var array
    */
   protected static $seenIds;

@@ -8,6 +8,7 @@ use Drupal\views\ResultRow;
 
 /**
  * Field handler which allows to show machine name content as human name.
+ *
  * @ingroup views_field_handlers
  *
  * Definition items:

@@ -75,6 +75,7 @@ class EditorAdminTest extends WebDriverTestBase {
    *
    * The order in which the different editors are selected is significant,
    * because the form state must change accordingly.
+   *
    * @see https://www.drupal.org/project/drupal/issues/3230829
    */
   public function testEditorCreation(): void {

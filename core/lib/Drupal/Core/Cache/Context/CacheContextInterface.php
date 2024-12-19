@@ -37,7 +37,6 @@ interface CacheContextInterface {
    *   if this is optimized away to allow for invalidation if the context
    *   value changes.
    *
-   *
    * @return \Drupal\Core\Cache\CacheableMetadata
    *   A cacheable metadata object.
    */

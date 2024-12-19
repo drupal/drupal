@@ -239,6 +239,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * over all translations if needed. This is different from its counterpart in
    * the Field API, FieldItemListInterface::preSave(), which is fired on all
    * field translations automatically.
+   *
    * @todo Adjust existing implementations and the documentation according to
    *   https://www.drupal.org/node/2577609 to have a consistent API.
    *

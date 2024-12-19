@@ -78,6 +78,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests setting attributes.
+   *
    * @covers ::setAttribute
    */
   public function testSetAttribute(): void {
@@ -106,6 +107,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing attributes.
+   *
    * @covers ::removeAttribute
    */
   public function testRemoveAttribute(): void {
@@ -145,6 +147,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests adding class attributes with the AttributeArray helper method.
+   *
    * @covers ::addClass
    */
   public function testAddClasses(): void {
@@ -201,6 +204,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing class attributes with the AttributeArray helper method.
+   *
    * @covers ::removeClass
    */
   public function testRemoveClasses(): void {
@@ -232,6 +236,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests checking for class names with the Attribute method.
+   *
    * @covers ::hasClass
    */
   public function testHasClass(): void {
@@ -247,6 +252,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests removing class attributes with the Attribute helper methods.
+   *
    * @covers ::removeClass
    * @covers ::addClass
    */
@@ -265,6 +271,7 @@ class AttributeTest extends UnitTestCase {
 
   /**
    * Tests the twig calls to the Attribute.
+   *
    * @dataProvider providerTestAttributeClassHelpers
    *
    * @covers ::removeClass

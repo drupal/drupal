@@ -472,6 +472,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * Using the Serialize interface and serialize() / unserialize() methods
    * breaks entity forms in PHP 5.4.
+   *
    * @todo Investigate in https://www.drupal.org/node/1977206.
    */
   public function __sleep(): array {

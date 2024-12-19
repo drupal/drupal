@@ -52,12 +52,14 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
 
   /**
    * Contains the current active sort column.
+   *
    * @var string
    */
   public $active;
 
   /**
    * Contains the current active sort order, either desc or asc.
+   *
    * @var string
    */
   public $order;

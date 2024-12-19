@@ -17,7 +17,6 @@ use Drupal\views\EntityViewsData;
 /**
  * Defines the Content moderation state entity.
  *
- *
  * @internal
  *   This entity is marked internal because it should not be used directly to
  *   alter the moderation state of an entity. Instead, the computed

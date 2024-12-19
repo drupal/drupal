@@ -42,6 +42,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
 
   /**
    * The number of entities to process in each batch.
+   *
    * @var int
    */
   protected $batchSize;

@@ -107,6 +107,7 @@ class Select extends Query implements SelectInterface {
 
   /**
    * Indicates if preExecute() has already been called.
+   *
    * @var bool
    */
   protected $prepared = FALSE;

@@ -387,6 +387,7 @@ function user_cancel($edit, $uid, $method) {
  *
  * Since batch and session API require a valid user account, the actual
  * cancellation of a user account needs to happen last.
+ *
  * @param array $edit
  *   An array of submitted form values.
  * @param \Drupal\user\UserInterface $account

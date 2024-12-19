@@ -41,6 +41,7 @@ class UrlEncodeTest extends MigrateTestCase {
 
   /**
    * Cover various encoding scenarios.
+   *
    * @dataProvider urlDataProvider
    */
   public function testUrls($input, $output): void {

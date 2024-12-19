@@ -31,11 +31,14 @@ use Symfony\Component\Routing\Route;
  * To define an access control plugin, extend this base class. Your access
  * plugin should have an annotation that includes the plugin's metadata, for
  * example:
+ * @code
  * @Plugin(
  *   id = "deny_all",
  *   title = @Translation("No Access"),
  *   help = @Translation("Will not be accessible.")
  * )
+ * @endcode
+ *
  * The definition should include the following keys:
  * - id: The unique identifier of your access plugin.
  * - title: The human-readable name for your access plugin.
