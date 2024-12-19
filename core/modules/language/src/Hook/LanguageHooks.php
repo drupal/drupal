@@ -224,7 +224,7 @@ class LanguageHooks {
    */
   #[Hook('modules_installed')]
   #[Hook('modules_uninstalled')]
-  public function modulesInstalled($modules, $is_syncing) {
+  public function modulesInstalled($modules, $is_syncing): void {
     if ($is_syncing) {
       return;
     }

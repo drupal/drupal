@@ -115,7 +115,7 @@ class ShortcutHooks {
    * Implements hook_themes_installed().
    */
   #[Hook('themes_installed')]
-  public function themesInstalled($theme_list) {
+  public function themesInstalled($theme_list): void {
     // Theme settings are not configuration entities and cannot depend on modules
     // so to set a module-specific setting, we need to set it with logic.
     if (in_array('claro', $theme_list, TRUE)) {

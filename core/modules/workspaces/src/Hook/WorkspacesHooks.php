@@ -42,7 +42,7 @@ class WorkspacesHooks {
    * Implements hook_module_preinstall().
    */
   #[Hook('module_preinstall')]
-  public function modulePreinstall($module) {
+  public function modulePreinstall($module): void {
     if ($module !== 'workspaces') {
       return;
     }

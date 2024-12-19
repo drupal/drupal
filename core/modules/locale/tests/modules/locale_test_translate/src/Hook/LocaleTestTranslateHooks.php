@@ -33,7 +33,7 @@ class LocaleTestTranslateHooks {
    * @see \Drupal\Tests\locale\Functional\LocaleConfigTranslationImportTest::testConfigTranslationWithForeignLanguageDefault
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled($modules, $is_syncing) {
+  public function modulesInstalled($modules, $is_syncing): void {
     // Ensure that writing to configuration during install does not cause
     // \Drupal\locale\LocaleConfigSubscriber to create incorrect translations due
     // the configuration langcode and data being out-of-sync.

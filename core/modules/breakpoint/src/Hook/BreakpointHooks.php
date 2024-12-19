@@ -44,7 +44,7 @@ class BreakpointHooks {
    * Implements hook_themes_installed().
    */
   #[Hook('themes_installed')]
-  public function themesInstalled($theme_list) {
+  public function themesInstalled($theme_list): void {
     \Drupal::service('breakpoint.manager')->clearCachedDefinitions();
   }
 
@@ -52,7 +52,7 @@ class BreakpointHooks {
    * Implements hook_themes_uninstalled().
    */
   #[Hook('themes_uninstalled')]
-  public function themesUninstalled($theme_list) {
+  public function themesUninstalled($theme_list): void {
     \Drupal::service('breakpoint.manager')->clearCachedDefinitions();
   }
 

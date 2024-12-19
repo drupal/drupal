@@ -16,7 +16,7 @@ class RouterInstallerTestHooks {
    * Implements hook_modules_installed().
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled($modules) {
+  public function modulesInstalled($modules): void {
     if (in_array('router_installer_test', $modules, TRUE)) {
       // Ensure a URL can be generated for routes provided by the module during
       // installation.

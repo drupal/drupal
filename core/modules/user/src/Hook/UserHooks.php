@@ -347,7 +347,7 @@ class UserHooks {
    * Implements hook_modules_uninstalled().
    */
   #[Hook('modules_uninstalled')]
-  public function modulesUninstalled($modules) {
+  public function modulesUninstalled($modules): void {
     // Remove any potentially orphan module data stored for users.
     \Drupal::service('user.data')->delete($modules);
   }

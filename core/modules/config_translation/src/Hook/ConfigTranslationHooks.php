@@ -78,7 +78,7 @@ class ConfigTranslationHooks {
    * Implements hook_themes_installed().
    */
   #[Hook('themes_installed')]
-  public function themesInstalled() {
+  public function themesInstalled(): void {
     // Themes can provide *.config_translation.yml declarations.
     // @todo Make ThemeHandler trigger an event instead and make
     //   ConfigMapperManager plugin manager subscribe to it.
@@ -90,7 +90,7 @@ class ConfigTranslationHooks {
    * Implements hook_themes_uninstalled().
    */
   #[Hook('themes_uninstalled')]
-  public function themesUninstalled() {
+  public function themesUninstalled(): void {
     // Themes can provide *.config_translation.yml declarations.
     // @todo Make ThemeHandler trigger an event instead and make
     //   ConfigMapperManager plugin manager subscribe to it.

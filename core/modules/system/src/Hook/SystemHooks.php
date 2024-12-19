@@ -393,7 +393,7 @@ class SystemHooks {
    * Implements hook_modules_uninstalled().
    */
   #[Hook('modules_uninstalled')]
-  public function modulesUninstalled($modules) {
+  public function modulesUninstalled($modules): void {
     // @todo Remove this when modules are able to maintain their revision metadata
     //   keys.
     //   @see https://www.drupal.org/project/drupal/issues/3074333

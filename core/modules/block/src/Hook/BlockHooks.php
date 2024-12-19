@@ -95,7 +95,7 @@ class BlockHooks {
    * @see block_themes_installed()
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled($modules) {
+  public function modulesInstalled($modules): void {
     // block_themes_installed() does not call block_theme_initialize() during site
     // installation because block configuration can be optional or provided by the
     // profile. Now, when the profile is installed, this configuration exists,

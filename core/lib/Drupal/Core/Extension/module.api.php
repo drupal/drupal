@@ -173,7 +173,7 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
  *   should be made earlier and exported so during import there's no need to
  *   do them again.
  */
-function hook_module_preinstall($module, bool $is_syncing) {
+function hook_module_preinstall($module, bool $is_syncing): void {
   my_module_cache_clear();
 }
 
@@ -201,7 +201,7 @@ function hook_module_preinstall($module, bool $is_syncing) {
  * @see \Drupal\Core\Extension\ModuleInstaller::install()
  * @see hook_install()
  */
-function hook_modules_installed($modules, $is_syncing) {
+function hook_modules_installed($modules, $is_syncing): void {
   if (in_array('lousy_module', $modules)) {
     \Drupal::state()->set('my_module.lousy_module_compatibility', TRUE);
   }
@@ -272,7 +272,7 @@ function hook_install($is_syncing): void {
  *   should be made earlier and exported so during import there's no need to
  *   do them again.
  */
-function hook_module_preuninstall($module, bool $is_syncing) {
+function hook_module_preuninstall($module, bool $is_syncing): void {
   my_module_cache_clear();
 }
 
@@ -297,7 +297,7 @@ function hook_module_preuninstall($module, bool $is_syncing) {
  *
  * @see hook_uninstall()
  */
-function hook_modules_uninstalled($modules, $is_syncing) {
+function hook_modules_uninstalled($modules, $is_syncing): void {
   if (in_array('lousy_module', $modules)) {
     \Drupal::state()->delete('my_module.lousy_module_compatibility');
   }

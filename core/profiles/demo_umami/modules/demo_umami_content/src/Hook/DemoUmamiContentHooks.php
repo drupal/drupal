@@ -16,7 +16,7 @@ class DemoUmamiContentHooks {
    * Implements hook_module_preinstall().
    */
   #[Hook('module_preinstall')]
-  public function modulePreinstall($module) {
+  public function modulePreinstall($module): void {
     if ($module === 'demo_umami_content' && !\Drupal::service('config.installer')->isSyncing()) {
       // Run before importing config so blocks are created with the correct
       // dependencies.

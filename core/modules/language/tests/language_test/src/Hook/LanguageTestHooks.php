@@ -102,7 +102,7 @@ class LanguageTestHooks {
    * Implements hook_module_preinstall().
    */
   #[Hook('module_preinstall')]
-  public function modulePreinstall() {
+  public function modulePreinstall(): void {
     \Drupal::state()->set('language_test.language_count_preinstall', count(\Drupal::languageManager()->getLanguages()));
   }
 

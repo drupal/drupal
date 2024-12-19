@@ -31,7 +31,7 @@ class SystemTestHooks {
    * Implements hook_modules_installed().
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled($modules) {
+  public function modulesInstalled($modules): void {
     if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
       foreach ($modules as $module) {
         \Drupal::messenger()->addStatus(t('hook_modules_installed fired for @module', ['@module' => $module]));
@@ -43,7 +43,7 @@ class SystemTestHooks {
    * Implements hook_modules_uninstalled().
    */
   #[Hook('modules_uninstalled')]
-  public function modulesUninstalled($modules, $is_syncing) {
+  public function modulesUninstalled($modules, $is_syncing): void {
     if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
       foreach ($modules as $module) {
         \Drupal::messenger()->addStatus(t('hook_modules_uninstalled fired for @module', ['@module' => $module]));
@@ -126,7 +126,7 @@ class SystemTestHooks {
    * Implements hook_module_preinstall().
    */
   #[Hook('module_preinstall')]
-  public function modulePreinstall($module, bool $is_syncing) {
+  public function modulePreinstall($module, bool $is_syncing): void {
     \Drupal::messenger()->addStatus('system_test_preinstall_module called');
     \Drupal::state()->set('system_test_preinstall_module', $module);
     // Save the config.installer isSyncing() value to state to check that it is
@@ -141,7 +141,7 @@ class SystemTestHooks {
    * Implements hook_module_preuninstall().
    */
   #[Hook('module_preuninstall')]
-  public function modulePreuninstall($module, bool $is_syncing) {
+  public function modulePreuninstall($module, bool $is_syncing): void {
     \Drupal::state()->set('system_test_preuninstall_module', $module);
     // Save the config.installer isSyncing() value to state to check that it is
     // correctly set when uninstalling module during config import.

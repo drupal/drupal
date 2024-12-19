@@ -122,7 +122,7 @@ class HelpHooks {
    * Implements hook_modules_uninstalled().
    */
   #[Hook('modules_uninstalled')]
-  public function modulesUninstalled(array $modules) {
+  public function modulesUninstalled(array $modules): void {
     _help_search_update($modules);
   }
 
@@ -130,7 +130,7 @@ class HelpHooks {
    * Implements hook_themes_uninstalled().
    */
   #[Hook('themes_uninstalled')]
-  public function themesUninstalled(array $themes) {
+  public function themesUninstalled(array $themes): void {
     \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
     _help_search_update();
   }
@@ -139,7 +139,7 @@ class HelpHooks {
    * Implements hook_modules_installed().
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled(array $modules, $is_syncing) {
+  public function modulesInstalled(array $modules, $is_syncing): void {
     _help_search_update();
   }
 
@@ -147,7 +147,7 @@ class HelpHooks {
    * Implements hook_themes_installed().
    */
   #[Hook('themes_installed')]
-  public function themesInstalled(array $themes) {
+  public function themesInstalled(array $themes): void {
     \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
     _help_search_update();
   }

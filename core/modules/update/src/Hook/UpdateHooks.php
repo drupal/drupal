@@ -200,7 +200,7 @@ class UpdateHooks {
    * If themes are installed, we invalidate the information of available updates.
    */
   #[Hook('themes_installed')]
-  public function themesInstalled($themes) {
+  public function themesInstalled($themes): void {
     // Clear all update module data.
     update_storage_clear();
   }
@@ -211,7 +211,7 @@ class UpdateHooks {
    * If themes are uninstalled, we invalidate the information of available updates.
    */
   #[Hook('themes_uninstalled')]
-  public function themesUninstalled($themes) {
+  public function themesUninstalled($themes): void {
     // Clear all update module data.
     update_storage_clear();
   }
@@ -222,7 +222,7 @@ class UpdateHooks {
    * If modules are installed, we invalidate the information of available updates.
    */
   #[Hook('modules_installed')]
-  public function modulesInstalled($modules) {
+  public function modulesInstalled($modules): void {
     // Clear all update module data.
     update_storage_clear();
   }
@@ -233,7 +233,7 @@ class UpdateHooks {
    * If modules are uninstalled, we invalidate the information of available updates.
    */
   #[Hook('modules_uninstalled')]
-  public function modulesUninstalled($modules) {
+  public function modulesUninstalled($modules): void {
     // Clear all update module data.
     update_storage_clear();
   }
