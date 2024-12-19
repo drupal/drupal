@@ -3,6 +3,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Path\CurrentPathStack;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -130,7 +131,12 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
    * {@inheritdoc}
    */
   public function match($pathinfo): array {
-    $request = Request::create($pathinfo);
+    try {
+      $request = Request::create($pathinfo);
+    }
+    catch (BadRequestException $e) {
+      throw new ResourceNotFoundException($e->getMessage(), $e->getCode(), $e);
+    }
 
     return $this->matchRequest($request);
   }

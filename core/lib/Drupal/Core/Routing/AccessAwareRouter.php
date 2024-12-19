@@ -7,8 +7,10 @@ use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Http\Exception\CacheableAccessDeniedHttpException;
 use Drupal\Core\Session\AccountInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\RouterInterface;
@@ -141,7 +143,13 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    *   Thrown when access checking failed.
    */
   public function match($pathinfo): array {
-    return $this->matchRequest(Request::create($pathinfo));
+    try {
+      $request = Request::create($pathinfo);
+    }
+    catch (BadRequestException $e) {
+      throw new ResourceNotFoundException($e->getMessage(), $e->getCode(), $e);
+    }
+    return $this->matchRequest($request);
   }
 
 }
