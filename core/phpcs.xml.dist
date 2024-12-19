@@ -260,6 +260,7 @@
   <rule ref="PSR2.Namespaces.UseDeclaration"/>
 
   <!-- SlevomatCodingStandard sniffs -->
+  <rule ref="SlevomatCodingStandard.Classes.BackedEnumTypeSpacing"/>
   <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
     <properties>
       <property name="forbiddenAnnotations" type="array">
