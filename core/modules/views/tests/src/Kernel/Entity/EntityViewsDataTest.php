@@ -154,7 +154,7 @@ class EntityViewsDataTest extends KernelTestBase {
     $definitions[$definition->id()] = $definition;
 
     $cache_backend = $this->prophesize(CacheBackendInterface::class);
-    $cache_data = new \StdClass();
+    $cache_data = new \stdClass();
     $cache_data->data = $definitions;
     $cache_backend->get('entity_type')->willReturn($cache_data);
     $this->entityTypeManager->setCacheBackend($cache_backend->reveal(), 'entity_type', ['entity_types']);

@@ -348,7 +348,7 @@ class ToolkitGdTest extends KernelTestBase {
 
     // Check that saved image reloads without raising PHP errors.
     $image_reloaded = $this->imageFactory->get($file_path);
-    $this->assertInstanceOf(\GDImage::class, $image_reloaded->getToolkit()->getImage());
+    $this->assertInstanceOf(\GdImage::class, $image_reloaded->getToolkit()->getImage());
   }
 
   /**

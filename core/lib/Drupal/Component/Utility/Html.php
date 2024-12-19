@@ -466,7 +466,7 @@ class Html {
     assert(isset(parse_url($scheme_and_host)["host"]), '$base_url is absolute and hence has a host.');
 
     $html_dom = Html::load($html);
-    $xpath = new \DOMXpath($html_dom);
+    $xpath = new \DOMXPath($html_dom);
 
     // Update all root-relative URLs to absolute URLs in the given HTML.
     // Perform on attributes that may contain a single URI.

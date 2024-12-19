@@ -84,7 +84,7 @@ class DenyNodePreviewTest extends UnitTestCase {
       [NULL, NULL],
       [NULL, FALSE],
       [NULL, TRUE],
-      [NULL, new \StdClass()],
+      [NULL, new \stdClass()],
       [NULL, [1, 2, 3]],
     ];
   }

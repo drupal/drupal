@@ -10,6 +10,8 @@ parameters:
 
   level: 1
 
+  checkInternalClassCaseSensitivity: true
+
   fileExtensions:
     - sh
 

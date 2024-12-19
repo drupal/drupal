@@ -55,7 +55,7 @@ class DateTimeWidgetBase extends WidgetBase {
       $storage_format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
     }
 
-    $storage_timezone = new \DateTimezone(DateTimeItemInterface::STORAGE_TIMEZONE);
+    $storage_timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
 
     foreach ($values as &$item) {
       if (!empty($item['value']) && $item['value'] instanceof DrupalDateTime) {
