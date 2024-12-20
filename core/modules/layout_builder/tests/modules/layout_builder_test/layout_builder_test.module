@@ -53,7 +53,7 @@ function layout_builder_test_preprocess_layout__twocol_section(&$vars): void {
 /**
  * Implements hook_module_implements_alter().
  */
-function layout_builder_test_module_implements_alter(&$implementations, $hook) {
+function layout_builder_test_module_implements_alter(&$implementations, $hook): void {
   if ($hook === 'system_breadcrumb_alter') {
     // Move our hook_system_breadcrumb_alter() implementation to run before
     // layout_builder_system_breadcrumb_alter().

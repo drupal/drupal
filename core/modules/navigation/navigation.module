@@ -9,7 +9,7 @@ use Drupal\navigation\TopBarRegion;
 /**
  * Implements hook_module_implements_alter().
  */
-function navigation_module_implements_alter(&$implementations, $hook) {
+function navigation_module_implements_alter(&$implementations, $hook): void {
   if ($hook == 'page_top') {
     $group = $implementations['navigation'];
     unset($implementations['navigation']);

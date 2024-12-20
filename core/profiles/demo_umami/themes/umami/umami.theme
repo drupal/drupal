@@ -62,7 +62,7 @@ function umami_preprocess_block(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for block templates.
  */
-function umami_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+function umami_theme_suggestions_block_alter(array &$suggestions, array $variables): void {
   // Block suggestions for content block bundles.
   if (isset($variables['elements']['content']['#block_content'])) {
     array_splice($suggestions, 1, 0, 'block__bundle__' . $variables['elements']['content']['#block_content']->bundle());

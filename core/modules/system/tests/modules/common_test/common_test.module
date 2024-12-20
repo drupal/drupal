@@ -13,7 +13,7 @@ declare(strict_types=1);
  * Same as common_test_drupal_alter_alter(), but here, we verify that themes
  * can also alter and come last.
  */
-function olivero_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
+function olivero_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL): void {
   // Alter first argument.
   if (is_array($data)) {
     $data['foo'] .= ' theme';
@@ -46,7 +46,7 @@ function olivero_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
  *
  * @see block_drupal_alter_foo_alter()
  */
-function common_test_module_implements_alter(&$implementations, $hook) {
+function common_test_module_implements_alter(&$implementations, $hook): void {
   // For
   // \Drupal::moduleHandler()->alter(['drupal_alter', 'drupal_alter_foo'], ...),
   // make the block module implementations run after all the other modules. Note

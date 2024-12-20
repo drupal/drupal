@@ -17,7 +17,7 @@ function test_theme_preprocess_twig_theme_test_php_variables(&$variables): void 
 /**
  * Implements hook_element_info_alter().
  */
-function test_theme_element_info_alter(&$info) {
+function test_theme_element_info_alter(&$info): void {
   // Decrease the default size of textfields.
   if (isset($info['textfield']['#size'])) {
     $info['textfield']['#size'] = 40;
@@ -27,7 +27,7 @@ function test_theme_element_info_alter(&$info) {
 /**
  * Implements hook_library_info_alter().
  */
-function test_theme_library_info_alter(&$libraries, $extension) {
+function test_theme_library_info_alter(&$libraries, $extension): void {
   if ($extension === 'test_theme') {
     $libraries['kitten']['js']['kittens.js'] = [];
   }
@@ -40,14 +40,14 @@ function test_theme_library_info_alter(&$libraries, $extension) {
  * the alter hook invoked when the 'theme_test' module calls
  * \Drupal::moduleHandler->alter('theme_test_alter').
  */
-function test_theme_theme_test_alter_alter(&$data) {
+function test_theme_theme_test_alter_alter(&$data): void {
   $data = 'test_theme_theme_test_alter_alter was invoked';
 }
 
 /**
  * Implements hook_theme_suggestions_alter().
  */
-function test_theme_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
+function test_theme_theme_suggestions_alter(array &$suggestions, array &$variables, $hook): void {
   \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
   // Theme alter hooks run after module alter hooks, so add this theme
   // suggestion to the beginning of the array so that the suggestion added by
@@ -62,7 +62,7 @@ function test_theme_theme_suggestions_alter(array &$suggestions, array &$variabl
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables) {
+function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$suggestions, array $variables): void {
   \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
   // Theme alter hooks run after module alter hooks, so add this theme
   // suggestion to the beginning of the array so that the suggestion added by
@@ -74,7 +74,7 @@ function test_theme_theme_suggestions_theme_test_suggestions_alter(array &$sugge
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function test_theme_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+function test_theme_theme_suggestions_node_alter(array &$suggestions, array $variables): void {
   // Add an invalid suggestion to be tested.
   $suggestions[] = 'invalid_theme_suggestions';
   \Drupal::messenger()->addStatus(__FUNCTION__ . '() executed.');
@@ -83,7 +83,7 @@ function test_theme_theme_suggestions_node_alter(array &$suggestions, array $var
 /**
  * Implements hook_theme_registry_alter().
  */
-function test_theme_theme_registry_alter(&$registry) {
+function test_theme_theme_registry_alter(&$registry): void {
   $registry['theme_test_template_test']['variables']['additional'] = 'value';
 }
 
