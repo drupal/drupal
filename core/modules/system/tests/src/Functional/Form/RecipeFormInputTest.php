@@ -39,6 +39,7 @@ class RecipeFormInputTest extends BrowserTestBase {
     // All recipe inputs are required, except for checkboxes, for which that
     // behavior makes no sense.
     $this->submitForm(['input_test[owner]' => ''], 'Apply recipe');
+    $assert_session->statusCodeEquals(200);
     $assert_session->statusMessageContains("Site owner's name field is required.", 'error');
     $assert_session->statusMessageNotContains('Allow mischief field is required.', 'error');
     // All inputs should be validated with their own constraints.
