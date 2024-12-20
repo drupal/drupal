@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -88,16 +87,16 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
 
     if (!isset($message)) {
       if ($actual_count == $expected_count) {
-        $message = new FormattableMarkup('hook_file_@name was called correctly.', ['@name' => $hook]);
+        $message = "hook_file_$hook was called correctly.";
       }
       elseif ($expected_count == 0) {
-        $message = \Drupal::translation()->formatPlural($actual_count, 'hook_file_@name was not expected to be called but was actually called once.', 'hook_file_@name was not expected to be called but was actually called @count times.', ['@name' => $hook, '@count' => $actual_count]);
+        $message = "hook_file_$hook was not expected to be called but was actually called $actual_count time(s).";
       }
       else {
-        $message = new FormattableMarkup('hook_file_@name was expected to be called %expected times but was called %actual times.', ['@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count]);
+        $message = "hook_file_$hook was expected to be called $expected_count time(s) but was called $actual_count time(s).";
       }
     }
-    $this->assertEquals($expected_count, $actual_count, (string) $message);
+    $this->assertEquals($expected_count, $actual_count, $message);
   }
 
   /**
