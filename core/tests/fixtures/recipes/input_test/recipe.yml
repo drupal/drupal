@@ -1,4 +1,8 @@
 name: Input Test
+recipes:
+  # Depend on another recipe in order to prove that we can collect input
+  # from recipes that depend on other recipes.
+  - no_extensions
 input:
   owner:
     data_type: string
