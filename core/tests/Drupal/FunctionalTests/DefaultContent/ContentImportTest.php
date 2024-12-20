@@ -8,6 +8,7 @@ use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\DefaultContent\PreImportEvent;
 use Drupal\Core\DefaultContent\Existing;
 use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\DefaultContent\Importer;
@@ -33,6 +34,7 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Psr\Log\LogLevel;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @covers \Drupal\Core\DefaultContent\Importer
@@ -277,7 +279,50 @@ class ContentImportTest extends BrowserTestBase {
     $this->assertInstanceOf(Section::class, $section);
     $this->assertCount(2, $section->getComponents());
     $this->assertSame('system_powered_by_block', $section->getComponent('03b45f14-cf74-469a-8398-edf3383ce7fa')->getPluginId());
+  }
 
+  /**
+   * Tests that the pre-import event allows skipping certain entities.
+   */
+  public function testPreImportEvent(): void {
+    $invalid_uuid_detected = FALSE;
+
+    $listener = function (PreImportEvent $event) use (&$invalid_uuid_detected): void {
+      $event->skip('3434bd5a-d2cd-4f26-bf79-a7f6b951a21b', 'Decided not to!');
+      try {
+        $event->skip('not-a-thing');
+      }
+      catch (\InvalidArgumentException) {
+        $invalid_uuid_detected = TRUE;
+      }
+    };
+    \Drupal::service(EventDispatcherInterface::class)
+      ->addListener(PreImportEvent::class, $listener);
+
+    $finder = new Finder($this->contentDir);
+    $this->assertSame('menu_link_content', $finder->data['3434bd5a-d2cd-4f26-bf79-a7f6b951a21b']['_meta']['entity_type']);
+
+    /** @var \Drupal\Core\DefaultContent\Importer $importer */
+    $importer = \Drupal::service(Importer::class);
+    $logger = new TestLogger();
+    $importer->setLogger($logger);
+    $importer->importContent($finder, Existing::Error);
+
+    // The entity we skipped should not be here, and the reason why should have
+    // been logged.
+    $menu_link = \Drupal::service(EntityRepositoryInterface::class)
+      ->loadEntityByUuid('menu_link_content', '3434bd5a-d2cd-4f26-bf79-a7f6b951a21b');
+    $this->assertNull($menu_link);
+    $this->assertTrue($logger->hasInfo([
+      'message' => 'Skipped importing @entity_type @uuid because: %reason',
+      'context' => [
+        '@entity_type' => 'menu_link_content',
+        '@uuid' => '3434bd5a-d2cd-4f26-bf79-a7f6b951a21b',
+        '%reason' => 'Decided not to!',
+      ],
+    ]));
+    // We should have caught an exception for trying to skip an invalid UUID.
+    $this->assertTrue($invalid_uuid_detected);
   }
 
 }
