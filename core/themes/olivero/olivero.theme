@@ -162,7 +162,7 @@ function olivero_preprocess_block(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for menu.
  */
-function olivero_theme_suggestions_menu_alter(&$suggestions, array $variables) {
+function olivero_theme_suggestions_menu_alter(&$suggestions, array $variables): void {
   if (isset($variables['attributes']['region'])) {
     $suggestions[] = 'menu__' . $variables['attributes']['region'];
   }
@@ -183,7 +183,7 @@ function olivero_preprocess_menu(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for form templates.
  */
-function olivero_theme_suggestions_form_alter(array &$suggestions, array $variables) {
+function olivero_theme_suggestions_form_alter(array &$suggestions, array $variables): void {
   if ($variables['element']['#form_id'] === 'search_block_form') {
     $suggestions[] = 'form__search_block_form';
   }
@@ -217,7 +217,7 @@ function olivero_form_alter(&$form, FormStateInterface $form_state, $form_id): v
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for block().
  */
-function olivero_theme_suggestions_block_alter(&$suggestions, array $variables) {
+function olivero_theme_suggestions_block_alter(&$suggestions, array $variables): void {
   if (!empty($variables['elements']['#id'])) {
 
     /** @var \Drupal\block\BlockInterface $block */
@@ -480,7 +480,7 @@ function olivero_preprocess_fieldset(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function olivero_theme_suggestions_user_alter(&$suggestions, $variables) {
+function olivero_theme_suggestions_user_alter(&$suggestions, $variables): void {
   $suggestions[] = 'user__' . $variables['elements']['#view_mode'];
 }
 
@@ -545,7 +545,7 @@ function olivero_preprocess_field__comment(&$variables): void {
 /**
  * Implements hook_element_info_alter().
  */
-function olivero_element_info_alter(&$info) {
+function olivero_element_info_alter(&$info): void {
   if (array_key_exists('text_format', $info)) {
     $info['text_format']['#pre_render'][] = [OliveroPreRender::class, 'textFormat'];
   }

@@ -34,6 +34,6 @@ function deprecation_test_deprecated_hook($arg) {
 /**
  * Implements hook_deprecated_alter_alter().
  */
-function deprecation_test_deprecated_alter_alter(&$data, $context1, $context2) {
+function deprecation_test_deprecated_alter_alter(&$data, $context1, $context2): void {
   $data = [$context1, $context2];
 }

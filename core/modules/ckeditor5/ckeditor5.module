@@ -20,7 +20,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_module_implements_alter().
  */
-function ckeditor5_module_implements_alter(&$implementations, $hook) {
+function ckeditor5_module_implements_alter(&$implementations, $hook): void {
   // This module's implementation of form_filter_format_form_alter() must happen
   // after the editor module's implementation, as that implementation adds the
   // active editor to $form_state. It must also happen after the media module's

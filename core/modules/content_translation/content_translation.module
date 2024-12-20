@@ -13,7 +13,7 @@ use Drupal\Core\Language\LanguageInterface;
 /**
  * Implements hook_module_implements_alter().
  */
-function content_translation_module_implements_alter(&$implementations, $hook) {
+function content_translation_module_implements_alter(&$implementations, $hook): void {
   switch ($hook) {
     // Move our hook_entity_type_alter() implementation to the end of the list.
     case 'entity_type_alter':

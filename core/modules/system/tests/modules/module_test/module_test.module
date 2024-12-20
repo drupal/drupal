@@ -14,7 +14,7 @@ use Drupal\Core\Extension\Extension;
  *
  * Manipulate module dependencies to test dependency chains.
  */
-function module_test_system_info_alter(&$info, Extension $file, $type) {
+function module_test_system_info_alter(&$info, Extension $file, $type): void {
   if (\Drupal::state()->get('module_test.dependency') == 'missing dependency') {
     if ($file->getName() == 'dblog') {
       // Make dblog module depend on config.
@@ -102,7 +102,7 @@ function module_test_modules_uninstalled($modules) {
  * @see module_test_altered_test_hook()
  * @see \Drupal\system\Tests\Module\ModuleImplementsAlterTest::testModuleImplementsAlter()
  */
-function module_test_module_implements_alter(&$implementations, $hook) {
+function module_test_module_implements_alter(&$implementations, $hook): void {
   if ($hook === 'altered_test_hook') {
     // Add a hook implementation, that will be found in
     // module_test.implementation.inc.

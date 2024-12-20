@@ -24,7 +24,7 @@ use Drupal\views_ui\Form\Ajax\ViewsFormInterface;
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for form_element.
  */
-function claro_theme_suggestions_form_element_alter(&$suggestions, $variables) {
+function claro_theme_suggestions_form_element_alter(&$suggestions, $variables): void {
   if (!empty($variables['element']['#type'])) {
     $suggestions[] = 'form_element__' . $variables['element']['#type'];
   }
@@ -33,7 +33,7 @@ function claro_theme_suggestions_form_element_alter(&$suggestions, $variables) {
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for details.
  */
-function claro_theme_suggestions_details_alter(&$suggestions, $variables) {
+function claro_theme_suggestions_details_alter(&$suggestions, $variables): void {
   if (!empty($variables['element']['#vertical_tab_item'])) {
     $suggestions[] = 'details__vertical_tabs';
   }
@@ -42,7 +42,7 @@ function claro_theme_suggestions_details_alter(&$suggestions, $variables) {
 /**
  * Implements hook_page_attachments_alter().
  */
-function claro_page_attachments_alter(array &$attachments) {
+function claro_page_attachments_alter(array &$attachments): void {
   $theme_path = \Drupal::request()->getBasePath() . '/' . \Drupal::service('extension.list.theme')->getPath('claro');
   $query_string = \Drupal::service('asset.query_string')->get();
 
@@ -263,7 +263,7 @@ function claro_preprocess_menu_local_action(array &$variables): void {
 /**
  * Implements hook_element_info_alter().
  */
-function claro_element_info_alter(&$type) {
+function claro_element_info_alter(&$type): void {
   // Add a pre-render function that handles the sidebar of the node form.
   // @todo Refactor when https://www.drupal.org/node/3056089 is in.
   if (isset($type['container'])) {
@@ -326,7 +326,7 @@ function claro_preprocess_text_format_wrapper(&$variables): void {
 /**
  * Implements hook_theme_registry_alter().
  */
-function claro_theme_registry_alter(&$theme_registry) {
+function claro_theme_registry_alter(&$theme_registry): void {
   if (!empty($theme_registry['admin_block_content'])) {
     $theme_registry['admin_block_content']['variables']['attributes'] = [];
   }
@@ -356,7 +356,7 @@ function claro_preprocess_maintenance_page(&$variables): void {
 /**
  * Implements hook_theme_suggestions_maintenance_page_alter().
  */
-function claro_theme_suggestions_maintenance_page_alter(&$suggestions) {
+function claro_theme_suggestions_maintenance_page_alter(&$suggestions): void {
   try {
     $is_front = \Drupal::service('path.matcher')->isFrontPage();
   }
@@ -761,7 +761,7 @@ function claro_form_media_form_alter(&$form, FormStateInterface $form_state): vo
 /**
  * Implements hook_views_ui_display_top_alter().
  */
-function claro_views_ui_display_top_alter(&$element) {
+function claro_views_ui_display_top_alter(&$element): void {
   // @todo Remove this after https://www.drupal.org/node/3051605 has been
   //   solved.
   $element['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)tabs(\s.+"|")/', '$1views-tabs$3', $element['tabs']['#prefix']);
@@ -806,7 +806,7 @@ function claro_views_ui_display_top_alter(&$element) {
 /**
  * Implements hook_views_ui_display_tab_alter().
  */
-function claro_views_ui_display_tab_alter(&$element) {
+function claro_views_ui_display_tab_alter(&$element): void {
   // We process the dropbutton-like element on views edit form's
   // display settings top section.
   //
@@ -1802,7 +1802,7 @@ function claro_preprocess_toolbar(&$variables, $hook, $info): void {
  *
  * @see system_library_info_alter()
  */
-function claro_system_module_invoked_library_info_alter(&$libraries, $extension) {
+function claro_system_module_invoked_library_info_alter(&$libraries, $extension): void {
   if ($extension === 'toolbar') {
     $claro_info = \Drupal::service('theme_handler')->listInfo()['claro']->info;
     $path_prefix = '/core/themes/claro/';
@@ -1833,7 +1833,7 @@ function claro_system_module_invoked_library_info_alter(&$libraries, $extension)
  *
  * @see system_theme_registry_alter()
  */
-function claro_system_module_invoked_theme_registry_alter(array &$theme_registry) {
+function claro_system_module_invoked_theme_registry_alter(array &$theme_registry): void {
   foreach (['toolbar', 'menu__toolbar'] as $registry_item) {
     if (isset($theme_registry[$registry_item])) {
       $theme_registry[$registry_item]['path'] = 'core/themes/claro/templates/navigation';
