@@ -3,6 +3,7 @@
 namespace Drupal\media_library\Hook;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
@@ -242,13 +243,14 @@ class MediaLibraryHooks {
    * Implements hook_ENTITY_TYPE_access().
    */
   #[Hook('image_style_access')]
-  public function imageStyleAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function imageStyleAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
     // Prevent the fallback 'media_library' image style from being deleted.
     // @todo Lock the image style instead of preventing delete access.
     //   https://www.drupal.org/project/drupal/issues/2247293
     if ($operation === 'delete' && $entity->id() === 'media_library') {
       return AccessResult::forbidden();
     }
+    return AccessResult::neutral();
   }
 
 }

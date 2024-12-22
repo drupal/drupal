@@ -709,7 +709,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @ingroup entity_api
  */
-function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account): \Drupal\Core\Access\AccessResultInterface {
   // No opinion.
   return AccessResult::neutral();
 }
@@ -741,7 +741,7 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  *
  * @ingroup entity_api
  */
-function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account): \Drupal\Core\Access\AccessResultInterface {
   // No opinion.
   return AccessResult::neutral();
 }
@@ -768,7 +768,7 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  *
  * @ingroup entity_api
  */
-function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
+function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle): \Drupal\Core\Access\AccessResultInterface {
   // No opinion.
   return AccessResult::neutral();
 }
@@ -794,7 +794,7 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  *
  * @ingroup entity_api
  */
-function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
+function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle): \Drupal\Core\Access\AccessResultInterface {
   // No opinion.
   return AccessResult::neutral();
 }
@@ -2162,7 +2162,7 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandlerInterface::fieldAccess()
  */
-function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, ?\Drupal\Core\Field\FieldItemListInterface $items = NULL) {
+function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, ?\Drupal\Core\Field\FieldItemListInterface $items = NULL): \Drupal\Core\Access\AccessResultInterface {
   if ($field_definition->getName() == 'field_of_interest' && $operation == 'edit') {
     return AccessResult::allowedIfHasPermission($account, 'update field of interest');
   }

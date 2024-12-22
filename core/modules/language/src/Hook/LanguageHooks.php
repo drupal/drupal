@@ -2,6 +2,7 @@
 
 namespace Drupal\language\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUI;
@@ -300,7 +301,7 @@ class LanguageHooks {
    * Implements hook_entity_field_access().
    */
   #[Hook('entity_field_access')]
-  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
     // Only allow edit access on a langcode field if the entity it is attached to
     // is configured to have an alterable language. Also without items we can not
     // decide whether or not to allow access.

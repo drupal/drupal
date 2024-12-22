@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\workspaces\ViewsQueryAlter;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
@@ -185,7 +186,7 @@ class WorkspacesHooks {
    * @see \Drupal\workspaces\EntityAccess
    */
   #[Hook('entity_access')]
-  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
     return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityAccess::class)->entityOperationAccess($entity, $operation, $account);
   }
 
@@ -195,7 +196,7 @@ class WorkspacesHooks {
    * @see \Drupal\workspaces\EntityAccess
    */
   #[Hook('entity_create_access')]
-  public function entityCreateAccess(AccountInterface $account, array $context, $entity_bundle) {
+  public function entityCreateAccess(AccountInterface $account, array $context, $entity_bundle): AccessResultInterface {
     return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityAccess::class)->entityCreateAccess($account, $context, $entity_bundle);
   }
 

@@ -2,6 +2,7 @@
 
 namespace Drupal\node\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -361,7 +362,7 @@ class NodeHooks1 {
    * Implements hook_ENTITY_TYPE_access().
    */
   #[Hook('node_access')]
-  public function nodeAccess(NodeInterface $node, $operation, AccountInterface $account) {
+  public function nodeAccess(NodeInterface $node, $operation, AccountInterface $account): AccessResultInterface {
     $type = $node->bundle();
     // Note create access is handled by hook_ENTITY_TYPE_create_access().
     switch ($operation) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\media_test_embed\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -28,7 +29,7 @@ class MediaTestEmbedHooks {
    * Implements hook_entity_access().
    */
   #[Hook('entity_access')]
-  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
     return AccessResult::neutral()->addCacheTags([
       '_media_test_embed_filter_access:' . $entity->getEntityTypeId() . ':' . $entity->id(),
     ]);

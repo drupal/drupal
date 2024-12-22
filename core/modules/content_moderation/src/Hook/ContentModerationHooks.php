@@ -2,6 +2,7 @@
 
 namespace Drupal\content_moderation\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\views\Plugin\views\filter\Broken;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -205,10 +206,10 @@ class ContentModerationHooks {
    * that wants to moderate things.
    */
   #[Hook('entity_access')]
-  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
     /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
     $moderation_info = \Drupal::service('content_moderation.moderation_information');
-    $access_result = NULL;
+    $access_result = AccessResult::neutral();
     if ($operation === 'view') {
       $access_result = $entity instanceof EntityPublishedInterface && !$entity->isPublished() ? AccessResult::allowedIfHasPermission($account, 'view any unpublished content') : AccessResult::neutral();
       $access_result->addCacheableDependency($entity);
@@ -240,7 +241,7 @@ class ContentModerationHooks {
    * Implements hook_entity_field_access().
    */
   #[Hook('entity_field_access')]
-  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
     if ($items && $operation === 'edit') {
       /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
       $moderation_info = \Drupal::service('content_moderation.moderation_information');

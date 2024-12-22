@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\content_translation_test\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
@@ -36,7 +37,7 @@ class ContentTranslationTestHooks {
    * Implements hook_entity_access().
    */
   #[Hook('entity_access')]
-  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
     $access = \Drupal::state()->get('content_translation.entity_access.' . $entity->getEntityTypeId());
     if (!empty($access[$operation])) {
       return AccessResult::allowed();

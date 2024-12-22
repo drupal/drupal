@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
@@ -288,7 +289,7 @@ class EntityTestHooks {
    * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
    */
   #[Hook('entity_field_access')]
-  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
     if ($field_definition->getName() == 'field_test_text') {
       if ($items) {
         if ($items->value == 'no access value') {
@@ -610,7 +611,7 @@ class EntityTestHooks {
    * Implements hook_entity_access().
    */
   #[Hook('entity_access')]
-  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
     // Only apply to the 'entity_test' entities.
     if ($entity->getEntityType()->getProvider() != 'entity_test') {
       return AccessResult::neutral();
@@ -641,7 +642,7 @@ class EntityTestHooks {
    * Implements hook_ENTITY_TYPE_access() for 'entity_test'.
    */
   #[Hook('entity_test_access')]
-  public function entityTestAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function entityTestAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
     \Drupal::state()->set('entity_test_entity_test_access', TRUE);
     // No opinion.
     return AccessResult::neutral();
@@ -651,7 +652,7 @@ class EntityTestHooks {
    * Implements hook_entity_create_access().
    */
   #[Hook('entity_create_access')]
-  public function entityCreateAccess(AccountInterface $account, $context, $entity_bundle) {
+  public function entityCreateAccess(AccountInterface $account, $context, $entity_bundle): AccessResultInterface {
     \Drupal::state()->set('entity_test_entity_create_access', TRUE);
     \Drupal::state()->set('entity_test_entity_create_access_context', $context);
     if ($entity_bundle === 'forbidden_access_bundle') {
@@ -667,7 +668,7 @@ class EntityTestHooks {
    * Implements hook_ENTITY_TYPE_create_access() for 'entity_test'.
    */
   #[Hook('entity_test_create_access')]
-  public function entityTestCreateAccess(AccountInterface $account, $context, $entity_bundle) {
+  public function entityTestCreateAccess(AccountInterface $account, $context, $entity_bundle): AccessResultInterface {
     \Drupal::state()->set('entity_test_entity_test_create_access', TRUE);
     // No opinion.
     return AccessResult::neutral();

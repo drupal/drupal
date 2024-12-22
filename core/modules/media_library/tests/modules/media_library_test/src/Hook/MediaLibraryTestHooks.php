@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\media_library_test\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\media_library_test\Form\TestNodeFormOverride;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -20,7 +21,7 @@ class MediaLibraryTestHooks {
    * Implements hook_ENTITY_TYPE_create_access().
    */
   #[Hook('media_create_access')]
-  public function mediaCreateAccess(AccountInterface $account, array $context, $entity_bundle) {
+  public function mediaCreateAccess(AccountInterface $account, array $context, $entity_bundle): AccessResultInterface {
     if (isset($context['media_library_state'])) {
       /** @var \Drupal\media_library\MediaLibraryState $state */
       $state = $context['media_library_state'];
@@ -33,7 +34,7 @@ class MediaLibraryTestHooks {
    * Implements hook_entity_field_access().
    */
   #[Hook('entity_field_access')]
-  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
     $deny_fields = \Drupal::state()->get('media_library_test_entity_field_access_deny_fields', []);
     // Always deny the field_media_no_access field.
     $deny_fields[] = 'field_media_no_access';

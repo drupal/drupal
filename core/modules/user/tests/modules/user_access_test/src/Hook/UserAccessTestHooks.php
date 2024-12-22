@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\user_access_test\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -20,7 +21,7 @@ class UserAccessTestHooks {
    * Implements hook_ENTITY_TYPE_access() for entity type "user".
    */
   #[Hook('user_access')]
-  public function userAccess(User $entity, $operation, $account) {
+  public function userAccess(User $entity, $operation, $account): AccessResultInterface {
     if ($entity->getAccountName() == "no_edit" && $operation == "update") {
       // Deny edit access.
       return AccessResult::forbidden();
@@ -40,7 +41,7 @@ class UserAccessTestHooks {
    * Implements hook_entity_create_access().
    */
   #[Hook('entity_create_access')]
-  public function entityCreateAccess(AccountInterface $account, array $context, $entity_bundle) {
+  public function entityCreateAccess(AccountInterface $account, array $context, $entity_bundle): AccessResultInterface {
     if ($context['entity_type_id'] != 'user') {
       return AccessResult::neutral();
     }
@@ -52,7 +53,7 @@ class UserAccessTestHooks {
    * Implements hook_entity_field_access().
    */
   #[Hook('entity_field_access')]
-  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
     // Account with role sub-admin can view the status, init and mail fields for
     // user with no roles.
     if ($field_definition->getTargetEntityTypeId() == 'user' && $operation === 'view' && in_array($field_definition->getName(), ['status', 'init', 'mail'])) {

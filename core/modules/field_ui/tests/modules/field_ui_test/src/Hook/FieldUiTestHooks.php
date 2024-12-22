@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\field_ui_test\Hook;
 
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Access\AccessResult;
@@ -19,7 +20,7 @@ class FieldUiTestHooks {
    * Implements hook_ENTITY_TYPE_access().
    */
   #[Hook('field_config_access')]
-  public function fieldConfigAccess(FieldConfigInterface $field) {
+  public function fieldConfigAccess(FieldConfigInterface $field): AccessResultInterface {
     return AccessResult::forbiddenIf($field->getName() == 'highlander');
   }
 
