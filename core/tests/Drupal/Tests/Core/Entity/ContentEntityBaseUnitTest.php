@@ -242,9 +242,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $field_item_list = $this->getMockBuilder('\Drupal\Core\Field\FieldItemList')
       ->disableOriginalConstructor()
       ->getMock();
-    $field_item = $this->getMockBuilder('\Drupal\Core\Field\FieldItemBase')
-      ->disableOriginalConstructor()
-      ->getMockForAbstractClass();
+    $field_item = new StubFieldItemBase();
 
     $this->fieldTypePluginManager->expects($this->any())
       ->method('createFieldItemList')
