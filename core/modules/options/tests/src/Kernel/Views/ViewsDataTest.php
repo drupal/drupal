@@ -50,7 +50,7 @@ class ViewsDataTest extends OptionsTestBase {
       'type' => 'list_string',
       'cardinality' => 1,
       'settings' => [
-        'allowed_values_function' => 'options_test_dynamic_values_callback',
+        'allowed_values_function' => '\Drupal\options_test\OptionsAllowedValues::dynamicValues',
       ],
     ]);
     $this->fieldStorage->save();

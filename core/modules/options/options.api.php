@@ -77,8 +77,8 @@ function hook_options_list_alter(array &$options, array $context) {
  *
  * @ingroup callbacks
  * @see options_allowed_values()
- * @see options_test_allowed_values_callback()
- * @see options_test_dynamic_values_callback()
+ * @see \Drupal\options_test\OptionsAllowedValues::simpleValues()
+ * @see \Drupal\options_test\OptionsAllowedValues::dynamicValues()
  */
 function callback_allowed_values_function(FieldStorageDefinitionInterface $definition, ?FieldableEntityInterface $entity = NULL, &$cacheable = TRUE) {
   if (isset($entity) && ($entity->bundle() == 'not_a_programmer')) {
