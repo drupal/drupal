@@ -1145,6 +1145,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * Implements the magic method for isset().
    */
   public function __isset($name) {
+    if ($name == 'original') {
+      return parent::__isset('original');
+    }
     // "Official" Field API fields are always set. For non-field properties,
     // check the internal values.
     return $this->hasField($name) ? TRUE : isset($this->values[$name]);
@@ -1154,6 +1157,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * Implements the magic method for unset().
    */
   public function __unset($name) {
+    if ($name == 'original') {
+      parent::__unset('original');
+    }
     // Unsetting a field means emptying it.
     if ($this->hasField($name)) {
       $this->get($name)->setValue([]);
