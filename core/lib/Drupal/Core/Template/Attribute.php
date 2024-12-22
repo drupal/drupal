@@ -5,6 +5,7 @@ namespace Drupal\Core\Template;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Serialization\Attribute\JsonSchema;
 
 /**
  * Collects, sanitizes, and renders HTML attributes.
@@ -320,6 +321,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   /**
    * Implements the magic __toString() method.
    */
+  #[JsonSchema(['type' => 'string', 'description' => 'Rendered HTML element attributes'])]
   public function __toString() {
     $return = '';
     /** @var \Drupal\Core\Template\AttributeValueBase $value */

@@ -4,9 +4,12 @@ namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\ResourceType\ResourceType;
+use Drupal\serialization\Normalizer\SchematicNormalizerTrait;
+use Drupal\serialization\Serializer\JsonSchemaProviderSerializerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
@@ -20,10 +23,12 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
  */
 class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
 
+  use SchematicNormalizerTrait;
+
   /**
    * {@inheritdoc}
    */
-  public function normalize($field, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  public function doNormalize($field, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     /** @var \Drupal\Core\Field\FieldItemListInterface $field */
     $normalized_items = $this->normalizeFieldItems($field, $format, $context);
     assert($context['resource_object'] instanceof ResourceObject);
@@ -76,7 +81,7 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
    * @param array $context
    *   The context array.
    *
-   * @return \Drupal\jsonapi\Normalizer\FieldItemNormalizer[]
+   * @return \Drupal\jsonapi\Normalizer\Value\CacheableNormalization[]
    *   The array of normalized field items.
    */
   protected function normalizeFieldItems(FieldItemListInterface $field, $format, array $context) {
@@ -87,6 +92,40 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
       }
     }
     return $normalizer_items;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getNormalizationSchema(mixed $object, array $context = []): array {
+    assert($object instanceof FieldItemListInterface);
+    // Some aspects of the schema are determined by the field config.
+    $cardinality = $object->getFieldDefinition()->getFieldStorageDefinition()->getCardinality();
+    $schema = [];
+    // Normalizers are resolved by the class/object being normalized. Even
+    // without data, we must retrieve a representative field item.
+    $field_item = $object->appendItem($object->generateSampleItems());
+    assert($this->serializer instanceof JsonSchemaProviderSerializerInterface);
+    $item_schema = $this->serializer->getJsonSchema($field_item, $context);
+    $object->removeItem(count($object) - 1);
+    unset($field_item);
+
+    $schema = $item_schema;
+    if ($cardinality !== 1) {
+      $schema['type'] = 'array';
+      if ($object->getFieldDefinition()->isRequired()) {
+        $schema['minItems'] = 1;
+      }
+      if ($cardinality !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+        $schema['maxItems'] = $cardinality;
+      }
+      if (!empty($item_schema)) {
+        $schema['items'] = $item_schema;
+      }
+    }
+    return !$object->getFieldDefinition()->isRequired()
+      ? ['oneOf' => [$schema, ['type' => 'null']]]
+      : $schema;
   }
 
   /**

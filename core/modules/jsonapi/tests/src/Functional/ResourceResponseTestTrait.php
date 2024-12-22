@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Access\AccessResultInterface;
@@ -79,10 +80,10 @@ trait ResourceResponseTestTrait {
     $merged_document['jsonapi'] = [
       'meta' => [
         'links' => [
-          'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
+          'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
         ],
       ],
-      'version' => '1.0',
+      'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
     ];
     // Until we can reasonably know what caused an error, we shouldn't include
     // 'self' links in error documents. For example, a 404 shouldn't have a

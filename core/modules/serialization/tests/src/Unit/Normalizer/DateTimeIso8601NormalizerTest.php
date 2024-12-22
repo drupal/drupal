@@ -15,6 +15,7 @@ use Drupal\Core\TypedData\Plugin\DataType\IntegerData;
 use Drupal\Core\TypedData\Type\DateTimeInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\serialization\Normalizer\DateTimeIso8601Normalizer;
+use Drupal\Tests\serialization\Traits\JsonSchemaTestTrait;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
@@ -29,6 +30,8 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
  * @see \Drupal\datetime\Plugin\Field\FieldType\DateTimeItem::DATETIME_TYPE_DATE
  */
 class DateTimeIso8601NormalizerTest extends UnitTestCase {
+
+  use JsonSchemaTestTrait;
 
   /**
    * The tested data type's normalizer.
@@ -253,6 +256,39 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
     $this->expectException(InvalidArgumentException::class);
     $this->expectExceptionMessage('$context[\'target_instance\'] or $context[\'field_definition\'] must be set to denormalize with the DateTimeIso8601Normalizer');
     $this->normalizer->denormalize('', DateTimeIso8601::class, NULL, []);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function jsonSchemaDataProvider(): array {
+    $case = function (UnitTestCase $test) {
+      assert(in_array(JsonSchemaTestTrait::class, class_uses($test)));
+      $field_item = $test->doProphesize(DateTimeItem::class);
+      $data = $test->doProphesize(DateTimeIso8601::class);
+
+      $field_storage_definition = $test->doProphesize(FieldStorageDefinitionInterface::class);
+      $field_storage_definition->getSetting('datetime_type')
+        ->willReturn(DateTimeItem::DATETIME_TYPE_DATE);
+      $field_definition = $test->doProphesize(FieldDefinitionInterface::class);
+      $field_definition->getFieldStorageDefinition()
+        ->willReturn($field_storage_definition);
+      $field_item->getFieldDefinition()
+        ->willReturn($field_definition);
+      $data->getParent()
+        ->willReturn($field_item);
+      $drupal_date_time = $test->doProphesize(DateTimeIso8601NormalizerTestDrupalDateTime::class);
+      $drupal_date_time->setTimezone(new \DateTimeZone('Australia/Sydney'))
+        ->willReturn($drupal_date_time->reveal());
+      $drupal_date_time->format('Y-m-d')
+        ->willReturn('1991-09-19');
+      $data->getDateTime()
+        ->willReturn($drupal_date_time->reveal());
+      return $data->reveal();
+    };
+    return [
+      'ISO 8601 date-only' => [fn (UnitTestCase $test) => $case($test)],
+    ];
   }
 
 }

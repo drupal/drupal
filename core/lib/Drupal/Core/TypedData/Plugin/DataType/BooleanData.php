@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Core\Serialization\Attribute\JsonSchema;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\PrimitiveBase;
@@ -22,6 +23,7 @@ class BooleanData extends PrimitiveBase implements BooleanInterface {
   /**
    * {@inheritdoc}
    */
+  #[JsonSchema(['type' => 'boolean'])]
   public function getCastedValue() {
     return (bool) $this->value;
   }

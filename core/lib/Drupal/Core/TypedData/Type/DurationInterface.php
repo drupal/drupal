@@ -20,6 +20,16 @@ interface DurationInterface {
   public function getDuration();
 
   /**
+   * Returns the duration as an ISO 8601 ABNF string.
+   *
+   * @return string
+   *   ABNF-formatted duration.
+   *
+   * @see https://datatracker.ietf.org/doc/html/rfc3339#appendix-A
+   */
+  public function getDurationAsIso8601Abnf(): string;
+
+  /**
    * Sets the duration.
    *
    * @param \DateInterval $duration

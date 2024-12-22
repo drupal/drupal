@@ -9,11 +9,28 @@ use Drupal\Component\Render\MarkupInterface;
  */
 class MarkupNormalizer extends NormalizerBase {
 
+  use SchematicNormalizerTrait;
+  use JsonSchemaReflectionTrait;
+
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  public function doNormalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     return (string) $object;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNormalizationSchema(mixed $object, array $context = []): array {
+    return $this->getJsonSchemaForMethod(
+      $object,
+      '__toString',
+      [
+        'type' => 'string',
+        'description' => 'May contain HTML markup.',
+      ]
+    );
   }
 
   /**

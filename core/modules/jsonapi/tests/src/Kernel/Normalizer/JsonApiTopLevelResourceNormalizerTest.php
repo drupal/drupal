@@ -17,12 +17,16 @@ use Drupal\jsonapi\JsonApiResource\NullIncludedData;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
+use Drupal\jsonapi\JsonApiSpec;
+use Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\system\Entity\Action;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
+use Drupal\Tests\jsonapi\Traits\JsonApiJsonSchemaTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -35,9 +39,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @internal
  */
-class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
+class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   use ImageFieldCreationTrait;
+  use JsonApiJsonSchemaTestTrait;
 
   /**
    * {@inheritdoc}
@@ -258,14 +263,56 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::normalize
+   * Get a test resource type, resource object and includes.
+   *
+   * @return array
+   *   Indexed array with values:
+   *     - Resource type.
+   *     - Resource object.
+   *     - Includes.
    */
-  public function testNormalize(): void {
-    $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
+  protected function getTestContentEntityResource(): array {
+    $resource_type = $this->container->get('jsonapi.resource_type.repository')
+      ->get('node', 'article');
 
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $includes = $this->includeResolver->resolve($resource_object, 'uid,field_tags,field_image');
+    return [$resource_type, $resource_object, $includes];
+  }
 
+  /**
+   * Get a test resource type, resource object and includes for config entity.
+   *
+   * @return array
+   *   Indexed array with values:
+   *     - Resource type.
+   *     - Resource object.
+   *     - Includes.
+   */
+  protected function getTestConfigEntityResource(): array {
+    $resource_type = $this->container->get('jsonapi.resource_type.repository')
+      ->get('action', 'action');
+
+    $resource_object = ResourceObject::createFromEntity(
+      $resource_type,
+      Action::create([
+        'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,
+        'type' => 'user',
+        'label' => 'Add the anonymous role to the selected users',
+        'configuration' => [
+          'rid' => RoleInterface::ANONYMOUS_ID,
+        ],
+        'plugin' => 'user_add_role_action',
+      ])
+    );
+    return [$resource_type, $resource_object, new NullIncludedData()];
+  }
+
+  /**
+   * @covers ::normalize
+   */
+  public function testNormalize(): void {
+    [$resource_type, $resource_object, $includes] = $this->getTestContentEntityResource();
     $jsonapi_doc_object = $this
       ->getNormalizer()
       ->normalize(
@@ -296,8 +343,8 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $normalized = $jsonapi_doc_object->getNormalization();
 
     // @see http://jsonapi.org/format/#document-jsonapi-object
-    $this->assertEquals('1.0', $normalized['jsonapi']['version']);
-    $this->assertEquals('http://jsonapi.org/format/1.0/', $normalized['jsonapi']['meta']['links']['self']['href']);
+    $this->assertEquals(JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION, $normalized['jsonapi']['version']);
+    $this->assertEquals(JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK, $normalized['jsonapi']['meta']['links']['self']['href']);
 
     $this->assertSame($normalized['data']['attributes']['title'], 'dummy_title');
     $this->assertEquals($normalized['data']['id'], $this->node->uuid());
@@ -777,7 +824,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for asserting cacheable metadata behavior.
    */
-  public static function testCacheableMetadataProvider() {
+  public static function testCacheableMetadataProvider(): array {
     $cacheable_metadata = function ($metadata) {
       return CacheableMetadata::createFromRenderArray(['#cache' => $metadata]);
     };
@@ -793,12 +840,95 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   /**
    * Helper to load the normalizer.
    */
-  protected function getNormalizer() {
+  protected function getNormalizer(): JsonApiDocumentTopLevelNormalizer {
     $normalizer_service = $this->container->get('jsonapi_test_normalizers_kernel.jsonapi_document_toplevel');
     // Simulate what happens when this normalizer service is used via the
     // serializer service, as it is meant to be used.
     $normalizer_service->setSerializer($this->container->get('jsonapi.serializer'));
     return $normalizer_service;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function jsonSchemaDataProvider(): array {
+    return [
+      'Empty collection top-level document' => [
+        new JsonApiDocumentTopLevel(
+          new ResourceObjectData([]),
+          new NullIncludedData(),
+          new LinkCollection([])
+        ),
+      ],
+    ];
+  }
+
+  /**
+   * Test the generated resource object normalization against the schema.
+   *
+   * @covers \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::normalize
+   * @covers \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::getNormalizationSchema
+   */
+  public function testResourceObjectSchema(): void {
+    [, $resource_object] = $this->getTestContentEntityResource();
+    $serializer = $this->container->get('jsonapi.serializer');
+    $context = ['account' => NULL];
+    $format = $this->getJsonSchemaTestNormalizationFormat();
+    $schema = $serializer->normalize($resource_object, 'json_schema', $context);
+    $this->doCheckSchemaAgainstMetaSchema($schema);
+    $normalized = json_decode(json_encode($serializer->normalize(
+      $resource_object,
+      $format,
+      $context
+    )->getNormalization()));
+    $validator = $this->getValidator();
+    $validator->validate($normalized, json_decode(json_encode($schema)));
+    $this->assertSame([], $validator->getErrors(), 'Validation errors on object ' . print_r($normalized, TRUE) . ' with schema ' . print_r($schema, TRUE));
+  }
+
+  /**
+   * Test the generated config resource object normalization against the schema.
+   *
+   * @covers \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::normalize
+   * @covers \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::getNormalizationSchema
+   */
+  public function testConfigEntityResourceObjectSchema(): void {
+    [, $resource_object] = $this->getTestConfigEntityResource();
+    $serializer = $this->container->get('jsonapi.serializer');
+    $context = ['account' => NULL];
+    $format = $this->getJsonSchemaTestNormalizationFormat();
+    $schema = $serializer->normalize($resource_object, 'json_schema', $context);
+    $this->doCheckSchemaAgainstMetaSchema($schema);
+    $normalized = json_decode(json_encode($serializer->normalize(
+      $resource_object,
+      $format,
+      $context
+    )->getNormalization()));
+    $validator = $this->getValidator();
+    $validator->validate($normalized, json_decode(json_encode($schema)));
+    $this->assertSame([], $validator->getErrors(), 'Validation errors on object ' . print_r($normalized, TRUE) . ' with schema ' . print_r($schema, TRUE));
+  }
+
+  public function testTopLevelResourceWithSingleResource(): void {
+    [, $resource_object] = $this->getTestContentEntityResource();
+    $serializer = $this->container->get('jsonapi.serializer');
+    $context = ['account' => NULL];
+    $format = $this->getJsonSchemaTestNormalizationFormat();
+    $topLevel = new JsonApiDocumentTopLevel(
+      new ResourceObjectData([$resource_object]),
+      new NullIncludedData(),
+      new LinkCollection([])
+    );
+    $schema = $serializer->normalize($topLevel, 'json_schema', $context);
+    $this->doCheckSchemaAgainstMetaSchema($schema);
+    $normalized = json_decode(json_encode($serializer->normalize(
+      $topLevel,
+      $format,
+      $context
+    )->getNormalization()));
+    $validator = $this->getValidator();
+    $validator->validate($normalized, json_decode(json_encode($schema)));
+    $this->assertSame([], $validator->getErrors(), 'Validation errors on object ' . print_r($normalized, TRUE) . ' with schema ' . print_r($schema, TRUE));
   }
 
 }

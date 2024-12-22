@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Random;
@@ -171,9 +172,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @var array
    */
   protected static $jsonApiMember = [
-    'version' => '1.0',
+    'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
     'meta' => [
-      'links' => ['self' => ['href' => 'http://jsonapi.org/format/1.0/']],
+      'links' => ['self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK]],
     ],
   ];
 

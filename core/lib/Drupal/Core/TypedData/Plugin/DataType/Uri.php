@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Core\Serialization\Attribute\JsonSchema;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\Type\UriInterface;
@@ -16,5 +17,13 @@ use Drupal\Core\TypedData\Type\UriInterface;
   label: new TranslatableMarkup("URI")
 )]
 class Uri extends StringData implements UriInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  #[JsonSchema(['type' => 'string', 'format' => 'uri'])]
+  public function getCastedValue() {
+    return parent::getCastedValue();
+  }
 
 }

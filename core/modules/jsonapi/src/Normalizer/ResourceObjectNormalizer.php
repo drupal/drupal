@@ -3,6 +3,9 @@
 namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\jsonapi\Events\CollectRelationshipMetaEvent;
@@ -10,8 +13,13 @@ use Drupal\jsonapi\Events\CollectResourceObjectMetaEvent;
 use Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher;
 use Drupal\jsonapi\JsonApiResource\Relationship;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
+use Drupal\jsonapi\ResourceType\ResourceType;
+use Drupal\jsonapi\ResourceType\ResourceTypeField;
+use Drupal\jsonapi\Serializer\Serializer;
+use Drupal\serialization\Normalizer\SchematicNormalizerTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -24,6 +32,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @see jsonapi.api.php
  */
 class ResourceObjectNormalizer extends NormalizerBase {
+
+  use SchematicNormalizerTrait;
 
   /**
    * The entity normalization cacher.
@@ -38,14 +48,28 @@ class ResourceObjectNormalizer extends NormalizerBase {
   private EventDispatcherInterface $eventDispatcher;
 
   /**
+   * @var mixed|\Drupal\Core\Entity\EntityFieldManagerInterface|null
+   */
+  private EntityFieldManagerInterface $entityFieldManager;
+
+  /**
+   * @var mixed|\Drupal\Core\Entity\EntityTypeManagerInterface|null
+   */
+  private EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * Constructs a ResourceObjectNormalizer object.
    *
    * @param \Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher $cacher
    *   The entity normalization cacher.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(ResourceObjectNormalizationCacher $cacher, ?EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(ResourceObjectNormalizationCacher $cacher, ?EventDispatcherInterface $event_dispatcher = NULL, ?EntityFieldManagerInterface $entity_field_manager = NULL, ?EntityTypeManagerInterface $entity_type_manager = NULL) {
     $this->cacher = $cacher;
 
     if ($event_dispatcher === NULL) {
@@ -53,6 +77,18 @@ class ResourceObjectNormalizer extends NormalizerBase {
       $event_dispatcher = \Drupal::service('event_dispatcher');
     }
     $this->eventDispatcher = $event_dispatcher;
+
+    if ($entity_field_manager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entity_field_manager argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3031367', E_USER_DEPRECATED);
+      $entity_field_manager = \Drupal::service('entity_field_manager');
+    }
+    $this->entityFieldManager = $entity_field_manager;
+
+    if ($entity_type_manager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entity_type_manager argument is deprecated in drupal:11.2.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3031367', E_USER_DEPRECATED);
+      $entity_type_manager = \Drupal::service('entity_type_manager');
+    }
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -65,7 +101,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  public function doNormalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof ResourceObject);
     // If the fields to use were specified, only output those field values.
     $context['resource_object'] = $object;
@@ -220,6 +256,132 @@ class ResourceObjectNormalizer extends NormalizerBase {
       // Config "fields" in this case are arrays or primitives and do not need
       // to be normalized.
       return CacheableNormalization::permanent($field);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNormalizationSchema(mixed $object, array $context = []): array {
+    if (is_string($object)) {
+      // Without a true object we can only provide a generic schema.
+      return [
+        '$ref' => JsonApiSpec::SUPPORTED_SPECIFICATION_JSON_SCHEMA . '#/definitions/resource',
+      ];
+    }
+    // ResourceObject is usually instantiated from a specific entity, however
+    // a placeholder can be created for purposes of schema generation which
+    // would provide access to the resource type, but not contain any "live"
+    // data.
+    assert($object instanceof ResourceObject);
+
+    $attributes_schema = [];
+    $relationships_schema = [];
+
+    $this->entityTypeManager->getDefinition($object->getResourceType()->getEntityTypeId())->entityClassImplements(FieldableEntityInterface::class)
+      ? $this->processContentEntitySchema($object, $context, $attributes_schema, $relationships_schema)
+      : $this->processConfigEntitySchema($object->getResourceType(), $context, $attributes_schema);
+
+    return [
+      'allOf' => [
+        ['$ref' => JsonApiSpec::SUPPORTED_SPECIFICATION_JSON_SCHEMA . '#/definitions/resourceIdentification'],
+      ],
+      'properties' => [
+        'meta' => [
+          '$ref' => JsonApiSpec::SUPPORTED_SPECIFICATION_JSON_SCHEMA . '#/definitions/meta',
+        ],
+        'links' => [
+          '$ref' => JsonApiSpec::SUPPORTED_SPECIFICATION_JSON_SCHEMA . '#/definitions/resourceLinks',
+        ],
+        // If the array is empty we must return an object so it won't encode as
+        // an array; we don't cast the value here so the returned value is still
+        // traversable as an array when accessed in PHP.
+        'attributes' => $attributes_schema ?: new \ArrayObject(),
+        'relationships' => $relationships_schema ?: new \ArrayObject(),
+      ],
+      'unevaluatedProperties' => FALSE,
+    ];
+  }
+
+  protected function processConfigEntitySchema(ResourceType $resource_type, array $context, array &$attributes_schema): void {
+    // This is largely the same as in ResourceObject but without a real entity.
+    $fields = $resource_type->getFields();
+    // Filter the array based on the field names.
+    $enabled_field_names = array_filter(array_keys($fields), static fn (string $internal_field_name) => $resource_type->isFieldEnabled($internal_field_name));
+    // Return a sub-array of $output containing the keys in $enabled_fields.
+    $input = array_intersect_key($fields, array_flip($enabled_field_names));
+    foreach ($input as $field_name => $field_value) {
+      $attributes_schema['properties'][$resource_type->getPublicName($field_name)] = [
+        'title' => $field_name,
+        // @todo Potentially introspect schema to give more information.
+        // @see https://www.drupal.org/project/drupal/issues/3426508
+        // Right now, this will validate to anything.
+      ];
+    }
+  }
+
+  protected function processContentEntitySchema(ResourceObject $resource_object, array $context, array &$attributes_schema, &$relationships_schema): void {
+    // Actual normalization supports sparse fieldsets, however we provide schema
+    // for all possible fields that may be retrieved.
+    $resource_type = $resource_object->getResourceType();
+    $field_definitions = $this->entityFieldManager
+      ->getFieldDefinitions($resource_type->getEntityTypeId(), $resource_type->getBundle());
+
+    $resource_fields = $resource_type->getFields();
+    // User resource objects contain a read-only attribute that is not a real
+    // field on the user entity type.
+    // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
+    // @todo Eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+    if ($resource_type->getEntityTypeId() === 'user') {
+      $resource_fields = array_diff_key($resource_fields, array_flip([$resource_type->getPublicName('display_name')]));
+    }
+
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $fields */
+    $fields = array_reduce(
+      $resource_fields,
+      function (array $carry, ResourceTypeField $resource_field) use ($field_definitions) {
+        if (!$resource_field->isFieldEnabled()) {
+          return $carry;
+        }
+        $carry[$resource_field->getPublicName()] = $field_definitions[$resource_field->getInternalName()];
+        return $carry;
+      },
+      []
+    );
+    assert($this->serializer instanceof Serializer);
+    $relationship_field_names = array_keys($resource_type->getRelatableResourceTypes());
+
+    $create_values = [];
+    if ($bundle_key = $this->entityTypeManager->getDefinition($resource_type->getEntityTypeId())->getKey('bundle')) {
+      $create_values = [$bundle_key => $resource_type->getBundle()];
+    }
+    $stub_entity = $this->entityTypeManager
+      ->getStorage($resource_type->getEntityTypeId())->create($create_values);
+    foreach ($fields as $field_name => $field) {
+      $stub_field = $stub_entity->get($field->getName());
+      if ($stub_field instanceof EntityReferenceFieldItemListInterface) {
+        // Build the relationship object based on the entity reference and
+        // retrieve normalizer for that object instead.
+        // @see ::serializeField()
+        $relationship = Relationship::createFromEntityReferenceField($resource_object, $stub_field);
+        $schema = $this->serializer->getJsonSchema($relationship, $context);
+      }
+      else {
+        $schema = $this->serializer->getJsonSchema($stub_field, $context);
+      }
+      // Fallback basic annotations.
+      if (empty($schema['title']) && $title = $field->getLabel()) {
+        $schema['title'] = (string) $title;
+      }
+      if (empty($schema['description']) && $description = $field->getFieldStorageDefinition()->getDescription()) {
+        $schema['description'] = (string) $description;
+      }
+      if (in_array($field_name, $relationship_field_names, TRUE)) {
+        $relationships_schema['properties'][$field_name] = $schema;
+      }
+      else {
+        $attributes_schema['properties'][$field_name] = $schema;
+      }
     }
   }
 

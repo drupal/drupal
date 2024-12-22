@@ -214,8 +214,9 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
     $this->referencer->save();
 
     // Set up the test dependencies.
-    $this->referencingResourceType = $this->container->get('jsonapi.resource_type.repository')->get('node', 'referencer');
-    $this->normalizer = new RelationshipNormalizer();
+    $resource_type_repository = $this->container->get('jsonapi.resource_type.repository');
+    $this->referencingResourceType = $resource_type_repository->get('node', 'referencer');
+    $this->normalizer = new RelationshipNormalizer($resource_type_repository);
     $this->normalizer->setSerializer($this->container->get('jsonapi.serializer'));
   }
 

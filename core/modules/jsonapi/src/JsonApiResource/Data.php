@@ -100,8 +100,8 @@ abstract class Data implements \IteratorAggregate, \Countable {
   /**
    * Returns the collection as an array.
    *
-   * @return \Drupal\Core\Entity\EntityInterface[]
-   *   The array of entities.
+   * @return \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface[]
+   *   Array of contained data.
    */
   public function toArray() {
     return $this->data;

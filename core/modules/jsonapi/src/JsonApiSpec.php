@@ -20,12 +20,17 @@ class JsonApiSpec {
    *
    * @see http://jsonapi.org/format/#document-jsonapi-object
    */
-  const SUPPORTED_SPECIFICATION_VERSION = '1.0';
+  const SUPPORTED_SPECIFICATION_VERSION = '1.1';
 
   /**
    * The URI of the supported specification document.
    */
-  const SUPPORTED_SPECIFICATION_PERMALINK = 'http://jsonapi.org/format/1.0/';
+  const SUPPORTED_SPECIFICATION_PERMALINK = 'http://jsonapi.org/format/1.1/';
+
+  /**
+   * The URI of the supported specification's JSON Schema.
+   */
+  const SUPPORTED_SPECIFICATION_JSON_SCHEMA = 'https://jsonapi.org/schemas/spec/v1.1/draft';
 
   /**
    * Member name: globally allowed characters.

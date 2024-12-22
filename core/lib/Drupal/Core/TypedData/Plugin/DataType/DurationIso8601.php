@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Core\Serialization\Attribute\JsonSchema;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\Type\DurationInterface;
@@ -26,6 +27,22 @@ class DurationIso8601 extends StringData implements DurationInterface {
       // constructor.
       return new \DateInterval($this->value);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  #[JsonSchema(['type' => 'string', 'format' => 'duration'])]
+  public function getDurationAsIso8601Abnf(): string {
+    return $this->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  #[JsonSchema(['type' => 'string', 'format' => 'duration'])]
+  public function getCastedValue() {
+    return parent::getCastedValue();
   }
 
   /**

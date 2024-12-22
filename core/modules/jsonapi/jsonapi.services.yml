@@ -49,6 +49,8 @@ services:
     arguments:
       - '@jsonapi.normalization_cacher'
       - '@event_dispatcher'
+      - '@entity_field.manager'
+      - '@entity_type.manager'
     tags:
       - { name: jsonapi_normalizer }
   jsonapi.normalization_cacher:
@@ -80,6 +82,7 @@ services:
     class: Drupal\jsonapi\Normalizer\RelationshipNormalizer
     tags:
       - { name: jsonapi_normalizer }
+    arguments: ['@jsonapi.resource_type.repository']
   serializer.encoder.jsonapi:
     class: Drupal\jsonapi\Encoder\JsonEncoder
     tags:

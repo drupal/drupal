@@ -69,7 +69,9 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
    *   specified this will return TRUE.
    */
   protected function checkFormat($format = NULL) {
-    if (!isset($format) || !isset($this->format)) {
+    // The format 'json_schema' is special-cased as it requires explicit
+    // support, as opposed to a permissive default-case value normalization.
+    if (!isset($format) || (!isset($this->format) && $format !== 'json_schema')) {
       return TRUE;
     }
 
