@@ -6,6 +6,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\form_test\Callbacks;
 
 /**
  * Provides a base class for tableselect forms.
@@ -28,7 +29,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
    *   A form with a tableselect element and a submit button.
    */
   public function tableselectFormBuilder($form, FormStateInterface $form_state, $element_properties) {
-    [$header, $options] = _form_test_tableselect_get_data();
+    [$header, $options] = Callbacks::tableselectGetData();
 
     $form['tableselect'] = $element_properties;
 
@@ -41,7 +42,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
       '#multiple' => FALSE,
       '#empty' => t('Empty text.'),
       '#ajax' => [
-        'callback' => 'form_test_tableselect_ajax_callback',
+        'callback' => '::tableselectAjaxCallback',
         'wrapper' => 'tableselect-wrapper',
       ],
     ];
@@ -52,6 +53,13 @@ abstract class FormTestTableSelectFormBase extends FormBase {
     ];
 
     return $form;
+  }
+
+  /**
+   * Ajax callback that returns the form element.
+   */
+  public function tableselectAjaxCallback(array $form, FormStateInterface $form_state): array {
+    return $form['tableselect'];
   }
 
 }

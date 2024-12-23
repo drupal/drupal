@@ -6,6 +6,7 @@ namespace Drupal\form_test\Hook;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\form_test\Callbacks;
 
 /**
  * Hook implementations for form_test.
@@ -55,7 +56,7 @@ class FormTestHooks {
       '#type' => 'submit',
       '#value' => t('Rebuild'),
       '#submit' => [
-        'form_test_user_register_form_rebuild',
+        [Callbacks::class, 'userRegisterFormRebuild'],
       ],
     ];
   }
