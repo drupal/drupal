@@ -6,6 +6,7 @@ namespace Drupal\Tests\field\Functional;
 
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field_test\FieldTestHelper;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -101,7 +102,7 @@ class TranslationWebTest extends FieldTestBase {
     $this->drupalLogin($web_user);
 
     // Prepare the field translations.
-    field_test_entity_info_translatable($this->entityTypeId, TRUE);
+    FieldTestHelper::entityInfoTranslatable($this->entityTypeId, TRUE);
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId)
       ->create();

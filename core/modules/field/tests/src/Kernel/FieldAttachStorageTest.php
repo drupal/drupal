@@ -6,6 +6,7 @@ namespace Drupal\Tests\field\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field_test\FieldTestHelper;
 
 /**
  * Tests storage-related Field Attach API functions.
@@ -202,14 +203,14 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $this->createFieldWithStorage('', $entity_type);
 
     // Add a default value function.
-    $this->fieldTestData->field->set('default_value_callback', 'field_test_default_value');
+    $this->fieldTestData->field->set('default_value_callback', FieldTestHelper::class . '::defaultValue');
     $this->fieldTestData->field->save();
 
     // Verify that fields are populated with default values.
     $entity_init = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->create(['id' => 1, 'revision_id' => 1]);
-    $default = field_test_default_value($entity_init, $this->fieldTestData->field);
+    $default = FieldTestHelper::defaultValue($entity_init, $this->fieldTestData->field);
     $this->assertEquals($default, $entity_init->{$this->fieldTestData->field_name}->getValue(), 'Default field value correctly populated.');
 
     // Insert: Field is NULL.

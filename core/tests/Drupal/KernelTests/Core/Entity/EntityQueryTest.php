@@ -10,6 +10,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field_test\FieldTestHelper;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -797,7 +798,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    * The tags and metadata should propagate to the SQL query object.
    */
   public function testMetaData(): void {
-    field_test_memorize();
+    FieldTestHelper::memorize();
 
     $query = $this->storage->getQuery()->accessCheck(FALSE);
     $query
@@ -805,7 +806,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->addMetaData('foo', 'bar')
       ->execute();
 
-    $mem = field_test_memorize();
+    $mem = FieldTestHelper::memorize();
     $this->assertEquals('bar', $mem['field_test_query_efq_metadata_test_alter'][0], 'Tag and metadata propagated to the SQL query object.');
   }
 

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field_test\FieldTestHelper;
+use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests multilingual fields logic.
@@ -110,13 +111,13 @@ class TranslationTest extends FieldKernelTestBase {
    */
   public function testTranslatableFieldSaveLoad(): void {
     // Enable field translations for nodes.
-    field_test_entity_info_translatable('node', TRUE);
+    FieldTestHelper::entityInfoTranslatable('node', TRUE);
     $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
     $this->assertTrue($entity_type->isTranslatable(), 'Nodes are translatable.');
 
     // Prepare the field translations.
     $entity_type_id = 'entity_test';
-    field_test_entity_info_translatable($entity_type_id, TRUE);
+    FieldTestHelper::entityInfoTranslatable($entity_type_id, TRUE);
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type_id)
       ->create(['type' => $this->field->getTargetBundle()]);

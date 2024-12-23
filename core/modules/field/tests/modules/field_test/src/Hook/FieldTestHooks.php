@@ -9,6 +9,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Render\Element;
+use Drupal\field_test\FieldTestHelper;
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Hook implementations for field_test.
@@ -46,7 +49,7 @@ class FieldTestHooks {
    */
   #[Hook('field_widget_complete_form_alter')]
   public function fieldWidgetCompleteFormAlter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context): void {
-    _field_test_alter_widget("hook_field_widget_complete_form_alter", $field_widget_complete_form, $form_state, $context);
+    $this->alterWidget("hook_field_widget_complete_form_alter", $field_widget_complete_form, $form_state, $context);
   }
 
   /**
@@ -54,7 +57,7 @@ class FieldTestHooks {
    */
   #[Hook('field_widget_complete_test_field_widget_multiple_form_alter')]
   public function fieldWidgetCompleteTestFieldWidgetMultipleFormAlter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context): void {
-    _field_test_alter_widget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
+    $this->alterWidget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
   }
 
   /**
@@ -62,7 +65,7 @@ class FieldTestHooks {
    */
   #[Hook('field_widget_complete_test_field_widget_multiple_single_value_form_alter')]
   public function fieldWidgetCompleteTestFieldWidgetMultipleSingleValueFormAlter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context): void {
-    _field_test_alter_widget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
+    $this->alterWidget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
   }
 
   /**
@@ -84,7 +87,7 @@ class FieldTestHooks {
    */
   #[Hook('query_efq_metadata_test_alter')]
   public function queryEfqMetadataTestAlter(&$query): void {
-    field_test_memorize('field_test_query_efq_metadata_test_alter', $query->getMetadata('foo'));
+    FieldTestHelper::memorize('field_test_query_efq_metadata_test_alter', $query->getMetadata('foo'));
   }
 
   /**
@@ -184,6 +187,47 @@ class FieldTestHooks {
   #[Hook('entity_query_tag__entity_test_mulrev__entity_query_entity_test_mulrev_alter_tag_test_alter')]
   public function entityQueryTagEntityTestMulrevEntityQueryEntityTestMulrevAlterTagTestAlter(QueryInterface $query) : void {
     $query->condition('id', '15', '<>');
+  }
+
+  /**
+   * Implements hook_field_storage_config_create().
+   */
+  #[Hook('field_storage_config_create')]
+  public function fieldStorageConfigCreate(FieldStorageConfigInterface $field_storage): void {
+    $args = func_get_args();
+    FieldTestHelper::memorize(__METHOD__, $args);
+  }
+
+  /**
+   * Implements hook_entity_reference_selection_alter().
+   */
+  #[Hook('entity_reference_selection_alter')]
+  public function entityReferenceSelectionAlter(array &$definitions): void {
+    if (\Drupal::state()->get('field_test_disable_broken_entity_reference_handler')) {
+      unset($definitions['broken']);
+    }
+  }
+
+  /**
+   * Sets up alterations for widget alter tests.
+   *
+   * @see \Drupal\field\Tests\FormTest::widgetAlterTest()
+   */
+  public function alterWidget($hook, array &$field_widget_complete_form, FormStateInterface $form_state, array $context): void {
+    $elements = &$field_widget_complete_form['widget'];
+    // Set a message if this is for the form displayed to set default value for
+    // the field.
+    if ($context['default']) {
+      \Drupal::messenger()->addStatus("From $hook(): Default form is true.");
+    }
+    $alter_info = \Drupal::state()->get("field_test.widget_alter_test");
+    $name = $context['items']->getFieldDefinition()->getName();
+    if (!empty($alter_info) && $hook === $alter_info['hook'] && $name === $alter_info['field_name']) {
+      $elements['#prefix'] = "From $hook(): prefix on $name parent element.";
+      foreach (Element::children($elements) as $delta => $element) {
+        $elements[$delta]['#suffix'] = "From $hook(): suffix on $name child element.";
+      }
+    }
   }
 
 }
