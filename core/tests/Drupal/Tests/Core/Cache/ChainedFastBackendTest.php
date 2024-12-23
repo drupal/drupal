@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Component\Datetime\Time;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\ChainedFastBackend;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Tests\UnitTestCase;
@@ -59,6 +60,47 @@ class ChainedFastBackendTest extends UnitTestCase {
       'foo'
     );
     $this->assertEquals('baz', $chained_fast_backend->get('foo')->data);
+  }
+
+  /**
+   * Tests a get() on consistent backend without saving on fast backend.
+   */
+  public function testSetInvalidDataFastBackend(): void {
+    $cid = $this->randomString();
+    $item = (object) [
+      'cid' => $cid,
+      'data' => serialize($this->randomObject()),
+      'created' => ChainedFastBackend::LAST_WRITE_TIMESTAMP_PREFIX . 'cache_foo',
+      'expire' => Cache::PERMANENT,
+      'tags' => [],
+      'valid' => FALSE,
+    ];
+
+    $consistent_cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
+
+    $consistent_cache->expects($this->once())
+      ->method('get')
+      ->withAnyParameters()
+      ->willReturn(FALSE);
+    $consistent_cache->expects($this->once())
+      ->method('getMultiple')
+      ->withAnyParameters()
+      ->willReturn([$item]);
+
+    $fast_cache = new MemoryBackend(new Time());
+
+    $chained_fast_backend = new ChainedFastBackend(
+      $consistent_cache,
+      $fast_cache,
+      'foo'
+    );
+
+    // Perform a get using the allowing invalid data parameter.
+    $this->assertEquals($item, $chained_fast_backend->get($cid, TRUE));
+
+    // Perform a get directly on the fast cache to guarantee the invalid data
+    // were not saved there.
+    $this->assertEquals(NULL, $fast_cache->get($cid), 'Invalid data was not saved on the fast cache.');
   }
 
   /**
