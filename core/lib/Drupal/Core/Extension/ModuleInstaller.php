@@ -352,6 +352,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // @todo should this be in the loop?
     \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
 
+    $entity_type_providers_to_install = $module_list;
     foreach ($module_list as $module) {
       // Set the schema version to the number of the last update provided by
       // the module, or the minimum core schema version.
@@ -360,6 +361,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if ($versions) {
         $version = max(max($versions), $version);
       }
+
+      // Remove the module from the list of possible entity type providers to
+      // install.
+      array_shift($entity_type_providers_to_install);
 
       // Notify interested components that this module's entity types and
       // field storage definitions are new. For example, a SQL-based storage
@@ -381,10 +386,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
             $update_manager->installEntityType($entity_type);
           }
         }
-        elseif ($is_fieldable_entity_type) {
+        elseif ($is_fieldable_entity_type && !in_array($entity_type->getProvider(), $entity_type_providers_to_install, TRUE)) {
           // The module being installed may be adding new fields to existing
           // entity types. Field definitions for any entity type defined by
-          // the module are handled in the if branch.
+          // modules being installed are handled in the if branch.
           foreach ($entity_field_manager->getFieldStorageDefinitions($entity_type->id()) as $storage_definition) {
             if ($storage_definition->getProvider() == $module) {
               // If the module being installed is also defining a storage key

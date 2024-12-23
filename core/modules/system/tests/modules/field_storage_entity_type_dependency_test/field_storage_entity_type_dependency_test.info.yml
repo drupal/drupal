@@ -1,0 +1,5 @@
+name: 'Field storage entity type dependency test'
+type: module
+description: 'Introduces a module dependency where entity types need to be installed before field storage definitions.'
+package: Testing
+version: VERSION

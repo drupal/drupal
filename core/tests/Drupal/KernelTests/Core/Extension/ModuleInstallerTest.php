@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
 use Drupal\Core\Extension\ModuleInstaller;
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
+use Drupal\Core\Logger\RfcLoggerTrait;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
@@ -19,7 +23,9 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  *
  * @group Extension
  */
-class ModuleInstallerTest extends KernelTestBase {
+class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
+
+  use RfcLoggerTrait;
 
   /**
    * Tests that routes are rebuilt during install and uninstall of modules.
@@ -237,6 +243,52 @@ class ModuleInstallerTest extends KernelTestBase {
 
     $this->expectDeprecation('Drupal\Core\Extension\ModuleInstaller::addUninstallValidator is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject the uninstall validators into the constructor instead. See https://www.drupal.org/node/3432595');
     $module_installer->addUninstallValidator($this->createMock(ModuleUninstallValidatorInterface::class));
+  }
+
+  /**
+   * Tests field storage definitions are installed only if entity types exist.
+   */
+  public function testFieldStorageEntityTypeDependencies(): void {
+    $profile = 'minimal';
+    $this->setInstallProfile($profile);
+    // Install a module that will make workspaces a dependency of taxonomy.
+    \Drupal::service('module_installer')->install(['field_storage_entity_type_dependency_test']);
+    // Installing taxonomy will install workspaces first. During installation of
+    // workspaces, the storage for 'workspace' field should not be attempted
+    // before the taxonomy term entity storage has been created, so there
+    // should not be a EntityStorageException logged.
+    \Drupal::service('module_installer')->install(['taxonomy']);
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('workspaces'));
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('taxonomy'));
+    $this->assertArrayHasKey('workspace', \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('taxonomy_term'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container): void {
+    parent::register($container);
+
+    $container
+      ->register(__CLASS__, __CLASS__)
+      ->setSynthetic(TRUE)
+      ->addTag('logger');
+    $container->set(__CLASS__, $this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function log($level, \Stringable|string $message, array $context = []): void {
+    if ($level > RfcLogLevel::ERROR) {
+      return;
+    }
+
+    // Fails the test if an error or more severe message is logged.
+    $message = (string) $message;
+    $placeholders = \Drupal::service('logger.log_message_parser')->parseMessagePlaceholders($message, $context);
+    $message = empty($placeholders) ? $message : strtr($message, $placeholders);
+    $this->fail($message);
   }
 
 }
