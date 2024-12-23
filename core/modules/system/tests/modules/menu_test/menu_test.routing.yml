@@ -577,3 +577,11 @@ menu_test.breadcrumb3:
     _title: 'Normal title'
   requirements:
     _access: 'TRUE'
+
+menu_test.skippable-breadcrumb:
+  path: '/menu-test/skippable-breadcrumb'
+  defaults:
+    _controller: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
+    _title: 'Normal title'
+  requirements:
+    _access: 'TRUE'
