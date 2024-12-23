@@ -445,12 +445,12 @@ END;
       // If this package requires any Drupal core packages, ensure it allows
       // any version.
       self::unboundCoreConstraints($requirements);
-      // In certain situations, like Drupal CI, auto_updates might be
-      // required into the code base by Composer. This may cause it to be added to
-      // the drupal/core-recommended metapackage, which can prevent the test site
-      // from being built correctly, among other deleterious effects. To prevent
-      // such shenanigans, always remove drupal/auto_updates from
-      // drupal/core-recommended.
+      // In certain situations, like specific CI environments, auto_updates
+      // might be required into the code base by Composer. This may cause it to
+      // be added to the drupal/core-recommended metapackage, which can prevent
+      // the test site from being built correctly, among other deleterious
+      // effects. To prevent such shenanigans, always remove drupal/auto_updates
+      // from drupal/core-recommended.
       if ($name === 'drupal/core-recommended') {
         unset($requirements['drupal/auto_updates']);
       }

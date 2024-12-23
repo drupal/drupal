@@ -1,5 +1,5 @@
 # Configuration file for PHPStan static code checking, see https://phpstan.org .
-# PHPStan is triggered on Drupal CI in commit-code-check.sh.
+# The PHPStan check is executed as a job in the CI pipeline.
 includes:
   - .phpstan-baseline.php
   - phar://phpstan.phar/conf/bleedingEdge.neon

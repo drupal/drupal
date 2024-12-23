@@ -39,7 +39,7 @@ class PhpExtensionsValidator implements EventSubscriberInterface {
     if (self::insideTest()) {
       // By default, assume OpenSSL is enabled and Xdebug isn't. This allows us
       // to run tests in environments that we might not support in production,
-      // such as Drupal CI.
+      // such as a configured CI environment.
       $loaded_extensions = \Drupal::state()
         ->get('package_manager_loaded_php_extensions', ['openssl']);
       return in_array($name, $loaded_extensions, TRUE);
