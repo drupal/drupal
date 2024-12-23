@@ -46,7 +46,7 @@ class ThemeHandlerTest extends UnitTestCase {
     $this->configFactory = $this->getConfigFactoryStub([
       'core.extension' => [
         'module' => [],
-        'theme' => [],
+        'theme' => ['stark' => 'stark'],
         'disabled' => [
           'theme' => [],
         ],
@@ -106,6 +106,16 @@ class ThemeHandlerTest extends UnitTestCase {
     catch (\Exception $e) {
       $this->fail('Empty libraries key in theme.info.yml causes PHP warning.');
     }
+  }
+
+  /**
+   * Test that a missing theme doesn't break ThemeHandler::listInfo().
+   *
+   * @covers ::listInfo
+   */
+  public function testMissingTheme(): void {
+    $themes = $this->themeHandler->listInfo();
+    $this->assertSame([], $themes);
   }
 
 }
