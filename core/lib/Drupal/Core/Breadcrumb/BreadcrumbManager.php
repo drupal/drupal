@@ -83,16 +83,18 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
       }
 
       $breadcrumb = $builder->build($route_match);
-
       if ($breadcrumb instanceof Breadcrumb) {
         $context['builder'] = $builder;
-        $breadcrumb->addCacheableDependency($cacheable_metadata);
         break;
       }
       else {
         throw new \UnexpectedValueException('Invalid breadcrumb returned by ' . get_class($builder) . '::build().');
       }
     }
+
+    // Ensure all collected cacheability is applied.
+    $breadcrumb->addCacheableDependency($cacheable_metadata);
+
     // Allow modules to alter the breadcrumb.
     $this->moduleHandler->alter('system_breadcrumb', $breadcrumb, $route_match, $context);
 
