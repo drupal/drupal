@@ -6,6 +6,7 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
+use Drupal\file_test\FileTestHelper;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -24,7 +25,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Clear out any hook calls.
-    file_test_reset();
+    FileTestHelper::reset();
   }
 
   /**
@@ -38,7 +39,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
     \Drupal::state()->resetCache();
 
     // Determine which hooks were called.
-    $actual = array_keys(array_filter(file_test_get_all_calls()));
+    $actual = array_keys(array_filter(FileTestHelper::getAllCalls()));
 
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
@@ -70,7 +71,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    *   Optional translated string message.
    */
   public function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {
-    $actual_count = count(file_test_get_calls($hook));
+    $actual_count = count(FileTestHelper::getCalls($hook));
 
     if (!isset($message)) {
       if ($actual_count == $expected_count) {

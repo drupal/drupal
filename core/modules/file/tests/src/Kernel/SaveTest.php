@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\file\Entity\File;
+use Drupal\file_test\FileTestHelper;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
@@ -45,7 +46,7 @@ class SaveTest extends FileManagedUnitTestBase {
     $this->assertEquals('en', $loaded_file->langcode->value, 'Langcode was defaulted correctly.');
 
     // Resave the file, updating the existing record.
-    file_test_reset();
+    FileTestHelper::reset();
     $file->status->value = 7;
     $file->save();
 

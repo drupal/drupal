@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\file_test\Hook;
 
 use Drupal\file\Entity\File;
+use Drupal\file_test\FileTestCdn;
+use Drupal\file_test\FileTestHelper;
 use Drupal\Core\Hook\Attribute\Hook;
 
 // cspell:ignore tarz
@@ -21,7 +23,7 @@ class FileTestHooks {
   #[Hook('file_load')]
   public function fileLoad($files) {
     foreach ($files as $file) {
-      _file_test_log_call('load', [$file->id()]);
+      FileTestHelper::logCall('load', [$file->id()]);
       // Assign a value on the object so that we can test that the $file is passed
       // by reference.
       $file->file_test['loaded'] = TRUE;
@@ -38,8 +40,8 @@ class FileTestHooks {
       $file = reset($files);
       return file_get_content_headers($file);
     }
-    _file_test_log_call('download', [$uri]);
-    return _file_test_get_return('download');
+    FileTestHelper::logCall('download', [$uri]);
+    return $this->getReturn('download');
   }
 
   /**
@@ -47,7 +49,7 @@ class FileTestHooks {
    */
   #[Hook('file_insert')]
   public function fileInsert(File $file) {
-    _file_test_log_call('insert', [$file->id()]);
+    FileTestHelper::logCall('insert', [$file->id()]);
   }
 
   /**
@@ -55,7 +57,7 @@ class FileTestHooks {
    */
   #[Hook('file_update')]
   public function fileUpdate(File $file) {
-    _file_test_log_call('update', [$file->id()]);
+    FileTestHelper::logCall('update', [$file->id()]);
   }
 
   /**
@@ -63,7 +65,7 @@ class FileTestHooks {
    */
   #[Hook('file_copy')]
   public function fileCopy(File $file, $source): void {
-    _file_test_log_call('copy', [$file->id(), $source->id()]);
+    FileTestHelper::logCall('copy', [$file->id(), $source->id()]);
   }
 
   /**
@@ -71,7 +73,7 @@ class FileTestHooks {
    */
   #[Hook('file_move')]
   public function fileMove(File $file, File $source): void {
-    _file_test_log_call('move', [$file->id(), $source->id()]);
+    FileTestHelper::logCall('move', [$file->id(), $source->id()]);
   }
 
   /**
@@ -79,7 +81,7 @@ class FileTestHooks {
    */
   #[Hook('file_predelete')]
   public function filePredelete(File $file) {
-    _file_test_log_call('delete', [$file->id()]);
+    FileTestHelper::logCall('delete', [$file->id()]);
   }
 
   /**
@@ -117,10 +119,10 @@ class FileTestHooks {
         // CDN 2.
         $pathinfo = pathinfo($path);
         if (array_key_exists('extension', $pathinfo) && in_array($pathinfo['extension'], $cdn_extensions)) {
-          $uri = FILE_URL_TEST_CDN_1 . '/' . $path;
+          $uri = FileTestCdn::First->value . '/' . $path;
         }
         else {
-          $uri = FILE_URL_TEST_CDN_2 . '/' . $path;
+          $uri = FileTestCdn::Second->value . '/' . $path;
         }
       }
     }
@@ -195,6 +197,23 @@ class FileTestHooks {
       /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
       $entity_types['file']->setAccessClass('Drupal\file_test\FileTestAccessControlHandler');
     }
+  }
+
+  /**
+   * Load the appropriate return value.
+   *
+   * @param string $op
+   *   One of the hook_file_[validate,download] operations.
+   *
+   * @return mixed
+   *   Value set by Drupal\file_test\FileTestHelper::setReturn().
+   *
+   * @see \Drupal\file_test\FileTestHelper::setReturn()
+   * @see Drupal\file_test\FileTestHelper::reset()
+   */
+  public function getReturn($op): mixed {
+    $return = \Drupal::state()->get('file_test.return', [$op => NULL]);
+    return $return[$op];
   }
 
 }

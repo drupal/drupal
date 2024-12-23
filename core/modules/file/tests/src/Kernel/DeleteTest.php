@@ -6,6 +6,7 @@ namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\file\Entity\File;
+use Drupal\file_test\FileTestHelper;
 
 /**
  * Tests the file delete function.
@@ -49,7 +50,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $this->assertNotEmpty(File::load($file->id()), 'File still exists in the database.');
 
     // Clear out the call to hook_file_load().
-    file_test_reset();
+    FileTestHelper::reset();
 
     $file_usage->delete($file, 'testing', 'test', 1);
     $usage = $file_usage->listUsage($file);
@@ -59,7 +60,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $file = File::load($file->id());
     $this->assertNotEmpty($file, 'File still exists in the database.');
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
-    file_test_reset();
+    FileTestHelper::reset();
 
     // Call file_cron() to clean up the file. Make sure the changed timestamp
     // of the file is older than the system.file.temporary_maximum_age

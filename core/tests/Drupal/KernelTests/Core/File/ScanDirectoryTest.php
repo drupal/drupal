@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\file_test\FileTestHelper;
+
 /**
  * Tests \Drupal\Core\File\FileSystem::scanDirectory.
  *
@@ -78,18 +80,18 @@ class ScanDirectoryTest extends FileTestBase {
   public function testOptionCallback(): void {
 
     // When nothing is matched nothing should be passed to the callback.
-    $all_files = $this->fileSystem->scanDirectory($this->path, '/^NON-EXISTING-FILENAME/', ['callback' => 'file_test_file_scan_callback']);
+    $all_files = $this->fileSystem->scanDirectory($this->path, '/^NON-EXISTING-FILENAME/', ['callback' => '\Drupal\file_test\FileTestHelper::fileScanCallback']);
     $this->assertCount(0, $all_files, 'No files were found.');
-    $results = file_test_file_scan_callback();
-    file_test_file_scan_callback_reset();
+    $results = FileTestHelper::fileScanCallback();
+    FileTestHelper::fileScanCallbackReset();
     $this->assertCount(0, $results, 'No files were passed to the callback.');
 
     // Grab a listing of all the JavaScript files and check that they're
     // passed to the callback.
-    $all_files = $this->fileSystem->scanDirectory($this->path, '/^javascript-/', ['callback' => 'file_test_file_scan_callback']);
+    $all_files = $this->fileSystem->scanDirectory($this->path, '/^javascript-/', ['callback' => '\Drupal\file_test\FileTestHelper::fileScanCallback']);
     $this->assertCount(2, $all_files, 'Found two, expected javascript files.');
-    $results = file_test_file_scan_callback();
-    file_test_file_scan_callback_reset();
+    $results = FileTestHelper::fileScanCallback();
+    FileTestHelper::fileScanCallbackReset();
     $this->assertCount(2, $results, 'Files were passed to the callback.');
   }
 
