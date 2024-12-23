@@ -13,6 +13,7 @@ use Drupal\Core\Language\LanguageInterface;
  * Translate settings and entities to various languages.
  *
  * @group config_translation
+ * @group #slow
  */
 class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
 
