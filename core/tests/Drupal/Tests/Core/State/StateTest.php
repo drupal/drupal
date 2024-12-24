@@ -320,10 +320,10 @@ class StateTest extends UnitTestCase {
    *
    * Here testing the key and value after deleting the key's value.
    *
+   * Ensure that deleting clears some static cache.
+   *
    * @covers ::get
    * @covers ::delete
-   *
-   * Ensure that deleting clears some static cache.
    */
   public function testDeleteAfterGet(): void {
     $values = ['key' => 'value'];

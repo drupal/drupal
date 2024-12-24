@@ -50,7 +50,6 @@ parameters:
 
     # Ignore common errors for now.
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
-    - "#^Plugin definitions cannot be altered.#"
     - "#^Class .* extends @internal class#"
     - identifier: missingType.iterableValue
 
