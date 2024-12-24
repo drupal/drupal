@@ -28,14 +28,14 @@ function dblog_filters() {
   if (!empty($types)) {
     $filters['type'] = [
       'title' => t('Type'),
-      'where' => "w.type = ?",
+      'field' => 'w.type',
       'options' => $types,
     ];
   }
 
   $filters['severity'] = [
     'title' => t('Severity'),
-    'where' => 'w.severity = ?',
+    'field' => 'w.severity',
     'options' => RfcLogLevel::getLevels(),
   ];
 

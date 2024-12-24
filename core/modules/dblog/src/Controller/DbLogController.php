@@ -10,6 +10,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\TableSortExtender;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -104,7 +105,6 @@ class DbLogController extends ControllerBase {
    */
   public function overview(Request $request) {
 
-    $filter = $this->buildFilterQuery($request);
     $rows = [];
 
     $classes = static::getLogLevelClassMap();
@@ -154,9 +154,8 @@ class DbLogController extends ControllerBase {
     ]);
     $query->leftJoin('users_field_data', 'ufd', '[w].[uid] = [ufd].[uid]');
 
-    if (!empty($filter['where'])) {
-      $query->where($filter['where'], $filter['args']);
-    }
+    $this->addFilterToQuery($request, $query);
+
     $result = $query
       ->limit(50)
       ->orderByHeader($header)
@@ -306,14 +305,16 @@ class DbLogController extends ControllerBase {
   /**
    * Builds a query for database log administration filters based on session.
    *
+   * This method retrieves the session-based filters from the request and applies
+   * them to the provided query object. If no filters are present, the query is
+   * left unchanged.
+   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
-   *
-   * @return array|null
-   *   An associative array with keys 'where' and 'args' or NULL if there were
-   *   no filters set.
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   The database query.
    */
-  protected function buildFilterQuery(Request $request) {
+  protected function addFilterToQuery(Request $request, SelectInterface &$query): void {
     $session_filters = $request->getSession()->get('dblog_overview_filter', []);
     if (empty($session_filters)) {
       return;
@@ -323,24 +324,29 @@ class DbLogController extends ControllerBase {
 
     $filters = dblog_filters();
 
-    // Build query.
-    $where = $args = [];
+    // Build the condition.
+    $condition_and = $query->getConnection()->condition('AND');
+    $condition_and_used = FALSE;
     foreach ($session_filters as $key => $filter) {
-      $filter_where = [];
+      $condition_or = $query->getConnection()->condition('OR');
+      $condition_or_used = FALSE;
       foreach ($filter as $value) {
-        $filter_where[] = $filters[$key]['where'];
-        $args[] = $value;
+        if ($key == 'severity') {
+          $value = (int) $value;
+        }
+        if (in_array($value, array_keys($filters[$key]['options']))) {
+          $condition_or->condition($filters[$key]['field'], $value);
+          $condition_or_used = TRUE;
+        }
       }
-      if (!empty($filter_where)) {
-        $where[] = '(' . implode(' OR ', $filter_where) . ')';
+      if ($condition_or_used) {
+        $condition_and->condition($condition_or);
+        $condition_and_used = TRUE;
       }
     }
-    $where = !empty($where) ? implode(' AND ', $where) : '';
-
-    return [
-      'where' => $where,
-      'args' => $args,
-    ];
+    if ($condition_and_used) {
+      $query->condition($condition_and);
+    }
   }
 
   /**
