@@ -53,7 +53,7 @@ class ImageModuleTestHooks {
    */
   #[Hook('file_download')]
   public function fileDownload($uri): array {
-    $default_uri = \Drupal::state()->get('image.test_file_download', FALSE);
+    $default_uri = \Drupal::keyValue('image')->get('test_file_download', FALSE);
     if ($default_uri == $uri) {
       return ['X-Image-Owned-By' => 'image_module_test'];
     }
