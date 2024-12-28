@@ -7,10 +7,12 @@
 
 declare(strict_types=1);
 
+use Drupal\hold_test\HoldTestHelper;
+
 /**
  * Implements hook_install().
  */
 function hold_test_install(): void {
-  hold_test_request(FALSE);
-  hold_test_response(FALSE);
+  HoldTestHelper::requestHold(FALSE);
+  HoldTestHelper::responseHold(FALSE);
 }

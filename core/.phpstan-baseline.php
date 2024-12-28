@@ -38134,18 +38134,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestServiceObject.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function hold_test_request\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/hold_test/hold_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function hold_test_response\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/hold_test/hold_test.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\hold_test\\\\EventSubscriber\\\\HoldTestSubscriber\\:\\:hold\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

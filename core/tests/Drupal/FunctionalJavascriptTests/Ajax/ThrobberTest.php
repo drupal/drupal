@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\hold_test\HoldTestHelper;
 
 /**
  * Tests the throbber.
@@ -64,28 +65,28 @@ JS;
 
     // Test theming fullscreen throbber.
     $session->executeScript($custom_ajax_progress_indicator_fullscreen);
-    hold_test_response(TRUE);
+    HoldTestHelper::responseHold(TRUE);
     $page->clickLink('Content: Published (grouped)');
     $this->assertNotNull($web_assert->waitForElement('css', '.custom-ajax-progress-fullscreen'), 'Custom ajaxProgressIndicatorFullscreen.');
-    hold_test_response(FALSE);
+    HoldTestHelper::responseHold(FALSE);
     $web_assert->assertNoElementAfterWait('css', '.custom-ajax-progress-fullscreen');
 
     // Test theming throbber message.
     $web_assert->waitForElementVisible('css', '[data-drupal-selector="edit-options-group-info-add-group"]');
     $session->executeScript($custom_ajax_progress_message);
-    hold_test_response(TRUE);
+    HoldTestHelper::responseHold(TRUE);
     $page->pressButton('Add another item');
     $this->assertNotNull($web_assert->waitForElement('css', '.ajax-progress-throbber .custom-ajax-progress-message'), 'Custom ajaxProgressMessage.');
-    hold_test_response(FALSE);
+    HoldTestHelper::responseHold(FALSE);
     $web_assert->assertNoElementAfterWait('css', '.ajax-progress-throbber');
 
     // Test theming throbber.
     $web_assert->waitForElementVisible('css', '[data-drupal-selector="edit-options-group-info-group-items-3-title"]');
     $session->executeScript($custom_ajax_progress_throbber);
-    hold_test_response(TRUE);
+    HoldTestHelper::responseHold(TRUE);
     $page->pressButton('Add another item');
     $this->assertNotNull($web_assert->waitForElement('css', '.custom-ajax-progress-throbber'), 'Custom ajaxProgressThrobber.');
-    hold_test_response(FALSE);
+    HoldTestHelper::responseHold(FALSE);
     $web_assert->assertNoElementAfterWait('css', '.custom-ajax-progress-throbber');
 
     // Test progress throbber position on a dropbutton in a table display.
@@ -93,10 +94,10 @@ JS;
     $this->clickLink('Place block');
     $web_assert->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($web_assert->waitForElementVisible('css', '#drupal-modal'));
-    hold_test_response(TRUE);
+    HoldTestHelper::responseHold(TRUE);
     $this->clickLink('Place block');
     $this->assertNotNull($web_assert->waitForElement('xpath', '//div[contains(@class, "dropbutton-wrapper")]/following-sibling::div[contains(@class, "ajax-progress-throbber")]'));
-    hold_test_response(FALSE);
+    HoldTestHelper::responseHold(FALSE);
     $web_assert->assertNoElementAfterWait('css', '.ajax-progress-throbber');
   }
 

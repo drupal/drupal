@@ -6,6 +6,7 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\hold_test\HoldTestHelper;
 use Drupal\media\Entity\Media;
 
 /**
@@ -434,11 +435,11 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * Switches to the table display of the widget view.
    */
   protected function switchToMediaLibraryTable() {
-    hold_test_response(TRUE);
+    HoldTestHelper::responseHold(TRUE);
     $this->getSession()->getPage()->clickLink('Table');
     // Assert the display change is correctly announced for screen readers.
     $this->assertAnnounceContains('Loading table view.');
-    hold_test_response(FALSE);
+    HoldTestHelper::responseHold(FALSE);
     $this->assertAnnounceContains('Changed to table view.');
     $this->assertMediaLibraryTable();
   }
