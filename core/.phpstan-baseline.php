@@ -53224,12 +53224,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workflows/tests/modules/workflow_type_test/src/Plugin/WorkflowType/WorkflowCustomAccessType.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function workflow_type_test_set_definitions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/tests/modules/workflow_type_test/workflow_type_test.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workflows\\\\Functional\\\\Rest\\\\WorkflowJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

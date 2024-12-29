@@ -88,7 +88,8 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
 
     // Remove all plugin types and ensure not even the admin user is allowed to
     // create a workflow.
-    workflow_type_test_set_definitions([]);
+    $this->container->get('state')->set('workflow_type_test.plugin_definitions', []);
+    $this->container->get('plugin.manager.workflows.type')->clearCachedDefinitions();
     $this->accessControlHandler->resetCache();
     $this->assertEquals(
       AccessResult::neutral()
