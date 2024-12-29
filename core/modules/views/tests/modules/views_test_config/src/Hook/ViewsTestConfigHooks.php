@@ -45,7 +45,7 @@ class ViewsTestConfigHooks {
    */
   #[Hook('views_plugins_area_alter')]
   public function viewsPluginsAreaAlter(array &$definitions) : void {
-    _views_test_config_disable_broken_handler($definitions, 'area');
+    $this->disableBrokenHandler($definitions, 'area');
   }
 
   /**
@@ -53,7 +53,7 @@ class ViewsTestConfigHooks {
    */
   #[Hook('views_plugins_argument_alter')]
   public function viewsPluginsArgumentAlter(array &$definitions) : void {
-    _views_test_config_disable_broken_handler($definitions, 'argument');
+    $this->disableBrokenHandler($definitions, 'argument');
   }
 
   /**
@@ -61,7 +61,7 @@ class ViewsTestConfigHooks {
    */
   #[Hook('views_plugins_field_alter')]
   public function viewsPluginsFieldAlter(array &$definitions) : void {
-    _views_test_config_disable_broken_handler($definitions, 'field');
+    $this->disableBrokenHandler($definitions, 'field');
   }
 
   /**
@@ -69,7 +69,7 @@ class ViewsTestConfigHooks {
    */
   #[Hook('views_plugins_filter_alter')]
   public function viewsPluginsFilterAlter(array &$definitions) : void {
-    _views_test_config_disable_broken_handler($definitions, 'filter');
+    $this->disableBrokenHandler($definitions, 'filter');
   }
 
   /**
@@ -77,7 +77,7 @@ class ViewsTestConfigHooks {
    */
   #[Hook('views_plugins_relationship_alter')]
   public function viewsPluginsRelationshipAlter(array &$definitions) : void {
-    _views_test_config_disable_broken_handler($definitions, 'relationship');
+    $this->disableBrokenHandler($definitions, 'relationship');
   }
 
   /**
@@ -85,7 +85,16 @@ class ViewsTestConfigHooks {
    */
   #[Hook('views_plugins_sort_alter')]
   public function viewsPluginsSortAlter(array &$definitions) : void {
-    _views_test_config_disable_broken_handler($definitions, 'sort');
+    $this->disableBrokenHandler($definitions, 'sort');
+  }
+
+  /**
+   * Helper method to remove broken handler.
+   */
+  public function disableBrokenHandler(array &$definitions, string $handler_type): void {
+    if (in_array($handler_type, \Drupal::state()->get('views_test_config_disable_broken_handler', []))) {
+      unset($definitions['broken']);
+    }
   }
 
 }
