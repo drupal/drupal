@@ -188,7 +188,7 @@
       const uncachedTokens = [];
       ids.forEach((contextualID) => {
         const html = storage.getItem(`Drupal.contextual.${contextualID.id}`);
-        if (html?.length) {
+        if (html && html.length) {
           // Initialize after the current execution cycle, to make the AJAX
           // request for retrieving the uncached contextual links as soon as
           // possible, but also to ensure that other Drupal behaviors have had

@@ -124,8 +124,8 @@
     // confirmation, because switching text formats might cause certain
     // markup to be stripped away.
     const supportContentFiltering =
-      drupalSettings.editor.formats[newFormatID]
-        ?.editorSupportsContentFiltering;
+      drupalSettings.editor.formats[newFormatID] &&
+      drupalSettings.editor.formats[newFormatID].editorSupportsContentFiltering;
     // If there is no content yet, it's always safe to change the text format.
     const hasContent = field.value !== '';
     if (hasContent && supportContentFiltering) {

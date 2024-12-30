@@ -19,7 +19,7 @@
           const pathElement = document.querySelector(
             '.js-form-item-path-0-alias input',
           );
-          const path = pathElement?.value;
+          const path = pathElement && pathElement.value;
           return path
             ? Drupal.t('Alias: @alias', { '@alias': path })
             : Drupal.t('No alias');

@@ -31,7 +31,7 @@
       // We're given a generic name to look for so we find all inputs containing
       // that name and copy over the input values that require all columns to be
       // translatable.
-      if (options?.dependent_selectors) {
+      if (options && options.dependent_selectors) {
         Object.keys(options.dependent_selectors).forEach((field) => {
           $fields = $context.find(`input[name^="${field}"]`);
           const dependentColumns = options.dependent_selectors[field];

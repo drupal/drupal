@@ -99,7 +99,11 @@ export default class DrupalImageUploadAdapter {
       const response = xhr.response;
 
       if (!response || response.error) {
-        return reject(response?.error?.message || genericErrorText);
+        return reject(
+          response && response.error && response.error.message
+            ? response.error.message
+            : genericErrorText,
+        );
       }
       // Resolve with the `urls` property and pass the response
       // to allow customizing the behavior of features relying on the upload adapters.

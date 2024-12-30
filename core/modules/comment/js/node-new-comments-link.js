@@ -130,7 +130,7 @@
       });
     }
 
-    if (drupalSettings.comment?.newCommentsLinks) {
+    if (drupalSettings.comment && drupalSettings.comment.newCommentsLinks) {
       render(drupalSettings.comment.newCommentsLinks.node[fieldName]);
     } else {
       $.ajax({

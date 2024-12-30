@@ -456,7 +456,7 @@
 
     // If there isn't a form, jQuery.ajax() will be used instead, allowing us to
     // bind Ajax to links as well.
-    if (this.element?.form) {
+    if (this.element && this.element.form) {
       /**
        * @type {jQuery}
        */
@@ -1038,7 +1038,7 @@
       (executionQueue, key) =>
         executionQueue.then(() => {
           const { command } = response[key];
-          if (ajaxCommands?.[command]) {
+          if (command && ajaxCommands[command]) {
             // When a command returns a promise, the remaining commands will not
             // execute until that promise has been fulfilled. This is typically
             // used to ensure JavaScript files added via the 'add_js' command
@@ -1894,9 +1894,10 @@
       xhr.getResponseHeader('X-Drupal-Ajax-Token') === '1' &&
       // The isInProgress() function might not be defined if the Ajax request
       // was initiated without Drupal.ajax() or new Drupal.Ajax().
+      settings.isInProgress &&
       // Until this is false, the Ajax request isn't completely done (the
       // response's commands might still be running).
-      settings?.isInProgress()
+      settings.isInProgress()
     );
   };
   $.extend(true, $.event.special, {

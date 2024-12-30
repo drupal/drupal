@@ -14,7 +14,7 @@
    */
   Drupal.behaviors.ViewsAjaxView = {};
   Drupal.behaviors.ViewsAjaxView.attach = function (context, settings) {
-    if (settings?.views?.ajaxViews) {
+    if (settings && settings.views && settings.views.ajaxViews) {
       const {
         views: { ajaxViews },
       } = settings;
@@ -25,7 +25,7 @@
   };
   Drupal.behaviors.ViewsAjaxView.detach = (context, settings, trigger) => {
     if (trigger === 'unload') {
-      if (settings?.views?.ajaxViews) {
+      if (settings && settings.views && settings.views.ajaxViews) {
         const {
           views: { ajaxViews },
         } = settings;

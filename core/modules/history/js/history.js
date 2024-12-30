@@ -16,7 +16,7 @@
 
   // Use the data embedded in the page, if available.
   let embeddedLastReadTimestamps = false;
-  if (drupalSettings.history?.lastReadTimestamps) {
+  if (drupalSettings.history && drupalSettings.history.lastReadTimestamps) {
     embeddedLastReadTimestamps = drupalSettings.history.lastReadTimestamps;
   }
 
@@ -67,7 +67,7 @@
      */
     getLastRead(nodeID) {
       // Use the data embedded in the page, if available.
-      if (embeddedLastReadTimestamps?.[nodeID]) {
+      if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
         return parseInt(embeddedLastReadTimestamps[nodeID], 10);
       }
       return parseInt(
@@ -90,7 +90,10 @@
         success(timestamp) {
           // If the data is embedded in the page, don't store on the client
           // side.
-          if (embeddedLastReadTimestamps?.[nodeID]) {
+          if (
+            embeddedLastReadTimestamps &&
+            embeddedLastReadTimestamps[nodeID]
+          ) {
             return;
           }
 
@@ -127,7 +130,7 @@
       }
 
       // Use the data embedded in the page, if available.
-      if (embeddedLastReadTimestamps?.[nodeID]) {
+      if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
         return (
           contentTimestamp > parseInt(embeddedLastReadTimestamps[nodeID], 10)
         );

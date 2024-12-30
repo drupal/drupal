@@ -18,9 +18,9 @@
 
       $context.find('.node-form-author').drupalSetSummary((context) => {
         const nameElement = context.querySelector('.field--name-uid input');
-        const name = nameElement?.value;
+        const name = nameElement && nameElement.value;
         const dateElement = context.querySelector('.field--name-created input');
-        const date = dateElement?.value;
+        const date = dateElement && dateElement.value;
 
         if (name && date) {
           return Drupal.t('By @name on @date', {

@@ -31,7 +31,7 @@
         );
       }
 
-      if (settings.file?.elements) {
+      if (settings.file && settings.file.elements) {
         elements = settings.file.elements;
         Object.keys(elements).forEach(initFileValidation);
       }
@@ -47,7 +47,7 @@
         );
       }
 
-      if (trigger === 'unload' && settings.file?.elements) {
+      if (trigger === 'unload' && settings.file && settings.file.elements) {
         elements = settings.file.elements;
         Object.keys(elements).forEach(removeFileValidation);
       }
