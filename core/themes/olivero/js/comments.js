@@ -14,10 +14,7 @@
     comments
       .querySelectorAll('[data-drupal-selector="comment"]')
       .forEach((comment) => {
-        if (
-          comment.nextElementSibling != null &&
-          comment.nextElementSibling.matches('.indented')
-        ) {
+        if (comment.nextElementSibling?.matches('.indented')) {
           comment.classList.add('has-children');
         }
       });
