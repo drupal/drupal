@@ -91,6 +91,9 @@
   z-index: 0;
   margin: 0;
   border-block-end: 4px solid var(--color--primary-50);
+  & thead {
+    background: var(--color--white);
+  }
 }
 
 /* Properly align VBO checkboxes. */

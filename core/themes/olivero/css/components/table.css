@@ -92,6 +92,10 @@
   border-block-end: 0.25rem solid var(--color--primary-50);
 }
 
+.sticky-header thead {
+  background: var(--color--white);
+}
+
 /* Properly align VBO checkboxes. */
 
 .views-field-node-bulk-form .form-item {
