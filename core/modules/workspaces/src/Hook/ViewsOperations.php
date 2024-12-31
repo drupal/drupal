@@ -1,132 +1,55 @@
 <?php
 
-namespace Drupal\workspaces;
+declare(strict_types=1);
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+namespace Drupal\workspaces\Hook;
+
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\views\Plugin\ViewsHandlerManager;
+use Drupal\views\Plugin\views\join\JoinPluginInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\views\query\Sql;
-use Drupal\views\Plugin\ViewsHandlerManager;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewsData;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\workspaces\WorkspaceAssociation;
+use Drupal\workspaces\WorkspaceInformationInterface;
+use Drupal\workspaces\WorkspaceManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a class for altering views queries.
- *
- * @internal
  */
-class ViewsQueryAlter implements ContainerInjectionInterface {
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The workspace manager service.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
-   * The views data.
-   *
-   * @var \Drupal\views\ViewsData
-   */
-  protected $viewsData;
-
-  /**
-   * A plugin manager which handles instances of views join plugins.
-   *
-   * @var \Drupal\views\Plugin\ViewsHandlerManager
-   */
-  protected $viewsJoinPluginManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The workspace information service.
-   *
-   * @var \Drupal\workspaces\WorkspaceInformationInterface
-   */
-  protected WorkspaceInformationInterface $workspaceInfo;
+class ViewsOperations {
 
   /**
    * An array of tables adjusted for workspace_association join.
    *
    * @var \WeakMap
    */
-  protected \WeakMap $adjustedTables;
+  private \WeakMap $adjustedTables;
 
-  /**
-   * Constructs a new ViewsQueryAlter instance.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
-   *   The workspace manager service.
-   * @param \Drupal\views\ViewsData $views_data
-   *   The views data.
-   * @param \Drupal\views\Plugin\ViewsHandlerManager $views_join_plugin_manager
-   *   The views join plugin manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\workspaces\WorkspaceInformationInterface $workspace_information
-   *   The workspace information service.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, WorkspaceManagerInterface $workspace_manager, ViewsData $views_data, ViewsHandlerManager $views_join_plugin_manager, LanguageManagerInterface $language_manager, WorkspaceInformationInterface $workspace_information) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->workspaceManager = $workspace_manager;
-    $this->viewsData = $views_data;
-    $this->viewsJoinPluginManager = $views_join_plugin_manager;
-    $this->languageManager = $language_manager;
-    $this->workspaceInfo = $workspace_information;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected WorkspaceManagerInterface $workspaceManager,
+    protected WorkspaceInformationInterface $workspaceInfo,
+    protected LanguageManagerInterface $languageManager,
+    protected ?ViewsData $viewsData = NULL,
+    #[Autowire(service: 'plugin.manager.views.join')]
+    protected ?ViewsHandlerManager $viewsJoinPluginManager = NULL,
+  ) {
     $this->adjustedTables = new \WeakMap();
   }
 
   /**
-   * {@inheritdoc}
+   * Implements hook_views_query_alter().
    */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager'),
-      $container->get('entity_field.manager'),
-      $container->get('workspaces.manager'),
-      $container->get('views.views_data'),
-      $container->get('plugin.manager.views.join'),
-      $container->get('language_manager'),
-      $container->get('workspaces.information')
-    );
-  }
-
-  /**
-   * Implements a hook bridge for hook_views_query_alter().
-   *
-   * @see hook_views_query_alter()
-   */
-  public function alterQuery(ViewExecutable $view, QueryPluginBase $query) {
+  #[Hook('views_query_alter')]
+  public function viewsQueryAlter(ViewExecutable $view, QueryPluginBase $query): void {
     // Don't alter any views queries if we're not in a workspace context.
     if (!$this->workspaceManager->hasActiveWorkspace()) {
       return;
@@ -168,7 +91,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    */
-  protected function alterQueryForEntityType(Sql $query, EntityTypeInterface $entity_type) {
+  protected function alterQueryForEntityType(Sql $query, EntityTypeInterface $entity_type): void {
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $this->entityTypeManager->getStorage($entity_type->id())->getTableMapping();
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id());
@@ -301,7 +224,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    * @return string
    *   The alias of the 'workspace_association' table.
    */
-  protected function ensureWorkspaceAssociationTable($entity_type_id, Sql $query, $relationship) {
+  protected function ensureWorkspaceAssociationTable(string $entity_type_id, Sql $query, string $relationship): string {
     if (isset($query->tables[$relationship]['workspace_association'])) {
       return $query->tables[$relationship]['workspace_association']['alias'];
     }
@@ -346,7 +269,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    * @return string
    *   The alias of the relationship.
    */
-  protected function ensureRevisionTable(EntityTypeInterface $entity_type, Sql $query, $relationship) {
+  protected function ensureRevisionTable(EntityTypeInterface $entity_type, Sql $query, string $relationship): string {
     // Get the alias for the 'workspace_association' table we chain off of in
     // the COALESCE.
     $workspace_association_table = $this->ensureWorkspaceAssociationTable($entity_type->id(), $query, $relationship);
@@ -400,7 +323,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  protected function getRevisionTableJoin($relationship, $table, $field, $workspace_association_table, EntityTypeInterface $entity_type) {
+  protected function getRevisionTableJoin(string $relationship, string $table, string $field, string $workspace_association_table, EntityTypeInterface $entity_type): JoinPluginInterface {
     $definition = [
       'table' => $table,
       'field' => $field,
@@ -438,7 +361,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    * @param string $alias
    *   The alias of the table it needs to appear before.
    */
-  protected function moveEntityTable(Sql $query, $workspace_association_table, $alias) {
+  protected function moveEntityTable(Sql $query, string $workspace_association_table, string $alias): void {
     $table_queue =& $query->getTableQueue();
     $keys = array_keys($table_queue);
     $current_index = array_search($workspace_association_table, $keys);

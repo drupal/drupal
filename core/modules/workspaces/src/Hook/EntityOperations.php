@@ -1,90 +1,39 @@
 <?php
 
-namespace Drupal\workspaces;
+declare(strict_types=1);
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+namespace Drupal\workspaces\Hook;
+
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\workspaces\WorkspaceAssociationInterface;
+use Drupal\workspaces\WorkspaceInformationInterface;
+use Drupal\workspaces\WorkspaceManagerInterface;
+use Drupal\workspaces\WorkspaceRepositoryInterface;
 
 /**
- * Defines a class for reacting to entity events.
- *
- * @internal
+ * Defines a class for reacting to entity runtime hooks.
  */
-class EntityOperations implements ContainerInjectionInterface {
+class EntityOperations {
 
-  use StringTranslationTrait;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The workspace manager service.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected WorkspaceManagerInterface $workspaceManager,
+    protected WorkspaceAssociationInterface $workspaceAssociation,
+    protected WorkspaceInformationInterface $workspaceInfo,
+    protected WorkspaceRepositoryInterface $workspaceRepository,
+  ) {}
 
   /**
-   * The workspace association service.
-   *
-   * @var \Drupal\workspaces\WorkspaceAssociationInterface
+   * Implements hook_entity_preload().
    */
-  protected $workspaceAssociation;
-
-  /**
-   * The workspace information service.
-   *
-   * @var \Drupal\workspaces\WorkspaceInformationInterface
-   */
-  protected $workspaceInfo;
-
-  /**
-   * Constructs a new EntityOperations instance.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
-   *   The workspace manager service.
-   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
-   *   The workspace association service.
-   * @param \Drupal\workspaces\WorkspaceInformationInterface $workspace_information
-   *   The workspace information service.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, WorkspaceInformationInterface $workspace_information) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->workspaceManager = $workspace_manager;
-    $this->workspaceAssociation = $workspace_association;
-    $this->workspaceInfo = $workspace_information;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager'),
-      $container->get('workspaces.manager'),
-      $container->get('workspaces.association'),
-      $container->get('workspaces.information')
-    );
-  }
-
-  /**
-   * Acts on entity IDs before they are loaded.
-   *
-   * @see hook_entity_preload()
-   */
-  public function entityPreload(array $ids, $entity_type_id) {
+  #[Hook('entity_preload')]
+  public function entityPreload(array $ids, string $entity_type_id): array {
     $entities = [];
 
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
@@ -115,14 +64,10 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Acts on an entity before it is created or updated.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being saved.
-   *
-   * @see hook_entity_presave()
+   * Implements hook_entity_presave().
    */
-  public function entityPresave(EntityInterface $entity) {
+  #[Hook('entity_presave')]
+  public function entityPresave(EntityInterface $entity): void {
     if ($this->shouldSkipOperations($entity)) {
       return;
     }
@@ -178,14 +123,15 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Responds to the creation of a new entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity that was just saved.
-   *
-   * @see hook_entity_insert()
+   * Implements hook_entity_insert().
    */
-  public function entityInsert(EntityInterface $entity) {
+  #[Hook('entity_insert')]
+  public function entityInsert(EntityInterface $entity): void {
+    if ($entity->getEntityTypeId() === 'workspace') {
+      $this->workspaceAssociation->workspaceInsert($entity);
+      $this->workspaceRepository->resetCache();
+    }
+
     if ($this->shouldSkipOperations($entity) || !$this->workspaceInfo->isEntitySupported($entity)) {
       return;
     }
@@ -215,14 +161,14 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Responds to updates to an entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity that was just saved.
-   *
-   * @see hook_entity_update()
+   * Implements hook_entity_update().
    */
-  public function entityUpdate(EntityInterface $entity) {
+  #[Hook('entity_update')]
+  public function entityUpdate(EntityInterface $entity): void {
+    if ($entity->getEntityTypeId() === 'workspace') {
+      $this->workspaceRepository->resetCache();
+    }
+
     if ($this->shouldSkipOperations($entity) || !$this->workspaceInfo->isEntitySupported($entity)) {
       return;
     }
@@ -235,13 +181,9 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Acts after an entity translation has been added.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $translation
-   *   The translation that was added.
-   *
-   * @see hook_entity_translation_insert()
+   * Implements hook_entity_translation_insert().
    */
+  #[Hook('entity_translation_insert')]
   public function entityTranslationInsert(EntityInterface $translation): void {
     if ($this->shouldSkipOperations($translation)
       || !$this->workspaceInfo->isEntitySupported($translation)
@@ -269,14 +211,14 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Acts on an entity before it is deleted.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity being deleted.
-   *
-   * @see hook_entity_predelete()
+   * Implements hook_entity_predelete().
    */
-  public function entityPredelete(EntityInterface $entity) {
+  #[Hook('entity_predelete')]
+  public function entityPredelete(EntityInterface $entity): void {
+    if ($entity->getEntityTypeId() === 'workspace') {
+      $this->workspaceRepository->resetCache();
+    }
+
     if ($this->shouldSkipOperations($entity)) {
       return;
     }
@@ -291,18 +233,36 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Alters entity forms to disallow concurrent editing in multiple workspaces.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param string $form_id
-   *   The form ID.
-   *
-   * @see hook_form_alter()
+   * Implements hook_entity_delete().
    */
-  public function entityFormAlter(array &$form, FormStateInterface $form_state, $form_id) {
+  #[Hook('entity_delete')]
+  public function entityDelete(EntityInterface $entity): void {
+    if ($this->workspaceInfo->isEntityTypeSupported($entity->getEntityType())) {
+      $this->workspaceAssociation->deleteAssociations(NULL, $entity->getEntityTypeId(), [$entity->id()]);
+    }
+  }
+
+  /**
+   * Implements hook_entity_revision_delete().
+   */
+  #[Hook('entity_revision_delete')]
+  public function entityRevisionDelete(EntityInterface $entity): void {
+    if ($this->workspaceInfo->isEntityTypeSupported($entity->getEntityType())) {
+      $this->workspaceAssociation->deleteAssociations(NULL, $entity->getEntityTypeId(), [$entity->id()], [$entity->getRevisionId()]);
+    }
+  }
+
+  /**
+   * Implements hook_form_alter().
+   *
+   * Alters entity forms to disallow concurrent editing in multiple workspaces.
+   */
+  #[Hook('form_alter')]
+  public function entityFormAlter(array &$form, FormStateInterface $form_state, string $form_id): void {
+    if (!$form_state->getFormObject() instanceof EntityFormInterface) {
+      return;
+    }
+
     $entity = $form_state->getFormObject()->getEntity();
     if (!$this->workspaceInfo->isEntitySupported($entity) && !$this->workspaceInfo->isEntityIgnored($entity)) {
       return;
@@ -310,7 +270,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // For supported and ignored entity types, signal the fact that this form is
     // safe to use in a workspace.
-    // @see \Drupal\workspaces\FormOperations::validateForm()
+    // @see \Drupal\workspaces\Hook\FormOperations::formAlter()
     $form_state->set('workspace_safe', TRUE);
 
     // There is nothing more to do for ignored entity types.
@@ -331,7 +291,7 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Entity builder that marks all supported entities as pending revisions.
    */
-  public static function entityFormEntityBuild($entity_type_id, RevisionableInterface $entity, &$form, FormStateInterface &$form_state) {
+  public static function entityFormEntityBuild(string $entity_type_id, RevisionableInterface $entity, array &$form, FormStateInterface &$form_state): void {
     // Ensure that all entity forms are signaling that a new revision will be
     // created.
     $entity->setNewRevision(TRUE);
@@ -350,7 +310,7 @@ class EntityOperations implements ContainerInjectionInterface {
    * @return bool
    *   Returns TRUE if entity operations should not be altered, FALSE otherwise.
    */
-  protected function shouldSkipOperations(EntityInterface $entity) {
+  protected function shouldSkipOperations(EntityInterface $entity): bool {
     // We should not react on entity operations when the entity is ignored or
     // when we're not in a workspace context.
     return $this->workspaceInfo->isEntityIgnored($entity) || !$this->workspaceManager->hasActiveWorkspace();

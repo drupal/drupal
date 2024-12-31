@@ -1,51 +1,38 @@
 <?php
 
-namespace Drupal\workspaces;
+declare(strict_types=1);
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+namespace Drupal\workspaces\Hook;
+
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\workspaces\Entity\Handler\BlockContentWorkspaceHandler;
 use Drupal\workspaces\Entity\Handler\DefaultWorkspaceHandler;
 use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\workspaces\WorkspaceInformationInterface;
 
 /**
- * Manipulates entity type information.
+ * Defines a class for reacting to entity type information hooks.
  *
- * This class contains primarily bridged hooks for compile-time or
- * cache-clear-time hooks. Runtime hooks should be placed in EntityOperations.
- *
- * @internal
+ * This class contains primarily compile-time or cache-clear-time hooks. Runtime
+ * hooks should be placed in EntityOperations.
  */
-class EntityTypeInfo implements ContainerInjectionInterface {
+class EntityTypeInfo {
 
   public function __construct(
-    protected readonly WorkspaceInformationInterface $workspaceInfo,
-  ) {
-  }
+    protected WorkspaceInformationInterface $workspaceInfo,
+  ) {}
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('workspaces.information')
-    );
-  }
-
-  /**
+   * Implements hook_entity_type_build().
+   *
    * Adds workspace support info to eligible entity types.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
-   *   An associative array of all entity type definitions, keyed by the entity
-   *   type name. Passed by reference.
-   *
-   * @see hook_entity_type_build()
    */
-  public function entityTypeBuild(array &$entity_types) {
+  #[Hook('entity_type_build')]
+  public function entityTypeBuild(array &$entity_types): void {
     foreach ($entity_types as $entity_type) {
       if ($entity_type->hasHandlerClass('workspace')) {
         continue;
@@ -77,14 +64,12 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   }
 
   /**
-   * Adds Workspace configuration to appropriate entity types.
+   * Implements hook_entity_type_alter().
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
-   *   An array of entity types.
-   *
-   * @see hook_entity_type_alter()
+   * Adds workspace configuration to appropriate entity types.
    */
-  public function entityTypeAlter(array &$entity_types) {
+  #[Hook('entity_type_alter')]
+  public function entityTypeAlter(array &$entity_types): void {
     foreach ($entity_types as $entity_type) {
       if (!$this->workspaceInfo->isEntityTypeSupported($entity_type)) {
         continue;
@@ -105,14 +90,10 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   }
 
   /**
-   * Alters field plugin definitions.
-   *
-   * @param array[] $definitions
-   *   An array of field plugin definitions.
-   *
-   * @see hook_field_info_alter()
+   * Implements hook_field_info_alter().
    */
-  public function fieldInfoAlter(&$definitions) {
+  #[Hook('field_info_alter')]
+  public function fieldInfoAlter(array &$definitions): void {
     if (isset($definitions['entity_reference'])) {
       $definitions['entity_reference']['constraints']['EntityReferenceSupportedNewEntities'] = [];
     }
@@ -124,17 +105,10 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   }
 
   /**
-   * Provides custom base field definitions for a content entity type.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition.
-   *
-   * @return \Drupal\Core\Field\FieldDefinitionInterface[]
-   *   An array of field definitions, keyed by field name.
-   *
-   * @see hook_entity_base_field_info()
+   * Implements hook_entity_base_field_info().
    */
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  #[Hook('entity_base_field_info')]
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
     if ($this->workspaceInfo->isEntityTypeSupported($entity_type)) {
       $field_name = $entity_type->getRevisionMetadataKey('workspace');
       $fields[$field_name] = BaseFieldDefinition::create('entity_reference')
@@ -147,6 +121,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
 
       return $fields;
     }
+    return [];
   }
 
 }
