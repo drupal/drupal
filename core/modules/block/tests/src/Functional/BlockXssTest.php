@@ -48,7 +48,7 @@ class BlockXssTest extends BrowserTestBase {
     $this->container->get('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title', ['label' => '<script>alert("XSS label");</script>']);
 
-    \Drupal::state()->set('block_test.content', $this->randomMachineName());
+    \Drupal::keyValue('block_test')->set('content', $this->randomMachineName());
     $this->drupalGet('');
     // Check that the block title was properly sanitized when rendered.
     $this->assertSession()->responseNotContains('<script>alert("XSS label");</script>');
