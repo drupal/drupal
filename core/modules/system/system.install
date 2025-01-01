@@ -1668,13 +1668,6 @@ function system_update_last_removed(): int {
 }
 
 /**
- * Invalidate container because the module handler has changed.
- */
-function system_update_11100(): void {
-  \Drupal::service('kernel')->invalidateContainer();
-}
-
-/**
  * Display requirements from security advisories.
  *
  * @param array[] $requirements
@@ -1723,6 +1716,13 @@ function _system_advisories_requirements(array &$requirements): void {
       )->toRenderable();
     }
   }
+}
+
+/**
+ * Invalidate container because the module handler has changed.
+ */
+function system_update_11100(): void {
+  \Drupal::service('kernel')->invalidateContainer();
 }
 
 /**
