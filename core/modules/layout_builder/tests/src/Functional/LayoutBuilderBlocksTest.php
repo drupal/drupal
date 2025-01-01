@@ -213,7 +213,7 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
     $assert_session->pageTextNotContains($block_content);
 
     // Set block content and reload the page.
-    \Drupal::state()->set('block_test.content', $block_content);
+    \Drupal::keyValue('block_test')->set('content', $block_content);
     $this->getSession()->reload();
 
     // The block placeholder is no longer displayed and the content is visible.

@@ -19,7 +19,7 @@ class TestCacheBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    $content = \Drupal::state()->get('block_test.content');
+    $content = \Drupal::keyValue('block_test')->get('content');
 
     $build = [];
     if (!empty($content)) {

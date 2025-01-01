@@ -54,7 +54,7 @@ class BlockViewBuilderTest extends KernelTestBase {
       ->get('entity_type.manager')
       ->getStorage('block');
 
-    \Drupal::state()->set('block_test.content', 'Llamas &gt; unicorns!');
+    \Drupal::keyValue('block_test')->set('content', 'Llamas &gt; unicorns!');
 
     // Create a block with only required values.
     $this->block = $this->controller->create([
@@ -73,7 +73,7 @@ class BlockViewBuilderTest extends KernelTestBase {
    * Tests the rendering of blocks.
    */
   public function testBasicRendering(): void {
-    \Drupal::state()->set('block_test.content', '');
+    \Drupal::keyValue('block_test')->set('content', '');
 
     $entity = $this->controller->create([
       'id' => 'test_block1',
@@ -136,7 +136,7 @@ class BlockViewBuilderTest extends KernelTestBase {
       'plugin' => 'test_cache',
     ]);
     $this->block->save();
-    \Drupal::state()->set('block_test.content', NULL);
+    \Drupal::keyValue('block_test')->set('content', NULL);
 
     // Verify cache handling for an empty block.
     $this->verifyRenderCacheHandling();
@@ -203,7 +203,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $this->assertSame('Llamas > unicorns!', trim((string) $this->cssSelect('[foo=bar]')[0]));
     \Drupal::state()->set('block_test_view_alter_suffix', FALSE);
 
-    \Drupal::state()->set('block_test.content', NULL);
+    \Drupal::keyValue('block_test')->set('content', NULL);
     Cache::invalidateTags($this->block->getCacheTagsToInvalidate());
 
     // Advanced: cached block, but an alter hook adds a #pre_render callback to
