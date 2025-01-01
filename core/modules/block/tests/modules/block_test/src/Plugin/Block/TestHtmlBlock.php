@@ -20,8 +20,8 @@ class TestHtmlBlock extends BlockBase {
    */
   public function build() {
     return [
-      '#attributes' => \Drupal::state()->get('block_test.attributes'),
-      '#children' => \Drupal::state()->get('block_test.content'),
+      '#attributes' => \Drupal::keyvalue('block_test')->get('attributes'),
+      '#children' => \Drupal::keyValue('block_test')->get('content'),
     ];
   }
 

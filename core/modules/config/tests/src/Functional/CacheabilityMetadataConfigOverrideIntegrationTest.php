@@ -38,7 +38,7 @@ class CacheabilityMetadataConfigOverrideIntegrationTest extends BrowserTestBase 
     // @todo If our block does not contain any content then the cache context
     //   is not bubbling up and the test fails. Remove this line once the cache
     //   contexts are properly set. See https://www.drupal.org/node/2529980.
-    \Drupal::state()->set('block_test.content', 'Needs to have some content');
+    \Drupal::keyValue('block_test')->set('content', 'Needs to have some content');
 
     $this->drupalLogin($this->drupalCreateUser());
   }
