@@ -66,7 +66,7 @@ class EditorTestHooks {
   #[Hook('editor_xss_filter_alter')]
   public function editorXssFilterAlter(&$editor_xss_filter_class, FilterFormatInterface $format, ?FilterFormatInterface $original_format = NULL): void {
     // Allow tests to enable or disable this alter hook.
-    if (!\Drupal::state()->get('editor_test_editor_xss_filter_alter_enabled', FALSE)) {
+    if (!\Drupal::keyValue('editor_test')->get('editor_xss_filter_alter_enabled', FALSE)) {
       return;
     }
     $filters = $format->filters()->getAll();
