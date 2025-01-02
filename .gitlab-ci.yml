@@ -183,7 +183,6 @@ default:
     _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
-    OTEL_COLLECTOR: $OTEL_COLLECTOR
   # Run on MR, schedule, push, parent pipeline and performance test.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
