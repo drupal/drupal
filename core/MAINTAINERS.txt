@@ -379,6 +379,7 @@ Search
 - Peter Wolanin 'pwolanin' https://www.drupal.org/u/pwolanin
 
 Serialization
+- Brad Jones 'bradjones1' https://www.drupal.org/u/bradjones1
 - Damian Lee 'damiankloip' https://www.drupal.org/u/damiankloip
 
 Settings Tray
