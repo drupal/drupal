@@ -7,6 +7,7 @@
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Url;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @param array $results
  *   An associative array of results from the batch operation.
  */
+#[StopProceduralHookScan]
 function update_manager_download_batch_finished($success, $results) {
   if (!empty($results['errors'])) {
     $item_list = [

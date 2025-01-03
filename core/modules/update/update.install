@@ -5,6 +5,7 @@
  * Install, update, and uninstall functions for the Update Manager module.
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\update\ProjectSecurityData;
@@ -73,6 +74,7 @@ function update_requirements($phase) {
 /**
  * Implements hook_install().
  */
+#[StopProceduralHookScan]
 function update_install(): void {
   $queue = \Drupal::queue('update_fetch_tasks', TRUE);
   $queue->createQueue();

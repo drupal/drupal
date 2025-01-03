@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\update\ProjectRelease;
@@ -19,6 +20,7 @@ use Drupal\update\UpdateManagerInterface;
  *   An associative array containing:
  *   - data: An array of data about each project's status.
  */
+#[StopProceduralHookScan]
 function template_preprocess_update_report(&$variables): void {
   $data = isset($variables['data']) && is_array($variables['data']) ? $variables['data'] : [];
 
