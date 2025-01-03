@@ -125,7 +125,6 @@ datelist
 daterange
 datestamp
 datetimeiso
-datetimeplus
 dburl
 dealerdirect
 defaultable
@@ -167,7 +166,6 @@ drupalmediatoolbar
 editables
 egulias
 elbonia
-elems
 encapsed
 endautoescape
 endcode
@@ -357,7 +355,6 @@ nplurals
 ntfs
 nyholm
 oembed
-omittable
 onecol
 oneplusfourgrid
 optgroups
@@ -385,7 +382,6 @@ phpserialize
 phpspec
 pickable
 pingback
-pjpeg
 placeholdered
 placeholdering
 plusthick
@@ -408,8 +404,6 @@ presave
 pretransaction
 preuninstall
 prophesize
-prophesized
-prophesizing
 protossl
 pseudotag
 puzzlepiece
@@ -432,7 +426,6 @@ referer
 refinable
 reindexing
 renderables
-reparenting
 replyto
 resave
 resaved
@@ -445,7 +438,6 @@ revisionable
 revisioned
 revisionid
 revisioning
-ribisi
 rowspans
 rtsp
 ruleset
@@ -534,17 +526,13 @@ tableinfo
 tableresponsive
 tableselect
 tablesort
-tablesort's
 tablesorts
 tabset
 tabwidth
-taskless
 tbachert
 testbot
-testbots
 testlogger
 textareas
-textboxes
 textfields
 themename
 themer
@@ -558,7 +546,6 @@ timemap
 timespan
 tinyint
 tinytext
-titlealert
 titlebar
 tlds
 tmpfs
@@ -589,7 +576,6 @@ unminified
 unmoderated
 unpromote
 unpublishing
-unrevisionable
 unrouted
 unsanitized
 unserialization
@@ -607,7 +593,6 @@ upscaling
 urandom
 userinfo
 versionable
-versionless
 vfsstream
 viewports
 wcag
@@ -621,7 +606,6 @@ webservers
 widthx
 wordsafe
 writeln
-xbap
 xbitmap
 xmlhttp
 xpsdocument

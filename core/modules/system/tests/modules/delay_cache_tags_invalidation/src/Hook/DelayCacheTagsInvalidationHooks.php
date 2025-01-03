@@ -25,8 +25,8 @@ class DelayCacheTagsInvalidationHooks {
     }
     // Read the pre-transaction cache writes.
     // @see \Drupal\KernelTests\Core\Cache\EndOfTransactionQueriesTest::testEntitySave()
-    \Drupal::state()->set('delay_cache_tags_invalidation_entity_test_insert' . '__pretransaction_foobar', \Drupal::cache()->get('test_cache_pretransaction_foobar'));
-    \Drupal::state()->set('delay_cache_tags_invalidation_entity_test_insert' . '__pretransaction_entity_test_list', \Drupal::cache()->get('test_cache_pretransaction_entity_test_list'));
+    \Drupal::state()->set('delay_cache_tags_invalidation_entity_test_insert' . '__pre-transaction_foobar', \Drupal::cache()->get('test_cache_pre-transaction_foobar'));
+    \Drupal::state()->set('delay_cache_tags_invalidation_entity_test_insert' . '__pre-transaction_entity_test_list', \Drupal::cache()->get('test_cache_pre-transaction_entity_test_list'));
     // Write during the transaction.
     \Drupal::cache()->set('delay_cache_tags_invalidation_entity_test_insert' . '__during_transaction_foobar', 'something', Cache::PERMANENT, ['foobar']);
     \Drupal::cache()->set('delay_cache_tags_invalidation_entity_test_insert' . '__during_transaction_entity_test_list', 'something', Cache::PERMANENT, ['entity_test_list']);

@@ -26,7 +26,7 @@ class SqlTest extends MigrateTestBase {
   protected $database;
 
   /**
-   * Prophesized event dispatcher.
+   * A mock event dispatcher.
    *
    * @var object|\Prophecy\Prophecy\ProphecySubjectInterface|\Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */

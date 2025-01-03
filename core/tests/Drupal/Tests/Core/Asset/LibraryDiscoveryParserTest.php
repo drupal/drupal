@@ -294,9 +294,9 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
 
     $libraries = $this->libraryDiscoveryParser->buildByExtension('versions');
 
-    $this->assertArrayNotHasKey('version', $libraries['versionless']);
-    $this->assertEquals(-1, $libraries['versionless']['css'][0]['version']);
-    $this->assertEquals(-1, $libraries['versionless']['js'][0]['version']);
+    $this->assertArrayNotHasKey('version', $libraries['no_version']);
+    $this->assertEquals(-1, $libraries['no_version']['css'][0]['version']);
+    $this->assertEquals(-1, $libraries['no_version']['js'][0]['version']);
 
     $this->assertEquals('9.8.7.6', $libraries['versioned']['version']);
     $this->assertEquals('9.8.7.6', $libraries['versioned']['css'][0]['version']);

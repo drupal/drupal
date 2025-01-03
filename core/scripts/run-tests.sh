@@ -36,7 +36,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\Process;
 
-// cspell:ignore exitcode wwwrun
+// cspell:ignore exitcode testbots wwwrun
 
 // Define some colors for display.
 // A nice calming green.

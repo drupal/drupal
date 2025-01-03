@@ -47,7 +47,7 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
   /**
    * Confirms precedence of tablesorts headers.
    *
-   * If a tablesort's orderByHeader is called before another orderBy, then its
+   * If a tablesort orderByHeader is called before another orderBy, then its
    * header happens first.
    */
   public function testTableSortQueryFirst(): void {

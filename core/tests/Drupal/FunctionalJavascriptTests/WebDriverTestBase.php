@@ -80,7 +80,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
     self::$modules = [
       'js_testing_ajax_request_test',
       'js_testing_log_test',
-      'jquery_keyevent_polyfill_test',
+      'jquery_key_event_polyfill_test',
     ];
     if ($this->disableCssAnimations) {
       self::$modules[] = 'css_disable_transitions_test';

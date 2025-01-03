@@ -1414,7 +1414,7 @@ module.exports = {
         const $ = jQuery;
         const toReturn = {};
         let count = 0;
-        const elems = $('#el1, #el2');
+        const elements = $('#el1, #el2');
         const of = $('#parentX');
         const expectedPosition = { top: 60, left: 60 };
         const expectedFeedback = {
@@ -1435,7 +1435,7 @@ module.exports = {
           vertical: 'top',
           important: 'vertical',
         };
-        const originalPosition = elems
+        const originalPosition = elements
           .position({
             my: 'right bottom',
             at: 'right bottom',
@@ -1444,14 +1444,14 @@ module.exports = {
           })
           .offset();
 
-        elems.position({
+        elements.position({
           my: 'left top',
           at: 'center+10 bottom',
           of: '#parentX',
           using(position, feedback) {
             toReturn[`correct context for call #${count}`] = {
               actual: this,
-              expected: elems[count],
+              expected: elements[count],
             };
             toReturn[`correct position for call #${count}`] = {
               actual: position,
@@ -1459,9 +1459,9 @@ module.exports = {
             };
             toReturn[`feedback and element match for call #${count}`] = {
               actual: feedback.element.element[0],
-              expected: elems[count],
+              expected: elements[count],
             };
-            // assert.deepEqual(feedback.element.element[0], elems[count]);
+            // assert.deepEqual(feedback.element.element[0], elements[count]);
             delete feedback.element.element;
             toReturn[`expected feedback after delete for call #${count}`] = {
               actual: feedback,
@@ -1472,7 +1472,7 @@ module.exports = {
         });
 
         // eslint-disable-next-line func-names
-        elems.each(function (index) {
+        elements.each(function (index) {
           toReturn[`elements not moved: ${index}`] = {
             actual: $(this).offset(),
             expected: originalPosition,

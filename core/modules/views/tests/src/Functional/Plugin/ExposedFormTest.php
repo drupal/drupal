@@ -264,12 +264,12 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertSession()->pageTextMatchesCount(2, '/' . $view->getTitle() . '/');
 
     // Set a custom label on the exposed filter form block.
-    $block->getPlugin()->setConfigurationValue('views_label', '<strong>Custom</strong> title<script>alert("hacked!");</script>');
+    $block->getPlugin()->setConfigurationValue('views_label', '<strong>Custom</strong> title <script>alert("hacked!");</script>');
     $block->save();
 
     // Test that the content block label is found.
     $this->drupalGet('test_exposed_block');
-    $this->assertSession()->responseContains('<strong>Custom</strong> titlealert("hacked!");');
+    $this->assertSession()->responseContains('<strong>Custom</strong> title alert("hacked!");');
 
     // Set label to hidden on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);
@@ -279,7 +279,7 @@ class ExposedFormTest extends ViewTestBase {
     // Assert that the only occurrence of `$view->getTitle()` is the title tag
     // now that label has been removed.
     $this->drupalGet('test_exposed_block');
-    $this->assertSession()->responseNotContains('<strong>Custom</strong> titlealert("hacked!");');
+    $this->assertSession()->responseNotContains('<strong>Custom</strong> title alert("hacked!");');
     $this->assertSession()->elementContains('css', 'title', $view->getTitle());
     $this->assertSession()->pageTextMatchesCount(1, '/' . $view->getTitle() . '/');
 

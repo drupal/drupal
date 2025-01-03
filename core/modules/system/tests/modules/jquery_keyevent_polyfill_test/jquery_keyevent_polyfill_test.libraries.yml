@@ -1,4 +1,0 @@
-jquery.keyevent.polyfill:
-  version: VERSION
-  js:
-    js/jquery.keyevent.polyfill.js: { }
