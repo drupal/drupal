@@ -79,6 +79,7 @@
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.MissingParamType">
     <include-pattern>core/lib/Component/*</include-pattern>
+    <include-pattern>core/*/*Database*/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.MissingReturnComment">
     <include-pattern>core/lib/Drupal/Core/*</include-pattern>

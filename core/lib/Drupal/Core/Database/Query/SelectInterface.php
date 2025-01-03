@@ -126,7 +126,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Escapes characters that work as wildcard characters in a LIKE pattern.
    *
-   * @param $string
+   * @param string $string
    *   The string to escape.
    *
    * @return string
@@ -154,7 +154,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Compiles and returns an associative array of the arguments for this prepared statement.
    *
-   * @param $queryPlaceholder
+   * @param \Drupal\Core\Database\Query\PlaceholderInterface|null $queryPlaceholder
    *   When collecting the arguments of a subquery, the main placeholder
    *   object should be passed as this parameter.
    *
@@ -168,7 +168,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Sets this query to be DISTINCT.
    *
-   * @param $distinct
+   * @param bool $distinct
    *   TRUE to flag this query DISTINCT, FALSE to disable it.
    *
    * @return $this
@@ -179,13 +179,13 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds a field to the list to be SELECTed.
    *
-   * @param $table_alias
+   * @param string $table_alias
    *   The name of the table from which the field comes, as an alias. Generally
    *   you will want to use the return value of join() here to ensure that it is
    *   valid.
-   * @param $field
+   * @param string $field
    *   The name of the field.
-   * @param $alias
+   * @param string $alias
    *   The alias for this field. If not specified, one will be generated
    *   automatically based on the $table_alias and $field. The alias will be
    *   checked for uniqueness, so the requested alias may not be the alias
@@ -206,11 +206,11 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * simply use addField() for the few fields you care about and this method for
    * the rest.
    *
-   * @param $table_alias
+   * @param string $table_alias
    *   The name of the table from which the field comes, as an alias. Generally
    *   you will want to use the return value of join() here to ensure that it is
    *   valid.
-   * @param $fields
+   * @param array $fields
    *   An indexed array of fields present in the specified table that should be
    *   included in this query. If not specified, $table_alias.* will be generated
    *   without any aliases.
@@ -227,14 +227,14 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * various functions, which may in some cases be database-dependent. This
    * method makes no effort to correct for database-specific functions.
    *
-   * @param $expression
+   * @param string $expression
    *   The expression string. May contain placeholders.
-   * @param $alias
+   * @param string $alias
    *   The alias for this expression. If not specified, one will be generated
    *   automatically in the form "expression_#". The alias will be checked for
    *   uniqueness, so the requested alias may not be the alias that is assigned
    *   in all cases.
-   * @param $arguments
+   * @param array $arguments
    *   Any placeholder arguments needed for this expression.
    *
    * @return string
@@ -247,15 +247,15 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    * This method is a convenience method for innerJoin().
    *
-   * @param $table
+   * @param \Drupal\Core\Database\Query\SelectInterface|string $table
    *   The table against which to join. May be a string or another SelectQuery
    *   object. If a query object is passed, it will be used as a subselect.
    *   Unless the table name starts with the database / schema name and a dot
    *   it will be prefixed.
-   * @param $alias
+   * @param string|null $alias
    *   The alias for the table. In most cases this should be the first letter
    *   of the table, or the first letter of each "word" in the table.
-   * @param $condition
+   * @param string|null $condition
    *   The condition on which to join this table. If the join requires values,
    *   this clause should use a named placeholder and the value or values to
    *   insert should be passed in the 4th parameter. For the first table joined
@@ -263,7 +263,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   table. The token %alias can be used in this string to be replaced with
    *   the actual alias. This is useful when $alias is modified by the database
    *   system, for example, when joining the same table more than once.
-   * @param $arguments
+   * @param array $arguments
    *   An array of arguments to replace into the $condition of this join.
    *
    * @return string
@@ -274,15 +274,15 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Inner Join against another table in the database.
    *
-   * @param $table
+   * @param \Drupal\Core\Database\Query\SelectInterface|string $table
    *   The table against which to join. May be a string or another SelectQuery
    *   object. If a query object is passed, it will be used as a subselect.
    *   Unless the table name starts with the database / schema name and a dot
    *   it will be prefixed.
-   * @param $alias
+   * @param string|null $alias
    *   The alias for the table. In most cases this should be the first letter
    *   of the table, or the first letter of each "word" in the table.
-   * @param $condition
+   * @param string|null $condition
    *   The condition on which to join this table. If the join requires values,
    *   this clause should use a named placeholder and the value or values to
    *   insert should be passed in the 4th parameter. For the first table joined
@@ -290,7 +290,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   table. The token %alias can be used in this string to be replaced with
    *   the actual alias. This is useful when $alias is modified by the database
    *   system, for example, when joining the same table more than once.
-   * @param $arguments
+   * @param array $arguments
    *   An array of arguments to replace into the $condition of this join.
    *
    * @return string
@@ -301,15 +301,15 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Left Outer Join against another table in the database.
    *
-   * @param $table
+   * @param \Drupal\Core\Database\Query\SelectInterface|string $table
    *   The table against which to join. May be a string or another SelectQuery
    *   object. If a query object is passed, it will be used as a subselect.
    *   Unless the table name starts with the database / schema name and a dot
    *   it will be prefixed.
-   * @param $alias
+   * @param string|null $alias
    *   The alias for the table. In most cases this should be the first letter
    *   of the table, or the first letter of each "word" in the table.
-   * @param $condition
+   * @param string|null $condition
    *   The condition on which to join this table. If the join requires values,
    *   this clause should use a named placeholder and the value or values to
    *   insert should be passed in the 4th parameter. For the first table joined
@@ -317,7 +317,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   table. The token %alias can be used in this string to be replaced with
    *   the actual alias. This is useful when $alias is modified by the database
    *   system, for example, when joining the same table more than once.
-   * @param $arguments
+   * @param array $arguments
    *   An array of arguments to replace into the $condition of this join.
    *
    * @return string
@@ -332,18 +332,18 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * In some cases, that may include dipping into the Schema API to find the necessary
    * fields on which to join.
    *
-   * @param $type
+   * @param string $type
    *   The type of join. Typically one of INNER, LEFT OUTER, and RIGHT OUTER.
-   * @param $table
+   * @param \Drupal\Core\Database\Query\SelectInterface|string $table
    *   The table against which to join. May be a string or another SelectQuery
    *   object. If a query object is passed, it will be used as a subselect.
    *   Unless the table name starts with the database / schema name and a dot
    *   it will be prefixed.
-   * @param $alias
+   * @param string $alias
    *   The alias for the table. In most cases this should be the first letter
    *   of the table, or the first letter of each "word" in the table. If omitted,
    *   one will be dynamically generated.
-   * @param $condition
+   * @param string|null $condition
    *   The condition on which to join this table. If the join requires values,
    *   this clause should use a named placeholder and the value or values to
    *   insert should be passed in the 4th parameter. For the first table joined
@@ -351,7 +351,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   table. The token %alias can be used in this string to be replaced with
    *   the actual alias. This is useful when $alias is modified by the database
    *   system, for example, when joining the same table more than once.
-   * @param $arguments
+   * @param array $arguments
    *   An array of arguments to replace into the $condition of this join.
    *
    * @return string
@@ -372,7 +372,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * when ordering on an alias, the alias must be added before orderBy() is
    * called.
    *
-   * @param $field
+   * @param string $field
    *   The field on which to order. The field is escaped for security so only
    *   valid field and alias names are possible. To order by an expression, add
    *   the expression with addExpression() first and then use the alias to order
@@ -383,7 +383,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   $query->addExpression('SUBSTRING([thread], 1, (LENGTH([thread]) - 1))', 'order_field');
    *   $query->orderBy('order_field', 'ASC');
    *   @endcode
-   * @param $direction
+   * @param string $direction
    *   The direction to sort. Legal values are "ASC" and "DESC". Any other value
    *   will be converted to "ASC".
    *
@@ -420,10 +420,10 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * If this method is called with no parameters, will remove any range
    * directives that have been set.
    *
-   * @param $start
+   * @param int|null $start
    *   The first record from the result set to return. If NULL, removes any
    *   range directives that are set.
-   * @param $length
+   * @param int|null $length
    *   The number of records to return from the result set.
    *
    * @return $this
@@ -446,9 +446,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * caller to ensure that they match properly. If they do
    * not, an SQL syntax error will result.
    *
-   * @param $query
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   The query to UNION to this query.
-   * @param $type
+   * @param string $type
    *   The type of UNION to add to the query. Defaults to plain
    *   UNION.
    *
@@ -460,7 +460,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Groups the result set by the specified field.
    *
-   * @param $field
+   * @param string $field
    *   The field on which to group. This should be the field as aliased.
    *
    * @return $this
@@ -507,14 +507,14 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * parameters, they are taken as $field and $value with $operator having a value
    * of IN if $value is an array and = otherwise.
    *
-   * @param $field
+   * @param string $field
    *   The name of the field to check. If you would like to add a more complex
    *   condition involving operators or functions, use having().
-   * @param $value
+   * @param mixed|null $value
    *   The value to test the field against. In most cases, this is a scalar. For more
    *   complex options, it is an array. The meaning of each element in the array is
    *   dependent on the $operator.
-   * @param $operator
+   * @param string|null $operator
    *   The comparison operator, such as =, <, or >=. It also accepts more complex
    *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
    *   = otherwise.
@@ -548,10 +548,10 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Adds an arbitrary HAVING clause to the query.
    *
-   * @param $snippet
+   * @param string $snippet
    *   A portion of a HAVING clause as a prepared statement. It must use named
    *   placeholders, not ? placeholders.
-   * @param $args
+   * @param array $args
    *   (optional) An associative array of arguments.
    *
    * @return $this
@@ -561,7 +561,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Compiles the HAVING clause for later retrieval.
    *
-   * @param $connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   The database connection for which to compile the clause.
    */
   public function havingCompile(Connection $connection);
@@ -569,7 +569,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Sets a condition in the HAVING clause that the specified field be NULL.
    *
-   * @param $field
+   * @param string $field
    *   The name of the field to check.
    *
    * @return $this
@@ -579,7 +579,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Sets a condition in the HAVING clause that the specified field be NOT NULL.
    *
-   * @param $field
+   * @param string $field
    *   The name of the field to check.
    *
    * @return $this
@@ -623,7 +623,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * ends. Other transactions that attempt UPDATE, DELETE, or SELECT FOR UPDATE
    * of these rows will be blocked until the current transaction ends.
    *
-   * @param $set
+   * @param bool|null $set
    *   IF TRUE, FOR UPDATE will be added to the query, if FALSE then it won't.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface

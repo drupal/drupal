@@ -69,7 +69,7 @@ class Update extends Query implements ConditionInterface {
   /**
    * Adds a set of field->value pairs to be updated.
    *
-   * @param $fields
+   * @param array $fields
    *   An associative array of fields to write into the database. The array keys
    *   are the field names and the values are the values to which to set them.
    *
@@ -87,12 +87,12 @@ class Update extends Query implements ConditionInterface {
    * Expression fields are cases such as counter=counter+1. This method takes
    * precedence over fields().
    *
-   * @param $field
+   * @param string $field
    *   The field to set.
-   * @param $expression
+   * @param string $expression
    *   The field will be set to the value of this expression. This parameter
    *   may include named placeholders.
-   * @param $arguments
+   * @param array|null $arguments
    *   If specified, this is an array of key/value pairs for named placeholders
    *   corresponding to the expression.
    *

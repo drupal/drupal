@@ -167,7 +167,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * Some drivers (including SQLite) will need to perform some preparation
    * themselves to get the statement right.
    *
-   * @param $query
+   * @param string $query
    *   The query.
    * @param array|null $args
    *   An array of arguments. This can be NULL.

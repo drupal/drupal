@@ -118,7 +118,7 @@ class Schema extends DatabaseSchema {
   /**
    * Set database-engine specific properties for a field.
    *
-   * @param $field
+   * @param array $field
    *   A field description array, as specified in the schema documentation.
    */
   protected function processField($field) {
@@ -154,9 +154,9 @@ class Schema extends DatabaseSchema {
    * Before passing a field out of a schema definition into this function it has
    * to be processed by self::processField().
    *
-   * @param $name
+   * @param string $name
    *   Name of the field.
-   * @param $spec
+   * @param array $spec
    *   The field specification, as per the schema data structure format.
    */
   protected function createFieldSql($name, $spec) {
@@ -399,13 +399,13 @@ class Schema extends DatabaseSchema {
    * As SQLite does not support ALTER TABLE (with a few exceptions) it is
    * necessary to create a new table and copy over the old content.
    *
-   * @param $table
+   * @param string $table
    *   Name of the table to be altered.
-   * @param $old_schema
+   * @param array $old_schema
    *   The old schema array for the table.
-   * @param $new_schema
+   * @param array $new_schema
    *   The new schema array for the table.
-   * @param $mapping
+   * @param array $mapping
    *   An optional mapping between the fields of the old specification and the
    *   fields of the new specification. An associative array, whose keys are
    *   the fields of the new table, and values can take two possible forms:
@@ -464,7 +464,7 @@ class Schema extends DatabaseSchema {
    * create a schema array. This is useful, for example, during update when
    * the old schema is not available.
    *
-   * @param $table
+   * @param string $table
    *   Name of the table.
    *
    * @return array
@@ -649,9 +649,9 @@ class Schema extends DatabaseSchema {
   /**
    * Utility method: rename columns in an index definition according to a new mapping.
    *
-   * @param $key_definition
+   * @param array $key_definition
    *   The key definition.
-   * @param $mapping
+   * @param array $mapping
    *   The new mapping.
    */
   protected function mapKeyDefinition(array $key_definition, array $mapping) {

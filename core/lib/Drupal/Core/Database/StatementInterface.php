@@ -23,10 +23,10 @@ interface StatementInterface extends \Traversable {
   /**
    * Executes a prepared statement.
    *
-   * @param $args
+   * @param array|null $args
    *   An array of values with as many elements as there are bound parameters in
    *   the SQL statement being executed. This can be NULL.
-   * @param $options
+   * @param array $options
    *   An array of options for this query.
    *
    * @return bool
@@ -68,14 +68,14 @@ interface StatementInterface extends \Traversable {
    * See http://php.net/manual/pdo.constants.php for the definition of the
    * constants used.
    *
-   * @param $mode
+   * @param int $mode
    *   One of the \PDO::FETCH_* constants.
-   * @param $a1
+   * @param int|null $a1
    *   An option depending of the fetch mode specified by $mode:
    *   - for \PDO::FETCH_COLUMN, the index of the column to fetch
    *   - for \PDO::FETCH_CLASS, the name of the class to create
    *   - for \PDO::FETCH_INTO, the object to add the data to
-   * @param $a2
+   * @param array $a2
    *   If $mode is \PDO::FETCH_CLASS, the optional arguments to pass to the
    *   constructor.
    */
@@ -87,12 +87,12 @@ interface StatementInterface extends \Traversable {
    * See http://php.net/manual/pdo.constants.php for the definition of the
    * constants used.
    *
-   * @param $mode
+   * @param int $mode
    *   One of the \PDO::FETCH_* constants.
    *   Default to what was specified by setFetchMode().
-   * @param $cursor_orientation
+   * @param int|null $cursor_orientation
    *   Not implemented in all database drivers, don't use.
-   * @param $cursor_offset
+   * @param int|null $cursor_offset
    *   Not implemented in all database drivers, don't use.
    *
    * @return array|object|false
@@ -103,7 +103,7 @@ interface StatementInterface extends \Traversable {
   /**
    * Returns a single field from the next record of a result set.
    *
-   * @param $index
+   * @param int $index
    *   The numeric index of the field to return. Defaults to the first field.
    *
    * @return mixed
@@ -146,11 +146,11 @@ interface StatementInterface extends \Traversable {
   /**
    * Returns an array containing all of the result set rows.
    *
-   * @param $mode
+   * @param int|null $mode
    *   One of the \PDO::FETCH_* constants.
-   * @param $column_index
+   * @param int|null $column_index
    *   If $mode is \PDO::FETCH_COLUMN, the index of the column to fetch.
-   * @param $constructor_arguments
+   * @param array $constructor_arguments
    *   If $mode is \PDO::FETCH_CLASS, the arguments to pass to the constructor.
    *
    * @return array
@@ -163,7 +163,7 @@ interface StatementInterface extends \Traversable {
    *
    * Note that this method will run the result set to the end.
    *
-   * @param $index
+   * @param int $index
    *   The index of the column number to fetch.
    *
    * @return array
@@ -181,9 +181,9 @@ interface StatementInterface extends \Traversable {
    *
    * Note that this method will run the result set to the end.
    *
-   * @param $key_index
+   * @param int $key_index
    *   The numeric index of the field to use as the array key.
-   * @param $value_index
+   * @param int $value_index
    *   The numeric index of the field to use as the array value.
    *
    * @return array
@@ -197,9 +197,9 @@ interface StatementInterface extends \Traversable {
    * If the given key appears multiple times, later records will overwrite
    * earlier ones.
    *
-   * @param $key
+   * @param string $key
    *   The name of the field on which to index the array.
-   * @param $fetch
+   * @param int|null $fetch
    *   The fetch mode to use. If set to \PDO::FETCH_ASSOC, \PDO::FETCH_NUM, or
    *   \PDO::FETCH_BOTH the returned value with be an array of arrays. For any
    *   other value it will be an array of objects. By default, the fetch mode

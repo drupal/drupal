@@ -152,7 +152,7 @@ class PagerSelectExtender extends SelectExtender {
    * explicitly, so it is possible for two pagers to end up using the same ID
    * if both are set explicitly.
    *
-   * @param $element
+   * @param array $element
    *   Element ID that is used to differentiate different pager queries.
    */
   public function element($element) {

@@ -783,7 +783,7 @@ abstract class Connection {
    *   for query_alter hook implementations.
    * @param string $alias
    *   (optional) The alias of the base table of this query.
-   * @param $options
+   * @param array $options
    *   An array of options on the query.
    *
    * @return \Drupal\Core\Database\Query\SelectInterface

@@ -43,7 +43,7 @@ class Log {
   /**
    * Constructor.
    *
-   * @param $key
+   * @param string $key
    *   The database connection key for which to enable logging.
    */
   public function __construct($key = 'default') {
@@ -55,7 +55,7 @@ class Log {
    *
    * If the specified logging key is already running this method does nothing.
    *
-   * @param $logging_key
+   * @param string $logging_key
    *   The identification key for this log request. By specifying different
    *   logging keys we are able to start and stop multiple logging runs
    *   simultaneously without them colliding.
@@ -69,7 +69,7 @@ class Log {
   /**
    * Retrieve the query log for the specified logging key so far.
    *
-   * @param $logging_key
+   * @param string $logging_key
    *   The logging key to fetch.
    *
    * @return array
@@ -85,7 +85,7 @@ class Log {
    * This method does not stop logging, it simply clears the log. To stop
    * logging, use the end() method.
    *
-   * @param $logging_key
+   * @param string $logging_key
    *   The logging key to empty.
    */
   public function clear($logging_key) {
@@ -95,7 +95,7 @@ class Log {
   /**
    * Stop logging for the specified logging key.
    *
-   * @param $logging_key
+   * @param string $logging_key
    *   The logging key to stop.
    */
   public function end($logging_key) {

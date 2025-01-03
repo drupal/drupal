@@ -158,11 +158,11 @@ abstract class Schema implements PlaceholderInterface {
    * to make all the others work. For example see
    * core/includes/databases/mysql/schema.inc.
    *
-   * @param $table_name
+   * @param string $table_name
    *   The name of the table in question.
-   * @param $operator
+   * @param string $operator
    *   The operator to apply on the 'table' part of the condition.
-   * @param $add_prefix
+   * @param bool $add_prefix
    *   Boolean to indicate whether the table name needs to be prefixed.
    *
    * @return \Drupal\Core\Database\Query\Condition
@@ -184,7 +184,7 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Check if a table exists.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table in drupal (no prefixing).
    * @param bool $add_prefix
    *   Boolean to indicate whether the table name needs to be prefixed.
@@ -297,9 +297,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Rename a table.
    *
-   * @param $table
+   * @param string $table
    *   The table to be renamed.
-   * @param $new_name
+   * @param string $new_name
    *   The new name for the table.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
@@ -312,7 +312,7 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Drop a table.
    *
-   * @param $table
+   * @param string $table
    *   The table to be dropped.
    *
    * @return bool
@@ -324,11 +324,11 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Add a new field to a table.
    *
-   * @param $table
+   * @param string $table
    *   Name of the table to be altered.
-   * @param $field
+   * @param string $field
    *   Name of the field to be added.
-   * @param $spec
+   * @param array $spec
    *   The field specification array, as taken from a schema definition.
    *   The specification may also contain the key 'initial', the newly
    *   created field will be set to the value of the key in all rows.
@@ -336,7 +336,7 @@ abstract class Schema implements PlaceholderInterface {
    *   value in existing tables.
    *   Alternatively, the 'initial_from_field' key may be used, which will
    *   auto-populate the new field with values from the specified field.
-   * @param $keys_new
+   * @param array|null $keys_new
    *   (optional) Keys and indexes specification to be created on the
    *   table along with adding the field. The format is the same as a
    *   table specification but without the 'fields' element. If you are
@@ -354,9 +354,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Drop a field.
    *
-   * @param $table
+   * @param string $table
    *   The table to be altered.
-   * @param $field
+   * @param string $field
    *   The field to be dropped.
    *
    * @return bool
@@ -368,9 +368,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Checks if an index exists in the given table.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table in drupal (no prefixing).
-   * @param $name
+   * @param string $name
    *   The name of the index in drupal (no prefixing).
    *
    * @return bool
@@ -381,9 +381,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Add a primary key.
    *
-   * @param $table
+   * @param string $table
    *   The table to be altered.
-   * @param $fields
+   * @param array $fields
    *   Fields for the primary key.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
@@ -396,7 +396,7 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Drop the primary key.
    *
-   * @param $table
+   * @param string $table
    *   The table to be altered.
    *
    * @return bool
@@ -428,11 +428,11 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Add a unique key.
    *
-   * @param $table
+   * @param string $table
    *   The table to be altered.
-   * @param $name
+   * @param string $name
    *   The name of the key.
-   * @param $fields
+   * @param array $fields
    *   An array of field names.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
@@ -445,9 +445,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Drop a unique key.
    *
-   * @param $table
+   * @param string $table
    *   The table to be altered.
-   * @param $name
+   * @param string $name
    *   The name of the key.
    *
    * @return bool
@@ -459,11 +459,11 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Add an index.
    *
-   * @param $table
+   * @param string $table
    *   The table to be altered.
-   * @param $name
+   * @param string $name
    *   The name of the index.
-   * @param $fields
+   * @param array $fields
    *   An array of field names or field information; if field information is
    *   passed, it's an array whose first element is the field name and whose
    *   second is the maximum length in the index. For example, the following
@@ -521,9 +521,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Drop an index.
    *
-   * @param $table
+   * @param string $table
    *   The table to be altered.
-   * @param $name
+   * @param string $name
    *   The name of the index.
    *
    * @return bool
@@ -603,15 +603,15 @@ abstract class Schema implements PlaceholderInterface {
    * Schema::addIndex() in all cases unless you are converting a field to
    * be type serial. You can use the $keys_new argument in all cases.
    *
-   * @param $table
+   * @param string $table
    *   Name of the table.
-   * @param $field
+   * @param string $field
    *   Name of the field to change.
-   * @param $field_new
+   * @param string $field_new
    *   New name for the field (set to the same as $field if you don't want to change the name).
-   * @param $spec
+   * @param array $spec
    *   The field specification for the new field.
-   * @param $keys_new
+   * @param array|null $keys_new
    *   (optional) Keys and indexes specification to be created on the
    *   table along with changing the field. The format is the same as a
    *   table specification but without the 'fields' element.
@@ -626,9 +626,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Create a new table from a Drupal table definition.
    *
-   * @param $name
+   * @param string $name
    *   The name of the table to create.
-   * @param $table
+   * @param array $table
    *   A Schema API table definition array.
    *
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
@@ -679,7 +679,7 @@ abstract class Schema implements PlaceholderInterface {
    * This is usually an identity function but if a key/index uses a column prefix
    * specification, this function extracts just the name.
    *
-   * @param $fields
+   * @param array $fields
    *   An array of key/index column specifiers.
    *
    * @return array
@@ -701,9 +701,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Prepare a table or column comment for database query.
    *
-   * @param $comment
+   * @param string $comment
    *   The comment string to prepare.
-   * @param $length
+   * @param int $length
    *   Optional upper limit on the returned string length.
    *
    * @return string

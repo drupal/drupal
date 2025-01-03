@@ -17,7 +17,7 @@ interface ExtendableInterface {
   /**
    * Enhance this object by wrapping it in an extender object.
    *
-   * @param $extender_name
+   * @param class-string $extender_name
    *   The fully-qualified name of the extender class, without the leading '\'
    *   (for example, Drupal\my_module\myExtenderClass). The extender name will
    *   be checked against the current database connection to allow
