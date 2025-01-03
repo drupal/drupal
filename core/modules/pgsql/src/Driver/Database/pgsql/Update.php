@@ -10,6 +10,9 @@ use Drupal\Core\Database\Query\SelectInterface;
  */
 class Update extends QueryUpdate {
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     $max_placeholder = 0;
     $blobs = [];

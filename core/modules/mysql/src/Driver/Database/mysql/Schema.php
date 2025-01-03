@@ -271,6 +271,9 @@ class Schema extends DatabaseSchema {
     return $map;
   }
 
+  /**
+   * Creates the keys for an SQL table.
+   */
   protected function createKeysSql($spec) {
     $keys = [];
 
@@ -355,6 +358,9 @@ class Schema extends DatabaseSchema {
     }
   }
 
+  /**
+   * Creates an SQL key for the given fields.
+   */
   protected function createKeySql($fields) {
     $return = [];
     foreach ($fields as $field) {

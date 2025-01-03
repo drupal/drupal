@@ -1112,7 +1112,7 @@ abstract class Connection {
    * @throws \LogicException
    *   If the transaction manager is undefined or unavailable.
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn
+  // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn, Drupal.Commenting.FunctionComment.Missing
   protected function driverTransactionManager(): TransactionManagerInterface {
     throw new \LogicException('The database driver has no TransactionManager implementation');
   }

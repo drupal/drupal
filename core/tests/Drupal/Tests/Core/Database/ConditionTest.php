@@ -175,6 +175,9 @@ class ConditionTest extends UnitTestCase {
     $condition->compile($connection, $query_placeholder);
   }
 
+  /**
+   * Provides data for testing SQL injection.
+   */
   public static function providerTestCompileWithSqlInjectionForOperator() {
     $data = [];
     $data[] = ["IS NOT NULL) ;INSERT INTO {test} (name) VALUES ('test12345678'); -- "];

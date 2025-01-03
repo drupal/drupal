@@ -471,6 +471,9 @@ EOD;
     return $map;
   }
 
+  /**
+   * Creates the SQL key for the given fields.
+   */
   protected function _createKeySql($fields) {
     $return = [];
     foreach ($fields as $field) {
@@ -1020,12 +1023,18 @@ EOD;
     $this->resetTableInformation($table);
   }
 
+  /**
+   * Creates a statement for an SQL index for the given fields.
+   */
   protected function _createIndexSql($table, $name, $fields) {
     $query = 'CREATE INDEX ' . $this->ensureIdentifiersLength($table, $name, 'idx') . ' ON {' . $table . '} (';
     $query .= $this->_createKeySql($fields) . ')';
     return $query;
   }
 
+  /**
+   * Adds keys for an SQL table.
+   */
   protected function _createKeys($table, $new_keys) {
     if (isset($new_keys['primary key'])) {
       $this->addPrimaryKey($table, $new_keys['primary key']);

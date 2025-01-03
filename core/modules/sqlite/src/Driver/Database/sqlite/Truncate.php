@@ -12,6 +12,9 @@ use Drupal\Core\Database\Query\Truncate as QueryTruncate;
  */
 class Truncate extends QueryTruncate {
 
+  /**
+   * {@inheritdoc}
+   */
   public function __toString() {
     // Create a sanitized comment string to prepend to the query.
     $comments = $this->connection->makeComment($this->comments);

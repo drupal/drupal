@@ -78,6 +78,7 @@
     <include-pattern>core/modules/*/Plugin/views/display/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/exposed_form/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/field/*</include-pattern>
+    <include-pattern>*/Database/*</include-pattern>
     <exclude-pattern>*/tests/*</exclude-pattern>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.MissingParamType">

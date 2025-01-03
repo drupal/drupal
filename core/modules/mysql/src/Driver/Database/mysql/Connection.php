@@ -212,6 +212,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     return $pdo;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }
@@ -225,6 +228,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     return $tablename;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function driver() {
     return 'mysql';
   }
@@ -279,6 +285,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     return $this->serverVersion;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function databaseType() {
     return 'mysql';
   }
@@ -305,6 +314,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function mapConditionOperator($operator) {
     // We don't want to override any of the defaults.
     return NULL;
