@@ -21,3 +21,7 @@ media.source.test_hidden_source_field:
 media.source.test_different_displays:
   type: media.source.test
   label: 'Test media source with different source field displays'
+
+media.source.test_source_with_a_really_long_name:
+  type: media.source.test
+  label: 'Test source with a really long name'

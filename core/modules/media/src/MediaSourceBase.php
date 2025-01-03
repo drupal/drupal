@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -314,10 +315,16 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
 
     // Iterate at least once, until no field with the generated ID is found.
     do {
-      $id = $base_id;
+      // Limit the base field name to the maximum allowed length.
+      $id = (strlen($base_id) > EntityTypeInterface::ID_MAX_LENGTH) ? substr($base_id, 0, EntityTypeInterface::ID_MAX_LENGTH) : $base_id;
       // If we've tried before, increment and append the suffix.
       if ($tries) {
         $id .= '_' . $tries;
+
+        // Ensure the suffixed field name does not exceed the maximum allowed length.
+        if (strlen($id) > EntityTypeInterface::ID_MAX_LENGTH) {
+          $id = substr($base_id, 0, (EntityTypeInterface::ID_MAX_LENGTH - strlen('_' . $tries))) . '_' . $tries;
+        }
       }
       $field = $storage->load('media.' . $id);
       $tries++;
