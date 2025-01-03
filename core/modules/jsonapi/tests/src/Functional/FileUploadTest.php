@@ -874,9 +874,9 @@ class FileUploadTest extends ResourceTestBase {
    * @internal
    */
   protected function assertResponseData(array $expected, ResponseInterface $response): void {
-    static::recursiveKSort($expected);
+    static::recursiveKsort($expected);
     $actual = $this->getDocumentFromResponse($response);
-    static::recursiveKSort($actual);
+    static::recursiveKsort($actual);
 
     $this->assertSame($expected, $actual);
   }

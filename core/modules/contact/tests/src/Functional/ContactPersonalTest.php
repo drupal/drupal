@@ -127,7 +127,7 @@ class ContactPersonalTest extends BrowserTestBase {
     // Assert mail content.
     $this->assertMailString('body', 'Hello ' . $this->contactUser->getDisplayName(), 1);
     $this->assertMailString('body', $this->webUser->getDisplayName(), 1);
-    $this->assertMailString('body', Html::Escape($message['message[0][value]']), 1);
+    $this->assertMailString('body', Html::escape($message['message[0][value]']), 1);
   }
 
   /**

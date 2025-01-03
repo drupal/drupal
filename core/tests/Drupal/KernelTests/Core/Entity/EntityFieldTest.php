@@ -753,7 +753,7 @@ class EntityFieldTest extends EntityKernelTestBase {
       ->setLabel('Test entity')
       ->setSetting('target_type', 'node')
       ->setSetting('handler_settings', ['target_bundles' => ['article' => 'article']]);
-    $reference_field = \Drupal::TypedDataManager()->create($definition);
+    $reference_field = \Drupal::typedDataManager()->create($definition);
     $reference_field->appendItem(['entity' => $node]);
     $violations = $reference_field->validate();
     $this->assertEquals(1, $violations->count());

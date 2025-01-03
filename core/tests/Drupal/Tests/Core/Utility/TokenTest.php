@@ -338,7 +338,7 @@ class TokenTest extends UnitTestCase {
     // The site name is plain text, but the slogan is markup.
     $tokens = [
       '[site:name]' => 'Your <best> buys',
-      '[site:slogan]' => Markup::Create('We are <b>best</b>'),
+      '[site:slogan]' => Markup::create('We are <b>best</b>'),
     ];
 
     $this->moduleHandler->expects($this->any())

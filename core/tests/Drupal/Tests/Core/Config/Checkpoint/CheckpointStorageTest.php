@@ -192,12 +192,12 @@ class CheckpointStorageTest extends UnitTestCase {
 
     $data = [];
     $data[] = ['write', ['config.a', (array) Random::getGenerator()->object()], $fixture];
-    $data[] = ['write', [Random::MachineName(), (array) Random::getGenerator()->object()], $fixture];
+    $data[] = ['write', [Random::machineName(), (array) Random::getGenerator()->object()], $fixture];
     $data[] = ['delete', ['config.a'], $fixture];
-    $data[] = ['delete', [Random::MachineName()], $fixture];
+    $data[] = ['delete', [Random::machineName()], $fixture];
     $data[] = ['rename', ['config.a', 'config.b'], $fixture];
-    $data[] = ['rename', ['config.a', Random::MachineName()], $fixture];
-    $data[] = ['rename', [Random::MachineName(), Random::MachineName()], $fixture];
+    $data[] = ['rename', ['config.a', Random::machineName()], $fixture];
+    $data[] = ['rename', [Random::machineName(), Random::machineName()], $fixture];
     $data[] = ['deleteAll', [''], $fixture];
     $data[] = ['deleteAll', ['config'], $fixture];
     $data[] = ['deleteAll', ['other'], $fixture];
