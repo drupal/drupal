@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -244,10 +245,10 @@ class EntityFormTest extends UnitTestCase {
   /**
    * Sets up the storage accessed via the entity type manager in the form.
    *
-   * @return \Prophecy\Prophecy\ObjectProphecy
+   * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\Core\Entity\EntityStorageInterface>
    *   The storage prophecy.
    */
-  protected function setUpStorage() {
+  protected function setUpStorage(): ObjectProphecy {
     $storage = $this->prophesize(EntityStorageInterface::class);
 
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);

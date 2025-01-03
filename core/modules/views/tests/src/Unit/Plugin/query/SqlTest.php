@@ -17,6 +17,7 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewsData;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -149,9 +150,9 @@ class SqlTest extends UnitTestCase {
    * @param \Drupal\Core\Entity\EntityInterface[][] $entity_revisions_by_type
    *   Test entities keyed by entity type and revision ID.
    *
-   * @return \Prophecy\Prophecy\ObjectProphecy
+   * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\Core\Entity\EntityTypeManagerInterface>
    */
-  protected function setupEntityTypes($entities_by_type = [], $entity_revisions_by_type = []) {
+  protected function setupEntityTypes($entities_by_type = [], $entity_revisions_by_type = []): ObjectProphecy {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type0 = new EntityType([
       'label' => 'First',

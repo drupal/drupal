@@ -12,6 +12,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Row;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * @coversDefaultClass \Drupal\migrate\MigrateExecutable
@@ -557,10 +558,10 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Returns an ID map object prophecy used in ::testRollback.
    *
-   * @return \Prophecy\Prophecy\ObjectProphecy
+   * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\migrate\Plugin\MigrateIdMapInterface>
    *   An ID map object prophecy.
    */
-  public function getTestRollbackIdMap(array $items, array $source_id_keys, array $destination_id_keys) {
+  public function getTestRollbackIdMap(array $items, array $source_id_keys, array $destination_id_keys): ObjectProphecy {
     static::$idMapRecords = array_map(function (array $item) {
       return $item + [
         'source_row_status' => '0',

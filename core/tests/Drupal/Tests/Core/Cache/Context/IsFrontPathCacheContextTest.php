@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Cache\Context;
 use Drupal\Core\Cache\Context\IsFrontPathCacheContext;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * @coversDefaultClass \Drupal\Core\Cache\Context\IsFrontPathCacheContext
@@ -36,9 +37,9 @@ class IsFrontPathCacheContextTest extends UnitTestCase {
    * @param bool $is_front
    *   Whether the page is the front page.
    *
-   * @return \Prophecy\Prophecy\ObjectProphecy
+   * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\Core\Path\PathMatcherInterface>
    */
-  protected function createPathMatcher($is_front) {
+  protected function createPathMatcher($is_front): ObjectProphecy {
     $path_matcher = $this->prophesize(PathMatcherInterface::class);
     $path_matcher->isFrontPage()
       ->willReturn($is_front);

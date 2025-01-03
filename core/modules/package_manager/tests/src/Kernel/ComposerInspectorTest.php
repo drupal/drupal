@@ -528,7 +528,7 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
    * @param string|null $reported_version
    *   The version number that `composer --format=json` should return.
    *
-   * @return \Prophecy\Prophecy\ObjectProphecy
+   * @return \Prophecy\Prophecy\ObjectProphecy<\PhpTuf\ComposerStager\API\Process\Service\ComposerProcessRunnerInterface>
    *   The configurator for the mocked Composer runner.
    */
   private function mockComposerRunner(?string $reported_version): ObjectProphecy {
