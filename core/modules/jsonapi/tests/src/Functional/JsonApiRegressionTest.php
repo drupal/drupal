@@ -342,7 +342,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/dog'), $request_options);
     $this->assertSame(200, $response->getStatusCode());
 
-    $this->createEntityReferenceField('node', 'dog', 'field_test', NULL, 'node');
+    $this->createEntityReferenceField('node', 'dog', 'field_test', '', 'node');
     \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $dog = Node::create(['type' => 'dog', 'title' => 'retriever']);
@@ -351,7 +351,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/dog/' . $dog->uuid() . '/field_test'), $request_options);
     $this->assertSame(200, $response->getStatusCode());
 
-    $this->createEntityReferenceField('node', 'cat', 'field_test', NULL, 'node');
+    $this->createEntityReferenceField('node', 'cat', 'field_test', '', 'node');
     \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $cat = Node::create(['type' => 'cat', 'title' => 'E. Napoleon']);

@@ -41,7 +41,7 @@ trait SchemaCheckTrait {
    * path segment can use a wildcard (`*`) to indicate any value for that
    * segment should be accepted for this property path to be ignored.
    *
-   * @var \string[][]
+   * @var array<string, array<string, array<int, string>>>
    */
   protected static array $ignoredPropertyPaths = [
     'search.page.*' => [

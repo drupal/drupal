@@ -18,7 +18,7 @@ trait UpdateTestTrait {
   /**
    * Sets information about installed extensions.
    *
-   * @param string[][] $installed_extensions
+   * @param array<string, array<string, string|bool>> $installed_extensions
    *   An array containing mocked installed extensions info. Keys are
    *   extension names, values are arrays containing key-value pairs that would
    *   be present in extensions' *.info.yml files.

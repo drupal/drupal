@@ -57,7 +57,7 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
    *
    * @param string $uri
    *   A string containing the URI to the file to open.
-   * @param int $mode
+   * @param string $mode
    *   The file mode, only strict readonly modes are supported.
    * @param int $options
    *   A bit mask of STREAM_USE_PATH and STREAM_REPORT_ERRORS.

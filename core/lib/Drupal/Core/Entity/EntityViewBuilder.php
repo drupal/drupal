@@ -494,7 +494,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   /**
    * Gets an EntityViewDisplay for rendering an individual field.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity.
    * @param string $field_name
    *   The field name.

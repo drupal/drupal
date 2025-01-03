@@ -10,7 +10,7 @@ trait LayoutBuilderHighlightTrait {
   /**
    * Provides the ID used to highlight the active Layout Builder UI element.
    *
-   * @param string $delta
+   * @param int $delta
    *   The section the block is in.
    * @param string $region
    *   The section region in which the block is placed.
@@ -38,7 +38,7 @@ trait LayoutBuilderHighlightTrait {
   /**
    * Provides the ID used to highlight the active Layout Builder UI element.
    *
-   * @param string $delta
+   * @param int $delta
    *   The location of the section.
    *
    * @return string
@@ -51,7 +51,7 @@ trait LayoutBuilderHighlightTrait {
   /**
    * Provides the ID used to highlight the active Layout Builder UI element.
    *
-   * @param string $delta
+   * @param int $delta
    *   The location of the section.
    *
    * @return string

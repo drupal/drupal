@@ -123,7 +123,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
   /**
    * Whether this ResourceIdentifier has an arity.
    *
-   * @return int
+   * @return bool
    *   TRUE if the ResourceIdentifier has an arity, FALSE otherwise.
    */
   public function hasArity() {

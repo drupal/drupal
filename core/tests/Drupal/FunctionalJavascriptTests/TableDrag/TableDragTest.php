@@ -548,7 +548,7 @@ class TableDragTest extends WebDriverTestBase {
   /**
    * Finds a row in the test table by the row ID.
    *
-   * @param string $id
+   * @param string|int $id
    *   The ID of the row.
    * @param string $table_id
    *   The ID of the parent table. Defaults to 'tabledrag-test-table'.

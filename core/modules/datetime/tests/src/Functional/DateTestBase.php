@@ -156,7 +156,7 @@ abstract class DateTestBase extends BrowserTestBase {
   /**
    * Renders an entity_test and sets the output in the internal browser.
    *
-   * @param int $id
+   * @param string|int $id
    *   The entity_test ID to render.
    * @param string $view_mode
    *   (optional) The view mode to use for rendering. Defaults to 'full'.

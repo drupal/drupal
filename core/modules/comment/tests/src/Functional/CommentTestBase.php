@@ -108,7 +108,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Comment body.
    * @param string $subject
    *   Comment subject.
-   * @param string $contact
+   * @param null|true|array $contact
    *   Set to NULL for no contact info, TRUE to ignore success checking, and
    *   array of values to set contact info.
    * @param string $field_name
@@ -327,9 +327,9 @@ abstract class CommentTestBase extends BrowserTestBase {
    *
    * @param string $name
    *   Name of variable.
-   * @param string $value
+   * @param string|int $value
    *   Value of variable.
-   * @param string $message
+   * @param string|\Stringable $message
    *   Status message to display.
    * @param string $field_name
    *   (optional) Field name through which the comment should be posted.
