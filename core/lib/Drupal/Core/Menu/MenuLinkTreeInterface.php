@@ -50,6 +50,8 @@ interface MenuLinkTreeInterface {
   /**
    * Loads a menu tree with a menu link plugin instance at each element.
    *
+   * There will be no sorting or access checks. For that, use ::transform().
+   *
    * @param string $menu_name
    *   The name of the menu.
    * @param \Drupal\Core\Menu\MenuTreeParameters $parameters
@@ -70,6 +72,14 @@ interface MenuLinkTreeInterface {
    *   - callable: a callable or a string that can be resolved to a callable
    *     by Drupal\Core\Utility\CallableResolver::getCallableFromDefinition()
    *   - args: optional array of arguments to pass to the callable after $tree.
+   *   For example, to sort and check access:
+   *   @code
+   *   $manipulators = [
+   *     ['callable' => 'menu.default_tree_manipulators:checkNodeAccess'],
+   *     ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+   *     ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+   *   ];
+   *   @endcode
    *
    * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
    *   The manipulated menu link tree.
