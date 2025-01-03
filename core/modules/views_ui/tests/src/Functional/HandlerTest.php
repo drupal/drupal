@@ -232,7 +232,7 @@ class HandlerTest extends UITestBase {
 
       // Test that the handler edit link is present.
       $this->assertSession()->elementsCount('xpath', "//a[contains(@href, '{$href}')]", 1);
-      $result = $this->assertSession()->elementTextEquals('xpath', "//a[contains(@href, '{$href}')]", $text);
+      $this->assertSession()->elementTextEquals('xpath', "//a[contains(@href, '{$href}')]", $text);
 
       $this->drupalGet($href);
       $this->assertSession()->elementTextContains('xpath', '//h1', $text);

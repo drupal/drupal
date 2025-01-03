@@ -37,7 +37,7 @@ class DisplayTest extends UITestBase {
    * Tests adding a display.
    */
   public function testAddDisplay(): void {
-    $view = $this->randomView();
+    $this->randomView();
     $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-1"]');
     $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-2"]');
     $this->assertSession()->pageTextMatchesCount(0, '/Block name:/');

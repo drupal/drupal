@@ -106,7 +106,6 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
     }
 
     $assert_session = $this->assertSession();
-    $page = $this->getSession()->getPage();
     $this->drupalGet('node/add/basic_page');
     // Upload 5 files into a media field that only allows 2.
     $this->openMediaLibraryForField('field_twin_media');

@@ -144,7 +144,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
   public function testTaxonomyAdminNoVocabularies(): void {
     // Delete all vocabularies.
     $vocabularies = Vocabulary::loadMultiple();
-    foreach ($vocabularies as $key => $vocabulary) {
+    foreach ($vocabularies as $vocabulary) {
       $vocabulary->delete();
     }
     // Confirm that no vocabularies are found in the database.

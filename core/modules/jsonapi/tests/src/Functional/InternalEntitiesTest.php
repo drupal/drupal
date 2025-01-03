@@ -112,7 +112,7 @@ class InternalEntitiesTest extends BrowserTestBase {
       'related' => "/jsonapi/entity_test_no_label/entity_test_no_label/{$this->internalEntity->uuid()}/field_internal",
     ];
     $this->drupalLogin($this->testUser);
-    foreach ($paths as $type => $path) {
+    foreach ($paths as $path) {
       $this->drupalGet($path, ['Accept' => 'application/vnd.api+json']);
       $this->assertSame(404, $this->getSession()->getStatusCode());
     }

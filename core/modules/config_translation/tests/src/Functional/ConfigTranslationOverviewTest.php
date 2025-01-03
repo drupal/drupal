@@ -89,7 +89,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefExists('admin/config/people/accounts/translate');
     // Make sure there is only a single operation for each dropbutton, either
     // 'List' or 'Translate'.
-    foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
+    foreach ($this->cssSelect('ul.dropbutton') as $dropbutton) {
       $this->assertCount(1, $dropbutton->findAll('xpath', 'li'));
       $this->assertTrue(($dropbutton->getText() === 'Translate') || ($dropbutton->getText() === 'List'));
     }
@@ -115,7 +115,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
 
       // Make sure there is only a single 'Translate' operation for each
       // dropbutton.
-      foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
+      foreach ($this->cssSelect('ul.dropbutton') as $dropbutton) {
         $this->assertCount(1, $dropbutton->findAll('xpath', 'li'));
         $this->assertSame('Translate', $dropbutton->getText());
       }

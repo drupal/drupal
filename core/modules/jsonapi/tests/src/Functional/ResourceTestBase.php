@@ -2563,7 +2563,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     ksort($array);
 
     // Then check for child arrays.
-    foreach ($array as $key => &$value) {
+    foreach ($array as &$value) {
       if (is_array($value)) {
         static::recursiveKsort($value);
       }
@@ -2758,7 +2758,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       }
     }
 
-    foreach ($field_sets as $type => $included_paths) {
+    foreach ($field_sets as $included_paths) {
       $this->grantIncludedPermissions($included_paths);
       $query = ['include' => implode(',', $included_paths)];
       $url->setOption('query', $query);

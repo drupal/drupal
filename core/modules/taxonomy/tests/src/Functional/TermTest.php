@@ -138,8 +138,6 @@ class TermTest extends TaxonomyTestBase {
     $term1 = $this->createTerm($this->vocabulary);
     $terms_array = [];
 
-    $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
-
     // Create 40 terms. Terms 1-12 get parent of $term1. All others are
     // individual terms.
     for ($x = 1; $x <= 40; $x++) {
@@ -152,8 +150,6 @@ class TermTest extends TaxonomyTestBase {
         $edit['parent'] = $term1->id();
       }
       $term = $this->createTerm($this->vocabulary, $edit);
-      $children = $taxonomy_storage->loadChildren($term1->id());
-      $parents = $taxonomy_storage->loadParents($term->id());
       $terms_array[$x] = Term::load($term->id());
     }
 

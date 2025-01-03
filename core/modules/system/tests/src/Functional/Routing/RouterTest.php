@@ -53,7 +53,6 @@ class RouterTest extends BrowserTestBase {
     $this->drupalGet('router_test/test2');
     $this->assertSession()->pageTextContains('test2');
     // Check expected headers from FinishResponseSubscriber.
-    $headers = $session->getResponseHeaders();
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', implode(' ', $expected_cache_contexts));
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'config:user.role.anonymous http_response rendered');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Max-Age', '-1 (Permanent)');

@@ -297,7 +297,7 @@ class ThemeUiTest extends BrowserTestBase {
     $requires_list_items = $theme_container->findAll('css', '.theme-info__requires li');
     $this->assertSameSize($expected_requires_list_items, $requires_list_items);
 
-    foreach ($requires_list_items as $key => $item) {
+    foreach ($requires_list_items as $item) {
       $this->assertContains($item->getText(), $expected_requires_list_items);
     }
 

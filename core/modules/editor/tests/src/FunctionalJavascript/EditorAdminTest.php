@@ -80,7 +80,6 @@ class EditorAdminTest extends WebDriverTestBase {
    */
   public function testEditorCreation(): void {
     $page = $this->getSession()->getPage();
-    $assert_session = $this->assertSession();
 
     $this->drupalGet('/admin/config/content/formats/add');
     $page->fillField('name', $this->randomString());

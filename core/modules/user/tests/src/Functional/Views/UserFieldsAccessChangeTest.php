@@ -64,11 +64,6 @@ class UserFieldsAccessChangeTest extends UserTestBase {
     $test_user = $this->drupalCreateUser();
     $xpath = "//td/a[.='" . $test_user->getAccountName() . "']/@href[.='" . $test_user->toUrl()->toString() . "']";
 
-    $attributes = [
-      'title' => 'View user profile.',
-    ];
-    $link = $test_user->toLink(NULL, 'canonical', ['attributes' => $attributes])->toString();
-
     // No access, so no link.
     $this->drupalGet('test_user_fields_access');
     $this->assertSession()->pageTextContains($test_user->getAccountName());

@@ -116,7 +116,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
 
     // Ensure link tags for all languages are found on each language variation
     // page of an entity.
-    foreach ($urls as $langcode => $url) {
+    foreach ($urls as $url) {
       $this->drupalGet($url);
       foreach ($urls as $langcode_alternate => $url_alternate) {
         $this->assertSession()->elementAttributeContains('xpath', "head/link[@rel='alternate' and @hreflang='$langcode_alternate']", 'href', $url_alternate->toString());
@@ -128,7 +128,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
     $this->config('system.site')->set('page.front', $entity_canonical)->save();
 
     // Tests hreflang when using entities as a front page.
-    foreach ($urls as $langcode => $url) {
+    foreach ($urls as $url) {
       $this->drupalGet($url);
       foreach ($entity->getTranslationLanguages() as $language) {
         $frontpage_path = Url::fromRoute('<front>', [], [

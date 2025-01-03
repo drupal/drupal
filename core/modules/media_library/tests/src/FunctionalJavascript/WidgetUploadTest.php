@@ -301,7 +301,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Create a list of new files to upload.
     $filenames = [];
     $remote_paths = [];
-    foreach (range(1, 4) as $i) {
+    for ($i = 1; $i < 5; $i++) {
       $path = $file_system->copy($png_image->uri, 'public://');
       $filenames[] = $file_system->basename($path);
       $remote_paths[] = $driver->uploadFileAndGetRemoteFilePath($file_system->realpath($path));
@@ -680,7 +680,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Create a list of new files to upload.
     $filenames = [];
     $remote_paths = [];
-    foreach (range(1, 4) as $i) {
+    for ($i = 1; $i < 5; $i++) {
       $path = $file_system->copy($png_image->uri, 'public://');
       $filenames[] = $file_system->basename($path);
       $remote_paths[] = $driver->uploadFileAndGetRemoteFilePath($file_system->realpath($path));

@@ -209,7 +209,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // form so that we repeat the same steps when recording performance data. Do
     // this twice so that any caches which take two requests to warm are also
     // covered.
-    foreach (range(0, 1) as $index) {
+    for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('node');
       $this->drupalGet('user/login');
       $this->submitLoginForm($this->user);
@@ -262,7 +262,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // we repeat the same steps when recording performance data. Do this twice
     // so that any caches which take two requests to warm are also covered.
 
-    foreach (range(0, 1) as $index) {
+    for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('node');
       $this->assertSession()->responseContains('Password');
       $this->submitLoginForm($this->user);

@@ -59,7 +59,7 @@ class FilterEntityReferenceWebTest extends UITestBase {
       return strnatcasecmp($a->getTitle(), $b->getTitle());
     });
     $i = 0;
-    foreach ($this->targetEntities as $id => $entity) {
+    foreach ($this->targetEntities as $entity) {
       $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);
       $this->assertEquals($options[$i]['label'], $entity->label(), $message);
       $i++;

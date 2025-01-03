@@ -37,10 +37,9 @@ class ElementsTableSelectTest extends BrowserTestBase {
     // Test for the presence of the Select all rows tableheader.
     $this->assertSession()->elementExists('xpath', '//th[@class="select-all"]');
 
-    $rows = ['row1', 'row2', 'row3'];
-    foreach ($rows as $row) {
-      $this->assertSession()->elementExists('xpath', '//input[@type="checkbox"]');
-    }
+    $this->assertSession()->elementExists('xpath', '//input[@type="checkbox" and @value="row1"]');
+    $this->assertSession()->elementExists('xpath', '//input[@type="checkbox" and @value="row2"]');
+    $this->assertSession()->elementExists('xpath', '//input[@type="checkbox" and @value="row3"]');
   }
 
   /**
@@ -54,10 +53,9 @@ class ElementsTableSelectTest extends BrowserTestBase {
     // Test for the absence of the Select all rows tableheader.
     $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
 
-    $rows = ['row1', 'row2', 'row3'];
-    foreach ($rows as $row) {
-      $this->assertSession()->elementExists('xpath', '//input[@type="radio"]');
-    }
+    $this->assertSession()->elementExists('xpath', '//input[@type="radio" and @value="row1"]');
+    $this->assertSession()->elementExists('xpath', '//input[@type="radio" and @value="row2"]');
+    $this->assertSession()->elementExists('xpath', '//input[@type="radio" and @value="row3"]');
   }
 
   /**

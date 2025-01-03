@@ -320,7 +320,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $text_file = $this->getTestFile('text');
     $edit = [
       'files[field_' . $name . '_' . 0 . ']' => \Drupal::service('file_system')->realpath($text_file->getFileUri()),
-      'comment_body[0][value]' => $comment_body = $this->randomMachineName(),
+      'comment_body[0][value]' => $this->randomMachineName(),
     ];
     $this->drupalGet('node/' . $node->id());
     $this->submitForm($edit, 'Save');
@@ -367,7 +367,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->createFileField($field_name, 'node', $type_name);
     $this->updateFileField($field_name, $type_name, ['file_extensions' => 'txt']);
 
-    $type = 'nojs';
     // Create node and prepare files for upload.
     $node = $this->drupalCreateNode(['type' => 'article']);
     $nid = $node->id();

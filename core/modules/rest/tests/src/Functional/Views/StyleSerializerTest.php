@@ -111,7 +111,7 @@ class StyleSerializerTest extends ViewTestBase {
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();
 
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertEquals(200, $response->getStatusCode());
   }
 
   /**

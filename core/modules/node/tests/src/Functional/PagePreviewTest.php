@@ -229,7 +229,7 @@ class PagePreviewTest extends NodeTestBase {
     // Get the UUID.
     $url = parse_url($this->getUrl());
     $paths = explode('/', $url['path']);
-    $view_mode = array_pop($paths);
+    array_pop($paths);
     $uuid = array_pop($paths);
 
     // Switch view mode. We'll remove the body from the teaser view mode.
