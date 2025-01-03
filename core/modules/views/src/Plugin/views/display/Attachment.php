@@ -32,6 +32,9 @@ class Attachment extends DisplayPluginBase {
    */
   protected $usesPager = FALSE;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -45,10 +48,16 @@ class Attachment extends DisplayPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     return $this->view->render($this->display['id']);
   }
 
+  /**
+   * Gets the positions for the attachment in relation to the parent display.
+   */
   public function attachmentPositions($position = NULL) {
     $positions = [
       'before' => $this->t('Before'),
@@ -296,6 +305,9 @@ class Attachment extends DisplayPluginBase {
     return $this->options['inherit_exposed_filters'] ? FALSE : TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function renderPager() {
     return $this->usesPager() && $this->getOption('render_pager');
   }

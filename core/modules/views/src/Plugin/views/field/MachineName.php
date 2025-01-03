@@ -25,6 +25,9 @@ class MachineName extends FieldPluginBase {
    */
   protected $valueOptions;
 
+  /**
+   * {@inheritdoc}
+   */
   public function getValueOptions() {
     if (isset($this->valueOptions)) {
       return;

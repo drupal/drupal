@@ -75,6 +75,9 @@
     <include-pattern>core/modules/*/Plugin/views/cache/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/query/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/sort/*</include-pattern>
+    <include-pattern>core/modules/*/Plugin/views/display/*</include-pattern>
+    <include-pattern>core/modules/*/Plugin/views/exposed_form/*</include-pattern>
+    <include-pattern>core/modules/*/Plugin/views/field/*</include-pattern>
     <exclude-pattern>*/tests/*</exclude-pattern>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.MissingParamType">
