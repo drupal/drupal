@@ -20,8 +20,14 @@ use Twig\NodeVisitor\NodeVisitorInterface;
  */
 final class TestNodeVisitor implements NodeVisitorInterface {
 
+  /**
+   * The name of the extension.
+   */
   private string $extensionName;
 
+  /**
+   * The variable name.
+   */
   private string $varName;
 
   /**

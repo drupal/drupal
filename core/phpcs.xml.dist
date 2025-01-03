@@ -112,6 +112,7 @@
   <rule ref="Drupal.Commenting.VariableComment.Missing">
     <exclude-pattern>./core/tests/*</exclude-pattern>
     <exclude-pattern>./core/*/tests/*</exclude-pattern>
+    <include-pattern>core/modules/*/tests/modules/*</include-pattern>
   </rule>
   <rule ref="Drupal.ControlStructures.ControlSignature"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>

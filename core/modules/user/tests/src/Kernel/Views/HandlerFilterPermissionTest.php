@@ -21,6 +21,7 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
    * @var array
    */
   public static $testViews = ['test_filter_permission'];
+  protected $columnMap;
 
   /**
    * Tests the permission filter handler.

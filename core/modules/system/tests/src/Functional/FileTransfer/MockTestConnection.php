@@ -9,7 +9,14 @@ namespace Drupal\Tests\system\Functional\FileTransfer;
  */
 class MockTestConnection {
 
+  /**
+   * The commands to run.
+   */
   protected $commandsRun = [];
+
+  /**
+   * The database connection.
+   */
   public $connectionString;
 
   public function run($cmd) {

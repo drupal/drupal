@@ -35,6 +35,9 @@ class PaginationAJAXTest extends WebDriverTestBase {
    */
   public static $testViews = ['test_content_ajax'];
 
+  /**
+   * The test user.
+   */
   protected $user;
 
   /**

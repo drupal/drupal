@@ -38,7 +38,14 @@ class CommentEntityTest extends CommentTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * A vocabulary used for testing.
+   */
   protected $vocab;
+
+  /**
+   * The comment type used for testing.
+   */
   protected $commentType;
 
   /**

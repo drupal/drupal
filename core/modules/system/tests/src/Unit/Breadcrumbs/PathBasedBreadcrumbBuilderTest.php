@@ -432,6 +432,9 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
  */
 class TestPathBasedBreadcrumbBuilder extends PathBasedBreadcrumbBuilder {
 
+  /**
+   * The test link generator.
+   */
   protected LinkGeneratorInterface $linkGenerator;
 
   public function setStringTranslation(TranslationInterface $string_translation) {

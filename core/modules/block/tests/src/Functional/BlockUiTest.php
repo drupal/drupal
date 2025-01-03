@@ -34,6 +34,8 @@ class BlockUiTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  protected $regions;
+
   /**
    * The submitted block values used by this test.
    *

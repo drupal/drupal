@@ -41,6 +41,9 @@ class DisplayTest extends WebDriverTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * The views used for testing.
+   */
   public static $testViews = ['test_content_ajax', 'test_display'];
 
   /**

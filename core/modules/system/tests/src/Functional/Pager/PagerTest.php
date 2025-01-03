@@ -34,8 +34,6 @@ class PagerTest extends BrowserTestBase {
    */
   protected $adminUser;
 
-  protected $profile = 'testing';
-
   /**
    * {@inheritdoc}
    */

@@ -43,6 +43,9 @@ class InstallTasksTest extends UnitTestCase {
 
     return new class($connection) extends Tasks {
 
+      /**
+       * The database connection.
+       */
       private $connection;
 
       public function __construct(Connection $connection) {

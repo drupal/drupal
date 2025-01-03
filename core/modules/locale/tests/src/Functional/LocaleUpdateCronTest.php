@@ -16,6 +16,7 @@ use Drupal\locale\Hook\LocaleHooks;
 class LocaleUpdateCronTest extends LocaleUpdateBase {
 
   use CronRunTrait;
+  protected $batchOutput = [];
 
   /**
    * {@inheritdoc}

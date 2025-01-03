@@ -442,9 +442,16 @@ class FixtureManipulator {
 
   protected function runComposerCommand(array $command_options): OutputCallbackInterface {
     $plain_output = new class() implements OutputCallbackInterface {
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+      /**
+       * The standard output for the process.
+       */
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable, Drupal.Commenting.VariableComment.Missing
       public string $stdout = '';
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+
+      /**
+       * The error output for the process.
+       */
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable, Drupal.Commenting.VariableComment.Missing
       public string $stderr = '';
 
       /**

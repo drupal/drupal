@@ -111,6 +111,9 @@ class EntityContentBaseTest extends EntityTestBase {
  */
 class EntityTestDestination extends EntityContentBase {
 
+  /**
+   * The test entity.
+   */
   private $entity = NULL;
 
   public function setEntity($entity): void {

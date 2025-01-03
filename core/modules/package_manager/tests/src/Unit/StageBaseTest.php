@@ -128,7 +128,7 @@ class StageBaseTest extends UnitTestCase {
       /**
        * {@inheritdoc}
        */
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable, Drupal.Commenting.VariableComment.Missing
       protected string $type = 'package_manager:good_grandchild';
 
     };
@@ -146,6 +146,9 @@ class ChildStage extends StageBase {
 
   public function __construct() {}
 
+  /**
+   * {@inheritdoc}
+   */
   protected string $type = 'package_manager:child';
 
 }

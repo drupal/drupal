@@ -11,8 +11,19 @@ use Drupal\Tests\BrowserTestBase;
  */
 abstract class CacheTestBase extends BrowserTestBase {
 
+  /**
+   * The default bin for the cache item.
+   */
   protected $defaultBin = 'render';
+
+  /**
+   * The default cache ID.
+   */
   protected $defaultCid = 'test_temporary';
+
+  /**
+   * The cache contents default value.
+   */
   protected $defaultValue = 'CacheTest';
 
   /**

@@ -21,6 +21,9 @@ class ConfigActionsTest extends KernelTestBase {
    */
   protected static $modules = ['field', 'node', 'system', 'text', 'user'];
 
+  /**
+   * The configuration action manager.
+   */
   private readonly ConfigActionManager $configActionManager;
 
   /**

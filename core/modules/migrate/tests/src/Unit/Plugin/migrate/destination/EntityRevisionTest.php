@@ -100,6 +100,9 @@ class EntityRevisionTest extends EntityTestBase {
  */
 class EntityRevisionTestDestination extends EntityRevision {
 
+  /**
+   * The test entity.
+   */
   private $entity = NULL;
 
   public function setEntity($entity): void {

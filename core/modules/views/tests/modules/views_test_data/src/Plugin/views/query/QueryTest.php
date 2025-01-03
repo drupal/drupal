@@ -21,9 +21,25 @@ use Drupal\views\ViewExecutable;
   help: new TranslatableMarkup('Defines a query test plugin.')
 )]
 class QueryTest extends QueryPluginBase {
+
+  /**
+   * The conditions to apply to the query.
+   */
   protected $conditions = [];
+
+  /**
+   * The list of fields.
+   */
   protected $fields = [];
+
+  /**
+   * An array of stdClasses.
+   */
   protected $allItems = [];
+
+  /**
+   * The field to order and the direction.
+   */
   protected $orderBy = [];
 
   /**
