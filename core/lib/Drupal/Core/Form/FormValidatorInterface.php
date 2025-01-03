@@ -25,7 +25,7 @@ interface FormValidatorInterface {
   /**
    * Validates user-submitted form data in the $form_state.
    *
-   * @param array $form_id
+   * @param string $form_id
    *   A unique string identifying the form for validation, submission,
    *   theming, and hook_form_alter functions.
    * @param array $form
