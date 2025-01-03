@@ -59,7 +59,7 @@ final class ConfigConfigurator {
         if (empty($recipe_data['dependencies'])) {
           unset($recipe_data['dependencies']);
         }
-        // Ensure we don't get a false mismatch due to differing key order.
+        // Ensure we don't get a false mismatch due to different key order.
         // @todo When https://www.drupal.org/project/drupal/issues/3230826 is
         //   fixed in core, use that API instead to sort the config data.
         self::recursiveSortByKey($active_data);

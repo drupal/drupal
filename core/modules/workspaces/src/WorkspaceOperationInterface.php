@@ -2,6 +2,8 @@
 
 namespace Drupal\workspaces;
 
+// cspell:ignore differring
+
 /**
  * Defines an interface for workspace operations.
  *
@@ -63,7 +65,7 @@ interface WorkspaceOperationInterface {
    * the return value is 3.
    *
    * @return int
-   *   The number of differing revisions.
+   *   The number of different revisions.
    */
   public function getNumberOfChangesOnTarget();
 
@@ -75,7 +77,7 @@ interface WorkspaceOperationInterface {
    * the return value is 3.
    *
    * @return int
-   *   The number of differing revisions.
+   *   The number of different revisions.
    */
   public function getNumberOfChangesOnSource();
 

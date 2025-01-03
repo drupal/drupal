@@ -496,7 +496,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     };
     // Recursively normalize the query parameters to ensure maximal cache hits.
     // If we did not normalize the order, functionally identical query string
-    // sets could be sent in differing order creating a potential DoS vector
+    // sets could be sent in different order creating a potential DoS vector
     // and decreasing cache hit rates.
     $sorted_resolved_parameters = $request->query->all();
     $recursive_sort($sorted_resolved_parameters);

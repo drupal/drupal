@@ -8,6 +8,8 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
 
+// cspell:ignore differring
+
 /**
  * Default implementation of the workspace merger.
  *
@@ -43,9 +45,9 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
 
         /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
         foreach ($revisions_on_source as $revision) {
-          // Track all the differing revisions from the source workspace in
-          // the context of the target workspace. This will automatically
-          // update all the descendants of the target workspace as well.
+          // Track all the different revisions from the source workspace in the
+          // context of the target workspace. This will automatically update all
+          // the descendants of the target workspace as well.
           $this->workspaceAssociation->trackEntity($revision, $this->targetWorkspace);
 
           // Set the workspace in which the revision was merged.

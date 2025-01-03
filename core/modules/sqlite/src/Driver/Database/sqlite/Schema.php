@@ -377,8 +377,8 @@ class Schema extends DatabaseSchema {
       elseif (isset($specification['initial'])) {
         // If we have an initial value, copy it over.
         $mapping[$field] = [
-          'expression' => ':newfieldinitial',
-          'arguments' => [':newfieldinitial' => $specification['initial']],
+          'expression' => ':new_field_initial',
+          'arguments' => [':new_field_initial' => $specification['initial']],
         ];
       }
       else {

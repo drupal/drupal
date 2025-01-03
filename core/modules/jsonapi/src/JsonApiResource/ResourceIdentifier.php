@@ -203,7 +203,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *
    * @return bool
    *   TRUE if both relationships reference the same resource, even when they
-   *   have differing arity values, FALSE otherwise.
+   *   have different arity values, FALSE otherwise.
    */
   public static function isParallel(ResourceIdentifier $a, ResourceIdentifier $b) {
     return static::compare($a->withArity(0), $b->withArity(0)) === 0;

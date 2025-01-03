@@ -147,7 +147,6 @@ deviantart
 dflt
 dialogsave
 diffchange
-differring
 dnumber
 dockerhub
 docroot
@@ -192,7 +191,6 @@ extraspace
 fakepath
 falsey
 fastcgi
-favourite
 favstar
 fcgi
 fdiv
@@ -219,7 +217,6 @@ français
 fraîche
 frontpage
 fudgy
-fulldata
 fulldate
 fulltext
 gabilondo
@@ -271,9 +268,7 @@ keypresses
 kinberg
 kolkata
 lamoids
-languageswitcher
 libc
-licious
 lified
 lightninggreen
 linkability
@@ -317,12 +312,10 @@ mglaman
 micheh
 mikey
 mimetypes
-minifyzombies
 minusthick
 mlfr
 mocktail
 mocktails
-mocky
 moderatable
 modernizr
 mojito
@@ -343,7 +336,6 @@ navs
 ndocs
 necolas
 newcol
-newfieldinitial
 newwin
 nids
 nightwatch
@@ -415,7 +407,6 @@ prerendered
 presave
 pretransaction
 preuninstall
-proname
 prophesize
 prophesized
 prophesizing
@@ -431,7 +422,6 @@ qvalues
 ralouphie
 rasterizable
 rasterizes
-readmore
 realpaths
 realword
 rebuilder
@@ -481,7 +471,6 @@ slatkin
 smacss
 smalldatetime
 smtps
-somecompany
 splitbutton
 splitbuttons
 squaresmall
@@ -577,7 +566,6 @@ toggleable
 tongatapu
 toolkits
 toplevel
-torder
 touchevents
 trackback
 transferthick
@@ -618,7 +606,6 @@ uploadprogress
 upscaling
 urandom
 userinfo
-vampirize
 versionable
 versionless
 vfsstream

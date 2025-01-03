@@ -1,3 +1,4 @@
+# cspell:ignore languageswitcher
 langcode: en
 status: true
 dependencies:

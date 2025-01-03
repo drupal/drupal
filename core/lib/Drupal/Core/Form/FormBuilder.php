@@ -1329,7 +1329,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * element. If the name alone doesn't identify the element uniquely, the input
    * key '_triggering_element_value' may also be set to require a match on
    * element value. An example where this is needed is if there are several
-   * // buttons all named 'op', and only differing in their value.
+   * // buttons all named 'op', and only different in their value.
    */
   protected function elementTriggeredScriptedSubmission($element, FormStateInterface &$form_state) {
     $input = $form_state->getUserInput();

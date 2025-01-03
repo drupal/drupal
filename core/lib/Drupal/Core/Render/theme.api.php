@@ -912,7 +912,7 @@ function hook_library_info_build(): array {
       'core/once',
     ],
   ];
-  if (Drupal::moduleHandler()->moduleExists('minifyzombies')) {
+  if (Drupal::moduleHandler()->moduleExists('minify_zombies')) {
     $libraries['zombie'] += [
       'js' => [
         'zombie.min.js' => [],
@@ -942,7 +942,7 @@ function hook_library_info_build(): array {
   // without reproducing this check. If the library definition does not exist
   // the library (of course) not be loaded but no notices or errors will be
   // triggered.
-  if (Drupal::moduleHandler()->moduleExists('vampirize')) {
+  if (Drupal::moduleHandler()->moduleExists('vampire')) {
     $libraries['vampire'] = [
       'js' => [
         'js/vampire.js' => [],

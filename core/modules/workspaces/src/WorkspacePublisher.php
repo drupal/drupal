@@ -12,6 +12,8 @@ use Drupal\workspaces\Event\WorkspacePrePublishEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+// cspell:ignore differring
+
 /**
  * Default implementation of the workspace publisher.
  *

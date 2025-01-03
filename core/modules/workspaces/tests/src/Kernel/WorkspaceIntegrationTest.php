@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+// cspell:ignore differring
+
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AnonymousUserSession;

@@ -174,10 +174,10 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
 
       // 2. Find the first thread.
       $first_thread_query = $this->database->select($unread_threads_query, 'thread');
-      $first_thread_query->addExpression('SUBSTRING([thread], 1, (LENGTH([thread]) - 1))', 'torder');
+      $first_thread_query->addExpression('SUBSTRING([thread], 1, (LENGTH([thread]) - 1))', 'thread_order');
       $first_thread = $first_thread_query
         ->fields('thread', ['thread'])
-        ->orderBy('torder')
+        ->orderBy('thread_order')
         ->range(0, 1)
         ->execute()
         ->fetchField();
@@ -322,8 +322,8 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
     else {
       // See comment above. Analysis reveals that this doesn't cost too much. It
       // scales much better than having the whole comment structure.
-      $query->addExpression('SUBSTRING([c].[thread], 1, (LENGTH([c].[thread]) - 1))', 'torder');
-      $query->orderBy('torder', 'ASC');
+      $query->addExpression('SUBSTRING([c].[thread], 1, (LENGTH([c].[thread]) - 1))', 'thread_order');
+      $query->orderBy('thread_order', 'ASC');
     }
 
     $cids = $query->execute()->fetchCol();

@@ -896,9 +896,9 @@ class Sql extends QueryPluginBase {
       'alias' => $alias,
     ] + $params;
 
-    // Test to see if the field is actually the same or not. Due to
-    // differing parameters changing the aggregation function, we need
-    // to do some automatic alias collision detection:
+    // Test to see if the field is actually the same or not. Due to different
+    // parameters changing the aggregation function, we need to do some
+    // automatic alias collision detection:
     $base = $alias;
     $counter = 0;
     while (!empty($this->fields[$alias]) && $this->fields[$alias] != $field_info) {

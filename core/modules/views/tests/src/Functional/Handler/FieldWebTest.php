@@ -645,7 +645,7 @@ class FieldWebTest extends ViewTestBase {
       }
     }
 
-    // Tests for displaying a readmore link when the output got trimmed.
+    // Tests for displaying a 'read more' link when the output got trimmed.
     $row->views_test_data_name = $this->randomMachineName(8);
     $name_field->options['alter']['max_length'] = 5;
     $name_field->options['alter']['more_link'] = TRUE;

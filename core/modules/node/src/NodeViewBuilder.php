@@ -7,6 +7,8 @@ use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Render\Element\Link;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
+// cspell:ignore readmore
+
 /**
  * View builder handler for nodes.
  */
