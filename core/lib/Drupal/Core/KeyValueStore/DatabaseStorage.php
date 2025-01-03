@@ -167,7 +167,7 @@ class DatabaseStorage extends StorageBase {
    * @return bool
    *   TRUE if the data was set, FALSE if it already existed.
    */
-  public function doSetIfNotExists($key, $value) {
+  protected function doSetIfNotExists($key, $value) {
     $result = $this->connection->merge($this->table)
       ->insertFields([
         'collection' => $this->collection,
