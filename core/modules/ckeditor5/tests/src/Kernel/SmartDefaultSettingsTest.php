@@ -8,11 +8,14 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\Core\Logger\LogMessageParserInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
+use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -65,6 +68,20 @@ class SmartDefaultSettingsTest extends KernelTestBase {
   protected $database;
 
   /**
+   * The service name for a logger implementation that collects anything logged.
+   *
+   * @var string
+   */
+  protected string $testLogServiceName = 'smart_default_settings_test.logger';
+
+  /**
+   * The message's placeholders parser.
+   *
+   * @var \Drupal\Core\Logger\LogMessageParserInterface
+   */
+  protected LogMessageParserInterface $parser;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -76,7 +93,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     'media',
     'media_library',
     'views',
-    'dblog',
     'help',
     'editor_test',
     'ckeditor_test',
@@ -90,9 +106,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $this->manager = $this->container->get('plugin.manager.ckeditor5.plugin');
     $this->typedConfig = $this->container->get('config.typed');
     $this->smartDefaultSettings = $this->container->get('ckeditor5.smart_default_settings');
-    $this->database = $this->container->get('database');
-
-    $this->installSchema('dblog', ['watchdog']);
+    $this->parser = $this->container->get('logger.log_message_parser');
 
     FilterFormat::create([
       'format' => 'minimal_ckeditor_wrong_allowed_html',
@@ -510,22 +524,20 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       $this->assertSame($expected_post_update_text_editor_violations, $updated_validation_errors);
     }
 
-    $db_logged = $this
-      ->database
-      ->select('watchdog', 'w')
-      ->fields('w', ['message', 'variables', 'severity'])
-      ->condition('type', 'ckeditor5')
-      ->orderBy('wid')
-      ->execute()
-      ->fetchAll();
+    // Get log messages.
+    $log_messages = $this->container->get($this->testLogServiceName)->cleanLogs();
 
     $type_to_status = [
       6 => 'status',
       4 => 'warning',
     ];
-    $db_logs = [];
-    foreach ($db_logged as $log) {
-      $db_logs[$type_to_status[$log->severity]][] = [$log->message, $log->variables];
+
+    // Convert messages array to provider format.
+    $logs = [];
+    foreach ($log_messages as $log) {
+      // Remove all from context except message arguments.
+      $message_arguments = $this->parser->parseMessagePlaceholders($log[1], $log[2]);
+      $logs[$type_to_status[$log[0]]][] = [$log[1], serialize($message_arguments)];
     }
 
     // Transforms TranslatableMarkup objects to string.
@@ -535,8 +547,18 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       }
     }
 
-    $this->assertSame($expected_db_logs, $db_logs);
+    $this->assertSame($expected_db_logs, $logs);
     $this->assertSame($expected_messages, $messages);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container): void {
+    parent::register($container);
+    $container
+      ->register($this->testLogServiceName, BufferingLogger::class)
+      ->addTag('logger');
   }
 
   /**
