@@ -53,7 +53,7 @@ function views_ui_theme_suggestions_views_ui_view_preview_section(array $variabl
  * @todo Refactor this function to use much stuff of
  *    views_ui_edit_form_get_bucket.
  *
- * @param $title
+ * @param string $title
  *   Add a bolded title of this section.
  */
 function views_ui_view_preview_section_handler_links(ViewExecutable $view, $type, $title = FALSE) {

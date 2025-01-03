@@ -309,7 +309,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   /**
    * Set the current page.
    *
-   * @param $number
+   * @param int|null $number
    *   If provided, the page number will be set to this. If NOT provided,
    *   the page number will be set from the pager manager service.
    */

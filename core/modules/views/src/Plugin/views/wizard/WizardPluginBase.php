@@ -502,7 +502,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param $parents
+   * @param array $parents
    *   An array of parent keys that point to the part of the submitted form
    *   values that are expected to contain the element's value (in the case where
    *   this form element was actually submitted). In a simple case (assuming
@@ -510,10 +510,10 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   $form['wrapper']['select'], so that the submitted form values would
    *   normally be found in $form_state->getValue(['wrapper', 'select']),
    *   you would pass ['wrapper', 'select'] for this parameter.
-   * @param $default_value
+   * @param array|string $default_value
    *   The default value to return if the #select element does not currently have
    *   a proper value set based on the submitted input.
-   * @param $element
+   * @param array $element
    *   An array representing the current version of the #select element within
    *   the form.
    *

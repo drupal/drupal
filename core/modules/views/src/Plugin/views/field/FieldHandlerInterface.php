@@ -191,7 +191,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    *
    * @param \Drupal\views\ResultRow $row
    *   An array of all ResultRow objects returned from the query.
-   * @param $output
+   * @param string $output
    *   The field rendered output.
    *
    * @return string[]
@@ -220,7 +220,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
   /**
    * Checks if a field value is empty.
    *
-   * @param $value
+   * @param mixed $value
    *   The field value.
    * @param bool $empty_zero
    *   Whether or not this field is configured to consider 0 as empty.

@@ -76,13 +76,13 @@ function views_preprocess_comment(&$variables): void {
  * later on (for example, alter hooks which run later during the same page
  * request).
  *
- * @param $render_element
+ * @param array $render_element
  *   The renderable array to which contextual links will be added. This array
  *   should be suitable for passing in to
  *   \Drupal\Core\Render\RendererInterface::render() and will normally contain a
  *   representation of the view display whose contextual links are being
  *   requested.
- * @param $location
+ * @param string $location
  *   The location in which the calling function intends to render the view and
  *   its contextual links. The core system supports three options for this
  *   parameter:
@@ -380,12 +380,12 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
  * to do that, you will need to do what this function does manually, by
  * loading the view, getting the preview and then getting $view->getTitle().
  *
- * @param $name
+ * @param string $name
  *   The name of the view to embed.
- * @param $display_id
+ * @param string $display_id
  *   The display id to embed. If unsure, use 'default', as it will always be
  *   valid. But things like 'page' or 'block' should work here.
- * @param ...$args
+ * @param mixed ...$args
  *   Any additional parameters will be passed as arguments.
  *
  * @return array|null
@@ -418,7 +418,7 @@ function views_embed_view($name, $display_id = 'default', ...$args) {
  *   want to use. A URL will appear in the status bar of your browser. This is
  *   usually at the bottom of the window, in the chrome. Everything after
  *   #views-tab- is the display ID, e.g. page_1.
- * @param ...$args
+ * @param mixed ...$args
  *   Any additional parameters will be passed as arguments.
  *
  * @return array

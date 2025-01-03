@@ -367,7 +367,7 @@ class ViewExecutableTest extends UnitTestCase {
    *
    * @param string $option
    *   The option to set on the View.
-   * @param $handler_type
+   * @param string $handler_type
    *   The handler type to set.
    */
   public function testAddHandler($option, $handler_type): void {
@@ -409,7 +409,7 @@ class ViewExecutableTest extends UnitTestCase {
    *
    * @param string $option
    *   The option to set on the View.
-   * @param $handler_type
+   * @param string $handler_type
    *   The handler type to set.
    */
   public function testAddHandlerWithEntityField($option, $handler_type): void {

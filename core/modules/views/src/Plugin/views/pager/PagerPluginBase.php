@@ -121,7 +121,7 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Set the current page.
    *
-   * @param $number
+   * @param mixed $number
    *   If provided, the page number will be set to this. If NOT provided,
    *   the page number will be set from the global page array.
    */
@@ -236,7 +236,7 @@ abstract class PagerPluginBase extends PluginBase {
    *
    * Called during the view render process.
    *
-   * @param $input
+   * @param array $input
    *   Any extra GET parameters that should be retained, such as exposed
    *   input.
    */

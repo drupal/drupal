@@ -385,16 +385,16 @@ class Sql extends QueryPluginBase {
    * 'node_content_parent' instead, thus allowing all properties of
    * both nodes to be available in the query.
    *
-   * @param $alias
+   * @param string $alias
    *   What this relationship will be called, and is also the alias
    *   for the table.
    * @param \Drupal\views\Plugin\views\join\JoinPluginBase $join
    *   A Join object (or derived object) to join the alias in.
-   * @param $base
+   * @param string $base
    *   The name of the 'base' table this relationship represents; this
    *   tells the join search which path to attempt to use when finding
    *   the path to this relationship.
-   * @param $link_point
+   * @param string|null $link_point
    *   If this relationship links to something other than the primary
    *   table, specify that table here. For example, a 'track' node
    *   might have a relationship to an 'album' node, which might
@@ -451,10 +451,10 @@ class Sql extends QueryPluginBase {
    * table is valid and exists; if you do not wish for this testing to
    * occur, use $query->queueTable() instead.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table to add. It needs to exist in the global table
    *   array.
-   * @param $relationship
+   * @param string|null $relationship
    *   An alias of a table; if this is set, the path back to this table will
    *   be tested prior to adding the table, making sure that all intermediary
    *   tables exist and are properly aliased. If set to NULL the path to
@@ -465,7 +465,7 @@ class Sql extends QueryPluginBase {
    *   a different method; this is most likely to be used when tracing
    *   a hierarchy path. (node->parent->parent2->parent3). This parameter
    *   will specify how this table joins if it is not the default.
-   * @param $alias
+   * @param string|null $alias
    *   A specific alias to use, rather than the default alias.
    *
    * @return string
@@ -493,10 +493,10 @@ class Sql extends QueryPluginBase {
    * ensureTable() should be used instead of this one, unless you are
    * absolutely sure this is what you want.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table to add. It needs to exist in the global table
    *   array.
-   * @param $relationship
+   * @param string|null $relationship
    *   The primary table alias this table is related to. If not set, the
    *   primary table will be used.
    * @param \Drupal\views\Plugin\views\join\JoinPluginBase $join
@@ -504,7 +504,7 @@ class Sql extends QueryPluginBase {
    *   a different method; this is most likely to be used when tracing
    *   a hierarchy path. (node->parent->parent2->parent3). This parameter
    *   will specify how this table joins if it is not the default.
-   * @param $alias
+   * @param string|null $alias
    *   A specific alias to use, rather than the default alias.
    *
    * @return string
@@ -610,9 +610,9 @@ class Sql extends QueryPluginBase {
    * the table queue. It will ensure a path leads back to the relationship
    * table.
    *
-   * @param $table
+   * @param string $table
    *   The un-aliased name of the table to ensure.
-   * @param $relationship
+   * @param string|null $relationship
    *   The relationship to ensure the table links to. Each relationship will
    *   get a unique instance of the table being added. If not specified,
    *   will be the primary table.
@@ -801,9 +801,9 @@ class Sql extends QueryPluginBase {
   /**
    * Retrieve join data from the larger join data cache.
    *
-   * @param $table
+   * @param string $table
    *   The table to get the join information for.
-   * @param $base_table
+   * @param string $base_table
    *   The path we're following to get this join.
    *
    * @return \Drupal\views\Plugin\views\join\JoinPluginBase
@@ -844,17 +844,17 @@ class Sql extends QueryPluginBase {
    * This will automatically call ensureTable to make sure the required table
    * exists, *unless* $table is unset.
    *
-   * @param $table
+   * @param string $table
    *   The table this field is attached to. If NULL, it is assumed this will
    *   be a formula; otherwise, ensureTable is used to make sure the
    *   table exists.
-   * @param $field
+   * @param string $field
    *   The name of the field to add. This may be a real field or a formula.
-   * @param $alias
+   * @param string $alias
    *   The alias to create. If not specified, the alias will be $table_$field
    *   unless $table is NULL. When adding formulae, it is recommended that an
    *   alias be used.
-   * @param $params
+   * @param array $params
    *   An array of parameters additional to the field that will control items
    *   such as aggregation functions and DISTINCT. Some values that are
    *   recognized:
@@ -942,17 +942,17 @@ class Sql extends QueryPluginBase {
    * );
    * @endcode
    *
-   * @param $group
+   * @param string $group
    *   The WHERE group to add these to; groups are used to create AND/OR
    *   sections. Groups cannot be nested. Use 0 as the default group.
    *   If the group does not yet exist it will be created as an AND group.
-   * @param $field
+   * @param string $field
    *   The name of the field to check.
-   * @param $value
+   * @param string|null $value
    *   The value to test the field against. In most cases, this is a scalar. For more
    *   complex options, it is an array. The meaning of each element in the array is
    *   dependent on the $operator.
-   * @param $operator
+   * @param string|null $operator
    *   The comparison operator, such as =, <, or >=. It also accepts more
    *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to =.
    *   If $field is a string you have to use 'formula' here.
@@ -986,14 +986,14 @@ class Sql extends QueryPluginBase {
    * (TABLE.FIELD) and that the table already exists in the query.
    * Internally the dbtng method "where" is used.
    *
-   * @param $group
+   * @param string $group
    *   The WHERE group to add these to; groups are used to create AND/OR
    *   sections. Groups cannot be nested. Use 0 as the default group.
    *   If the group does not yet exist it will be created as an AND group.
-   * @param $snippet
+   * @param string $snippet
    *   The snippet to check. This can be either a column or
    *   a complex expression like "UPPER(table.field) = 'value'"
-   * @param $args
+   * @param array $args
    *   An associative array of arguments.
    *
    * @see QueryConditionInterface::where()
@@ -1024,14 +1024,14 @@ class Sql extends QueryPluginBase {
    * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
    * Internally the dbtng method "having" is used.
    *
-   * @param $group
+   * @param string $group
    *   The HAVING group to add these to; groups are used to create AND/OR
    *   sections. Groups cannot be nested. Use 0 as the default group.
    *   If the group does not yet exist it will be created as an AND group.
-   * @param $snippet
+   * @param string $snippet
    *   The snippet to check. This can be either a column or
    *   a complex expression like "COUNT(table.field) > 3"
-   * @param $args
+   * @param array $args
    *   An associative array of arguments.
    *
    * @see QueryConditionInterface::having()
@@ -1059,20 +1059,20 @@ class Sql extends QueryPluginBase {
   /**
    * Add an ORDER BY clause to the query.
    *
-   * @param $table
+   * @param string $table
    *   The table this field is part of. If a formula, enter NULL.
    *   If you want to orderby random use "rand" as table and nothing else.
-   * @param $field
+   * @param string|null $field
    *   The field or formula to sort on. If already a field, enter NULL
    *   and put in the alias.
-   * @param $order
+   * @param string $order
    *   Either ASC or DESC.
-   * @param $alias
+   * @param string $alias
    *   The alias to add the field as. In SQL, all fields in the order by
    *   must also be in the SELECT portion. If an $alias isn't specified
    *   one will be generated for from the $field; however, if the
    *   $field is a formula, this alias will likely fail.
-   * @param $params
+   * @param array $params
    *   Any params that should be passed through to the addField.
    */
   public function addOrderBy($table, $field = NULL, $order = 'ASC', $alias = '', $params = []) {
@@ -1156,8 +1156,8 @@ class Sql extends QueryPluginBase {
    * There is other code in filters which makes sure that the group IDs are
    * higher than zero.
    *
-   * @param $where
-   *   'where' or 'having'.
+   * @param string $where
+   *   The type of clause, either 'where' or 'having'.
    */
   protected function buildCondition($where = 'where') {
     $has_condition = FALSE;
@@ -1325,7 +1325,7 @@ class Sql extends QueryPluginBase {
   /**
    * Generates a query and count query from all of the information supplied.
    *
-   * @param $get_count
+   * @param bool $get_count
    *   Provide a countQuery if this is true, otherwise provide a normal query.
    */
   public function query($get_count = FALSE) {

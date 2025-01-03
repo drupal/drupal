@@ -87,6 +87,8 @@
     <include-pattern>core/lib/Component/*</include-pattern>
     <include-pattern>core/includes/*</include-pattern>
     <include-pattern>core/*/*Database*/*</include-pattern>
+    <include-pattern>*/*/views/*</include-pattern>
+    <include-pattern>*/*/views_ui/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.MissingReturnComment">
     <include-pattern>core/lib/Drupal/Core/*</include-pattern>

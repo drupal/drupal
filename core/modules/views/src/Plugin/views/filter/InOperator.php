@@ -275,6 +275,9 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
 
   /**
    * When using exposed filters, we may be required to reduce the set.
+   *
+   * @param array $input
+   *   (optional) Associative array containing the exposed data for this view.
    */
   public function reduceValueOptions($input = NULL) {
     if (!isset($input)) {

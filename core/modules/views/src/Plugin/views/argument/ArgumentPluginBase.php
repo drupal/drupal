@@ -990,7 +990,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *
    * The base variant of this is usually adequate.
    *
-   * @param $order
+   * @param string $order
    *   The order selected in the UI.
    * @param string|null $by
    *   (optional) This parameter sets the direction for which to order.
@@ -1006,7 +1006,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * This will be called once per row of a summary, and used as part of
    * $view->getUrl().
    *
-   * @param $data
+   * @param array $data
    *   The query results for the row.
    */
   public function summaryArgument($data) {
@@ -1016,7 +1016,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   /**
    * Provides the name to use for the summary, defaults to the name field.
    *
-   * @param $data
+   * @param array $data
    *   The query results for the row.
    */
   public function summaryName($data) {
