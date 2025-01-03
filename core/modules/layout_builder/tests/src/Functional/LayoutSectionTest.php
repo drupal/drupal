@@ -197,7 +197,7 @@ class LayoutSectionTest extends BrowserTestBase {
     ]);
 
     // Restrict access to the block.
-    $this->container->get('state')->set('test_block_access', FALSE);
+    $this->container->get('keyvalue')->get('block_test')->set('access', FALSE);
 
     $this->drupalGet($node->toUrl('canonical'));
     $this->assertLayoutSection('.layout--onecol', NULL, '', '', 'UNCACHEABLE (poor cacheability)');
@@ -205,7 +205,7 @@ class LayoutSectionTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Hello test world');
 
     // Grant access to the block, and ensure it was rendered.
-    $this->container->get('state')->set('test_block_access', TRUE);
+    $this->container->get('keyvalue')->get('block_test')->set('access', TRUE);
     $this->drupalGet($node->toUrl('canonical'));
     $this->assertLayoutSection('.layout--onecol', 'Hello test world', '', '', 'UNCACHEABLE (poor cacheability)');
   }
