@@ -146,9 +146,9 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
   /**
    * #lazy_builder callback; builds a #pre_render-able block.
    *
-   * @param $entity_id
+   * @param string $entity_id
    *   A block config entity ID.
-   * @param $view_mode
+   * @param string $view_mode
    *   The view mode the block is being viewed in.
    *
    * @return array

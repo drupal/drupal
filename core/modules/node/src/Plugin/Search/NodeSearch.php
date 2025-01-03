@@ -434,7 +434,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
   /**
    * Adds the configured rankings to the search query.
    *
-   * @param $query
+   * @param \Drupal\Core\Database\Query\SelectExtender $query
    *   A query object that has been extended with the Search DB Extender.
    */
   protected function addNodeRankings(SelectExtender $query) {

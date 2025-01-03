@@ -22,7 +22,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
-   * @param $element_properties
+   * @param array $element_properties
    *   An array of element properties for the tableselect element.
    *
    * @return array

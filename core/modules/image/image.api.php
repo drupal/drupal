@@ -13,7 +13,7 @@
 /**
  * Alter the information provided in \Drupal\image\Annotation\ImageEffect.
  *
- * @param $effects
+ * @param array $effects
  *   The array of image effects, keyed on the machine-readable effect name.
  */
 function hook_image_effect_info_alter(&$effects) {

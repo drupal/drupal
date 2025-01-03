@@ -175,7 +175,7 @@ class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
   /**
    * Filters entities based on their view builder handlers.
    *
-   * @param $entity_type
+   * @param string $entity_type
    *   The entity type of the entity that needs to be validated.
    *
    * @return bool

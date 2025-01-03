@@ -76,9 +76,9 @@ function history_read_multiple($nids) {
 /**
  * Updates 'last viewed' timestamp of the specified entity for the current user.
  *
- * @param $nid
+ * @param string|int|null $nid
  *   The node ID that has been read.
- * @param $account
+ * @param \Drupal\User\UserInterface $account
  *   (optional) The user account to update the history for. Defaults to the
  *   current user.
  */

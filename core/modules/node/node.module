@@ -29,8 +29,9 @@ use Drupal\node\NodeTypeInterface;
  *   query joins the {comment_entity_statistics} table so that the comment_count
  *   field is available, a title attribute will be added to show the number of
  *   comments.
- * @param $title
- *   (optional) A heading for the resulting list.
+ * @param string|null $title
+ *   (optional) A heading for the resulting list. NULL results in no heading.
+ *   Defaults to NULL.
  *
  * @return array|false
  *   A renderable array containing a list of linked node titles fetched from
@@ -446,7 +447,7 @@ function node_access_grants($operation, AccountInterface $account) {
  * 'node_access'; when this function returns TRUE, no node access joins are
  * added to the query.
  *
- * @param $account
+ * @param \Drupal\Core\Session\AccountProxyInterface|null $account
  *   (optional) The user object for the user whose access is being checked. If
  *   omitted, the current user is used. Defaults to NULL.
  *
@@ -491,8 +492,9 @@ function node_access_view_all_nodes($account = NULL) {
  * When unsure if the current user is an administrator, node_access_rebuild()
  * should be used instead.
  *
- * @param $rebuild
- *   (optional) The boolean value to be written.
+ * @param bool|null $rebuild
+ *   (optional) The boolean value to be written. Defaults to NULL, which returns
+ *   the current value.
  *
  * @return bool|null
  *   The current value of the flag if no value was provided for $rebuild. If a
@@ -524,7 +526,7 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * Note : As of Drupal 6, node access modules are not required to (and actually
  * should not) call node_access_rebuild() in hook_install/uninstall anymore.
  *
- * @param $batch_mode
+ * @param bool $batch_mode
  *   (optional) Set to TRUE to process in 'batch' mode, spawning processing over
  *   several HTTP requests (thus avoiding the risk of PHP timeout if the site
  *   has a large number of nodes). hook_update_N() and any form submit handler

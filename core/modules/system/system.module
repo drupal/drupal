@@ -220,13 +220,13 @@ function template_preprocess_entity_add_list(&$variables): void {
  *
  * @param callable $callback
  *   The name of the function to invoke once the user authorizes the operation.
- * @param $file
+ * @param string $file
  *   The full path to the file where the callback function is implemented.
- * @param $arguments
+ * @param array $arguments
  *   Optional array of arguments to pass into the callback when it is invoked.
  *   Note that the first argument to the callback is always the FileTransfer
  *   object created by authorize.php when the user authorizes the operation.
- * @param $page_title
+ * @param string $page_title
  *   Optional string to use as the page title once redirected to authorize.php.
  */
 function system_authorized_init($callback, $file, $arguments = [], $page_title = NULL) {
@@ -332,7 +332,7 @@ function system_preprocess_block(&$variables): void {
  * This function is called from the system_settings form to check all core
  * file directories (file_public_path, file_private_path, file_temporary_path).
  *
- * @param $form_element
+ * @param array $form_element
  *   The form element containing the name of the directory to check.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
@@ -376,7 +376,7 @@ function system_check_directory($form_element, FormStateInterface $form_state) {
  *
  * @param \Drupal\Core\Extension\Extension|string $theme
  *   A theme extension object, or the name of a theme.
- * @param $show
+ * @param string $show
  *   Possible values: REGIONS_ALL or REGIONS_VISIBLE. Visible excludes hidden
  *   regions.
  *
@@ -425,7 +425,7 @@ function system_sort_themes($a, $b) {
 /**
  * Gets the name of the default region for a given theme.
  *
- * @param $theme
+ * @param string $theme
  *   The name of a theme.
  *
  * @return string

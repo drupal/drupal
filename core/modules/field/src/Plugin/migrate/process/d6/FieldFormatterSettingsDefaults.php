@@ -42,7 +42,7 @@ class FieldFormatterSettingsDefaults extends ProcessPluginBase {
   /**
    * @param string $type
    *   The field type.
-   * @param $format
+   * @param string $format
    *   The format selected for the field on the display.
    *
    * @return array

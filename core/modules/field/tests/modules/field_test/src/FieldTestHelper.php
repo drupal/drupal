@@ -70,9 +70,9 @@ class FieldTestHelper {
    *   assertEquals([$field], $mem['fieldStorageConfigCreate'][0]);
    * @endcode
    *
-   * @param $key
+   * @param string $key
    *   The key under which to store to $value, or NULL as described above.
-   * @param $value
+   * @param mixed|null $value
    *   A value to store for $key.
    *
    * @return array|null

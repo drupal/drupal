@@ -184,7 +184,7 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
   /**
    * Gets the base route requirements for a particular method.
    *
-   * @param $method
+   * @param string $method
    *   The HTTP method to be used for the route.
    *
    * @return array

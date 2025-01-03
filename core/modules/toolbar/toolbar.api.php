@@ -157,7 +157,7 @@ function hook_toolbar(): array {
  * element of the $items array is one item returned by a module from
  * hook_toolbar(). Additional items may be added, or existing items altered.
  *
- * @param $items
+ * @param array $items
  *   Associative array of toolbar menu definitions returned from hook_toolbar().
  */
 function hook_toolbar_alter(&$items) {

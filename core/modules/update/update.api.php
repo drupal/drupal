@@ -25,7 +25,7 @@ use Drupal\update\UpdateFetcherInterface;
  * updates report. In rare cases, a module might want to alter the data
  * associated with a project already in the list.
  *
- * @param $projects
+ * @param array $projects
  *   Reference to an array of the projects installed on the system. This
  *   includes all the metadata documented in the comments below for each project
  *   (either module or theme) that is currently installed. The array is
@@ -78,7 +78,7 @@ function hook_update_projects_alter(&$projects) {
 /**
  * Alter the information about available updates for projects.
  *
- * @param $projects
+ * @param array $projects
  *   Reference to an array of information about available updates to each
  *   project installed on the system.
  *

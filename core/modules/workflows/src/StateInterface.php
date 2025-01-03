@@ -43,7 +43,7 @@ interface StateInterface {
   /**
    * Determines if the state can transition to the provided state ID.
    *
-   * @param $to_state_id
+   * @param string $to_state_id
    *   The state to transition to.
    *
    * @return bool
@@ -54,7 +54,7 @@ interface StateInterface {
   /**
    * Gets the Transition object for the provided state ID.
    *
-   * @param $to_state_id
+   * @param string $to_state_id
    *   The state to transition to.
    *
    * @return \Drupal\workflows\TransitionInterface

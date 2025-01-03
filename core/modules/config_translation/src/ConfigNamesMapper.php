@@ -99,7 +99,7 @@ class ConfigNamesMapper extends PluginBase implements ConfigMapperInterface, Con
   /**
    * Constructs a ConfigNamesMapper.
    *
-   * @param $plugin_id
+   * @param string $plugin_id
    *   The config mapper plugin ID.
    * @param mixed $plugin_definition
    *   An array of plugin information with the following keys:

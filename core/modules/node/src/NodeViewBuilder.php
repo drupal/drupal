@@ -81,7 +81,7 @@ class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterf
    *   The language in which the node entity is being viewed.
    * @param bool $is_in_preview
    *   Whether the node is currently being previewed.
-   * @param $revision_id
+   * @param int|string $revision_id
    *   (optional) The identifier of the node revision to be loaded. If none
    *   is provided, the default revision will be loaded.
    *

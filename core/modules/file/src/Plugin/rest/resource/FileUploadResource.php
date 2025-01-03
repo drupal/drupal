@@ -271,7 +271,7 @@ class FileUploadResource extends ResourceBase {
   /**
    * Generates a lock ID based on the file URI.
    *
-   * @param $file_uri
+   * @param string $file_uri
    *   The file URI.
    *
    * @return string

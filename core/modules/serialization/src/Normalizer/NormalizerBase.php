@@ -83,7 +83,7 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
    *
    * @param array $context
    *   Context options for the normalizer.
-   * @param $data
+   * @param mixed $data
    *   The data that might have cacheability information.
    */
   protected function addCacheableDependency(array $context, $data) {

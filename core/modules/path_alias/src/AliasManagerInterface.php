@@ -44,7 +44,7 @@ interface AliasManagerInterface {
   /**
    * Clears the static caches in alias manager and rebuilds the prefix list.
    *
-   * @param $source
+   * @param string|null $source
    *   Source path of the alias that is being inserted/updated. If omitted, the
    *   entire lookup static cache will be cleared and the prefix list will be
    *   rebuilt.

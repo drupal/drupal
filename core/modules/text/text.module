@@ -16,14 +16,14 @@ use Drupal\filter\Entity\FilterFormat;
  * place such as the end of a paragraph, a line break, or the end of a sentence
  * (in that order of preference).
  *
- * @param $text
+ * @param string $text
  *   The content for which a summary will be generated.
- * @param $format
+ * @param string $format
  *   The format of the content. If the line break filter is present then we
  *   treat newlines embedded in $text as line breaks. If the htmlcorrector
  *   filter is present, it will be run on the generated summary (if different
  *   from the incoming $text).
- * @param $size
+ * @param string|null $size
  *   The desired character length of the summary. If omitted, the default value
  *   will be used. Ignored if the special delimiter is present in $text.
  *

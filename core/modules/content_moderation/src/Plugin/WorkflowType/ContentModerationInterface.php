@@ -68,7 +68,7 @@ interface ContentModerationInterface extends WorkflowTypeInterface {
   /**
    * {@inheritdoc}
    *
-   * @param $entity
+   * @param \Drupal\Core\Entity\EntityInterface|null $entity
    *   Content Moderation uses this parameter to determine the initial state
    *   based on publishing status.
    */

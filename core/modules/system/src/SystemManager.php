@@ -124,7 +124,7 @@ class SystemManager {
   /**
    * Extracts the highest severity from the requirements array.
    *
-   * @param $requirements
+   * @param array $requirements
    *   An array of requirements, in the same format as is returned by
    *   hook_requirements().
    *

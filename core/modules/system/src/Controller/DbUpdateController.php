@@ -532,7 +532,7 @@ class DbUpdateController extends ControllerBase {
   /**
    * Renders a list of requirement errors or warnings.
    *
-   * @param $severity
+   * @param int $severity
    *   The severity of the message, as per RFC 3164.
    * @param array $requirements
    *   The array of requirement values.
@@ -664,7 +664,7 @@ class DbUpdateController extends ControllerBase {
    * page in update.php). Additionally, if the site was off-line, now that the
    * update process is completed, the site is set back online.
    *
-   * @param $success
+   * @param bool $success
    *   Indicate that the batch API tasks were all completed successfully.
    * @param array $results
    *   An array of all the results that were updated in update_do_one().

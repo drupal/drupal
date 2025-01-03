@@ -10,7 +10,7 @@ use Drupal\Core\Installer\InstallerKernel;
 /**
  * Initializes blocks for installed themes.
  *
- * @param $theme_list
+ * @param string[] $theme_list
  *   An array of theme names.
  *
  * @see block_modules_installed()
@@ -40,7 +40,7 @@ function block_themes_installed($theme_list) {
  * a particular region isn't available in the new theme, the block is assigned
  * to the new theme's default region.
  *
- * @param $theme
+ * @param string $theme
  *   The name of a theme.
  */
 function block_theme_initialize($theme) {

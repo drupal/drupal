@@ -53,7 +53,7 @@ class HelpTopicTwigLoader extends FilesystemLoader {
   /**
    * Adds an extensions help_topics directory to the Twig loader.
    *
-   * @param $path
+   * @param string $path
    *   The path to the extension.
    */
   protected function addExtension($path) {

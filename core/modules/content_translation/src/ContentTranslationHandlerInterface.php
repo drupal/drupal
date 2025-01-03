@@ -25,7 +25,7 @@ interface ContentTranslationHandlerInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity whose translation has to be accessed.
-   * @param $op
+   * @param string $op
    *   The operation to be performed on the translation. Possible values are:
    *   - "create"
    *   - "update"

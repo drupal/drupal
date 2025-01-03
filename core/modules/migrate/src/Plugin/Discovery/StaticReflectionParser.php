@@ -19,7 +19,7 @@ class StaticReflectionParser extends BaseStaticReflectionParser {
    *
    * @param \Drupal\Component\Annotation\Doctrine\StaticReflectionParser $parser
    *   The current static parser.
-   * @param $finder
+   * @param \Doctrine\Common\Reflection\ClassFinderInterface $finder
    *   The class finder. Must implement
    *   \Drupal\Component\ClassFinder\ClassFinderInterface, but can do so
    *   implicitly (i.e., implements the interface's methods but not the actual

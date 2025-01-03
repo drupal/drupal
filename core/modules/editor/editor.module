@@ -236,7 +236,7 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
  *   An array of file entity UUIDs.
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   An entity whose fields to inspect for file references.
- * @param $count
+ * @param int $count
  *   The number of references to delete. Should be 1 when deleting a single
  *   revision and 0 when deleting an entity entirely.
  *

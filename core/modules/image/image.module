@@ -14,7 +14,7 @@ define('IMAGE_DERIVATIVE_TOKEN', 'itok');
 /**
  * Clears cached versions of a specific file in all styles.
  *
- * @param $path
+ * @param string $path
  *   The Drupal file path to the original image.
  */
 function image_path_flush($path) {
@@ -27,7 +27,7 @@ function image_path_flush($path) {
 /**
  * Gets an array of image styles suitable for using as select list options.
  *
- * @param $include_empty
+ * @param bool $include_empty
  *   If TRUE a '- None -' option will be inserted in the options array.
  *
  * @return string[]

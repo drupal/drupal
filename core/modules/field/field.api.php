@@ -56,7 +56,7 @@ use Drupal\field\Entity\FieldConfig;
 /**
  * Perform alterations on Field API field types.
  *
- * @param $info
+ * @param array $info
  *   Array of information on field types as collected by the "field type" plugin
  *   manager.
  */
@@ -272,7 +272,7 @@ function hook_field_widget_single_element_WIDGET_TYPE_form_alter(array &$element
  *   \Drupal\Core\Field\WidgetBaseInterface::form().
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
- * @param $context
+ * @param array $context
  *   An associative array containing the following key-value pairs:
  *   - form: The form structure to which widgets are being attached. This may be
  *     a full form structure, or a sub-element of a larger form.
@@ -299,12 +299,12 @@ function hook_field_widget_complete_form_alter(&$field_widget_complete_form, For
  * to modify a specific widget form, rather than using
  * hook_field_widget_complete_form_alter() and checking the widget type.
  *
- * @param $field_widget_complete_form
+ * @param array $field_widget_complete_form
  *   The field widget form element as constructed by
  *   \Drupal\Core\Field\WidgetBaseInterface::form().
- * @param $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
- * @param $context
+ * @param array $context
  *   An associative array containing the following key-value pairs:
  *   - form: The form structure to which widgets are being attached. This may be
  *     a full form structure, or a sub-element of a larger form.
@@ -414,7 +414,7 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
  * field definitions cache has been cleared, this hook is invoked on all modules
  * to allow them to respond to the field storage being purged.
  *
- * @param $field_storage \Drupal\field\Entity\FieldStorageConfig
+ * @param \Drupal\field\Entity\FieldStorageConfig $field_storage
  *   The field storage being purged.
  */
 function hook_field_purge_field_storage(FieldStorageConfig $field_storage) {
@@ -431,7 +431,7 @@ function hook_field_purge_field_storage(FieldStorageConfig $field_storage) {
  * field info cache has been cleared, this hook is invoked on all modules to
  * allow them to respond to the field being purged.
  *
- * @param $field
+ * @param \Drupal\field\Entity\FieldConfig $field
  *   The field being purged.
  */
 function hook_field_purge_field(FieldConfig $field) {

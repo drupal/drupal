@@ -68,7 +68,7 @@ function template_preprocess_responsive_image_formatter(&$variables): void {
  *
  * Default template: responsive-image.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - uri: The URI of the image.
  *   - width: The width of the image (if known).
