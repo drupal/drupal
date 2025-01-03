@@ -166,6 +166,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    * Gets an array of PSR-4 namespaces to search for plugin classes.
    *
    * @return string[][]
+   *   An array of namespaces to search.
    */
   protected function getPluginNamespaces(): array {
     return $this->pluginNamespaces;

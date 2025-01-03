@@ -37,6 +37,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    * Gets the plugin discovery.
    *
    * @return \Drupal\Component\Plugin\Discovery\DiscoveryInterface
+   *   The plugin discovery.
    */
   protected function getDiscovery() {
     return $this->discovery;
@@ -46,6 +47,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    * Gets the plugin factory.
    *
    * @return \Drupal\Component\Plugin\Factory\FactoryInterface
+   *   The plugin factory.
    */
   protected function getFactory() {
     return $this->factory;

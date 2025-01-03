@@ -183,12 +183,16 @@ class Random {
   }
 
   /**
-   * Generate a string that looks like a word (letters only, alternating consonants and vowels).
+   * Generates a string that looks like a word.
+   *
+   * The generated string contains only letters and has alternating consonants
+   * and vowels.
    *
    * @param int $length
    *   The desired word length.
    *
    * @return string
+   *   A random string with the requested number of random words.
    */
   public function word($length) {
     $vowels = ["a", "e", "i", "o", "u"];
@@ -304,6 +308,7 @@ class Random {
    *   The number of paragraphs to create. Defaults to 12.
    *
    * @return string
+   *   A string of multiple paragraphs.
    */
   public function paragraphs($paragraph_count = 12) {
     $output = '';

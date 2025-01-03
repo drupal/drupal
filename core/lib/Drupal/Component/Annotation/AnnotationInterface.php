@@ -16,6 +16,7 @@ interface AnnotationInterface {
    * Gets the name of the provider of the annotated class.
    *
    * @return string
+   *   The provider of the annotated class.
    */
   public function getProvider();
 
@@ -31,6 +32,7 @@ interface AnnotationInterface {
    * Gets the unique ID for this annotated class.
    *
    * @return string
+   *   The annotated class ID.
    */
   public function getId();
 
@@ -38,6 +40,7 @@ interface AnnotationInterface {
    * Gets the class of the annotated class.
    *
    * @return string
+   *   The class name of the annotated class.
    */
   public function getClass();
 

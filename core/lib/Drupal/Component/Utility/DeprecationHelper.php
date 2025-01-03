@@ -31,6 +31,10 @@ final class DeprecationHelper {
    *   Callback for deprecated code path.
    *
    * @return Current|Deprecated
+   *   The method to invoke based on the current version and the version of the
+   *   deprecation. The current callback when the current version is greater
+   *   than or equal to the version of the deprecation. Otherwise, the
+   *   deprecated callback.
    */
   public static function backwardsCompatibleCall(string $currentVersion, string $deprecatedVersion, callable $currentCallable, callable $deprecatedCallable): mixed {
     // Normalize the version string when it's a dev version to the first point release of that minor. E.g. 10.2.x-dev

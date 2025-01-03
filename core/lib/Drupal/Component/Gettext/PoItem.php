@@ -67,7 +67,8 @@ class PoItem {
   /**
    * Gets the language code of the currently used language.
    *
-   * @return string with langcode
+   * @return string
+   *   The language code for this item.
    */
   public function getLangcode() {
     return $this->langcode;
@@ -86,7 +87,8 @@ class PoItem {
   /**
    * Gets the context this translation belongs to.
    *
-   * @return string $context
+   * @return string
+   *   The context for this translation.
    */
   public function getContext() {
     return $this->context;
@@ -157,6 +159,7 @@ class PoItem {
    * Get if the translation has plural values.
    *
    * @return bool
+   *   TRUE if the translation has plurals, otherwise FALSE.
    */
   public function isPlural() {
     return $this->plural;
@@ -165,7 +168,8 @@ class PoItem {
   /**
    * Gets the comment of this translation.
    *
-   * @return String $comment
+   * @return string
+   *   The comment of this translation.
    */
   public function getComment() {
     return $this->comment;

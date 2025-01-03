@@ -46,7 +46,8 @@ class PoMemoryWriter implements PoWriterInterface {
   /**
    * Get all stored PoItem's.
    *
-   * @return array PoItem
+   * @return array
+   *   Array of all PoItem elements.
    */
   public function getData() {
     return $this->items;
