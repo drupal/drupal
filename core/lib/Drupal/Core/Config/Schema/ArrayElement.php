@@ -162,7 +162,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    * @param array $definition
    *   The base type definition array, for which a data definition should be
    *   created.
-   * @param $value
+   * @param mixed $value
    *   The value of the configuration element.
    * @param string $key
    *   The key of the contained element.

@@ -458,7 +458,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * yet the query failed, then the cache is stale and the exception needs to
    * propagate.
    *
-   * @param $e
+   * @param \Exception $e
    *   The exception.
    * @param string|null $table_name
    *   The table name. Defaults to $this->bin.

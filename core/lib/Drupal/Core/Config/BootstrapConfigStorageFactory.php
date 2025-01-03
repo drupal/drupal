@@ -13,7 +13,7 @@ class BootstrapConfigStorageFactory {
   /**
    * Returns a configuration storage implementation.
    *
-   * @param $class_loader
+   * @param \Composer\Autoload\ClassLoader $class_loader
    *   The class loader. Normally Composer's ClassLoader, as included by the
    *   front controller, but may also be decorated.
    *

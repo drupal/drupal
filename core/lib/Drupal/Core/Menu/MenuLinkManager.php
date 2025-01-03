@@ -79,7 +79,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    *
    * @param array $definition
    *   The definition to be processed and modified by reference.
-   * @param $plugin_id
+   * @param string $plugin_id
    *   The ID of the plugin this definition is being used for.
    */
   protected function processDefinition(array &$definition, $plugin_id) {

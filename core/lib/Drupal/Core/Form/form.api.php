@@ -15,7 +15,7 @@
  *
  * Callback for batch_set().
  *
- * @param $multiple_params
+ * @param array $multiple_params
  *   Additional parameters specific to the batch. These are specified in the
  *   array passed to batch_set().
  * @param array|\ArrayAccess $context
@@ -102,11 +102,11 @@ function callback_batch_operation($multiple_params, &$context) {
  * This callback may be specified in a batch to perform clean-up operations, or
  * to analyze the results of the batch operations.
  *
- * @param $success
+ * @param bool $success
  *   A boolean indicating whether the batch has completed successfully.
- * @param $results
+ * @param array $results
  *   The value set in $context['results'] by callback_batch_operation().
- * @param $operations
+ * @param array $operations
  *   If $success is FALSE, contains the operations that remained unprocessed.
  * @param string $elapsed
  *   A string representing the elapsed time for the batch process, e.g.,
@@ -326,7 +326,7 @@ function hook_form_BASE_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterfa
  * Called by batch_process() to allow modules to alter a batch before it is
  * processed.
  *
- * @param $batch
+ * @param array $batch
  *   The associative array of batch information. See batch_set() for details on
  *   what this could contain.
  *

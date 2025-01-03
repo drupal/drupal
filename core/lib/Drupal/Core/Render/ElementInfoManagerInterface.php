@@ -53,7 +53,7 @@ interface ElementInfoManagerInterface extends DiscoveryInterface {
    *   An element type as defined by an element plugin.
    * @param string $property_name
    *   The property within the element type that should be returned.
-   * @param $default
+   * @param mixed|null $default
    *   (Optional) The value to return if the element type does not specify a
    *   value for the property. Defaults to NULL.
    *

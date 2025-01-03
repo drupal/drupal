@@ -87,7 +87,7 @@ interface ConditionAggregateInterface extends \Countable {
   /**
    * Compiles this conditional clause.
    *
-   * @param $query
+   * @param \Drupal\Core\Entity\Query\QueryInterface $query
    *   The query object this conditional clause belongs to.
    */
   public function compile($query);

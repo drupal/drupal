@@ -1084,9 +1084,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * Checks whether a field column should be treated as serial.
    *
-   * @param $table_name
+   * @param string $table_name
    *   The name of the table the field column belongs to.
-   * @param $schema_name
+   * @param string $schema_name
    *   The schema name of the field column.
    *
    * @return bool

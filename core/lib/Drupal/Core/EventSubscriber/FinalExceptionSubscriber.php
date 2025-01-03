@@ -193,7 +193,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
   /**
    * Wrapper for error_displayable().
    *
-   * @param $error
+   * @param array $error
    *   Optional error to examine for ERROR_REPORTING_DISPLAY_SOME.
    *
    * @return bool
@@ -211,7 +211,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
    * Attempts to reduce verbosity by removing DRUPAL_ROOT from the file path in
    * the message. This does not happen for (false) security.
    *
-   * @param $error
+   * @param array $error
    *   Optional error to examine for ERROR_REPORTING_DISPLAY_SOME.
    *
    * @return array

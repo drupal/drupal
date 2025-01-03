@@ -473,7 +473,7 @@ abstract class QueryBase implements QueryInterface {
    * is useful for locating classes in a hierarchy of namespaces, such as when
    * searching for the appropriate query class for an entity type.
    *
-   * @param $object
+   * @param object $object
    *   An object within a namespace.
    *
    * @return array

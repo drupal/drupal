@@ -29,7 +29,7 @@ interface EntityStorageInterface {
   /**
    * Resets the internal entity cache.
    *
-   * @param $ids
+   * @param int[]|null $ids
    *   (optional) If specified, the cache is reset for the entities with the
    *   given ids only.
    */
@@ -38,7 +38,7 @@ interface EntityStorageInterface {
   /**
    * Loads one or more entities.
    *
-   * @param $ids
+   * @param int[]|null $ids
    *   An array of entity IDs, or NULL to load all entities.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]

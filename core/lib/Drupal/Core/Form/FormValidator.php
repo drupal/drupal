@@ -209,7 +209,7 @@ class FormValidator implements FormValidatorInterface {
    * and selected options were in the list of options given to the user. Then
    * calls user-defined validators.
    *
-   * @param $elements
+   * @param array $elements
    *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form. The current user-submitted data is stored
@@ -221,7 +221,7 @@ class FormValidator implements FormValidatorInterface {
    *   This technique is useful when validation requires file parsing,
    *   web service requests, or other expensive requests that should
    *   not be repeated in the submission step.
-   * @param $form_id
+   * @param string $form_id
    *   A unique string identifying the form for validation, submission,
    *   theming, and hook_form_alter functions. Is only present on the initial
    *   call to the method, which receives the entire form array as the $element,

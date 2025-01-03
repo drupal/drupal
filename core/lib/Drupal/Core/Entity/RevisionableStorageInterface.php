@@ -24,7 +24,7 @@ interface RevisionableStorageInterface extends EntityStorageInterface {
   /**
    * Loads a specific entity revision.
    *
-   * @param int $revision_id
+   * @param int|string $revision_id
    *   The revision ID.
    *
    * @return \Drupal\Core\Entity\RevisionableInterface|null
@@ -35,7 +35,7 @@ interface RevisionableStorageInterface extends EntityStorageInterface {
   /**
    * Loads multiple entity revisions.
    *
-   * @param array $revision_ids
+   * @param int[]|string[] $revision_ids
    *   An array of revision IDs to load.
    *
    * @return \Drupal\Core\Entity\RevisionableInterface[]
@@ -49,7 +49,7 @@ interface RevisionableStorageInterface extends EntityStorageInterface {
    *
    * A revision can only be deleted if it's not the currently active one.
    *
-   * @param int $revision_id
+   * @param int|string $revision_id
    *   The revision ID.
    */
   public function deleteRevision($revision_id);

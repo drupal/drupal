@@ -15,7 +15,7 @@ interface EntityViewBuilderInterface {
   /**
    * Builds the component fields and properties of a set of entities.
    *
-   * @param &$build
+   * @param array &$build
    *   The renderable array representing the entity content.
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   The entities whose content is being built.

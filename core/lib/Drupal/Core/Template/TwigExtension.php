@@ -191,7 +191,7 @@ class TwigExtension extends AbstractExtension {
   /**
    * Generates a URL path given a route name and parameters.
    *
-   * @param $name
+   * @param string $name
    *   The name of the route.
    * @param array $parameters
    *   (optional) An associative array of route parameters names and values.
@@ -214,7 +214,7 @@ class TwigExtension extends AbstractExtension {
   /**
    * Generates an absolute URL given a route name and parameters.
    *
-   * @param $name
+   * @param string $name
    *   The name of the route.
    * @param array $parameters
    *   An associative array of route parameter names and values.

@@ -311,7 +311,7 @@ class ConfigDependencyManager {
   /**
    * Updates one of the lightweight ConfigEntityDependency objects.
    *
-   * @param $name
+   * @param string $name
    *   The configuration dependency name.
    * @param array $dependencies
    *   The configuration dependencies. The array is structured like this:

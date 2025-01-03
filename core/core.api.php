@@ -2078,7 +2078,7 @@ function hook_condition_info_alter(array &$definitions) {
  * this hook. All core modules use MailManagerInterface->mail() for messaging,
  * it is best practice but not mandatory in contributed modules.
  *
- * @param $message
+ * @param array $message
  *   An array containing the message data. Keys in this array include:
  *   - 'id':
  *     The MailManagerInterface->mail() id of the message. Look at module source
@@ -2130,9 +2130,9 @@ function hook_mail_alter(&$message) {
  * unlike hook_mail_alter(), is only called on the $module argument to
  * MailManagerInterface->mail(), not all modules.
  *
- * @param $key
+ * @param string $key
  *   An identifier of the mail.
- * @param $message
+ * @param array $message
  *   An array to be filled in. Elements in this array include:
  *   - id: An ID to identify the mail sent. Look at module source code or
  *     MailManagerInterface->mail() for possible id values.
@@ -2153,7 +2153,7 @@ function hook_mail_alter(&$message) {
  *   - headers: Associative array containing mail headers, such as From,
  *     Sender, MIME-Version, Content-Type, etc.
  *     MailManagerInterface->mail() pre-fills several headers in this array.
- * @param $params
+ * @param array $params
  *   An array of parameters supplied by the caller of
  *   MailManagerInterface->mail().
  *
@@ -2214,7 +2214,7 @@ function hook_mail_backend_info_alter(&$info) {
 /**
  * Alter the default country list.
  *
- * @param $countries
+ * @param string[][] $countries
  *   The associative array of countries keyed by two-letter country code.
  *
  * @see \Drupal\Core\Locale\CountryManager::getList()
@@ -2339,7 +2339,7 @@ function hook_config_import_steps_alter(&$sync_steps, \Drupal\Core\Config\Config
  *
  * For adding new data types use configuration schema YAML files instead.
  *
- * @param $definitions
+ * @param array $definitions
  *   Associative array of configuration type definitions keyed by schema type
  *   names. The elements are themselves array with information about the type.
  *

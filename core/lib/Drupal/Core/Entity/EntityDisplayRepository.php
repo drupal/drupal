@@ -197,7 +197,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
   /**
    * Returns an array of enabled display mode options by bundle.
    *
-   * @param $display_type
+   * @param string $display_type
    *   The display type to be retrieved. It can be "view_mode" or "form_mode".
    * @param string $entity_type_id
    *   The entity type whose display mode options should be returned.

@@ -124,7 +124,7 @@ class LibraryDiscoveryCollector extends CacheCollector implements LibraryDiscove
    *   The name of the extension for which library definitions will be extended.
    * @param string $library_name
    *   The name of the library whose definitions is to be extended.
-   * @param $library_definition
+   * @param array $library_definition
    *   The library definition to be extended.
    *
    * @return array

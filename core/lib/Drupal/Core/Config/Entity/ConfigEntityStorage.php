@@ -313,9 +313,9 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   /**
    * Invokes a hook on behalf of the entity.
    *
-   * @param $hook
+   * @param string $hook
    *   One of 'presave', 'insert', 'update', 'predelete', or 'delete'.
-   * @param $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    */
   protected function invokeHook($hook, EntityInterface $entity) {

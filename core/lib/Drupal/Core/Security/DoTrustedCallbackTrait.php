@@ -31,7 +31,7 @@ trait DoTrustedCallbackTrait {
    *   magic method __invoke() are not supported.
    * @param array $args
    *   The arguments to pass the callback.
-   * @param $message
+   * @param string $message
    *   The error message if the callback is not trusted. If the message contains
    *   "%s" it will be replaced in with the resolved callback.
    * @param string $error_type

@@ -1437,7 +1437,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   /**
    * Adds defaults to a table schema definition.
    *
-   * @param $schema
+   * @param array $schema
    *   The schema definition array for a single table, passed by reference.
    */
   protected function addTableDefaults(&$schema) {

@@ -62,7 +62,7 @@ class Details extends RenderElementBase {
   /**
    * Adds form element theming to details.
    *
-   * @param $element
+   * @param array $element
    *   An associative array containing the properties and children of the
    *   details.
    *

@@ -550,9 +550,9 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  * For more detailed information, see the
  * @link themeable Theme system overview topic @endlink.
  *
- * @param $variables
+ * @param array $variables
  *   The variables array (modify in place).
- * @param $hook
+ * @param string $hook
  *   The name of the theme hook.
  */
 function hook_preprocess(&$variables, $hook) {
@@ -599,7 +599,7 @@ function hook_preprocess(&$variables, $hook) {
  * For more detailed information, see the
  * @link themeable Theme system overview topic @endlink.
  *
- * @param $variables
+ * @param array $variables
  *   The variables array (modify in place).
  */
 function hook_preprocess_HOOK(&$variables): void {
@@ -876,7 +876,7 @@ function hook_element_plugin_alter(array &$definitions) {
 /**
  * Alters JavaScript before it is presented on the page.
  *
- * @param $javascript
+ * @param array $javascript
  *   An array of all JavaScript being presented on the page.
  * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
  *   The assets attached to the current response.
@@ -1060,7 +1060,7 @@ function hook_library_info_alter(&$libraries, $extension) {
 /**
  * Alter CSS files before they are output on the page.
  *
- * @param $css
+ * @param array $css
  *   An array of all CSS items (files and inline CSS) being requested on the page.
  * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
  *   The assets attached to the current response.
@@ -1158,7 +1158,7 @@ function hook_page_bottom(array &$page_bottom): void {
  *   purposes. This is primarily useful for themes that may wish to examine
  *   existing implementations to extract data (such as arguments) so that
  *   it may properly register its own, higher priority implementations.
- * @param $type
+ * @param string $type
  *   Whether a theme, module, etc. is being processed. This is primarily useful
  *   so that themes tell if they are the actual theme being called or a parent
  *   theme. May be one of:
@@ -1169,9 +1169,9 @@ function hook_page_bottom(array &$page_bottom): void {
  *     being used.
  *   - 'base_theme': A base theme is being checked for theme implementations.
  *   - 'theme': The actual theme in use is being checked.
- * @param $theme
+ * @param string $theme
  *   The actual name of theme, module, etc. that is being processed.
- * @param $path
+ * @param string $path
  *   The directory path of the theme or module, so that it doesn't need to be
  *   looked up.
  *
@@ -1318,7 +1318,7 @@ function hook_theme($existing, $type, $theme, $path): array {
  * ];
  * @endcode
  *
- * @param $theme_registry
+ * @param array $theme_registry
  *   The entire cache of theme registry information, post-processing.
  *
  * @see hook_theme()

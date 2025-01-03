@@ -53,7 +53,7 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
   /**
    * Gets DatabaseBackend for the specified cache bin.
    *
-   * @param $bin
+   * @param string $bin
    *   The cache bin for which the object is created.
    *
    * @return \Drupal\Core\Cache\DatabaseBackend

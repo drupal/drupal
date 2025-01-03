@@ -571,7 +571,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition.
-   * @param $batch_size
+   * @param int $batch_size
    *   The maximum number of field data records to purge before returning.
    *
    * @return \Drupal\Core\Field\FieldItemListInterface[]

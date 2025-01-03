@@ -228,9 +228,9 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * Gets a FileTransfer class for a specific transfer method and settings.
    *
-   * @param $backend
+   * @param string $backend
    *   The FileTransfer backend to get the class for.
-   * @param $settings
+   * @param array $settings
    *   Array of settings for the FileTransfer.
    *
    * @return \Drupal\Core\FileTransfer\FileTransfer|bool
@@ -282,9 +282,9 @@ class FileTransferAuthorizeForm extends FormBase {
    * Therefore, to properly add defaults, we need to walk through all the
    * children form elements and process those defaults recursively.
    *
-   * @param $element
+   * @param array $element
    *   Reference to the Form API form element we're operating on.
-   * @param $key
+   * @param string $key
    *   The key for our current form element, if any.
    * @param array $defaults
    *   The default settings for the file transfer backend we're operating on.
@@ -309,7 +309,7 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * Runs the operation specified in 'authorize_operation' session property.
    *
-   * @param $filetransfer
+   * @param array $filetransfer
    *   The FileTransfer object to use for running the operation.
    *
    * @return \Symfony\Component\HttpFoundation\Response|null

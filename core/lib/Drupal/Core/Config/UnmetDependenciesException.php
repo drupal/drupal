@@ -81,7 +81,7 @@ class UnmetDependenciesException extends ConfigException {
   /**
    * Creates an exception for an extension and a list of configuration objects.
    *
-   * @param $extension
+   * @param string $extension
    *   The name of the extension that is being installed.
    * @param array $config_objects
    *   A list of configuration keyed by configuration name, with unmet

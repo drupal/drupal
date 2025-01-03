@@ -268,7 +268,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
-   * @param $class_loader
+   * @param \Composer\Autoload\ClassLoader $class_loader
    *   The class loader. Normally Composer's ClassLoader, as included by the
    *   front controller, but may also be decorated.
    * @param string $environment
@@ -297,7 +297,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @param string $environment
    *   String indicating the environment, e.g. 'prod' or 'dev'.
-   * @param $class_loader
+   * @param \Composer\Autoload\ClassLoader $class_loader
    *   The class loader. Normally \Composer\Autoload\ClassLoader, as included by
    *   the front controller, but may also be decorated.
    * @param bool $allow_dumping
@@ -756,7 +756,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Returns module data on the filesystem.
    *
-   * @param $module
+   * @param string $module
    *   The name of the module.
    *
    * @return \Drupal\Core\Extension\Extension|bool

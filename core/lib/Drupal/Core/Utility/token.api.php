@@ -25,11 +25,11 @@ use Drupal\user\Entity\User;
  * A module implementing this hook should also implement hook_token_info() in
  * order to list its available tokens on editing screens.
  *
- * @param $type
+ * @param string $type
  *   The machine-readable name of the type (group) of token being replaced, such
  *   as 'node', 'user', or another type defined by a hook_token_info()
  *   implementation.
- * @param $tokens
+ * @param array $tokens
  *   An array of tokens to be replaced. The keys are the machine-readable token
  *   names, and the values are the raw [type:token] strings that appeared in the
  *   original text.
@@ -131,9 +131,9 @@ function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\R
 /**
  * Alter replacement values for placeholder tokens.
  *
- * @param $replacements
+ * @param array $replacements
  *   An associative array of replacements returned by hook_tokens().
- * @param $context
+ * @param array $context
  *   The context in which hook_tokens() was called. An associative array with
  *   the following keys, which have the same meaning as the corresponding
  *   parameters of hook_tokens():
@@ -247,7 +247,7 @@ function hook_token_info() {
 /**
  * Alter the metadata about available placeholder tokens and token types.
  *
- * @param $data
+ * @param array $data
  *   The associative array of token definitions from hook_token_info().
  *
  * @see hook_token_info()

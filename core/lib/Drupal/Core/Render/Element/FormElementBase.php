@@ -129,7 +129,7 @@ abstract class FormElementBase extends RenderElementBase implements FormElementI
   /**
    * #element_validate callback for #pattern form element property.
    *
-   * @param $element
+   * @param array $element
    *   An associative array containing the properties and children of the
    *   generic form element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state

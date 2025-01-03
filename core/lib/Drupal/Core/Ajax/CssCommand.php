@@ -50,9 +50,9 @@ class CssCommand implements CommandInterface {
   /**
    * Adds a property/value pair to the CSS to be added to this element.
    *
-   * @param $property
+   * @param string $property
    *   The CSS property to be changed.
-   * @param $value
+   * @param string $value
    *   The new value of the CSS property.
    *
    * @return $this

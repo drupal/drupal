@@ -64,7 +64,7 @@ interface TranslatableInterface {
    * The returned translation has to be of the same type than this typed data
    * object.
    *
-   * @param $langcode
+   * @param string $langcode
    *   The language code of the translation to get or
    *   LanguageInterface::LANGCODE_DEFAULT
    *   to get the data in default language.

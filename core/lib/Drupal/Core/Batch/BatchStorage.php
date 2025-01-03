@@ -188,7 +188,7 @@ class BatchStorage implements BatchStorageInterface {
    * yet the query failed, then the batch is stale and the exception needs to
    * propagate.
    *
-   * @param $e
+   * @param \Exception $e
    *   The exception.
    *
    * @throws \Exception

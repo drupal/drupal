@@ -35,7 +35,7 @@ interface TypedConfigInterface extends TraversableTypedDataInterface {
   /**
    * Gets a contained typed configuration element.
    *
-   * @param $name
+   * @param string $name
    *   The name of the property to get; e.g., 'title' or 'name'. Nested
    *   elements can be get using multiple dot delimited names, for example,
    *   'page.front'.

@@ -198,7 +198,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * yet the query failed, then the semaphore is stale and the exception needs
    * to propagate.
    *
-   * @param $e
+   * @param \Exception $e
    *   The exception.
    *
    * @throws \Exception

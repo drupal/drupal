@@ -868,7 +868,7 @@ class Registry implements DestructableInterface {
   /**
    * Gets all user functions grouped by the word before the first underscore.
    *
-   * @param $prefixes
+   * @param string[] $prefixes
    *   An array of function prefixes by which the list can be limited.
    *
    * @return array

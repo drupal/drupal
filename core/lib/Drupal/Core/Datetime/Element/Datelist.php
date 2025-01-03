@@ -354,9 +354,9 @@ class Datelist extends DateElementBase {
   /**
    * Rounds minutes and seconds to nearest requested value.
    *
-   * @param $date
+   * @param mixed $date
    *   The date.
-   * @param $increment
+   * @param int $increment
    *   The value to round to.
    *
    * @return \Drupal\Core\Datetime\DrupalDateTime

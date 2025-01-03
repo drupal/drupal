@@ -109,11 +109,11 @@ class CssOptimizer implements AssetOptimizerInterface {
    * it is not on the AssetOptimizerInterface, so any future refactoring can
    * make it protected.
    *
-   * @param $file
+   * @param string $file
    *   Name of the stylesheet to be processed.
-   * @param $optimize
+   * @param bool|null $optimize
    *   Defines if CSS contents should be compressed or not.
-   * @param $reset_base_path
+   * @param bool $reset_base_path
    *   Used internally to facilitate recursive resolution of @import commands.
    *
    * @return string
@@ -203,9 +203,9 @@ class CssOptimizer implements AssetOptimizerInterface {
   /**
    * Processes the contents of a stylesheet for aggregation.
    *
-   * @param $contents
+   * @param string $contents
    *   The contents of the stylesheet.
-   * @param $optimize
+   * @param bool $optimize
    *   (optional) Boolean whether CSS contents should be minified. Defaults to
    *   FALSE.
    *

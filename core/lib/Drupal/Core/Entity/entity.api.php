@@ -1500,7 +1500,7 @@ function hook_ENTITY_TYPE_revision_delete(\Drupal\Core\Entity\EntityInterface $e
 /**
  * Act on entities being assembled before rendering.
  *
- * @param &$build
+ * @param array &$build
  *   A renderable array representing the entity content. The module may add
  *   elements to $build prior to rendering. The structure of $build is a
  *   renderable array as expected by
@@ -1510,7 +1510,7 @@ function hook_ENTITY_TYPE_revision_delete(\Drupal\Core\Entity\EntityInterface $e
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
  *   The entity view display holding the display options configured for the
  *   entity components.
- * @param $view_mode
+ * @param string $view_mode
  *   The view mode the entity is rendered in.
  *
  * @see hook_entity_view_alter()
@@ -1533,7 +1533,7 @@ function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $en
 /**
  * Act on entities of a particular type being assembled before rendering.
  *
- * @param &$build
+ * @param array &$build
  *   A renderable array representing the entity content. The module may add
  *   elements to $build prior to rendering. The structure of $build is a
  *   renderable array as expected by
@@ -1543,7 +1543,7 @@ function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $en
  * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
  *   The entity view display holding the display options configured for the
  *   entity components.
- * @param $view_mode
+ * @param string $view_mode
  *   The view mode the entity is rendered in.
  *
  * @see hook_ENTITY_TYPE_view_alter()
@@ -1820,7 +1820,7 @@ function hook_entity_display_build_alter(&$build, $context) {
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity that is about to be shown on the form.
- * @param $operation
+ * @param string $operation
  *   The current operation.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
@@ -1846,7 +1846,7 @@ function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity that is about to be shown on the form.
- * @param $operation
+ * @param string $operation
  *   The current operation.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.

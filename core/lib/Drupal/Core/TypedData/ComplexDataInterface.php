@@ -31,7 +31,7 @@ interface ComplexDataInterface extends TraversableTypedDataInterface {
   /**
    * Gets a property object.
    *
-   * @param $property_name
+   * @param string $property_name
    *   The name of the property to get; e.g., 'title' or 'name'.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
@@ -47,9 +47,9 @@ interface ComplexDataInterface extends TraversableTypedDataInterface {
   /**
    * Sets a property value.
    *
-   * @param $property_name
+   * @param string $property_name
    *   The name of the property to set; e.g., 'title' or 'name'.
-   * @param $value
+   * @param mixed|null $value
    *   The value to set, or NULL to unset the property.
    * @param bool $notify
    *   (optional) Whether to notify the parent object of the change. Defaults to
