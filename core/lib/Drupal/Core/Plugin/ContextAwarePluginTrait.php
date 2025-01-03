@@ -123,6 +123,7 @@ trait ContextAwarePluginTrait {
    *
    * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface[]
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getContextDefinitions() {
     $definition = $this->getPluginDefinition();
     if ($definition instanceof ContextAwarePluginDefinitionInterface) {
@@ -137,6 +138,7 @@ trait ContextAwarePluginTrait {
    *
    * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getContextDefinition($name) {
     $definition = $this->getPluginDefinition();
     if ($definition instanceof ContextAwarePluginDefinitionInterface) {

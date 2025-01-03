@@ -287,6 +287,10 @@ class Registry implements DestructableInterface {
    * Gets the theme registry cache.
    *
    * @return array|null
+   *   The complete theme registry data array for the active theme for this
+   *   registry.
+   *
+   * @see Registry::$registry
    */
   protected function cacheGet(): ?array {
     $theme_name = $this->theme->getName();

@@ -48,6 +48,7 @@ class InlineTemplate extends RenderElementBase {
    *
    * @return array
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public static function preRenderInlineTemplate($element) {
     /** @var \Drupal\Core\Template\TwigEnvironment $environment */
     $environment = \Drupal::service('twig');

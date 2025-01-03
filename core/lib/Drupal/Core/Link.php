@@ -129,6 +129,7 @@ class Link implements RenderableInterface {
    * Returns the URL of the link.
    *
    * @return \Drupal\Core\Url
+   *   The URL object.
    */
   public function getUrl() {
     return $this->url;

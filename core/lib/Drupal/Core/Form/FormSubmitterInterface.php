@@ -69,6 +69,8 @@ interface FormSubmitterInterface {
    *   The current state of the form.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+   *   The HTTP response if the form submission results in a redirect, otherwise
+   *   NULL.
    *
    * @see \Drupal\Core\Form\FormBuilderInterface::processForm()
    * @see \Drupal\Core\Form\FormBuilderInterface::buildForm()

@@ -19,7 +19,7 @@ interface RefinableCalculatedPermissionsInterface extends RefinableCacheableDepe
    *   given identifier within the scope. Defaults to FALSE, meaning a merge
    *   will take place instead.
    *
-   * @return self
+   * @return $this
    */
   public function addItem(CalculatedPermissionsItemInterface $item, bool $overwrite = FALSE): self;
 
@@ -32,7 +32,7 @@ interface RefinableCalculatedPermissionsInterface extends RefinableCacheableDepe
    *   (optional) The scope identifier to remove the item from, defaults to
    *   'drupal'.
    *
-   * @return self
+   * @return $this
    */
   public function removeItem(string $scope = AccessPolicyInterface::SCOPE_DRUPAL, string|int $identifier = AccessPolicyInterface::SCOPE_DRUPAL): self;
 
@@ -49,7 +49,7 @@ interface RefinableCalculatedPermissionsInterface extends RefinableCacheableDepe
    * @param string $scope
    *   The scope name to remove the items for.
    *
-   * @return self
+   * @return $this
    */
   public function removeItemsByScope(string $scope): self;
 
@@ -61,7 +61,7 @@ interface RefinableCalculatedPermissionsInterface extends RefinableCacheableDepe
    * @param \Drupal\Core\Session\CalculatedPermissionsInterface $other
    *   The other calculated permissions object to merge into this one.
    *
-   * @return self
+   * @return $this
    */
   public function merge(CalculatedPermissionsInterface $other): self;
 

@@ -481,6 +481,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    *   Request.
    *
    * @return string
+   *   The query parameters identifier for the route collection cache.
    */
   protected function getQueryParametersCacheIdPart(Request $request) {
     // @todo Use \Symfony\Component\HttpFoundation\Request::normalizeQueryString

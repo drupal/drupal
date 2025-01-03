@@ -258,6 +258,7 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    *   The bundle to get the configurable field for.
    *
    * @return \Drupal\Core\Field\FieldConfigInterface
+   *   The configuration entity for the field.
    */
   public function getConfig($bundle);
 
@@ -265,6 +266,7 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    * Returns a unique identifier for the field.
    *
    * @return string
+   *   The unique ID for the field.
    */
   public function getUniqueIdentifier();
 

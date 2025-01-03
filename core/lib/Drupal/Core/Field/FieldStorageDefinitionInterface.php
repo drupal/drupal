@@ -326,6 +326,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    * Returns a unique identifier for the field storage.
    *
    * @return string
+   *   A unique identifier for the field storage.
    */
   public function getUniqueStorageIdentifier();
 

@@ -94,6 +94,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    * Gets the plugin discovery.
    *
    * @return \Drupal\Component\Plugin\Discovery\DiscoveryInterface
+   *   The discovery service.
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
@@ -109,6 +110,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    * Gets the plugin factory.
    *
    * @return \Drupal\Component\Plugin\Factory\FactoryInterface
+   *   The plugin factory.
    */
   protected function getFactory() {
     if (!isset($this->factory)) {

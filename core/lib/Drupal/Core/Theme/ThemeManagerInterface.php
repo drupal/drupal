@@ -36,6 +36,7 @@ interface ThemeManagerInterface {
    *   The route match.
    *
    * @return \Drupal\Core\Theme\ActiveTheme
+   *   The active theme object.
    */
   public function getActiveTheme(?RouteMatchInterface $route_match = NULL);
 
@@ -43,6 +44,7 @@ interface ThemeManagerInterface {
    * Determines whether there is an active theme.
    *
    * @return bool
+   *   TRUE if there is an active theme, FALSE otherwise.
    */
   public function hasActiveTheme();
 

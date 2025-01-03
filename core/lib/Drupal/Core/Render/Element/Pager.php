@@ -68,6 +68,7 @@ class Pager extends RenderElementBase {
    *   A renderable array of #type => pager.
    *
    * @return array
+   *   The render array with cache contexts added.
    */
   public static function preRenderPager(array $pager) {
     // Note: the default pager theme process function

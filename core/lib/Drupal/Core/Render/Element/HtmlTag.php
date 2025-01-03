@@ -80,6 +80,7 @@ class HtmlTag extends RenderElementBase {
    *     any non-empty value here will add the <noscript> tag.)
    *
    * @return array
+   *   The element, after the pre-rendering processing run.
    */
   public static function preRenderHtmlTag($element) {
     $attributes = isset($element['#attributes']) ? new Attribute($element['#attributes']) : '';

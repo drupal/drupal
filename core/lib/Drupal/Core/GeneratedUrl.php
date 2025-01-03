@@ -23,6 +23,7 @@ class GeneratedUrl extends BubbleableMetadata {
    * Gets the generated URL.
    *
    * @return string
+   *   The generated URL.
    */
   public function getGeneratedUrl() {
     return $this->generatedUrl;

@@ -24,6 +24,8 @@ interface PlaceholderGeneratorInterface {
    *   analyzed.
    *
    * @return bool
+   *   Returns TRUE is the render array can be overwritten with placeholders,
+   *   FALSE otherwise.
    */
   public function canCreatePlaceholder(array $element);
 

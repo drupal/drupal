@@ -81,7 +81,7 @@
     <include-pattern>core/lib/Component/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.MissingReturnComment">
-    <include-pattern>core/lib/Drupal/Core/[a-e]*/*</include-pattern>
+    <include-pattern>core/lib/Drupal/Core/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.GenderNeutralComment"/>
   <rule ref="Drupal.Commenting.HookComment"/>

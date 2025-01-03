@@ -386,6 +386,8 @@ class FormValidator implements FormValidatorInterface {
    *   The current state of the form.
    *
    * @return array|null
+   *   An array of validation errors for the triggering element. Defaults to
+   *   NULL, which turns off error suppression.
    */
   protected function determineLimitValidationErrors(FormStateInterface &$form_state) {
     // While this element is being validated, it may be desired that some

@@ -748,6 +748,7 @@ interface FormStateInterface {
    * Returns references to details elements to render them within vertical tabs.
    *
    * @return array
+   *   References to details elements to render them within vertical tabs.
    */
   public function &getGroups();
 
@@ -924,6 +925,7 @@ interface FormStateInterface {
    * Determines if this form submission should bypass #access.
    *
    * @return bool
+   *   TRUE if this form bypassing access checked, otherwise FALSE.
    *
    * @see \Drupal\Core\Form\FormState::$programmed_bypass_access_check
    */

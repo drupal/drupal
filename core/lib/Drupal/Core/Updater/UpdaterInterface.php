@@ -18,6 +18,7 @@ interface UpdaterInterface {
    * Checks if the project is installed.
    *
    * @return bool
+   *   Return TRUE if the project is installed, FALSE otherwise.
    */
   public function isInstalled();
 

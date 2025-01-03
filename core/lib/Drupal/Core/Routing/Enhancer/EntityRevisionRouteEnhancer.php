@@ -19,6 +19,7 @@ class EntityRevisionRouteEnhancer implements EnhancerInterface {
    *   The current route.
    *
    * @return bool
+   *   TRUE if the enhancer runs on the current route, FALSE otherwise.
    */
   protected function applies(Route $route) {
     // Check whether there is any entity revision parameter.

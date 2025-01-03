@@ -41,6 +41,7 @@ class FieldStorageDefinitionEvent extends Event {
    * The field storage definition.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface
+   *   The field storage definition for the entity.
    */
   public function getFieldStorageDefinition() {
     return $this->fieldStorageDefinition;
@@ -50,6 +51,7 @@ class FieldStorageDefinitionEvent extends Event {
    * The original field storage definition.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface
+   *   The field storage definition for the original entity.
    */
   public function getOriginal() {
     return $this->original;

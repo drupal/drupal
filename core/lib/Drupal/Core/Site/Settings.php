@@ -61,7 +61,7 @@ final class Settings {
    * A singleton is used because this class is used before the container is
    * available.
    *
-   * @return \Drupal\Core\Site\Settings
+   * @return $this
    *
    * @throws \BadMethodCallException
    *   Thrown when the settings instance has not been initialized yet.

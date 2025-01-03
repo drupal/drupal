@@ -177,6 +177,7 @@ class BaseFieldOverride extends FieldConfigBase {
    * Gets the base field definition.
    *
    * @return \Drupal\Core\Field\BaseFieldDefinition
+   *   An associative array of the base field definition.
    */
   protected function getBaseFieldDefinition() {
     if (!isset($this->baseFieldDefinition)) {

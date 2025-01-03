@@ -69,6 +69,7 @@ class Module extends Updater implements UpdaterInterface {
    *   The project to check.
    *
    * @return bool
+   *   TRUE if the the project can be updated, FALSE otherwise.
    */
   public static function canUpdate($project_name) {
     return (bool) \Drupal::service('extension.list.module')->getPath($project_name);

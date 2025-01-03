@@ -13,6 +13,7 @@ interface PrimitiveInterface {
    * Gets the primitive data value.
    *
    * @return mixed
+   *   The primitive data value.
    */
   public function getValue();
 
@@ -29,6 +30,7 @@ interface PrimitiveInterface {
    * Gets the primitive data value casted to the correct PHP type.
    *
    * @return mixed
+   *   The primitive data value cast to the correct PHP type.
    */
   public function getCastedValue();
 

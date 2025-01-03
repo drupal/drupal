@@ -38,6 +38,7 @@ interface RedirectDestinationInterface {
    * @endcode
    *
    * @return string
+   *   The full path of the destination.
    */
   public function get();
 

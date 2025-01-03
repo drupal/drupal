@@ -100,6 +100,8 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    * Returns the type of stream wrapper.
    *
    * @return int
+   *   The type of stream wrapper. This should be one of the constants in this
+   *   class.
    */
   public static function getType();
 

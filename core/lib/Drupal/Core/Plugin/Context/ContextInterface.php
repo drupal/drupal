@@ -18,12 +18,14 @@ interface ContextInterface extends ComponentContextInterface, CacheableDependenc
    *
    * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getContextDefinition();
 
   /**
    * Gets the context value as typed data object.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The typed data object associated with the context.
    */
   public function getContextData();
 

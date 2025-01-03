@@ -45,6 +45,7 @@ interface SubformStateInterface extends FormStateInterface {
    * Gets the complete form state.
    *
    * @return \Drupal\Core\Form\FormStateInterface
+   *   The form state.
    */
   public function getCompleteFormState();
 

@@ -217,6 +217,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * Helper for creating a list item object.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The new property instance.
    */
   protected function createItem($offset = 0, $value = NULL) {
     return $this->getTypedDataManager()->getPropertyInstance($this, $offset, $value);

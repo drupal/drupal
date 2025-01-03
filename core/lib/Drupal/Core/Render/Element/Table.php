@@ -383,6 +383,7 @@ class Table extends FormElementBase {
    *     $options array.
    *
    * @return array
+   *   Associative array of rendered child elements for a table.
    *
    * @see template_preprocess_table()
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()

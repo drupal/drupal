@@ -30,6 +30,7 @@ interface LayoutInterface extends PluginInspectionInterface, DerivativeInspectio
    *
    * @return \Drupal\Core\Layout\LayoutDefinition
    */
+  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getPluginDefinition();
 
 }

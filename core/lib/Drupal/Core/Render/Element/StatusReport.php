@@ -65,6 +65,8 @@ class StatusReport extends RenderElementBase {
    * Gets the severities.
    *
    * @return array
+   *   An associative array of the requirements severities. The keys are the
+   *   requirement constants defined in install.inc.
    */
   public static function getSeverities() {
     return [

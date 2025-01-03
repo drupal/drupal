@@ -17,6 +17,7 @@ interface LinkRelationTypeInterface {
    * Indicates whether this link relation type is of the 'registered' kind.
    *
    * @return bool
+   *   TRUE if the link relation is registered, FALSE otherwise.
    *
    * @see https://tools.ietf.org/html/rfc5988#section-4.1
    */
@@ -26,6 +27,7 @@ interface LinkRelationTypeInterface {
    * Indicates whether this link relation type is of the 'extension' kind.
    *
    * @return bool
+   *   TRUE if the link relation is an extension type, FALSE otherwise.
    *
    * @see https://tools.ietf.org/html/rfc5988#section-4.2
    */
