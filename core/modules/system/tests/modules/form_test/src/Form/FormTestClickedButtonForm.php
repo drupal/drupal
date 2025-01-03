@@ -88,7 +88,7 @@ class FormTestClickedButtonForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($triggering_element = $form_state->getTriggeringElement()) {
-      $this->messenger()->addStatus(t('The clicked button is %name.', ['%name' => $triggering_element['#name']]));
+      $this->messenger()->addStatus($this->t('The clicked button is %name.', ['%name' => $triggering_element['#name']]));
     }
     else {
       $this->messenger()->addStatus('There is no clicked button.');

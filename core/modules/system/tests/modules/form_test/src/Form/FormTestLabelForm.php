@@ -61,34 +61,34 @@ class FormTestLabelForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['form_checkboxes_test'] = [
       '#type' => 'checkboxes',
-      '#title' => t('Checkboxes test'),
+      '#title' => $this->t('Checkboxes test'),
       '#options' => [
-        'first-checkbox' => t('First checkbox'),
-        'second-checkbox' => t('Second checkbox'),
-        'third-checkbox' => t('Third checkbox'),
-        '0' => t('0'),
+        'first-checkbox' => $this->t('First checkbox'),
+        'second-checkbox' => $this->t('Second checkbox'),
+        'third-checkbox' => $this->t('Third checkbox'),
+        '0' => $this->t('0'),
       ],
     ];
     $form['form_radios_test'] = [
       '#type' => 'radios',
-      '#title' => t('Radios test'),
+      '#title' => $this->t('Radios test'),
       '#options' => [
-        'first-radio' => t('First radio'),
-        'second-radio' => t('Second radio'),
-        'third-radio' => t('Third radio'),
-        '0' => t('0'),
+        'first-radio' => $this->t('First radio'),
+        'second-radio' => $this->t('Second radio'),
+        'third-radio' => $this->t('Third radio'),
+        '0' => $this->t('0'),
       ],
       // Test #field_prefix and #field_suffix placement.
-      '#field_prefix' => '<span id="form-test-radios-field-prefix">' . t('Radios #field_prefix element') . '</span>',
-      '#field_suffix' => '<span id="form-test-radios-field-suffix">' . t('Radios #field_suffix element') . '</span>',
+      '#field_prefix' => '<span id="form-test-radios-field-prefix">' . $this->t('Radios #field_prefix element') . '</span>',
+      '#field_suffix' => '<span id="form-test-radios-field-suffix">' . $this->t('Radios #field_suffix element') . '</span>',
     ];
     $form['form_checkbox_test'] = [
       '#type' => 'checkbox',
-      '#title' => t('Checkbox test'),
+      '#title' => $this->t('Checkbox test'),
     ];
     $form['form_textfield_test_title_and_required'] = [
       '#type' => 'textfield',
-      '#title' => t('Textfield test for required with title'),
+      '#title' => $this->t('Textfield test for required with title'),
       '#required' => TRUE,
     ];
     $form['form_textfield_test_no_title_required'] = [
@@ -100,20 +100,20 @@ class FormTestLabelForm extends FormBase {
     ];
     $form['form_textfield_test_title'] = [
       '#type' => 'textfield',
-      '#title' => t('Textfield test for title only'),
+      '#title' => $this->t('Textfield test for title only'),
       // Not required.
       // Test #prefix and #suffix placement.
-      '#prefix' => '<div id="form-test-textfield-title-prefix">' . t('Textfield #prefix element') . '</div>',
-      '#suffix' => '<div id="form-test-textfield-title-suffix">' . t('Textfield #suffix element') . '</div>',
+      '#prefix' => '<div id="form-test-textfield-title-prefix">' . $this->t('Textfield #prefix element') . '</div>',
+      '#suffix' => '<div id="form-test-textfield-title-suffix">' . $this->t('Textfield #suffix element') . '</div>',
     ];
     $form['form_textfield_test_title_after'] = [
       '#type' => 'textfield',
-      '#title' => t('Textfield test for title after element'),
+      '#title' => $this->t('Textfield test for title after element'),
       '#title_display' => 'after',
     ];
     $form['form_textfield_test_title_invisible'] = [
       '#type' => 'textfield',
-      '#title' => t('Textfield test for invisible title'),
+      '#title' => $this->t('Textfield test for invisible title'),
       '#title_display' => 'invisible',
     ];
     // Textfield test for title set not to display.

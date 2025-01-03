@@ -40,7 +40,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
       '#header' => $header,
       '#options' => $options,
       '#multiple' => FALSE,
-      '#empty' => t('Empty text.'),
+      '#empty' => $this->t('Empty text.'),
       '#ajax' => [
         'callback' => '::tableselectAjaxCallback',
         'wrapper' => 'tableselect-wrapper',
@@ -49,7 +49,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
     ];
 
     return $form;

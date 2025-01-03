@@ -6,11 +6,14 @@ namespace Drupal\settings_tray_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormBase;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * @see \Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationIsClassBlock
  */
 class SettingsTrayFormAnnotationIsClassBlockForm extends PluginFormBase {
+
+  use StringTranslationTrait;
 
   /**
    * The block plugin.
@@ -27,7 +30,7 @@ class SettingsTrayFormAnnotationIsClassBlockForm extends PluginFormBase {
 
     $form['some_setting'] = [
       '#type' => 'select',
-      '#title' => t('Some setting'),
+      '#title' => $this->t('Some setting'),
       '#options' => [
         'a' => 'A',
         'b' => 'B',

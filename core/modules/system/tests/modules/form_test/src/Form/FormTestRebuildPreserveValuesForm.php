@@ -30,17 +30,17 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
     $form = [
       'checkbox_1_default_off' => [
         '#type' => 'checkbox',
-        '#title' => t('This checkbox defaults to unchecked'),
+        '#title' => $this->t('This checkbox defaults to unchecked'),
         '#default_value' => FALSE,
       ],
       'checkbox_1_default_on' => [
         '#type' => 'checkbox',
-        '#title' => t('This checkbox defaults to checked'),
+        '#title' => $this->t('This checkbox defaults to checked'),
         '#default_value' => TRUE,
       ],
       'text_1' => [
         '#type' => 'textfield',
-        '#title' => t('This textfield has a non-empty default value.'),
+        '#title' => $this->t('This textfield has a non-empty default value.'),
         '#default_value' => 'DEFAULT 1',
       ],
     ];
@@ -59,17 +59,17 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
       $form += [
         'checkbox_2_default_off' => [
           '#type' => 'checkbox',
-          '#title' => t('This checkbox defaults to unchecked'),
+          '#title' => $this->t('This checkbox defaults to unchecked'),
           '#default_value' => FALSE,
         ],
         'checkbox_2_default_on' => [
           '#type' => 'checkbox',
-          '#title' => t('This checkbox defaults to checked'),
+          '#title' => $this->t('This checkbox defaults to checked'),
           '#default_value' => TRUE,
         ],
         'text_2' => [
           '#type' => 'textfield',
-          '#title' => t('This textfield has a non-empty default value.'),
+          '#title' => $this->t('This textfield has a non-empty default value.'),
           '#default_value' => 'DEFAULT 2',
         ],
       ];

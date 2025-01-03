@@ -6,11 +6,14 @@ namespace Drupal\views_test_data\Form;
 
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Implements a test form that has a validation error.
  */
 class ViewsTestDataErrorForm implements FormInterface {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -28,7 +31,7 @@ class ViewsTestDataErrorForm implements FormInterface {
     ];
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
     ];
 
     return $form;
@@ -38,7 +41,7 @@ class ViewsTestDataErrorForm implements FormInterface {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setErrorByName('text', t('Form validation error'));
+    $form_state->setErrorByName('text', $this->t('Form validation error'));
   }
 
   /**

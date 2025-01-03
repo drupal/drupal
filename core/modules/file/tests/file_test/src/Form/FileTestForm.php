@@ -8,12 +8,14 @@ use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * File test form class.
  */
 class FileTestForm implements FormInterface {
   use FileTestFormTrait;
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -31,7 +33,7 @@ class FileTestForm implements FormInterface {
 
     $form['file_test_upload'] = [
       '#type' => 'file',
-      '#title' => t('Upload a file'),
+      '#title' => $this->t('Upload a file'),
     ];
 
     return $form;
@@ -83,13 +85,13 @@ class FileTestForm implements FormInterface {
     $file = file_save_upload('file_test_upload', $validators, $destination, 0, static::fileExistsFromName($form_state->getValue('file_test_replace')));
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
-      \Drupal::messenger()->addStatus(t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));
-      \Drupal::messenger()->addStatus(t('File name is @filename.', ['@filename' => $file->getFilename()]));
-      \Drupal::messenger()->addStatus(t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
-      \Drupal::messenger()->addStatus(t('You WIN!'));
+      \Drupal::messenger()->addStatus($this->t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));
+      \Drupal::messenger()->addStatus($this->t('File name is @filename.', ['@filename' => $file->getFilename()]));
+      \Drupal::messenger()->addStatus($this->t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
+      \Drupal::messenger()->addStatus($this->t('You WIN!'));
     }
     elseif ($file === FALSE) {
-      \Drupal::messenger()->addError(t('Epic upload FAIL!'));
+      \Drupal::messenger()->addError($this->t('Epic upload FAIL!'));
     }
   }
 

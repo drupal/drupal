@@ -28,30 +28,30 @@ class FormTestLanguageSelectForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['languages_all'] = [
-      '#title' => t('Languages: All'),
+      '#title' => $this->t('Languages: All'),
       '#type' => 'language_select',
       '#languages' => LanguageInterface::STATE_ALL,
       '#default_value' => 'xx',
     ];
     $form['languages_configurable'] = [
-      '#title' => t('Languages: Configurable'),
+      '#title' => $this->t('Languages: Configurable'),
       '#type' => 'language_select',
       '#languages' => LanguageInterface::STATE_CONFIGURABLE,
       '#default_value' => 'en',
     ];
     $form['languages_locked'] = [
-      '#title' => t('Languages: Locked'),
+      '#title' => $this->t('Languages: Locked'),
       '#type' => 'language_select',
       '#languages' => LanguageInterface::STATE_LOCKED,
     ];
     $form['languages_config_and_locked'] = [
-      '#title' => t('Languages: Configurable and locked'),
+      '#title' => $this->t('Languages: Configurable and locked'),
       '#type' => 'language_select',
       '#languages' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED,
       '#default_value' => 'dummy_value',
     ];
     $form['language_custom_options'] = [
-      '#title' => t('Languages: Custom'),
+      '#title' => $this->t('Languages: Custom'),
       '#type' => 'language_select',
       '#languages' => LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_LOCKED,
       '#options' => ['opt1' => 'First option', 'opt2' => 'Second option', 'opt3' => 'Third option'],

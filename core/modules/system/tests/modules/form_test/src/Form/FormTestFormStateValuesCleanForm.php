@@ -29,11 +29,11 @@ class FormTestFormStateValuesCleanForm extends FormBase {
     // Build an example form containing multiple submit and button elements; not
     // only on the top-level.
     $form = ['#tree' => TRUE];
-    $form['foo'] = ['#type' => 'submit', '#value' => t('Submit')];
-    $form['bar'] = ['#type' => 'submit', '#value' => t('Submit')];
+    $form['foo'] = ['#type' => 'submit', '#value' => $this->t('Submit')];
+    $form['bar'] = ['#type' => 'submit', '#value' => $this->t('Submit')];
     $form['beer'] = ['#type' => 'value', '#value' => 1000];
-    $form['baz']['foo'] = ['#type' => 'button', '#value' => t('Submit')];
-    $form['baz']['baz'] = ['#type' => 'submit', '#value' => t('Submit')];
+    $form['baz']['foo'] = ['#type' => 'button', '#value' => $this->t('Submit')];
+    $form['baz']['baz'] = ['#type' => 'submit', '#value' => $this->t('Submit')];
     $form['baz']['beer'] = ['#type' => 'value', '#value' => 2000];
 
     // Add an arbitrary element and manually set it to be cleaned.

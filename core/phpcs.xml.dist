@@ -184,6 +184,7 @@
   <rule ref="DrupalPractice.Objects.GlobalFunction">
     <include-pattern>*/Plugin/*</include-pattern>
     <include-pattern>*/ListBuilder/*</include-pattern>
+    <include-pattern>*/tests/*/Form/*</include-pattern>
   </rule>
 
   <!-- Generic sniffs -->

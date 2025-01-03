@@ -29,7 +29,7 @@ class IncorrectConfigTargetForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['missing_key'] = [
       '#type' => 'textfield',
-      '#title' => t('Missing key'),
+      '#title' => $this->t('Missing key'),
       '#config_target' => 'form_test.object:does_not_exist',
     ];
     return parent::buildForm($form, $form_state);

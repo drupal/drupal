@@ -27,7 +27,7 @@ class FormTestEmptySelectForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['empty_select'] = [
       '#type' => 'select',
-      '#title' => t('Empty Select'),
+      '#title' => $this->t('Empty Select'),
       '#multiple' => FALSE,
       '#options' => NULL,
     ];
