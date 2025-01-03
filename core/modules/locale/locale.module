@@ -11,6 +11,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Form\FormStateInterface;
@@ -141,6 +142,7 @@ const LOCALE_TRANSLATION_CURRENT = 'current';
  *   Array of installed languages keyed by language name. English is omitted
  *   unless it is marked as translatable.
  */
+#[StopProceduralHookScan]
 function locale_translatable_language_list() {
   $languages = \Drupal::languageManager()->getLanguages();
   if (!locale_is_translatable('en')) {
