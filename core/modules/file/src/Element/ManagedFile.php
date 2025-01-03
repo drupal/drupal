@@ -326,7 +326,7 @@ class ManagedFile extends FormElementBase {
     }
 
     if (!empty($element['#accept'])) {
-      $element['upload']['#attributes'] = ['accept' => $element['#accept']];
+      $element['upload']['#attributes']['accept'] = $element['#accept'];
     }
 
     // Indicate that $element['#title'] should be used as the HTML label for the

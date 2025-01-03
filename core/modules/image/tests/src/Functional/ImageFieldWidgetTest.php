@@ -27,6 +27,7 @@ class ImageFieldWidgetTest extends ImageFieldTestBase {
     $min_resolution = 50;
     $max_resolution = 100;
     $field_settings = [
+      'description' => 'test description',
       'max_resolution' => $max_resolution . 'x' . $max_resolution,
       'min_resolution' => $min_resolution . 'x' . $min_resolution,
       'alt_field' => 0,
@@ -36,7 +37,7 @@ class ImageFieldWidgetTest extends ImageFieldTestBase {
     // Verify that the image field widget is found on add/node page.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "field--widget-image-image")]');
     // Verify that the image field widget limits accepted files.
-    $this->assertSession()->elementExists('xpath', '//input[contains(@accept, "image/*")]');
+    $this->assertSession()->elementExists('xpath', '//input[@aria-describedby][contains(@accept, "image/*")]');
     $this->assertSession()->pageTextNotContains('Image test on [site:name]');
 
     // Check for allowed image file extensions - default.
