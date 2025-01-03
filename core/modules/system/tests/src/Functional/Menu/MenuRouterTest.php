@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Core\Url;
+use Drupal\menu_test\MenuTestHelper;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -121,7 +122,7 @@ class MenuRouterTest extends BrowserTestBase {
 
     // Change the menu_name parameter in menu_test.module, then force a menu
     // rebuild.
-    menu_test_menu_name('changed');
+    MenuTestHelper::menuName('changed');
     $menu_link_manager->rebuild();
 
     $menu_links = $menu_link_manager->loadLinksByRoute('menu_test.menu_name_test');

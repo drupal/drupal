@@ -7,6 +7,7 @@ namespace Drupal\menu_test\Hook;
 use Drupal\Core\Url;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\menu_test\MenuTestHelper;
 
 /**
  * Hook implementations for menu_test.
@@ -21,7 +22,7 @@ class MenuTestHooks {
     // Many of the machine names here are slightly different from the route name.
     // Since the machine name is arbitrary, this helps ensure that core does not
     // add mistaken assumptions about the correlation.
-    $links['menu_test.menu_name_test']['menu_name'] = menu_test_menu_name();
+    $links['menu_test.menu_name_test']['menu_name'] = MenuTestHelper::menuName();
     $links['menu_test.context']['title'] = \Drupal::config('menu_test.menu_item')->get('title');
     // Adds a custom menu link.
     $links['menu_test.custom'] = [
