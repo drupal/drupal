@@ -25778,12 +25778,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/media.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function media_theme_suggestions_media\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/media.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media\\\\Controller\\\\MediaFilterController\\:\\:checkCsrf\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

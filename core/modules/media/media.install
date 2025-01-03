@@ -8,47 +8,12 @@
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\Entity\MediaType;
 use Drupal\user\RoleInterface;
-
-/**
- * Implements hook_install().
- */
-function media_install(): void {
-  $source = \Drupal::service('extension.list.module')->getPath('media') . '/images/icons';
-  $destination = \Drupal::config('media.settings')->get('icon_base_uri');
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
-  $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
-
-  $files = $file_system->scanDirectory($source, '/.*\.(svg|png|jpg|jpeg|gif)$/');
-  foreach ($files as $file) {
-    // When reinstalling the media module we don't want to copy the icons when
-    // they already exist. The icons could be replaced (by a contrib module or
-    // manually), so we don't want to replace the existing files. Removing the
-    // files when we uninstall could also be a problem if the files are
-    // referenced somewhere else. Since showing an error that it was not
-    // possible to copy the files is also confusing, we silently do nothing.
-    if (!file_exists($destination . DIRECTORY_SEPARATOR . $file->filename)) {
-      try {
-        $file_system->copy($file->uri, $destination, FileExists::Error);
-      }
-      catch (FileException) {
-        // Ignore and continue.
-      }
-
-    }
-  }
-
-  // Grant the "view media" permission to all users by default.
-  if (\Drupal::moduleHandler()->moduleExists('user')) {
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['view media']);
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['view media']);
-  }
-}
 
 /**
  * Implements hook_requirements().
@@ -142,6 +107,43 @@ function media_requirements($phase) {
   }
 
   return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+#[StopProceduralHookScan]
+function media_install(): void {
+  $source = \Drupal::service('extension.list.module')->getPath('media') . '/images/icons';
+  $destination = \Drupal::config('media.settings')->get('icon_base_uri');
+  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+  $file_system = \Drupal::service('file_system');
+  $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
+  $files = $file_system->scanDirectory($source, '/.*\.(svg|png|jpg|jpeg|gif)$/');
+  foreach ($files as $file) {
+    // When reinstalling the media module we don't want to copy the icons when
+    // they already exist. The icons could be replaced (by a contrib module or
+    // manually), so we don't want to replace the existing files. Removing the
+    // files when we uninstall could also be a problem if the files are
+    // referenced somewhere else. Since showing an error that it was not
+    // possible to copy the files is also confusing, we silently do nothing.
+    if (!file_exists($destination . DIRECTORY_SEPARATOR . $file->filename)) {
+      try {
+        $file_system->copy($file->uri, $destination, FileExists::Error);
+      }
+      catch (FileException) {
+        // Ignore and continue.
+      }
+
+    }
+  }
+
+  // Grant the "view media" permission to all users by default.
+  if (\Drupal::moduleHandler()->moduleExists('user')) {
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['view media']);
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['view media']);
+  }
 }
 
 /**
