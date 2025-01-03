@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 
+// cspell:ignore drupalelementstyle
+
 /**
  * Implements hook_ckeditor4to5upgrade_plugin_info_alter().
  */

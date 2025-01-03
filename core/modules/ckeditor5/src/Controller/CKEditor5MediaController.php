@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+// cspell:ignore mediaimagetextalternative mediaimagetextalternativeui
+
 /**
  * Provides an API for checking if a media entity has image field.
  *

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
-// cspell:ignore sourceediting
+// cspell:ignore sourceediting xmlhttprequest
 
 /**
  * Tests for CKEditor 5 in the admin UI.

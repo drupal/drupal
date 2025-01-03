@@ -15,7 +15,7 @@ use PHPUnit\Framework\Constraint\IsNull;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use WebDriver\Exception;
 
-// cspell:ignore interactable
+// cspell:ignore interactable xmlhttprequest
 
 /**
  * Defines a class with methods for asserting presence of elements during tests.

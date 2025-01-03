@@ -17,7 +17,8 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
-// cspell:ignore alternatif hurlant layercake tatou texte zartan
+// cspell:ignore alternatif drupalelementstyle hurlant layercake tatou texte
+// cspell:ignore zartan
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media

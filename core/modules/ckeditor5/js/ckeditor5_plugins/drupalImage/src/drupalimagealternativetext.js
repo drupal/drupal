@@ -1,5 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore imagealternativetext imagetextalternativeediting drupalimagealternativetextediting drupalimagealternativetextui */
+/* cspell:ignore imagealternativetext imagetextalternative */
+/* cspell:ignore imagetextalternativeediting drupalimagealternativetextediting */
+/* cspell:ignore drupalimagealternativetextui */
 
 /**
  * @module drupalImage/imagealternativetext

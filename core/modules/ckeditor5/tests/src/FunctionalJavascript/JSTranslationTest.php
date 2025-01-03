@@ -7,6 +7,8 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 
+// cspell:ignore drupalmediatoolbar
+
 /**
  * Tests for CKEditor 5 plugins using Drupal's translation system.
  *
