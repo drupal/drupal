@@ -18,7 +18,7 @@ use Drupal\Tests\rest\Functional\ResourceTestBase;
  *
  * @internal
  */
-class RestJsonApiUnsupported extends ResourceTestBase {
+class RestJsonApiUnsupportedTest extends ResourceTestBase {
 
   use AnonResourceTestTrait;
 
@@ -50,7 +50,7 @@ class RestJsonApiUnsupported extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access content']);

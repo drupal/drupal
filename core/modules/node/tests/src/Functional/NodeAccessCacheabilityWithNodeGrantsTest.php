@@ -14,7 +14,7 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
  *
  * @group node
  */
-class NodeAccessCacheabilityWithNodeGrants extends BrowserTestBase {
+class NodeAccessCacheabilityWithNodeGrantsTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;
 

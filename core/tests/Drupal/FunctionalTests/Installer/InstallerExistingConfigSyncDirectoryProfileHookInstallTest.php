@@ -9,7 +9,7 @@ namespace Drupal\FunctionalTests\Installer;
  *
  * @group Installer
  */
-class InstallerExistingConfigSyncDirectoryProfileHookInstall extends InstallerConfigDirectoryTestBase {
+class InstallerExistingConfigSyncDirectoryProfileHookInstallTest extends InstallerConfigDirectoryTestBase {
 
   /**
    * {@inheritdoc}
@@ -29,7 +29,7 @@ class InstallerExistingConfigSyncDirectoryProfileHookInstall extends InstallerCo
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller() {
+  protected function visitInstaller(): void {
     // Create an .install file with a hook_install() implementation.
     $path = $this->siteDirectory . '/profiles/' . $this->profile;
     $contents = <<<EOF
@@ -45,7 +45,7 @@ EOF;
   /**
    * Installer step: Select installation profile.
    */
-  protected function setUpProfile() {
+  protected function setUpProfile(): void {
     // This is the form we are testing so wait until the test method to do
     // assertions.
   }
@@ -53,21 +53,21 @@ EOF;
   /**
    * Installer step: Requirements problem.
    */
-  protected function setUpRequirementsProblem() {
+  protected function setUpRequirementsProblem(): void {
     // This form will never be reached.
   }
 
   /**
    * Installer step: Configure settings.
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     // This form will never be reached.
   }
 
   /**
    * Final installer step: Configure site.
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // This form will never be reached.
   }
 

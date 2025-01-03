@@ -13,7 +13,7 @@ use Drupal\workflows\WorkflowInterface;
  * @group migrate_drupal_ui
  * @group #slow
  */
-class Upgrade7TestWithContentModeration extends Upgrade7Test {
+class Upgrade7WithContentModerationTest extends Upgrade7Test {
 
   /**
    * {@inheritdoc}

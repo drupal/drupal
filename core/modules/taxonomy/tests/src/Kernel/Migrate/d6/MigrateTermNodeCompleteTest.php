@@ -13,7 +13,7 @@ use Drupal\node\Entity\Node;
  *
  * @group migrate_drupal_6
  */
-class MigrateTermNodeComplete extends MigrateDrupal6TestBase {
+class MigrateTermNodeCompleteTest extends MigrateDrupal6TestBase {
 
   /**
    * {@inheritdoc}

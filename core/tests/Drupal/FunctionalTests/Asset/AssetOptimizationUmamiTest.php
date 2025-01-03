@@ -14,7 +14,7 @@ namespace Drupal\FunctionalTests\Asset;
  * @group asset
  * @group #slow
  */
-class AssetOptimizationTestUmami extends AssetOptimizationTest {
+class AssetOptimizationUmamiTest extends AssetOptimizationTest {
 
   /**
    * {@inheritdoc}

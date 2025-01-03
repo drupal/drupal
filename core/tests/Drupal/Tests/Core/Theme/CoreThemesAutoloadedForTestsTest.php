@@ -12,7 +12,7 @@ use Drupal\claro\ClaroPreRender;
  *
  * @group Theme
  */
-class CoreThemesAutoloadedForTests extends UnitTestCase {
+class CoreThemesAutoloadedForTestsTest extends UnitTestCase {
 
   /**
    * Confirms that core/themes is autoloaded for tests.

@@ -11,7 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group Installer
  */
-class TestingProfileHooks extends BrowserTestBase {
+class TestingProfileHooksTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}

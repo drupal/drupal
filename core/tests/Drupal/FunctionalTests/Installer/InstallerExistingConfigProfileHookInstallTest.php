@@ -9,14 +9,14 @@ namespace Drupal\FunctionalTests\Installer;
  *
  * @group Installer
  */
-class InstallerExistingConfigProfileHookInstall extends InstallerConfigDirectoryTestBase {
+class InstallerExistingConfigProfileHookInstallTest extends InstallerConfigDirectoryTestBase {
 
   protected $profile = 'config_profile_with_hook_install';
 
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller() {
+  protected function visitInstaller(): void {
     // Create an .install file with a hook_install() implementation.
     $path = $this->siteDirectory . '/profiles/' . $this->profile;
     $contents = <<<EOF
@@ -32,14 +32,14 @@ EOF;
   /**
    * Installer step: Configure settings.
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     // There are errors therefore there is nothing to do here.
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpRequirementsProblem() {
+  protected function setUpRequirementsProblem(): void {
     // The parent method asserts that there are no requirements errors, but
     // this test expects a requirements error in the test method below.
     // Therefore, we override this method to suppress the parent's assertions.
@@ -48,7 +48,7 @@ EOF;
   /**
    * Final installer step: Configure site.
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // There are errors therefore there is nothing to do here.
   }
 

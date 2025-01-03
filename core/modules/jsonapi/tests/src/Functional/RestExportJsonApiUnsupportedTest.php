@@ -13,7 +13,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
  *
  * @internal
  */
-class RestExportJsonApiUnsupported extends ViewTestBase {
+class RestExportJsonApiUnsupportedTest extends ViewTestBase {
 
   /**
    * {@inheritdoc}
