@@ -17,7 +17,7 @@ use Drupal\Core\Url;
  *
  * Default template: admin-block-content.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - content: List of administrative menu items. Each menu item contains:
  *     - url: Path to the admin section.
@@ -45,7 +45,7 @@ function template_preprocess_admin_block_content(&$variables): void {
  *
  * Default template: admin-page.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - blocks: An array of blocks to display. Each array should include a
  *     'title', a 'description', a formatted 'content' and a 'position' which
@@ -77,7 +77,7 @@ function template_preprocess_admin_page(&$variables): void {
  *
  * Default template: system-admin-index.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - menu_items: An array of modules to be displayed.
  */
@@ -115,7 +115,7 @@ function template_preprocess_system_admin_index(&$variables): void {
  *
  * Default template: system-modules-details.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form. The main form element
  *     represents a package, and child elements of the form are individual
@@ -205,7 +205,7 @@ function template_preprocess_system_modules_details(&$variables): void {
  *
  * Default template: system-modules-uninstall.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - form: A render element representing the form. Child elements of the form
  *     are individual modules. Each module is an associative array containing
@@ -252,7 +252,7 @@ function template_preprocess_system_modules_uninstall(&$variables): void {
  *
  * Default template: system-themes-page.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - theme_groups: An associative array containing groups of themes.
  *   - theme_group_titles: An associative array containing titles of themes.

@@ -145,15 +145,15 @@ function _update_fix_missing_schema() {
  * and set the #finished property to the percentage completed that it is, as a
  * fraction of 1.
  *
- * @param $module
+ * @param string $module
  *   The module whose update will be run.
- * @param $number
+ * @param string $number
  *   The update number to run.
- * @param $dependency_map
+ * @param array $dependency_map
  *   An array whose keys are the names of all update functions that will be
  *   performed during this batch process, and whose values are arrays of other
  *   update functions that each one depends on.
- * @param $context
+ * @param array $context
  *   The batch context array.
  *
  * @see update_resolve_dependencies()
@@ -398,7 +398,7 @@ function update_get_update_list() {
  * dependency chain for each update, as provided by the depth-first search
  * algorithm in Drupal\Component\Graph\Graph::searchAndSort().
  *
- * @param $starting_updates
+ * @param array $starting_updates
  *   An array whose keys contain the names of modules with updates to be run
  *   and whose values contain the number of the first requested update for that
  *   module.
@@ -465,7 +465,7 @@ function update_resolve_dependencies($starting_updates) {
 /**
  * Returns an organized list of update functions for a set of modules.
  *
- * @param $starting_updates
+ * @param array $starting_updates
  *   An array whose keys contain the names of modules and whose values contain
  *   the number of the first requested update for that module.
  *
@@ -523,7 +523,7 @@ function update_get_update_function_list($starting_updates) {
  * modules which implement hook_update_dependencies(), and builds them into the
  * graph as well.
  *
- * @param $update_functions
+ * @param array $update_functions
  *   An organized array of update functions, in the format returned by
  *   update_get_update_function_list().
  *
@@ -586,11 +586,11 @@ function update_build_dependency_graph($update_functions) {
 /**
  * Determines if a module update is missing or unavailable.
  *
- * @param $module
+ * @param string $module
  *   The name of the module.
- * @param $number
+ * @param int $number
  *   The number of the update within that module.
- * @param $update_functions
+ * @param array $update_functions
  *   An organized array of update functions, in the format returned by
  *   update_get_update_function_list(). This should represent all module
  *   updates that are requested to run at the time this function is called.
@@ -606,9 +606,9 @@ function update_is_missing($module, $number, $update_functions) {
 /**
  * Determines if a module update has already been performed.
  *
- * @param $module
+ * @param string $module
  *   The name of the module.
- * @param $number
+ * @param int $number
  *   The number of the update within that module.
  *
  * @return bool

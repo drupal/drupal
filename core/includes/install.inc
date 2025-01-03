@@ -142,7 +142,7 @@ function drupal_install_profile_distribution_version() {
 /**
  * Verifies that all dependencies are met for a given installation profile.
  *
- * @param $install_state
+ * @param array $install_state
  *   An array of information about the current installation state.
  *
  * @return array
@@ -280,11 +280,11 @@ function drupal_install_system($install_state) {
 /**
  * Verifies the state of the specified file.
  *
- * @param $file
+ * @param string $file
  *   The file to check for.
- * @param $mask
+ * @param int $mask
  *   An optional bitmask created from various FILE_* constants.
- * @param $type
+ * @param string|null $type
  *   The type of file. Can be file (default), dir, or link.
  * @param bool $auto_fix
  *   (optional) Determines whether to attempt fixing the permissions according
@@ -372,11 +372,11 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $auto_f
 /**
  * Creates a directory with the specified permissions.
  *
- * @param $file
+ * @param string $file
  *   The name of the directory to create;
- * @param $mask
+ * @param int $mask
  *   The permissions of the directory to create.
- * @param $message
+ * @param bool $message
  *   (optional) Whether to output messages. Defaults to TRUE.
  *
  * @return bool
@@ -423,11 +423,11 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  * using bitwise operations. This lets us remove, for example, 0222 from
  * 0700 and get the correct value of 0500.
  *
- * @param $file
+ * @param string $file
  *   The name of the file with permissions to fix.
- * @param $mask
+ * @param int $mask
  *   The desired permissions for the file.
- * @param $message
+ * @param bool $message
  *   (optional) Whether to output messages. Defaults to TRUE.
  *
  * @return bool
@@ -502,7 +502,7 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  *
  * This issues an on-site HTTP redirect. Messages (and errors) are erased.
  *
- * @param $path
+ * @param string $path
  *   An installer path.
  */
 function install_goto($path) {
@@ -530,7 +530,7 @@ function install_goto($path) {
  * that need to be bypassed), using this function to generate the URL for links
  * to the next steps of the script ensures that the links will work correctly.
  *
- * @param $query
+ * @param array $query
  *   (optional) An array of query parameters to merge in to the existing ones.
  *
  * @return string
@@ -558,7 +558,7 @@ function drupal_current_script_url($query = []) {
  * update.php) and returns a URL that can be used to attempt to proceed to the
  * next step of the script.
  *
- * @param $severity
+ * @param int $severity
  *   The severity of the requirements problem, as returned by
  *   drupal_requirements_severity().
  *
@@ -633,7 +633,7 @@ function drupal_check_profile($profile) {
 /**
  * Extracts the highest severity from the requirements array.
  *
- * @param $requirements
+ * @param array $requirements
  *   An array of requirements, in the same format as is returned by
  *   hook_requirements().
  *
@@ -653,7 +653,7 @@ function drupal_requirements_severity(&$requirements) {
 /**
  * Checks a module's requirements.
  *
- * @param $module
+ * @param string $module
  *   Machine name of module to check.
  *
  * @return bool
@@ -729,9 +729,9 @@ function drupal_check_module($module) {
  *      - dblog
  * @endcode
  *
- * @param $profile
+ * @param string $profile
  *   Name of profile.
- * @param $langcode
+ * @param string $langcode
  *   Language code (if any).
  *
  * @return array

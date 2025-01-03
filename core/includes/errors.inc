@@ -45,13 +45,13 @@ function drupal_error_levels() {
 /**
  * Provides custom PHP error handling.
  *
- * @param $error_level
+ * @param int $error_level
  *   The level of the error raised.
- * @param $message
+ * @param string $message
  *   The error message.
- * @param $filename
+ * @param string $filename
  *   The filename that the error was raised in.
- * @param $line
+ * @param int $line
  *   The line number the error was raised at.
  */
 function _drupal_error_handler_real($error_level, $message, $filename, $line) {
@@ -109,7 +109,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line) {
  * all errors should be displayed. For ERROR_REPORTING_DISPLAY_SOME, $error
  * will be examined to determine if it should be displayed.
  *
- * @param $error
+ * @param array $error
  *   Optional error to examine for ERROR_REPORTING_DISPLAY_SOME.
  *
  * @return bool
@@ -132,7 +132,7 @@ function error_displayable($error = NULL) {
 /**
  * Logs a PHP error or exception and displays an error page in fatal cases.
  *
- * @param $error
+ * @param array $error
  *   An array with the following keys: %type, @message, %function, %file, %line,
  *   @backtrace_string, severity_level, backtrace, and exception. All the
  *   parameters are plain-text, with the exception of @message, which needs to
@@ -342,15 +342,15 @@ function _drupal_get_error_level() {
 /**
  * Adds error information to headers so that tests can access it.
  *
- * @param $message
+ * @param string $message
  *   The error message.
- * @param $type
+ * @param string $type
  *   The type of error.
- * @param $function
+ * @param string $function
  *   The function that emitted the error.
- * @param $file
+ * @param string $file
  *   The file that emitted the error.
- * @param $line
+ * @param int $line
  *   The line number in file that emitted the error.
  */
 function _drupal_error_header($message, $type, $function, $file, $line) {

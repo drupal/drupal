@@ -95,13 +95,13 @@ function t($string, array $args = [], array $options = []) {
 /**
  * Provides custom PHP error handling.
  *
- * @param $error_level
+ * @param int $error_level
  *   The level of the error raised.
- * @param $message
+ * @param string $message
  *   The error message.
- * @param $filename
+ * @param string $filename
  *   (optional) The filename that the error was raised in.
- * @param $line
+ * @param int $line
  *   (optional) The line number the error was raised at.
  */
 function _drupal_error_handler($error_level, $message, $filename = NULL, $line = NULL) {
@@ -367,14 +367,14 @@ function drupal_maintenance_theme() {
  * }
  * @endcode
  *
- * @param $name
+ * @param string|null $name
  *   Globally unique name for the variable. For a function with only one static,
  *   variable, the function name (e.g. via the PHP magic __FUNCTION__ constant)
  *   is recommended. For a function with multiple static variables add a
  *   distinguishing suffix to the function name for each one.
- * @param $default_value
+ * @param mixed|null $default_value
  *   Optional default value.
- * @param $reset
+ * @param bool $reset
  *   TRUE to reset one or all variables(s). This parameter is only used
  *   internally and should not be passed in; use drupal_static_reset() instead.
  *   (This function's return value should not be used when TRUE is passed in.)
@@ -425,7 +425,7 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
 /**
  * Resets one or all centrally stored static variable(s).
  *
- * @param $name
+ * @param string $name
  *   Name of the static variable to reset. Omit to reset all variables.
  *   Resetting all variables should only be used, for example, for running
  *   unit tests with a clean environment.
@@ -442,7 +442,7 @@ function drupal_static_reset($name = NULL) {
  *
  * @param callable $callback
  *   The shutdown function to register.
- * @param ...$args
+ * @param mixed ...$args
  *   Additional arguments to pass to the shutdown function.
  *
  * @return array

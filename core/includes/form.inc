@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * the #options property to an associative array in which the keys are group
  * labels, and the values are associative arrays in the normal #options format.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #options, #description, #extra,
@@ -153,9 +153,9 @@ function form_select_options($element, $choices = NULL) {
  * As usual with functions that can return [] or FALSE, do not
  * forget to use === and !== if needed.
  *
- * @param $element
+ * @param array $element
  *   The select element to search.
- * @param $key
+ * @param string $key
  *   The key to look for.
  *
  * @return array|bool
@@ -355,7 +355,7 @@ function template_preprocess_input(&$variables): void {
  *
  * Default template: form.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #action, #method, #attributes, #children
@@ -694,7 +694,7 @@ function template_preprocess_form_element_label(&$variables): void {
  * 'finished' callback. Batch sets are processed sequentially, with the progress
  * bar starting afresh for each new set.
  *
- * @param $batch_definition
+ * @param array $batch_definition
  *   An associative array defining the batch, with the following elements (all
  *   are optional except as noted):
  *   - operations: (required) Array of operations to be performed, where each
@@ -799,9 +799,9 @@ function batch_set($batch_definition) {
  * inserted a new set, additional sets will be inserted after the last inserted
  * set.
  *
- * @param &$batch
+ * @param array &$batch
  *   The batch array.
- * @param $batch_set
+ * @param array $batch_set
  *   The batch set.
  */
 function _batch_append_set(&$batch, $batch_set) {
@@ -871,7 +871,7 @@ function _batch_append_set(&$batch, $batch_set) {
  * @param \Drupal\Core\Url|null $url
  *   (optional) URL of the batch processing page. Should only be used for
  *   separate scripts like update.php.
- * @param $redirect_callback
+ * @param string|null $redirect_callback
  *   (optional) Specify a function to be called to redirect to the progressive
  *   processing page.
  *
@@ -1001,9 +1001,9 @@ function &batch_get() {
  * be used. The name and class of the queue are added by reference to the
  * batch set.
  *
- * @param $batch
+ * @param array $batch
  *   The batch array.
- * @param $set_id
+ * @param string $set_id
  *   The id of the set to process.
  */
 function _batch_populate_queue(&$batch, $set_id) {
@@ -1030,7 +1030,7 @@ function _batch_populate_queue(&$batch, $set_id) {
 /**
  * Returns a queue object for a batch set.
  *
- * @param $batch_set
+ * @param string[][] $batch_set
  *   The batch set.
  *
  * @return \Drupal\Core\Queue\QueueInterface|null

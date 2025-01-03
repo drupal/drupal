@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Rebuilds all caches even when Drupal itself does not work.
  *
- * @param $class_loader
+ * @param \Composer\Autoload\ClassLoader $class_loader
  *   The class loader. Normally Composer's ClassLoader, as included by the
  *   front controller, but may also be decorated.
  * @param \Symfony\Component\HttpFoundation\Request $request
