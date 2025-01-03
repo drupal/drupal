@@ -64,6 +64,9 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
    */
   public $order;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -413,10 +416,16 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function evenEmpty() {
     return parent::evenEmpty() || !empty($this->options['empty_table']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function wizardSubmit(&$form, FormStateInterface $form_state, WizardInterface $wizard, &$display_options, $display_type) {
     // If any of the displays use the table style, make sure that the fields
     // always have a labels by unsetting the override.

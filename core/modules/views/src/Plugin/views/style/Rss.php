@@ -37,6 +37,9 @@ class Rss extends StylePluginBase {
    */
   protected $usesRowPlugin = TRUE;
 
+  /**
+   * Attaches the RSS icon and feed link to the view.
+   */
   public function attachTo(array &$build, $display_id, Url $feed_url, $title) {
     $url_options = [];
     $input = $this->view->getExposedInput();
@@ -63,6 +66,9 @@ class Rss extends StylePluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -71,6 +77,9 @@ class Rss extends StylePluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
@@ -108,6 +117,9 @@ class Rss extends StylePluginBase {
     return $description;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function render() {
     $rows = [];
 

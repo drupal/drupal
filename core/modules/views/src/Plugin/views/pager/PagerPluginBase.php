@@ -252,20 +252,38 @@ abstract class PagerPluginBase extends PluginBase {
       && $this->total_items > (intval($this->current_page) + 1) * $this->getItemsPerPage();
   }
 
+  /**
+   * Allows the exposed form to be altered.
+   */
   public function exposedFormAlter(&$form, FormStateInterface $form_state) {}
 
+  /**
+   * Allows the exposed form to be validated.
+   */
   public function exposedFormValidate(&$form, FormStateInterface $form_state) {}
 
+  /**
+   * Handles submission of the exposed form.
+   */
   public function exposedFormSubmit(&$form, FormStateInterface $form_state, &$exclude) {}
 
+  /**
+   * Indicates whether this pager uses exposed filters.
+   */
   public function usesExposed() {
     return FALSE;
   }
 
+  /**
+   * Returns whether the items per page is exposed.
+   */
   protected function itemsPerPageExposed() {
     return FALSE;
   }
 
+  /**
+   * Returns whether the offset is exposed.
+   */
   protected function isOffsetExposed() {
     return FALSE;
   }

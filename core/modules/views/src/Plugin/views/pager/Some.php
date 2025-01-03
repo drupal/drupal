@@ -19,6 +19,9 @@ use Drupal\views\Attribute\ViewsPager;
 )]
 class Some extends PagerPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
       return $this->formatPlural($this->options['items_per_page'], '@count item, skip @skip', '@count items, skip @skip', ['@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']]);
@@ -26,6 +29,9 @@ class Some extends PagerPluginBase {
     return $this->formatPlural($this->options['items_per_page'], '@count item', '@count items', ['@count' => $this->options['items_per_page']]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['items_per_page'] = ['default' => 10];
@@ -57,14 +63,23 @@ class Some extends PagerPluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function usePager() {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function useCountQuery() {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     $this->view->query->setLimit($this->options['items_per_page']);
     $this->view->query->setOffset($this->options['offset']);

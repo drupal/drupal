@@ -62,6 +62,9 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['items_per_page'] = ['default' => 10];
@@ -232,6 +235,9 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     // Only accept integer values.
     $error = FALSE;
@@ -265,6 +271,9 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     if ($this->itemsPerPageExposed()) {
       $query = $this->view->getRequest()->query;
@@ -313,6 +322,9 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     $this->current_page = max(0, $this->pagerParameters->findPage($this->options['id']));
   }
 
+  /**
+   * Gets the total number of pages.
+   */
   public function getPagerTotal() {
     if ($items_per_page = intval($this->getItemsPerPage())) {
       return ceil($this->total_items / $items_per_page);
@@ -347,18 +359,30 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function usesExposed() {
     return $this->itemsPerPageExposed() || $this->isOffsetExposed();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function itemsPerPageExposed() {
     return !empty($this->options['expose']['items_per_page']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function isOffsetExposed() {
     return !empty($this->options['expose']['offset']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function exposedFormAlter(&$form, FormStateInterface $form_state) {
     if ($this->itemsPerPageExposed()) {
       $options = explode(',', $this->options['expose']['items_per_page_options']);
@@ -390,6 +414,9 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function exposedFormValidate(&$form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('offset') && trim($form_state->getValue('offset'))) {
       if (!is_numeric($form_state->getValue('offset')) || $form_state->getValue('offset') < 0) {

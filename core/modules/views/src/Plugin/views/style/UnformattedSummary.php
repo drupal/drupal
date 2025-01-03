@@ -20,6 +20,9 @@ use Drupal\views\Attribute\ViewsStyle;
 )]
 class UnformattedSummary extends DefaultSummary {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['inline'] = ['default' => FALSE];
@@ -27,6 +30,9 @@ class UnformattedSummary extends DefaultSummary {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
     $form['inline'] = [

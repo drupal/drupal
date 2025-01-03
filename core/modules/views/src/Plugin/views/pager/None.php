@@ -31,6 +31,9 @@ class None extends PagerPluginBase {
     $this->setItemsPerPage(0);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
       return $this->t('All items, skip @skip', ['@skip' => $this->options['offset']]);
@@ -38,6 +41,9 @@ class None extends PagerPluginBase {
     return $this->t('All items');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['offset'] = ['default' => 0];
@@ -59,26 +65,44 @@ class None extends PagerPluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function usePager() {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function useCountQuery() {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getItemsPerPage() {
     return 0;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function executeCountQuery(&$count_query) {
     // If we are displaying all items, never count. But we can update the count in post_execute.
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function postExecute(&$result) {
     $this->total_items = count($result);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query() {
     // The only query modifications we might do are offsets.
     if (!empty($this->options['offset'])) {
