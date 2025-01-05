@@ -671,7 +671,6 @@ trait FunctionalTestSetupTrait {
     $this->publicFilesDirectory = $this->siteDirectory . '/files';
     $this->privateFilesDirectory = $this->siteDirectory . '/private';
     $this->tempFilesDirectory = $this->siteDirectory . '/temp';
-    $this->translationFilesDirectory = $this->siteDirectory . '/translations';
 
     // Ensure the configImporter is refreshed for each test.
     $this->configImporter = NULL;
