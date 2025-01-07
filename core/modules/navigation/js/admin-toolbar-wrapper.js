@@ -68,7 +68,7 @@
                 newState ? 'locked' : 'unlocked',
               );
 
-              doc.querySelector('.admin-toolbar').dispatchEvent(
+              doc.querySelector('.admin-toolbar')?.dispatchEvent(
                 new CustomEvent(SIDEBAR_CONTENT_EVENT, {
                   detail: {
                     state: newState,
