@@ -1896,7 +1896,7 @@
       xhr.getResponseHeader('X-Drupal-Ajax-Token') === '1' &&
       // The isInProgress() function might not be defined if the Ajax request
       // was initiated without Drupal.ajax() or new Drupal.Ajax().
-      settings.isInProgress &&
+      typeof settings.isInProgress === 'function' &&
       // Until this is false, the Ajax request isn't completely done (the
       // response's commands might still be running).
       settings.isInProgress()
