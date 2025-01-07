@@ -15,7 +15,7 @@ class Tasks extends CoreTasks {
    * {@inheritdoc}
    */
   public function name() {
-    return t('MySQL by the driver_test module');
+    return $this->t('MySQL by the driver_test module');
   }
 
 }

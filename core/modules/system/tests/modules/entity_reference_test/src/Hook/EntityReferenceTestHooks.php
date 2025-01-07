@@ -7,11 +7,14 @@ namespace Drupal\entity_reference_test\Hook;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Hook implementations for entity_reference_test.
  */
 class EntityReferenceTestHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_entity_base_field_info().
@@ -20,7 +23,7 @@ class EntityReferenceTestHooks {
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
     $fields = [];
     if ($entity_type->id() === 'entity_test') {
-      $fields['user_role'] = BaseFieldDefinition::create('entity_reference')->setLabel(t('User role'))->setDescription(t('The role of the associated user.'))->setSetting('target_type', 'user_role')->setSetting('handler', 'default');
+      $fields['user_role'] = BaseFieldDefinition::create('entity_reference')->setLabel($this->t('User role'))->setDescription($this->t('The role of the associated user.'))->setSetting('target_type', 'user_role')->setSetting('handler', 'default');
     }
     return $fields;
   }

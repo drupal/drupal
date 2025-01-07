@@ -7,11 +7,14 @@ namespace Drupal\system_test\Hook;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Hook implementations for system_test.
  */
 class SystemTestHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_help().
@@ -21,8 +24,8 @@ class SystemTestHooks {
     switch ($route_name) {
       case 'help.page.system_test':
         $output = '';
-        $output .= '<h2>' . t('Test Help Page') . '</h2>';
-        $output .= '<p>' . t('This is a test help page for the system_test module for the purpose of testing if the "Help" link displays properly.') . '</p>';
+        $output .= '<h2>' . $this->t('Test Help Page') . '</h2>';
+        $output .= '<p>' . $this->t('This is a test help page for the system_test module for the purpose of testing if the "Help" link displays properly.') . '</p>';
         return $output;
     }
   }
@@ -34,7 +37,7 @@ class SystemTestHooks {
   public function modulesInstalled($modules): void {
     if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
       foreach ($modules as $module) {
-        \Drupal::messenger()->addStatus(t('hook_modules_installed fired for @module', ['@module' => $module]));
+        \Drupal::messenger()->addStatus($this->t('hook_modules_installed fired for @module', ['@module' => $module]));
       }
     }
   }
@@ -46,7 +49,7 @@ class SystemTestHooks {
   public function modulesUninstalled($modules, $is_syncing): void {
     if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
       foreach ($modules as $module) {
-        \Drupal::messenger()->addStatus(t('hook_modules_uninstalled fired for @module', ['@module' => $module]));
+        \Drupal::messenger()->addStatus($this->t('hook_modules_uninstalled fired for @module', ['@module' => $module]));
       }
     }
     // Save the config.installer isSyncing() value to state to check that it is
@@ -104,7 +107,7 @@ class SystemTestHooks {
     // \Drupal::service('path.matcher')->isFrontPage().
     $frontpage = \Drupal::state()->get('system_test.front_page_output', 0);
     if ($frontpage && \Drupal::service('path.matcher')->isFrontPage()) {
-      \Drupal::messenger()->addStatus(t('On front page.'));
+      \Drupal::messenger()->addStatus($this->t('On front page.'));
     }
   }
 
@@ -115,7 +118,7 @@ class SystemTestHooks {
   public function filetransferInfo() {
     return [
       'system_test' => [
-        'title' => t('System Test FileTransfer'),
+        'title' => $this->t('System Test FileTransfer'),
         'class' => 'Drupal\system_test\MockFileTransfer',
         'weight' => -10,
       ],

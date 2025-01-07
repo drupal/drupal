@@ -17,7 +17,7 @@ class Tasks extends CoreTasks {
    * {@inheritdoc}
    */
   public function name() {
-    return t('DummyDB');
+    return $this->t('DummyDB');
   }
 
 }

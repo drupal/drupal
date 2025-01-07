@@ -18,8 +18,8 @@ class EntityTestListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Label');
-    $header['id'] = t('Machine name');
+    $header['label'] = $this->t('Label');
+    $header['id'] = $this->t('Machine name');
     return $header + parent::buildHeader();
   }
 

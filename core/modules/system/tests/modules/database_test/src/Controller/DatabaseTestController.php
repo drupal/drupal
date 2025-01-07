@@ -8,6 +8,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\Query\TableSortExtender;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * Controller routines for database_test routes.
  */
 class DatabaseTestController extends ControllerBase {
+
+  use StringTranslationTrait;
 
   /**
    * The database connection.
@@ -104,10 +107,10 @@ class DatabaseTestController extends ControllerBase {
    */
   public function testTablesort() {
     $header = [
-      'tid' => ['data' => t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
-      'pid' => ['data' => t('Person ID'), 'field' => 'pid'],
-      'task' => ['data' => t('Task'), 'field' => 'task'],
-      'priority' => ['data' => t('Priority'), 'field' => 'priority'],
+      'tid' => ['data' => $this->t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
+      'pid' => ['data' => $this->t('Person ID'), 'field' => 'pid'],
+      'task' => ['data' => $this->t('Task'), 'field' => 'task'],
+      'priority' => ['data' => $this->t('Priority'), 'field' => 'priority'],
     ];
 
     $query = $this->connection->select('test_task', 't');
@@ -136,10 +139,10 @@ class DatabaseTestController extends ControllerBase {
    */
   public function testTablesortFirst() {
     $header = [
-      'tid' => ['data' => t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
-      'pid' => ['data' => t('Person ID'), 'field' => 'pid'],
-      'task' => ['data' => t('Task'), 'field' => 'task'],
-      'priority' => ['data' => t('Priority'), 'field' => 'priority'],
+      'tid' => ['data' => $this->t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
+      'pid' => ['data' => $this->t('Person ID'), 'field' => 'pid'],
+      'task' => ['data' => $this->t('Task'), 'field' => 'task'],
+      'priority' => ['data' => $this->t('Priority'), 'field' => 'priority'],
     ];
 
     $query = $this->connection->select('test_task', 't');

@@ -38,7 +38,7 @@ class EntityTestForm extends ContentEntityForm {
     if ($entity->getEntityType()->hasKey('revision') && !$entity->isNew()) {
       $form['revision'] = [
         '#type' => 'checkbox',
-        '#title' => t('Create new revision'),
+        '#title' => $this->t('Create new revision'),
         '#default_value' => $entity->isNewRevision(),
       ];
     }
@@ -62,10 +62,10 @@ class EntityTestForm extends ContentEntityForm {
       $status = $entity->save();
 
       if ($is_new) {
-        $message = t('%entity_type @id has been created.', ['@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()]);
+        $message = $this->t('%entity_type @id has been created.', ['@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()]);
       }
       else {
-        $message = t('%entity_type @id has been updated.', ['@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()]);
+        $message = $this->t('%entity_type @id has been updated.', ['@id' => $entity->id(), '%entity_type' => $entity->getEntityTypeId()]);
       }
       $this->messenger()->addStatus($message);
 

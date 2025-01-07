@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\system_test;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Mock FileTransfer object to test the settings form functionality.
  */
 class MockFileTransfer {
+
+  use StringTranslationTrait;
 
   /**
    * Returns a Drupal\system_test\MockFileTransfer object.
@@ -26,7 +30,7 @@ class MockFileTransfer {
     $form = [];
     $form['system_test_username'] = [
       '#type' => 'textfield',
-      '#title' => t('System Test Username'),
+      '#title' => $this->t('System Test Username'),
     ];
     return $form;
   }
