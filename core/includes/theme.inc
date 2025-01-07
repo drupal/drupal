@@ -1462,7 +1462,8 @@ function template_preprocess_field_multiple_value_form(&$variables): void {
 
   if ($variables['multiple']) {
     $table_id = Html::getUniqueId($element['#field_name'] . '_values');
-    $order_class = $element['#field_name'] . '-delta-order';
+    // Using table id allows handing nested content with the same field names.
+    $order_class = $table_id . '-delta-order';
     $header_attributes = new Attribute(['class' => ['label']]);
     if (!empty($element['#required'])) {
       $header_attributes['class'][] = 'js-form-required';
