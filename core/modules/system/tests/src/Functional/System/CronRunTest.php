@@ -120,11 +120,17 @@ class CronRunTest extends BrowserTestBase {
   public function testCronUI(): void {
     $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
+    \Drupal::state()->delete('system.cron_last');
     $this->drupalGet('admin/config/system/cron');
-    // Don't use REQUEST to calculate the exact time, because that will
-    // fail randomly. Look for the word 'years', because without a timestamp,
-    // the time will start at 1 January 1970.
-    $this->assertSession()->pageTextNotContains('years');
+    // Check that cron has never run.
+    $this->assertSession()->pageTextContains('Last run: never');
+
+    // Now check that it has run.
+    // Sleep to allow cron time to complete since it happens during kernel
+    // terminate after the page response is set.
+    sleep(3);
+    $this->drupalGet('admin/config/system/cron');
+    $this->assertSession()->pageTextNotContains('Last run: never');
 
     $cron_last = time() - 200;
     \Drupal::state()->set('system.cron_last', $cron_last);
