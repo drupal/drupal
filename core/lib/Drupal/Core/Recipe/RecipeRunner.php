@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
+use Drupal\Core\Config\Action\ConfigActionException;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
@@ -93,11 +95,14 @@ final class RecipeRunner {
    *   The recipe being applied.
    */
   protected static function processConfiguration(Recipe $recipe): void {
+    /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
+    $config_manager = \Drupal::service(ConfigManagerInterface::class);
+
     $config_installer = new RecipeConfigInstaller(
       \Drupal::service('config.factory'),
       \Drupal::service('config.storage'),
       \Drupal::service('config.typed'),
-      \Drupal::service('config.manager'),
+      $config_manager,
       \Drupal::service('event_dispatcher'),
       NULL,
       \Drupal::service('extension.path.resolver'));
@@ -118,6 +123,13 @@ final class RecipeRunner {
       /** @var \Drupal\Core\Config\Action\ConfigActionManager $config_action_manager */
       $config_action_manager = \Drupal::service('plugin.manager.config_action');
       foreach ($config->config['actions'] as $config_name => $actions) {
+        // If this config name contains an input value, it must begin with the
+        // config prefix of a known entity type.
+        if (str_contains($config_name, '${') && empty($config_manager->getEntityTypeIdByName($config_name))) {
+          throw new ConfigActionException("The entity type for the config name '$config_name' could not be identified.");
+        }
+        $config_name = str_replace($keys, $replace, $config_name);
+
         foreach ($actions as $action_id => $data) {
           $config_action_manager->applyAction($action_id, $config_name, static::replaceInputValues($data, $replace));
         }
