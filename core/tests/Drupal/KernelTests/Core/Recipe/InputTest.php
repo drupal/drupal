@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\contact\Entity\ContactForm;
+use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Recipe\ConsoleInputCollector;
 use Drupal\Core\Recipe\InputCollectorInterface;
 use Drupal\Core\Recipe\Recipe;
@@ -14,6 +15,7 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
@@ -227,6 +229,47 @@ YAML
     $config = $this->config('system.site');
     $this->assertSame("Boston rocks!", $config->get('name'));
     $this->assertSame('int is 1234, bool is  and float is 3.141', $config->get('slogan'));
+  }
+
+  /**
+   * Tests using input values in entity IDs for config actions.
+   */
+  public function testInputInConfigEntityIds(): void {
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('node'));
+
+    $collector = new class () implements InputCollectorInterface {
+
+      /**
+       * {@inheritdoc}
+       */
+      public function collectValue(string $name, DataDefinitionInterface $definition, mixed $default_value): mixed {
+        return $default_value;
+      }
+
+    };
+    $recipe = Recipe::createFromDirectory('core/tests/fixtures/recipes/input_test');
+    $recipe->input->collectAll($collector);
+    RecipeRunner::processRecipe($recipe);
+    $this->assertInstanceOf(NodeType::class, NodeType::load('test'));
+
+    // Using an input placeholder in a non-identifying part of the config entity
+    // ID should cause an exception.
+    $recipe = $this->createRecipe([
+      'name' => 'Invalid use of an input in config entity ID',
+      'config' => [
+        'actions' => [
+          'node.${anything}.test' => [
+            'createIfNotExists' => [
+              'id' => 'test',
+            ],
+          ],
+        ],
+      ],
+    ]);
+    $recipe->input->collectAll($collector);
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage("The entity type for the config name 'node.\${anything}.test' could not be identified.");
+    RecipeRunner::processRecipe($recipe);
   }
 
 }
