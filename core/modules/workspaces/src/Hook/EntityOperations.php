@@ -21,6 +21,11 @@ use Drupal\workspaces\WorkspaceRepositoryInterface;
  */
 class EntityOperations {
 
+  /**
+   * A list of entity UUIDs that were created as published in a workspace.
+   */
+  protected array $initialPublished = [];
+
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected WorkspaceManagerInterface $workspaceManager,
@@ -113,11 +118,9 @@ class EntityOperations {
     // - An unpublished default revision in the default ('live') workspace.
     // - A published pending revision in the current workspace.
     if ($entity->isNew() && $entity->isPublished()) {
-      // Keep track of the publishing status in a dynamic property for
-      // ::entityInsert(), then unpublish the default revision.
-      // @todo Remove this dynamic property once we have an API for associating
-      //   temporary data with an entity: https://www.drupal.org/node/2896474.
-      $entity->_initialPublished = TRUE;
+      // Keep track of the initially published entities for ::entityInsert(),
+      // then unpublish the default revision.
+      $this->initialPublished[$entity->uuid()] = TRUE;
       $entity->setUnpublished();
     }
   }
@@ -147,7 +150,7 @@ class EntityOperations {
     // does not 'leak' into the live site. This differs from edits to existing
     // entities where there is already a valid default revision for the live
     // workspace.
-    if (isset($entity->_initialPublished)) {
+    if (isset($this->initialPublished[$entity->uuid()])) {
       // Ensure that the default revision of an entity saved in a workspace is
       // unpublished.
       if ($entity->isPublished()) {
