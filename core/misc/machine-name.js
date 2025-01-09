@@ -142,11 +142,7 @@
         }
         // Skip processing upon a form validation error on a non-empty
         // machine name.
-        if (
-          $target.hasClass('error') &&
-          $target[0].value &&
-          $target[0].value.trim().length
-        ) {
+        if ($target.hasClass('error') && $target[0].value?.trim().length) {
           return;
         }
         // Figure out the maximum length for the machine name.

@@ -73,10 +73,7 @@
         // To prevent this potential miscalculation, the spacer is momentarily
         // removed when blur occurs on rows preceding it. The spacer is
         // reintroduced immediately after the next item receives focus.
-        if (
-          nextSibling &&
-          nextSibling.getAttribute('data-drupal-table-row-spacer')
-        ) {
+        if (nextSibling?.getAttribute('data-drupal-table-row-spacer')) {
           nextSibling.parentNode.removeChild(nextSibling);
         }
       }

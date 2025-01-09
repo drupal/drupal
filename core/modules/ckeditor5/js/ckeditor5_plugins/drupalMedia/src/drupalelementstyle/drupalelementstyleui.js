@@ -503,7 +503,7 @@ export default class DrupalElementStyleUi extends Plugin {
       // If style is selected, use the label of the selected style as the
       // default label of the splitbutton.
       dropdownButtonView.bind('label').to(command, 'value', (commandValue) => {
-        if (commandValue && commandValue[group]) {
+        if (commandValue?.[group]) {
           // eslint-disable-next-line no-restricted-syntax
           for (const style of definedStyles) {
             if (style.name === commandValue[group]) {

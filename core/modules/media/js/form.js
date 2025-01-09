@@ -18,9 +18,9 @@
         .find('.media-form-author')
         .drupalSetSummary((context) => {
           const nameInput = context.querySelector('.field--name-uid input');
-          const name = nameInput && nameInput.value;
+          const name = nameInput?.value;
           const dateInput = context.querySelector('.field--name-created input');
-          const date = dateInput && dateInput.value;
+          const date = dateInput?.value;
 
           if (name && date) {
             return Drupal.t('By @name on @date', {
