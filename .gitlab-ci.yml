@@ -224,10 +224,10 @@ default:
     _TARGET_PHP: "8.2"
     _TARGET_DB: "sqlite-3"
 
-'PHP 8.3 MySQL 8.4':
+'PHP 8.4 MySQL 8.4':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_PHP: "8.4-ubuntu"
     _TARGET_DB: "mysql-8.4"
 
 'PHP 8.3 MySQL 9.0':
@@ -320,8 +320,8 @@ default:
   needs: [ '[Daily] PHP 8.1 PostgreSQL 14.1' ]
   <<: [ *run-daily ]
 
-'[Daily] PHP 8.3 MySQL 8.4':
-  extends: 'PHP 8.3 MySQL 8.4'
+'[Daily] PHP 8.4 MySQL 8.4':
+  extends: 'PHP 8.4 MySQL 8.4'
   needs: [ '[Daily] PHP 8.1 SQLite 3' ]
   <<: [ *run-daily ]
 
