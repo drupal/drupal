@@ -172,7 +172,6 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEquals(1, $index_count, 'Term 2 is indexed once.');
 
     // Redo the above tests without interface.
-    $node_storage->resetCache([$node->id()]);
     $node = $node_storage->load($node->id());
     $node->title = $this->randomMachineName();
 

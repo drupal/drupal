@@ -116,7 +116,6 @@ class PathLanguageTest extends PathTestBase {
     $languages = $this->container->get('language_manager')->getLanguages();
 
     // Ensure the node was created.
-    $node_storage->resetCache([$english_node->id()]);
     $english_node = $node_storage->load($english_node->id());
     $english_node_french_translation = $english_node->getTranslation('fr');
     $this->assertTrue($english_node->hasTranslation('fr'), 'Node found in database.');

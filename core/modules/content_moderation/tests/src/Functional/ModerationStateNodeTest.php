@@ -48,7 +48,6 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     // Set up published revision.
     $this->drupalGet($path);
     $this->submitForm(['moderation_state[0][state]' => 'published'], 'Save');
-    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$node->id()]);
     /** @var \Drupal\node\NodeInterface $node */
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
     $this->assertTrue($node->isPublished());

@@ -199,7 +199,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $alt = $this->randomMachineName();
 
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $alt);
-    $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
 
     // Test that the default formatter is being used.
@@ -390,7 +389,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // Create a new node with an image attached.
     $test_image = current($this->getTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
-    $node_storage->resetCache([$nid]);
 
     // Use the responsive image formatter linked to file formatter.
     $display_options = [
@@ -467,7 +465,6 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // Create a new node with an image attached.
     $test_image = current($this->getTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
-    $node_storage->resetCache([$nid]);
 
     // Use the responsive image formatter linked to file formatter.
     $display_options = [

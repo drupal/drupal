@@ -72,7 +72,6 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->submitForm($edit, 'Save');
 
     // Load the node again and check the revision is the same as before.
-    $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id(), TRUE);
     $this->assertEquals($node->getRevisionId(), $node_revision->getRevisionId(), "After an existing node is saved with 'Create new revision' unchecked, a new revision is not created.");
 
@@ -86,7 +85,6 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->submitForm($edit, 'Save');
 
     // Load the node again and check the revision is different from before.
-    $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertNotEquals($node->getRevisionId(), $node_revision->getRevisionId(), "After an existing node is saved with 'Create new revision' checked, a new revision is created.");
   }

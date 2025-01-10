@@ -167,7 +167,6 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   protected function doTestTranslationEdit(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
 
@@ -188,7 +187,6 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   protected function doTestPublishedStatus(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
 
@@ -206,7 +204,6 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
         $this->drupalGet($url, $options);
         $this->submitForm(['status[value]' => $value], 'Save');
       }
-      $storage->resetCache([$this->entityId]);
       $entity = $storage->load($this->entityId);
       foreach ($this->langcodes as $langcode) {
         // The term is created as unpublished thus we switch to the published

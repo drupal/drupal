@@ -398,7 +398,6 @@ class TextFieldTest extends StringFieldTest {
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
 
     // Display the entity.
-    $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $display = $display_repository->getViewDisplay($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);

@@ -80,7 +80,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $this->drupalLogin($this->translator);
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->assertNotEmpty($entity, 'Entity found in the database.');
     $this->drupalGet($entity->toUrl());
@@ -125,7 +124,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     // page.
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->drupalGet($entity->toUrl());
     $this->assertCacheContexts(Cache::mergeContexts(['languages:language_content'], $this->defaultCacheContexts));
@@ -161,7 +159,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       // Verify that language selector is correctly disabled on translations.
       $this->assertSession()->fieldNotExists('edit-langcode-0-value');
     }
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
     $this->assertSession()->pageTextNotContains('Source language');
@@ -194,7 +191,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     ], ['language' => $language]);
     $this->drupalGet($add_url);
     $this->submitForm($edit, $this->getFormSubmitActionForNewTranslation($entity, $langcode));
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
     $this->assertSession()->pageTextContains('Source language');
@@ -217,7 +213,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   protected function doTestTranslationOverview() {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $translate_url = $entity->toUrl('drupal:content-translation-overview');
     $this->drupalGet($translate_url);
@@ -242,7 +237,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   protected function doTestOutdatedStatus() {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $langcode = 'fr';
     $languages = \Drupal::languageManager()->getLanguages();
@@ -252,7 +246,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $edit_path = $entity->toUrl('edit-form', ['language' => $languages[$langcode]]);
     $this->drupalGet($edit_path);
     $this->submitForm($edit, $this->getFormSubmitAction($entity, $langcode));
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
 
     // Check that every translation has the correct "outdated" status, and that
@@ -290,7 +283,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   protected function doTestPublishedStatus() {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
 
     // Unpublish translations.
@@ -320,7 +312,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   protected function doTestAuthoringInfo() {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $values = [];
 
@@ -342,7 +333,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     foreach ($this->langcodes as $langcode) {
       $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
@@ -374,14 +364,12 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $langcode = 'fr';
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $language = ConfigurableLanguage::load($langcode);
     $url = $entity->toUrl('edit-form', ['language' => $language]);
     $this->drupalGet($url);
     $this->clickLink('Delete translation');
     $this->submitForm([], 'Delete ' . $language->getName() . ' translation');
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId, TRUE);
     $this->assertIsObject($entity);
     $translations = $entity->getTranslationLanguages();
@@ -514,7 +502,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   protected function doTestTranslationEdit() {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
 
@@ -536,7 +523,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   protected function doTestTranslationChanged() {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $changed_field_name = $this->getChangedFieldName($entity);
     $definition = $entity->getFieldDefinition($changed_field_name);
@@ -604,7 +590,6 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   public function doTestChangedTimeAfterSaveWithoutChanges() {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
-    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     // Test only entities, which implement the EntityChangedInterface.
     if ($entity instanceof EntityChangedInterface) {

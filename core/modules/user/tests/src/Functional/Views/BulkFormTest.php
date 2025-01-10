@@ -69,7 +69,6 @@ class BulkFormTest extends UserTestBase {
     ];
     $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their roles.
-    $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->hasRole($role), 'The user now has the custom role.');
 
@@ -79,7 +78,6 @@ class BulkFormTest extends UserTestBase {
     ];
     $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their roles.
-    $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertFalse($account->hasRole($role), 'The user no longer has the custom role.');
 
@@ -92,7 +90,6 @@ class BulkFormTest extends UserTestBase {
     ];
     $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their status.
-    $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isBlocked(), 'The user is blocked.');
     $this->assertSession()->pageTextNotContains($account->label());

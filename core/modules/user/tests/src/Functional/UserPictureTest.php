@@ -167,7 +167,6 @@ class UserPictureTest extends BrowserTestBase {
 
     // Load actual user data from database.
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
-    $user_storage->resetCache([$this->webUser->id()]);
     $account = $user_storage->load($this->webUser->id());
     return File::load($account->user_picture->target_id);
   }

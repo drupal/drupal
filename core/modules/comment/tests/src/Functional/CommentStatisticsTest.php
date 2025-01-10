@@ -75,7 +75,6 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Checks the new values of node comment statistics with comment #1.
     // The node cache needs to be reset before reload.
-    $node_storage->resetCache([$this->node->id()]);
     $node = $node_storage->load($this->node->id());
     $this->assertSame('', $node->get('comment')->last_comment_name, 'The value of node last_comment_name should be an empty string.');
     $this->assertEquals($this->webUser2->id(), $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is the comment #1 uid.');
@@ -106,7 +105,6 @@ class CommentStatisticsTest extends CommentTestBase {
     // Checks the new values of node comment statistics with comment #2 and
     // ensure they haven't changed since the comment has not been moderated.
     // The node needs to be reloaded with the cache reset.
-    $node_storage->resetCache([$this->node->id()]);
     $node = $node_storage->load($this->node->id());
     $this->assertSame('', $node->get('comment')->last_comment_name, 'The value of node last_comment_name should be an empty string.');
     $this->assertEquals($this->webUser2->id(), $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is still the comment #1 uid.');
@@ -130,7 +128,6 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Checks the new values of node comment statistics with comment #3.
     // The node needs to be reloaded with the cache reset.
-    $node_storage->resetCache([$this->node->id()]);
     $node = $node_storage->load($this->node->id());
     $this->assertEquals($comment_loaded->getAuthorName(), $node->get('comment')->last_comment_name, 'The value of node last_comment_name is the name of the anonymous user.');
     $this->assertEquals(0, $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is zero.');

@@ -132,7 +132,6 @@ class ContentEntityFormCorrectUserInputMappingOnFieldDeltaElementsTest extends B
     $this->submitForm($edit, "{$this->fieldName}_0_remove_button");
     $this->submitForm([], 'Save');
 
-    $storage->resetCache([$entity->id()]);
     $entity = $storage->load($entity->id());
     $this->assertEquals([
       ['shape' => 'rectangle', 'color' => 'green'],

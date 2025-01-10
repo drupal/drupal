@@ -160,7 +160,6 @@ class FormTest extends FieldTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
-    $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was updated');
 
@@ -172,7 +171,6 @@ class FormTest extends FieldTestBase {
     $this->drupalGet('entity_test/manage/' . $id . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
-    $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field was emptied');
   }
@@ -505,7 +503,6 @@ class FormTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the new revision has the expected values.
-    $storage->resetCache([$id]);
     $entity = $storage->load($id);
     $this->assertEquals(99, $entity->{$field_name_no_access}->value, 'New revision has the expected value for the field with no edit access.');
     $this->assertEquals(2, $entity->{$field_name}->value, 'New revision has the expected value for the field with edit access.');
@@ -573,7 +570,6 @@ class FormTest extends FieldTestBase {
     $edit = ["{$field_name}[0][value]" => $value];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('entity_test_rev ' . $id . ' has been updated.');
-    $storage->resetCache([$id]);
     $entity = $storage->load($id);
     $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was updated');
 

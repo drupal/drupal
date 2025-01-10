@@ -197,8 +197,6 @@ class CommentPreviewTest extends CommentTestBase {
     $this->submitForm($displayed, 'Save');
 
     // Check that the saved comment is still correct.
-    $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
-    $comment_storage->resetCache([$comment->id()]);
     /** @var \Drupal\comment\CommentInterface $comment_loaded */
     $comment_loaded = Comment::load($comment->id());
     $this->assertEquals($edit['subject[0][value]'], $comment_loaded->getSubject(), 'Subject loaded.');
@@ -216,7 +214,6 @@ class CommentPreviewTest extends CommentTestBase {
     unset($edit['uid']);
     $this->drupalGet('comment/' . $comment->id() . '/edit');
     $this->submitForm($user_edit, 'Save');
-    $comment_storage->resetCache([$comment->id()]);
     $comment_loaded = Comment::load($comment->id());
     $this->assertEquals($expected_created_time, $comment_loaded->getCreatedTime(), 'Expected date and time for comment edited.');
     $this->drupalLogout();

@@ -267,7 +267,6 @@ class FilterAdminTest extends BrowserTestBase {
     $this->assertSession()->checkboxChecked('roles[' . RoleInterface::AUTHENTICATED_ID . ']');
     $this->assertSession()->checkboxChecked('filters[' . $second_filter . '][status]');
     $this->assertSession()->checkboxChecked('filters[' . $first_filter . '][status]');
-    \Drupal::entityTypeManager()->getStorage('user_role')->resetCache([RoleInterface::AUTHENTICATED_ID]);
     /** @var \Drupal\user\Entity\Role $role */
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
     $this->assertTrue($role->hasPermission($format->getPermissionName()), 'The authenticated role has permission to use the filter.');
@@ -277,7 +276,6 @@ class FilterAdminTest extends BrowserTestBase {
     $this->submitForm([], 'Disable');
     $this->assertSession()->addressEquals('admin/config/content/formats');
     $this->assertSession()->statusMessageContains("Disabled text format {$edit['name']}.", 'status');
-    \Drupal::entityTypeManager()->getStorage('user_role')->resetCache([RoleInterface::AUTHENTICATED_ID]);
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
     $this->assertFalse($role->hasPermission($format->getPermissionName()), 'The filter permission has been removed from the authenticated role');
 

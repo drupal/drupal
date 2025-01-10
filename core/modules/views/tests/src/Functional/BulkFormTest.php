@@ -106,12 +106,10 @@ class BulkFormTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Unpublish content was applied to 1 item.');
 
     // Load the node again.
-    $node_storage->resetCache([$node->id()]);
     $node = $node_storage->load($node->id());
     $this->assertFalse($node->isPublished(), 'A single node has been unpublished.');
 
     // The second node should still be published.
-    $node_storage->resetCache([$nodes[1]->id()]);
     $node = $node_storage->load($nodes[1]->id());
     $this->assertTrue($node->isPublished(), 'An unchecked node is still published.');
 

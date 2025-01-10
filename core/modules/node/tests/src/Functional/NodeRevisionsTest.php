@@ -176,7 +176,6 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert");
     $this->submitForm([], 'Revert');
     $this->assertSession()->pageTextContains("Basic page {$nodes[1]->label()} has been reverted to the revision from {$this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime())}.");
-    $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
     $this->assertSame($nodes[1]->body->value, $reverted_node->body->value, 'Node reverted correctly.');
     // Confirm the revision author is the user performing the revert.
@@ -357,7 +356,6 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($new_title);
-    $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertEquals($revision_log, $node_revision->revision_log->value, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
 
@@ -376,7 +374,6 @@ class NodeRevisionsTest extends NodeTestBase {
     $node->save();
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($new_title);
-    $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertEmpty($node_revision->revision_log->value, 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
   }
@@ -420,7 +417,6 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->submitForm([], 'Revert');
     /** @var \Drupal\node\NodeStorage $node_storage */
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $node_storage->resetCache();
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
     $this->assertGreaterThan($translation_revision_id, $node->getRevisionId());
@@ -436,7 +432,6 @@ class NodeRevisionsTest extends NodeTestBase {
     // untranslated field will be reverted as well.
     $this->drupalGet($revert_translation_url);
     $this->submitForm(['revert_untranslated_fields' => TRUE], 'Revert');
-    $node_storage->resetCache();
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
     $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());
@@ -454,7 +449,6 @@ class NodeRevisionsTest extends NodeTestBase {
     ]);
     $this->drupalGet($revert_url);
     $this->submitForm([], 'Revert');
-    $node_storage->resetCache();
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
     $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());

@@ -38,6 +38,7 @@ trait RefreshVariablesTrait {
 
     \Drupal::service('config.factory')->reset();
     \Drupal::service('state')->reset();
+    \Drupal::service('entity.memory_cache')->deleteAll();
   }
 
 }
