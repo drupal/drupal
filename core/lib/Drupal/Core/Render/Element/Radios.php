@@ -42,15 +42,14 @@ class Radios extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#process' => [
-        [$class, 'processRadios'],
+        [static::class, 'processRadios'],
       ],
       '#theme_wrappers' => ['radios'],
       '#pre_render' => [
-        [$class, 'preRenderCompositeFormElement'],
+        [static::class, 'preRenderCompositeFormElement'],
       ],
     ];
   }

@@ -42,22 +42,20 @@ class Datetime extends DateElementBase {
       }
     }
 
-    $class = static::class;
-
     // Note that since this information is cached, the #date_timezone property
     // is not set here, as this needs to vary potentially by-user.
     return [
       '#input' => TRUE,
       '#element_validate' => [
-        [$class, 'validateDatetime'],
+        [static::class, 'validateDatetime'],
       ],
       '#process' => [
-        [$class, 'processDatetime'],
-        [$class, 'processAjaxForm'],
-        [$class, 'processGroup'],
+        [static::class, 'processDatetime'],
+        [static::class, 'processAjaxForm'],
+        [static::class, 'processGroup'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderGroup'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'datetime_form',
       '#theme_wrappers' => ['datetime_wrapper'],

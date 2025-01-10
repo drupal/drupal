@@ -21,14 +21,13 @@ class ProcessedText extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#text' => '',
       '#format' => NULL,
       '#filter_types_to_skip' => [],
       '#langcode' => '',
       '#pre_render' => [
-        [$class, 'preRenderText'],
+        [static::class, 'preRenderText'],
       ],
     ];
   }

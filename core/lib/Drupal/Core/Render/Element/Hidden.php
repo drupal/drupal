@@ -30,14 +30,13 @@ class Hidden extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#process' => [
-        [$class, 'processAjaxForm'],
+        [static::class, 'processAjaxForm'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderHidden'],
+        [static::class, 'preRenderHidden'],
       ],
       '#theme' => 'input__hidden',
     ];

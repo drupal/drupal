@@ -39,10 +39,9 @@ class TextFormat extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#process' => [
-        [$class, 'processFormat'],
+        [static::class, 'processFormat'],
       ],
       '#base_type' => 'textarea',
       '#theme_wrappers' => ['text_format_wrapper'],

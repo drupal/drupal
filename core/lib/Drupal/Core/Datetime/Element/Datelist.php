@@ -24,14 +24,13 @@ class Datelist extends DateElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#element_validate' => [
-        [$class, 'validateDatelist'],
+        [static::class, 'validateDatelist'],
       ],
       '#process' => [
-        [$class, 'processDatelist'],
+        [static::class, 'processDatelist'],
       ],
       '#theme' => 'datetime_form',
       '#theme_wrappers' => ['datetime_wrapper'],

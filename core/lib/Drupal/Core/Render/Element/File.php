@@ -27,21 +27,20 @@ class File extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#multiple' => FALSE,
       '#process' => [
-        [$class, 'processFile'],
+        [static::class, 'processFile'],
       ],
       '#size' => 60,
       '#pre_render' => [
-        [$class, 'preRenderFile'],
+        [static::class, 'preRenderFile'],
       ],
       '#theme' => 'input__file',
       '#theme_wrappers' => ['form_element'],
       '#value_callback' => [
-        [$class, 'valueCallback'],
+        [static::class, 'valueCallback'],
       ],
     ];
   }

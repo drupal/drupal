@@ -20,11 +20,10 @@ class Token extends Hidden {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#pre_render' => [
-        [$class, 'preRenderHidden'],
+        [static::class, 'preRenderHidden'],
       ],
       '#theme' => 'input__hidden',
     ];

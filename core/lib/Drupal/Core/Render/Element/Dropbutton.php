@@ -49,10 +49,9 @@ class Dropbutton extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#pre_render' => [
-        [$class, 'preRenderDropbutton'],
+        [static::class, 'preRenderDropbutton'],
       ],
       '#theme' => 'links__dropbutton',
     ];

@@ -40,14 +40,13 @@ class Date extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#theme' => 'input__date',
       '#process' => [
-        [$class, 'processAjaxForm'],
+        [static::class, 'processAjaxForm'],
       ],
-      '#pre_render' => [[$class, 'preRenderDate']],
+      '#pre_render' => [[static::class, 'preRenderDate']],
       '#theme_wrappers' => ['form_element'],
       '#attributes' => ['type' => 'date'],
       '#date_date_format' => 'Y-m-d',

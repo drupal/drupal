@@ -30,13 +30,12 @@ class Actions extends Container {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#process' => [
         // @todo Move this to #pre_render.
-        [$class, 'preRenderActionsDropbutton'],
-        [$class, 'processActions'],
-        [$class, 'processContainer'],
+        [static::class, 'preRenderActionsDropbutton'],
+        [static::class, 'processActions'],
+        [static::class, 'processContainer'],
       ],
       '#weight' => 100,
       '#theme_wrappers' => ['container'],

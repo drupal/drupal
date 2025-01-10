@@ -30,10 +30,9 @@ class InlineTemplate extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#pre_render' => [
-        [$class, 'preRenderInlineTemplate'],
+        [static::class, 'preRenderInlineTemplate'],
       ],
       '#template' => '',
       '#context' => [],

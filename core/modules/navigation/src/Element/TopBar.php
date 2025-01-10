@@ -19,10 +19,9 @@ class TopBar extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo(): array {
-    $class = static::class;
     return [
       '#pre_render' => [
-        [$class, 'preRenderTopBar'],
+        [static::class, 'preRenderTopBar'],
       ],
       '#theme' => 'top_bar',
       '#attached' => [

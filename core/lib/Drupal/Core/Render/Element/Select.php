@@ -86,18 +86,17 @@ class Select extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#multiple' => FALSE,
       '#sort_options' => FALSE,
       '#sort_start' => NULL,
       '#process' => [
-        [$class, 'processSelect'],
-        [$class, 'processAjaxForm'],
+        [static::class, 'processSelect'],
+        [static::class, 'processAjaxForm'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderSelect'],
+        [static::class, 'preRenderSelect'],
       ],
       '#theme' => 'select',
       '#theme_wrappers' => ['form_element'],

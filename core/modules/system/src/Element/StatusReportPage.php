@@ -17,13 +17,12 @@ class StatusReportPage extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#theme' => 'status_report_page',
       '#pre_render' => [
-        [$class, 'preRenderCounters'],
-        [$class, 'preRenderGeneralInfo'],
-        [$class, 'preRenderRequirements'],
+        [static::class, 'preRenderCounters'],
+        [static::class, 'preRenderGeneralInfo'],
+        [static::class, 'preRenderRequirements'],
       ],
     ];
   }

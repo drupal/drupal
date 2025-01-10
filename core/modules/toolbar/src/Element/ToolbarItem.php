@@ -18,10 +18,9 @@ class ToolbarItem extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#pre_render' => [
-        [$class, 'preRenderToolbarItem'],
+        [static::class, 'preRenderToolbarItem'],
       ],
       'tab' => [
         '#type' => 'link',

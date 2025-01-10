@@ -34,12 +34,11 @@ class Range extends Number {
    */
   public function getInfo() {
     $info = parent::getInfo();
-    $class = static::class;
     return [
       '#min' => 0,
       '#max' => 100,
       '#pre_render' => [
-        [$class, 'preRenderRange'],
+        [static::class, 'preRenderRange'],
       ],
       '#theme' => 'input__range',
     ] + $info;

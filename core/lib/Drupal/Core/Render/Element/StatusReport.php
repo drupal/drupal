@@ -14,7 +14,6 @@ class StatusReport extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#theme' => 'status_report_grouped',
       '#priorities' => [
@@ -24,7 +23,7 @@ class StatusReport extends RenderElementBase {
         'ok',
       ],
       '#pre_render' => [
-        [$class, 'preRenderGroupRequirements'],
+        [static::class, 'preRenderGroupRequirements'],
       ],
     ];
   }

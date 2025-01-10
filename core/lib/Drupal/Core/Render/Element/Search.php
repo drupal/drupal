@@ -25,18 +25,17 @@ class Search extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => 128,
       '#autocomplete_route_name' => FALSE,
       '#process' => [
-        [$class, 'processAutocomplete'],
-        [$class, 'processAjaxForm'],
+        [static::class, 'processAutocomplete'],
+        [static::class, 'processAjaxForm'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderSearch'],
+        [static::class, 'preRenderSearch'],
       ],
       '#theme' => 'input__search',
       '#theme_wrappers' => ['form_element'],

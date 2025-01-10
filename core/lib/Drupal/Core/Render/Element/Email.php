@@ -45,22 +45,21 @@ class Email extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => self::EMAIL_MAX_LENGTH,
       '#autocomplete_route_name' => FALSE,
       '#process' => [
-        [$class, 'processAutocomplete'],
-        [$class, 'processAjaxForm'],
-        [$class, 'processPattern'],
+        [static::class, 'processAutocomplete'],
+        [static::class, 'processAjaxForm'],
+        [static::class, 'processPattern'],
       ],
       '#element_validate' => [
-        [$class, 'validateEmail'],
+        [static::class, 'validateEmail'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderEmail'],
+        [static::class, 'preRenderEmail'],
       ],
       '#theme' => 'input__email',
       '#theme_wrappers' => ['form_element'],

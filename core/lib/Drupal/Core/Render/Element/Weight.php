@@ -32,14 +32,13 @@ class Weight extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#delta' => 10,
       '#default_value' => 0,
       '#process' => [
-        [$class, 'processWeight'],
-        [$class, 'processAjaxForm'],
+        [static::class, 'processWeight'],
+        [static::class, 'processAjaxForm'],
       ],
     ];
   }

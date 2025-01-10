@@ -42,14 +42,13 @@ class Checkboxes extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#input' => TRUE,
       '#process' => [
-        [$class, 'processCheckboxes'],
+        [static::class, 'processCheckboxes'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderCompositeFormElement'],
+        [static::class, 'preRenderCompositeFormElement'],
       ],
       '#theme_wrappers' => ['checkboxes'],
     ];

@@ -30,14 +30,13 @@ class Fieldset extends RenderElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = static::class;
     return [
       '#process' => [
-        [$class, 'processGroup'],
-        [$class, 'processAjaxForm'],
+        [static::class, 'processGroup'],
+        [static::class, 'processAjaxForm'],
       ],
       '#pre_render' => [
-        [$class, 'preRenderGroup'],
+        [static::class, 'preRenderGroup'],
       ],
       '#value' => NULL,
       '#theme_wrappers' => ['fieldset'],
