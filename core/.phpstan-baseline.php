@@ -54478,30 +54478,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/profiles/demo_umami/demo_umami.install',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function demo_umami_form_install_configure_submit\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/demo_umami.profile',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function demo_umami_help\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/demo_umami.profile',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function demo_umami_set_users_passwords\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/demo_umami.profile',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function demo_umami_toolbar\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/demo_umami.profile',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\demo_umami_content\\\\InstallHelper\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -54626,12 +54602,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/minimal/tests/src/Functional/MinimalTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function standard_form_install_configure_submit\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/standard/standard.profile',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\standard\\\\Functional\\\\StandardTest\\:\\:assertConfigSchema\\(\\) has no return type specified\\.$#',
