@@ -27,13 +27,6 @@ class UserRolesCacheContext extends UserCacheContextBase implements CalculatedCa
    * {@inheritdoc}
    */
   public function getContext($role = NULL) {
-    // User 1 does not actually have any special behavior for roles; this is
-    // added as additional security and backwards compatibility protection for
-    // SA-CORE-2015-002.
-    // @todo Remove in Drupal 9.0.0.
-    if ($this->user->id() == 1) {
-      return 'is-super-user';
-    }
     if ($role === NULL) {
       return implode(',', $this->user->getRoles());
     }
