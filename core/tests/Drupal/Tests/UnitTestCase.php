@@ -139,32 +139,6 @@ abstract class UnitTestCase extends TestCase {
   }
 
   /**
-   * Returns a stub config storage that returns the supplied configuration.
-   *
-   * @param array $configs
-   *   An associative array of configuration settings whose keys are
-   *   configuration object names and whose values are key => value arrays
-   *   for the configuration object in question.
-   *
-   * @return \Drupal\Core\Config\StorageInterface
-   *   A mocked config storage.
-   */
-  public function getConfigStorageStub(array $configs) {
-    $config_storage = $this->createMock('Drupal\Core\Config\NullStorage');
-    $config_storage->expects($this->any())
-      ->method('listAll')
-      ->willReturn(array_keys($configs));
-
-    foreach ($configs as $name => $config) {
-      $config_storage->expects($this->any())
-        ->method('read')
-        ->with($this->equalTo($name))
-        ->willReturn($config);
-    }
-    return $config_storage;
-  }
-
-  /**
    * Returns a stub translation manager that just returns the passed string.
    *
    * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\StringTranslation\TranslationInterface
