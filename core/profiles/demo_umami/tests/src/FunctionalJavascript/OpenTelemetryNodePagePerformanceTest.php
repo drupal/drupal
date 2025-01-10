@@ -61,12 +61,15 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/1');
     }, 'umamiNodePageHotCache');
     $this->assertSession()->pageTextContains('quiche');
-    $this->assertSame($performance_data->getQueryCount(), 0);
-    $this->assertSame($performance_data->getCacheGetCount(), 1);
-    $this->assertSame($performance_data->getCacheSetCount(), 0);
-    $this->assertSame($performance_data->getCacheDeleteCount(), 0);
-    $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(1, $performance_data->getCacheTagIsValidCount());
+    $expected = [
+      'QueryCount' => 0,
+      'CacheGetCount' => 1,
+      'CacheSetCount' => 0,
+      'CacheDeleteCount' => 0,
+      'CacheTagChecksumCount' => 0,
+      'CacheTagIsValidCount' => 1,
+    ];
+    $this->assertMetrics($expected, $performance_data);
   }
 
   /**

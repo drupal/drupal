@@ -590,16 +590,21 @@ trait PerformanceTestTrait {
    *   Maximum value.
    * @param int $actual
    *   The number to assert against.
+   * @param string $message
+   *   The message to display.
    *
    * @return void
    *
    * @throws \PHPUnit\Framework\ExpectationFailedException
    */
-  protected function assertCountBetween(int $min, int $max, int $actual) {
+  protected function assertCountBetween(int $min, int $max, int $actual, string $message = '') {
+    if (!empty($message)) {
+      $message .= " ";
+    }
     static::assertThat(
       $actual,
       static::logicalAnd(static::greaterThanOrEqual($min), static::lessThanOrEqual($max)),
-      "$actual is greater or equal to $min and is smaller or equal to $max",
+      "$message$actual is greater or equal to $min and is smaller or equal to $max",
     );
   }
 
@@ -619,6 +624,61 @@ trait PerformanceTestTrait {
       return is_a($class, '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a($class, '\Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
     }
     return FALSE;
+  }
+
+  /**
+   * Assert metrics from a performance data value object.
+   *
+   * @param array $expected
+   *   The expected metrics.
+   * @param \Drupal\Tests\PerformanceData $performance_data
+   *   An instance of the performance data value object.
+   *
+   * @return void
+   */
+  protected function assertMetrics(
+    array $expected,
+    PerformanceData $performance_data,
+  ): void {
+    // Allow those metrics to have a range of +/- 50 bytes, so small changes
+    // are not significant enough to break tests.
+    $assertRange = [
+      'ScriptBytes',
+      'StylesheetBytes',
+    ];
+    foreach ($expected as $name => $metric) {
+      if (in_array($name, $assertRange)) {
+        $this->assertCountBetween($metric - 50, $metric + 50, $performance_data->{"get$name"}(), "Asserting $name");
+      }
+      else {
+        $this->assertSame($metric, $performance_data->{"get$name"}(), "Asserting $name");
+      }
+    }
+  }
+
+  /**
+   * Get metrics from a performance data value object.
+   *
+   * @param \Drupal\Tests\PerformanceData $performance_data
+   *   An instance of the performance data value object.
+   *
+   * @return array
+   *   An array of metrics.
+   */
+  protected function getMetrics(PerformanceData $performance_data): array {
+    return [
+      'StylesheetCount' => $performance_data->getStylesheetCount(),
+      'ScriptCount' => $performance_data->getScriptCount(),
+      'StylesheetBytes' => $performance_data->getStylesheetBytes(),
+      'ScriptBytes' => $performance_data->getScriptBytes(),
+      'QueryCount' => $performance_data->getQueryCount(),
+      'CacheGetCount' => $performance_data->getCacheGetCount(),
+      'CacheSetCount' => $performance_data->getCacheSetCount(),
+      'CacheDeleteCount' => $performance_data->getCacheDeleteCount(),
+      'CacheTagChecksumCount' => $performance_data->getCacheTagChecksumCount(),
+      'CacheTagIsValidCount' => $performance_data->getCacheTagIsValidCount(),
+      'CacheTagInvalidationCount' => $performance_data->getCacheTagInvalidationCount(),
+    ];
   }
 
 }

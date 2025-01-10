@@ -84,8 +84,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('');
     }, 'standardFrontPage');
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(1, $performance_data->getStylesheetCount());
-    $this->assertLessThan(3500, $performance_data->getStylesheetBytes());
 
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
@@ -127,21 +125,24 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(36, $performance_data->getQueryCount());
-    $this->assertSame(123, $performance_data->getCacheGetCount());
-    $this->assertSame(45, $performance_data->getCacheSetCount());
-    $this->assertSame(0, $performance_data->getCacheDeleteCount());
-    $this->assertSame(37, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(43, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 36,
+      'CacheGetCount' => 123,
+      'CacheSetCount' => 45,
+      'CacheDeleteCount' => 0,
+      'CacheTagChecksumCount' => 37,
+      'CacheTagIsValidCount' => 43,
+      'CacheTagInvalidationCount' => 0,
+      'StylesheetCount' => 1,
+      'StylesheetBytes' => 3450,
+    ];
+    $this->assertMetrics($expected, $performance_data);
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     }, 'standardNodePage');
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(1, $performance_data->getStylesheetCount());
-    $this->assertLessThan(3500, $performance_data->getStylesheetBytes());
 
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node/1" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
@@ -157,13 +158,18 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(10, $performance_data->getQueryCount());
-    $this->assertSame(93, $performance_data->getCacheGetCount());
-    $this->assertSame(16, $performance_data->getCacheSetCount());
-    $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertCountBetween(24, 25, $performance_data->getCacheTagChecksumCount());
     $this->assertCountBetween(39, 40, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 10,
+      'CacheGetCount' => 93,
+      'CacheSetCount' => 16,
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'StylesheetCount' => 1,
+      'StylesheetBytes' => 3150,
+    ];
+    $this->assertMetrics($expected, $performance_data);
 
     // Test user profile page.
     $this->user = $this->drupalCreateUser();
@@ -171,8 +177,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('user/' . $this->user->id());
     }, 'standardUserPage');
     $this->assertNoJavaScript($performance_data);
-    $this->assertSame(1, $performance_data->getStylesheetCount());
-    $this->assertLessThan(3500, $performance_data->getStylesheetBytes());
 
     $expected_queries = [
       'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/user/2" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
@@ -192,13 +196,18 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(14, $performance_data->getQueryCount());
-    $this->assertSame(78, $performance_data->getCacheGetCount());
-    $this->assertSame(17, $performance_data->getCacheSetCount());
-    $this->assertSame(0, $performance_data->getCacheDeleteCount());
-    $this->assertSame(23, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(32, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 14,
+      'CacheGetCount' => 78,
+      'CacheSetCount' => 17,
+      'CacheDeleteCount' => 0,
+      'CacheTagChecksumCount' => 23,
+      'CacheTagIsValidCount' => 32,
+      'CacheTagInvalidationCount' => 0,
+      'StylesheetCount' => 1,
+      'StylesheetBytes' => 3150,
+    ];
+    $this->assertMetrics($expected, $performance_data);
   }
 
   /**
@@ -243,13 +252,16 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(17, $performance_data->getQueryCount());
-    $this->assertSame(84, $performance_data->getCacheGetCount());
-    $this->assertSame(1, $performance_data->getCacheSetCount());
-    $this->assertSame(1, $performance_data->getCacheDeleteCount());
-    $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(37, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 17,
+      'CacheGetCount' => 84,
+      'CacheSetCount' => 1,
+      'CacheDeleteCount' => 1,
+      'CacheTagChecksumCount' => 1,
+      'CacheTagIsValidCount' => 37,
+      'CacheTagInvalidationCount' => 0,
+    ];
+    $this->assertMetrics($expected, $performance_data);
     $this->drupalLogout();
   }
 
@@ -297,13 +309,16 @@ class StandardPerformanceTest extends PerformanceTestBase {
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(18, $performance_data->getQueryCount());
-    $this->assertSame(105, $performance_data->getCacheGetCount());
-    $this->assertSame(1, $performance_data->getCacheSetCount());
-    $this->assertSame(1, $performance_data->getCacheDeleteCount());
-    $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(43, $performance_data->getCacheTagIsValidCount());
-    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $expected = [
+      'QueryCount' => 18,
+      'CacheGetCount' => 105,
+      'CacheSetCount' => 1,
+      'CacheDeleteCount' => 1,
+      'CacheTagChecksumCount' => 1,
+      'CacheTagIsValidCount' => 43,
+      'CacheTagInvalidationCount' => 0,
+    ];
+    $this->assertMetrics($expected, $performance_data);
   }
 
   /**
