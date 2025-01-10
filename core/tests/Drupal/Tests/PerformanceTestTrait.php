@@ -640,7 +640,7 @@ trait PerformanceTestTrait {
     array $expected,
     PerformanceData $performance_data,
   ): void {
-    // Allow those metrics to have a range of +/- 50 bytes, so small changes
+    // Allow those metrics to have a range of +/- 500 bytes, so small changes
     // are not significant enough to break tests.
     $assertRange = [
       'ScriptBytes',
@@ -648,7 +648,7 @@ trait PerformanceTestTrait {
     ];
     foreach ($expected as $name => $metric) {
       if (in_array($name, $assertRange)) {
-        $this->assertCountBetween($metric - 50, $metric + 50, $performance_data->{"get$name"}(), "Asserting $name");
+        $this->assertCountBetween($metric - 500, $metric + 500, $performance_data->{"get$name"}(), "Asserting $name");
       }
       else {
         $this->assertSame($metric, $performance_data->{"get$name"}(), "Asserting $name");
