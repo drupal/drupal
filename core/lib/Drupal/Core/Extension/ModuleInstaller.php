@@ -563,7 +563,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Allow modules to react prior to the uninstallation of a module.
-      $this->invokeAll('module_preuninstall', [$module, $sync_status]);
+      $this->moduleHandler->invokeAll('module_preuninstall', [$module, $sync_status]);
 
       // Uninstall the module.
       $this->moduleHandler->loadInclude($module, 'install');
@@ -657,12 +657,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
     \Drupal::service('router.builder')->rebuild();
 
     // Let other modules react.
-    $this->invokeAll('modules_uninstalled', [$module_list, $sync_status]);
+    $this->moduleHandler->invokeAll('modules_uninstalled', [$module_list, $sync_status]);
 
     // Flush all persistent caches.
     // Any cache entry might implicitly depend on the uninstalled modules,
     // so clear all of them explicitly.
-    $this->invokeAll('cache_flush');
+    $this->moduleHandler->invokeAll('cache_flush');
     foreach (Cache::getBins() as $cache_backend) {
       $cache_backend->deleteAll();
     }
@@ -799,7 +799,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
   }
 
   /**
-   * Call procedural hooks in all installed modules during installation.
+   * Call a procedural hook in an installed module during installation.
    *
    * Hooks called during install will remain procedural.
    * - hook_install()
@@ -810,21 +810,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * - hook_uninstall()
    * - hook_update_last_removed()
    * - hook_update_N()
-   *
-   * @param string $hook
-   *   The name of the hook to invoke.
-   * @param array $args
-   *   Arguments to pass to the hook.
-   */
-  protected function invokeAll($hook, $args = []): void {
-    $this->moduleHandler->loadAll();
-    $this->moduleHandler->invokeAll($hook, $args);
-  }
-
-  /**
-   * Call a procedural hook in an installed module during installation.
-   *
-   * Hook_install(), hook_uninstall() etc. will remain procedural.
    *
    * @param string $module
    *   The module (it can be a profile, too).
