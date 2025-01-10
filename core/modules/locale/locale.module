@@ -92,9 +92,13 @@ const LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL = 'remote_and_local';
 /**
  * Default location of gettext file on the translation server.
  *
- * @see locale_translation_default_translation_server().
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal::TRANSLATION_DEFAULT_SERVER_PATTERN instead.
+ *
+ * @see https://www.drupal.org/node/3488133
+ * @see locale_translation_default_translation_server()
  */
-const LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN = 'https://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po';
+const LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN = \Drupal::TRANSLATION_DEFAULT_SERVER_PATTERN;
 
 /**
  * The number of seconds that the translations status entry should be considered.

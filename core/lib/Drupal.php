@@ -134,6 +134,13 @@ class Drupal {
   const RECOMMENDED_PHP = '8.3.0';
 
   /**
+   * Default location of gettext file on the translation server.
+   *
+   * @see locale_translation_default_translation_server()
+   */
+  const TRANSLATION_DEFAULT_SERVER_PATTERN = 'https://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po';
+
+  /**
    * The currently active container object, or NULL if not initialized yet.
    *
    * @var \Drupal\Component\DependencyInjection\ContainerInterface|null
