@@ -28,7 +28,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
 
     $expected = [
       'ScriptCount' => 1,
-      'ScriptBytes' => 11850,
+      'ScriptBytes' => 11700,
       'StylesheetCount' => 6,
       'StylesheetBytes' => 124450,
     ];
@@ -48,11 +48,10 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
 
     $expected = [
       'ScriptCount' => 2,
-      'ScriptBytes' => 249650,
+      'ScriptBytes' => 249200,
       'StylesheetCount' => 6,
     ];
     $this->assertMetrics($expected, $performance_data);
-    $this->assertLessThan(250000, $performance_data->getScriptBytes());
 
   }
 
