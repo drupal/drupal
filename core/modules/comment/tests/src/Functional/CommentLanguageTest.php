@@ -73,7 +73,7 @@ class CommentLanguageTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
 
     // Enable content language negotiation UI.
-    \Drupal::state()->set('language_test.content_language_type', TRUE);
+    \Drupal::keyValue('language_test')->set('content_language_type', TRUE);
 
     // Set interface language detection to user and content language detection
     // to URL. Disable inheritance from interface language to ensure content
