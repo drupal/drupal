@@ -81,7 +81,7 @@ abstract class FileMediaFormatterBase extends FileFormatterBase implements FileM
 
     foreach ($extension_list as $extension) {
       $mime_type = $extension_mime_type_guesser->guessMimeType('fakedFile.' . $extension);
-      if (static::mimeTypeApplies($mime_type)) {
+      if ($mime_type !== NULL && static::mimeTypeApplies($mime_type)) {
         return TRUE;
       }
     }
@@ -192,11 +192,12 @@ abstract class FileMediaFormatterBase extends FileFormatterBase implements FileM
     // grouping in case the multiple file behavior is not 'tags'.
     /** @var \Drupal\file\Entity\File $file */
     foreach ($this->getEntitiesToView($items, $langcode) as $file) {
-      if (static::mimeTypeApplies($file->getMimeType())) {
+      $mime_type = $file->getMimeType();
+      if ($mime_type !== NULL && static::mimeTypeApplies($mime_type)) {
         $source_attributes = new Attribute();
         $source_attributes
           ->setAttribute('src', $file->createFileUrl())
-          ->setAttribute('type', $file->getMimeType());
+          ->setAttribute('type', $mime_type);
         if ($this->getSetting('multiple_file_display_type') === 'tags') {
           $source_files[] = [
             [
