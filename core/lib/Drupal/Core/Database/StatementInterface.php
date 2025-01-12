@@ -168,6 +168,9 @@ interface StatementInterface extends \Traversable {
    *
    * @return array
    *   An indexed array, or an empty array if there is no result set.
+   *
+   * @throws \ValueError
+   *   If there is at least one record but the column index is not defined.
    */
   public function fetchCol($index = 0);
 

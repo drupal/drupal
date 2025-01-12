@@ -6,7 +6,9 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\RowCountException;
 use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\StatementPrefetchIterator;
 use Drupal\Tests\system\Functional\Database\FakeRecord;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the Database system's various fetch capabilities.
@@ -31,6 +33,28 @@ class FetchTest extends DatabaseTestBase {
     }
 
     $this->assertCount(1, $records, 'There is only one record.');
+  }
+
+  /**
+   * Confirms that we can fetch a single column value.
+   */
+  public function testQueryFetchColumn(): void {
+    $statement = $this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
+    $statement->setFetchMode(\PDO::FETCH_COLUMN, 0);
+    $this->assertSame('John', $statement->fetch());
+  }
+
+  /**
+   * Confirms that an out of range index throws an error.
+   */
+  public function testQueryFetchColumnOutOfRange(): void {
+    $this->expectException(\ValueError::class);
+    $this->expectExceptionMessage('Invalid column index');
+    $statement = $this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
+    $statement->setFetchMode(\PDO::FETCH_COLUMN, 200);
+    $statement->fetch();
   }
 
   /**
@@ -162,6 +186,62 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests ::fetchCol() for edge values returned.
+   */
+  public function testQueryFetchColEdgeCases(): void {
+    $this->connection->insert('test_null')
+      ->fields([
+        'name' => 'Foo',
+        'age' => 0,
+      ])
+      ->execute();
+
+    $this->connection->insert('test_null')
+      ->fields([
+        'name' => 'Bar',
+        'age' => NULL,
+      ])
+      ->execute();
+
+    $this->connection->insert('test_null')
+      ->fields([
+        'name' => 'Qux',
+        'age' => (int) FALSE,
+      ])
+      ->execute();
+
+    $statement = $this->connection->select('test_null')
+      ->fields('test_null', ['age'])
+      ->orderBy('id')
+      ->execute();
+
+    $this->assertSame(['0', NULL, '0'], $statement->fetchCol());
+
+    // Additional fetch returns FALSE since the result set is finished.
+    $this->assertFalse($statement->fetchField());
+  }
+
+  /**
+   * Confirms that an out of range index in fetchCol() throws an error.
+   */
+  public function testQueryFetchColIndexOutOfRange(): void {
+    $this->expectException(\ValueError::class);
+    $this->expectExceptionMessage('Invalid column index');
+    $this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] > :age', [':age' => 25])
+      ->fetchCol(200);
+  }
+
+  /**
+   * Confirms empty result set prevails on out of range index in fetchCol().
+   */
+  public function testQueryFetchColIndexOutOfRangeOnEmptyResultSet(): void {
+    $this->assertSame([], $this->connection
+      ->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 255])
+      ->fetchCol(200));
+  }
+
+  /**
    * Tests ::fetchAllAssoc().
    */
   public function testQueryFetchAllAssoc(): void {
@@ -274,7 +354,7 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirms that an out of range index throws an error.
+   * Confirms that an out of range index in fetchField() throws an error.
    */
   public function testQueryFetchFieldIndexOutOfRange(): void {
     $this->expectException(\ValueError::class);
@@ -285,7 +365,7 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirms that empty result set prevails on out of range index.
+   * Confirms empty result set prevails on out of range index in fetchField().
    */
   public function testQueryFetchFieldIndexOutOfRangeOnEmptyResultSet(): void {
     $this->assertFalse($this->connection
@@ -306,6 +386,20 @@ class FetchTest extends DatabaseTestBase {
       $exception = TRUE;
     }
     $this->assertTrue($exception, 'Exception was thrown');
+  }
+
+  /**
+   * Confirms deprecation of StatementPrefetchIterator::fetchColumn().
+   */
+  #[IgnoreDeprecations]
+  public function testLegacyFetchColumn(): void {
+    $statement = $this->connection->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
+    if (!$statement instanceof StatementPrefetchIterator) {
+      $this->markTestSkipped('This test is for StatementPrefetchIterator statements only.');
+    }
+
+    $this->expectDeprecation('Drupal\Core\Database\StatementPrefetchIterator::fetchColumn() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use ::fetchField() instead. See https://www.drupal.org/node/3490312');
+    $statement->fetchColumn();
   }
 
 }
