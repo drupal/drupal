@@ -613,8 +613,6 @@ function drupal_check_profile($profile) {
         require_once $install_file;
       }
 
-      \Drupal::service('class_loader')->addPsr4('Drupal\\' . $module . '\\', \Drupal::root() . "/$module_path/src");
-
       if (function_exists($function)) {
         $requirements = array_merge($requirements, $function('install'));
       }
