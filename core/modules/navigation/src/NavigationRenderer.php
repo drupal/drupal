@@ -3,6 +3,7 @@
 namespace Drupal\navigation;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -18,6 +19,7 @@ use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Menu\LocalTaskManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
@@ -128,6 +130,7 @@ final class NavigationRenderer {
     if ($storage) {
       foreach ($storage->getSections() as $delta => $section) {
         $build[$delta] = $section->toRenderArray([]);
+        $build[$delta]['#cache']['contexts'] = ['user.permissions', 'theme', 'languages:language_interface'];
       }
     }
     // The render array is built based on decisions made by SectionStorage
@@ -157,6 +160,8 @@ final class NavigationRenderer {
     ];
     $build[0] = NestedArray::mergeDeepArray([$build[0], $defaults]);
 
+    $build[0]['content_top'] = $this->getContentTop();
+
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {
       $logo_path = $logo_settings->get('logo.path');
       if (!empty($logo_path) && is_file($logo_path)) {
@@ -169,8 +174,34 @@ final class NavigationRenderer {
         }
       }
     }
-    $build[0]['#cache']['contexts'] = ['user.permissions', 'theme', 'languages:language_interface'];
     return $build;
+  }
+
+  /**
+   * Gets the content for content_top section.
+   *
+   * @return array
+   *   The content_top section content.
+   */
+  protected function getContentTop(): array {
+    $content_top = [
+      '#theme' => 'navigation_content_top',
+    ];
+    $content_top_items = $this->moduleHandler->invokeAll('navigation_content_top');
+    $this->moduleHandler->alter('navigation_content_top', $content_top_items);
+    uasort($content_top_items, [SortArray::class, 'sortByWeightElement']);
+    // Filter out empty items, taking care to merge any cacheability metadata.
+    $cacheability = new CacheableMetadata();
+    $content_top_items = array_filter($content_top_items, function ($item) use (&$cacheability) {
+      if (Element::isEmpty($item)) {
+        $cacheability = $cacheability->merge(CacheableMetadata::createFromRenderArray($item));
+        return FALSE;
+      }
+      return TRUE;
+    });
+    $cacheability->applyTo($content_top);
+    $content_top['#items'] = $content_top_items;
+    return $content_top;
   }
 
   /**
