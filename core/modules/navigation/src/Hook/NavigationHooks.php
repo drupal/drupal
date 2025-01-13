@@ -99,6 +99,11 @@ class NavigationHooks {
       ],
     ];
     $items['menu_region__footer'] = ['variables' => ['items' => [], 'title' => NULL, 'menu_name' => NULL]];
+    $items['navigation_content_top'] = [
+      'variables' => [
+        'items' => [],
+      ],
+    ];
     return $items;
   }
 
