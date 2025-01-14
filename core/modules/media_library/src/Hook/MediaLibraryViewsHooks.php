@@ -8,10 +8,6 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for media_library.
  */
 class MediaLibraryViewsHooks {
-  /**
-   * @file
-   * Contains Views integration for the media_library module.
-   */
 
   /**
    * Implements hook_views_data().

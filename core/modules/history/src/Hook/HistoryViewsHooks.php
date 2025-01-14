@@ -8,10 +8,6 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for history.
  */
 class HistoryViewsHooks {
-  /**
-   * @file
-   * Provide views data for history.module.
-   */
 
   /**
    * Implements hook_views_data().

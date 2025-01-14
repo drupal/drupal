@@ -8,10 +8,6 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for user.
  */
 class UserViewsHooks {
-  /**
-   * @file
-   * Provide views data for user.module.
-   */
 
   /**
    * Implements hook_views_plugins_argument_validator_alter().
