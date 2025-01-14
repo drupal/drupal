@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
@@ -16,6 +17,7 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 class PrepareUninstallTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;
+  use NodeAccessTrait;
 
   /**
    * {@inheritdoc}
@@ -52,7 +54,7 @@ class PrepareUninstallTest extends BrowserTestBase {
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     node_access_rebuild();
-    node_access_test_add_field(NodeType::load('article'));
+    $this->addPrivateField(NodeType::load('article'));
     \Drupal::state()->set('node_access_test.private', TRUE);
 
     // Create 10 nodes.

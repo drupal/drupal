@@ -6,6 +6,7 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\user\RoleInterface;
 
 /**
@@ -14,6 +15,8 @@ use Drupal\user\RoleInterface;
  * @group file
  */
 class FilePrivateTest extends FileFieldTestBase {
+
+  use NodeAccessTrait;
 
   /**
    * {@inheritdoc}
@@ -30,7 +33,7 @@ class FilePrivateTest extends FileFieldTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    node_access_test_add_field(NodeType::load('article'));
+    $this->addPrivateField(NodeType::load('article'));
     node_access_rebuild();
     \Drupal::state()->set('node_access_test.private', TRUE);
     // This test expects unused managed files to be marked as a temporary file.

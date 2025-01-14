@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\NodeAccessTrait;
 
 /**
  * Tests multilingual node access with a module that is not language-aware.
@@ -15,6 +16,8 @@ use Drupal\node\Entity\NodeType;
  * @group node
  */
 class NodeAccessLanguageTest extends NodeAccessTestBase {
+
+  use NodeAccessTrait;
 
   /**
    * {@inheritdoc}
@@ -27,7 +30,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    node_access_test_add_field(NodeType::load('page'));
+    $this->addPrivateField(NodeType::load('page'));
 
     // After enabling a node access module, the access table has to be rebuild.
     node_access_rebuild();

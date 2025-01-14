@@ -10,6 +10,7 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
@@ -21,6 +22,7 @@ use Drupal\user\Entity\User;
 class UserCancelTest extends BrowserTestBase {
 
   use CommentTestTrait;
+  use NodeAccessTrait;
 
   /**
    * {@inheritdoc}
@@ -279,7 +281,7 @@ class UserCancelTest extends BrowserTestBase {
 
     // Setup node access
     node_access_rebuild();
-    node_access_test_add_field(NodeType::load('page'));
+    $this->addPrivateField(NodeType::load('page'));
     \Drupal::state()->set('node_access_test.private', TRUE);
 
     $this->config('user.settings')->set('cancel_method', 'user_cancel_block_unpublish')->save();
