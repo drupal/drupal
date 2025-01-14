@@ -6,6 +6,7 @@
 
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\FieldStorageConfigInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
@@ -456,4 +457,42 @@ function views_element_validate_tags($element, FormStateInterface $form_state) {
       return;
     }
   }
+}
+
+/**
+ * Determines whether the entity type the field appears in is SQL based.
+ *
+ * @param \Drupal\field\FieldStorageConfigInterface $field_storage
+ *   The field storage definition.
+ *
+ * @return \Drupal\Core\Entity\Sql\SqlContentEntityStorage
+ *   Returns the entity type storage if supported.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ * \Drupal::service('views.field_data_provider')
+ * ->getSqlStorageForField($field_storage); instead.
+ * @see https://www.drupal.org/node/3489502
+ */
+function _views_field_get_entity_type_storage(FieldStorageConfigInterface $field_storage) {
+  @trigger_error('_views_field_get_entity_type_storage() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal::service(\'views.field_data_provider\')->getSqlStorageForField($field_storage). See https://www.drupal.org/node/3489502', E_USER_DEPRECATED);
+  return \Drupal::service('views.field_data_provider')->getSqlStorageForField($field_storage);
+}
+
+/**
+ * Default views data implementation for a field.
+ *
+ * @param \Drupal\field\FieldStorageConfigInterface $field_storage
+ *   The field definition.
+ *
+ * @return array
+ *   The default views data for the field.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
+ * \Drupal::service('views.field_data_provider')
+ * ->defaultFieldImplementation($field_storage); instead.
+ * @see https://www.drupal.org/node/3489502
+ */
+function views_field_default_views_data(FieldStorageConfigInterface $field_storage) {
+  @trigger_error('views_field_default_views_data() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal::service(\'views.field_data_provider\')->defaultFieldImplementation($field_storage). See https://www.drupal.org/node/3489502', E_USER_DEPRECATED);
+  return \Drupal::service('views.field_data_provider')->defaultFieldImplementation($field_storage);
 }

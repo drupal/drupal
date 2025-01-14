@@ -532,11 +532,11 @@ function hook_views_data_alter(array &$data) {
  * When collecting the views data, views_views_data() invokes this hook for each
  * field storage definition, on the module that provides the field storage
  * definition. If the return value is empty, the result of
- * views_field_default_views_data() is used instead. Then the result is altered
+ * FieldViewsDataProvider::defaultFieldImplementation() is used instead. Then the result is altered
  * by invoking hook_field_views_data_alter() on all modules.
  *
  * If no hook implementation exists, hook_views_data() falls back to
- * views_field_default_views_data().
+ * FieldViewsDataProvider::defaultFieldImplementation().
  *
  * @param \Drupal\field\FieldStorageConfigInterface $field_storage
  *   The field storage config entity.
@@ -550,7 +550,7 @@ function hook_views_data_alter(array &$data) {
  * @see hook_field_views_data_views_data_alter()
  */
 function hook_field_views_data(FieldStorageConfigInterface $field_storage): array {
-  $data = views_field_default_views_data($field_storage);
+  $data = \Drupal::service('views.field_data_provider')->defaultFieldImplementation($field_storage);
   foreach ($data as $table_name => $table_data) {
     // Add the relationship only on the target_id field.
     $data[$table_name][$field_storage->getName() . '_target_id']['relationship'] = [
@@ -569,8 +569,8 @@ function hook_field_views_data(FieldStorageConfigInterface $field_storage): arra
  *
  * This is called on all modules even if there is no hook_field_views_data()
  * implementation for the field, and therefore may be used to alter the
- * default data that views_field_default_views_data() supplies for the
- * field storage.
+ * default data that FieldViewsDataProvider::defaultFieldImplementation()
+ * supplies for the field storage.
  *
  * @param array $data
  *   The views data for the field storage. This has the same format as the

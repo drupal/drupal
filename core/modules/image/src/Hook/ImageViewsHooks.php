@@ -16,11 +16,11 @@ class ImageViewsHooks {
    * Views integration for image fields. Adds an image relationship to the default
    * field data.
    *
-   * @see views_field_default_views_data()
+   * @see FieldViewsDataProvider::defaultFieldImplementation()
    */
   #[Hook('field_views_data')]
   public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {
-    $data = views_field_default_views_data($field_storage);
+    $data = \Drupal::service('views.field_data_provider')->defaultFieldImplementation($field_storage);
     foreach ($data as $table_name => $table_data) {
       // Add the relationship only on the target_id field.
       $data[$table_name][$field_storage->getName() . '_target_id']['relationship'] = [

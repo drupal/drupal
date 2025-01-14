@@ -64,6 +64,10 @@ services:
     tags:
       - { name: backend_overridable }
   Drupal\views\ViewsData: '@views.views_data'
+  views.field_data_provider:
+    class: Drupal\views\FieldViewsDataProvider
+    arguments: ['@entity_type.manager', '@plugin.manager.field.field_type']
+  Drupal\views\FieldViewsDataProvider: '@views.field_data_provider'
   views.views_data_helper:
     class: Drupal\views\ViewsDataHelper
     arguments: ['@views.views_data']

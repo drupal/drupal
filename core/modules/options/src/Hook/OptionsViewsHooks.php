@@ -19,7 +19,7 @@ class OptionsViewsHooks {
    */
   #[Hook('field_views_data')]
   public function fieldViewsData(FieldStorageConfigInterface $field): array {
-    $data = views_field_default_views_data($field);
+    $data = \Drupal::service('views.field_data_provider')->defaultFieldImplementation($field);
     foreach ($data as $table_name => $table_data) {
       foreach ($table_data as $field_name => $field_data) {
         if (isset($field_data['filter']) && $field_name != 'delta') {

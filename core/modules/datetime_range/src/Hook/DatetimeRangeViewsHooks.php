@@ -2,6 +2,7 @@
 
 namespace Drupal\datetime_range\Hook;
 
+use Drupal\datetime\DateTimeViewsHelper;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 
@@ -10,17 +11,18 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class DatetimeRangeViewsHooks {
 
+  public function __construct(
+    protected readonly DateTimeViewsHelper $dateTimeViewsHelper,
+  ) {}
+
   /**
    * Implements hook_field_views_data().
    */
   #[Hook('field_views_data')]
   public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {
-    // Include datetime.views.inc file in order for helper function
-    // datetime_type_field_views_data_helper() to be available.
-    \Drupal::moduleHandler()->loadInclude('datetime', 'inc', 'datetime.views');
     // Get datetime field data for value and end_value.
-    $data = datetime_type_field_views_data_helper($field_storage, [], 'value');
-    $data = datetime_type_field_views_data_helper($field_storage, $data, 'end_value');
+    $data = $this->dateTimeViewsHelper->buildViewsData($field_storage, [], 'value');
+    $data = $this->dateTimeViewsHelper->buildViewsData($field_storage, $data, 'end_value');
     return $data;
   }
 
