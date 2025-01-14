@@ -30,9 +30,8 @@ class UserRolesCacheContext extends UserCacheContextBase implements CalculatedCa
     if ($role === NULL) {
       return implode(',', $this->user->getRoles());
     }
-    else {
-      return (in_array($role, $this->user->getRoles()) ? 'true' : 'false');
-    }
+
+    return in_array($role, $this->user->getRoles(), TRUE) ? 'true' : 'false';
   }
 
   /**
