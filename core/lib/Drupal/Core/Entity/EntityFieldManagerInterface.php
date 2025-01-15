@@ -140,4 +140,20 @@ interface EntityFieldManagerInterface {
    */
   public function getExtraFields($entity_type_id, $bundle);
 
+  /**
+   * Returns the labels used for a field on an entity type.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $field_name
+   *   The machine name of the field.
+   *
+   * @return array
+   *   An array where the first element is the most commonly used label for the
+   *   field and the second element is a list of all labels in use. When more
+   *   than one label is used the same number of times then the labels are
+   *   sorted alphabetically.
+   */
+  public function getFieldLabels(string $entity_type, string $field_name): array;
+
 }

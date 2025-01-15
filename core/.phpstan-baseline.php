@@ -52030,6 +52030,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/views.module',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Function views_entity_field_label\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.module',
+];
+$ignoreErrors[] = [
 	'message' => '#^Function views_hook_info\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -52040,12 +52046,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function views_entity_field_label\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function views_ui_add_ajax_trigger\\(\\) has no return type specified\\.$#',

@@ -66,7 +66,7 @@ services:
   Drupal\views\ViewsData: '@views.views_data'
   views.field_data_provider:
     class: Drupal\views\FieldViewsDataProvider
-    arguments: ['@entity_type.manager', '@plugin.manager.field.field_type']
+    arguments: ['@entity_type.manager', '@plugin.manager.field.field_type', '@entity_field.manager']
   Drupal\views\FieldViewsDataProvider: '@views.field_data_provider'
   views.views_data_helper:
     class: Drupal\views\ViewsDataHelper

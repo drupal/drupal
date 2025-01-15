@@ -2,13 +2,18 @@
 
 namespace Drupal\image\Hook;
 
-use Drupal\field\FieldStorageConfigInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Hook implementations for image.
  */
 class ImageViewsHooks {
+
+  public function __construct(
+    protected readonly EntityFieldManagerInterface $entityFieldManager,
+  ) {}
 
   /**
    * Implements hook_field_views_data().
@@ -50,7 +55,7 @@ class ImageViewsHooks {
     $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type_id;
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $entity_type_manager->getStorage($entity_type_id)->getTableMapping();
-    [$label] = views_entity_field_label($entity_type_id, $field_name);
+    [$label] = $this->entityFieldManager->getFieldLabels($entity_type_id, $field_name);
     $data['file_managed'][$pseudo_field_name]['relationship'] = [
       'title' => t('@entity using @field', [
         '@entity' => $entity_type->getLabel(),

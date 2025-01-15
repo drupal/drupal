@@ -2,6 +2,7 @@
 
 namespace Drupal\views;
 
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
@@ -18,6 +19,7 @@ class FieldViewsDataProvider {
   public function __construct(
     protected readonly EntityTypeManager $entityTypeManager,
     protected readonly FieldTypePluginManagerInterface $fieldTypePluginManager,
+    protected readonly EntityFieldManagerInterface $entityFieldManager,
   ) {}
 
   /**
@@ -240,7 +242,7 @@ class FieldViewsDataProvider {
     // Determine the label to use for the field. We don't have a label available
     // at the field level, so we just go through all fields and take the one
     // which is used the most frequently.
-    [$label, $all_labels] = views_entity_field_label($entity_type_id, $field_name);
+    [$label, $all_labels] = $this->entityFieldManager->getFieldLabels($entity_type_id, $field_name);
 
     // Expose data for the field as a whole.
     foreach ($field_tables as $type => $table_info) {
