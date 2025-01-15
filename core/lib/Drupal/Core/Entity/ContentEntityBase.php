@@ -1185,7 +1185,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     if ($entity_type->hasKey('id')) {
       $duplicate->{$entity_type->getKey('id')}->value = NULL;
     }
+    // Explicitly mark the entity as new and the default revision. A new entity
+    // is always the default revision, but that persists only until the entity
+    // is saved.
     $duplicate->enforceIsNew();
+    $duplicate->isDefaultRevision(TRUE);
 
     // Check if the entity type supports UUIDs and generate a new one if so.
     if ($entity_type->hasKey('uuid')) {
