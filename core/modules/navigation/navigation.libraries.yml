@@ -28,6 +28,16 @@ internal.navigation:
     - navigation/internal.popover
     - navigation/internal.safe-triangle
 
+internal.navigation-workspaces:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
+  version: VERSION
+  css:
+    theme:
+      css/components/toolbar-workspaces.css: {}
+  dependencies:
+    - navigation/internal.navigation
+
 admin-reset-styles:
   css:
     base:

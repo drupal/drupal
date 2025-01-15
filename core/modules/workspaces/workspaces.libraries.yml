@@ -1,9 +1,15 @@
-drupal.workspaces.toolbar:
+drupal.workspaces.off-canvas:
   version: VERSION
   css:
     theme:
       css/workspaces.off-canvas.css: {}
+drupal.workspaces.toolbar:
+  version: VERSION
+  css:
+    theme:
       css/workspaces.toolbar.css: {}
+  dependencies:
+    - workspaces/drupal.workspaces.off-canvas
 drupal.workspaces.overview:
   version: VERSION
   css:

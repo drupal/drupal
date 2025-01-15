@@ -16,6 +16,7 @@ services:
         '@request_stack',
         '@extension.list.module',
         '@current_user',
+        '%renderer.config%',
       ]
   Drupal\navigation\NavigationRenderer: '@navigation.renderer'
 

@@ -77,6 +77,7 @@ final class NavigationRenderer {
     private RequestStack $requestStack,
     private ModuleExtensionList $moduleExtensionList,
     private AccountInterface $currentUser,
+    private array $rendererConfig,
   ) {}
 
   /**
@@ -130,7 +131,7 @@ final class NavigationRenderer {
     if ($storage) {
       foreach ($storage->getSections() as $delta => $section) {
         $build[$delta] = $section->toRenderArray([]);
-        $build[$delta]['#cache']['contexts'] = ['user.permissions', 'theme', 'languages:language_interface'];
+        $build[$delta]['#cache']['contexts'] = $this->rendererConfig['required_cache_contexts'];
       }
     }
     // The render array is built based on decisions made by SectionStorage

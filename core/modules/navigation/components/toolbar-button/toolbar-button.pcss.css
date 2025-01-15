@@ -6,8 +6,21 @@
 
 @import "../../css/base/media-queries.pcss.css";
 
-:root {
+[data-drupal-admin-styles] {
   --toolbar-button-outline-offset: 0;
+  --toolbar-button-bg: transparent;
+  --toolbar-button-color: var(--admin-toolbar-color-gray-800);
+  /* Hover styles. */
+  --toolbar-button-hover-bg: var(--admin-toolbar-color-gray-050);
+  --toolbar-button-hover-color: var(--admin-toolbar-color-gray-990);
+  /* Focus variables. */
+  --toolbar-button-focus-color: var(--admin-toolbar-color-blue-700);
+  /* Current variables */
+  --toolbar-button-current-bg: var(--admin-toolbar-color-gray-050);
+  --toolbar-button-current-color: var(--admin-toolbar-color-blue-700);
+  /* Active child variables. */
+  --toolbar-button-has-active-child-bg: var(--admin-toolbar-color-gray-050);
+  --toolbar-button-has-active-child-color: var(--admin-toolbar-color-gray-950);
 }
 
 .toolbar-button {
@@ -20,38 +33,48 @@
   text-align: start;
   text-decoration: none;
   word-break: break-word;
-  color: var(--admin-toolbar-color-gray-800);
+  color: var(--toolbar-button-color);
   border: 0;
   border-radius: var(--admin-toolbar-space-8);
-  background-color: transparent;
+  background-color: var(--toolbar-button-bg);
   font-size: var(--admin-toolbar-font-size-info-sm);
   font-variation-settings: "wght" 700;
   line-height: var(--admin-toolbar-line-height-info-sm);
   gap: calc(0.5 * var(--admin-toolbar-rem));
 
   &:has(+ .toolbar-popover__wrapper .is-active) {
-    color: var(--admin-toolbar-color-gray-950);
-    background-color: var(--admin-toolbar-color-gray-050);
+    color: var(--toolbar-button-has-active-child-color);
+    background-color: var(--toolbar-button-has-active-child-bg);
+  }
+
+  &[class*="toolbar-button--icon"]:has(+ .ajax-progress--throbber),
+  &[class*="toolbar-button--icon"]:has(+ .ajax-progress-throbber) {
+    --icon: url(./assets/throbber.svg);
+
+    & + .ajax-progress--throbber,
+    & + .ajax-progress-throbber {
+      display: none;
+    }
   }
 
   &:hover {
     z-index: 20;
-    color: var(--admin-toolbar-color-gray-990);
+    color: var(--toolbar-button-hover-color);
     outline: 2px solid var(--admin-toolbar-color-blue-200);
     outline-offset: var(--toolbar-button-outline-offset);
-    background-color: var(--admin-toolbar-color-gray-050);
+    background-color: var(--toolbar-button-hover-bg);
   }
 
   &:focus {
     z-index: 10;
-    color: var(--admin-toolbar-color-blue-700);
+    color: var(--toolbar-button-focus-color);
     outline: 2px solid var(--admin-toolbar-color-focus);
     outline-offset: var(--toolbar-button-outline-offset);
   }
 
   &.current {
-    color: var(--admin-toolbar-color-blue-700);
-    background-color: var(--admin-toolbar-color-gray-050);
+    color: var(--toolbar-button-current-color);
+    background-color: var(--toolbar-button-current-bg);
   }
 }
 
@@ -72,9 +95,9 @@
   &:hover:focus {
     z-index: 1;
     cursor: auto;
-    color: var(--admin-toolbar-color-gray-800);
+    color: var(--toolbar-button-color);
     outline: 0;
-    background-color: transparent;
+    background-color: var(--toolbar-button-bg);
   }
 }
 
@@ -267,6 +290,10 @@
 
 .toolbar-button--icon--user {
   --icon: url(./assets/user.svg);
+}
+
+.toolbar-button--icon--workspaces {
+  --icon: url(./assets/workspaces.svg);
 }
 
 .toolbar-button--collapsible {
