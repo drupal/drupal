@@ -1231,7 +1231,7 @@ function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInter
         }
         $test_class = $result->test_class;
         if (!isset($xml_files[$test_class])) {
-          $doc = new DomDocument('1.0');
+          $doc = new DomDocument('1.0', 'utf-8');
           $root = $doc->createElement('testsuite');
           $root = $doc->appendChild($root);
           $xml_files[$test_class] = ['doc' => $doc, 'suite' => $root];
