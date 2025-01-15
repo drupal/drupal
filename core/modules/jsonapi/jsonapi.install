@@ -30,7 +30,7 @@ function jsonapi_install(): void {
 /**
  * Implements hook_requirements().
  */
-function jsonapi_requirements($phase) {
+function jsonapi_requirements($phase): array {
   $requirements = [];
   if ($phase === 'runtime') {
     $module_handler = \Drupal::moduleHandler();

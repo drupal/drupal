@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_requirements().
  */
-function requirements1_test_requirements($phase) {
+function requirements1_test_requirements($phase): array {
   $requirements = [];
 
   // Always fails requirements.

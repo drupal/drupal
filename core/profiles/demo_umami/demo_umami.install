@@ -10,7 +10,7 @@ use Drupal\shortcut\Entity\Shortcut;
 /**
  * Implements hook_requirements().
  */
-function demo_umami_requirements($phase) {
+function demo_umami_requirements($phase): array {
   $requirements = [];
   if ($phase == 'runtime') {
     $profile = \Drupal::installProfile();

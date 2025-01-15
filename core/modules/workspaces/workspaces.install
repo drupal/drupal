@@ -11,7 +11,7 @@ use Drupal\workspaces\Entity\Workspace;
 /**
  * Implements hook_requirements().
  */
-function workspaces_requirements($phase) {
+function workspaces_requirements($phase): array {
   $requirements = [];
   if ($phase === 'install') {
     if (\Drupal::moduleHandler()->moduleExists('workspace')) {

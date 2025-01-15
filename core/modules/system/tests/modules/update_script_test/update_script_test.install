@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_requirements().
  */
-function update_script_test_requirements($phase) {
+function update_script_test_requirements($phase): array {
   $requirements = [];
 
   if ($phase == 'update') {

@@ -33,7 +33,7 @@ use Drupal\update\UpdateManagerInterface;
  * @see _update_cron_notify()
  * @see \Drupal\update\UpdateManagerInterface
  */
-function update_requirements($phase) {
+function update_requirements($phase): array {
   $requirements = [];
   if ($phase == 'runtime') {
     if ($available = update_get_available(FALSE)) {

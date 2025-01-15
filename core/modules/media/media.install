@@ -18,7 +18,7 @@ use Drupal\user\RoleInterface;
 /**
  * Implements hook_requirements().
  */
-function media_requirements($phase) {
+function media_requirements($phase): array {
   $requirements = [];
   if ($phase == 'install') {
     $destination = 'public://media-icons/generic';

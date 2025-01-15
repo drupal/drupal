@@ -14,7 +14,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_requirements().
  */
-function locale_requirements($phase) {
+function locale_requirements($phase): array {
   $requirements = [];
   if ($phase == 'runtime') {
     $available_updates = [];

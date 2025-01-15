@@ -8,7 +8,7 @@
 /**
  * Implements hook_requirements().
  */
-function navigation_requirements($phase) {
+function navigation_requirements($phase): array {
   $requirements = [];
 
   if ($phase === 'runtime') {

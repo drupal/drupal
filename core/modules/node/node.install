@@ -12,7 +12,7 @@ use Drupal\user\RoleInterface;
 /**
  * Implements hook_requirements().
  */
-function node_requirements($phase) {
+function node_requirements($phase): array {
   $requirements = [];
   if ($phase === 'runtime') {
     // Only show rebuild button if there are either 0, or 2 or more, rows

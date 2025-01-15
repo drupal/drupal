@@ -8,7 +8,7 @@
 /**
  * Implements hook_requirements().
  */
-function layout_discovery_requirements($phase) {
+function layout_discovery_requirements($phase): array {
   $requirements = [];
   if ($phase === 'install') {
     if (\Drupal::moduleHandler()->moduleExists('layout_plugin')) {

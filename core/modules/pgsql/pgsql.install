@@ -10,7 +10,7 @@ use Drupal\Core\Database\Database;
 /**
  * Implements hook_requirements().
  */
-function pgsql_requirements() {
+function pgsql_requirements(): array {
   $requirements = [];
   // Test with PostgreSQL databases for the status of the pg_trgm extension.
   if (Database::isActiveConnection()) {

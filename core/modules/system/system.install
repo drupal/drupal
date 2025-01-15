@@ -63,7 +63,7 @@ const DRUPAL_CORE_REMOVED_THEME_LIST = [
 /**
  * Implements hook_requirements().
  */
-function system_requirements($phase) {
+function system_requirements($phase): array {
   global $install_state;
 
   // Get the current default PHP requirements for this version of Drupal.

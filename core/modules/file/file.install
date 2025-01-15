@@ -62,7 +62,7 @@ function file_schema(): array {
  *
  * Display information about getting upload progress bars working.
  */
-function file_requirements($phase) {
+function file_requirements($phase): array {
   $requirements = [];
 
   if ($phase != 'runtime') {

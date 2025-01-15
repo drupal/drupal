@@ -1119,7 +1119,7 @@ function hook_updater_info_alter(&$updaters) {
  *     - REQUIREMENT_ERROR: The requirement failed with an error.
  *     Defaults to REQUIREMENT_OK when installing, REQUIREMENT_INFO otherwise.
  */
-function hook_requirements($phase) {
+function hook_requirements($phase): array {
   $requirements = [];
 
   // Report Drupal version
