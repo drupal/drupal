@@ -752,8 +752,8 @@ drupal.tabledrag.ajax:
   js:
     misc/tabledrag-ajax.js: { }
   dependencies:
-    - core/ajax
-    - core/tabledrag
+    - core/drupal.ajax
+    - core/drupal.tabledrag
 
 drupal.tableheader:
   version: VERSION
