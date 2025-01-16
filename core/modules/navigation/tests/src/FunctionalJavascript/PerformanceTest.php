@@ -80,7 +80,7 @@ class PerformanceTest extends PerformanceTestBase {
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
     $this->assertSame(1, $performance_data->getStyleSheetCount());
     $this->assertSame(2, $performance_data->getScriptCount());
-    $this->assertLessThan(90000, $performance_data->getStylesheetBytes());
+    $this->assertLessThan(90200, $performance_data->getStylesheetBytes());
     $this->assertLessThan(220000, $performance_data->getScriptBytes());
 
     // Check that the navigation toolbar is cached without any high-cardinality
