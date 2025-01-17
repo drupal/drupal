@@ -107,7 +107,10 @@ class SystemManager {
 
     // Check run-time requirements and status information.
     $requirements = $this->moduleHandler->invokeAll('requirements', ['runtime']);
+    $runtime_requirements = $this->moduleHandler->invokeAll('runtime_requirements');
+    $requirements = array_merge($requirements, $runtime_requirements);
     $this->moduleHandler->alter('requirements', $requirements);
+    $this->moduleHandler->alter('runtime_requirements', $requirements);
     uasort($requirements, function ($a, $b) {
       if (!isset($a['weight'])) {
         if (!isset($b['weight'])) {

@@ -1,0 +1,5 @@
+name: 'Test Hook Runtime Requirements'
+type: module
+description: 'Support module for testing hook_runtime_requirements().'
+package: Testing
+version: VERSION
