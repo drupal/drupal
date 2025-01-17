@@ -1276,5 +1276,65 @@ function hook_runtime_requirements_alter(array &$requirements): void {
 }
 
 /**
+ * Check requirements before running database updates.
+ *
+ * This hook is invoked when update.php is run and when database updates are
+ * triggered via the CLI.
+ *
+ * @return array
+ *   An associative array where the keys are arbitrary but must be unique (it
+ *   is suggested to use the module short name as a prefix) and the values are
+ *   themselves associative arrays with the following elements:
+ *   - title: The name of the requirement.
+ *   - value: The current value (e.g., version, time, level, etc).
+ *   - description: The description of the requirement/status.
+ *   - severity: (optional) The requirement's result/severity level, one of:
+ *     - REQUIREMENT_INFO: Has no effect during updates.
+ *     - REQUIREMENT_OK: Has no effect during updates.
+ *     - REQUIREMENT_WARNING: Displays a warning, user can choose to continue.
+ *     - REQUIREMENT_ERROR: Displays an error message, user cannot continue
+ *       until the problem is resolved.
+ *     Defaults to REQUIREMENT_OK.
+ */
+function hook_update_requirements() {
+  $requirements = [];
+
+  // Test PHP version
+  $requirements['php'] = [
+    'title' => t('PHP'),
+    'value' => phpversion(),
+  ];
+  if (version_compare(phpversion(), \Drupal::MINIMUM_PHP) < 0) {
+    $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', ['%version' => \Drupal::MINIMUM_PHP]);
+    $requirements['php']['severity'] = REQUIREMENT_ERROR;
+  }
+
+  return $requirements;
+}
+
+/**
+ * Alters update requirements data.
+ *
+ * Implementations are able to alter the title, value, description or the
+ * severity of certain requirements defined by hook_requirements() and
+ * hook_update_requirements() implementations, or even remove such entries.
+ *
+ * @param array $requirements
+ *   The requirements data to be altered.
+ *
+ * @see hook_update_requirements()
+ */
+function hook_update_requirements_alter(array &$requirements): void {
+  // Change the title from 'PHP' to 'PHP version'.
+  $requirements['php']['title'] = t('PHP version');
+
+  // Decrease the 'update status' requirement severity from warning to info.
+  $requirements['update status']['severity'] = REQUIREMENT_INFO;
+
+  // Remove a requirements entry.
+  unset($requirements['foo']);
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

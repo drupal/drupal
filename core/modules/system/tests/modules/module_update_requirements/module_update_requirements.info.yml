@@ -1,0 +1,5 @@
+name: 'Test Hook Update Requirements'
+type: module
+description: 'Support module for testing hook_update_requirements().'
+package: Testing
+version: VERSION
