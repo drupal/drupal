@@ -27,6 +27,7 @@ class PerformanceTestBase extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->doSetUpTasks();
+    \Drupal::service('module_installer')->uninstall(['automated_cron']);
   }
 
   /**
