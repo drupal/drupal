@@ -8,7 +8,7 @@ use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the log message added by file_save_htaccess().
+ * Tests the log message added by the HtaccessWriter service.
  *
  * @group File
  */
@@ -25,15 +25,15 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests file_save_htaccess().
+   * Tests the HtaccessWriter service write functionality.
    */
   public function testHtaccessSave(): void {
     // Prepare test directories.
     $private = $this->publicFilesDirectory . '/test/private';
 
-    // Verify that file_save_htaccess() returns FALSE if .htaccess cannot be
-    // written and writes a correctly formatted message to the error log. Set
-    // $private to TRUE so all possible .htaccess lines are written.
+    // Verify that HtaccessWriter service returns FALSE if .htaccess cannot be
+    // written and writes a correctly formatted message to the error log.
+    // Set $private to TRUE so all possible .htaccess lines are written.
     /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccess */
     $htaccess = \Drupal::service('file.htaccess_writer');
     $this->assertFalse($htaccess->write($private, TRUE));
