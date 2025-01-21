@@ -30,7 +30,7 @@ use Drupal\migrate\Row;
  *     \Drupal\migrate\Plugin\MigrateIdMapInterface::STATUS_NEEDS_UPDATE.
  * - The row needs an update.
  *   - Rows can be marked by custom or contrib modules using the
- *     \Drupal\migrate\Plugin\MigrateIdMapInterface::prepareUpdate() os
+ *     \Drupal\migrate\Plugin\MigrateIdMapInterface::prepareUpdate() or
  *     \Drupal\migrate\Plugin\MigrateIdMapInterface::setUpdate()
  *     methods.
  * - The row is above the high-water mark.
@@ -97,9 +97,9 @@ use Drupal\migrate\Row;
  * source:
  *   plugin: some_source_plugin_name
  *   constants:
- *     - foo: bar
+ *     foo: bar
  * process:
- *   baz: constants/bar
+ *   baz: constants/foo
  * @endcode
  *
  * In this example, the constant 'foo' is defined with a value of 'bar'. It is
