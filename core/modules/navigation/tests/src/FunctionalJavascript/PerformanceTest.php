@@ -73,11 +73,11 @@ class PerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 4,
-      'CacheGetCount' => 60,
+      'CacheGetCount' => 61,
       'CacheSetCount' => 2,
       'CacheDeleteCount' => 0,
-      'CacheTagChecksumCount' => 2,
-      'CacheTagIsValidCount' => 29,
+      'CacheTagChecksumCount' => 3,
+      'CacheTagIsValidCount' => 31,
       'CacheTagInvalidationCount' => 0,
       'ScriptCount' => 2,
       'ScriptBytes' => 215500,

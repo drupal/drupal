@@ -1,0 +1,21 @@
+{%
+  set classes = [
+    'toolbar-title',
+    icon ? 'toolbar-title--icon--' ~ icon : '',
+  ]
+%}
+{% if modifiers is iterable %}
+  {% set classes = classes|merge(modifiers|map(modifier => "toolbar-title--#{modifier}")) %}
+{% endif %}
+
+{% if extra_classes is iterable %}
+  {% set classes = classes|merge(extra_classes) %}
+{% endif %}
+
+<{{html_tag|default('h2')}}{{attributes.addClass(classes)}}>
+  <span class="toolbar-title__label">
+    {% block content %}
+      {{ content }}
+    {% endblock %}
+  </span>
+</{{html_tag|default('h2')}}>

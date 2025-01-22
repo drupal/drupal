@@ -9,7 +9,6 @@ services:
         '@module_handler',
         '@current_route_match',
         '@plugin.manager.menu.local_task',
-        '@entity_type.manager',
         '@image.factory',
         '@file_url_generator',
         '@plugin.manager.layout_builder.section_storage',
@@ -17,6 +16,7 @@ services:
         '@extension.list.module',
         '@current_user',
         '%renderer.config%',
+        '@navigation.entity_route_helper',
       ]
   Drupal\navigation\NavigationRenderer: '@navigation.renderer'
 
@@ -30,6 +30,16 @@ services:
         '@menu.active_trail',
         '@callable_resolver',
       ]
+
+  navigation.entity_route_helper:
+    class: Drupal\navigation\EntityRouteHelper
+    arguments:
+      [
+        '@current_route_match',
+        '@entity_type.manager',
+        '@cache.discovery',
+      ]
+  Drupal\navigation\EntityRouteHelper: '@navigation.entity_route_helper'
 
   navigation.user_lazy_builder:
     class: Drupal\navigation\UserLazyBuilder

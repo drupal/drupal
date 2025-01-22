@@ -1,0 +1,54 @@
+/* cspell:ignore csvg cpath wght */
+/**
+ * @file
+ * Toolbar title styles.
+ */
+
+.toolbar-title {
+  font-variation-settings: "wght" 500;
+}
+
+/* Sizes aligned with variables from css/base/variables.pcss.css */
+.toolbar-title--xs {
+  font-size: var(--admin-toolbar-font-size-heading-xs);
+}
+
+.toolbar-title--ellipsis {
+  .toolbar-title__label {
+    overflow: hidden;
+    max-width: var(--toolbar--title-max-width);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+/* Class starts with `toolbar-title--icon`  */
+[class*="toolbar-title--icon"] {
+  display: flex;
+  align-items: center;
+  gap: var(--admin-toolbar-space-8);
+
+  &::before {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    content: "";
+    color: currentColor;
+    background-color: currentColor;
+    inline-size: var(--admin-toolbar-space-16);
+    block-size: var(--admin-toolbar-space-16);
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: 100% auto;
+    mask-image: var(--icon);
+  }
+}
+
+.toolbar-title--icon--file {
+  --icon: url(./assets/file.svg);
+}
+.toolbar-title--icon--database {
+  --icon: url(./assets/database.svg);
+}

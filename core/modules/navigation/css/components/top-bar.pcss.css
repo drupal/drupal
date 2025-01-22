@@ -45,6 +45,7 @@
 
 .top-bar__actions {
   display: flex;
+  justify-content: end;
   gap: 0.5rem;
 
   @media (--admin-toolbar-desktop) {
@@ -55,9 +56,9 @@
 
 .top-bar__content {
   display: grid;
-  grid-auto-flow: column;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: var(--admin-toolbar-space-16);
   width: 100%;
 }
@@ -73,9 +74,14 @@
 
 .top-bar__context {
   display: flex;
-  gap: 0.5rem;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
+  gap: var(--admin-toolbar-space-20);
+}
+
+.top-bar__title {
+  --toolbar--title-max-width: 40ch;
 }
 
 .top-bar__tools {

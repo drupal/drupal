@@ -1,0 +1,54 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+
+# The human readable name.
+name: Title
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+# Schema for the props. We support www.json-schema.org. Learn more about the
+# syntax there.
+props:
+  type: object
+  properties:
+    modifiers:
+      type: array
+      title: Modifier classes.
+      description:
+        Title modifiers.
+        https://en.bem.info/methodology/css/#modifiers
+      items:
+        type: string
+        enum:
+          - ellipsis
+          - xs
+    extra_classes:
+      type: array
+      title: Extra classes.
+      description:
+        External modifiers added from the placement context.
+        https://en.bem.info/methodology/css/#mixes
+      items:
+        type: string
+    html_tag:
+      type: string
+      title: HTML tag for title
+      # Limit the available options by using enums.
+      enum:
+        - h1
+        - h2
+        - h3
+        - h4
+        - h5
+        - h6
+        - span
+      # Provide a default value
+      default: h2
+    icon:
+      title: Icon
+      type: string
+slots:
+  content:
+    title: Content
+    description: Content of title.

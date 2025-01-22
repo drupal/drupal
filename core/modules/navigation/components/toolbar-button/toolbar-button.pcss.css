@@ -25,9 +25,8 @@
 
 .toolbar-button {
   z-index: 1;
+  flex-grow: 0;
   align-items: center;
-  padding-inline: var(--admin-toolbar-space-16);
-  padding-block: var(--admin-toolbar-space-10);
   min-height: var(--admin-toolbar-space-40);
   cursor: pointer;
   text-align: start;
@@ -38,8 +37,10 @@
   border-radius: var(--admin-toolbar-space-8);
   background-color: var(--toolbar-button-bg);
   font-size: var(--admin-toolbar-font-size-info-sm);
-  font-variation-settings: "wght" 700;
   line-height: var(--admin-toolbar-line-height-info-sm);
+  padding-inline: var(--admin-toolbar-space-16);
+  padding-block: var(--admin-toolbar-space-10);
+  font-variation-settings: "wght" 700;
   gap: calc(0.5 * var(--admin-toolbar-rem));
 
   &:has(+ .toolbar-popover__wrapper .is-active) {
