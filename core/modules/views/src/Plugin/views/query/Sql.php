@@ -948,7 +948,7 @@ class Sql extends QueryPluginBase {
    *   If the group does not yet exist it will be created as an AND group.
    * @param string $field
    *   The name of the field to check.
-   * @param string|null $value
+   * @param string|array|null $value
    *   The value to test the field against. In most cases, this is a scalar. For more
    *   complex options, it is an array. The meaning of each element in the array is
    *   dependent on the $operator.
