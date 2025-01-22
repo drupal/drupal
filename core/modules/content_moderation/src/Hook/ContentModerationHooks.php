@@ -81,7 +81,7 @@ class ContentModerationHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
     return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityTypeInfo::class)->entityBaseFieldInfo($entity_type);
   }
 
@@ -89,7 +89,7 @@ class ContentModerationHooks {
    * Implements hook_entity_bundle_field_info().
    */
   #[Hook('entity_bundle_field_info')]
-  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions): array {
     if (isset($base_field_definitions['moderation_state'])) {
       // Add the target bundle to the moderation state field. Since each bundle
       // can be attached to a different moderation workflow, adding this
@@ -98,6 +98,7 @@ class ContentModerationHooks {
       $base_field_definitions['moderation_state']->setTargetBundle($bundle);
       return ['moderation_state' => $base_field_definitions['moderation_state']];
     }
+    return [];
   }
 
   /**
@@ -176,7 +177,7 @@ class ContentModerationHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityTypeInfo::class)->entityExtraFieldInfo();
   }
 

@@ -34,7 +34,7 @@
  * @see hook_language_types_info_alter()
  * @ingroup language_negotiation
  */
-function hook_language_types_info() {
+function hook_language_types_info(): array {
   return [
     'custom_language_type' => [
       'name' => t('Custom language'),

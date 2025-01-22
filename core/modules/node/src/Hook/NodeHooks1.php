@@ -172,7 +172,7 @@ class NodeHooks1 {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $extra = [];
     $description = t('Node module element');
     foreach (NodeType::loadMultiple() as $bundle) {

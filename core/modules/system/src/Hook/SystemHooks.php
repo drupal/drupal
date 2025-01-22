@@ -161,7 +161,7 @@ class SystemHooks {
    * Implements hook_updater_info().
    */
   #[Hook('updater_info')]
-  public function updaterInfo() {
+  public function updaterInfo(): array {
     return [
       'module' => [
         'class' => 'Drupal\Core\Updater\Module',
@@ -180,7 +180,7 @@ class SystemHooks {
    * Implements hook_filetransfer_info().
    */
   #[Hook('filetransfer_info')]
-  public function filetransferInfo() {
+  public function filetransferInfo(): array {
     $backends = [];
     // This is the default, will be available on most systems.
     if (function_exists('ftp_connect')) {

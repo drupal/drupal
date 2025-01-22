@@ -66,7 +66,7 @@ class UpdateTestHooks {
    * Implements hook_filetransfer_info().
    */
   #[Hook('filetransfer_info')]
-  public function filetransferInfo() {
+  public function filetransferInfo(): array {
     // Define a test file transfer method, to ensure that there will always be at
     // least one method available in the user interface (regardless of the
     // environment in which the update manager tests are run).

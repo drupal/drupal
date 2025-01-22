@@ -208,7 +208,7 @@ function hook_tokens_alter(array &$replacements, array $context, \Drupal\Core\Re
  * @see hook_token_info_alter()
  * @see hook_tokens()
  */
-function hook_token_info() {
+function hook_token_info(): array {
   $type = [
     'name' => t('Nodes'),
     'description' => t('Tokens related to individual nodes.'),

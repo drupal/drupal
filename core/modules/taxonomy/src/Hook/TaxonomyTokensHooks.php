@@ -17,7 +17,7 @@ class TaxonomyTokensHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo() {
+  public function tokenInfo(): array {
     $types['term'] = [
       'name' => t("Taxonomy terms"),
       'description' => t("Tokens related to taxonomy terms."),

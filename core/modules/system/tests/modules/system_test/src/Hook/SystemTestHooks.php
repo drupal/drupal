@@ -115,7 +115,7 @@ class SystemTestHooks {
    * Implements hook_filetransfer_info().
    */
   #[Hook('filetransfer_info')]
-  public function filetransferInfo() {
+  public function filetransferInfo(): array {
     return [
       'system_test' => [
         'title' => $this->t('System Test FileTransfer'),

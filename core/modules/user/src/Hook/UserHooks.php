@@ -124,7 +124,7 @@ class UserHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $fields['user']['user']['form']['account'] = [
       'label' => t('User name and password'),
       'description' => t('User module account form elements.'),

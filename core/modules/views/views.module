@@ -245,7 +245,7 @@ function &views_get_current_view() {
 /**
  * Implements hook_hook_info().
  */
-function views_hook_info() {
+function views_hook_info(): array {
   $hooks = [];
 
   $hooks += array_fill_keys([

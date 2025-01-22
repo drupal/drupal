@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_hook_info().
  */
-function module_handler_test_hook_info() {
+function module_handler_test_hook_info(): array {
   return [
     'hook' => ['group' => 'hook'],
   ];

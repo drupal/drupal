@@ -172,7 +172,7 @@ function hook_archiver_info_alter(&$info) {
  * @see hook_filetransfer_info_alter()
  * @see drupal_get_filetransfer_info()
  */
-function hook_filetransfer_info() {
+function hook_filetransfer_info(): array {
   $info['sftp'] = [
     'title' => t('SFTP (Secure FTP)'),
     'class' => 'Drupal\Core\FileTransfer\SFTP',

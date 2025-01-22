@@ -43,7 +43,7 @@ const REGIONS_ALL = 'all';
 /**
  * Implements hook_hook_info().
  */
-function system_hook_info() {
+function system_hook_info(): array {
   $hooks['token_info'] = [
     'group' => 'tokens',
   ];

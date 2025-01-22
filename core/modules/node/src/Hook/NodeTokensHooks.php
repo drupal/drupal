@@ -17,7 +17,7 @@ class NodeTokensHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo() {
+  public function tokenInfo(): array {
     $type = [
       'name' => t('Nodes'),
       'description' => t('Tokens related to individual content items, or "nodes".'),

@@ -18,7 +18,7 @@ class CommentTokensHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo() {
+  public function tokenInfo(): array {
     $type = [
       'name' => t('Comments'),
       'description' => t('Tokens for comments posted on the site.'),

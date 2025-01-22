@@ -16,7 +16,7 @@ class UserTokensHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo() {
+  public function tokenInfo(): array {
     $types['user'] = [
       'name' => t('Users'),
       'description' => t('Tokens related to individual user accounts.'),

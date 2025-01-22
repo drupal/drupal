@@ -14,7 +14,7 @@ class ViewsTokensHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo() {
+  public function tokenInfo(): array {
     $info['types']['view'] = [
       'name' => t('View', [], [
         'context' => 'View entity type',

@@ -31,7 +31,7 @@ class LanguageTestHooks {
    * Implements hook_language_types_info().
    */
   #[Hook('language_types_info')]
-  public function languageTypesInfo() {
+  public function languageTypesInfo(): array {
     if (\Drupal::keyValue('language_test')->get('language_types')) {
       return [
         'test_language_type' => [
@@ -46,6 +46,7 @@ class LanguageTestHooks {
         ],
       ];
     }
+    return [];
   }
 
   /**

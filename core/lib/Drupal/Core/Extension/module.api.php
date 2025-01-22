@@ -83,7 +83,7 @@ use Drupal\Core\Utility\UpdateException;
  *     system will determine whether a file with the name $module.$group.inc
  *     exists, and automatically load it when required.
  */
-function hook_hook_info() {
+function hook_hook_info(): array {
   $hooks['token_info'] = [
     'group' => 'tokens',
   ];
@@ -1025,7 +1025,7 @@ function hook_update_last_removed(): int {
  * @see drupal_get_updaters()
  * @see hook_updater_info_alter()
  */
-function hook_updater_info() {
+function hook_updater_info(): array {
   return [
     'module' => [
       'class' => 'Drupal\Core\Updater\Module',

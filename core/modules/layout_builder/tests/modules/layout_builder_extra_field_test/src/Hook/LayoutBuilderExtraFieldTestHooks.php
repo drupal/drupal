@@ -15,7 +15,7 @@ class LayoutBuilderExtraFieldTestHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $extra['node']['bundle_with_section_field']['display']['layout_builder_extra_field_test'] = [
       'label' => t('New Extra Field'),
       'description' => t('New Extra Field description'),

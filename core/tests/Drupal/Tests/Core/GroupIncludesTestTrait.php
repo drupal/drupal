@@ -26,7 +26,7 @@ trait GroupIncludesTestTrait {
     file_put_contents('vfs://drupal_root/test_module.module', <<<'EOD'
 <?php
 
-function test_module_hook_info() {
+function test_module_hook_info(): array {
   $hooks['token_info'] = [
     'group' => 'tokens',
   ];

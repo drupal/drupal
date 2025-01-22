@@ -16,7 +16,7 @@ class SystemTokensHooks {
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
-  public function tokenInfo() {
+  public function tokenInfo(): array {
     $types['site'] = [
       'name' => t("Site information"),
       'description' => t("Tokens for site-wide settings and other global information."),

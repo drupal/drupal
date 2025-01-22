@@ -19,12 +19,12 @@ class ContactStorageTestHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
+    $fields = [];
     if ($entity_type->id() == 'contact_message') {
-      $fields = [];
       $fields['id'] = BaseFieldDefinition::create('integer')->setLabel(t('Message ID'))->setDescription(t('The message ID.'))->setReadOnly(TRUE)->setSetting('unsigned', TRUE);
-      return $fields;
     }
+    return $fields;
   }
 
   /**

@@ -171,7 +171,7 @@ class FieldHooks {
    * Implements hook_entity_field_storage_info().
    */
   #[Hook('entity_field_storage_info')]
-  public function entityFieldStorageInfo(EntityTypeInterface $entity_type) {
+  public function entityFieldStorageInfo(EntityTypeInterface $entity_type): array {
     if (\Drupal::entityTypeManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
       // Query by filtering on the ID as this is more efficient than filtering
       // on the entity_type property directly.
@@ -184,25 +184,26 @@ class FieldHooks {
       }
       return $result;
     }
+    return [];
   }
 
   /**
    * Implements hook_entity_bundle_field_info().
    */
   #[Hook('entity_bundle_field_info')]
-  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions): array {
+    $result = [];
     if (\Drupal::entityTypeManager()->getStorage($entity_type->id()) instanceof DynamicallyFieldableEntityStorageInterface) {
       // Query by filtering on the ID as this is more efficient than filtering
       // on the entity_type property directly.
       $ids = \Drupal::entityQuery('field_config')->condition('id', $entity_type->id() . '.' . $bundle . '.', 'STARTS_WITH')->execute();
       // Fetch all fields and key them by field name.
       $field_configs = FieldConfig::loadMultiple($ids);
-      $result = [];
       foreach ($field_configs as $field_instance) {
         $result[$field_instance->getName()] = $field_instance;
       }
-      return $result;
     }
+    return $result;
   }
 
   /**

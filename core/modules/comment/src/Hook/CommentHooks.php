@@ -71,7 +71,7 @@ class CommentHooks {
    * Implements hook_entity_extra_field_info().
    */
   #[Hook('entity_extra_field_info')]
-  public function entityExtraFieldInfo() {
+  public function entityExtraFieldInfo(): array {
     $return = [];
     foreach (CommentType::loadMultiple() as $comment_type) {
       $return['comment'][$comment_type->id()] = [

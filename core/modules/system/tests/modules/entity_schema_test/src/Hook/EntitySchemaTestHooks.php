@@ -44,7 +44,7 @@ class EntitySchemaTestHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
     if ($entity_type->id() == 'entity_test_update') {
       $definitions['custom_base_field'] = BaseFieldDefinition::create('string')->setName('custom_base_field')->setLabel($this->t('A custom base field'));
       if (\Drupal::state()->get('entity_schema_update')) {
@@ -54,30 +54,33 @@ class EntitySchemaTestHooks {
       }
       return $definitions;
     }
+    return [];
   }
 
   /**
    * Implements hook_entity_field_storage_info().
    */
   #[Hook('entity_field_storage_info')]
-  public function entityFieldStorageInfo(EntityTypeInterface $entity_type) {
+  public function entityFieldStorageInfo(EntityTypeInterface $entity_type): array {
     if ($entity_type->id() == 'entity_test_update') {
       $definitions['custom_bundle_field'] = FieldStorageDefinition::create('string')->setName('custom_bundle_field')->setLabel($this->t('A custom bundle field'))->setRevisionable(TRUE)->setTargetEntityTypeId($entity_type->id());
       return $definitions;
     }
+    return [];
   }
 
   /**
    * Implements hook_entity_bundle_field_info().
    */
   #[Hook('entity_bundle_field_info')]
-  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle) {
+  public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle): array {
     if ($entity_type->id() == 'entity_test_update' && $bundle == 'custom') {
       /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface $custom_bundle_field_storage */
       $custom_bundle_field_storage = $this->entityFieldStorageInfo($entity_type)['custom_bundle_field'];
       $definitions[$custom_bundle_field_storage->getName()] = FieldDefinition::createFromFieldStorageDefinition($custom_bundle_field_storage);
       return $definitions;
     }
+    return [];
   }
 
   /**

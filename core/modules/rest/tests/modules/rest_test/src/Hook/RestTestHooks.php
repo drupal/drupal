@@ -66,7 +66,7 @@ class RestTestHooks {
    * Implements hook_entity_base_field_info().
    */
   #[Hook('entity_base_field_info')]
-  public function entityBaseFieldInfo(EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
     $fields = [];
     $fields['rest_test_validation'] = BaseFieldDefinition::create('string')->setLabel(t('REST test validation field'))->setDescription(t('A text field with some special validations attached used for testing purposes'))->addConstraint('rest_test_validation');
     return $fields;
