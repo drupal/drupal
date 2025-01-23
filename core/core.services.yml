@@ -661,7 +661,7 @@ services:
   Drupal\Core\Extension\ProfileExtensionList: '@extension.list.profile'
   extension.list.theme:
     class: Drupal\Core\Extension\ThemeExtensionList
-    arguments: ['%app.root%', 'theme', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
+    arguments: ['%app.root%', 'theme', '@cache.bootstrap', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
   Drupal\Core\Extension\ThemeExtensionList: '@extension.list.theme'
   extension.list.theme_engine:
     class: Drupal\Core\Extension\ThemeEngineExtensionList
