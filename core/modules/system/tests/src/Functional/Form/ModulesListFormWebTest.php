@@ -95,7 +95,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
    * Tests the module form with a module with an invalid info.yml file.
    */
   public function testModulesListFormWithInvalidInfoFile(): void {
-    $path = \Drupal::getContainer()->getParameter('site.path') . "/modules/broken";
+    $path = $this->root . '/' . \Drupal::getContainer()->getParameter('site.path') . "/modules/broken";
     mkdir($path, 0777, TRUE);
     $file_path = "$path/broken.info.yml";
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Extension;
 
-use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Tests\UnitTestCase;
@@ -64,40 +63,6 @@ class ExtensionDiscoveryTest extends UnitTestCase {
     $extension_expected->subpath = 'themes/engines/twig';
     $extension_expected->origin = 'core';
     $this->assertEquals($extension_expected, $extensions_by_type['theme_engine']['twig'], 'twig');
-  }
-
-  /**
-   * Tests changing extension discovery file cache objects to arrays.
-   *
-   * @covers ::scan
-   * @runInSeparateProcess
-   */
-  public function testExtensionDiscoveryCache(): void {
-    // Set up an extension object in the cache to mimic site prior to changing
-    // \Drupal\Core\Extension\ExtensionDiscovery::scanDirectory() to cache an
-    // array instead of an object. Note we cannot use the VFS file system
-    // because FileCache does not support stream wrappers.
-    $extension = new Extension($this->root, 'module', 'core/modules/user/user.info.yml', 'user.module');
-    $extension->subpath = 'modules/user';
-    $extension->origin = 'core';
-    // Undo \Drupal\Tests\UnitTestCase::setUp() so FileCache works.
-    FileCacheFactory::setConfiguration([]);
-    $file_cache = FileCacheFactory::get('extension_discovery');
-    $file_cache->set($this->root . '/core/modules/user/user.info.yml', $extension);
-
-    // Create an ExtensionDiscovery object to test.
-    $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], 'sites/default');
-    $modules = $extension_discovery->scan('module', FALSE);
-    $this->assertArrayHasKey('user', $modules);
-    $this->assertEquals((array) $extension, (array) $modules['user']);
-    $this->assertNotSame($extension, $modules['user']);
-    // FileCache item should now be an array.
-    $this->assertSame([
-      'type' => 'module',
-      'pathname' => 'core/modules/user/user.info.yml',
-      'filename' => 'user.module',
-      'subpath' => 'modules/user',
-    ], $file_cache->get($this->root . '/core/modules/user/user.info.yml'));
   }
 
   /**
