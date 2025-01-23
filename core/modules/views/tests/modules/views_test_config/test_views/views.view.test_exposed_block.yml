@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
   module:
     - node
 id: test_exposed_block
@@ -12,66 +14,83 @@ base_table: node_field_data
 base_field: nid
 display:
   default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
     display_options:
       title: 'Test Exposed Block'
+      pager:
+        type: full
+      exposed_form:
+        type: basic
+        options:
+          reset_button: true
       access:
         type: none
       cache:
         type: tag
-      exposed_form:
-        options:
-          reset_button: true
-        type: basic
       filters:
         type:
-          expose:
-            identifier: type
-            label: 'Content: Type'
-            operator_id: type_op
-            reduce: false
-          exposed: true
-          field: type
           id: type
           table: node_field_data
-          plugin_id: in_operator
+          field: type
           entity_type: node
           entity_field: type
-      pager:
-        type: full
-      query:
-        options:
-          query_comment: ''
-        type: views_query
+          plugin_id: bundle
+          exposed: true
+          expose:
+            operator_id: type_op
+            label: 'Content: Type'
+            identifier: type
+            reduce: false
       style:
         type: default
       row:
         type: 'entity:node'
-    display_plugin: default
-    display_title: Default
-    id: default
-    position: 0
-  page_1:
-    display_options:
-      path: test_exposed_block
-      exposed_block: true
-    display_plugin: page
-    display_title: Page
-    id: page_1
-    position: 0
-  block_1:
-    display_plugin: block
-    id: block_1
-    display_title: Block
-    position: 2
-    display_options:
+      query:
+        type: views_query
+        options:
+          query_comment: ''
       display_extenders: {  }
-      exposed_block: true
     cache_metadata:
       max-age: -1
       contexts:
-        - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+      tags: {  }
+  block_1:
+    id: block_1
+    display_title: Block
+    display_plugin: block
+    position: 2
+    display_options:
+      exposed_block: true
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+      tags: {  }
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 0
+    display_options:
+      exposed_block: true
+      display_extenders: {  }
+      path: test_exposed_block
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
       tags: {  }

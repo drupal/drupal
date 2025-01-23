@@ -1,0 +1,7 @@
+name: 'Views Test Data Alter'
+type: module
+description: 'Test module for Views to alter data.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:views
