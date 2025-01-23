@@ -51946,12 +51946,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views_ui/src/Form/Ajax/ViewsFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_ui\\\\Form\\\\BasicSettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/src/Form/BasicSettingsForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\Form\\\\BreakLockForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
