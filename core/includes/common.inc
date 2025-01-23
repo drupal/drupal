@@ -55,6 +55,11 @@ const SAVED_UPDATED = 2;
 
 /**
  * Return status for saving which deleted an existing item.
+ *
+ * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.
+ *   There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3328750
  */
 const SAVED_DELETED = 3;
 
