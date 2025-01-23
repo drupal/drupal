@@ -333,12 +333,6 @@ class HandlerTest extends ViewTestBase {
    * @see \Drupal\views\Plugin\views\HandlerBase::placeholder()
    */
   public function testPlaceholder(): void {
-    // Change the test view to use the test field plugin which has the
-    // additional get placeholder method.
-    $config = $this->config('views.view.test_view');
-    $config->set('display.default.display_options.fields.name.plugin_id', 'test_field');
-    $config->save();
-
     $view = Views::getView('test_view');
     $view->initHandlers();
     $view->initQuery();

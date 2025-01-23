@@ -2,8 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
-    - taxonomy.vocabulary.tags
+    - taxonomy.vocabulary.test_exposed_checkboxes
   module:
     - node
     - taxonomy
@@ -16,44 +15,33 @@ base_table: node_field_data
 base_field: nid
 display:
   default:
-    id: default
-    display_title: Default
-    display_plugin: default
-    position: 0
     display_options:
-      pager:
-        type: full
-      exposed_form:
-        type: basic
-        options:
-          reset_button: true
       access:
         type: none
       cache:
         type: tag
+      exposed_form:
+        options:
+          reset_button: true
+        type: basic
       filters:
-        type_1:
-          id: type_1
+        type:
+          id: type
           table: node_field_data
           field: type
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: node
-          entity_field: type
-          plugin_id: bundle
           operator: in
           value: {  }
           group: 1
           exposed: true
           expose:
-            operator_id: type_1_op
-            label: 'Content type'
-            description: ''
+            operator_id: type_op
+            label: 'Content: Type'
+            description: 'Exposed description'
             use_operator: false
-            operator: type_1_op
-            operator_limit_selection: false
-            operator_list: {  }
+            operator: ''
             identifier: type
             required: false
             remember: false
@@ -61,7 +49,6 @@ display:
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
-              content_editor: '0'
               administrator: '0'
             reduce: false
           is_grouped: false
@@ -76,6 +63,9 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          plugin_id: in_operator
+          entity_type: node
+          entity_field: type
         tid:
           id: tid
           table: taxonomy_index
@@ -83,7 +73,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          plugin_id: taxonomy_index_tid
           operator: and
           value: {  }
           group: 1
@@ -94,8 +83,6 @@ display:
             description: ''
             use_operator: false
             operator: tid_op
-            operator_limit_selection: false
-            operator_list: {  }
             identifier: tid
             required: false
             remember: false
@@ -118,45 +105,50 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          vid: tags
           type: select
-          hierarchy: false
           limit: true
+          vid: test_exposed_checkboxes
+          hierarchy: false
           error_message: true
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
+          plugin_id: taxonomy_index_tid
+      pager:
+        type: full
+      query:
+        options:
+          query_comment: ''
+        type: views_query
       style:
         type: default
       row:
         type: 'entity:node'
-      query:
-        type: views_query
-        options:
-          query_comment: ''
       display_extenders: {  }
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
       tags: {  }
   page_1:
-    id: page_1
-    display_title: Page
-    display_plugin: page
-    position: 0
     display_options:
-      display_extenders: {  }
       path: test_exposed_form_checkboxes
+      display_extenders: {  }
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: 0
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user
         - 'user.node_grants:view'
       tags: {  }

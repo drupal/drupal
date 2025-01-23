@@ -86,7 +86,7 @@ display:
           exclude: false
           entity_type: entity_test
           entity_field: test_text_access
-          plugin_id: field
+          plugin_id: standard
           empty: ''
           hide_empty: false
           empty_zero: false
