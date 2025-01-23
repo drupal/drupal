@@ -159,13 +159,14 @@ class ComponentValidatorTest extends TestCase {
    *
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentException
    */
-  public function testValidatePropsInvalid(array $context, string $component_id, array $definition): void {
+  public function testValidatePropsInvalid(array $context, string $component_id, array $definition, string $expected_exception_message): void {
     $component = new Component(
       ['app_root' => '/fake/path/root'],
       'sdc_test:' . $component_id,
       $definition
     );
     $this->expectException(InvalidComponentException::class);
+    $this->expectExceptionMessage($expected_exception_message);
     $component_validator = new ComponentValidator();
     $component_validator->setValidator();
     $component_validator->validateProps($context, $component);
@@ -175,7 +176,7 @@ class ComponentValidatorTest extends TestCase {
    * Data provider with invalid component props.
    *
    * @return array
-   *   The data.
+   *   Returns the generator with the invalid properties.
    */
   public static function dataProviderValidatePropsInvalid(): array {
     return [
@@ -187,6 +188,7 @@ class ComponentValidatorTest extends TestCase {
         ],
         'my-cta',
         static::loadComponentDefinitionFromFs('my-cta'),
+        '[sdc_test:my-cta/text] The property text is required.',
       ],
       'attributes with invalid object class' => [
         [
@@ -197,11 +199,13 @@ class ComponentValidatorTest extends TestCase {
         ],
         'my-cta',
         static::loadComponentDefinitionFromFs('my-cta'),
+        'Data provided to prop "attributes" for component "sdc_test:my-cta" is not a valid instance of "Drupal\Core\Template\Attribute"',
       ],
       'ctaTarget violates the allowed properties in the enum' => [
         ['ctaTarget' => 'foo'],
         'my-banner',
         static::loadComponentDefinitionFromFs('my-banner'),
+        '[sdc_test:my-banner/ctaTarget] Does not have a value in the enumeration ["","_blank"]. The provided value is: "foo".',
       ],
     ];
   }
