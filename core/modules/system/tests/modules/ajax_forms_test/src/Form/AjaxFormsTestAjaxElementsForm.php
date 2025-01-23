@@ -26,12 +26,10 @@ class AjaxFormsTestAjaxElementsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $callback_object = new Callbacks();
-
     $form['date'] = [
       '#type' => 'date',
       '#ajax' => [
-        'callback' => [$callback_object, 'dateCallback'],
+        'callback' => [Callbacks::class, 'dateCallback'],
       ],
       '#suffix' => '<div id="ajax_date_value">No date yet selected</div>',
     ];
@@ -39,7 +37,7 @@ class AjaxFormsTestAjaxElementsForm extends FormBase {
     $form['datetime'] = [
       '#type' => 'datetime',
       '#ajax' => [
-        'callback' => [$callback_object, 'datetimeCallback'],
+        'callback' => [Callbacks::class, 'datetimeCallback'],
         'wrapper' => 'ajax_datetime_value',
       ],
     ];
