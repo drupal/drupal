@@ -133,11 +133,12 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
 /**
  * Alter archiver information declared by other modules.
  *
- * See hook_archiver_info() for a description of archivers and the archiver
- * information structure.
- *
  * @param array $info
- *   Archiver information to alter (return values from hook_archiver_info()).
+ *   An associative array of archivers, keyed by archiver ID. Each value
+ *   consists of the plugin definition for that archiver.
+ *
+ * @see \Drupal\Core\Archiver\ArchiverManager
+ * @see \Drupal\Core\Archiver\Attribute\Archiver
  */
 function hook_archiver_info_alter(&$info) {
   $info['tar']['extensions'][] = 'tgz';
