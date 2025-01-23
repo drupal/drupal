@@ -36,7 +36,7 @@ if (file_exists(__DIR__ . $url['path'])) {
   return FALSE;
 }
 
-// Work around the PHP bug.
+.
 $path = $url['path'];
 $script = 'index.php';
 if (str_contains($path, '.php')) {
