@@ -1,0 +1,8 @@
+id: simple_migration
+label: Simple migration test
+source:
+  plugin: simple_source
+process:
+  foo: foo
+destination:
+  plugin: null

@@ -1,0 +1,5 @@
+name: 'Migration plugin configuration rest'
+type: module
+description: 'Provides test migrations to test altering configuration.'
+package: Testing
+version: VERSION

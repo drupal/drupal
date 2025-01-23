@@ -21,7 +21,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
     'migrate',
     'migrate_drupal',
     // Test with a simple migration.
-    'ban',
+    'migrate_plugin_config_test',
     'locale',
   ];
 
@@ -46,7 +46,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
       // Tests adding new configuration to a migration.
       [
         // New configuration.
-        'd7_blocked_ips',
+        'simple_migration',
         [
           'source' => [
             'constants' => [
@@ -56,7 +56,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
         ],
         // Expected final source configuration.
         [
-          'plugin' => 'd7_blocked_ips',
+          'plugin' => 'simple_source',
           'constants' => [
             'added_setting' => 'Ban them all!',
           ],
@@ -65,7 +65,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
       // Tests overriding pre-existing configuration in a migration.
       [
         // New configuration.
-        'd7_blocked_ips',
+        'simple_migration',
         [
           'source' => [
             'plugin' => 'a_different_plugin',

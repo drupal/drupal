@@ -120,6 +120,7 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
   protected function getContentClasses(): array {
     return [
       EntityContentBase::class,
+      // @todo Remove BlockedIp in https://www.drupal.org/project/drupal/issues/3488827
       BlockedIp::class,
       UserData::class,
     ];
