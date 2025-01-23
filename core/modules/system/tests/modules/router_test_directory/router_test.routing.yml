@@ -254,3 +254,13 @@ router_test.rejects_query_strings:
     _controller: '\Drupal\router_test\TestControllers::rejectsQueryStrings'
   requirements:
     _access: 'TRUE'
+
+router_test.alias:
+  alias: 'router_test.1'
+
+router_test.deprecated:
+  alias: 'router_test.1'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.2.0'
+    message: 'The "%alias_id%" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "router_test.1" route instead.'

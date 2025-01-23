@@ -9,6 +9,7 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\router_test\TestControllers;
 use Drupal\Tests\BrowserTestBase;
+use Symfony\Component\Routing\Alias;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Drupal\Core\Url;
 
@@ -341,6 +342,54 @@ class RouterTest extends BrowserTestBase {
     $url = $request->getUriForPath('/////////////////////////////////////////////////router_test/test1') . '?qs=test&destination=http://www.example.com%5c@drupal8alt.test';
     $this->drupalGet($url);
     $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1') . '?qs=test');
+  }
+
+  /**
+   * Tests route aliasing.
+   */
+  public function testRouteAlias(): void {
+    $request = \Drupal::request();
+    $route_provider = \Drupal::service('router.route_provider');
+
+    // Check a simple aliased route.
+    $aliased_route_url = Url::fromRoute('router_test.alias');
+    $this->drupalGet($aliased_route_url);
+    $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1'));
+
+    $routes = $route_provider->getRoutesByNames(['router_test.alias']);
+    $aliased_route = reset($routes);
+    $this->assertTrue($aliased_route instanceof Alias);
+    $this->assertFalse($aliased_route->isDeprecated());
+
+    // Check that loading an aliased route by name returns the actual route.
+    $actual_route = $route_provider->getRouteByName('router_test.alias');
+    $this->assertFalse($actual_route instanceof Alias);
+    $this->assertEquals('/router_test/test1', $actual_route->getPath());
+  }
+
+  /**
+   * Tests route aliasing with deprecation.
+   *
+   * @group legacy
+   */
+  public function testRouteAliasWithDeprecation(): void {
+    $request = \Drupal::request();
+    $route_provider = \Drupal::service('router.route_provider');
+
+    // Check an aliased route with a deprecation message.
+    $deprecated_route_url = Url::fromRoute('router_test.deprecated');
+    $this->expectDeprecation('The "router_test.deprecated" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "router_test.1" route instead.');
+    $this->drupalGet($deprecated_route_url);
+    $this->assertSession()->addressEquals($request->getUriForPath('/router_test/test1'));
+
+    $routes = $route_provider->getRoutesByNames(['router_test.deprecated']);
+    $deprecated_route = reset($routes);
+    $this->assertTrue($deprecated_route instanceof Alias);
+    $this->assertTrue($deprecated_route->isDeprecated());
+    $deprecation = $deprecated_route->getDeprecation('router_test.deprecated');
+    $this->assertEquals('drupal/core', $deprecation['package']);
+    $this->assertEquals('11.2.0', $deprecation['version']);
+    $this->assertEquals('The "router_test.deprecated" route is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. Use the "router_test.1" route instead.', $deprecation['message']);
   }
 
 }
