@@ -12,66 +12,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Filter that limits test entity list to revisable ones.
- */
-const ENTITY_TEST_TYPES_REVISABLE = 1;
-
-/**
- * Filter that limits test entity list to multilingual ones.
- */
-const ENTITY_TEST_TYPES_MULTILINGUAL = 2;
-
-/**
- * Filter that limits test entity list to ones that can be routed.
- */
-const ENTITY_TEST_TYPES_ROUTING = 3;
-
-/**
- * Returns a list of test entity types.
- *
- * The returned entity types are one for each available entity storage type:
- * - The plain entity_test type supports neither revisions nor multilingual
- *   properties.
- * - The entity_test_mul type supports multilingual properties.
- * - The entity_test_rev type supports revisions.
- * - The entity_test_mulrev type supports both revisions and multilingual
- *   properties.
- *
- * @param int $filter
- *   Either ENTITY_TEST_TYPES_REVISABLE to only return revisable entity types or
- *   ENTITY_TEST_TYPES_MULTILINGUAL to only return multilingual ones. Defaults
- *   to NULL, which returns all.
- *
- * @return array
- *   List with entity_types.
- */
-function entity_test_entity_types($filter = NULL) {
-  $types = [];
-  if ($filter === NULL || $filter === ENTITY_TEST_TYPES_ROUTING) {
-    $types[] = 'entity_test';
-  }
-  if ($filter != ENTITY_TEST_TYPES_REVISABLE) {
-    $types[] = 'entity_test_mul';
-    $types[] = 'entity_test_mul_langcode_key';
-    $types[] = 'entity_test_mul_changed';
-  }
-  if ($filter != ENTITY_TEST_TYPES_MULTILINGUAL) {
-    $types[] = 'entity_test_rev';
-  }
-  if ($filter === ENTITY_TEST_TYPES_ROUTING) {
-    $types[] = 'entity_test_base_field_display';
-    $types[] = 'entity_test_string_id';
-    $types[] = 'entity_test_uuid_id';
-    $types[] = 'entity_test_no_id';
-    $types[] = 'entity_test_mul_with_bundle';
-  }
-  $types[] = 'entity_test_mulrev';
-  $types[] = 'entity_test_mulrev_changed';
-
-  return array_combine($types, $types);
-}
-
-/**
  * Creates a new bundle for entity_test entities.
  *
  * @param string $bundle

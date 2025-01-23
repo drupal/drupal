@@ -23,6 +23,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestComputedField;
 use Drupal\entity_test\Entity\EntityTestRev;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
@@ -59,7 +60,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    foreach (entity_test_entity_types() as $entity_type_id) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type_id) {
       // The entity_test schema is installed by the parent.
       if ($entity_type_id != 'entity_test') {
         $this->installEntitySchema($entity_type_id);
@@ -136,7 +137,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testReadWrite(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       $this->doTestReadWrite($entity_type);
     }
   }
@@ -402,7 +403,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testSave(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       $this->doTestSave($entity_type);
     }
   }
@@ -439,7 +440,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testIntrospection(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       $this->doTestIntrospection($entity_type);
     }
   }
@@ -543,7 +544,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testIterator(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       $this->doTestIterator($entity_type);
     }
   }
@@ -582,7 +583,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testDataStructureInterfaces(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       $this->doTestDataStructureInterfaces($entity_type);
     }
   }
@@ -654,7 +655,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testDataTypes(): void {
     $types = \Drupal::typedDataManager()->getDefinitions();
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       $this->assertNotEmpty($types['entity:' . $entity_type]['class'], 'Entity data type registered.');
     }
     // Check bundle types are provided as well.
@@ -774,7 +775,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testComputedProperties(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       $this->doTestComputedProperties($entity_type);
     }
   }

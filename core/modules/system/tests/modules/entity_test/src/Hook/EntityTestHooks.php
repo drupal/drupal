@@ -21,6 +21,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\entity_test\EntityTestHelper;
 
 /**
  * Hook implementations for entity_test.
@@ -36,7 +37,7 @@ class EntityTestHooks {
   public function entityTypeAlter(array &$entity_types) : void {
     $state = \Drupal::state();
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       // Optionally specify a translation handler for testing translations.
       if ($state->get('entity_test.translation')) {
         $translation = $entity_types[$entity_type]->get('translation');

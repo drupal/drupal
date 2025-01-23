@@ -6,6 +6,8 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\entity_test\Entity\EntityTestMulRev;
+use Drupal\entity_test\EntityTestHelper;
+use Drupal\entity_test\EntityTestTypesFilter;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -174,7 +176,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $user = $this->createUser();
 
     // All revisionable entity variations have to have the same results.
-    foreach (entity_test_entity_types(ENTITY_TEST_TYPES_REVISABLE) as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes(EntityTestTypesFilter::Revisable) as $entity_type) {
       $this->installEntitySchema($entity_type);
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
 

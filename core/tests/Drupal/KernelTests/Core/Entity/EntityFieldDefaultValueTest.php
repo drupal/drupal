@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Uuid\Uuid;
+use Drupal\entity_test\EntityTestHelper;
 
 /**
  * Tests default values for entity fields.
@@ -34,7 +35,7 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
    */
   public function testDefaultValues(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
       $this->assertDefaultValues($entity_type);
     }
   }
