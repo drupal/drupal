@@ -34,6 +34,7 @@ props:
           - expand--side
           - large
           - non-interactive
+          - primary
           - small-offset
           - weight--400
     extra_classes:

@@ -255,7 +255,7 @@ final class NavigationRenderer {
     $cacheability = new CacheableMetadata();
     $cacheability->addCacheableDependency($this->localTaskManager);
     $this->localTasks = [
-      'tasks' => [],
+      'page_actions' => [],
       'cacheability' => $cacheability,
     ];
     // For now, we're only interested in local tasks corresponding to a content
@@ -277,8 +277,8 @@ final class NavigationRenderer {
       $link['localized_options'] += [
         'set_active_class' => TRUE,
       ];
-      $this->localTasks['tasks'][$route_name] = [
-        '#theme' => 'top_bar_local_task',
+      $this->localTasks['page_actions'][$route_name] = [
+        '#theme' => 'top_bar_page_action',
         '#link' => [
           '#type' => 'link',
           '#title' => $link['title'],
@@ -301,7 +301,7 @@ final class NavigationRenderer {
    */
   public function hasLocalTasks(): bool {
     $local_tasks = $this->getLocalTasks();
-    return !empty($local_tasks['tasks']);
+    return !empty($local_tasks['page_actions']);
   }
 
 }

@@ -2,15 +2,15 @@
 
 namespace Drupal\navigation\Hook;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\navigation\RenderCallbacks;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
+use Drupal\navigation\RenderCallbacks;
 use Drupal\navigation\TopBarItemManagerInterface;
 
 /**
@@ -81,8 +81,8 @@ class NavigationHooks {
   #[Hook('theme')]
   public function theme($existing, $type, $theme, $path) : array {
     $items['top_bar'] = ['render element' => 'element'];
-    $items['top_bar_local_tasks'] = ['variables' => ['local_tasks' => []]];
-    $items['top_bar_local_task'] = ['variables' => ['link' => []]];
+    $items['top_bar_page_actions'] = ['variables' => ['page_actions' => [], 'featured_page_actions' => []]];
+    $items['top_bar_page_action'] = ['variables' => ['link' => []]];
     $items['big_pipe_interface_preview__navigation_shortcut_lazy_builder_lazyLinks__Shortcuts'] = [
       'variables' => [
         'callback' => NULL,
