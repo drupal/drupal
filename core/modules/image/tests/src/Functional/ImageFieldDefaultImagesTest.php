@@ -145,6 +145,27 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $article = $this->drupalCreateNode(['type' => 'article']);
     $article_built = $this->drupalBuildEntityView($article);
     $this->assertEquals($default_images['field']->id(), $article_built[$field_name][0]['#item']->target_id, "A new article node without an image has the expected default image file ID of {$default_images['field']->id()}.");
+    // Confirm that the default image entity _referringItem property is set to
+    // the field item on the article node.
+    $article_default_image_referring_entity = $article_built[$field_name][0]['#item']->entity->_referringItem->getEntity();
+    $this->assertEquals($article->id(), $article_default_image_referring_entity->id());
+
+    // Confirm that the image default is shown for another new article node.
+    $article2 = $this->drupalCreateNode(['type' => 'article']);
+    $article2_built = $this->drupalBuildEntityView($article2);
+    $this->assertEquals($default_images['field']->id(), $article2_built[$field_name][0]['#item']->target_id, "A new article node without an image has the expected default image file ID of {$default_images['field']->id()}.");
+    // Confirm that the default image entity _referringItem property is set to
+    // the field item on the second article node.
+    $article2_default_image_referring_entity = $article2_built[$field_name][0]['#item']->entity->_referringItem->getEntity();
+    $this->assertEquals($article2->id(), $article2_default_image_referring_entity->id());
+    // Confirm that the default image entity _referringItem property on the
+    // first article is still set to the field item on the article node.
+    $article_default_image_referring_entity = $article_built[$field_name][0]['#item']->entity->_referringItem->getEntity();
+    $this->assertEquals($article->id(), $article_default_image_referring_entity->id());
+
+    // Confirm that the _referringItem values for the default image entities on
+    // the two nodes are referring to field items on different nodes.
+    $this->assertNotEquals($article_default_image_referring_entity->id(), $article2_default_image_referring_entity->id());
 
     // Also check that the field renders without warnings when the label is
     // hidden.
