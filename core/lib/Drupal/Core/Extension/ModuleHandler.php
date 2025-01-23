@@ -567,6 +567,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       }
       if (isset($this->groupIncludes[$hook])) {
         foreach ($this->groupIncludes[$hook] as $include) {
+          @trigger_error('Autoloading hooks in the file (' . $include . ') is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Move the functions in this file to either the .module file or other appropriate location. See https://www.drupal.org/node/3489765', E_USER_DEPRECATED);
           include_once $include;
         }
       }

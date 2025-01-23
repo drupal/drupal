@@ -384,9 +384,12 @@ class ModuleHandlerTest extends UnitTestCase {
 
   /**
    * @covers ::getHookListeners
+   *
+   * @group legacy
    */
   public function testGroupIncludes(): void {
     self::setupGroupIncludes();
+    $this->expectDeprecation('Autoloading hooks in the file (vfs://drupal_root/test_module.tokens.inc) is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Move the functions in this file to either the .module file or other appropriate location. See https://www.drupal.org/node/3489765');
     $moduleHandler = new ModuleHandler('', [], new EventDispatcher(), [], self::GROUP_INCLUDES);
     $this->assertFalse(function_exists('_test_module_helper'));
     $moduleHandler->invokeAll('token_info');
