@@ -22022,12 +22022,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_data_type/src/TraversableObject.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function jsonapi_test_field_filter_access_jsonapi_entity_field_filter_access\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_field_filter_access/jsonapi_test_field_filter_access.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi_test_field_type\\\\Normalizer\\\\StringNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
 	'identifier' => 'missingType.generics',
 	'count' => 1,
@@ -23940,12 +23934,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/tests/modules/layout_builder_element_test/src/EventSubscriber/TestPrepareLayout.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function layout_builder_extra_field_test_node_view\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/modules/layout_builder_extra_field_test/layout_builder_extra_field_test.module',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder_form_block_test\\\\Plugin\\\\Block\\\\TestFormApiFormBlock\\:\\:submitForm\\(\\) has no return type specified\\.$#',
