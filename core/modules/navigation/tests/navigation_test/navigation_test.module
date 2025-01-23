@@ -8,6 +8,7 @@
 declare(strict_types=1);
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Cache\CacheableMetadata;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -16,4 +17,51 @@ function navigation_test_preprocess_block__navigation(&$variables) {
   // Add some additional classes so we can target the correct contextual link
   // in tests.
   $variables['attributes']['class'][] = Html::cleanCssIdentifier('block-' . $variables['elements']['#plugin_id']);
+}
+
+/**
+ * Implements hook_navigation_content_top().
+ */
+function navigation_test_navigation_content_top(): array {
+  if (\Drupal::keyValue('navigation_test')->get('content_top')) {
+    $items = [
+      'navigation_foo' => [
+        '#markup' => 'foo',
+      ],
+      'navigation_bar' => [
+        '#markup' => 'bar',
+      ],
+      'navigation_baz' => [
+        '#markup' => 'baz',
+      ],
+    ];
+  }
+  else {
+    $items = [
+      'navigation_foo' => [],
+      'navigation_bar' => [],
+      'navigation_baz' => [],
+    ];
+  }
+  // Add cache tags to our items to express a made up dependency to test
+  // cacheability. Note that as we're always returning the same items,
+  // sometimes only with cacheability metadata. By doing this we're testing
+  // conditional rendering of content_top items.
+  foreach ($items as &$element) {
+    CacheableMetadata::createFromRenderArray($element)
+      ->addCacheTags(['navigation_test'])
+      ->applyTo($element);
+  }
+  return $items;
+}
+
+/**
+ * Implements hook_navigation_content_top_alter().
+ */
+function navigation_test_navigation_content_top_alter(array &$content_top): void {
+  if (\Drupal::keyValue('navigation_test')->get('content_top_alter')) {
+    unset($content_top['navigation_foo']);
+    $content_top['navigation_bar']['#markup'] = 'new bar';
+    $content_top['navigation_baz']['#weight'] = '-100';
+  }
 }

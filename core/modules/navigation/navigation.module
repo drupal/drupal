@@ -138,6 +138,12 @@ function navigation_theme($existing, $type, $theme, $path) {
     ],
   ];
 
+  $items['navigation_content_top'] = [
+    'variables' => [
+      'items' => [],
+    ],
+  ];
+
   return $items;
 }
 
