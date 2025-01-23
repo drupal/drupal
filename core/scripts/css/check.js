@@ -14,7 +14,7 @@ module.exports = (filePath) => {
         return;
       }
       if (code !== data.toString()) {
-        log(`'${filePath}' is not updated.`);
+        log(`'${filePath}' does not match its CSS file. Recompile the CSS with: yarn run build:css`);
         process.exitCode = 1;
       }
     });
