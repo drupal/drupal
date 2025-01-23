@@ -410,12 +410,12 @@ class ConfigImporter {
     // sorted in reverse alphabetical order, to ensure the order is exactly
     // opposite from installation. For example, this module list:
     // @code
-    // array(
+    // [
     //   'actions' => 0,
     //   'ban' => 0,
     //   'options' => -2,
     //   'text' => -1,
-    // );
+    // ];
     // @endcode
     // Will result in the following sort order:
     // 1. -2   options

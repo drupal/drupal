@@ -92,7 +92,7 @@ class DefaultViewsTest extends UITestBase {
     // $this->assertSession()->linkExists('Revert');
     // $this->assertSession()->linkByHrefExists($revert_href);
     // $this->drupalGet($revert_href);
-    // $this->submitForm(array(), 'Revert');
+    // $this->submitForm([], 'Revert');
     // $this->drupalGet('glossary');
     // $this->assertSession()->pageTextNotContains($new_title);
 
