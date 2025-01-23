@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\ajax_forms_test\Form;
 
-use Drupal\ajax_forms_test\Callbacks;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -33,7 +32,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'After': Click to put something after the div"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsAfterCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_after_callback',
       ],
       '#suffix' => '<div id="after_div">Something can be inserted after this</div>',
     ];
@@ -43,7 +42,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'Alert': Click to alert"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsAlertCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_alert_callback',
       ],
     ];
 
@@ -52,7 +51,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'Announce': Click to announce"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsAnnounceCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_announce_callback',
       ],
     ];
 
@@ -61,7 +60,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'Announce': Click to announce with 'polite' priority"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsAnnouncePoliteCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_announce_polite_callback',
       ],
     ];
 
@@ -70,7 +69,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'Announce': Click to announce with 'assertive' priority"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsAnnounceAssertiveCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_announce_assertive_callback',
       ],
     ];
 
@@ -79,7 +78,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'Announce': Click to announce twice"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsDoubleAnnounceCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_double_announce_callback',
       ],
     ];
 
@@ -88,7 +87,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'Append': Click to append something"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsAppendCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_append_callback',
       ],
       '#suffix' => '<div id="append_div">Append inside this div</div>',
     ];
@@ -98,7 +97,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'before': Click to put something before the div"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsBeforeCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_before_callback',
       ],
       '#suffix' => '<div id="before_div">Insert something before this.</div>',
     ];
@@ -108,7 +107,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX changed: Click to mark div changed."),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsChangedCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_changed_callback',
       ],
       '#suffix' => '<div id="changed_div"> <div id="changed_div_mark_this">This div can be marked as changed or not.</div></div>',
     ];
@@ -117,7 +116,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX changed: Click to mark div changed with asterisk."),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsChangedAsteriskCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_changed_asterisk_callback',
       ],
     ];
 
@@ -126,7 +125,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("Set the '#box' div to be blue."),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsCssCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_css_callback',
       ],
       '#suffix' => '<div id="css_div" style="height: 50px; width: 50px; border: 1px solid black"> box</div>',
     ];
@@ -137,7 +136,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX data command: Issue command."),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsDataCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_data_callback',
       ],
       '#suffix' => '<div id="data_div">Data attached to this div.</div>',
     ];
@@ -147,7 +146,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX invoke command: Invoke addClass() method."),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsHtmlCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_invoke_callback',
       ],
       '#suffix' => '<div id="invoke_div">Original contents</div>',
     ];
@@ -157,7 +156,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX html: Replace the HTML in a selector."),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsHtmlCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_html_callback',
       ],
       '#suffix' => '<div id="html_div">Original contents</div>',
     ];
@@ -167,7 +166,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX insert: Let client insert based on #ajax['method']."),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsInsertCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_insert_callback',
         'method' => 'prepend',
       ],
       '#suffix' => '<div id="insert_div">Original contents</div>',
@@ -178,7 +177,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'prepend': Click to prepend something"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsPrependCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_prepend_callback',
       ],
       '#suffix' => '<div id="prepend_div">Something will be prepended to this div. </div>',
     ];
@@ -188,7 +187,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX 'remove': Click to remove text"),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsRemoveCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_remove_callback',
       ],
       '#suffix' => '<div id="remove_div"><div id="remove_text">text to be removed</div></div>',
     ];
@@ -198,7 +197,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t("AJAX 'restripe' command"),
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsRestripeCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_restripe_callback',
       ],
       '#suffix' => '<div id="restripe_div">
                     <table id="restripe_table" style="border: 1px solid black" >
@@ -214,7 +213,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t("AJAX 'settings' command"),
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsSettingsCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_settings_callback',
       ],
     ];
 
@@ -223,7 +222,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t("AJAX 'add_css' command"),
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsAddCssCallback'],
+        'callback' => 'ajax_forms_test_advanced_commands_add_css_callback',
       ],
     ];
 

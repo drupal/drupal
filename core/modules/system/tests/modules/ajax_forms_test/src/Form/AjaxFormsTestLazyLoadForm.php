@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\ajax_forms_test\Form;
 
-use Drupal\ajax_forms_test\Callbacks;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -41,7 +40,7 @@ class AjaxFormsTestLazyLoadForm extends FormBase {
       '#value' => $this->t('Submit'),
       '#ajax' => [
         'wrapper' => 'ajax-forms-test-lazy-load-ajax-wrapper',
-        'callback' => [Callbacks::class, 'lazyLoadFormAjax'],
+        'callback' => 'ajax_forms_test_lazy_load_form_ajax',
       ],
       '#prefix' => '<div id="ajax-forms-test-lazy-load-ajax-wrapper"></div>',
     ];

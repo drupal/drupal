@@ -1,0 +1,253 @@
+<?php
+
+/**
+ * @file
+ * Mock module for Ajax forms testing.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Ajax\AddCssCommand;
+use Drupal\Core\Ajax\AfterCommand;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\AlertCommand;
+use Drupal\Core\Ajax\AnnounceCommand;
+use Drupal\Core\Ajax\AppendCommand;
+use Drupal\Core\Ajax\BeforeCommand;
+use Drupal\Core\Ajax\ChangedCommand;
+use Drupal\Core\Ajax\CssCommand;
+use Drupal\Core\Ajax\DataCommand;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\InsertCommand;
+use Drupal\Core\Ajax\InvokeCommand;
+use Drupal\Core\Ajax\PrependCommand;
+use Drupal\Core\Ajax\RemoveCommand;
+use Drupal\Core\Ajax\RestripeCommand;
+use Drupal\Core\Ajax\SettingsCommand;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Ajax form callback: Selects 'after'.
+ */
+function ajax_forms_test_advanced_commands_after_callback($form, FormStateInterface $form_state) {
+  $selector = '#after_div';
+
+  $response = new AjaxResponse();
+  $response->addCommand(new AfterCommand($selector, "This will be placed after"));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'alert'.
+ */
+function ajax_forms_test_advanced_commands_alert_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new AlertCommand('Alert'));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'announce' with no priority specified.
+ */
+function ajax_forms_test_advanced_commands_announce_callback($form, FormStateInterface $form_state) {
+  return (new AjaxResponse())->addCommand(new AnnounceCommand('Default announcement.'));
+}
+
+/**
+ * Ajax form callback: Selects 'announce' with 'polite' priority.
+ */
+function ajax_forms_test_advanced_commands_announce_polite_callback($form, FormStateInterface $form_state) {
+  return (new AjaxResponse())->addCommand(new AnnounceCommand('Polite announcement.', 'polite'));
+}
+
+/**
+ * Ajax form callback: Selects 'announce' with 'assertive' priority.
+ */
+function ajax_forms_test_advanced_commands_announce_assertive_callback($form, FormStateInterface $form_state) {
+  return (new AjaxResponse())->addCommand(new AnnounceCommand('Assertive announcement.', 'assertive'));
+}
+
+/**
+ * Ajax form callback: Selects 'announce' with two announce commands returned.
+ */
+function ajax_forms_test_advanced_commands_double_announce_callback($form, FormStateInterface $form_state) {
+  return (new AjaxResponse())->addCommand(new AnnounceCommand('Assertive announcement.', 'assertive'))
+    ->addCommand(new AnnounceCommand('Another announcement.'));
+}
+
+/**
+ * Ajax form callback: Selects 'append'.
+ */
+function ajax_forms_test_advanced_commands_append_callback($form, FormStateInterface $form_state) {
+  $selector = '#append_div';
+  $response = new AjaxResponse();
+  $response->addCommand(new AppendCommand($selector, "Appended text"));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'before'.
+ */
+function ajax_forms_test_advanced_commands_before_callback($form, FormStateInterface $form_state) {
+  $selector = '#before_div';
+  $response = new AjaxResponse();
+  $response->addCommand(new BeforeCommand($selector, "Before text"));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'changed'.
+ */
+function ajax_forms_test_advanced_commands_changed_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new ChangedCommand('#changed_div'));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'changed' with asterisk marking inner div.
+ */
+function ajax_forms_test_advanced_commands_changed_asterisk_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new ChangedCommand('#changed_div', '#changed_div_mark_this'));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'css'.
+ */
+function ajax_forms_test_advanced_commands_css_callback($form, FormStateInterface $form_state) {
+  $selector = '#css_div';
+  $color = 'blue';
+
+  $response = new AjaxResponse();
+  $response->addCommand(new CssCommand($selector, ['background-color' => $color]));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'data'.
+ */
+function ajax_forms_test_advanced_commands_data_callback($form, FormStateInterface $form_state) {
+  $selector = '#data_div';
+  $response = new AjaxResponse();
+  $response->addCommand(new DataCommand($selector, 'test_key', 'test_value'));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'invoke'.
+ */
+function ajax_forms_test_advanced_commands_invoke_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new InvokeCommand('#invoke_div', 'addClass', ['error']));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'html'.
+ */
+function ajax_forms_test_advanced_commands_html_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new HtmlCommand('#html_div', 'replacement text'));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'insert'.
+ */
+function ajax_forms_test_advanced_commands_insert_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new InsertCommand('#insert_div', 'insert replacement text'));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'prepend'.
+ */
+function ajax_forms_test_advanced_commands_prepend_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new PrependCommand('#prepend_div', "prepended text"));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'remove'.
+ */
+function ajax_forms_test_advanced_commands_remove_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new RemoveCommand('#remove_text'));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'restripe'.
+ */
+function ajax_forms_test_advanced_commands_restripe_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new RestripeCommand('#restripe_table'));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects 'settings'.
+ */
+function ajax_forms_test_advanced_commands_settings_callback($form, FormStateInterface $form_state) {
+  $setting['ajax_forms_test']['foo'] = 42;
+  $response = new AjaxResponse();
+  $response->addCommand(new SettingsCommand($setting));
+  return $response;
+}
+
+/**
+ * Ajax callback for 'add_css'.
+ */
+function ajax_forms_test_advanced_commands_add_css_callback($form, FormStateInterface $form_state) {
+  $response = new AjaxResponse();
+  $response->addCommand(new AddCssCommand([
+    [
+      'href' => 'my/file.css',
+      'media' => 'all',
+    ],
+    [
+      'href' => 'https://example.com/css?family=Open+Sans',
+      'media' => 'all',
+    ],
+  ]));
+  return $response;
+}
+
+/**
+ * Ajax form callback: Selects the 'driver_text' element of the validation form.
+ */
+function ajax_forms_test_validation_form_callback($form, FormStateInterface $form_state) {
+  \Drupal::messenger()->addStatus("ajax_forms_test_validation_form_callback invoked");
+  \Drupal::messenger()->addStatus(t("Callback: driver_text=%driver_text, spare_required_field=%spare_required_field", ['%driver_text' => $form_state->getValue('driver_text'), '%spare_required_field' => $form_state->getValue('spare_required_field')]));
+  return ['#markup' => '<div id="message_area">ajax_forms_test_validation_form_callback at ' . date('c') . '</div>'];
+}
+
+/**
+ * Ajax form callback: Selects the 'driver_number' element of the validation form.
+ */
+function ajax_forms_test_validation_number_form_callback($form, FormStateInterface $form_state) {
+  \Drupal::messenger()->addStatus("ajax_forms_test_validation_number_form_callback invoked");
+  \Drupal::messenger()->addStatus(t("Callback: driver_number=%driver_number, spare_required_field=%spare_required_field", ['%driver_number' => $form_state->getValue('driver_number'), '%spare_required_field' => $form_state->getValue('spare_required_field')]));
+  return ['#markup' => '<div id="message_area_number">ajax_forms_test_validation_number_form_callback at ' . date('c') . '</div>'];
+}
+
+/**
+ * AJAX form callback: Selects for the ajax_forms_test_lazy_load_form() form.
+ */
+function ajax_forms_test_lazy_load_form_ajax($form, FormStateInterface $form_state) {
+  $build = [
+    '#markup' => 'new content',
+  ];
+
+  if ($form_state->getValue('add_files')) {
+    $build['#attached']['library'][] = 'system/admin';
+    $build['#attached']['library'][] = 'system/drupal.system';
+    $build['#attached']['drupalSettings']['ajax_forms_test_lazy_load_form_submit'] = 'executed';
+  }
+
+  return $build;
+}

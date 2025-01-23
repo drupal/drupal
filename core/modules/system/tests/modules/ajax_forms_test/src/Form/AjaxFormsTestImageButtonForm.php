@@ -26,6 +26,7 @@ class AjaxFormsTestImageButtonForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $object = new Callbacks();
     $form['image_button'] = [
       '#type' => 'image_button',
       '#name' => 'image_button',
@@ -33,7 +34,7 @@ class AjaxFormsTestImageButtonForm extends FormBase {
       '#attributes' => ['alt' => $this->t('Edit')],
       '#op' => 'edit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'imageButtonCallback'],
+        'callback' => [$object, 'imageButtonCallback'],
       ],
       '#suffix' => '<div id="ajax_image_button_result">Image button not pressed yet.</div>',
     ];
