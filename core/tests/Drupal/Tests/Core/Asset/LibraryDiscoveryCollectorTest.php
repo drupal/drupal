@@ -83,6 +83,9 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
     ],
   ];
 
+  /**
+   * The active theme.
+   */
   protected $activeTheme;
 
   /**

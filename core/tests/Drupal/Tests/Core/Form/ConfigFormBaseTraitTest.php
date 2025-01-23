@@ -71,6 +71,10 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
 
 class ConfiguredTrait {
   use ConfigFormBaseTrait;
+
+  /**
+   * The configuration factory.
+   */
   public $configFactory;
 
   protected function getEditableConfigNames() {}

@@ -12,6 +12,9 @@ use Drupal\Core\Menu\MenuLinkBase;
  */
 class MenuLinkMock extends MenuLinkBase {
 
+  /**
+   * The default configuration for the test menu link.
+   */
   protected static $defaults = [
     'menu_name' => 'mock',
     'route_name' => 'MUST BE PROVIDED',

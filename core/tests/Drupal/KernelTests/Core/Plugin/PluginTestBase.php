@@ -22,11 +22,34 @@ abstract class PluginTestBase extends KernelTestBase {
    */
   protected static $modules = ['plugin_test'];
 
+  /**
+   * The test plugin manager used by Plugin API unit tests.
+   */
   protected $testPluginManager;
+
+  /**
+   * The expected plugin definitions for the test plugin.
+   */
   protected $testPluginExpectedDefinitions;
+
+  /**
+   * The mock plugin manager used by Plugin API derivative unit tests.
+   */
   protected $mockBlockManager;
+
+  /**
+   * The expected plugin definitions for the mock block plugin.
+   */
   protected $mockBlockExpectedDefinitions;
+
+  /**
+   * The default plugin manager used by Plugin API unit tests.
+   */
   protected $defaultsTestPluginManager;
+
+  /**
+   * The expected plugin definitions for the defaults plugin.
+   */
   protected $defaultsTestPluginExpectedDefinitions;
 
   /**

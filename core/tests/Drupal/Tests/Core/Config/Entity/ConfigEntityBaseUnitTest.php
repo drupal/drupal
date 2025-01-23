@@ -717,10 +717,19 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
 class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCollections {
 
+  /**
+   * The plugin collection.
+   */
   protected $pluginCollection;
 
+  /**
+   * The plugin manager.
+   */
   protected $pluginManager;
 
+  /**
+   * The configuration for the plugin collection.
+   */
   protected array $the_plugin_collection_config = [];
 
   public function setPluginManager(PluginManagerInterface $plugin_manager): void {

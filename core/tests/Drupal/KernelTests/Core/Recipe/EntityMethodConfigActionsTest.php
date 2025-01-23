@@ -20,6 +20,9 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
    */
   protected static $modules = ['config_test', 'entity_test', 'system'];
 
+  /**
+   * The configuration action manager.
+   */
   private readonly ConfigActionManager $configActionManager;
 
   /**

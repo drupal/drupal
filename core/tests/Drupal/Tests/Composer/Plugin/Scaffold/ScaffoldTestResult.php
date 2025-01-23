@@ -9,7 +9,14 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold;
  */
 class ScaffoldTestResult {
 
+  /**
+   * The location of the scaffold fixture.
+   */
   protected $docroot;
+
+  /**
+   * The stdout from the test.
+   */
   protected $scaffoldOutput;
 
   /**

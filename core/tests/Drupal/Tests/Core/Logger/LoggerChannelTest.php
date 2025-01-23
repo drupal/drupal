@@ -188,7 +188,14 @@ class LoggerChannelTest extends UnitTestCase {
 class NaughtyRecursiveLogger implements LoggerInterface {
   use LoggerTrait;
 
+  /**
+   * The logger channel.
+   */
   protected $channel;
+
+  /**
+   * The message to log.
+   */
   protected $message;
 
   public function __construct(LoggerChannel $channel) {

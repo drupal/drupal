@@ -11,9 +11,25 @@ use Drupal\Core\Entity\EntityBase;
  */
 class StubEntityBase extends EntityBase {
 
+  /**
+   * The ID for the stub entity.
+   */
   public $id;
+
+  /**
+   * The language code for the stub entity.
+   */
+
   public $langcode;
+
+  /**
+   * The UUID for the stub entity.
+   */
   public $uuid;
+
+  /**
+   * The label for the stub entity.
+   */
   public $label;
 
 }

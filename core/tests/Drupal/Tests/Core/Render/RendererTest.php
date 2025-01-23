@@ -22,6 +22,9 @@ use Drupal\Core\Template\Attribute;
  */
 class RendererTest extends RendererTestBase {
 
+  /**
+   * The expected theme variables.
+   */
   protected $defaultThemeVars = [
     '#cache' => [
       'contexts' => [
