@@ -26,8 +26,6 @@ class AjaxFormsTestSimpleForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $object = new Callbacks();
-
     $form = [];
     $form['select'] = [
       '#title' => $this->t('Color'),
@@ -38,7 +36,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
         'blue' => 'blue',
       ],
       '#ajax' => [
-        'callback' => [$object, 'selectCallback'],
+        'callback' => [Callbacks::class, 'selectCallback'],
       ],
       '#suffix' => '<div id="ajax_selected_color">No color yet selected</div>',
     ];
@@ -47,7 +45,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Test checkbox'),
       '#ajax' => [
-        'callback' => [$object, 'checkboxCallback'],
+        'callback' => [Callbacks::class, 'checkboxCallback'],
       ],
       '#suffix' => '<div id="ajax_checkbox_value">No action yet</div>',
     ];
@@ -87,7 +85,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
         '#type' => 'checkbox',
         '#title' => $this->t('AJAX checkbox in a group'),
         '#ajax' => [
-          'callback' => [$object, 'checkboxGroupCallback'],
+          'callback' => [Callbacks::class, 'checkboxGroupCallback'],
           'wrapper' => 'checkbox-wrapper',
         ],
       ],
@@ -101,7 +99,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
         '#group' => 'nested_group',
         '#title' => $this->t('AJAX checkbox in a nested group'),
         '#ajax' => [
-          'callback' => [$object, 'checkboxGroupCallback'],
+          'callback' => [Callbacks::class, 'checkboxGroupCallback'],
           'wrapper' => 'checkbox-wrapper',
         ],
       ],
