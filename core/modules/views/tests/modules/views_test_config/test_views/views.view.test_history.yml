@@ -188,8 +188,7 @@ display:
           group_type: group
           admin_label: ''
           operator: '='
-          value:
-            value: ''
+          value: ''
           group: 1
           exposed: false
           expose:
@@ -216,7 +215,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: date
+          plugin_id: history_user_timestamp
       defaults:
         filters: false
         filter_groups: false

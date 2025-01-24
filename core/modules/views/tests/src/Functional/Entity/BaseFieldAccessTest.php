@@ -39,15 +39,6 @@ class BaseFieldAccessTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config', 'comment_test_views']): void {
     parent::setUp($import_test_views, $modules);
 
-    \Drupal::state()->set('entity_test.views_data', [
-      'entity_test' => [
-        'test_text_access' => [
-          'field' => [
-            'id' => 'standard',
-          ],
-        ],
-      ],
-    ]);
     $entity_1 = EntityTest::create([
       'test_text_access' => 'no access value',
     ]);

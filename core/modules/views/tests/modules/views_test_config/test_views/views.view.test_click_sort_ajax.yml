@@ -1,41 +1,105 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - views_test_data
 id: test_click_sort_ajax
 label: test_click_sort_ajax
 module: views
 description: ''
 tag: ''
 base_table: views_test_data
-base_field: nid
+base_field: id
 display:
   default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: null
     display_options:
-      use_ajax: true
       fields:
         id:
           id: id
           table: views_test_data
           field: id
-          label: ID
           plugin_id: numeric
+          label: ID
         name:
           id: name
           table: views_test_data
           field: name
-          label: Name
+          relationship: none
+          group_type: group
+          admin_label: ''
           plugin_id: string
+          label: Name
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
         created:
           id: created
           table: views_test_data
           field: created
-          label: created
-          plugin_id: field
-          type: timestamp
-          settings:
-            date_format: medium
-            custom_date_format: ''
-            timezone: ''
+          plugin_id: date
+          date_format: timestamp
+          custom_date_format: ''
+          timezone: ''
+      pager:
+        type: mini
+        options:
+          offset: 0
+          pagination_heading_level: h4
+          items_per_page: 1
+          total_pages: null
+          id: 0
+          tags:
+            next: 'Next ›'
+            previous: '‹ Previous'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
       access:
         type: none
       cache:
@@ -43,23 +107,61 @@ display:
       style:
         type: table
         options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          columns:
+            id: id
+            name: name
+            created: created
+          default: id
           info:
             id:
-              sortable: true
+              sortable: false
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             name:
               sortable: true
               default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             created:
               sortable: false
-    display_plugin: default
-    display_title: Default
-    id: default
-    position: 0
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          override: true
+          sticky: false
+          summary: ''
+          empty_table: false
+          caption: ''
+          description: ''
+      use_ajax: true
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url.query_args
+      tags: {  }
   page_1:
-    display_options:
-      path: test_click_sort
-    display_plugin: page
-    display_title: Page
     id: page_1
+    display_title: Page
+    display_plugin: page
     position: 0
+    display_options:
+      display_extenders: {  }
+      path: test_click_sort
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url.query_args
+      tags: {  }
