@@ -117,7 +117,7 @@ class StatusTest extends BrowserTestBase {
     // Check if JSON database support is enabled.
     $this->assertSession()->pageTextContains('Database support for JSON');
     $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
-      ':text' => 'Is required in Drupal 10.0.',
+      ':text' => 'Drupal requires databases that support JSON storage.',
     ]);
     $this->assertCount(1, $elements);
     $this->assertStringStartsWith('Available', $elements[0]->getParent()->getText());
