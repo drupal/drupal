@@ -147,7 +147,7 @@ class AjaxFormsTestCommandsForm extends FormBase {
       '#value' => $this->t("AJAX invoke command: Invoke addClass() method."),
       '#type' => 'submit',
       '#ajax' => [
-        'callback' => [Callbacks::class, 'advancedCommandsHtmlCallback'],
+        'callback' => [Callbacks::class, 'advancedCommandsInvokeCallback'],
       ],
       '#suffix' => '<div id="invoke_div">Original contents</div>',
     ];
