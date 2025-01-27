@@ -56,6 +56,11 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * The field storage definitions for all base fields of the entity type.
    *
    * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No
+   * replacement is provided.
+   *
+   * @see https://www.drupal.org/node/3240278
    */
   protected $fieldStorageDefinitions;
 
@@ -116,8 +121,14 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * Gets the field storage definitions.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
+   *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No
+   * replacement is provided.
+   *
+   * @see https://www.drupal.org/node/3240278
    */
   protected function getFieldStorageDefinitions() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3240278', E_USER_DEPRECATED);
     if (!isset($this->fieldStorageDefinitions)) {
       $this->fieldStorageDefinitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityType->id());
     }
@@ -312,8 +323,13 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     // Load all typed data definitions of all fields. This should cover each of
     // the entity base, revision, data tables.
     $field_definitions = $this->entityFieldManager->getBaseFieldDefinitions($this->entityType->id());
+
+    $field_storage_definitions = array_map(function (FieldDefinitionInterface $definition) {
+      return $definition->getFieldStorageDefinition();
+    }, $field_definitions);
+
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-    $table_mapping = $this->storage->getTableMapping($field_definitions);
+    $table_mapping = $this->storage->getTableMapping($field_storage_definitions);
     // Fetch all fields that can appear in both the base table and the data
     // table.
     $duplicate_fields = array_intersect_key($entity_keys, array_flip(['id', 'revision', 'bundle']));
@@ -335,9 +351,9 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       }
     }
 
-    foreach ($field_definitions as $field_definition) {
-      if ($table_mapping->requiresDedicatedTableStorage($field_definition->getFieldStorageDefinition())) {
-        $table = $table_mapping->getDedicatedDataTableName($field_definition->getFieldStorageDefinition());
+    foreach ($field_storage_definitions as $field_storage_definition) {
+      if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
+        $table = $table_mapping->getDedicatedDataTableName($field_storage_definition);
 
         $data[$table]['table']['group'] = $this->entityType->getLabel();
         $data[$table]['table']['provider'] = $this->entityType->getProvider();
@@ -350,7 +366,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         ];
 
         if ($revisionable) {
-          $revision_table = $table_mapping->getDedicatedRevisionTableName($field_definition->getFieldStorageDefinition());
+          $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage_definition);
 
           $data[$revision_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
           $data[$revision_table]['table']['provider'] = $this->entityType->getProvider();
@@ -436,7 +452,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected function mapFieldDefinition($table, $field_name, FieldDefinitionInterface $field_definition, TableMappingInterface $table_mapping, &$table_data) {
     // Create a dummy instance to retrieve property definitions.
     $field_column_mapping = $table_mapping->getColumnNames($field_name);
-    $field_schema = $this->getFieldStorageDefinitions()[$field_name]->getSchema();
+    $field_schema = $field_definition->getFieldStorageDefinition()->getSchema();
 
     $field_definition_type = $field_definition->getType();
     // Add all properties to views table data. We need an entry for each
