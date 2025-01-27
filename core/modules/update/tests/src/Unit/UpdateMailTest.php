@@ -12,7 +12,7 @@ use Drupal\update\Hook\UpdateHooks;
 /**
  * Tests text of update email.
  *
- * @covers \update_mail
+ * @covers \Drupal\update\Hook\UpdateHooks::mail
  *
  * @group update
  */

@@ -46,7 +46,7 @@ class BlockRebuildTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::block_rebuild
+   * @covers \Drupal\block\Hook\BlockHooks::rebuild
    */
   public function testRebuildNoBlocks(): void {
     $blockRebuild = new BlockHooks();
@@ -57,7 +57,7 @@ class BlockRebuildTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::block_rebuild
+   * @covers \Drupal\block\Hook\BlockHooks::rebuild
    */
   public function testRebuildNoInvalidBlocks(): void {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
@@ -70,7 +70,7 @@ class BlockRebuildTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::block_rebuild
+   * @covers \Drupal\block\Hook\BlockHooks::rebuild
    */
   public function testRebuildInvalidBlocks(): void {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);

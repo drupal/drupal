@@ -206,4 +206,12 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
     }
   }
 
+  /**
+   * Provides source data for ::testSource.
+   *
+   * @return iterable
+   *   The source data.
+   */
+  abstract public static function providerSource();
+
 }
