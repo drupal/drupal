@@ -94,8 +94,8 @@ variables:
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
     SE_NODE_MAX_SESSIONS: "16"
     SE_SESSION_RETRY_INTERVAL: "1"
-    SE_SESSION_REQUEST_TIMEOUT: "10"
-    SE_START_XVFB: "false"
+    SE_SESSION_REQUEST_TIMEOUT: "60"
+    SE_START_XVFB: "true"
     SE_START_VNC: "false"
 
 .run-tests: &run-tests
