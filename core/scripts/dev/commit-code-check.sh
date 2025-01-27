@@ -139,7 +139,8 @@ JAVASCRIPT_PACKAGES_CHANGED=0
 # it is used to make sure the compiled JS is valid.
 CKEDITOR5_PLUGINS_CHANGED=0
 
-# This variable will be set to when the dictionary has changed.
+# This variable will be set to one when either of the core dictionaries or the
+# .cspell.json config has changed.
 CSPELL_DICTIONARY_FILE_CHANGED=0
 
 # Build up a list of absolute file names.
@@ -176,7 +177,7 @@ for FILE in $FILES; do
     CKEDITOR5_PLUGINS_CHANGED=1;
   fi;
 
-  if [[ $FILE == "core/misc/cspell/dictionary.txt" || $FILE == "core/misc/cspell/drupal-dictionary.txt" ]]; then
+  if [[ $FILE == "core/misc/cspell/dictionary.txt" || $FILE == "core/misc/cspell/drupal-dictionary.txt" || $FILE == "core/.cspell.json" ]]; then
     CSPELL_DICTIONARY_FILE_CHANGED=1;
   fi
 done
