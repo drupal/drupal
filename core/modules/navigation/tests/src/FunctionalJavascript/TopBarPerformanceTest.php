@@ -69,13 +69,15 @@ class TopBarPerformanceTest extends PerformanceTestBase {
 
     // Ensure that there is no change to performance metrics from the Top Bar.
     // Anonymous users should never see the Top Bar.
-    $this->assertSame($performance_data_before_top_bar->getQueryCount(), $performance_data_after_top_bar->getQueryCount());
-    $this->assertSame($performance_data_before_top_bar->getCacheGetCount(), $performance_data_after_top_bar->getCacheGetCount());
-    $this->assertSame($performance_data_before_top_bar->getCacheSetCount(), $performance_data_after_top_bar->getCacheSetCount());
-    $this->assertSame($performance_data_before_top_bar->getCacheDeleteCount(), $performance_data_after_top_bar->getCacheDeleteCount());
-    $this->assertSame($performance_data_before_top_bar->getCacheTagChecksumCount(), $performance_data_after_top_bar->getCacheTagChecksumCount());
-    $this->assertSame($performance_data_before_top_bar->getCacheTagIsValidCount(), $performance_data_after_top_bar->getCacheTagIsValidCount());
-    $this->assertSame($performance_data_before_top_bar->getCacheTagInvalidationCount(), $performance_data_after_top_bar->getCacheTagInvalidationCount());
+    $this->assertMetrics([
+      'QueryCount' => $performance_data_before_top_bar->getQueryCount(),
+      'CacheGetCount' => $performance_data_before_top_bar->getCacheGetCount(),
+      'CacheSetCount' => $performance_data_before_top_bar->getCacheSetCount(),
+      'CacheDeleteCount' => $performance_data_before_top_bar->getCacheDeleteCount(),
+      'CacheTagChecksumCount' => $performance_data_before_top_bar->getCacheTagChecksumCount(),
+      'CacheTagIsValidCount' => $performance_data_before_top_bar->getCacheTagIsValidCount(),
+      'CacheTagInvalidationCount' => $performance_data_before_top_bar->getCacheTagInvalidationCount(),
+    ], $performance_data_after_top_bar);
   }
 
 }
