@@ -106,3 +106,4 @@ services:
     class: Drupal\views\Plugin\views\query\CastSql
     tags:
       - { name: backend_overridable }
+  Drupal\views\Plugin\views\query\CastSqlInterface: '@views.cast_sql'
