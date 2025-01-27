@@ -240,7 +240,7 @@ Help
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
 
 Image
-- Claudiu Cristea 'claudiu.cristea' https://www.drupal.org/u/claudiu.cristea
+- ?
 
 Inline Form Errors
 - Daniël Smidt 'dmsmidt' https://www.drupal.org/u/dmsmidt
