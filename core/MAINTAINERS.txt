@@ -276,7 +276,6 @@ Markup
 Media
 - Sean Blommaert 'seanB' https://www.drupal.org/u/seanb
 - Marcos Cano 'marcoscano' https://www.drupal.org/u/marcoscano
-- Christian Fritsch 'chr.fritsch' https://www.drupal.org/u/chr.fritsch
 - Adam Globus-Hoenich 'phenaproxima' https://www.drupal.org/u/phenaproxima
 
   Media Library
