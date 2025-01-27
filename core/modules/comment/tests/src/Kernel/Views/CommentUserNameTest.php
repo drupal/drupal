@@ -7,6 +7,7 @@ namespace Drupal\Tests\comment\Kernel\Views;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\user\Entity\Role;
@@ -20,6 +21,8 @@ use Drupal\views\Views;
  * @group comment
  */
 class CommentUserNameTest extends ViewsKernelTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * Admin user.
@@ -83,7 +86,7 @@ class CommentUserNameTest extends ViewsKernelTestBase {
 
     $commentType = CommentType::create([
       'id' => 'entity_test_comment',
-      'label' => t('Entity Test Comment'),
+      'label' => $this->t('Entity Test Comment'),
       'target_entity_type_id' => 'entity_test',
     ]);
     $commentType->save();

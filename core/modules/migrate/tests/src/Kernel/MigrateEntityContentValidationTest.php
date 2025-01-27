@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -24,6 +25,8 @@ use Drupal\user\RoleInterface;
  * @group migrate
  */
 class MigrateEntityContentValidationTest extends KernelTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -155,7 +158,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
     ]);
     $this->assertSame(sprintf('1: [user]: name=%s||name=%s||mail=Email field is required.', $username_constraint->illegalMessage, new FormattableMarkup($username_constraint->tooLongMessage, ['%name' => $long_username, '%max' => 60])), $this->messages[0], 'First message should have 3 validation errors.');
     // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-    $this->assertSame(sprintf('1: [user]: name=%s||name=%s||mail=Email field is required.', $username_constraint->illegalMessage, t($username_constraint->tooLongMessage, ['%name' => $long_username, '%max' => 60])), $this->messages[0], 'First message should have 3 validation errors.');
+    $this->assertSame(sprintf('1: [user]: name=%s||name=%s||mail=Email field is required.', $username_constraint->illegalMessage, $this->t($username_constraint->tooLongMessage, ['%name' => $long_username, '%max' => 60])), $this->messages[0], 'First message should have 3 validation errors.');
     $this->assertSame(sprintf('2: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[1], 'Second message should have 2 validation errors.');
     $this->assertSame(sprintf('3: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[2], 'Third message should have 2 validation errors.');
     $this->assertArrayNotHasKey(3, $this->messages, 'Fourth message should not exist.');

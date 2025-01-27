@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager\Exception\StageFailureMarkerException;
 use Drupal\package_manager\FailureMarker;
@@ -17,6 +18,8 @@ use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
  */
 class FailureMarkerTest extends PackageManagerKernelTestBase {
 
+  use StringTranslationTrait;
+
   /**
    * @covers ::getMessage
    * @testWith [true]
@@ -24,7 +27,7 @@ class FailureMarkerTest extends PackageManagerKernelTestBase {
    */
   public function testGetMessageWithoutThrowable(bool $include_backtrace): void {
     $failure_marker = $this->container->get(FailureMarker::class);
-    $failure_marker->write($this->createStage(), t('Disastrous catastrophe!'));
+    $failure_marker->write($this->createStage(), $this->t('Disastrous catastrophe!'));
 
     $this->assertMatchesRegularExpression('/^Disastrous catastrophe!$/', $failure_marker->getMessage($include_backtrace));
   }
@@ -36,7 +39,7 @@ class FailureMarkerTest extends PackageManagerKernelTestBase {
    */
   public function testGetMessageWithThrowable(bool $include_backtrace): void {
     $failure_marker = $this->container->get(FailureMarker::class);
-    $failure_marker->write($this->createStage(), t('Disastrous catastrophe!'), new \Exception('Witchcraft!'));
+    $failure_marker->write($this->createStage(), $this->t('Disastrous catastrophe!'), new \Exception('Witchcraft!'));
 
     $expected_pattern = $include_backtrace
       ? <<<REGEXP
@@ -76,7 +79,7 @@ REGEXP
    */
   public function testAssertNotExists(): void {
     $failure_marker = $this->container->get(FailureMarker::class);
-    $failure_marker->write($this->createStage(), t('Something wicked occurred here.'), new \Exception('Witchcraft!'));
+    $failure_marker->write($this->createStage(), $this->t('Something wicked occurred here.'), new \Exception('Witchcraft!'));
 
     $this->expectException(StageFailureMarkerException::class);
     $this->expectExceptionMessageMatches('/^Something wicked occurred here. Caused by Exception, with this message: Witchcraft!\nBacktrace:\n#0 .*/');

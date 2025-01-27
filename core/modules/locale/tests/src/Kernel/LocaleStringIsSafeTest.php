@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Kernel;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -12,6 +13,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @group locale
  */
 class LocaleStringIsSafeTest extends KernelTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -75,7 +78,7 @@ class LocaleStringIsSafeTest extends KernelTestBase {
 
       // Pass the original string to the t() function to get it marked as safe.
       // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-      $safe_string = t($original_string);
+      $safe_string = $this->t($original_string);
       $rendered_safe_string = \Drupal::theme()->render('locale_test_tokenized', ['content' => $safe_string]);
       // t() function always marks the string as safe so it won't be escaped,
       // and should be the same as the original.

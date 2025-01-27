@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Event\PostCreateEvent;
@@ -21,6 +22,7 @@ use Drupal\Tests\package_manager\Traits\ComposerInstallersTrait;
 class OverwriteExistingPackagesValidatorTest extends PackageManagerKernelTestBase {
 
   use ComposerInstallersTrait;
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -144,13 +146,13 @@ class OverwriteExistingPackagesValidatorTest extends PackageManagerKernelTestBas
 
     $expected_results = [
       ValidationResult::createError([
-        t('The new package drupal/module_4 will be installed in the directory /modules/module_6, which already exists but is not managed by Composer.'),
+        $this->t('The new package drupal/module_4 will be installed in the directory /modules/module_6, which already exists but is not managed by Composer.'),
       ]),
       ValidationResult::createError([
-        t('The new package drupal/other_module_1 will be installed in the directory /modules/module_1, which already exists but is not managed by Composer.'),
+        $this->t('The new package drupal/other_module_1 will be installed in the directory /modules/module_1, which already exists but is not managed by Composer.'),
       ]),
       ValidationResult::createError([
-        t('The new package drupal/other_module_2 will be installed in the directory /modules/module_2, which already exists but is not managed by Composer.'),
+        $this->t('The new package drupal/other_module_2 will be installed in the directory /modules/module_2, which already exists but is not managed by Composer.'),
       ]),
     ];
     $this->assertResults($expected_results, PreApplyEvent::class);

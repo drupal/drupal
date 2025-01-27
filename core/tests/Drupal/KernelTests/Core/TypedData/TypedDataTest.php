@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
@@ -30,6 +31,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @group TypedData
  */
 class TypedDataTest extends KernelTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * The typed data manager to use.
@@ -610,7 +613,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEquals(1, $violations->count());
 
     // Test translating violation messages.
-    $message = t('This value should be %limit or more.', ['%limit' => 5]);
+    $message = $this->t('This value should be %limit or more.', ['%limit' => 5]);
     $this->assertEquals($message, $violations[0]->getMessage(), 'Translated violation message retrieved.');
     $this->assertEquals('', $violations[0]->getPropertyPath());
     $this->assertSame($integer, $violations[0]->getRoot(), 'Root object returned.');
@@ -622,7 +625,7 @@ class TypedDataTest extends KernelTestBase {
       ]);
     $violations = $this->typedDataManager->create($definition, "short")->validate();
     $this->assertEquals(1, $violations->count());
-    $message = t('This value is too short. It should have %limit characters or more.', ['%limit' => 10]);
+    $message = $this->t('This value is too short. It should have %limit characters or more.', ['%limit' => 10]);
     $this->assertEquals($message, $violations[0]->getMessage(), 'Translated violation message retrieved.');
 
     // Test having multiple violations.

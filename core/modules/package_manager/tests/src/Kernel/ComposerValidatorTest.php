@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\package_manager\Kernel;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreCreateEvent;
@@ -15,6 +16,8 @@ use Drupal\package_manager\ValidationResult;
  * @internal
  */
 class ComposerValidatorTest extends PackageManagerKernelTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * Data provider for testComposerSettingsValidation().
@@ -156,7 +159,7 @@ class ComposerValidatorTest extends PackageManagerKernelTestBase {
     $this->enableModules(['help']);
     (new ActiveFixtureManipulator())->addConfig($config)->commitChanges();
 
-    $result = ValidationResult::createError($expected_messages, t("Composer settings don't satisfy Package Manager's requirements."));
+    $result = ValidationResult::createError($expected_messages, $this->t("Composer settings don't satisfy Package Manager's requirements."));
     $this->assertStatusCheckResults([$result]);
   }
 
