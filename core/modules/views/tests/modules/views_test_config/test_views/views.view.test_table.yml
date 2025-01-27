@@ -39,6 +39,7 @@ display:
           id: job
           relationship: none
           table: views_test_data
+          element_label_colon: true
           plugin_id: string
         job_1:
           field: job

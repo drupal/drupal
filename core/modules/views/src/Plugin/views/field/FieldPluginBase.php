@@ -529,7 +529,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $options['element_label_type'] = ['default' => ''];
     $options['element_label_class'] = ['default' => ''];
-    $options['element_label_colon'] = ['default' => TRUE];
+    $options['element_label_colon'] = ['default' => FALSE];
 
     $options['element_wrapper_type'] = ['default' => ''];
     $options['element_wrapper_class'] = ['default' => ''];

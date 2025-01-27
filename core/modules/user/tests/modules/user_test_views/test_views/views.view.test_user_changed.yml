@@ -37,6 +37,7 @@ display:
           table: users_field_data
           field: changed
           label: 'Updated date'
+          element_label_colon: true
           plugin_id: field
           type: timestamp
           settings:
