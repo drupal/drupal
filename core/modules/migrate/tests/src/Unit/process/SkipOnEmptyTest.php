@@ -89,7 +89,7 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests repeated execution of a process plugin can reset the pipeline stoppage correctly.
+   * Tests repeated execution of a process plugin resets the pipeline stoppage.
    */
   public function testMultipleTransforms(): void {
     $configuration['method'] = 'process';

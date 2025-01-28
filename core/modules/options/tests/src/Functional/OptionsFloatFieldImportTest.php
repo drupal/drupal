@@ -9,7 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Functional\FieldTestBase;
 
 /**
- * Tests option fields can be updated and created through config synchronization.
+ * Tests option fields can be updated and created by config synchronization.
  *
  * @group options
  */

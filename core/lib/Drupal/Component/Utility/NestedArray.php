@@ -3,7 +3,7 @@
 namespace Drupal\Component\Utility;
 
 /**
- * Provides helpers to perform operations on nested arrays and array keys of variable depth.
+ * Provides methods for working with nested arrays of variable depth.
  *
  * @ingroup utility
  */

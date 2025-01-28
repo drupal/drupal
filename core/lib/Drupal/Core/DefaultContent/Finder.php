@@ -19,7 +19,9 @@ use Symfony\Component\Finder\Finder as SymfonyFinder;
 final class Finder {
 
   /**
-   * The content entity data to import, in dependency order, keyed by entity UUID.
+   * The content entity data to import.
+   *
+   * The entities are in dependency order, keyed by entity UUID.
    *
    * @var array<string, array<mixed>>
    */

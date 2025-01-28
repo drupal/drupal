@@ -107,7 +107,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests the UniqueField validation constraint validator for entity reference fields.
+   * Tests the UniqueField constraint validator for entity reference fields.
    *
    * Case 2. Try to create another entity with existing reference for unique field.
    *
@@ -183,7 +183,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests the UniqueField validation constraint validator for existing value in the same entity.
+   * Tests the UniqueField constraint for existing value in the same entity.
    *
    * Case 3. Try to add existing value for unique field in the same entity.
    *
@@ -231,7 +231,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests the UniqueField validation constraint validator for multiple violations.
+   * Tests the UniqueField constraint for multiple violations.
    *
    * Case 4. Try to add multiple existing values for unique field in the same entity.
    *
@@ -292,7 +292,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests the UniqueField validation constraint validator with regards to case-insensitivity.
+   * Tests the UniqueField constraint with regards to case-insensitivity.
    *
    * Case 5. Try to create another entity with existing value for unique field with different capitalization.
    *

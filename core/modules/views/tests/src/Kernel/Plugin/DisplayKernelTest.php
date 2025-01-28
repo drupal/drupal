@@ -87,7 +87,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests the \Drupal\views\Plugin\views\display\DisplayPluginBase::getPlugin() method.
+   * Tests \Drupal\views\Plugin\views\display\DisplayPluginBase::getPlugin().
    */
   public function testGetPlugin(): void {
     $view = Views::getView('test_display_defaults');

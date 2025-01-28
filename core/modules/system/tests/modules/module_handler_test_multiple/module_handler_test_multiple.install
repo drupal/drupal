@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the module_handler_test_multiple module.
+ * Install functions for the module_handler_test_multiple module.
  */
 
 declare(strict_types=1);

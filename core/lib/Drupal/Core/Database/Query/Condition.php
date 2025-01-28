@@ -62,7 +62,7 @@ class Condition implements ConditionInterface, \Countable {
   protected $changed = TRUE;
 
   /**
-   * The identifier of the query placeholder this condition has been compiled against.
+   * The query placeholder identifier this condition has been compiled against.
    *
    * @var string
    */

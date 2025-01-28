@@ -153,7 +153,7 @@ class FieldWebTest extends ViewTestBase {
   }
 
   /**
-   * Assertion helper which checks whether a string is not part of another string.
+   * Asserts that a string is not part of another string.
    *
    * @param string $haystack
    *   The value to search in.

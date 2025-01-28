@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the update_test_descriptions module.
+ * Update functions for the update_test_descriptions module.
  */
 
 declare(strict_types=1);

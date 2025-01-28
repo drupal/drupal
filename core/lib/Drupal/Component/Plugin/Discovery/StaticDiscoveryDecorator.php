@@ -22,7 +22,7 @@ class StaticDiscoveryDecorator extends StaticDiscovery {
   protected $registerDefinitions;
 
   /**
-   * Constructs a \Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator object.
+   * Constructs StaticDiscoveryDecorator object.
    *
    * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
    *   The discovery object that is being decorated.

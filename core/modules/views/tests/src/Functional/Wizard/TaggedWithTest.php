@@ -194,7 +194,9 @@ class TaggedWithTest extends WizardTestBase {
   }
 
   /**
-   * Tests that the "tagged with" form element only shows for node types that support it.
+   * Tests the "tagged with" form element.
+   *
+   * Confirm that the element only shows for node types that support it.
    */
   public function testTaggedWithByNodeType(): void {
     // The tagging field is associated with one of our node types only. So the

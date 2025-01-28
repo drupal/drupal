@@ -71,7 +71,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   public $value = NULL;
 
   /**
-   * The table to use for the name, should it not be in the same table as the argument.
+   * The table to use for the name, if it is not the same table as the argument.
    *
    * @var string
    */

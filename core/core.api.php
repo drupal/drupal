@@ -2052,7 +2052,7 @@ function hook_queue_info_alter(&$queues) {
 }
 
 /**
- * Alter the information provided in \Drupal\Core\Condition\ConditionManager::getDefinitions().
+ * Alter the information provided in ConditionManager::getDefinitions().
  *
  * @param array $definitions
  *   The array of condition definitions.

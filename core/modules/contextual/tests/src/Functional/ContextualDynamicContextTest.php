@@ -243,7 +243,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
   }
 
   /**
-   * Asserts that a contextual link placeholder with the given id does not exist.
+   * Asserts that a contextual link placeholder with a given id does not exist.
    *
    * @param string $id
    *   A contextual link id.

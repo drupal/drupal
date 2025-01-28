@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the update_test_no_preexisting module.
+ * Update functions for the update_test_no_preexisting module.
  */
 
 declare(strict_types=1);

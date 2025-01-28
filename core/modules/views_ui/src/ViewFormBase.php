@@ -141,7 +141,7 @@ abstract class ViewFormBase extends EntityForm {
   }
 
   /**
-   * Controls whether or not the default display should have its own tab on edit.
+   * Returns whether or not the default display should have its own tab on edit.
    */
   public function isDefaultDisplayShown(ViewUI $view) {
     // Always show the default display for advanced users who prefer that mode.

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the demo_umami installation profile.
+ * Install, update and uninstall functions for the demo_umami profile.
  */
 
 use Drupal\shortcut\Entity\Shortcut;

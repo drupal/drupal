@@ -27,7 +27,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
   protected $factory;
 
   /**
-   * The object that returns the preconfigured plugin instance appropriate for a particular runtime condition.
+   * The preconfigured plugin instance for a particular runtime condition.
    *
    * @var \Drupal\Component\Plugin\Mapper\MapperInterface|null
    */

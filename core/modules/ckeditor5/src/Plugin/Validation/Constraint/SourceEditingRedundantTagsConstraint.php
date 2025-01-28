@@ -27,7 +27,7 @@ class SourceEditingRedundantTagsConstraint extends SymfonyConstraint {
   public $enabledPluginsMessage = 'The following @element_type(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: %overlapping_tags.';
 
   /**
-   * When a Source Editing element is added that an enabled plugin optionally supports.
+   * When a Source Editing element is added that an enabled plugin supports.
    *
    * @var string
    */

@@ -11,7 +11,7 @@ use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery as ComponentAttrib
 class AttributeClassDiscovery extends ComponentAttributeClassDiscovery {
 
   /**
-   * A suffix to append to each PSR-4 directory associated with a base namespace.
+   * Suffix to append to each PSR-4 directory associated with a base namespace.
    *
    * This suffix is used to form the directories where plugins are found.
    *

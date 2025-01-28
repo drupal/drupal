@@ -21,7 +21,9 @@ class Extension {
   protected $type;
 
   /**
-   * The relative pathname of the extension (e.g., 'core/modules/node/node.info.yml').
+   * The relative pathname of the extension.
+   *
+   * An example relative pathname is 'core/modules/node/node.info.yml'.
    *
    * @var string
    */

@@ -9,7 +9,7 @@ use Drupal\Core\Language\LanguageManager;
 // cspell:ignore xoxo
 
 /**
- * Verifies that the installer language list combines local and remote languages.
+ * Verifies that the installer language list uses local and remote languages.
  *
  * @group Installer
  */

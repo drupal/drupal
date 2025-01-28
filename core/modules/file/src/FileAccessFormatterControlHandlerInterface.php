@@ -5,7 +5,7 @@ namespace Drupal\file;
 use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 
 /**
- * Defines an interface for file access handlers that need to run on file formatters.
+ * Defines an interface for file access handlers which runs on file formatters.
  *
  * \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceFormatterBase,
  * which file and image formatters extend, checks 'view' access on the

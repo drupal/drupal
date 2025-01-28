@@ -101,7 +101,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
   }
 
   /**
-   * Pre-render callback: Renders a processed text element's #markup as a summary.
+   * Pre-render callback: Renders a processed text element's #markup summary.
    *
    * @param array $element
    *   A structured array with the following key-value pairs:
