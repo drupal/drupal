@@ -298,12 +298,12 @@ class YamlFileLoader
             if (is_string($service['factory'])) {
                 if (str_contains($service['factory'], ':') && !str_contains($service['factory'], '::')) {
                     $parts = explode(':', $service['factory']);
-                    $definition->setFactory(array($this->resolveServices('@'.$parts[0]), $parts[1]));
+                    $definition->setFactory([$this->resolveServices('@'.$parts[0]), $parts[1]]);
                 } else {
                     $definition->setFactory($service['factory']);
                 }
             } else {
-                $definition->setFactory(array($this->resolveServices($service['factory'][0]), $service['factory'][1]));
+                $definition->setFactory([$this->resolveServices($service['factory'][0]), $service['factory'][1]]);
             }
         }
 
@@ -335,7 +335,7 @@ class YamlFileLoader
             if (is_string($service['configurator'])) {
                 $definition->setConfigurator($service['configurator']);
             } else {
-                $definition->setConfigurator(array($this->resolveServices($service['configurator'][0]), $service['configurator'][1]));
+                $definition->setConfigurator([$this->resolveServices($service['configurator'][0]), $service['configurator'][1]]);
             }
         }
 
@@ -347,10 +347,10 @@ class YamlFileLoader
             foreach ($service['calls'] as $call) {
                 if (isset($call['method'])) {
                     $method = $call['method'];
-                    $args = isset($call['arguments']) ? $this->resolveServices($call['arguments']) : array();
+                    $args = isset($call['arguments']) ? $this->resolveServices($call['arguments']) : [];
                 } else {
                     $method = $call[0];
-                    $args = isset($call[1]) ? $this->resolveServices($call[1]) : array();
+                    $args = isset($call[1]) ? $this->resolveServices($call[1]) : [];
                 }
 
                 $definition->addMethodCall($method, $args);
@@ -476,7 +476,7 @@ class YamlFileLoader
             throw new InvalidArgumentException(sprintf('The service file "%s" is not valid. It should contain an array. Check your YAML syntax.', $file));
         }
 
-        if ($invalid_keys = array_keys(array_diff_key($content, array('parameters' => 1, 'services' => 1)))) {
+        if ($invalid_keys = array_keys(array_diff_key($content, ['parameters' => 1, 'services' => 1]))) {
             throw new InvalidArgumentException(sprintf('The service file "%s" is not valid: it contains invalid root key(s) "%s". Services have to be added under "services" and Parameters under "parameters".', $file, implode('", "', $invalid_keys)));
         }
 
@@ -522,7 +522,7 @@ class YamlFileLoader
 
         }
         if (is_array($value)) {
-            $value = array_map(array($this, 'resolveServices'), $value);
+            $value = array_map([$this, 'resolveServices'], $value);
         } elseif (is_string($value) && str_starts_with($value, '@=')) {
             // Not supported.
             //return new Expression(substr($value, 2));

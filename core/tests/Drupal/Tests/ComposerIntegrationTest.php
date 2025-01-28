@@ -221,7 +221,7 @@ class ComposerIntegrationTest extends UnitTestCase {
   {
     $content = json_decode($composerFileContents, true);
 
-    $relevantKeys = array(
+    $relevantKeys = [
       'name',
       'version',
       'require',
@@ -233,9 +233,9 @@ class ComposerIntegrationTest extends UnitTestCase {
       'prefer-stable',
       'repositories',
       'extra',
-    );
+    ];
 
-    $relevantContent = array();
+    $relevantContent = [];
 
     foreach (array_intersect($relevantKeys, array_keys($content)) as $key) {
       $relevantContent[$key] = $content[$key];

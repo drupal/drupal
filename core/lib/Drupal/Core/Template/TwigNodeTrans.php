@@ -80,11 +80,11 @@ class TwigNodeTrans extends Node {
 
     // Write any tokens found as an associative array parameter, otherwise just
     // leave as an empty array.
-    $compiler->raw(', array(');
+    $compiler->raw(', [');
     foreach ($tokens as $token) {
       $compiler->string($token->getAttribute('placeholder'))->raw(' => ')->subcompile($token)->raw(', ');
     }
-    $compiler->raw(')');
+    $compiler->raw(']');
 
     // Write any options passed.
     if ($this->hasNode('options')) {
