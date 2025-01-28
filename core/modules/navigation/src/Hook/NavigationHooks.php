@@ -83,14 +83,6 @@ class NavigationHooks {
     $items['top_bar'] = ['render element' => 'element'];
     $items['top_bar_page_actions'] = ['variables' => ['page_actions' => [], 'featured_page_actions' => []]];
     $items['top_bar_page_action'] = ['variables' => ['link' => []]];
-    $items['big_pipe_interface_preview__navigation_shortcut_lazy_builder_lazyLinks__Shortcuts'] = [
-      'variables' => [
-        'callback' => NULL,
-        'arguments' => NULL,
-        'preview' => NULL,
-      ],
-      'base hook' => 'big_pipe_interface_preview',
-    ];
     $items['block__navigation'] = ['render element' => 'elements', 'base hook' => 'block'];
     $items['navigation_menu'] = [
       'base hook' => 'menu',
