@@ -293,7 +293,6 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
 
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Menu link title'))
-      ->setDescription(t('The text to be used for this link in the menu.'))
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
@@ -333,7 +332,6 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
 
     $fields['link'] = BaseFieldDefinition::create('link')
       ->setLabel(t('Link'))
-      ->setDescription(t('The location this menu link points to.'))
       ->setRevisionable(TRUE)
       ->setRequired(TRUE)
       ->setSettings([
