@@ -1002,6 +1002,10 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $expected_result = array_combine(array_column($expected_default_revisions, $revision_key), array_column($expected_default_revisions, $id_key));
     $this->assertEquals($expected_result, $result);
 
+    // Check latest revision queries.
+    $result = $storage->getQuery()->accessCheck(FALSE)->latestRevision()->execute();
+    $this->assertEquals($expected_result, $result);
+
     // Check querying each revision individually.
     foreach ($expected_values as $expected_value) {
       $query = $storage->getQuery()->accessCheck(FALSE);

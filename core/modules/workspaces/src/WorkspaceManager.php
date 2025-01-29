@@ -134,9 +134,11 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     $this->activeWorkspace = $workspace ?: FALSE;
 
     // Clear the static entity cache for the supported entity types.
-    $cache_tags_to_invalidate = array_map(function ($entity_type_id) {
-      return 'entity.memory_cache:' . $entity_type_id;
-    }, array_keys($this->workspaceInfo->getSupportedEntityTypes()));
+    $cache_tags_to_invalidate = [];
+    foreach (array_keys($this->workspaceInfo->getSupportedEntityTypes()) as $entity_type_id) {
+      $this->entityTypeManager->getStorage($entity_type_id)->resetCache();
+      $cache_tags_to_invalidate[] = 'entity.memory_cache:' . $entity_type_id;
+    }
     $this->entityMemoryCache->invalidateTags($cache_tags_to_invalidate);
 
     // Clear the static cache for path aliases. We can't inject the path alias

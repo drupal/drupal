@@ -57,11 +57,19 @@ trait QueryTrait {
    * {@inheritdoc}
    */
   public function prepare() {
+    // Latest revision queries have to return the latest workspace-specific
+    // revisions, in order to prevent changes done outside the workspace from
+    // leaking into the currently active one. For the same reason, latest
+    // revision queries will return the default revision for entities that are
+    // not tracked in the active workspace.
+    if ($this->latestRevision && $this->workspaceInfo->isEntityTypeSupported($this->entityType) && $this->workspaceManager->hasActiveWorkspace()) {
+      $this->allRevisions = FALSE;
+      $this->latestRevision = FALSE;
+    }
+
     parent::prepare();
 
     // Do not alter entity revision queries.
-    // @todo How about queries for the latest revision? Should we alter them to
-    //   look for the latest workspace-specific revision?
     if ($this->allRevisions) {
       return $this;
     }

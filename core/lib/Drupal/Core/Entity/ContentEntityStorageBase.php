@@ -513,6 +513,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         ->range(0, 1)
         ->sort($this->entityType->getKey('revision'), 'DESC')
         ->accessCheck(FALSE)
+        ->addMetaData('entity_id', $entity_id)
+        ->addTag('latest_translated_affected_revision')
         ->execute();
 
       $this->latestRevisionIds[$entity_id][$langcode] = key($result);
