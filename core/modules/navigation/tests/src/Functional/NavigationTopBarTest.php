@@ -22,8 +22,6 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
     'navigation',
     'node',
     'layout_builder',
-    'field_ui',
-    'file',
     'test_page_test',
   ];
 
@@ -57,6 +55,7 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
       'access administration pages',
       'access navigation',
       'bypass node access',
+      'configure any layout',
     ]);
     $this->drupalLogin($this->adminUser);
 

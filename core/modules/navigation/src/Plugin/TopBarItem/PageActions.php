@@ -110,7 +110,7 @@ final class PageActions extends TopBarItemBase implements ContainerFactoryPlugin
   protected function getFeaturedPageActions(array $page_actions): ?array {
     $featured_page_actions = [];
     $current_route_name = $this->routeMatch->getRouteName();
-    $canonical_pattern = '/^entity\.(.+?)\.canonical$/';
+    $canonical_pattern = '/^entity\.(.+?)\.(canonical|latest_version)$/';
     if (preg_match($canonical_pattern, $current_route_name, $matches)) {
       $entity_type = $matches[1];
       $edit_route = "entity.$entity_type.edit_form";
