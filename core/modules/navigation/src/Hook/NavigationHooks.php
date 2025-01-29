@@ -99,6 +99,19 @@ class NavigationHooks {
         'items' => [],
       ],
     ];
+    $items['navigation__messages'] = [
+      'variables' => [
+        'message_list' => NULL,
+      ],
+    ];
+    $items['navigation__message'] = [
+      'variables' => [
+        'attributes' => [],
+        'url' => NULL,
+        'content' => NULL,
+        'type' => 'status',
+      ],
+    ];
     return $items;
   }
 

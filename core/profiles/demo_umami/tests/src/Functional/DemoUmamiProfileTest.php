@@ -213,40 +213,23 @@ class DemoUmamiProfileTest extends BrowserTestBase {
       'create recipe content',
       'use editorial transition create_new_draft',
     ];
-    $account = $this->drupalCreateUser($permissions);
-    $this->drupalLogin($account);
-    $web_assert = $this->assertSession();
+    $this->assertDemonstrationWarningMessage($permissions);
+  }
 
-    $nodes = $this->container->get('entity_type.manager')
-      ->getStorage('node')
-      ->loadByProperties(['title' => 'Deep mediterranean quiche']);
-    /** @var \Drupal\node\Entity\Node $recipe_node */
-    $recipe_node = reset($nodes);
-
-    // Check when editing a node, the warning is visible.
-    $this->drupalGet($recipe_node->toUrl('edit-form'));
-    $web_assert->statusCodeEquals(200);
-    $web_assert->pageTextContains('This site is intended for demonstration purposes.');
-
-    // Check when adding a node, the warning is visible.
-    $this->drupalGet('node/add/recipe');
-    $web_assert->statusCodeEquals(200);
-    $web_assert->pageTextContains('This site is intended for demonstration purposes.');
-
-    // Check when looking at admin/content, the warning is visible.
-    $this->drupalGet('admin/content');
-    $web_assert->statusCodeEquals(200);
-    $web_assert->pageTextContains('This site is intended for demonstration purposes.');
-
-    // Check when viewing a node, the warning is not visible.
-    $this->drupalGet($recipe_node->toUrl());
-    $web_assert->statusCodeEquals(200);
-    $web_assert->pageTextNotContains('This site is intended for demonstration purposes.');
-
-    // Check when viewing the homepage, the warning is not visible.
-    $this->drupalGet('<front>');
-    $web_assert->statusCodeEquals(200);
-    $web_assert->pageTextNotContains('This site is intended for demonstration purposes.');
+  /**
+   * Tests that the navigation warning only appears on the admin pages.
+   */
+  protected function testNavigationDemonstrationWarningMessage(): void {
+    \Drupal::service('module_installer')->install(['navigation']);
+    $permissions = [
+      'access content overview',
+      'access navigation',
+      'administer nodes',
+      'edit any recipe content',
+      'create recipe content',
+      'use editorial transition create_new_draft',
+    ];
+    $this->assertDemonstrationWarningMessage($permissions);
   }
 
   /**
@@ -295,6 +278,49 @@ class DemoUmamiProfileTest extends BrowserTestBase {
 
     $this->loggedInUser = $account;
     $this->container->get('current_user')->setAccount($account);
+  }
+
+  /**
+   * Asserts if the demonstration warning message is displayed properly.
+   *
+   * @param array $permissions
+   *   The user permissions needed to make the assertions.
+   */
+  protected function assertDemonstrationWarningMessage(array $permissions): void {
+    $account = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($account);
+    $web_assert = $this->assertSession();
+
+    $nodes = $this->container->get('entity_type.manager')
+      ->getStorage('node')
+      ->loadByProperties(['title' => 'Deep mediterranean quiche']);
+    /** @var \Drupal\node\Entity\Node $recipe_node */
+    $recipe_node = reset($nodes);
+
+    // Check when editing a node, the warning is visible.
+    $this->drupalGet($recipe_node->toUrl('edit-form'));
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('This site is intended for demonstration purposes.');
+
+    // Check when adding a node, the warning is visible.
+    $this->drupalGet('node/add/recipe');
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('This site is intended for demonstration purposes.');
+
+    // Check when looking at admin/content, the warning is visible.
+    $this->drupalGet('admin/content');
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextContains('This site is intended for demonstration purposes.');
+
+    // Check when viewing a node, the warning is not visible.
+    $this->drupalGet($recipe_node->toUrl());
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextNotContains('This site is intended for demonstration purposes.');
+
+    // Check when viewing the homepage, the warning is not visible.
+    $this->drupalGet('<front>');
+    $web_assert->statusCodeEquals(200);
+    $web_assert->pageTextNotContains('This site is intended for demonstration purposes.');
   }
 
 }

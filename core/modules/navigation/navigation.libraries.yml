@@ -38,6 +38,15 @@ internal.navigation-workspaces:
   dependencies:
     - navigation/internal.navigation
 
+internal.navigation-messages:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
+  css:
+    theme:
+      css/components/toolbar-message.css: { }
+  dependencies:
+    - navigation/internal.navigation
+
 admin-reset-styles:
   css:
     base:
