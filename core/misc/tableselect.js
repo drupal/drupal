@@ -154,7 +154,7 @@
     for (let i = from[mode]; i; i = i[mode]) {
       const $i = $(i);
       // Make sure that we're only dealing with elements.
-      if (i.nodeType !== 1) {
+      if (i.nodeType !== Node.ELEMENT_NODE) {
         continue;
       }
       // Either add or remove the selected class based on the state of the
