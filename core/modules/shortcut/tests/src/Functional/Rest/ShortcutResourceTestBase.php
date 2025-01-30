@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\shortcut\Functional\Rest;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
@@ -12,6 +13,8 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
  * ResourceTestBase for Shortcut entity.
  */
 abstract class ShortcutResourceTestBase extends EntityResourceTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -56,7 +59,7 @@ abstract class ShortcutResourceTestBase extends EntityResourceTestBase {
     // Create shortcut.
     $shortcut = Shortcut::create([
       'shortcut_set' => 'default',
-      'title' => t('Comments'),
+      'title' => $this->t('Comments'),
       'weight' => -20,
       'link' => [
         'uri' => 'internal:/admin/content/comment',

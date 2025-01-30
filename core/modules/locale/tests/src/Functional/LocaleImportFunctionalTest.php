@@ -7,6 +7,7 @@ namespace Drupal\Tests\locale\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
@@ -19,6 +20,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group locale
  */
 class LocaleImportFunctionalTest extends BrowserTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -266,8 +269,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     // We cast the return value of t() to string so as to retrieve the
     // translated value, rendered as a string.
-    $this->assertSame('Svibanj', (string) t('May', [], ['langcode' => 'hr', 'context' => 'Long month name']), 'Long month name context is working.');
-    $this->assertSame('Svi.', (string) t('May', [], ['langcode' => 'hr']), 'Default context is working.');
+    $this->assertSame('Svibanj', (string) $this->t('May', [], ['langcode' => 'hr', 'context' => 'Long month name']), 'Long month name context is working.');
+    $this->assertSame('Svi.', (string) $this->t('May', [], ['langcode' => 'hr']), 'Default context is working.');
   }
 
   /**
@@ -282,7 +285,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ]);
 
     $this->assertSession()->pageTextContains("One translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
-    $this->assertSame('Műveletek', (string) t('Operations', [], ['langcode' => $langcode]), 'String imported and translated.');
+    $this->assertSame('Műveletek', (string) $this->t('Operations', [], ['langcode' => $langcode]), 'String imported and translated.');
 
     // Try importing a .po file.
     $this->importPoFile($this->getPoFileWithEmptyMsgstr(), [

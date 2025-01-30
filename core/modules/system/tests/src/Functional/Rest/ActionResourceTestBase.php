@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Rest;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
 
 abstract class ActionResourceTestBase extends ConfigEntityResourceTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -39,7 +42,7 @@ abstract class ActionResourceTestBase extends ConfigEntityResourceTestBase {
     $action = Action::create([
       'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,
       'type' => 'user',
-      'label' => t('Add the anonymous role to the selected users'),
+      'label' => $this->t('Add the anonymous role to the selected users'),
       'configuration' => [
         'rid' => RoleInterface::ANONYMOUS_ID,
       ],

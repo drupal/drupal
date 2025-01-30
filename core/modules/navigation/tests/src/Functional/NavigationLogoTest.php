@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\Functional;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
@@ -15,6 +16,7 @@ use Drupal\Tests\TestFileCreationTrait;
  */
 class NavigationLogoTest extends BrowserTestBase {
 
+  use StringTranslationTrait;
   use TestFileCreationTrait;
 
   /**
@@ -91,7 +93,7 @@ class NavigationLogoTest extends BrowserTestBase {
       'logo_provider' => 'custom',
       'logo_path' => $logo_file->getFileUri(),
     ];
-    $this->submitForm($edit, t('Save configuration'));
+    $this->submitForm($edit, $this->t('Save configuration'));
     // Refresh the page to verify custom logo is placed.
     $this->drupalGet('/admin/config/user-interface/navigation/settings');
     $this->assertSession()->elementExists('css', 'a.admin-toolbar__logo > img');
@@ -102,7 +104,7 @@ class NavigationLogoTest extends BrowserTestBase {
       'logo_provider' => 'custom',
       'logo_path' => 'core/misc/logo/drupal-logo.svg',
     ];
-    $this->submitForm($edit, t('Save configuration'));
+    $this->submitForm($edit, $this->t('Save configuration'));
     // Refresh the page to verify custom logo is placed.
     $this->drupalGet('/admin/config/user-interface/navigation/settings');
     $this->assertSession()->elementExists('css', 'a.admin-toolbar__logo > img');
@@ -114,7 +116,7 @@ class NavigationLogoTest extends BrowserTestBase {
       'logo_provider' => 'custom',
       'files[logo_upload]' => $this->fileSystem->realpath($file->uri),
     ];
-    $this->submitForm($edit, t('Save configuration'));
+    $this->submitForm($edit, $this->t('Save configuration'));
     $this->assertSession()->statusMessageContains('The image was resized to fit within the navigation logo expected dimensions of 40x40 pixels. The new dimensions of the resized image are 40x27 pixels.');
     // Refresh the page to verify custom logo is placed.
     $this->drupalGet('/admin/config/user-interface/navigation/settings');
