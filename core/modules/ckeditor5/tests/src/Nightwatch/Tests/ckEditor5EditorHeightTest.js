@@ -10,7 +10,7 @@ module.exports = {
       .drupalInstallModule('node', true);
 
     // Set fixed (desktop-ish) size to ensure a maximum viewport.
-    browser.resizeWindow(1920, 1080);
+    browser.window.resize(1920, 1080);
   },
   after(browser) {
     browser.drupalUninstall();

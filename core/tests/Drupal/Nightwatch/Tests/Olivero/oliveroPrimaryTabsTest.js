@@ -18,7 +18,7 @@ module.exports = {
         permissions: ['administer nodes'],
       })
       .drupalLogin({ name: 'user', password: '123' });
-    browser.setWindowSize(1600, 800);
+    browser.window.setSize(1600, 800);
   },
   after(browser) {
     browser.drupalUninstall();
