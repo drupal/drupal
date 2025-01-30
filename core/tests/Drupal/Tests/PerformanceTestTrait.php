@@ -132,26 +132,41 @@ trait PerformanceTestTrait {
       $cache_tag_is_valid_count = 0;
       $cache_tag_invalidation_count = 0;
       $cache_tag_checksum_count = 0;
+      $cache_tag_lookup_query_args = [];
       foreach ($performance_test_data['database_events'] as $event) {
+        $normalized_query = static::normalizeQuery($event->queryString, $this->databasePrefix);
+
         // Don't log queries from the database cache backend because they're
         // logged separately as cache operations.
         if (!static::isDatabaseCache($event)) {
-          // Make the query easier to read and log it.
-          static::logQuery(
-            $performance_data,
-            str_replace([$this->databasePrefix, "\r\n", "\r", "\n"], ['', ' ', ' ', ' '], $event->queryString),
-            $event->args
-          );
+          static::logQuery($performance_data, $normalized_query, $event->args);
+        }
+        // Keep track of cache tag lookup queries.
+        elseif (str_starts_with($normalized_query, 'SELECT "tag", "invalidations" FROM "cachetags"')) {
+          $cache_tag_lookup_query_args[] = array_values($event->args);
         }
       }
+      $cache_operations = [];
       foreach ($performance_test_data['cache_operations'] as $operation) {
         if (in_array($operation['operation'], ['get', 'getMultiple'], TRUE)) {
+          if (!isset($cache_operations['get'][$operation['bin']])) {
+            $cache_operations['get'][$operation['bin']] = [];
+          }
+          $cache_operations['get'][$operation['bin']][] = $operation['cids'];
           $cache_get_count++;
         }
         elseif (in_array($operation['operation'], ['set', 'setMultiple'], TRUE)) {
+          if (!isset($cache_operations['get'][$operation['bin']])) {
+            $cache_operations['set'][$operation['bin']] = [];
+          }
+          $cache_operations['set'][$operation['bin']][] = $operation['cids'];
           $cache_set_count++;
         }
         elseif (in_array($operation['operation'], ['delete', 'deleteMultiple'], TRUE)) {
+          if (!isset($cache_operations['delete'][$operation['bin']])) {
+            $cache_operations['delete'][$operation['bin']] = [];
+          }
+          $cache_operations['delete'][$operation['bin']][] = $operation['cids'];
           $cache_delete_count++;
         }
       }
@@ -168,6 +183,8 @@ trait PerformanceTestTrait {
       $performance_data->setCacheTagChecksumCount($cache_tag_checksum_count);
       $performance_data->setCacheTagIsValidCount($cache_tag_is_valid_count);
       $performance_data->setCacheTagInvalidationCount($cache_tag_invalidation_count);
+      $performance_data->setCacheOperations($cache_operations);
+      $performance_data->setCacheTagGroupedLookups($cache_tag_lookup_query_args);
     }
 
     return $performance_data;
@@ -679,6 +696,21 @@ trait PerformanceTestTrait {
       'CacheTagIsValidCount' => $performance_data->getCacheTagIsValidCount(),
       'CacheTagInvalidationCount' => $performance_data->getCacheTagInvalidationCount(),
     ];
+  }
+
+  /**
+   * Normalizes a query by removing the database prefix and newlines.
+   *
+   * @param string $query_string
+   *   The query string to normalize.
+   * @param string $database_prefix
+   *   The database prefix to remove from the query.
+   *
+   * @return string
+   *   The normalized query string.
+   */
+  protected static function normalizeQuery(string $query_string, string $database_prefix): string {
+    return str_replace([$database_prefix, "\r\n", "\r", "\n"], ['', ' ', ' ', ' '], $query_string);
   }
 
 }

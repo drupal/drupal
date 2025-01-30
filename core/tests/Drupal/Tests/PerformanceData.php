@@ -7,7 +7,7 @@ namespace Drupal\Tests;
 /**
  * Value object to store performance information collected from requests.
  *
- * @see Drupal\Tests\PerformanceTestTrait::collectPerformanceData().
+ * @see \Drupal\Tests\PerformanceTestTrait::collectPerformanceData().
  */
 class PerformanceData {
 
@@ -57,6 +57,13 @@ class PerformanceData {
   protected int $cacheDeleteCount = 0;
 
   /**
+   * List of cids keyed by operation and bin.
+   *
+   * @var string[][]
+   */
+  protected array $cacheOperations = [];
+
+  /**
    * The number of cache tag checksum checks.
    */
   protected int $cacheTagChecksumCount = 0;
@@ -70,6 +77,13 @@ class PerformanceData {
    * The number of cache tag invalidations.
    */
   protected int $cacheTagInvalidationCount = 0;
+
+  /**
+   * The grouped cache tag lookups.
+   *
+   * @var string[]
+   */
+  protected array $cacheTagGroupedLookups = [];
 
   /**
    * The original return value.
@@ -208,6 +222,58 @@ class PerformanceData {
   }
 
   /**
+   * Sets the cache operations.
+   *
+   * @param string[][] $cacheOperations
+   *   List of cids keyed by operation and bin.
+   *
+   * @return void
+   */
+  public function setCacheOperations(array $cacheOperations): void {
+    $this->cacheOperations = $cacheOperations;
+  }
+
+  /**
+   * Gets the cache operations.
+   *
+   * @return string[][]
+   *   List of cids keyed by operation and bin.
+   */
+  public function getCacheOperations(): array {
+    return $this->cacheOperations;
+  }
+
+  /**
+   * Returns the cache get operation count grouped by bin.
+   *
+   * @return int[]
+   *   Count of cache get operations keyed by bin.
+   */
+  public function getCacheGetCountByBin(): array {
+    return array_map(fn (array $cids) => count($cids), $this->cacheOperations['get'] ?? []);
+  }
+
+  /**
+   * Returns the cache set operation count grouped by bin.
+   *
+   * @return int[]
+   *   Count of cache set operations keyed by bin.
+   */
+  public function getCacheSetCountByBin(): array {
+    return array_map(fn (array $cids) => count($cids), $this->cacheOperations['set'] ?? []);
+  }
+
+  /**
+   * Returns the cache delete operation count grouped by bin.
+   *
+   * @return int[]
+   *   Count of cache delete operations keyed by bin.
+   */
+  public function getCacheDeleteCountByBin(): array {
+    return array_map(fn (array $cids) => count($cids), $this->cacheOperations['delete'] ?? []);
+  }
+
+  /**
    * Sets the cache set count.
    *
    * @param int $count
@@ -305,6 +371,36 @@ class PerformanceData {
    */
   public function getCacheTagInvalidationCount(): int {
     return $this->cacheTagInvalidationCount;
+  }
+
+  /**
+   * Sets the grouped cache tag lookups.
+   *
+   * @param string[] $groupedLookups
+   *   Grouped cache tag lookups by query.
+   */
+  public function setCacheTagGroupedLookups(array $groupedLookups): void {
+    $this->cacheTagGroupedLookups = $groupedLookups;
+  }
+
+  /**
+   * Gets the grouped cache tag lookups.
+   *
+   * @@return string[]
+   *   Grouped cache tag lookups by query.
+   */
+  public function getCacheTagGroupedLookups(): array {
+    return $this->cacheTagGroupedLookups;
+  }
+
+  /**
+   * Gets the cache tag lookup query count.
+   *
+   * @return int
+   *   The number of cache tag lookup queries recorded.
+   */
+  public function getCacheTagLookupQueryCount(): int {
+    return count($this->cacheTagGroupedLookups);
   }
 
   /**
