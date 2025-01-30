@@ -55,6 +55,7 @@
 
 # Symfony 7.
 %Method "Symfony\\Contracts\\Service\\ResetInterface::reset\(\)" might add "void" as a native return type declaration in the future. Do the same in implementation "Drupal\\Component\\DependencyInjection\\Container" now to avoid errors or add an explicit @return annotation to suppress this message.%
+%Since symfony/http-foundation 6.3: Calling "Symfony\\Component\\HttpFoundation\\Request::create\(\)" with an invalid URI is deprecated.%
 
 # Temporarily for testing Symfony 6.4.
 %Since symfony/dependency-injection 6.4: "Symfony\\Component\\DependencyInjection\\ContainerAwareTrait" is deprecated, use dependency injection instead.%
