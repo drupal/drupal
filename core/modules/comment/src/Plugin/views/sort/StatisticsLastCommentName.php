@@ -38,9 +38,9 @@ class StatisticsLastCommentName extends SortPluginBase {
     ];
     $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $definition);
 
-    // @todo this might be safer if we had an ensure_relationship rather than guessing
-    // the table alias. Though if we did that we'd be guessing the relationship name
-    // so that doesn't matter that much.
+    // @todo this might be safer if we had an ensure_relationship rather than
+    //   guessing the table alias. Though if we did that we'd be guessing the
+    //   relationship name so that doesn't matter that much.
     $this->user_table = $this->query->ensureTable('ces_users', $this->relationship, $join);
     $this->user_field = $this->query->addField($this->user_table, 'name');
 

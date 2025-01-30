@@ -600,8 +600,9 @@ class ViewUI implements ViewEntityInterface {
 
       // Suppress contextual links of entities within the result set during a
       // Preview.
-      // @todo We'll want to add contextual links specific to editing the View, so
-      //   the suppression may need to be moved deeper into the Preview pipeline.
+      // @todo We'll want to add contextual links specific to editing the View,
+      //   so the suppression may need to be moved deeper into the Preview
+      //   pipeline.
       views_ui_contextual_links_suppress_push();
 
       $show_additional_queries = $config->get('ui.show.additional_queries');

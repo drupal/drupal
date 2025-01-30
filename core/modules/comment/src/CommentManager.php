@@ -212,7 +212,7 @@ class CommentManager implements CommentManagerInterface {
           else {
             // Default to 30 days ago.
             // @todo Remove this else branch when we have a generic
-            //   HistoryRepository service in https://www.drupal.org/node/3267011.
+            //   HistoryRepository service in https://www.drupal.org/i/3267011.
             $timestamp = COMMENT_NEW_LIMIT;
           }
         }

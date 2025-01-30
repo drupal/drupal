@@ -261,8 +261,9 @@ class Table extends FormElementBase {
           $row['select'] += [
             '#type' => $element['#multiple'] ? 'checkbox' : 'radio',
             '#id' => HtmlUtility::getUniqueId('edit-' . implode('-', $element_parents)),
-            // @todo If rows happen to use numeric indexes instead of string keys,
-            //   this results in a first row with $key === 0, which is always FALSE.
+            // @todo If rows happen to use numeric indexes instead of string
+            //   keys, this results in a first row with $key === 0, which is
+            //   always FALSE.
             '#return_value' => $key,
             '#attributes' => $element['#attributes'],
             '#wrapper_attributes' => [

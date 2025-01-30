@@ -197,13 +197,17 @@ class TypedDataTest extends KernelTestBase {
     $typed_data = $this->createTypedData(['type' => 'datetime_iso8601'], $value);
     $this->assertInstanceOf(DateTimeInterface::class, $typed_data);
     $this->assertSame($value, $typed_data->getValue(), 'Date value was fetched.');
-    // @todo Uncomment this assertion in https://www.drupal.org/project/drupal/issues/2716891.
+    // @todo Uncomment this assertion in
+    //   https://www.drupal.org/project/drupal/issues/2716891.
+    // phpcs:ignore
     // $this->assertEquals($typed_data->getDateTime()->format('c'), $typed_data->getValue(), 'Value representation of a date is ISO 8601');
     $this->assertSame('UTC', $typed_data->getDateTime()->getTimezone()->getName());
     $this->assertEquals(0, $typed_data->validate()->count());
     $new_value = '2014-01-02T20:00';
     $typed_data->setValue($new_value);
-    // @todo Uncomment this assertion in https://www.drupal.org/project/drupal/issues/2716891.
+    // @todo Uncomment this assertion in
+    //   https://www.drupal.org/project/drupal/issues/2716891.
+    // phpcs:ignore
     // $this->assertTrue($typed_data->getDateTime()->format('c') === $new_value, 'Date value was changed and set by an ISO8601 date.');
     $this->assertEquals(0, $typed_data->validate()->count());
     $this->assertSame('2014-01-02', $typed_data->getDateTime()->format('Y-m-d'), 'Date value was changed and set by date string.');

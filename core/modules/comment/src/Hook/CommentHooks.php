@@ -178,8 +178,8 @@ class CommentHooks {
   #[Hook('node_links_alter')]
   public function nodeLinksAlter(array &$links, NodeInterface $node, array &$context): void {
     // Comment links are only added to node entity type for backwards
-    // compatibility. Should you require comment links for other entity types you
-    // can do so by implementing a new field formatter.
+    // compatibility. Should you require comment links for other entity types
+    // you can do so by implementing a new field formatter.
     // @todo Make this configurable from the formatter. See
     //   https://www.drupal.org/node/1901110.
     $comment_links = \Drupal::service('comment.link_builder')->buildCommentedEntityLinks($node, $context);

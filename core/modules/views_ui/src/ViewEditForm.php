@@ -120,9 +120,10 @@ class ViewEditForm extends ViewFormBase {
     // stale between page requests.
     // See views_ui_ajax_get_form() for how this affects #ajax.
     // @todo To remove this and allow the form to be cacheable:
-    //   - Change $form_state->get('view') to $form_state->getTemporary()['view'].
-    //   - Add a #process function to initialize $form_state->getTemporary()['view']
-    //     on cached form submissions.
+    //   - Change $form_state->get('view') to
+    //     $form_state->getTemporary()['view'].
+    //   - Add a #process function to initialize
+    //     $form_state->getTemporary()['view'] on cached form submissions.
     //   - Use \Drupal\Core\Form\FormStateInterface::loadInclude().
     $form_state->disableCache();
 

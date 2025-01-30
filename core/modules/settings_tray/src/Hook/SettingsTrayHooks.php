@@ -112,7 +112,8 @@ class SettingsTrayHooks {
       $items['contextual']['#weight'] = -1000;
       $items['contextual']['#attached']['library'][] = 'settings_tray/drupal.settings_tray';
       $items['contextual']['tab']['#attributes']['data-drupal-settingstray'] = 'toggle';
-      // Set a class on items to mark whether they should be active in edit mode.
+      // Set a class on items to mark whether they should be active in edit
+      // mode.
       // @todo Create a dynamic method for modules to set their own items.
       //   https://www.drupal.org/node/2784589.
       $edit_mode_items = ['contextual'];

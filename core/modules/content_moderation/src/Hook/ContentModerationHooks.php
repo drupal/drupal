@@ -364,7 +364,7 @@ class ContentModerationHooks {
   #[Hook('views_post_execute')]
   public function viewsPostExecute(ViewExecutable $view): void {
     // @todo Remove this once broken handlers in views configuration result in
-    //   a view no longer returning results. https://www.drupal.org/node/2907954.
+    //   a view no longer returning results. https://www.drupal.org/i/2907954.
     foreach ($view->filter as $id => $filter) {
       if (str_starts_with($id, 'moderation_state') && $filter instanceof Broken) {
         $view->result = [];

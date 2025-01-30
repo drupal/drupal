@@ -91,7 +91,8 @@ class MenuUiHooks {
    */
   #[Hook('form_node_form_alter')]
   public function formNodeFormAlter(&$form, FormStateInterface $form_state) : void {
-    // Generate a list of possible parents (not including this link or descendants).
+    // Generate a list of possible parents (not including this link or
+    // descendants).
     // @todo This must be handled in a #process handler.
     $node = $form_state->getFormObject()->getEntity();
     $defaults = menu_ui_get_menu_link_defaults($node);
@@ -229,9 +230,9 @@ class MenuUiHooks {
       '#description' => t('Content of this type can be placed in the selected menus.'),
     ];
     // @todo See if we can avoid pre-loading all options by changing the form or
-    //   using a #process callback. https://www.drupal.org/node/2310319
-    //   To avoid an 'illegal option' error after saving the form we have to load
-    //   all available menu parents. Otherwise, it is not possible to dynamically
+    //   using a #process callback. https://www.drupal.org/node/2310319 To avoid
+    //   an 'illegal option' error after saving the form we have to load all
+    //   available menu parents. Otherwise, it is not possible to dynamically
     //   add options to the list using ajax.
     $options_cacheability = new CacheableMetadata();
     $options = $menu_parent_selector->getParentSelectOptions('', NULL, $options_cacheability);

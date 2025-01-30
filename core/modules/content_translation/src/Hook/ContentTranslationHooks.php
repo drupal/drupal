@@ -250,9 +250,8 @@ class ContentTranslationHooks {
       // or it was enabled before, so that we keep translation metadata around
       // when translation is disabled.
       // @todo Re-evaluate this approach and consider removing field storage
-      //   definitions and the related field data if the entity type has no bundle
-      //   enabled for translation.
-      // @see https://www.drupal.org/node/2907777
+      //   definitions and the related field data if the entity type has no
+      //   bundle enabled for translation. See https://www.drupal.org/i/2907777
       if ($manager->isEnabled($entity_type_id) || array_intersect_key($definitions, $installed_storage_definitions)) {
         $info = $definitions;
       }

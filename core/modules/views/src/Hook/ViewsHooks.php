@@ -175,9 +175,9 @@ class ViewsHooks {
         if (!isset($def['theme']) || empty($def['register_theme'])) {
           continue;
         }
-        // For each theme registration, we have a base directory to check for the
-        // templates folder. This will be relative to the root of the given module
-        // folder, so we always need a module definition.
+        // For each theme registration, we have a base directory to check for
+        // the templates folder. This will be relative to the root of the given
+        // module folder, so we always need a module definition.
         // @todo Watchdog or exception?
         if (!isset($def['provider']) || !$module_handler->moduleExists($def['provider'])) {
           continue;

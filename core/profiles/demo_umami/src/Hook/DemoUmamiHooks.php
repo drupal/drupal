@@ -95,8 +95,9 @@ class DemoUmamiHooks {
   #[Hook('toolbar')]
   public function toolbar(): array {
     // Add a warning about using an experimental profile.
-    // @todo This can be removed once a generic warning for experimental profiles
-    //   has been introduced. https://www.drupal.org/project/drupal/issues/2934374
+    // @todo This can be removed once a generic warning for experimental
+    //   profiles has been introduced in
+    //   https://www.drupal.org/project/drupal/issues/2934374
     $items['experimental-profile-warning'] = [
       '#weight' => 3400,
       '#cache' => [

@@ -87,7 +87,8 @@ class NodeEditFormTest extends NodeTestBase {
     $this->clickLink('Edit');
     $this->assertSession()->addressEquals($node->toUrl('edit-form'));
 
-    // Check that the title and body fields are displayed with the correct values.
+    // Check that the title and body fields are displayed with the correct
+    // values.
     // @todo Ideally assertLink would support HTML, but it doesn't.
     $this->assertSession()->responseContains('Edit');
     $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);

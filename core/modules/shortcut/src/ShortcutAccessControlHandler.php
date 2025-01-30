@@ -55,7 +55,8 @@ class ShortcutAccessControlHandler extends EntityAccessControlHandler implements
       return shortcut_set_edit_access($shortcut_set);
     }
     // @todo Fix this bizarre code: how can a shortcut exist without a shortcut
-    // set? The above if-test is unnecessary. See https://www.drupal.org/node/2339903.
+    //   set? The above if-test is unnecessary. See
+    //   https://www.drupal.org/node/2339903.
     return AccessResult::neutral()->addCacheableDependency($entity);
   }
 
@@ -67,7 +68,8 @@ class ShortcutAccessControlHandler extends EntityAccessControlHandler implements
       return shortcut_set_edit_access($shortcut_set);
     }
     // @todo Fix this bizarre code: how can a shortcut exist without a shortcut
-    // set? The above if-test is unnecessary. See https://www.drupal.org/node/2339903.
+    //   set? The above if-test is unnecessary. See
+    //   https://www.drupal.org/node/2339903.
     return AccessResult::neutral();
   }
 

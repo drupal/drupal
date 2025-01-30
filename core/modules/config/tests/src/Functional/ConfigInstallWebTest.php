@@ -87,9 +87,10 @@ class ConfigInstallWebTest extends BrowserTestBase {
     $config_entity->set('label', 'Customized integration config label')->save();
 
     // @todo FIXME: Setting config keys WITHOUT SAVING retains the changed config
-    //   object in memory. Every new call to $this->config() MUST revert in-memory changes
-    //   that haven't been saved!
-    //   In other words: This test passes even without this reset, but it shouldn't.
+    //   object in memory. Every new call to $this->config() MUST revert
+    //   in-memory changes that haven't been saved!
+    //   In other words: This test passes even without this reset, but it
+    //   shouldn't.
     $this->container->get('config.factory')->reset();
 
     // Disable and uninstall the integration module.

@@ -662,11 +662,11 @@ abstract class Schema implements PlaceholderInterface {
    * @throws \BadMethodCallException
    *   If the method is not implemented in the concrete driver class.
    *
-   * @todo This method is called by Schema::createTable on the abstract class, and
-   *   therefore should be defined as well on the abstract class to prevent static
-   *   analysis errors. In D11, consider changing it to an abstract method, or to
-   *   make it private for each driver, and ::createTable actually an abstract
-   *   method here for implementation in each driver.
+   * @todo This method is called by Schema::createTable on the abstract class,
+   *   and therefore should be defined as well on the abstract class to prevent
+   *   static analysis errors. In D11, consider changing it to an abstract
+   *   method, or to make it private for each driver, and ::createTable actually
+   *   an abstract method here for implementation in each driver.
    */
   // phpcs:ignore Drupal.Commenting.FunctionComment.InvalidNoReturn, Drupal.Commenting.FunctionComment.Missing
   protected function createTableSql($name, $table) {

@@ -113,8 +113,8 @@ class EntityTestHooks {
     if ($entity_type->id() == 'entity_test' && $state->get('entity_test.remove_name_field')) {
       unset($fields['name']);
     }
-    // In 8001 we are assuming that a new definition with multiple cardinality has
-    // been deployed.
+    // In 8001 we are assuming that a new definition with multiple cardinality
+    // has been deployed.
     // @todo Remove this if we end up using state definitions at runtime. See
     //   https://www.drupal.org/node/2554235.
     if ($entity_type->id() == 'entity_test' && $state->get('entity_test.db_updates.entity_definition_updates') == 8001) {

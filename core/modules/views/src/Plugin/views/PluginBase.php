@@ -418,8 +418,8 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       ];
 
       // Currently you cannot attach assets to tokens with
-      // Renderer::renderInIsolation(). This may be unnecessarily limiting. Consider
-      // using Renderer::executeInRenderContext() instead.
+      // Renderer::renderInIsolation(). This may be unnecessarily limiting.
+      // Consider using Renderer::executeInRenderContext() instead.
       // @todo https://www.drupal.org/node/2566621
       return (string) $this->getRenderer()->renderInIsolation($build);
     }
