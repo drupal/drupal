@@ -48,6 +48,9 @@ class MonthDate extends Date {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryArgument($data) {
     // Make sure the argument contains leading zeroes.
     return str_pad($data->{$this->base_alias}, 2, '0', STR_PAD_LEFT);

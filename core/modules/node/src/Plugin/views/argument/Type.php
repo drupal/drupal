@@ -67,6 +67,9 @@ class Type extends StringArgument {
     return $this->node_type($this->argument);
   }
 
+  /**
+   * Returns the label for the given node type.
+   */
   public function node_type($type_name) {
     $type = $this->nodeTypeStorage->load($type_name);
     $output = $type ? $type->label() : $this->t('Unknown content type');

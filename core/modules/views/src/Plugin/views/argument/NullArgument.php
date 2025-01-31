@@ -15,6 +15,9 @@ use Drupal\views\Attribute\ViewsArgument;
 )]
 class NullArgument extends ArgumentPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['must_not_be'] = ['default' => FALSE];

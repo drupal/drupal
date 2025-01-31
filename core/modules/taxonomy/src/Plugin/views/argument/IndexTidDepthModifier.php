@@ -19,10 +19,19 @@ use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 )]
 class IndexTidDepthModifier extends ArgumentPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function query($group_by = FALSE) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function preQuery() {
     // We don't know our argument yet, but it's based upon our position:
     $argument = $this->view->args[$this->position] ?? NULL;

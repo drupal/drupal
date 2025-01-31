@@ -46,6 +46,9 @@ class ManyToOne extends ArgumentPluginBase {
     $this->value = [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -65,6 +68,9 @@ class ManyToOne extends ArgumentPluginBase {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
@@ -102,6 +108,9 @@ class ManyToOne extends ArgumentPluginBase {
     $this->helper->ensureMyTable();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function query($group_by = FALSE) {
     $empty = FALSE;
     if (isset($this->definition['zero is null']) && $this->definition['zero is null']) {
@@ -132,6 +141,9 @@ class ManyToOne extends ArgumentPluginBase {
     $this->helper->addFilter();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function title() {
     if (!$this->argument) {
       return !empty($this->definition['empty field name']) ? $this->definition['empty field name'] : $this->t('Uncategorized');
@@ -159,6 +171,9 @@ class ManyToOne extends ArgumentPluginBase {
     return implode($this->operator == 'or' ? ' + ' : ', ', $this->titleQuery());
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function summaryQuery() {
     $field = $this->table . '.' . $this->field;
     $join = $this->getJoin();
@@ -182,6 +197,9 @@ class ManyToOne extends ArgumentPluginBase {
     return $this->summaryBasics();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryArgument($data) {
     $value = $data->{$this->base_alias};
     if (empty($value)) {

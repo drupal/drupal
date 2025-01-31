@@ -40,6 +40,9 @@ class DayDate extends Date {
     return $this->dateFormatter->format(strtotime("2005" . "05" . $day . " 00:00:00 UTC"), 'custom', $this->format, 'UTC');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryArgument($data) {
     // Make sure the argument contains leading zeroes.
     return str_pad($data->{$this->base_alias}, 2, '0', STR_PAD_LEFT);

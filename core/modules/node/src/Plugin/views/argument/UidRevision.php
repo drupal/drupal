@@ -15,6 +15,9 @@ use Drupal\views\Attribute\ViewsArgument;
 )]
 class UidRevision extends Uid {
 
+  /**
+   * {@inheritdoc}
+   */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
     $placeholder = $this->placeholder();

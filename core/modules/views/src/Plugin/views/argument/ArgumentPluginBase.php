@@ -157,6 +157,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     }
   }
 
+  /**
+   * Checks if the argument has an exception.
+   */
   public function isException($arg = NULL) {
     if (!isset($arg)) {
       $arg = $this->argument ?? NULL;
@@ -164,6 +167,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return !empty($this->options['exception']['value']) && $this->options['exception']['value'] === $arg;
   }
 
+  /**
+   * Returns the title of the exception for the argument.
+   */
   public function exceptionTitle() {
     // If title overriding is off for the exception, return the normal title.
     if (empty($this->options['exception']['title_enable'])) {
@@ -183,6 +189,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return !empty($info['style plugin']) || !empty($validate_info['style plugin']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -227,6 +236,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return $callbacks;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
@@ -476,6 +488,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     return $output;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $option_values = &$form_state->getValue('options');
     if (empty($option_values)) {
@@ -506,6 +521,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $option_values = &$form_state->getValue('options');
     if (empty($option_values)) {
