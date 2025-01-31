@@ -1061,7 +1061,8 @@ function hook_library_info_alter(&$libraries, $extension) {
  * Alter CSS files before they are output on the page.
  *
  * @param array $css
- *   An array of all CSS items (files and inline CSS) being requested on the page.
+ *   An array of all CSS items (files and inline CSS) being requested on the
+ *   page.
  * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
  *   The assets attached to the current response.
  * @param \Drupal\Core\Language\LanguageInterface $language
@@ -1115,7 +1116,8 @@ function hook_page_attachments(array &$attachments): void {
  * exception is thrown.
  *
  * @param array &$attachments
- *   Array of all attachments provided by hook_page_attachments() implementations.
+ *   Array of all attachments provided by hook_page_attachments()
+ *   implementations.
  *
  * @see hook_page_attachments()
  */

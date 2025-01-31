@@ -77,8 +77,9 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
    *   - table: The name of the table containing the handler.
    *   - field: The name of the field the handler represents.
    * @param string|null $override_plugin_id
-   *   (optional) Override the actual handler object with this plugin ID. Used for
-   *   aggregation when the handler is redirected to the aggregation handler.
+   *   (optional) Override the actual handler object with this plugin ID. Used
+   *   for aggregation when the handler is redirected to the aggregation
+   *   handler.
    *
    * @return \Drupal\views\Plugin\views\ViewsHandlerInterface
    *   An instance of a handler object. May be a broken handler instance.

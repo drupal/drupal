@@ -76,8 +76,8 @@ class Heading extends CKEditor5PluginDefault implements CKEditor5PluginConfigura
    * Gets all enabled headings.
    *
    * @return string[]
-   *   The values in the plugins.ckeditor5_heading.enabled_headings configuration
-   *   plus the headings that are always enabled.
+   *   The values in the plugins.ckeditor5_heading.enabled_headings
+   *   configuration plus the headings that are always enabled.
    */
   private function getEnabledHeadings(): array {
     return array_merge(

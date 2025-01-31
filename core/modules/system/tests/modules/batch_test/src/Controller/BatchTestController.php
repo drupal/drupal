@@ -30,7 +30,8 @@ class BatchTestController {
    * Fires a batch process without a form submission.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
-   *   A redirect response if the batch is progressive. No return value otherwise.
+   *   A redirect response if the batch is progressive. No return value
+   *   otherwise.
    */
   public function testLargePercentage() {
     batch_test_stack(NULL, TRUE);
@@ -46,7 +47,8 @@ class BatchTestController {
    *   Some value passed to a custom batch callback.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
-   *   A redirect response if the batch is progressive. No return value otherwise.
+   *   A redirect response if the batch is progressive. No return value
+   *   otherwise.
    */
   public function testNestedDrupalFormSubmit($value = 1) {
     // Set the batch and process it.
@@ -60,7 +62,8 @@ class BatchTestController {
    * Fires a batch process without a form submission.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
-   *   A redirect response if the batch is progressive. No return value otherwise.
+   *   A redirect response if the batch is progressive. No return value
+   *   otherwise.
    */
   public function testNoForm() {
     batch_test_stack(NULL, TRUE);
@@ -74,7 +77,8 @@ class BatchTestController {
    * Fires a batch process without a form submission and a finish redirect.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
-   *   A redirect response if the batch is progressive. No return value otherwise.
+   *   A redirect response if the batch is progressive. No return value
+   *   otherwise.
    */
   public function testFinishRedirect() {
     batch_test_stack(NULL, TRUE);
@@ -113,7 +117,8 @@ class BatchTestController {
    * Runs a batch for testing theme used on the progress page.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
-   *   A redirect response if the batch is progressive. No return value otherwise.
+   *   A redirect response if the batch is progressive. No return value
+   *   otherwise.
    */
   public function testThemeBatch() {
     batch_test_stack(NULL, TRUE);
@@ -130,7 +135,8 @@ class BatchTestController {
    * Runs a batch for testing the title shown on the progress page.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
-   *   A redirect response if the batch is progressive. No return value otherwise.
+   *   A redirect response if the batch is progressive. No return value
+   *   otherwise.
    */
   public function testTitleBatch() {
     batch_test_stack(NULL, TRUE);

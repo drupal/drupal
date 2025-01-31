@@ -141,7 +141,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
    *   The CKEditor 5 plugin configuration, if any.
    *
    * @throws \InvalidArgumentException
-   *   Thrown when the method is called with any other text editor than CKEditor 5.
+   *   Thrown when the editor is not CKEditor 5.
    */
   protected static function getPluginConfiguration(EditorInterface $editor, string $plugin_id): array {
     if ($editor->getEditor() !== 'ckeditor5') {

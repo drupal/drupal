@@ -112,7 +112,8 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
    *   An object to use in resolving route arguments.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request object to use for building titles and paths for plugin instances.
+   *   The request object to use for building titles and paths for plugin
+   *   instances.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider

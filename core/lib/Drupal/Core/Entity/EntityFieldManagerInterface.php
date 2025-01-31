@@ -134,9 +134,9 @@ interface EntityFieldManagerInterface {
    *   - edit: (optional) String containing markup (normally a link) used as the
    *     element's 'edit' operation in the administration interface. Only for
    *     'form' context.
-   *   - delete: (optional) String containing markup (normally a link) used as the
-   *     element's 'delete' operation in the administration interface. Only for
-   *     'form' context.
+   *   - delete: (optional) String containing markup (normally a link) used as
+   *     the element's 'delete' operation in the administration interface. Only
+   *     for 'form' context.
    */
   public function getExtraFields($entity_type_id, $bundle);
 

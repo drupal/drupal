@@ -163,8 +163,8 @@ class ViewsDataHelper {
    * Sort function for fetched fields.
    *
    * @param array $a
-   *   First item for comparison. The compared items should be associative arrays
-   *   that include a 'group' and a 'title' key.
+   *   First item for comparison. The compared items should be associative
+   *   arrays that include a 'group' and a 'title' key.
    * @param array $b
    *   Second item for comparison.
    *

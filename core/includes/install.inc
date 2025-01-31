@@ -536,8 +536,8 @@ function install_goto($path) {
  * @return string
  *   The URL of the current script, with query parameters modified by the
  *   passed-in $query. The URL is not sanitized, so it still needs to be run
- *   through \Drupal\Component\Utility\UrlHelper::filterBadProtocol() if it will be
- *   used as an HTML attribute value.
+ *   through \Drupal\Component\Utility\UrlHelper::filterBadProtocol() if it will
+ *   be used as an HTML attribute value.
  *
  * @see drupal_requirements_url()
  * @see Drupal\Component\Utility\UrlHelper::filterBadProtocol()

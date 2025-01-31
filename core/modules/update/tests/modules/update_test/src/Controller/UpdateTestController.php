@@ -38,15 +38,16 @@ class UpdateTestController extends ControllerBase {
    * indicating which availability scenario to use for that project.
    *
    * @param string $project_name
-   *   The project short name the update manager is trying to fetch data for (the
-   *   fetch URLs are of the form: [base_url]/[project_name]/[core_version]).
+   *   The project short name the update manager is trying to fetch data for
+   *   (the fetch URLs are of the form:
+   *   [base_url]/[project_name]/[core_version]).
    * @param string $version
    *   The version of Drupal core.
    *
    * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|Response
-   *   A BinaryFileResponse object containing the content of the XML release file
-   *   for the specified project if one is available; a Response object with no
-   *   content otherwise.
+   *   A BinaryFileResponse object containing the content of the XML release
+   *   file for the specified project if one is available; a Response object
+   *   with no content otherwise.
    */
   public function updateTest($project_name, $version) {
     $xml_map = $this->config('update_test.settings')->get('xml_map');

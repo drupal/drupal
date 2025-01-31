@@ -221,7 +221,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    * @param string[] $expected_link_texts
    *   The expected links' text.
    * @param int $error_or_warning
-   *   Whether the links are a warning or an error. Should be one of the REQUIREMENT_* constants.
+   *   Whether the links are a warning or an error. Should be one of the
+   *   REQUIREMENT_* constants.
    *
    * @internal
    */
@@ -247,7 +248,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    * @param string[] $expected_link_texts
    *   The expected links' text.
    * @param int $error_or_warning
-   *   Whether the links are a warning or an error. Should be one of the REQUIREMENT_* constants.
+   *   Whether the links are a warning or an error. Should be one of the
+   *   REQUIREMENT_* constants.
    *
    * @internal
    */

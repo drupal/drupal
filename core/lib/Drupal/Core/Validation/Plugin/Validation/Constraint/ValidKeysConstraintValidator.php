@@ -181,7 +181,8 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
    *   An array containing the following message parameters:
    *   - '@unresolved_dynamic_type': unresolved dynamic type
    *   - '@resolved_dynamic_type': resolved dynamic type
-   *   - '@dynamic_type_property_path': (relative) property path of the condition
+   *   - '@dynamic_type_property_path': (relative) property path of the
+   *      condition
    *   - '@dynamic_type_property_value': value of the condition
    *
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\ValidKeysConstraint::$dynamicInvalidKeyMessage

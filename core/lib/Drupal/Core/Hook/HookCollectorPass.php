@@ -262,7 +262,8 @@ class HookCollectorPass implements CompilerPassInterface {
    *   The class.
    *
    * @return \Drupal\Core\Hook\Attribute\Hook[]
-   *   An array of Hook attributes on this class. The $method property is guaranteed to be set.
+   *   An array of Hook attributes on this class. The $method property is
+   *   guaranteed to be set.
    */
   protected static function getHookAttributesInClass(string $class): array {
     $reflection_class = new \ReflectionClass($class);

@@ -103,8 +103,8 @@ interface TableMappingInterface {
    *   The name of the property.
    *
    * @return string
-   *   A string containing a generated column name for a field data table that is
-   *   unique among all other fields.
+   *   A string containing a generated column name for a field data table that
+   *   is unique among all other fields.
    */
   public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, $property_name);
 

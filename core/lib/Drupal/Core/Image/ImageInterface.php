@@ -97,8 +97,8 @@ interface ImageInterface {
    * Closes the image and saves the changes to a file.
    *
    * @param string|null $destination
-   *   (optional) Destination path where the image should be saved. If it is empty
-   *   the original image file will be overwritten.
+   *   (optional) Destination path where the image should be saved. If it is
+   *   empty the original image file will be overwritten.
    *
    * @return bool
    *   TRUE on success, FALSE on failure.

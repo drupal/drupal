@@ -64,7 +64,8 @@ class XssTest extends TestCase {
    * @param string $message
    *   The assertion message to display upon failure.
    * @param array $allowed_tags
-   *   (optional) The allowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
+   *   (optional) The allowed HTML tags to be passed to
+   *   \Drupal\Component\Utility\Xss::filter().
    *
    * @dataProvider providerTestFilterXssNormalized
    */
@@ -131,7 +132,8 @@ class XssTest extends TestCase {
    * @param string $message
    *   The assertion message to display upon failure.
    * @param array $allowed_tags
-   *   (optional) The allowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
+   *   (optional) The allowed HTML tags to be passed to
+   *   \Drupal\Component\Utility\Xss::filter().
    *
    * @dataProvider providerTestFilterXssNotNormalized
    */

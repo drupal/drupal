@@ -481,8 +481,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *   Link position counting from zero.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
-   *   messages: use new FormattableMarkup() to embed variables in the message text, not
-   *   t(). If left blank, a default message will be displayed.
+   *   messages: use new FormattableMarkup() to embed variables in the message
+   *   text, not t(). If left blank, a default message will be displayed.
    *
    * @internal
    */

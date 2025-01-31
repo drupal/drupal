@@ -47,9 +47,9 @@ class QueueFactory {
    * @param string $name
    *   The name of the queue to work with.
    * @param bool $reliable
-   *   (optional) TRUE if the ordering of items and guaranteeing every item executes at
-   *   least once is important, FALSE if scalability is the main concern. Defaults
-   *   to FALSE.
+   *   (optional) TRUE if the ordering of items and guaranteeing every item
+   *   executes at least once is important, FALSE if scalability is the main
+   *   concern. Defaults to FALSE.
    *
    * @return \Drupal\Core\Queue\QueueInterface
    *   A queue implementation for the given name.

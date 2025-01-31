@@ -292,8 +292,8 @@ function template_preprocess_responsive_image(&$variables): void {
  *
  * @param array $variables
  *   An array with the following keys:
- *     - responsive_image_style_id: The \Drupal\responsive_image\Entity\ResponsiveImageStyle
- *       ID.
+ *     - responsive_image_style_id: The
+ *       \Drupal\responsive_image\Entity\ResponsiveImageStyle ID.
  *     - width: The width of the image (if known).
  *     - height: The height of the image (if known).
  *     - uri: The URI of the image file.

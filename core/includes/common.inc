@@ -240,13 +240,14 @@ function base_path() {
  *     - 'self' affects the dragged row itself.
  *     - 'group' affects the dragged row, plus any children below it (the entire
  *       dragged group).
- *   - 'group': A class name applied on all related form elements for this action.
+ *   - 'group': A class name applied on all related form elements for this
+ *      action.
  *   - 'subgroup': (optional) If the group has several subgroups within it, this
  *     string should contain the class name identifying fields in the same
  *     subgroup.
- *   - 'source': (optional) If the $action is 'match', this string should contain
- *     the classname identifying what field will be used as the source value
- *     when matching the value in $subgroup.
+ *   - 'source': (optional) If the $action is 'match', this string should
+ *     contain the classname identifying what field will be used as the source
+ *     value when matching the value in $subgroup.
  *   - 'hidden': (optional) The column containing the field elements may be
  *     entirely hidden from view dynamically when the JavaScript is loaded. Set
  *     to FALSE if the column should not be hidden.

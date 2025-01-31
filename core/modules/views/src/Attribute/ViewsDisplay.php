@@ -62,8 +62,8 @@ class ViewsDisplay extends Plugin {
    *   (optional) Whether to register a theme function automatically. Defaults
    *   to TRUE.
    * @param bool $entity_reference_display
-   *   (optional) Custom property, used with \Drupal\views\Views::getApplicableViews().
-   *   Defaults to FALSE.
+   *   (optional) Custom property, used with
+   *   \Drupal\views\Views::getApplicableViews(). Defaults to FALSE.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
    */

@@ -194,8 +194,8 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    *
    * @param string|array $output
    *   A string|array representing the block. This will be modified to be a
-   *   renderable array, containing the optional '#contextual_links' property (if
-   *   there are any contextual links associated with the block).
+   *   renderable array, containing the optional '#contextual_links' property
+   *   (if there are any contextual links associated with the block).
    * @param string $block_type
    *   The type of the block. If it's 'block' it's a regular views display,
    *   but 'exposed_filter' exist as well.

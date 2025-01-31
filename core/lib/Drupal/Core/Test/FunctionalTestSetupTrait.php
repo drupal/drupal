@@ -598,7 +598,8 @@ trait FunctionalTestSetupTrait {
    * Sets up the base URL based upon the environment variable.
    *
    * @throws \Exception
-   *   Thrown when no SIMPLETEST_BASE_URL environment variable is provided or uses an invalid scheme.
+   *   Thrown when no SIMPLETEST_BASE_URL environment variable is provided or
+   *   uses an invalid scheme.
    */
   protected function setupBaseUrl() {
     global $base_url;

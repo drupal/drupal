@@ -280,24 +280,25 @@ EOD;
    *   If TRUE, attempt to truncate on a word boundary. Word boundaries are
    *   spaces, punctuation, and Unicode characters used as word boundaries in
    *   non-Latin languages; see Unicode::PREG_CLASS_WORD_BOUNDARY for more
-   *   information. If a word boundary cannot be found that would make the length
-   *   of the returned string fall within length guidelines (see parameters
-   *   $max_length and $min_wordsafe_length), word boundaries are ignored.
+   *   information. If a word boundary cannot be found that would make the
+   *   length of the returned string fall within length guidelines (see
+   *   parameters $max_length and $min_wordsafe_length), word boundaries are
+   *   ignored.
    * @param bool $add_ellipsis
    *   If TRUE, add '...' to the end of the truncated string (defaults to
    *   FALSE). The string length will still fall within $max_length.
    * @param int $min_wordsafe_length
-   *   If $wordsafe is TRUE, the minimum acceptable length for truncation (before
-   *   adding an ellipsis, if $add_ellipsis is TRUE). Has no effect if $wordsafe
-   *   is FALSE. This can be used to prevent having a very short resulting string
-   *   that will not be understandable. For instance, if you are truncating the
-   *   string "See MyVeryLongURLExample.com for more information" to a word-safe
-   *   return length of 20, the only available word boundary within 20 characters
-   *   is after the word "See", which wouldn't leave a very informative string. If
-   *   you had set $min_wordsafe_length to 10, though, the function would realize
-   *   that "See" alone is too short, and would then just truncate ignoring word
-   *   boundaries, giving you "See MyVeryLongURL..." (assuming you had set
-   *   $add_ellipsis to TRUE).
+   *   If $wordsafe is TRUE, the minimum acceptable length for truncation
+   *   (before adding an ellipsis, if $add_ellipsis is TRUE). Has no effect if
+   *   $wordsafe is FALSE. This can be used to prevent having a very short
+   *   resulting string that will not be understandable. For instance, if you
+   *   are truncating the string "See MyVeryLongURLExample.com for more
+   *   information" to a word-safe return length of 20, the only available word
+   *   boundary within 20 characters is after the word "See", which wouldn't
+   *   leave a very informative string. If you had set $min_wordsafe_length to
+   *   10, though, the function would realize that "See" alone is too short, and
+   *   would then just truncate ignoring word boundaries, giving you "See
+   *   MyVeryLongURL..." (assuming you had set $add_ellipsis to TRUE).
    *
    * @return string
    *   The truncated string.

@@ -42,7 +42,8 @@ class AjaxPageState implements HttpKernelInterface {
    * Decompresses the libraries array key.
    *
    * @param array $ajax_page_state
-   *   An array of query parameters, where the libraries parameter is compressed.
+   *   An array of query parameters, where the libraries parameter is
+   *   compressed.
    *
    * @return array
    *   The input array of query parameters, where the libraries parameter is

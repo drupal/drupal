@@ -65,8 +65,8 @@ class FileTestHelper {
    *
    * @return array
    *   An array keyed by hook name ('load', 'validate', 'download', 'insert',
-   *   'update', 'copy', 'move', 'delete') with values being arrays of parameters
-   *   passed to each call.
+   *   'update', 'copy', 'move', 'delete') with values being arrays of
+   *   parameters passed to each call.
    */
   public static function getAllCalls(): array {
     return \Drupal::state()->get('file_test.results', []);

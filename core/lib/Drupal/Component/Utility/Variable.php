@@ -42,7 +42,8 @@ class Variable {
    * @param mixed $var
    *   The variable to export.
    * @param string $prefix
-   *   A prefix that will be added at the beginning of every lines of the output.
+   *   A prefix that will be added at the beginning of every lines of the
+   *   output.
    *
    * @return string
    *   The variable exported in a way compatible to Drupal's coding standards.

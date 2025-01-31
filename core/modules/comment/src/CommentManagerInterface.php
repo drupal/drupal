@@ -29,8 +29,8 @@ interface CommentManagerInterface {
    *   An array of comment field map definitions, keyed by field name. Each
    *   value is an array with two entries:
    *   - type: The field type.
-   *   - bundles: The bundles in which the field appears, as an array with entity
-   *     types as keys and the array of bundle names as values.
+   *   - bundles: The bundles in which the field appears, as an array with
+   *     entity types as keys and the array of bundle names as values.
    */
   public function getFields($entity_type_id);
 

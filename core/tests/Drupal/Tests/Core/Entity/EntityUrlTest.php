@@ -463,8 +463,8 @@ class EntityUrlTest extends UnitTestCase {
    * Returns a mock entity for testing.
    *
    * @param class-string<\Drupal\Tests\Core\Entity\StubEntityBase> $class
-   *   The class name to mock. Should be \Drupal\Tests\Core\Entity\StubEntityBase
-   *   or a subclass.
+   *   The class name to mock. Should be
+   *   \Drupal\Tests\Core\Entity\StubEntityBase or a subclass.
    * @param array<string,int|string> $values
    *   An array of entity values to construct the mock entity with.
    * @param list<string> $methods

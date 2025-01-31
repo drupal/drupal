@@ -559,7 +559,8 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
    * @param string $message
    *   The assertion message to display upon failure.
    * @param array $disallowed_tags
-   *   (optional) The disallowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
+   *   (optional) The disallowed HTML tags to be passed to
+   *   \Drupal\Component\Utility\Xss::filter().
    *
    * @dataProvider providerTestDisallowMode
    */
@@ -578,7 +579,8 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
    *     - The value to filter.
    *     - The value to expect after filtering.
    *     - The assertion message.
-   *     - (optional) The disallowed HTML tags to be passed to \Drupal\Component\Utility\Xss::filter().
+   *     - (optional) The disallowed HTML tags to be passed to
+   *       \Drupal\Component\Utility\Xss::filter().
    */
   public static function providerTestDisallowMode() {
     return [

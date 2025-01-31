@@ -377,7 +377,8 @@ class Table extends FormElementBase {
    * @endcode
    *
    * @param array $element
-   *   A structured array containing two sub-levels of elements. Properties used:
+   *   A structured array containing two sub-levels of elements. Properties
+   *   used:
    *   - #tabledrag: The value is a list of $options arrays that are passed to
    *     drupal_attach_tabledrag(). The HTML ID of the table is added to each
    *     $options array.

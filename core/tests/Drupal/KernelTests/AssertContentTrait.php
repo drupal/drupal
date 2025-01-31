@@ -817,8 +817,9 @@ trait AssertContentTrait {
    * @param \SimpleXmlElement[] $fields
    *   Xml elements.
    * @param string $value
-   *   (optional) Value of the field to assert. You may pass in NULL (default) to skip
-   *   checking the actual value, while still checking that the field exists.
+   *   (optional) Value of the field to assert. You may pass in NULL (default)
+   *   to skip checking the actual value, while still checking that the field
+   *   exists.
    * @param string $message
    *   (optional) A message to display with the assertion. Do not translate
    *   messages with t(). Use double quotes and embed variables directly in

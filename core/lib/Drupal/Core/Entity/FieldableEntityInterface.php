@@ -42,8 +42,8 @@ interface FieldableEntityInterface extends EntityInterface {
    * per-bundle basis via 'base_field_override' configuration entities.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition. Useful when a single class is used for multiple,
-   *   possibly dynamic entity types.
+   *   The entity type definition. Useful when a single class is used for
+   *   multiple, possibly dynamic entity types.
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   An array of base field definitions for the entity type, keyed by field
@@ -75,8 +75,8 @@ interface FieldableEntityInterface extends EntityInterface {
    * precedence.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition. Useful when a single class is used for multiple,
-   *   possibly dynamic entity types.
+   *   The entity type definition. Useful when a single class is used for
+   *   multiple, possibly dynamic entity types.
    * @param string $bundle
    *   The bundle.
    * @param \Drupal\Core\Field\FieldDefinitionInterface[] $base_field_definitions

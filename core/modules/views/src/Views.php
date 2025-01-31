@@ -295,8 +295,8 @@ class Views {
    *   - views name, for example 'my_view'
    *   - views name and display ID separated by ':', for example 'my_view:page'
    * @param bool $optgroup
-   *   If TRUE, returns an array with optgroups for each view (will be ignored for
-   *   $views_only = TRUE). Can be used by select
+   *   If TRUE, returns an array with optgroups for each view (will be ignored
+   *   for $views_only = TRUE). Can be used by select
    * @param bool $sort
    *   If TRUE, the list of views is sorted ascending.
    *

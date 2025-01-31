@@ -176,7 +176,8 @@ final class RecipeRunner {
    * @param \Drupal\Core\Recipe\Recipe $recipe
    *   The recipe to convert to batch operations.
    * @param string[] $recipes
-   *   The paths of the recipes that have already been converted to batch operations.
+   *   The paths of the recipes that have already been converted to batch
+   *   operations.
    * @param string[] $modules
    *   The modules that will already be installed due to previous recipes in the
    *   batch.

@@ -21,8 +21,8 @@ class DiffArray {
    *   The array to compare to.
    *
    * @return array
-   *   Returns an array containing all the values from array1 that are not present
-   *   in array2.
+   *   Returns an array containing all the values from array1 that are not
+   *   present in array2.
    */
   public static function diffAssocRecursive(array $array1, array $array2) {
     $difference = [];

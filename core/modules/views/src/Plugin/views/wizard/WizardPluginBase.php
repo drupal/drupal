@@ -504,23 +504,23 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   The current state of the form.
    * @param array $parents
    *   An array of parent keys that point to the part of the submitted form
-   *   values that are expected to contain the element's value (in the case where
-   *   this form element was actually submitted). In a simple case (assuming
-   *   #tree is TRUE throughout the form), if the select element is located in
-   *   $form['wrapper']['select'], so that the submitted form values would
-   *   normally be found in $form_state->getValue(['wrapper', 'select']),
+   *   values that are expected to contain the element's value (in the case
+   *   where this form element was actually submitted). In a simple case
+   *   (assuming #tree is TRUE throughout the form), if the select element is
+   *   located in $form['wrapper']['select'], so that the submitted form values
+   *   would normally be found in $form_state->getValue(['wrapper', 'select']),
    *   you would pass ['wrapper', 'select'] for this parameter.
    * @param array|string $default_value
-   *   The default value to return if the #select element does not currently have
-   *   a proper value set based on the submitted input.
+   *   The default value to return if the #select element does not currently
+   *   have a proper value set based on the submitted input.
    * @param array $element
    *   An array representing the current version of the #select element within
    *   the form.
    *
    * @return array|string
-   *   The current value of the #select element. A common use for this is to feed
-   *   it back into $element['#default_value'] so that the form will be rendered
-   *   with the correct value selected.
+   *   The current value of the #select element. A common use for this is to
+   *   feed it back into $element['#default_value'] so that the form will be
+   *   rendered with the correct value selected.
    */
   public static function getSelected(FormStateInterface $form_state, $parents, $default_value, $element) {
     // For now, don't trust this to work on anything but a #select element.

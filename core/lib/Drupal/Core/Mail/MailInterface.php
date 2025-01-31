@@ -45,8 +45,8 @@ interface MailInterface {
    *
    * @param array $message
    *   Message array with at least the following elements:
-   *   - id: A unique identifier of the email type. Examples: 'contact_user_copy',
-   *     'user_password_reset'.
+   *   - id: A unique identifier of the email type. Examples:
+   *     'contact_user_copy', 'user_password_reset'.
    *   - to: The mail address or addresses where the message will be sent to.
    *     The formatting of this string will be validated with the
    *     @link http://php.net/manual/filter.filters.validate.php PHP email validation filter. @endlink

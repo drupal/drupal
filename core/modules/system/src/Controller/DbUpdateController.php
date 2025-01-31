@@ -669,7 +669,8 @@ class DbUpdateController extends ControllerBase {
    * @param array $results
    *   An array of all the results that were updated in update_do_one().
    * @param array $operations
-   *   A list of all the operations that had not been completed by the batch API.
+   *   A list of all the operations that had not been completed by the batch
+   *   API.
    */
   public static function batchFinished($success, $results, $operations) {
     // No updates to run, so caches won't get flushed later.  Clear them now.

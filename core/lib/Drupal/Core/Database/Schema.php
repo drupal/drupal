@@ -608,7 +608,8 @@ abstract class Schema implements PlaceholderInterface {
    * @param string $field
    *   Name of the field to change.
    * @param string $field_new
-   *   New name for the field (set to the same as $field if you don't want to change the name).
+   *   New name for the field (set to the same as $field if you don't want to
+   *   change the name).
    * @param array $spec
    *   The field specification for the new field.
    * @param array|null $keys_new

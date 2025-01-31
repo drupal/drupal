@@ -107,8 +107,8 @@ interface ModuleHandlerInterface {
    *   The same array with the new keys for each module:
    *   - requires: An array with the keys being the modules that this module
    *     requires.
-   *   - required_by: An array with the keys being the modules that will not work
-   *     without this module.
+   *   - required_by: An array with the keys being the modules that will not
+   *     work without this module.
    *
    * @see \Drupal\Core\Extension\ExtensionDiscovery
    */
@@ -348,8 +348,8 @@ interface ModuleHandlerInterface {
    *   execute both hook_form_alter() and hook_form_FORM_ID_alter()
    *   implementations, it passes ['form', 'form_' . $form_id] for $type.
    * @param mixed $data
-   *   The variable that will be passed to hook_TYPE_alter() implementations to be
-   *   altered. The type of this variable depends on the value of the $type
+   *   The variable that will be passed to hook_TYPE_alter() implementations to
+   *   be altered. The type of this variable depends on the value of the $type
    *   argument. For example, when altering a 'form', $data will be a structured
    *   array. When altering a 'profile', $data will be an object.
    * @param mixed $context1
@@ -381,8 +381,8 @@ interface ModuleHandlerInterface {
    *   execute both hook_form_alter() and hook_form_FORM_ID_alter()
    *   implementations, it passes ['form', 'form_' . $form_id] for $type.
    * @param mixed $data
-   *   The variable that will be passed to hook_TYPE_alter() implementations to be
-   *   altered. The type of this variable depends on the value of the $type
+   *   The variable that will be passed to hook_TYPE_alter() implementations to
+   *   be altered. The type of this variable depends on the value of the $type
    *   argument. For example, when altering a 'form', $data will be a structured
    *   array. When altering a 'profile', $data will be an object.
    * @param mixed $context1

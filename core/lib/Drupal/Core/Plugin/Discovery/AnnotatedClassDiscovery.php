@@ -48,8 +48,8 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
    *   keyed by the corresponding namespace to look for plugin implementations.
    *   If $subdir is not an empty string, it will be appended to each namespace.
    * @param string $plugin_definition_annotation_name
-   *   (optional) The name of the annotation that contains the plugin definition.
-   *   Defaults to 'Drupal\Component\Annotation\Plugin'.
+   *   (optional) The name of the annotation that contains the plugin
+   *   definition. Defaults to 'Drupal\Component\Annotation\Plugin'.
    * @param string[] $annotation_namespaces
    *   (optional) Additional namespaces to scan for annotation definitions.
    */

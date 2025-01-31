@@ -132,7 +132,8 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
    *   The values to intersect $orig_values with.
    *
    * @return array
-   *   Elements of $orig_values contained in $comp_values when ignoring capitalization.
+   *   Elements of $orig_values contained in $comp_values when ignoring
+   *   capitalization.
    */
   private function caseInsensitiveArrayIntersect(array $orig_values, array $comp_values): array {
     $lowercase_comp_values = array_map('strtolower', $comp_values);

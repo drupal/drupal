@@ -114,10 +114,11 @@ interface FormBuilderInterface {
    *   (optional) A previously built $form. Used to retain the #build_id and
    *   #action properties in Ajax callbacks and similar partial form rebuilds.
    *   The only properties copied from $old_form are the ones which both exist
-   *   in $old_form and for which $form_state->getRebuildInfo()['copy'][PROPERTY]
-   *   is TRUE. If $old_form is not passed, the entire $form is rebuilt freshly.
-   *   'rebuild_info' needs to be a separate top-level property next to
-   *   'build_info', since the contained data must not be cached.
+   *   in $old_form and for which
+   *   $form_state->getRebuildInfo()['copy'][PROPERTY] is TRUE. If $old_form is
+   *   not passed, the entire $form is rebuilt freshly. 'rebuild_info' needs to
+   *   be a separate top-level property next to 'build_info', since the
+   *   contained data must not be cached.
    *
    * @return array
    *   The newly built form.

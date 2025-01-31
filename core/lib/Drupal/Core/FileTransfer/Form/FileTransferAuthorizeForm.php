@@ -234,8 +234,8 @@ class FileTransferAuthorizeForm extends FormBase {
    *   Array of settings for the FileTransfer.
    *
    * @return \Drupal\Core\FileTransfer\FileTransfer|bool
-   *   An instantiated FileTransfer object for the requested method and settings,
-   *   or FALSE if there was an error finding or instantiating it.
+   *   An instantiated FileTransfer object for the requested method and
+   *   settings, or FALSE if there was an error finding or instantiating it.
    */
   protected function getFiletransfer($backend, $settings = []) {
     $filetransfer = FALSE;

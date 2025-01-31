@@ -633,8 +633,10 @@ function olivero_form_views_exposed_form_alter(&$form): void {
  * @return array
  *   Array containing hue, saturation, and lightness values.
  *   $hue: integer of value 0-360 indicating the hue on a color wheel.
- *   $saturation: string of saturation as a percentage (0% all gray, 100% full color).
- *   $lightness: string of lightness as a percentage (0% darkened to black, 50% full color, 100% lightened to white).
+ *   $saturation: string of saturation as a percentage (0% all gray, 100% full
+ *   color).
+ *   $lightness: string of lightness as a percentage (0% darkened to black, 50%
+ *   full color, 100% lightened to white).
  *
  * @see https://css-tricks.com/converting-color-spaces-in-javascript
  *   Code based on JS version.

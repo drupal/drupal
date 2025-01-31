@@ -67,12 +67,12 @@ interface NodeGrantDatabaseStorageInterface {
    *   is a module-defined id to define grant privileges. each grant_* field
    *   is a boolean value.
    * @param string $realm
-   *   (optional) If provided, read/write grants for that realm only. Defaults to
-   *   NULL.
+   *   (optional) If provided, read/write grants for that realm only. Defaults
+   *   to NULL.
    * @param bool $delete
-   *   (optional) If false, does not delete records. This is only for optimization
-   *   purposes, and assumes the caller has already performed a mass delete of
-   *   some form. Defaults to TRUE.
+   *   (optional) If false, does not delete records. This is only for
+   *   optimization purposes, and assumes the caller has already performed a
+   *   mass delete of some form. Defaults to TRUE.
    */
   public function write(NodeInterface $node, array $grants, $realm = NULL, $delete = TRUE);
 

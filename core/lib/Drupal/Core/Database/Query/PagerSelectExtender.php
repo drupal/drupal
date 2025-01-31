@@ -100,7 +100,7 @@ class PagerSelectExtender extends SelectExtender {
    * one is generated off of the pager query itself.
    *
    * @param \Drupal\Core\Database\Query\SelectInterface $query
-   *   The count query object.  It must return a single row with a single column,
+   *   The count query object. It must return a single row with a single column,
    *   which is the total number of records.
    */
   public function setCountQuery(SelectInterface $query) {

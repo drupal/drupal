@@ -212,8 +212,8 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   valid.
    * @param array $fields
    *   An indexed array of fields present in the specified table that should be
-   *   included in this query. If not specified, $table_alias.* will be generated
-   *   without any aliases.
+   *   included in this query. If not specified, $table_alias.* will be
+   *   generated without any aliases.
    *
    * @return $this
    *   The called object.
@@ -340,8 +340,8 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   Unless the table name starts with the database / schema name and a dot
    *   it will be prefixed.
    * @param string $alias
-   *   The alias for the table. In most cases this should be the first letter
-   *   of the table, or the first letter of each "word" in the table. If omitted,
+   *   The alias for the table. In most cases this should be the first letter of
+   *   the table, or the first letter of each "word" in the table. If omitted,
    *   one will be dynamically generated.
    * @param string|null $condition
    *   The condition on which to join this table. If the join requires values,
@@ -511,13 +511,13 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   The name of the field to check. If you would like to add a more complex
    *   condition involving operators or functions, use having().
    * @param mixed|null $value
-   *   The value to test the field against. In most cases, this is a scalar. For more
-   *   complex options, it is an array. The meaning of each element in the array is
-   *   dependent on the $operator.
+   *   The value to test the field against. In most cases, this is a scalar. For
+   *   more complex options, it is an array. The meaning of each element in the
+   *   array is dependent on the $operator.
    * @param string|null $operator
-   *   The comparison operator, such as =, <, or >=. It also accepts more complex
-   *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
-   *   = otherwise.
+   *   The comparison operator, such as =, <, or >=. It also accepts more
+   *   complex options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is
+   *   an array = otherwise.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.

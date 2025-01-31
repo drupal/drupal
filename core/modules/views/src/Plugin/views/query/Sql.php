@@ -863,7 +863,8 @@ class Sql extends QueryPluginBase {
    *     aggregated in a GROUP BY.
    *
    * @return string
-   *   The name that this field can be referred to as. Usually this is the alias.
+   *   The name that this field can be referred to as. Usually this is the
+   *   alias.
    */
   public function addField($table, $field, $alias = '', $params = []) {
     // We check for this specifically because it gets a special alias.
@@ -949,9 +950,9 @@ class Sql extends QueryPluginBase {
    * @param string $field
    *   The name of the field to check.
    * @param string|array|null $value
-   *   The value to test the field against. In most cases, this is a scalar. For more
-   *   complex options, it is an array. The meaning of each element in the array is
-   *   dependent on the $operator.
+   *   The value to test the field against. In most cases, this is a scalar. For
+   *   more complex options, it is an array. The meaning of each element in the
+   *   array is dependent on the $operator.
    * @param string|null $operator
    *   The comparison operator, such as =, <, or >=. It also accepts more
    *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to =.
@@ -1021,8 +1022,8 @@ class Sql extends QueryPluginBase {
    * Add a complex HAVING clause to the query.
    *
    * The caller is responsible for ensuring that all fields are fully qualified
-   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
-   * Internally the dbtng method "having" is used.
+   * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist
+   * in the query. Internally the dbtng method "having" is used.
    *
    * @param string $group
    *   The HAVING group to add these to; groups are used to create AND/OR

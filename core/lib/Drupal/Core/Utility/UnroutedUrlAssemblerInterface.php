@@ -23,15 +23,15 @@ interface UnroutedUrlAssemblerInterface {
    *     system.  The base path (the subdirectory where the front controller
    *     is found) will be added to the path. Additional query arguments for
    *     local paths must be supplied in $options['query'], not part of $uri.
-   *   - If your external URL contains a query (e.g. http://example.com/foo?a=b),
-   *     then you can either URL encode the query keys and values yourself and
-   *     include them in $uri, or use $options['query'] to let this method
-   *     URL encode them.
+   *   - If your external URL contains a query (e.g.
+   *     http://example.com/foo?a=b), then you can either URL encode the query
+   *     keys and values yourself and include them in $uri, or use
+   *     $options['query'] to let this method URL encode them.
    * @param array $options
    *   (optional) An associative array of additional options, with the following
    *   elements:
-   *   - 'query': An array of query key/value-pairs (without any URL-encoding) to
-   *     append to the URL.
+   *   - 'query': An array of query key/value-pairs (without any URL-encoding)
+   *      to append to the URL.
    *   - 'fragment': A fragment identifier (named anchor) to append to the URL.
    *     Do not include the leading '#' character.
    *   - 'absolute': Defaults to FALSE. Whether to force the output to be an

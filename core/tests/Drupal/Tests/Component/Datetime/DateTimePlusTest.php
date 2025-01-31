@@ -143,15 +143,16 @@ class DateTimePlusTest extends TestCase {
    *   - 'expected_initial_date' - Expected output from DateTimePlus::format().
    *   - 'expected_initial_timezone' - Expected output from
    *      DateTimePlus::getTimeZone()::getName().
-   *   - 'expected_initial_offset' - Expected output from DateTimePlus::getOffset().
+   *   - 'expected_initial_offset' - Expected output from
+   *      DateTimePlus::getOffset().
    * @param array $transform
    *   An array containing:
-   *   - 'timezone_transform' - Argument to transform date to another timezone via
-   *     DateTimePlus::setTimezone().
+   *   - 'timezone_transform' - Argument to transform date to another timezone
+   *     via DateTimePlus::setTimezone().
    *   - 'format_transform' - Format argument to use when transforming date to
    *     another timezone.
-   *   - 'expected_transform_date' - Expected output from DateTimePlus::format(),
-   *     after timezone transform.
+   *   - 'expected_transform_date' - Expected output from
+   *     DateTimePlus::format(), after timezone transform.
    *   - 'expected_transform_timezone' - Expected output from
    *     DateTimePlus::getTimeZone()::getName(), after timezone transform.
    *   - 'expected_transform_offset' - Expected output from
@@ -497,7 +498,8 @@ class DateTimePlusTest extends TestCase {
    *   An array of arrays, each containing:
    *   - 'date' - Date string or object for DateTimePlus.
    *   - 'timezone' - Timezone string for DateTimePlus.
-   *   - 'expected' - Expected return from DateTimePlus::getTimezone()::getName().
+   *   - 'expected' - Expected return from
+   *      DateTimePlus::getTimezone()::getName().
    *   - 'message' - Message to display on test failure.
    *
    * @see testDateTimezone

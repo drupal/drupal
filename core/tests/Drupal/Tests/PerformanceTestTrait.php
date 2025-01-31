@@ -299,7 +299,8 @@ trait PerformanceTestTrait {
    * @todo https://www.drupal.org/project/drupal/issues/3379757
    *
    * @param string|null $service_name
-   *   An optional human readable identifier so that traces can be grouped together.
+   *   An optional human readable identifier so that traces can be grouped
+   *   together.
    *
    * @return \Drupal\Tests\PerformanceData
    *   An instance of the performance data value object.

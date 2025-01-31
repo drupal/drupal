@@ -55,8 +55,8 @@ class SortArray {
    * Callback for uasort().
    *
    * @param array $a
-   *   First item for comparison. The compared items should be associative arrays
-   *   that optionally include a 'title' key.
+   *   First item for comparison. The compared items should be associative
+   *   arrays that optionally include a 'title' key.
    * @param array $b
    *   Second item for comparison.
    *
@@ -73,8 +73,8 @@ class SortArray {
    * Callback for uasort().
    *
    * @param array $a
-   *   First item for comparison. The compared items should be associative arrays
-   *   that optionally include a '#title' key.
+   *   First item for comparison. The compared items should be associative
+   *   arrays that optionally include a '#title' key.
    * @param array $b
    *   Second item for comparison.
    *

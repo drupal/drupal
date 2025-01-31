@@ -82,8 +82,8 @@ class Actions extends Container {
    *   The complete form structure.
    *
    * @return array
-   *   The processed #type 'actions' element, including individual buttons grouped
-   *   into new #type 'dropbutton' elements.
+   *   The processed #type 'actions' element, including individual buttons
+   *   grouped into new #type 'dropbutton' elements.
    */
   public static function preRenderActionsDropbutton(&$element, FormStateInterface $form_state, &$complete_form) {
     $dropbuttons = [];

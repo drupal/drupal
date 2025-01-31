@@ -15,8 +15,8 @@ class Percentage {
    * @param int $current
    *   The number of the current operation. This may be a floating point number
    *   rather than an integer in the case of a multi-step operation that is not
-   *   yet complete; in that case, the fractional part of $current represents the
-   *   fraction of the operation that has been completed.
+   *   yet complete; in that case, the fractional part of $current represents
+   *   the fraction of the operation that has been completed.
    *
    * @return string
    *   The properly formatted percentage, as a string. We output percentages
