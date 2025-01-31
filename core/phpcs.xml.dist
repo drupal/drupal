@@ -109,11 +109,6 @@
     <!-- Sniff for: DuplicateVar, EmptyVar, IncorrectVarType, InlineVariableName, WrongStyle -->
     <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
   </rule>
-  <rule ref="Drupal.Commenting.VariableComment.Missing">
-    <include-pattern>./core/tests/*</include-pattern>
-    <exclude-pattern>./core/*/tests/*</exclude-pattern>
-    <include-pattern>core/modules/*/tests/modules/*</include-pattern>
-  </rule>
   <rule ref="Drupal.ControlStructures.ControlSignature"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>
   <rule ref="Drupal.ControlStructures.InlineControlStructure"/>

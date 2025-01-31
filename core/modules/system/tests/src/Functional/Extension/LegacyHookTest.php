@@ -13,8 +13,14 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LegacyHookTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['legacy_hook_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'stark';
 
   public function testLegacyHook(): void {

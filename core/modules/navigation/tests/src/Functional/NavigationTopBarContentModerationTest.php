@@ -14,6 +14,9 @@ use Drupal\Tests\content_moderation\Functional\ModerationStateTestBase;
  */
 class NavigationTopBarContentModerationTest extends ModerationStateTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'stark';
 
   /**

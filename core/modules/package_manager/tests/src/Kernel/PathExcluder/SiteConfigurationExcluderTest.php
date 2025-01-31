@@ -115,6 +115,9 @@ class SiteConfigurationExcluderTest extends PackageManagerKernelTestBase {
  */
 class TestSiteConfigurationExcluder extends SiteConfigurationExcluder {
 
+  /**
+   * The site path.
+   */
   public string $sitePath;
 
 }

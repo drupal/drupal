@@ -30,7 +30,6 @@ class PageTitleTest extends BrowserTestBase {
    * The test user.
    */
   protected $contentUser;
-  protected $savedTitle;
 
   /**
    * Implement setUp().
