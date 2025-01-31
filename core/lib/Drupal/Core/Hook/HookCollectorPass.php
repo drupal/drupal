@@ -156,14 +156,14 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * Collects procedural and Attribute hook implementations.
    *
-   * @param $dir
+   * @param string $dir
    *   The directory in which the module resides.
-   * @param $module
+   * @param string $module
    *   The name of the module.
-   * @param $module_preg
+   * @param string $module_preg
    *   A regular expression matching every module, longer module names are
    *   matched first.
-   * @param $skip_procedural
+   * @param bool $skip_procedural
    *   Skip the procedural check for the current module.
    */
   protected function collectModuleHookImplementations($dir, $module, $module_preg, bool $skip_procedural): void {
@@ -300,9 +300,9 @@ class HookCollectorPass implements CompilerPassInterface {
    *
    * @param \Drupal\Core\Hook\Attribute\Hook $hook
    *   A hook attribute.
-   * @param $class
+   * @param string $class
    *   The class in which said attribute resides in.
-   * @param $module
+   * @param string $module
    *   The module in which the class resides in.
    */
   protected function addFromAttribute(Hook $hook, $class, $module): void {

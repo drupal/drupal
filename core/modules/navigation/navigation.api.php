@@ -38,7 +38,7 @@ function hook_navigation_content_top(): array {
 /**
  * Alter replacement values for placeholder tokens.
  *
- * @param $content_top
+ * @param array $content_top
  *   An associative array of content returned by hook_navigation_content_top().
  *
  * @see hook_navigation_content_top()

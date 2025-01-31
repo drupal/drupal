@@ -184,19 +184,16 @@ class Inspector {
    *
    * @param mixed $traversable
    *   Variable to be examined.
-   * @param ...$keys
+   * @param string ...$keys
    *   Keys to be searched for.
    *
    * @return bool
    *   TRUE if $traversable can be traversed and all members have all keys.
    */
-  public static function assertAllHaveKey($traversable) {
-    $args = func_get_args();
-    unset($args[0]);
-
+  public static function assertAllHaveKey($traversable, string ...$keys) {
     if (is_iterable($traversable)) {
       foreach ($traversable as $member) {
-        foreach ($args as $key) {
+        foreach ($keys as $key) {
           if (!array_key_exists($key, $member)) {
             return FALSE;
           }
@@ -370,21 +367,18 @@ class Inspector {
    *
    * @param mixed $traversable
    *   Variable to be examined.
-   * @param ...$classes
+   * @param string ...$classes
    *   Classes and interfaces to test objects against.
    *
    * @return bool
    *   TRUE if $traversable can be traversed and all members are objects with
    *   at least one of the listed classes or interfaces.
    */
-  public static function assertAllObjects($traversable) {
-    $args = func_get_args();
-    unset($args[0]);
-
+  public static function assertAllObjects($traversable, string ...$classes) {
     if (is_iterable($traversable)) {
       foreach ($traversable as $member) {
-        if (count($args) > 0) {
-          foreach ($args as $instance) {
+        if (count($classes) > 0) {
+          foreach ($classes as $instance) {
             if ($member instanceof $instance) {
               // We're continuing to the next member on the outer loop.
               // @see http://php.net/continue

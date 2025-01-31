@@ -35,7 +35,7 @@ final class ProceduralCall {
   /**
    * Loads the file a function lives in, if any.
    *
-   * @param $function
+   * @param string $function
    *   The name of the function.
    */
   public function loadFile($function): void {

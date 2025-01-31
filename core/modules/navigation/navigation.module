@@ -26,7 +26,7 @@ function navigation_module_implements_alter(&$implementations, $hook): void {
  *
  * Default template: top-bar.html.twig
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
  *    - element: An associative array containing the properties and children of
  *      the top bar.

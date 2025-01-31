@@ -517,7 +517,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   The storage containing the default configuration.
-   * @param $previous_config_names
+   * @param array $previous_config_names
    *   An array of configuration names that have previously been checked.
    *
    * @return array
