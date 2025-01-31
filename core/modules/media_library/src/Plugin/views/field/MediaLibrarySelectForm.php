@@ -46,13 +46,13 @@ class MediaLibrarySelectForm extends FieldPluginBase {
   /**
    * Return a media entity ID from a views result row.
    *
-   * @see \Drupal\views\Form\ViewsFormMainForm
-   *
    * @param int $row_id
    *   The index of a views result row.
    *
    * @return string
    *   The ID of a media entity.
+   *
+   * @see \Drupal\views\Form\ViewsFormMainForm
    */
   public function form_element_row_id(int $row_id): string {
     return $this->view->result[$row_id]->mid;

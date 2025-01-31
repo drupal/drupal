@@ -252,13 +252,13 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    * properties per bundle use this method to create an override that can be
    * saved in configuration.
    *
-   * @see \Drupal\Core\Field\Entity\BaseFieldBundleOverride
-   *
    * @param string $bundle
    *   The bundle to get the configurable field for.
    *
    * @return \Drupal\Core\Field\FieldConfigInterface
    *   The configuration entity for the field.
+   *
+   * @see \Drupal\Core\Field\Entity\BaseFieldBundleOverride
    */
   public function getConfig($bundle);
 

@@ -174,13 +174,13 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    * not Cache-Control, then 'private, must-revalidate' (in exactly this order)
    * is returned.
    *
-   * @see \Symfony\Component\HttpFoundation\ResponseHeaderBag::computeCacheControlValue()
-   *
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The response object.
    *
    * @return bool
    *   TRUE when Cache-Control header was set explicitly on the given response.
+   *
+   * @see \Symfony\Component\HttpFoundation\ResponseHeaderBag::computeCacheControlValue()
    */
   protected function isCacheControlCustomized(Response $response) {
     // Symfony >= 3.2 explicitly removes the Cache-Control header for 301

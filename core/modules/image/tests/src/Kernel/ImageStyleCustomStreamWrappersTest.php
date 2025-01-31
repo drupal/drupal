@@ -70,12 +70,12 @@ class ImageStyleCustomStreamWrappersTest extends KernelTestBase {
   /**
    * Tests derivative creation with several source on a local writable stream.
    *
-   * @dataProvider providerTestCustomStreamWrappers
-   *
    * @param string $source_scheme
    *   The source stream wrapper scheme.
    * @param string $expected_scheme
    *   The derivative expected stream wrapper scheme.
+   *
+   * @dataProvider providerTestCustomStreamWrappers
    */
   public function testCustomStreamWrappers($source_scheme, $expected_scheme): void {
     $derivative_uri = $this->imageStyle->buildUri("$source_scheme://some/path/image.png");

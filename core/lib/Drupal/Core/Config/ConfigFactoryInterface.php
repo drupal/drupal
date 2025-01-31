@@ -97,14 +97,14 @@ interface ConfigFactoryInterface {
   /**
    * Gets configuration object names starting with a given prefix.
    *
-   * @see \Drupal\Core\Config\StorageInterface::listAll()
-   *
    * @param string $prefix
    *   (optional) The prefix to search for. If omitted, all configuration object
    *   names that exist are returned.
    *
    * @return array
    *   An array containing matching configuration object names.
+   *
+   * @see \Drupal\Core\Config\StorageInterface::listAll()
    */
   public function listAll($prefix = '');
 

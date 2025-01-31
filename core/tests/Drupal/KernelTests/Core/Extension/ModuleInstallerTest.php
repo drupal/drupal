@@ -174,13 +174,12 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
   /**
    * Tests container rebuilding due to the container_rebuild_required info key.
    *
-   * @covers ::install
-   *
    * @param array $modules
    *   The modules to install.
    * @param int $count
    *   The number of times the container should have been rebuilt.
    *
+   * @covers ::install
    * @dataProvider containerRebuildRequiredProvider
    */
   public function testContainerRebuildRequired(array $modules, int $count): void {

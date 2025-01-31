@@ -490,12 +490,11 @@ class TwigExtension extends AbstractExtension {
    * For example: a generated link or generated URL object is passed as a Twig
    * template argument, and its bubbleable metadata must be bubbled.
    *
-   * @see \Drupal\Core\GeneratedLink
-   * @see \Drupal\Core\GeneratedUrl
-   *
    * @param mixed $arg
    *   A Twig template argument that is about to be printed.
    *
+   * @see \Drupal\Core\GeneratedLink
+   * @see \Drupal\Core\GeneratedUrl
    * @see \Drupal\Core\Theme\ThemeManager::render()
    * @see \Drupal\Core\Render\RendererInterface::render()
    */

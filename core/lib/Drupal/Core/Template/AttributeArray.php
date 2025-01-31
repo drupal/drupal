@@ -84,13 +84,13 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
   /**
    * Exchange the array for another one.
    *
-   * @see ArrayObject::exchangeArray
-   *
    * @param array $input
    *   The array input to replace the internal value.
    *
    * @return array
    *   The old array value.
+   *
+   * @see ArrayObject::exchangeArray
    */
   public function exchangeArray($input) {
     $old = $this->value;

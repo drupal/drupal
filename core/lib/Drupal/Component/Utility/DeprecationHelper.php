@@ -18,9 +18,6 @@ final class DeprecationHelper {
    * The below templates help code editors and PHPStan understand the return
    * value of this function.
    *
-   * @template Current
-   * @template Deprecated
-   *
    * @param string $currentVersion
    *   Version to check against.
    * @param string $deprecatedVersion
@@ -35,6 +32,9 @@ final class DeprecationHelper {
    *   deprecation. The current callback when the current version is greater
    *   than or equal to the version of the deprecation. Otherwise, the
    *   deprecated callback.
+   *
+   * @template Current
+   * @template Deprecated
    */
   public static function backwardsCompatibleCall(string $currentVersion, string $deprecatedVersion, callable $currentCallable, callable $deprecatedCallable): mixed {
     // Normalize the version string when it's a dev version to the first point release of that minor. E.g. 10.2.x-dev

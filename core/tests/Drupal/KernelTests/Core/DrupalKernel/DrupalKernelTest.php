@@ -219,13 +219,13 @@ class DrupalKernelTest extends KernelTestBase {
    * This test runs in a separate process since it registers class loaders and
    * results in statics being set.
    *
+   * @param bool $value
+   *   The value to set class_loader_auto_detect to.
+   *
    * @runInSeparateProcess
    * @preserveGlobalState disabled
    * @covers ::boot
    * @dataProvider providerClassLoaderAutoDetect
-   *
-   * @param bool $value
-   *   The value to set class_loader_auto_detect to.
    */
   public function testClassLoaderAutoDetect($value): void {
     // Create a virtual file system containing items that should be

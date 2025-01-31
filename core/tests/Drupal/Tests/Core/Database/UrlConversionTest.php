@@ -474,12 +474,12 @@ class UrlConversionTest extends UnitTestCase {
   /**
    * Tests ::getConnectionInfoAsUrl() exception for invalid arguments.
    *
-   * @covers ::getConnectionInfoAsUrl
-   *
    * @param array $connection_options
    *   The database connection information.
    * @param string $expected_exception_message
    *   The expected exception message.
+   *
+   * @covers ::getConnectionInfoAsUrl
    *
    * @dataProvider providerInvalidArgumentGetConnectionInfoAsUrl
    */

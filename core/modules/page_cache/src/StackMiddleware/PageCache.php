@@ -183,8 +183,6 @@ class PageCache implements HttpKernelInterface {
   /**
    * Fetches a response from the backend and stores it in the cache.
    *
-   * @see drupal_page_header()
-   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object.
    * @param int $type
@@ -195,6 +193,8 @@ class PageCache implements HttpKernelInterface {
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.
+   *
+   * @see drupal_page_header()
    */
   protected function fetch(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE) {
     /** @var \Symfony\Component\HttpFoundation\Response $response */

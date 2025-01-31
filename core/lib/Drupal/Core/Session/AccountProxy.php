@@ -206,13 +206,13 @@ class AccountProxy implements AccountProxyInterface {
    * container into the AccountProxy. Thus it is necessary to retrieve the
    * entity type manager statically.
    *
-   * @see https://www.drupal.org/node/2430447
-   *
    * @param int $account_id
    *   The id of an account to load.
    *
    * @return \Drupal\Core\Session\AccountInterface|null
    *   An account or NULL if none is found.
+   *
+   * @see https://www.drupal.org/node/2430447
    */
   protected function loadUserEntity($account_id) {
     return \Drupal::entityTypeManager()->getStorage('user')->load($account_id);

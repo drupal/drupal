@@ -43,13 +43,6 @@ interface ConfigFactoryOverrideInterface {
    * - Deleting triggers ConfigCollectionEvents::DELETE_IN_COLLECTION.
    * - Renaming triggers ConfigCollectionEvents::RENAME_IN_COLLECTION.
    *
-   * @see \Drupal\Core\Config\ConfigCollectionInfo
-   * @see \Drupal\Core\Config\ConfigImporter::importConfig()
-   * @see \Drupal\Core\Config\ConfigInstaller::createConfiguration()
-   * @see \Drupal\Core\Config\ConfigCollectionEvents::SAVE_IN_COLLECTION
-   * @see \Drupal\Core\Config\ConfigCollectionEvents::DELETE_IN_COLLECTION
-   * @see \Drupal\Core\Config\ConfigCollectionEvents::RENAME_IN_COLLECTION
-   *
    * @param string $name
    *   The configuration object name.
    * @param string $collection
@@ -60,6 +53,13 @@ interface ConfigFactoryOverrideInterface {
    *   should be returned when the overrider does not use configuration
    *   collections. For example: a module that provides an overrider to avoid
    *   storing API keys in config would not use collections.
+   *
+   * @see \Drupal\Core\Config\ConfigCollectionInfo
+   * @see \Drupal\Core\Config\ConfigImporter::importConfig()
+   * @see \Drupal\Core\Config\ConfigInstaller::createConfiguration()
+   * @see \Drupal\Core\Config\ConfigCollectionEvents::SAVE_IN_COLLECTION
+   * @see \Drupal\Core\Config\ConfigCollectionEvents::DELETE_IN_COLLECTION
+   * @see \Drupal\Core\Config\ConfigCollectionEvents::RENAME_IN_COLLECTION
    */
   public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION);
 

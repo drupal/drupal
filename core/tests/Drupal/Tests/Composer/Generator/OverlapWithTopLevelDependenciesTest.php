@@ -30,10 +30,10 @@ class OverlapWithTopLevelDependenciesTest extends TestCase {
   /**
    * Tests top level and core-recommended dependencies do not overlap.
    *
-   * @dataProvider templateProjectPathProvider
-   *
    * @param string $template_project_path
    *   The path of the project template to test.
+   *
+   * @dataProvider templateProjectPathProvider
    */
   public function testOverlapWithTemplateProject($template_project_path): void {
     $root = dirname(__DIR__, 6);

@@ -83,12 +83,12 @@ class SubProcessWithSkipTest extends KernelTestBase {
   /**
    * Test use of skip_on_empty within sub_process.
    *
-   * @dataProvider providerTestSubProcessSkip
-   *
    * @param string $method
    *   The method to use with skip_on_empty (row or process).
    * @param array $expected_data
    *   The expected result of the migration.
+   *
+   * @dataProvider providerTestSubProcessSkip
    */
   public function testSubProcessSkip(string $method, array $expected_data): void {
     $definition = $this->getDefinition();

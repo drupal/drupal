@@ -179,8 +179,6 @@ class EntityRevisionTest extends UnitTestCase {
   /**
    * Helper method to create an entity revision destination with mock services.
    *
-   * @see \Drupal\Tests\migrate\Unit\Destination\EntityRevision
-   *
    * @param array $configuration
    *   Configuration for the destination.
    * @param string $plugin_id
@@ -190,6 +188,8 @@ class EntityRevisionTest extends UnitTestCase {
    *
    * @return \Drupal\Tests\migrate\Unit\destination\EntityRevision
    *   Mocked destination.
+   *
+   * @see \Drupal\Tests\migrate\Unit\Destination\EntityRevision
    */
   protected function getEntityRevisionDestination(array $configuration = [], $plugin_id = 'entity_revision', array $plugin_definition = []) {
     return new EntityRevision($configuration, $plugin_id, $plugin_definition,

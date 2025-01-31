@@ -207,13 +207,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * Retrieves the hash of the source identifier values.
    *
-   * @internal
-   *
    * @param array $source_id_values
    *   The source identifiers
    *
    * @return string
    *   A hash containing the hashed values of the source identifiers.
+   *
+   * @internal
    */
   public function getSourceIdsHash(array $source_id_values) {
     // When looking up the destination ID we require an array with both the

@@ -79,16 +79,15 @@ class FormatDateTest extends MigrateProcessTestCase {
   /**
    * Tests transformation.
    *
-   * @covers ::transform
-   *
-   * @dataProvider datesDataProvider
-   *
    * @param array $configuration
    *   The configuration of the migration process plugin.
    * @param string $value
    *   The source value for the migration process plugin.
    * @param string $expected
    *   The expected value of the migration process plugin.
+   *
+   * @covers ::transform
+   * @dataProvider datesDataProvider
    */
   public function testTransform($configuration, $value, $expected): void {
     $this->plugin = new FormatDate($configuration, 'test_format_date', []);

@@ -208,15 +208,15 @@ EOF;
   /**
    * Tests multibyte truncate bytes.
    *
-   * @dataProvider providerTestTruncateBytes
-   * @covers ::truncateBytes
-   *
    * @param string $text
    *   The string to truncate.
    * @param int $max_length
    *   The upper limit on the returned string length.
    * @param string $expected
    *   The expected return from Unicode::truncateBytes().
+   *
+   * @dataProvider providerTestTruncateBytes
+   * @covers ::truncateBytes
    */
   public function testTruncateBytes($text, $max_length, $expected): void {
     $this->assertEquals($expected, Unicode::truncateBytes($text, $max_length), 'The string was not correctly truncated.');
@@ -243,15 +243,15 @@ EOF;
   /**
    * Tests UTF-8 validation.
    *
-   * @dataProvider providerTestValidateUtf8
-   * @covers ::validateUtf8
-   *
    * @param string $text
    *   The text to validate.
    * @param bool $expected
    *   The expected return value from Unicode::validateUtf8().
    * @param string $message
    *   The message to display on failure.
+   *
+   * @dataProvider providerTestValidateUtf8
+   * @covers ::validateUtf8
    */
   public function testValidateUtf8($text, $expected, $message): void {
     $this->assertEquals($expected, Unicode::validateUtf8($text), $message);
@@ -283,15 +283,15 @@ EOF;
   /**
    * Tests UTF-8 conversion.
    *
-   * @dataProvider providerTestConvertToUtf8
-   * @covers ::convertToUtf8
-   *
    * @param string $data
    *   The data to be converted.
    * @param string $encoding
    *   The encoding the data is in.
    * @param string|bool $expected
    *   The expected result.
+   *
+   * @dataProvider providerTestConvertToUtf8
+   * @covers ::convertToUtf8
    */
   public function testConvertToUtf8($data, $encoding, $expected): void {
     $this->assertEquals($expected, Unicode::convertToUtf8($data, $encoding));

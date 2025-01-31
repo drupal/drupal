@@ -28,13 +28,13 @@ interface SessionConfigurationInterface {
   /**
    * Returns a list of options suitable for passing to the session storage.
    *
-   * @see \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage::__construct()
-   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
    * @return array
    *   An associative array of session ini settings.
+   *
+   * @see \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage::__construct()
    */
   public function getOptions(Request $request);
 

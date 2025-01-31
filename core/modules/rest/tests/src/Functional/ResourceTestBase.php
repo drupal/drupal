@@ -231,14 +231,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * (Should be called before sending a well-formed request.)
    *
-   * @see \GuzzleHttp\ClientInterface::request()
-   *
    * @param string $method
    *   HTTP method.
    * @param \Drupal\Core\Url $url
    *   URL to request.
    * @param array $request_options
    *   Request options to apply.
+   *
+   * @see \GuzzleHttp\ClientInterface::request()
    */
   abstract protected function assertNormalizationEdgeCases($method, Url $url, array $request_options);
 
@@ -247,14 +247,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * (Should be called before sending a well-formed request.)
    *
-   * @see \GuzzleHttp\ClientInterface::request()
-   *
    * @param string $method
    *   HTTP method.
    * @param \Drupal\Core\Url $url
    *   URL to request.
    * @param array $request_options
    *   Request options to apply.
+   *
+   * @see \GuzzleHttp\ClientInterface::request()
    */
   abstract protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options);
 

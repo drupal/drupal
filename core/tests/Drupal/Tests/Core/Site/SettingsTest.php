@@ -161,9 +161,6 @@ class SettingsTest extends UnitTestCase {
    * or provider. This test is only for the general deprecated settings API
    * itself.
    *
-   * @see self::testRealDeprecatedSettings()
-   * @see self::providerTestRealDeprecatedSettings()
-   *
    * @param string[] $settings_config
    *   Array of settings to put in the settings.php file for testing.
    * @param string $setting_name
@@ -179,6 +176,9 @@ class SettingsTest extends UnitTestCase {
    * @covers ::initialize
    *
    * @group legacy
+   *
+   * @see self::testRealDeprecatedSettings()
+   * @see self::providerTestRealDeprecatedSettings()
    */
   public function testFakeDeprecatedSettings(array $settings_config, string $setting_name, string $expected_value, bool $expect_deprecation_message = TRUE): void {
 

@@ -113,15 +113,15 @@ class SessionConfiguration implements SessionConfigurationInterface {
    * The Set-Cookie response header and its domain attribute are defined in RFC
    * 2109, RFC 2965 and RFC 6265 each one superseding the previous version.
    *
-   * @see http://tools.ietf.org/html/rfc2109
-   * @see http://tools.ietf.org/html/rfc2965
-   * @see http://tools.ietf.org/html/rfc6265
-   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
    *
    * @return string|null
    *   The session cookie domain, or NULL if the calculated value is invalid.
+   *
+   * @see http://tools.ietf.org/html/rfc2109
+   * @see http://tools.ietf.org/html/rfc2965
+   * @see http://tools.ietf.org/html/rfc6265
    */
   protected function getCookieDomain(Request $request) {
     if (isset($this->options['cookie_domain'])) {

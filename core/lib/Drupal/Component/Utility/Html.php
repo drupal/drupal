@@ -86,8 +86,6 @@ class Html {
    * Link below shows the syntax for valid CSS identifiers (including element
    * names, classes, and IDs in selectors).
    *
-   * @see https://www.w3.org/TR/CSS21/syndata.html#characters
-   *
    * @param string $identifier
    *   The identifier to clean.
    * @param array $filter
@@ -95,6 +93,8 @@ class Html {
    *
    * @return string
    *   The cleaned identifier.
+   *
+   * @see https://www.w3.org/TR/CSS21/syndata.html#characters
    */
   public static function cleanCssIdentifier(
     $identifier,

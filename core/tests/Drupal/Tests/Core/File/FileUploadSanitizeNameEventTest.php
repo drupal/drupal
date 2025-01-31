@@ -63,12 +63,12 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
   /**
    * Test event construction.
    *
+   * @param string $filename
+   *   The filename to test
+   *
    * @dataProvider provideFilenames
    * @covers ::__construct
    * @covers ::getFilename
-   *
-   * @param string $filename
-   *   The filename to test
    */
   public function testEventFilenameFunctions(string $filename): void {
     $event = new FileUploadSanitizeNameEvent($filename, '');

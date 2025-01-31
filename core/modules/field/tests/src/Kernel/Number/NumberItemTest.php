@@ -128,8 +128,6 @@ class NumberItemTest extends FieldKernelTestBase {
   /**
    * Tests constraints on numeric item fields.
    *
-   * @dataProvider dataNumberFieldSettingsProvider
-   *
    * @param string $type
    *   The field type.
    * @param int|float $min
@@ -144,6 +142,8 @@ class NumberItemTest extends FieldKernelTestBase {
    *   The expected constraint violation message.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
+   *
+   * @dataProvider dataNumberFieldSettingsProvider
    */
   public function testConstraints($type, $min, $max, $value, $expect_constraints, $expected_constraint_message = ''): void {
     $field = FieldConfig::loadByName('entity_test', 'entity_test', 'field_' . $type);

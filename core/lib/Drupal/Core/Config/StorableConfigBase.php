@@ -129,13 +129,13 @@ abstract class StorableConfigBase extends ConfigBase {
    * configuration storage before any changes. If this is a new configuration
    * object it will be an empty array.
    *
-   * @see \Drupal\Core\Config\Config::get()
-   *
    * @param string $key
    *   A string that maps to a key within the configuration data.
    *
    * @return mixed
    *   The data that was requested.
+   *
+   * @see \Drupal\Core\Config\Config::get()
    */
   public function getOriginal($key = '') {
     $original_data = $this->originalData;

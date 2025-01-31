@@ -24,10 +24,10 @@ class ArgumentTransformTermTest extends TaxonomyTestBase {
   /**
    * Tests term argument transformation of hyphens and spaces.
    *
-   * @dataProvider termArgumentTransformationProvider
-   *
    * @param string $name
    *   The name of the taxonomy term to use for the test.
+   *
+   * @dataProvider termArgumentTransformationProvider
    */
   public function testTermArgumentTransformation($name): void {
     /** @var \Drupal\taxonomy\TermInterface $term */

@@ -30,7 +30,6 @@ interface AssetResolverInterface {
    * - CSS_STATE
    * - CSS_THEME
    *
-   * @see https://www.drupal.org/node/1887918#separate-concerns
    * This ensures proper cascading of styles so themes can easily override
    * module styles through CSS selectors.
    *
@@ -51,6 +50,8 @@ interface AssetResolverInterface {
    *
    * @return array
    *   A (possibly optimized) collection of CSS assets.
+   *
+   * @see https://www.drupal.org/node/1887918#separate-concerns
    */
   public function getCssAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL);
 

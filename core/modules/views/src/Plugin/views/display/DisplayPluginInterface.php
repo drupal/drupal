@@ -400,13 +400,13 @@ interface DisplayPluginInterface {
   /**
    * #pre_render callback for view display rendering.
    *
-   * @see self::render()
-   *
    * @param array $element
    *   The element to #pre_render
    *
    * @return array
    *   The processed element.
+   *
+   * @see self::render()
    */
   public function elementPreRender(array $element);
 

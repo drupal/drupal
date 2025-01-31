@@ -18,14 +18,14 @@ class BlockBaseTest extends UnitTestCase {
   /**
    * Tests the machine name suggestion.
    *
-   * @see \Drupal\Core\Block\BlockBase::getMachineNameSuggestion()
-   *
    * @param string $label
    *   The block label.
    * @param string $expected
    *   The expected machine name.
    *
    * @dataProvider providerTestGetMachineNameSuggestion
+   *
+   * @see \Drupal\Core\Block\BlockBase::getMachineNameSuggestion()
    */
   public function testGetMachineNameSuggestion($label, $expected): void {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');

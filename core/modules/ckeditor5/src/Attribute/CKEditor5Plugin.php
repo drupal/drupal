@@ -38,8 +38,6 @@ class CKEditor5Plugin extends Plugin {
    * Force YAML-defined plugin definitions to be parsed by the attributes, to
    * ensure consistent handling of defaults.
    *
-   * @see \Drupal\Component\Plugin\Discovery\AttributeBridgeDecorator::getDefinitions()
-   *
    * @param string $id
    *   The plugin ID.
    * @param array|\Drupal\ckeditor5\Attribute\CKEditor5AspectsOfCKEditor5Plugin|null $ckeditor5
@@ -50,6 +48,8 @@ class CKEditor5Plugin extends Plugin {
    *   set by deriver.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
+   *
+   * @see \Drupal\Component\Plugin\Discovery\AttributeBridgeDecorator::getDefinitions()
    */
   public function __construct(
     public readonly string $id,

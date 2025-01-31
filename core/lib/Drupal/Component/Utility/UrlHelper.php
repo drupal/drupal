@@ -71,13 +71,13 @@ class UrlHelper {
    * compress a string into a URL-safe query parameter which will be shorter
    * than if it was used directly.
    *
-   * @see \Drupal\Component\Utility\UrlHelper::uncompressQueryParameter()
-   *
    * @param string $data
    *   The data to compress.
    *
    * @return string
    *   The data compressed into a URL-safe string.
+   *
+   * @see \Drupal\Component\Utility\UrlHelper::uncompressQueryParameter()
    */
   public static function compressQueryParameter(string $data): string {
     // Use 'base64url' encoding. Note that the '=' sign is only used for padding
@@ -90,8 +90,6 @@ class UrlHelper {
   /**
    * Takes a compressed parameter and converts it back to the original.
    *
-   * @see \Drupal\Component\Utility\UrlHelper::compressQueryParameter()
-   *
    * @param string $compressed
    *   A string as compressed by
    *   \Drupal\Component\Utility\UrlHelper::compressQueryParameter().
@@ -99,6 +97,8 @@ class UrlHelper {
    * @return string
    *   The uncompressed data, or the original string if it cannot be
    *   uncompressed.
+   *
+   * @see \Drupal\Component\Utility\UrlHelper::compressQueryParameter()
    */
   public static function uncompressQueryParameter(string $compressed): string {
     // Because this comes from user data, suppress the PHP warning that

@@ -16,14 +16,14 @@ class NormalizerBaseTest extends UnitTestCase {
   /**
    * Tests the supportsNormalization method.
    *
-   * @dataProvider providerTestSupportsNormalization
-   *
    * @param bool $expected_return
    *   The expected boolean return value from supportNormalization.
    * @param mixed $data
    *   The data passed to supportsNormalization.
    * @param string $supported_types
    *   (optional) The supported interface or class to set on the normalizer.
+   *
+   * @dataProvider providerTestSupportsNormalization
    */
   public function testSupportsNormalization($expected_return, $data, $supported_types = NULL): void {
     $normalizer_base = new TestNormalizerBase();

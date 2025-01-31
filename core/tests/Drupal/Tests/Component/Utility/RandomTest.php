@@ -202,14 +202,14 @@ class RandomTest extends TestCase {
   /**
    * Callback for random string validation.
    *
-   * @see \Drupal\Component\Utility\Random::name()
-   * @see \Drupal\Tests\Component\Utility\RandomTest::testRandomStringValidator()
-   *
    * @param string $string
    *   The random string to validate.
    *
    * @return bool
    *   TRUE if the random string is valid, FALSE if not.
+   *
+   * @see \Drupal\Component\Utility\Random::name()
+   * @see \Drupal\Tests\Component\Utility\RandomTest::testRandomStringValidator()
    */
   public function _RandomStringValidate($string) {
     // Return FALSE for the first generated string and any string that is the

@@ -44,15 +44,15 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
   /**
    * Tests that removeRoute() removes routes when the module is not enabled.
    *
-   * @dataProvider providerTestRemoveRoute
-   * @covers ::onAlterRoutes
-   *
    * @param string $route_name
    *   The machine name for the route.
    * @param array $requirements
    *   An array of requirements to use for the route.
    * @param bool $removed
    *   Whether or not the route is expected to be removed from the collection.
+   *
+   * @dataProvider providerTestRemoveRoute
+   * @covers ::onAlterRoutes
    */
   public function testRemoveRoute($route_name, array $requirements, $removed): void {
     $collection = new RouteCollection();

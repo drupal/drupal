@@ -381,10 +381,6 @@ function show(&$element) {
  * longer exist. All following hook_rebuild() operations must be based on fresh
  * and current system data. All modules must be able to rely on this contract.
  *
- * @see \Drupal\Core\Cache\CacheHelper::getBins()
- * @see hook_cache_flush()
- * @see hook_rebuild()
- *
  * This function also resets the theme, which means it is not initialized
  * anymore and all previously added JavaScript and CSS is gone. Normally, this
  * function is called as an end-of-POST-request operation that is followed by a
@@ -394,17 +390,21 @@ function show(&$element) {
  * convenience, this function automatically re-initializes the maintenance theme
  * if it was initialized before.
  *
- * @todo Try to clear page/JS/CSS caches last, so cached pages can still be
- *   served during this possibly long-running operation. (Conflict on bootstrap
- *   cache though.)
- * @todo Add a global lock to ensure that caches are not primed in concurrent
- *   requests.
- *
  * @param \Drupal\Core\DrupalKernel|array $kernel
  *   (optional) The Drupal Kernel. It is the caller's responsibility to rebuild
  *   the container if this is passed in. Sometimes drupal_flush_all_caches is
  *   used as a batch operation so $kernel will be an array, in this instance it
  *   will be treated as if it is NULL.
+ *
+ * @see \Drupal\Core\Cache\CacheHelper::getBins()
+ * @see hook_cache_flush()
+ * @see hook_rebuild()
+ *
+ * @todo Try to clear page/JS/CSS caches last, so cached pages can still be
+ *   served during this possibly long-running operation. (Conflict on bootstrap
+ *   cache though.)
+ * @todo Add a global lock to ensure that caches are not primed in concurrent
+ *   requests.
  */
 function drupal_flush_all_caches($kernel = NULL) {
   // This is executed based on old/previously known information if $kernel is

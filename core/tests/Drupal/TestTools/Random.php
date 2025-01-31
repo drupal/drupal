@@ -65,13 +65,13 @@ abstract class Random {
   /**
    * Callback for random string validation.
    *
-   * @see \Drupal\Component\Utility\Random::string()
-   *
    * @param string $string
    *   The random string to validate.
    *
    * @return bool
    *   TRUE if the random string is valid, FALSE if not.
+   *
+   * @see \Drupal\Component\Utility\Random::string()
    */
   public static function stringValidate(string $string): bool {
     // Consecutive spaces causes issues for link validation.

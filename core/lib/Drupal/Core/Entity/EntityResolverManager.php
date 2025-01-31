@@ -58,14 +58,14 @@ class EntityResolverManager {
    * and method that would be used. This is not possible for the service:method
    * notation as the runtime container does not allow static introspection.
    *
-   * @see \Drupal\Core\Controller\ControllerResolver::getControllerFromDefinition()
-   * @see \Drupal\Core\Controller\ClassResolver::getInstanceFromDefinition()
-   *
    * @param array $defaults
    *   The default values provided by the route.
    *
    * @return string|null
    *   Returns the controller class, otherwise NULL.
+   *
+   * @see \Drupal\Core\Controller\ControllerResolver::getControllerFromDefinition()
+   * @see \Drupal\Core\Controller\ClassResolver::getInstanceFromDefinition()
    */
   protected function getControllerClass(array $defaults) {
     $controller = NULL;

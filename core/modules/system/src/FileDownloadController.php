@@ -41,8 +41,6 @@ class FileDownloadController extends ControllerBase {
    * file exists but no modules responded an AccessDeniedHttpException will be
    * thrown. If the file does not exist a NotFoundHttpException will be thrown.
    *
-   * @see hook_file_download()
-   *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    * @param string $scheme
@@ -55,6 +53,8 @@ class FileDownloadController extends ControllerBase {
    *   Thrown when the requested file does not exist.
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when the user does not have access to the file.
+   *
+   * @see hook_file_download()
    */
   public function download(Request $request, $scheme = 'private') {
     $target = $request->query->get('file');

@@ -79,12 +79,12 @@ class FileCopyTest extends FileTestBase {
   /**
    * Tests successful file reuse.
    *
-   * @dataProvider providerSuccessfulReuse
-   *
    * @param string $source_path
    *   Source path to copy from.
    * @param string $destination_path
    *   The destination path to copy to.
+   *
+   * @dataProvider providerSuccessfulReuse
    */
   public function testSuccessfulReuse($source_path, $destination_path): void {
     $file_reuse = $this->doTransform($source_path, $destination_path);

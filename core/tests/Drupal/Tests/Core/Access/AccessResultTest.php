@@ -909,16 +909,15 @@ class AccessResultTest extends UnitTestCase {
   /**
    * Tests allowedIfHasPermissions().
    *
-   * @covers ::allowedIfHasPermissions
-   *
-   * @dataProvider providerTestAllowedIfHasPermissions
-   *
    * @param string[] $permissions
    *   The permissions to check for.
    * @param string $conjunction
    *   The conjunction to use when checking for permission. 'AND' or 'OR'.
    * @param \Drupal\Core\Access\AccessResult $expected_access
    *   The expected access check result.
+   *
+   * @covers ::allowedIfHasPermissions
+   * @dataProvider providerTestAllowedIfHasPermissions
    */
   public function testAllowedIfHasPermissions($permissions, $conjunction, AccessResult $expected_access): void {
     $account = $this->createMock('\Drupal\Core\Session\AccountInterface');
