@@ -145,11 +145,11 @@ class Datetime extends DateElementBase {
    *
    * Required settings:
    *   - #default_value: A DrupalDateTime object, adjusted to the proper local
-   *     timezone. Converting a date stored in the database from UTC to the local
-   *     zone and converting it back to UTC before storing it is not handled here.
-   *     This element accepts a date as the default value, and then converts the
-   *     user input strings back into a new date object on submission. No timezone
-   *     adjustment is performed.
+   *     timezone. Converting a date stored in the database from UTC to the
+   *     local zone and converting it back to UTC before storing it is not
+   *     handled here. This element accepts a date as the default value, and
+   *     then converts the user input strings back into a new date object on
+   *     submission. No timezone adjustment is performed.
    * Optional properties include:
    *   - #date_date_format: A date format string that describes the format that
    *     should be displayed to the end user for the date. When using HTML5
@@ -179,7 +179,8 @@ class Datetime extends DateElementBase {
    *     right HTML5 format for the chosen element if an HTML5 element is used,
    *     otherwise defaults to DateFormat::load('html_time')->getPattern().
    *   - #date_time_callbacks: An array of optional callbacks for the time
-   *     element. Can be used to add a jQuery timepicker or an 'All day' checkbox.
+   *     element. Can be used to add a jQuery timepicker or an 'All day'
+   *     checkbox.
    *   - #date_year_range: A description of the range of years to allow, like
    *     '1900:2050', '-3:+3' or '2000:+3', where the first value describes the
    *     earliest year and the second the latest year in the range. A year

@@ -92,10 +92,10 @@ class BlockContentHooks {
    * 'reusable' is explicitly set.
    *
    * Block_content entities that are not reusable should by default not be
-   * selectable as entity reference values. A module can still create an instance
-   * of \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
-   * that will allow selection of non-reusable blocks by explicitly setting
-   * a condition on the 'reusable' field.
+   * selectable as entity reference values. A module can still create an
+   * instance of \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
+   * that will allow selection of non-reusable blocks by explicitly setting a
+   * condition on the 'reusable' field.
    *
    * @see \Drupal\block_content\BlockContentAccessControlHandler
    */

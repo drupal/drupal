@@ -55,8 +55,8 @@ class ContextualHooks {
   /**
    * Implements hook_page_attachments().
    *
-   * Adds the drupal.contextual-links library to the page for any user who has the
-   * 'access contextual links' permission.
+   * Adds the drupal.contextual-links library to the page for any user who has
+   * the 'access contextual links' permission.
    *
    * @see contextual_preprocess()
    */

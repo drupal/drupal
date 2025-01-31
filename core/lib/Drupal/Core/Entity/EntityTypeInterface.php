@@ -380,9 +380,9 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * Gets the name of the default administrative permission.
    *
-   * The default \Drupal\Core\Entity\EntityAccessControlHandler class checks this
-   * permission for all operations in its checkAccess() method. Entities with
-   * more complex permissions can extend this class to do their own access
+   * The default \Drupal\Core\Entity\EntityAccessControlHandler class checks
+   * this permission for all operations in its checkAccess() method. Entities
+   * with more complex permissions can extend this class to do their own access
    * checks.
    *
    * @return string|bool

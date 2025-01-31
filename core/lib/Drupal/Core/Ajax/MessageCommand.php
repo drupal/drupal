@@ -9,7 +9,9 @@ use Drupal\Core\Asset\AttachedAssets;
 /**
  * AJAX command for a JavaScript Drupal.message() call.
  *
- * AJAX command that allows you to add messages from an Ajax response. The command will create a new Drupal.Message() object and call its addMessage() method.
+ * AJAX command that allows you to add messages from an Ajax response. The
+ * command will create a new Drupal.Message() object and call its addMessage()
+ * method.
  *
  * Usage examples:
  * Here are examples of how to suppress announcements:

@@ -556,8 +556,8 @@ interface DisplayPluginInterface {
   /**
    * Is the output of the view empty.
    *
-   * If a view has no result and neither the empty, nor the footer nor the header
-   * does show anything return FALSE.
+   * If a view has no result and neither the empty, nor the footer nor the
+   * header does show anything return FALSE.
    *
    * @return bool
    *   Returns TRUE if the output is empty, else FALSE.

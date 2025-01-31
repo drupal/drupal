@@ -15,8 +15,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * The container is built by the kernel and passed in to this class which stores
  * it statically. The container always contains the services from
- * \Drupal\Core\CoreServiceProvider, the service providers of enabled modules and any other
- * service providers defined in $GLOBALS['conf']['container_service_providers'].
+ * \Drupal\Core\CoreServiceProvider, the service providers of enabled modules
+ * and any other service providers defined in
+ * $GLOBALS['conf']['container_service_providers'].
  *
  * This class exists only to support legacy code that cannot be dependency
  * injected. If your code needs it, consider refactoring it to be object
@@ -479,8 +480,9 @@ class Drupal {
    * Use this to store machine-generated data, local to a specific environment
    * that does not need deploying and does not need human editing; for example,
    * the last time cron was run. Data which needs to be edited by humans and
-   * needs to be the same across development, production, etc. environments
-   * (for example, the system maintenance message) should use \Drupal::config() instead.
+   * needs to be the same across development, production, etc. environments (for
+   * example, the system maintenance message) should use \Drupal::config()
+   * instead.
    *
    * @return \Drupal\Core\State\StateInterface
    */
@@ -616,10 +618,10 @@ class Drupal {
   /**
    * Returns the CSRF token manager service.
    *
-   * The generated token is based on the session ID of the current user. Normally,
-   * anonymous users do not have a session, so the generated token will be
-   * different on every page request. To generate a token for users without a
-   * session, manually start a session prior to calling this function.
+   * The generated token is based on the session ID of the current user.
+   * Normally, anonymous users do not have a session, so the generated token
+   * will be different on every page request. To generate a token for users
+   * without a session, manually start a session prior to calling this function.
    *
    * @return \Drupal\Core\Access\CsrfTokenGenerator
    *   The CSRF token manager.

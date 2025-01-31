@@ -145,18 +145,18 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Build a condition to match a table name against a standard information_schema.
    *
-   * The information_schema is a SQL standard that provides information about the
-   * database server and the databases, schemas, tables, columns and users within
-   * it. This makes information_schema a useful tool to use across the drupal
-   * database drivers and is used by a few different functions. The function below
-   * describes the conditions to be meet when querying information_schema.tables
-   * for drupal tables or information associated with drupal tables. Even though
-   * this is the standard method, not all databases follow standards and so this
-   * method should be overwritten by a database driver if the database provider
-   * uses alternate methods. Because information_schema.tables is used in a few
-   * different functions, a database driver will only need to override this function
-   * to make all the others work. For example see
-   * core/includes/databases/mysql/schema.inc.
+   * The information_schema is a SQL standard that provides information about
+   * the database server and the databases, schemas, tables, columns and users
+   * within it. This makes information_schema a useful tool to use across the
+   * drupal database drivers and is used by a few different functions. The
+   * function below describes the conditions to be meet when querying
+   * information_schema.tables for drupal tables or information associated with
+   * drupal tables. Even though this is the standard method, not all databases
+   * follow standards and so this method should be overwritten by a database
+   * driver if the database provider uses alternate methods. Because
+   * information_schema.tables is used in a few different functions, a database
+   * driver will only need to override this function to make all the others
+   * work. For example see core/includes/databases/mysql/schema.inc.
    *
    * @param string $table_name
    *   The name of the table in question.
@@ -286,8 +286,9 @@ abstract class Schema implements PlaceholderInterface {
    * Returns a mapping of Drupal schema field names to DB-native field types.
    *
    * Because different field types do not map 1:1 between databases, Drupal has
-   * its own normalized field type names. This function returns a driver-specific
-   * mapping table from Drupal names to the native names for each database.
+   * its own normalized field type names. This function returns a
+   * driver-specific mapping table from Drupal names to the native names for
+   * each database.
    *
    * @return array
    *   An array of Schema API field types to driver-specific field types.
@@ -587,9 +588,9 @@ abstract class Schema implements PlaceholderInterface {
    *
    * The reasons for this are due to the different database engines:
    *
-   * On PostgreSQL, changing a field definition involves adding a new field
-   * and dropping an old one which* causes any indices, primary keys and
-   * sequences (from serial-type fields) that use the changed field to be dropped.
+   * On PostgreSQL, changing a field definition involves adding a new field and
+   * dropping an old one which* causes any indices, primary keys and sequences
+   * (from serial-type fields) that use the changed field to be dropped.
    *
    * On MySQL, all type 'serial' fields must be part of at least one key
    * or index as soon as they are created. You cannot use
@@ -677,8 +678,8 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Return an array of field names from an array of key/index column specifiers.
    *
-   * This is usually an identity function but if a key/index uses a column prefix
-   * specification, this function extracts just the name.
+   * This is usually an identity function but if a key/index uses a column
+   * prefix specification, this function extracts just the name.
    *
    * @param array $fields
    *   An array of key/index column specifiers.

@@ -24,12 +24,12 @@ use Drupal\Core\Access\AccessResult;
  * @section sec_requirements Basic requirements
  * To define a block in a module you need to:
  * - Define a Block plugin by creating a new class that implements the
- *   \Drupal\Core\Block\BlockPluginInterface, in namespace Plugin\Block under your
- *   module namespace. For more information about creating plugins, see the
+ *   \Drupal\Core\Block\BlockPluginInterface, in namespace Plugin\Block under
+ *   your module namespace. For more information about creating plugins, see the
  *   @link plugin_api Plugin API topic. @endlink
- * - Usually you will want to extend the \Drupal\Core\Block\BlockBase class, which
- *   provides a common configuration form and utility methods for getting and
- *   setting configuration in the block configuration entity.
+ * - Usually you will want to extend the \Drupal\Core\Block\BlockBase class,
+ *   which provides a common configuration form and utility methods for getting
+ *   and setting configuration in the block configuration entity.
  * - Block plugins use the annotations defined by
  *   \Drupal\Core\Block\Annotation\Block. See the
  *   @link annotation Annotations topic @endlink for more information about

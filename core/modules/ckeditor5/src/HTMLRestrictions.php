@@ -617,8 +617,8 @@ final class HTMLRestrictions {
       // - An array value for a given tag/attribute provides an array keyed by
       //   specific attributes/attribute values with boolean values determining
       //   if they are allowed or not.
-      // - A value of TRUE for a given tag/attribute permits all attributes/attribute
-      //   values for that tag/attribute.
+      // - A value of TRUE for a given tag/attribute permits all
+      //   attributes/attribute values for that tag/attribute.
       // @see \Drupal\filter\Entity\FilterFormat::getHtmlRestrictions()
       function ($value, string $tag) use ($other) {
         // If this HTML restrictions object contains a tag that the other did

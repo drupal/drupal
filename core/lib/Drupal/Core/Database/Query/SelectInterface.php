@@ -34,9 +34,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Returns a reference to the expressions array for this query.
    *
-   * Because this method returns by reference, alter hooks may edit the expressions
-   * array directly to make their changes. If just adding expressions, however, the
-   * use of addExpression() is preferred.
+   * Because this method returns by reference, alter hooks may edit the
+   * expressions array directly to make their changes. If just adding
+   * expressions, however, the use of addExpression() is preferred.
    *
    * Note that this method must be called by reference as well:
    *
@@ -328,9 +328,9 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Join against another table in the database.
    *
-   * This method does the "hard" work of queueing up a table to be joined against.
-   * In some cases, that may include dipping into the Schema API to find the necessary
-   * fields on which to join.
+   * This method does the "hard" work of queueing up a table to be joined
+   * against. In some cases, that may include dipping into the Schema API to
+   * find the necessary fields on which to join.
    *
    * @param string $type
    *   The type of join. Typically one of INNER, LEFT OUTER, and RIGHT OUTER.
@@ -362,8 +362,8 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Orders the result set by a given field.
    *
-   * If called multiple times, the query will order by each specified field in the
-   * order this method is called.
+   * If called multiple times, the query will order by each specified field in
+   * the order this method is called.
    *
    * If the query uses DISTINCT or GROUP BY conditions, fields or expressions
    * that are used for the order must be selected to be compatible with some
@@ -504,8 +504,8 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * Helper function to build most common HAVING conditional clauses.
    *
    * This method can take a variable number of parameters. If called with two
-   * parameters, they are taken as $field and $value with $operator having a value
-   * of IN if $value is an array and = otherwise.
+   * parameters, they are taken as $field and $value with $operator having a
+   * value of IN if $value is an array and = otherwise.
    *
    * @param string $field
    *   The name of the field to check. If you would like to add a more complex

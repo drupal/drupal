@@ -83,8 +83,8 @@ class ViewsHooks {
   /**
    * Implements hook_theme().
    *
-   * Register views theming functions and those that are defined via views plugin
-   * definitions.
+   * Register views theming functions and those that are defined via views
+   * plugin definitions.
    */
   #[Hook('theme')]
   public function theme($existing, $type, $theme, $path) : array {

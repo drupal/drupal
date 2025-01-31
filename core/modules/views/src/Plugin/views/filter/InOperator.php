@@ -14,7 +14,8 @@ use Drupal\Core\Form\OptGroup;
  * Filter to handle matching of multiple options selectable via checkboxes.
  *
  * Definition items:
- * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
+ * - options callback: The function to call in order to generate the value
+ *   options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
  *
  * @ingroup views_filter_handlers

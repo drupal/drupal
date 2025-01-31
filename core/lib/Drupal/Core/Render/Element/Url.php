@@ -59,7 +59,8 @@ class Url extends FormElementBase {
   /**
    * Form element validation handler for #type 'url'.
    *
-   * Note that #maxlength and #required is validated by _form_validate() already.
+   * Note that #maxlength and #required is validated by _form_validate()
+   * already.
    */
   public static function validateUrl(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = trim($element['#value']);

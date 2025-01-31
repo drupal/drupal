@@ -56,8 +56,8 @@ class Select extends Query implements SelectInterface {
   /**
    * The fields by which to order this query.
    *
-   * This is an associative array. The keys are the fields to order, and the value
-   * is the direction to order, either ASC or DESC.
+   * This is an associative array. The keys are the fields to order, and the
+   * value is the direction to order, either ASC or DESC.
    *
    * @var array
    */

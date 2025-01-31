@@ -17,9 +17,9 @@ abstract class DateElementBase extends FormElementBase {
    * Handles a string like -3:+3 or 2001:2010 to describe a dynamic range of
    * minimum and maximum years to use in a date selector.
    *
-   * Centers the range around the current year, if any, but expands it far enough
-   * so it will pick up the year value in the field in case the value in the field
-   * is outside the initial range.
+   * Centers the range around the current year, if any, but expands it far
+   * enough so it will pick up the year value in the field in case the value in
+   * the field is outside the initial range.
    *
    * @param string $string
    *   A min and max year string like '-3:+1' or '2000:2010' or '2000:+3'.

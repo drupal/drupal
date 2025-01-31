@@ -97,8 +97,8 @@ class SettingsTrayHooks {
   /**
    * Implements hook_toolbar_alter().
    *
-   * Alters the 'contextual' toolbar tab if it exists (meaning the user is allowed
-   * to use contextual links) and if they can administer blocks.
+   * Alters the 'contextual' toolbar tab if it exists (meaning the user is
+   * allowed to use contextual links) and if they can administer blocks.
    *
    * @todo Remove the "administer blocks" requirement in
    *   https://www.drupal.org/node/2822965.
@@ -128,7 +128,8 @@ class SettingsTrayHooks {
   /**
    * Implements hook_block_alter().
    *
-   * Ensures every block plugin definition has an 'settings_tray' form specified.
+   * Ensures every block plugin definition has an 'settings_tray' form
+   * specified.
    *
    * @see \Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
    */

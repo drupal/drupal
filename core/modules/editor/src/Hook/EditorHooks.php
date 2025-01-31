@@ -57,8 +57,8 @@ class EditorHooks {
   /**
    * Implements hook_menu_links_discovered_alter().
    *
-   * Rewrites the menu entries for filter module that relate to the configuration
-   * of text editors.
+   * Rewrites the menu entries for filter module that relate to the
+   * configuration of text editors.
    */
   #[Hook('menu_links_discovered_alter')]
   public function menuLinksDiscoveredAlter(array &$links): void {

@@ -45,8 +45,8 @@ class DrupalKernelTest extends KernelTestBase {
    * Build a kernel for testings.
    *
    * Because the bootstrap is in DrupalKernel::boot and that involved loading
-   * settings from the filesystem we need to go to extra lengths to build a kernel
-   * for testing.
+   * settings from the filesystem we need to go to extra lengths to build a
+   * kernel for testing.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A request object to use in booting the kernel.

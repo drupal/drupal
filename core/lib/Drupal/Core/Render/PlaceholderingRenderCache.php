@@ -53,7 +53,8 @@ class PlaceholderingRenderCache extends RenderCache {
    * 1. when rendering, cache write, but auto-placeholdered
    * 2. when rendering placeholders, cache read
    *
-   * Scenario C. The double rendering for an uncacheable element would happen because:
+   * Scenario C. The double rendering for an uncacheable element would happen
+   * because:
    * 1. when rendering, not cacheable, but auto-placeholdered
    * 2. when rendering placeholders, rendered again
    *

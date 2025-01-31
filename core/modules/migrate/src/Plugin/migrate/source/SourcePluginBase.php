@@ -549,8 +549,8 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
   /**
    * The current value of the high water mark.
    *
-   * The high water mark defines a timestamp stating the time the import was last
-   * run. If the mark is set, only content with a higher timestamp will be
+   * The high water mark defines a timestamp stating the time the import was
+   * last run. If the mark is set, only content with a higher timestamp will be
    * imported.
    *
    * @return int|null

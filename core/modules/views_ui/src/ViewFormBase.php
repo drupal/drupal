@@ -79,8 +79,8 @@ abstract class ViewFormBase extends EntityForm {
    *
    * This function can be called from hook_menu_local_tasks_alter() to implement
    * these tabs as secondary local tasks, or it can be called from elsewhere if
-   * having them as secondary local tasks isn't desired. The caller is responsible
-   * for setting the active tab's #active property to TRUE.
+   * having them as secondary local tasks isn't desired. The caller is
+   * responsible for setting the active tab's #active property to TRUE.
    *
    * @param \Drupal\views_ui\ViewUI $view
    *   The ViewUI entity.

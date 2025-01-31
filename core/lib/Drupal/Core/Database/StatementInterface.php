@@ -117,8 +117,8 @@ interface StatementInterface extends \Traversable {
   /**
    * Fetches the next row and returns it as an object.
    *
-   * The object will be of the class specified by StatementInterface::setFetchMode()
-   * or stdClass if not specified.
+   * The object will be of the class specified by
+   * StatementInterface::setFetchMode() or stdClass if not specified.
    *
    * @param string|null $class_name
    *   Name of the created class.

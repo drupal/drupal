@@ -49,10 +49,10 @@ function search_preprocess_block(&$variables): void {
  *   in \Drupal\search\Plugin\SearchPluginBase. For more information about
  *   plugins, see the @link plugin_api Plugin API topic. @endlink
  *
- * If your module needs to provide a more complicated search form, then you
- * need to implement it yourself. In that case, you may wish to define it as a
- * local task (tab) under the /search page (e.g. /search/my_module) so that users
- * can easily find it.
+ * If your module needs to provide a more complicated search form, then you need
+ * to implement it yourself. In that case, you may wish to define it as a local
+ * task (tab) under the /search page (e.g. /search/my_module) so that users can
+ * easily find it.
  *
  * @see plugin_api
  * @see annotation

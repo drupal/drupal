@@ -130,7 +130,8 @@ final class LinksetController extends ControllerBase {
    * preserved in the final component of the hierarchy value.
    *
    * According to the Linkset specification, each value in the hierarchy array
-   * must be a string. See https://tools.ietf.org/html/draft-ietf-httpapi-linkset-08#section-4.2.4.3
+   * must be a string. See
+   * https://tools.ietf.org/html/draft-ietf-httpapi-linkset-08#section-4.2.4.3
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   A tree of menu elements.

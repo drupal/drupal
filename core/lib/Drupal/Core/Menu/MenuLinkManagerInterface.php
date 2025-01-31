@@ -30,11 +30,11 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
   /**
    * Deletes all links having a certain menu name.
    *
-   * If a link is not deletable but is resettable, the link will be reset to have
-   * its original menu name, under the assumption that the original menu is not
-   * the one we are deleting it from. Note that when resetting, if the original
-   * menu name is the same as the menu name passed to this method, the link will
-   * not be moved or deleted.
+   * If a link is not deletable but is resettable, the link will be reset to
+   * have its original menu name, under the assumption that the original menu is
+   * not the one we are deleting it from. Note that when resetting, if the
+   * original menu name is the same as the menu name passed to this method, the
+   * link will not be moved or deleted.
    *
    * @param string $menu_name
    *   The name of the menu whose links will be deleted or reset.

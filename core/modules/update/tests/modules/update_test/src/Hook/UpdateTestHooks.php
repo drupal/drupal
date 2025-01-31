@@ -18,10 +18,10 @@ class UpdateTestHooks {
    * Checks the 'update_test.settings:system_info' configuration and sees if we
    * need to alter the system info for the given $file based on the setting. The
    * setting is expected to be a nested associative array. If the key '#all' is
-   * defined, its subarray will include .info.yml keys and values for all modules
-   * and themes on the system. Otherwise, the settings array is keyed by the
-   * module or theme short name ($file->name) and the subarrays contain settings
-   * just for that module or theme.
+   * defined, its subarray will include .info.yml keys and values for all
+   * modules and themes on the system. Otherwise, the settings array is keyed by
+   * the module or theme short name ($file->name) and the subarrays contain
+   * settings just for that module or theme.
    */
   #[Hook('system_info_alter')]
   public function systemInfoAlter(&$info, Extension $file): void {
@@ -38,13 +38,13 @@ class UpdateTestHooks {
   /**
    * Implements hook_update_status_alter().
    *
-   * Checks the 'update_test.settings:update_status' configuration and sees if we
-   * need to alter the update status for the given project based on the setting.
-   * The setting is expected to be a nested associative array. If the key '#all'
-   * is defined, its subarray will include .info.yml keys and values for all modules
-   * and themes on the system. Otherwise, the settings array is keyed by the
-   * module or theme short name and the subarrays contain settings just for that
-   * module or theme.
+   * Checks the 'update_test.settings:update_status' configuration and sees if
+   * we need to alter the update status for the given project based on the
+   * setting. The setting is expected to be a nested associative array. If the
+   * key '#all' is defined, its subarray will include .info.yml keys and values
+   * for all modules and themes on the system. Otherwise, the settings array is
+   * keyed by the module or theme short name and the subarrays contain settings
+   * just for that module or theme.
    */
   #[Hook('update_status_alter')]
   public function updateStatusAlter(&$projects): void {

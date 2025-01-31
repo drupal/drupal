@@ -233,8 +233,8 @@ class FileItem extends EntityReferenceItem {
    * Form API callback.
    *
    * Removes slashes from the beginning and end of the destination value and
-   * ensures that the file directory path is not included at the beginning of the
-   * value.
+   * ensures that the file directory path is not included at the beginning of
+   * the value.
    *
    * This function is assigned as an #element_validate callback in
    * fieldSettingsForm().

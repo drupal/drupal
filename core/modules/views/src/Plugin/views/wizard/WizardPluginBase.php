@@ -482,14 +482,14 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Gets the current value of a #select element, from within a form constructor function.
    *
-   * This function is intended for use in highly dynamic forms (in particular the
-   * add view wizard) which are rebuilt in different ways depending on which
-   * triggering element (AJAX or otherwise) was most recently fired. For example,
-   * sometimes it is necessary to decide how to build one dynamic form element
-   * based on the value of a different dynamic form element that may not have
-   * even been present on the form the last time it was submitted. This function
-   * takes care of resolving those conflicts and gives you the proper current
-   * value of the requested #select element.
+   * This function is intended for use in highly dynamic forms (in particular
+   * the add view wizard) which are rebuilt in different ways depending on which
+   * triggering element (AJAX or otherwise) was most recently fired. For
+   * example, sometimes it is necessary to decide how to build one dynamic form
+   * element based on the value of a different dynamic form element that may not
+   * have even been present on the form the last time it was submitted. This
+   * function takes care of resolving those conflicts and gives you the proper
+   * current value of the requested #select element.
    *
    * By necessity, this function sometimes uses non-validated user input from
    * FormState::$input in making its determination. Although it performs some

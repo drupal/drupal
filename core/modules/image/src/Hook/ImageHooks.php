@@ -237,7 +237,8 @@ class ImageHooks {
   /**
    * Implements hook_entity_presave().
    *
-   * Transforms default image of image field from array into single value at save.
+   * Transforms default image of image field from array into single value at
+   * save.
    */
   #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity) {

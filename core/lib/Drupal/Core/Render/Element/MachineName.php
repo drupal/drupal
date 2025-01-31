@@ -35,7 +35,8 @@ use Drupal\Core\Render\Attribute\FormElement;
  *     human-readable name (i.e., as contained in the $form structure) to use as
  *     source for the machine name. Defaults to ['label'].
  *   - label: (optional) Text to display as label for the machine name value
- *     after the human-readable name form element. Defaults to t('Machine name').
+ *     after the human-readable name form element. Defaults to t('Machine
+ *     name').
  *   - replace_pattern: (optional) A regular expression (without delimiters)
  *     matching disallowed characters in the machine name. Defaults to
  *     '[^a-z0-9_]+'.

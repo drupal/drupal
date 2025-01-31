@@ -32,10 +32,10 @@ class UpdateTestController extends ControllerBase {
    *
    * The specific XML file to print depends on two things: the project we're
    * trying to fetch data for, and the desired "availability scenario" for that
-   * project which we're trying to test. Before attempting to fetch this data (by
-   * checking for updates on the available updates report), callers need to define
-   * the 'update_test_xml_map' variable as an array, keyed by project name,
-   * indicating which availability scenario to use for that project.
+   * project which we're trying to test. Before attempting to fetch this data
+   * (by checking for updates on the available updates report), callers need to
+   * define the 'update_test_xml_map' variable as an array, keyed by project
+   * name, indicating which availability scenario to use for that project.
    *
    * @param string $project_name
    *   The project short name the update manager is trying to fetch data for

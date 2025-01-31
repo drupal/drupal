@@ -12,17 +12,18 @@ class Unicode {
   /**
    * Matches Unicode characters that are word boundaries.
    *
-   * Characters with the following General_category (gc) property values are used
-   * as word boundaries. While this does not fully conform to the Word Boundaries
-   * algorithm described in http://unicode.org/reports/tr29, as PCRE does not
-   * contain the Word_Break property table, this simpler algorithm has to do.
+   * Characters with the following General_category (gc) property values are
+   * used as word boundaries. While this does not fully conform to the Word
+   * Boundaries algorithm described in http://unicode.org/reports/tr29, as PCRE
+   * does not contain the Word_Break property table, this simpler algorithm has
+   * to do.
    * - Cc, Cf, Cn, Co, Cs: Other.
    * - Pc, Pd, Pe, Pf, Pi, Po, Ps: Punctuation.
    * - Sc, Sk, Sm, So: Symbols.
    * - Zl, Zp, Zs: Separators.
    *
-   * Non-boundary characters include the following General_category (gc) property
-   * values:
+   * Non-boundary characters include the following General_category (gc)
+   * property values:
    * - Ll, Lm, Lo, Lt, Lu: Letters.
    * - Mc, Me, Mn: Combining Marks.
    * - Nd, Nl, No: Numbers.
@@ -190,8 +191,8 @@ EOD;
   /**
    * Truncates a UTF-8-encoded string safely to a number of bytes.
    *
-   * If the end position is in the middle of a UTF-8 sequence, it scans backwards
-   * until the beginning of the byte sequence.
+   * If the end position is in the middle of a UTF-8 sequence, it scans
+   * backwards until the beginning of the byte sequence.
    *
    * Use this function whenever you want to chop off a string at an unsure
    * location. On the other hand, if you're sure that you're splitting on a
@@ -378,10 +379,10 @@ EOD;
    * When text containing an invalid UTF-8 lead byte (0xC0 - 0xFF) is presented
    * as UTF-8 to Internet Explorer 6, the program may misinterpret subsequent
    * bytes. When these subsequent bytes are HTML control characters such as
-   * quotes or angle brackets, parts of the text that were deemed safe by filters
-   * end up in locations that are potentially unsafe; An onerror attribute that
-   * is outside of a tag, and thus deemed safe by a filter, can be interpreted
-   * by the browser as if it were inside the tag.
+   * quotes or angle brackets, parts of the text that were deemed safe by
+   * filters end up in locations that are potentially unsafe; An onerror
+   * attribute that is outside of a tag, and thus deemed safe by a filter, can
+   * be interpreted by the browser as if it were inside the tag.
    *
    * The function does not return FALSE for strings containing character codes
    * above U+10FFFF, even though these are prohibited by RFC 3629.

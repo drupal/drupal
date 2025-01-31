@@ -362,9 +362,9 @@ class LanguageHooks {
    * Implements hook_language_types_info_alter().
    *
    * We can't set the fixed properties in \Drupal\Core\Language\LanguageManager,
-   * where the rest of the properties for the default language types are defined.
-   * The LanguageNegation classes are only loaded when the language module is
-   * enabled and we can't be sure of that in the LanguageManager.
+   * where the rest of the properties for the default language types are
+   * defined. The LanguageNegation classes are only loaded when the language
+   * module is enabled and we can't be sure of that in the LanguageManager.
    */
   #[Hook('language_types_info_alter')]
   public function languageTypesInfoAlter(array &$language_types): void {

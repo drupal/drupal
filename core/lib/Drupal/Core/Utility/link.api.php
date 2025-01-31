@@ -35,17 +35,17 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *     \Drupal\Core\Routing\UrlGenerator::generateFromRoute() to generate the
  *     href attribute for this link, and also used when generating the link.
  *     Defaults to an empty array. It may contain the following elements:
- *     - 'query': An array of query key/value-pairs (without any URL-encoding) to
- *       append to the URL.
+ *     - 'query': An array of query key/value-pairs (without any URL-encoding)
+ *       to append to the URL.
  *     - absolute: Whether to force the output to be an absolute link (beginning
  *       with http:). Useful for links that will be displayed outside the site,
  *       such as in an RSS feed. Defaults to FALSE.
  *     - language: An optional language object. May affect the rendering of
  *       the anchor tag, such as by adding a language prefix to the path.
  *     - attributes: An associative array of HTML attributes to apply to the
- *       anchor tag. If element 'class' is included, it must be an array; 'title'
- *       must be a string; other elements are more flexible, as they just need
- *       to work as an argument for the constructor of the class
+ *       anchor tag. If element 'class' is included, it must be an array;
+ *       'title' must be a string; other elements are more flexible, as they
+ *       just need to work as an argument for the constructor of the class
  *       Drupal\Core\Template\Attribute($options['attributes']).
  *
  * @see \Drupal\Core\Utility\UnroutedUrlAssembler::assemble()

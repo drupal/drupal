@@ -108,8 +108,8 @@ class CommonTestHooks {
   /**
    * Implements hook_cron().
    *
-   * System module should handle if a module does not catch an exception and keep
-   * cron going.
+   * System module should handle if a module does not catch an exception and
+   * keep cron going.
    *
    * @see common_test_cron_helper()
    */

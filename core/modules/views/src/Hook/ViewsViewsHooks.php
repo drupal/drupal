@@ -190,9 +190,9 @@ class ViewsViewsHooks {
    * Implements hook_views_data_alter().
    *
    * Field modules can implement hook_field_views_data_views_data_alter() to
-   * alter the views data on a per field basis. This is weirdly named so as
-   * not to conflict with the \Drupal::moduleHandler()->alter('field_views_data')
-   * in views_views_data().
+   * alter the views data on a per field basis. This is weirdly named so as not
+   * to conflict with the \Drupal::moduleHandler()->alter('field_views_data') in
+   * views_views_data().
    */
   #[Hook('views_data_alter')]
   public function viewsDataAlter(&$data): void {
@@ -212,9 +212,9 @@ class ViewsViewsHooks {
    * Implements hook_field_views_data().
    *
    * The function implements the hook on behalf of 'core' because it adds a
-   * relationship and a reverse relationship to entity_reference field type, which
-   * is provided by core. This function also provides an argument plugin for
-   * entity_reference fields that handles title token replacement.
+   * relationship and a reverse relationship to entity_reference field type,
+   * which is provided by core. This function also provides an argument plugin
+   * for entity_reference fields that handles title token replacement.
    */
   #[Hook('field_views_data')]
   public function fieldViewsData(FieldStorageConfigInterface $field_storage): array {

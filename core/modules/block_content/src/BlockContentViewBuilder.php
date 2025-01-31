@@ -8,10 +8,10 @@ use Drupal\Core\Entity\EntityViewBuilder;
 /**
  * View builder handler for content blocks.
  *
- * Note: Content blocks (block_content entities) are not designed to be displayed
- * outside of blocks! This BlockContentViewBuilder class is designed to be used
- * by \Drupal\block_content\Plugin\Block\BlockContentBlock::build() and by
- * nothing else.
+ * Note: Content blocks (block_content entities) are not designed to be
+ * displayed outside of blocks! This BlockContentViewBuilder class is designed
+ * to be used by \Drupal\block_content\Plugin\Block\BlockContentBlock::build()
+ * and by nothing else.
  *
  * @see \Drupal\block_content\Plugin\Block\BlockContentBlock
  */

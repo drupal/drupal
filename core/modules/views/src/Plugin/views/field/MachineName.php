@@ -12,7 +12,8 @@ use Drupal\views\ResultRow;
  * @ingroup views_field_handlers
  *
  * Definition items:
- * - options callback: The function to call in order to generate the value options. If omitted, the options 'Yes' and 'No' will be used.
+ * - options callback: The function to call in order to generate the value
+ *   options. If omitted, the options 'Yes' and 'No' will be used.
  * - options arguments: An array of arguments to pass to the options callback.
  */
 #[ViewsField("machine_name")]

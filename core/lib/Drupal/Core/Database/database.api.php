@@ -469,8 +469,8 @@ use Drupal\Core\Database\Query\SelectInterface;
 /**
  * Perform alterations to a structured query.
  *
- * Structured (aka dynamic) queries that have tags associated may be altered by any module
- * before the query is executed.
+ * Structured (aka dynamic) queries that have tags associated may be altered by
+ * any module before the query is executed.
  *
  * @param Drupal\Core\Database\Query\AlterableInterface $query
  *   A Query object describing the composite parts of a SQL query.

@@ -7,7 +7,8 @@ use Drupal\Core\Ajax\CommandInterface;
 /**
  * Provides an AJAX command for showing the save and cancel buttons.
  *
- * This command is implemented in Drupal.AjaxCommands.prototype.viewsShowButtons.
+ * This command is implemented in
+ * Drupal.AjaxCommands.prototype.viewsShowButtons.
  */
 class ShowButtonsCommand implements CommandInterface {
 

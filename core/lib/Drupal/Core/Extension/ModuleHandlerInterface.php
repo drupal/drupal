@@ -317,9 +317,9 @@ interface ModuleHandlerInterface {
    * hook_TYPE_alter() implementations in modules. It ensures a consistent
    * interface for all altering operations.
    *
-   * A maximum of 2 alterable arguments is supported. In case more arguments need
-   * to be passed and alterable, modules provide additional variables assigned by
-   * reference in the last $context argument:
+   * A maximum of 2 alterable arguments is supported. In case more arguments
+   * need to be passed and alterable, modules provide additional variables
+   * assigned by reference in the last $context argument:
    * @code
    *   $context = [
    *     'alterable' => &$alterable,

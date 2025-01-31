@@ -305,7 +305,8 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * - entity cache tag: "<entity type>:<entity ID>"
    * - entity type list cache tag: "<entity type>_list"
    * - referencing entity type view cache tag: "<referencing entity type>_view"
-   * - referencing entity type cache tag: "<referencing entity type>:<referencing entity ID>"
+   * - referencing entity type cache tag: "
+   *   <referencing entity type>:<referencing entity ID>"
    */
   public function testReferencedEntity(): void {
     $entity_type = $this->entity->getEntityTypeId();

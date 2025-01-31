@@ -84,8 +84,8 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Contains the default access logic of this field.
    *
-   * See \Drupal\Core\Entity\EntityAccessControlHandlerInterface::fieldAccess() for
-   * the parameter documentation.
+   * See \Drupal\Core\Entity\EntityAccessControlHandlerInterface::fieldAccess()
+   * for the parameter documentation.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.

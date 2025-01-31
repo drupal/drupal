@@ -10,7 +10,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *
  * Plugin Namespace: Plugin\WorkflowType
  *
- * For a working example, see \Drupal\content_moderation\Plugin\Workflow\ContentModerate
+ * For a working example, see
+ * \Drupal\content_moderation\Plugin\Workflow\ContentModerate
  *
  * @see \Drupal\workflows\WorkflowTypeInterface
  * @see \Drupal\workflows\WorkflowTypeManager

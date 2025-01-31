@@ -7,7 +7,8 @@ use Drupal\Core\Ajax\CommandInterface;
 /**
  * Provides an AJAX command for triggering the views live preview.
  *
- * This command is implemented in Drupal.AjaxCommands.prototype.viewsTriggerPreview.
+ * This command is implemented in
+ * Drupal.AjaxCommands.prototype.viewsTriggerPreview.
  */
 class TriggerPreviewCommand implements CommandInterface {
 

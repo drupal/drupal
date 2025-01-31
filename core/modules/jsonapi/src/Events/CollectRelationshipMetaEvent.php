@@ -14,8 +14,8 @@ use Drupal\Component\EventDispatcher\Event;
  * Event for collecting the relationship metadata of a JSON:API resource object.
  *
  * Subscribers of this event that call ::setMetaValue() must set the appropriate
- * cache tags and contexts. These should be based on the data that is used to set
- * the meta. These will then bubble up to the normalization.
+ * cache tags and contexts. These should be based on the data that is used to
+ * set the meta. These will then bubble up to the normalization.
  *
  * @Event
  */

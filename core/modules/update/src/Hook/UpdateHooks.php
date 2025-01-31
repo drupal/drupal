@@ -197,7 +197,8 @@ class UpdateHooks {
   /**
    * Implements hook_themes_installed().
    *
-   * If themes are installed, we invalidate the information of available updates.
+   * If themes are installed, we invalidate the information of available
+   * updates.
    */
   #[Hook('themes_installed')]
   public function themesInstalled($themes): void {
@@ -208,7 +209,8 @@ class UpdateHooks {
   /**
    * Implements hook_themes_uninstalled().
    *
-   * If themes are uninstalled, we invalidate the information of available updates.
+   * If themes are uninstalled, we invalidate the information of available
+   * updates.
    */
   #[Hook('themes_uninstalled')]
   public function themesUninstalled($themes): void {
@@ -219,7 +221,8 @@ class UpdateHooks {
   /**
    * Implements hook_modules_installed().
    *
-   * If modules are installed, we invalidate the information of available updates.
+   * If modules are installed, we invalidate the information of available
+   * updates.
    */
   #[Hook('modules_installed')]
   public function modulesInstalled($modules): void {
@@ -230,7 +233,8 @@ class UpdateHooks {
   /**
    * Implements hook_modules_uninstalled().
    *
-   * If modules are uninstalled, we invalidate the information of available updates.
+   * If modules are uninstalled, we invalidate the information of available
+   * updates.
    */
   #[Hook('modules_uninstalled')]
   public function modulesUninstalled($modules): void {
@@ -273,11 +277,12 @@ class UpdateHooks {
    * Implements hook_verify_update_archive().
    *
    * First, we ensure that the archive isn't a copy of Drupal core, which the
-   * update manager does not yet support. See https://www.drupal.org/node/606592.
+   * update manager does not yet support. See
+   * https://www.drupal.org/node/606592.
    *
-   * Then, we make sure that at least one module included in the archive file has
-   * an .info.yml file which claims that the code is compatible with the current
-   * version of Drupal core.
+   * Then, we make sure that at least one module included in the archive file
+   * has an .info.yml file which claims that the code is compatible with the
+   * current version of Drupal core.
    *
    * @see \Drupal\Core\Extension\ExtensionDiscovery
    */

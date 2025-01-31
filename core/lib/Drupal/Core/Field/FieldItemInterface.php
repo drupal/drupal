@@ -331,8 +331,8 @@ interface FieldItemInterface extends ComplexDataInterface {
   /**
    * Returns a settings array in the field type's canonical representation.
    *
-   * This function does the inverse of static::storageSettingsToConfigData(). It's
-   * called when loading a field's settings from a configuration object.
+   * This function does the inverse of static::storageSettingsToConfigData().
+   * It's called when loading a field's settings from a configuration object.
    *
    * @param array $settings
    *   The field's settings, as it is stored within a configuration object.
@@ -348,7 +348,8 @@ interface FieldItemInterface extends ComplexDataInterface {
   /**
    * Returns a settings array that can be stored as a configuration value.
    *
-   * Same as static::storageSettingsToConfigData(), but for the field's settings.
+   * Same as static::storageSettingsToConfigData(), but for the field's
+   * settings.
    *
    * @param array $settings
    *   The field's settings in the field type's canonical representation.

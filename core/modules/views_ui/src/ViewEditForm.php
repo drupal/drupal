@@ -853,8 +853,8 @@ class ViewEditForm extends ViewFormBase {
    * the SharedTempStore rather than $form_state->setRebuild(). Without this
    * submit handler, buttons that add or remove displays would redirect to the
    * destination parameter (e.g., when the Edit View form is linked to from a
-   * contextual link). This handler can be added to buttons whose form submission
-   * should not yet redirect to the destination.
+   * contextual link). This handler can be added to buttons whose form
+   * submission should not yet redirect to the destination.
    */
   public function submitDelayDestination($form, FormStateInterface $form_state) {
     $request = $this->requestStack->getCurrentRequest();

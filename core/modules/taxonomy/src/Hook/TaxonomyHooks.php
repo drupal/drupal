@@ -124,13 +124,13 @@ class TaxonomyHooks {
    * between terms and fieldable entities. However its most common use case
    * requires listing all content associated with a term or group of terms
    * sorted by creation date. To avoid slow queries due to joining across
-   * multiple node and field tables with various conditions and order by criteria,
-   * we maintain a denormalized table with all relationships between terms,
-   * published nodes and common sort criteria such as status, sticky and created.
-   * When using other field storage engines or alternative methods of
+   * multiple node and field tables with various conditions and order by
+   * criteria, we maintain a denormalized table with all relationships between
+   * terms, published nodes and common sort criteria such as status, sticky and
+   * created. When using other field storage engines or alternative methods of
    * denormalizing this data you should set the
-   * taxonomy.settings:maintain_index_table to '0' to avoid unnecessary writes in
-   * SQL.
+   * taxonomy.settings:maintain_index_table to '0' to avoid unnecessary writes
+   * in SQL.
    */
 
   /**

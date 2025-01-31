@@ -135,12 +135,12 @@ class LayoutBuilderHooks {
   /**
    * Implements hook_entity_view_alter().
    *
-   * ExtraFieldBlock block plugins add placeholders for each extra field which is
-   * configured to be displayed. Those placeholders are replaced by this hook.
-   * Modules that implement hook_entity_extra_field_info() use their
+   * ExtraFieldBlock block plugins add placeholders for each extra field which
+   * is configured to be displayed. Those placeholders are replaced by this
+   * hook. Modules that implement hook_entity_extra_field_info() use their
    * implementations of hook_entity_view_alter() to add the rendered output of
-   * the extra fields they provide, so we cannot get the rendered output of extra
-   * fields before this point in the view process.
+   * the extra fields they provide, so we cannot get the rendered output of
+   * extra fields before this point in the view process.
    * layout_builder_module_implements_alter() moves this implementation of
    * hook_entity_view_alter() to the end of the list.
    *

@@ -38,7 +38,8 @@ final class MigrateEvents {
    *
    * This event allows modules to perform an action whenever a row is deleted
    * from a migration's map table (implying it has been rolled back). The event
-   * listener method receives a \Drupal\migrate\Event\MigrateMapDeleteEvent instance.
+   * listener method receives a \Drupal\migrate\Event\MigrateMapDeleteEvent
+   * instance.
    *
    * @Event
    *

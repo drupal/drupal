@@ -12,8 +12,8 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  * This class extends the basic component and adds in Drupal-specific
  * handling, like translation of the format() method.
  *
- * Static methods in base class can also be used to create DrupalDateTime objects.
- * For example:
+ * Static methods in base class can also be used to create DrupalDateTime
+ * objects. For example:
  *
  * @code
  * DrupalDateTime::createFromArray(['year' => 2010, 'month' => 9, 'day' => 28])

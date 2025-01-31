@@ -305,9 +305,9 @@ class DbLogController extends ControllerBase {
   /**
    * Builds a query for database log administration filters based on session.
    *
-   * This method retrieves the session-based filters from the request and applies
-   * them to the provided query object. If no filters are present, the query is
-   * left unchanged.
+   * This method retrieves the session-based filters from the request and
+   * applies them to the provided query object. If no filters are present, the
+   * query is left unchanged.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.

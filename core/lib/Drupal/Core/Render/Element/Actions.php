@@ -66,13 +66,13 @@ class Actions extends Container {
    *
    * This callback iterates over all child elements of the #type 'actions'
    * container to look for elements with a #dropbutton property, so as to group
-   * those elements into dropbuttons. As such, it works similar to #group, but is
-   * specialized for dropbuttons.
+   * those elements into dropbuttons. As such, it works similar to #group, but
+   * is specialized for dropbuttons.
    *
    * The value of #dropbutton denotes the dropbutton to group the child element
-   * into. For example, two different values of 'foo' and 'bar' on child elements
-   * would generate two separate dropbuttons, which each contain the corresponding
-   * buttons.
+   * into. For example, two different values of 'foo' and 'bar' on child
+   * elements would generate two separate dropbuttons, which each contain the
+   * corresponding buttons.
    *
    * @param array $element
    *   The #type 'actions' element to process.

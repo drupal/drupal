@@ -1251,7 +1251,8 @@
  *   https://www.drupal.org/docs/theming-drupal
  * - Modules: Modules add to or alter the behavior and functionality of Drupal,
  *   by using one or more of the methods listed below. For more information
- *   about creating modules, see https://www.drupal.org/docs/creating-custom-modules
+ *   about creating modules, see
+ *   https://www.drupal.org/docs/creating-custom-modules
  * - Installation profiles: Installation profiles can be used to
  *   create distributions, which are complete specific-purpose packages of
  *   Drupal including additional modules, themes, and data. For more

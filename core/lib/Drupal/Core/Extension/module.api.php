@@ -181,8 +181,8 @@ function hook_module_preinstall($module, bool $is_syncing): void {
  * This function differs from hook_install() in that it gives all other modules
  * a chance to perform actions when a module is installed, whereas
  * hook_install() is only called on the module actually being installed. See
- * \Drupal\Core\Extension\ModuleInstaller::install() for a detailed description of
- * the order in which install hooks are invoked.
+ * \Drupal\Core\Extension\ModuleInstaller::install() for a detailed description
+ * of the order in which install hooks are invoked.
  *
  * This hook should be implemented in a .module file, not in an .install file.
  *

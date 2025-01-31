@@ -108,8 +108,8 @@ function hook_node_grants(AccountInterface $account, $operation): array {
  * - 'gid': A 'grant ID' from hook_node_grants().
  * - 'grant_view': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can view this node. This should usually be
- *   set to $node->isPublished(). Failure to do so may expose unpublished content
- *   to some users.
+ *   set to $node->isPublished(). Failure to do so may expose unpublished
+ *   content to some users.
  * - 'grant_update': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can edit this node.
  * - 'grant_delete': If set to 1 a user that has been identified as a member

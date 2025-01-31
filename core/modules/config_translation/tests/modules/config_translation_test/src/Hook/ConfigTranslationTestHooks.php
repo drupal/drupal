@@ -80,10 +80,10 @@ class ConfigTranslationTestHooks {
    * Implements hook_form_FORM_ID_alter() for ConfigTranslationEditForm.
    *
    * Adds a column to the configuration translation edit form that shows the
-   * current translation. Note that this column would not be displayed by default,
-   * as the columns are hardcoded in
-   * config_translation_manage_form_element.html.twig. The template would need to
-   * be overridden for the column to be displayed.
+   * current translation. Note that this column would not be displayed by
+   * default, as the columns are hardcoded in
+   * config_translation_manage_form_element.html.twig. The template would need
+   * to be overridden for the column to be displayed.
    *
    * @see \Drupal\config_translation\Form\ConfigTranslationEditForm
    */

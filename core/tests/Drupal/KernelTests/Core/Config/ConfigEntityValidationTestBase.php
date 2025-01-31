@@ -631,7 +631,9 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   /**
    * Determines the config entity mapping properties with required keys.
    *
-   * This refers only to the top-level properties of the config entity which are expected to be mappings, and of those mappings, only the ones which have required keys.
+   * This refers only to the top-level properties of the config entity which are
+   * expected to be mappings, and of those mappings, only the ones which have
+   * required keys.
    *
    * @return string[]
    *   An array of key-value pairs, with:

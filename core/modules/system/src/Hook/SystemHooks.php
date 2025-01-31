@@ -303,8 +303,8 @@ class SystemHooks {
   /**
    * Implements hook_cron().
    *
-   * Remove older rows from flood, batch cache and expirable keyvalue tables. Also
-   * ensure files directories have .htaccess files.
+   * Remove older rows from flood, batch cache and expirable keyvalue tables.
+   * Also ensure files directories have .htaccess files.
    */
   #[Hook('cron')]
   public function cron(): void {

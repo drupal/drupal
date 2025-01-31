@@ -58,7 +58,8 @@ class DblogHooks {
   /**
    * Implements hook_cron().
    *
-   * Controls the size of the log table, paring it to 'dblog_row_limit' messages.
+   * Controls the size of the log table, paring it to 'dblog_row_limit'
+   * messages.
    */
   #[Hook('cron')]
   public function cron(): void {

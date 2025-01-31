@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Path processor manager.
  *
- * Holds an array of path processor objects and uses them to sequentially process
- * a path, in order of processor priority.
+ * Holds an array of path processor objects and uses them to sequentially
+ * process a path, in order of processor priority.
  */
 class PathProcessorManager implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
 

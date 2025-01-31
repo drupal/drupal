@@ -26,33 +26,34 @@ class FieldHooks {
    * @{
    * Attaches custom data fields to Drupal entities.
    *
-   * The Field API allows custom data fields to be attached to Drupal entities and
-   * takes care of storing, loading, editing, and rendering field data. Any entity
-   * type (node, user, etc.) can use the Field API to make itself "fieldable" and
-   * thus allow fields to be attached to it. Other modules can provide a user
-   * interface for managing custom fields via a web browser as well as a wide and
-   * flexible variety of data type, form element, and display format capabilities.
+   * The Field API allows custom data fields to be attached to Drupal entities
+   * and takes care of storing, loading, editing, and rendering field data. Any
+   * entity type (node, user, etc.) can use the Field API to make itself
+   * "fieldable" and thus allow fields to be attached to it. Other modules can
+   * provide a user interface for managing custom fields via a web browser as
+   * well as a wide and flexible variety of data type, form element, and display
+   * format capabilities.
    *
    * The Field API defines two primary data structures, FieldStorage and Field,
-   * and the concept of a Bundle. A FieldStorage defines a particular type of data
-   * that can be attached to entities. A Field is attached to a single
-   * Bundle. A Bundle is a set of fields that are treated as a group by the Field
-   * Attach API and is related to a single fieldable entity type.
+   * and the concept of a Bundle. A FieldStorage defines a particular type of
+   * data that can be attached to entities. A Field is attached to a single
+   * Bundle. A Bundle is a set of fields that are treated as a group by the
+   * Field Attach API and is related to a single fieldable entity type.
    *
    * For example, suppose a site administrator wants Article nodes to have a
-   * subtitle and photo. Using the Field API or Field UI module, the administrator
-   * creates a field named 'subtitle' of type 'text' and a field named 'photo' of
-   * type 'image'. The administrator (again, via a UI) creates two Field
-   * Instances, one attaching the field 'subtitle' to the 'node' bundle 'article'
-   * and one attaching the field 'photo' to the 'node' bundle 'article'. When the
-   * node storage loads an Article node, it loads the values of the
-   * 'subtitle' and 'photo' fields because they are both attached to the 'node'
-   * bundle 'article'.
+   * subtitle and photo. Using the Field API or Field UI module, the
+   * administrator creates a field named 'subtitle' of type 'text' and a field
+   * named 'photo' of type 'image'. The administrator (again, via a UI) creates
+   * two Field Instances, one attaching the field 'subtitle' to the 'node'
+   * bundle 'article' and one attaching the field 'photo' to the 'node' bundle
+   * 'article'. When the node storage loads an Article node, it loads the values
+   * of the 'subtitle' and 'photo' fields because they are both attached to the
+   * 'node' bundle 'article'.
    *
    * - @link field_types Field Types API @endlink: Defines field types, widget
-   *   types, and display formatters. Field modules use this API to provide field
-   *   types like Text and Node Reference along with the associated form elements
-   *   and display formatters.
+   *   types, and display formatters. Field modules use this API to provide
+   *   field types like Text and Node Reference along with the associated form
+   *   elements and display formatters.
    *
    * - @link field_purge Field API bulk data deletion @endlink: Cleans up after
    *   bulk deletion operations such as deletion of field storage or field.
@@ -267,8 +268,8 @@ class FieldHooks {
   /**
    * Implements hook_form_FORM_ID_alter().
    *
-   * Adds a warning if field data will be permanently removed by the configuration
-   * synchronization.
+   * Adds a warning if field data will be permanently removed by the
+   * configuration synchronization.
    *
    * @see \Drupal\field\ConfigImporterFieldPurger
    */

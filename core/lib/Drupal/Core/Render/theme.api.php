@@ -199,8 +199,9 @@
  * Themes support post updates in order to install module dependencies that have
  * been added to the THEME.info.yml after the theme has been installed.
  * Additionally, if a theme has changed its configuration schema, post updates
- * can fix theme settings configuration. See @link hook_post_update_NAME hook_post_update_NAME @endlink
- * for more information about post updates.
+ * can fix theme settings configuration. See
+ * @link hook_post_update_NAME hook_post_update_NAME @endlink for more
+ * information about post updates.
  *
  * @see hooks
  * @see callbacks
@@ -628,7 +629,8 @@ function hook_preprocess_HOOK(&$variables): void {
  * must otherwise make sure that the hook implementation is available at
  * any given time.
  *
- * Suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
+ * Suggestions must begin with the value of HOOK, followed by two underscores to
+ * be discoverable.
  *
  * In the following example, we provide suggestions to
  * node templates based bundle, id, and view mode.
@@ -682,7 +684,8 @@ function hook_theme_suggestions_HOOK(array $variables) {
  * hook_theme_suggestions_HOOK_alter(). So, for each module or theme, the more
  * general hooks are called first followed by the more specific.
  *
- * New suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
+ * New suggestions must begin with the value of HOOK, followed by two
+ * underscores to be discoverable.
  *
  * In the following example, we provide an alternative template suggestion to
  * node and taxonomy term templates based on the user being logged in.
@@ -728,8 +731,9 @@ function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $h
  * hook called (in this case 'node__article') is available in
  * $variables['theme_hook_original'].
  *
- * New suggestions must begin with the value of HOOK, followed by two underscores to be discoverable.
- * For example, consider the below suggestions from hook_theme_suggestions_node_alter:
+ * New suggestions must begin with the value of HOOK, followed by two
+ * underscores to be discoverable. For example, consider the below suggestions
+ * from hook_theme_suggestions_node_alter:
  *   - node__article is valid
  *   - node__article__custom_template is valid
  *   - node--article is invalid

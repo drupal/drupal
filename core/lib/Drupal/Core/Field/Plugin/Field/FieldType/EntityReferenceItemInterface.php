@@ -7,7 +7,8 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 /**
  * Interface definition for field items referencing other entities.
  *
- * Field items should extend \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemBase.
+ * Field items should extend
+ * \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItemBase.
  */
 interface EntityReferenceItemInterface {
 

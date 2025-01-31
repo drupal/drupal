@@ -676,7 +676,8 @@ function locale_config_batch_update_config_translations(array $names, array $lan
  *   Contains a list of files imported.
  *
  * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
- * locale_config_batch_update_config_translations($names, $langcodes, $context) instead.
+ * locale_config_batch_update_config_translations($names, $langcodes, $context)
+ * instead.
  *
  * @see https://www.drupal.org/node/3475054
  */

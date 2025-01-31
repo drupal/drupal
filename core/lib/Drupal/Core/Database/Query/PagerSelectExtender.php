@@ -84,8 +84,8 @@ class PagerSelectExtender extends SelectExtender {
   /**
    * Ensure that there is an element associated with this query.
    *
-   * After running this method, access $this->element to get the element for this
-   * query.
+   * After running this method, access $this->element to get the element for
+   * this query.
    */
   protected function ensureElement() {
     if (!isset($this->element)) {

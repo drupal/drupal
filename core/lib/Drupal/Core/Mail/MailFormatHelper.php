@@ -84,8 +84,9 @@ class MailFormatHelper {
   /**
    * Transforms an HTML string into plain text, preserving its structure.
    *
-   * The output will be suitable for use as 'format=flowed; delsp=yes' text
-   * (RFC 3676) and can be passed directly to MailManagerInterface::mail() for sending.
+   * The output will be suitable for use as 'format=flowed; delsp=yes' text (RFC
+   * 3676) and can be passed directly to MailManagerInterface::mail() for
+   * sending.
    *
    * We deliberately use LF rather than CRLF, see MailManagerInterface::mail().
    *

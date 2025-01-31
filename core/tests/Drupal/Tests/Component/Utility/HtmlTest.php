@@ -327,8 +327,9 @@ class HtmlTest extends TestCase {
   /**
    * Tests Html::serialize().
    *
-   * Resolves an issue by where an empty DOMDocument object sent to serialization would
-   * cause errors in getElementsByTagName() in the serialization function.
+   * Resolves an issue by where an empty DOMDocument object sent to
+   * serialization would cause errors in getElementsByTagName() in the
+   * serialization function.
    *
    * @covers ::serialize
    */

@@ -351,8 +351,9 @@ class Condition implements ConditionInterface, \Countable {
   /**
    * PHP magic __clone() method.
    *
-   * Only copies fields that implement Drupal\Core\Database\Query\ConditionInterface. Also sets
-   * $this->changed to TRUE.
+   * Only copies fields that implement
+   * Drupal\Core\Database\Query\ConditionInterface. Also sets $this->changed to
+   * TRUE.
    */
   public function __clone() {
     $this->changed = TRUE;

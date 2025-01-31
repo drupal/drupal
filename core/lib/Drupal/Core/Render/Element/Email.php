@@ -69,7 +69,8 @@ class Email extends FormElementBase {
   /**
    * Form element validation handler for #type 'email'.
    *
-   * Note that #maxlength and #required is validated by _form_validate() already.
+   * Note that #maxlength and #required is validated by _form_validate()
+   * already.
    */
   public static function validateEmail(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = trim($element['#value']);

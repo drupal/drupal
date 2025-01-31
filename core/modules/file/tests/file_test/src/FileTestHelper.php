@@ -43,7 +43,8 @@ class FileTestHelper {
   /**
    * Gets the arguments passed to a given hook invocation.
    *
-   * Arguments are gathered since Drupal\file_test\FileTestHelper::reset() was last called.
+   * Arguments are gathered since Drupal\file_test\FileTestHelper::reset() was
+   * last called.
    *
    * @param string $op
    *   One of the hook_file_* operations: 'load', 'validate', 'download',

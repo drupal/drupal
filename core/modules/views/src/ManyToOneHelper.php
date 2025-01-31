@@ -56,8 +56,8 @@ class ManyToOneHelper {
   /**
    * Get the field via formula or build it using alias and field name.
    *
-   * Sometimes the handler might want us to use some kind of formula, so give
-   * it that option. If it wants us to do this, it must set $helper->formula = TRUE
+   * Sometimes the handler might want us to use some kind of formula, so give it
+   * that option. If it wants us to do this, it must set $helper->formula = TRUE
    * and implement handler->getFormula().
    */
   public function getField() {
@@ -72,10 +72,10 @@ class ManyToOneHelper {
   /**
    * Add a table to the query.
    *
-   * This is an advanced concept; not only does it add a new instance of the table,
-   * but it follows the relationship path all the way down to the relationship
-   * link point and adds *that* as a new relationship and then adds the table to
-   * the relationship, if necessary.
+   * This is an advanced concept; not only does it add a new instance of the
+   * table, but it follows the relationship path all the way down to the
+   * relationship link point and adds *that* as a new relationship and then adds
+   * the table to the relationship, if necessary.
    */
   public function addTable($join = NULL, $alias = NULL) {
     // This is used for lookups in the many_to_one table.
