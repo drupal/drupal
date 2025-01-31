@@ -189,6 +189,7 @@
     <include-pattern>*/modules/system/tests/modules/*</include-pattern>
     <include-pattern>*/Kernel*/*</include-pattern>
     <include-pattern>*/tests/*/Functional*/*</include-pattern>
+    <include-pattern>./core/lib/*</include-pattern>
   </rule>
 
   <!-- Generic sniffs -->

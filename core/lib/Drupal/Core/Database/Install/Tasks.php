@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Install;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -13,6 +14,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * of it to support special handling required by that database.
  */
 abstract class Tasks {
+
+  use StringTranslationTrait;
 
   /**
    * The name of the PDO driver this database type requires.
@@ -159,7 +162,7 @@ abstract class Tasks {
           }
         }
         else {
-          $this->fail(t("Failed to run all tasks against the database server. The task %task wasn't found.", ['%task' => $task['function']]));
+          $this->fail($this->t("Failed to run all tasks against the database server. The task %task wasn't found.", ['%task' => $task['function']]));
         }
       }
     }
@@ -194,7 +197,7 @@ abstract class Tasks {
       $this->pass('Drupal can CONNECT to the database ok.');
     }
     catch (\Exception $e) {
-      $this->fail(t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname and port number?</li></ul>', ['%error' => $e->getMessage()]));
+      $this->fail($this->t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname and port number?</li></ul>', ['%error' => $e->getMessage()]));
       return FALSE;
     }
     return TRUE;
@@ -207,11 +210,11 @@ abstract class Tasks {
     try {
       Database::getConnection()->query($query);
       // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-      $this->pass(t($pass));
+      $this->pass($this->t($pass));
     }
     catch (\Exception $e) {
       // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-      $this->fail(t($fail, ['%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name()]));
+      $this->fail($this->t($fail, ['%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name()]));
       return !$fatal;
     }
   }
@@ -237,7 +240,7 @@ abstract class Tasks {
     // them or not.
     // @see https://www.php.net/manual/en/function.version-compare.php
     if ($this->minimumVersion() && version_compare(Database::getConnection()->version(), $this->minimumVersion() . '-AnyName', '<')) {
-      $this->fail(t("The database server version %version is less than the minimum required version %minimum_version.", ['%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion()]));
+      $this->fail($this->t("The database server version %version is less than the minimum required version %minimum_version.", ['%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion()]));
     }
   }
 
@@ -260,7 +263,7 @@ abstract class Tasks {
 
     $form['database'] = [
       '#type' => 'textfield',
-      '#title' => t('Database name'),
+      '#title' => $this->t('Database name'),
       '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
       '#required' => TRUE,
@@ -273,7 +276,7 @@ abstract class Tasks {
 
     $form['username'] = [
       '#type' => 'textfield',
-      '#title' => t('Database username'),
+      '#title' => $this->t('Database username'),
       '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#size' => 45,
       '#required' => TRUE,
@@ -286,7 +289,7 @@ abstract class Tasks {
 
     $form['password'] = [
       '#type' => 'password',
-      '#title' => t('Database password'),
+      '#title' => $this->t('Database password'),
       '#default_value' => empty($database['password']) ? '' : $database['password'],
       '#required' => FALSE,
       '#size' => 45,
@@ -294,7 +297,7 @@ abstract class Tasks {
 
     $form['advanced_options'] = [
       '#type' => 'details',
-      '#title' => t('Advanced options'),
+      '#title' => $this->t('Advanced options'),
       '#weight' => 10,
     ];
 
@@ -303,16 +306,16 @@ abstract class Tasks {
     $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['prefix'] = [
       '#type' => 'textfield',
-      '#title' => t('Table name prefix'),
+      '#title' => $this->t('Table name prefix'),
       '#default_value' => empty($database['prefix']) ? '' : $database['prefix'],
       '#size' => 45,
-      '#description' => t('If more than one application will be sharing this database, a unique table name prefix – such as %prefix – will prevent collisions.', ['%prefix' => $db_prefix]),
+      '#description' => $this->t('If more than one application will be sharing this database, a unique table name prefix – such as %prefix – will prevent collisions.', ['%prefix' => $db_prefix]),
       '#weight' => 10,
     ];
 
     $form['advanced_options']['host'] = [
       '#type' => 'textfield',
-      '#title' => t('Host'),
+      '#title' => $this->t('Host'),
       '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
       '#size' => 45,
       // Host names can be 255 characters long.
@@ -322,7 +325,7 @@ abstract class Tasks {
 
     $form['advanced_options']['port'] = [
       '#type' => 'number',
-      '#title' => t('Port number'),
+      '#title' => $this->t('Port number'),
       '#default_value' => empty($database['port']) ? '' : $database['port'],
       '#min' => 0,
       '#max' => 65535,
@@ -348,7 +351,7 @@ abstract class Tasks {
 
     // Verify the table prefix.
     if (!empty($database['prefix']) && is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['prefix'])) {
-      $errors[$database['driver'] . '][prefix'] = t('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', ['%prefix' => $database['prefix']]);
+      $errors[$database['driver'] . '][prefix'] = $this->t('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', ['%prefix' => $database['prefix']]);
     }
 
     return $errors;
@@ -400,10 +403,10 @@ abstract class Tasks {
    */
   protected function checkJsonSupport() {
     if ($this->getConnection()->hasJson()) {
-      $this->pass(t('Database connection supports the JSON type.'));
+      $this->pass($this->t('Database connection supports the JSON type.'));
     }
     else {
-      $this->fail(t('<a href="https://www.drupal.org/docs/system-requirements">Database connection does not support JSON.</a>'));
+      $this->fail($this->t('<a href="https://www.drupal.org/docs/system-requirements">Database connection does not support JSON.</a>'));
     }
   }
 

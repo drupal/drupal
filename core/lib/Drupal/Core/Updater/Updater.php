@@ -4,11 +4,14 @@ namespace Drupal\Core\Updater;
 
 use Drupal\Core\FileTransfer\FileTransferException;
 use Drupal\Core\FileTransfer\FileTransfer;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Defines the base class for Updaters used in Drupal.
  */
 abstract class Updater {
+
+  use StringTranslationTrait;
 
   /**
    * Directory to install from.
@@ -350,8 +353,8 @@ abstract class Updater {
           }
           catch (FileTransferException $e) {
             // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-            $message = t($e->getMessage(), $e->arguments);
-            $throw_message = t('Unable to create %directory due to the following: %reason', ['%directory' => $directory, '%reason' => $message]);
+            $message = $this->t($e->getMessage(), $e->arguments);
+            $throw_message = $this->t('Unable to create %directory due to the following: %reason', ['%directory' => $directory, '%reason' => $message]);
             throw new UpdaterException($throw_message);
           }
         }

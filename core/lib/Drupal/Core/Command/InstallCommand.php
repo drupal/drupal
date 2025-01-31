@@ -9,6 +9,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParserDynamic;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +24,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *   This command makes no guarantee of an API for Drupal extensions.
  */
 class InstallCommand extends Command {
+
+  use StringTranslationTrait;
 
   /**
    * The class loader.
@@ -233,7 +236,7 @@ class InstallCommand extends Command {
         $started = TRUE;
         // We've already done 1.
         $progress_bar->setFormat("%current%/%max% [%bar%]\n%message%\n");
-        $progress_bar->setMessage(t('Installing @drupal', ['@drupal' => drupal_install_profile_distribution_name()]));
+        $progress_bar->setMessage($this->t('Installing @drupal', ['@drupal' => drupal_install_profile_distribution_name()]));
         $tasks = install_tasks($install_state);
         $progress_bar->start(count($tasks) + 1);
       }
@@ -244,7 +247,7 @@ class InstallCommand extends Command {
       }
       $progress_bar->advance();
     });
-    $success_message = t('Congratulations, you installed @drupal!', [
+    $success_message = $this->t('Congratulations, you installed @drupal!', [
       '@drupal' => drupal_install_profile_distribution_name(),
       '@name' => 'admin',
       '@pass' => $password,

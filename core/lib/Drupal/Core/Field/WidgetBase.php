@@ -281,7 +281,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
         $elements['add_more'] = [
           '#type' => 'submit',
           '#name' => strtr($id_prefix, '-', '_') . '_add_more',
-          '#value' => t('Add another item'),
+          '#value' => $this->t('Add another item'),
           '#attributes' => ['class' => ['field-add-more-submit']],
           '#limit_validation_errors' => [],
           '#submit' => [[static::class, 'addMoreSubmit']],

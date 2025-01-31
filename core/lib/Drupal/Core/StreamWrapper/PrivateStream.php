@@ -3,6 +3,7 @@
 namespace Drupal\Core\StreamWrapper;
 
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
 /**
@@ -12,6 +13,8 @@ use Drupal\Core\Url;
  * interface.
  */
 class PrivateStream extends LocalStream {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -24,14 +27,14 @@ class PrivateStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getName() {
-    return t('Private files');
+    return $this->t('Private files');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Private local files served by Drupal.');
+    return $this->t('Private local files served by Drupal.');
   }
 
   /**

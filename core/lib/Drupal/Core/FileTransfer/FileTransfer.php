@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\FileTransfer;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Defines the base FileTransfer class.
  *
@@ -20,6 +22,8 @@ namespace Drupal\Core\FileTransfer;
  */
 #[\AllowDynamicProperties]
 abstract class FileTransfer {
+
+  use StringTranslationTrait;
 
   /**
    * The username for this file transfer.
@@ -446,26 +450,26 @@ abstract class FileTransfer {
   public function getSettingsForm() {
     $form['username'] = [
       '#type' => 'textfield',
-      '#title' => t('Username'),
+      '#title' => $this->t('Username'),
     ];
     $form['password'] = [
       '#type' => 'password',
-      '#title' => t('Password'),
-      '#description' => t('Your password is not saved in the database and is only used to establish a connection.'),
+      '#title' => $this->t('Password'),
+      '#description' => $this->t('Your password is not saved in the database and is only used to establish a connection.'),
     ];
     $form['advanced'] = [
       '#type' => 'details',
-      '#title' => t('Advanced settings'),
+      '#title' => $this->t('Advanced settings'),
     ];
     $form['advanced']['hostname'] = [
       '#type' => 'textfield',
-      '#title' => t('Host'),
+      '#title' => $this->t('Host'),
       '#default_value' => 'localhost',
-      '#description' => t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
+      '#description' => $this->t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
     ];
     $form['advanced']['port'] = [
       '#type' => 'textfield',
-      '#title' => t('Port'),
+      '#title' => $this->t('Port'),
       '#default_value' => NULL,
     ];
     return $form;
