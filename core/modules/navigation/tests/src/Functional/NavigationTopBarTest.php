@@ -111,6 +111,9 @@ class NavigationTopBarTest extends PageCacheTagsTestBase {
       $this->clickLink($toolbar_link->getText());
       $this->assertSession()->elementExists('xpath', "(//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button)[1]");
       $this->assertSession()->elementAttributeContains('xpath', "(//div[contains(@class, 'top-bar__content')]/div[contains(@class, 'top-bar__actions')]/button)[1]", 'class', 'toolbar-button--icon--dots');
+      // Ensure that link to current page is not included in the dropdown.
+      $url = $this->getSession()->getCurrentUrl();
+      $this->assertSession()->linkByHrefNotExistsExact(parse_url($url, PHP_URL_PATH));
     }
 
     // Regular tabs are visible for user that cannot access to navigation.

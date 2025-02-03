@@ -264,7 +264,14 @@ final class NavigationRenderer {
       return $this->localTasks;
     }
     $entity_local_tasks = $this->localTaskManager->getLocalTasks($this->routeMatch->getRouteName());
-    foreach ($entity_local_tasks['tabs'] as $route_name => $local_task) {
+    uasort($entity_local_tasks['tabs'], [SortArray::class, 'sortByWeightProperty']);
+    foreach ($entity_local_tasks['tabs'] as $local_task_name => $local_task) {
+      // Exclude current route local task, since it is not going to be included
+      // in the page actions link list.
+      $url = $local_task['#link']['url'] ?? NULL;
+      if ($url?->getRouteName() === $entity_local_tasks['route_name']) {
+        continue;
+      }
       // The $local_task array that we get here is tailor-made for use
       // with the menu-local-tasks.html.twig, eg. the menu_local_task
       // theme hook. It has all the information we need, but we're not
@@ -277,7 +284,7 @@ final class NavigationRenderer {
       $link['localized_options'] += [
         'set_active_class' => TRUE,
       ];
-      $this->localTasks['page_actions'][$route_name] = [
+      $this->localTasks['page_actions'][$local_task_name] = [
         '#theme' => 'top_bar_page_action',
         '#link' => [
           '#type' => 'link',
