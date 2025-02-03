@@ -23,12 +23,12 @@ class InvalidPluginDefinitionException extends PluginException {
    *   The exception message.
    * @param int $code
    *   The exception code.
-   * @param \Exception|null $previous
+   * @param \Throwable|null $previous
    *   The previous throwable used for exception chaining.
    *
    * @see \Exception
    */
-  public function __construct($plugin_id, $message = '', $code = 0, ?\Exception $previous = NULL) {
+  public function __construct($plugin_id, $message = '', $code = 0, ?\Throwable $previous = NULL) {
     $this->pluginId = $plugin_id;
     parent::__construct($message, $code, $previous);
   }

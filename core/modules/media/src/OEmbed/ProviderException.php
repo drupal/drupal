@@ -28,10 +28,10 @@ class ProviderException extends \Exception {
    *   if available, or '<unknown>' if not.
    * @param \Drupal\media\OEmbed\Provider $provider
    *   (optional) The provider information.
-   * @param \Exception $previous
+   * @param \Throwable $previous
    *   (optional) The previous exception, if any.
    */
-  public function __construct($message, ?Provider $provider = NULL, ?\Exception $previous = NULL) {
+  public function __construct($message, ?Provider $provider = NULL, ?\Throwable $previous = NULL) {
     $this->provider = $provider;
     $message = str_replace('@name', $provider ? $provider->getName() : '<unknown>', $message);
     parent::__construct($message, 0, $previous);
