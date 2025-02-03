@@ -79,7 +79,7 @@
     <include-pattern>core/modules/*/Plugin/views/pager/*</include-pattern>
     <include-pattern>core/modules/*/Plugin/views/style/*</include-pattern>
     <include-pattern>*/Database/*</include-pattern>
-    <exclude-pattern>*/tests/*</exclude-pattern>
+    <include-pattern>*/FunctionalJavascript/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.MissingParamType"/>
   <rule ref="Drupal.Commenting.FunctionComment.MissingReturnComment">

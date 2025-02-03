@@ -276,6 +276,9 @@ trait ImageTestBaselineTrait {
     }
   }
 
+  /**
+   * Returns data for testLinkability() and testImageArbitraryHtml().
+   */
   protected function providerLinkability(): array {
     return [
       'BLOCK image, restricted' => ['block', FALSE],

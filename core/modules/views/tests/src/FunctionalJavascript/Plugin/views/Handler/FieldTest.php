@@ -112,6 +112,9 @@ class FieldTest extends WebDriverTestBase {
     $this->assertEquals('Content', $web_assert->waitForElement('css', '.ui-dialog-title')->getText());
   }
 
+  /**
+   * Tests changing the formatter.
+   */
   public function testFormatterChanging(): void {
     $web_assert = $this->assertSession();
     $url = '/admin/structure/views/view/test_field_body';

@@ -20,6 +20,9 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
    */
   protected $profile = 'demo_umami';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $user = $this->drupalCreateUser();

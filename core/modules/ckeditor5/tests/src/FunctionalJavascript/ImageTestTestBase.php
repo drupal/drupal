@@ -124,6 +124,9 @@ class ImageTestTestBase extends ImageTestBase {
     ];
   }
 
+  /**
+   * Uploads a test image.
+   */
   protected function addImage() {
     $page = $this->getSession()->getPage();
     $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));

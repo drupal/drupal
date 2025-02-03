@@ -110,6 +110,9 @@ trait ImageTestProviderTrait {
     $this->assertVisibleBalloon('.ck-text-alternative-form');
   }
 
+  /**
+   * Providers data for testAltTextRequired().
+   */
   public static function providerAltTextRequired(): array {
     return [
       'Restricted' => [FALSE],
@@ -179,6 +182,9 @@ trait ImageTestProviderTrait {
     $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
   }
 
+  /**
+   * Data provider for testAlignment().
+   */
   public static function providerAlignment() {
     return [
       'Block image' => ['block'],

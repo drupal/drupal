@@ -220,6 +220,12 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->assertEmpty($xpath->query('//a'));
   }
 
+  /**
+   * Returns data for multiple tests.
+   *
+   * Provides data for testLinkability(), testLinkManualDecorator() and
+   * testLinkedMediaArbitraryHtml().
+   */
   public static function providerLinkability(): array {
     return [
       'restricted' => [FALSE],
