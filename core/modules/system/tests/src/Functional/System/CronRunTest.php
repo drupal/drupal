@@ -118,6 +118,11 @@ class CronRunTest extends BrowserTestBase {
    * Make sure the cron UI reads from the state storage.
    */
   public function testCronUI(): void {
+    // To prevent race conditions between the admin_user login triggering cron
+    // and updating its state, and this test doing the same thing, we use
+    // \Drupal\Tests\WaitTerminateTestTrait::setWaitForTerminate().
+    $this->setWaitForTerminate();
+
     $admin_user = $this->drupalCreateUser(['administer site configuration']);
     $this->drupalLogin($admin_user);
     \Drupal::state()->delete('system.cron_last');
