@@ -174,8 +174,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $this->cacheTagsInvalidator->invalidateTags($cache_tags);
     $this->resetDefinitions();
     // Every item in the cache bin should have one of the menu cache tags but it
-    // is not guaranteed, so invalidate everything in the bin.
-    $this->menuCacheBackend->invalidateAll();
+    // is not guaranteed, so delete everything in the bin.
+    $this->menuCacheBackend->deleteAll();
   }
 
   /**

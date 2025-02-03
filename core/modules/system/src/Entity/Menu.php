@@ -101,7 +101,7 @@ class Menu extends ConfigEntityBase implements MenuInterface {
    */
   public function save() {
     $return = parent::save();
-    \Drupal::cache('menu')->invalidateAll();
+    \Drupal::cache('menu')->deleteAll();
     // Invalidate the block cache to update menu-based derivatives.
     if (\Drupal::moduleHandler()->moduleExists('block')) {
       \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
@@ -114,7 +114,7 @@ class Menu extends ConfigEntityBase implements MenuInterface {
    */
   public function delete() {
     parent::delete();
-    \Drupal::cache('menu')->invalidateAll();
+    \Drupal::cache('menu')->deleteAll();
 
     // Invalidate the block cache to update menu-based derivatives.
     if (\Drupal::moduleHandler()->moduleExists('block')) {

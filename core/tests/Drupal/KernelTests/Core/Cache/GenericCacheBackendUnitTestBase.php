@@ -636,6 +636,8 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
+   *
+   * @group legacy
    */
   public function testInvalidateAll(): void {
     $backend_a = $this->getCacheBackend();
@@ -646,6 +648,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $backend_a->set('test2', 3, time() + 1000);
     $backend_b->set('test3', 4, Cache::PERMANENT);
 
+    $this->expectDeprecation('CacheBackendInterface::invalidateAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use CacheBackendInterface::deleteAll() or cache tag invalidation instead. See https://www.drupal.org/node/3500622');
     $backend_a->invalidateAll();
 
     $this->assertFalse($backend_a->get('test1'), 'First key has been invalidated.');
