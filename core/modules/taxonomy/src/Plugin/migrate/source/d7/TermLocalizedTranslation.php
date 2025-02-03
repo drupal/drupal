@@ -2,8 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
-use Drupal\content_translation\Plugin\migrate\source\I18nQueryTrait;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Plugin\migrate\source\I18nQueryTrait;
 
 // cspell:ignore ltlanguage objectid
 

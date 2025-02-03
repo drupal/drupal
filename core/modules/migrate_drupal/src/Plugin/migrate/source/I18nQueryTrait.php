@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\content_translation\Plugin\migrate\source;
+declare(strict_types=1);
 
-@trigger_error('The ' . __NAMESPACE__ . '\I18nQueryTrait is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\migrate_drupal\Plugin\migrate\source\I18nQueryTrait instead. See https://www.drupal.org/node/3439256', E_USER_DEPRECATED);
+namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\MigrateException;
@@ -12,11 +12,6 @@ use Drupal\migrate\Row;
 
 /**
  * Gets an i18n translation from the source database.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
- * \Drupal\migrate_drupal\Plugin\migrate\source\I18nQueryTrait instead.
- *
- * @see https://www.drupal.org/node/3439256
  */
 trait I18nQueryTrait {
 
@@ -25,7 +20,7 @@ trait I18nQueryTrait {
    *
    * @var string
    */
-  protected $i18nStringTable;
+  protected string $i18nStringTable;
 
   /**
    * Gets the translation for the property not already in the row.
@@ -55,7 +50,7 @@ trait I18nQueryTrait {
    *
    * @throws \Drupal\migrate\MigrateException
    */
-  protected function getPropertyNotInRowTranslation(Row $row, $property_not_in_row, $object_id_name, MigrateIdMapInterface $id_map) {
+  protected function getPropertyNotInRowTranslation(Row $row, string $property_not_in_row, string $object_id_name, MigrateIdMapInterface $id_map): bool {
     $language = $row->getSourceProperty('language');
     if (!$language) {
       throw new MigrateException('No language found.');
@@ -84,12 +79,7 @@ trait I18nQueryTrait {
     $query->condition('lt.language', $language);
     $query->addField('lt', 'translation');
     $results = $query->execute()->fetchAssoc();
-    if (!$results) {
-      $row->setSourceProperty($property_not_in_row . '_translated', NULL);
-    }
-    else {
-      $row->setSourceProperty($property_not_in_row . '_translated', $results['translation']);
-    }
+    $row->setSourceProperty($property_not_in_row . '_translated', $results['translation'] ?? NULL);
     return TRUE;
   }
 
