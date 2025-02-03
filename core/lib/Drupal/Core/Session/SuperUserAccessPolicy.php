@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Session;
 
+use Drupal\Core\Cache\CacheOptionalInterface;
+
 /**
  * Grants user 1 an all access pass.
  */
-final class SuperUserAccessPolicy extends AccessPolicyBase {
+final class SuperUserAccessPolicy extends AccessPolicyBase implements CacheOptionalInterface {
 
   /**
    * {@inheritdoc}

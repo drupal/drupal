@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Session;
 
+use Drupal\Core\Cache\CacheOptionalInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\VariationCacheInterface;
@@ -82,7 +83,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       }
 
       // Retrieve the permissions from the persistent cache if available.
-      if ($cache = $this->variationCache->get($cache_keys, $initial_cacheability)) {
+      if ($this->needsPersistentCache() && $cache = $this->variationCache->get($cache_keys, $initial_cacheability)) {
         $calculated_permissions = $cache->data;
         $cacheability = CacheableMetadata::createFromObject($calculated_permissions);
 
@@ -134,7 +135,9 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       // we had stored a CalculatedPermissions object, we would no longer be
       // able to ask for its cache contexts.
       $cacheability = CacheableMetadata::createFromObject($calculated_permissions);
-      $this->variationCache->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
+      if ($this->needsPersistentCache()) {
+        $this->variationCache->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
+      }
 
       // Then convert the calculated permissions to an immutable value object
       // and store it in the static cache so that we don't have to do the same
@@ -198,6 +201,22 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
   protected function validateScope(string $scope, CalculatedPermissionsInterface $calculated_permissions): bool {
     $actual_scopes = $calculated_permissions->getScopes();
     return empty($actual_scopes) || $actual_scopes === [$scope];
+  }
+
+  /**
+   * Returns whether the persistent cache is necessary.
+   *
+   * @return bool
+   *   TRUE if cache should be used (at least one policy requires cache), FALSE
+   *   if not.
+   */
+  protected function needsPersistentCache(): bool {
+    foreach ($this->accessPolicies as $access_policy) {
+      if (!$access_policy instanceof CacheOptionalInterface) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }
