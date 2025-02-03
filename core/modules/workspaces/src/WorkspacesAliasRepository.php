@@ -44,7 +44,7 @@ class WorkspacesAliasRepository extends AliasRepository {
     $wa_join = $query->leftJoin('workspace_association', NULL, "[%alias].[target_entity_type_id] = 'path_alias' AND [%alias].[target_entity_id] = [original_base_table].[id] AND [%alias].[workspace] = :active_workspace_id", [
       ':active_workspace_id' => $active_workspace->id(),
     ]);
-    $query->innerJoin('path_alias_revision', 'base_table', "[%alias].[revision_id] = COALESCE([$wa_join].[target_entity_revision_id], [original_base_table].[revision_id]) AND [%alias].[langcode] = [original_base_table].[langcode]");
+    $query->innerJoin('path_alias_revision', 'base_table', "[%alias].[revision_id] = COALESCE([$wa_join].[target_entity_revision_id], [original_base_table].[revision_id])");
     $query->condition('base_table.status', 1);
 
     return $query;
