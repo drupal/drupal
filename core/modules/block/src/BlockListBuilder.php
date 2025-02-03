@@ -150,6 +150,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    * Builds the main "Blocks" portion of the form.
    *
    * @return array
+   *   An array representing the blocks form structure.
    */
   protected function buildBlocksForm() {
     // Build blocks first for each region.

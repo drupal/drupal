@@ -46,6 +46,7 @@ class LinkWidget extends WidgetBase {
    *   The URI to get the displayable string for.
    *
    * @return string
+   *   The displayable string for the URI.
    *
    * @see static::getUserEnteredStringAsUri()
    */

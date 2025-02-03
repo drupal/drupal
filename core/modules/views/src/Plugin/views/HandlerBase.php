@@ -309,6 +309,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Gets the module handler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    */
   protected function getModuleHandler() {
     if (!$this->moduleHandler) {
@@ -646,6 +647,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Exposed means it provides form elements to let users modify the view.
    *
    * @return bool
+   *   TRUE if the item is exposed, FALSE otherwise.
    */
   public function isExposed() {
     return !empty($this->options['exposed']);
@@ -747,6 +749,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * Gets views data service.
    *
    * @return \Drupal\views\ViewsData
+   *   The views data service.
    */
   protected function getViewsData() {
     if (!$this->viewsData) {

@@ -121,6 +121,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * Gets the field storage definitions.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
+   *   The array of field storage definitions, keyed by field name.
    *
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No
    * replacement is provided.

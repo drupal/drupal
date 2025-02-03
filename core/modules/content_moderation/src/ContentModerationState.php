@@ -55,6 +55,7 @@ class ContentModerationState implements StateInterface {
    * Determines if entities should be published if in this state.
    *
    * @return bool
+   *   TRUE if entities should be published if in this state, FALSE if not.
    */
   public function isPublishedState() {
     return $this->published;
@@ -64,6 +65,8 @@ class ContentModerationState implements StateInterface {
    * Determines if entities should be the default revision if in this state.
    *
    * @return bool
+   *   TRUE if entities should be the default revision if in this state, FALSE
+   *   if not.
    */
   public function isDefaultRevisionState() {
     return $this->defaultRevision;

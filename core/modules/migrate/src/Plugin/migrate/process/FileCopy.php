@@ -246,6 +246,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    *   The URI or path to test.
    *
    * @return bool
+   *   TRUE if the URI is local, FALSE otherwise.
    */
   protected function isLocalUri($uri) {
     $scheme = StreamWrapperManager::getScheme($uri);

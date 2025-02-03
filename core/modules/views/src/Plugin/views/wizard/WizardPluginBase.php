@@ -174,6 +174,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Gets the filters property.
    *
    * @return array
+   *   An array of filters, keyed by filter ID, containing filter information.
    */
   public function getFilters() {
     $filters = [];
@@ -207,6 +208,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Gets the availableSorts property.
    *
    * @return array
+   *   An array of available sorts, keyed by sort ID, containing sort information.
    */
   public function getAvailableSorts() {
     return $this->availableSorts;
@@ -216,6 +218,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * Gets the sorts property.
    *
    * @return array
+   *   An array of sorts, keyed by sort ID, containing sort information.
    */
   public function getSorts() {
     return $this->sorts;

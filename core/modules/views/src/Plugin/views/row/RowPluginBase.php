@@ -65,6 +65,7 @@ abstract class RowPluginBase extends PluginBase {
    * Returns the usesFields property.
    *
    * @return bool
+   *   TRUE if fields are used by this row plugin, FALSE otherwise.
    */
   public function usesFields() {
     return $this->usesFields;

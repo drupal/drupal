@@ -294,6 +294,7 @@ class TextFormat extends RenderElementBase {
    * Wraps the config factory.
    *
    * @return \Drupal\Core\Config\ConfigFactoryInterface
+   *   The configuration factory service.
    */
   protected static function configFactory() {
     return \Drupal::configFactory();
@@ -303,6 +304,7 @@ class TextFormat extends RenderElementBase {
    * Wraps the element info service.
    *
    * @return \Drupal\Core\Render\ElementInfoManagerInterface
+   *   The element info service.
    */
   protected static function elementInfo() {
     return \Drupal::service('element_info');

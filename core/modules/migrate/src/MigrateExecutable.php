@@ -135,6 +135,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * Gets the event dispatcher.
    *
    * @return \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   *   The event dispatcher service.
    */
   protected function getEventDispatcher() {
     if (!$this->eventDispatcher) {

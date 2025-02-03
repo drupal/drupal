@@ -219,6 +219,7 @@ function views_invalidate_cache() {
  * easy for other modules or items in drupal_eval to identify
  *
  * @return \Drupal\views\ViewExecutable
+ *   The current view object, or NULL if no view is set.
  */
 function &views_set_current_view($view = NULL) {
   static $cache = NULL;

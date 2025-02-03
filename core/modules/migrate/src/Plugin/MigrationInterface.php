@@ -107,6 +107,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * Get a list of required plugin IDs.
    *
    * @return string[]
+   *   An array of required plugin IDs.
    */
   public function getRequirements(): array;
 
@@ -306,6 +307,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * Indicates if the migration is auditable.
    *
    * @return bool
+   *   TRUE if the migration is auditable, FALSE otherwise.
    */
   public function isAuditable();
 

@@ -95,6 +95,7 @@ class Views {
    *   The plugin type, for example filter.
    *
    * @return \Drupal\views\Plugin\ViewsPluginManager
+   *   The Views plugin manager service.
    */
   public static function pluginManager($type) {
     return \Drupal::service('plugin.manager.views.' . $type);
@@ -104,6 +105,7 @@ class Views {
    * Returns the plugin manager for a certain views handler type.
    *
    * @return \Drupal\views\Plugin\ViewsHandlerManager
+   *   The Views plugin manager service.
    */
   public static function handlerManager($type) {
     return \Drupal::service('plugin.manager.views.' . $type);

@@ -808,6 +808,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *   A group entry as defined by buildGroupForm().
    *
    * @return bool
+   *   TRUE if the grouped filter entry has a valid value, FALSE otherwise.
    */
   protected function hasValidGroupedValue(array $group) {
     if (!method_exists($this, 'operators')) {
@@ -885,6 +886,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *   (optional) The form element to set any errors on.
    *
    * @return string
+   *   Returns an error message if validation fails, or NULL if validation passes.
    */
   protected function validateIdentifier($identifier, ?FormStateInterface $form_state = NULL, &$form_group = []) {
     $error = '';
@@ -1729,6 +1731,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * if OR grouping is in use.
    *
    * @return bool
+   *   TRUE if the filter can be used in OR groups, FALSE otherwise.
    */
   public function canGroup() {
     return TRUE;

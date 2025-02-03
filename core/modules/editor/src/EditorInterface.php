@@ -17,6 +17,7 @@ interface EditorInterface extends ConfigEntityInterface {
    * available yet.
    *
    * @return bool
+   *   TRUE if the text editor has an associated filter format, FALSE otherwise.
    */
   public function hasAssociatedFilterFormat();
 
@@ -28,6 +29,7 @@ interface EditorInterface extends ConfigEntityInterface {
    * @see hasAssociatedFilterFormat()
    *
    * @return \Drupal\filter\FilterFormatInterface|null
+   *   The filter format this text editor is associated with.
    */
   public function getFilterFormat();
 

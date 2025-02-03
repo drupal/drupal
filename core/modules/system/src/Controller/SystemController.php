@@ -179,6 +179,7 @@ class SystemController extends ControllerBase {
    *   Valid values are 'on' and 'off'.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect response to the front page.
    */
   public function compactPage($mode) {
     user_cookie_save(['admin_compact_mode' => ($mode == 'on')]);

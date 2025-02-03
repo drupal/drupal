@@ -116,6 +116,7 @@ final class ProcessOutputCallback implements OutputCallbackInterface, LoggerAwar
    * Resets buffers.
    *
    * @return self
+   *   The current instance for method chaining.
    */
   public function reset(): self {
     $this->clearErrorOutput();

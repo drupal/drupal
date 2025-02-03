@@ -101,6 +101,7 @@ class ContextualLinks extends RenderElementBase {
    * Wraps the contextual link manager.
    *
    * @return \Drupal\Core\Menu\ContextualLinkManager
+   *   The contextual link manager service.
    */
   protected static function contextualLinkManager() {
     return \Drupal::service('plugin.manager.menu.contextual_link');
@@ -110,6 +111,7 @@ class ContextualLinks extends RenderElementBase {
    * Wraps the module handler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    */
   protected static function moduleHandler() {
     return \Drupal::moduleHandler();

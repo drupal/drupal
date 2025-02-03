@@ -201,6 +201,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    *   Which plugin should be used for the new display ID.
    *
    * @return string
+   *   The generated display ID.
    */
   protected function generateDisplayId($plugin_id) {
     // 'default' is singular and is unique, so just go with 'default'

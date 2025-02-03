@@ -148,6 +148,7 @@ interface LanguageNegotiatorInterface {
    *   The method identifier.
    *
    * @return \Drupal\language\LanguageNegotiationMethodInterface
+   *   An instance of the specified language negotiation method.
    */
   public function getNegotiationMethodInstance($method_id);
 

@@ -157,6 +157,7 @@ class ProcessedText extends RenderElementBase {
    * Wraps the config factory.
    *
    * @return \Drupal\Core\Config\ConfigFactoryInterface
+   *   The config factory service.
    */
   protected static function configFactory() {
     return \Drupal::configFactory();

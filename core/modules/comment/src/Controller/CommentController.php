@@ -84,6 +84,7 @@ class CommentController extends ControllerBase {
    *   A comment entity.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect response to the comment's permalink after approval.
    */
   public function commentApprove(CommentInterface $comment) {
     $comment->setPublished();

@@ -196,6 +196,7 @@ class FilterHtml extends FilterBase {
    *   The name to find or match against a prefix.
    *
    * @return bool|array
+   *   The allowed value if found, or FALSE if no match is found.
    */
   protected function findAllowedValue(array $allowed, $name) {
     if (isset($allowed['exact'][$name])) {
@@ -220,6 +221,8 @@ class FilterHtml extends FilterBase {
    *   TRUE, FALSE, or an array of allowed values.
    *
    * @return bool|array
+   *   An array containing 'exact' and 'prefix' lists of allowed values,
+   *   or TRUE/FALSE if all or no values are allowed.
    */
   protected function prepareAttributeValues($attribute_values) {
     if ($attribute_values === TRUE || $attribute_values === FALSE) {

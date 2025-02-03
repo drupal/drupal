@@ -61,6 +61,7 @@ class UpdateRoot {
    * specific subdirectories of this root path.
    *
    * @return string
+   *   The root path for project installation or update.
    */
   public function __toString(): string {
     // Return the $updateRoot when it is set.

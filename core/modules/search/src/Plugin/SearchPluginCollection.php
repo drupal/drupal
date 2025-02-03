@@ -39,6 +39,7 @@ class SearchPluginCollection extends DefaultSingleLazyPluginCollection {
    * {@inheritdoc}
    *
    * @return \Drupal\search\Plugin\SearchInterface
+   *   The search plugin instance associated with the given instance ID.
    */
   public function &get($instance_id) {
     return parent::get($instance_id);

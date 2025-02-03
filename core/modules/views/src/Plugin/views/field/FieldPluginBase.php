@@ -1898,6 +1898,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Gets the link generator.
    *
    * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   *   The link generator service.
    */
   protected function linkGenerator() {
     if (!isset($this->linkGenerator)) {
@@ -1910,6 +1911,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Returns the render API renderer.
    *
    * @return \Drupal\Core\Render\RendererInterface
+   *   The render API renderer service.
    */
   protected function getRenderer() {
     if (!isset($this->renderer)) {

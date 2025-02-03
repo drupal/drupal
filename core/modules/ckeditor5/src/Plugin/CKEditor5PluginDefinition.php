@@ -58,6 +58,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Gets an array representation of this CKEditor 5 plugin definition.
    *
    * @return array
+   *   The array representation of this CKEditor 5 plugin definition.
    */
   public function toArray(): array {
     return [
@@ -347,6 +348,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Gets the human-readable name of the CKEditor plugin.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The human-readable name of the CKEditor plugin.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$label
    */
@@ -381,6 +383,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has conditions.
    *
    * @return bool
+   *   TRUE if the plugin has conditions, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$conditions
    */
@@ -404,6 +407,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has toolbar items.
    *
    * @return bool
+   *   TRUE if the plugin has toolbar items, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$toolbar_items
    */
@@ -433,6 +437,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has an asset library to load.
    *
    * @return bool
+   *   TRUE if the plugin has an asset library to load, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$library
    */
@@ -462,6 +467,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has an asset library to load on the admin UI.
    *
    * @return bool
+   *   TRUE if the plugin has an asset library to load on the admin UI, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$admin_library
    */
@@ -527,6 +533,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin allows creating/editing elements and attributes.
    *
    * @return bool
+   *   TRUE if the plugin has elements, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$elements
    */
@@ -550,6 +557,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin loads CKEditor 5 plugin classes.
    *
    * @return bool
+   *   TRUE if the plugin loads CKEditor 5 plugin classes, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin::$plugins
    */
@@ -573,6 +581,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
    * Whether this plugin has additional values for the CKEditor 5 configuration.
    *
    * @return bool
+   *   TRUE if there are additional configuration values, FALSE otherwise.
    *
    * @see \Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin::$config
    */

@@ -181,6 +181,7 @@ trait MigrationConfigurationTrait {
    * Returns the follow-up migration tags.
    *
    * @return string[]
+   *   An array of follow-up migration tags.
    */
   protected function getFollowUpMigrationTags() {
     if ($this->followUpMigrationTags === NULL) {

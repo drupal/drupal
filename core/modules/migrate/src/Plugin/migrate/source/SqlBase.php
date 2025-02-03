@@ -384,6 +384,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
 
   /**
    * @return \Drupal\Core\Database\Query\SelectInterface
+   *   The query object.
    */
   abstract public function query();
 

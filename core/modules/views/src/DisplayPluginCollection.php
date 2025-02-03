@@ -49,6 +49,7 @@ class DisplayPluginCollection extends DefaultLazyPluginCollection {
    * {@inheritdoc}
    *
    * @return \Drupal\views\Plugin\views\display\DisplayPluginBase
+   *   The display plugin.
    */
   public function &get($instance_id) {
     return parent::get($instance_id);

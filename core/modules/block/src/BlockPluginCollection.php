@@ -40,6 +40,7 @@ class BlockPluginCollection extends DefaultSingleLazyPluginCollection {
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Block\BlockPluginInterface
+   *   The block plugin instance.
    */
   public function &get($instance_id) {
     return parent::get($instance_id);

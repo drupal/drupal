@@ -106,6 +106,7 @@ class TextProcessed extends TypedData implements CacheableDependencyInterface {
    * Returns the renderer service.
    *
    * @return \Drupal\Core\Render\RendererInterface
+   *   The renderer service.
    */
   protected function getRenderer() {
     return \Drupal::service('renderer');

@@ -39,6 +39,7 @@ interface ConfigMapperInterface {
    * Returns the route parameters for the base route the mapper is attached to.
    *
    * @return array
+   *   An array of route parameters for the base route.
    */
   public function getBaseRouteParameters();
 
@@ -70,6 +71,7 @@ interface ConfigMapperInterface {
    * Returns the route parameters for the translation overview route.
    *
    * @return array
+   *   An array of route parameters for the translation overview route.
    */
   public function getOverviewRouteParameters();
 
@@ -101,6 +103,7 @@ interface ConfigMapperInterface {
    * Returns the route parameters for the translation add form route.
    *
    * @return array
+   *   An array of route parameters for the translation add form route.
    */
   public function getAddRouteParameters();
 
@@ -124,6 +127,7 @@ interface ConfigMapperInterface {
    * Returns the route parameters for the translation edit form route.
    *
    * @return array
+   *   An array of route parameters for the translation edit form route.
    */
   public function getEditRouteParameters();
 
@@ -147,6 +151,7 @@ interface ConfigMapperInterface {
    * Returns the route parameters for the translation deletion route.
    *
    * @return array
+   *   An array of route parameters for the translation deletion route.
    */
   public function getDeleteRouteParameters();
 

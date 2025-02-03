@@ -159,6 +159,7 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
    *   The default value.
    *
    * @return mixed
+   *   The variable value.
    */
   protected function variableGet($name, $default) {
     try {

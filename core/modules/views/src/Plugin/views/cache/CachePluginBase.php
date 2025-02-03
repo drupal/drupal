@@ -261,6 +261,7 @@ abstract class CachePluginBase extends PluginBase {
    * Gets the max age for the current view.
    *
    * @return int
+   *   The maximum age for the current view's cache.
    */
   public function getCacheMaxAge() {
     $max_age = $this->getDefaultCacheMaxAge();

@@ -107,6 +107,7 @@ class LanguageConfiguration extends FormElementBase {
    * Wraps the language manager.
    *
    * @return \Drupal\Core\Language\LanguageManagerInterface
+   *   The language manager service.
    */
   protected static function languageManager() {
     return \Drupal::languageManager();

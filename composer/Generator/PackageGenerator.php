@@ -64,6 +64,7 @@ class PackageGenerator {
    * Returns a list of metapackage builders.
    *
    * @return BuilderInterface[]
+   *   An array of BuilderInterface objects.
    */
   protected function builders() {
     return [

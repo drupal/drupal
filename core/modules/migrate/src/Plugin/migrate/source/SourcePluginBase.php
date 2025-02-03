@@ -527,6 +527,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * Checks if the source is countable or using the iterator_count function.
    *
    * @return int
+   *   The count of available source records.
    */
   protected function doCount() {
     $iterator = $this->getIterator();

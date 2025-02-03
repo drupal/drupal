@@ -17,6 +17,7 @@ interface ContentTranslationHandlerInterface {
    * Returns a set of field definitions to be used to store metadata items.
    *
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
+   *   The field definitions.
    */
   public function getFieldDefinitions();
 

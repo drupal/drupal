@@ -263,6 +263,7 @@ class FieldStorageConfigEditForm extends EntityForm {
    * returns that cardinality or NULL if no cardinality has been enforced.
    *
    * @return int|null
+   *   The enforced cardinality as an integer, or NULL if no cardinality is enforced.
    */
   protected function getEnforcedCardinality() {
     /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */

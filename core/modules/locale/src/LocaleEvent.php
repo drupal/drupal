@@ -39,7 +39,8 @@ class LocaleEvent extends Event {
   /**
    * Returns the language codes.
    *
-   * @return string[] $langCodes
+   * @return string[]
+   *   $langCodes
    */
   public function getLangCodes() {
     return $this->langCodes;
@@ -48,7 +49,8 @@ class LocaleEvent extends Event {
   /**
    * Returns the string identifiers.
    *
-   * @return array $lids
+   * @return array
+   *   $lids
    */
   public function getLids() {
     return $this->lids;

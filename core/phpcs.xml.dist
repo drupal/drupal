@@ -86,6 +86,12 @@
     <include-pattern>core/lib/Drupal/Core/*</include-pattern>
     <include-pattern>core/lib/Drupal/Component/*</include-pattern>
   </rule>
+  <rule ref="Drupal.Commenting.FunctionComment.MissingReturnComment">
+    <exclude-pattern>core/lib/Drupal/Core/*</exclude-pattern>
+    <exclude-pattern>core/lib/Drupal/Component/*</exclude-pattern>
+    <exclude-pattern>core/tests/*</exclude-pattern>
+    <exclude-pattern>core/*/tests/*</exclude-pattern>
+  </rule>
   <rule ref="Drupal.Commenting.GenderNeutralComment"/>
   <rule ref="Drupal.Commenting.HookComment"/>
   <rule ref="Drupal.Commenting.InlineComment">

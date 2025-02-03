@@ -68,6 +68,7 @@ class ContentTranslationPermissions implements ContainerInjectionInterface {
    * Returns an array of content translation permissions.
    *
    * @return array
+   *   An associative array of permissions keyed by permission name.
    */
   public function contentPermissions() {
     $permissions = [];

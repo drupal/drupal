@@ -122,6 +122,7 @@ class Composer {
    *   Type of subproject - one of Metapackage, Plugin, or Template
    *
    * @return \Symfony\Component\Finder\Finder
+   *   A Finder object.
    */
   public static function composerSubprojectPaths(string $root, string $subprojectType): Finder {
     return Finder::create()

@@ -274,6 +274,7 @@ class FieldConfigEditForm extends EntityForm {
    *   An element to check.
    *
    * @return bool
+   *   TRUE if the element contains any required elements, FALSE otherwise.
    */
   private function hasAnyRequired(array $element) {
     $has_required = FALSE;
@@ -450,6 +451,7 @@ class FieldConfigEditForm extends EntityForm {
    *   The parent entity that the field is attached to.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The typed data object representing the field configuration and its default value.
    */
   private function getTypedData(FieldConfigInterface $field_config, FieldableEntityInterface $parent): TypedDataInterface {
     // Make sure that typed data manager is re-generating the instance. This

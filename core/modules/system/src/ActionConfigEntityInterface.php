@@ -13,6 +13,7 @@ interface ActionConfigEntityInterface extends ConfigEntityInterface {
    * Returns whether or not this action is configurable.
    *
    * @return bool
+   *   TRUE if the action is configurable, FALSE otherwise.
    */
   public function isConfigurable();
 
@@ -30,6 +31,7 @@ interface ActionConfigEntityInterface extends ConfigEntityInterface {
    * Returns the operation plugin.
    *
    * @return \Drupal\Core\Action\ActionInterface
+   *   The action plugin instance.
    */
   public function getPlugin();
 

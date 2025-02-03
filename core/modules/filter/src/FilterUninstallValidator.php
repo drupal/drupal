@@ -89,6 +89,7 @@ class FilterUninstallValidator implements ModuleUninstallValidatorInterface {
    * Returns all enabled filter formats.
    *
    * @return \Drupal\filter\FilterFormatInterface[]
+   *   An array of enabled filter formats.
    */
   protected function getEnabledFilterFormats() {
     return $this->filterStorage->loadByProperties(['status' => TRUE]);

@@ -156,6 +156,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
    * Returns the editor plugin manager.
    *
    * @return \Drupal\Component\Plugin\PluginManagerInterface
+   *   The editor plugin manager instance.
    */
   protected function editorPluginManager() {
     if (!$this->editorPluginManager) {

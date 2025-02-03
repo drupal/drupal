@@ -465,6 +465,7 @@ class ManagedFile extends FormElementBase {
    * Wraps the file usage service.
    *
    * @return \Drupal\file\FileUsage\FileUsageInterface
+   *   The file usage service.
    */
   protected static function fileUsage() {
     return \Drupal::service('file.usage');

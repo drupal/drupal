@@ -14,6 +14,7 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
    * Provides user facing strings for the filter element.
    *
    * @return array
+   *   An associative array of facing strings.
    */
   protected function getFilterLabels() {
     return [

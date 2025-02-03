@@ -70,6 +70,7 @@ class MigrationPluginManager extends BaseMigrationPluginManager {
    * Returns the migration tags that trigger source_module enforcement.
    *
    * @return string[]
+   *   An array of migration tags that enforce source_module.
    */
   protected function getEnforcedSourceModuleTags() {
     if ($this->enforcedSourceModuleTags === NULL) {

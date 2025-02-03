@@ -92,6 +92,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    * Returns the resource plugin manager.
    *
    * @return \Drupal\Component\Plugin\PluginManagerInterface
+   *   The REST plugin manager service.
    */
   protected function getResourcePluginManager() {
     if (!isset($this->pluginManager)) {
@@ -240,6 +241,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    * Returns the REST resource dependencies.
    *
    * @return \Drupal\rest\Entity\ConfigDependencies
+   *   The REST resource dependencies.
    */
   protected function getRestResourceDependencies() {
     return \Drupal::service('class_resolver')->getInstanceFromDefinition(ConfigDependencies::class);

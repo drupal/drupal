@@ -921,6 +921,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    *   Whether to include only overridden handlers.
    *
    * @return \Drupal\views\Plugin\views\ViewsHandlerInterface[]
+   *   An array of handlers used by the display.
    */
   protected function getAllHandlers($only_overrides = FALSE) {
     $handler_types = Views::getHandlerTypes();
@@ -942,6 +943,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    *   Whether to include only overridden plugins.
    *
    * @return \Drupal\views\Plugin\views\ViewsPluginInterface[]
+   *   An array of plugins used by the display.
    */
   protected function getAllPlugins($only_overrides = FALSE) {
     $plugins = [];
@@ -1354,7 +1356,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     $options['exposed_form'] = [
       'category' => 'exposed',
-      'title' => $this->t('Exposed form style'),
+      'title' => $this->t('Exposed Form'),
       'value' => $exposed_form_plugin->pluginTitle(),
       'setting' => $exposed_form_str,
       'desc' => $this->t('Select the kind of exposed filter to use.'),

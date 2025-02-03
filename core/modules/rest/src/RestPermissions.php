@@ -51,6 +51,7 @@ class RestPermissions implements ContainerInjectionInterface {
    * Returns an array of REST permissions.
    *
    * @return array
+   *   An array of permissions keyed by permission name.
    */
   public function permissions() {
     $permissions = [];

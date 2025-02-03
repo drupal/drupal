@@ -31,6 +31,7 @@ abstract class EntityTranslationRendererBase extends RendererBase {
    *   The relationship to be used.
    *
    * @return string
+   *   A language code.
    */
   public function getLangcodeByRelationship(ResultRow $row, string $relationship): string {
     // This method needs to be overridden if the relationship is needed in the

@@ -80,6 +80,7 @@ class PhpExtensionsValidator implements EventSubscriberInterface {
    * Whether this validator is running inside a test.
    *
    * @return bool
+   *   TRUE if the validator is running in a test. FALSE otherwise.
    */
   private static function insideTest(): bool {
     // @see \Drupal\Core\CoreServiceProvider::registerTest()

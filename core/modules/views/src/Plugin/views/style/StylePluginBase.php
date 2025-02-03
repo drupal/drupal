@@ -154,6 +154,7 @@ abstract class StylePluginBase extends PluginBase {
    * Returns the usesRowPlugin property.
    *
    * @return bool
+   *   TRUE if this style uses a row plugin, FALSE otherwise.
    */
   public function usesRowPlugin() {
     return $this->usesRowPlugin;
@@ -164,6 +165,7 @@ abstract class StylePluginBase extends PluginBase {
    * Returns the usesRowClass property.
    *
    * @return bool
+   *   TRUE if this style uses a row class, FALSE otherwise.
    */
   public function usesRowClass() {
     return $this->usesRowClass;
@@ -173,6 +175,7 @@ abstract class StylePluginBase extends PluginBase {
    * Returns the usesGrouping property.
    *
    * @return bool
+   *   TRUE if this style supports grouping, FALSE otherwise.
    */
   public function usesGrouping() {
     return $this->usesGrouping;
@@ -182,6 +185,7 @@ abstract class StylePluginBase extends PluginBase {
    * Return TRUE if this style also uses fields.
    *
    * @return bool
+   *   TRUE if fields are used, FALSE otherwise.
    */
   public function usesFields() {
     // If we use a row plugin, ask the row plugin. Chances are, we don't
@@ -212,6 +216,7 @@ abstract class StylePluginBase extends PluginBase {
    * Return TRUE if this style enables field labels by default.
    *
    * @return bool
+   *   TRUE if field labels are enabled by default, FALSE otherwise.
    */
   public function defaultFieldLabels() {
     return $this->defaultFieldLabels;
