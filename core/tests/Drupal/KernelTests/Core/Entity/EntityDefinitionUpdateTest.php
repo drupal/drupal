@@ -17,6 +17,7 @@ use Drupal\Core\Field\FieldStorageDefinitionEvents;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\entity_test\FieldStorageDefinition;
 use Drupal\entity_test_update\Entity\EntityTestUpdate;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
@@ -534,7 +535,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->assertTrue($schema_handler->tableExists($dedicated_table_name), 'The bundle field uses a dedicated table.');
 
     // Save an entity with the bundle field populated.
-    entity_test_create_bundle('custom');
+    EntityTestHelper::createBundle('custom');
     $entity = $storage->create(['type' => 'test_bundle', 'new_bundle_field' => 'foo']);
     $entity->save();
 
@@ -620,7 +621,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     $this->applyEntityUpdates();
 
     // Save an entity with the bundle field populated.
-    entity_test_create_bundle('custom');
+    EntityTestHelper::createBundle('custom');
     $this->entityTypeManager->getStorage('entity_test_update')->create(['type' => 'test_bundle', 'new_bundle_field' => 'foo'])->save();
 
     // Change the field's field type and apply updates. It's expected to

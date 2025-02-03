@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\comment\Entity\CommentType;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 
@@ -50,8 +51,8 @@ class EntityDeriverTest extends KernelTestBase {
       'label' => 'Default comment',
       'target_entity_type_id' => 'node',
     ])->save();
-    entity_test_create_bundle('foo', NULL, 'entity_test_no_bundle');
-    entity_test_create_bundle('entity_test_no_bundle', NULL, 'entity_test_no_bundle');
+    EntityTestHelper::createBundle('foo', NULL, 'entity_test_no_bundle');
+    EntityTestHelper::createBundle('entity_test_no_bundle', NULL, 'entity_test_no_bundle');
     $this->typedDataManager = $this->container->get('typed_data_manager');
   }
 

@@ -659,7 +659,7 @@ class EntityFieldTest extends EntityKernelTestBase {
       $this->assertNotEmpty($types['entity:' . $entity_type]['class'], 'Entity data type registered.');
     }
     // Check bundle types are provided as well.
-    entity_test_create_bundle('bundle');
+    EntityTestHelper::createBundle('bundle');
     $types = \Drupal::typedDataManager()->getDefinitions();
     $this->assertNotEmpty($types['entity:entity_test:bundle']['class'], 'Entity bundle data type registered.');
   }
@@ -694,7 +694,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   public function testFieldOverrideBundleField(): void {
     // First make sure the bundle field override in code, which is provided by
     // the test entity works.
-    entity_test_create_bundle('some_test_bundle', 'Some test bundle', 'entity_test_field_override');
+    EntityTestHelper::createBundle('some_test_bundle', 'Some test bundle', 'entity_test_field_override');
     $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('entity_test_field_override', 'entity_test_field_override');
     $this->assertEquals('The default description.', $field_definitions['name']->getDescription());
     $this->assertNull($field_definitions['name']->getTargetBundle());

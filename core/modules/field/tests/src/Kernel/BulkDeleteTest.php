@@ -6,6 +6,7 @@ namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_test\FieldTestHelper;
@@ -105,7 +106,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
     // Create two bundles.
     $this->bundles = ['bb_1' => 'bb_1', 'bb_2' => 'bb_2'];
     foreach ($this->bundles as $name => $desc) {
-      entity_test_create_bundle($name, $desc);
+      EntityTestHelper::createBundle($name, $desc);
     }
 
     // Create two field storages.

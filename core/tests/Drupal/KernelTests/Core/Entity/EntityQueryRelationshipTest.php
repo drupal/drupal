@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
@@ -76,7 +77,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
     $vocabulary->save();
 
     // Second, create the field.
-    entity_test_create_bundle('test_bundle');
+    EntityTestHelper::createBundle('test_bundle');
     $this->fieldName = $this->randomMachineName();
     $handler_settings = [
       'target_bundles' => [

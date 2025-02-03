@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\field_ui\FunctionalJavascript;
 
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -98,7 +99,7 @@ class EntityDisplayTest extends WebDriverTestBase {
    * Tests extra fields.
    */
   public function testExtraFields(): void {
-    entity_test_create_bundle('bundle_with_extra_fields');
+    EntityTestHelper::createBundle('bundle_with_extra_fields');
     $this->drupalGet('entity_test/structure/bundle_with_extra_fields/display');
     $this->assertSession()->waitForElement('css', '.tabledrag-handle');
     $id = $this->getSession()->getPage()->find('css', '[name="form_build_id"]')->getValue();

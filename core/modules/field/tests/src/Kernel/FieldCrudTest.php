@@ -7,6 +7,7 @@ namespace Drupal\Tests\field\Kernel;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\FieldException;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 
@@ -284,7 +285,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     FieldConfig::create($this->fieldDefinition)->save();
     $another_field_definition = $this->fieldDefinition;
     $another_field_definition['bundle'] .= '_another_bundle';
-    entity_test_create_bundle($another_field_definition['bundle']);
+    EntityTestHelper::createBundle($another_field_definition['bundle']);
     FieldConfig::create($another_field_definition)->save();
 
     // Test that the first field is not deleted, and then delete it.
@@ -312,7 +313,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   public function testDeleteFieldCrossDeletion(): void {
     $field_definition_2 = $this->fieldDefinition;
     $field_definition_2['bundle'] .= '_another_bundle';
-    entity_test_create_bundle($field_definition_2['bundle']);
+    EntityTestHelper::createBundle($field_definition_2['bundle']);
 
     // Check that deletion of a field storage deletes its fields.
     $field_storage = $this->fieldStorage;

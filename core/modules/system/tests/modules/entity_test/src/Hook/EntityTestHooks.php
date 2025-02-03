@@ -124,6 +124,9 @@ class EntityTestHooks {
 
   /**
    * Implements hook_entity_bundle_info().
+   *
+   * @see \Drupal\entity_test\EntityTestHelper::createBundle()
+   * @see \Drupal\entity_test\EntityTestHelper::deleteBundle()
    */
   #[Hook('entity_bundle_info')]
   public function entityBundleInfo(): array {

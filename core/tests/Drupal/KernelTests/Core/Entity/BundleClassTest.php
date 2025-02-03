@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Exception\AmbiguousBundleClassException;
 use Drupal\Core\Entity\Exception\BundleClassInheritanceException;
 use Drupal\Core\Entity\Exception\MissingBundleClassException;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\entity_test_bundle_class\Entity\EntityTestAmbiguousBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestUserClass;
@@ -47,7 +48,7 @@ class BundleClassTest extends EntityKernelTestBase {
    * Tests making use of a custom bundle class.
    */
   public function testEntitySubclass(): void {
-    entity_test_create_bundle('bundle_class');
+    EntityTestHelper::createBundle('bundle_class');
 
     // Ensure we start life with empty counters.
     $this->assertEquals(0, EntityTestBundleClass::$preCreateCount);
@@ -131,7 +132,7 @@ class BundleClassTest extends EntityKernelTestBase {
     $this->assertEquals(5, EntityTestBundleClass::$preCreateCount);
 
     // Make another bundle that does not have a bundle subclass.
-    entity_test_create_bundle('entity_test');
+    EntityTestHelper::createBundle('entity_test');
 
     $entity_test_1 = $this->storage->create(['type' => 'entity_test']);
     $entity_test_1->save();
@@ -223,8 +224,8 @@ class BundleClassTest extends EntityKernelTestBase {
   public function testAmbiguousBundleClassExceptionCreate(): void {
     $this->container->get('state')->set('entity_test_bundle_class_enable_ambiguous_entity_types', TRUE);
     $this->entityTypeManager->clearCachedDefinitions();
-    entity_test_create_bundle('bundle_class');
-    entity_test_create_bundle('bundle_class_2');
+    EntityTestHelper::createBundle('bundle_class');
+    EntityTestHelper::createBundle('bundle_class_2');
 
     // Since we now have two bundles trying to reuse the same class, we expect
     // this to throw an exception.
@@ -239,8 +240,8 @@ class BundleClassTest extends EntityKernelTestBase {
    */
   public function testAmbiguousBundleClassExceptionEntityTypeRepository(): void {
     $this->container->get('state')->set('entity_test_bundle_class_enable_ambiguous_entity_types', TRUE);
-    entity_test_create_bundle('entity_test_no_label');
-    entity_test_create_bundle('entity_test_no_label', NULL, 'entity_test_no_label');
+    EntityTestHelper::createBundle('entity_test_no_label');
+    EntityTestHelper::createBundle('entity_test_no_label', NULL, 'entity_test_no_label');
     // Now that we have an entity bundle class that's shared by two entirely
     // different entity types, we expect an exception to be thrown.
     $this->expectException(AmbiguousBundleClassException::class);
@@ -266,7 +267,7 @@ class BundleClassTest extends EntityKernelTestBase {
     $this->container->get('state')->set('entity_test_bundle_class_non_inheriting', TRUE);
     $this->entityTypeManager->clearCachedDefinitions();
     $this->expectException(BundleClassInheritanceException::class);
-    entity_test_create_bundle('bundle_class');
+    EntityTestHelper::createBundle('bundle_class');
     $this->storage->create(['type' => 'bundle_class']);
   }
 
@@ -277,7 +278,7 @@ class BundleClassTest extends EntityKernelTestBase {
     $this->container->get('state')->set('entity_test_bundle_class_does_not_exist', TRUE);
     $this->entityTypeManager->clearCachedDefinitions();
     $this->expectException(MissingBundleClassException::class);
-    entity_test_create_bundle('bundle_class');
+    EntityTestHelper::createBundle('bundle_class');
     $this->storage->create(['type' => 'bundle_class']);
   }
 

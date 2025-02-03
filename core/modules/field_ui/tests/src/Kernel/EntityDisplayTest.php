@@ -11,6 +11,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
@@ -174,7 +175,7 @@ class EntityDisplayTest extends KernelTestBase {
    * Tests the behavior of a field component within an entity display object.
    */
   public function testExtraFieldComponent(): void {
-    entity_test_create_bundle('bundle_with_extra_fields');
+    EntityTestHelper::createBundle('bundle_with_extra_fields');
     $display = EntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'bundle_with_extra_fields',
@@ -197,7 +198,7 @@ class EntityDisplayTest extends KernelTestBase {
    * Tests the behavior of an extra field component with initial invalid values.
    */
   public function testExtraFieldComponentInitialInvalidConfig(): void {
-    entity_test_create_bundle('bundle_with_extra_fields');
+    EntityTestHelper::createBundle('bundle_with_extra_fields');
     $display = EntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'bundle_with_extra_fields',

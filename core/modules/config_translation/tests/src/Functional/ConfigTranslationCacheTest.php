@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config_translation\Functional;
 
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -134,7 +135,7 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
     $field_storage->save();
 
     $bundle = $this->randomMachineName();
-    entity_test_create_bundle($bundle);
+    EntityTestHelper::createBundle($bundle);
     $field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

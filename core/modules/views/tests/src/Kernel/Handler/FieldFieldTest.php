@@ -7,6 +7,7 @@ namespace Drupal\Tests\views\Kernel\Handler;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -583,7 +584,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   public function testMissingBundleFieldRender(): void {
     // Create a new bundle not having the test field attached.
     $bundle = $this->randomMachineName();
-    entity_test_create_bundle($bundle);
+    EntityTestHelper::createBundle($bundle);
 
     $entity = EntityTest::create([
       'type' => $bundle,
@@ -603,7 +604,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
    */
   public function testGetValueMethod(): void {
     $bundle = 'test_bundle';
-    entity_test_create_bundle($bundle);
+    EntityTestHelper::createBundle($bundle);
 
     $field_multiple = FieldConfig::create([
       'field_name' => 'field_test_multiple',

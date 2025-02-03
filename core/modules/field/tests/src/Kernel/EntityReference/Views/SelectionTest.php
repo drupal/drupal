@@ -6,6 +6,7 @@ namespace Drupal\Tests\field\Kernel\EntityReference\Views;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
@@ -78,7 +79,7 @@ class SelectionTest extends KernelTestBase {
 
     // Ensure the bundle to which the field is attached actually exists, or we
     // will get config validation errors.
-    entity_test_create_bundle('test_bundle');
+    EntityTestHelper::createBundle('test_bundle');
 
     // Create an entity reference field.
     $handler_settings = [

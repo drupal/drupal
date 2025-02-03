@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 use Drupal\entity_test\Entity\EntityTestConstraints;
@@ -215,7 +216,7 @@ class FileListingTest extends FileFieldTestBase {
 
     // Create a bundle and attach a File field to the bundle.
     $bundle = $this->randomMachineName();
-    entity_test_create_bundle($bundle, NULL, 'entity_test_constraints');
+    EntityTestHelper::createBundle($bundle, NULL, 'entity_test_constraints');
     $this->createFileField('field_test_file', 'entity_test_constraints', $bundle, [], ['file_extensions' => 'txt png']);
 
     // Create file to attach to entity.

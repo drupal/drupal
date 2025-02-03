@@ -54,4 +54,43 @@ class EntityTestHelper {
     return array_combine($types, $types);
   }
 
+  /**
+   * Creates a new bundle for entity_test entities.
+   *
+   * @param string $bundle
+   *   The machine-readable name of the bundle.
+   * @param string $text
+   *   (optional) The human-readable name of the bundle. If none is provided, the
+   *   machine name will be used.
+   * @param string $entity_type
+   *   (optional) The entity type for which the bundle is created. Defaults to
+   *   'entity_test'.
+   *
+   * @see \Drupal\entity_test\Hook\EntityTestHooks::entityBundleInfo()
+   */
+  public static function createBundle($bundle, $text = NULL, $entity_type = 'entity_test'): void {
+    $bundles = \Drupal::state()->get($entity_type . '.bundles', [$entity_type => ['label' => 'Entity Test Bundle']]);
+    $bundles += [$bundle => ['label' => $text ? $text : $bundle]];
+    \Drupal::state()->set($entity_type . '.bundles', $bundles);
+    \Drupal::service('entity_bundle.listener')->onBundleCreate($bundle, $entity_type);
+  }
+
+  /**
+   * Deletes a bundle for entity_test entities.
+   *
+   * @param string $bundle
+   *   The machine-readable name of the bundle to delete.
+   * @param string $entity_type
+   *   (optional) The entity type for which the bundle is deleted. Defaults to
+   *   'entity_test'.
+   *
+   * @see \Drupal\entity_test\Hook\EntityTestHooks::entityBundleInfo()
+   */
+  public static function deleteBundle($bundle, $entity_type = 'entity_test'): void {
+    $bundles = \Drupal::state()->get($entity_type . '.bundles', [$entity_type => ['label' => 'Entity Test Bundle']]);
+    unset($bundles[$bundle]);
+    \Drupal::state()->set($entity_type . '.bundles', $bundles);
+    \Drupal::service('entity_bundle.listener')->onBundleDelete($bundle, $entity_type);
+  }
+
 }
