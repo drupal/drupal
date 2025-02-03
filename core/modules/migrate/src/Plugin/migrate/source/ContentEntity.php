@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\migrate_drupal\Plugin\migrate\source;
+namespace Drupal\migrate\Plugin\migrate\source;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -8,20 +8,15 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\EntityFieldDefinitionTrait;
-use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Source plugin to get content entities from the current version of Drupal.
- *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
- * \Drupal\migrate\Plugin\migrate\source\ContentEntity instead.
- *
- * @see https://www.drupal.org/node/3498916
  *
  * This plugin uses the Entity API to export entity data. If the source entity
  * type has custom field storage fields or computed fields, this class will need
@@ -66,30 +61,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * For additional configuration keys, refer to the parent class:
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "content_entity",
+ *   source_module = "migrate",
+ *   deriver = "\Drupal\migrate\Plugin\migrate\source\ContentEntityDeriver",
+ * )
  */
 class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginInterface {
   use EntityFieldDefinitionTrait;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
 
   /**
    * The entity type definition.
@@ -103,7 +83,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    *
    * @var array
    */
-  protected $defaultConfiguration = [
+  protected array $defaultConfiguration = [
     'bundle' => NULL,
     'include_translations' => TRUE,
     'add_revision_id' => TRUE,
@@ -112,15 +92,18 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
-    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\migrate\Plugin\migrate\source\ContentEntity instead. See https://www.drupal.org/node/3498916', E_USER_DEPRECATED);
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+  public function __construct(
+    array $configuration,
+    string $plugin_id,
+    array $plugin_definition,
+    MigrationInterface $migration,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+  ) {
     if (empty($plugin_definition['entity_type'])) {
       throw new InvalidPluginDefinitionException($plugin_id, 'Missing required "entity_type" definition.');
     }
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->entityType = $this->entityTypeManager->getDefinition($plugin_definition['entity_type']);
     if (!$this->entityType instanceof ContentEntityTypeInterface) {
       throw new InvalidPluginDefinitionException($plugin_id, sprintf('The entity type (%s) is not supported. The "content_entity" source plugin only supports content entities.', $plugin_definition['entity_type']));
@@ -140,7 +123,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL): static {
     return new static(
       $configuration,
       $plugin_id,
@@ -165,7 +148,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * @return \Generator
    *   A data generator for this source.
    */
-  protected function initializeIterator() {
+  protected function initializeIterator(): \Generator {
     $ids = $this->query()->execute();
     return $this->yieldEntities($ids);
   }
@@ -179,7 +162,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * @return \Generator
    *   An iterable of the loaded entities.
    */
-  protected function yieldEntities(array $ids) {
+  protected function yieldEntities(array $ids): \Generator {
     $storage = $this->entityTypeManager
       ->getStorage($this->entityType->id());
     foreach ($ids as $id) {
@@ -206,7 +189,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * @return array
    *   The entity, represented as an array.
    */
-  protected function toArray(ContentEntityInterface $entity) {
+  protected function toArray(ContentEntityInterface $entity): array {
     $return = $entity->toArray();
     // This is necessary because the IDs must be flat. They cannot be nested for
     // the ID map.
@@ -225,7 +208,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The query.
    */
-  public function query() {
+  public function query(): QueryInterface {
     $query = $this->entityTypeManager
       ->getStorage($this->entityType->id())
       ->getQuery()
@@ -256,14 +239,14 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  protected function doCount() {
+  protected function doCount(): int {
     return $this->query()->count()->execute();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function fields() {
+  public function fields(): array {
     // Retrieving fields from a non-fieldable content entity will throw a
     // LogicException. Return an empty list of fields instead.
     if (!$this->entityType->entityClassImplements('Drupal\Core\Entity\FieldableEntityInterface')) {
@@ -282,7 +265,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public function getIds() {
+  public function getIds(): array {
     $id_key = $this->entityType->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
     if ($this->configuration['add_revision_id'] && $this->entityType->isRevisionable()) {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source;
+namespace Drupal\Tests\migrate\Kernel\Plugin\source;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -23,7 +23,7 @@ use Drupal\user\Entity\User;
 /**
  * Tests the entity content source plugin.
  *
- * @group migrate_drupal
+ * @group migrate
  * @group #slow
  */
 class ContentEntityTest extends KernelTestBase {
@@ -37,7 +37,6 @@ class ContentEntityTest extends KernelTestBase {
   protected static $modules = [
     'user',
     'migrate',
-    'migrate_drupal',
     'system',
     'node',
     'taxonomy',
@@ -428,13 +427,13 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * Data provider for several test methods.
    *
-   * @see \Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\ContentEntityTest::testUserSource
-   * @see \Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\ContentEntityTest::testFileSource
-   * @see \Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\ContentEntityTest::testNodeSource
-   * @see \Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\ContentEntityTest::testMediaSource
-   * @see \Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\ContentEntityTest::testTermSource
+   * @see \Drupal\Tests\migrate\Kernel\Plugin\source\ContentEntityTest::testUserSource
+   * @see \Drupal\Tests\migrate\Kernel\Plugin\source\ContentEntityTest::testFileSource
+   * @see \Drupal\Tests\migrate\Kernel\Plugin\source\ContentEntityTest::testNodeSource
+   * @see \Drupal\Tests\migrate\Kernel\Plugin\source\ContentEntityTest::testMediaSource
+   * @see \Drupal\Tests\migrate\Kernel\Plugin\source\ContentEntityTest::testTermSource
    */
-  public static function migrationConfigurationProvider() {
+  public static function migrationConfigurationProvider(): array {
     $data = [];
     foreach ([FALSE, TRUE] as $include_translations) {
       foreach ([FALSE, TRUE] as $add_revision_id) {
@@ -460,7 +459,7 @@ class ContentEntityTest extends KernelTestBase {
    * @return array
    *   The definition.
    */
-  protected function migrationDefinition($plugin_id, array $configuration = []): array {
+  protected function migrationDefinition(string $plugin_id, array $configuration = []): array {
     return [
       'source' => [
         'plugin' => $plugin_id,

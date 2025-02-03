@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source;
+namespace Drupal\Tests\migrate\Kernel\Plugin\source;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\source\ContentEntity;
+use Drupal\migrate\Plugin\migrate\source\ContentEntity;
 
 /**
  * Tests the constructor of the entity content source plugin.
  *
- * @group legacy
- * @group migrate_drupal
+ * @group migrate
  */
 class ContentEntityConstructorTest extends KernelTestBase {
 
@@ -22,7 +21,6 @@ class ContentEntityConstructorTest extends KernelTestBase {
    */
   protected static $modules = [
     'migrate',
-    'migrate_drupal',
     'node',
     'system',
     'user',
@@ -33,7 +31,7 @@ class ContentEntityConstructorTest extends KernelTestBase {
    *
    * @dataProvider providerTestConstructor
    */
-  public function testConstructor($configuration, $plugin_definition, $exception_class, $expected): void {
+  public function testConstructor(array $configuration, array $plugin_definition, string $exception_class, string $expected): void {
     $migration = $this->prophesize(MigrationInterface::class)->reveal();
     $this->expectException($exception_class);
     $this->expectExceptionMessage($expected);
@@ -43,7 +41,7 @@ class ContentEntityConstructorTest extends KernelTestBase {
   /**
    * Provides data for constructor tests.
    */
-  public static function providerTestConstructor() {
+  public static function providerTestConstructor(): array {
     return [
       'entity type missing' => [
         [],
