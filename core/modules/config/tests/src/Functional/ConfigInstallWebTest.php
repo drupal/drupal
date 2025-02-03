@@ -27,6 +27,8 @@ class ConfigInstallWebTest extends BrowserTestBase {
 
   /**
    * The admin user used in this test.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser;
 

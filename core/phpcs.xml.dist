@@ -102,9 +102,10 @@
   <rule ref="Drupal.Commenting.InlineVariableComment"/>
   <rule ref="Drupal.Commenting.PostStatementComment"/>
   <rule ref="Drupal.Commenting.TodoComment" />
-  <rule ref="Drupal.Commenting.VariableComment">
-    <!-- Sniff for: DuplicateVar, EmptyVar, IncorrectVarType, InlineVariableName, WrongStyle -->
-    <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
+  <rule ref="Drupal.Commenting.VariableComment"/>
+  <rule ref="Drupal.Commenting.VariableComment.MissingVar">
+    <include-pattern>core/modules/*/tests/*</include-pattern>
+    <include-pattern>core/profiles/*/tests/*</include-pattern>
   </rule>
   <rule ref="Drupal.ControlStructures.ControlSignature"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>

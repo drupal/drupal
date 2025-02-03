@@ -43,6 +43,8 @@ class DisplayTest extends WebDriverTestBase {
 
   /**
    * The views used for testing.
+   *
+   * @var array
    */
   public static $testViews = ['test_content_ajax', 'test_display'];
 

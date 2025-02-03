@@ -22,6 +22,6 @@ class RestTestConstraint extends SymfonyConstraint {
   /**
    * The default violation message.
    */
-  public $message = 'REST test validation failed';
+  public string $message = 'REST test validation failed';
 
 }

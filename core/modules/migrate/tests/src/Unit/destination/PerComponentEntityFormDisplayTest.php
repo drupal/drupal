@@ -52,11 +52,15 @@ class TestPerComponentEntityFormDisplay extends PerComponentEntityFormDisplay {
 
   /**
    * The test values.
+   *
+   * @var string[]
    */
   protected $testValues;
 
   /**
    * The test entity.
+   *
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $entity;
 

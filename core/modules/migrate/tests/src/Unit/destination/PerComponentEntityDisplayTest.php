@@ -52,11 +52,15 @@ class TestPerComponentEntityDisplay extends ComponentEntityDisplayBase {
 
   /**
    * The arguments of getEntity.
+   *
+   * @var string[]
    */
   protected $testValues;
 
   /**
    * The test entity.
+   *
+   * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $entity;
 

@@ -24,21 +24,29 @@ class QueryTest extends QueryPluginBase {
 
   /**
    * The conditions to apply to the query.
+   *
+   * @var array
    */
   protected $conditions = [];
 
   /**
    * The list of fields.
+   *
+   * @var string[][]
    */
   protected $fields = [];
 
   /**
    * An array of stdClasses.
+   *
+   * @var \stdClass[]
    */
   protected $allItems = [];
 
   /**
    * The field to order and the direction.
+   *
+   * @var array
    */
   protected $orderBy = [];
 

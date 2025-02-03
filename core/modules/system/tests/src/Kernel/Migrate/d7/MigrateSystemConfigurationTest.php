@@ -20,6 +20,8 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
 
   /**
    * The expected configuration after migration.
+   *
+   * @var array
    */
   protected $expectedConfig = [
     'system.authorize' => [],

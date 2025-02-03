@@ -21,7 +21,7 @@ class EntityTestCompositeConstraint extends CompositeConstraintBase {
   /**
    * The default violation message.
    */
-  public $message = 'Multiple fields are validated';
+  public string $message = 'Multiple fields are validated';
 
   /**
    * {@inheritdoc}

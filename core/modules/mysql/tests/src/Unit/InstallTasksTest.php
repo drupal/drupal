@@ -45,6 +45,8 @@ class InstallTasksTest extends UnitTestCase {
 
       /**
        * The database connection.
+       *
+       * @var \Drupal\Core\Database\Connection
        */
       private $connection;
 

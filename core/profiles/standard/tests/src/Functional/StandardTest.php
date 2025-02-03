@@ -16,7 +16,7 @@ class StandardTest extends BrowserTestBase {
   use StandardTestTrait;
 
   /**
-   * The profile to use.
+   * {@inheritdoc}
    */
   protected $profile = 'standard';
 

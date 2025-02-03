@@ -11,11 +11,15 @@ class MockTestConnection {
 
   /**
    * The commands to run.
+   *
+   * @var array
    */
   protected $commandsRun = [];
 
   /**
    * The database connection.
+   *
+   * @var string
    */
   public $connectionString;
 

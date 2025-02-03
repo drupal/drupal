@@ -27,6 +27,8 @@ class CollectRoutesTest extends UnitTestCase {
 
   /**
    * The RouteCollection.
+   *
+   * @var \Symfony\Component\Routing\RouteCollection
    */
   protected $routes;
 

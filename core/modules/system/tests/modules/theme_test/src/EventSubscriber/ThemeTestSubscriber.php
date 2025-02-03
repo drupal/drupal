@@ -22,6 +22,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    * @todo This variable is never initialized, so we don't know what it is.
    *   See https://www.drupal.org/node/2721315
    */
+  // phpcs:ignore Drupal.Commenting.VariableComment.Missing, Drupal.Commenting.VariableComment.MissingVar
   protected $container;
 
   /**

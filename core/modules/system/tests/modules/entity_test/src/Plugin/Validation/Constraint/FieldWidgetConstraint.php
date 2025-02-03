@@ -20,6 +20,6 @@ class FieldWidgetConstraint extends SymfonyConstraint {
   /**
    * The default violation message.
    */
-  public $message = 'Widget constraint has failed.';
+  public string $message = 'Widget constraint has failed.';
 
 }

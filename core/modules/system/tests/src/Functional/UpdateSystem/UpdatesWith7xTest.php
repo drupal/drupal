@@ -36,6 +36,8 @@ class UpdatesWith7xTest extends BrowserTestBase {
 
   /**
    * An administrative user.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   private $updateUser;
 

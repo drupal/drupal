@@ -17,6 +17,8 @@ class FileUriTest extends MigrateTestCase {
 
   /**
    * The plugin configuration.
+   *
+   * @var array
    */
   protected $migrationConfiguration = [
     'id' => 'test',

@@ -29,6 +29,8 @@ class AccessDeniedTest extends BrowserTestBase {
 
   /**
    * The test user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $adminUser;
 

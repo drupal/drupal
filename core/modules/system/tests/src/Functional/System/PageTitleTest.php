@@ -28,6 +28,8 @@ class PageTitleTest extends BrowserTestBase {
 
   /**
    * The test user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $contentUser;
 

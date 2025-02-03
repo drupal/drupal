@@ -109,6 +109,8 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
 
       /**
        * The test entity.
+       *
+       * @var \Drupal\media\Entity\Media
        */
       private $entity;
 

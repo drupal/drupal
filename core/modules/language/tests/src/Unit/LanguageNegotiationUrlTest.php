@@ -20,11 +20,15 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
 
   /**
    * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
   /**
    * The test user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $user;
 

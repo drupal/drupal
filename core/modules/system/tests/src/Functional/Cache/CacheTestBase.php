@@ -13,16 +13,22 @@ abstract class CacheTestBase extends BrowserTestBase {
 
   /**
    * The default bin for the cache item.
+   *
+   * @var string
    */
   protected $defaultBin = 'render';
 
   /**
    * The default cache ID.
+   *
+   * @var string
    */
   protected $defaultCid = 'test_temporary';
 
   /**
    * The cache contents default value.
+   *
+   * @var string
    */
   protected $defaultValue = 'CacheTest';
 

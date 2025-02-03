@@ -29,6 +29,8 @@ class EntityTranslationFormTest extends BrowserTestBase {
 
   /**
    * The test language codes.
+   *
+   * @var string[]
    */
   protected $langcodes;
 

@@ -11,6 +11,8 @@ class TraversableObject implements \IteratorAggregate {
 
   /**
    * The test data.
+   *
+   * @var string
    */
   public $property = "value";
 

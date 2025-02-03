@@ -20,7 +20,7 @@ class MinimalTest extends BrowserTestBase {
   use RequirementsPageTrait;
 
   /**
-   * The profile to use.
+   * {@inheritdoc}
    */
   protected $profile = 'minimal';
 

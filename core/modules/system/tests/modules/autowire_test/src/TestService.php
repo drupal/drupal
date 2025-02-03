@@ -21,11 +21,15 @@ class TestService {
 
   /**
    * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
    */
   protected $database;
 
   /**
    * The Drupal kernel.
+   *
+   * @var \Drupal\Core\DrupalKernelInterface
    */
   protected $kernel;
 

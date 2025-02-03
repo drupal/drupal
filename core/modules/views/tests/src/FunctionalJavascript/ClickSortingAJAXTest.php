@@ -31,6 +31,8 @@ class ClickSortingAJAXTest extends WebDriverTestBase {
 
   /**
    * The views to use for testing.
+   *
+   * @var string[]
    */
   public static $testViews = ['test_content_ajax'];
 

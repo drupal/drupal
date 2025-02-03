@@ -16,6 +16,8 @@ class BlockLanguageTest extends BrowserTestBase {
 
   /**
    * An administrative user to configure the test environment.
+   *
+   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser;
 

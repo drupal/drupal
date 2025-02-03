@@ -37,6 +37,8 @@ class PaginationAJAXTest extends WebDriverTestBase {
 
   /**
    * The test user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $user;
 
