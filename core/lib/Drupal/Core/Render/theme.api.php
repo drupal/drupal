@@ -105,8 +105,8 @@
  * THEME indicates a theme name, and ENGINE indicates a theme engine name).
  * Modules, themes, and theme engines can provide these functions to modify how
  * the data is preprocessed, before it is passed to the theme template:
- * - template_preprocess(&$variables, $hook): Creates a default set of variables
- *   for all theme hooks with template implementations. Provided by Drupal Core.
+ * - ThemeManager::addDefaultTemplateVariables(&$variables): Creates a default
+ *   set of variables for all theme hooks. Provided by Drupal Core.
  * - template_preprocess_HOOK(&$variables): Should be implemented by the module
  *   that registers the theme hook, to set up default variables.
  * - MODULE_preprocess(&$variables, $hook): hook_preprocess() is invoked on all
@@ -1316,7 +1316,6 @@ function hook_theme($existing, $type, $theme, $path): array {
  *     'content' => NULL,
  *   ],
  *   'preprocess functions' => [
- *     0 => 'template_preprocess',
  *     1 => 'template_preprocess_block_content_add_list',
  *     2 => 'contextual_preprocess',
  *     3 => 'claro_preprocess_block_content_add_list',
@@ -1340,29 +1339,26 @@ function hook_theme_registry_alter(&$theme_registry) {
 }
 
 /**
- * Alter the default, hook-independent variables for all templates.
+ * Alter the default variables for all templates.
  *
  * Allows modules to provide additional default template variables or manipulate
- * existing. This hook is invoked from template_preprocess() after basic default
- * template variables have been set up and before the next template preprocess
- * function is invoked.
+ * existing. This hook is invoked from ThemeManager service's
+ * getDefaultTemplateVariables() method after basic default template variables
+ * have been set up and before the template preprocess functions are invoked.
  *
  * Note that the default template variables are statically cached within a
  * request. When adding a template variable that depends on other context, it is
- * your responsibility to appropriately reset the static cache in
- * template_preprocess() when needed:
+ * your responsibility to appropriately reset the default variables:
  * @code
- * drupal_static_reset('template_preprocess');
+ * \Drupal::service('theme.manager)->resetActiveTheme()
  * @endcode
  *
  * See user_template_preprocess_default_variables_alter() for an example.
  *
  * @param array $variables
  *   An associative array of default template variables, as set up by
- *   _template_preprocess_default_variables(). Passed by reference.
- *
- * @see template_preprocess()
- * @see _template_preprocess_default_variables()
+ *   Drupal/Core/Theme/ThemeManagerInterface::getDefaultTemplateVariables().
+ *   Passed by reference.
  */
 function hook_template_preprocess_default_variables_alter(&$variables) {
   $variables['is_admin'] = \Drupal::currentUser()->hasPermission('access administration pages');
