@@ -64,7 +64,6 @@
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.Commenting.FunctionComment">
     <exclude name="Drupal.Commenting.FunctionComment.ParamCommentFullStop"/>
-    <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
   <rule ref="Drupal.Commenting.FunctionComment.Missing">
     <include-pattern>core/modules/*/Plugin/views/argument/*</include-pattern>
