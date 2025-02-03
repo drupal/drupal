@@ -198,6 +198,9 @@ class PathWorkspacesTest extends BrowserTestBase {
 
     $this->assertAccessiblePaths([$default_path, $translation_path]);
 
+    // Verify the default alias is available in the live workspace.
+    $this->assertAccessiblePaths([$default_path]);
+
     $this->switchToWorkspace($stage);
 
     $this->assertAccessiblePaths([$default_path, $translation_path]);
@@ -311,6 +314,21 @@ class PathWorkspacesTest extends BrowserTestBase {
     $stage->publish();
     $this->assertAccessiblePaths([$default_path, $new_stage_translation_path]);
     $this->assertNotAccessiblePaths([$stage_translation_path]);
+
+    // Switch back to Stage.
+    $this->switchToWorkspace($stage);
+
+    // Edit the path alias to set its language to "Not specified".
+    $alias_edit_path = "admin/config/search/path/edit/{$default_node->id()}";
+    $this->drupalGet($alias_edit_path);
+    // Set the alias language to "Not specified".
+    $edit = [
+      'langcode[0][value]' => 'und',
+    ];
+    $this->submitForm($edit, 'Save');
+
+    // Verify the path alias is still available in the Stage workspace.
+    $this->assertAccessiblePaths([$default_path]);
   }
 
   /**
