@@ -18,7 +18,7 @@ use Drupal\views\Views;
  *
  * @group entity_reference
  *
- * @see core_field_views_data()
+ * @see \Drupal\views\Hook\ViewsViewsHooks::fieldViewsData()
  */
 class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
 
