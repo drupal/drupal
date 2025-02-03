@@ -2614,9 +2614,8 @@ function hook_validation_constraint_alter(array &$definitions) {
  * Making the expensive service lazy means that the class is only dependent on
  * the proxy service, and not on all the dependencies of the lazy service.
  *
- * To define a service as lazy, add @code lazy: true @endcode to the service
- * definition, and use the @code core/scripts/generate-proxy.sh @endcode script
- * to generate the proxy class.
+ * To define a service as lazy, add "lazy: true" to the service definition, and
+ * use the "core/scripts/generate-proxy.sh" script to generate the proxy class.
  *
  * @see core/scripts/generate-proxy.sh
  */

@@ -54,7 +54,7 @@ class Endpoint {
    * Endpoint constructor.
    *
    * @param string $url
-   *   The endpoint URL. May contain a @code '{format}' @endcode placeholder.
+   *   The endpoint URL. May contain a "{format}" placeholder.
    * @param \Drupal\media\OEmbed\Provider $provider
    *   The provider this endpoint belongs to.
    * @param string[] $schemes

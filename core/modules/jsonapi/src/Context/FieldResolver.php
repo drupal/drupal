@@ -33,37 +33,34 @@ use Drupal\Core\Session\AccountInterface;
  * Path resolution:
  * Path resolution refers to the ability to map a set of external field names to
  * their internal counterparts. This is necessary because a resource type can
- * provide aliases for its field names. For example, the resource type @code
- * node--article @endcode might "alias" the internal field name @code
- * uid @endcode to the external field name @code author @endcode. This permits
- * an API consumer to request @code
- * /jsonapi/node/article?include=author @endcode for a better developer
- * experience.
+ * provide aliases for its field names. For example, the resource type
+ * "node--article" might "alias" the internal field name "uid" to the external
+ * field name "author". This permits an API consumer to request
+ * "/jsonapi/node/article?include=author" for a better developer experience.
  *
  * Path validation:
  * Path validation refers to the ability to ensure that a requested path
  * corresponds to a valid set of internal fields. For example, if an API
- * consumer may send a @code GET @endcode request to @code
- * /jsonapi/node/article?sort=author.field_first_name @endcode. The field
- * resolver ensures that @code uid @endcode (which would have been resolved
- * from @code author @endcode) exists on article nodes and that @code
- * field_first_name @endcode exists on user entities. However, in the case of
- * an @code include @endcode path, the field resolver would raise a client error
- * because @code field_first_name @endcode is not an entity reference field,
- * meaning it does not identify any related resources that can be included in a
- * compound document.
+ * consumer may send a GET request to
+ * "/jsonapi/node/article?sort=author.field_first_name". The field resolver
+ * ensures that "uid" (which would have been resolved from "author") exists on
+ * article nodes and that "field_first_name" exists on user entities. However,
+ * in the case of an "include" path, the field resolver would raise a client
+ * error because "field_first_name" is not an entity reference field, meaning it
+ * does not identify any related resources that can be included in a compound
+ * document.
  *
  * Path expansion:
  * Path expansion refers to the ability to expand a path to an entity query
  * compatible field expression. For example, a request URL might have a query
- * string like @code ?filter[field_tags.name]=aviation @endcode, before
- * constructing the appropriate entity query, the entity query system needs the
- * path expression to be "expanded" into @code field_tags.entity.name @endcode.
- * In some rare cases, the entity query system needs this to be expanded to
- * @code field_tags.entity:taxonomy_term.name @endcode; the field resolver
- * simply does this by default for every path.
+ * string like "?filter[field_tags.name]=aviation", before constructing the
+ * appropriate entity query, the entity query system needs the path expression
+ * to be "expanded" into "field_tags.entity.name". In some rare cases, the
+ * entity query system needs this to be expanded to
+ * "field_tags.entity:taxonomy_term.name"; the field resolver simply does this
+ * by default for every path.
  *
- * *Note:* path expansion is *not* performed for @code include @endcode paths.
+ * *Note:* path expansion is *not* performed for "include" paths.
  *
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
@@ -155,25 +152,23 @@ class FieldResolver {
    * Example 1:
    * An installation may have three comment types for three different entity
    * types, two of which have a file field and one of which does not. In that
-   * case, a path like @code field_comments.entity_id.media @endcode might be
-   * resolved to both @code field_comments.entity_id.field_audio @endcode
-   * and @code field_comments.entity_id.field_image @endcode.
+   * case, a path like "field_comments.entity_id.media" might be resolved to
+   * both "field_comments.entity_id.field_audio" and
+   * "field_comments.entity_id.field_image".
    *
    * Example 2:
-   * A path of @code field_author_profile.account @endcode might
-   * resolve to @code field_author_profile.uid @endcode and @code
-   * field_author_profile.field_user @endcode if @code
-   * field_author_profile @endcode can relate to two different JSON:API resource
-   * types (like `node--profile` and `node--migrated_profile`) which have the
-   * external field name @code account @endcode aliased to different internal
-   * field names.
+   * A path of "field_author_profile.account" might resolve to
+   * "field_author_profile.uid" and "field_author_profile.field_user" if
+   * "field_author_profile" can relate to two different JSON:API resource types
+   * (like `node--profile` and `node--migrated_profile`) which have the external
+   * field name "account" aliased to different internal field names.
    *
    * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
    *   The resource type for which the path should be validated.
    * @param string[] $path_parts
    *   The include path as an array of strings. For example, the include query
-   *   parameter string of @code field_tags.uid @endcode should be given
-   *   as @code ['field_tags', 'uid'] @endcode.
+   *   parameter string of "field_tags.uid" should be given
+   *   as "['field_tags', 'uid']".
    * @param int $depth
    *   (internal) Used to track recursion depth in order to generate better
    *   exception messages.

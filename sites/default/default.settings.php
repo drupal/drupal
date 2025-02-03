@@ -67,10 +67,10 @@
  * during the same request.
  *
  * One example of the simplest connection array is shown below. To use the
- * sample settings, copy and uncomment the code below between the @code and
- * @endcode lines and paste it after the $databases declaration. You will need
- * to replace the database username and password and possibly the host and port
- * with the appropriate credentials for your database system.
+ * sample settings, copy and uncomment the code below and paste it after the
+ * $databases declaration. You will need to replace the database username and
+ * password and possibly the host and port with the appropriate credentials for
+ * your database system.
  *
  * The next section describes how to customize the $databases array for more
  * specific needs.

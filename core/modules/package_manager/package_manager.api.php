@@ -188,7 +188,7 @@
  * - The Composer executable is available.
  * - The detected version of Composer is supported.
  * - composer.json and composer.lock exist in the project root, and are valid
- *   according to the @code composer validate @endcode command.
+ *   according to the "composer validate" command.
  * - The stage directory is not a subdirectory of the active directory.
  * - There is enough free disk space to do stage operations.
  * - The Drupal site root and vendor directory are writable.

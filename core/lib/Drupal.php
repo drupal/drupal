@@ -404,16 +404,14 @@ class Drupal {
    * Retrieves a configuration object.
    *
    * This is the main entry point to the configuration API. Calling
-   * @code \Drupal::config('my_module.admin') @endcode will return a
-   * configuration object the my_module module can use to read its
-   * administrative settings.
+   * \Drupal::config('my_module.admin') will return a configuration object the
+   * my_module module can use to read its administrative settings.
    *
    * @param string $name
    *   The name of the configuration object to retrieve, which typically
    *   corresponds to a configuration file. For
-   *   @code \Drupal::config('my_module.admin') @endcode, the configuration
-   *   object returned will contain the content of the my_module.admin
-   *   configuration file.
+   *   \Drupal::config('my_module.admin'), the configuration object returned
+   *   will contain the content of the my_module.admin configuration file.
    *
    * @return \Drupal\Core\Config\ImmutableConfig
    *   An immutable configuration object.

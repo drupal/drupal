@@ -156,9 +156,8 @@ class UrlHelper {
   /**
    * Parses a URL string into its path, query, and fragment components.
    *
-   * This function splits both internal paths like @code node?b=c#d @endcode and
-   * external URLs like @code https://example.com/a?b=c#d @endcode into their
-   * component parts. See
+   * This function splits both internal paths like "node?b=c#d" and external
+   * URLs like "https://example.com/a?b=c#d" into their component parts. See
    * @link http://tools.ietf.org/html/rfc3986#section-3 RFC 3986 @endlink for an
    * explanation of what the component parts are.
    *

@@ -27,8 +27,8 @@ class WorkflowStateTransitionOperationsAccessCheck implements AccessInterface {
    * is required in the route for the access check to be applied. For the "add"
    * operation, only a workflow is required. The '_workflow_access' requirement
    * translates into access checks on the workflow entity type in the formats:
-   *   - @code"$operation-state:$state_id"@endcode
-   *   - @code"$operation-transition:$transition_id"@endcode
+   *   - "$operation-state:$state_id"
+   *   - "$operation-transition:$transition_id"
    *
    * For example the following route definition with the path
    * "/test-workflow/foo-state/delete" the 'delete-state:foo-state' operation

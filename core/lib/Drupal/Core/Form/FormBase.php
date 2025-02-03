@@ -93,13 +93,13 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
    * Retrieves a configuration object.
    *
    * This is the main entry point to the configuration API. Calling
-   * @code $this->config('my_module.admin') @endcode will return a configuration
-   * object in which the my_module module can store its administrative settings.
+   * "$this->config('my_module.admin')" will return a configuration object in
+   * which the my_module module can store its administrative settings.
    *
    * @param string $name
    *   The name of the configuration object to retrieve. The name corresponds to
-   *   a configuration file. For @code \Drupal::config('my_module.admin') @endcode,
-   *   the config object returned will contain the contents of my_module.admin
+   *   a configuration file. For "\Drupal::config('my_module.admin')", the
+   *   config object returned will contain the contents of my_module.admin
    *   configuration file.
    *
    * @return \Drupal\Core\Config\ImmutableConfig

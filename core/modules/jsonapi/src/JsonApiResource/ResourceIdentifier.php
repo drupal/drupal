@@ -17,10 +17,10 @@ use Drupal\jsonapi\ResourceType\ResourceType;
  * reference items to the same entity. Here, these are termed "parallel"
  * relationships (as in "parallel edges" of a graph).
  *
- * This class adds a concept of an @code arity @endcode member under each its
- * @code meta @endcode object. The value of this member is an integer that is
- * incremented by 1 (starting from 0) for each repeated resource identifier
- * sharing a common @code type @endcode and @code id @endcode.
+ * This class adds a concept of an "arity" member under each its "meta" object.
+ * The value of this member is an integer that is incremented by 1 (starting
+ * from 0) for each repeated resource identifier sharing a common "type" and
+ * "id".
  *
  * There are a number of helper methods to process the logic of dealing with
  * resource identifies with and without arity.

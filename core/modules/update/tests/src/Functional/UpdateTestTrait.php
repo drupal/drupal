@@ -65,8 +65,8 @@ trait UpdateTestTrait {
    *   The release history XML files to use for particular extension(s). The
    *   keys are the extension names (use 'drupal' for Drupal core itself), and
    *   the values are the suffix of the release history XML file to use. For
-   *   example, @code 'drupal' => 'sec.8.0.2' @endcode will map to a file called
-   *   drupal.sec.8.0.2.xml. Look at
+   *   example, "['drupal' => 'sec.8.0.2']" will map to a file called
+   *   "drupal.sec.8.0.2.xml". Look at
    *   core/modules/update/tests/fixtures/release-history for more release
    *   history XML examples.
    */

@@ -20,10 +20,10 @@ namespace Drupal\Core\Render;
  * - exception handlers
  *
  * i.e. use this when rendering HTML pages in limited environments. Otherwise,
- * use a @code _controller @endcode route, and return a render array.
- * This will cause a main content renderer
- * (\Drupal\Core\Render\MainContent\MainContentRendererInterface) to be
- * used, and in case of an HTML request that will be
+ * use a "_controller" route, and return a render array. This will cause a main
+ * content renderer
+ * (\Drupal\Core\Render\MainContent\MainContentRendererInterface) to be used,
+ * and in case of an HTML request that will be
  * \Drupal\Core\Render\MainContent\HtmlRenderer.
  *
  * In fact, this is not only *typically* used in a limited environment, it even

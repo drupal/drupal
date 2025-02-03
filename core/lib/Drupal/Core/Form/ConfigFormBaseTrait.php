@@ -27,9 +27,9 @@ trait ConfigFormBaseTrait {
    *
    * @param string $name
    *   The name of the configuration object to retrieve. The name corresponds to
-   *   a configuration file. For @code \Drupal::config('my_module.admin') @endcode,
-   *   the config object returned will contain the contents of node.admin
-   *   configuration file.
+   *   a configuration file. For Drupal::config('my_module.admin'), the config
+   *   object returned will contain the contents of node.admin configuration
+   *   file.
    *
    * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig
    *   An editable configuration object if the given name is listed in the
