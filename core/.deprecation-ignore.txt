@@ -29,3 +29,6 @@
 
 # Twig 3.
 %Since twig/twig 3.12: Twig Filter "spaceless" is deprecated%
+%Since twig/twig 3.15: Instantiating "Twig\\Node\\Node" directly is deprecated; the class will become abstract in 4.0.%
+%Since twig/twig 3.15: Using the "deprecated", "deprecating_package", and "alternative" options is deprecated, pass a "deprecation_info" one instead.%
+%Since twig/twig 3.15: The "Twig\\Node\\Expression\\NameExpression" class is deprecated, use "Twig\\Node\\Expression\\Variable\\ContextVariable" instead.%
