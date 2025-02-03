@@ -25,12 +25,12 @@ class BrokenPostRequestException extends BadRequestHttpException {
    *   The size of the maximum upload size in bytes.
    * @param string $message
    *   The internal exception message.
-   * @param \Exception|null $previous
+   * @param \Throwable|null $previous
    *   The previous exception.
    * @param int $code
    *   The internal exception code.
    */
-  public function __construct(int $max_upload_size, string $message = '', ?\Exception $previous = NULL, int $code = 0) {
+  public function __construct(int $max_upload_size, string $message = '', ?\Throwable $previous = NULL, int $code = 0) {
     parent::__construct($message, $previous, $code);
 
     $this->size = $max_upload_size;

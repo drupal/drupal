@@ -28,14 +28,14 @@ class ParamNotConvertedException extends \Exception {
    *   The Exception message to throw.
    * @param int $code
    *   The Exception code.
-   * @param \Exception $previous
+   * @param \Throwable $previous
    *   The previous exception used for the exception chaining.
    * @param string $route_name
    *   The route name that was not converted.
    * @param array $raw_parameters
    *   The raw parameters that were not converted.
    */
-  public function __construct($message = "", $code = 0, ?\Exception $previous = NULL, $route_name = "", array $raw_parameters = []) {
+  public function __construct($message = "", $code = 0, ?\Throwable $previous = NULL, $route_name = "", array $raw_parameters = []) {
     parent::__construct($message, $code, $previous);
     $this->routeName = $route_name;
     $this->rawParameters = $raw_parameters;
