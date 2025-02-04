@@ -41,11 +41,6 @@ services:
       ]
   Drupal\navigation\EntityRouteHelper: '@navigation.entity_route_helper'
 
-  navigation.user_lazy_builder:
-    class: Drupal\navigation\UserLazyBuilder
-    arguments: ['@current_user']
-  Drupal\navigation\UserLazyBuilders: '@navigation.user_lazy_builder'
-
   plugin.manager.top_bar_item:
     class: Drupal\navigation\TopBarItemManager
     parent: default_plugin_manager

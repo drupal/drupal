@@ -10,3 +10,20 @@ navigation_block.admin_display:
   parent: system.admin_config_ui
   description: 'Manage navigation blocks.'
   route_name: layout_builder.navigation.view
+
+# Navigation User default links.
+navigation.user_links.user.page:
+  title: 'View profile'
+  weight: -10
+  route_name: user.page
+  menu_name: navigation-user-links
+navigation.user_links.user.edit:
+  title: 'Edit profile'
+  weight: 0
+  route_name: user.edit
+  menu_name: navigation-user-links
+navigation.user_links.user.logout:
+  title: 'Log out'
+  weight: 10
+  route_name: user.logout
+  menu_name: navigation-user-links

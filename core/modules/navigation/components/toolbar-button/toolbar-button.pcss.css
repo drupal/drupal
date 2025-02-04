@@ -315,7 +315,7 @@
   --icon: url(./assets/appearance.svg);
 }
 
-.toolbar-button--icon--user {
+.toolbar-button--icon--navigation-user-links-user-wrapper {
   --icon: url(./assets/user.svg);
 }
 

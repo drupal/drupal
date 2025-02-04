@@ -58,6 +58,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
       'config:shortcut.set.default',
       'config:system.menu.admin',
       'config:system.menu.content',
+      'config:system.menu.navigation-user-links',
       'http_response',
       'rendered',
     ];

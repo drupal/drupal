@@ -3,9 +3,11 @@
 namespace Drupal\navigation\Hook;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
@@ -19,6 +21,17 @@ use Drupal\navigation\TopBarItemManagerInterface;
 class NavigationHooks {
 
   use StringTranslationTrait;
+
+  /**
+   * NavigationHooks constructor.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user.
+   */
+  public function __construct(
+    protected AccountInterface $currentUser,
+  ) {
+  }
 
   /**
    * Implements hook_help().
@@ -93,7 +106,6 @@ class NavigationHooks {
         'attributes' => [],
       ],
     ];
-    $items['menu_region__footer'] = ['variables' => ['items' => [], 'title' => NULL, 'menu_name' => NULL]];
     $items['navigation_content_top'] = [
       'variables' => [
         'items' => [],
@@ -240,6 +252,21 @@ class NavigationHooks {
         '#weight' => -1000,
       ],
     ];
+  }
+
+  /**
+   * Implements hook_js_settings_alter().
+   */
+  #[Hook('js_settings_alter')]
+  public function jsSettingsAlter(array &$settings, AttachedAssetsInterface $assets): void {
+    // If Navigation's user-block library is not installed, return.
+    if (!in_array('navigation/internal.user-block', $assets->getLibraries())) {
+      return;
+    }
+    // Provide the user name in drupalSettings to allow JavaScript code to
+    // customize the experience for the end user, rather than the server side,
+    // which would break the render cache.
+    $settings['navigation']['user'] = $this->currentUser->getAccountName();
   }
 
 }

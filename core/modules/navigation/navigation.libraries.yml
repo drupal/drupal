@@ -113,3 +113,13 @@ internal.safe-triangle:
   dependencies:
     - core/drupal
     - core/once
+
+internal.user-block:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
+  js:
+    js/user-block.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
