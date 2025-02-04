@@ -132,7 +132,7 @@ variables:
   allow_failure: true
   services:
     - <<: *with-database
-    - <<: *with-chrome
+    - <<: *with-selenium-chrome
   script:
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
 
