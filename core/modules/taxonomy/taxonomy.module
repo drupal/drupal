@@ -12,7 +12,7 @@ use Drupal\taxonomy\Entity\Term;
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function taxonomy_theme_suggestions_taxonomy_term(array $variables) {
+function taxonomy_theme_suggestions_taxonomy_term(array $variables): array {
   $suggestions = [];
 
   /** @var \Drupal\taxonomy\TermInterface $term */

@@ -636,7 +636,7 @@ function hook_preprocess_HOOK(&$variables): void {
  * node templates based bundle, id, and view mode.
  *
  * @code
- * function node_theme_suggestions_node(array $variables) {
+ * function node_theme_suggestions_node(array $variables): array {
  *   $suggestions = [];
  *   $node = $variables['elements']['#node'];
  *   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
@@ -660,7 +660,7 @@ function hook_preprocess_HOOK(&$variables): void {
  *
  * @see hook_theme_suggestions_HOOK_alter()
  */
-function hook_theme_suggestions_HOOK(array $variables) {
+function hook_theme_suggestions_HOOK(array $variables): array {
   $suggestions = [];
 
   $suggestions[] = 'hookname__' . $variables['elements']['#langcode'];

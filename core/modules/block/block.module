@@ -73,7 +73,7 @@ function block_theme_initialize($theme) {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function block_theme_suggestions_block(array $variables) {
+function block_theme_suggestions_block(array $variables): array {
   $suggestions = [];
 
   $suggestions[] = 'block__' . $variables['elements']['#configuration']['provider'];

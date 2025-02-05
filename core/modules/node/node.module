@@ -279,7 +279,7 @@ function node_preprocess_field__node(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function node_theme_suggestions_node(array $variables) {
+function node_theme_suggestions_node(array $variables): array {
   $suggestions = [];
   $node = $variables['elements']['#node'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');

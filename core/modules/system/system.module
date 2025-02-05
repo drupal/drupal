@@ -63,7 +63,7 @@ function system_hook_info(): array {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function system_theme_suggestions_html(array $variables) {
+function system_theme_suggestions_html(array $variables): array {
   $path_args = explode('/', trim(\Drupal::service('path.current')->getPath(), '/'));
   return theme_get_suggestions($path_args, 'html');
 }
@@ -71,7 +71,7 @@ function system_theme_suggestions_html(array $variables) {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function system_theme_suggestions_page(array $variables) {
+function system_theme_suggestions_page(array $variables): array {
   $path_args = explode('/', trim(\Drupal::service('path.current')->getPath(), '/'));
   $suggestions = theme_get_suggestions($path_args, 'page');
 
@@ -88,7 +88,7 @@ function system_theme_suggestions_page(array $variables) {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function system_theme_suggestions_maintenance_page(array $variables) {
+function system_theme_suggestions_maintenance_page(array $variables): array {
   $suggestions = [];
 
   // Dead databases will show error messages so supplying this template will
@@ -111,7 +111,7 @@ function system_theme_suggestions_maintenance_page(array $variables) {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function system_theme_suggestions_region(array $variables) {
+function system_theme_suggestions_region(array $variables): array {
   $suggestions = [];
   if (!empty($variables['elements']['#region'])) {
     $suggestions[] = 'region__' . $variables['elements']['#region'];
@@ -122,7 +122,7 @@ function system_theme_suggestions_region(array $variables) {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function system_theme_suggestions_field(array $variables) {
+function system_theme_suggestions_field(array $variables): array {
   $suggestions = [];
   $element = $variables['element'];
 

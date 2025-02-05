@@ -11,7 +11,7 @@ use Drupal\search\SearchTextProcessorInterface;
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function search_theme_suggestions_search_result(array $variables) {
+function search_theme_suggestions_search_result(array $variables): array {
   return ['search_result__' . $variables['plugin_id']];
 }
 

@@ -7,7 +7,7 @@
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function big_pipe_theme_suggestions_big_pipe_interface_preview(array $variables) {
+function big_pipe_theme_suggestions_big_pipe_interface_preview(array $variables): array {
   $common_callbacks_simplified_suggestions = [
     'Drupal_block_BlockViewBuilder__lazyBuilder' => 'block',
   ];

@@ -42,7 +42,7 @@ function views_ui_preprocess_views_view(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function views_ui_theme_suggestions_views_ui_view_preview_section(array $variables) {
+function views_ui_theme_suggestions_views_ui_view_preview_section(array $variables): array {
   return ['views_ui_view_preview_section__' . $variables['section']];
 }
 

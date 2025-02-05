@@ -20,7 +20,7 @@ function theme_test_preprocess_html(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function theme_test_theme_suggestions_theme_test_preprocess_suggestions($variables) {
+function theme_test_theme_suggestions_theme_test_preprocess_suggestions($variables): array {
   return ['theme_test_preprocess_suggestions__' . $variables['foo']];
 }
 
@@ -54,14 +54,14 @@ function template_preprocess_theme_test_render_element(&$variables): void {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables) {
+function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables): array {
   return ['theme_test_suggestion_provided__foo'];
 }
 
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function theme_test_theme_suggestions_node(array $variables) {
+function theme_test_theme_suggestions_node(array $variables): array {
   $xss = '<script type="text/javascript">alert(\'yo\');</script>';
   $suggestions[] = 'node__' . $xss;
 
