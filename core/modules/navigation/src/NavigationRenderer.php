@@ -99,7 +99,8 @@ final class NavigationRenderer {
         'keys' => ['navigation', 'navigation'],
         'max-age' => CacheBackendInterface::CACHE_PERMANENT,
       ],
-      '#pre_render' => ['navigation.renderer:doBuildNavigation'],
+      '#lazy_builder' => ['navigation.renderer:doBuildNavigation', []],
+      '#create_placeholder' => TRUE,
     ];
   }
 
@@ -107,7 +108,8 @@ final class NavigationRenderer {
    * Pre-render callback for ::buildNavigation.
    */
   #[TrustedCallback]
-  public function doBuildNavigation($build): array {
+  public function doBuildNavigation(): array {
+    $build = [];
     $logo_settings = $this->configFactory->get('navigation.settings');
     $logo_provider = $logo_settings->get('logo.provider');
 
