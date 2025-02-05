@@ -664,14 +664,18 @@ trait PerformanceTestTrait {
       'ScriptBytes',
       'StylesheetBytes',
     ];
+    $values = [];
     foreach ($expected as $name => $metric) {
       if (in_array($name, $assertRange)) {
         $this->assertCountBetween($metric - 500, $metric + 500, $performance_data->{"get$name"}(), "Asserting $name");
+        unset($expected[$name]);
       }
       else {
-        $this->assertSame($metric, $performance_data->{"get$name"}(), "Asserting $name");
+        $values[$name] = $performance_data->{"get$name"}();
       }
     }
+    $this->assertSame($expected, $values);
+
   }
 
   /**
