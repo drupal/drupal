@@ -110,10 +110,7 @@ class FieldTestHooks {
       $fields[$field_name]->setPropertyConstraints('value', [
         'TestField' => [
           'value' => -2,
-          'message' => t('%name does not accept the value @value.', [
-            '%name' => $field_name,
-            '@value' => -2,
-          ]),
+          'message' => "$field_name does not accept the value -2.",
         ],
       ]);
       // Add a property constraint using

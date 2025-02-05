@@ -36,16 +36,16 @@ class ContentModerationTestViewsHooks {
   public function viewsDataAlter(array &$data): void {
     if (isset($data['users_field_data'])) {
       $data['users_field_data']['uid_revision_test'] = [
-        'help' => t('Relate the content revision to the user who created it.'),
+        'help' => 'Relate the content revision to the user who created it.',
         'real field' => 'uid',
         'relationship' => [
-          'title' => t('Content revision authored'),
-          'help' => t('Relate the content revision to the user who created it. This relationship will create one record for each content revision item created by the user.'),
+          'title' => 'Content revision authored',
+          'help' => 'Relate the content revision to the user who created it. This relationship will create one record for each content revision item created by the user.',
           'id' => 'standard',
           'base' => 'node_field_revision',
           'base field' => 'uid',
           'field' => 'uid',
-          'label' => t('node revisions'),
+          'label' => 'node revisions',
         ],
       ];
     }

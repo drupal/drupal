@@ -18,7 +18,7 @@ class ViewsUiTestHooks {
    */
   #[Hook('views_preview_info_alter')]
   public function viewsPreviewInfoAlter(&$rows, $view): void {
-    $data = ['#markup' => t('Test row count')];
+    $data = ['#markup' => 'Test row count'];
     $data['#attached']['library'][] = 'views_ui_test/views_ui_test.test';
     $rows['query'][] = [['data' => $data], count($view->result)];
   }

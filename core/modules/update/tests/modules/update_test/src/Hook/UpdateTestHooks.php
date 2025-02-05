@@ -72,7 +72,7 @@ class UpdateTestHooks {
     // environment in which the update manager tests are run).
     return [
       'system_test' => [
-        'title' => t('Update Test FileTransfer'),
+        'title' => 'Update Test FileTransfer',
         'class' => 'Drupal\update_test\TestFileTransferWithSettingsForm',
         'weight' => -20,
       ],

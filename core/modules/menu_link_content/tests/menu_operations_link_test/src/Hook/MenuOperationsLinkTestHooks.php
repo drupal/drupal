@@ -23,7 +23,7 @@ class MenuOperationsLinkTestHooks {
       return;
     }
     // Alter the title of the edit link appearing in operations menu.
-    $operations['edit']['title'] = t('Altered Edit Title');
+    $operations['edit']['title'] = 'Altered Edit Title';
   }
 
   /**
@@ -35,7 +35,7 @@ class MenuOperationsLinkTestHooks {
       return [];
     }
     $operations['custom_operation'] = [
-      'title' => t('Custom Home'),
+      'title' => 'Custom Home',
       'weight' => 20,
       'url' => Url::fromRoute('<front>'),
     ];

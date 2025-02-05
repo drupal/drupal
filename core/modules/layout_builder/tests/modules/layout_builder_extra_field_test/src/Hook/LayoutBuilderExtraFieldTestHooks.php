@@ -17,8 +17,8 @@ class LayoutBuilderExtraFieldTestHooks {
   #[Hook('entity_extra_field_info')]
   public function entityExtraFieldInfo(): array {
     $extra['node']['bundle_with_section_field']['display']['layout_builder_extra_field_test'] = [
-      'label' => t('New Extra Field'),
-      'description' => t('New Extra Field description'),
+      'label' => 'New Extra Field',
+      'description' => 'New Extra Field description',
       'weight' => 0,
     ];
     return $extra;

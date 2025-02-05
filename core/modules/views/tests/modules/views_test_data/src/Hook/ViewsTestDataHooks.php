@@ -18,7 +18,7 @@ class ViewsTestDataHooks {
    */
   #[Hook('form_views_form_test_form_multiple_default_alter')]
   public function formViewsFormTestFormMultipleDefaultAlter(&$form, FormStateInterface $form_state, $form_id) : void {
-    \Drupal::messenger()->addStatus(t('Test base form ID with Views forms and arguments.'));
+    \Drupal::messenger()->addStatus('Test base form ID with Views forms and arguments.');
   }
 
   /**

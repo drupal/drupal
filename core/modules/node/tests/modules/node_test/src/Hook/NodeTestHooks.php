@@ -28,24 +28,18 @@ class NodeTestHooks {
       // Add RSS elements and namespaces when building the RSS feed.
       $node->rss_elements[] = [
         'key' => 'testElement',
-        'value' => t('Value of testElement RSS element for node @nid.', [
-          '@nid' => $node->id(),
-        ]),
+        'value' => 'Value of testElement RSS element for node ' . $node->id() . '.',
       ];
       // Add content that should be displayed only in the RSS feed.
       $build['extra_feed_content'] = [
-        '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node @nid.', [
-          '@nid' => $node->id(),
-        ]) . '</p>',
+        '#markup' => '<p>' . 'Extra data that should appear only in the RSS feed for node ' . $node->id() . '.</p>',
         '#weight' => 10,
       ];
     }
     if ($view_mode != 'rss') {
       // Add content that should NOT be displayed in the RSS feed.
       $build['extra_non_feed_content'] = [
-        '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node @nid.', [
-          '@nid' => $node->id(),
-        ]) . '</p>',
+        '#markup' => '<p>' . 'Extra data that should appear everywhere except the RSS feed for node ' . $node->id() . '.</p>',
       ];
     }
   }

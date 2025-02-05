@@ -182,10 +182,7 @@
   <rule ref="DrupalPractice.Objects.GlobalFunction">
     <include-pattern>*/Plugin/*</include-pattern>
     <include-pattern>*/ListBuilder/*</include-pattern>
-    <include-pattern>*/tests/*/Form/*</include-pattern>
-    <include-pattern>*/modules/system/tests/modules/*</include-pattern>
-    <include-pattern>*/Kernel*/*</include-pattern>
-    <include-pattern>*/tests/*/Functional*/*</include-pattern>
+    <include-pattern>*/tests/*</include-pattern>
     <include-pattern>./core/lib/*</include-pattern>
   </rule>
 

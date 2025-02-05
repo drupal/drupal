@@ -17,14 +17,14 @@ class DummyReadOnlyStreamWrapper extends LocalReadOnlyStream {
    * {@inheritdoc}
    */
   public function getName() {
-    return t('Dummy files (readonly)');
+    return 'Dummy files (readonly)';
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Dummy wrapper for testing (readonly).');
+    return 'Dummy wrapper for testing (readonly).';
   }
 
   public function getDirectoryPath() {

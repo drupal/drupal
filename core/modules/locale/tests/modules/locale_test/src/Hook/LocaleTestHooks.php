@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\locale_test\Hook;
 
 use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -13,6 +14,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for locale_test.
  */
 class LocaleTestHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_system_info_alter().
@@ -176,9 +179,9 @@ class LocaleTestHooks {
   #[Hook('token_info')]
   public function tokenInfo(): array {
     $info = [];
-    $info['types']['locale_test'] = ['name' => t('Locale test'), 'description' => t('Locale test')];
-    $info['tokens']['locale_test']['security_test1'] = ['type' => 'text', 'name' => t('Security test 1')];
-    $info['tokens']['locale_test']['security_test2'] = ['type' => 'text', 'name' => t('Security test 2')];
+    $info['types']['locale_test'] = ['name' => $this->t('Locale test'), 'description' => $this->t('Locale test')];
+    $info['tokens']['locale_test']['security_test1'] = ['type' => 'text', 'name' => $this->t('Security test 1')];
+    $info['tokens']['locale_test']['security_test2'] = ['type' => 'text', 'name' => $this->t('Security test 2')];
     return $info;
   }
 

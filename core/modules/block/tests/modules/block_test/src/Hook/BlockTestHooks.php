@@ -19,7 +19,7 @@ class BlockTestHooks {
   #[Hook('block_alter')]
   public function blockAlter(&$block_info): void {
     if (\Drupal::state()->get('block_test_info_alter') && isset($block_info['test_block_instantiation'])) {
-      $block_info['test_block_instantiation']['category'] = t('Custom category');
+      $block_info['test_block_instantiation']['category'] = 'Custom category';
     }
   }
 

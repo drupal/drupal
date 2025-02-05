@@ -46,7 +46,7 @@ class CommentTestHooks {
       ],
       '#links' => [
         'comment-report' => [
-          'title' => t('Report'),
+          'title' => 'Report',
           'url' => Url::fromRoute('comment_test.report', [
             'comment' => $entity->id(),
           ], [
