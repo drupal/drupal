@@ -48,6 +48,28 @@ interface RenderCacheInterface {
   public function get(array $elements);
 
   /**
+   * Gets multiple cached, pre-rendered elements from cache.
+   *
+   * @param array $multiple_elements
+   *   An associative array keyed by arbitrary identifiers, where the value is
+   *   what you would otherwise pass to ::get(). Example:
+   *   @code
+   *     $items = [
+   *       'item_a' => $elements_a,
+   *       'item_b' => $elements_b,
+   *     ];
+   *   @endcode
+   *
+   * @return array
+   *   An associative array keyed by the same keys as $multiple_elements,
+   *   containing the original element and all its children pre-rendered. Items
+   *   whose cached copy was not available are not returned.
+   *
+   * @see \Drupal\Core\Render\RenderCacheInterface::get()
+   */
+  public function getMultiple(array $multiple_elements): array;
+
+  /**
    * Caches the rendered output of a renderable array.
    *
    * May be called by an implementation of \Drupal\Core\Render\RendererInterface

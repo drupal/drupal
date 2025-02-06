@@ -39,6 +39,53 @@ class VariationCache implements VariationCacheInterface {
   /**
    * {@inheritdoc}
    */
+  public function getMultiple(array $items): array {
+    // This method does not use ::getRedirectChain() like ::get() does, because
+    // we are looking for multiple cache entries and can therefore optimize the
+    // following of redirect chains by calling ::getMultiple() on the underlying
+    // cache backend.
+    //
+    // Create a map of CIDs with their associated $items index and cache keys.
+    $cid_map = [];
+    foreach ($items as $index => [$keys, $cacheability]) {
+      $cid = $this->createCacheIdFast($keys, $cacheability);
+      $cid_map[$cid] = [
+        'index' => $index,
+        'keys' => $keys,
+      ];
+    }
+
+    // Go over all CIDs and update the map according to found redirects. If the
+    // map is empty, it means we've followed all CIDs to their final result or
+    // lack thereof.
+    $results = [];
+    while (!empty($cid_map)) {
+      $new_cid_map = [];
+
+      $fetch_cids = array_keys($cid_map);
+      foreach ($this->cacheBackend->getMultiple($fetch_cids) as $cid => $result) {
+        $info = $cid_map[$cid];
+
+        // Add redirects to the next CID map, so the next iteration can look
+        // them all up in one ::getMultiple() call to the cache backend.
+        if ($result->data instanceof CacheRedirect) {
+          $redirect_cid = $this->createCacheIdFast($info['keys'], $result->data);
+          $new_cid_map[$redirect_cid] = $info;
+          continue;
+        }
+
+        $results[$info['index']] = $result;
+      }
+
+      $cid_map = $new_cid_map;
+    }
+
+    return $results;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function set(array $keys, $data, CacheableDependencyInterface $cacheability, CacheableDependencyInterface $initial_cacheability): void {
     $initial_contexts = $initial_cacheability->getCacheContexts();
     $contexts = $cacheability->getCacheContexts();

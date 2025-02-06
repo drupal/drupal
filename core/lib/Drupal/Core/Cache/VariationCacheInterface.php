@@ -30,6 +30,27 @@ interface VariationCacheInterface {
   public function get(array $keys, CacheableDependencyInterface $initial_cacheability);
 
   /**
+   * Gets multiple cache entries based on a set of cache keys.
+   *
+   * @param array $items
+   *   An associative array keyed by arbitrary identifiers. Each value is a set
+   *   of arguments you would otherwise pass to ::get(). Example:
+   *   @code
+   *     $items = [
+   *       'item_a' => [['key1', 'key2'], $cacheability_a],
+   *       'item_b' => [['another_key'], $cacheability_b],
+   *     ];
+   *   @endcode
+   *
+   * @return array
+   *   An associative array keyed by the same keys as $items, containing only
+   *   the items found in the cache. Items that did not resolve are omitted.
+   *
+   * @see \Drupal\Core\Cache\VariationCacheInterface::get()
+   */
+  public function getMultiple(array $items): array;
+
+  /**
    * Stores data in the cache.
    *
    * @param string[] $keys

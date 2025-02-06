@@ -1805,6 +1805,11 @@ services:
     tags:
       - { name: service_collector, tag: placeholder_strategy, call: addPlaceholderStrategy }
   Drupal\Core\Render\Placeholder\PlaceholderStrategyInterface: '@placeholder_strategy'
+  placeholder_strategy.cached:
+    class: Drupal\Core\Render\Placeholder\CachedStrategy
+    arguments: ['@placeholder_strategy', '@render_cache']
+    tags:
+      - { name: placeholder_strategy, priority: 100 }
   placeholder_strategy.single_flush:
     class: Drupal\Core\Render\Placeholder\SingleFlushStrategy
     tags:

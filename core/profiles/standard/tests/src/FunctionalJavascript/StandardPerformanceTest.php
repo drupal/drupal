@@ -278,11 +278,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 14,
-      'CacheGetCount' => 77,
+      'CacheGetCount' => 80,
       'CacheSetCount' => 17,
       'CacheDeleteCount' => 0,
       'CacheTagChecksumCount' => 23,
-      'CacheTagIsValidCount' => 31,
+      'CacheTagIsValidCount' => 33,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 23,
       'StylesheetCount' => 1,
@@ -335,11 +335,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'QueryCount' => 17,
-      'CacheGetCount' => 82,
+      'CacheGetCount' => 85,
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagChecksumCount' => 1,
-      'CacheTagIsValidCount' => 35,
+      'CacheTagIsValidCount' => 37,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 26,
       'CacheTagGroupedLookups' => [
