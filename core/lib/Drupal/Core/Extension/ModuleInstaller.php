@@ -354,14 +354,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
     $entity_type_providers_to_install = $module_list;
     foreach ($module_list as $module) {
-      // Set the schema version to the number of the last update provided by
-      // the module, or the minimum core schema version.
-      $version = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
-      $versions = $this->updateRegistry->getAvailableUpdates($module);
-      if ($versions) {
-        $version = max(max($versions), $version);
-      }
-
       // Remove the module from the list of possible entity type providers to
       // install.
       array_shift($entity_type_providers_to_install);
@@ -405,10 +397,20 @@ class ModuleInstaller implements ModuleInstallerInterface {
           }
         }
       }
+    }
 
+    foreach ($module_list as $module) {
       // Install default configuration of the module.
       $config_installer = \Drupal::service('config.installer');
       $config_installer->installDefaultConfig('module', $module, DefaultConfigMode::InstallSimple);
+
+      // Set the schema version to the number of the last update provided by
+      // the module, or the minimum core schema version.
+      $version = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
+      $versions = $this->updateRegistry->getAvailableUpdates($module);
+      if ($versions) {
+        $version = max(max($versions), $version);
+      }
 
       // If the module has no current updates, but has some that were
       // previously removed, set the version to the value of

@@ -263,6 +263,21 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
   }
 
   /**
+   * Tests that entity storage tables are installed before simple config.
+   *
+   * When multiple modules are installed together in one batch, entity storage
+   * for entity types in all the modules should exist before simple config from
+   * any module is installed.
+   */
+  public function testEntityStorageInstalledBeforeSimpleConfig(): void {
+    \Drupal::service('module_installer')->install(['node', 'module_installer_config_subscriber']);
+    // The module_installer_config_subscriber module has an config save event
+    // subscriber for its own simple config. When that config is saved during
+    // module installed, it checks that the node storage table exists.
+    $this->assertNotTrue(\Drupal::keyValue('module_installer_config_subscriber')->get('node_tables_missing'));
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container): void {

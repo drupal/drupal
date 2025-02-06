@@ -1,0 +1,5 @@
+name: 'Module installer config subscriber'
+description: 'Support module for tests that check that entity data tables exist before config is saved.'
+type: module
+package: Testing
+version: VERSION

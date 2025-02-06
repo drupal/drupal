@@ -1,0 +1,6 @@
+module_installer_config_subscriber.settings:
+  type: config_object
+  label: 'Test config'
+  mapping:
+    test:
+      type: boolean
