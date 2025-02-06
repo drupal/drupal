@@ -1865,7 +1865,6 @@ services:
   Drupal\Core\Theme\ComponentNegotiator:
     arguments:
       - '@theme.manager'
-      - '@extension.list.module'
   plugin.manager.sdc:
     public: true
     class: Drupal\Core\Theme\ComponentPluginManager

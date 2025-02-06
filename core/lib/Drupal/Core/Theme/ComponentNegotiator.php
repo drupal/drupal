@@ -2,13 +2,20 @@
 
 namespace Drupal\Core\Theme;
 
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\Extension;
-use Drupal\Core\Extension\ModuleExtensionList;
 
 /**
  * Determines which component should be used.
  */
 class ComponentNegotiator {
+
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['moduleExtensionList' => 'extension.list.module'];
 
   /**
    * Holds the component IDs from previous negotiations.
@@ -22,12 +29,9 @@ class ComponentNegotiator {
    *
    * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
-   *   The module extension list.
    */
   public function __construct(
     protected ThemeManagerInterface $themeManager,
-    protected ModuleExtensionList $moduleExtensionList,
   ) {
   }
 
@@ -126,24 +130,12 @@ class ComponentNegotiator {
    *   The negotiated plugin ID, or NULL if none found.
    */
   private function maybeNegotiateByModule(array $candidates): ?string {
-    $module_list = $this->moduleExtensionList->getList();
-    if (!$module_list) {
-      return NULL;
+    foreach ($candidates as $candidate) {
+      if ($candidate['extension_type'] === ExtensionType::Module) {
+        return $candidate['id'];
+      }
     }
-    $candidates = array_filter(
-      $candidates,
-      static fn(array $definition) => $definition['extension_type'] === ExtensionType::Module
-    );
-    $sort_by_module_weight_and_name = static function (array $definition_a, array $definition_b) use ($module_list) {
-      $a_weight = $module_list[$definition_a['provider']]?->weight ?? 999;
-      $b_weight = $module_list[$definition_b['provider']]?->weight ?? 999;
-      return $a_weight !== $b_weight
-        ? $a_weight <=> $b_weight
-        : $definition_a['provider'] <=> $definition_b['provider'];
-    };
-    uasort($candidates, $sort_by_module_weight_and_name);
-    $definition = reset($candidates);
-    return $definition ? ($definition['id'] ?? NULL) : NULL;
+    return NULL;
   }
 
   /**
