@@ -98,4 +98,19 @@ class RecipeTest extends KernelTestBase {
     $this->assertIsObject($recipe);
   }
 
+  /**
+   * Tests getting extra extension-specific info from a recipe.
+   *
+   * @covers ::getExtra
+   */
+  public function testExtra(): void {
+    $recipe = $this->createRecipe([
+      'name' => 'Getting extra info',
+      'extra' => [
+        'special_sauce' => 'Wasabi',
+      ],
+    ]);
+    $this->assertSame('Wasabi', $recipe->getExtra('special_sauce'));
+  }
+
 }

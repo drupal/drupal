@@ -722,6 +722,45 @@ input:
 YAML,
       NULL,
     ];
+    yield 'extra is present and not an array' => [
+      <<<YAML
+name: Bad extra
+extra: 'yes!'
+YAML,
+      [
+        '[extra]' => ['This value should be of type associative_array.'],
+      ],
+    ];
+    yield 'extra is an indexed array' => [
+      <<<YAML
+name: Bad extra
+extra:
+  - one
+  - two
+YAML,
+      [
+        '[extra]' => ['This value should be of type associative_array.'],
+      ],
+    ];
+    yield 'invalid key in extra' => [
+      <<<YAML
+name: Bad extra
+extra:
+  'not a valid extension name': true
+YAML,
+      [
+        '[extra]' => ['not a valid extension name is not a valid extension name.'],
+      ],
+    ];
+    yield 'valid extra' => [
+      <<<YAML
+name: Bad extra
+extra:
+  project_browser:
+    yes: sir
+YAML,
+      NULL,
+    ];
   }
 
   /**
