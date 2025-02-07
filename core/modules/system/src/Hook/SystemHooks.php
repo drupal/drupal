@@ -485,7 +485,7 @@ class SystemHooks {
    * Implements hook_file_download().
    */
   #[Hook('file_download')]
-  public function fileDownload($uri) {
+  public function fileDownload($uri): array|int|null {
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     $scheme = $stream_wrapper_manager->getScheme($uri);
     if ($stream_wrapper_manager->isValidScheme($scheme)) {
@@ -513,6 +513,7 @@ class SystemHooks {
         return ['Cache-Control' => 'public'];
       }
     }
+    return NULL;
   }
 
   /**

@@ -14342,12 +14342,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config/src/Form/ConfigSync.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config\\\\Hook\\\\ConfigHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/src/Hook/ConfigHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config\\\\Hook\\\\ConfigHooks\\:\\:help\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -17366,12 +17360,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/editor/src/Hook/EditorHooks.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\editor\\\\Hook\\\\EditorHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/editor/src/Hook/EditorHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\editor\\\\Hook\\\\EditorHooks\\:\\:filterFormatPresave\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -19382,12 +19370,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/file_test/src/Form/FileTestSaveUploadFromForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\file_test\\\\Hook\\\\FileTestHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/file_test/src/Hook/FileTestHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\file_test\\\\Hook\\\\FileTestHooks\\:\\:fileInsert\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20757,12 +20739,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Hook\\\\ImageHooks\\:\\:fieldStorageConfigUpdate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/Hook/ImageHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image\\\\Hook\\\\ImageHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Hook/ImageHooks.php',
@@ -34110,12 +34086,6 @@ $ignoreErrors[] = [
 	'identifier' => 'isset.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/ThemeSettingsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemHooks\\:\\:fileDownload\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Hook/SystemHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemHooks\\:\\:help\\(\\) has no return type specified\\.$#',

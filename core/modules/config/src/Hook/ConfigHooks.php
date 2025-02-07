@@ -72,7 +72,7 @@ class ConfigHooks {
    * Implements hook_file_download().
    */
   #[Hook('file_download')]
-  public function fileDownload($uri) {
+  public function fileDownload($uri): array|int|null {
     $scheme = StreamWrapperManager::getScheme($uri);
     $target = StreamWrapperManager::getTarget($uri);
     if ($scheme == 'temporary' && $target == 'config.tar.gz') {
@@ -87,6 +87,7 @@ class ConfigHooks {
       }
       return -1;
     }
+    return NULL;
   }
 
 }

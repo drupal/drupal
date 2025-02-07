@@ -98,7 +98,7 @@ class FileTestHelper {
    *
    * @param string $op
    *   One of the hook_file_[validate,download] operations.
-   * @param mixed $value
+   * @param array|int $value
    *   Value for the hook to return.
    *
    * @see Drupal\file_test\FileTestHelper::getReturn()

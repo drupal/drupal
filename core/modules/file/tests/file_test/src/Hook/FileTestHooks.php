@@ -34,7 +34,7 @@ class FileTestHooks {
    * Implements hook_file_download().
    */
   #[Hook('file_download')]
-  public function fileDownload($uri) {
+  public function fileDownload($uri): array|int|null {
     if (\Drupal::state()->get('file_test.allow_all', FALSE)) {
       $files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $uri]);
       $file = reset($files);
@@ -205,13 +205,13 @@ class FileTestHooks {
    * @param string $op
    *   One of the hook_file_[validate,download] operations.
    *
-   * @return mixed
+   * @return array|int|null
    *   Value set by Drupal\file_test\FileTestHelper::setReturn().
    *
    * @see \Drupal\file_test\FileTestHelper::setReturn()
    * @see Drupal\file_test\FileTestHelper::reset()
    */
-  public function getReturn($op): mixed {
+  public function getReturn($op): array|int|null {
     $return = \Drupal::state()->get('file_test.return', [$op => NULL]);
     return $return[$op];
   }

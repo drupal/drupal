@@ -268,13 +268,13 @@ class EditorHooks {
    * @see file_get_file_references()
    */
   #[Hook('file_download')]
-  public function fileDownload($uri) {
+  public function fileDownload($uri): array|int|null {
     // Get the file record based on the URI. If not in the database just return.
     /** @var \Drupal\file\FileRepositoryInterface $file_repository */
     $file_repository = \Drupal::service('file.repository');
     $file = $file_repository->loadByUri($uri);
     if (!$file) {
-      return;
+      return NULL;
     }
     // Temporary files are handled by file_file_download(), so nothing to do here
     // about them.
@@ -287,7 +287,7 @@ class EditorHooks {
     // an image preview on a node creation form) in which case, allow download by
     // the file's owner.
     if (empty($usage_list['editor']) && ($file->isPermanent() || $file->getOwnerId() != \Drupal::currentUser()->id())) {
-      return;
+      return NULL;
     }
     // Editor.module MUST NOT call $file->access() here (like file_file_download()
     // does) as checking the 'download' access to a file entity would end up in
