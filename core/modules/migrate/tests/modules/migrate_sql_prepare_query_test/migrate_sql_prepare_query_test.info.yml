@@ -1,0 +1,5 @@
+name: 'Migrate SQL prepare query test'
+type: module
+description: 'Provides a source plugin to test prepare query method.'
+package: Testing
+version: VERSION
