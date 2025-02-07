@@ -39,7 +39,7 @@ services:
     arguments: ['@current_user', '@entity_type.manager', '@datetime.time']
   theme.negotiator.admin_theme:
     class: Drupal\user\Theme\AdminNegotiator
-    arguments: ['@current_user', '@config.factory', '@entity_type.manager', '@router.admin_context']
+    arguments: ['@current_user', '@config.factory', '@router.admin_context']
     tags:
       - { name: theme_negotiator, priority: -40 }
   user.auth:
