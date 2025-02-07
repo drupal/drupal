@@ -6,6 +6,7 @@ namespace Drupal\Core\Recipe;
 
 use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\Extension\Dependency;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Component\Serialization\Yaml;
@@ -60,6 +61,8 @@ final class Recipe {
    *   The default content finder.
    * @param string $path
    *   The recipe's path.
+   * @param array $extra
+   *   Any extra information to expose to specific modules.
    */
   public function __construct(
     public readonly string $name,
@@ -71,6 +74,7 @@ final class Recipe {
     public readonly InputConfigurator $input,
     public readonly Finder $content,
     public readonly string $path,
+    private readonly array $extra,
   ) {}
 
   /**
@@ -90,7 +94,7 @@ final class Recipe {
     $config = new ConfigConfigurator($recipe_data['config'], $path, \Drupal::service('config.storage'));
     $input = new InputConfigurator($recipe_data['input'] ?? [], $recipes, basename($path), \Drupal::typedDataManager());
     $content = new Finder($path . '/content');
-    return new static($recipe_data['name'], $recipe_data['description'], $recipe_data['type'], $recipes, $install, $config, $input, $content, $path);
+    return new static($recipe_data['name'], $recipe_data['description'], $recipe_data['type'], $recipes, $install, $config, $input, $content, $path, $recipe_data['extra'] ?? []);
   }
 
   /**
@@ -296,6 +300,12 @@ final class Recipe {
       'content' => new Optional([
         new Type('array'),
       ]),
+      'extra' => new Optional([
+        new Sequentially([
+          new Type('associative_array'),
+          new Callback(self::validateKeysAreValidExtensionNames(...)),
+        ]),
+      ]),
     ]);
 
     $recipe_data = Yaml::decode($recipe_contents);
@@ -421,6 +431,42 @@ final class Recipe {
         '%config_provider' => $config_provider,
       ]);
     }
+  }
+
+  /**
+   * Validates that the keys of an array are valid extension names.
+   *
+   * Note that the keys do not have to be the names of extensions that are
+   * installed, or even extensions that exist. They just have to follow the
+   * form of a valid extension name.
+   *
+   * @param array $value
+   *   The array being validated.
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
+   *   The validator execution context.
+   */
+  private static function validateKeysAreValidExtensionNames(array $value, ExecutionContextInterface $context): void {
+    $keys = array_keys($value);
+    foreach ($keys as $key) {
+      if (!preg_match(ExtensionDiscovery::PHP_FUNCTION_PATTERN, $key)) {
+        $context->addViolation('%name is not a valid extension name.', [
+          '%name' => $key,
+        ]);
+      }
+    }
+  }
+
+  /**
+   * Returns extra information to expose to a particular extension.
+   *
+   * @param string $extension_name
+   *   The name of a Drupal extension.
+   *
+   * @return mixed
+   *   The extra data exposed to the given extension, or NULL if there is none.
+   */
+  public function getExtra(string $extension_name): mixed {
+    return $this->extra[$extension_name] ?? NULL;
   }
 
 }
