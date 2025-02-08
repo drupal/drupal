@@ -675,4 +675,31 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertSession()->pageTextNotContains('First rev fr title');
   }
 
+  /**
+   * Tests redirection after saving translation.
+   */
+  public function testRedirect(): void {
+    $this->drupalLogin($this->administrator);
+
+    $article = $this->drupalCreateNode(['type' => 'article', 'langcode' => $this->langcodes[0]]);
+
+    $edit = [
+      'title[0][value]' => 'English node title',
+    ];
+    $this->drupalGet('node/' . $article->id() . '/edit');
+    $this->submitForm($edit, 'Save');
+
+    $this->assertSession()->pageTextContains('English node title');
+    $this->assertEquals($this->baseUrl . '/node/' . $article->id(), $this->getSession()->getCurrentUrl());
+
+    $this->drupalGet('node/' . $article->id() . '/translations/add/' . $this->langcodes[0] . '/' . $this->langcodes[1]);
+    $edit = [
+      'title[0][value]' => 'Italian node title',
+    ];
+    $this->submitForm($edit, 'Save (this translation)');
+
+    $this->assertSession()->pageTextContains('Italian node title');
+    $this->assertEquals($this->baseUrl . '/' . $this->langcodes[1] . '/node/' . $article->id(), $this->getSession()->getCurrentUrl());
+  }
+
 }
