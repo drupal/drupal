@@ -1691,6 +1691,13 @@ function install_download_additional_translations_operations(&$install_state) {
   if (!($language = ConfigurableLanguage::load($langcode))) {
     // Create the language if not already shipped with a profile.
     $language = ConfigurableLanguage::createFromLangcode($langcode);
+
+    $standard_languages = LanguageManager::getStandardLanguageList();
+    if (isset($standard_languages[$langcode])) {
+      // Use the localized language label since the site is being installed
+      // with that language.
+      $language->setName($standard_languages[$langcode][1]);
+    }
   }
   $language->save();
 

@@ -316,7 +316,9 @@ class LocaleHooks {
    */
   #[Hook('form_language_admin_edit_form_alter')]
   public function formLanguageAdminEditFormAlter(&$form, FormStateInterface $form_state) : void {
-    if ($form['langcode']['#type'] == 'value' && $form['langcode']['#value'] == 'en') {
+    /** @var \Drupal\language\ConfigurableLanguageInterface $language */
+    $language = $form_state->getFormObject()->getEntity();
+    if ($language->id() == 'en') {
       $form['locale_translate_english'] = [
         '#title' => t('Enable interface translation to English'),
         '#type' => 'checkbox',
