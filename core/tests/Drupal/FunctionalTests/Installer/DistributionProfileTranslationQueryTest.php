@@ -120,7 +120,8 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertSession()->pageTextContains('German');
+    // cspell:ignore deutsch
+    $this->assertSession()->pageTextContains('Deutsch');
     $this->assertSession()->pageTextNotContains('English');
   }
 
