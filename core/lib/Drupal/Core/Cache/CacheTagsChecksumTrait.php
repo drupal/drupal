@@ -33,6 +33,11 @@ trait CacheTagsChecksumTrait {
   protected $tagCache = [];
 
   /**
+   * Registered cache tags to preload.
+   */
+  protected array $preloadTags = [];
+
+  /**
    * Callback to be invoked just after a database transaction gets committed.
    *
    * Executes all delayed tag invalidations.
@@ -131,13 +136,24 @@ trait CacheTagsChecksumTrait {
    */
   protected function calculateChecksum(array $tags) {
     $checksum = 0;
+
     // If there are no cache tags, then there is no cache tag to checksum,
-    // so return early..
+    // so return early.
     if (empty($tags)) {
       return $checksum;
     }
 
-    $query_tags = array_diff($tags, array_keys($this->tagCache));
+    // If there are registered preload tags, add them to the tags list then
+    // reset the list. This needs to make sure that it only returns the
+    // requested cache tags, so store the combination of requested and
+    // preload cache tags in a separate variable.
+    $tags_with_preload = $tags;
+    if ($this->preloadTags) {
+      $tags_with_preload = array_unique(array_merge($tags, $this->preloadTags));
+      $this->preloadTags = [];
+    }
+
+    $query_tags = array_diff($tags_with_preload, array_keys($this->tagCache));
     if ($query_tags) {
       $tag_invalidations = $this->getTagInvalidationCounts($query_tags);
       $this->tagCache += $tag_invalidations;
@@ -158,6 +174,13 @@ trait CacheTagsChecksumTrait {
   public function reset() {
     $this->tagCache = [];
     $this->invalidatedTags = [];
+  }
+
+  /**
+   * Implements \Drupal\Core\Cache\CacheTagsChecksumPreloadInterface::registerCacheTagsForPreload()
+   */
+  public function registerCacheTagsForPreload(array $cache_tags): void {
+    $this->preloadTags = array_merge($this->preloadTags, $cache_tags);
   }
 
   /**
