@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Entity\Exception\AmbiguousBundleClassException;
@@ -1123,15 +1122,11 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       return;
     }
 
-    $cache_tags = [
-      $this->entityTypeId . '_values',
-      'entity_field_info',
-    ];
     $items = [];
     foreach ($entities as $id => $entity) {
       $items[$this->buildCacheId($id)] = [
         'data' => $entity,
-        'tags' => $cache_tags,
+        'tags' => ['entity_field_info'],
       ];
     }
     $this->cacheBackend->setMultiple($items);
@@ -1210,7 +1205,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     else {
       parent::resetCache();
       if ($this->entityType->isPersistentlyCacheable()) {
-        Cache::invalidateTags([$this->entityTypeId . '_values']);
+        $this->cacheBackend->deleteAll();
       }
       $this->latestRevisionIds = [];
     }

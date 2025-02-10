@@ -145,12 +145,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagChecksumCount' => 37,
       'CacheTagIsValidCount' => 42,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 22,
+      'CacheTagLookupQueryCount' => 21,
       'CacheTagGroupedLookups' => [
-        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info', 'user_values'],
+        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info'],
         ['config:views.view.frontpage'],
         ['config:core.extension', 'views_data'],
-        ['node_values'],
         ['node:1', 'node_list'],
         ['rendered', 'user:0', 'user_view'],
         ['config:filter.format.restricted_html', 'node_view'],
@@ -211,10 +210,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 16,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 19,
+      'CacheTagLookupQueryCount' => 18,
       'CacheTagGroupedLookups' => [
-        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info', 'user_values'],
-        ['node_values'],
+        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info'],
         ['rendered', 'user:0', 'user_view'],
         ['config:filter.format.restricted_html', 'node:1', 'node_view'],
         ['block_view', 'config:block.block.stark_site_branding', 'config:system.site'],
@@ -331,9 +329,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 17,
       'CacheTagGroupedLookups' => [
         // Form submission and login.
-        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info', 'user_values'],
+        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info'],
         // The user page after the redirect.
-        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info', 'user_values'],
+        ['route_match', 'access_policies', 'routes', 'router', 'entity_types', 'entity_field_info', 'entity_bundles', 'local_task', 'library_info'],
         ['rendered', 'user:2', 'user_view'],
         ['block_view', 'config:block.block.stark_site_branding', 'config:system.site'],
         ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form', 'config:block.block.stark_search_form_narrow', 'config:search.settings'],
@@ -407,7 +405,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheTagChecksumCount' => 1,
       'CacheTagIsValidCount' => 41,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 20,
+      'CacheTagLookupQueryCount' => 19,
     ];
     $this->assertMetrics($expected, $performance_data);
   }

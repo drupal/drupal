@@ -35,7 +35,6 @@ class CacheTagPreloadSubscriber implements EventSubscriberInterface {
         'entity_bundles',
         'local_task',
         'library_info',
-        'user_values',
       ], Settings::get('cache_preload_tags', []));
       $this->cacheTagsChecksum->registerCacheTagsForPreload($default_preload_cache_tags);
     }

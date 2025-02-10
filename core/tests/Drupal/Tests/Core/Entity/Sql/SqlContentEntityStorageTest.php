@@ -1308,7 +1308,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->with([
         $key => [
           'data' => $entity,
-          'tags' => [$this->entityTypeId . '_values', 'entity_field_info'],
+          'tags' => ['entity_field_info'],
         ],
       ]);
 
