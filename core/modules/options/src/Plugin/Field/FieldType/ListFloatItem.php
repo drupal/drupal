@@ -22,6 +22,7 @@ use Drupal\Core\TypedData\DataDefinition;
   ],
   category: "selection_list",
   weight: -10,
+  no_ui: TRUE,
   default_widget: "options_select",
   default_formatter: "list_default",
 )]

@@ -22,6 +22,7 @@ use Drupal\Core\TypedData\DataDefinition;
   ],
   category: "number",
   weight: -10,
+  no_ui: TRUE,
   default_widget: "number",
   default_formatter: "number_decimal"
 )]

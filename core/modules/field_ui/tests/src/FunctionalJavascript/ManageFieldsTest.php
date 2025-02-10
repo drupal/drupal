@@ -318,12 +318,10 @@ class ManageFieldsTest extends WebDriverTestBase {
         'selection_list' => [
           'List (text)',
           'List (integer)',
-          'List (float)',
         ],
         'number' => [
           'Number (integer)',
           'Number (decimal)',
-          'Number (float)',
         ],
       };
       // Assert that the field type options are displayed as per their weights.
