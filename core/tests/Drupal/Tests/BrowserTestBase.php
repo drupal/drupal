@@ -123,15 +123,6 @@ abstract class BrowserTestBase extends TestCase {
   protected $defaultTheme;
 
   /**
-   * An array of custom translations suitable for SettingsEditor::rewrite().
-   *
-   * @var array
-   *
-   * @see \Drupal\Core\Site\SettingsEditor::rewrite()
-   */
-  protected $customTranslations;
-
-  /**
    * Mink class for the default driver to use.
    *
    * Should be a fully-qualified class name that implements
