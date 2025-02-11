@@ -40,6 +40,14 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
       }
     }
 
+    // Ensure that Layout Builder's tempstore is workspace-aware.
+    if ($container->hasDefinition('layout_builder.tempstore_repository')) {
+      $definition = $container->getDefinition('layout_builder.tempstore_repository');
+      $definition
+        ->setClass(WorkspacesLayoutTempstoreRepository::class)
+        ->addMethodCall('setWorkspacesManager', [new Reference('workspaces.manager')]);
+    }
+
     // Ensure that there's no active workspace while running database updates by
     // removing the relevant tag from all workspace negotiator services.
     if ($container->get('kernel') instanceof UpdateKernel) {
