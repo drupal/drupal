@@ -25,6 +25,14 @@ class UserLogoutConfirm extends ConfirmFormBase implements WorkspaceSafeFormInte
   /**
    * {@inheritdoc}
    */
+  public function getDescription() {
+    // phpcs:ignore Drupal.Semantics.FunctionT.EmptyString
+    return $this->t('');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getQuestion(): TranslatableMarkup {
     return $this->t('Are you sure you want to log out?');
   }
