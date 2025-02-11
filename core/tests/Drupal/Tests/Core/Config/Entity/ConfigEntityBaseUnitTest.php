@@ -507,6 +507,11 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->assertNull($duplicate->getOriginalId());
     $this->assertNotEquals($this->entity->uuid(), $duplicate->uuid());
     $this->assertSame($new_uuid, $duplicate->uuid());
+
+    $this->moduleHandler->invokeAll($this->entityTypeId . '_duplicate', [$duplicate, $this->entity])
+      ->shouldHaveBeenCalled();
+    $this->moduleHandler->invokeAll('entity_duplicate', [$duplicate, $this->entity])
+      ->shouldHaveBeenCalled();
   }
 
   /**

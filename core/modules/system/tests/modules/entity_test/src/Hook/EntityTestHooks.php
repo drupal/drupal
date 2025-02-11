@@ -22,6 +22,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\entity_test\EntityTestHelper;
+use Drupal\entity_test\Entity\EntityTest;
 
 /**
  * Hook implementations for entity_test.
@@ -702,6 +703,26 @@ class EntityTestHooks {
   public function entityTestFormModeAlter(&$form_mode, EntityInterface $entity) : void {
     if ($entity->getEntityTypeId() === 'entity_test' && $entity->get('name')->value === 'test_entity_type_form_mode_alter') {
       $form_mode = 'compact';
+    }
+  }
+
+  /**
+   * Implements hook_entity_duplicate().
+   */
+  #[Hook('entity_duplicate')]
+  public function entityDuplicateAlter(EntityInterface $duplicate, EntityInterface $entity) : void {
+    if ($duplicate instanceof ContentEntityInterface && str_contains($duplicate->label(), 'UUID CRUD test entity') && $duplicate->hasField('name')) {
+      $duplicate->set('name', $duplicate->label() . ' duplicate');
+    }
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_duplicate().
+   */
+  #[Hook('entity_test_duplicate')]
+  public function entityTestDuplicate(EntityTest $duplicate, EntityTest $entity) : void {
+    if (str_contains($duplicate->label(), 'UUID CRUD test entity') && $duplicate->hasField('name')) {
+      $duplicate->set('name', 'prefix ' . $duplicate->label());
     }
   }
 
