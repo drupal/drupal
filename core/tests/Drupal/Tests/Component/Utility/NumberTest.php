@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Number;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,6 +18,8 @@ use PHPUnit\Framework\TestCase;
  * @see \Drupal\Component\Utility\Number
  */
 class NumberTest extends TestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * Tests Number::validStep() without offset.
@@ -155,6 +158,37 @@ class NumberTest extends TestCase {
       [36, '110'],
       [100, '12s'],
     ];
+  }
+
+  /**
+   * Tests the alphadecimal conversion function input parameter checking.
+   *
+   * Number::alphadecimalToInt() must throw an exception
+   * when non-alphanumeric characters are passed as input.
+   *
+   * @covers ::alphadecimalToInt
+   */
+  public function testAlphadecimalToIntThrowsExceptionWithMalformedStrings(): void {
+    $this->expectException(\InvalidArgumentException::class);
+    $nonAlphanumericChar = '#';
+    Number::alphadecimalToInt($nonAlphanumericChar);
+  }
+
+  /**
+   * Tests the alphadecimal conversion function keeps backward compatibility.
+   *
+   * Many tests and code rely on Number::alphadecimalToInt() returning 0
+   * for degenerate values '' and NULL. We must ensure they are accepted.
+   *
+   * @group legacy
+   * @covers ::alphadecimalToInt
+   */
+  public function testAlphadecimalToIntReturnsZeroWithNullAndEmptyString(): void {
+    $deprecationMessage = 'Passing NULL or an empty string to Drupal\Component\Utility\Number::alphadecimalToInt() is deprecated in drupal:11.2.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3494472';
+    $this->expectDeprecation($deprecationMessage);
+    $this->assertSame(0, Number::alphadecimalToInt(NULL));
+    $this->expectDeprecation($deprecationMessage);
+    $this->assertSame(0, Number::alphadecimalToInt(''));
   }
 
 }
