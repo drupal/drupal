@@ -64,6 +64,12 @@ services:
     arguments: [ '@workspaces.manager', '@plugin.manager.element_info' ]
   Drupal\workspaces\WorkspacesLazyBuilders: '@workspaces.lazy_builders'
 
+  workspaces.entity.repository:
+    decorates: entity.repository
+    class: Drupal\workspaces\WorkspacesEntityRepository
+    arguments: ['@.inner', '@workspaces.manager']
+    public: false
+
   workspaces.entity.query.sql:
     decorates: entity.query.sql
     class: Drupal\workspaces\EntityQuery\QueryFactory

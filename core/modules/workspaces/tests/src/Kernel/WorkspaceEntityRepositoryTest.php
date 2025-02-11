@@ -91,6 +91,11 @@ class WorkspaceEntityRepositoryTest extends KernelTestBase {
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
     $this->assertSame($ham_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
 
+    // Check that the active variant in Live is still the default revision.
+    $this->switchToLive();
+    $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
+    $this->assertSame($entity->getLoadedRevisionId(), $active->getLoadedRevisionId());
+
     $this->switchToWorkspace('cheese');
     $cheese_revision = $storage->createRevision($entity);
     $storage->save($cheese_revision);
