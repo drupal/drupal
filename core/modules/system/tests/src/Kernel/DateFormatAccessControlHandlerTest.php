@@ -49,7 +49,7 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
   /**
    * @covers ::checkAccess
    * @covers ::checkCreateAccess
-   * @dataProvider testAccessProvider
+   * @dataProvider providerTestAccess
    */
   public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result): void {
 
@@ -70,7 +70,7 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
     static::assertEquals($create_access_result, $this->accessControlHandler->createAccess(NULL, $user, [], TRUE));
   }
 
-  public static function testAccessProvider() {
+  public static function providerTestAccess(): array {
     $c = new ContainerBuilder();
     $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
