@@ -65,6 +65,7 @@ class WorkspaceTest extends BrowserTestBase {
       'create workspace',
       'edit own workspace',
       'edit any workspace',
+      'view any workspace',
       'view own workspace',
       'access toolbar',
     ];
