@@ -85,3 +85,10 @@ function system_post_update_sdc_uninstall() {
     \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
   }
 }
+
+/**
+ * Rebuild the container to fix HTML in RSS feeds.
+ */
+function system_post_update_remove_rss_cdata_subscriber(): void {
+  // Empty update to trigger container rebuild.
+}
