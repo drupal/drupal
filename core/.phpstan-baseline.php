@@ -12338,12 +12338,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block_content/tests/modules/block_content_test/src/Plugin/EntityReferenceSelection/TestSelection.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$loaded might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 9,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Functional/BlockContentRevisionsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Functional\\\\BlockContentTranslationUITest\\:\\:getEditValues\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
