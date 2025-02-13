@@ -317,7 +317,7 @@ function hook_views_data(): array {
       // ID of relationship handler plugin to use.
       'id' => 'standard',
       // Default label for relationship in the UI.
-      'label' => t('Example node'),
+      'title' => t('Example node'),
       // Description shown within the add relationship handler in the UI.
       'help' => t('Relationship between the node and node field data'),
     ],
@@ -396,7 +396,7 @@ function hook_views_data(): array {
       'id' => 'boolean',
       // Override the generic field title, so that the filter uses a different
       // label in the UI.
-      'label' => t('Published'),
+      'title' => t('Published'),
       // Override the default BooleanOperator filter handler's 'type' setting,
       // to display this as a "Yes/No" filter instead of a "True/False" filter.
       'type' => 'yes-no',
@@ -517,7 +517,7 @@ function hook_views_data_alter(array &$data) {
       'field' => 'fid',
       // ID of relationship handler plugin to use.
       'id' => 'standard',
-      'label' => t('Default label for relationship'),
+      'title' => t('Default label for relationship'),
       // Description shown within the add relationship handler in the UI.
       'help' => t('Description of the placeholder field relationship'),
     ],
@@ -557,7 +557,7 @@ function hook_field_views_data(FieldStorageConfigInterface $field_storage): arra
       'id' => 'standard',
       'base' => 'file_managed',
       'base field' => 'target_id',
-      'label' => t('image from @field_name', ['@field_name' => $field_storage->getName()]),
+      'title' => t('image from @field_name', ['@field_name' => $field_storage->getName()]),
     ];
   }
 
