@@ -106,7 +106,7 @@ class LayoutBuilderTestHooks {
    * Implements hook_entity_form_display_alter().
    */
   #[Hook('entity_form_display_alter', module: 'layout_builder')]
-  public function layoutBuilderEntityFormDisplayAlter(EntityFormDisplayInterface $form_display, array $context) {
+  public function layoutBuilderEntityFormDisplayAlter(EntityFormDisplayInterface $form_display, array $context): void {
     if ($context['form_mode'] === 'layout_builder') {
       $form_display->setComponent('status', ['type' => 'boolean_checkbox', 'settings' => ['display_label' => TRUE]]);
     }

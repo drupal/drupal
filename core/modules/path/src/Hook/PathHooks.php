@@ -112,7 +112,7 @@ class PathHooks {
    * Implements hook_entity_translation_create().
    */
   #[Hook('entity_translation_create')]
-  public function entityTranslationCreate(ContentEntityInterface $translation) {
+  public function entityTranslationCreate(ContentEntityInterface $translation): void {
     foreach ($translation->getFieldDefinitions() as $field_name => $field_definition) {
       if ($field_definition->getType() === 'path' && $translation->get($field_name)->pid) {
         // If there are values and a path ID, update the langcode and unset the

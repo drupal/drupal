@@ -21,7 +21,7 @@ class FileTestHooks {
    * Implements hook_ENTITY_TYPE_load() for file entities.
    */
   #[Hook('file_load')]
-  public function fileLoad($files) {
+  public function fileLoad($files): void {
     foreach ($files as $file) {
       FileTestHelper::logCall('load', [$file->id()]);
       // Assign a value on the object so that we can test that the $file is passed
@@ -48,7 +48,7 @@ class FileTestHooks {
    * Implements hook_ENTITY_TYPE_insert() for file entities.
    */
   #[Hook('file_insert')]
-  public function fileInsert(File $file) {
+  public function fileInsert(File $file): void {
     FileTestHelper::logCall('insert', [$file->id()]);
   }
 
@@ -56,7 +56,7 @@ class FileTestHooks {
    * Implements hook_ENTITY_TYPE_update() for file entities.
    */
   #[Hook('file_update')]
-  public function fileUpdate(File $file) {
+  public function fileUpdate(File $file): void {
     FileTestHelper::logCall('update', [$file->id()]);
   }
 
@@ -80,7 +80,7 @@ class FileTestHooks {
    * Implements hook_ENTITY_TYPE_predelete() for file entities.
    */
   #[Hook('file_predelete')]
-  public function filePredelete(File $file) {
+  public function filePredelete(File $file): void {
     FileTestHelper::logCall('delete', [$file->id()]);
   }
 

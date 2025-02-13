@@ -249,7 +249,7 @@ class NodeHooks1 {
    * Implements hook_ENTITY_TYPE_predelete() for user entities.
    */
   #[Hook('user_predelete')]
-  public function userPredelete($account) {
+  public function userPredelete($account): void {
     // Delete nodes (current revisions).
     // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
     $nids = \Drupal::entityQuery('node')->condition('uid', $account->id())->accessCheck(FALSE)->execute();
@@ -508,7 +508,7 @@ class NodeHooks1 {
    * Implements hook_ENTITY_TYPE_delete() for 'configurable_language'.
    */
   #[Hook('configurable_language_delete')]
-  public function configurableLanguageDelete(ConfigurableLanguageInterface $language) {
+  public function configurableLanguageDelete(ConfigurableLanguageInterface $language): void {
     // On nodes with this language, unset the language.
     \Drupal::entityTypeManager()->getStorage('node')->clearRevisionsLanguage($language);
   }
@@ -517,7 +517,7 @@ class NodeHooks1 {
    * Implements hook_ENTITY_TYPE_insert() for comment entities.
    */
   #[Hook('comment_insert')]
-  public function commentInsert($comment) {
+  public function commentInsert($comment): void {
     // Reindex the node when comments are added.
     if ($comment->getCommentedEntityTypeId() == 'node') {
       node_reindex_node_search($comment->getCommentedEntityId());
@@ -528,7 +528,7 @@ class NodeHooks1 {
    * Implements hook_ENTITY_TYPE_update() for comment entities.
    */
   #[Hook('comment_update')]
-  public function commentUpdate($comment) {
+  public function commentUpdate($comment): void {
     // Reindex the node when comments are changed.
     if ($comment->getCommentedEntityTypeId() == 'node') {
       node_reindex_node_search($comment->getCommentedEntityId());
@@ -539,7 +539,7 @@ class NodeHooks1 {
    * Implements hook_ENTITY_TYPE_delete() for comment entities.
    */
   #[Hook('comment_delete')]
-  public function commentDelete($comment) {
+  public function commentDelete($comment): void {
     // Reindex the node when comments are deleted.
     if ($comment->getCommentedEntityTypeId() == 'node') {
       node_reindex_node_search($comment->getCommentedEntityId());

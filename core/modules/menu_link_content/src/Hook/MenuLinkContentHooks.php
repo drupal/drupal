@@ -52,10 +52,10 @@ class MenuLinkContentHooks {
   }
 
   /**
-   * Implements hook_menu_delete().
+   * Implements hook_ENTITY_TYPE_delete().
    */
   #[Hook('menu_delete')]
-  public function menuDelete(MenuInterface $menu) {
+  public function menuDelete(MenuInterface $menu): void {
     $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
     $menu_links = $storage->loadByProperties(['menu_name' => $menu->id()]);
     $storage->delete($menu_links);
@@ -65,7 +65,7 @@ class MenuLinkContentHooks {
    * Implements hook_ENTITY_TYPE_insert() for 'path_alias'.
    */
   #[Hook('path_alias_insert')]
-  public function pathAliasInsert(PathAliasInterface $path_alias) {
+  public function pathAliasInsert(PathAliasInterface $path_alias): void {
     _menu_link_content_update_path_alias($path_alias->getAlias());
   }
 
@@ -73,7 +73,7 @@ class MenuLinkContentHooks {
    * Implements hook_ENTITY_TYPE_update() for 'path_alias'.
    */
   #[Hook('path_alias_update')]
-  public function pathAliasUpdate(PathAliasInterface $path_alias) {
+  public function pathAliasUpdate(PathAliasInterface $path_alias): void {
     if ($path_alias->getAlias() != $path_alias->getOriginal()->getAlias()) {
       _menu_link_content_update_path_alias($path_alias->getAlias());
       _menu_link_content_update_path_alias($path_alias->getOriginal()->getAlias());
@@ -87,7 +87,7 @@ class MenuLinkContentHooks {
    * Implements hook_ENTITY_TYPE_delete() for 'path_alias'.
    */
   #[Hook('path_alias_delete')]
-  public function pathAliasDelete(PathAliasInterface $path_alias) {
+  public function pathAliasDelete(PathAliasInterface $path_alias): void {
     _menu_link_content_update_path_alias($path_alias->getAlias());
   }
 
@@ -95,7 +95,7 @@ class MenuLinkContentHooks {
    * Implements hook_entity_predelete().
    */
   #[Hook('entity_predelete')]
-  public function entityPredelete(EntityInterface $entity) {
+  public function entityPredelete(EntityInterface $entity): void {
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
     $entity_type_id = $entity->getEntityTypeId();

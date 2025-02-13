@@ -122,7 +122,7 @@ class SearchHooks {
    * Implements hook_ENTITY_TYPE_presave() for block entities.
    */
   #[Hook('block_presave')]
-  public function blockPresave(BlockInterface $block) {
+  public function blockPresave(BlockInterface $block): void {
     // @see \Drupal\search\Plugin\Block\SearchBlock
     if ($block->getPluginId() === 'search_form_block') {
       $settings = $block->get('settings');

@@ -230,7 +230,7 @@ class ImageHooks {
    * Implements hook_ENTITY_TYPE_predelete() for file entities.
    */
   #[Hook('file_predelete')]
-  public function filePredelete(FileInterface $file) {
+  public function filePredelete(FileInterface $file): void {
     // Delete any image derivatives of this image.
     image_path_flush($file->getFileUri());
   }
@@ -242,7 +242,7 @@ class ImageHooks {
    * save.
    */
   #[Hook('entity_presave')]
-  public function entityPresave(EntityInterface $entity) {
+  public function entityPresave(EntityInterface $entity): void {
     // Get the default image settings, return if not saving an image field storage
     // or image field entity.
     $default_image = [];
@@ -279,7 +279,7 @@ class ImageHooks {
    * Implements hook_ENTITY_TYPE_update() for 'field_storage_config'.
    */
   #[Hook('field_storage_config_update')]
-  public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage) {
+  public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage): void {
     if ($field_storage->getType() != 'image') {
       // Only act on image fields.
       return;
@@ -313,7 +313,7 @@ class ImageHooks {
    * Implements hook_ENTITY_TYPE_update() for 'field_config'.
    */
   #[Hook('field_config_update')]
-  public function fieldConfigUpdate(FieldConfigInterface $field) {
+  public function fieldConfigUpdate(FieldConfigInterface $field): void {
     $field_storage = $field->getFieldStorageDefinition();
     if ($field_storage->getType() != 'image') {
       // Only act on image fields.
@@ -348,7 +348,7 @@ class ImageHooks {
    * Implements hook_ENTITY_TYPE_delete() for 'field_storage_config'.
    */
   #[Hook('field_storage_config_delete')]
-  public function fieldStorageConfigDelete(FieldStorageConfigInterface $field) {
+  public function fieldStorageConfigDelete(FieldStorageConfigInterface $field): void {
     if ($field->getType() != 'image') {
       // Only act on image fields.
       return;
@@ -364,7 +364,7 @@ class ImageHooks {
    * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
    */
   #[Hook('field_config_delete')]
-  public function fieldConfigDelete(FieldConfigInterface $field) {
+  public function fieldConfigDelete(FieldConfigInterface $field): void {
     $field_storage = $field->getFieldStorageDefinition();
     if ($field_storage->getType() != 'image') {
       // Only act on image fields.

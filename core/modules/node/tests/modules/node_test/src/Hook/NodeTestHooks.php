@@ -20,7 +20,7 @@ class NodeTestHooks {
    * Implements hook_ENTITY_TYPE_view() for node entities.
    */
   #[Hook('node_view')]
-  public function nodeView(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  public function nodeView(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode): void {
     if ($node->isNew()) {
       return;
     }
@@ -127,7 +127,7 @@ class NodeTestHooks {
    * Implements hook_ENTITY_TYPE_presave() for node entities.
    */
   #[Hook('node_presave')]
-  public function nodePresave(NodeInterface $node) {
+  public function nodePresave(NodeInterface $node): void {
     if ($node->getTitle() == 'testing_node_presave') {
       // Sun, 19 Nov 1978 05:00:00 GMT
       $node->setCreatedTime(280299600);
@@ -146,7 +146,7 @@ class NodeTestHooks {
    * Implements hook_ENTITY_TYPE_update() for node entities.
    */
   #[Hook('node_update')]
-  public function nodeUpdate(NodeInterface $node) {
+  public function nodeUpdate(NodeInterface $node): void {
     // Determine changes on update.
     if ($node->getOriginal()?->getTitle() == 'test_changes') {
       if ($node->getOriginal()->getTitle() != $node->getTitle()) {
@@ -175,7 +175,7 @@ class NodeTestHooks {
    * @see \Drupal\node\Tests\NodeSaveTest::testNodeSaveOnInsert()
    */
   #[Hook('node_insert')]
-  public function nodeInsert(NodeInterface $node) {
+  public function nodeInsert(NodeInterface $node): void {
     // Set the node title to the node ID and save.
     if ($node->getTitle() == 'new') {
       $node->setTitle('Node ' . $node->id());

@@ -138,7 +138,7 @@ class FieldUiHooks {
    * Implements hook_entity_bundle_create().
    */
   #[Hook('entity_bundle_create')]
-  public function entityBundleCreate($entity_type, $bundle) {
+  public function entityBundleCreate($entity_type, $bundle): void {
     // When a new bundle is created, the menu needs to be rebuilt to add our
     // menu item tabs.
     \Drupal::service('router.builder')->setRebuildNeeded();
@@ -187,34 +187,34 @@ class FieldUiHooks {
   }
 
   /**
-   * Implements hook_entity_view_mode_presave().
+   * Implements hook_ENTITY_TYPE_presave().
    */
   #[Hook('entity_view_mode_presave')]
-  public function entityViewModePresave(EntityViewModeInterface $view_mode) {
+  public function entityViewModePresave(EntityViewModeInterface $view_mode): void {
     \Drupal::service('router.builder')->setRebuildNeeded();
   }
 
   /**
-   * Implements hook_entity_form_mode_presave().
+   * Implements hook_ENTITY_TYPE_presave().
    */
   #[Hook('entity_form_mode_presave')]
-  public function entityFormModePresave(EntityFormModeInterface $form_mode) {
+  public function entityFormModePresave(EntityFormModeInterface $form_mode): void {
     \Drupal::service('router.builder')->setRebuildNeeded();
   }
 
   /**
-   * Implements hook_entity_view_mode_delete().
+   * Implements hook_ENTITY_TYPE_delete().
    */
   #[Hook('entity_view_mode_delete')]
-  public function entityViewModeDelete(EntityViewModeInterface $view_mode) {
+  public function entityViewModeDelete(EntityViewModeInterface $view_mode): void {
     \Drupal::service('router.builder')->setRebuildNeeded();
   }
 
   /**
-   * Implements hook_entity_form_mode_delete().
+   * Implements hook_ENTITY_TYPE_delete().
    */
   #[Hook('entity_form_mode_delete')]
-  public function entityFormModeDelete(EntityFormModeInterface $form_mode) {
+  public function entityFormModeDelete(EntityFormModeInterface $form_mode): void {
     \Drupal::service('router.builder')->setRebuildNeeded();
   }
 

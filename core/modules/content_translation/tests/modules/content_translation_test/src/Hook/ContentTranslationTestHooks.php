@@ -72,7 +72,7 @@ class ContentTranslationTestHooks {
    * Implements hook_entity_translation_delete().
    */
   #[Hook('entity_translation_delete')]
-  public function entityTranslationDelete(EntityInterface $translation) {
+  public function entityTranslationDelete(EntityInterface $translation): void {
     \Drupal::state()->set('content_translation_test.translation_deleted', TRUE);
   }
 

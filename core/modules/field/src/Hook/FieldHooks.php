@@ -211,7 +211,7 @@ class FieldHooks {
    * Implements hook_entity_bundle_delete().
    */
   #[Hook('entity_bundle_delete')]
-  public function entityBundleDelete($entity_type_id, $bundle) {
+  public function entityBundleDelete($entity_type_id, $bundle): void {
     $storage = \Drupal::entityTypeManager()->getStorage('field_config');
     // Get the fields on the bundle.
     $fields = $storage->loadByProperties(['entity_type' => $entity_type_id, 'bundle' => $bundle]);
@@ -294,7 +294,7 @@ class FieldHooks {
    * Implements hook_ENTITY_TYPE_insert() for 'field_config'.
    */
   #[Hook('field_config_insert')]
-  public function fieldConfigInsert(FieldConfigInterface $field) {
+  public function fieldConfigInsert(FieldConfigInterface $field): void {
     if ($field->isSyncing()) {
       // Don't change anything during a configuration sync.
       return;
@@ -312,7 +312,7 @@ class FieldHooks {
    * an entity reference field.
    */
   #[Hook('field_storage_config_update')]
-  public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage) {
+  public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage): void {
     if ($field_storage->isSyncing()) {
       // Don't change anything during a configuration sync.
       return;
@@ -344,7 +344,7 @@ class FieldHooks {
    * Determine the selection handler plugin ID for an entity reference field.
    */
   #[Hook('field_config_create')]
-  public function fieldConfigCreate(FieldConfigInterface $field) {
+  public function fieldConfigCreate(FieldConfigInterface $field): void {
     if ($field->isSyncing()) {
       return;
     }
@@ -374,7 +374,7 @@ class FieldHooks {
    * Determine the selection handler plugin ID for an entity reference field.
    */
   #[Hook('field_config_presave')]
-  public function fieldConfigPresave(FieldConfigInterface $field) {
+  public function fieldConfigPresave(FieldConfigInterface $field): void {
     // Don't change anything during a configuration sync.
     if ($field->isSyncing()) {
       return;

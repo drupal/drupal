@@ -186,7 +186,7 @@ class ContentTranslationHooks {
    * @see \Drupal\content_translation\ContentTranslationManager::isEnabled()
    */
   #[Hook('language_content_settings_insert')]
-  public function languageContentSettingsInsert(ContentLanguageSettingsInterface $settings) {
+  public function languageContentSettingsInsert(ContentLanguageSettingsInterface $settings): void {
     if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
       _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
     }
@@ -206,7 +206,7 @@ class ContentTranslationHooks {
    * @see \Drupal\content_translation\ContentTranslationManager::isEnabled()
    */
   #[Hook('language_content_settings_update')]
-  public function languageContentSettingsUpdate(ContentLanguageSettingsInterface $settings) {
+  public function languageContentSettingsUpdate(ContentLanguageSettingsInterface $settings): void {
     $original_settings = $settings->getOriginal();
     if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE) && !$original_settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
       _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
@@ -471,7 +471,7 @@ class ContentTranslationHooks {
    * Implements hook_entity_presave().
    */
   #[Hook('entity_presave')]
-  public function entityPresave(EntityInterface $entity) {
+  public function entityPresave(EntityInterface $entity): void {
     if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && !$entity->isNew() && $entity->getOriginal()) {
       /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
       $manager = \Drupal::service('content_translation.manager');

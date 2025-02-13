@@ -17,7 +17,7 @@ class ViewsTestConfigHooks {
    * Implements hook_ENTITY_TYPE_load().
    */
   #[Hook('view_load')]
-  public function viewLoad(array $views) {
+  public function viewLoad(array $views): void {
     // Emulate a severely broken view: this kind of view configuration cannot be
     // saved, it can likely be returned only by a corrupt active configuration.
     $broken_view_id = \Drupal::state()->get('views_test_config.broken_view');

@@ -30,12 +30,12 @@ class ImageModuleTestHooks {
   }
 
   /**
-   * Implements hook_image_style_presave().
+   * Implements hook_ENTITY_TYPE_presave().
    *
    * Used to save test third party settings in the image style entity.
    */
   #[Hook('image_style_presave')]
-  public function imageStylePresave(ImageStyleInterface $style) {
+  public function imageStylePresave(ImageStyleInterface $style): void {
     $style->setThirdPartySetting('image_module_test', 'foo', 'bar');
   }
 

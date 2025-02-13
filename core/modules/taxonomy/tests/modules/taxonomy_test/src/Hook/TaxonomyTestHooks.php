@@ -79,7 +79,7 @@ class TaxonomyTestHooks {
    * Implements hook_ENTITY_TYPE_load() for the taxonomy term.
    */
   #[Hook('taxonomy_term_load')]
-  public function taxonomyTermLoad($entities) {
+  public function taxonomyTermLoad($entities): void {
     $value = \Drupal::state()->get('taxonomy_test_taxonomy_term_load');
     // Only record loaded terms is the test has set this to an empty array.
     if (is_array($value)) {

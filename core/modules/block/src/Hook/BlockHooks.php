@@ -137,7 +137,7 @@ class BlockHooks {
    * Removes deleted role from blocks that use it.
    */
   #[Hook('user_role_delete')]
-  public function userRoleDelete($role) {
+  public function userRoleDelete($role): void {
     foreach (Block::loadMultiple() as $block) {
       /** @var \Drupal\block\BlockInterface $block */
       $visibility = $block->getVisibility();
@@ -153,7 +153,7 @@ class BlockHooks {
    * Implements hook_ENTITY_TYPE_delete() for menu entities.
    */
   #[Hook('menu_delete')]
-  public function menuDelete(Menu $menu) {
+  public function menuDelete(Menu $menu): void {
     if (!$menu->isSyncing()) {
       foreach (Block::loadMultiple() as $block) {
         if ($block->getPluginId() == 'system_menu_block:' . $menu->id()) {
@@ -169,7 +169,7 @@ class BlockHooks {
    * Delete the potential block visibility settings of the deleted language.
    */
   #[Hook('configurable_language_delete')]
-  public function configurableLanguageDelete(ConfigurableLanguageInterface $language) {
+  public function configurableLanguageDelete(ConfigurableLanguageInterface $language): void {
     // Remove the block visibility settings for the deleted language.
     foreach (Block::loadMultiple() as $block) {
       /** @var \Drupal\block\BlockInterface $block */

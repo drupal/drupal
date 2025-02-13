@@ -210,7 +210,7 @@ class LanguageHooks {
    * Implements hook_entity_bundle_delete().
    */
   #[Hook('entity_bundle_delete')]
-  public function entityBundleDelete($entity_type_id, $bundle) {
+  public function entityBundleDelete($entity_type_id, $bundle): void {
     // Remove the content language settings associated with the bundle.
     $settings = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
     if (!$settings->isNew()) {

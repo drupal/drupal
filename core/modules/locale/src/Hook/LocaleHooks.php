@@ -112,7 +112,7 @@ class LocaleHooks {
    * Implements hook_ENTITY_TYPE_insert() for 'configurable_language'.
    */
   #[Hook('configurable_language_insert')]
-  public function configurableLanguageInsert(ConfigurableLanguageInterface $language) {
+  public function configurableLanguageInsert(ConfigurableLanguageInterface $language): void {
     // @todo move these two cache clears out. See
     //   https://www.drupal.org/node/1293252.
     // Changing the language settings impacts the interface: clear render cache.
@@ -125,7 +125,7 @@ class LocaleHooks {
    * Implements hook_ENTITY_TYPE_update() for 'configurable_language'.
    */
   #[Hook('configurable_language_update')]
-  public function configurableLanguageUpdate(ConfigurableLanguageInterface $language) {
+  public function configurableLanguageUpdate(ConfigurableLanguageInterface $language): void {
     // @todo move these two cache clears out. See
     //   https://www.drupal.org/node/1293252.
     // Changing the language settings impacts the interface: clear render cache.
@@ -138,7 +138,7 @@ class LocaleHooks {
    * Implements hook_ENTITY_TYPE_delete() for 'configurable_language'.
    */
   #[Hook('configurable_language_delete')]
-  public function configurableLanguageDelete(ConfigurableLanguageInterface $language) {
+  public function configurableLanguageDelete(ConfigurableLanguageInterface $language): void {
     // Remove translations.
     \Drupal::service('locale.storage')->deleteTranslations(['language' => $language->id()]);
     // Remove interface translation files.

@@ -65,7 +65,7 @@ class HistoryHooks {
    * Implements hook_ENTITY_TYPE_delete() for node entities.
    */
   #[Hook('node_delete')]
-  public function nodeDelete(EntityInterface $node) {
+  public function nodeDelete(EntityInterface $node): void {
     \Drupal::database()->delete('history')->condition('nid', $node->id())->execute();
   }
 
@@ -85,7 +85,7 @@ class HistoryHooks {
    * Implements hook_ENTITY_TYPE_delete() for user entities.
    */
   #[Hook('user_delete')]
-  public function userDelete($account) {
+  public function userDelete($account): void {
     \Drupal::database()->delete('history')->condition('uid', $account->id())->execute();
   }
 

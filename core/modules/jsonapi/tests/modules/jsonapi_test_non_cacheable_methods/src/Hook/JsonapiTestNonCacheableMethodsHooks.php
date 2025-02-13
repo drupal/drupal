@@ -17,7 +17,7 @@ class JsonapiTestNonCacheableMethodsHooks {
    * Implements hook_entity_presave().
    */
   #[Hook('entity_presave')]
-  public function entityPresave(EntityInterface $entity) {
+  public function entityPresave(EntityInterface $entity): void {
     Url::fromRoute('<front>')->toString();
   }
 
@@ -25,7 +25,7 @@ class JsonapiTestNonCacheableMethodsHooks {
    * Implements hook_entity_predelete().
    */
   #[Hook('entity_predelete')]
-  public function entityPredelete(EntityInterface $entity) {
+  public function entityPredelete(EntityInterface $entity): void {
     Url::fromRoute('<front>')->toString();
   }
 

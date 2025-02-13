@@ -60,7 +60,7 @@ class EntityTestUpdateHooks {
    * Implements hook_ENTITY_TYPE_presave() for the 'view' entity type.
    */
   #[Hook('view_presave')]
-  public function viewPresave(EntityInterface $entity) {
+  public function viewPresave(EntityInterface $entity): void {
     if (\Drupal::state()->get('entity_test_update.throw_view_exception') === $entity->id()) {
       throw new \LogicException('The view could not be saved.');
     }

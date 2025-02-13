@@ -16,7 +16,7 @@ class ContentModerationTestResaveHooks {
    * Implements hook_entity_insert().
    */
   #[Hook('entity_insert')]
-  public function entityInsert(EntityInterface $entity) {
+  public function entityInsert(EntityInterface $entity): void {
     /** @var \Drupal\content_moderation\ModerationInformationInterface $content_moderation */
     $content_moderation = \Drupal::service('content_moderation.moderation_information');
     if ($content_moderation->isModeratedEntity($entity)) {

@@ -265,7 +265,7 @@ class ViewsHooks {
    * Implements hook_ENTITY_TYPE_insert() for 'field_config'.
    */
   #[Hook('field_config_insert')]
-  public function fieldConfigInsert(EntityInterface $field) {
+  public function fieldConfigInsert(EntityInterface $field): void {
     Views::viewsData()->clear();
   }
 
@@ -273,7 +273,7 @@ class ViewsHooks {
    * Implements hook_ENTITY_TYPE_update() for 'field_config'.
    */
   #[Hook('field_config_update')]
-  public function fieldConfigUpdate(EntityInterface $entity) {
+  public function fieldConfigUpdate(EntityInterface $entity): void {
     Views::viewsData()->clear();
   }
 
@@ -281,7 +281,7 @@ class ViewsHooks {
    * Implements hook_ENTITY_TYPE_delete() for 'field_config'.
    */
   #[Hook('field_config_delete')]
-  public function fieldConfigDelete(EntityInterface $entity) {
+  public function fieldConfigDelete(EntityInterface $entity): void {
     Views::viewsData()->clear();
   }
 
@@ -289,7 +289,7 @@ class ViewsHooks {
    * Implements hook_ENTITY_TYPE_insert().
    */
   #[Hook('base_field_override_insert')]
-  public function baseFieldOverrideInsert(EntityInterface $entity) {
+  public function baseFieldOverrideInsert(EntityInterface $entity): void {
     Views::viewsData()->clear();
   }
 
@@ -297,7 +297,7 @@ class ViewsHooks {
    * Implements hook_ENTITY_TYPE_update().
    */
   #[Hook('base_field_override_update')]
-  public function baseFieldOverrideUpdate(EntityInterface $entity) {
+  public function baseFieldOverrideUpdate(EntityInterface $entity): void {
     Views::viewsData()->clear();
   }
 
@@ -305,7 +305,7 @@ class ViewsHooks {
    * Implements hook_ENTITY_TYPE_delete().
    */
   #[Hook('base_field_override_delete')]
-  public function baseFieldOverrideDelete(EntityInterface $entity) {
+  public function baseFieldOverrideDelete(EntityInterface $entity): void {
     Views::viewsData()->clear();
   }
 
@@ -368,7 +368,7 @@ class ViewsHooks {
    * Implements hook_ENTITY_TYPE_presave().
    */
   #[Hook('view_presave')]
-  public function viewPresave(ViewEntityInterface $view) {
+  public function viewPresave(ViewEntityInterface $view): void {
     /** @var \Drupal\views\ViewsConfigUpdater $config_updater */
     $config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
     $config_updater->updateAll($view);

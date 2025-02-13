@@ -157,7 +157,7 @@ class UserHooks {
    *   \Drupal\user\Entity\User::preSave().
    */
   #[Hook('user_presave')]
-  public function userPresave(UserInterface $account) {
+  public function userPresave(UserInterface $account): void {
     $config = \Drupal::config('system.date');
     if ($config->get('timezone.user.configurable') && !$account->getTimeZone() && !$config->get('timezone.user.default')) {
       $account->timezone = $config->get('timezone.default');
@@ -168,7 +168,7 @@ class UserHooks {
    * Implements hook_ENTITY_TYPE_view() for user entities.
    */
   #[Hook('user_view')]
-  public function userView(array &$build, UserInterface $account, EntityViewDisplayInterface $display) {
+  public function userView(array &$build, UserInterface $account, EntityViewDisplayInterface $display): void {
     if ($account->isAuthenticated() && $display->getComponent('member_for')) {
       $build['member_for'] = [
         '#type' => 'item',
@@ -270,7 +270,7 @@ class UserHooks {
    * Implements hook_ENTITY_TYPE_insert() for user_role entities.
    */
   #[Hook('user_role_insert')]
-  public function userRoleInsert(RoleInterface $role) {
+  public function userRoleInsert(RoleInterface $role): void {
     // Ignore the authenticated and anonymous roles or the role is being synced.
     if (in_array($role->id(), [
       RoleInterface::AUTHENTICATED_ID,
@@ -315,7 +315,7 @@ class UserHooks {
    * Implements hook_ENTITY_TYPE_delete() for user_role entities.
    */
   #[Hook('user_role_delete')]
-  public function userRoleDelete(RoleInterface $role) {
+  public function userRoleDelete(RoleInterface $role): void {
     // Delete role references for all users.
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');
     $user_storage->deleteRoleReferences([$role->id()]);

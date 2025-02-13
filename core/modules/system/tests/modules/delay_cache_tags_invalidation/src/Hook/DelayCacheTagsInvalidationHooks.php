@@ -19,7 +19,7 @@ class DelayCacheTagsInvalidationHooks {
    * Implements hook_ENTITY_TYPE_insert().
    */
   #[Hook('entity_test_insert')]
-  public function entityTestInsert(EntityTest $entity) {
+  public function entityTestInsert(EntityTest $entity): void {
     if (\Drupal::state()->get('delay_cache_tags_invalidation_exception')) {
       throw new \Exception('Abort entity save to trigger transaction rollback.');
     }
@@ -38,7 +38,7 @@ class DelayCacheTagsInvalidationHooks {
    * Implements hook_ENTITY_TYPE_insert().
    */
   #[Hook('user_insert')]
-  public function userInsert(UserInterface $entity) {
+  public function userInsert(UserInterface $entity): void {
     if ($entity->getAccountName() === 'john doe') {
       // Read the in-transaction cache writes.
       // @see  delay_cache_tags_invalidation_entity_test_insert()

@@ -58,7 +58,7 @@ class JsonapiHooks {
    * Implements hook_entity_bundle_create().
    */
   #[Hook('entity_bundle_create')]
-  public function entityBundleCreate() {
+  public function entityBundleCreate(): void {
     Routes::rebuild();
   }
 
@@ -66,7 +66,7 @@ class JsonapiHooks {
    * Implements hook_entity_bundle_delete().
    */
   #[Hook('entity_bundle_delete')]
-  public function entityBundleDelete() {
+  public function entityBundleDelete(): void {
     Routes::rebuild();
   }
 
@@ -74,7 +74,7 @@ class JsonapiHooks {
    * Implements hook_entity_create().
    */
   #[Hook('entity_create')]
-  public function entityCreate(EntityInterface $entity) {
+  public function entityCreate(EntityInterface $entity): void {
     if (in_array($entity->getEntityTypeId(), ['field_storage_config', 'field_config'])) {
       // @todo Only do this when relationship fields are updated, not just any field.
       Routes::rebuild();
@@ -85,7 +85,7 @@ class JsonapiHooks {
    * Implements hook_entity_delete().
    */
   #[Hook('entity_delete')]
-  public function entityDelete(EntityInterface $entity) {
+  public function entityDelete(EntityInterface $entity): void {
     if (in_array($entity->getEntityTypeId(), ['field_storage_config', 'field_config'])) {
       // @todo Only do this when relationship fields are updated, not just any field.
       Routes::rebuild();

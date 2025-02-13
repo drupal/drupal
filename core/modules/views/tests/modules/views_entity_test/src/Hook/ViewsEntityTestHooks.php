@@ -54,7 +54,7 @@ class ViewsEntityTestHooks {
    * @see \Drupal\Tests\views\Kernel\Handler\FieldFieldTest::testSimpleExecute()
    */
   #[Hook('entity_load')]
-  public function entityLoad(array $entities, $entity_type_id) {
+  public function entityLoad(array $entities, $entity_type_id): void {
     if ($entity_type_id === 'entity_test') {
       // Cast the value of an entity field to be something else than a string so
       // we can check that

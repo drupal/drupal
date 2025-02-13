@@ -11,9 +11,9 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Implements hook_entity_node_view().
+ * Implements hook_ENTITY_TYPE_view().
  */
-function layout_builder_test_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+function layout_builder_test_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
   if ($display->getComponent('layout_builder_test')) {
     $build['layout_builder_test'] = [
       '#markup' => 'Extra, Extra read all about it.',

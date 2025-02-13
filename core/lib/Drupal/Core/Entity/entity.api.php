@@ -917,9 +917,9 @@ function hook_entity_bundle_info_alter(&$bundles) {
  * @param string $bundle
  *   The name of the bundle.
  *
- * @see entity_crud
+ * @ingroup entity_crud
  */
-function hook_entity_bundle_create($entity_type_id, $bundle) {
+function hook_entity_bundle_create($entity_type_id, $bundle): void {
   // When a new bundle is created, the menu needs to be rebuilt to add the
   // Field UI menu item tabs.
   \Drupal::service('router.builder')->setRebuildNeeded();
@@ -937,7 +937,7 @@ function hook_entity_bundle_create($entity_type_id, $bundle) {
  *
  * @ingroup entity_crud
  */
-function hook_entity_bundle_delete($entity_type_id, $bundle) {
+function hook_entity_bundle_delete($entity_type_id, $bundle): void {
   // Remove the settings associated with the bundle in my_module.settings.
   $config = \Drupal::config('my_module.settings');
   $bundle_settings = $config->get('bundle_settings');
@@ -958,7 +958,7 @@ function hook_entity_bundle_delete($entity_type_id, $bundle) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_create()
  */
-function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity): void {
   \Drupal::logger('example')->info('Entity created: @label', ['@label' => $entity->label()]);
 }
 
@@ -973,7 +973,7 @@ function hook_entity_create(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_entity_create()
  */
-function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity): void {
   \Drupal::logger('example')->info('ENTITY_TYPE created: @label', ['@label' => $entity->label()]);
 }
 
@@ -1025,7 +1025,7 @@ function hook_ENTITY_TYPE_duplicate(\Drupal\Core\Entity\EntityInterface $duplica
  * @see \Drupal\Core\Entity\RevisionableStorageInterface::createRevision()
  * @see \Drupal\Core\Entity\TranslatableRevisionableStorageInterface::createRevision()
  */
-function hook_entity_revision_create(\Drupal\Core\Entity\EntityInterface $new_revision, \Drupal\Core\Entity\EntityInterface $entity, $keep_untranslatable_fields) {
+function hook_entity_revision_create(\Drupal\Core\Entity\EntityInterface $new_revision, \Drupal\Core\Entity\EntityInterface $entity, $keep_untranslatable_fields): void {
   // Retain the value from an untranslatable field, which are by default
   // synchronized from the default revision.
   $new_revision->set('untranslatable_field', $entity->get('untranslatable_field'));
@@ -1049,7 +1049,7 @@ function hook_entity_revision_create(\Drupal\Core\Entity\EntityInterface $new_re
  * @see \Drupal\Core\Entity\RevisionableStorageInterface::createRevision()
  * @see \Drupal\Core\Entity\TranslatableRevisionableStorageInterface::createRevision()
  */
-function hook_ENTITY_TYPE_revision_create(\Drupal\Core\Entity\EntityInterface $new_revision, \Drupal\Core\Entity\EntityInterface $entity, $keep_untranslatable_fields) {
+function hook_ENTITY_TYPE_revision_create(\Drupal\Core\Entity\EntityInterface $new_revision, \Drupal\Core\Entity\EntityInterface $entity, $keep_untranslatable_fields): void {
   // Retain the value from an untranslatable field, which are by default
   // synchronized from the default revision.
   $new_revision->set('untranslatable_field', $entity->get('untranslatable_field'));
@@ -1098,7 +1098,7 @@ function hook_entity_preload(array $ids, $entity_type_id): array {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_load()
  */
-function hook_entity_load(array $entities, $entity_type_id) {
+function hook_entity_load(array $entities, $entity_type_id): void {
   foreach ($entities as $entity) {
     $entity->foo = my_module_add_something($entity);
   }
@@ -1113,7 +1113,7 @@ function hook_entity_load(array $entities, $entity_type_id) {
  * @ingroup entity_crud
  * @see hook_entity_load()
  */
-function hook_ENTITY_TYPE_load($entities) {
+function hook_ENTITY_TYPE_load($entities): void {
   foreach ($entities as $entity) {
     $entity->foo = my_module_add_something($entity);
   }
@@ -1165,7 +1165,7 @@ function hook_ENTITY_TYPE_storage_load(array $entities) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_presave()
  */
-function hook_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_presave(\Drupal\Core\Entity\EntityInterface $entity): void {
   if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
     $route_match = \Drupal::routeMatch();
     \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $route_match->getParameter('source_langcode'));
@@ -1184,7 +1184,7 @@ function hook_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_entity_presave()
  */
-function hook_ENTITY_TYPE_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_ENTITY_TYPE_presave(\Drupal\Core\Entity\EntityInterface $entity): void {
   if ($entity->isTranslatable()) {
     $route_match = \Drupal::routeMatch();
     \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->getId(), $route_match->getParameter('source_langcode'));
@@ -1203,7 +1203,7 @@ function hook_ENTITY_TYPE_presave(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_insert()
  */
-function hook_entity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_insert(\Drupal\Core\Entity\EntityInterface $entity): void {
   // Insert the new entity into a fictional table of all entities.
   \Drupal::database()->insert('example_entity')
     ->fields([
@@ -1227,7 +1227,7 @@ function hook_entity_insert(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_entity_insert()
  */
-function hook_ENTITY_TYPE_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_ENTITY_TYPE_insert(\Drupal\Core\Entity\EntityInterface $entity): void {
   // Insert the new entity into a fictional table of this type of entity.
   \Drupal::database()->insert('example_entity')
     ->fields([
@@ -1251,7 +1251,7 @@ function hook_ENTITY_TYPE_insert(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_update()
  */
-function hook_entity_update(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_update(\Drupal\Core\Entity\EntityInterface $entity): void {
   // Update the entity's entry in a fictional table of all entities.
   \Drupal::database()->update('example_entity')
     ->fields([
@@ -1275,7 +1275,7 @@ function hook_entity_update(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_entity_update()
  */
-function hook_ENTITY_TYPE_update(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_ENTITY_TYPE_update(\Drupal\Core\Entity\EntityInterface $entity): void {
   // Update the entity's entry in a fictional table of this type of entity.
   \Drupal::database()->update('example_entity')
     ->fields([
@@ -1297,7 +1297,7 @@ function hook_ENTITY_TYPE_update(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_translation_create()
  */
-function hook_entity_translation_create(\Drupal\Core\Entity\EntityInterface $translation) {
+function hook_entity_translation_create(\Drupal\Core\Entity\EntityInterface $translation): void {
   \Drupal::logger('example')->info('Entity translation created: @label', ['@label' => $translation->label()]);
 }
 
@@ -1313,7 +1313,7 @@ function hook_entity_translation_create(\Drupal\Core\Entity\EntityInterface $tra
  * @ingroup entity_crud
  * @see hook_entity_translation_create()
  */
-function hook_ENTITY_TYPE_translation_create(\Drupal\Core\Entity\EntityInterface $translation) {
+function hook_ENTITY_TYPE_translation_create(\Drupal\Core\Entity\EntityInterface $translation): void {
   \Drupal::logger('example')->info('ENTITY_TYPE translation created: @label', ['@label' => $translation->label()]);
 }
 
@@ -1329,7 +1329,7 @@ function hook_ENTITY_TYPE_translation_create(\Drupal\Core\Entity\EntityInterface
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_translation_insert()
  */
-function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $translation) {
+function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $translation): void {
   $variables = [
     '@language' => $translation->language()->getName(),
     '@label' => $translation->getUntranslated()->label(),
@@ -1349,7 +1349,7 @@ function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $tra
  * @ingroup entity_crud
  * @see hook_entity_translation_insert()
  */
-function hook_ENTITY_TYPE_translation_insert(\Drupal\Core\Entity\EntityInterface $translation) {
+function hook_ENTITY_TYPE_translation_insert(\Drupal\Core\Entity\EntityInterface $translation): void {
   $variables = [
     '@language' => $translation->language()->getName(),
     '@label' => $translation->getUntranslated()->label(),
@@ -1368,7 +1368,7 @@ function hook_ENTITY_TYPE_translation_insert(\Drupal\Core\Entity\EntityInterface
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_translation_delete()
  */
-function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
+function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $translation): void {
   $variables = [
     '@language' => $translation->language()->getName(),
     '@label' => $translation->label(),
@@ -1387,7 +1387,7 @@ function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $tra
  * @ingroup entity_crud
  * @see hook_entity_translation_delete()
  */
-function hook_ENTITY_TYPE_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
+function hook_ENTITY_TYPE_translation_delete(\Drupal\Core\Entity\EntityInterface $translation): void {
   $variables = [
     '@language' => $translation->language()->getName(),
     '@label' => $translation->label(),
@@ -1404,7 +1404,7 @@ function hook_ENTITY_TYPE_translation_delete(\Drupal\Core\Entity\EntityInterface
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_predelete()
  */
-function hook_entity_predelete(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_predelete(\Drupal\Core\Entity\EntityInterface $entity): void {
   $connection = \Drupal::database();
   // Count references to this entity in a custom table before they are removed
   // upon entity deletion.
@@ -1433,7 +1433,7 @@ function hook_entity_predelete(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_entity_predelete()
  */
-function hook_ENTITY_TYPE_predelete(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_ENTITY_TYPE_predelete(\Drupal\Core\Entity\EntityInterface $entity): void {
   $connection = \Drupal::database();
   // Count references to this entity in a custom table before they are removed
   // upon entity deletion.
@@ -1464,7 +1464,7 @@ function hook_ENTITY_TYPE_predelete(\Drupal\Core\Entity\EntityInterface $entity)
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_delete()
  */
-function hook_entity_delete(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_delete(\Drupal\Core\Entity\EntityInterface $entity): void {
   // Delete the entity's entry from a fictional table of all entities.
   \Drupal::database()->delete('example_entity')
     ->condition('type', $entity->getEntityTypeId())
@@ -1483,7 +1483,7 @@ function hook_entity_delete(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_entity_delete()
  */
-function hook_ENTITY_TYPE_delete(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_ENTITY_TYPE_delete(\Drupal\Core\Entity\EntityInterface $entity): void {
   // Delete the entity's entry from a fictional table of all entities.
   \Drupal::database()->delete('example_entity')
     ->condition('type', $entity->getEntityTypeId())
@@ -1502,7 +1502,7 @@ function hook_ENTITY_TYPE_delete(\Drupal\Core\Entity\EntityInterface $entity) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_revision_delete()
  */
-function hook_entity_revision_delete(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_revision_delete(\Drupal\Core\Entity\EntityInterface $entity): void {
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
   foreach ($referenced_files_by_field as $field => $uuids) {
     _editor_delete_file_usage($uuids, $entity, 1);
@@ -1520,7 +1520,7 @@ function hook_entity_revision_delete(\Drupal\Core\Entity\EntityInterface $entity
  * @ingroup entity_crud
  * @see hook_entity_revision_delete()
  */
-function hook_ENTITY_TYPE_revision_delete(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_ENTITY_TYPE_revision_delete(\Drupal\Core\Entity\EntityInterface $entity): void {
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
   foreach ($referenced_files_by_field as $field => $uuids) {
     _editor_delete_file_usage($uuids, $entity, 1);
@@ -1548,7 +1548,7 @@ function hook_ENTITY_TYPE_revision_delete(\Drupal\Core\Entity\EntityInterface $e
  *
  * @ingroup entity_crud
  */
-function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode): void {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'my_module_addition' extra field has been defined for the
   // entity bundle in hook_entity_extra_field_info().
@@ -1581,7 +1581,7 @@ function hook_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $en
  *
  * @ingroup entity_crud
  */
-function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode): void {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'my_module_addition' extra field has been defined for the
   // entity bundle in hook_entity_extra_field_info().
@@ -1621,7 +1621,7 @@ function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterfac
  * @see hook_entity_view()
  * @see hook_ENTITY_TYPE_view_alter()
  */
-function hook_entity_view_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+function hook_entity_view_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display): void {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
@@ -1660,7 +1660,7 @@ function hook_entity_view_alter(array &$build, \Drupal\Core\Entity\EntityInterfa
  * @see hook_ENTITY_TYPE_view()
  * @see hook_entity_view_alter()
  */
-function hook_ENTITY_TYPE_view_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display) {
+function hook_ENTITY_TYPE_view_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display): void {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
@@ -1689,7 +1689,7 @@ function hook_ENTITY_TYPE_view_alter(array &$build, \Drupal\Core\Entity\EntityIn
  *
  * @ingroup entity_crud
  */
-function hook_entity_prepare_view($entity_type_id, array $entities, array $displays, $view_mode) {
+function hook_entity_prepare_view($entity_type_id, array $entities, array $displays, $view_mode): void {
   // Load a specific node into the user object for later theming.
   if (!empty($entities) && $entity_type_id == 'user') {
     // Only do the extra work if the component is configured to be
@@ -1720,7 +1720,7 @@ function hook_entity_prepare_view($entity_type_id, array $entities, array $displ
  *
  * @ingroup entity_crud
  */
-function hook_entity_view_mode_alter(&$view_mode, \Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_view_mode_alter(&$view_mode, \Drupal\Core\Entity\EntityInterface $entity): void {
   // For nodes, change the view mode when it is teaser.
   if ($entity->getEntityTypeId() == 'node' && $view_mode == 'teaser') {
     $view_mode = 'my_custom_view_mode';
@@ -1766,7 +1766,7 @@ function hook_ENTITY_TYPE_view_mode_alter(string &$view_mode, \Drupal\Core\Entit
  *
  * @ingroup entity_crud
  */
-function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode) {
+function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode): void {
 
 }
 
@@ -1790,7 +1790,7 @@ function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entit
  *
  * @ingroup entity_crud
  */
-function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode) {
+function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode): void {
 
 }
 
@@ -1808,7 +1808,7 @@ function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\Ent
  *
  * @ingroup entity_crud
  */
-function hook_entity_view_display_alter(\Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, array $context) {
+function hook_entity_view_display_alter(\Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, array $context): void {
   // Leave field labels out of the search index.
   if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
     foreach ($display->getComponents() as $name => $options) {
@@ -1833,7 +1833,7 @@ function hook_entity_view_display_alter(\Drupal\Core\Entity\Display\EntityViewDi
  *
  * @ingroup entity_crud
  */
-function hook_entity_display_build_alter(&$build, $context) {
+function hook_entity_display_build_alter(&$build, $context): void {
   /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
   $entity = $context['entity'];
   if ($entity->getEntityTypeId() === 'my_entity' && $entity->bundle() === 'display_build_alter_bundle') {
@@ -1860,7 +1860,7 @@ function hook_entity_display_build_alter(&$build, $context) {
  *
  * @ingroup entity_crud
  */
-function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state) {
+function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state): void {
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
     $form_state->set('label_altered', TRUE);
@@ -1886,7 +1886,7 @@ function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $
  *
  * @ingroup entity_crud
  */
-function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state) {
+function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Form\FormStateInterface $form_state): void {
   if ($operation == 'edit') {
     $entity->label->value = 'Altered label';
     $form_state->set('label_altered', TRUE);
@@ -1903,7 +1903,7 @@ function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $enti
  *
  * @ingroup entity_crud
  */
-function hook_entity_form_mode_alter(&$form_mode, \Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_form_mode_alter(&$form_mode, \Drupal\Core\Entity\EntityInterface $entity): void {
   // Change the form mode for users with Administrator role.
   if ($entity->getEntityTypeId() == 'user' && $entity->hasRole('administrator')) {
     $form_mode = 'my_custom_form_mode';
@@ -1941,7 +1941,7 @@ function hook_ENTITY_TYPE_form_mode_alter(string &$form_mode, \Drupal\Core\Entit
  *
  * @ingroup entity_crud
  */
-function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display, array $context) {
+function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display, array $context): void {
   // Hide the 'user_picture' field from the register form.
   if ($context['entity_type'] == 'user' && $context['form_mode'] == 'register') {
     $form_display->setComponent('user_picture', [
@@ -2244,7 +2244,7 @@ function hook_entity_field_access_alter(array &$grants, array $context) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_field_values_init()
  */
-function hook_entity_field_values_init(\Drupal\Core\Entity\FieldableEntityInterface $entity) {
+function hook_entity_field_values_init(\Drupal\Core\Entity\FieldableEntityInterface $entity): void {
   if ($entity instanceof \Drupal\Core\Entity\ContentEntityInterface && !$entity->foo->value) {
     $entity->foo->value = 'some_initial_value';
   }
@@ -2263,7 +2263,7 @@ function hook_entity_field_values_init(\Drupal\Core\Entity\FieldableEntityInterf
  * @ingroup entity_crud
  * @see hook_entity_field_values_init()
  */
-function hook_ENTITY_TYPE_field_values_init(\Drupal\Core\Entity\FieldableEntityInterface $entity) {
+function hook_ENTITY_TYPE_field_values_init(\Drupal\Core\Entity\FieldableEntityInterface $entity): void {
   if (!$entity->foo->value) {
     $entity->foo->value = 'some_initial_value';
   }

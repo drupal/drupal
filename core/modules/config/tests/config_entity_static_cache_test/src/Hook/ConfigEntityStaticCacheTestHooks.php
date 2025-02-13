@@ -16,7 +16,7 @@ class ConfigEntityStaticCacheTestHooks {
    * Implements hook_ENTITY_TYPE_load() for 'static_cache_test_config_test'.
    */
   #[Hook('config_test_load')]
-  public function configTestLoad($entities) {
+  public function configTestLoad($entities): void {
     static $random;
     if (!$random) {
       $random = new Random();

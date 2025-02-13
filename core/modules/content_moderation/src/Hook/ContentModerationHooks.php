@@ -113,55 +113,55 @@ class ContentModerationHooks {
    * Implements hook_entity_presave().
    */
   #[Hook('entity_presave')]
-  public function entityPresave(EntityInterface $entity) {
-    return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityPresave($entity);
+  public function entityPresave(EntityInterface $entity): void {
+    \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityPresave($entity);
   }
 
   /**
    * Implements hook_entity_insert().
    */
   #[Hook('entity_insert')]
-  public function entityInsert(EntityInterface $entity) {
-    return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityInsert($entity);
+  public function entityInsert(EntityInterface $entity): void {
+    \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityInsert($entity);
   }
 
   /**
    * Implements hook_entity_update().
    */
   #[Hook('entity_update')]
-  public function entityUpdate(EntityInterface $entity) {
-    return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityUpdate($entity);
+  public function entityUpdate(EntityInterface $entity): void {
+    \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityUpdate($entity);
   }
 
   /**
    * Implements hook_entity_delete().
    */
   #[Hook('entity_delete')]
-  public function entityDelete(EntityInterface $entity) {
-    return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityDelete($entity);
+  public function entityDelete(EntityInterface $entity): void {
+    \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityDelete($entity);
   }
 
   /**
    * Implements hook_entity_revision_delete().
    */
   #[Hook('entity_revision_delete')]
-  public function entityRevisionDelete(EntityInterface $entity) {
-    return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityRevisionDelete($entity);
+  public function entityRevisionDelete(EntityInterface $entity): void {
+    \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityRevisionDelete($entity);
   }
 
   /**
    * Implements hook_entity_translation_delete().
    */
   #[Hook('entity_translation_delete')]
-  public function entityTranslationDelete(EntityInterface $translation) {
-    return \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityTranslationDelete($translation);
+  public function entityTranslationDelete(EntityInterface $translation): void {
+    \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityTranslationDelete($translation);
   }
 
   /**
    * Implements hook_entity_prepare_form().
    */
   #[Hook('entity_prepare_form')]
-  public function entityPrepareForm(EntityInterface $entity, $operation, FormStateInterface $form_state) {
+  public function entityPrepareForm(EntityInterface $entity, $operation, FormStateInterface $form_state): void {
     \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityTypeInfo::class)->entityPrepareForm($entity, $operation, $form_state);
   }
 
@@ -185,7 +185,7 @@ class ContentModerationHooks {
    * Implements hook_entity_view().
    */
   #[Hook('entity_view')]
-  public function entityView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  public function entityView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode): void {
     \Drupal::service('class_resolver')->getInstanceFromDefinition(EntityOperations::class)->entityView($build, $entity, $display, $view_mode);
   }
 
@@ -315,7 +315,7 @@ class ContentModerationHooks {
    * Implements hook_entity_bundle_delete().
    */
   #[Hook('entity_bundle_delete')]
-  public function entityBundleDelete($entity_type_id, $bundle_id) {
+  public function entityBundleDelete($entity_type_id, $bundle_id): void {
     // Remove non-configuration based bundles from content moderation based
     // workflows when they are removed.
     foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
@@ -330,7 +330,7 @@ class ContentModerationHooks {
    * Implements hook_ENTITY_TYPE_insert().
    */
   #[Hook('workflow_insert')]
-  public function workflowInsert(WorkflowInterface $entity) {
+  public function workflowInsert(WorkflowInterface $entity): void {
     // Clear bundle cache so workflow gets added or removed from the bundle
     // information.
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
@@ -346,7 +346,7 @@ class ContentModerationHooks {
    * Implements hook_ENTITY_TYPE_update().
    */
   #[Hook('workflow_update')]
-  public function workflowUpdate(WorkflowInterface $entity) {
+  public function workflowUpdate(WorkflowInterface $entity): void {
     // Clear bundle cache so workflow gets added or removed from the bundle
     // information.
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();

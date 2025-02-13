@@ -137,7 +137,7 @@ class TaxonomyHooks {
    * Implements hook_ENTITY_TYPE_insert() for node entities.
    */
   #[Hook('node_insert')]
-  public function nodeInsert(EntityInterface $node) {
+  public function nodeInsert(EntityInterface $node): void {
     // Add taxonomy index entries for the node.
     taxonomy_build_node_index($node);
   }
@@ -146,7 +146,7 @@ class TaxonomyHooks {
    * Implements hook_ENTITY_TYPE_update() for node entities.
    */
   #[Hook('node_update')]
-  public function nodeUpdate(EntityInterface $node) {
+  public function nodeUpdate(EntityInterface $node): void {
     // If we're not dealing with the default revision of the node, do not make any
     // change to the taxonomy index.
     if (!$node->isDefaultRevision()) {
@@ -160,7 +160,7 @@ class TaxonomyHooks {
    * Implements hook_ENTITY_TYPE_predelete() for node entities.
    */
   #[Hook('node_predelete')]
-  public function nodePredelete(EntityInterface $node) {
+  public function nodePredelete(EntityInterface $node): void {
     // Clean up the {taxonomy_index} table when nodes are deleted.
     taxonomy_delete_node_index($node);
   }
@@ -169,7 +169,7 @@ class TaxonomyHooks {
    * Implements hook_ENTITY_TYPE_delete() for taxonomy_term entities.
    */
   #[Hook('taxonomy_term_delete')]
-  public function taxonomyTermDelete(Term $term) {
+  public function taxonomyTermDelete(Term $term): void {
     if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
       // Clean up the {taxonomy_index} table when terms are deleted.
       \Drupal::database()->delete('taxonomy_index')->condition('tid', $term->id())->execute();

@@ -15,7 +15,7 @@ class FilterTestHooks {
    * Implements hook_ENTITY_TYPE_insert().
    */
   #[Hook('filter_format_insert')]
-  public function filterFormatInsert($format) {
+  public function filterFormatInsert($format): void {
     \Drupal::messenger()->addStatus('hook_filter_format_insert invoked.');
   }
 
@@ -23,7 +23,7 @@ class FilterTestHooks {
    * Implements hook_ENTITY_TYPE_update().
    */
   #[Hook('filter_format_update')]
-  public function filterFormatUpdate($format) {
+  public function filterFormatUpdate($format): void {
     \Drupal::messenger()->addStatus('hook_filter_format_update invoked.');
   }
 

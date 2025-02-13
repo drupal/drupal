@@ -52,7 +52,7 @@ class OptionsHooks {
    * Implements hook_ENTITY_TYPE_update() for 'field_storage_config'.
    */
   #[Hook('field_storage_config_update')]
-  public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage) {
+  public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage): void {
     drupal_static_reset('options_allowed_values');
   }
 
@@ -60,7 +60,7 @@ class OptionsHooks {
    * Implements hook_ENTITY_TYPE_delete() for 'field_storage_config'.
    */
   #[Hook('field_storage_config_delete')]
-  public function fieldStorageConfigDelete(FieldStorageConfigInterface $field_storage) {
+  public function fieldStorageConfigDelete(FieldStorageConfigInterface $field_storage): void {
     drupal_static_reset('options_allowed_values');
   }
 

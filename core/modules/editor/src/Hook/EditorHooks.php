@@ -185,7 +185,7 @@ class EditorHooks {
    * Implements hook_entity_insert().
    */
   #[Hook('entity_insert')]
-  public function entityInsert(EntityInterface $entity) {
+  public function entityInsert(EntityInterface $entity): void {
     // Only act on content entities.
     if (!$entity instanceof FieldableEntityInterface) {
       return;
@@ -200,7 +200,7 @@ class EditorHooks {
    * Implements hook_entity_update().
    */
   #[Hook('entity_update')]
-  public function entityUpdate(EntityInterface $entity) {
+  public function entityUpdate(EntityInterface $entity): void {
     // Only act on content entities.
     if (!$entity instanceof FieldableEntityInterface) {
       return;
@@ -235,7 +235,7 @@ class EditorHooks {
    * Implements hook_entity_delete().
    */
   #[Hook('entity_delete')]
-  public function entityDelete(EntityInterface $entity) {
+  public function entityDelete(EntityInterface $entity): void {
     // Only act on content entities.
     if (!$entity instanceof FieldableEntityInterface) {
       return;
@@ -250,7 +250,7 @@ class EditorHooks {
    * Implements hook_entity_revision_delete().
    */
   #[Hook('entity_revision_delete')]
-  public function entityRevisionDelete(EntityInterface $entity) {
+  public function entityRevisionDelete(EntityInterface $entity): void {
     // Only act on content entities.
     if (!$entity instanceof FieldableEntityInterface) {
       return;
@@ -326,7 +326,7 @@ class EditorHooks {
    * @todo remove in https://www.drupal.org/project/drupal/issues/3231354.
    */
   #[Hook('filter_format_presave')]
-  public function filterFormatPresave(FilterFormatInterface $format) {
+  public function filterFormatPresave(FilterFormatInterface $format): void {
     // The text format being created cannot have a text editor yet.
     if ($format->isNew()) {
       return;

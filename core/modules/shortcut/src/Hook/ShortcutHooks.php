@@ -127,7 +127,7 @@ class ShortcutHooks {
    * Implements hook_ENTITY_TYPE_delete().
    */
   #[Hook('user_delete')]
-  public function userDelete(EntityInterface $entity) {
+  public function userDelete(EntityInterface $entity): void {
     // Clean up shortcut set mapping of removed user account.
     \Drupal::entityTypeManager()->getStorage('shortcut_set')->unassignUser($entity);
   }
