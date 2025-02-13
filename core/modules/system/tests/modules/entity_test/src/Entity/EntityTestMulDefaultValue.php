@@ -57,7 +57,7 @@ class EntityTestMulDefaultValue extends EntityTestMul {
     $fields['description'] = BaseFieldDefinition::create('shape')
       ->setLabel(t('Some custom description'))
       ->setTranslatable(TRUE)
-      ->setDefaultValueCallback('entity_test_field_default_value');
+      ->setDefaultValueCallback(EntityTestDefaultValue::class . '::descriptionDefaultValue');
 
     return $fields;
   }

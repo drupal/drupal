@@ -35164,12 +35164,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_schema_test/src/Hook/EntitySchemaTestHooks.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function _entity_test_record_hooks\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function entity_test_create_bundle\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -35177,18 +35171,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Function entity_test_delete_bundle\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function entity_test_form_entity_test_form_validate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Function entity_test_form_entity_test_form_validate_check\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/entity_test.module',

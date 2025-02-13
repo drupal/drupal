@@ -22,6 +22,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\entity_test\EntityTestHelper;
+use Drupal\entity_test\Callbacks;
 use Drupal\entity_test\Entity\EntityTest;
 
 /**
@@ -242,12 +243,12 @@ class EntityTestHooks {
   public function formEntityTestFormAlter(&$form) : void {
     switch (\Drupal::state()->get('entity_test.form.validate.test')) {
       case 'form-level':
-        $form['#validate'][] = 'entity_test_form_entity_test_form_validate';
-        $form['#validate'][] = 'entity_test_form_entity_test_form_validate_check';
+        $form['#validate'][] = [Callbacks::class, 'entityTestFormValidate'];
+        $form['#validate'][] = [Callbacks::class, 'entityTestFormValidateCheck'];
         break;
 
       case 'button-level':
-        $form['actions']['submit']['#validate'][] = 'entity_test_form_entity_test_form_validate';
+        $form['actions']['submit']['#validate'][] = [Callbacks::class, 'entityTestFormValidateCheck'];
     }
   }
 
@@ -410,7 +411,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_translation_create')]
   public function entityTranslationCreate(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_translation_create', $translation->language()->getId());
+    $this->recordHooks('entity_translation_create', $translation->language()->getId());
   }
 
   /**
@@ -418,7 +419,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_translation_insert')]
   public function entityTranslationInsert(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_translation_insert', $translation->language()->getId());
+    $this->recordHooks('entity_translation_insert', $translation->language()->getId());
   }
 
   /**
@@ -426,7 +427,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_translation_delete')]
   public function entityTranslationDelete(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_translation_delete', $translation->language()->getId());
+    $this->recordHooks('entity_translation_delete', $translation->language()->getId());
   }
 
   /**
@@ -434,7 +435,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mul_translation_create')]
   public function entityTestMulTranslationCreate(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mul_translation_create', $translation->language()->getId());
+    $this->recordHooks('entity_test_mul_translation_create', $translation->language()->getId());
   }
 
   /**
@@ -442,7 +443,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mul_translation_insert')]
   public function entityTestMulTranslationInsert(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mul_translation_insert', $translation->language()->getId());
+    $this->recordHooks('entity_test_mul_translation_insert', $translation->language()->getId());
   }
 
   /**
@@ -450,7 +451,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mul_translation_delete')]
   public function entityTestMulTranslationDelete(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mul_translation_delete', $translation->language()->getId());
+    $this->recordHooks('entity_test_mul_translation_delete', $translation->language()->getId());
   }
 
   /**
@@ -458,7 +459,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mul_changed_translation_create')]
   public function entityTestMulChangedTranslationCreate(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mul_changed_translation_create', $translation->language()->getId());
+    $this->recordHooks('entity_test_mul_changed_translation_create', $translation->language()->getId());
   }
 
   /**
@@ -466,7 +467,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mul_changed_translation_insert')]
   public function entityTestMulChangedTranslationInsert(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mul_changed_translation_insert', $translation->language()->getId());
+    $this->recordHooks('entity_test_mul_changed_translation_insert', $translation->language()->getId());
   }
 
   /**
@@ -474,7 +475,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mul_changed_translation_delete')]
   public function entityTestMulChangedTranslationDelete(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mul_changed_translation_delete', $translation->language()->getId());
+    $this->recordHooks('entity_test_mul_changed_translation_delete', $translation->language()->getId());
   }
 
   /**
@@ -482,7 +483,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mulrev_translation_create')]
   public function entityTestMulrevTranslationCreate(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mulrev_translation_create', $translation->language()->getId());
+    $this->recordHooks('entity_test_mulrev_translation_create', $translation->language()->getId());
   }
 
   /**
@@ -490,7 +491,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mulrev_translation_insert')]
   public function entityTestMulrevTranslationInsert(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mulrev_translation_insert', $translation->language()->getId());
+    $this->recordHooks('entity_test_mulrev_translation_insert', $translation->language()->getId());
   }
 
   /**
@@ -498,7 +499,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mulrev_translation_delete')]
   public function entityTestMulrevTranslationDelete(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mulrev_translation_delete', $translation->language()->getId());
+    $this->recordHooks('entity_test_mulrev_translation_delete', $translation->language()->getId());
   }
 
   /**
@@ -506,7 +507,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mulrev_changed_translation_create')]
   public function entityTestMulrevChangedTranslationCreate(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mulrev_changed_translation_create', $translation->language()->getId());
+    $this->recordHooks('entity_test_mulrev_changed_translation_create', $translation->language()->getId());
   }
 
   /**
@@ -514,7 +515,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mulrev_changed_translation_insert')]
   public function entityTestMulrevChangedTranslationInsert(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mulrev_changed_translation_insert', $translation->language()->getId());
+    $this->recordHooks('entity_test_mulrev_changed_translation_insert', $translation->language()->getId());
   }
 
   /**
@@ -522,7 +523,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mulrev_changed_translation_delete')]
   public function entityTestMulrevChangedTranslationDelete(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mulrev_changed_translation_delete', $translation->language()->getId());
+    $this->recordHooks('entity_test_mulrev_changed_translation_delete', $translation->language()->getId());
   }
 
   /**
@@ -530,7 +531,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mul_langcode_key_translation_create')]
   public function entityTestMulLangcodeKeyTranslationCreate(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mul_langcode_key_translation_create', $translation->language()->getId());
+    $this->recordHooks('entity_test_mul_langcode_key_translation_create', $translation->language()->getId());
   }
 
   /**
@@ -538,7 +539,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mul_langcode_key_translation_insert')]
   public function entityTestMulLangcodeKeyTranslationInsert(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mul_langcode_key_translation_insert', $translation->language()->getId());
+    $this->recordHooks('entity_test_mul_langcode_key_translation_insert', $translation->language()->getId());
   }
 
   /**
@@ -546,7 +547,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_test_mul_langcode_key_translation_delete')]
   public function entityTestMulLangcodeKeyTranslationDelete(EntityInterface $translation) {
-    _entity_test_record_hooks('entity_test_mul_langcode_key_translation_delete', $translation->language()->getId());
+    $this->recordHooks('entity_test_mul_langcode_key_translation_delete', $translation->language()->getId());
   }
 
   /**
@@ -554,7 +555,7 @@ class EntityTestHooks {
    */
   #[Hook('entity_revision_create')]
   public function entityRevisionCreate(EntityInterface $new_revision, EntityInterface $entity, $keep_untranslatable_fields) {
-    _entity_test_record_hooks('entity_revision_create', [
+    $this->recordHooks('entity_revision_create', [
       'new_revision' => $new_revision,
       'entity' => $entity,
       'keep_untranslatable_fields' => $keep_untranslatable_fields,
@@ -569,7 +570,7 @@ class EntityTestHooks {
     if ($new_revision->get('name')->value == 'revision_create_test_it') {
       $new_revision->set('name', 'revision_create_test_it_altered');
     }
-    _entity_test_record_hooks('entity_test_mulrev_revision_create', [
+    $this->recordHooks('entity_test_mulrev_revision_create', [
       'new_revision' => $new_revision,
       'entity' => $entity,
       'keep_untranslatable_fields' => $keep_untranslatable_fields,
@@ -724,6 +725,22 @@ class EntityTestHooks {
     if (str_contains($duplicate->label(), 'UUID CRUD test entity') && $duplicate->hasField('name')) {
       $duplicate->set('name', 'prefix ' . $duplicate->label());
     }
+  }
+
+  /**
+   * Helper function to be used to record hook invocations.
+   *
+   * @param string $hook
+   *   The hook name.
+   * @param mixed $data
+   *   Arbitrary data associated with the hook invocation.
+   */
+  protected function recordHooks($hook, $data): void {
+    $state = \Drupal::state();
+    $key = 'entity_test.hooks';
+    $hooks = $state->get($key);
+    $hooks[$hook] = $data;
+    $state->set($key, $hooks);
   }
 
 }
