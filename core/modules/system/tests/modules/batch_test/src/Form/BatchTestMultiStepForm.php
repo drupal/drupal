@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\batch_test\Form;
 
+use Drupal\batch_test\BatchTestDefinitions;
+use Drupal\batch_test\BatchTestHelper;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -51,16 +53,18 @@ class BatchTestMultiStepForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    batch_test_stack(NULL, TRUE);
+    $batch_test_definitions = new BatchTestDefinitions();
+    $batch_test_helper = new BatchTestHelper();
+    $batch_test_helper->stack(NULL, TRUE);
 
     $step = $form_state->get('step');
     switch ($step) {
       case 1:
-        batch_set(_batch_test_batch_1());
+        batch_set($batch_test_definitions->batch1());
         break;
 
       case 2:
-        batch_set(_batch_test_batch_2());
+        batch_set($batch_test_definitions->batch2());
         break;
     }
 

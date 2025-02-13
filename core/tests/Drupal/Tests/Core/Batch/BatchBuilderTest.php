@@ -115,20 +115,20 @@ class BatchBuilderTest extends UnitTestCase {
    * @covers ::setFile
    */
   public function testSetFile(): void {
-    $filename = dirname(__DIR__, 6) . '/core/modules/system/tests/modules/batch_test/batch_test.callbacks.inc';
-    $this->assertIsNotCallable('_batch_test_callback_1');
-    $this->assertIsNotCallable('_batch_test_finished_1');
+    $filename = $this->root . '/core/modules/system/tests/modules/batch_test/batch_test.set_file.inc';
+    $this->assertIsNotCallable('_batch_test_set_file_callback_1');
+    $this->assertIsNotCallable('_batch_test_set_file_finished_1');
 
     $batch = (new BatchBuilder())
       ->setFile($filename)
-      ->setFinishCallback('_batch_test_finished_1')
-      ->addOperation('_batch_test_callback_1', [])
+      ->setFinishCallback('_batch_test_set_file_finished_1')
+      ->addOperation('_batch_test_set_file_callback_1', [])
       ->toArray();
     $this->assertEquals($filename, $batch['file']);
-    $this->assertEquals([['_batch_test_callback_1', []]], $batch['operations']);
-    $this->assertEquals('_batch_test_finished_1', $batch['finished']);
-    $this->assertIsCallable('_batch_test_callback_1');
-    $this->assertIsCallable('_batch_test_finished_1');
+    $this->assertEquals([['_batch_test_set_file_callback_1', []]], $batch['operations']);
+    $this->assertEquals('_batch_test_set_file_finished_1', $batch['finished']);
+    $this->assertIsCallable('_batch_test_set_file_callback_1');
+    $this->assertIsCallable('_batch_test_set_file_finished_1');
   }
 
   /**

@@ -29,7 +29,7 @@ class BatchNotFoundTest extends BrowserTestBase {
    */
   public function testBatchNotFound(): void {
 
-    $edit = ['batch' => 'batch_0'];
+    $edit = ['batch' => 'batch0'];
     $this->drupalGet('batch-test');
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);

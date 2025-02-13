@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Batch;
 
+use Drupal\batch_test\BatchTestHelper;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -45,7 +46,8 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('admin/batch-test/test-theme');
     // The stack should contain the name of the theme used on the progress
     // page.
-    $this->assertEquals(['claro'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
+    $batch_test_helper = new BatchTestHelper();
+    $this->assertEquals(['claro'], $batch_test_helper->stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
   }
 
   /**
@@ -65,7 +67,8 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('batch-test/test-title');
 
     // The stack should contain the title shown on the progress page.
-    $this->assertEquals(['Batch Test'], batch_test_stack(), 'The batch title is shown on the batch page.');
+    $batch_test_helper = new BatchTestHelper();
+    $this->assertEquals(['Batch Test'], $batch_test_helper->stack(), 'The batch title is shown on the batch page.');
     $this->assertSession()->pageTextContains('Redirection successful.');
   }
 
