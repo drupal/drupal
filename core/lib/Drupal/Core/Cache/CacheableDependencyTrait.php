@@ -17,7 +17,7 @@ trait CacheableDependencyTrait {
   /**
    * Cache tags.
    *
-   * @var string[]
+   * @var list<string>
    */
   protected $cacheTags = [];
 
