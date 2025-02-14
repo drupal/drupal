@@ -60,7 +60,7 @@ final class NavigationContentLinks implements ContainerInjectionInterface {
         'weight' => -10,
       ],
       'navigation.content' => [
-        'route_name' => 'view.content.page_1',
+        'route_name' => 'system.admin_content',
         'title' => $this->t('Content'),
       ],
       'navigation.files' => [
@@ -68,11 +68,11 @@ final class NavigationContentLinks implements ContainerInjectionInterface {
         'title' => $this->t('Files'),
       ],
       'navigation.media' => [
-        'route_name' => 'view.media.media_page_list',
+        'route_name' => 'entity.media.collection',
         'title' => $this->t('Media'),
       ],
       'navigation.blocks' => [
-        'route_name' => 'view.block_content.page_1',
+        'route_name' => 'entity.block_content.collection',
         'title' => $this->t('Blocks'),
       ],
     ];
