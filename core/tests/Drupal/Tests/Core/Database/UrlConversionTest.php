@@ -44,7 +44,6 @@ class UrlConversionTest extends UnitTestCase {
    *   - database_array: An array containing the expected results.
    */
   public static function providerConvertDbUrlToConnectionInfo() {
-    $root = dirname(__FILE__, 7);
     return [
       'MySql without prefix' => [
         'mysql://test_user:test_pass@test_host:3306/test_database',
@@ -65,7 +64,7 @@ class UrlConversionTest extends UnitTestCase {
         [
           'driver' => 'sqlite',
           'host' => 'localhost',
-          'database' => $root . '/test_database',
+          'database' => 'test_database',
           'namespace' => 'Drupal\sqlite\Driver\Database\sqlite',
           'autoload' => 'core/modules/sqlite/src/Driver/Database/sqlite/',
         ],
@@ -91,7 +90,7 @@ class UrlConversionTest extends UnitTestCase {
         [
           'driver' => 'sqlite',
           'host' => 'localhost',
-          'database' => $root . '/test_database',
+          'database' => 'test_database',
           'prefix' => 'foo',
           'namespace' => 'Drupal\sqlite\Driver\Database\sqlite',
           'autoload' => 'core/modules/sqlite/src/Driver/Database/sqlite/',
@@ -266,7 +265,7 @@ class UrlConversionTest extends UnitTestCase {
         [
           'driver' => 'sqlite',
           'host' => 'localhost',
-          'database' => $root . '/test_database',
+          'database' => 'test_database',
           'namespace' => 'Drupal\sqlite\Driver\Database\sqlite',
           'autoload' => 'core/modules/sqlite/src/Driver/Database/sqlite/',
         ],

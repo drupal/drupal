@@ -445,12 +445,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     if ($url_components['path'][0] === '/') {
       $url_components['path'] = substr($url_components['path'], 1);
     }
-    if ($url_components['path'][0] === '/' || $url_components['path'] === ':memory:') {
-      $database['database'] = $url_components['path'];
-    }
-    else {
-      $database['database'] = $root . '/' . $url_components['path'];
-    }
+    $database['database'] = $url_components['path'];
 
     // User credentials and system port are irrelevant for SQLite.
     unset(
