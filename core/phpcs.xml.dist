@@ -160,8 +160,6 @@
 
   <!-- Drupal Practice sniffs -->
   <rule ref="DrupalPractice.CodeAnalysis.VariableAnalysis">
-    <exclude-pattern>*/core/tests/*</exclude-pattern>
-    <exclude-pattern>*/core/profiles/*/tests/*</exclude-pattern>
     <!-- Do not run this sniff on API files or transliteration data. -->
     <exclude-pattern>*.api.php</exclude-pattern>
     <exclude-pattern>core/lib/Drupal/Component/Transliteration/data/*.php</exclude-pattern>
