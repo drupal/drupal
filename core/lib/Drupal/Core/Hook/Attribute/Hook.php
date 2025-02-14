@@ -12,13 +12,13 @@ namespace Drupal\Core\Hook\Attribute;
  * - On a method, use this attribute with the hook name:
  *   @code
  *   #[Hook('user_cancel')]
- *   public method userCancel(...)
+ *   public function userCancel(...) {}
  *   @endcode
  * - On a class, specifying the method name:
  *   @code
  *   #[Hook('user_cancel', method: 'userCancel')]
  *   class Hooks {
- *     method userCancel(...) {}
+ *     public function userCancel(...) {}
  *   }
  *   @endcode
  * - On a class with an __invoke method, which is taken to be the hook
@@ -26,7 +26,7 @@ namespace Drupal\Core\Hook\Attribute;
  *   @code
  *   #[Hook('user_cancel')]
  *   class Hooks {
- *     method __invoke(...) {}
+ *     public function __invoke(...) {}
  *   }
  *   @endcode
  *

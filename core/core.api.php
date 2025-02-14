@@ -1632,13 +1632,13 @@
  * - On a method, use the attribute with the hook name:
  *   @code
  *   #[Hook('user_cancel')]
- *   public method userCancel(...)
+ *   public function userCancel(...) {}
  *   @endcode
  * - On a class, specify the method name as well as the hook name:
  *   @code
  *   #[Hook('user_cancel', method: 'userCancel')]
  *   class Hooks {
- *     method userCancel(...) {}
+ *     public function userCancel(...) {}
  *   }
  *   @endcode
  * - On a class with an __invoke method, which is taken to be the hook
@@ -1646,7 +1646,7 @@
  *   @code
  *   #[Hook('user_cancel')]
  *   class Hooks {
- *     method __invoke(...) {}
+ *     public function __invoke(...) {}
  *   }
  *   @endcode
  *
