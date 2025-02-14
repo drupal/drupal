@@ -1,0 +1,4 @@
+name: 'Tests MenuLinkAdd class'
+type: module
+package: Testing
+version: VERSION

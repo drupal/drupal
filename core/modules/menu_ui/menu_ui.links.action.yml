@@ -1,7 +1,7 @@
 entity.menu.add_link_form:
   route_name: entity.menu.add_link_form
   title: 'Add link'
-  class: \Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd
+  class: \Drupal\Core\Menu\LocalActionWithDestination
   appears_on:
     - entity.menu.edit_form
 

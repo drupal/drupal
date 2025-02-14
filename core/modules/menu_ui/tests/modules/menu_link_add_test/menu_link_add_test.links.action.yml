@@ -1,0 +1,6 @@
+entity.menu.add_link_form_deprecated:
+  route_name: entity.menu.add_link_form
+  title: 'Add link (deprecated)'
+  class: \Drupal\menu_ui\Plugin\Menu\LocalAction\MenuLinkAdd
+  appears_on:
+    - entity.menu.edit_form
