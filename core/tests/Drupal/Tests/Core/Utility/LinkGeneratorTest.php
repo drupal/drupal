@@ -60,6 +60,8 @@ class LinkGeneratorTest extends UnitTestCase {
 
   /**
    * Contains the LinkGenerator default options.
+   *
+   * @var array
    */
   protected $defaultOptions = [
     'query' => [],

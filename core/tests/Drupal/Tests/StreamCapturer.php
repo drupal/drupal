@@ -13,6 +13,8 @@ class StreamCapturer extends \php_user_filter {
 
   /**
    * The cache data.
+   *
+   * @var string
    */
   public static $cache = '';
 

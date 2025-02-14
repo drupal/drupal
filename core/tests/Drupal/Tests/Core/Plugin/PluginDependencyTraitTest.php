@@ -179,11 +179,15 @@ class TestPluginDependency {
 
   /**
    * The module handler.
+   *
+   * @var Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
   /**
    * The theme handler.
+   *
+   * @var Drupal\Core\Extension\ThemeHandlerInterface
    */
   protected $themeHandler;
 

@@ -18,6 +18,8 @@ class TagsTest extends UnitTestCase {
 
   /**
    * A list of valid tags.
+   *
+   * @var string[][]
    */
   protected $validTags = [
     'Drupal' => 'Drupal',

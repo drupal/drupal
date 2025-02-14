@@ -21,14 +21,12 @@ use Drupal\Core\Installer\Form\SelectProfileForm;
 abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
 
   /**
-   * This is set by the profile in the core.extension extracted.
-   *
-   * If set to FALSE, then the install will proceed without an install profile.
+   * {@inheritdoc}
    */
   protected $profile = NULL;
 
   /**
-   * @todo Fill out docblock.
+   * @var bool
    */
   protected $existingSyncDirectory = FALSE;
 

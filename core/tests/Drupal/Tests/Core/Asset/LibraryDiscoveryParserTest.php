@@ -871,6 +871,8 @@ class TestLibraryDiscoveryParser extends LibraryDiscoveryParser {
 
   /**
    * The valid URIs.
+   *
+   * @var array
    */
   protected $validUris;
 

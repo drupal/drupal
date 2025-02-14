@@ -19,11 +19,15 @@ class MTimeProtectedFileStorageTest extends MTimeProtectedFileStorageBase {
    *
    * The default implementation protects against even the filemtime change so
    * both iterations will return FALSE.
+   *
+   * @var bool[]
    */
   protected array $expected = [FALSE, FALSE];
 
   /**
    * The PHP storage class to test.
+   *
+   * @var class-string
    */
   protected $storageClass = 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage';
 

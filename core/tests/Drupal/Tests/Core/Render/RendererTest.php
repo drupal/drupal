@@ -26,6 +26,8 @@ class RendererTest extends RendererTestBase {
 
   /**
    * The expected theme variables.
+   *
+   * @var array
    */
   protected $defaultThemeVars = [
     '#cache' => [

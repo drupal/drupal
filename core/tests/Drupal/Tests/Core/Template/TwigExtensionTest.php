@@ -679,6 +679,8 @@ class TwigExtensionTestString {
 
   /**
    * The test string.
+   *
+   * @var string
    */
   protected $string;
 

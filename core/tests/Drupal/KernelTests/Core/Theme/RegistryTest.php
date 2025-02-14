@@ -26,6 +26,8 @@ class RegistryTest extends KernelTestBase {
 
   /**
    * The profile to use for this test.
+   *
+   * @var string
    */
   protected $profile = 'testing';
 

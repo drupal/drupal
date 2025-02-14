@@ -208,6 +208,8 @@ class MockContainerInjection implements ContainerInjectionInterface {
 
   /**
    * The test value saved during construction.
+   *
+   * @var string
    */
   protected $result;
 

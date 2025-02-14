@@ -24,31 +24,43 @@ abstract class PluginTestBase extends KernelTestBase {
 
   /**
    * The test plugin manager used by Plugin API unit tests.
+   *
+   * @var \Drupal\plugin_test\Plugin\TestPluginManager
    */
   protected $testPluginManager;
 
   /**
    * The expected plugin definitions for the test plugin.
+   *
+   * @var array
    */
   protected $testPluginExpectedDefinitions;
 
   /**
    * The mock plugin manager used by Plugin API derivative unit tests.
+   *
+   * @var \Drupal\plugin_test\Plugin\MockBlockManager
    */
   protected $mockBlockManager;
 
   /**
    * The expected plugin definitions for the mock block plugin.
+   *
+   * @var array
    */
   protected $mockBlockExpectedDefinitions;
 
   /**
    * The default plugin manager used by Plugin API unit tests.
+   *
+   * @var \Drupal\plugin_test\Plugin\DefaultsTestPluginManager
    */
   protected $defaultsTestPluginManager;
 
   /**
    * The expected plugin definitions for the defaults plugin.
+   *
+   * @var array
    */
   protected $defaultsTestPluginExpectedDefinitions;
 

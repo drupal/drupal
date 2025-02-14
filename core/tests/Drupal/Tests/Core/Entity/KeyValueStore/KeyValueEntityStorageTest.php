@@ -638,26 +638,36 @@ class EntityBaseTest extends EntityBase {
 
   /**
    * The entity ID.
+   *
+   * @var string
    */
   public $id;
 
   /**
    * The language code for the entity.
+   *
+   * @var string
    */
   public $langcode;
 
   /**
    * The entity UUID.
+   *
+   * @var string
    */
   public $uuid;
 
   /**
    * The entity label.
+   *
+   * @var string
    */
   public $label;
 
   /**
    * The original, or NULL if the entity cannot be loaded.
+   *
+   * @var string
    */
   public $original;
 

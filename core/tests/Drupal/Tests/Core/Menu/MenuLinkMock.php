@@ -14,6 +14,8 @@ class MenuLinkMock extends MenuLinkBase {
 
   /**
    * The default configuration for the test menu link.
+   *
+   * @var array
    */
   protected static $defaults = [
     'menu_name' => 'mock',

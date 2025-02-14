@@ -100,6 +100,8 @@ class PluginStub extends Plugin {
 
   /**
    * A default property for testing.
+   *
+   * @var string
    */
   protected $defaultProperty = 'test_value';
 

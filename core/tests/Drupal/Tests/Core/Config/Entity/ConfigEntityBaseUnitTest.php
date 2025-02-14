@@ -724,11 +724,15 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
 
   /**
    * The plugin collection.
+   *
+   * @var \Drupal\Core\Plugin\DefaultLazyPluginCollection
    */
   protected $pluginCollection;
 
   /**
    * The plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pluginManager;
 

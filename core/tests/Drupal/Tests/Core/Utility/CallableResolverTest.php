@@ -215,6 +215,8 @@ class MockContainerInjection implements ContainerInjectionInterface {
 
   /**
    * The value to be injected.
+   *
+   * @var string
    */
   protected $injected;
 

@@ -18,6 +18,8 @@ class GenericTestExistsTest extends UnitTestCase {
 
   /**
    * Lists module that do not require a Generic test.
+   *
+   * @var string[]
    */
   protected $modulesNoTest = ['help_topics', 'sdc'];
 
