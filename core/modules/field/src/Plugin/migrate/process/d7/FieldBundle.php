@@ -110,7 +110,7 @@ class FieldBundle extends ProcessPluginBase implements ContainerFactoryPluginInt
         $lookup_result = empty($lookup_result) ? NULL : reset($lookup_result[0]);
       }
     }
-    return $lookup_result ? $lookup_result : $bundle;
+    return $lookup_result ?: $bundle;
   }
 
 }

@@ -94,7 +94,7 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $theme = $form_state->getBuildInfo()['args'][0] ? $form_state->getBuildInfo()['args'][0] : NULL;
+    $theme = $form_state->getBuildInfo()['args'][0] ?: NULL;
     $all_themes = $this->themeList->getList();
     if (!isset($all_themes[$theme])) {
       return $this->redirect('system.themes_page');

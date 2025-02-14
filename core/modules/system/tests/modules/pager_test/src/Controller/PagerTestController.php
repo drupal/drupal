@@ -88,7 +88,7 @@ class PagerTestController extends ControllerBase implements TrustedCallbackInter
 
     // Counter of calls to the current pager.
     $query_params = $this->pagerParams->getQueryParameters();
-    $pager_calls = isset($query_params['pager_calls']) ? ($query_params['pager_calls'] ? $query_params['pager_calls'] : 0) : 0;
+    $pager_calls = isset($query_params['pager_calls']) ? ($query_params['pager_calls'] ?: 0) : 0;
     $build['l_pager_pager_0'] = ['#markup' => $this->t('Pager calls: @pager_calls', ['@pager_calls' => $pager_calls])];
 
     // Pager.

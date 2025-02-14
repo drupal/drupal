@@ -564,7 +564,7 @@ class LocaleConfigManager {
    *   updated (saved or removed).
    */
   public function updateConfigTranslations(array $names, array $langcodes = []) {
-    $langcodes = $langcodes ? $langcodes : array_keys($this->languageManager->getLanguages());
+    $langcodes = $langcodes ?: array_keys($this->languageManager->getLanguages());
     $count = 0;
     foreach ($names as $name) {
       $translatable = $this->getTranslatableDefaultConfig($name);

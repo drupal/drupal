@@ -67,7 +67,7 @@ class DrupalTranslator implements TranslatorInterface {
    * {@inheritdoc}
    */
   public function getLocale() {
-    return $this->locale ? $this->locale : \Drupal::languageManager()->getCurrentLanguage()->getId();
+    return $this->locale ?: \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
   /**

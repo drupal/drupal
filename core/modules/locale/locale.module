@@ -178,7 +178,7 @@ function locale_get_plural($count, $langcode = NULL) {
   // individually for each language.
   $plural_indexes = &drupal_static(__FUNCTION__ . ':plurals', []);
 
-  $langcode = $langcode ? $langcode : $language_interface->getId();
+  $langcode = $langcode ?: $language_interface->getId();
 
   if (!isset($plural_indexes[$langcode][$count])) {
     // Retrieve and statically cache the plural formulas for all languages.
@@ -545,8 +545,8 @@ function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
   $result = [];
   $status = \Drupal::keyValue('locale.translation_status')->getAll();
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.translation');
-  $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
-  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $projects = $projects ?: array_keys(locale_translation_get_projects());
+  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
   // Get the translation status of each project-language combination. If no
   // status was stored, a new translation source is created.

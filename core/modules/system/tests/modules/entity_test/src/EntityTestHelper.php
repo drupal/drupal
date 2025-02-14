@@ -70,7 +70,7 @@ class EntityTestHelper {
    */
   public static function createBundle($bundle, $text = NULL, $entity_type = 'entity_test'): void {
     $bundles = \Drupal::state()->get($entity_type . '.bundles', [$entity_type => ['label' => 'Entity Test Bundle']]);
-    $bundles += [$bundle => ['label' => $text ? $text : $bundle]];
+    $bundles += [$bundle => ['label' => $text ?: $bundle]];
     \Drupal::state()->set($entity_type . '.bundles', $bundles);
     \Drupal::service('entity_bundle.listener')->onBundleCreate($bundle, $entity_type);
   }

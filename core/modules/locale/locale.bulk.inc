@@ -89,8 +89,8 @@ function locale_translate_batch_import_files(array $options, $force = FALSE) {
 function locale_translate_get_interface_translation_files(array $projects = [], array $langcodes = []) {
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
   $files = [];
-  $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
-  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $projects = $projects ?: array_keys(locale_translation_get_projects());
+  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
   // Scan the translations directory for files matching a name pattern
   // containing a project name and language code: {project}.{langcode}.po or
@@ -547,7 +547,7 @@ function locale_translate_delete_translation_files(array $projects = [], array $
  *   The batch definition.
  */
 function locale_config_batch_update_components(array $options, array $langcodes = [], array $components = [], bool $update_default_config_langcodes = FALSE) {
-  $langcodes = $langcodes ? $langcodes : array_keys(\Drupal::languageManager()->getLanguages());
+  $langcodes = $langcodes ?: array_keys(\Drupal::languageManager()->getLanguages());
   if ($langcodes && $names = \Drupal::service('locale.config_manager')->getComponentNames($components)) {
     // If the component list is empty we need to ensure that all configuration
     // in the default collection is using the site's default langcode.

@@ -45,7 +45,7 @@ class TimezoneController {
 
     // An abbreviation of "0" passed in the callback arguments should be
     // interpreted as the empty string.
-    $abbreviation = $abbreviation ? $abbreviation : '';
+    $abbreviation = $abbreviation ?: '';
     $timezone = timezone_name_from_abbr($abbreviation, $offset, $is_daylight_saving_time);
     return new JsonResponse($timezone);
   }

@@ -19,7 +19,7 @@ class SetDialogTitleCommand extends SetDialogOptionCommand {
    *   The title that will be set on the dialog.
    */
   public function __construct($selector, $title) {
-    $this->selector = $selector ? $selector : '#drupal-modal';
+    $this->selector = $selector ?: '#drupal-modal';
     $this->optionName = 'title';
     $this->optionValue = $title;
   }

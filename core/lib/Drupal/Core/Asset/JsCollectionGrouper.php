@@ -51,7 +51,7 @@ class JsCollectionGrouper implements AssetCollectionGrouperInterface {
         $groups[$index] = $item;
         unset($groups[$index]['data'], $groups[$index]['weight']);
         $groups[$index]['items'] = [];
-        $current_group_keys = $group_keys ? $group_keys : NULL;
+        $current_group_keys = $group_keys ?: NULL;
       }
 
       // Add the item to the current group.

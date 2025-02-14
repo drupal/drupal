@@ -208,7 +208,7 @@ class FieldWebTest extends ViewTestBase {
       // Some combinations of PHP / libxml versions return an empty array
       // instead of the documented FALSE. Forcefully convert any falsy values
       // to an empty array to allow foreach(...) constructions.
-      return $result ? $result : [];
+      return $result ?: [];
     }
     else {
       return FALSE;

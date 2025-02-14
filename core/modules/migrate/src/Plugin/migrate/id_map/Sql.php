@@ -560,7 +560,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $query->condition("map.$destination_id", $destination_id_values[$field_name], '=');
     }
     $result = $query->execute()->fetchAssoc();
-    return $result ? $result : [];
+    return $result ?: [];
   }
 
   /**

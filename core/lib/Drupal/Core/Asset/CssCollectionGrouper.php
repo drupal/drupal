@@ -75,7 +75,7 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
         }
         unset($groups[$i]['data'], $groups[$i]['weight'], $groups[$i]['basename']);
         $groups[$i]['items'] = [];
-        $current_group_keys = $group_keys ? $group_keys : NULL;
+        $current_group_keys = $group_keys ?: NULL;
       }
 
       // Add the item to the current group.

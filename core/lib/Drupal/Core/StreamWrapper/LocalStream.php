@@ -235,7 +235,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    * {@inheritdoc}
    */
   public function stream_cast($cast_as) {
-    return $this->handle ? $this->handle : FALSE;
+    return $this->handle ?: FALSE;
   }
 
   /**

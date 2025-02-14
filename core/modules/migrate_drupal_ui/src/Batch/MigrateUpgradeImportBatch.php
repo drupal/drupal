@@ -134,7 +134,7 @@ class MigrateUpgradeImportBatch {
       static::$messages = new MigrateMessageCapture();
       $executable = new MigrateExecutable($migration, static::$messages);
 
-      $migration_name = $migration->label() ? $migration->label() : $migration_id;
+      $migration_name = $migration->label() ?: $migration_id;
 
       try {
         $migration_status = $executable->import();
@@ -230,7 +230,7 @@ class MigrateUpgradeImportBatch {
       if (!empty($context['sandbox']['migration_ids'])) {
         $migration_id = reset($context['sandbox']['migration_ids']);
         $migration = \Drupal::service('plugin.manager.migration')->createInstance($migration_id);
-        $migration_name = $migration->label() ? $migration->label() : $migration_id;
+        $migration_name = $migration->label() ?: $migration_id;
         $context['message'] = (string) new TranslatableMarkup('Currently upgrading @migration (@current of @max total tasks)', [
           '@migration' => $migration_name,
           '@current' => $context['sandbox']['current'],

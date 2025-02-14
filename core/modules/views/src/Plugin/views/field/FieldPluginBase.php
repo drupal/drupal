@@ -1342,7 +1342,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $value = $this->renderTrimText($alter, $value);
       if ($this->options['alter']['more_link'] && strlen($value) < $length) {
         $tokens = $this->getRenderTokens($alter);
-        $more_link_text = $this->options['alter']['more_link_text'] ? $this->options['alter']['more_link_text'] : $this->t('more');
+        $more_link_text = $this->options['alter']['more_link_text'] ?: $this->t('more');
         $more_link_text = strtr(Xss::filterAdmin($more_link_text), $tokens);
         $more_link_path = $this->options['alter']['more_link_path'];
         $more_link_path = strip_tags(Html::decodeEntities($this->viewsTokenReplace($more_link_path, $tokens)));

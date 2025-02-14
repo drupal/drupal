@@ -1018,7 +1018,7 @@ class ConfigImporter {
     }
     else {
       $data = $this->storageComparer->getSourceStorage($collection)->read($name);
-      $config->setData($data ? $data : []);
+      $config->setData($data ?: []);
       $config->save();
     }
     $this->setProcessedConfiguration($collection, $op, $name);

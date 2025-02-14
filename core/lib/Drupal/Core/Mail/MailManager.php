@@ -312,7 +312,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
             ->error('Error sending email (from %from to %to with reply-to %reply).', [
               '%from' => $message['from'],
               '%to' => $message['to'],
-              '%reply' => $message['reply-to'] ? $message['reply-to'] : $this->t('not set'),
+              '%reply' => $message['reply-to'] ?: $this->t('not set'),
             ]);
           $error_message = $params['_error_message'] ?? $this->t('Unable to send email. Contact the site administrator if the problem persists.');
           if ($error_message) {

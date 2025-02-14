@@ -165,7 +165,7 @@ class NodeTokensHooks {
 
           // Default values for the chained tokens handled below.
           case 'author':
-            $account = $node->getOwner() ? $node->getOwner() : User::load(0);
+            $account = $node->getOwner() ?: User::load(0);
             $bubbleable_metadata->addCacheableDependency($account);
             $replacements[$original] = $account->label();
             break;

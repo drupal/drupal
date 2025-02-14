@@ -105,7 +105,7 @@ function hook_tokens($type, $tokens, array $data, array $options, \Drupal\Core\R
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $account = $node->getOwner() ? $node->getOwner() : User::load(0);
+          $account = $node->getOwner() ?: User::load(0);
           $replacements[$original] = $account->label();
           $bubbleable_metadata->addCacheableDependency($account);
           break;
