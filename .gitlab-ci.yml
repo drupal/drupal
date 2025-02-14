@@ -528,7 +528,7 @@ default:
     - vendor/bin/drush config:inspect --statistics > HEAD.json
     # Return to the MR commit being tested, conditionally install updates, always rebuild the container.
     - git checkout -f $CI_COMMIT_SHA
-    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA --name-only | grep -q '.install$\|.post_update\.php$' && echo '🤖 Installing DB updates…' && vendor/bin/drush updatedb --yes --quiet
+    - git diff $CI_MERGE_REQUEST_DIFF_BASE_SHA $CI_COMMIT_SHA --name-only | grep -q '.install$\|.post_update\.php$' && echo '🤖 Installing DB updates…' && vendor/bin/drush updatedb --yes
     - vendor/bin/drush cr --quiet
     # Compute statistics for coverage of validatable config for MR.
     - vendor/bin/drush config:inspect --statistics > MR.json
