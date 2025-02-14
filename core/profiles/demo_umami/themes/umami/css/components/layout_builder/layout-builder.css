@@ -6,9 +6,9 @@
 .layout-builder__message .messages {
   background-image: none;
 }
-.layout-builder__message--defaults .messages__content {
-  --umami-message-icon: url("../../../../../../../misc/icons/73b355/globe.svg");
+.layout-builder__message--defaults .messages {
+  --umami-message-icon: url("/core/misc/icons/73b355/globe.svg");
 }
-.layout-builder__message--overrides .messages__content {
-  --umami-message-icon: url("../../../../../../../misc/icons/73b355/location.svg");
+.layout-builder__message--overrides .messages {
+  --umami-message-icon: url("/core/misc/icons/73b355/location.svg");
 }

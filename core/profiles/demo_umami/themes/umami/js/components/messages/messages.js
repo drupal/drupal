@@ -4,6 +4,20 @@
  */
 
 ((Drupal) => {
+  customElements.define(
+    'drupal-umami-messages',
+    class extends HTMLElement {
+      constructor() {
+        super();
+        const template = document.getElementById('umami-messages-template');
+        const templateContent = template.content;
+
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+        shadowRoot.appendChild(templateContent.cloneNode(true));
+      }
+    },
+  );
+
   /**
    * Overrides message theme function.
    *
@@ -23,7 +37,7 @@
    */
   Drupal.theme.message = ({ text }, { type, id }) => {
     const messagesTypes = Drupal.Message.getMessageTypeLabels();
-    const messageWrapper = document.createElement('div');
+    const messageWrapper = document.createElement('drupal-umami-messages');
 
     messageWrapper.setAttribute('class', `messages messages--${type}`);
     messageWrapper.setAttribute(
@@ -34,14 +48,12 @@
     messageWrapper.setAttribute('data-drupal-message-type', type);
 
     messageWrapper.innerHTML = `
-    <div class="messages__content">
-      <h2 class="visually-hidden">
-        ${messagesTypes[type]}
-      </h2>
-      <span class="messages__item">
-        ${text}
-      </span>
-    </div>
+    <span slot="title">
+      ${messagesTypes[type]}
+    </span>
+    <span class="messages__item" slot="content">
+      ${text}
+    </span>
   `;
 
     return messageWrapper;

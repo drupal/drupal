@@ -1,0 +1,38 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the messages block.
+ *
+ * Removes wrapper elements from block so that empty block does not appear when
+ * there are no messages.
+ *
+ * Available variables:
+ * - content: The content of this block.
+ *
+ * @ingroup themeable
+ */
+#}
+{{ content }}
+
+{#
+  The Umami theme is for demonstration only.
+
+  Umami uses a web component for rendering messages. The component is
+  "<drupal-umami-messages>".
+
+  This implementation is a trial only and should not be used on production
+  sites.
+
+  @see https://www.drupal.org/project/drupal/issues/3476471
+  @see https://developer.mozilla.org/en-US/docs/Web/API/Web_components
+#}
+
+<template id="umami-messages-template">
+  <h2 part="heading">
+    <slot name="title"></slot>
+  </h2>
+  <div part="content">
+    <div part="icon"></div>
+    <slot name="content"></slot>
+  </div>
+</template>
