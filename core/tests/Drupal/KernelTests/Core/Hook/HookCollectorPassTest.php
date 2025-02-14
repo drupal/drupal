@@ -124,4 +124,17 @@ class HookCollectorPassTest extends KernelTestBase {
 
   }
 
+  /**
+   * Test Hook attribute with named arguments, and class with invoke method.
+   */
+  public function testHookAttribute(): void {
+    $module_installer = $this->container->get('module_installer');
+    $this->assertTrue($module_installer->install(['hook_collector_hook_attribute']));
+    $this->assertFalse(isset($GLOBALS['hook_named_arguments']));
+    $this->assertFalse(isset($GLOBALS['hook_invoke_method']));
+    drupal_flush_all_caches();
+    $this->assertTrue(isset($GLOBALS['hook_named_arguments']));
+    $this->assertTrue(isset($GLOBALS['hook_invoke_method']));
+  }
+
 }
