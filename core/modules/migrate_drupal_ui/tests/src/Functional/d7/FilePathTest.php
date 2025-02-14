@@ -260,10 +260,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
   }
 
   /**
-   * Gets the file data.
-   *
-   * @return string[][]
-   *   Data from the source file_managed table.
+   * {@inheritdoc}
    */
   public function getManagedFiles() {
     return [

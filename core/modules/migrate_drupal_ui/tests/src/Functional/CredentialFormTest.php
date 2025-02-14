@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 use Drupal\Core\Database\Database;
-use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 // cspell:ignore drupalmysqldriverdatabasemysql
 
@@ -19,8 +18,6 @@ use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
  * @group #slow
  */
 class CredentialFormTest extends MigrateUpgradeTestBase {
-
-  use CreateTestContentEntitiesTrait;
 
   /**
    * {@inheritdoc}

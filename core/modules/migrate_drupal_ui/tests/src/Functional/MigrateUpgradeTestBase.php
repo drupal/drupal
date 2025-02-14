@@ -343,6 +343,16 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   }
 
   /**
+   * Gets the file data.
+   *
+   * @return string[][]
+   *   Data from the source file_managed table.
+   */
+  protected function getManagedFiles() {
+    return [];
+  }
+
+  /**
    * Checks public and private files are copied but not temporary files.
    */
   protected function assertFileMigrations() {
