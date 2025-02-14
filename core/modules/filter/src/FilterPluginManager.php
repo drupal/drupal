@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\filter\Attribute\Filter;
+use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Manages text processing filters.
@@ -31,7 +32,7 @@ class FilterPluginManager extends DefaultPluginManager implements FallbackPlugin
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Filter', $namespaces, $module_handler, 'Drupal\filter\Plugin\FilterInterface', Filter::class, 'Drupal\filter\Annotation\Filter');
+    parent::__construct('Plugin/Filter', $namespaces, $module_handler, FilterInterface::class, Filter::class, 'Drupal\filter\Annotation\Filter');
     $this->alterInfo('filter_info');
     $this->setCacheBackend($cache_backend, 'filter_plugins');
   }

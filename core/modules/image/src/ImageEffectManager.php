@@ -32,7 +32,7 @@ class ImageEffectManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/ImageEffect', $namespaces, $module_handler, 'Drupal\image\ImageEffectInterface', ImageEffect::class, 'Drupal\image\Annotation\ImageEffect');
+    parent::__construct('Plugin/ImageEffect', $namespaces, $module_handler, ImageEffectInterface::class, ImageEffect::class, 'Drupal\image\Annotation\ImageEffect');
 
     $this->alterInfo('image_effect_info');
     $this->setCacheBackend($cache_backend, 'image_effect_plugins');

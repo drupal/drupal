@@ -37,7 +37,7 @@ class HelpSectionManager extends DefaultPluginManager {
    *   The module handler for the alter hook.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/HelpSection', $namespaces, $module_handler, 'Drupal\help\HelpSectionPluginInterface', HelpSection::class, 'Drupal\help\Annotation\HelpSection');
+    parent::__construct('Plugin/HelpSection', $namespaces, $module_handler, HelpSectionPluginInterface::class, HelpSection::class, 'Drupal\help\Annotation\HelpSection');
 
     $this->alterInfo('help_section_info');
     $this->setCacheBackend($cache_backend, 'help_section_plugins');
