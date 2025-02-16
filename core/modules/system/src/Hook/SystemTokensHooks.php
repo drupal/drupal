@@ -170,8 +170,8 @@ class SystemTokensHooks {
     elseif ($type == 'date') {
       if (empty($data['date'])) {
         $date = \Drupal::time()->getRequestTime();
-        // We depend on the current request time, so the tokens are not cacheable
-        // at all.
+        // We depend on the current request time, so the tokens are not
+        // cacheable at all.
         $bubbleable_metadata->setCacheMaxAge(0);
       }
       else {

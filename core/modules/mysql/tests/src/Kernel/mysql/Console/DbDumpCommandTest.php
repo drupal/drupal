@@ -76,7 +76,8 @@ class DbDumpCommandTest extends DriverSpecificKernelTestBase {
     $this->assertStringNotContainsString("'path' => 'test", $output, 'Insert path field not found');
     $this->assertStringNotContainsString("'pattern_outline' => 'test", $output, 'Insert pattern_outline field not found');
 
-    // Assert that insert statement doesn't exist for wildcard schema only match.
+    // Assert that insert statement doesn't exist for wildcard schema only
+    // match.
     $command_tester->execute(['--schema-only' => 'route.*']);
     $output = $command_tester->getDisplay();
     $this->assertStringContainsString("createTable('router", $output, 'Table router found');

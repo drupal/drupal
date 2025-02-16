@@ -190,8 +190,9 @@ class Date extends NumericFilter {
       // Keep sign.
       $b = '***CURRENT_TIME***' . sprintf('%+d', $b);
     }
-    // This is safe because we are manually scrubbing the values.
-    // It is necessary to do it this way because $a and $b are formulas when using an offset.
+    // This is safe because we are manually scrubbing the values. It is
+    // necessary to do it this way because $a and $b are formulas when using an
+    // offset.
     $operator = strtoupper($this->operator);
     $this->query->addWhereExpression($this->options['group'], "$field $operator $a AND $b");
   }
@@ -205,8 +206,8 @@ class Date extends NumericFilter {
       // Keep sign.
       $value = '***CURRENT_TIME***' . sprintf('%+d', $value);
     }
-    // This is safe because we are manually scrubbing the value.
-    // It is necessary to do it this way because $value is a formula when using an offset.
+    // This is safe because we are manually scrubbing the value. It is necessary
+    // to do it this way because $value is a formula when using an offset.
     $this->query->addWhereExpression($this->options['group'], "$field $this->operator $value");
   }
 

@@ -944,8 +944,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ->fields((array) $record)
           ->execute();
         // Even if this is a new entity the ID key might have been set, in which
-        // case we should not override the provided ID. An ID key that is not set
-        // to any value is interpreted as NULL (or DEFAULT) and thus overridden.
+        // case we should not override the provided ID. An ID key that is not
+        // set to any value is interpreted as NULL (or DEFAULT) and thus
+        // overridden.
         if (!isset($record->{$this->idKey})) {
           $record->{$this->idKey} = $insert_id;
         }

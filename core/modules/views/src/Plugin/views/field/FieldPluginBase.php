@@ -1319,9 +1319,10 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     // Check if there should be no further rewrite for empty values.
     $no_rewrite_for_empty = $this->options['hide_alter_empty'] && $this->isValueEmpty($this->original_value, $this->options['empty_zero']);
 
-    // Check whether the value is empty and return nothing, so the field isn't rendered.
-    // First check whether the field should be hidden if the value(hide_alter_empty = TRUE) /the rewrite is empty (hide_alter_empty = FALSE).
-    // For numeric values you can specify whether "0"/0 should be empty.
+    // Check whether the value is empty and return nothing, so the field isn't
+    // rendered. First check whether the field should be hidden if the
+    // value(hide_alter_empty = TRUE) /the rewrite is empty (hide_alter_empty =
+    // FALSE). For numeric values you can specify whether "0"/0 should be empty.
     if ((($this->options['hide_empty'] && empty($value))
         || ($alter['phase'] != static::RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty))
       && $this->isValueEmpty($value, $this->options['empty_zero'], FALSE)) {
@@ -1526,7 +1527,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     // If the path is empty do not build a link around the given text and return
     // it as is.
-    // http://www.example.com URLs will not have a $url['path'], so check host as well.
+    // http://www.example.com URLs will not have a $url['path'], so check host
+    // as well.
     if (empty($url['path']) && empty($url['host']) && empty($url['fragment']) && empty($url['url'])) {
       return $text;
     }
@@ -1582,8 +1584,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options['attributes']['target'] = $target;
     }
 
-    // Allow the addition of arbitrary attributes to links. Additional attributes
-    // currently can only be altered in preprocessors and not within the UI.
+    // Allow the addition of arbitrary attributes to links. Additional
+    // attributes currently can only be altered in preprocessors and not within
+    // the UI.
     if (isset($alter['link_attributes']) && is_array($alter['link_attributes'])) {
       foreach ($alter['link_attributes'] as $key => $attribute) {
         if (!isset($options['attributes'][$key])) {

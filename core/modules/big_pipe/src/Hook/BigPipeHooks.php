@@ -44,9 +44,9 @@ class BigPipeHooks {
       return;
     }
     $request = \Drupal::request();
-    // BigPipe is only used when there is an actual session, so only add the no-JS
-    // detection when there actually is a session.
-    // @see \Drupal\big_pipe\Render\Placeholder\BigPipeStrategy.
+    // BigPipe is only used when there is an actual session, so only add the
+    // no-JS detection when there actually is a session. @see
+    // \Drupal\big_pipe\Render\Placeholder\BigPipeStrategy.
     $session_exists = \Drupal::service('session_configuration')->hasSession($request);
     $page['#cache']['contexts'][] = 'session.exists';
     // Only do the no-JS detection while we don't know if there's no JS support:

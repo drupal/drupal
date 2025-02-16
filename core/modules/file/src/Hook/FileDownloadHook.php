@@ -35,12 +35,12 @@ class FileDownloadHook {
     if ($file->isTemporary()) {
       $usage = $this->fileUsage->listUsage($file);
       if (empty($usage) && $file->getOwnerId() != $this->currentUser->id()) {
-        // Deny access to temporary files without usage that are not owned by the
-        // same user. This prevents the security issue that a private file that
-        // was protected by field permissions becomes available after its usage
-        // was removed and before it is actually deleted from the file system.
-        // Modules that depend on this behavior should make the file permanent
-        // instead.
+        // Deny access to temporary files without usage that are not owned by
+        // the same user. This prevents the security issue that a private file
+        // that was protected by field permissions becomes available after its
+        // usage was removed and before it is actually deleted from the file
+        // system. Modules that depend on this behavior should make the file
+        // permanent instead.
         return -1;
       }
     }
@@ -48,9 +48,9 @@ class FileDownloadHook {
     $references = file_get_file_references($file, NULL, EntityStorageInterface::FIELD_LOAD_CURRENT, NULL);
     // Stop processing if there are no references in order to avoid returning
     // headers for files controlled by other modules. Make an exception for
-    // temporary files where the host entity has not yet been saved (for example,
-    // an image preview on a node/add form) in which case, allow download by the
-    // file's owner.
+    // temporary files where the host entity has not yet been saved (for
+    // example, an image preview on a node/add form) in which case, allow
+    // download by the file's owner.
     if (empty($references) && ($file->isPermanent() || $file->getOwnerId() != $this->currentUser->id())) {
       return NULL;
     }

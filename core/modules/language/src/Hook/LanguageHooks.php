@@ -160,8 +160,8 @@ class LanguageHooks {
    */
   #[Hook('element_info_alter')]
   public function elementInfoAlter(&$type): void {
-    // Alter the language_select element so that it will be rendered like a select
-    // field.
+    // Alter the language_select element so that it will be rendered like a
+    // select field.
     if (isset($type['language_select'])) {
       if (!isset($type['language_select']['#process'])) {
         $type['language_select']['#process'] = [];
@@ -231,8 +231,8 @@ class LanguageHooks {
     }
     if (!in_array('language', $modules)) {
       if (InstallerKernel::installationAttempted() && ($profile = \Drupal::installProfile())) {
-        // If the install profile provides its own language.types configuration do
-        // not overwrite it.
+        // If the install profile provides its own language.types configuration
+        // do not overwrite it.
         $profile_directory = \Drupal::service('extension.list.profile')->getPath($profile);
         $profile_storages = [
           new FileStorage($profile_directory . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY),
@@ -245,8 +245,8 @@ class LanguageHooks {
         }
       }
       // Since newly (un)installed modules may change the default settings for
-      // non-locked language types (e.g. content language), we need to resave the
-      // language type configuration.
+      // non-locked language types (e.g. content language), we need to resave
+      // the language type configuration.
       /** @var \Drupal\language\LanguageNegotiatorInterface $negotiator */
       $negotiator = \Drupal::service('language_negotiator');
       $configurable = \Drupal::config('language.types')->get('configurable');
@@ -273,8 +273,9 @@ class LanguageHooks {
    */
   #[Hook('form_alter')]
   public function formAlter(&$form, FormStateInterface $form_state) : void {
-    // Content entity forms may have added a langcode field. But content language
-    // configuration should decide if it should be exposed or not in the forms.
+    // Content entity forms may have added a langcode field. But content
+    // language configuration should decide if it should be exposed or not in
+    // the forms.
     $form_object = $form_state->getFormObject();
     if ($form_object instanceof ContentEntityFormInterface && $form_object->getEntity()->getEntityType()->hasKey('langcode')) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -302,9 +303,9 @@ class LanguageHooks {
    */
   #[Hook('entity_field_access')]
   public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
-    // Only allow edit access on a langcode field if the entity it is attached to
-    // is configured to have an alterable language. Also without items we can not
-    // decide whether or not to allow access.
+    // Only allow edit access on a langcode field if the entity it is attached
+    // to is configured to have an alterable language. Also without items we can
+    // not decide whether or not to allow access.
     if ($items && $operation == 'edit') {
       // Check if we are dealing with a langcode field.
       $langcode_key = $items->getEntity()->getEntityType()->getKey('langcode');

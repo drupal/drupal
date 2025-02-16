@@ -71,17 +71,17 @@ class WorkspacesUiHooks {
       '#weight' => 500,
     ];
 
-    // Add a special class to the wrapper if we don't have an active workspace so
-    // we can highlight it with a different color.
+    // Add a special class to the wrapper if we don't have an active workspace
+    // so we can highlight it with a different color.
     if (!$active_workspace) {
       $items['workspace']['#wrapper_attributes']['class'][] = 'workspaces-toolbar-tab--is-default';
     }
 
     // \Drupal\toolbar\Element\ToolbarItem::preRenderToolbarItem adds an
-    // #attributes property to each toolbar item's tab child automatically.
-    // Lazy builders don't support an #attributes property so we need to
-    // add another render callback to remove the #attributes property. We start by
-    // adding the defaults, and then we append our own pre render callback.
+    // #attributes property to each toolbar item's tab child automatically. Lazy
+    // builders don't support an #attributes property so we need to add another
+    // render callback to remove the #attributes property. We start by adding
+    // the defaults, and then we append our own pre render callback.
     $items['workspace'] += \Drupal::service('plugin.manager.element_info')->getInfo('toolbar_item');
     $items['workspace']['#pre_render'][] = 'workspaces.lazy_builders:removeTabAttributes';
 

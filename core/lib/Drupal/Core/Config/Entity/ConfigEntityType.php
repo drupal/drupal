@@ -195,8 +195,8 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
 
     // If there is an ID key for this config entity type, make it immutable by
     // default. Individual config entities can override this with an
-    // `ImmutableProperties` constraint in their definition that is either empty,
-    // or with an alternative set of immutable properties.
+    // `ImmutableProperties` constraint in their definition that is either
+    // empty, or with an alternative set of immutable properties.
     $id_key = $this->getKey('id');
     if ($id_key) {
       $constraints += [

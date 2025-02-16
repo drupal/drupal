@@ -1298,7 +1298,8 @@ class ViewExecutable {
       $this->exposed_widgets = $exposed_form->renderExposedForm();
       if (!empty($this->build_info['abort'])) {
         $this->built = TRUE;
-        // Don't execute the query, $form_state, but rendering will still be executed to display the empty text.
+        // Don't execute the query, $form_state, but rendering will still be
+        // executed to display the empty text.
         $this->executed = TRUE;
         return empty($this->build_info['fail']);
       }
@@ -1457,7 +1458,8 @@ class ViewExecutable {
       return TRUE;
     }
 
-    // Don't allow to use deactivated displays, but display them on the live preview.
+    // Don't allow to use deactivated displays, but display them on the live
+    // preview.
     if (!$this->display_handler->isEnabled() && empty($this->live_preview)) {
       $this->build_info['fail'] = TRUE;
       return FALSE;

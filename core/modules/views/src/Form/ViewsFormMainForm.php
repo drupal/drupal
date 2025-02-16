@@ -81,8 +81,8 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
 
     $form['#pre_render'][] = [static::class, 'preRenderViewsForm'];
 
-    // Add the output markup to the form array so that it's included when the form
-    // array is passed to the theme function.
+    // Add the output markup to the form array so that it's included when the
+    // form array is passed to the theme function.
     $form['output'] = $output;
     // This way any additional form elements will go before the view
     // (below the exposed widgets).

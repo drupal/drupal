@@ -74,8 +74,8 @@ class SettingsTrayHooks {
   #[Hook('block_view_alter')]
   public function blockViewAlter(array &$build): void {
     if (isset($build['#contextual_links']['block'])) {
-      // Ensure that contextual links vary by whether the block has config overrides
-      // or not.
+      // Ensure that contextual links vary by whether the block has config
+      // overrides or not.
       // @see _contextual_links_to_id()
       $build['#contextual_links']['block']['metadata']['has_overrides'] = _settings_tray_has_block_overrides($build['#block']) ? 1 : 0;
     }

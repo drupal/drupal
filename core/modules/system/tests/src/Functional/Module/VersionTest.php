@@ -21,7 +21,8 @@ class VersionTest extends ModuleTestBase {
    */
   public function testModuleVersions(): void {
     $dependencies = [
-      // Alternating between being compatible and incompatible with 8.x-2.4-beta3.
+      // Alternating between being compatible and incompatible with
+      // 8.x-2.4-beta3.
       // The first is always a compatible.
       'common_test',
       // Branch incompatibility.

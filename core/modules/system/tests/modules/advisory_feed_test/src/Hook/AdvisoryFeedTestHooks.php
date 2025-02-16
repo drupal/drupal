@@ -17,10 +17,10 @@ class AdvisoryFeedTestHooks {
    */
   #[Hook('system_info_alter')]
   public function systemInfoAlter(&$info, Extension $file): void {
-    // Alter the 'generic_module1_test' module to use the 'generic_module1_project'
-    // project name.  This ensures that for an extension where the 'name' and
-    // the 'project' properties do not match, 'project' is used for matching
-    // 'project' in the JSON feed.
+    // Alter the 'generic_module1_test' module to use the
+    // 'generic_module1_project' project name.  This ensures that for an
+    // extension where the 'name' and the 'project' properties do not match,
+    // 'project' is used for matching 'project' in the JSON feed.
     $system_info = [
       'generic_module1_test' => [
         'project' => 'generic_module1_project',

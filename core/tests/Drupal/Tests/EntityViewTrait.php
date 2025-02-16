@@ -38,15 +38,15 @@ trait EntityViewTrait {
    */
   protected function buildEntityView(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
     $ensure_fully_built = function (&$elements) use (&$ensure_fully_built) {
-      // If the default values for this element have not been loaded yet, populate
-      // them.
+      // If the default values for this element have not been loaded yet,
+      // populate them.
       if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
         $elements += \Drupal::service('element_info')->getInfo($elements['#type']);
       }
 
       // Make any final changes to the element before it is rendered. This means
-      // that the $element or the children can be altered or corrected before the
-      // element is rendered into the final text.
+      // that the $element or the children can be altered or corrected before
+      // the element is rendered into the final text.
       if (isset($elements['#pre_render'])) {
         foreach ($elements['#pre_render'] as $callable) {
           $elements = call_user_func($callable, $elements);

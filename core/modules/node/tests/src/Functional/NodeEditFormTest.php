@@ -101,7 +101,8 @@ class NodeEditFormTest extends NodeTestBase {
     // Stay on the current page, without reloading.
     $this->submitForm($edit, 'Save');
 
-    // Check that the title and body fields are displayed with the updated values.
+    // Check that the title and body fields are displayed with the updated
+    // values.
     $this->assertSession()->pageTextContains($edit[$title_key]);
     $this->assertSession()->pageTextContains($edit[$body_key]);
 

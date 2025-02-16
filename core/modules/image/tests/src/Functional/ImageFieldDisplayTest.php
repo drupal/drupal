@@ -446,7 +446,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseContains($default_output);
 
-    // Test the image loading "priority" formatter works together with "image_style".
+    // Test the image loading "priority" formatter works together with
+    // "image_style".
     $display_options['settings']['image_style'] = 'thumbnail';
     $display->setComponent($field_name, $display_options)
       ->save();

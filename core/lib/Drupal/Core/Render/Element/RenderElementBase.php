@@ -200,8 +200,8 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
       elseif (!empty($element['#group_details'])) {
         // Intentionally empty to clarify the flow; we simply return $element.
       }
-      // Otherwise, this element belongs to a group and the group exists, so we do
-      // not render it.
+      // Otherwise, this element belongs to a group and the group exists, so we
+      // do not render it.
       elseif (Element::children($element['#groups'][$group])) {
         $element['#printed'] = TRUE;
       }
@@ -285,23 +285,24 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
         case 'submit':
         case 'button':
         case 'image_button':
-          // Pressing the ENTER key within a textfield triggers the click event of
-          // the form's first submit button. Triggering Ajax in this situation
-          // leads to problems, like breaking autocomplete textfields, so we bind
-          // to mousedown instead of click.
+          // Pressing the ENTER key within a textfield triggers the click event
+          // of the form's first submit button. Triggering Ajax in this
+          // situation leads to problems, like breaking autocomplete textfields,
+          // so we bind to mousedown instead of click.
           // @see https://www.drupal.org/node/216059
           $element['#ajax']['event'] = 'mousedown';
           // Retain keyboard accessibility by setting 'keypress'. This causes
-          // ajax.js to trigger 'event' when SPACE or ENTER are pressed while the
-          // button has focus.
+          // ajax.js to trigger 'event' when SPACE or ENTER are pressed while
+          // the button has focus.
           $element['#ajax']['keypress'] = TRUE;
           // Binding to mousedown rather than click means that it is possible to
-          // trigger a click by pressing the mouse, holding the mouse button down
-          // until the Ajax request is complete and the button is re-enabled, and
-          // then releasing the mouse button. Set 'prevent' so that ajax.js binds
-          // an additional handler to prevent such a click from triggering a
-          // non-Ajax form submission. This also prevents a textfield's ENTER
-          // press triggering this button's non-Ajax form submission behavior.
+          // trigger a click by pressing the mouse, holding the mouse button
+          // down until the Ajax request is complete and the button is
+          // re-enabled, and then releasing the mouse button. Set 'prevent' so
+          // that ajax.js binds an additional handler to prevent such a click
+          // from triggering a non-Ajax form submission. This also prevents a
+          // textfield's ENTER press triggering this button's non-Ajax form
+          // submission behavior.
           if (!isset($element['#ajax']['prevent'])) {
             $element['#ajax']['prevent'] = 'click';
           }
@@ -351,11 +352,12 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
 
       // Assign default settings. When 'url' is set to NULL, ajax.js submits the
       // Ajax request to the same URL as the form or link destination is for
-      // someone with JavaScript disabled. This is generally preferred as a way to
-      // ensure consistent server processing for js and no-js users, and Drupal's
-      // content negotiation takes care of formatting the response appropriately.
-      // However, 'url' and 'options' may be set when wanting server processing
-      // to be substantially different for a JavaScript triggered submission.
+      // someone with JavaScript disabled. This is generally preferred as a way
+      // to ensure consistent server processing for js and no-js users, and
+      // Drupal's content negotiation takes care of formatting the response
+      // appropriately. However, 'url' and 'options' may be set when wanting
+      // server processing to be substantially different for a JavaScript
+      // triggered submission.
       $settings += [
         'url' => NULL,
         'httpMethod' => 'POST',
@@ -386,16 +388,17 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
       unset($settings['options']);
 
       // Add special data to $settings['submit'] so that when this element
-      // triggers an Ajax submission, Drupal's form processing can determine which
-      // element triggered it.
+      // triggers an Ajax submission, Drupal's form processing can determine
+      // which element triggered it.
       // @see _form_element_triggered_scripted_submission()
       if (isset($settings['trigger_as'])) {
-        // An element can add a 'trigger_as' key within #ajax to make the element
-        // submit as though another one (for example, a non-button can use this
-        // to submit the form as though a button were clicked). When using this,
-        // the 'name' key is always required to identify the element to trigger
-        // as. The 'value' key is optional, and only needed when multiple elements
-        // share the same name, which is commonly the case for buttons.
+        // An element can add a 'trigger_as' key within #ajax to make the
+        // element submit as though another one (for example, a non-button can
+        // use this to submit the form as though a button were clicked). When
+        // using this, the 'name' key is always required to identify the element
+        // to trigger as. The 'value' key is optional, and only needed when
+        // multiple elements share the same name, which is commonly the case for
+        // buttons.
         $settings['submit']['_triggering_element_name'] = $settings['trigger_as']['name'];
         if (isset($settings['trigger_as']['value'])) {
           $settings['submit']['_triggering_element_value'] = $settings['trigger_as']['value'];
@@ -403,8 +406,8 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
         unset($settings['trigger_as']);
       }
       elseif (isset($element['#name'])) {
-        // Most of the time, elements can submit as themselves, in which case the
-        // 'trigger_as' key isn't needed, and the element's name is used.
+        // Most of the time, elements can submit as themselves, in which case
+        // the 'trigger_as' key isn't needed, and the element's name is used.
         $settings['submit']['_triggering_element_name'] = $element['#name'];
         // If the element is a (non-image) button, its name may not identify it
         // uniquely, in which case a match on value is also needed.
@@ -453,8 +456,8 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
   public static function processGroup(&$element, FormStateInterface $form_state, &$complete_form) {
     $parents = implode('][', $element['#parents']);
 
-    // Each details element forms a new group. The #type 'vertical_tabs' basically
-    // only injects a new details element.
+    // Each details element forms a new group. The #type 'vertical_tabs'
+    // basically only injects a new details element.
     $groups = &$form_state->getGroups();
     $groups[$parents]['#group_exists'] = TRUE;
     $element['#groups'] = &$groups;

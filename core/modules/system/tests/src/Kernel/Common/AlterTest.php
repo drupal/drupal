@@ -62,9 +62,9 @@ class AlterTest extends KernelTestBase {
     $this->assertEquals($entity_expected, $entity_copy, 'Second argument to \\Drupal::moduleHandler->alter() was altered.');
     $this->assertEquals($array2_expected, $array2_copy, 'Third argument to \\Drupal::moduleHandler->alter() was altered.');
 
-    // Verify alteration order when passing an array of types to \Drupal::moduleHandler->alter().
-    // common_test_module_implements_alter() places 'block' implementation after
-    // other modules.
+    // Verify alteration order when passing an array of types to
+    // \Drupal::moduleHandler->alter(). common_test_module_implements_alter()
+    // places 'block' implementation after other modules.
     $array_copy = $array;
     $array_expected = ['foo' => 'Drupal block theme'];
     \Drupal::moduleHandler()->alter(['drupal_alter', 'drupal_alter_foo'], $array_copy);

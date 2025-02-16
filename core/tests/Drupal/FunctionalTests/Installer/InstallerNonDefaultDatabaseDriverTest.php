@@ -42,7 +42,8 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
     $this->testDriverName = 'DriverTest' . ucfirst($driver);
     $testDriverNamespace = "Drupal\\driver_test\\Driver\\Database\\{$this->testDriverName}";
 
-    // Assert that we are using the database drivers from the driver_test module.
+    // Assert that we are using the database drivers from the driver_test
+    // module.
     $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-drupaldriver-testdriverdatabasedrivertestmysql"]', 'MySQL by the driver_test module');
     $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-drupaldriver-testdriverdatabasedrivertestpgsql"]', 'PostgreSQL by the driver_test module');
 

@@ -101,7 +101,8 @@ trait ViewResultAssertionTrait {
     foreach ($expected_result as $key => $value) {
       $row = [];
       foreach ($column_map as $expected_column) {
-        // The comparison will be done on the string representation of the value.
+        // The comparison will be done on the string representation of the
+        // value.
         if (is_object($value)) {
           $row[$expected_column] = (string) $value->$expected_column;
         }

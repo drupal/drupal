@@ -74,10 +74,10 @@ class NavigationHooks {
       $navigation_renderer->buildTopBar($page_top);
       return;
     }
-    // But if in layout mode, add an empty element to leave space. We need to use
-    // an empty .admin-toolbar element because the css uses the adjacent sibling
-    // selector. The actual rendering of the navigation blocks/layout occurs in
-    // the layout form.
+    // But if in layout mode, add an empty element to leave space. We need to
+    // use an empty .admin-toolbar element because the css uses the adjacent
+    // sibling selector. The actual rendering of the navigation blocks/layout
+    // occurs in the layout form.
     $page_top['navigation'] = [
       '#type' => 'html_tag',
       '#tag' => 'aside',

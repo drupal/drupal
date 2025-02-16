@@ -224,7 +224,8 @@ class BlockTest extends BlockTestBase {
     $block['theme'] = $this->config('system.theme')->get('default');
     $block['region'] = 'header';
 
-    // Set block title to confirm that interface works and override any custom titles.
+    // Set block title to confirm that interface works and override any custom
+    // titles.
     $this->drupalGet('admin/structure/block/add/' . $block['id'] . '/' . $block['theme']);
     $this->submitForm([
       'settings[label]' => $block['settings[label]'],

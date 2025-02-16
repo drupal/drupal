@@ -443,7 +443,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       foreach ($ranking as $rank => $values) {
         if (isset($this->configuration['rankings'][$rank]) && !empty($this->configuration['rankings'][$rank])) {
           $node_rank = $this->configuration['rankings'][$rank];
-          // If the table defined in the ranking isn't already joined, then add it.
+          // If the table defined in the ranking isn't already joined, then add
+          // it.
           if (isset($values['join']) && !isset($tables[$values['join']['alias']])) {
             $query->addJoin($values['join']['type'], $values['join']['table'], $values['join']['alias'], $values['join']['on']);
           }

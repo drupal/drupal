@@ -295,7 +295,8 @@ class LocaleHooks {
         $form['languages'][$langcode]['locale_statistics'] = ['#markup' => t('not applicable')];
       }
       // #type = link doesn't work with #weight on table.
-      // reset and set it back after locale_statistics to get it at the right end.
+      // reset and set it back after locale_statistics to get it at the right
+      // end.
       $operations = $form['languages'][$langcode]['operations'];
       unset($form['languages'][$langcode]['operations']);
       $form['languages'][$langcode]['operations'] = $operations;

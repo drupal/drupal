@@ -306,7 +306,8 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
       $left_field = $this->leftFormula ?: "$left_table[alias].$this->leftField";
     }
     else {
-      // This can be used if left_field is a formula or something. It should be used only *very* rarely.
+      // This can be used if left_field is a formula or something. It should be
+      // used only *very* rarely.
       $left_field = $this->leftField;
       $left_table = NULL;
     }

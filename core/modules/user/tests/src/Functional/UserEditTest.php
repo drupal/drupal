@@ -28,7 +28,8 @@ class UserEditTest extends BrowserTestBase {
     $user2 = $this->drupalCreateUser([]);
     $this->drupalLogin($user1);
 
-    // Test that error message appears when attempting to use a non-unique user name.
+    // Test that error message appears when attempting to use a non-unique user
+    // name.
     $edit['name'] = $user2->getAccountName();
     $this->drupalGet("user/" . $user1->id() . "/edit");
     $this->submitForm($edit, 'Save');

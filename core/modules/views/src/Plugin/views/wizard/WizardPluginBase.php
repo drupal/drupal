@@ -547,15 +547,15 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     if (!empty($user_input)) {
       $key_exists = NULL;
       $submitted = NestedArray::getValue($user_input, $parents, $key_exists);
-      // Check that the user-submitted value is one of the allowed options before
-      // returning it. This is not a substitute for actual form validation;
-      // rather it is necessary because, for example, the same select element
-      // might have #options A, B, and C under one set of conditions but #options
-      // D, E, F under a different set of conditions. So the form submission
-      // might have occurred with option A selected, but when the form is rebuilt
-      // option A is no longer one of the choices. In that case, we don't want to
-      // use the value that was submitted anymore but rather fall back to the
-      // default value.
+      // Check that the user-submitted value is one of the allowed options
+      // before returning it. This is not a substitute for actual form
+      // validation; rather it is necessary because, for example, the same
+      // select element might have #options A, B, and C under one set of
+      // conditions but #options D, E, F under a different set of conditions. So
+      // the form submission might have occurred with option A selected, but
+      // when the form is rebuilt option A is no longer one of the choices. In
+      // that case, we don't want to use the value that was submitted anymore
+      // but rather fall back to the default value.
       if ($key_exists && in_array($submitted, array_keys($element['#options']))) {
         return $submitted;
       }
@@ -628,7 +628,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
 
     $bundles = $this->bundleInfoService->getBundleInfo($this->entityTypeId);
-    // If the current base table support bundles and has more than one (like user).
+    // If the current base table support bundles and has more than one (like
+    // user).
     if (!empty($bundles) && $this->entityType && $this->entityType->hasKey('bundle')) {
       // Get all bundles and their human readable names.
       $options = ['all' => $this->t('All')];

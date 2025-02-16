@@ -263,8 +263,8 @@ class CacheTest extends ViewsKernelTestBase {
    */
   public function testHeaderStorage(): void {
     // Create a view with output caching enabled.
-    // Some hook_views_pre_render in views_test_data.module adds the test css/js file.
-    // so they should be added to the css/js storage.
+    // Some hook_views_pre_render in views_test_data.module adds the test css/js
+    // file. so they should be added to the css/js storage.
     $view = Views::getView('test_view');
     $view->setDisplay();
     $view->storage->set('id', 'test_cache_header_storage');

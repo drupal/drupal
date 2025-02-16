@@ -112,7 +112,8 @@ class DisplayModeUpdateTest extends FieldKernelTestBase {
    */
   public function testDisplayModeUpdateAfterFieldCreation(): void {
 
-    // Sanity test: field has not been created yet, so should not exist in display.
+    // Sanity test: field has not been created yet, so should not exist in
+    // display.
     $this->assertArrayNotHasKey('field_test', \Drupal::config($this->defaultViewDisplayName)->get('hidden'));
     $this->assertArrayNotHasKey('field_test', \Drupal::config($this->defaultFormDisplayName)->get('hidden'));
     $this->assertArrayNotHasKey('field_test', \Drupal::config($this->foobarViewDisplayName)->get('hidden'));

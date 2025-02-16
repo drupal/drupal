@@ -427,7 +427,8 @@ function _filter_url($text, $filter) {
   $valid_url_query_ending_chars = '[a-zA-Z0-9_&=#\/]';
 
   // Full path
-  // and allow @ in a URL, but only in the middle. Catch things like http://example.com/@user/
+  // and allow @ in a URL, but only in the middle. Catch things like
+  // http://example.com/@user/
   $valid_url_path = '(?:(?:' . $valid_url_path_characters . '*(?:' . $valid_url_balanced_parens . $valid_url_path_characters . '*)*' . $valid_url_ending_characters . ')|(?:@' . $valid_url_path_characters . '+\/))';
 
   // Prepare domain name pattern.
@@ -484,8 +485,8 @@ function _filter_url($text, $filter) {
         if ($chunk_type == 'text') {
           // Only process this text if there are no unclosed $ignore_tags.
           if ($open_tag == '') {
-            // If there is a match, inject a link into this chunk via the callback
-            // function contained in $task.
+            // If there is a match, inject a link into this chunk via the
+            // callback function contained in $task.
             $chunks[$i] = preg_replace_callback($pattern, $task, $chunks[$i]);
           }
           // Text chunk is done, so next chunk must be a tag.
@@ -703,7 +704,8 @@ function _filter_autop($text) {
       $chunk = preg_replace("|<p>(<li.+?)</p>|", "$1", $chunk);
       $chunk = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $chunk);
       $chunk = str_replace('</blockquote></p>', '</p></blockquote>', $chunk);
-      // Under certain strange conditions it could create a P of entirely whitespace
+      // Under certain strange conditions it could create a P of entirely
+      // whitespace
       $chunk = preg_replace('|<p>\s*</p>\n?|', '', $chunk);
       $chunk = preg_replace('!<p>\s*(</?' . $block . '[^>]*>)!', "$1", $chunk);
       $chunk = preg_replace('!(</?' . $block . '[^>]*>)\s*</p>!', "$1", $chunk);

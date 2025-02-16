@@ -42,8 +42,8 @@ class EntityNormalizer extends ComplexDataNormalizer implements DenormalizerInte
     // The bundle property will be required to denormalize a bundleable
     // fieldable entity.
     if ($entity_type_definition->entityClassImplements(FieldableEntityInterface::class)) {
-      // Extract bundle data to pass into entity creation if the entity type uses
-      // bundles.
+      // Extract bundle data to pass into entity creation if the entity type
+      // uses bundles.
       if ($entity_type_definition->hasKey('bundle')) {
         // Get an array containing the bundle only. This also remove the bundle
         // key from the $data array.

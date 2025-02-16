@@ -123,7 +123,8 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
             if ($fileinfo->getExtension() == 'php') {
               if ($cached = $this->fileCache->get($fileinfo->getPathName())) {
                 if (isset($cached['id'])) {
-                  // Explicitly unserialize this to create a new object instance.
+                  // Explicitly unserialize this to create a new object
+                  // instance.
                   $definitions[$cached['id']] = unserialize($cached['content']);
                 }
                 continue;

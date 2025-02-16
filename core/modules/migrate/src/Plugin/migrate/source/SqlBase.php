@@ -265,13 +265,13 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       // The rules for determining what conditions to add to the query are as
       // follows (applying first applicable rule):
       // 1. If the map is joinable, join it. We will want to accept all rows
-      //    which are either not in the map, or marked in the map as NEEDS_UPDATE.
-      //    Note that if high water fields are in play, we want to accept all rows
-      //    above the high water mark in addition to those selected by the map
-      //    conditions, so we need to OR them together (but AND with any existing
-      //    conditions in the query). So, ultimately the SQL condition will look
-      //    like (original conditions) AND (map IS NULL OR map needs update
-      //    OR above high water).
+      //    which are either not in the map, or marked in the map as
+      //    NEEDS_UPDATE. Note that if high water fields are in play, we want to
+      //    accept all rows above the high water mark in addition to those
+      //    selected by the map conditions, so we need to OR them together (but
+      //    AND with any existing conditions in the query). So, ultimately the
+      //    SQL condition will look like (original conditions) AND (map IS NULL
+      //    OR map needs update OR above high water).
       $conditions = $this->query->orConditionGroup();
       $condition_added = FALSE;
       $added_fields = [];

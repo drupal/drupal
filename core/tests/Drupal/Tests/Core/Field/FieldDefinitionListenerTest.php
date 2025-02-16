@@ -81,8 +81,8 @@ class FieldDefinitionListenerTest extends UnitTestCase {
   protected function setUpEntityTypeManager($definitions = []): void {
     foreach ($definitions as $key => $entity_type) {
       // \Drupal\Core\Entity\EntityTypeInterface::getLinkTemplates() is called
-      // by \Drupal\Core\Entity\EntityTypeManager::processDefinition() so it must
-      // always be mocked.
+      // by \Drupal\Core\Entity\EntityTypeManager::processDefinition() so it
+      // must always be mocked.
       $entity_type->getLinkTemplates()->willReturn([]);
 
       $definitions[$key] = $entity_type->reveal();

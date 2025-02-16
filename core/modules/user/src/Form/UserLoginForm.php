@@ -182,7 +182,8 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
       // reached. Default is 50 failed attempts allowed in one hour. This is
       // independent of the per-user limit to catch attempts from one IP to log
       // in to many different user accounts.  We have a reasonably high limit
-      // since there may be only one apparent IP for all users at an institution.
+      // since there may be only one apparent IP for all users at an
+      // institution.
       if (!$this->userFloodControl->isAllowed('user.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
         $form_state->set('flood_control_triggered', 'ip');
         return;

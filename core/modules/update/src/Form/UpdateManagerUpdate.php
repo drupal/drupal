@@ -206,9 +206,9 @@ class UpdateManagerUpdate extends FormBase {
 
       // If the recommended release for a contributed project is not compatible
       // with the currently installed version of core, list that project in a
-      // separate table. If core compatibility is not defined, it means we can't determine
-      // compatibility requirements (or we're looking at core), so we assume it
-      // is compatible.
+      // separate table. If core compatibility is not defined, it means we can't
+      // determine compatibility requirements (or we're looking at core), so we
+      // assume it is compatible.
       $compatible = $recommended_release->isCoreCompatible() ?? TRUE;
 
       if ($needs_manual) {

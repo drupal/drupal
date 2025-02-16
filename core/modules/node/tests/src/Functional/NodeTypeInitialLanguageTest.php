@@ -51,7 +51,8 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     $this->assertTrue($this->assertSession()->optionExists('edit-language-configuration-langcode', LanguageInterface::LANGCODE_SITE_DEFAULT)->isSelected());
     $this->assertSession()->checkboxNotChecked('edit-language-configuration-language-alterable');
 
-    // Tests if the language field cannot be rearranged on the manage fields tab.
+    // Tests if the language field cannot be rearranged on the manage fields
+    // tab.
     $this->drupalGet('admin/structure/types/manage/article/fields');
     $this->assertSession()->elementNotExists('xpath', '//*[@id="field-overview"]/*[@id="language"]');
 

@@ -81,8 +81,8 @@ class EnvironmentCleaner implements EnvironmentCleanerInterface {
     $tables = $schema->findTables('test%');
     $count = 0;
     foreach ($tables as $table) {
-      // Only drop tables which begin wih 'test' followed by digits, for example,
-      // {test12345678node__body}.
+      // Only drop tables which begin wih 'test' followed by digits, for
+      // example, {test12345678node__body}.
       if (preg_match('/^test\d+.*/', $table, $matches)) {
         $schema->dropTable($matches[0]);
         $count++;

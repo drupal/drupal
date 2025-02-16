@@ -331,8 +331,8 @@ class Views {
       $exclude_view_display = $exclude_view->current_display;
     }
     else {
-      // Append a ':' to the $exclude_view string so we always have more than one
-      // item to explode.
+      // Append a ':' to the $exclude_view string so we always have more than
+      // one item to explode.
       [$exclude_view_name, $exclude_view_display] = explode(':', "$exclude_view:");
     }
 

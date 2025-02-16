@@ -262,11 +262,11 @@ class DateTimePlus {
       $datetime_plus->setTimestamp($date->getTimestamp());
       $datetime_plus->setTimezone($date->getTimezone());
 
-      // Functions that parse date is forgiving, it might create a date that
-      // is not exactly a match for the provided value, so test for that by
-      // re-creating the date/time formatted string and comparing it to the input. For
-      // instance, an input value of '11' using a format of Y (4 digits) gets
-      // created as '0011' instead of '2011'.
+      // Functions that parse date is forgiving, it might create a date that is
+      // not exactly a match for the provided value, so test for that by
+      // re-creating the date/time formatted string and comparing it to the
+      // input. For instance, an input value of '11' using a format of Y (4
+      // digits) gets created as '0011' instead of '2011'.
       if ($settings['validate_format'] && $date->format($format) != $time) {
         throw new \UnexpectedValueException('The created date does not match the input value.');
       }

@@ -44,10 +44,11 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
         '#default_value' => 'DEFAULT 1',
       ],
     ];
-    // Provide an 'add more' button that rebuilds the form with an additional two
-    // checkboxes and a textfield. The test is to make sure that the rebuild
+    // Provide an 'add more' button that rebuilds the form with an additional
+    // two checkboxes and a textfield. The test is to make sure that the rebuild
     // triggered by this button preserves the user input values for the initial
-    // elements and initializes the new elements with the correct default values.
+    // elements and initializes the new elements with the correct default
+    // values.
     if (!$form_state->has('add_more')) {
       $form['add_more'] = [
         '#type' => 'submit',

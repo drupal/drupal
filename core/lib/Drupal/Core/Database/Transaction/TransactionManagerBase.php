@@ -379,8 +379,8 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
         // transaction. The transaction is closed.
         $this->processRootRollback();
         if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::RolledBack) {
-          // The Transaction object remains open, and when it will get destructed
-          // no commit should happen. Void the stack item.
+          // The Transaction object remains open, and when it will get
+          // destructed no commit should happen. Void the stack item.
           $this->voidStackItem($id);
         }
       }

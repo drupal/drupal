@@ -155,8 +155,8 @@ trait InsertTrait {
       foreach ($nested_insert_values as $insert_values) {
         $placeholders = [];
 
-        // Default fields aren't really placeholders, but this is the most convenient
-        // way to handle them.
+        // Default fields aren't really placeholders, but this is the most
+        // convenient way to handle them.
         $placeholders = array_pad($placeholders, count($default_fields), 'default');
 
         $new_placeholder = $max_placeholder + count($insert_values);
@@ -168,7 +168,8 @@ trait InsertTrait {
       }
     }
     else {
-      // If there are no values, then this is a default-only query. We still need to handle that.
+      // If there are no values, then this is a default-only query. We still
+      // need to handle that.
       $placeholders = array_fill(0, count($default_fields), 'default');
       $values[] = '(' . implode(', ', $placeholders) . ')';
     }

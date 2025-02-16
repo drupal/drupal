@@ -120,7 +120,8 @@ abstract class ViewFormBase extends EntityForm {
       }
     }
 
-    // If the default display isn't supposed to be shown, don't display its tab, unless it's the only display.
+    // If the default display isn't supposed to be shown, don't display its tab,
+    // unless it's the only display.
     if ((!$this->isDefaultDisplayShown($view) && $display_id != 'default') && count($tabs) > 1) {
       $tabs['default']['#access'] = FALSE;
     }
@@ -146,8 +147,8 @@ abstract class ViewFormBase extends EntityForm {
   public function isDefaultDisplayShown(ViewUI $view) {
     // Always show the default display for advanced users who prefer that mode.
     $advanced_mode = \Drupal::config('views.settings')->get('ui.show.default_display');
-    // For other users, show the default display only if there are no others, and
-    // hide it if there's at least one "real" display.
+    // For other users, show the default display only if there are no others,
+    // and hide it if there's at least one "real" display.
     $additional_displays = (count($view->getExecutable()->displayHandlers) == 1);
 
     return $advanced_mode || $additional_displays;

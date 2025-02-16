@@ -68,7 +68,8 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
 
     /** @var \Drupal\Core\State\StateInterface $state */
     $state = $this->container->get('state');
-    // Define the schema and views data variable before enabling the test module.
+    // Define the schema and views data variable before enabling the test
+    // module.
     $state->set('views_test_data_schema', $this->schemaDefinition());
     $state->set('views_test_data_views_data', $this->viewsData());
     $this->container->get('views.views_data')->clear();

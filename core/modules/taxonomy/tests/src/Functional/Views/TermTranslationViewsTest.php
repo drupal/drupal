@@ -79,8 +79,8 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
     $this->drupalLogin($this->rootUser);
 
     foreach ($this->terms as $term) {
-      // Test with "Content: Has taxonomy term ID (with depth)" contextual filter.
-      // Generate base language url and send request.
+      // Test with "Content: Has taxonomy term ID (with depth)" contextual
+      // filter. Generate base language url and send request.
       $url = Url::fromRoute('view.taxonomy_translated_term_name_test.page_1', ['arg_0' => $term->id()])->toString();
       $this->drupalGet($url);
       $this->assertSession()->pageTextContains($term->label());

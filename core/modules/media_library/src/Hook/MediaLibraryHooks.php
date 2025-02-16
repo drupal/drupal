@@ -161,10 +161,10 @@ class MediaLibraryHooks {
           $query = MediaLibraryState::fromRequest($view->getRequest())->all();
         }
         catch (\InvalidArgumentException $e) {
-          // MediaLibraryState::fromRequest() will throw an exception if the view
-          // is being previewed, since not all required query parameters will be
-          // present. In a preview, however, this can be omitted since we're
-          // merely previewing.
+          // MediaLibraryState::fromRequest() will throw an exception if the
+          // view is being previewed, since not all required query parameters
+          // will be present. In a preview, however, this can be omitted since
+          // we're merely previewing.
           // @todo Use the views API for checking for the preview mode when it
           //   lands. https://www.drupal.org/project/drupal/issues/3060855
           if (empty($view->preview) && empty($view->live_preview)) {

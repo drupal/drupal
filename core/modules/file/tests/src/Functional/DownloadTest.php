@@ -53,8 +53,8 @@ class DownloadTest extends FileManagedTestBase {
     // Test generating a URL to a created file.
     $file = $this->createFile();
     $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
-    // URLs can't contain characters outside the ASCII set so $filename has to be
-    // encoded.
+    // URLs can't contain characters outside the ASCII set so $filename has to
+    // be encoded.
     $filename = $GLOBALS['base_url'] . '/' . \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath() . '/' . rawurlencode($file->getFilename());
     $this->assertEquals($filename, $url, 'Correctly generated a URL for a created file.');
     $http_client = $this->getHttpClient();

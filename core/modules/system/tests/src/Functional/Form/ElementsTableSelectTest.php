@@ -132,15 +132,18 @@ class ElementsTableSelectTest extends BrowserTestBase {
    * Tests the #js_select property.
    */
   public function testAdvancedSelect(): void {
-    // When #multiple = TRUE a Select all checkbox should be displayed by default.
+    // When #multiple = TRUE a Select all checkbox should be displayed by
+    // default.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-default');
     $this->assertSession()->elementExists('xpath', '//th[@class="select-all"]');
 
-    // When #js_select is set to FALSE, a "Select all" checkbox should not be displayed.
+    // When #js_select is set to FALSE, a "Select all" checkbox should not be
+    // displayed.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-no-advanced-select');
     $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
 
-    // A "Select all" checkbox never makes sense when #multiple = FALSE, regardless of the value of #js_select.
+    // A "Select all" checkbox never makes sense when #multiple = FALSE,
+    // regardless of the value of #js_select.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-false-default');
     $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
 

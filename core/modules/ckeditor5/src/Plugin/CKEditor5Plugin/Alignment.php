@@ -73,7 +73,8 @@ class Alignment extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    // Match the config schema structure at ckeditor5.plugin.ckeditor5_alignment.
+    // Match the config schema structure at
+    // ckeditor5.plugin.ckeditor5_alignment.
     $form_value = $form_state->getValue('enabled_alignments');
     $config_value = array_values(array_filter($form_value));
     $form_state->setValue('enabled_alignments', $config_value);

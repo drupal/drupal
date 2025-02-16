@@ -46,8 +46,8 @@ class FilterPermissions implements ContainerInjectionInterface {
    */
   public function permissions() {
     $permissions = [];
-    // Generate permissions for each text format. Warn the administrator that any
-    // of them are potentially unsafe.
+    // Generate permissions for each text format. Warn the administrator that
+    // any of them are potentially unsafe.
     /** @var \Drupal\filter\FilterFormatInterface[] $formats */
     $formats = $this->entityTypeManager->getStorage('filter_format')->loadByProperties(['status' => TRUE]);
     uasort($formats, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');

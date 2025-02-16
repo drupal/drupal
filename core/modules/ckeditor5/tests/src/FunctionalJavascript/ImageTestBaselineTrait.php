@@ -191,14 +191,15 @@ trait ImageTestBaselineTrait {
       $url_input->setValue('http://www.drupal.org/association');
       $balloon->pressButton('Save');
 
-      // Assert the "editingDowncast" HTML after making changes. First assert the
-      // link exists, then assert the expected DOM structure in detail.
+      // Assert the "editingDowncast" HTML after making changes. First assert
+      // the link exists, then assert the expected DOM structure in detail.
       $assert_session->elementExists('css', '.ck-content a[href*="//www.drupal.org/association"]');
-      // For inline images, the link is wrapping the widget; for block images the
-      // link lives inside the widget. (This is how it is implemented upstream, it
-      // could be implemented differently, we just want to ensure we do not break
-      // it. Drupal only cares about having its own "dataDowncast", the
-      // "editingDowncast" is considered an implementation detail.)
+      // For inline images, the link is wrapping the widget; for block images
+      // the link lives inside the widget. (This is how it is implemented
+      // upstream, it could be implemented differently, we just want to ensure
+      // we do not break it. Drupal only cares about having its own
+      // "dataDowncast", the "editingDowncast" is considered an implementation
+      // detail.)
       $assert_session->elementExists('css', $image_type === 'inline'
         ? '.ck-content a[href*="//www.drupal.org/association"] .ck-widget.' . $expected_widget_class . ' > img[src*="' . $src . '"][alt="drupalimage test image"]'
         : '.ck-content .ck-widget.' . $expected_widget_class . ' a[href*="//www.drupal.org/association"] > img[src*="' . $src . '"][alt="drupalimage test image"]'
@@ -233,8 +234,8 @@ trait ImageTestBaselineTrait {
         : 'a[href="http://www.drupal.org/association"] img[src*="' . $src . '"]');
 
       // Go back to edit the now *linked* <drupal-media>. Everything from this
-      // point onwards is effectively testing "upcasting" and proving there is no
-      // data loss.
+      // point onwards is effectively testing "upcasting" and proving there is
+      // no data loss.
       $this->drupalGet($this->host->toUrl('edit-form'));
       $this->waitForEditor();
 

@@ -40,8 +40,8 @@ class ChainedPlaceholderStrategy implements PlaceholderStrategyInterface {
     $new_placeholders = [];
 
     // Give each placeholder strategy a chance to replace all not-yet replaced
-    // placeholders. The order of placeholder strategies is well defined
-    // and this uses a variation of the "chain of responsibility" design pattern.
+    // placeholders. The order of placeholder strategies is well defined and
+    // this uses a variation of the "chain of responsibility" design pattern.
     foreach ($this->placeholderStrategies as $strategy) {
       $processed_placeholders = $strategy->processPlaceholders($placeholders);
       assert(array_intersect_key($processed_placeholders, $placeholders) === $processed_placeholders, 'Processed placeholders must be a subset of all placeholders.');

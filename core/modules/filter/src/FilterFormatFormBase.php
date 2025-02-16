@@ -145,9 +145,9 @@ abstract class FilterFormatFormBase extends EntityForm {
         '#parents' => ['filters', $name, 'provider'],
       ];
 
-      // Retrieve the settings form of the filter plugin. The plugin should not be
-      // aware of the text format. Therefore, it only receives a set of minimal
-      // base properties to allow advanced implementations to work.
+      // Retrieve the settings form of the filter plugin. The plugin should not
+      // be aware of the text format. Therefore, it only receives a set of
+      // minimal base properties to allow advanced implementations to work.
       $settings_form = [
         '#parents' => ['filters', $name, 'settings'],
         '#tree' => TRUE,

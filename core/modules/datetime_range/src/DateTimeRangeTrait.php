@@ -46,7 +46,8 @@ trait DateTimeRangeTrait {
           if (!empty($item->_attributes)) {
             $elements[$delta]['#attributes'] += $item->_attributes;
             // Unset field item attributes since they have been included in the
-            // formatter output and should not be rendered in the field template.
+            // formatter output and should not be rendered in the field
+            // template.
             unset($item->_attributes);
           }
         }

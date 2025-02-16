@@ -103,8 +103,8 @@ class BlockContentSaveTest extends BlockContentTestBase {
    * @see block_test_block_insert()
    */
   public function testBlockContentSaveOnInsert(): void {
-    // block_content_test_block_content_insert() triggers a save on insert if the
-    // title equals 'new'.
+    // block_content_test_block_content_insert() triggers a save on insert if
+    // the title equals 'new'.
     $block = $this->createBlockContent('new');
     $this->assertEquals('BlockContent ' . $block->id(), $block->label(), 'Content block saved on block insert.');
   }

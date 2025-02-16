@@ -115,7 +115,8 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
     ];
 
     foreach ($languages as $langcode => $data) {
-      // Import a .po file to add a new language with a given number of plural forms
+      // Import a .po file to add a new language with a given number of plural
+      // forms.
       $name = \Drupal::service('file_system')->tempnam('temporary://', $langcode . '_') . '.po';
       file_put_contents($name, $this->getPoFile($data['plurals']));
       $this->drupalGet('admin/config/regional/translate/import');

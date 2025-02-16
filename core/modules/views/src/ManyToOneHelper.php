@@ -88,8 +88,8 @@ class ManyToOneHelper {
       $join = $this->getJoin();
     }
 
-    // See if there's a chain between us and the base relationship. If so, we need
-    // to create a new relationship to use.
+    // See if there's a chain between us and the base relationship. If so, we
+    // need to create a new relationship to use.
     $relationship = $this->handler->relationship;
 
     // Determine the primary table to seek

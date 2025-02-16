@@ -101,8 +101,8 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
           return;
         }
         // When this mode is enabled, changes to synchronized properties are
-        // allowed only in the default translation, thus we need to make sure this
-        // is always used as source for the synchronization process.
+        // allowed only in the default translation, thus we need to make sure
+        // this is always used as source for the synchronization process.
         else {
           $sync_langcode = $entity->getUntranslated()->language()->getId();
         }

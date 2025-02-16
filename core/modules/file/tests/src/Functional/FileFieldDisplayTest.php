@@ -86,7 +86,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $default_output = \Drupal::service('renderer')->renderRoot($file_link);
     $this->assertSession()->responseContains($default_output);
 
-    // Turn the "display" option off and check that the file is no longer displayed.
+    // Turn the "display" option off and check that the file is no longer
+    // displayed.
     $edit = [$field_name . '[0][display]' => FALSE];
     $this->drupalGet('node/' . $nid . '/edit');
     $this->submitForm($edit, 'Save');

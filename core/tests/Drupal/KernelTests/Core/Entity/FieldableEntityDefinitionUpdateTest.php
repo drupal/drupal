@@ -566,8 +566,8 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       $new_entity_type = $this->lastInstalledSchemaRepository->getLastInstalledDefinition('entity_test_update');
       $this->assertFalse($new_entity_type->isRevisionable(), 'The entity type is kept unchanged.');
 
-      // Check that the last installed field storage definitions did not change by
-      // looking at the 'langcode' field, which is updated automatically.
+      // Check that the last installed field storage definitions did not change
+      // by looking at the 'langcode' field, which is updated automatically.
       $new_storage_definitions = $this->lastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions('entity_test_update');
       $langcode_key = $original_entity_type->getKey('langcode');
       $this->assertEquals($original_storage_definitions[$langcode_key]->isRevisionable(), $new_storage_definitions[$langcode_key]->isRevisionable(), "The 'langcode' field is kept unchanged.");

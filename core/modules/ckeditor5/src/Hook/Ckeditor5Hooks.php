@@ -109,9 +109,9 @@ class Ckeditor5Hooks {
       if (isset($form['filters']['settings']['filter_html']['allowed_html'])) {
         $filter_allowed_html =& $form['filters']['settings']['filter_html']['allowed_html'];
         $filter_allowed_html['#value_callback'] = [CKEditor5::class, 'getGeneratedAllowedHtmlValue'];
-        // Set readonly and add the form-disabled wrapper class as using #disabled
-        // or the disabled attribute will prevent the new values from being
-        // validated.
+        // Set readonly and add the form-disabled wrapper class as using
+        // #disabled or the disabled attribute will prevent the new values from
+        // being validated.
         $filter_allowed_html['#attributes']['readonly'] = TRUE;
         $filter_allowed_html['#wrapper_attributes']['class'][] = 'form-disabled';
         $filter_allowed_html['#description'] = t('With CKEditor 5 this is a
@@ -130,8 +130,8 @@ class Ckeditor5Hooks {
         }
       }
     }
-    // Override the AJAX callbacks for changing editors, so multiple areas of the
-    // form can be updated on change.
+    // Override the AJAX callbacks for changing editors, so multiple areas of
+    // the form can be updated on change.
     $form['editor']['editor']['#ajax'] = [
       'callback' => '_update_ckeditor5_html_filter',
       'trigger_as' => [
@@ -215,7 +215,8 @@ class Ckeditor5Hooks {
       $libraries['internal.drupal.ckeditor5.stylesheets'] = ['css' => ['theme' => array_fill_keys(array_values($css), [])]];
     }
     if ($extension === 'core') {
-      // CSS rule to resolve the conflict with z-index between CKEditor 5 and jQuery UI.
+      // CSS rule to resolve the conflict with z-index between CKEditor 5 and
+      // jQuery UI.
       $libraries['drupal.dialog']['css']['component']['modules/ckeditor5/css/ckeditor5.dialog.fix.css'] = [];
       // Fix the CKEditor 5 focus management in dialogs. Modify the library
       // declaration to ensure this file is always loaded after
@@ -245,7 +246,8 @@ class Ckeditor5Hooks {
         ];
       }
     }
-    // Copied from \Drupal\Core\Asset\LibraryDiscoveryParser::buildByExtension().
+    // Copied from
+    // \Drupal\Core\Asset\LibraryDiscoveryParser::buildByExtension().
     if ($extension === 'core') {
       $path = 'core';
     }
@@ -309,8 +311,8 @@ class Ckeditor5Hooks {
     // all translation files in a single aggregate.
     $ckeditor_dll_file = 'core/assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js';
     if (isset($javascript[$placeholder_file])) {
-      // Use the placeholder file weight to set all the translations files weights
-      // so they can be aggregated together as expected.
+      // Use the placeholder file weight to set all the translations files
+      // weights so they can be aggregated together as expected.
       $default_weight = $javascript[$placeholder_file]['weight'];
       if (isset($javascript[$ckeditor_dll_file])) {
         $default_weight = $javascript[$ckeditor_dll_file]['weight'];

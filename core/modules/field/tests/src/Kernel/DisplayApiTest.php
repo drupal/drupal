@@ -296,7 +296,8 @@ class DisplayApiTest extends FieldKernelTestBase {
    * Tests that the prepareView() formatter method still fires for empty values.
    */
   public function testFieldEmpty(): void {
-    // Uses \Drupal\field_test\Plugin\Field\FieldFormatter\TestFieldEmptyFormatter.
+    // Uses
+    // \Drupal\field_test\Plugin\Field\FieldFormatter\TestFieldEmptyFormatter.
     $display = [
       'label' => 'hidden',
       'type' => 'field_empty_test',

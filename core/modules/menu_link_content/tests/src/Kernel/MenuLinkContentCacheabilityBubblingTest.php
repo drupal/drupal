@@ -91,7 +91,8 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
     // cacheability metadata of the same type is working (two links with cache
     // tags).
     $test_cases = [
-      // \Drupal\Core\RouteProcessor\RouteProcessorCurrent: 'route' cache context.
+      // \Drupal\Core\RouteProcessor\RouteProcessorCurrent: 'route' cache
+      // context.
       [
         'uri' => 'route:<current>',
         'cacheability' => (new BubbleableMetadata())->setCacheContexts(['route']),

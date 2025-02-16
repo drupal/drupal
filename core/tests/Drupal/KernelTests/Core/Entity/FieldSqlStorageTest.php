@@ -468,7 +468,8 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $this->assertEquals($foreign_key_name, $schema['foreign keys'][$foreign_key_name]['table'], 'Foreign key table name preserved through CRUD');
     $this->assertEquals('id', $schema['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'Foreign key column name preserved through CRUD');
 
-    // Update the field settings, it should update the foreign key definition too.
+    // Update the field settings, it should update the foreign key definition
+    // too.
     $foreign_key_name = 'color';
     $field_storage->setSetting('foreign_key_name', $foreign_key_name);
     $field_storage->save();

@@ -153,7 +153,8 @@ class View extends AreaPluginBase {
     $dependencies = parent::calculateDependencies();
 
     [$view_id] = explode(':', $this->options['view_to_insert'], 2);
-    // Don't call the current view, as it would result into an infinite recursion.
+    // Don't call the current view, as it would result into an infinite
+    // recursion.
     if ($view_id && $this->view->storage->id() != $view_id) {
       $view = $this->viewStorage->load($view_id);
       $dependencies[$view->getConfigDependencyKey()][] = $view->getConfigDependencyName();

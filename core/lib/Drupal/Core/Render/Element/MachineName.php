@@ -139,8 +139,9 @@ class MachineName extends Textfield {
       '#suffix' => '',
     ];
     // A form element that only wants to set one #machine_name property (usually
-    // 'source' only) would leave all other properties undefined, if the defaults
-    // were defined by an element plugin. Therefore, we apply the defaults here.
+    // 'source' only) would leave all other properties undefined, if the
+    // defaults were defined by an element plugin. Therefore, we apply the
+    // defaults here.
     $element['#machine_name'] += [
       'source' => ['label'],
       'target' => '#' . $element['#id'],
@@ -163,8 +164,8 @@ class MachineName extends Textfield {
       $form_state->set('machine_name.initial_values', $initial_values);
     }
 
-    // By default, machine names are restricted to Latin alphanumeric characters.
-    // So, default to LTR directionality.
+    // By default, machine names are restricted to Latin alphanumeric
+    // characters. So, default to LTR directionality.
     if (!isset($element['#attributes'])) {
       $element['#attributes'] = [];
     }

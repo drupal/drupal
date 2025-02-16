@@ -96,8 +96,8 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
    *   The app root.
    */
   public function __construct(ModuleHandlerInterface $module_handler, protected ThemeHandlerInterface $themeHandler, CacheBackendInterface $cache_backend, protected string $root) {
-    // Note that the parent construct is not called because this class does not use
-    // annotated class discovery.
+    // Note that the parent construct is not called because this class does not
+    // use annotated class discovery.
     $this->moduleHandler = $module_handler;
     $this->alterInfo('help_topics_info');
     $this->setCacheBackend($cache_backend, 'help_topics');

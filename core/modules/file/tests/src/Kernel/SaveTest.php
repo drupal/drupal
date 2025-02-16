@@ -61,8 +61,9 @@ class SaveTest extends FileManagedUnitTestBase {
     $this->assertEquals($file->isPermanent(), $loaded_file->isPermanent(), 'Status was saved correctly.');
     $this->assertEquals('en', $loaded_file->langcode->value, 'Langcode was saved correctly.');
 
-    // Try to insert a second file with the same name apart from case insensitivity
-    // to ensure the 'uri' index allows for filenames with different cases.
+    // Try to insert a second file with the same name apart from case
+    // insensitivity to ensure the 'uri' index allows for filenames with
+    // different cases.
     $uppercase_values = [
       'uid' => $account->id(),
       'filename' => 'DRUPLICON.txt',

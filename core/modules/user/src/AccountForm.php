@@ -105,7 +105,8 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       '#access' => $account->mail->access('edit'),
     ];
 
-    // Only show name field on registration form or user can change own username.
+    // Only show name field on registration form or user can change own
+    // username.
     $form['account']['name'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Username'),

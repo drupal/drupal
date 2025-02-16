@@ -90,7 +90,8 @@ class None extends PagerPluginBase {
    * {@inheritdoc}
    */
   public function executeCountQuery(&$count_query) {
-    // If we are displaying all items, never count. But we can update the count in post_execute.
+    // If we are displaying all items, never count. But we can update the count
+    // in post_execute.
   }
 
   /**

@@ -142,8 +142,9 @@ class FormValidator implements FormValidatorInterface {
    *   The unique string identifying the form.
    */
   protected function handleErrorsWithLimitedValidation(&$form, FormStateInterface &$form_state, $form_id) {
-    // If validation errors are limited then remove any non validated form values,
-    // so that only values that passed validation are left for submit callbacks.
+    // If validation errors are limited then remove any non validated form
+    // values, so that only values that passed validation are left for submit
+    // callbacks.
     $triggering_element = $form_state->getTriggeringElement();
     if (isset($triggering_element['#limit_validation_errors']) && $triggering_element['#limit_validation_errors'] !== FALSE) {
       $values = [];

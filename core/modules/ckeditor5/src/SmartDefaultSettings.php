@@ -145,7 +145,8 @@ final class SmartDefaultSettings {
     }
 
     // Add toolbar items based on HTML tags and attributes.
-    // NOTE: Helper updates $editor->settings by reference and returns info for the message.
+    // NOTE: Helper updates $editor->settings by reference and returns info for
+    // the message.
     $result = $this->addToolbarItemsToMatchHtmlElementsInFormat($text_format, $editor);
     if ($result !== NULL) {
       [$enabling_message_content, $enabled_for_attributes_message_content, $missing, $plugins_enabled] = $result;
@@ -217,8 +218,8 @@ final class SmartDefaultSettings {
     $this->addDefaultSettingsForEnabledConfigurablePlugins($editor);
 
     if ($has_html_restrictions) {
-      // Determine what tags/attributes are allowed in this text format that were
-      // not allowed previous to the switch.
+      // Determine what tags/attributes are allowed in this text format that
+      // were not allowed previous to the switch.
       $allowed_by_new_plugin_config = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($this->pluginManager->getEnabledDefinitions($editor)), $editor));
       $surplus_tags_attributes = $allowed_by_new_plugin_config->diff($old_editor_restrictions)->diff($missing_fundamental_tags);
       $attributes_to_tag = [];

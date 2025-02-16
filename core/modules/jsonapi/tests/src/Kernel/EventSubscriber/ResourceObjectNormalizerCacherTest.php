@@ -130,7 +130,8 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
   public function testMaxAgeCorrection(): void {
     $this->installEntitySchema('entity_test_computed_field');
 
-    // Use EntityTestComputedField since ComputedTestCacheableStringItemList has a max age of 800
+    // Use EntityTestComputedField since ComputedTestCacheableStringItemList has
+    // a max age of 800
     $baseMaxAge = 800;
     $entity = EntityTestComputedField::create([]);
     $entity->save();

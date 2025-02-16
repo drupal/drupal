@@ -119,13 +119,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     ];
     $connection_options['pdo'] += [
       \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-      // So we don't have to mess around with cursors and unbuffered queries by default.
+      // So we don't have to mess around with cursors and unbuffered queries by
+      // default.
       \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE,
       // Make sure MySQL returns all matched rows on update queries including
       // rows that actually didn't have to be updated because the values didn't
       // change. This matches common behavior among other database systems.
       \PDO::MYSQL_ATTR_FOUND_ROWS => TRUE,
-      // Because MySQL's prepared statements skip the query cache, because it's dumb.
+      // Because MySQL's prepared statements skip the query cache, because it's
+      // dumb.
       \PDO::ATTR_EMULATE_PREPARES => TRUE,
       // Limit SQL to a single statement like mysqli.
       \PDO::MYSQL_ATTR_MULTI_STATEMENTS => FALSE,

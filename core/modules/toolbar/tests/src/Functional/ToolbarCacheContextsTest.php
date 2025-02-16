@@ -84,8 +84,8 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
     // Test with default combination and permission to see toolbar.
     $this->assertToolbarCacheContexts(['user', 'session'], 'Expected cache contexts found for default combination and permission to see toolbar.');
 
-    // Test without user toolbar tab. User module is a required module so we have to
-    // manually remove the user toolbar tab.
+    // Test without user toolbar tab. User module is a required module so we
+    // have to manually remove the user toolbar tab.
     $this->installExtraModules(['toolbar_disable_user_toolbar']);
     $this->assertToolbarCacheContexts(['user.permissions'], 'Expected cache contexts found without user toolbar tab.');
 

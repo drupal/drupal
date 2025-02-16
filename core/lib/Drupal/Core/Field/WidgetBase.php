@@ -352,7 +352,8 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
     // Add a DIV around the delta receiving the Ajax effect.
     $delta = $element['#max_delta'];
-    // Construct an attribute to add to div for use as selector to set the focus on.
+    // Construct an attribute to add to div for use as selector to set the focus
+    // on.
     $button_parent = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
     $focus_attribute = 'data-drupal-selector="field-' . $button_parent['#field_name'] . '-more-focus-target"';
     $element[$delta]['#prefix'] = '<div class="ajax-new-content" ' . $focus_attribute . '>' . ($element[$delta]['#prefix'] ?? '');

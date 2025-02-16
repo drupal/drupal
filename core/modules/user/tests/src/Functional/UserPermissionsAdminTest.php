@@ -49,8 +49,8 @@ class UserPermissionsAdminTest extends BrowserTestBase {
       'view user email addresses',
     ], $role->getPermissions());
 
-    // Remove the first permission, resulting in a single permission in the first
-    // key of the array.
+    // Remove the first permission, resulting in a single permission in the
+    // first key of the array.
     $this->submitForm([
       'test_role[change own username]' => 0,
     ], 'Save permissions');

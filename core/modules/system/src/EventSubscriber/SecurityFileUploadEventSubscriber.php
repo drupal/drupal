@@ -83,9 +83,9 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
 
     if (!$insecure_uploads && in_array(strtolower($final_extension), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
       if (empty($extensions) || in_array('txt', $extensions, TRUE)) {
-        // Add .txt to potentially executable files prior to munging to help prevent
-        // exploits. This results in a filenames like filename.php being changed to
-        // filename.php.txt prior to munging.
+        // Add .txt to potentially executable files prior to munging to help
+        // prevent exploits. This results in a filenames like filename.php being
+        // changed to filename.php.txt prior to munging.
         $filename_parts[] = $final_extension;
         $final_extension = 'txt';
       }

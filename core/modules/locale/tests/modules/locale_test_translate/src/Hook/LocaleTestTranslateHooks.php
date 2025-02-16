@@ -35,8 +35,8 @@ class LocaleTestTranslateHooks {
   #[Hook('modules_installed')]
   public function modulesInstalled($modules, $is_syncing): void {
     // Ensure that writing to configuration during install does not cause
-    // \Drupal\locale\LocaleConfigSubscriber to create incorrect translations due
-    // the configuration langcode and data being out-of-sync.
+    // \Drupal\locale\LocaleConfigSubscriber to create incorrect translations
+    // due the configuration langcode and data being out-of-sync.
     \Drupal::configFactory()->getEditable('locale_test_translate.settings')->set('key_set_during_install', TRUE)->save();
   }
 

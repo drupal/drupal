@@ -219,8 +219,8 @@ class FieldHooks {
     // function actually just marks the data and fields as deleted, leaving the
     // garbage collection for a separate process, because it is not always
     // possible to delete this much data in a single page request (particularly
-    // since for some field types, the deletion is more than just a simple DELETE
-    // query).
+    // since for some field types, the deletion is more than just a simple
+    // DELETE query).
     foreach ($fields as $field) {
       $field->delete();
     }
@@ -258,9 +258,9 @@ class FieldHooks {
   public function configImportStepsAlter(&$sync_steps, ConfigImporter $config_importer): void {
     $field_storages = ConfigImporterFieldPurger::getFieldStoragesToPurge($config_importer->getStorageComparer()->getSourceStorage()->read('core.extension'), $config_importer->getStorageComparer()->getChangelist('delete'));
     if ($field_storages) {
-      // Add a step to the beginning of the configuration synchronization process
-      // to purge field data where the module that provides the field is being
-      // uninstalled.
+      // Add a step to the beginning of the configuration synchronization
+      // process to purge field data where the module that provides the field is
+      // being uninstalled.
       array_unshift($sync_steps, ['\Drupal\field\ConfigImporterFieldPurger', 'process']);
     }
   }

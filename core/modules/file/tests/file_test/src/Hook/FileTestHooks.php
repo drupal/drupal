@@ -24,8 +24,8 @@ class FileTestHooks {
   public function fileLoad($files): void {
     foreach ($files as $file) {
       FileTestHelper::logCall('load', [$file->id()]);
-      // Assign a value on the object so that we can test that the $file is passed
-      // by reference.
+      // Assign a value on the object so that we can test that the $file is
+      // passed by reference.
       $file->file_test['loaded'] = TRUE;
     }
   }
@@ -115,8 +115,8 @@ class FileTestHooks {
         }
         // Clean up Windows paths.
         $path = str_replace('\\', '/', $path);
-        // Serve files with one of the CDN extensions from CDN 1, all others from
-        // CDN 2.
+        // Serve files with one of the CDN extensions from CDN 1, all others
+        // from CDN 2.
         $pathinfo = pathinfo($path);
         if (array_key_exists('extension', $pathinfo) && in_array($pathinfo['extension'], $cdn_extensions)) {
           $uri = FileTestCdn::First->value . '/' . $path;
@@ -146,8 +146,8 @@ class FileTestHooks {
       }
     }
     elseif ($alter_mode == 'protocol-relative') {
-      // Only serve shipped files and public created files with protocol-relative
-      // URLs.
+      // Only serve shipped files and public created files with
+      // protocol-relative URLs.
       $scheme = $stream_wrapper_manager::getScheme($uri);
       if (!$scheme || $scheme == 'public') {
         // Shipped files.

@@ -231,15 +231,16 @@ class ViewUI implements ViewEntityInterface {
 
     [$was_defaulted, $is_defaulted, $revert] = $this->getOverrideValues($form, $form_state);
 
-    // Based on the user's choice in the display dropdown, determine which display
-    // these changes apply to.
+    // Based on the user's choice in the display dropdown, determine which
+    // display these changes apply to.
     $display_id = $form_state->get('display_id');
     if ($revert) {
       // If it's revert just change the override and return.
       $display = &$this->getExecutable()->displayHandlers->get($display_id);
       $display->optionsOverride($form, $form_state);
 
-      // Don't execute the normal submit handling but still store the changed view into cache.
+      // Don't execute the normal submit handling but still store the changed
+      // view into cache.
       $this->cacheSet();
       return;
     }
@@ -347,7 +348,8 @@ class ViewUI implements ViewEntityInterface {
     ];
 
     // Compatibility, to be removed later: // TODO: When is "later"?
-    // We used to set these items on the form, but now we want them on the $form_state:
+    // We used to set these items on the form, but now we want them on the
+    // $form_state:
     if (isset($form['#title'])) {
       $form_state->set('title', $form['#title']);
     }
@@ -364,8 +366,9 @@ class ViewUI implements ViewEntityInterface {
   public function getOverrideValues($form, FormStateInterface $form_state) {
     // Make sure the dropdown exists in the first place.
     if ($form_state->hasValue(['override', 'dropdown'])) {
-      // #default_value is used to determine whether it was the default value or not.
-      // So the available options are: $display, 'default' and 'default_revert', not 'defaults'.
+      // #default_value is used to determine whether it was the default value or
+      // not. So the available options are: $display, 'default' and
+      // 'default_revert', not 'defaults'.
       $was_defaulted = ($form['override']['dropdown']['#default_value'] === 'defaults');
       $dropdown = $form_state->getValue(['override', 'dropdown']);
       $is_defaulted = ($dropdown === 'default');
@@ -404,8 +407,8 @@ class ViewUI implements ViewEntityInterface {
 
     $stack = [implode('-', array_filter([$key, $this->id(), $display_id, $type, $id])), $key, $display_id, $type, $id];
     // If we're being asked to add this form to the bottom of the stack, no
-    // special logic is required. Our work is equally easy if we were asked to add
-    // to the top of the stack, but there's nothing in it yet.
+    // special logic is required. Our work is equally easy if we were asked to
+    // add to the top of the stack, but there's nothing in it yet.
     if (!$top || empty($this->stack)) {
       $this->stack[] = $stack;
     }
@@ -464,7 +467,8 @@ class ViewUI implements ViewEntityInterface {
     }
 
     if (!$form_state->isValueEmpty('name') && is_array($form_state->getValue('name'))) {
-      // Loop through each of the items that were checked and add them to the view.
+      // Loop through each of the items that were checked and add them to the
+      // view.
       foreach (array_keys(array_filter($form_state->getValue('name'))) as $field) {
         [$table, $field] = explode('.', $field, 2);
 
@@ -475,7 +479,8 @@ class ViewUI implements ViewEntityInterface {
 
         // Check to see if we have group by settings
         $key = $type;
-        // Footer,header and empty text have a different internal handler type(area).
+        // Footer,header and empty text have a different internal handler
+        // type(area).
         if (isset($types[$type]['type'])) {
           $key = $types[$type]['type'];
         }
@@ -488,7 +493,8 @@ class ViewUI implements ViewEntityInterface {
           $this->addFormToStack('handler-group', $display_id, $type, $id);
         }
 
-        // Check to see if this type has settings, if so add the settings form first
+        // Check to see if this type has settings, if so add the settings form
+        // first
         if ($handler && $handler->hasExtraOptions()) {
           $this->addFormToStack('handler-extra', $display_id, $type, $id);
         }
@@ -529,7 +535,8 @@ class ViewUI implements ViewEntityInterface {
   }
 
   public function renderPreview($display_id, $args = []) {
-    // Save the current path so it can be restored before returning from this function.
+    // Save the current path so it can be restored before returning from this
+    // function.
     $request_stack = \Drupal::requestStack();
     $current_request = $request_stack->getCurrentRequest();
     $executable = $this->getExecutable();

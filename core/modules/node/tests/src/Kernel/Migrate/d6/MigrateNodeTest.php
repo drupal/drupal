@@ -158,7 +158,8 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $node = Node::load(12);
     $this->assertSame('zu', $manager->getTranslationMetadata($node->getTranslation('en'))->getSource());
 
-    // Node 11 is a translation of node 10, and should not be imported separately.
+    // Node 11 is a translation of node 10, and should not be imported
+    // separately.
     $this->assertNull(Node::load(11), "Node 11 doesn't exist in D8, it was a translation");
 
     // Rerun migration with two source database changes.

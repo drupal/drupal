@@ -101,7 +101,8 @@ function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_sta
   }
 
   if ($form_state->get('ckeditor5_is_active')) {
-    // Delete all existing validation messages, replace them with the current set.
+    // Delete all existing validation messages, replace them with the current
+    // set.
     $response->addCommand(new RemoveCommand('#ckeditor5-realtime-validation-messages-container > *'));
     $messages = \Drupal::messenger()->deleteAll();
     foreach ($messages as $type => $messages_by_type) {

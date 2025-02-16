@@ -87,7 +87,8 @@ class Search extends ArgumentPluginBase {
 
       $search_condition = $this->view->query->getConnection()->condition('AND');
 
-      // Create a new join to relate the 'search_total' table to our current 'search_index' table.
+      // Create a new join to relate the 'search_total' table to our current
+      // 'search_index' table.
       $definition = [
         'table' => 'search_total',
         'field' => 'word',

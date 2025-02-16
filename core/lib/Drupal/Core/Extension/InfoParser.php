@@ -31,9 +31,9 @@ class InfoParser extends InfoParserDynamic {
     }
     else {
       // Just use a static file cache when there is no prefix. This code path is
-      // triggered when info is parsed prior to \Drupal\Core\DrupalKernel::boot()
-      // running. This occurs during the very early installer and in some test
-      // scenarios.
+      // triggered when info is parsed prior to
+      // \Drupal\Core\DrupalKernel::boot() running. This occurs during the very
+      // early installer and in some test scenarios.
       $this->fileCache = new FileCache('info_parser', 'info_parser');
     }
   }

@@ -43,7 +43,8 @@ class ImageResize extends CKEditor5PluginDefault implements CKEditor5PluginConfi
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    // Match the config schema structure at ckeditor5.plugin.ckeditor5_imageResize.
+    // Match the config schema structure at
+    // ckeditor5.plugin.ckeditor5_imageResize.
     $form_value = $form_state->getValue('allow_resize');
     $form_state->setValue('allow_resize', (bool) $form_value);
   }

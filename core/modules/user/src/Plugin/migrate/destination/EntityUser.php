@@ -140,9 +140,9 @@ class EntityUser extends EntityContentBase {
   protected function save(ContentEntityInterface $entity, array $old_destination_id_values = []) {
     // Do not overwrite the root account password.
     if ($entity->id() != 1) {
-      // Set the pre_hashed password so that the PasswordItem field does not hash
-      // already hashed passwords. If the md5_passwords configuration option is
-      // set we need to rehash the password and prefix with a U.
+      // Set the pre_hashed password so that the PasswordItem field does not
+      // hash already hashed passwords. If the md5_passwords configuration
+      // option is set we need to rehash the password and prefix with a U.
       // @see \Drupal\Core\Field\Plugin\Field\FieldType\PasswordItem::preSave()
       $entity->pass->pre_hashed = TRUE;
       if (isset($this->configuration['md5_passwords'])) {

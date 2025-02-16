@@ -86,9 +86,9 @@ class FieldUiHooks {
           'empty' => '',
         ],
       ],
-          // Provide a dedicated template for new storage options as their styling
-          // is quite different from a typical form element, so it works best to not
-          // include default form element classes.
+      // Provide a dedicated template for new storage options as their styling
+      // is quite different from a typical form element, so it works best to not
+      // include default form element classes.
       'form_element__new_storage_type' => [
         'base hook' => 'form_element',
         'render element' => 'element',

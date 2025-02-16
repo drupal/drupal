@@ -106,8 +106,8 @@ class DateTimeFieldItemList extends FieldItemList {
       }
       $value = $date->format($format);
       // We only provide a default value for the first item, as do all fields.
-      // Otherwise, there is no way to clear out unwanted values on multiple value
-      // fields.
+      // Otherwise, there is no way to clear out unwanted values on multiple
+      // value fields.
       $default_value = [
         [
           'value' => $value,

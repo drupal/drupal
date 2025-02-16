@@ -121,7 +121,8 @@ class FilterCaption extends FilterBase implements ContainerFactoryPluginInterfac
         ];
         $altered_html = \Drupal::service('renderer')->render($filter_caption);
 
-        // Load the altered HTML into a new DOMDocument and retrieve the element.
+        // Load the altered HTML into a new DOMDocument and retrieve the
+        // element.
         $updated_nodes = Html::load($altered_html)->getElementsByTagName('body')
           ->item(0)
           ->childNodes;

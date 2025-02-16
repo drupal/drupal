@@ -1190,8 +1190,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // of how the element is themed or whether JavaScript is used to change the
     // control's attributes. However, it's good UI to let the user know that
     // input is not wanted for the control. HTML supports two attributes for:
-    // this: https://www.w3.org/TR/html401/interact/forms.html#h-17.12. If a form
-    // wants to start a control off with one of these attributes for UI
+    // this: https://www.w3.org/TR/html401/interact/forms.html#h-17.12. If a
+    // form wants to start a control off with one of these attributes for UI
     // purposes, only, but still allow input to be processed if it's submitted,
     // it can set the desired attribute in #attributes directly rather than
     // using #disabled. However, developers should think carefully about the

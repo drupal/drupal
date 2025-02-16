@@ -56,8 +56,9 @@ class FileSystemTest extends KernelTestBase {
     $this->expectException(DirectoryNotReadyException::class);
     $this->expectExceptionMessage("The specified file 'public://test.txt' could not be copied because the destination directory 'public://subdirectory' is not properly configured. This may be caused by a problem with file or directory permissions.");
     touch('public://test.txt');
-    // public://subdirectory has not been created, so \Drupal::service('file_system')->prepareDirectory()
-    // will fail, causing copy() to throw DirectoryNotReadyException.
+    // public://subdirectory has not been created, so
+    // \Drupal::service('file_system')->prepareDirectory() will fail, causing
+    // copy() to throw DirectoryNotReadyException.
     $this->fileSystem->copy('public://test.txt', 'public://subdirectory/test.txt');
   }
 

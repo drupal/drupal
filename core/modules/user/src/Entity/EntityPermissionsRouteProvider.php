@@ -93,8 +93,8 @@ class EntityPermissionsRouteProvider implements EntityRouteProviderInterface, En
         '_permission' => 'administer permissions',
       ],
       [
-        // Indicate that Drupal\Core\Entity\Enhancer\EntityBundleRouteEnhancer should
-        // set the bundle parameter.
+        // Indicate that Drupal\Core\Entity\Enhancer\EntityBundleRouteEnhancer
+        // should set the bundle parameter.
         '_field_ui' => TRUE,
         'parameters' => [
           $entity_type_id => [

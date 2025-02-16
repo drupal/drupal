@@ -410,8 +410,9 @@ class ConfigImporterTest extends KernelTestBase {
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     // Both entities are deleted. ConfigTest::postSave() causes updates of the
-    // dependency entity to delete the dependent entity. Since the dependency depends on
-    // the dependent, removing the dependent causes the dependency to be removed.
+    // dependency entity to delete the dependent entity. Since the dependency
+    // depends on the dependent, removing the dependent causes the dependency to
+    // be removed.
     $this->assertNull($entity_storage->load('dependency'));
     $this->assertNull($entity_storage->load('dependent'));
     $logs = $config_importer->getErrors();
@@ -433,7 +434,8 @@ class ConfigImporterTest extends KernelTestBase {
       'label' => 'Dependency',
       'weight' => 0,
       'uuid' => $uuid->generate(),
-      // Add a dependency on dependent, to make sure this delete is synced first.
+      // Add a dependency on dependent, to make sure this delete is synced
+      // first.
       'dependencies' => [
         'config' => [$name_dependent],
       ],

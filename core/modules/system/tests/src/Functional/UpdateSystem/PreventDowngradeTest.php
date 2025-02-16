@@ -84,7 +84,8 @@ class PreventDowngradeTest extends UpdatePathTestBase {
       ->condition('name', 'core.extension')
       ->execute();
 
-    // Set the schema for 'downgrade_prevention_test' to the update function, 11102.
+    // Set the schema for 'downgrade_prevention_test' to the update function,
+    // 11102.
     $database->update('key_value')
       ->fields([
         'value' => 'i:11102;',

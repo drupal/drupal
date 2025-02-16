@@ -223,7 +223,8 @@ function _batch_progress_page() {
           'batch_progress_meta_refresh',
         ],
       ],
-      // Adds JavaScript code and settings for clients where JavaScript is enabled.
+      // Adds JavaScript code and settings for clients where JavaScript is
+      // enabled.
       'drupalSettings' => [
         'batch' => [
           'errorMessage' => $current_set['error_message'] . '<br />' . $batch['error_message'],

@@ -156,7 +156,8 @@ class FormTest extends BrowserTestBase {
         }
       }
     }
-    // Clear the expected form error messages so they don't appear as exceptions.
+    // Clear the expected form error messages so they don't appear as
+    // exceptions.
     \Drupal::messenger()->deleteAll();
   }
 
@@ -752,7 +753,8 @@ class FormTest extends BrowserTestBase {
     }
 
     // Submit the form with no input, as the browser does for disabled elements,
-    // and fetch the $form_state->getValues() that is passed to the submit handler.
+    // and fetch the $form_state->getValues() that is passed to the submit
+    // handler.
     $this->drupalGet('form-test/disabled-elements');
     $this->submitForm([], 'Submit');
     $returned_values['normal'] = Json::decode($this->getSession()->getPage()->getContent());

@@ -659,15 +659,17 @@ class LocaleConfigManager {
     // site language is not English.
     $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
     if ($default_langcode != 'en') {
-      // Update active configuration copies of all prior shipped configuration if
-      // they are still English. It is not enough to change configuration shipped
-      // with the components just installed, because installing a component such
-      // as views may bring in default configuration from prior components.
+      // Update active configuration copies of all prior shipped configuration
+      // if they are still English. It is not enough to change configuration
+      // shipped with the components just installed, because installing a
+      // component such as views may bring in default configuration from prior
+      // components.
       $names = $this->getComponentNames();
       foreach ($names as $name) {
         $config = $this->configFactory->reset($name)->getEditable($name);
         // Should only update if still exists in active configuration. If locale
-        // module is enabled later, then some configuration may not exist anymore.
+        // module is enabled later, then some configuration may not exist
+        // anymore.
         if (!$config->isNew()) {
           $typed_config = $this->typedConfigManager->createFromNameAndData($config->getName(), $config->getRawData());
           $langcode = $config->get('langcode');

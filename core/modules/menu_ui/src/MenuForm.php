@@ -234,7 +234,8 @@ class MenuForm extends EntityForm {
       // Use a dedicated menu tree access check manipulator as users editing
       // this form, granted with 'administer menu' permission, should be able to
       // access menu links with inaccessible routes. The default menu tree
-      // manipulator only allows the access to menu links with accessible routes.
+      // manipulator only allows the access to menu links with accessible
+      // routes.
       // @see \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators::checkAccess()
       // @see \Drupal\menu_ui\Menu\MenuUiMenuTreeManipulators::checkAccess()
       ['callable' => 'menu_ui.menu_tree_manipulators:checkAccess'],
@@ -340,7 +341,8 @@ class MenuForm extends EntityForm {
           $form['links'][$id]['#attributes']['class'][] = 'menu-link-content--pending-revision';
         }
 
-        // TableDrag: Sort the table row according to its existing/configured weight.
+        // TableDrag: Sort the table row according to its existing/configured
+        // weight.
         $form['links'][$id]['#weight'] = $element['#item']->link->getWeight();
 
         // Add special classes to be used for tabledrag.js.

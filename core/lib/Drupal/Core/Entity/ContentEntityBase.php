@@ -233,8 +233,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
             }
           }
           else {
-            // We save translatable fields such as the publishing status of a node
-            // into an entity key array keyed by langcode as a performance
+            // We save translatable fields such as the publishing status of a
+            // node into an entity key array keyed by langcode as a performance
             // optimization, so we don't have to go through TypedData when we
             // need these values.
             foreach ($this->values[$field_name] as $langcode => $field_value) {

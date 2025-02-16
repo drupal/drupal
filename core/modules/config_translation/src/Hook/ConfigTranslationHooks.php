@@ -111,7 +111,8 @@ class ConfigTranslationHooks {
         }
         elseif ($entity_type_id == 'field_config') {
           $class = 'Drupal\config_translation\Controller\ConfigTranslationFieldListBuilder';
-          // Will be filled in dynamically, see \Drupal\field\Entity\FieldConfig::linkTemplates().
+          // Will be filled in dynamically, see
+          // \Drupal\field\Entity\FieldConfig::linkTemplates().
           $entity_type->setLinkTemplate('config-translation-overview', $entity_type->getLinkTemplate('edit-form') . '/translate');
         }
         else {
@@ -207,9 +208,9 @@ class ConfigTranslationHooks {
       'sequence' => '\Drupal\config_translation\FormElement\ListElement',
       'plural_label' => '\Drupal\config_translation\FormElement\PluralVariants',
     ];
-    // Enhance the text and date type definitions with classes to generate proper
-    // form elements in ConfigTranslationFormBase. Other translatable types will
-    // appear as a one line textfield.
+    // Enhance the text and date type definitions with classes to generate
+    // proper form elements in ConfigTranslationFormBase. Other translatable
+    // types will appear as a one line textfield.
     foreach ($definitions as $type => &$definition) {
       if (isset($map[$type]) && !isset($definition['form_element_class'])) {
         $definition['form_element_class'] = $map[$type];

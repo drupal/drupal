@@ -328,7 +328,8 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
       // Replace the form submit button label.
       $form['actions']['submit']['#value'] = $this->t('Apply to selected items');
 
-      // Ensure a consistent container for filters/operations in the view header.
+      // Ensure a consistent container for filters/operations in the view
+      // header.
       $form['header'] = [
         '#type' => 'container',
         '#weight' => -100,

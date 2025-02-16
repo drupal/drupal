@@ -103,8 +103,8 @@ class FormTestLimitValidationErrorsForm extends FormBase {
    * {@inheritdoc}
    */
   public function partialSubmitForm(array &$form, FormStateInterface $form_state) {
-    // The title has not been validated, thus its value - in case of the test case
-    // an empty string - may not be set.
+    // The title has not been validated, thus its value - in case of the test
+    // case an empty string - may not be set.
     if (!$form_state->hasValue('title') && $form_state->hasValue('test')) {
       $this->messenger()->addStatus('Only validated values appear in the form values.');
     }

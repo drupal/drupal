@@ -67,8 +67,8 @@ class Link extends RenderElementBase {
     // in #options.
     $element += ['#options' => []];
     // However, within the scope of renderable elements, #attributes is a valid
-    // way to specify attributes, too. Take them into account, but do not override
-    // attributes from #options.
+    // way to specify attributes, too. Take them into account, but do not
+    // override attributes from #options.
     if (isset($element['#attributes'])) {
       $element['#options'] += ['attributes' => []];
       $element['#options']['attributes'] += $element['#attributes'];

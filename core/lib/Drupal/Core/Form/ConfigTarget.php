@@ -217,8 +217,8 @@ final class ConfigTarget {
     if ($this->toConfig) {
       $value = ($this->toConfig)($value, $form_state);
       if ($is_multi_target) {
-        // If we're targeting multiple property paths, $value needs to be an array
-        // with every targeted property path.
+        // If we're targeting multiple property paths, $value needs to be an
+        // array with every targeted property path.
         if (!is_array($value)) {
           throw new \LogicException(sprintf('The toConfig callable returned a %s, but it must be an array with a key-value pair for each of the targeted property paths.', gettype($value)));
         }

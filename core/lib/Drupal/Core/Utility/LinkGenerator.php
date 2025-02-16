@@ -82,7 +82,8 @@ class LinkGenerator implements LinkGeneratorInterface {
       $text = $this->renderer->render($text);
     }
 
-    // Start building a structured representation of our link to be altered later.
+    // Start building a structured representation of our link to be altered
+    // later.
     $variables = [
       'text' => $text,
       'url' => $url,
@@ -139,8 +140,8 @@ class LinkGenerator implements LinkGeneratorInterface {
       }
     }
 
-    // Remove all HTML and PHP tags from a tooltip, calling expensive strip_tags()
-    // only when a quick strpos() gives suspicion tags are present.
+    // Remove all HTML and PHP tags from a tooltip, calling expensive
+    // strip_tags() only when a quick strpos() gives suspicion tags are present.
     if (isset($variables['options']['attributes']['title']) && str_contains($variables['options']['attributes']['title'], '<')) {
       $variables['options']['attributes']['title'] = strip_tags($variables['options']['attributes']['title']);
     }

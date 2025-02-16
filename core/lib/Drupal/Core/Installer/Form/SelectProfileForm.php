@@ -39,8 +39,8 @@ class SelectProfileForm extends FormBase {
     foreach ($install_state['profiles'] as $profile) {
       /** @var \Drupal\Core\Extension\Extension $profile */
       $details = install_profile_info($profile->getName());
-      // Don't show hidden profiles. This is used by to hide the testing profile,
-      // which only exists to speed up test runs.
+      // Don't show hidden profiles. This is used by to hide the testing
+      // profile, which only exists to speed up test runs.
       if ($details['hidden'] === TRUE && !drupal_valid_test_ua()) {
         continue;
       }
@@ -57,9 +57,9 @@ class SelectProfileForm extends FormBase {
     natcasesort($names);
     if (isset($names['minimal'])) {
       // If the expert ("Minimal") core profile is present, put it in front of
-      // any non-core profiles rather than including it with them alphabetically,
-      // since the other profiles might be intended to group together in a
-      // particular way.
+      // any non-core profiles rather than including it with them
+      // alphabetically, since the other profiles might be intended to group
+      // together in a particular way.
       $names = ['minimal' => $names['minimal']] + $names;
     }
     if (isset($names['standard'])) {

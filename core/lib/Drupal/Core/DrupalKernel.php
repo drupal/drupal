@@ -1019,9 +1019,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       if ($test_prefix = drupal_valid_test_ua()) {
         $test_db = new TestDatabase($test_prefix);
         // Only code that interfaces directly with tests should rely on this
-        // constant; e.g., the error/exception handler conditionally adds further
-        // error information into HTTP response headers that are consumed by
-        // the internal browser.
+        // constant; e.g., the error/exception handler conditionally adds
+        // further error information into HTTP response headers that are
+        // consumed by the internal browser.
         define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
 
         // Log fatal errors to the test site directory.

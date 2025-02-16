@@ -79,7 +79,8 @@ class TokenHooks {
             $bubbleable_metadata->addCacheContexts(['url.site']);
             break;
 
-          // These tokens are default variations on the chained tokens handled below.
+          // These tokens are default variations on the chained tokens handled
+          // below.
           case 'created':
             $date_format = $dateFormatStorage->load('medium');
             $bubbleable_metadata->addCacheableDependency($date_format);

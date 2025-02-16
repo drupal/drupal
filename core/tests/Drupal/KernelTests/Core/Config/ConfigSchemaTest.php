@@ -261,7 +261,8 @@ class ConfigSchemaTest extends KernelTestBase {
     // Most complex case, get metadata for actual configuration element.
     $effects = \Drupal::service('config.typed')->get('image.style.medium')->get('effects');
     $definition = $effects->get('bddf0d06-42f9-4c75-a700-a33cafa25ea0')->get('data')->getDataDefinition()->toArray();
-    // This should be the schema for image.effect.image_scale, reuse previous one.
+    // This should be the schema for image.effect.image_scale, reuse previous
+    // one.
     $expected['type'] = 'image.effect.image_scale';
     $expected['mapping']['width']['requiredKey'] = TRUE;
     $expected['mapping']['height']['requiredKey'] = TRUE;
@@ -288,7 +289,8 @@ class ConfigSchemaTest extends KernelTestBase {
 
     // More complex, several level deep test.
     $definition = \Drupal::service('config.typed')->getDefinition('config_schema_test.some_schema.some_module.section_one.subsection');
-    // This should be the schema of config_schema_test.some_schema.some_module.*.*.
+    // This should be the schema of
+    // config_schema_test.some_schema.some_module.*.*.
     $expected = [];
     $expected['label'] = 'Schema multiple filesystem marker test';
     $expected['class'] = Mapping::class;

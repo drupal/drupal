@@ -190,7 +190,8 @@ class PagerTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
     $this->assertSession()->pageTextContains('20 items');
 
-    // Test that the override element is only displayed on pager plugin selection form.
+    // Test that the override element is only displayed on pager plugin
+    // selection form.
     $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager');
     $this->assertSession()->fieldValueEquals('override[dropdown]', 'page_1');
     $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager_options');
@@ -222,7 +223,8 @@ class PagerTest extends ViewTestBase {
    */
   public function testNoLimit(): void {
     // Create 11 nodes and make sure that everyone is returned.
-    // We create 11 nodes, because the default pager plugin had 10 items per page.
+    // We create 11 nodes, because the default pager plugin had 10 items per
+    // page.
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
@@ -269,7 +271,8 @@ class PagerTest extends ViewTestBase {
    */
   public function testLimit(): void {
     // Create 11 nodes and make sure that everyone is returned.
-    // We create 11 nodes, because the default pager plugin had 10 items per page.
+    // We create 11 nodes, because the default pager plugin had 10 items per
+    // page.
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
@@ -303,7 +306,8 @@ class PagerTest extends ViewTestBase {
    */
   public function testNormalPager(): void {
     // Create 11 nodes and make sure that everyone is returned.
-    // We create 11 nodes, because the default pager plugin had 10 items per page.
+    // We create 11 nodes, because the default pager plugin had 10 items per
+    // page.
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();
@@ -415,7 +419,8 @@ class PagerTest extends ViewTestBase {
    */
   public function testRenderNullPager(): void {
     // Create 11 nodes and make sure that everyone is returned.
-    // We create 11 nodes, because the default pager plugin had 10 items per page.
+    // We create 11 nodes, because the default pager plugin had 10 items per
+    // page.
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
       $this->drupalCreateNode();

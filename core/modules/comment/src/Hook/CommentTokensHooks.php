@@ -138,8 +138,8 @@ class CommentTokensHooks {
 
           case 'mail':
             $mail = $comment->getAuthorEmail();
-            // Add the user cacheability metadata in case the author of the comment
-            // is not the anonymous user.
+            // Add the user cacheability metadata in case the author of the
+            // comment is not the anonymous user.
             if ($comment->getOwnerId()) {
               $bubbleable_metadata->addCacheableDependency($comment->getOwner());
             }
@@ -155,8 +155,8 @@ class CommentTokensHooks {
             break;
 
           case 'body':
-            // "processed" returns a \Drupal\Component\Render\MarkupInterface via
-            // check_markup().
+            // "processed" returns a \Drupal\Component\Render\MarkupInterface
+            // via check_markup().
             $replacements[$original] = $comment->comment_body->processed;
             break;
 
@@ -177,8 +177,8 @@ class CommentTokensHooks {
 
           case 'author':
             $name = $comment->getAuthorName();
-            // Add the user cacheability metadata in case the author of the comment
-            // is not the anonymous user.
+            // Add the user cacheability metadata in case the author of the
+            // comment is not the anonymous user.
             if ($comment->getOwnerId()) {
               $bubbleable_metadata->addCacheableDependency($comment->getOwner());
             }

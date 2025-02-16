@@ -163,8 +163,8 @@ class ViewsViewsHooks {
         $data = NestedArray::mergeDeep($data, $views_data->getViewsData());
       }
     }
-    // Field modules can implement hook_field_views_data() to override the default
-    // behavior for adding fields.
+    // Field modules can implement hook_field_views_data() to override the
+    // default behavior for adding fields.
     $module_handler = \Drupal::moduleHandler();
     $entity_type_manager = \Drupal::entityTypeManager();
     if ($entity_type_manager->hasDefinition('field_storage_config')) {
@@ -252,8 +252,8 @@ class ViewsViewsHooks {
           'base field' => $target_entity_type->getKey('id'),
           'relationship field' => $field_name . '_target_id',
         ];
-        // Provide a reverse relationship for the entity type that is referenced by
-        // the field.
+        // Provide a reverse relationship for the entity type that is referenced
+        // by the field.
         $args['@entity'] = $entity_type->getLabel();
         $args['@label'] = $target_entity_type->getSingularLabel();
         $pseudo_field_name = 'reverse__' . $entity_type_id . '__' . $field_name;

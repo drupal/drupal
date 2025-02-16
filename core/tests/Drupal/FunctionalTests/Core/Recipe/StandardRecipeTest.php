@@ -115,6 +115,7 @@ class StandardRecipeTest extends StandardTest {
 
     // Ensure we have truly rebuilt the standard profile using recipes.
     // Uncomment the code below to see the differences in a single file.
+    // phpcs:ignore Drupal.Files.LineLength
     // $this->assertSame($sync->read('node.settings'), $active->read('node.settings'));
     $comparer = $this->configImporter()->getStorageComparer();
     $expected_list = $comparer->getEmptyChangelist();

@@ -612,7 +612,8 @@ class EntityResource {
     if ($response instanceof CacheableResponseInterface) {
       $response->addCacheableDependency($entity);
 
-      // Cacheability from the classes subscribed to CollectRelationshipMetaEvent is added to the response.
+      // Cacheability from the classes subscribed to
+      // CollectRelationshipMetaEvent is added to the response.
       $response->addCacheableDependency($collect_meta_event);
     }
 

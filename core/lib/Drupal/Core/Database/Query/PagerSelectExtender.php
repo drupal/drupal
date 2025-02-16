@@ -77,7 +77,8 @@ class PagerSelectExtender extends SelectExtender {
     $pager = $this->connection->getPagerManager()->createPager($total_items, $this->limit, $this->element);
     $this->range($pager->getCurrentPage() * $this->limit, $this->limit);
 
-    // Now that we've added our pager-based range instructions, run the query normally.
+    // Now that we've added our pager-based range instructions, run the query
+    // normally.
     return $this->query->execute();
   }
 

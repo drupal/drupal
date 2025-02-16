@@ -240,8 +240,8 @@ class AliasManager implements AliasManagerInterface {
    *   An optional path for which an alias is being inserted.
    */
   protected function pathAliasPrefixListRebuild($path = NULL) {
-    // When paths are inserted, only rebuild the prefix list if the path has a top
-    // level component which is not already in the prefix list.
+    // When paths are inserted, only rebuild the prefix list if the path has a
+    // top level component which is not already in the prefix list.
     if (!empty($path)) {
       if ($this->pathPrefixes->get(strtok($path, '/'))) {
         return;

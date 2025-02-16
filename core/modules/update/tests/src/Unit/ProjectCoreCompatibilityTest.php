@@ -73,7 +73,8 @@ class ProjectCoreCompatibilityTest extends UnitTestCase {
         '8.9.2' => [],
       ],
     ];
-    // Confirm that with no core supported branches the releases are not changed.
+    // Confirm that with no core supported branches the releases are not
+    // changed.
     $test_cases['no 9 releases, no supported branches'] += [
       'expected_releases' => $test_cases['no 9 releases, no supported branches']['project_data']['releases'],
       'expected_security_updates' => $test_cases['no 9 releases, no supported branches']['project_data']['security updates'],

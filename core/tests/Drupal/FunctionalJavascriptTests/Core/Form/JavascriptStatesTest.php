@@ -138,7 +138,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $radios_checked_element = $page->findField('radios_checked_when_checkbox_trigger_checked');
     $this->assertNotEmpty($radios_checked_element);
 
-    // We want to select the specific radio buttons, not the whole radios field itself.
+    // We want to select the specific radio buttons, not the whole radios field
+    // itself.
     $radios_all_disabled_value1 = $this->xpath('//input[@name=:name][@value=:value]', [':name' => 'radios_all_disabled_when_checkbox_trigger_checked', ':value' => 'value1']);
     $this->assertCount(1, $radios_all_disabled_value1);
     // We want to access the radio button directly for the rest of the test, so

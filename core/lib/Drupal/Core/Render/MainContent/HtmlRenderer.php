@@ -145,7 +145,8 @@ class HtmlRenderer implements MainContentRendererInterface {
     ];
 
     // The special page regions will appear directly in html.html.twig, not in
-    // page.html.twig, hence add them here, just before rendering html.html.twig.
+    // page.html.twig, hence add them here, just before rendering
+    // html.html.twig.
     $this->buildPageTopAndBottom($html);
 
     // Render, but don't replace placeholders yet, because that happens later in

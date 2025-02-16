@@ -110,8 +110,8 @@ class ToolbarHooks {
     // @see toolbar_subtrees_jsonp()
     [$hash, $hash_cacheability] = _toolbar_get_subtrees_hash();
     $subtrees_attached['drupalSettings']['toolbar'] = ['subtreesHash' => $hash];
-    // The administration element has a link that is themed to correspond to
-    // a toolbar tray. The tray contains the full administrative menu of the site.
+    // The administration element has a link that is themed to correspond to a
+    // toolbar tray. The tray contains the full administrative menu of the site.
     $items['administration'] = [
       '#type' => 'toolbar_item',
       'tab' => [
@@ -124,11 +124,12 @@ class ToolbarHooks {
             'toolbar-icon',
             'toolbar-icon-menu',
           ],
-                  // A data attribute that indicates to the client to defer loading of
-                  // the admin menu subtrees until this tab is activated. Admin menu
-                  // subtrees will not render to the DOM if this attribute is removed.
-                  // The value of the attribute is intentionally left blank. Only the
-                  // presence of the attribute is necessary.
+                  // A data attribute that indicates to the client to defer
+                  // loading of the admin menu subtrees until this tab is
+                  // activated. Admin menu subtrees will not render to the DOM
+                  // if this attribute is removed. The value of the attribute is
+                  // intentionally left blank. Only the presence of the
+                  // attribute is necessary.
           'data-drupal-subtrees' => '',
         ],
       ],

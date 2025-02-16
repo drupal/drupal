@@ -82,7 +82,8 @@ class UpdateHooks {
         case 'system.batch_page.html':
           return;
 
-        // If we are on the appearance or modules list, display a detailed report
+        // If we are on the appearance or modules list, display a detailed
+        // report
         // of the update status.
         case 'system.themes_page':
         case 'system.modules_list':
@@ -93,8 +94,8 @@ class UpdateHooks {
       $status = update_requirements('runtime');
       foreach (['core', 'contrib'] as $report_type) {
         $type = 'update_' . $report_type;
-        // hook_requirements() supports render arrays therefore we need to render
-        // them before using
+        // hook_requirements() supports render arrays therefore we need to
+        // render them before using
         // \Drupal\Core\Messenger\MessengerInterface::addStatus().
         if (isset($status[$type]['description']) && is_array($status[$type]['description'])) {
           $status[$type]['description'] = \Drupal::service('renderer')->renderInIsolation($status[$type]['description']);
@@ -141,8 +142,8 @@ class UpdateHooks {
         ],
         'file' => 'update.report.inc',
       ],
-          // We are using template instead of '#type' => 'table' here to keep markup
-          // out of preprocess and allow for easier changes to markup.
+      // We are using template instead of '#type' => 'table' here to keep markup
+      // out of preprocess and allow for easier changes to markup.
       'update_version' => [
         'variables' => [
           'version' => NULL,
@@ -297,10 +298,10 @@ class UpdateHooks {
         ]),
       ];
     }
-    // Parse all the .info.yml files and make sure at least one is compatible with
-    // this version of Drupal core. If one is compatible, then the project as a
-    // whole is considered compatible (since, for example, the project may ship
-    // with some out-of-date modules that are not necessary for its overall
+    // Parse all the .info.yml files and make sure at least one is compatible
+    // with this version of Drupal core. If one is compatible, then the project
+    // as a whole is considered compatible (since, for example, the project may
+    // ship with some out-of-date modules that are not necessary for its overall
     // functionality).
     $compatible_project = FALSE;
     $incompatible = [];

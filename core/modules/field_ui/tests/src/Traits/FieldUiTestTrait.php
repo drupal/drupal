@@ -81,7 +81,8 @@ trait FieldUiTestTrait {
       // Test Breadcrumbs.
       $this->getSession()->getPage()->findLink($label);
 
-      // Ensure that each array key in $storage_edit is prefixed with field_storage.
+      // Ensure that each array key in $storage_edit is prefixed with
+      // field_storage.
       $prefixed_storage_edit = [];
       foreach ($storage_edit as $key => $value) {
         if (str_starts_with($key, 'field_storage')) {

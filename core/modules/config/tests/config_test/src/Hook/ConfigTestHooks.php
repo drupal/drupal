@@ -27,9 +27,9 @@ class ConfigTestHooks {
   #[Hook('entity_type_alter')]
   public function entityTypeAlter(array &$entity_types) : void {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-    // The 'translatable' entity key is not supposed to change over time. In this
-    // case we can safely do it because we set it once and we do not change it for
-    // all the duration of the test session.
+    // The 'translatable' entity key is not supposed to change over time. In
+    // this case we can safely do it because we set it once and we do not change
+    // it for all the duration of the test session.
     $entity_types['config_test']->set('translatable', \Drupal::service('state')->get('config_test.translatable'));
     // Create a clone of config_test that does not have a status.
     $entity_types['config_test_no_status'] = clone $entity_types['config_test'];

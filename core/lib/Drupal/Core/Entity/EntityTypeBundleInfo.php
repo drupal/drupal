@@ -93,8 +93,8 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
       else {
         $this->bundleInfo = $this->moduleHandler->invokeAll('entity_bundle_info');
         foreach ($this->entityTypeManager->getDefinitions() as $type => $entity_type) {
-          // First look for entity types that act as bundles for others, load them
-          // and add them as bundles.
+          // First look for entity types that act as bundles for others, load
+          // them and add them as bundles.
           if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
             foreach ($this->entityTypeManager->getStorage($bundle_entity_type)->loadMultiple() as $entity) {
               $this->bundleInfo[$type][$entity->id()]['label'] = $entity->label();

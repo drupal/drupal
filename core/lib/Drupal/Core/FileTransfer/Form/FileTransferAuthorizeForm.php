@@ -119,8 +119,9 @@ class FileTransferAuthorizeForm extends FormBase {
           ],
         ],
       ];
-      // We can't use #prefix on the container itself since then the header won't
-      // be hidden and shown when the containers are being manipulated via JS.
+      // We can't use #prefix on the container itself since then the header
+      // won't be hidden and shown when the containers are being manipulated via
+      // JS.
       $form['connection_settings'][$name]['header'] = [
         '#markup' => '<h4>' . $this->t('@backend connection settings', ['@backend' => $backend['title']]) . '</h4>',
       ];

@@ -48,8 +48,8 @@ class Number {
 
     // $remainder is a double precision floating point number. Remainders that
     // can't be represented with single precision floats are acceptable. The
-    // fractional part of a float has 24 bits. That means remainders smaller than
-    // $step * 2^-24 are acceptable.
+    // fractional part of a float has 24 bits. That means remainders smaller
+    // than $step * 2^-24 are acceptable.
     $computed_acceptable_error = (double) ($step / pow(2.0, 24));
 
     return $computed_acceptable_error >= $remainder || $remainder >= ($step - $computed_acceptable_error);

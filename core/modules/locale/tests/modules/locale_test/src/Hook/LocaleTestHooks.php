@@ -25,18 +25,18 @@ class LocaleTestHooks {
    */
   #[Hook('system_info_alter')]
   public function systemInfoAlter(&$info, Extension $file, $type): void {
-    // Only modify the system info if required.
-    // By default the locale_test modules are hidden and have a project specified.
-    // To test the module detection process by locale_project_list() the
-    // test modules should mimic a custom module. I.e. be non-hidden.
+    // Only modify the system info if required. By default the locale_test
+    // modules are hidden and have a project specified. To test the module
+    // detection process by locale_project_list() the test modules should mimic
+    // a custom module. I.e. be non-hidden.
     if (\Drupal::state()->get('locale.test_system_info_alter')) {
       if ($file->getName() == 'locale_test' || $file->getName() == 'locale_test_translate') {
         // Don't hide the module.
         $info['hidden'] = FALSE;
       }
     }
-    // Alter the name and the core version of the project. This should not affect
-    // the locale project information.
+    // Alter the name and the core version of the project. This should not
+    // affect the locale project information.
     if (\Drupal::state()->get('locale.test_system_info_alter_name_core')) {
       if ($file->getName() == 'locale_test') {
         $info['core'] = '8.6.7';
@@ -67,8 +67,8 @@ class LocaleTestHooks {
       unset($projects['drupal']);
     }
     if (\Drupal::state()->get('locale.test_projects_alter')) {
-      // Instead of the default ftp.drupal.org we use the file system of the test
-      // instance to simulate a remote file location.
+      // Instead of the default ftp.drupal.org we use the file system of the
+      // test instance to simulate a remote file location.
       $url = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
       $remote_url = $url . PublicStream::basePath() . '/remote/';
       // Completely replace the project data with a set of test projects.

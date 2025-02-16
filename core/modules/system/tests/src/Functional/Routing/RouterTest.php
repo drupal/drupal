@@ -92,11 +92,13 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache-Contexts');
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache-Tags');
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache-Max-Age');
-    // 5. controller result: CacheableResponse object, globally cacheable route access.
+    // 5. controller result: CacheableResponse object, globally cacheable route
+    // access.
     $this->drupalGet('router_test/test21');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', '');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'http_response');
-    // 6. controller result: CacheableResponse object, per-role cacheable route access.
+    // 6. controller result: CacheableResponse object, per-role cacheable route
+    // access.
     $this->drupalGet('router_test/test22');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', 'user.roles');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'http_response');

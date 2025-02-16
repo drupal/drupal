@@ -147,7 +147,8 @@ abstract class StorageTestBase extends KernelTestBase {
     $stores[0]->delete('foo');
     $this->assertNull($stores[0]->get('foo'));
 
-    // Verify that a non-existing key is not returned when getting multiple keys.
+    // Verify that a non-existing key is not returned when getting multiple
+    // keys.
     $stores[0]->set('bar', 'baz');
     $values = $stores[0]->getMultiple(['foo', 'bar']);
     $this->assertFalse(isset($values['foo']), "Key 'foo' not found.");

@@ -90,8 +90,8 @@ class PathProcessorTest extends UnitTestCase {
       ->method('getPathByAlias')
       ->willReturnMap($system_path_map);
 
-    // Create a stub config factory with all config settings that will be checked
-    // during this test.
+    // Create a stub config factory with all config settings that will be
+    // checked during this test.
     $config_factory_stub = $this->getConfigFactoryStub(
       [
         'system.site' => [
@@ -140,8 +140,8 @@ class PathProcessorTest extends UnitTestCase {
     $language_processor = new PathProcessorLanguage($config_factory_stub, $this->languageManager, $negotiator, $current_user, $config_subscriber);
 
     // First, test the processor manager with the processors in the incorrect
-    // order. The alias processor will run before the language processor, meaning
-    // aliases will not be found.
+    // order. The alias processor will run before the language processor,
+    // meaning aliases will not be found.
     $priorities = [
       1000 => $alias_processor,
       500 => $decode_processor,

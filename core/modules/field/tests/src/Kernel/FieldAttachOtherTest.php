@@ -373,7 +373,8 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
     }
     $this->assertSame($expected_values_2, $entity->{$this->fieldTestData->field_name_2}->getValue(), 'Submit filters empty values');
 
-    // Call EntityFormDisplayInterface::extractFormValues() for a single field (the second field).
+    // Call EntityFormDisplayInterface::extractFormValues() for a single field
+    // (the second field).
     foreach ($display->getComponents() as $name => $options) {
       if ($name != $this->fieldTestData->field_name_2) {
         $display->removeComponent($name);

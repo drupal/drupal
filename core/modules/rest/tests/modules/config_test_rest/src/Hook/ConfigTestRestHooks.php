@@ -22,8 +22,9 @@ class ConfigTestRestHooks {
   #[Hook('entity_type_alter')]
   public function entityTypeAlter(array &$entity_types) : void {
     // Undo part of what config_test_entity_type_alter() did: remove this
-    // config_test_no_status entity type, because it uses the same entity class as
-    // the config_test entity type, which makes REST deserialization impossible.
+    // config_test_no_status entity type, because it uses the same entity class
+    // as the config_test entity type, which makes REST deserialization
+    // impossible.
     unset($entity_types['config_test_no_status']);
   }
 
@@ -32,9 +33,9 @@ class ConfigTestRestHooks {
    */
   #[Hook('config_test_access')]
   public function configTestAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
-    // Add permission, so that EntityResourceTestBase's scenarios can test access
-    // being denied. By default, all access is always allowed for the config_test
-    // config entity.
+    // Add permission, so that EntityResourceTestBase's scenarios can test
+    // access being denied. By default, all access is always allowed for the
+    // config_test config entity.
     $access_result = AccessResult::forbiddenIf(!$account->hasPermission('view config_test'))->cachePerPermissions();
     if (!$access_result->isAllowed() && $access_result instanceof AccessResultReasonInterface) {
       $access_result->setReason("The 'view config_test' permission is required.");

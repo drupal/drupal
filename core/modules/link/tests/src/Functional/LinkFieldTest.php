@@ -200,7 +200,8 @@ class LinkFieldTest extends BrowserTestBase {
       'entity:user/invalid-parameter' => $validation_error_1,
     ];
 
-    // Test external and internal URLs for 'link_type' = LinkItemInterface::LINK_GENERIC.
+    // Test external and internal URLs for
+    // 'link_type' = LinkItemInterface::LINK_GENERIC.
     $this->assertValidEntries($field_name, $valid_external_entries + $valid_internal_entries);
     $this->assertInvalidEntries($field_name, $invalid_external_entries + $invalid_internal_entries);
 

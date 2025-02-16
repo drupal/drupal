@@ -169,7 +169,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   public function __destruct() {
     if ($this->tableDropped && !empty($this->attachedDatabases)) {
       foreach ($this->attachedDatabases as $prefix) {
-        // Check if the database is now empty, ignore the internal SQLite tables.
+        // Check if the database is now empty, ignore the internal SQLite
+        // tables.
         try {
           $count = $this->query('SELECT COUNT(*) FROM ' . $prefix . '.sqlite_master WHERE type = :type AND name NOT LIKE :pattern', [':type' => 'table', ':pattern' => 'sqlite_%'])->fetchField();
 
@@ -246,7 +247,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * SQLite compatibility implementation for the LEAST() SQL function.
    */
   public static function sqlFunctionLeast() {
-    // Remove all NULL, FALSE and empty strings values but leaves 0 (zero) values.
+    // Remove all NULL, FALSE and empty strings values but leaves 0 (zero)
+    // values.
     $values = FilterArray::removeEmptyStrings(func_get_args());
 
     return count($values) < 1 ? NULL : min($values);

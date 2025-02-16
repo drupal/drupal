@@ -118,7 +118,8 @@ class NodeTypeTranslationTest extends BrowserTestBase {
       "translation[config_names][node.type.$type][name]" => $translated_name,
     ];
 
-    // Edit the title label to avoid having an exception when we save the translation.
+    // Edit the title label to avoid having an exception when we save the
+    // translation.
     $this->drupalGet("admin/structure/types/manage/{$type}/translate/{$langcode}/add");
     $this->submitForm($edit, 'Save translation');
 
@@ -153,7 +154,8 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalGet("admin/structure/types/manage/{$type}");
     $this->submitForm(['title_label' => 'Edited title'], 'Save');
 
-    // Assert that the title label is displayed on the translation form with the right value.
+    // Assert that the title label is displayed on the translation form with the
+    // right value.
     $this->drupalGet("admin/structure/types/manage/$type/translate/$langcode/add");
     $this->assertSession()->pageTextContains('Edited title');
 

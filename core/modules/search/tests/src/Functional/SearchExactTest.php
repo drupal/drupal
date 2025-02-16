@@ -66,14 +66,16 @@ class SearchExactTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefExists('page=3', 0, '4th page link is found for keyword search.');
     $this->assertSession()->linkByHrefNotExists('page=4', '5th page link is not found for keyword search.');
 
-    // Test that the correct number of pager links are found for exact phrase search.
+    // Test that the correct number of pager links are found for exact phrase
+    // search.
     $edit = ['keys' => '"love pizza"'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
     $this->assertSession()->linkByHrefExists('page=1', 0, '2nd page link is found for exact phrase search.');
     $this->assertSession()->linkByHrefNotExists('page=2', '3rd page link is not found for exact phrase search.');
 
-    // Check that with post settings turned on the post information is displayed.
+    // Check that with post settings turned on the post information is
+    // displayed.
     $node_type_config = \Drupal::configFactory()->getEditable('node.type.page');
     $node_type_config->set('display_submitted', TRUE);
     $node_type_config->save();

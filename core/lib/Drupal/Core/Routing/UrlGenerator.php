@@ -63,8 +63,9 @@ class UrlGenerator implements UrlGeneratorInterface {
    * @see \Symfony\Component\Routing\Generator\UrlGenerator
    */
   protected $decodedChars = [
-    // The slash can be used to designate a hierarchical structure and we want allow using it with this meaning
-    // some webservers don't allow the slash in encoded form in the path for security reasons anyway
+    // The slash can be used to designate a hierarchical structure and we want
+    // allow using it with this meaning some webservers don't allow the slash in
+    // encoded form in the path for security reasons anyway
     // see http://stackoverflow.com/questions/4069002/http-400-if-2f-part-of-get-url-in-jboss
     // Map from these encoded characters.
     '%2F',
@@ -186,7 +187,8 @@ class UrlGenerator implements UrlGeneratorInterface {
     // Tokens start from the end of the path and work to the beginning. The
     // first one or several variable tokens may be optional, but once we find a
     // supplied token or a static text portion of the path, all remaining
-    // variables up to the start of the path must be supplied to there is no gap.
+    // variables up to the start of the path must be supplied to there is no
+    // gap.
     $optional = TRUE;
     // Structure of $tokens from the compiled route:
     // If the path is /admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link-inline
@@ -306,11 +308,12 @@ class UrlGenerator implements UrlGeneratorInterface {
 
     // Drupal paths rarely include dots, so skip this processing if possible.
     if (str_contains($path, '/.')) {
-      // The path segments "." and ".." are interpreted as relative reference when
-      // resolving a URI; see http://tools.ietf.org/html/rfc3986#section-3.3
-      // so we need to encode them as they are not used for this purpose here
-      // otherwise we would generate a URI that, when followed by a user agent
-      // (e.g. browser), does not match this route
+      // The path segments "." and ".." are interpreted as relative reference
+      // when resolving a URI; see
+      // http://tools.ietf.org/html/rfc3986#section-3.3 so we need to encode
+      // them as they are not used for this purpose here otherwise we would
+      // generate a URI that, when followed by a user agent (e.g. browser), does
+      // not match this route
       $path = strtr($path, ['/../' => '/%2E%2E/', '/./' => '/%2E/']);
       if (str_ends_with($path, '/..')) {
         $path = substr($path, 0, -2) . '%2E%2E';

@@ -172,9 +172,9 @@ class CommentDefaultFormatter extends FormatterBase {
             $build = $this->viewBuilder->viewMultiple($comments, $this->getSetting('view_mode'));
             $build['pager']['#type'] = 'pager';
             // CommentController::commentPermalink() calculates the page number
-            // where a specific comment appears and does a subrequest pointing to
-            // that page, we need to pass that subrequest route to our pager to
-            // keep the pager working.
+            // where a specific comment appears and does a subrequest pointing
+            // to that page, we need to pass that subrequest route to our pager
+            // to keep the pager working.
             $build['pager']['#route_name'] = $this->routeMatch->getRouteName();
             $build['pager']['#route_parameters'] = $this->routeMatch->getRawParameters()->all();
             if ($this->getSetting('pager_id')) {

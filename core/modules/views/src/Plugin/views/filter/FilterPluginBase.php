@@ -1145,10 +1145,10 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
     $form['#theme'] = 'views_ui_build_group_filter_form';
 
-    // #flatten will move everything from $form['group_info'][$key] to $form[$key]
-    // prior to rendering. That's why the preRender for it needs to run first,
-    // so that when the next preRender (the one for fieldsets) runs, it gets
-    // the flattened data.
+    // #flatten will move everything from $form['group_info'][$key] to
+    // $form[$key] prior to rendering. That's why the preRender for it needs to
+    // run first, so that when the next preRender (the one for fieldsets) runs,
+    // it gets the flattened data.
     array_unshift($form['#pre_render'], [static::class, 'preRenderFlattenData']);
     $form['group_info']['#flatten'] = TRUE;
 
@@ -1401,7 +1401,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       $form['#size'] = NULL;
     }
 
-    // Cleanup in case the translated element's (radios or checkboxes) display value contains html.
+    // Cleanup in case the translated element's (radios or checkboxes) display
+    // value contains html.
     if ($form['#type'] == 'select') {
       $this->prepareFilterSelectOptions($form['#options']);
     }
@@ -1511,7 +1512,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         $this->options['expose']['operator_id'] = $operator_id;
         $this->options['expose']['use_operator'] = TRUE;
 
-        // Value can be optional, For example for 'empty' and 'not empty' filters.
+        // Value can be optional, For example for 'empty' and 'not empty'
+        // filters.
         if (isset($selected_group_options['value']) && $selected_group_options['value'] !== '') {
           $input[$this->options['group_info']['identifier']] = $selected_group_options['value'];
         }

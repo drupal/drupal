@@ -61,7 +61,8 @@ class InstalledPackagesListTest extends PackageManagerKernelTestBase {
     ]);
     $this->assertNull($list->getPackageByDrupalProjectName('example3'));
 
-    // The project does not physically exist, which means it must be a metapackage.
+    // The project does not physically exist, which means it must be a
+    // metapackage.
     $list = new InstalledPackagesList([
       'drupal/missing' => InstalledPackage::createFromArray([
         'name' => 'drupal/missing',

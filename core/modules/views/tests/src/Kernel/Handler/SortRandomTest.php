@@ -92,7 +92,8 @@ class SortRandomTest extends ViewsKernelTestBase {
       'views_test_data_age' => 'views_test_data_name',
     ]);
 
-    // Execute a second random view, we expect the result set to be different again.
+    // Execute a second random view, we expect the result set to be different
+    // again.
     $view_random_2 = $this->getBasicRandomView();
     $this->executeView($view_random_2);
     $this->assertSameSize($this->dataSet(), $view_random_2->result, 'The number of returned rows match.');

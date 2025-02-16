@@ -197,7 +197,8 @@ class DisplayTest extends ViewTestBase {
     $errors = $view->validate();
     $this->assertEmpty($errors, 'More link validation has no errors.');
 
-    // Confirm that the view does not validate when the page display is disabled.
+    // Confirm that the view does not validate when the page display is
+    // disabled.
     $view->setDisplay('page_1');
     $view->display_handler->setOption('enabled', FALSE);
     $view->setDisplay('default');
@@ -205,7 +206,8 @@ class DisplayTest extends ViewTestBase {
     $this->assertNotEmpty($errors, 'More link validation has some errors.');
     $this->assertEquals('Display "Default" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', $errors['default'][0], 'More link validation has the right error.');
 
-    // Confirm that the view does not validate when the page display does not exist.
+    // Confirm that the view does not validate when the page display does not
+    // exist.
     $view = Views::getView('test_view');
     $view->setDisplay('default');
     $view->display_handler->setOption('use_more', 1);

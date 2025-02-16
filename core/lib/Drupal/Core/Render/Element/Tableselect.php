@@ -194,8 +194,8 @@ class Tableselect extends Table {
         array_unshift($header, ['class' => ['select-all']]);
       }
       else {
-        // Add an empty header when radio buttons are displayed or a "Select all"
-        // checkbox is not desired.
+        // Add an empty header when radio buttons are displayed or a "Select
+        // all" checkbox is not desired.
         array_unshift($header, '');
       }
     }

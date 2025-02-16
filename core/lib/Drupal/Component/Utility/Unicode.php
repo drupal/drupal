@@ -328,9 +328,9 @@ EOD;
 
     if ($wordsafe) {
       $matches = [];
-      // Find the last word boundary, if there is one within $min_wordsafe_length
-      // to $max_length characters. preg_match() is always greedy, so it will
-      // find the longest string possible.
+      // Find the last word boundary, if there is one within
+      // $min_wordsafe_length to $max_length characters. preg_match() is always
+      // greedy, so it will find the longest string possible.
       $found = preg_match('/^(.{' . $min_wordsafe_length . ',' . $max_length . '})[' . Unicode::PREG_CLASS_WORD_BOUNDARY . ']/us', $string, $matches);
       if ($found) {
         $string = $matches[1];

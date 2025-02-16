@@ -270,7 +270,8 @@ class DateFormatter implements DateFormatterInterface {
             }
             else {
               // If we did not output days, set the granularity to 0 so that we
-              // will not output hours and get things like "@count week @count hour".
+              // will not output hours and get things like "@count week @count
+              // hour".
               $granularity = 0;
             }
             break;
@@ -296,7 +297,8 @@ class DateFormatter implements DateFormatterInterface {
       }
       elseif ($output) {
         // Break if there was previous output but not any output at this level,
-        // to avoid skipping levels and getting output like "@count year @count second".
+        // to avoid skipping levels and getting output like "@count year @count
+        // second".
         break;
       }
 

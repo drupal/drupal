@@ -96,7 +96,8 @@ class DefaultViewsTest extends UITestBase {
     // $this->drupalGet('glossary');
     // $this->assertSession()->pageTextNotContains($new_title);
 
-    // Duplicate the view and check that the normal schema of duplicated views is used.
+    // Duplicate the view and check that the normal schema of duplicated views
+    // is used.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Duplicate', '/glossary');
     $edit = [

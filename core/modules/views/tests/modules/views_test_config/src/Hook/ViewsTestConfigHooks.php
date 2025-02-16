@@ -34,8 +34,9 @@ class ViewsTestConfigHooks {
   public function viewsPostRender(ViewExecutable $view, &$output, CachePluginBase $cache): void {
     if (\Drupal::state()->get('views_test_config.views_post_render_cache_tag')) {
       \Drupal::state()->set('views_test_config.views_post_render_called', TRUE);
-      // Set a cache key on output to ensure ViewsSelection::stripAdminAndAnchorTagsFromResults
-      // correctly handles elements that aren't result rows.
+      // Set a cache key on output to ensure
+      // ViewsSelection::stripAdminAndAnchorTagsFromResults correctly handles
+      // elements that aren't result rows.
       $output['#cache']['tags'][] = 'foo';
     }
   }

@@ -382,7 +382,8 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     // Grant anonymous permission to skip comment approval.
     $this->grantPermissionsToTestedRole(['skip comment approval']);
 
-    // Status should be TRUE when posting as anonymous and skip comment approval.
+    // Status should be TRUE when posting as anonymous and skip comment
+    // approval.
     $response = $this->request('POST', $url, $request_options);
     $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
     $this->assertResourceResponse(201, FALSE, $response);

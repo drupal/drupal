@@ -22,8 +22,8 @@ class AdvisoryTestClientMiddleware {
         $test_end_point = \Drupal::state()->get('advisories_test_endpoint');
         if ($test_end_point && str_contains((string) $request->getUri(), '://updates.drupal.org/psa.json')) {
           // Only override $uri if it matches the advisories JSON feed to avoid
-          // changing any other uses of the 'http_client' service during tests with
-          // this module installed.
+          // changing any other uses of the 'http_client' service during tests
+          // with this module installed.
           $request = $request->withUri(new Uri($test_end_point));
         }
         return $handler($request, $options);

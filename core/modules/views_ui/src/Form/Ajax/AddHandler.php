@@ -79,7 +79,8 @@ class AddHandler extends ViewsFormBase {
     // Add the display override dropdown.
     views_ui_standard_display_dropdown($form, $form_state, $section);
 
-    // Figure out all the base tables allowed based upon what the relationships provide.
+    // Figure out all the base tables allowed based upon what the relationships
+    // provide.
     $base_tables = $executable->getBaseTables();
     $options = Views::viewsDataHelper()->fetchFields(array_keys($base_tables), $type, $display->useGroupBy(), $form_state->get('type'));
 

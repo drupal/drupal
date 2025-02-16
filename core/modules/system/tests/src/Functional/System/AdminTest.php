@@ -136,7 +136,8 @@ class AdminTest extends BrowserTestBase {
   protected function getTopLevelMenuLinks() {
     $menu_tree = \Drupal::menuTree();
 
-    // The system.admin link is normally the parent of all top-level admin links.
+    // The system.admin link is normally the parent of all top-level admin
+    // links.
     $parameters = new MenuTreeParameters();
     $parameters->setRoot('system.admin')->excludeRoot()->setTopLevelOnly()->onlyEnabledLinks();
     $tree = $menu_tree->load(NULL, $parameters);

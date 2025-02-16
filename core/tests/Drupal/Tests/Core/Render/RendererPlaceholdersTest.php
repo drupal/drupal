@@ -204,7 +204,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $cases = [];
 
     // Case one: render array that has a placeholder that is:
-    // - automatically created, but manually triggered (#create_placeholder = TRUE)
+    // - automatically created, but manually triggered (#create_placeholder =
+    //   TRUE)
     // - uncacheable
     $element_without_cache_keys = $base_element_a1;
     $expected_placeholder_render_array = $extract_placeholder_render_array($base_element_a1['placeholder']);
@@ -219,7 +220,8 @@ class RendererPlaceholdersTest extends RendererTestBase {
     ];
 
     // Case two: render array that has a placeholder that is:
-    // - automatically created, but manually triggered (#create_placeholder = TRUE)
+    // - automatically created, but manually triggered (#create_placeholder =
+    //   TRUE)
     // - cacheable
     $element_with_cache_keys = $base_element_a1;
     $element_with_cache_keys['placeholder']['#cache']['keys'] = $keys;

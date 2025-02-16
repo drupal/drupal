@@ -187,8 +187,8 @@ class SwitchShortcutSet extends FormBase {
         ':switch-url' => Url::fromRoute('<current>')->toString(),
       ];
       if ($account_is_user) {
-        // Only administrators can create new shortcut sets, so we know they have
-        // access to switch back.
+        // Only administrators can create new shortcut sets, so we know they
+        // have access to switch back.
         $this->messenger()->addStatus($this->t('You are now using the new %set_name shortcut set. You can edit it from this page or <a href=":switch-url">switch back to a different one.</a>', $replacements));
       }
       else {

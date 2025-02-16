@@ -393,7 +393,8 @@ class ContactPersonalTest extends BrowserTestBase {
 
     // Tests that the opt-out message is not included in admin user copy emails.
     $this->assertStringNotContainsString($opt_out_message, $user_copy_emails[0]['body'], 'Opt-out message not included in admin user copy email.');
-    // Tests that the opt-out message is not included in non-admin user copy emails.
+    // Tests that the opt-out message is not included in non-admin user copy
+    // emails.
     $this->assertStringNotContainsString($opt_out_message, $user_copy_emails[1]['body'], 'Opt-out message not included in non-admin user copy email.');
   }
 

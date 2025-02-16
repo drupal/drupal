@@ -511,8 +511,8 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function execute() {
-    // If validation fails, simply return NULL.
-    // Note that validation routines in preExecute() may throw exceptions instead.
+    // If validation fails, simply return NULL. Note that validation routines in
+    // preExecute() may throw exceptions instead.
     if (!$this->preExecute()) {
       return NULL;
     }
@@ -543,7 +543,8 @@ class Select extends Query implements SelectInterface {
       $alias = $table_alias . '_' . $field;
     }
 
-    // If that is already used, just add a counter until we find an unused alias.
+    // If that is already used, just add a counter until we find an unused
+    // alias.
     $alias_candidate = $alias;
     $count = 2;
     while (!empty($this->fields[$alias_candidate])) {
@@ -762,8 +763,8 @@ class Select extends Query implements SelectInterface {
         }
       }
 
-      // Also remove 'all_fields' statements, which are expanded into tablename.*
-      // when the query is executed.
+      // Also remove 'all_fields' statements, which are expanded into
+      // tablename.* when the query is executed.
       foreach ($count->tables as &$table) {
         unset($table['all_fields']);
       }
@@ -780,7 +781,8 @@ class Select extends Query implements SelectInterface {
 
     if ($count->distinct && !empty($group_by)) {
       // If the query is distinct and contains a GROUP BY, we need to remove the
-      // distinct because SQL99 does not support counting on distinct multiple fields.
+      // distinct because SQL99 does not support counting on distinct multiple
+      // fields.
       $count->distinct = FALSE;
     }
 
@@ -834,7 +836,8 @@ class Select extends Query implements SelectInterface {
     }
     $query .= implode(', ', $fields);
 
-    // FROM - We presume all queries have a FROM, as any query that doesn't won't need the query builder anyway.
+    // FROM - We presume all queries have a FROM, as any query that doesn't
+    // won't need the query builder anyway.
     $query .= "\nFROM";
     foreach ($this->tables as $table) {
       $query .= "\n";
@@ -842,7 +845,8 @@ class Select extends Query implements SelectInterface {
         $query .= $table['join type'] . ' JOIN ';
       }
 
-      // If the table is a subquery, compile it and integrate it into this query.
+      // If the table is a subquery, compile it and integrate it into this
+      // query.
       if ($table['table'] instanceof SelectInterface) {
         // Run preparation steps on this sub-query before converting to string.
         $subquery = $table['table'];

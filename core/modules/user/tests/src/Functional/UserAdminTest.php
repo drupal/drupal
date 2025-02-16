@@ -144,7 +144,8 @@ class UserAdminTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_b));
     $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_c));
 
-    // Test unblocking of a user from /admin/people page and sending of activation mail
+    // Test unblocking of a user from /admin/people page and sending of
+    // activation mail
     $edit_unblock = [];
     $edit_unblock['action'] = 'user_unblock_user_action';
     $edit_unblock['user_bulk_form[4]'] = TRUE;
@@ -158,7 +159,8 @@ class UserAdminTest extends BrowserTestBase {
     $this->assertTrue($account->isActive(), 'User C unblocked');
     $this->assertMail("to", $account->getEmail(), "Activation mail sent to user C");
 
-    // Test blocking and unblocking another user from /user/[uid]/edit form and sending of activation mail
+    // Test blocking and unblocking another user from /user/[uid]/edit form and
+    // sending of activation mail.
     $user_d = $this->drupalCreateUser([]);
     $account1 = $user_storage->load($user_d->id());
     $this->drupalGet('user/' . $account1->id() . '/edit');

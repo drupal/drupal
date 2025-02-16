@@ -64,7 +64,8 @@ class SelectLanguageForm extends FormBase {
       '#title' => 'Choose language',
       '#title_display' => 'invisible',
       '#options' => $select_options,
-      // Use the browser detected language as default or English if nothing found.
+      // Use the browser detected language as default or English if nothing
+      // found.
       '#default_value' => !empty($browser_langcode) ? $browser_langcode : 'en',
     ];
     $link_to_english = install_full_redirect_url(['parameters' => ['langcode' => 'en']]);

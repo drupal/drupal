@@ -51,8 +51,8 @@ class LanguageTest extends CKEditor5TestBase {
       $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
       $assert_session->assertWaitOnAjaxRequest();
 
-      // The Source Editing plugin settings form should now be present and should
-      // have no allowed tags configured.
+      // The Source Editing plugin settings form should now be present and
+      // should have no allowed tags configured.
       $page->clickLink('Source editing');
       $this->assertNotNull($assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-sourceediting-allowed-tags"]'));
 

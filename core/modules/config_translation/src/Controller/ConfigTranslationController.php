@@ -177,7 +177,8 @@ class ConfigTranslationController extends ControllerBase {
     }
 
     // We create a fake request object to pass into
-    // ConfigMapperInterface::populateFromRouteMatch() for the different languages.
+    // ConfigMapperInterface::populateFromRouteMatch() for the different
+    // languages.
     // Creating a separate request for each language and route is neither easily
     // possible nor performant.
     $fake_request = $request->duplicate();

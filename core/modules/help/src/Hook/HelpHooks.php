@@ -34,7 +34,8 @@ class HelpHooks {
           ':themes' => Url::fromRoute('system.themes_page')->toString(),
           ':download_themes' => 'https://www.drupal.org/project/themes',
         ]) . '</li>';
-        // Display a link to the create content page if Node module is installed.
+        // Display a link to the create content page if Node module is
+        // installed.
         if (\Drupal::moduleHandler()->moduleExists('node')) {
           $output .= '<li>' . t('<strong>Start posting content</strong> Finally, you may <a href=":content">add new content</a> to your website.', [':content' => Url::fromRoute('node.add_page')->toString()]) . '</li>';
         }
@@ -113,8 +114,8 @@ class HelpHooks {
    */
   #[Hook('block_view_help_block_alter')]
   public function blockViewHelpBlockAlter(array &$build, BlockPluginInterface $block): void {
-    // Assume that most users do not need or want to perform contextual actions on
-    // the help block, so don't needlessly draw attention to it.
+    // Assume that most users do not need or want to perform contextual actions
+    // on the help block, so don't needlessly draw attention to it.
     unset($build['#contextual_links']);
   }
 

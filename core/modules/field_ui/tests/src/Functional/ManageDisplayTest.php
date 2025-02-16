@@ -125,7 +125,8 @@ class ManageDisplayTest extends BrowserTestBase {
     ];
 
     // Check that the field is displayed with the default formatter in 'rss'
-    // mode (uses 'default'), and hidden in 'teaser' mode (uses custom settings).
+    // mode (uses 'default'), and hidden in 'teaser' mode (uses custom
+    // settings).
     $this->assertNodeViewText($node, 'rss', $output['field_test_default'], "The field is displayed as expected in view modes that use 'default' settings.");
     $this->assertNodeViewNoText($node, 'teaser', $value, "The field is hidden in view modes that use custom settings.");
 

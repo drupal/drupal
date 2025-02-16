@@ -368,12 +368,11 @@ final class Importer implements LoggerAwareInterface {
   private function verifyNormalizedLanguage(array $data): array {
     $default_langcode = $data['_meta']['default_langcode'];
     $default_language = $this->languageManager->getDefaultLanguage();
-    // Check the language. If the default language isn't known, import as one
-    // of the available translations if one exists with those values. If none
-    // exists, create the entity in the default language.
-    // During the installer, when installing with an alternative language,
-    // `en` is still the default when modules are installed so check the default language
-    // instead.
+    // Check the language. If the default language isn't known, import as one of
+    // the available translations if one exists with those values. If none
+    // exists, create the entity in the default language. During the installer,
+    // when installing with an alternative language, `en` is still the default
+    // when modules are installed so check the default language instead.
     if (!$this->languageManager->getLanguage($default_langcode) || (InstallerKernel::installationAttempted() && $default_language->getId() !== $default_langcode)) {
       $use_default = TRUE;
       foreach ($data['translations'] ?? [] as $langcode => $translation_data) {

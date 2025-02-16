@@ -91,7 +91,8 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    */
   public function testSearchSettingsPage(): void {
 
-    // Test that the settings form displays the correct count of items left to index.
+    // Test that the settings form displays the correct count of items left to
+    // index.
     $this->drupalGet('admin/config/search/pages');
     $this->assertSession()->pageTextContains('There are 0 items left to index.');
 

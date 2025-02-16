@@ -118,7 +118,8 @@ class UserTokensHooks {
             $replacements[$original] = $account->id() ? $account->toUrl('edit-form', $url_options)->toString() : t('not yet assigned');
             break;
 
-          // These tokens are default variations on the chained tokens handled below.
+          // These tokens are default variations on the chained tokens handled
+          // below.
           case 'last-login':
             $date_format = DateFormat::load('medium');
             $bubbleable_metadata->addCacheableDependency($date_format);

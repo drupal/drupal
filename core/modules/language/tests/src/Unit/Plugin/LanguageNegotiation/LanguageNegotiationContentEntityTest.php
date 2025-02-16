@@ -192,7 +192,8 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
     $this->assertTrue(isset($options['query'][LanguageNegotiationContentEntity::QUERY_PARAMETER]));
     $this->assertEquals('en', $options['query'][LanguageNegotiationContentEntity::QUERY_PARAMETER]);
 
-    // Case 3a1: via $options['language'] with an additional $options['query'][static::QUERY_PARAMETER].
+    // Case 3a1: via $options['language'] with an additional
+    // $options['query'][static::QUERY_PARAMETER].
     $options['language'] = $this->languages['en'];
     $options['query'][LanguageNegotiationContentEntity::QUERY_PARAMETER] = 'xx';
     $this->assertEquals($path, $languageNegotiationContentEntityMock->processOutbound($path, $options, $request, $bubbleableMetadataMock));

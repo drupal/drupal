@@ -73,8 +73,8 @@ class Display extends ViewsFormBase {
     ];
     $executable->display_handler->buildOptionsForm($form['options'], $form_state);
 
-    // The handler options form sets $form['#title'], which we need on the entire
-    // $form instead of just the ['options'] section.
+    // The handler options form sets $form['#title'], which we need on the
+    // entire $form instead of just the ['options'] section.
     $form['#title'] = $form['options']['#title'];
     unset($form['options']['#title']);
 

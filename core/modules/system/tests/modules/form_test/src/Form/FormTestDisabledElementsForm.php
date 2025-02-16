@@ -49,7 +49,8 @@ class FormTestDisabledElementsForm extends FormBase {
         ],
         '#multiple' => TRUE,
         '#default_value' => ['test_2' => 'test_2'],
-        // The keys of #test_hijack_value need to match the #name of the control.
+        // The keys of #test_hijack_value need to match the #name of the
+        // control.
         // @see FormsTestCase::testDisabledElements()
         '#test_hijack_value' => $type == 'select' ? ['' => 'test_1'] : ['test_1' => 'test_1'],
         '#disabled' => TRUE,

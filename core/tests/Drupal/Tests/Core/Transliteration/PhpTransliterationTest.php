@@ -44,7 +44,8 @@ class PhpTransliterationTest extends UnitTestCase {
       ->method('alter')
       ->willReturnCallback(function ($hook, &$overrides, $langcode) {
         if ($langcode == 'zz') {
-          // The default transliteration of Ä is A, but change it to Z for testing.
+          // The default transliteration of Ä is A, but change it to Z for
+          // testing.
           $overrides[0xC4] = 'Z';
           // Also provide transliterations of two 5-byte characters from
           // http://wikipedia.org/wiki/Gothic_alphabet.

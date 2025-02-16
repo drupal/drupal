@@ -325,8 +325,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
     // Announce that rollback is about to happen.
     $this->getEventDispatcher()->dispatch(new MigrateRollbackEvent($this->migration), MigrateEvents::PRE_ROLLBACK);
 
-    // Optimistically assume things are going to work out; if not, $return will be
-    // updated to some other status.
+    // Optimistically assume things are going to work out; if not, $return will
+    // be updated to some other status.
     $return = MigrationInterface::RESULT_COMPLETED;
 
     $this->migration->setStatus(MigrationInterface::STATUS_ROLLING_BACK);
@@ -556,8 +556,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
       );
       $usage = $this->attemptMemoryReclaim();
       $pct_memory = $usage / $this->memoryLimit;
-      // Use a lower threshold - we don't want to be in a situation where we keep
-      // coming back here and trimming a tiny amount
+      // Use a lower threshold - we don't want to be in a situation where we
+      // keep coming back here and trimming a tiny amount
       if ($pct_memory > (0.90 * $threshold)) {
         $this->message->display(
           $this->t(

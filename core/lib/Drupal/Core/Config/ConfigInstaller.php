@@ -198,8 +198,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
       // @see install_install_profile()
       $profile_installed = in_array($this->drupalGetProfile(), $this->getEnabledExtensions(), TRUE);
       if (!$this->isSyncing() && (!InstallerKernel::installationAttempted() || $profile_installed)) {
-        // Install any optional configuration entities whose dependencies can now
-        // be met. This searches all the installed modules config/optional
+        // Install any optional configuration entities whose dependencies can
+        // now be met. This searches all the installed modules config/optional
         // directories.
         $storage = new ExtensionInstallStorage($this->getActiveStorages(StorageInterface::DEFAULT_COLLECTION), InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION, FALSE, $this->installProfile);
         $this->installOptionalConfig($storage, [$type => $name]);
@@ -555,7 +555,8 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $previous_config_names = [];
 
     foreach ($names as $name) {
-      // Add the extension that will be enabled to the list of enabled extensions.
+      // Add the extension that will be enabled to the list of enabled
+      // extensions.
       $enabled_extensions[] = $name;
 
       $config_install_path = $this->getDefaultConfigDirectory($type, $name);
@@ -580,9 +581,10 @@ class ConfigInstaller implements ConfigInstallerInterface {
       // Install profiles can not have config clashes. Configuration that
       // has the same name as a module's configuration will be used instead.
       if ($name !== $this->drupalGetProfile()) {
-        // Throw an exception if the module being installed contains configuration
-        // that already exists. Additionally, can not continue installing more
-        // modules because those may depend on the current module being installed.
+        // Throw an exception if the module being installed contains
+        // configuration that already exists. Additionally, can not continue
+        // installing more modules because those may depend on the current
+        // module being installed.
         $existing_configuration = $this->findPreExistingConfiguration($storage, $previous_config_names);
         if (!empty($existing_configuration)) {
           throw PreExistingConfigException::create($name, $existing_configuration);

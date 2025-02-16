@@ -79,9 +79,9 @@ class FilterAPITest extends EntityKernelTestBase {
     $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_MARKUP_LANGUAGE]);
     $this->assertSame($expected_filter_text_without_html_generators, (string) $actual_filtered_text_without_html_generators, 'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters.');
     // Related to @see FilterSecurityTest.php/testSkipSecurityFilters(), but
-    // this check focuses on the ability to filter multiple filter types at once.
-    // Drupal core only ships with these two types of filters, so this is the
-    // most extensive test possible.
+    // this check focuses on the ability to filter multiple filter types at
+    // once. Drupal core only ships with these two types of filters, so this is
+    // the most extensive test possible.
     $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE]);
     $this->assertSame($expected_filter_text_without_html_generators, (string) $actual_filtered_text_without_html_generators, 'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
   }
@@ -159,7 +159,8 @@ class FilterAPITest extends EntityKernelTestBase {
     );
 
     // Test on very_restricted_html, where there's two different filters of the
-    // FilterInterface::TYPE_HTML_RESTRICTOR type, each restricting in different ways.
+    // FilterInterface::TYPE_HTML_RESTRICTOR type, each restricting in different
+    // ways.
     $very_restricted_html_format = FilterFormat::create([
       'format' => 'very_restricted_html',
       'name' => 'Very Restricted HTML',

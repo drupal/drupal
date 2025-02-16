@@ -99,8 +99,8 @@ class JsonapiHooks {
   public function jsonapiEntityFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
     // All core entity types and most or all contrib entity types allow users
     // with the entity type's administrative permission to view all of the
-    // entities, so enable similarly permissive filtering to those users as well.
-    // A contrib module may override this decision by returning
+    // entities, so enable similarly permissive filtering to those users as
+    // well. A contrib module may override this decision by returning
     // AccessResult::forbidden() from its implementation of this hook.
     if ($admin_permission = $entity_type->getAdminPermission()) {
       return [
@@ -190,8 +190,8 @@ class JsonapiHooks {
         JSONAPI_FILTER_AMONG_ALL => $forbidden,
         JSONAPI_FILTER_AMONG_OWN => $forbidden,
         JSONAPI_FILTER_AMONG_PUBLISHED => $forbidden,
-            // For legacy reasons, the Node entity type has a "status" key, so forbid
-            // this subset as well, even though it has no semantic meaning.
+        // For legacy reasons, the Node entity type has a "status" key, so
+        // forbid this subset as well, even though it has no semantic meaning.
         JSONAPI_FILTER_AMONG_ENABLED => $forbidden,
       ];
     }
@@ -200,10 +200,10 @@ class JsonapiHooks {
       JSONAPI_FILTER_AMONG_OWN => AccessResult::allowedIfHasPermission($account, 'view own unpublished content'),
           // @see \Drupal\node\NodeGrantDatabaseStorage::access()
           // Note that:
-          // - This is just for the default grant. Other node access conditions are
-          //   added via the 'node_access' query tag.
-          // - Permissions were checked earlier in this function, so we must vary the
-          //   cache by them.
+          // - This is just for the default grant. Other node access conditions
+          //   are added via the 'node_access' query tag.
+          // - Permissions were checked earlier in this function, so we must
+          //   vary the cache by them.
       JSONAPI_FILTER_AMONG_PUBLISHED => AccessResult::allowed()->cachePerPermissions(),
     ];
   }

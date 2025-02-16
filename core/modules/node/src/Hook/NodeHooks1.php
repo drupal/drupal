@@ -220,12 +220,12 @@ class NodeHooks1 {
       ],
       'sticky' => [
         'title' => t('Content is sticky at top of lists'),
-              // The sticky flag is either 0 or 1, which is automatically normalized.
+        // The sticky flag is either 0 or 1, which is automatically normalized.
         'score' => 'n.sticky',
       ],
       'promote' => [
         'title' => t('Content is promoted to the front page'),
-              // The promote flag is either 0 or 1, which is automatically normalized.
+        // The promote flag is either 0 or 1, which is automatically normalized.
         'score' => 'n.promote',
       ],
     ];
@@ -234,7 +234,7 @@ class NodeHooks1 {
     if ($node_min_max = \Drupal::state()->get('node.min_max_update_time')) {
       $ranking['recent'] = [
         'title' => t('Recently created'),
-            // Exponential decay with half life of 14% of the age range of nodes.
+        // Exponential decay with half life of 14% of the age range of nodes.
         'score' => 'EXP(-5 * (1 - (n.created - :node_oldest) / :node_range))',
         'arguments' => [
           ':node_oldest' => $node_min_max['min_created'],
@@ -473,8 +473,8 @@ class NodeHooks1 {
    */
   #[Hook('modules_installed')]
   public function modulesInstalled(array $modules): void {
-    // Check if any of the newly enabled modules require the node_access table to
-    // be rebuilt.
+    // Check if any of the newly enabled modules require the node_access table
+    // to be rebuilt.
     if (!node_access_needs_rebuild() && \Drupal::moduleHandler()->hasImplementations('node_grants', $modules)) {
       node_access_needs_rebuild(TRUE);
     }
@@ -490,9 +490,9 @@ class NodeHooks1 {
     foreach ($modules as $module) {
       // At this point, the module is already disabled, but its code is still
       // loaded in memory. Module functions must no longer be called. We only
-      // check whether a hook implementation function exists and do not invoke it.
-      // Node access also needs to be rebuilt if language module is disabled to
-      // remove any language-specific grants.
+      // check whether a hook implementation function exists and do not invoke
+      // it. Node access also needs to be rebuilt if language module is disabled
+      // to remove any language-specific grants.
       if (!node_access_needs_rebuild() && (\Drupal::moduleHandler()->hasImplementations('node_grants', $module) || $module == 'language')) {
         node_access_needs_rebuild(TRUE);
       }

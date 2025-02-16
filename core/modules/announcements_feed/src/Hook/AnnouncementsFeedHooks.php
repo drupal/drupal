@@ -69,10 +69,10 @@ class AnnouncementsFeedHooks {
       '#weight' => 3399,
     ];
     // \Drupal\toolbar\Element\ToolbarItem::preRenderToolbarItem adds an
-    // #attributes property to each toolbar item's tab child automatically.
-    // Lazy builders don't support an #attributes property so we need to
-    // add another render callback to remove the #attributes property. We start by
-    // adding the defaults, and then we append our own pre render callback.
+    // #attributes property to each toolbar item's tab child automatically. Lazy
+    // builders don't support an #attributes property so we need to add another
+    // render callback to remove the #attributes property. We start by adding
+    // the defaults, and then we append our own pre render callback.
     $items['announcement'] += \Drupal::service('plugin.manager.element_info')->getInfo('toolbar_item');
     $items['announcement']['#pre_render'][] = [RenderCallbacks::class, 'removeTabAttributes'];
     return $items;

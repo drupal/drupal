@@ -101,8 +101,8 @@ class MenuLinkContentHooks {
     $entity_type_id = $entity->getEntityTypeId();
     foreach ($entity->uriRelationships() as $rel) {
       $url = $entity->toUrl($rel);
-      // Entities can provide uri relationships that are not routed, in this case
-      // getRouteParameters() will throw an exception.
+      // Entities can provide uri relationships that are not routed, in this
+      // case getRouteParameters() will throw an exception.
       if (!$url->isRouted()) {
         continue;
       }

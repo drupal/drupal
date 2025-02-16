@@ -292,8 +292,8 @@ class MediaHooks {
    */
   #[Hook('field_type_category_info_alter')]
   public function fieldTypeCategoryInfoAlter(&$definitions): void {
-    // The `media` field type belongs in the `general` category, so the libraries
-    // need to be attached using an alter hook.
+    // The `media` field type belongs in the `general` category, so the
+    // libraries need to be attached using an alter hook.
     $definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY]['libraries'][] = 'media/drupal.media-icon';
   }
 

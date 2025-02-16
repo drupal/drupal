@@ -35,7 +35,8 @@ class Callbacks {
       $triggered = TRUE;
     }
     elseif ($form_state->has('form_test_name')) {
-      // To simplify this test, just take over the element's value into $form_state.
+      // To simplify this test, just take over the element's value into
+      // $form_state.
       $form_state->setValueForElement($element, $form_state->get('form_test_name'));
 
       $triggered = TRUE;

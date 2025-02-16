@@ -89,9 +89,9 @@ class MigrateDrupalHooks {
         }
       }
       catch (RequirementsException $e) {
-        // This code currently runs whenever the definitions are being loaded and
-        // if you have a Drupal 7 source site then the requirements will not be
-        // met for the d6_taxonomy_vocabulary migration.
+        // This code currently runs whenever the definitions are being loaded
+        // and if you have a Drupal 7 source site then the requirements will not
+        // be met for the d6_taxonomy_vocabulary migration.
       }
       catch (DatabaseExceptionWrapper $e) {
         // When the definitions are loaded it is possible the tables will not
@@ -119,8 +119,8 @@ class MigrateDrupalHooks {
       }
     }
     // If this is a complete node migration then for all migrations, except the
-    // classic node migrations, replace any dependency on a classic node migration
-    // with a dependency on the complete node migration.
+    // classic node migrations, replace any dependency on a classic node
+    // migration with a dependency on the complete node migration.
     if (NodeMigrateType::getNodeMigrateType($connection, $version ?? FALSE) === NodeMigrateType::NODE_MIGRATE_TYPE_COMPLETE) {
       $classic_migration_match = '/d([67])_(node|node_translation|node_revision|node_entity_translation)($|:.*)/';
       $replace_with_complete_migration = function (&$value, $key, $classic_migration_match) {

@@ -71,9 +71,9 @@ class NegotiationBrowserForm extends ConfigFormBase {
       $existing_languages[$langcode] = $language->getName();
     }
 
-    // If we have no languages available, present the list of predefined languages
-    // only. If we do have already added languages, set up two option groups with
-    // the list of existing and then predefined languages.
+    // If we have no languages available, present the list of predefined
+    // languages only. If we do have already added languages, set up two option
+    // groups with the list of existing and then predefined languages.
     if (empty($existing_languages)) {
       $language_options = $this->languageManager->getStandardLanguageListWithoutConfigured();
     }

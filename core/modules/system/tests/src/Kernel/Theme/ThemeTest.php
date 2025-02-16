@@ -67,8 +67,8 @@ class ThemeTest extends KernelTestBase {
       }
     }
 
-    // suggestion_not_implemented is not an implemented theme hook so \Drupal::theme() service
-    // should return FALSE instead of a string.
+    // suggestion_not_implemented is not an implemented theme hook so
+    // \Drupal::theme() service should return FALSE instead of a string.
     $output = \Drupal::theme()->render(['suggestion_not_implemented'], []);
     $this->assertFalse($output, '\Drupal::theme() returns FALSE when a hook suggestion is not implemented.');
   }

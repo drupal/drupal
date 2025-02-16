@@ -79,7 +79,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     $data = $this->config->toArray();
     $data['settings']['foobar'] = TRUE;
     $this->assertValidationErrors('block.block.branding', $data,
-      // Now 1 validation error should be triggered: one for the unsupported key.
+      // Now 1 validation error should be triggered: one for the unsupported
+      // key.
       // @see \Drupal\system\Plugin\Block\SystemBrandingBlock::defaultConfiguration()
       // @see \Drupal\system\Plugin\Block\SystemPoweredByBlock::defaultConfiguration()
       [

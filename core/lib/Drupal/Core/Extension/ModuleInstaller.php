@@ -722,10 +722,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $source_storage = $config_installer->getSourceStorage();
 
     if (!empty($module_filenames)) {
-      // This reboots the kernel to register the module's bundle and its services
-      // in the service container. The $module_filenames argument is taken over as
-      // %container.modules% parameter, which is passed to a fresh ModuleHandler
-      // instance upon first retrieval.
+      // This reboots the kernel to register the module's bundle and its
+      // services in the service container. The $module_filenames argument is
+      // taken over as %container.modules% parameter, which is passed to a fresh
+      // ModuleHandler instance upon first retrieval.
       $this->kernel->updateModules($module_filenames, $module_filenames);
       $container = $this->kernel->getContainer();
     }

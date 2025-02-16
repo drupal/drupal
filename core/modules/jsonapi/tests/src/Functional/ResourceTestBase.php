@@ -2038,7 +2038,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     if ($this->entity->getEntityType()->hasKey('label')) {
       $request_options[RequestOptions::BODY] = $parseable_invalid_request_body;
-      // DX: 422 when invalid entity: multiple values sent for single-value field.
+      // DX: 422 when invalid entity: multiple values sent for single-value
+      // field.
       $response = $this->request('POST', $url, $request_options);
       $label_field = $this->entity->getEntityType()->getKey('label');
       $label_field_capitalized = $this->entity->getFieldDefinition($label_field)->getLabel();
@@ -3542,8 +3543,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $entity_type = $this->entity->getEntityType();
     if ($entity_type instanceof ContentEntityTypeInterface &&
       ($field_name = $entity_type->getRevisionMetadataKey('revision_log_message'))) {
-      // The default entity access control handler assumes that permissions do not
-      // change during the lifetime of a request and caches access results.
+      // The default entity access control handler assumes that permissions do
+      // not change during the lifetime of a request and caches access results.
       // However, we're changing permissions during a test run and need fresh
       // results, so reset the cache.
       \Drupal::entityTypeManager()->getAccessControlHandler($this->entity->getEntityTypeId())->resetCache();

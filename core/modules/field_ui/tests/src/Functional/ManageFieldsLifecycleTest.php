@@ -217,7 +217,8 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
 
     // Test the cardinality validation is not access sensitive.
 
-    // Remove the cardinality limit 4 so we can add a node the user doesn't have access to.
+    // Remove the cardinality limit 4 so we can add a node the user doesn't have
+    // access to.
     $edit = [
       'field_storage[subform][cardinality]' => (string) FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];

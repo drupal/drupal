@@ -125,7 +125,8 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
     $web_assert->elementNotExists('css', '.contextual .trigger.visually-hidden');
     // The toolbar edit button should read "Editing".
     $web_assert->elementContains('css', static::TOOLBAR_EDIT_LINK_SELECTOR, 'Editing');
-    // The main canvas element should have the "js-settings-tray-edit-mode" class.
+    // The main canvas element should have the "js-settings-tray-edit-mode"
+    // class.
     $web_assert->elementExists('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode');
   }
 

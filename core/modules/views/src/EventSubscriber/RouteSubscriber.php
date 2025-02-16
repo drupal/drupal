@@ -138,8 +138,8 @@ class RouteSubscriber extends RouteSubscriberBase {
       if (($view = $view->getExecutable()) && $view instanceof ViewExecutable) {
         if ($view->setDisplay($display_id) && $display = $view->displayHandlers->get($display_id)) {
           if ($display instanceof DisplayRouterInterface) {
-            // If the display returns TRUE a route item was found, so it does not
-            // have to be added.
+            // If the display returns TRUE a route item was found, so it does
+            // not have to be added.
             $view_route_names = $display->alterRoutes($collection);
             $this->viewRouteNames = $view_route_names + $this->viewRouteNames;
             foreach ($view_route_names as $id_display => $route_name) {

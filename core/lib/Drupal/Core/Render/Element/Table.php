@@ -151,7 +151,8 @@ class Table extends FormElementBase {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    // If #multiple is FALSE, the regular default value of radio buttons is used.
+    // If #multiple is FALSE, the regular default value of radio buttons is
+    // used.
     if (!empty($element['#tableselect']) && !empty($element['#multiple'])) {
       // Contrary to #type 'checkboxes', the default value of checkboxes in a
       // table is built from the array keys (instead of array values) of the
@@ -424,9 +425,10 @@ class Table extends FormElementBase {
       $element['#attached']['library'][] = 'core/drupal.tableheader';
       $element['#attributes']['class'][] = 'sticky-header';
     }
-    // If the table has headers and it should react responsively to columns hidden
-    // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
-    // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
+    // If the table has headers and it should react responsively to columns
+    // hidden with the classes represented by the constants
+    // RESPONSIVE_PRIORITY_MEDIUM and RESPONSIVE_PRIORITY_LOW, add the
+    // tableresponsive behaviors.
     if (count($element['#header']) && $element['#responsive']) {
       $element['#attached']['library'][] = 'core/drupal.tableresponsive';
       // Add 'responsive-enabled' class to the table to identify it for JS.

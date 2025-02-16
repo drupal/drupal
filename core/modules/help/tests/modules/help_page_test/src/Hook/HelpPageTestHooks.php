@@ -29,8 +29,8 @@ class HelpPageTestHooks {
       case 'help_page_test.test_array':
         return ['#markup' => 'Help text from help_page_test_help module.'];
     }
-    // Ensure that hook_help() can return an empty string and not cause the block
-    // to display.
+    // Ensure that hook_help() can return an empty string and not cause the
+    // block to display.
     return '';
   }
 

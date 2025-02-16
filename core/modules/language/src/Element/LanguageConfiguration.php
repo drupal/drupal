@@ -53,8 +53,8 @@ class LanguageConfiguration extends FormElementBase {
 
     // Add the entity type and bundle information to the form if they are set.
     // They will be used, in the submit handler, to generate the names of the
-    // configuration entities that will store the settings and are a way to uniquely
-    // identify the entity.
+    // configuration entities that will store the settings and are a way to
+    // uniquely identify the entity.
     $language = $form_state->get('language') ?: [];
     $language += [
       $element['#name'] => [

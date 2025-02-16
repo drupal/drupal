@@ -870,7 +870,8 @@ function system_requirements($phase): array {
       else {
         $error = t('The directory %directory is not writable.', ['%directory' => $directory]);
       }
-      // The files directory requirement check is done only during install and runtime.
+      // The files directory requirement check is done only during install and
+      // runtime.
       if ($phase == 'runtime') {
         $description = t('You may need to set the correct directory at the <a href=":admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', [':admin-file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
       }
@@ -992,7 +993,8 @@ function system_requirements($phase): array {
     $requirements['update access']['title'] = t('Access to update.php');
   }
 
-  // Display an error if a newly introduced dependency in a module is not resolved.
+  // Display an error if a newly introduced dependency in a module is not
+  // resolved.
   if ($phase === 'update' || $phase === 'runtime') {
     $create_extension_incompatibility_list = function (array $extension_names, PluralTranslatableMarkup $description, PluralTranslatableMarkup $title, TranslatableMarkup|string $message = '', TranslatableMarkup|string $additional_description = '') {
       if ($message === '') {

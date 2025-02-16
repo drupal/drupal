@@ -58,8 +58,8 @@ class ListNormalizerTest extends UnitTestCase {
       ->method('getPropertyInstance')
       ->willReturn($this->typedData);
 
-    // Set up a mock container as ItemList() will call for the 'typed_data_manager'
-    // service.
+    // Set up a mock container as ItemList() will call for the
+    // 'typed_data_manager' service.
     $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
       ->onlyMethods(['get'])
       ->getMock();

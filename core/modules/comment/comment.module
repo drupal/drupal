@@ -168,7 +168,8 @@ function template_preprocess_comment(&$variables): void {
     $variables['author_id'] = $comment->getOwnerId();
     $variables['new_indicator_timestamp'] = $comment->getChangedTime();
     $variables['created'] = $date_formatter->format($comment->getCreatedTime());
-    // Avoid calling DateFormatterInterface::format() twice on the same timestamp.
+    // Avoid calling DateFormatterInterface::format() twice on the same
+    // timestamp.
     if ($comment->getChangedTime() == $comment->getCreatedTime()) {
       $variables['changed'] = $variables['created'];
     }

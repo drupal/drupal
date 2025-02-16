@@ -323,8 +323,8 @@ class Schema extends DatabaseSchema {
     // supports adding new fields to a table, in some simple cases. In most
     // cases, we have to create a new table and copy the data over.
     if (empty($keys_new) && (empty($specification['not null']) || isset($specification['default']))) {
-      // When we don't have to create new keys and we are not creating a
-      // NOT NULL column without a default value, we can use the quicker version.
+      // When we don't have to create new keys and we are not creating a NOT
+      // NULL column without a default value, we can use the quicker version.
       $query = 'ALTER TABLE {' . $table . '} ADD ' . $this->createFieldSql($field, $this->processField($specification));
       $this->executeDdlStatement($query);
 

@@ -60,8 +60,8 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
     $default_method = $this->config('user.settings')->get('cancel_method');
     $own_account = $this->entity->id() == $this->currentUser()->id();
     // Options supplied via user_cancel_methods() can have a custom
-    // #confirm_description property for the confirmation form description.
-    // This text refers to "Your account" so only user it if cancelling own account.
+    // #confirm_description property for the confirmation form description. This
+    // text refers to "Your account" so only user it if cancelling own account.
     if ($own_account && isset($this->cancelMethods[$default_method]['#confirm_description'])) {
       return $this->cancelMethods[$default_method]['#confirm_description'];
     }

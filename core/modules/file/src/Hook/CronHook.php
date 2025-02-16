@@ -36,8 +36,8 @@ class CronHook {
   public function __invoke(): void {
     $age = $this->configFactory->get('system.file')->get('temporary_maximum_age');
     $fileStorage = $this->entityTypeManager->getStorage('file');
-    // Only delete temporary files if older than $age. Note that automatic cleanup
-    // is disabled if $age set to 0.
+    // Only delete temporary files if older than $age. Note that automatic
+    // cleanup is disabled if $age set to 0.
     if ($age) {
       $fids = $fileStorage->getQuery()->accessCheck(FALSE)->condition('status', FileInterface::STATUS_PERMANENT, '<>')->condition('changed', $this->time->getRequestTime() - $age, '<')->range(0, 100)->execute();
       /** @var \Drupal\file\FileInterface[] $files */

@@ -27,7 +27,8 @@ function _drupal_maintenance_theme() {
   require_once __DIR__ . '/common.inc';
   require_once __DIR__ . '/module.inc';
 
-  // Install and update pages are treated differently to prevent theming overrides.
+  // Install and update pages are treated differently to prevent theming
+  // overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
     if (InstallerKernel::installationAttempted()) {
       $custom_theme = $GLOBALS['install_state']['theme'];

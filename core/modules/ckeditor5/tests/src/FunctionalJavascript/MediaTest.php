@@ -611,7 +611,8 @@ class MediaTest extends MediaTestBase {
     $this->assertEquals('center', $drupal_media_element->getAttribute('data-align'));
 
     $page->pressButton('Save');
-    // Check that the 'content has been updated' message status appears to confirm we left the editor.
+    // Check that the 'content has been updated' message status appears to
+    // confirm we left the editor.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.messages.messages--status'));
     // Check that the class is correct in the front end.
     $assert_session->elementExists('css', 'figure.align-center');
@@ -743,7 +744,8 @@ class MediaTest extends MediaTestBase {
     $assert_session->elementNotExists('css', '.ck-widget.drupal-media.arbitrary-class');
     $page->pressButton('Save');
 
-    // Check that the 'content has been updated' message status appears to confirm we left the editor.
+    // Check that the 'content has been updated' message status appears to
+    // confirm we left the editor.
     $assert_session->waitForElementVisible('css', 'messages messages--status');
 
     // Ensure that the class is correct in the front end.

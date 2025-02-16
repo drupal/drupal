@@ -230,7 +230,8 @@ class SessionTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderDoesNotExist('Set-Cookie');
 
-    // Verify that no session is created if drupal_save_session(FALSE) is called.
+    // Verify that no session is created if drupal_save_session(FALSE) is
+    // called.
     $this->drupalGet('session-test/set-message-but-do-not-save');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);

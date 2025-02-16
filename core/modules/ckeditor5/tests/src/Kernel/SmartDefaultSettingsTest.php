@@ -517,7 +517,8 @@ class SmartDefaultSettingsTest extends KernelTestBase {
 
     $updated_validation_errors = $this->validatePairToViolationsArray($updated_text_editor, $updated_text_format, TRUE);
     if (is_null($expected_post_update_text_editor_violations)) {
-      // If a violation is not expected, it should be compared against an empty array.
+      // If a violation is not expected, it should be compared against an empty
+      // array.
       $this->assertSame([], $updated_validation_errors);
     }
     else {

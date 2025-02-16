@@ -40,8 +40,8 @@ class CommentPagerTest extends CommentTestBase {
 
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_FLAT, 'Comment paging changed.');
 
-    // Set "Comments per page" as zero and verify that all comments are appearing
-    // on the page.
+    // Set "Comments per page" as zero and verify that all comments are
+    // appearing on the page.
     $this->setCommentsPerPage(0);
     $this->drupalGet('node/' . $node->id());
     $this->assertTrue($this->commentExists($comments[0]), 'Comment 1 appears on page.');

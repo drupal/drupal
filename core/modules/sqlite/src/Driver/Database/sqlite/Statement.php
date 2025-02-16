@@ -97,7 +97,8 @@ class Statement extends StatementPrefetchIterator implements StatementInterface 
       // @see http://www.sqlite.org/faq.html#q15
       // @see http://www.sqlite.org/rescode.html#schema
       if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 17) {
-        // The schema has changed. SQLite specifies that we must resend the query.
+        // The schema has changed. SQLite specifies that we must resend the
+        // query.
         $return = parent::execute($args, $options);
       }
       else {

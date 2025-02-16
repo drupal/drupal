@@ -337,7 +337,8 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
           $this->currentItem = [];
         }
         elseif ($this->context == 'MSGID') {
-          // We are currently already in the context, meaning we passed an id with no data.
+          // We are currently already in the context, meaning we passed an id
+          // with no data.
           $this->errors[] = new FormattableMarkup('The translation stream %uri contains an error: "msgid" is unexpected on line %line.', $log_vars);
           return FALSE;
         }
@@ -455,7 +456,8 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         return;
       }
       elseif ($line != '') {
-        // Anything that is not a token may be a continuation of a previous token.
+        // Anything that is not a token may be a continuation of a previous
+        // token.
 
         $quoted = $this->parseQuoted($line);
         if ($quoted === FALSE) {

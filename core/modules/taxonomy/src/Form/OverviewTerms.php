@@ -539,12 +539,14 @@ class OverviewTerms extends FormBase {
     foreach ($form_state->getValue('terms') as $tid => $values) {
       if (isset($form['terms'][$tid]['#term'])) {
         $term = $form['terms'][$tid]['#term'];
-        // Give terms at the root level a weight in sequence with terms on previous pages.
+        // Give terms at the root level a weight in sequence with terms on
+        // previous pages.
         if ($values['term']['parent'] == 0 && $term->getWeight() != $weight) {
           $term->setWeight($weight);
           $changed_terms[$term->id()] = $term;
         }
-        // Terms not at the root level can safely start from 0 because they're all on this page.
+        // Terms not at the root level can safely start from 0 because they're
+        // all on this page.
         elseif ($values['term']['parent'] > 0) {
           $level_weights[$values['term']['parent']] = isset($level_weights[$values['term']['parent']]) ? $level_weights[$values['term']['parent']] + 1 : 0;
           if ($level_weights[$values['term']['parent']] != $term->getWeight()) {

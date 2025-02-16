@@ -55,8 +55,8 @@ abstract class RouteMatchTestBase extends UnitTestCase {
         // Parameters should be filtered to only those defined by the route.
         // Specifically:
         // - Path parameters, regardless of name.
-        // - Defaults that are not path parameters only if they do not start with
-        //   an underscore.
+        // - Defaults that are not path parameters only if they do not start
+        //   with an underscore.
         [
           'param_without_leading_underscore' => 'value',
           '_param_with_leading_underscore' => 'value',

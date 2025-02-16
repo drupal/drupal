@@ -105,7 +105,8 @@ class NodeTestHooks {
   public function nodeAccessRecordsAlter(&$grants, NodeInterface $node): void {
     if (!empty($grants)) {
       foreach ($grants as $key => $grant) {
-        // Alter grant from test_page_realm to test_alter_realm and modify the gid.
+        // Alter grant from test_page_realm to test_alter_realm and modify the
+        // gid.
         if ($grant['realm'] == 'test_page_realm' && $node->isPromoted()) {
           $grants[$key]['realm'] = 'test_alter_realm';
           $grants[$key]['gid'] = 2;

@@ -328,7 +328,8 @@ class ModulesListForm extends FormBase {
 
     // Disable the checkbox for required modules.
     if (!empty($module->info['required'])) {
-      // Used when displaying modules that are required by the installation profile
+      // Used when displaying modules that are required by the installation
+      // profile
       $row['enable']['#disabled'] = TRUE;
       $row['#required_by'][] = $distribution . (!empty($module->info['explanation']) ? ' (' . $module->info['explanation'] . ')' : '');
     }
@@ -352,7 +353,8 @@ class ModulesListForm extends FormBase {
       ]);
     }
 
-    // Ensure this module is compatible with the currently installed version of PHP.
+    // Ensure this module is compatible with the currently installed version of
+    // PHP.
     if (version_compare(phpversion(), $module->info['php']) < 0) {
       $compatible = FALSE;
       $required = $module->info['php'] . (substr_count($module->info['php'], '.') < 2 ? '.*' : '');

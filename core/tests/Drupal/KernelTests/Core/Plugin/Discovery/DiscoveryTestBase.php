@@ -52,7 +52,8 @@ abstract class DiscoveryTestBase extends KernelTestBase {
       $this->assertDefinitionIdentical($this->discovery->getDefinition($id), $definition);
     }
 
-    // Ensure that an empty array is returned if no plugin definitions are found.
+    // Ensure that an empty array is returned if no plugin definitions are
+    // found.
     $this->assertSame([], $this->emptyDiscovery->getDefinitions(), 'Empty array returned if no plugin definitions are found.');
 
     // Ensure that NULL is returned as the definition of a non-existing plugin.

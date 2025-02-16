@@ -80,7 +80,8 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     // @see \Drupal\Core\Entity\Sql\DefaultTableMapping::generateFieldTableName()
     $this->createEntityReferenceField('entity_test_mul_changed', 'entity_test_mul_changed', 'field_test_data_with_a_long_name', 'field_test_data_with_a_long_name', 'entity_test');
 
-    // Create reference from entity_test_mul to entity_test cardinality: infinite.
+    // Create reference from entity_test_mul to entity_test cardinality:
+    // infinite.
     $this->createEntityReferenceField('entity_test_mul', 'entity_test_mul', 'field_data_test_unlimited', 'field_data_test_unlimited', 'entity_test', 'default', [], FieldStorageConfig::CARDINALITY_UNLIMITED);
 
     ViewTestData::createTestViews(static::class, ['entity_reference_test_views']);

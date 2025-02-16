@@ -126,10 +126,10 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $file->save();
 
     // Setup the site languages by installing two languages.
-    // Set the default language in order for the translated string to be registered
-    // into database when seen by t(). Without doing this, our target string
-    // is for some reason not found when doing translate search. This might
-    // be some bug.
+    // Set the default language in order for the translated string to be
+    // registered into database when seen by t(). Without doing this, our target
+    // string is for some reason not found when doing translate search. This
+    // might be some bug.
     $default_language = \Drupal::languageManager()->getDefaultLanguage();
     ConfigurableLanguage::createFromLangcode($langcode_browser_fallback)->save();
     $this->config('system.site')->set('default_langcode', $langcode_browser_fallback)->save();

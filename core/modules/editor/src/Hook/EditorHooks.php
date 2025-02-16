@@ -276,26 +276,27 @@ class EditorHooks {
     if (!$file) {
       return NULL;
     }
-    // Temporary files are handled by file_file_download(), so nothing to do here
-    // about them.
+    // Temporary files are handled by file_file_download(), so nothing to do
+    // here about them.
     // @see file_file_download()
     // Find out if any editor-backed field contains the file.
     $usage_list = \Drupal::service('file.usage')->listUsage($file);
     // Stop processing if there are no references in order to avoid returning
     // headers for files controlled by other modules. Make an exception for
-    // temporary files where the host entity has not yet been saved (for example,
-    // an image preview on a node creation form) in which case, allow download by
-    // the file's owner.
+    // temporary files where the host entity has not yet been saved (for
+    // example, an image preview on a node creation form) in which case, allow
+    // download by the file's owner.
     if (empty($usage_list['editor']) && ($file->isPermanent() || $file->getOwnerId() != \Drupal::currentUser()->id())) {
       return NULL;
     }
-    // Editor.module MUST NOT call $file->access() here (like file_file_download()
-    // does) as checking the 'download' access to a file entity would end up in
-    // FileAccessControlHandler->checkAccess() and ->getFileReferences(), which
-    // calls file_get_file_references(). This latter one would allow downloading
-    // files only handled by the file.module, which is exactly not the case right
-    // here. So instead we must check if the current user is allowed to view any
-    // of the entities that reference the image using the 'editor' module.
+    // Editor.module MUST NOT call $file->access() here (like
+    // file_file_download() does) as checking the 'download' access to a file
+    // entity would end up in FileAccessControlHandler->checkAccess() and
+    // ->getFileReferences(), which calls file_get_file_references(). This
+    // latter one would allow downloading files only handled by the file.module,
+    // which is exactly not the case right here. So instead we must check if the
+    // current user is allowed to view any of the entities that reference the
+    // image using the 'editor' module.
     if ($file->isPermanent()) {
       $referencing_entity_is_accessible = FALSE;
       $references = empty($usage_list['editor']) ? [] : $usage_list['editor'];

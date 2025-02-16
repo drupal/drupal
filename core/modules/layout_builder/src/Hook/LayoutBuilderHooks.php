@@ -162,8 +162,8 @@ class LayoutBuilderHooks {
           $replacement = $build[$field_name] ?? [];
           ExtraFieldBlock::replaceFieldPlaceholder($build, $replacement, $field_name);
           // After the rendered field in $build has been copied over to the
-          // ExtraFieldBlock block we must remove it from its original location or
-          // else it will be rendered twice.
+          // ExtraFieldBlock block we must remove it from its original location
+          // or else it will be rendered twice.
           unset($build[$field_name]);
         }
       }
@@ -266,7 +266,8 @@ class LayoutBuilderHooks {
     /** @var \Drupal\block_content\BlockContentInterface $entity */
     if ($operation === 'view' || $entity->isReusable() || empty(\Drupal::service('inline_block.usage')->getUsage($entity->id()))) {
       // If the operation is 'view' or this is reusable block or if this is
-      // non-reusable that isn't used by this module then don't alter the access.
+      // non-reusable that isn't used by this module then don't alter the
+      // access.
       return AccessResult::neutral();
     }
     if ($account->hasPermission('create and edit custom blocks')) {
@@ -347,8 +348,8 @@ class LayoutBuilderHooks {
         }
           return $link->getUrl()->getRouteName() !== "entity.entity_view_display.{$entity_type_id}.default";
       });
-      // Links cannot be removed from an existing breadcrumb object. Create a new
-      // object but carry over the cacheable metadata.
+      // Links cannot be removed from an existing breadcrumb object. Create a
+      // new object but carry over the cacheable metadata.
       $cacheability = CacheableMetadata::createFromObject($breadcrumb);
       $breadcrumb = new Breadcrumb();
       $breadcrumb->setLinks($links);
@@ -363,8 +364,8 @@ class LayoutBuilderHooks {
   public function entityTranslationCreate(EntityInterface $translation): void {
     /** @var \Drupal\Core\Entity\FieldableEntityInterface $translation */
     if ($translation->hasField(OverridesSectionStorage::FIELD_NAME) && $translation->getFieldDefinition(OverridesSectionStorage::FIELD_NAME)->isTranslatable()) {
-      // When creating a new translation do not copy untranslated sections because
-      // per-language layouts are not supported.
+      // When creating a new translation do not copy untranslated sections
+      // because per-language layouts are not supported.
       $translation->set(OverridesSectionStorage::FIELD_NAME, []);
     }
   }

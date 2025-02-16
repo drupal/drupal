@@ -199,7 +199,8 @@ class CommentManager implements CommentManagerInterface {
     // @todo Replace module handler with optional history service injection
     //   after https://www.drupal.org/node/2081585.
     if ($this->currentUser->isAuthenticated() && $this->moduleHandler->moduleExists('history')) {
-      // Retrieve the timestamp at which the current user last viewed this entity.
+      // Retrieve the timestamp at which the current user last viewed this
+      // entity.
       if (!$timestamp) {
         if ($entity->getEntityTypeId() == 'node') {
           $timestamp = history_read($entity->id());

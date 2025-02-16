@@ -109,8 +109,8 @@ JS;
 
     // The CKEditor 5 module should refuse to allow styles on non-HTML5 tags.
     $assert_session->waitForElement('css', '[role=alert][data-drupal-message-type="error"]:contains("A style can only be specified for an HTML 5 tag. <drupal-media> is not an HTML5 tag.")');
-    // The vertical tab for "Style" settings should not be marked up as the cause
-    // of the error, but only the "Styles" text area in the vertical tab.
+    // The vertical tab for "Style" settings should not be marked up as the
+    // cause of the error, but only the "Styles" text area in the vertical tab.
     $assert_session->elementNotExists('css', '.vertical-tabs__pane[data-ckeditor5-plugin-id="ckeditor5_style"][aria-invalid="true"]');
     $assert_session->elementExists('css', '.vertical-tabs__pane[data-ckeditor5-plugin-id="ckeditor5_style"] textarea[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"][aria-invalid="true"]');
 

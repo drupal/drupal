@@ -66,14 +66,14 @@ class ThemeCommonElements {
         ],
       ],
       'image' => [
-        // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
-        // allows the alt attribute to be omitted in some cases. Therefore,
-        // default the alt attribute to an empty string, but allow code providing
-        // variables to image.html.twig templates to pass explicit NULL for it to
-        // be omitted. Usually, neither omission nor an empty string satisfies
-        // accessibility requirements, so it is strongly encouraged for code
-        // building variables for image.html.twig templates to pass a meaningful
-        // value for the alt variable.
+        // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5
+        // draft allows the alt attribute to be omitted in some cases.
+        // Therefore, default the alt attribute to an empty string, but allow
+        // code providing variables to image.html.twig templates to pass
+        // explicit NULL for it to be omitted. Usually, neither omission nor an
+        // empty string satisfies accessibility requirements, so it is strongly
+        // encouraged for code building variables for image.html.twig templates
+        // to pass a meaningful value for the alt variable.
         // - https://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
         // - https://www.w3.org/TR/xhtml1/dtds.html
         // - http://dev.w3.org/html5/spec/Overview.html#alt

@@ -108,9 +108,9 @@ class ThemeTestHooks {
   #[Hook('library_info_alter')]
   public function libraryInfoAlter(array &$libraries, string $extension) : void {
     // Allow test code to simulate library changes in a particular extension by
-    // setting a state key in the form `theme_test_library_info_alter $extension`,
-    // whose values is an array containing everything that should be recursively
-    // merged into the given extension's library definitions.
+    // setting a state key in the form `theme_test_library_info_alter
+    // $extension`, whose values is an array containing everything that should
+    // be recursively merged into the given extension's library definitions.
     $info = \Drupal::state()->get('theme_test_library_info_alter' . " {$extension}");
     if (is_array($info)) {
       $libraries = NestedArray::mergeDeep($libraries, $info);

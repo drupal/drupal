@@ -261,7 +261,8 @@ class EntityDisplayTest extends KernelTestBase {
     ];
     $this->assertEquals($expected, $display->getComponent($field_name));
 
-    // Check that the getFormatter() method returns the correct formatter plugin.
+    // Check that the getFormatter() method returns the correct formatter
+    // plugin.
     $formatter = $display->getRenderer($field_name);
     $this->assertEquals($default_formatter, $formatter->getPluginId());
     $this->assertEquals($formatter_settings, $formatter->getSettings());

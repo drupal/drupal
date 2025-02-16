@@ -68,7 +68,8 @@ class HtmlTest extends TestCase {
     return [
       // Verify that no valid ASCII characters are stripped from the identifier.
       [$id1, $id1, []],
-      // Verify that valid UTF-8 characters are not stripped from the identifier.
+      // Verify that valid UTF-8 characters are not stripped from the
+      // identifier.
       [$id2, $id2, []],
       // Verify that double underscores are not stripped from the identifier.
       [$id3, $id3],

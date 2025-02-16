@@ -162,7 +162,8 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->submitForm($edit, 'Create new account');
     $this->assertSession()->pageTextContains('The email address ' . $duplicate_user->getEmail() . ' is already taken.');
 
-    // Attempt to bypass duplicate email registration validation by adding spaces.
+    // Attempt to bypass duplicate email registration validation by adding
+    // spaces.
     $edit['mail'] = '   ' . $duplicate_user->getEmail() . '   ';
 
     $this->drupalGet('user/register');

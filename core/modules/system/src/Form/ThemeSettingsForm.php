@@ -195,7 +195,8 @@ class ThemeSettingsForm extends ConfigFormBase {
     foreach ($toggles as $name => $title) {
       if ((!$theme) || in_array($name, $features)) {
         $form['theme_settings']['toggle_' . $name] = ['#type' => 'checkbox', '#title' => $title, '#default_value' => theme_get_setting('features.' . $name, $theme)];
-        // Disable checkboxes for features not supported in the current configuration.
+        // Disable checkboxes for features not supported in the current
+        // configuration.
         if (isset($disabled['toggle_' . $name])) {
           $form['theme_settings']['toggle_' . $name]['#disabled'] = TRUE;
         }
@@ -433,8 +434,8 @@ class ThemeSettingsForm extends ConfigFormBase {
         $form_state->unsetValue('favicon_path');
       }
 
-      // If the user provided a path for a logo or favicon file, make sure a file
-      // exists at that path.
+      // If the user provided a path for a logo or favicon file, make sure a
+      // file exists at that path.
       if ($form_state->getValue('logo_path')) {
         $path = $this->validatePath($form_state->getValue('logo_path'));
         if (!$path) {
@@ -467,8 +468,8 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     $values = $form_state->getValues();
 
-    // If the user uploaded a new logo or favicon, save it to a permanent location
-    // and use it in place of the default theme-provided file.
+    // If the user uploaded a new logo or favicon, save it to a permanent
+    // location and use it in place of the default theme-provided file.
     $default_scheme = $this->config('system.file')->get('default_scheme');
     try {
       if (!empty($values['logo_upload'])) {
@@ -494,8 +495,8 @@ class ThemeSettingsForm extends ConfigFormBase {
     unset($values['logo_upload']);
     unset($values['favicon_upload']);
 
-    // If the user entered a path relative to the system files directory for
-    // a logo or favicon, store a public:// URI so the theme system can handle it.
+    // If the user entered a path relative to the system files directory for a
+    // logo or favicon, store a public:// URI so the theme system can handle it.
     if (!empty($values['logo_path'])) {
       $values['logo_path'] = $this->validatePath($values['logo_path']);
     }

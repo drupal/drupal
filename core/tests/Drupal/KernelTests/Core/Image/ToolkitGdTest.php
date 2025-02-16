@@ -242,9 +242,9 @@ class ToolkitGdTest extends KernelTestBase {
           'arguments' => [],
           'height' => 20,
           'width' => 40,
-          // Grayscale corners are a bit funky. Each of the corners are a shade of
-          // gray. The values of these were determined simply by looking at the
-          // final image to see what desaturated colors end up being.
+          // Grayscale corners are a bit funky. Each of the corners are a shade
+          // of gray. The values of these were determined simply by looking at
+          // the final image to see what desaturated colors end up being.
           'corners' => [
             array_fill(0, 3, 76) + [3 => 0],
             array_fill(0, 3, 149) + [3 => 0],

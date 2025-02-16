@@ -93,8 +93,8 @@ class ContentModerationHooks {
     if (isset($base_field_definitions['moderation_state'])) {
       // Add the target bundle to the moderation state field. Since each bundle
       // can be attached to a different moderation workflow, adding this
-      // information to the field definition allows the associated workflow to be
-      // derived where a field definition is present.
+      // information to the field definition allows the associated workflow to
+      // be derived where a field definition is present.
       $base_field_definitions['moderation_state']->setTargetBundle($bundle);
       return ['moderation_state' => $base_field_definitions['moderation_state']];
     }
@@ -248,7 +248,8 @@ class ContentModerationHooks {
       $moderation_info = \Drupal::service('content_moderation.moderation_information');
       $entity_type = \Drupal::entityTypeManager()->getDefinition($field_definition->getTargetEntityTypeId());
       $entity = $items->getEntity();
-      // Deny edit access to the published field if the entity is being moderated.
+      // Deny edit access to the published field if the entity is being
+      // moderated.
       if ($entity_type->hasKey('published') && $moderation_info->isModeratedEntity($entity) && $entity->moderation_state && $field_definition->getName() == $entity_type->getKey('published')) {
         return AccessResult::forbidden('Cannot edit the published field of moderated entities.');
       }
@@ -269,10 +270,10 @@ class ContentModerationHooks {
    */
   #[Hook('action_info_alter')]
   public function actionInfoAlter(&$definitions): void {
-    // The publish/unpublish actions are not valid on moderated entities. So swap
-    // their implementations out for alternates that will become a no-op on a
-    // moderated entity. If another module has already swapped out those classes,
-    // though, we'll be polite and do nothing.
+    // The publish/unpublish actions are not valid on moderated entities. So
+    // swap their implementations out for alternates that will become a no-op on
+    // a moderated entity. If another module has already swapped out those
+    // classes, though, we'll be polite and do nothing.
     foreach ($definitions as &$definition) {
       if ($definition['id'] === 'entity:publish_action' && $definition['class'] == PublishAction::class) {
         $definition['class'] = ModerationOptOutPublish::class;
@@ -297,10 +298,10 @@ class ContentModerationHooks {
         foreach ($plugin->getBundlesForEntityType($entity_type_id) as $bundle_id) {
           if (isset($bundles[$entity_type_id][$bundle_id])) {
             $bundles[$entity_type_id][$bundle_id]['workflow'] = $workflow->id();
-            // If we have even one moderation-enabled translatable bundle, we need
-            // to make the moderation state bundle translatable as well, to enable
-            // the revision translation merge logic also for content moderation
-            // state revisions.
+            // If we have even one moderation-enabled translatable bundle, we
+            // need to make the moderation state bundle translatable as well, to
+            // enable the revision translation merge logic also for content
+            // moderation state revisions.
             if (!empty($bundles[$entity_type_id][$bundle_id]['translatable'])) {
               $translatable = TRUE;
             }

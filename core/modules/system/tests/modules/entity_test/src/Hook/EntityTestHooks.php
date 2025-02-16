@@ -217,9 +217,9 @@ class EntityTestHooks {
   public function entityExtraFieldInfo(): array {
     $extra['entity_test']['bundle_with_extra_fields'] = [
       'display' => [
-              // Note: those extra fields do not currently display anything, they are
-              // just used in \Drupal\Tests\field_ui\Kernel\EntityDisplayTest to test
-              // the behavior of entity display objects.
+        // Note: those extra fields do not currently display anything, they are
+        // just used in \Drupal\Tests\field_ui\Kernel\EntityDisplayTest to test
+        // the behavior of entity display objects.
         'display_extra_field' => [
           'label' => $this->t('Display extra field'),
           'description' => $this->t('An extra field on the display side.'),

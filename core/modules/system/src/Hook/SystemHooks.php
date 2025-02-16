@@ -205,11 +205,12 @@ class SystemHooks {
     // Generate the values for the core/drupal.ajax library.
     // We need to send ajaxPageState settings for core/drupal.ajax if:
     // - ajaxPageState is being loaded in this Response, in which case it will
-    //   already exist at $settings['ajaxPageState'] (because the core/drupal.ajax
-    //   library definition specifies a placeholder 'ajaxPageState' setting).
+    //   already exist at $settings['ajaxPageState'] (because the
+    //   core/drupal.ajax library definition specifies a placeholder
+    //   'ajaxPageState' setting).
     // - core/drupal.ajax already has been loaded and hence this is an AJAX
-    //   Response in which we must send the list of extra asset libraries that are
-    //   being added in this AJAX Response.
+    //   Response in which we must send the list of extra asset libraries that
+    //   are being added in this AJAX Response.
     /** @var \Drupal\Core\Asset\LibraryDependencyResolver $library_dependency_resolver */
     $library_dependency_resolver = \Drupal::service('library.dependency_resolver');
     if (isset($settings['ajaxPageState']) || in_array('core/drupal.ajax', $library_dependency_resolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()))) {
@@ -229,7 +230,8 @@ class SystemHooks {
    */
   #[Hook('js_settings_alter')]
   public function jsSettingsAlter(&$settings, AttachedAssetsInterface $assets): void {
-    // As this is being output in the final response always use the main request.
+    // As this is being output in the final response always use the main
+    // request.
     $request = \Drupal::requestStack()->getMainRequest();
     $current_query = $request->query->all();
     // Let output path processors set a prefix.
@@ -292,7 +294,8 @@ class SystemHooks {
    */
   #[Hook('system_info_alter')]
   public function systemInfoAlter(&$info, Extension $file, $type): void {
-    // Remove page-top and page-bottom from the blocks UI since they are reserved for
+    // Remove page-top and page-bottom from the blocks UI since they are
+    // reserved for
     // modules to populate from outside the blocks system.
     if ($type == 'theme') {
       $info['regions_hidden'][] = 'page_top';
@@ -457,9 +460,9 @@ class SystemHooks {
             // To ensure that all the advisory messages are grouped together on
             // the page, they must all be warnings or all be errors. If any
             // advisories are not public service announcements, then display all
-            // the messages as errors because security advisories already tied to
-            // a specific release are immediately actionable by upgrading to a
-            // secure version of a project.
+            // the messages as errors because security advisories already tied
+            // to a specific release are immediately actionable by upgrading to
+            // a secure version of a project.
             $display_as_errors = $display_as_errors ? TRUE : !$advisory->isPsa();
             $links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
           }

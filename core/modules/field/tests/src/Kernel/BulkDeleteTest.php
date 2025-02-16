@@ -357,8 +357,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
     }
 
     // Check hooks invocations.
-    // FieldItemInterface::delete() should have been called once for each entity in the
-    // bundle.
+    // FieldItemInterface::delete() should have been called once for each entity
+    // in the bundle.
     $actual_hooks = FieldTestHelper::memorize();
     $hooks = [];
     $hooks['field_test_field_delete'] = $this->entitiesByBundles[$bundle];

@@ -149,8 +149,8 @@ class CommonTestHooks {
    */
   #[Hook('page_attachments_alter')]
   public function pageAttachmentsAlter(array &$page): void {
-    // Remove a library that was added in common_test_page_attachments(), to test
-    // that this hook can do what it claims to do.
+    // Remove a library that was added in common_test_page_attachments(), to
+    // test that this hook can do what it claims to do.
     if (isset($page['#attached']['library']) && ($index = array_search('core/bar', $page['#attached']['library'])) && $index !== FALSE) {
       unset($page['#attached']['library'][$index]);
     }

@@ -318,8 +318,8 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
 
     foreach ($remove_fids as $fid) {
       // If it's a temporary file we can safely remove it immediately, otherwise
-      // it's up to the implementing module to remove usages of files to have them
-      // removed.
+      // it's up to the implementing module to remove usages of files to have
+      // them removed.
       if ($element['#files'][$fid] && $element['#files'][$fid]->isTemporary()) {
         $element['#files'][$fid]->delete();
       }

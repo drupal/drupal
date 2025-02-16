@@ -99,7 +99,8 @@ class LanguageBrowserDetectionAcceptLanguageTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Content-Language', 'fr');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'UNCACHEABLE (response policy)');
 
-    // Check with browser without language settings - should return fallback language.
+    // Check with browser without language settings - should return fallback
+    // language.
     $this->drupalGet('/system-test/echo/language test', [], ['Accept-Language' => '']);
     $this->assertSession()->responseHeaderEquals('Content-Language', 'en');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'UNCACHEABLE (response policy)');

@@ -116,8 +116,8 @@ class ViewEditForm extends ViewFormBase {
     /** @var \Drupal\views_ui\ViewUI $view */
     $view = $this->entity;
     $display_id = $this->displayID;
-    // Do not allow the form to be cached, because $form_state->get('view') can become
-    // stale between page requests.
+    // Do not allow the form to be cached, because $form_state->get('view') can
+    // become stale between page requests.
     // See views_ui_ajax_get_form() for how this affects #ajax.
     // @todo To remove this and allow the form to be cacheable:
     //   - Change $form_state->get('view') to
@@ -311,13 +311,15 @@ class ViewEditForm extends ViewFormBase {
         $displays[$new_id] = $displays[$id];
         unset($displays[$id]);
 
-        // Redirect the user to the renamed display to be sure that the page itself exists and doesn't throw errors.
+        // Redirect the user to the renamed display to be sure that the page
+        // itself exists and doesn't throw errors.
         $form_state->setRedirect('entity.view.edit_display_form', [
           'view' => $view->id(),
           'display_id' => $new_id,
         ]);
 
-        // Find attachments attached to old display id and attach them with new id.
+        // Find attachments attached to old display id and attach them with new
+        // id.
         if ($attachments) {
           foreach ($attachments as $attachment) {
             $attached_options = $executable->displayHandlers->get($attachment)->getOption('displays');
@@ -338,7 +340,8 @@ class ViewEditForm extends ViewFormBase {
     $destination = $query->get('destination');
 
     if (!empty($destination)) {
-      // Find out the first display which has a changed path and redirect to this URL.
+      // Find out the first display which has a changed path and redirect to
+      // this URL.
       $old_view = Views::getView($view->id());
       $old_view->initDisplay();
       foreach ($old_view->displayHandlers as $id => $display) {
@@ -588,11 +591,12 @@ class ViewEditForm extends ViewFormBase {
     // Collapse the details by default.
     $build['columns']['third']['#open'] = \Drupal::config('views.settings')->get('ui.show.advanced_column');
 
-    // Each option (e.g. title, access, display as grid/table/list) fits into one
-    // of several "buckets," or boxes (Format, Fields, Sort, and so on).
+    // Each option (e.g. title, access, display as grid/table/list) fits into
+    // one of several "buckets," or boxes (Format, Fields, Sort, and so on).
     $buckets = [];
 
-    // Fetch options from the display plugin, with a list of buckets they go into.
+    // Fetch options from the display plugin, with a list of buckets they go
+    // into.
     $options = [];
     $view->getExecutable()->displayHandlers->get($display['id'])->optionsSummary($buckets, $options);
 
@@ -608,8 +612,8 @@ class ViewEditForm extends ViewFormBase {
       if (isset($bucket['column']) && isset($build['columns'][$bucket['column']])) {
         $column = $bucket['column'];
       }
-      // If a bucket doesn't pick one of our predefined columns to belong to, put
-      // it in the last one.
+      // If a bucket doesn't pick one of our predefined columns to belong to,
+      // put it in the last one.
       else {
         $column = 'third';
       }
@@ -734,7 +738,8 @@ class ViewEditForm extends ViewFormBase {
     $build = $this->getDisplayTab($view);
     $response->addCommand(new HtmlCommand('#views-tab-' . $display_id, $build));
 
-    // Regenerate the top area so changes to display names and order will appear.
+    // Regenerate the top area so changes to display names and order will
+    // appear.
     $build = $this->renderDisplayTop($view);
     $response->addCommand(new ReplaceCommand('#views-display-top', $build));
   }
@@ -824,8 +829,8 @@ class ViewEditForm extends ViewFormBase {
           'class' => ['add-display'],
           'data-drupal-dropdown-label' => $label,
         ],
-        // Allow JavaScript to remove the 'Add ' prefix from the button label when
-        // placing the button in an "Add" dropdown menu.
+        // Allow JavaScript to remove the 'Add ' prefix from the button label
+        // when placing the button in an "Add" dropdown menu.
         '#process' => array_merge(['views_ui_form_button_was_clicked'], $this->elementInfo->getInfoProperty('submit', '#process', [])),
         '#values' => [$this->t('Add @display', ['@display' => $label]), $label],
       ];
@@ -1194,7 +1199,8 @@ class ViewEditForm extends ViewFormBase {
       }
     }
 
-    // If using grouping, re-order fields so that they show up properly in the list.
+    // If using grouping, re-order fields so that they show up properly in the
+    // list.
     if ($type == 'filter' && $grouping) {
       $store = $build['fields'];
       $build['fields'] = [];

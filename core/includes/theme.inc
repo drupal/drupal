@@ -825,8 +825,8 @@ function template_preprocess_table(&$variables): void {
 
         // Track responsive classes for each column as needed. Only the header
         // cells for a column are marked up with the responsive classes by a
-        // module developer or themer. The responsive classes on the header cells
-        // must be transferred to the content cells.
+        // module developer or themer. The responsive classes on the header
+        // cells must be transferred to the content cells.
         if (!empty($cell['class']) && is_array($cell['class'])) {
           if (in_array(RESPONSIVE_PRIORITY_MEDIUM, $cell['class'])) {
             $responsive_classes[$responsive_index] = RESPONSIVE_PRIORITY_MEDIUM;

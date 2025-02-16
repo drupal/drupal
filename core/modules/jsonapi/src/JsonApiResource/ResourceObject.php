@@ -97,7 +97,8 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
     $this->fields = $fields;
     $this->links = $links->withContext($this);
 
-    // If the specified language empty it falls back the same way as in the entity system
+    // If the specified language empty it falls back the same way as in the
+    // entity system
     // @see \Drupal\Core\Entity\EntityBase::language()
     $this->language = $language ?: new Language(['id' => LanguageInterface::LANGCODE_NOT_SPECIFIED]);
   }

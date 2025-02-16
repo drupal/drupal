@@ -198,8 +198,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
   if (\Drupal::hasRequest() && \Drupal::request()->isXmlHttpRequest()) {
     if ($fatal) {
       if (error_displayable($error)) {
-        // When called from JavaScript, simply output the error message.
-        // Should not translate the string to avoid errors producing more errors.
+        // When called from JavaScript, simply output the error message. Should
+        // not translate the string to avoid errors producing more errors.
         $response->setContent(new FormattableMarkup(Error::DEFAULT_ERROR_MESSAGE, $error));
         $response->send();
       }
@@ -259,8 +259,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
     }
 
     if ($fatal) {
-      // We fallback to a maintenance page at this point, because the page generation
-      // itself can generate errors.
+      // We fallback to a maintenance page at this point, because the page
+      // generation itself can generate errors.
       // Should not translate the string to avoid errors producing more errors.
       $message = 'The website encountered an unexpected error. Try again later.' . '<br />' . $message;
 

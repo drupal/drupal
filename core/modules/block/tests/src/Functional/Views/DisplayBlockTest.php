@@ -219,8 +219,8 @@ class DisplayBlockTest extends ViewTestBase {
       $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
       $this->submitForm($edit, 'Save block');
       $block = $storage->load($default_theme . '_views_block__test_view_block_block_1_' . $i);
-      // This will only return a result if our new block has been created with the
-      // expected machine name.
+      // This will only return a result if our new block has been created with
+      // the expected machine name.
       $this->assertNotEmpty($block, 'The expected block was loaded.');
     }
 

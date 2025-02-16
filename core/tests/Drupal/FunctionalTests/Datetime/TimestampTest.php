@@ -171,7 +171,8 @@ class TimestampTest extends BrowserTestBase {
     $this->drupalGet('entity_test/add');
     $date_format = DateFormat::load('html_date')->getPattern();
     $time_format = DateFormat::load('html_time')->getPattern();
-    // Make sure the default field value is set as the default value in the widget.
+    // Make sure the default field value is set as the default value in the
+    // widget.
     $this->assertSession()->fieldExists('field_timestamp[0][value][date]');
     $this->assertSession()->fieldValueEquals('field_timestamp[0][value][date]', $date->format($date_format));
     $this->assertSession()->fieldExists('field_timestamp[0][value][time]');

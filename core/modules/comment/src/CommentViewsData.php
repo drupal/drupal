@@ -235,8 +235,8 @@ class CommentViewsData extends EntityViewsData {
     $data['comment_field_data']['pid']['relationship']['help'] = $this->t('The parent comment');
     $data['comment_field_data']['pid']['relationship']['label'] = $this->t('parent');
 
-    // Define the base group of this table. Fields that don't have a group defined
-    // will go into this field by default.
+    // Define the base group of this table. Fields that don't have a group
+    // defined will go into this field by default.
     $data['comment_entity_statistics']['table']['group'] = $this->t('Comment Statistics');
 
     // Provide a relationship for each entity type except comment.
@@ -246,10 +246,10 @@ class CommentViewsData extends EntityViewsData {
       }
       // This relationship does not use the 'field id' column, if the entity has
       // multiple comment-fields, then this might introduce duplicates, in which
-      // case the site-builder should enable aggregation and SUM the comment_count
-      // field. We cannot create a relationship from the base table to
-      // {comment_entity_statistics} for each field as multiple joins between
-      // the same two tables is not supported.
+      // case the site-builder should enable aggregation and SUM the
+      // comment_count field. We cannot create a relationship from the base
+      // table to {comment_entity_statistics} for each field as multiple joins
+      // between the same two tables is not supported.
       if (\Drupal::service('comment.manager')->getFields($type)) {
         $data['comment_entity_statistics']['table']['join'][$entity_type->getDataTable() ?: $entity_type->getBaseTable()] = [
           'type' => 'LEFT',

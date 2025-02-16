@@ -129,8 +129,8 @@ class FixtureManipulatorTest extends PackageManagerKernelTestBase {
     catch (\LogicException $e) {
       $this->assertStringContainsString("Expected package 'my/package' to not be installed, but it was.", $e->getMessage());
     }
-    // Ensure that none of the failed calls to ::addPackage() changed the installed
-    // packages.
+    // Ensure that none of the failed calls to ::addPackage() changed the
+    // installed packages.
     $this->assertPackageListsEqual($this->originalFixturePackages, $this->inspector->getInstalledPackagesList($this->dir));
     $root_info = $this->inspector->getRootPackageInfo($this->dir);
     $this->assertSame(

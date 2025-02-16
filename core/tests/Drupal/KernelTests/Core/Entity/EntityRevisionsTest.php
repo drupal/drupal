@@ -160,7 +160,8 @@ class EntityRevisionsTest extends EntityKernelTestBase {
    * Tests re-saving the entity in entity_test_entity_insert().
    */
   public function testSaveInHookEntityInsert(): void {
-    // Create an entity which will be saved again in entity_test_entity_insert().
+    // Create an entity which will be saved again in
+    // entity_test_entity_insert().
     $entity = EntityTestMulRev::create(['name' => 'EntityLoadedRevisionTest']);
     $entity->save();
     $loadedRevisionId = \Drupal::state()->get('entity_test.loadedRevisionId');

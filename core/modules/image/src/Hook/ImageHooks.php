@@ -82,18 +82,18 @@ class ImageHooks {
     return [
           // Theme functions in image.module.
       'image_style' => [
-              // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
-              // allows the alt attribute to be omitted in some cases. Therefore,
-              // default the alt attribute to an empty string, but allow code using
-              // '#theme' => 'image_style' to pass explicit NULL for it to be omitted.
-              // Usually, neither omission nor an empty string satisfies accessibility
-              // requirements, so it is strongly encouraged for code using '#theme' =>
-              // 'image_style' to pass a meaningful value for the alt variable.
-              // - https://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
-              // - https://www.w3.org/TR/xhtml1/dtds.html
-              // - http://dev.w3.org/html5/spec/Overview.html#alt
-              // The title attribute is optional in all cases, so it is omitted by
-              // default.
+      // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
+      // allows the alt attribute to be omitted in some cases. Therefore,
+      // default the alt attribute to an empty string, but allow code using
+      // '#theme' => 'image_style' to pass explicit NULL for it to be omitted.
+      // Usually, neither omission nor an empty string satisfies accessibility
+      // requirements, so it is strongly encouraged for code using '#theme' =>
+      // 'image_style' to pass a meaningful value for the alt variable.
+      // - https://www.w3.org/TR/REC-html40/struct/objects.html#h-13.8
+      // - https://www.w3.org/TR/xhtml1/dtds.html
+      // - http://dev.w3.org/html5/spec/Overview.html#alt
+      // The title attribute is optional in all cases, so it is omitted by
+      // default.
         'variables' => [
           'style_name' => NULL,
           'uri' => NULL,
@@ -193,7 +193,8 @@ class ImageHooks {
         }
         // Check the permissions of the original to grant access to this image.
         $headers = \Drupal::moduleHandler()->invokeAll('file_download', [$original_uri]);
-        // Confirm there's at least one module granting access and none denying access.
+        // Confirm there's at least one module granting access and none denying
+        // access.
         if (!empty($headers) && !in_array(-1, $headers)) {
           return [
                 // Send headers describing the image's size, and MIME-type.
@@ -243,8 +244,8 @@ class ImageHooks {
    */
   #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity): void {
-    // Get the default image settings, return if not saving an image field storage
-    // or image field entity.
+    // Get the default image settings, return if not saving an image field
+    // storage or image field entity.
     $default_image = [];
     if (($entity instanceof FieldStorageConfigInterface || $entity instanceof FieldConfigInterface) && $entity->getType() == 'image') {
       $default_image = $entity->getSetting('default_image');

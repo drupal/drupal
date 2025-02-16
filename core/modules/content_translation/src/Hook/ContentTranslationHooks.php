@@ -228,7 +228,8 @@ class ContentTranslationHooks {
           $settings = $content_translation_manager->getBundleTranslationSettings($entity_type_id, $bundle);
           // If pending revision support is enabled for this bundle, we need to
           // hide untranslatable field widgets, otherwise changes in pending
-          // revisions might be overridden by changes in later default revisions.
+          // revisions might be overridden by changes in later default
+          // revisions.
           $bundle_info['untranslatable_fields.default_translation_affected'] = !empty($settings['untranslatable_fields_hide']) || ContentTranslationManager::isPendingRevisionSupportEnabled($entity_type_id, $bundle);
         }
       }
@@ -247,9 +248,9 @@ class ContentTranslationHooks {
     if ($manager->isSupported($entity_type_id)) {
       $definitions = $manager->getTranslationHandler($entity_type_id)->getFieldDefinitions();
       $installed_storage_definitions = \Drupal::service('entity.last_installed_schema.repository')->getLastInstalledFieldStorageDefinitions($entity_type_id);
-      // We return metadata storage fields whenever content translation is enabled
-      // or it was enabled before, so that we keep translation metadata around
-      // when translation is disabled.
+      // We return metadata storage fields whenever content translation is
+      // enabled or it was enabled before, so that we keep translation metadata
+      // around when translation is disabled.
       // @todo Re-evaluate this approach and consider removing field storage
       //   definitions and the related field data if the entity type has no
       //   bundle enabled for translation. See https://www.drupal.org/i/2907777
@@ -311,8 +312,8 @@ class ContentTranslationHooks {
    */
   #[Hook('views_data_alter')]
   public function viewsDataAlter(array &$data): void {
-    // Add the content translation entity link definition to Views data for entity
-    // types having translation enabled.
+    // Add the content translation entity link definition to Views data for
+    // entity types having translation enabled.
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $manager */
     $manager = \Drupal::service('content_translation.manager');
@@ -352,9 +353,9 @@ class ContentTranslationHooks {
     }
     $entity = $form_object->getEntity();
     $op = $form_object->getOperation();
-    // Let the content translation handler alter the content entity form. This can
-    // be the 'add' or 'edit' form. It also tries a 'default' form in case neither
-    // of the aforementioned forms are defined.
+    // Let the content translation handler alter the content entity form. This
+    // can be the 'add' or 'edit' form. It also tries a 'default' form in case
+    // neither of the aforementioned forms are defined.
     if ($entity instanceof ContentEntityInterface && $entity->isTranslatable() && count($entity->getTranslationLanguages()) > 1 && in_array($op, ['edit', 'add', 'default'], TRUE)) {
       $controller = \Drupal::entityTypeManager()->getHandler($entity->getEntityTypeId(), 'translation');
       $controller->entityFormAlter($form, $form_state, $entity);
@@ -403,8 +404,8 @@ class ContentTranslationHooks {
           $entity->addCacheableDependency($access);
           if (!$access->isAllowed()) {
             // If the user has no translation update access, also check view
-            // access for that translation, to allow other modules to allow access
-            // to unpublished translations.
+            // access for that translation, to allow other modules to allow
+            // access to unpublished translations.
             $access = $entity->getTranslation($langcode)->access('view', NULL, TRUE);
             $entity->addCacheableDependency($access);
             if (!$access->isAllowed()) {

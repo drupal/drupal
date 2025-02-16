@@ -147,8 +147,8 @@ class NestedArray {
   public static function setValue(array &$array, array $parents, $value, $force = FALSE) {
     $ref = &$array;
     foreach ($parents as $parent) {
-      // PHP auto-creates container arrays and NULL entries without error if $ref
-      // is NULL, but throws an error if $ref is set, but not an array.
+      // PHP auto-creates container arrays and NULL entries without error if
+      // $ref is NULL, but throws an error if $ref is set, but not an array.
       if (isset($ref) && !is_array($ref)) {
         if (!$force) {
           throw new \LogicException('Cannot create key "' . $parent . '" on non-array value.');

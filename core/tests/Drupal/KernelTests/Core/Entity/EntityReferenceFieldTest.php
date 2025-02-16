@@ -165,7 +165,8 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     // Set the field value.
     $entity->{$this->fieldName}->setValue($reference_field);
 
-    // Load the target entities using EntityReferenceField::referencedEntities().
+    // Load the target entities using
+    // EntityReferenceField::referencedEntities().
     $entities = $entity->{$this->fieldName}->referencedEntities();
 
     // Test returned entities:
@@ -223,7 +224,8 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     // Set the field value.
     $entity->{$field_name}->setValue([['target_id' => $target_entity->id()]]);
 
-    // Load the target entities using EntityReferenceField::referencedEntities().
+    // Load the target entities using
+    // EntityReferenceField::referencedEntities().
     $entities = $entity->{$field_name}->referencedEntities();
     $this->assertEquals($target_entity->id(), $entities[0]->id());
 

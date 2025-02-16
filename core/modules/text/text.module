@@ -39,7 +39,8 @@ function text_summary($text, $format = NULL, $size = NULL) {
   // Find where the delimiter is in the body.
   $delimiter = strpos($text, '<!--break-->');
 
-  // If the size is zero, and there is no delimiter, the entire body is the summary.
+  // If the size is zero, and there is no delimiter, the entire body is the
+  // summary.
   if ($size == 0 && $delimiter === FALSE) {
     return $text;
   }

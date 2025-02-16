@@ -74,9 +74,10 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
         'region' => $value['region'],
       ]);
       if ($blocks) {
-        // Sort the blocks by weight. Don't use \Drupal\block\Entity\Block::sort()
-        // here because it seems to be intended to sort blocks in the UI, where
-        // we really just want to get the weights right in this situation.
+        // Sort the blocks by weight. Don't use
+        // \Drupal\block\Entity\Block::sort() here because it seems to be
+        // intended to sort blocks in the UI, where we really just want to get
+        // the weights right in this situation.
         uasort($blocks, fn (BlockInterface $a, BlockInterface $b) => $a->getWeight() <=> $b->getWeight());
 
         $value['weight'] = match ($value['position']) {

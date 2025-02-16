@@ -261,7 +261,8 @@ class NumberFieldTest extends BrowserTestBase {
       $this->assertSession()->elementNotExists('xpath', '//div[@content="' . $valid_entry . '"]');
     }
 
-    // Test for the content attribute when a Prefix is displayed. Presumably this also tests for the attribute when a Suffix is displayed.
+    // Test for the content attribute when a Prefix is displayed. Presumably
+    // this also tests for the attribute when a Suffix is displayed.
     $display_repository->getViewDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'number_integer',

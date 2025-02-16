@@ -56,7 +56,8 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
   public function register(ContainerBuilder $container) {
     $this->registerTest($container);
 
-    // Only register the private file stream wrapper if a file path has been set.
+    // Only register the private file stream wrapper if a file path has been
+    // set.
     if (Settings::get('file_private_path')) {
       $container->register('stream_wrapper.private', 'Drupal\Core\StreamWrapper\PrivateStream')
         ->addTag('stream_wrapper', ['scheme' => 'private']);

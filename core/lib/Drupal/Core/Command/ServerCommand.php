@@ -245,8 +245,8 @@ class ServerCommand extends Command {
     $server = proc_open($process->getCommandLine(), $descriptors, $pipes, $kernel->getAppRoot());
     if (is_resource($server)) {
       if ($io->isVerbose()) {
-        // Write a blank line so that server output and the useful information are
-        // visually separated.
+        // Write a blank line so that server output and the useful information
+        // are visually separated.
         $io->writeln('');
       }
       $server_status = proc_get_status($server);

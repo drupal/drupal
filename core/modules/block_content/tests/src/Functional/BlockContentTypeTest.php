@@ -224,8 +224,8 @@ class BlockContentTypeTest extends BlockContentTestBase {
 
       // For each installed theme, go to its block page and test the redirects.
       foreach ($themes as $theme) {
-        // Test that adding a block from the 'place blocks' form sends you to the
-        // block configure form.
+        // Test that adding a block from the 'place blocks' form sends you to
+        // the block configure form.
         $path = $theme == $default_theme ? 'admin/structure/block' : "admin/structure/block/list/$theme";
         $this->drupalGet($path);
         $this->clickLink('Place block');

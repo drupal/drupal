@@ -32,9 +32,9 @@ class MediaLinkabilityTest extends MediaTestBase {
         ->setFilterConfig('filter_html', ['status' => FALSE]);
     }
     else {
-      // Allow the data-foo attribute in <a> via GHS. Also, add support for div's
-      // with data-foo attribute to ensure that linked drupal-media elements can
-      // be wrapped with <div>.
+      // Allow the data-foo attribute in <a> via GHS. Also, add support for
+      // div's with data-foo attribute to ensure that linked drupal-media
+      // elements can be wrapped with <div>.
       $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<a data-foo>', '<div data-bar>'];
       $editor->setSettings($settings);
       $filter_format->setFilterConfig('filter_html', [

@@ -139,7 +139,8 @@ class HandlerTest extends UITestBase {
       // Test that the  handler edit link has the right label.
       $this->assertSession()->elementExists('xpath', "//a[starts-with(normalize-space(text()), '{$random_label}')]");
 
-      // Save the view and have a look whether the handler was added as expected.
+      // Save the view and have a look whether the handler was added as
+      // expected.
       $this->submitForm([], 'Save');
       $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');
       $display = $view->getDisplay('default');

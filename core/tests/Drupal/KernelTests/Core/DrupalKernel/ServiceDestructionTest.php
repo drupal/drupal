@@ -50,8 +50,8 @@ class ServiceDestructionTest extends KernelTestBase {
     // The service has not been destructed yet.
     $this->assertNull(\Drupal::state()->get('service_provider_test.destructed'));
 
-    // Terminate the kernel. The test class has not been called, so it should not
-    // be destructed.
+    // Terminate the kernel. The test class has not been called, so it should
+    // not be destructed.
     $response = new Response();
     $kernel->terminate($request, $response);
     $this->assertNull(\Drupal::state()->get('service_provider_test.destructed'));

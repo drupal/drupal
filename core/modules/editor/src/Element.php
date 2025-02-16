@@ -55,7 +55,8 @@ class Element implements TrustedCallbackInterface {
     }
     $format_ids = array_keys($element['format']['format']['#options']);
 
-    // Early-return if no text editor is associated with any of the text formats.
+    // Early-return if no text editor is associated with any of the text
+    // formats.
     $editors = Editor::loadMultiple($format_ids);
     foreach ($editors as $key => $editor) {
       $definition = $this->pluginManager->getDefinition($editor->getEditor());
@@ -87,8 +88,9 @@ class Element implements TrustedCallbackInterface {
       $element['format']['format']['#attributes']['data-editor-for'] = $field_id;
     }
 
-    // Hide the text format's filters' guidelines of those text formats that have
-    // a text editor associated: they're rather useless when using a text editor.
+    // Hide the text format's filters' guidelines of those text formats that
+    // have a text editor associated: they're rather useless when using a text
+    // editor.
     foreach ($editors as $format_id => $editor) {
       $element['format']['guidelines'][$format_id]['#access'] = FALSE;
     }
@@ -111,9 +113,10 @@ class Element implements TrustedCallbackInterface {
         $element['value']['#value'] = $filtered;
       }
 
-      // Only when the user has access to multiple text formats, we must add data-
-      // attributes for the original value and change tracking, because they are
-      // only necessary when the end user can switch between text formats/editors.
+      // Only when the user has access to multiple text formats, we must add
+      // data- attributes for the original value and change tracking, because
+      // they are only necessary when the end user can switch between text
+      // formats/editors.
       if ($element['format']['format']['#access']) {
         $element['value']['#attributes']['data-editor-value-is-changed'] = 'false';
         $element['value']['#attributes']['data-editor-value-original'] = $original;

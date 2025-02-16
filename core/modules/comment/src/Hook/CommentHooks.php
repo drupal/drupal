@@ -135,8 +135,8 @@ class CommentHooks {
   #[Hook('field_config_update')]
   public function fieldConfigUpdate(FieldConfigInterface $field): void {
     if ($field->getType() == 'comment') {
-      // Comment field settings also affects the rendering of *comment* entities,
-      // not only the *commented* entities.
+      // Comment field settings also affects the rendering of *comment*
+      // entities, not only the *commented* entities.
       \Drupal::entityTypeManager()->getViewBuilder('comment')->resetCache();
     }
   }
@@ -278,7 +278,8 @@ class CommentHooks {
       return;
     }
     // Load comment information from the database and update the entity's
-    // comment statistics properties, which are defined on each CommentItem field.
+    // comment statistics properties, which are defined on each CommentItem
+    // field.
     $result = \Drupal::service('comment.statistics')->read($entities, $entity_type);
     foreach ($result as $record) {
       // Skip fields that entity does not have.
@@ -312,10 +313,10 @@ class CommentHooks {
   #[Hook('entity_predelete')]
   public function entityPredelete(EntityInterface $entity): void {
     // Entities can have non-numeric IDs, but {comment} and
-    // {comment_entity_statistics} tables have integer columns for entity ID, and
-    // PostgreSQL throws exceptions if you attempt query conditions with
-    // mismatched types. So, we need to verify that the ID is numeric (even for an
-    // entity type that has an integer ID, $entity->id() might be a string
+    // {comment_entity_statistics} tables have integer columns for entity ID,
+    // and PostgreSQL throws exceptions if you attempt query conditions with
+    // mismatched types. So, we need to verify that the ID is numeric (even for
+    // an entity type that has an integer ID, $entity->id() might be a string
     // containing a number), and then cast it to an integer when querying.
     if ($entity instanceof FieldableEntityInterface && is_numeric($entity->id())) {
       $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
@@ -491,7 +492,8 @@ class CommentHooks {
     if (!$storage->loadUnchanged($display->getOriginalId())->status()) {
       return;
     }
-    // Disable the comment field formatter when the used view display is disabled.
+    // Disable the comment field formatter when the used view display is
+    // disabled.
     foreach ($storage->loadMultiple() as $view_display) {
       $changed = FALSE;
       /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */

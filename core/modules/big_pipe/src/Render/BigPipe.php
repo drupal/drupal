@@ -530,8 +530,8 @@ class BigPipe {
           $ajax_response->addCommand(new ReplaceCommand(sprintf('[data-big-pipe-placeholder-id="%s"]', $big_pipe_js_placeholder_id), $elements['#markup']));
           $ajax_response->setAttachments($elements['#attached']);
 
-          // Delete all messages that were generated during the rendering of this
-          // placeholder, to render them in a BigPipe-optimized way.
+          // Delete all messages that were generated during the rendering of
+          // this placeholder, to render them in a BigPipe-optimized way.
           $messages = $this->messenger->deleteAll();
           foreach ($messages as $type => $type_messages) {
             foreach ($type_messages as $message) {
@@ -584,8 +584,8 @@ EOF;
           else {
             try {
               // SecuredRedirectResponse is an abstract class that requires a
-              // concrete implementation. Default to LocalRedirectResponse, which
-              // considers only redirects to within the same site as safe.
+              // concrete implementation. Default to LocalRedirectResponse,
+              // which considers only redirects to within the same site as safe.
               $safe_response = LocalRedirectResponse::createFromRedirectResponse($response);
               $safe_response->setRequestContext($this->requestContext);
               $ajax_response->addCommand(new RedirectCommand($safe_response->getTargetUrl()));

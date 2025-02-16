@@ -575,7 +575,8 @@ class EntityViewsDataTest extends KernelTestBase {
     // table.
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['revision_id']));
 
-    // Also ensure that field_data only fields don't appear on the revision table.
+    // Also ensure that field_data only fields don't appear on the revision
+    // table.
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['id']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['name']));
     $this->assertFalse(isset($data['entity_test_mulrev_revision']['description']));

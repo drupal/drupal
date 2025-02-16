@@ -206,7 +206,8 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
         if ($uid <= 1) {
           continue;
         }
-        // Prevent user administrators from deleting themselves without confirmation.
+        // Prevent user administrators from deleting themselves without
+        // confirmation.
         if ($uid == $current_user_id) {
           $admin_form_mock = [];
           $admin_form_state = $form_state;

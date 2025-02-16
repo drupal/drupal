@@ -41,9 +41,9 @@ class Percentage {
         $percentage = sprintf('%01.' . $decimal_places . 'f', round($current / $total * 100, $decimal_places));
         // When $current is an integer, the above calculation will always be
         // correct. However, if $current is a floating point number (in the case
-        // of a multi-step batch operation that is not yet complete), $percentage
-        // may be erroneously rounded up to 100%. To prevent that, we add one
-        // more decimal place and try again.
+        // of a multi-step batch operation that is not yet complete),
+        // $percentage may be erroneously rounded up to 100%. To prevent that,
+        // we add one more decimal place and try again.
         $decimal_places++;
       } while ($percentage == '100');
     }

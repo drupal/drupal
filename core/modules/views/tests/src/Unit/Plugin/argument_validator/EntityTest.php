@@ -198,8 +198,8 @@ class EntityTest extends UnitTestCase {
    * @covers ::calculateDependencies
    */
   public function testCalculateDependencies(): void {
-    // Create an entity type manager, storage, entity type, and entity to mock the
-    // loading of entities providing bundles.
+    // Create an entity type manager, storage, entity type, and entity to mock
+    // the loading of entities providing bundles.
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');

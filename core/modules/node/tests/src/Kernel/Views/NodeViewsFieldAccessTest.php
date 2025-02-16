@@ -72,6 +72,7 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->assertFieldAccess('node', 'promote', 'On');
     $this->assertFieldAccess('node', 'sticky', 'Off');
 
+    // phpcs:ignore Drupal.Files.LineLength
     // $this->assertFieldAccess('node', 'created', \Drupal::service('date.formatter')->format(123456));
     // $this->assertFieldAccess('node', 'changed', \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime()));
   }

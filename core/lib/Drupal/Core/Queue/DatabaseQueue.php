@@ -246,8 +246,8 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
         ->condition('name', 'drupal_batch:%', 'LIKE')
         ->execute();
 
-      // Reset expired items in the default queue implementation table. If that's
-      // not used, this will simply be a no-op.
+      // Reset expired items in the default queue implementation table. If
+      // that's not used, this will simply be a no-op.
       $this->connection->update(static::TABLE_NAME)
         ->fields([
           'expire' => 0,

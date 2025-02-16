@@ -194,8 +194,8 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
 
     // Ensure that workspace batch purging does not happen inside a workspace.
     $workspace_manager->executeOutsideWorkspace(function () use ($workspace_manager, $entities) {
-      // Add the IDs of the deleted workspaces to the list of workspaces that will
-      // be purged on cron.
+      // Add the IDs of the deleted workspaces to the list of workspaces that
+      // will be purged on cron.
       $state = \Drupal::state();
       $deleted_workspace_ids = $state->get('workspace.deleted', []);
       $deleted_workspace_ids += array_combine(array_keys($entities), array_keys($entities));

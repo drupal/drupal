@@ -270,9 +270,9 @@ class FileViewsData extends EntityViewsData {
       ],
     ];
 
-    // Provide basic fields from the {file_usage} table to all of the base tables
-    // we've declared joins to, because there is no 'skip base' property on these
-    // fields.
+    // Provide basic fields from the {file_usage} table to all of the base
+    // tables we've declared joins to, because there is no 'skip base' property
+    // on these fields.
     $data['file_usage']['module'] = [
       'title' => $this->t('Module'),
       'help' => $this->t('The module managing this file relationship.'),

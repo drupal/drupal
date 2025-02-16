@@ -105,7 +105,8 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertSession()->pageTextContains($node->getOwner()->getAccountName());
     $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getCreatedTime()));
 
-    // Check if the node revision checkbox is not rendered on node creation form.
+    // Check if the node revision checkbox is not rendered on node creation
+    // form.
     $admin_user = $this->drupalCreateUser([
       'administer nodes',
       'create page content',

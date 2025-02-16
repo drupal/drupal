@@ -70,7 +70,8 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
   public function testTranslations(): void {
     $storage = $this->entityTypeManager->getStorage('entity_test_mulrevpub');
 
-    // Create two untranslated nodes in Live, a published and an unpublished one.
+    // Create two untranslated nodes in Live, a published and an unpublished
+    // one.
     $entity_published = $storage->create(['name' => 'live - 1 - published', 'status' => TRUE]);
     $entity_published->save();
     $entity_unpublished = $storage->create(['name' => 'live - 2 - unpublished', 'status' => FALSE]);

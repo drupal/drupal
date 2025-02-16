@@ -169,11 +169,11 @@ class DateTimeFieldTest extends DateTestBase {
       $output = $this->renderTestEntity($id);
       $this->assertStringContainsString($expected, $output, "Formatted date field using daterange_custom format displayed as $expected in $timezone.");
 
-      // Verify that the 'datetime_time_ago' formatter works for intervals in the
-      // past.  First update the test entity so that the date difference always
-      // has the same interval.  Since the database always stores UTC, and the
-      // interval will use this, force the test date to use UTC and not the local
-      // or user timezone.
+      // Verify that the 'datetime_time_ago' formatter works for intervals in
+      // the past.  First update the test entity so that the date difference
+      // always has the same interval.  Since the database always stores UTC,
+      // and the interval will use this, force the test date to use UTC and not
+      // the local or user timezone.
       $timestamp = \Drupal::time()->getRequestTime() - 87654321;
       $entity = EntityTest::load($id);
       $field_name = $this->fieldStorage->getName();
@@ -196,11 +196,11 @@ class DateTimeFieldTest extends DateTestBase {
       $output = $this->renderTestEntity($id);
       $this->assertStringContainsString((string) $expected, $output, "Formatted date field using datetime_time_ago format displayed as $expected in $timezone.");
 
-      // Verify that the 'datetime_time_ago' formatter works for intervals in the
-      // future.  First update the test entity so that the date difference always
-      // has the same interval.  Since the database always stores UTC, and the
-      // interval will use this, force the test date to use UTC and not the local
-      // or user timezone.
+      // Verify that the 'datetime_time_ago' formatter works for intervals in
+      // the future.  First update the test entity so that the date difference
+      // always has the same interval.  Since the database always stores UTC,
+      // and the interval will use this, force the test date to use UTC and not
+      // the local or user timezone.
       $timestamp = \Drupal::time()->getRequestTime() + 87654321;
       $entity = EntityTest::load($id);
       $field_name = $this->fieldStorage->getName();
@@ -415,7 +415,8 @@ class DateTimeFieldTest extends DateTestBase {
     $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-hour\"]");
     $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-minute\"]");
 
-    // Go to the form display page to assert that increment option does not appear on Date Only
+    // Go to the form display page to assert that increment option does not
+    // appear on Date Only.
     $fieldEditUrl = 'entity_test/structure/entity_test/form-display';
     $this->drupalGet($fieldEditUrl);
 
@@ -441,7 +442,8 @@ class DateTimeFieldTest extends DateTestBase {
       ->save();
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
-    // Go to the form display page to assert that increment option does appear on Date Time
+    // Go to the form display page to assert that increment option does appear
+    // on Date Time.
     $fieldEditUrl = 'entity_test/structure/entity_test/form-display';
     $this->drupalGet($fieldEditUrl);
 

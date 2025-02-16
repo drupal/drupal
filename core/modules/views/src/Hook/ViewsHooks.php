@@ -102,9 +102,9 @@ class ViewsHooks {
       ],
     ];
     $variables = [
-          // For displays, we pass in a dummy array as the first parameter, since
-          // $view is an object but the core contextual_preprocess() function only
-          // attaches contextual links when the primary theme argument is an array.
+      // For displays, we pass in a dummy array as the first parameter, since
+      // $view is an object but the core contextual_preprocess() function only
+      // attaches contextual links when the primary theme argument is an array.
       'display' => [
         'view_array' => [],
         'view' => NULL,
@@ -166,8 +166,8 @@ class ViewsHooks {
     $module_handler = \Drupal::moduleHandler();
     // Register theme functions for all style plugins. It provides a basic auto
     // implementation of theme functions or template files by using the plugin
-    // definitions (theme, theme_file, module, register_theme). Template files are
-    // assumed to be located in the templates folder.
+    // definitions (theme, theme_file, module, register_theme). Template files
+    // are assumed to be located in the templates folder.
     foreach ($plugins as $type => $info) {
       foreach ($info as $def) {
         // Not all plugins have theme functions, and they can also explicitly
