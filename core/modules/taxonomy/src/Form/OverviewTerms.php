@@ -357,7 +357,7 @@ class OverviewTerms extends FormBase {
       ];
       $form['terms'][$key]['status'] = [
         '#type' => 'item',
-        '#markup' => ($term->isPublished()) ? t('Published') : t('Unpublished'),
+        '#markup' => ($term->isPublished()) ? $this->t('Published') : $this->t('Unpublished'),
       ];
 
       // Add a special class for terms with pending revision so we can highlight

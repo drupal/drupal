@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\Lock;
 use Drupal\views\Controller\ViewAjaxController;
 use Drupal\views\Views;
@@ -27,6 +28,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 #[\AllowDynamicProperties]
 class ViewUI implements ViewEntityInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Indicates if a view is currently being edited.
@@ -294,11 +297,11 @@ class ViewUI implements ViewEntityInterface {
     ];
 
     if (empty($name)) {
-      $name = t('Apply');
+      $name = $this->t('Apply');
       if (!empty($this->stack) && count($this->stack) > 1) {
-        $name = t('Apply and continue');
+        $name = $this->t('Apply and continue');
       }
-      $names = [t('Apply'), t('Apply and continue')];
+      $names = [$this->t('Apply'), $this->t('Apply and continue')];
     }
 
     // Forms that are purely informational set an ok_button flag, so we know not
@@ -337,7 +340,7 @@ class ViewUI implements ViewEntityInterface {
     $cancel_submit = function_exists($form_id . '_cancel') ? $form_id . '_cancel' : [$this, 'standardCancel'];
     $form['actions']['cancel'] = [
       '#type' => 'submit',
-      '#value' => !$form_state->get('ok_button') ? t('Cancel') : t('Ok'),
+      '#value' => !$form_state->get('ok_button') ? $this->t('Cancel') : $this->t('Ok'),
       '#submit' => [$cancel_submit],
       '#validate' => [],
       '#limit_validation_errors' => [],
@@ -567,7 +570,7 @@ class ViewUI implements ViewEntityInterface {
 
       if (!$executable->setDisplay($display_id)) {
         return [
-          '#markup' => t('Invalid display id @display', ['@display' => $display_id]),
+          '#markup' => $this->t('Invalid display id @display', ['@display' => $display_id]),
         ];
       }
 
@@ -667,14 +670,14 @@ class ViewUI implements ViewEntityInterface {
             if (!empty($this->additionalQueries)) {
               $queries[] = [
                 '#prefix' => '<strong>',
-                '#markup' => t('These queries were run during view rendering:'),
+                '#markup' => $this->t('These queries were run during view rendering:'),
                 '#suffix' => '</strong>',
               ];
               foreach ($this->additionalQueries as $query) {
                 $query_string = strtr($query['query'], $query['args']);
                 $queries[] = [
                   '#prefix' => "\n",
-                  '#markup' => t('[@time ms] @query', ['@time' => round($query['time'] * 100000, 1) / 100000.0, '@query' => $query_string]),
+                  '#markup' => $this->t('[@time ms] @query', ['@time' => round($query['time'] * 100000, 1) / 100000.0, '@query' => $query_string]),
                 ];
               }
 
@@ -716,13 +719,13 @@ class ViewUI implements ViewEntityInterface {
               $path = Link::fromTextAndUrl($path->toString(), $path)->toString();
             }
             else {
-              $path = t('This display has no path.');
+              $path = $this->t('This display has no path.');
             }
             $rows['query'][] = [
               [
                 'data' => [
                   '#prefix' => '<strong>',
-                  '#markup' => t('Path'),
+                  '#markup' => $this->t('Path'),
                   '#suffix' => '</strong>',
                 ],
               ],
@@ -741,7 +744,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'Query build time' %}</strong>",
                 ],
               ],
-              t('@time ms', ['@time' => intval($executable->build_time * 100000) / 100]),
+              $this->t('@time ms', ['@time' => intval($executable->build_time * 100000) / 100]),
             ];
 
             $rows['statistics'][] = [
@@ -751,7 +754,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'Query execute time' %}</strong>",
                 ],
               ],
-              t('@time ms', ['@time' => intval($executable->execute_time * 100000) / 100]),
+              $this->t('@time ms', ['@time' => intval($executable->execute_time * 100000) / 100]),
             ];
 
             $rows['statistics'][] = [
@@ -761,7 +764,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'View render time' %}</strong>",
                 ],
               ],
-              t('@time ms', ['@time' => intval($this->render_time * 100) / 100]),
+              $this->t('@time ms', ['@time' => intval($this->render_time * 100) / 100]),
             ];
           }
           \Drupal::moduleHandler()->alter('views_preview_info', $rows, $executable);
@@ -774,13 +777,13 @@ class ViewUI implements ViewEntityInterface {
               [
                 'data' => [
                   '#prefix' => '<strong>',
-                  '#markup' => t('Query'),
+                  '#markup' => $this->t('Query'),
                   '#suffix' => '</strong>',
                 ],
               ],
               [
                 'data' => [
-                  '#markup' => t('No query was run'),
+                  '#markup' => $this->t('No query was run'),
                 ],
               ],
             ];
@@ -790,13 +793,13 @@ class ViewUI implements ViewEntityInterface {
               [
                 'data' => [
                   '#prefix' => '<strong>',
-                  '#markup' => t('Query'),
+                  '#markup' => $this->t('Query'),
                   '#suffix' => '</strong>',
                 ],
               ],
               [
                 'data' => [
-                  '#markup' => t('No query was run'),
+                  '#markup' => $this->t('No query was run'),
                 ],
               ],
             ];
@@ -810,7 +813,7 @@ class ViewUI implements ViewEntityInterface {
           \Drupal::messenger()->addError($error);
         }
       }
-      $preview = ['#markup' => t('Unable to preview due to validation errors.')];
+      $preview = ['#markup' => $this->t('Unable to preview due to validation errors.')];
     }
 
     // Assemble the preview, the query info, and the query statistics in the
@@ -876,7 +879,7 @@ class ViewUI implements ViewEntityInterface {
    */
   public function cacheSet() {
     if ($this->isLocked()) {
-      \Drupal::messenger()->addError(t('Changes cannot be made to a locked view.'));
+      \Drupal::messenger()->addError($this->t('Changes cannot be made to a locked view.'));
       return;
     }
 

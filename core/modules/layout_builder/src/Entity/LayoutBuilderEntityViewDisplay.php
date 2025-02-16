@@ -14,6 +14,7 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Render\Element;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -30,6 +31,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
   use LayoutEntityHelperTrait;
   use SectionListTrait;
+  use StringTranslationTrait;
 
   /**
    * The entity field manager.
@@ -231,7 +233,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       $field = FieldConfig::create([
         'field_storage' => $field_storage,
         'bundle' => $bundle,
-        'label' => t('Layout'),
+        'label' => $this->t('Layout'),
       ]);
       $field->setTranslatable(FALSE);
       $field->save();

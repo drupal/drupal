@@ -3,6 +3,7 @@
 namespace Drupal\views\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
@@ -44,6 +45,8 @@ use Drupal\views\ViewEntityInterface;
   ],
 )]
 class View extends ConfigEntityBase implements ViewEntityInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The name of the base table this view will use.
@@ -153,7 +156,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $plugin = Views::pluginManager('display')->getDefinition($plugin_id);
 
     if (empty($plugin)) {
-      $plugin['title'] = t('Broken');
+      $plugin['title'] = $this->t('Broken');
     }
 
     if (empty($id)) {

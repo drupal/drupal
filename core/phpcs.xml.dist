@@ -183,6 +183,8 @@
     <include-pattern>*/ListBuilder/*</include-pattern>
     <include-pattern>*/tests/*</include-pattern>
     <include-pattern>./core/lib/*</include-pattern>
+    <include-pattern>./core/modules/*</include-pattern>
+    <exclude-pattern>./core/modules/*/Hook/*</exclude-pattern>
   </rule>
 
   <!-- Generic sniffs -->

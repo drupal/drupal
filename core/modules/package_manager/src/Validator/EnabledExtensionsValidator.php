@@ -46,7 +46,7 @@ final class EnabledExtensionsValidator implements EventSubscriberInterface {
       $extension_name = $extension->getName();
       $package = $active_packages_list->getPackageByDrupalProjectName($extension_name);
       if ($package && $stage_packages_list->getPackageByDrupalProjectName($extension_name) === NULL) {
-        $removed_project_messages[] = t("'@name' @type (provided by <code>@package</code>)", [
+        $removed_project_messages[] = $this->t("'@name' @type (provided by <code>@package</code>)", [
           '@name' => $extension_name,
           '@type' => $extension->getType(),
           '@package' => $package->name,

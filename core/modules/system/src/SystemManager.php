@@ -7,12 +7,15 @@ use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * System Manager Service.
  */
 class SystemManager {
+
+  use StringTranslationTrait;
 
   /**
    * Module handler service.
@@ -168,7 +171,7 @@ class SystemManager {
     }
     else {
       $output = [
-        '#markup' => t('You do not have any administrative items.'),
+        '#markup' => $this->t('You do not have any administrative items.'),
       ];
     }
     return $output;

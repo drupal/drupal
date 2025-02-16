@@ -79,7 +79,7 @@ class UpdateController extends ControllerBase {
     $batch_builder = (new BatchBuilder())
       ->setTitle($this->t('Checking available update data'))
       ->addOperation([$this->updateManager, 'fetchDataBatch'], [])
-      ->setProgressMessage(t('Trying to check available update data ...'))
+      ->setProgressMessage($this->t('Trying to check available update data ...'))
       ->setErrorMessage($this->t('Error checking available update data.'))
       ->setFinishCallback('update_fetch_data_finished');
     batch_set($batch_builder->toArray());

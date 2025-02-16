@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldStorageConfigInterface;
 
@@ -15,6 +16,8 @@ use Drupal\field\FieldStorageConfigInterface;
  * Provide default views data for fields.
  */
 class FieldViewsDataProvider {
+
+  use StringTranslationTrait;
 
   public function __construct(
     protected readonly EntityTypeManager $entityTypeManager,
@@ -254,7 +257,7 @@ class FieldViewsDataProvider {
         $field_alias = $field_name;
       }
       else {
-        $group = t('@group (historical data)', ['@group' => $group_name]);
+        $group = $this->t('@group (historical data)', ['@group' => $group_name]);
         $field_alias = $field_name . '__revision_id';
       }
 
@@ -262,7 +265,7 @@ class FieldViewsDataProvider {
         'group' => $group,
         'title' => $label,
         'title short' => $label,
-        'help' => t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
+        'help' => $this->t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
       ];
 
       // Go through and create a list of aliases for all possible combinations of
@@ -276,19 +279,19 @@ class FieldViewsDataProvider {
               'base' => $base_table,
               'group' => $group_name,
               'title' => $label_name,
-              'help' => t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
+              'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
             ];
-            $also_known[] = t('@group: @field', ['@group' => $group_name, '@field' => $label_name]);
+            $also_known[] = $this->t('@group: @field', ['@group' => $group_name, '@field' => $label_name]);
           }
         }
         elseif ($supports_revisions && $label != $label_name) {
           $aliases[] = [
             'base' => $table,
-            'group' => t('@group (historical data)', ['@group' => $group_name]),
+            'group' => $this->t('@group (historical data)', ['@group' => $group_name]),
             'title' => $label_name,
-            'help' => t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
+            'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
           ];
-          $also_known[] = t('@group (historical data): @field', ['@group' => $group_name, '@field' => $label_name]);
+          $also_known[] = $this->t('@group (historical data): @field', ['@group' => $group_name, '@field' => $label_name]);
         }
       }
       if ($aliases) {
@@ -302,7 +305,7 @@ class FieldViewsDataProvider {
         // Considering the dual use of this help data (both as metadata and as
         // help text), other patterns such as use of #markup would not be correct
         // here.
-        $data[$table_alias][$field_alias]['help'] = Markup::create($data[$table_alias][$field_alias]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
+        $data[$table_alias][$field_alias]['help'] = Markup::create($data[$table_alias][$field_alias]['help'] . ' ' . $this->t('Also known as:') . ' ' . implode(', ', $also_known));
       }
 
       $keys = array_keys($field_columns);
@@ -353,12 +356,12 @@ class FieldViewsDataProvider {
       }
 
       if (count($field_columns) == 1 || $column == 'value') {
-        $title = t('@label (@name)', ['@label' => $label, '@name' => $field_name]);
+        $title = $this->t('@label (@name)', ['@label' => $label, '@name' => $field_name]);
         $title_short = $label;
       }
       else {
-        $title = t('@label (@name:@column)', ['@label' => $label, '@name' => $field_name, '@column' => $column]);
-        $title_short = t('@label:@column', ['@label' => $label, '@column' => $column]);
+        $title = $this->t('@label (@name:@column)', ['@label' => $label, '@name' => $field_name, '@column' => $column]);
+        $title_short = $this->t('@label:@column', ['@label' => $label, '@column' => $column]);
       }
 
       // Expose data for the property.
@@ -370,7 +373,7 @@ class FieldViewsDataProvider {
           $group = $group_name;
         }
         else {
-          $group = t('@group (historical data)', ['@group' => $group_name]);
+          $group = $this->t('@group (historical data)', ['@group' => $group_name]);
         }
         $column_real_name = $table_mapping->getFieldColumnName($field_storage, $column);
 
@@ -381,7 +384,7 @@ class FieldViewsDataProvider {
           'group' => $group,
           'title' => $title,
           'title short' => $title_short,
-          'help' => t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
+          'help' => $this->t('Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
         ];
 
         // Go through and create a list of aliases for all possible combinations of
@@ -391,17 +394,17 @@ class FieldViewsDataProvider {
         foreach ($all_labels as $label_name => $true) {
           if ($label != $label_name) {
             if (count($field_columns) == 1 || $column == 'value') {
-              $alias_title = t('@label (@name)', ['@label' => $label_name, '@name' => $field_name]);
+              $alias_title = $this->t('@label (@name)', ['@label' => $label_name, '@name' => $field_name]);
             }
             else {
-              $alias_title = t('@label (@name:@column)', ['@label' => $label_name, '@name' => $field_name, '@column' => $column]);
+              $alias_title = $this->t('@label (@name:@column)', ['@label' => $label_name, '@name' => $field_name, '@column' => $column]);
             }
             $aliases[] = [
               'group' => $group_name,
               'title' => $alias_title,
-              'help' => t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $title]),
+              'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $title]),
             ];
-            $also_known[] = t('@group: @field', ['@group' => $group_name, '@field' => $title]);
+            $also_known[] = $this->t('@group: @field', ['@group' => $group_name, '@field' => $title]);
           }
         }
         if ($aliases) {
@@ -415,7 +418,7 @@ class FieldViewsDataProvider {
           // Considering the dual use of this help data (both as metadata and as
           // help text), other patterns such as use of #markup would not be
           // correct here.
-          $data[$table_alias][$column_real_name]['help'] = Markup::create($data[$table_alias][$column_real_name]['help'] . ' ' . t('Also known as:') . ' ' . implode(', ', $also_known));
+          $data[$table_alias][$column_real_name]['help'] = Markup::create($data[$table_alias][$column_real_name]['help'] . ' ' . $this->t('Also known as:') . ' ' . implode(', ', $also_known));
         }
 
         $data[$table_alias][$column_real_name]['argument'] = [
@@ -425,7 +428,7 @@ class FieldViewsDataProvider {
           'additional fields' => $additional_fields,
           'field_name' => $field_name,
           'entity_type' => $entity_type_id,
-          'empty field name' => t('- No value -'),
+          'empty field name' => $this->t('- No value -'),
         ];
         $data[$table_alias][$column_real_name]['filter'] = [
           'field' => $column_real_name,
@@ -454,14 +457,14 @@ class FieldViewsDataProvider {
 
         // Expose additional delta column for multiple value fields.
         if ($field_storage->isMultiple()) {
-          $title_delta = t('@label (@name:delta)', ['@label' => $label, '@name' => $field_name]);
-          $title_short_delta = t('@label:delta', ['@label' => $label]);
+          $title_delta = $this->t('@label (@name:delta)', ['@label' => $label, '@name' => $field_name]);
+          $title_short_delta = $this->t('@label:delta', ['@label' => $label]);
 
           $data[$table_alias]['delta'] = [
             'group' => $group,
             'title' => $title_delta,
             'title short' => $title_short_delta,
-            'help' => t('Delta - Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
+            'help' => $this->t('Delta - Appears in: @bundles.', ['@bundles' => implode(', ', $bundles_names)]),
           ];
           $data[$table_alias]['delta']['field'] = [
             'id' => 'numeric',
@@ -471,7 +474,7 @@ class FieldViewsDataProvider {
             'table' => $table,
             'id' => 'numeric',
             'additional fields' => $additional_fields,
-            'empty field name' => t('- No value -'),
+            'empty field name' => $this->t('- No value -'),
             'field_name' => $field_name,
             'entity_type' => $entity_type_id,
           ];

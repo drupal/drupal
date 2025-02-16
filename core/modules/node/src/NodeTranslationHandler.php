@@ -40,7 +40,7 @@ class NodeTranslationHandler extends ContentTranslationHandler {
       }
       if (isset($status_translatable)) {
         if (isset($form['actions']['submit'])) {
-          $form['actions']['submit']['#value'] .= ' ' . ($status_translatable ? t('(this translation)') : t('(all translations)'));
+          $form['actions']['submit']['#value'] .= ' ' . ($status_translatable ? $this->t('(this translation)') : $this->t('(all translations)'));
         }
       }
     }
@@ -51,7 +51,7 @@ class NodeTranslationHandler extends ContentTranslationHandler {
    */
   protected function entityFormTitle(EntityInterface $entity) {
     $type_name = node_get_type_label($entity);
-    return t('<em>Edit @type</em> @title', ['@type' => $type_name, '@title' => $entity->label()]);
+    return $this->t('<em>Edit @type</em> @title', ['@type' => $type_name, '@title' => $entity->label()]);
   }
 
   /**

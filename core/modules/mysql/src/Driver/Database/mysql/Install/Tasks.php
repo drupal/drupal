@@ -5,6 +5,7 @@ namespace Drupal\mysql\Driver\Database\mysql\Install;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\Tasks as InstallTasks;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\Core\Database\DatabaseNotFoundException;
 
@@ -12,6 +13,8 @@ use Drupal\Core\Database\DatabaseNotFoundException;
  * Specifies installation tasks for MySQL and equivalent databases.
  */
 class Tasks extends InstallTasks {
+
+  use StringTranslationTrait;
 
   /**
    * Minimum required MySQL version.
@@ -110,13 +113,13 @@ class Tasks extends InstallTasks {
         catch (DatabaseNotFoundException $e) {
           // Still no dice; probably a permission issue. Raise the error to the
           // installer.
-          $this->fail(t('Database %database not found. The server reports the following message when attempting to create the database: %error.', ['%database' => $database, '%error' => $e->getMessage()]));
+          $this->fail($this->t('Database %database not found. The server reports the following message when attempting to create the database: %error.', ['%database' => $database, '%error' => $e->getMessage()]));
         }
       }
       else {
         // Database connection failed for some other reason than a non-existent
         // database.
-        $this->fail(t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist or does the database user have sufficient privileges to create the database?</li><li>Have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname and port number?</li></ul>', ['%error' => $e->getMessage()]));
+        $this->fail($this->t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist or does the database user have sufficient privileges to create the database?</li><li>Have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname and port number?</li></ul>', ['%error' => $e->getMessage()]));
         return FALSE;
       }
     }
@@ -154,7 +157,7 @@ class Tasks extends InstallTasks {
   public function ensureInnoDbAvailable() {
     $engines = Database::getConnection()->query('SHOW ENGINES')->fetchAllKeyed();
     if (isset($engines['MyISAM']) && $engines['MyISAM'] == 'DEFAULT' && !isset($engines['InnoDB'])) {
-      $this->fail(t('The MyISAM storage engine is not supported.'));
+      $this->fail($this->t('The MyISAM storage engine is not supported.'));
     }
   }
 

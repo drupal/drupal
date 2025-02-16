@@ -392,7 +392,7 @@ class CommentForm extends ContentEntityForm {
       // Add a log entry.
       $logger->info('Comment posted: %subject.', [
         '%subject' => $comment->getSubject(),
-        'link' => Link::fromTextAndUrl(t('View'), $comment->toUrl()->setOption('fragment', 'comment-' . $comment->id()))->toString(),
+        'link' => Link::fromTextAndUrl($this->t('View'), $comment->toUrl()->setOption('fragment', 'comment-' . $comment->id()))->toString(),
       ]);
       // Add an appropriate message upon submitting the comment form.
       $this->messenger()->addStatus($this->getStatusMessage($comment, $is_new));

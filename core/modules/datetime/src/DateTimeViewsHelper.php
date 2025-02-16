@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\datetime;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\views\FieldViewsDataProvider;
 
@@ -11,6 +12,8 @@ use Drupal\views\FieldViewsDataProvider;
  * A helper for datetime fields integrating with views.
  */
 class DateTimeViewsHelper {
+
+  use StringTranslationTrait;
 
   public function __construct(
     protected readonly ?FieldViewsDataProvider $fieldViewsDataProvider,
@@ -51,17 +54,17 @@ class DateTimeViewsHelper {
       $group = $data[$table_name][$field_storage->getName() . '_' . $column_name]['group'];
       $arguments = [
         // Argument type => help text.
-        'year' => t('Date in the form of YYYY.'),
-        'month' => t('Date in the form of MM (01 - 12).'),
-        'day' => t('Date in the form of DD (01 - 31).'),
-        'week' => t('Date in the form of WW (01 - 53).'),
-        'year_month' => t('Date in the form of YYYYMM.'),
-        'full_date' => t('Date in the form of CCYYMMDD.'),
+        'year' => $this->t('Date in the form of YYYY.'),
+        'month' => $this->t('Date in the form of MM (01 - 12).'),
+        'day' => $this->t('Date in the form of DD (01 - 31).'),
+        'week' => $this->t('Date in the form of WW (01 - 53).'),
+        'year_month' => $this->t('Date in the form of YYYYMM.'),
+        'full_date' => $this->t('Date in the form of CCYYMMDD.'),
       ];
       foreach ($arguments as $argument_type => $help_text) {
         $column_name_text = $column_name === $field_storage->getMainPropertyName() ? '' : ':' . $column_name;
         $data[$table_name][$field_storage->getName() . '_' . $column_name . '_' . $argument_type] = [
-          'title' => t('@label@column (@argument)', [
+          'title' => $this->t('@label@column (@argument)', [
             '@label' => $field_storage->getLabel(),
             '@column' => $column_name_text,
             '@argument' => $argument_type,

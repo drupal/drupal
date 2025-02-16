@@ -3,6 +3,7 @@
 namespace Drupal\views;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * View analyzer plugin manager.
@@ -15,6 +16,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  * by modules or as patches to Views itself.
  */
 class Analyzer {
+
+  use StringTranslationTrait;
 
   /**
    * A module handler that invokes the 'views_analyze' hook.
@@ -59,7 +62,7 @@ class Analyzer {
    */
   public function formatMessages(array $messages) {
     if (empty($messages)) {
-      $messages = [static::formatMessage(t('View analysis can find nothing to report.'), 'ok')];
+      $messages = [static::formatMessage($this->t('View analysis can find nothing to report.'), 'ok')];
     }
 
     $types = ['ok' => [], 'warning' => [], 'error' => []];
