@@ -18,6 +18,8 @@ class Name extends InOperator {
 
   /**
    * This filter is always considered multiple-valued.
+   *
+   * @var bool
    */
   protected $alwaysMultiple = TRUE;
 

@@ -38,6 +38,8 @@ class HtmlTag extends RenderElementBase {
   /**
    * Void elements do not contain values or closing tags.
    *
+   * @var string[]
+   *
    * @see https://www.w3.org/TR/html5/syntax.html#syntax-start-tag
    * @see https://www.w3.org/TR/html5/syntax.html#void-elements
    */

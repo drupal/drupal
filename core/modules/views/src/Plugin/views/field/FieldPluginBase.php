@@ -81,6 +81,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
   /**
    * An array of aliases.
+   *
+   * @var string[]
    */
   public $aliases = [];
 

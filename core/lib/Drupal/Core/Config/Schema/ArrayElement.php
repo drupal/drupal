@@ -11,6 +11,8 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
 
   /**
    * Parsed elements.
+   *
+   * @var array
    */
   protected $elements;
 

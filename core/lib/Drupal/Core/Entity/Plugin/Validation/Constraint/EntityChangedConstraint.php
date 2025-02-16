@@ -18,6 +18,8 @@ class EntityChangedConstraint extends SymfonyConstraint {
 
   /**
    * The default violation message.
+   *
+   * @var string
    */
   public $message = 'The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.';
 

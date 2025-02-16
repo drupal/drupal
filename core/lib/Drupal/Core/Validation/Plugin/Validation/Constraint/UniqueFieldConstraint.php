@@ -17,6 +17,8 @@ class UniqueFieldConstraint extends SymfonyConstraint {
 
   /**
    * The default violation message.
+   *
+   * @var string
    */
   public $message = 'A @entity_type with @field_name %value already exists.';
 

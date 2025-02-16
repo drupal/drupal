@@ -111,6 +111,8 @@ class ManyToOne extends InOperator {
 
   /**
    * The default form type.
+   *
+   * @var string
    */
   protected $valueFormType = 'select';
 

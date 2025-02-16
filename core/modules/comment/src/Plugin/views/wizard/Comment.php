@@ -29,6 +29,8 @@ class Comment extends WizardPluginBase {
 
   /**
    * Set default values for the filters.
+   *
+   * @var array
    */
   protected $filters = [
     'status_node' => [

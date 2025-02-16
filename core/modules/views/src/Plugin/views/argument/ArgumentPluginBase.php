@@ -57,16 +57,22 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
   /**
    * The validator to use.
+   *
+   * @var string|null
    */
   public $validator = NULL;
 
   /**
    * The name of the argument.
+   *
+   * @var string|null
    */
   public $argument = NULL;
 
   /**
    * The value for the argument.
+   *
+   * @var mixed
    */
   public $value = NULL;
 

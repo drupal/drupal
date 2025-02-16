@@ -15,6 +15,8 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
 
   /**
    * Exposed filter options.
+   *
+   * @var bool
    */
   protected $alwaysMultiple = TRUE;
 

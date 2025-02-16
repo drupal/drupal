@@ -11,6 +11,8 @@ class SessionConfiguration implements SessionConfigurationInterface {
 
   /**
    * An associative array of session ini settings.
+   *
+   * @var array
    */
   protected $options;
 

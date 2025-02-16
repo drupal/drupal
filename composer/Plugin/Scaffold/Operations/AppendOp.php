@@ -41,11 +41,15 @@ class AppendOp extends AbstractOperation {
 
   /**
    * An indicator of whether the file we are appending to is managed or not.
+   *
+   * @var bool
    */
   protected $managed;
 
   /**
    * An indicator of whether we are allowed to append to a non-scaffolded file.
+   *
+   * @var bool
    */
   protected $forceAppend;
 

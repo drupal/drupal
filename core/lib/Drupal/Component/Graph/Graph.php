@@ -9,6 +9,8 @@ class Graph {
 
   /**
    * Holds the directed acyclic graph.
+   *
+   * @var array
    */
   protected $graph;
 

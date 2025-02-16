@@ -25,6 +25,8 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
 
   /**
    * The default form type.
+   *
+   * @var string
    */
   protected $valueFormType = 'checkboxes';
 
