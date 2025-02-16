@@ -4,6 +4,7 @@ namespace Drupal\field_layout\Hook;
 
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field_layout\FieldLayoutBuilder;
 use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -20,6 +21,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class FieldLayoutHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -27,9 +30,9 @@ class FieldLayoutHooks {
   public function help($route_name, RouteMatchInterface $route_match) {
     switch ($route_name) {
       case 'help.page.field_layout':
-        $output = '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Field Layout module allows you to arrange fields into regions on forms and displays of entities such as nodes and users.') . '</p>';
-        $output .= '<p>' . t('For more information, see the <a href=":field-layout-documentation">online documentation for the Field Layout module</a>.', [
+        $output = '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Field Layout module allows you to arrange fields into regions on forms and displays of entities such as nodes and users.') . '</p>';
+        $output .= '<p>' . $this->t('For more information, see the <a href=":field-layout-documentation">online documentation for the Field Layout module</a>.', [
           ':field-layout-documentation' => 'https://www.drupal.org/documentation/modules/field_layout',
         ]) . '</p>';
         return $output;

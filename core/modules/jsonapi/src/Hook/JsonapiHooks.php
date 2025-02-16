@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\jsonapi\Routing\Routes;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -15,6 +16,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class JsonapiHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -22,21 +25,21 @@ class JsonapiHooks {
   public function help($route_name, RouteMatchInterface $route_match) {
     switch ($route_name) {
       case 'help.page.jsonapi':
-        $output = '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The JSON:API module is a fully compliant implementation of the <a href=":spec">JSON:API Specification</a>. By following shared conventions, you can increase productivity, take advantage of generalized tooling, and focus on what matters: your application. Clients built around JSON:API are able to take advantage of features like efficient response caching, which can sometimes eliminate network requests entirely. For more information, see the <a href=":docs">online documentation for the JSON:API module</a>.', [
+        $output = '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The JSON:API module is a fully compliant implementation of the <a href=":spec">JSON:API Specification</a>. By following shared conventions, you can increase productivity, take advantage of generalized tooling, and focus on what matters: your application. Clients built around JSON:API are able to take advantage of features like efficient response caching, which can sometimes eliminate network requests entirely. For more information, see the <a href=":docs">online documentation for the JSON:API module</a>.', [
           ':spec' => 'https://jsonapi.org',
           ':docs' => 'https://www.drupal.org/docs/8/modules/json-api',
         ]) . '</p>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('General') . '</dt>';
-        $output .= '<dd>' . t('JSON:API is a particular implementation of REST that provides conventions for resource relationships, collections, filters, pagination, and sorting. These conventions help developers build clients faster and encourages reuse of code.') . '</dd>';
-        $output .= '<dd>' . t('The <a href=":jsonapi-docs">JSON:API</a> and <a href=":rest-docs">RESTful Web Services</a> modules serve similar purposes. <a href=":comparison">Read the comparison of the RESTFul Web Services and JSON:API modules</a> to determine the best choice for your site.', [
+        $output .= '<dt>' . $this->t('General') . '</dt>';
+        $output .= '<dd>' . $this->t('JSON:API is a particular implementation of REST that provides conventions for resource relationships, collections, filters, pagination, and sorting. These conventions help developers build clients faster and encourages reuse of code.') . '</dd>';
+        $output .= '<dd>' . $this->t('The <a href=":jsonapi-docs">JSON:API</a> and <a href=":rest-docs">RESTful Web Services</a> modules serve similar purposes. <a href=":comparison">Read the comparison of the RESTFul Web Services and JSON:API modules</a> to determine the best choice for your site.', [
           ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/json-api',
           ':rest-docs' => 'https://www.drupal.org/docs/8/core/modules/rest',
           ':comparison' => 'https://www.drupal.org/docs/8/modules/jsonapi/jsonapi-vs-cores-rest-module',
         ]) . '</dd>';
-        $output .= '<dd>' . t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations']) . '</dd>';
-        $output .= '<dd>' . t('Revision support is currently read-only and only for the "Content" and "Media" entity types in JSON:API. See the <a href=":jsonapi-docs">JSON:API revision support documentation</a> for more information on the current status of revision support.', [':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/revisions']) . '</dd>';
+        $output .= '<dd>' . $this->t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations']) . '</dd>';
+        $output .= '<dd>' . $this->t('Revision support is currently read-only and only for the "Content" and "Media" entity types in JSON:API. See the <a href=":jsonapi-docs">JSON:API revision support documentation</a> for more information on the current status of revision support.', [':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/revisions']) . '</dd>';
         $output .= '</dl>';
         return $output;
     }
@@ -50,7 +53,7 @@ class JsonapiHooks {
   public function modulesInstalled($modules): void {
     $potential_conflicts = ['content_translation', 'config_translation', 'language'];
     if (!empty(array_intersect($modules, $potential_conflicts))) {
-      \Drupal::messenger()->addWarning(t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations']));
+      \Drupal::messenger()->addWarning($this->t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations']));
     }
   }
 

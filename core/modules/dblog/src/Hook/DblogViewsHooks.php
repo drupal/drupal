@@ -3,11 +3,14 @@
 namespace Drupal\dblog\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Hook implementations for dblog.
  */
 class DblogViewsHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_views_data().
@@ -15,16 +18,16 @@ class DblogViewsHooks {
   #[Hook('views_data')]
   public function viewsData(): array {
     $data = [];
-    $data['watchdog']['table']['group'] = t('Watchdog');
+    $data['watchdog']['table']['group'] = $this->t('Watchdog');
     $data['watchdog']['table']['wizard_id'] = 'watchdog';
     $data['watchdog']['table']['base'] = [
       'field' => 'wid',
-      'title' => t('Log entries'),
-      'help' => t('Contains a list of log entries.'),
+      'title' => $this->t('Log entries'),
+      'help' => $this->t('Contains a list of log entries.'),
     ];
     $data['watchdog']['wid'] = [
-      'title' => t('WID'),
-      'help' => t('Unique watchdog event ID.'),
+      'title' => $this->t('WID'),
+      'help' => $this->t('Unique watchdog event ID.'),
       'field' => [
         'id' => 'standard',
       ],
@@ -39,8 +42,8 @@ class DblogViewsHooks {
       ],
     ];
     $data['watchdog']['uid'] = [
-      'title' => t('UID'),
-      'help' => t('The user ID of the user on which the log entry was written.'),
+      'title' => $this->t('UID'),
+      'help' => $this->t('The user ID of the user on which the log entry was written.'),
       'field' => [
         'id' => 'standard',
       ],
@@ -51,16 +54,16 @@ class DblogViewsHooks {
         'id' => 'numeric',
       ],
       'relationship' => [
-        'title' => t('User'),
-        'help' => t('The user on which the log entry as written.'),
+        'title' => $this->t('User'),
+        'help' => $this->t('The user on which the log entry as written.'),
         'base' => 'users_field_data',
         'base field' => 'uid',
         'id' => 'standard',
       ],
     ];
     $data['watchdog']['type'] = [
-      'title' => t('Type'),
-      'help' => t('The type of the log entry, for example "user" or "page not found".'),
+      'title' => $this->t('Type'),
+      'help' => $this->t('The type of the log entry, for example "user" or "page not found".'),
       'field' => [
         'id' => 'standard',
       ],
@@ -75,8 +78,8 @@ class DblogViewsHooks {
       ],
     ];
     $data['watchdog']['message'] = [
-      'title' => t('Message'),
-      'help' => t('The actual message of the log entry.'),
+      'title' => $this->t('Message'),
+      'help' => $this->t('The actual message of the log entry.'),
       'field' => [
         'id' => 'dblog_message',
       ],
@@ -91,8 +94,8 @@ class DblogViewsHooks {
       ],
     ];
     $data['watchdog']['variables'] = [
-      'title' => t('Variables'),
-      'help' => t('The variables of the log entry in a serialized format.'),
+      'title' => $this->t('Variables'),
+      'help' => $this->t('The variables of the log entry in a serialized format.'),
       'field' => [
         'id' => 'serialized',
         'click sortable' => FALSE,
@@ -108,8 +111,8 @@ class DblogViewsHooks {
       ],
     ];
     $data['watchdog']['severity'] = [
-      'title' => t('Severity level'),
-      'help' => t('The severity level of the event; ranges from 0 (Emergency) to 7 (Debug).'),
+      'title' => $this->t('Severity level'),
+      'help' => $this->t('The severity level of the event; ranges from 0 (Emergency) to 7 (Debug).'),
       'field' => [
         'id' => 'machine_name',
         'options callback' => 'Drupal\dblog\Controller\DbLogController::getLogLevelClassMap',
@@ -123,8 +126,8 @@ class DblogViewsHooks {
       ],
     ];
     $data['watchdog']['link'] = [
-      'title' => t('Operations'),
-      'help' => t('Operation links for the event.'),
+      'title' => $this->t('Operations'),
+      'help' => $this->t('Operation links for the event.'),
       'field' => [
         'id' => 'dblog_operations',
       ],
@@ -139,8 +142,8 @@ class DblogViewsHooks {
       ],
     ];
     $data['watchdog']['location'] = [
-      'title' => t('Location'),
-      'help' => t('URL of the origin of the event.'),
+      'title' => $this->t('Location'),
+      'help' => $this->t('URL of the origin of the event.'),
       'field' => [
         'id' => 'standard',
       ],
@@ -155,8 +158,8 @@ class DblogViewsHooks {
       ],
     ];
     $data['watchdog']['referer'] = [
-      'title' => t('Referer'),
-      'help' => t('URL of the previous page.'),
+      'title' => $this->t('Referer'),
+      'help' => $this->t('URL of the previous page.'),
       'field' => [
         'id' => 'standard',
       ],
@@ -171,8 +174,8 @@ class DblogViewsHooks {
       ],
     ];
     $data['watchdog']['hostname'] = [
-      'title' => t('Hostname'),
-      'help' => t('Hostname of the user who triggered the event.'),
+      'title' => $this->t('Hostname'),
+      'help' => $this->t('Hostname of the user who triggered the event.'),
       'field' => [
         'id' => 'standard',
       ],
@@ -187,8 +190,8 @@ class DblogViewsHooks {
       ],
     ];
     $data['watchdog']['timestamp'] = [
-      'title' => t('Timestamp'),
-      'help' => t('Date when the event occurred.'),
+      'title' => $this->t('Timestamp'),
+      'help' => $this->t('Date when the event occurred.'),
       'field' => [
         'id' => 'date',
       ],

@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -15,6 +16,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for block_content.
  */
 class BlockContentHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_help().
@@ -25,20 +28,20 @@ class BlockContentHooks {
       case 'help.page.block_content':
         $field_ui = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Block Content module allows you to create and manage custom <em>block types</em> and <em>content-containing blocks</em>. For more information, see the <a href=":online-help">online documentation for the Block Content module</a>.', [':online-help' => 'https://www.drupal.org/documentation/modules/block_content']) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Block Content module allows you to create and manage custom <em>block types</em> and <em>content-containing blocks</em>. For more information, see the <a href=":online-help">online documentation for the Block Content module</a>.', [':online-help' => 'https://www.drupal.org/documentation/modules/block_content']) . '</p>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Creating and managing block types') . '</dt>';
-        $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create and edit block types with fields and display settings, from the <a href=":types">Block types</a> page under the Structure menu. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a> and <a href=":field">Field module help</a>.', [
+        $output .= '<dt>' . $this->t('Creating and managing block types') . '</dt>';
+        $output .= '<dd>' . $this->t('Users with the <em>Administer blocks</em> permission can create and edit block types with fields and display settings, from the <a href=":types">Block types</a> page under the Structure menu. For more information about managing fields and display settings, see the <a href=":field-ui">Field UI module help</a> and <a href=":field">Field module help</a>.', [
           ':types' => Url::fromRoute('entity.block_content_type.collection')->toString(),
           ':field-ui' => $field_ui,
           ':field' => Url::fromRoute('help.page', [
             'name' => 'field',
           ])->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Creating content blocks') . '</dt>';
-        $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create, edit, and delete content blocks of each defined block type, from the <a href=":block-library">Content blocks page</a>. After creating a block, place it in a region from the <a href=":blocks">Block layout page</a>, just like blocks provided by other modules.', [
+        $output .= '<dt>' . $this->t('Creating content blocks') . '</dt>';
+        $output .= '<dd>' . $this->t('Users with the <em>Administer blocks</em> permission can create, edit, and delete content blocks of each defined block type, from the <a href=":block-library">Content blocks page</a>. After creating a block, place it in a region from the <a href=":blocks">Block layout page</a>, just like blocks provided by other modules.', [
           ':blocks' => Url::fromRoute('block.admin_display')->toString(),
           ':block-library' => Url::fromRoute('entity.block_content.collection')->toString(),
         ]) . '</dd>';
@@ -146,7 +149,7 @@ class BlockContentHooks {
         $custom_block = reset($custom_block);
         if ($custom_block && $custom_block->access('update')) {
           $operations['block-edit'] = [
-            'title' => t('Edit block'),
+            'title' => $this->t('Edit block'),
             'url' => $custom_block->toUrl('edit-form')->setOptions([]),
             'weight' => 50,
           ];

@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Hook;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\views\ViewsConfigUpdater;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
@@ -20,6 +21,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class ViewsHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -28,26 +31,26 @@ class ViewsHooks {
     switch ($route_name) {
       case 'help.page.views':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Views module provides a back end to fetch information from content, user accounts, taxonomy terms, and other entities from the database and present it to the user as a grid, HTML list, table, unformatted list, etc. The resulting displays are known generally as <em>views</em>.') . '</p>';
-        $output .= '<p>' . t('For more information, see the <a href=":views">online documentation for the Views module</a>.', [':views' => 'https://www.drupal.org/documentation/modules/views']) . '</p>';
-        $output .= '<p>' . t('In order to create and modify your own views using the administration and configuration user interface, you will need to install either the Views UI module in core or a contributed module that provides a user interface for Views. See the <a href=":views-ui">Views UI module help page</a> for more information.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Views module provides a back end to fetch information from content, user accounts, taxonomy terms, and other entities from the database and present it to the user as a grid, HTML list, table, unformatted list, etc. The resulting displays are known generally as <em>views</em>.') . '</p>';
+        $output .= '<p>' . $this->t('For more information, see the <a href=":views">online documentation for the Views module</a>.', [':views' => 'https://www.drupal.org/documentation/modules/views']) . '</p>';
+        $output .= '<p>' . $this->t('In order to create and modify your own views using the administration and configuration user interface, you will need to install either the Views UI module in core or a contributed module that provides a user interface for Views. See the <a href=":views-ui">Views UI module help page</a> for more information.', [
           ':views-ui' => \Drupal::moduleHandler()->moduleExists('views_ui') ? Url::fromRoute('help.page', [
             'name' => 'views_ui',
           ])->toString() : '#',
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Adding functionality to administrative pages') . '</dt>';
-        $output .= '<dd>' . t('The Views module adds functionality to some core administration pages. For example, <em>admin/content</em> uses Views to filter and sort content. With Views uninstalled, <em>admin/content</em> is more limited.') . '</dd>';
-        $output .= '<dt>' . t('Expanding Views functionality') . '</dt>';
-        $output .= '<dd>' . t('Contributed projects that support the Views module can be found in the <a href=":node">online documentation for Views-related contributed modules</a>.', [':node' => 'https://www.drupal.org/documentation/modules/views/add-ons']) . '</dd>';
-        $output .= '<dt>' . t('Improving table accessibility') . '</dt>';
-        $output .= '<dd>' . t('Views tables include semantic markup to improve accessibility. Data cells are automatically associated with header cells through id and header attributes. To improve the accessibility of your tables you can add descriptive elements within the Views table settings. The <em>caption</em> element can introduce context for a table, making it easier to understand. The <em>summary</em> element can provide an overview of how the data has been organized and how to navigate the table. Both the caption and summary are visible by default and also implemented according to HTML5 guidelines.') . '</dd>';
-        $output .= '<dt>' . t('Working with multilingual views') . '</dt>';
-        $output .= '<dd>' . t('If your site has multiple languages and translated entities, each result row in a view will contain one translation of each involved entity (a view can involve multiple entities if it uses relationships). You can use a filter to restrict your view to one language: without filtering, if an entity has three translations it will add three rows to the results; if you filter by language, at most one result will appear (it could be zero if that particular entity does not have a translation matching your language filter choice). If a view uses relationships, each entity in the relationship needs to be filtered separately. You can filter a view to a fixed language choice, such as English or Spanish, or to the language selected by the page the view is displayed on (the language that is selected for the page by the language detection settings either for Content or User interface).') . '</dd>';
-        $output .= '<dd>' . t('Because each result row contains a specific translation of each entity, field-level filters are also relative to these entity translations. For example, if your view has a filter that specifies that the entity title should contain a particular English word, you will presumably filter out all rows containing Chinese translations, since they will not contain the English word. If your view also has a second filter specifying that the title should contain a particular Chinese word, and if you are using "And" logic for filtering, you will presumably end up with no results in the view, because there are probably not any entity translations containing both the English and Chinese words in the title.') . '</dd>';
-        $output .= '<dd>' . t('Independent of filtering, you can choose the display language (the language used to display the entities and their fields) via a setting on the display. Your language choices are the same as the filter language choices, with an additional choice of "Content language of view row" and "Original language of content in view row", which means to display each entity in the result row using the language that entity has or in which it was originally created. In theory, this would give you the flexibility to filter to French translations, for instance, and then display the results in Spanish. The more usual choices would be to use the same language choices for the display language and each entity filter in the view, or to use the Row language setting for the display.') . '</dd>';
+        $output .= '<dt>' . $this->t('Adding functionality to administrative pages') . '</dt>';
+        $output .= '<dd>' . $this->t('The Views module adds functionality to some core administration pages. For example, <em>admin/content</em> uses Views to filter and sort content. With Views uninstalled, <em>admin/content</em> is more limited.') . '</dd>';
+        $output .= '<dt>' . $this->t('Expanding Views functionality') . '</dt>';
+        $output .= '<dd>' . $this->t('Contributed projects that support the Views module can be found in the <a href=":node">online documentation for Views-related contributed modules</a>.', [':node' => 'https://www.drupal.org/documentation/modules/views/add-ons']) . '</dd>';
+        $output .= '<dt>' . $this->t('Improving table accessibility') . '</dt>';
+        $output .= '<dd>' . $this->t('Views tables include semantic markup to improve accessibility. Data cells are automatically associated with header cells through id and header attributes. To improve the accessibility of your tables you can add descriptive elements within the Views table settings. The <em>caption</em> element can introduce context for a table, making it easier to understand. The <em>summary</em> element can provide an overview of how the data has been organized and how to navigate the table. Both the caption and summary are visible by default and also implemented according to HTML5 guidelines.') . '</dd>';
+        $output .= '<dt>' . $this->t('Working with multilingual views') . '</dt>';
+        $output .= '<dd>' . $this->t('If your site has multiple languages and translated entities, each result row in a view will contain one translation of each involved entity (a view can involve multiple entities if it uses relationships). You can use a filter to restrict your view to one language: without filtering, if an entity has three translations it will add three rows to the results; if you filter by language, at most one result will appear (it could be zero if that particular entity does not have a translation matching your language filter choice). If a view uses relationships, each entity in the relationship needs to be filtered separately. You can filter a view to a fixed language choice, such as English or Spanish, or to the language selected by the page the view is displayed on (the language that is selected for the page by the language detection settings either for Content or User interface).') . '</dd>';
+        $output .= '<dd>' . $this->t('Because each result row contains a specific translation of each entity, field-level filters are also relative to these entity translations. For example, if your view has a filter that specifies that the entity title should contain a particular English word, you will presumably filter out all rows containing Chinese translations, since they will not contain the English word. If your view also has a second filter specifying that the title should contain a particular Chinese word, and if you are using "And" logic for filtering, you will presumably end up with no results in the view, because there are probably not any entity translations containing both the English and Chinese words in the title.') . '</dd>';
+        $output .= '<dd>' . $this->t('Independent of filtering, you can choose the display language (the language used to display the entities and their fields) via a setting on the display. Your language choices are the same as the filter language choices, with an additional choice of "Content language of view row" and "Original language of content in view row", which means to display each entity in the result row using the language that entity has or in which it was originally created. In theory, this would give you the flexibility to filter to French translations, for instance, and then display the results in Spanish. The more usual choices would be to use the same language choices for the display language and each entity filter in the view, or to use the Row language setting for the display.') . '</dd>';
         $output .= '</dl>';
         return $output;
     }

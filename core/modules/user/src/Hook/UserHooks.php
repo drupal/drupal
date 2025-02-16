@@ -3,6 +3,7 @@
 namespace Drupal\user\Hook;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -25,6 +26,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class UserHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -33,26 +36,26 @@ class UserHooks {
     switch ($route_name) {
       case 'help.page.user':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The User module allows users to register, log in, and log out. It also allows users with proper permissions to manage user roles and permissions. For more information, see the <a href=":user_docs">online documentation for the User module</a>.', [':user_docs' => 'https://www.drupal.org/documentation/modules/user']) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The User module allows users to register, log in, and log out. It also allows users with proper permissions to manage user roles and permissions. For more information, see the <a href=":user_docs">online documentation for the User module</a>.', [':user_docs' => 'https://www.drupal.org/documentation/modules/user']) . '</p>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Creating and managing users') . '</dt>';
-        $output .= '<dd>' . t('Through the <a href=":people">People administration page</a> you can add and cancel user accounts and assign users to roles. By editing one particular user you can change their username, email address, password, and information in other fields.', [':people' => Url::fromRoute('entity.user.collection')->toString()]) . '</dd>';
-        $output .= '<dt>' . t('Configuring user roles') . '</dt>';
-        $output .= '<dd>' . t('<em>Roles</em> are used to group and classify users; each user can be assigned one or more roles. Typically there are two pre-defined roles: <em>Anonymous user</em> (users that are not logged in), and <em>Authenticated user</em> (users that are registered and logged in). Depending on how your site was set up, an <em>Administrator</em> role may also be available: users with this role will automatically be assigned any new permissions whenever a module is installed. You can create additional roles on the <a href=":roles">Roles administration page</a>.', [
+        $output .= '<dt>' . $this->t('Creating and managing users') . '</dt>';
+        $output .= '<dd>' . $this->t('Through the <a href=":people">People administration page</a> you can add and cancel user accounts and assign users to roles. By editing one particular user you can change their username, email address, password, and information in other fields.', [':people' => Url::fromRoute('entity.user.collection')->toString()]) . '</dd>';
+        $output .= '<dt>' . $this->t('Configuring user roles') . '</dt>';
+        $output .= '<dd>' . $this->t('<em>Roles</em> are used to group and classify users; each user can be assigned one or more roles. Typically there are two pre-defined roles: <em>Anonymous user</em> (users that are not logged in), and <em>Authenticated user</em> (users that are registered and logged in). Depending on how your site was set up, an <em>Administrator</em> role may also be available: users with this role will automatically be assigned any new permissions whenever a module is installed. You can create additional roles on the <a href=":roles">Roles administration page</a>.', [
           ':roles' => Url::fromRoute('entity.user_role.collection')->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Setting permissions') . '</dt>';
-        $output .= '<dd>' . t('After creating roles, you can set permissions for each role on the <a href=":permissions_user">Permissions page</a>. Granting a permission allows users who have been assigned a particular role to perform an action on the site, such as viewing content, editing or creating  a particular type of content, administering settings for a particular module, or using a particular function of the site (such as search).', [
+        $output .= '<dt>' . $this->t('Setting permissions') . '</dt>';
+        $output .= '<dd>' . $this->t('After creating roles, you can set permissions for each role on the <a href=":permissions_user">Permissions page</a>. Granting a permission allows users who have been assigned a particular role to perform an action on the site, such as viewing content, editing or creating  a particular type of content, administering settings for a particular module, or using a particular function of the site (such as search).', [
           ':permissions_user' => Url::fromRoute('user.admin_permissions')->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Other permissions pages') . '</dt>';
-        $output .= '<dd>' . t('The main Permissions page can be overwhelming, so each module that defines permissions has its own page for setting them. There are links to these pages on the <a href=":modules">Extend page</a>. When editing a content type, vocabulary, etc., there is also a Manage permissions tab for permissions related to that configuration.', [':modules' => Url::fromRoute('system.modules_list')->toString()]) . '</dd>';
-        $output .= '<dt>' . t('Managing account settings') . '</dt>';
-        $output .= '<dd>' . t('The <a href=":accounts">Account settings page</a> allows you to manage settings for the displayed name of the Anonymous user role, personal contact forms, user registration settings, and account cancellation settings. On this page you can also manage settings for account personalization, and adapt the text for the email messages that users receive when they register or request a password recovery. You may also set which role is automatically assigned new permissions whenever a module is installed (the Administrator role).', [':accounts' => Url::fromRoute('entity.user.admin_form')->toString()]) . '</dd>';
-        $output .= '<dt>' . t('Managing user account fields') . '</dt>';
-        $output .= '<dd>' . t('Because User accounts are an entity type, you can extend them by adding fields through the Manage fields tab on the <a href=":accounts">Account settings page</a>. By adding fields for e.g., a picture, a biography, or address, you can a create a custom profile for the users of the website. For background information on entities and fields, see the <a href=":field_help">Field module help page</a>.', [
+        $output .= '<dt>' . $this->t('Other permissions pages') . '</dt>';
+        $output .= '<dd>' . $this->t('The main Permissions page can be overwhelming, so each module that defines permissions has its own page for setting them. There are links to these pages on the <a href=":modules">Extend page</a>. When editing a content type, vocabulary, etc., there is also a Manage permissions tab for permissions related to that configuration.', [':modules' => Url::fromRoute('system.modules_list')->toString()]) . '</dd>';
+        $output .= '<dt>' . $this->t('Managing account settings') . '</dt>';
+        $output .= '<dd>' . $this->t('The <a href=":accounts">Account settings page</a> allows you to manage settings for the displayed name of the Anonymous user role, personal contact forms, user registration settings, and account cancellation settings. On this page you can also manage settings for account personalization, and adapt the text for the email messages that users receive when they register or request a password recovery. You may also set which role is automatically assigned new permissions whenever a module is installed (the Administrator role).', [':accounts' => Url::fromRoute('entity.user.admin_form')->toString()]) . '</dd>';
+        $output .= '<dt>' . $this->t('Managing user account fields') . '</dt>';
+        $output .= '<dd>' . $this->t('Because User accounts are an entity type, you can extend them by adding fields through the Manage fields tab on the <a href=":accounts">Account settings page</a>. By adding fields for e.g., a picture, a biography, or address, you can a create a custom profile for the users of the website. For background information on entities and fields, see the <a href=":field_help">Field module help page</a>.', [
           ':field_help' => \Drupal::moduleHandler()->moduleExists('field') ? Url::fromRoute('help.page', [
             'name' => 'field',
           ])->toString() : '#',
@@ -62,27 +65,27 @@ class UserHooks {
         return $output;
 
       case 'user.admin_create':
-        return '<p>' . t("This web page allows administrators to register new users. Users' email addresses and usernames must be unique.") . '</p>';
+        return '<p>' . $this->t("This web page allows administrators to register new users. Users' email addresses and usernames must be unique.") . '</p>';
 
       case 'user.admin_permissions':
-        return '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href=":role">Roles</a> page to create a role.) Any permissions granted to the Authenticated user role will be given to any user who is logged in to your site. On the <a href=":settings">Role settings</a> page, you can make any role into an Administrator role for the site, meaning that role will be granted all permissions. You should be careful to ensure that only trusted users are given this access and level of control of your site.', [
+        return '<p>' . $this->t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href=":role">Roles</a> page to create a role.) Any permissions granted to the Authenticated user role will be given to any user who is logged in to your site. On the <a href=":settings">Role settings</a> page, you can make any role into an Administrator role for the site, meaning that role will be granted all permissions. You should be careful to ensure that only trusted users are given this access and level of control of your site.', [
           ':role' => Url::fromRoute('entity.user_role.collection')->toString(),
           ':settings' => Url::fromRoute('user.role.settings')->toString(),
         ]) . '</p>';
 
       case 'entity.user_role.collection':
-        return '<p>' . t('A role defines a group of users that have certain privileges. These privileges are defined on the <a href=":permissions">Permissions page</a>. Here, you can define the names and the display sort order of the roles on your site. It is recommended to order roles from least permissive (for example, Anonymous user) to most permissive (for example, Administrator user). Users who are not logged in have the Anonymous user role. Users who are logged in have the Authenticated user role, plus any other roles granted to their user account.', [
+        return '<p>' . $this->t('A role defines a group of users that have certain privileges. These privileges are defined on the <a href=":permissions">Permissions page</a>. Here, you can define the names and the display sort order of the roles on your site. It is recommended to order roles from least permissive (for example, Anonymous user) to most permissive (for example, Administrator user). Users who are not logged in have the Anonymous user role. Users who are logged in have the Authenticated user role, plus any other roles granted to their user account.', [
           ':permissions' => Url::fromRoute('user.admin_permissions')->toString(),
         ]) . '</p>';
 
       case 'entity.user.field_ui_fields':
-        return '<p>' . t('This form lets administrators add and edit fields for storing user data.') . '</p>';
+        return '<p>' . $this->t('This form lets administrators add and edit fields for storing user data.') . '</p>';
 
       case 'entity.entity_form_display.user.default':
-        return '<p>' . t('This form lets administrators configure how form fields should be displayed when editing a user profile.') . '</p>';
+        return '<p>' . $this->t('This form lets administrators configure how form fields should be displayed when editing a user profile.') . '</p>';
 
       case 'entity.entity_view_display.user.default':
-        return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
+        return '<p>' . $this->t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
     }
   }
 
@@ -126,25 +129,25 @@ class UserHooks {
   #[Hook('entity_extra_field_info')]
   public function entityExtraFieldInfo(): array {
     $fields['user']['user']['form']['account'] = [
-      'label' => t('User name and password'),
-      'description' => t('User module account form elements.'),
+      'label' => $this->t('User name and password'),
+      'description' => $this->t('User module account form elements.'),
       'weight' => -10,
     ];
     $fields['user']['user']['form']['language'] = [
-      'label' => t('Language settings'),
-      'description' => t('User module form element.'),
+      'label' => $this->t('Language settings'),
+      'description' => $this->t('User module form element.'),
       'weight' => 0,
     ];
     if (\Drupal::config('system.date')->get('timezone.user.configurable')) {
       $fields['user']['user']['form']['timezone'] = [
-        'label' => t('Timezone'),
-        'description' => t('System module form element.'),
+        'label' => $this->t('Timezone'),
+        'description' => $this->t('System module form element.'),
         'weight' => 6,
       ];
     }
     $fields['user']['user']['display']['member_for'] = [
-      'label' => t('Member for'),
-      'description' => t("User module 'member for' view element."),
+      'label' => $this->t('Member for'),
+      'description' => $this->t("User module 'member for' view element."),
       'weight' => 5,
     ];
     return $fields;
@@ -172,7 +175,7 @@ class UserHooks {
     if ($account->isAuthenticated() && $display->getComponent('member_for')) {
       $build['member_for'] = [
         '#type' => 'item',
-        '#markup' => '<h4 class="label">' . t('Member for') . '</h4> ' . \Drupal::service('date.formatter')->formatTimeDiffSince($account->getCreatedTime()),
+        '#markup' => '<h4 class="label">' . $this->t('Member for') . '</h4> ' . \Drupal::service('date.formatter')->formatTimeDiffSince($account->getCreatedTime()),
       ];
     }
   }
@@ -230,7 +233,7 @@ class UserHooks {
     // If the user has a NULL time zone, notify them to set a time zone.
     $config = \Drupal::config('system.date');
     if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
-      \Drupal::messenger()->addStatus(t('Configure your <a href=":user-edit">account time zone setting</a>.', [
+      \Drupal::messenger()->addStatus($this->t('Configure your <a href=":user-edit">account time zone setting</a>.', [
         ':user-edit' => $account->toUrl('edit-form', [
           'query' => \Drupal::destination()->getAsArray(),
           'fragment' => 'edit-timezone',
@@ -285,7 +288,7 @@ class UserHooks {
       $action = Action::create([
         'id' => $add_id,
         'type' => 'user',
-        'label' => t('Add the @label role to the selected user(s)', [
+        'label' => $this->t('Add the @label role to the selected user(s)', [
           '@label' => $role->label(),
         ]),
         'configuration' => [
@@ -300,7 +303,7 @@ class UserHooks {
       $action = Action::create([
         'id' => $remove_id,
         'type' => 'user',
-        'label' => t('Remove the @label role from the selected user(s)', [
+        'label' => $this->t('Remove the @label role from the selected user(s)', [
           '@label' => $role->label(),
         ]),
         'configuration' => [
@@ -365,7 +368,7 @@ class UserHooks {
         '#title' => $user->getDisplayName(),
         '#url' => Url::fromRoute('user.page'),
         '#attributes' => [
-          'title' => t('My account'),
+          'title' => $this->t('My account'),
           'class' => [
             'toolbar-icon',
             'toolbar-icon-user',
@@ -379,7 +382,7 @@ class UserHooks {
         ],
       ],
       'tray' => [
-        '#heading' => t('User account actions'),
+        '#heading' => $this->t('User account actions'),
       ],
       '#weight' => 100,
       '#attached' => [
@@ -391,7 +394,7 @@ class UserHooks {
     if ($user->isAnonymous()) {
       $links = [
         'login' => [
-          'title' => t('Log in'),
+          'title' => $this->t('Log in'),
           'url' => Url::fromRoute('user.page'),
         ],
       ];
@@ -441,7 +444,7 @@ class UserHooks {
     $config = \Drupal::config('system.date');
     $form['timezone']['configurable_timezones'] = [
       '#type' => 'checkbox',
-      '#title' => t('Users may set their own time zone'),
+      '#title' => $this->t('Users may set their own time zone'),
       '#default_value' => $config->get('timezone.user.configurable'),
     ];
     $form['timezone']['configurable_timezones_wrapper'] = [
@@ -458,20 +461,20 @@ class UserHooks {
     ];
     $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = [
       '#type' => 'checkbox',
-      '#title' => t('Remind users at login if their time zone is not set'),
+      '#title' => $this->t('Remind users at login if their time zone is not set'),
       '#default_value' => $config->get('timezone.user.warn'),
-      '#description' => t('Only applied if users may set their own time zone.'),
+      '#description' => $this->t('Only applied if users may set their own time zone.'),
     ];
     $form['timezone']['configurable_timezones_wrapper']['user_default_timezone'] = [
       '#type' => 'radios',
-      '#title' => t('Time zone for new users'),
+      '#title' => $this->t('Time zone for new users'),
       '#default_value' => $config->get('timezone.user.default'),
       '#options' => [
-        UserInterface::TIMEZONE_DEFAULT => t('Default time zone'),
-        UserInterface::TIMEZONE_EMPTY => t('Empty time zone'),
-        UserInterface::TIMEZONE_SELECT => t('Users may set their own time zone at registration'),
+        UserInterface::TIMEZONE_DEFAULT => $this->t('Default time zone'),
+        UserInterface::TIMEZONE_EMPTY => $this->t('Empty time zone'),
+        UserInterface::TIMEZONE_SELECT => $this->t('Users may set their own time zone at registration'),
       ],
-      '#description' => t('Only applied if users may set their own time zone.'),
+      '#description' => $this->t('Only applied if users may set their own time zone.'),
     ];
     $form['#submit'][] = 'user_form_system_regional_settings_submit';
   }
@@ -512,7 +515,7 @@ class UserHooks {
     }
     return [
       'manage-permissions' => [
-        'title' => t('Manage permissions'),
+        'title' => $this->t('Manage permissions'),
         'weight' => 50,
         'url' => $url,
       ],

@@ -8,11 +8,14 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Hook implementations for comment.
  */
 class CommentTokensHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_token_info().
@@ -20,8 +23,8 @@ class CommentTokensHooks {
   #[Hook('token_info')]
   public function tokenInfo(): array {
     $type = [
-      'name' => t('Comments'),
-      'description' => t('Tokens for comments posted on the site.'),
+      'name' => $this->t('Comments'),
+      'description' => $this->t('Tokens for comments posted on the site.'),
       'needs-data' => 'comment',
     ];
     $tokens = [];
@@ -35,68 +38,68 @@ class CommentTokensHooks {
         $token_type = $entity_type_id == 'taxonomy_term' ? 'term' : $entity_type_id;
         // @todo Make this work per field. See https://www.drupal.org/node/2031903.
         $tokens[$token_type]['comment-count'] = [
-          'name' => t("Comment count"),
-          'description' => t("The number of comments posted on an entity."),
+          'name' => $this->t("Comment count"),
+          'description' => $this->t("The number of comments posted on an entity."),
         ];
         $tokens[$token_type]['comment-count-new'] = [
-          'name' => t("New comment count"),
-          'description' => t("The number of comments posted on an entity since the reader last viewed it."),
+          'name' => $this->t("New comment count"),
+          'description' => $this->t("The number of comments posted on an entity since the reader last viewed it."),
         ];
       }
     }
     // Core comment tokens
-    $comment['cid'] = ['name' => t("Comment ID"), 'description' => t("The unique ID of the comment.")];
-    $comment['uuid'] = ['name' => t('UUID'), 'description' => t("The UUID of the comment.")];
+    $comment['cid'] = ['name' => $this->t("Comment ID"), 'description' => $this->t("The unique ID of the comment.")];
+    $comment['uuid'] = ['name' => $this->t('UUID'), 'description' => $this->t("The UUID of the comment.")];
     $comment['hostname'] = [
-      'name' => t("IP Address"),
-      'description' => t("The IP address of the computer the comment was posted from."),
+      'name' => $this->t("IP Address"),
+      'description' => $this->t("The IP address of the computer the comment was posted from."),
     ];
     $comment['mail'] = [
-      'name' => t("Email address"),
-      'description' => t("The email address left by the comment author."),
+      'name' => $this->t("Email address"),
+      'description' => $this->t("The email address left by the comment author."),
     ];
     $comment['homepage'] = [
-      'name' => t("Home page"),
-      'description' => t("The home page URL left by the comment author."),
+      'name' => $this->t("Home page"),
+      'description' => $this->t("The home page URL left by the comment author."),
     ];
-    $comment['title'] = ['name' => t("Title"), 'description' => t("The title of the comment.")];
+    $comment['title'] = ['name' => $this->t("Title"), 'description' => $this->t("The title of the comment.")];
     $comment['body'] = [
-      'name' => t("Content"),
-      'description' => t("The formatted content of the comment itself."),
+      'name' => $this->t("Content"),
+      'description' => $this->t("The formatted content of the comment itself."),
     ];
     $comment['langcode'] = [
-      'name' => t('Language code'),
-      'description' => t('The language code of the language the comment is written in.'),
+      'name' => $this->t('Language code'),
+      'description' => $this->t('The language code of the language the comment is written in.'),
     ];
-    $comment['url'] = ['name' => t("URL"), 'description' => t("The URL of the comment.")];
+    $comment['url'] = ['name' => $this->t("URL"), 'description' => $this->t("The URL of the comment.")];
     $comment['edit-url'] = [
-      'name' => t("Edit URL"),
-      'description' => t("The URL of the comment's edit page."),
+      'name' => $this->t("Edit URL"),
+      'description' => $this->t("The URL of the comment's edit page."),
     ];
     // Chained tokens for comments
     $comment['created'] = [
-      'name' => t("Date created"),
-      'description' => t("The date the comment was posted."),
+      'name' => $this->t("Date created"),
+      'description' => $this->t("The date the comment was posted."),
       'type' => 'date',
     ];
     $comment['changed'] = [
-      'name' => t("Date changed"),
-      'description' => t("The date the comment was most recently updated."),
+      'name' => $this->t("Date changed"),
+      'description' => $this->t("The date the comment was most recently updated."),
       'type' => 'date',
     ];
     $comment['parent'] = [
-      'name' => t("Parent"),
-      'description' => t("The comment's parent, if comment threading is active."),
+      'name' => $this->t("Parent"),
+      'description' => $this->t("The comment's parent, if comment threading is active."),
       'type' => 'comment',
     ];
     $comment['entity'] = [
-      'name' => t("Entity"),
-      'description' => t("The entity the comment was posted to."),
+      'name' => $this->t("Entity"),
+      'description' => $this->t("The entity the comment was posted to."),
       'type' => 'entity',
     ];
     $comment['author'] = [
-      'name' => t("Author"),
-      'description' => t("The author name of the comment."),
+      'name' => $this->t("Author"),
+      'description' => $this->t("The author name of the comment."),
       'type' => 'user',
     ];
     return ['types' => ['comment' => $type], 'tokens' => ['comment' => $comment] + $tokens];

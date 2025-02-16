@@ -10,12 +10,15 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Token;
 
 /**
  * Hook implementations for file tokens.
  */
 class TokenHooks {
+
+  use StringTranslationTrait;
 
   public function __construct(
     private readonly Token $token,
@@ -120,37 +123,37 @@ class TokenHooks {
   #[Hook('token_info')]
   public function tokenInfo(): array {
     $types['file'] = [
-      'name' => t("Files"),
-      'description' => t("Tokens related to uploaded files."),
+      'name' => $this->t("Files"),
+      'description' => $this->t("Tokens related to uploaded files."),
       'needs-data' => 'file',
     ];
     // File related tokens.
     $file['fid'] = [
-      'name' => t("File ID"),
-      'description' => t("The unique ID of the uploaded file."),
+      'name' => $this->t("File ID"),
+      'description' => $this->t("The unique ID of the uploaded file."),
     ];
-    $file['uuid'] = ['name' => t('UUID'), 'description' => t('The UUID of the uploaded file.')];
-    $file['name'] = ['name' => t("File name"), 'description' => t("The name of the file on disk.")];
+    $file['uuid'] = ['name' => $this->t('UUID'), 'description' => $this->t('The UUID of the uploaded file.')];
+    $file['name'] = ['name' => $this->t("File name"), 'description' => $this->t("The name of the file on disk.")];
     $file['path'] = [
-      'name' => t("Path"),
-      'description' => t("The location of the file relative to Drupal root."),
+      'name' => $this->t("Path"),
+      'description' => $this->t("The location of the file relative to Drupal root."),
     ];
-    $file['mime'] = ['name' => t("MIME type"), 'description' => t("The MIME type of the file.")];
-    $file['size'] = ['name' => t("File size"), 'description' => t("The size of the file.")];
-    $file['url'] = ['name' => t("URL"), 'description' => t("The web-accessible URL for the file.")];
+    $file['mime'] = ['name' => $this->t("MIME type"), 'description' => $this->t("The MIME type of the file.")];
+    $file['size'] = ['name' => $this->t("File size"), 'description' => $this->t("The size of the file.")];
+    $file['url'] = ['name' => $this->t("URL"), 'description' => $this->t("The web-accessible URL for the file.")];
     $file['created'] = [
-      'name' => t("Created"),
-      'description' => t("The date the file created."),
+      'name' => $this->t("Created"),
+      'description' => $this->t("The date the file created."),
       'type' => 'date',
     ];
     $file['changed'] = [
-      'name' => t("Changed"),
-      'description' => t("The date the file was most recently changed."),
+      'name' => $this->t("Changed"),
+      'description' => $this->t("The date the file was most recently changed."),
       'type' => 'date',
     ];
     $file['owner'] = [
-      'name' => t("Owner"),
-      'description' => t("The user who originally uploaded the file."),
+      'name' => $this->t("Owner"),
+      'description' => $this->t("The user who originally uploaded the file."),
       'type' => 'user',
     ];
     return ['types' => $types, 'tokens' => ['file' => $file]];

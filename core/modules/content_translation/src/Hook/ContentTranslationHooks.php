@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -22,6 +23,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class ContentTranslationHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -30,8 +33,8 @@ class ContentTranslationHooks {
     switch ($route_name) {
       case 'help.page.content_translation':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Content Translation module allows you to translate content, comments, content blocks, taxonomy terms, users and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a>. Together with the modules <a href=":language">Language</a>, <a href=":config-trans">Configuration Translation</a>, and <a href=":locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see the <a href=":translation-entity">online documentation for the Content Translation module</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Content Translation module allows you to translate content, comments, content blocks, taxonomy terms, users and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a>. Together with the modules <a href=":language">Language</a>, <a href=":config-trans">Configuration Translation</a>, and <a href=":locale">Interface Translation</a>, it allows you to build multilingual websites. For more information, see the <a href=":translation-entity">online documentation for the Content Translation module</a>.', [
           ':locale' => \Drupal::moduleHandler()->moduleExists('locale') ? Url::fromRoute('help.page', [
             'name' => 'locale',
           ])->toString() : '#',
@@ -46,31 +49,31 @@ class ContentTranslationHooks {
             'name' => 'field',
           ])->toString(),
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Enabling translation') . '</dt>';
-        $output .= '<dd>' . t('In order to translate content, the website must have at least two <a href=":url">languages</a>. When that is the case, you can enable translation for the desired content entities on the <a href=":translation-entity">Content language</a> page. When enabling translation you can choose the default language for content and decide whether to show the language selection field on the content editing forms.', [
+        $output .= '<dt>' . $this->t('Enabling translation') . '</dt>';
+        $output .= '<dd>' . $this->t('In order to translate content, the website must have at least two <a href=":url">languages</a>. When that is the case, you can enable translation for the desired content entities on the <a href=":translation-entity">Content language</a> page. When enabling translation you can choose the default language for content and decide whether to show the language selection field on the content editing forms.', [
           ':url' => Url::fromRoute('entity.configurable_language.collection')->toString(),
           ':translation-entity' => Url::fromRoute('language.content_settings_page')->toString(),
           ':language-help' => Url::fromRoute('help.page', [
             'name' => 'language',
           ])->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Enabling field translation') . '</dt>';
-        $output .= '<dd>' . t('You can define which fields of a content entity can be translated. For example, you might want to translate the title and body field while leaving the image field untranslated. If you exclude a field from being translated, it will still show up in the content editing form, but any changes made to that field will be applied to <em>all</em> translations of that content.') . '</dd>';
-        $output .= '<dt>' . t('Translating content') . '</dt>';
-        $output .= '<dd>' . t('If translation is enabled you can translate a content entity via the Translate tab (or Translate link). The Translations page of a content entity gives an overview of the translation status for the current content and lets you add, edit, and delete its translations. This process is similar for every translatable content entity on your site.') . '</dd>';
-        $output .= '<dt>' . t('Changing the source language for a translation') . '</dt>';
-        $output .= '<dd>' . t('When you add a new translation, the original text you are translating is displayed in the edit form as the <em>source</em>. If at least one translation of the original content already exists when you add a new translation, you can choose either the original content (default) or one of the other translations as the source, using the select list in the Source language section. After saving the translation, the chosen source language is then listed on the Translate tab of the content.') . '</dd>';
-        $output .= '<dt>' . t('Setting status of translations') . '</dt>';
-        $output .= '<dd>' . t('If you edit a translation in one language you may want to set the status of the other translations as <em>out-of-date</em>. You can set this status by selecting the <em>Flag other translations as outdated</em> checkbox in the Translation section of the content editing form. The status will be visible on the Translations page.') . '</dd>';
+        $output .= '<dt>' . $this->t('Enabling field translation') . '</dt>';
+        $output .= '<dd>' . $this->t('You can define which fields of a content entity can be translated. For example, you might want to translate the title and body field while leaving the image field untranslated. If you exclude a field from being translated, it will still show up in the content editing form, but any changes made to that field will be applied to <em>all</em> translations of that content.') . '</dd>';
+        $output .= '<dt>' . $this->t('Translating content') . '</dt>';
+        $output .= '<dd>' . $this->t('If translation is enabled you can translate a content entity via the Translate tab (or Translate link). The Translations page of a content entity gives an overview of the translation status for the current content and lets you add, edit, and delete its translations. This process is similar for every translatable content entity on your site.') . '</dd>';
+        $output .= '<dt>' . $this->t('Changing the source language for a translation') . '</dt>';
+        $output .= '<dd>' . $this->t('When you add a new translation, the original text you are translating is displayed in the edit form as the <em>source</em>. If at least one translation of the original content already exists when you add a new translation, you can choose either the original content (default) or one of the other translations as the source, using the select list in the Source language section. After saving the translation, the chosen source language is then listed on the Translate tab of the content.') . '</dd>';
+        $output .= '<dt>' . $this->t('Setting status of translations') . '</dt>';
+        $output .= '<dd>' . $this->t('If you edit a translation in one language you may want to set the status of the other translations as <em>out-of-date</em>. You can set this status by selecting the <em>Flag other translations as outdated</em> checkbox in the Translation section of the content editing form. The status will be visible on the Translations page.') . '</dd>';
         $output .= '</dl>';
         return $output;
 
       case 'language.content_settings_page':
         $output = '';
         if (!\Drupal::languageManager()->isMultilingual()) {
-          $output .= '<p>' . t('Before you can translate content, there must be at least two languages added on the <a href=":url">languages administration</a> page.', [
+          $output .= '<p>' . $this->t('Before you can translate content, there must be at least two languages added on the <a href=":url">languages administration</a> page.', [
             ':url' => Url::fromRoute('entity.configurable_language.collection')->toString(),
           ]) . '</p>';
         }
@@ -299,7 +302,7 @@ class ContentTranslationHooks {
     $operations = [];
     if ($entity->hasLinkTemplate('drupal:content-translation-overview') && content_translation_translate_access($entity)->isAllowed()) {
       $operations['translate'] = [
-        'title' => t('Translate'),
+        'title' => $this->t('Translate'),
         'url' => $entity->toUrl('drupal:content-translation-overview'),
         'weight' => 50,
       ];
@@ -323,8 +326,8 @@ class ContentTranslationHooks {
         $t_arguments = ['@entity_type_label' => $entity_type->getLabel()];
         $data[$base_table]['translation_link'] = [
           'field' => [
-            'title' => t('Link to translate @entity_type_label', $t_arguments),
-            'help' => t('Provide a translation link to the @entity_type_label.', $t_arguments),
+            'title' => $this->t('Link to translate @entity_type_label', $t_arguments),
+            'help' => $this->t('Provide a translation link to the @entity_type_label.', $t_arguments),
             'id' => 'content_translation_link',
           ],
         ];
@@ -428,8 +431,8 @@ class ContentTranslationHooks {
       foreach ($bundle_info_service->getBundleInfo($entity_type) as $bundle => $bundle_info) {
         if (\Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle)) {
           $extra[$entity_type][$bundle]['form']['translation'] = [
-            'label' => t('Translation'),
-            'description' => t('Translation settings'),
+            'label' => $this->t('Translation'),
+            'description' => $this->t('Translation settings'),
             'weight' => 10,
           ];
         }
@@ -447,7 +450,7 @@ class ContentTranslationHooks {
     $bundle_is_translatable = \Drupal::service('content_translation.manager')->isEnabled($field->getTargetEntityTypeId(), $field->getTargetBundle());
     $form['translatable'] = [
       '#type' => 'checkbox',
-      '#title' => t('Users may translate this field'),
+      '#title' => $this->t('Users may translate this field'),
       '#default_value' => $field->isTranslatable(),
       '#weight' => -1,
       '#disabled' => !$bundle_is_translatable,
@@ -456,7 +459,7 @@ class ContentTranslationHooks {
     // Provide helpful pointers for administrators.
     if (\Drupal::currentUser()->hasPermission('administer content translation') && !$bundle_is_translatable) {
       $toggle_url = Url::fromRoute('language.content_settings_page', [], ['query' => \Drupal::destination()->getAsArray()])->toString();
-      $form['translatable']['#description'] = t('To configure translation for this field, <a href=":language-settings-url">enable language support</a> for this type.', [':language-settings-url' => $toggle_url]);
+      $form['translatable']['#description'] = $this->t('To configure translation for this field, <a href=":language-settings-url">enable language support</a> for this type.', [':language-settings-url' => $toggle_url]);
     }
     if ($field->isTranslatable()) {
       \Drupal::moduleHandler()->loadInclude('content_translation', 'inc', 'content_translation.admin');

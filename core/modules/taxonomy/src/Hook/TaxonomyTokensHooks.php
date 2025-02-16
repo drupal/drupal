@@ -3,6 +3,7 @@
 namespace Drupal\taxonomy\Hook;
 
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -13,69 +14,71 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class TaxonomyTokensHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
   public function tokenInfo(): array {
     $types['term'] = [
-      'name' => t("Taxonomy terms"),
-      'description' => t("Tokens related to taxonomy terms."),
+      'name' => $this->t("Taxonomy terms"),
+      'description' => $this->t("Tokens related to taxonomy terms."),
       'needs-data' => 'term',
     ];
     $types['vocabulary'] = [
-      'name' => t("Vocabularies"),
-      'description' => t("Tokens related to taxonomy vocabularies."),
+      'name' => $this->t("Vocabularies"),
+      'description' => $this->t("Tokens related to taxonomy vocabularies."),
       'needs-data' => 'vocabulary',
     ];
     // Taxonomy term related variables.
     $term['tid'] = [
-      'name' => t("Term ID"),
-      'description' => t("The unique ID of the taxonomy term."),
+      'name' => $this->t("Term ID"),
+      'description' => $this->t("The unique ID of the taxonomy term."),
     ];
-    $term['uuid'] = ['name' => t('UUID'), 'description' => t("The UUID of the taxonomy term.")];
-    $term['name'] = ['name' => t("Name"), 'description' => t("The name of the taxonomy term.")];
+    $term['uuid'] = ['name' => $this->t('UUID'), 'description' => $this->t("The UUID of the taxonomy term.")];
+    $term['name'] = ['name' => $this->t("Name"), 'description' => $this->t("The name of the taxonomy term.")];
     $term['description'] = [
-      'name' => t("Description"),
-      'description' => t("The optional description of the taxonomy term."),
+      'name' => $this->t("Description"),
+      'description' => $this->t("The optional description of the taxonomy term."),
     ];
     $term['node-count'] = [
-      'name' => t("Node count"),
-      'description' => t("The number of nodes tagged with the taxonomy term."),
+      'name' => $this->t("Node count"),
+      'description' => $this->t("The number of nodes tagged with the taxonomy term."),
     ];
-    $term['url'] = ['name' => t("URL"), 'description' => t("The URL of the taxonomy term.")];
+    $term['url'] = ['name' => $this->t("URL"), 'description' => $this->t("The URL of the taxonomy term.")];
     // Taxonomy vocabulary related variables.
     $vocabulary['vid'] = [
-      'name' => t("Vocabulary ID"),
-      'description' => t("The unique ID of the taxonomy vocabulary."),
+      'name' => $this->t("Vocabulary ID"),
+      'description' => $this->t("The unique ID of the taxonomy vocabulary."),
     ];
-    $vocabulary['name'] = ['name' => t("Name"), 'description' => t("The name of the taxonomy vocabulary.")];
+    $vocabulary['name'] = ['name' => $this->t("Name"), 'description' => $this->t("The name of the taxonomy vocabulary.")];
     $vocabulary['description'] = [
-      'name' => t("Description"),
-      'description' => t("The optional description of the taxonomy vocabulary."),
+      'name' => $this->t("Description"),
+      'description' => $this->t("The optional description of the taxonomy vocabulary."),
     ];
     $vocabulary['node-count'] = [
-      'name' => t("Node count"),
-      'description' => t("The number of nodes tagged with terms belonging to the taxonomy vocabulary."),
+      'name' => $this->t("Node count"),
+      'description' => $this->t("The number of nodes tagged with terms belonging to the taxonomy vocabulary."),
     ];
     $vocabulary['term-count'] = [
-      'name' => t("Term count"),
-      'description' => t("The number of terms belonging to the taxonomy vocabulary."),
+      'name' => $this->t("Term count"),
+      'description' => $this->t("The number of terms belonging to the taxonomy vocabulary."),
     ];
     // Chained tokens for taxonomies
     $term['vocabulary'] = [
-      'name' => t("Vocabulary"),
-      'description' => t("The vocabulary the taxonomy term belongs to."),
+      'name' => $this->t("Vocabulary"),
+      'description' => $this->t("The vocabulary the taxonomy term belongs to."),
       'type' => 'vocabulary',
     ];
     $term['parent'] = [
-      'name' => t("Parent term"),
-      'description' => t("The parent term of the taxonomy term, if one exists."),
+      'name' => $this->t("Parent term"),
+      'description' => $this->t("The parent term of the taxonomy term, if one exists."),
       'type' => 'term',
     ];
     $term['changed'] = [
-      'name' => t("Date changed"),
-      'description' => t("The date the taxonomy was most recently updated."),
+      'name' => $this->t("Date changed"),
+      'description' => $this->t("The date the taxonomy was most recently updated."),
       'type' => 'date',
     ];
     return ['types' => $types, 'tokens' => ['term' => $term, 'vocabulary' => $vocabulary]];

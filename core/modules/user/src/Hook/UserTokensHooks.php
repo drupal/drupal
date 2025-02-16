@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Hook;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Entity\User;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -12,49 +13,51 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class UserTokensHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
   public function tokenInfo(): array {
     $types['user'] = [
-      'name' => t('Users'),
-      'description' => t('Tokens related to individual user accounts.'),
+      'name' => $this->t('Users'),
+      'description' => $this->t('Tokens related to individual user accounts.'),
       'needs-data' => 'user',
     ];
     $types['current-user'] = [
-      'name' => t('Current user'),
-      'description' => t('Tokens related to the currently logged in user.'),
+      'name' => $this->t('Current user'),
+      'description' => $this->t('Tokens related to the currently logged in user.'),
       'type' => 'user',
     ];
-    $user['uid'] = ['name' => t('User ID'), 'description' => t("The unique ID of the user account.")];
-    $user['uuid'] = ['name' => t('UUID'), 'description' => t("The UUID of the user account.")];
+    $user['uid'] = ['name' => $this->t('User ID'), 'description' => $this->t("The unique ID of the user account.")];
+    $user['uuid'] = ['name' => $this->t('UUID'), 'description' => $this->t("The UUID of the user account.")];
     $user['name'] = [
-      'name' => t("Deprecated: User Name"),
-      'description' => t("Deprecated: Use account-name or display-name instead."),
+      'name' => $this->t("Deprecated: User Name"),
+      'description' => $this->t("Deprecated: Use account-name or display-name instead."),
     ];
     $user['account-name'] = [
-      'name' => t("Account Name"),
-      'description' => t("The login name of the user account."),
+      'name' => $this->t("Account Name"),
+      'description' => $this->t("The login name of the user account."),
     ];
     $user['display-name'] = [
-      'name' => t("Display Name"),
-      'description' => t("The display name of the user account."),
+      'name' => $this->t("Display Name"),
+      'description' => $this->t("The display name of the user account."),
     ];
     $user['mail'] = [
-      'name' => t("Email"),
-      'description' => t("The email address of the user account."),
+      'name' => $this->t("Email"),
+      'description' => $this->t("The email address of the user account."),
     ];
-    $user['url'] = ['name' => t("URL"), 'description' => t("The URL of the account profile page.")];
-    $user['edit-url'] = ['name' => t("Edit URL"), 'description' => t("The URL of the account edit page.")];
+    $user['url'] = ['name' => $this->t("URL"), 'description' => $this->t("The URL of the account profile page.")];
+    $user['edit-url'] = ['name' => $this->t("Edit URL"), 'description' => $this->t("The URL of the account edit page.")];
     $user['last-login'] = [
-      'name' => t("Last login"),
-      'description' => t("The date the user last logged in to the site."),
+      'name' => $this->t("Last login"),
+      'description' => $this->t("The date the user last logged in to the site."),
       'type' => 'date',
     ];
     $user['created'] = [
-      'name' => t("Created"),
-      'description' => t("The date the user account was created."),
+      'name' => $this->t("Created"),
+      'description' => $this->t("The date the user account was created."),
       'type' => 'date',
     ];
     return ['types' => $types, 'tokens' => ['user' => $user]];
@@ -83,7 +86,7 @@ class UserTokensHooks {
           // Basic user account information.
           case 'uid':
             // In the case of hook user_presave uid is not set yet.
-            $replacements[$original] = $account->id() ?: t('not yet assigned');
+            $replacements[$original] = $account->id() ?: $this->t('not yet assigned');
             break;
 
           case 'uuid':
@@ -111,11 +114,11 @@ class UserTokensHooks {
             break;
 
           case 'url':
-            $replacements[$original] = $account->id() ? $account->toUrl('canonical', $url_options)->toString() : t('not yet assigned');
+            $replacements[$original] = $account->id() ? $account->toUrl('canonical', $url_options)->toString() : $this->t('not yet assigned');
             break;
 
           case 'edit-url':
-            $replacements[$original] = $account->id() ? $account->toUrl('edit-form', $url_options)->toString() : t('not yet assigned');
+            $replacements[$original] = $account->id() ? $account->toUrl('edit-form', $url_options)->toString() : $this->t('not yet assigned');
             break;
 
           // These tokens are default variations on the chained tokens handled
@@ -123,14 +126,14 @@ class UserTokensHooks {
           case 'last-login':
             $date_format = DateFormat::load('medium');
             $bubbleable_metadata->addCacheableDependency($date_format);
-            $replacements[$original] = $account->getLastLoginTime() ? \Drupal::service('date.formatter')->format($account->getLastLoginTime(), 'medium', '', NULL, $langcode) : t('never');
+            $replacements[$original] = $account->getLastLoginTime() ? \Drupal::service('date.formatter')->format($account->getLastLoginTime(), 'medium', '', NULL, $langcode) : $this->t('never');
             break;
 
           case 'created':
             $date_format = DateFormat::load('medium');
             $bubbleable_metadata->addCacheableDependency($date_format);
             // In the case of user_presave the created date may not yet be set.
-            $replacements[$original] = $account->getCreatedTime() ? \Drupal::service('date.formatter')->format($account->getCreatedTime(), 'medium', '', NULL, $langcode) : t('not yet created');
+            $replacements[$original] = $account->getCreatedTime() ? \Drupal::service('date.formatter')->format($account->getCreatedTime(), 'medium', '', NULL, $langcode) : $this->t('not yet created');
             break;
         }
       }

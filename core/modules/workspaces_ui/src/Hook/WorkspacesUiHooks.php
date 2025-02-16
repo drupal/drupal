@@ -6,12 +6,15 @@ namespace Drupal\workspaces_ui\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
 /**
  * Hook implementations for the workspaces_ui module.
  */
 class WorkspacesUiHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_help().
@@ -22,8 +25,8 @@ class WorkspacesUiHooks {
       // Main module help for the Workspaces UI module.
       case 'help.page.workspaces_ui':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Workspaces UI module provides an interface for managing workspaces for the <a href=":workspaces_module">Workspaces module</a>. For more information, see the <a href=":workspaces">online documentation for the Workspaces UI module</a>.', [':workspaces_module' => Url::fromRoute('help.page', ['name' => 'workspaces'])->toString(), ':workspaces' => 'https://www.drupal.org/docs/8/core/modules/workspace/overview']) . '</p>';
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Workspaces UI module provides an interface for managing workspaces for the <a href=":workspaces_module">Workspaces module</a>. For more information, see the <a href=":workspaces">online documentation for the Workspaces UI module</a>.', [':workspaces_module' => Url::fromRoute('help.page', ['name' => 'workspaces'])->toString(), ':workspaces' => 'https://www.drupal.org/docs/8/core/modules/workspace/overview']) . '</p>';
         return $output;
     }
     return NULL;
@@ -58,7 +61,7 @@ class WorkspacesUiHooks {
         '#create_placeholder' => TRUE,
         '#lazy_builder_preview' => [
           '#type' => 'link',
-          '#title' => $active_workspace ? $active_workspace->label() : t('Live'),
+          '#title' => $active_workspace ? $active_workspace->label() : $this->t('Live'),
           '#url' => Url::fromRoute('entity.workspace.collection'),
           '#attributes' => [
             'class' => ['toolbar-tray-lazy-placeholder-link'],

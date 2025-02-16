@@ -7,6 +7,7 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Render\Element;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -16,6 +17,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class Ckeditor5Hooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -24,18 +27,18 @@ class Ckeditor5Hooks {
     switch ($route_name) {
       case 'help.page.ckeditor5':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The CKEditor 5 module provides a highly-accessible, highly-usable visual text editor and adds a toolbar to text fields. Users can use buttons to format content and to create semantically correct and valid HTML. The CKEditor module uses the framework provided by the <a href=":text_editor">Text Editor module</a>. It requires JavaScript to be enabled in the browser. For more information, see the <a href=":doc_url">online documentation for the CKEditor 5 module</a> and the <a href=":cke5_url">CKEditor 5 website</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The CKEditor 5 module provides a highly-accessible, highly-usable visual text editor and adds a toolbar to text fields. Users can use buttons to format content and to create semantically correct and valid HTML. The CKEditor module uses the framework provided by the <a href=":text_editor">Text Editor module</a>. It requires JavaScript to be enabled in the browser. For more information, see the <a href=":doc_url">online documentation for the CKEditor 5 module</a> and the <a href=":cke5_url">CKEditor 5 website</a>.', [
           ':doc_url' => 'https://www.drupal.org/docs/contributed-modules/ckeditor-5',
           ':cke5_url' => 'https://ckeditor.com/ckeditor-5/',
           ':text_editor' => Url::fromRoute('help.page', [
             'name' => 'editor',
           ])->toString(),
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Enabling CKEditor 5 for individual text formats') . '</dt>';
-        $output .= '<dd>' . t('CKEditor 5 has to be installed and configured separately for individual text formats from the <a href=":formats">Text formats and editors page</a> because the filter settings for each text format can be different. For more information, see the <a href=":text_editor">Text Editor help page</a> and <a href=":filter">Filter help page</a>.', [
+        $output .= '<dt>' . $this->t('Enabling CKEditor 5 for individual text formats') . '</dt>';
+        $output .= '<dd>' . $this->t('CKEditor 5 has to be installed and configured separately for individual text formats from the <a href=":formats">Text formats and editors page</a> because the filter settings for each text format can be different. For more information, see the <a href=":text_editor">Text Editor help page</a> and <a href=":filter">Filter help page</a>.', [
           ':formats' => Url::fromRoute('filter.admin_overview')->toString(),
           ':text_editor' => Url::fromRoute('help.page', [
             'name' => 'editor',
@@ -44,43 +47,43 @@ class Ckeditor5Hooks {
             'name' => 'filter',
           ])->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Configuring the toolbar') . '</dt>';
-        $output .= '<dd>' . t('When CKEditor 5 is chosen from the <em>Text editor</em> drop-down menu, its toolbar configuration is displayed. You can add and remove buttons from the <em>Active toolbar</em> by dragging and dropping them. Separators and rows can be added to organize the buttons.') . '</dd>';
-        $output .= '<dt>' . t('Filtering HTML content') . '</dt>';
-        $output .= '<dd>' . t("Unlike other text editors, plugin configuration determines the tags and attributes allowed in text formats using CKEditor 5. If using the <em>Limit allowed HTML tags and correct faulty HTML</em> filter, this filter's values will be automatically set based on enabled plugins and toolbar items.");
-        $output .= '<dt>' . t('Toggling between formatted text and HTML source') . '</dt>';
-        $output .= '<dd>' . t('If the <em>Source</em> button is available in the toolbar, users can click this button to disable the visual editor and edit the HTML source directly. After toggling back, the visual editor uses the HTML tags allowed via plugin configuration (and not explicity disallowed by filters) to format the text. Tags not enabled via plugin configuration will be stripped out of the HTML source when the user toggles back to the text editor.') . '</dd>';
-        $output .= '<dt>' . t('Developing CKEditor 5 plugins in Drupal') . '</dt>';
-        $output .= '<dd>' . t('See the <a href=":dev_docs_url">online documentation</a> for detailed information on developing CKEditor 5 plugins for use in Drupal.', [
+        $output .= '<dt>' . $this->t('Configuring the toolbar') . '</dt>';
+        $output .= '<dd>' . $this->t('When CKEditor 5 is chosen from the <em>Text editor</em> drop-down menu, its toolbar configuration is displayed. You can add and remove buttons from the <em>Active toolbar</em> by dragging and dropping them. Separators and rows can be added to organize the buttons.') . '</dd>';
+        $output .= '<dt>' . $this->t('Filtering HTML content') . '</dt>';
+        $output .= '<dd>' . $this->t("Unlike other text editors, plugin configuration determines the tags and attributes allowed in text formats using CKEditor 5. If using the <em>Limit allowed HTML tags and correct faulty HTML</em> filter, this filter's values will be automatically set based on enabled plugins and toolbar items.");
+        $output .= '<dt>' . $this->t('Toggling between formatted text and HTML source') . '</dt>';
+        $output .= '<dd>' . $this->t('If the <em>Source</em> button is available in the toolbar, users can click this button to disable the visual editor and edit the HTML source directly. After toggling back, the visual editor uses the HTML tags allowed via plugin configuration (and not explicity disallowed by filters) to format the text. Tags not enabled via plugin configuration will be stripped out of the HTML source when the user toggles back to the text editor.') . '</dd>';
+        $output .= '<dt>' . $this->t('Developing CKEditor 5 plugins in Drupal') . '</dt>';
+        $output .= '<dd>' . $this->t('See the <a href=":dev_docs_url">online documentation</a> for detailed information on developing CKEditor 5 plugins for use in Drupal.', [
           ':dev_docs_url' => 'https://www.drupal.org/docs/contributed-modules/ckeditor-5/plugin-and-contrib-module-development',
         ]) . '</dd>';
         $output .= '</dd>';
-        $output .= '<dt>' . t('Accessibility features') . '</dt>';
-        $output .= '<dd>' . t('The built in WYSIWYG editor (CKEditor 5) comes with a number of accessibility features. CKEditor 5 comes with built in <a href=":shortcuts">keyboard shortcuts</a>, which can be beneficial for both power users and keyboard only users.', [
+        $output .= '<dt>' . $this->t('Accessibility features') . '</dt>';
+        $output .= '<dd>' . $this->t('The built in WYSIWYG editor (CKEditor 5) comes with a number of accessibility features. CKEditor 5 comes with built in <a href=":shortcuts">keyboard shortcuts</a>, which can be beneficial for both power users and keyboard only users.', [
           ':shortcuts' => 'https://ckeditor.com/docs/ckeditor5/latest/features/keyboard-support.html',
         ]) . '</dd>';
-        $output .= '<dt>' . t('Generating accessible content') . '</dt>';
+        $output .= '<dt>' . $this->t('Generating accessible content') . '</dt>';
         $output .= '<dd>';
         $output .= '<ul>';
-        $output .= '<li>' . t('HTML tables can be created with table headers and caption/summary elements.') . '</li>';
-        $output .= '<li>' . t('Alt text is required by default on images added through CKEditor (note that this can be overridden).') . '</li>';
-        $output .= '<li>' . t('Semantic HTML5 figure/figcaption are available to add captions to images.') . '</li>';
-        $output .= '<li>' . t('To support multilingual page content, CKEditor 5 can be configured to include a language button in the toolbar.') . '</li>';
+        $output .= '<li>' . $this->t('HTML tables can be created with table headers and caption/summary elements.') . '</li>';
+        $output .= '<li>' . $this->t('Alt text is required by default on images added through CKEditor (note that this can be overridden).') . '</li>';
+        $output .= '<li>' . $this->t('Semantic HTML5 figure/figcaption are available to add captions to images.') . '</li>';
+        $output .= '<li>' . $this->t('To support multilingual page content, CKEditor 5 can be configured to include a language button in the toolbar.') . '</li>';
         $output .= '</ul>';
         $output .= '</dd>';
         $output .= '</dl>';
-        $output .= '<h3 id="migration-settings">' . t('Migrating an Existing Text Format to CKEditor 5') . '</h2>';
-        $output .= '<p>' . t('When switching an existing text format to use CKEditor 5, an automatic process is initiated that helps text formats switching to CKEditor 5 from CKEditor 4 (or no text editor) to do so with minimal effort and zero data loss.') . '</p>';
-        $output .= '<p>' . t("This process is designed for there to be no data loss risk in switching to CKEditor 5. However some of your editor's functionality may not be 100% equivalent to what was available previously. In most cases, these changes are minimal. After the process completes, status and/or warning messages will summarize any changes that occurred, and more detailed information will be available in the site's logs.") . '</p>';
-        $output .= '<p>' . t('CKEditor 5 will attempt to enable plugins that provide equivalent toolbar items to those used prior to switching to CKEditor 5. All core CKEditor 4 plugins and many popular contrib plugins already have CKEditor 5 equivalents. In some cases, functionality that required contrib modules is now built into CKEditor 5. In instances where a plugin does not have an equivalent, no data loss will occur but elements previously provided via the plugin may need to be added manually as HTML via source editing.') . '</p>';
-        $output .= '<h4>' . t('Additional migration considerations for text formats with restricted HTML') . '</h4>';
+        $output .= '<h3 id="migration-settings">' . $this->t('Migrating an Existing Text Format to CKEditor 5') . '</h2>';
+        $output .= '<p>' . $this->t('When switching an existing text format to use CKEditor 5, an automatic process is initiated that helps text formats switching to CKEditor 5 from CKEditor 4 (or no text editor) to do so with minimal effort and zero data loss.') . '</p>';
+        $output .= '<p>' . $this->t("This process is designed for there to be no data loss risk in switching to CKEditor 5. However some of your editor's functionality may not be 100% equivalent to what was available previously. In most cases, these changes are minimal. After the process completes, status and/or warning messages will summarize any changes that occurred, and more detailed information will be available in the site's logs.") . '</p>';
+        $output .= '<p>' . $this->t('CKEditor 5 will attempt to enable plugins that provide equivalent toolbar items to those used prior to switching to CKEditor 5. All core CKEditor 4 plugins and many popular contrib plugins already have CKEditor 5 equivalents. In some cases, functionality that required contrib modules is now built into CKEditor 5. In instances where a plugin does not have an equivalent, no data loss will occur but elements previously provided via the plugin may need to be added manually as HTML via source editing.') . '</p>';
+        $output .= '<h4>' . $this->t('Additional migration considerations for text formats with restricted HTML') . '</h4>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('The “Allowed HTML tags" field in the “Limit allowed HTML tags and correct Faulty HTML" filter is now read-only') . '</dt>';
-        $output .= '<dd>' . t('This field accurately represents the tags/attributes allowed by a text format, but the allowed tags are based on which plugins are enabled and how they are configured. For example, enabling the Underline plugin adds the &lt;u&gt; tag to “Allowed HTML tags".') . '</dd>';
-        $output .= '<dt id="required-tags">' . t('The &lt;p&gt; and &lt;br &gt; tags will be automatically added to your text format.') . '</dt>';
-        $output .= '<dd>' . t('CKEditor 5 requires the &lt;p&gt; and &lt;br &gt; tags to achieve basic functionality. They will be automatically added to “Allowed HTML tags" on formats that previously did not allow them.') . '</dd>';
-        $output .= '<dt id="source-editing">' . t('Tags/attributes that are not explicitly supported by any plugin are supported by Source Editing') . '</dt>';
-        $output .= '<dd>' . t('When a necessary tag/attribute is not directly supported by an available plugin, the "Source Editing" plugin is enabled. This plugin is typically used for by passing the CKEditor 5 UI and editing contents as HTML source. In the settings for Source Editing, tags/attributes that aren\'t available via other plugins are added to Source Editing\'s "Manually editable HTML tags" setting so they are supported by the text format.') . '</dd>';
+        $output .= '<dt>' . $this->t('The “Allowed HTML tags" field in the “Limit allowed HTML tags and correct Faulty HTML" filter is now read-only') . '</dt>';
+        $output .= '<dd>' . $this->t('This field accurately represents the tags/attributes allowed by a text format, but the allowed tags are based on which plugins are enabled and how they are configured. For example, enabling the Underline plugin adds the &lt;u&gt; tag to “Allowed HTML tags".') . '</dd>';
+        $output .= '<dt id="required-tags">' . $this->t('The &lt;p&gt; and &lt;br &gt; tags will be automatically added to your text format.') . '</dt>';
+        $output .= '<dd>' . $this->t('CKEditor 5 requires the &lt;p&gt; and &lt;br &gt; tags to achieve basic functionality. They will be automatically added to “Allowed HTML tags" on formats that previously did not allow them.') . '</dd>';
+        $output .= '<dt id="source-editing">' . $this->t('Tags/attributes that are not explicitly supported by any plugin are supported by Source Editing') . '</dt>';
+        $output .= '<dd>' . $this->t('When a necessary tag/attribute is not directly supported by an available plugin, the "Source Editing" plugin is enabled. This plugin is typically used for by passing the CKEditor 5 UI and editing contents as HTML source. In the settings for Source Editing, tags/attributes that aren\'t available via other plugins are added to Source Editing\'s "Manually editable HTML tags" setting so they are supported by the text format.') . '</dd>';
         $output .= '</dl>';
         return $output;
     }
@@ -114,7 +117,7 @@ class Ckeditor5Hooks {
         // being validated.
         $filter_allowed_html['#attributes']['readonly'] = TRUE;
         $filter_allowed_html['#wrapper_attributes']['class'][] = 'form-disabled';
-        $filter_allowed_html['#description'] = t('With CKEditor 5 this is a
+        $filter_allowed_html['#description'] = $this->t('With CKEditor 5 this is a
           read-only field. The allowed HTML tags and attributes are determined
           by the CKEditor 5 configuration. Manually removing tags would break
           enabled functionality, and any manually added tags would be removed by

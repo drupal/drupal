@@ -3,6 +3,7 @@
 namespace Drupal\content_moderation\Hook;
 
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\views\Plugin\views\filter\Broken;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -34,6 +35,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class ContentModerationHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -43,17 +46,17 @@ class ContentModerationHooks {
       // Main module help for the content_moderation module.
       case 'help.page.content_moderation':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Content Moderation module allows you to expand on Drupal\'s "unpublished" and "published" states for content. It allows you to have a published version that is live, but have a separate working copy that is undergoing review before it is published. This is achieved by using <a href=":workflows">Workflows</a> to apply different states and transitions to entities as needed. For more information, see the <a href=":content_moderation">online documentation for the Content Moderation module</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Content Moderation module allows you to expand on Drupal\'s "unpublished" and "published" states for content. It allows you to have a published version that is live, but have a separate working copy that is undergoing review before it is published. This is achieved by using <a href=":workflows">Workflows</a> to apply different states and transitions to entities as needed. For more information, see the <a href=":content_moderation">online documentation for the Content Moderation module</a>.', [
           ':content_moderation' => 'https://www.drupal.org/documentation/modules/content_moderation',
           ':workflows' => Url::fromRoute('help.page', [
             'name' => 'workflows',
           ])->toString(),
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Applying workflows') . '</dt>';
-        $output .= '<dd>' . t('Content Moderation allows you to apply <a href=":workflows">Workflows</a> to content, content blocks, and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a>, to provide more fine-grained publishing options. For example, a Basic page might have states such as Draft and Published, with allowed transitions such as Draft to Published (making the current revision "live"), and Published to Draft (making a new draft revision of published content).', [
+        $output .= '<dt>' . $this->t('Applying workflows') . '</dt>';
+        $output .= '<dd>' . $this->t('Content Moderation allows you to apply <a href=":workflows">Workflows</a> to content, content blocks, and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a>, to provide more fine-grained publishing options. For example, a Basic page might have states such as Draft and Published, with allowed transitions such as Draft to Published (making the current revision "live"), and Published to Draft (making a new draft revision of published content).', [
           ':workflows' => Url::fromRoute('help.page', [
             'name' => 'workflows',
           ])->toString(),
@@ -64,14 +67,14 @@ class ContentModerationHooks {
         if (\Drupal::moduleHandler()->moduleExists('views')) {
           $moderated_content_view = View::load('moderated_content');
           if (isset($moderated_content_view) && $moderated_content_view->status() === TRUE) {
-            $output .= '<dt>' . t('Moderating content') . '</dt>';
-            $output .= '<dd>' . t('You can view a list of content awaiting moderation on the <a href=":moderated">moderated content page</a>. This will show any content in an unpublished state, such as Draft or Archived, to help surface content that requires more work from content editors.', [
+            $output .= '<dt>' . $this->t('Moderating content') . '</dt>';
+            $output .= '<dd>' . $this->t('You can view a list of content awaiting moderation on the <a href=":moderated">moderated content page</a>. This will show any content in an unpublished state, such as Draft or Archived, to help surface content that requires more work from content editors.', [
               ':moderated' => Url::fromRoute('view.moderated_content.moderated_content')->toString(),
             ]) . '</dd>';
           }
         }
-        $output .= '<dt>' . t('Configure Content Moderation permissions') . '</dt>';
-        $output .= '<dd>' . t('Each transition is exposed as a permission. If a user has the permission for a transition, they can use the transition to change the state of the content item, from Draft to Published.') . '</dd>';
+        $output .= '<dt>' . $this->t('Configure Content Moderation permissions') . '</dt>';
+        $output .= '<dd>' . $this->t('Each transition is exposed as a permission. If a user has the permission for a transition, they can use the transition to change the state of the content item, from Draft to Published.') . '</dd>';
         $output .= '</dl>';
         return $output;
     }

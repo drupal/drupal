@@ -3,6 +3,7 @@
 namespace Drupal\node\Hook;
 
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Entity\User;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -13,58 +14,60 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class NodeTokensHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
   public function tokenInfo(): array {
     $type = [
-      'name' => t('Nodes'),
-      'description' => t('Tokens related to individual content items, or "nodes".'),
+      'name' => $this->t('Nodes'),
+      'description' => $this->t('Tokens related to individual content items, or "nodes".'),
       'needs-data' => 'node',
     ];
     // Core tokens for nodes.
     $node['nid'] = [
-      'name' => t("Content ID"),
-      'description' => t('The unique ID of the content item, or "node".'),
+      'name' => $this->t("Content ID"),
+      'description' => $this->t('The unique ID of the content item, or "node".'),
     ];
     $node['uuid'] = [
-      'name' => t('UUID'),
-      'description' => t('The UUID of the content item, or "node".'),
+      'name' => $this->t('UUID'),
+      'description' => $this->t('The UUID of the content item, or "node".'),
     ];
     $node['vid'] = [
-      'name' => t("Revision ID"),
-      'description' => t("The unique ID of the node's latest revision."),
+      'name' => $this->t("Revision ID"),
+      'description' => $this->t("The unique ID of the node's latest revision."),
     ];
-    $node['type'] = ['name' => t("Content type")];
+    $node['type'] = ['name' => $this->t("Content type")];
     $node['type-name'] = [
-      'name' => t("Content type name"),
-      'description' => t("The human-readable name of the node type."),
+      'name' => $this->t("Content type name"),
+      'description' => $this->t("The human-readable name of the node type."),
     ];
-    $node['title'] = ['name' => t("Title")];
-    $node['body'] = ['name' => t("Body"), 'description' => t("The main body text of the node.")];
+    $node['title'] = ['name' => $this->t("Title")];
+    $node['body'] = ['name' => $this->t("Body"), 'description' => $this->t("The main body text of the node.")];
     $node['summary'] = [
-      'name' => t("Summary"),
-      'description' => t("The summary of the node's main body text."),
+      'name' => $this->t("Summary"),
+      'description' => $this->t("The summary of the node's main body text."),
     ];
     $node['langcode'] = [
-      'name' => t('Language code'),
-      'description' => t('The language code of the language the node is written in.'),
+      'name' => $this->t('Language code'),
+      'description' => $this->t('The language code of the language the node is written in.'),
     ];
     $node['published_status'] = [
-      'name' => t('Published'),
-      'description' => t('The publication status of the node ("Published" or "Unpublished").'),
+      'name' => $this->t('Published'),
+      'description' => $this->t('The publication status of the node ("Published" or "Unpublished").'),
     ];
-    $node['url'] = ['name' => t("URL"), 'description' => t("The URL of the node.")];
-    $node['edit-url'] = ['name' => t("Edit URL"), 'description' => t("The URL of the node's edit page.")];
+    $node['url'] = ['name' => $this->t("URL"), 'description' => $this->t("The URL of the node.")];
+    $node['edit-url'] = ['name' => $this->t("Edit URL"), 'description' => $this->t("The URL of the node's edit page.")];
     // Chained tokens for nodes.
-    $node['created'] = ['name' => t("Date created"), 'type' => 'date'];
+    $node['created'] = ['name' => $this->t("Date created"), 'type' => 'date'];
     $node['changed'] = [
-      'name' => t("Date changed"),
-      'description' => t("The date the node was most recently updated."),
+      'name' => $this->t("Date changed"),
+      'description' => $this->t("The date the node was most recently updated."),
       'type' => 'date',
     ];
-    $node['author'] = ['name' => t("Author"), 'type' => 'user'];
+    $node['author'] = ['name' => $this->t("Author"), 'type' => 'user'];
     return ['types' => ['node' => $type], 'tokens' => ['node' => $node]];
   }
 
@@ -152,7 +155,7 @@ class NodeTokensHooks {
             break;
 
           case 'published_status':
-            $replacements[$original] = $node->isPublished() ? t('Published') : t('Unpublished');
+            $replacements[$original] = $node->isPublished() ? $this->t('Published') : $this->t('Unpublished');
             break;
 
           case 'url':

@@ -2,6 +2,7 @@
 
 namespace Drupal\views_ui\Hook;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\views\Entity\View;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -16,6 +17,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class ViewsUiHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -24,29 +27,29 @@ class ViewsUiHooks {
     switch ($route_name) {
       case 'help.page.views_ui':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Views UI module provides an interface for managing views for the <a href=":views">Views module</a>. For more information, see the <a href=":handbook">online documentation for the Views UI module</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Views UI module provides an interface for managing views for the <a href=":views">Views module</a>. For more information, see the <a href=":handbook">online documentation for the Views UI module</a>.', [
           ':views' => Url::fromRoute('help.page', [
             'name' => 'views',
           ])->toString(),
           ':handbook' => 'https://www.drupal.org/documentation/modules/views_ui',
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Creating and managing views') . '</dt>';
-        $output .= '<dd>' . t('Views can be created from the <a href=":list">Views list page</a> by using the "Add view" action. Existing views can be managed from the <a href=":list">Views list page</a> by locating the view in the "Enabled" or "Disabled" list and selecting the desired operation action, for example "Edit".', [
+        $output .= '<dt>' . $this->t('Creating and managing views') . '</dt>';
+        $output .= '<dd>' . $this->t('Views can be created from the <a href=":list">Views list page</a> by using the "Add view" action. Existing views can be managed from the <a href=":list">Views list page</a> by locating the view in the "Enabled" or "Disabled" list and selecting the desired operation action, for example "Edit".', [
           ':list' => Url::fromRoute('entity.view.collection', [
             'name' => 'views_ui',
           ])->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Enabling and disabling views') . '<dt>';
-        $output .= '<dd>' . t('Views can be enabled or disabled from the <a href=":list">Views list page</a>. To enable a view, find the view within the "Disabled" list and select the "Enable" operation. To disable a view find the view within the "Enabled" list and select the "Disable" operation.', [
+        $output .= '<dt>' . $this->t('Enabling and disabling views') . '<dt>';
+        $output .= '<dd>' . $this->t('Views can be enabled or disabled from the <a href=":list">Views list page</a>. To enable a view, find the view within the "Disabled" list and select the "Enable" operation. To disable a view find the view within the "Enabled" list and select the "Disable" operation.', [
           ':list' => Url::fromRoute('entity.view.collection', [
             'name' => 'views_ui',
           ])->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Exporting and importing views') . '</dt>';
-        $output .= '<dd>' . t('Views can be exported and imported as configuration files by using the <a href=":config">Configuration Manager module</a>.', [
+        $output .= '<dt>' . $this->t('Exporting and importing views') . '</dt>';
+        $output .= '<dd>' . $this->t('Views can be exported and imported as configuration files by using the <a href=":config">Configuration Manager module</a>.', [
           ':config' => \Drupal::moduleHandler()->moduleExists('config') ? Url::fromRoute('help.page', [
             'name' => 'config',
           ])->toString() : '#',
@@ -197,7 +200,7 @@ class ViewsUiHooks {
     $ret = [];
     // Check for something other than the default display:
     if (count($view->displayHandlers) < 2) {
-      $ret[] = Analyzer::formatMessage(t('This view has only a default display and therefore will not be placed anywhere on your site; perhaps you want to add a page or a block display.'), 'warning');
+      $ret[] = Analyzer::formatMessage($this->t('This view has only a default display and therefore will not be placed anywhere on your site; perhaps you want to add a page or a block display.'), 'warning');
     }
     // If a display has a path, check that it does not match an existing path
     // alias. This results in the path alias not working.
@@ -208,7 +211,7 @@ class ViewsUiHooks {
       if ($display->hasPath() && ($path = $display->getOption('path'))) {
         $normal_path = \Drupal::service('path_alias.manager')->getPathByAlias($path);
         if ($path != $normal_path) {
-          $ret[] = Analyzer::formatMessage(t('You have configured display %display with a path which is an path alias as well. This might lead to unwanted effects so better use an internal path.', ['%display' => $display->display['display_title']]), 'warning');
+          $ret[] = Analyzer::formatMessage($this->t('You have configured display %display with a path which is an path alias as well. This might lead to unwanted effects so better use an internal path.', ['%display' => $display->display['display_title']]), 'warning');
         }
       }
     }
@@ -230,7 +233,7 @@ class ViewsUiHooks {
         $view = View::load($view_id);
         if ($view && $view->access('edit')) {
           $operations['view-edit'] = [
-            'title' => t('Edit view'),
+            'title' => $this->t('Edit view'),
             'url' => Url::fromRoute('entity.view.edit_display_form', [
               'view' => $view_id,
               'display_id' => $display_id,

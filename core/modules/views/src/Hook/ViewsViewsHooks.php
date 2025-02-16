@@ -3,6 +3,7 @@
 namespace Drupal\views\Hook;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\system\ActionConfigEntityInterface;
@@ -13,109 +14,111 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class ViewsViewsHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_views_data().
    */
   #[Hook('views_data')]
   public function viewsData(): array {
-    $data['views']['table']['group'] = t('Global');
+    $data['views']['table']['group'] = $this->t('Global');
     $data['views']['table']['join'] = ['#global' => []];
     $data['views']['random'] = [
-      'title' => t('Random'),
-      'help' => t('Randomize the display order.'),
+      'title' => $this->t('Random'),
+      'help' => $this->t('Randomize the display order.'),
       'sort' => [
         'id' => 'random',
       ],
     ];
     $data['views']['null'] = [
-      'title' => t('Null'),
-      'help' => t('Allow a contextual filter value to be ignored. The query will not be altered by this contextual filter value. Can be used when contextual filter values come from the URL, and a part of the URL needs to be ignored.'),
+      'title' => $this->t('Null'),
+      'help' => $this->t('Allow a contextual filter value to be ignored. The query will not be altered by this contextual filter value. Can be used when contextual filter values come from the URL, and a part of the URL needs to be ignored.'),
       'argument' => [
         'id' => 'null',
       ],
     ];
     $data['views']['nothing'] = [
-      'title' => t('Custom text'),
-      'help' => t('Provide custom text or link.'),
+      'title' => $this->t('Custom text'),
+      'help' => $this->t('Provide custom text or link.'),
       'field' => [
         'id' => 'custom',
         'click sortable' => FALSE,
       ],
     ];
     $data['views']['counter'] = [
-      'title' => t('View result counter'),
-      'help' => t('Displays the actual position of the view result'),
+      'title' => $this->t('View result counter'),
+      'help' => $this->t('Displays the actual position of the view result'),
       'field' => [
         'id' => 'counter',
       ],
     ];
     $data['views']['area'] = [
-      'title' => t('Text area'),
-      'help' => t('Provide markup for the area using any available text format.'),
+      'title' => $this->t('Text area'),
+      'help' => $this->t('Provide markup for the area using any available text format.'),
       'area' => [
         'id' => 'text',
       ],
     ];
     $data['views']['area_text_custom'] = [
-      'title' => t('Unfiltered text'),
-      'help' => t('Provide markup for the area with minimal filtering.'),
+      'title' => $this->t('Unfiltered text'),
+      'help' => $this->t('Provide markup for the area with minimal filtering.'),
       'area' => [
         'id' => 'text_custom',
       ],
     ];
     $data['views']['title'] = [
-      'title' => t('Title override'),
-      'help' => t('Override the default view title for this view. This is useful to display an alternative title when a view is empty.'),
+      'title' => $this->t('Title override'),
+      'help' => $this->t('Override the default view title for this view. This is useful to display an alternative title when a view is empty.'),
       'area' => [
         'id' => 'title',
         'sub_type' => 'empty',
       ],
     ];
     $data['views']['view'] = [
-      'title' => t('View area'),
-      'help' => t('Insert a view inside an area.'),
+      'title' => $this->t('View area'),
+      'help' => $this->t('Insert a view inside an area.'),
       'area' => [
         'id' => 'view',
       ],
     ];
     $data['views']['result'] = [
-      'title' => t('Result summary'),
-      'help' => t('Shows result summary, for example the items per page.'),
+      'title' => $this->t('Result summary'),
+      'help' => $this->t('Shows result summary, for example the items per page.'),
       'area' => [
         'id' => 'result',
       ],
     ];
     $data['views']['messages'] = [
-      'title' => t('Messages'),
-      'help' => t('Displays messages in an area.'),
+      'title' => $this->t('Messages'),
+      'help' => $this->t('Displays messages in an area.'),
       'area' => [
         'id' => 'messages',
       ],
     ];
     $data['views']['http_status_code'] = [
-      'title' => t('Response status code'),
-      'help' => t('Alter the HTTP response status code used by this view, mostly helpful for empty results.'),
+      'title' => $this->t('Response status code'),
+      'help' => $this->t('Alter the HTTP response status code used by this view, mostly helpful for empty results.'),
       'area' => [
         'id' => 'http_status_code',
       ],
     ];
     $data['views']['combine'] = [
-      'title' => t('Combine fields filter'),
-      'help' => t('Combine multiple fields together and search by them.'),
+      'title' => $this->t('Combine fields filter'),
+      'help' => $this->t('Combine multiple fields together and search by them.'),
       'filter' => [
         'id' => 'combine',
       ],
     ];
     $data['views']['dropbutton'] = [
-      'title' => t('Dropbutton'),
-      'help' => t('Display fields in a dropbutton.'),
+      'title' => $this->t('Dropbutton'),
+      'help' => $this->t('Display fields in a dropbutton.'),
       'field' => [
         'id' => 'dropbutton',
       ],
     ];
     $data['views']['display_link'] = [
-      'title' => t('Link to display'),
-      'help' => t('Displays a link to a path-based display of this view while keeping the filter criteria, sort criteria, pager settings and contextual filters.'),
+      'title' => $this->t('Link to display'),
+      'help' => $this->t('Displays a link to a path-based display of this view while keeping the filter criteria, sort criteria, pager settings and contextual filters.'),
       'area' => [
         'id' => 'display_link',
       ],
@@ -126,10 +129,10 @@ class ViewsViewsHooks {
       if ($entity_type->hasViewBuilderClass()) {
         $label = $entity_type->getLabel();
         $data['views']['entity_' . $entity_type_id] = [
-          'title' => t('Rendered entity - @label', [
+          'title' => $this->t('Rendered entity - @label', [
             '@label' => $label,
           ]),
-          'help' => t('Displays a rendered @label entity in an area.', [
+          'help' => $this->t('Displays a rendered @label entity in an area.', [
             '@label' => $label,
           ]),
           'area' => [
@@ -148,8 +151,8 @@ class ViewsViewsHooks {
         continue;
       }
       $data[$entity_info->getBaseTable()][$entity_type . '_bulk_form'] = [
-        'title' => t('Bulk update'),
-        'help' => t('Allows users to apply an action to one or more items.'),
+        'title' => $this->t('Bulk update'),
+        'help' => $this->t('Allows users to apply an action to one or more items.'),
         'field' => [
           'id' => 'bulk_form',
         ],
@@ -240,10 +243,10 @@ class ViewsViewsHooks {
         // field.
         $args = ['@label' => $target_entity_type->getLabel(), '@field_name' => $field_name];
         $data[$table_name][$field_name]['relationship'] = [
-          'title' => t('@label referenced from @field_name', $args),
-          'label' => t('@field_name: @label', $args),
+          'title' => $this->t('@label referenced from @field_name', $args),
+          'label' => $this->t('@field_name: @label', $args),
           'group' => $entity_type->getLabel(),
-          'help' => t('Appears in: @bundles.', [
+          'help' => $this->t('Appears in: @bundles.', [
             '@bundles' => implode(', ', $field_storage->getBundles()),
           ]),
           'id' => 'standard',
@@ -258,12 +261,12 @@ class ViewsViewsHooks {
         $args['@label'] = $target_entity_type->getSingularLabel();
         $pseudo_field_name = 'reverse__' . $entity_type_id . '__' . $field_name;
         $data[$target_base_table][$pseudo_field_name]['relationship'] = [
-          'title' => t('@entity using @field_name', $args),
-          'label' => t('@field_name', [
+          'title' => $this->t('@entity using @field_name', $args),
+          'label' => $this->t('@field_name', [
             '@field_name' => $field_name,
           ]),
           'group' => $target_entity_type->getLabel(),
-          'help' => t('Relate each @entity with a @field_name set to the @label.', $args),
+          'help' => $this->t('Relate each @entity with a @field_name set to the @label.', $args),
           'id' => 'entity_reverse',
           'base' => $entity_type->getDataTable() ?: $entity_type->getBaseTable(),
           'entity_type' => $entity_type_id,

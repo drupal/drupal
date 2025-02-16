@@ -3,6 +3,7 @@
 namespace Drupal\node\Hook;
 
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -23,6 +24,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class NodeHooks1 {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -33,10 +36,10 @@ class NodeHooks1 {
     // while the rebuild is being processed.
     if ($route_name != 'node.configure_rebuild_confirm' && $route_name != 'system.batch_page.html' && $route_name != 'help.page.node' && $route_name != 'help.main' && \Drupal::currentUser()->hasPermission('administer nodes') && node_access_needs_rebuild()) {
       if ($route_name == 'system.status') {
-        $message = t('The content access permissions need to be rebuilt.');
+        $message = $this->t('The content access permissions need to be rebuilt.');
       }
       else {
-        $message = t('The content access permissions need to be rebuilt. <a href=":node_access_rebuild">Rebuild permissions</a>.', [
+        $message = $this->t('The content access permissions need to be rebuilt. <a href=":node_access_rebuild">Rebuild permissions</a>.', [
           ':node_access_rebuild' => Url::fromRoute('node.configure_rebuild_confirm')->toString(),
         ]);
       }
@@ -45,32 +48,32 @@ class NodeHooks1 {
     switch ($route_name) {
       case 'help.page.node':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Node module manages the creation, editing, deletion, settings, and display of the main site content. Content items managed by the Node module are typically displayed as pages on your site, and include a title, some meta-data (author, creation time, content type, etc.), and optional fields containing text or other data (fields are managed by the <a href=":field">Field module</a>). For more information, see the <a href=":node">online documentation for the Node module</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Node module manages the creation, editing, deletion, settings, and display of the main site content. Content items managed by the Node module are typically displayed as pages on your site, and include a title, some meta-data (author, creation time, content type, etc.), and optional fields containing text or other data (fields are managed by the <a href=":field">Field module</a>). For more information, see the <a href=":node">online documentation for the Node module</a>.', [
           ':node' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/node-module',
           ':field' => Url::fromRoute('help.page', [
             'name' => 'field',
           ])->toString(),
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Creating content') . '</dt>';
-        $output .= '<dd>' . t('When new content is created, the Node module records basic information about the content, including the author, date of creation, and the <a href=":content-type">Content type</a>. It also manages the <em>publishing options</em>, which define whether or not the content is published, promoted to the front page of the site, and/or sticky at the top of content lists. Default settings can be configured for each <a href=":content-type">type of content</a> on your site.', [
+        $output .= '<dt>' . $this->t('Creating content') . '</dt>';
+        $output .= '<dd>' . $this->t('When new content is created, the Node module records basic information about the content, including the author, date of creation, and the <a href=":content-type">Content type</a>. It also manages the <em>publishing options</em>, which define whether or not the content is published, promoted to the front page of the site, and/or sticky at the top of content lists. Default settings can be configured for each <a href=":content-type">type of content</a> on your site.', [
           ':content-type' => Url::fromRoute('entity.node_type.collection')->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Creating custom content types') . '</dt>';
-        $output .= '<dd>' . t('The Node module gives users with the <em>Administer content types</em> permission the ability to <a href=":content-new">create new content types</a> in addition to the default ones already configured. Creating custom content types gives you the flexibility to add <a href=":field">fields</a> and configure default settings that suit the differing needs of various site content.', [
+        $output .= '<dt>' . $this->t('Creating custom content types') . '</dt>';
+        $output .= '<dd>' . $this->t('The Node module gives users with the <em>Administer content types</em> permission the ability to <a href=":content-new">create new content types</a> in addition to the default ones already configured. Creating custom content types gives you the flexibility to add <a href=":field">fields</a> and configure default settings that suit the differing needs of various site content.', [
           ':content-new' => Url::fromRoute('node.type_add')->toString(),
           ':field' => Url::fromRoute('help.page', [
             'name' => 'field',
           ])->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Administering content') . '</dt>';
-        $output .= '<dd>' . t('The <a href=":content">Content</a> page lists your content, allowing you add new content, filter, edit or delete existing content, or perform bulk operations on existing content.', [':content' => Url::fromRoute('system.admin_content')->toString()]) . '</dd>';
-        $output .= '<dt>' . t('Creating revisions') . '</dt>';
-        $output .= '<dd>' . t('The Node module also enables you to create multiple versions of any content, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
-        $output .= '<dt>' . t('User permissions') . '</dt>';
-        $output .= '<dd>' . t('The Node module makes a number of permissions available for each content type, which can be set by role on the <a href=":permissions">permissions page</a>.', [
+        $output .= '<dt>' . $this->t('Administering content') . '</dt>';
+        $output .= '<dd>' . $this->t('The <a href=":content">Content</a> page lists your content, allowing you add new content, filter, edit or delete existing content, or perform bulk operations on existing content.', [':content' => Url::fromRoute('system.admin_content')->toString()]) . '</dd>';
+        $output .= '<dt>' . $this->t('Creating revisions') . '</dt>';
+        $output .= '<dd>' . $this->t('The Node module also enables you to create multiple versions of any content, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
+        $output .= '<dt>' . $this->t('User permissions') . '</dt>';
+        $output .= '<dd>' . $this->t('The Node module makes a number of permissions available for each content type, which can be set by role on the <a href=":permissions">permissions page</a>.', [
           ':permissions' => Url::fromRoute('user.admin_permissions.module', [
             'modules' => 'node',
           ])->toString(),
@@ -79,20 +82,20 @@ class NodeHooks1 {
         return $output;
 
       case 'node.type_add':
-        return '<p>' . t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
+        return '<p>' . $this->t('Individual content types can have different fields, behaviors, and permissions assigned to them.') . '</p>';
 
       case 'entity.entity_form_display.node.default':
       case 'entity.entity_form_display.node.form_mode':
         $type = $route_match->getParameter('node_type');
-        return '<p>' . t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', ['%type' => $type->label()]) . '</p>';
+        return '<p>' . $this->t('Content items can be edited using different form modes. Here, you can define which fields are shown and hidden when %type content is edited in each form mode, and define how the field form widgets are displayed in each form mode.', ['%type' => $type->label()]) . '</p>';
 
       case 'entity.entity_view_display.node.default':
       case 'entity.entity_view_display.node.view_mode':
         $type = $route_match->getParameter('node_type');
-        return '<p>' . t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' . '<p>' . t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', ['%type' => $type->label()]) . '</p>';
+        return '<p>' . $this->t('Content items can be displayed using different view modes: Teaser, Full content, Print, RSS, etc. <em>Teaser</em> is a short format that is typically used in lists of multiple content items. <em>Full content</em> is typically used when the content is displayed on its own page.') . '</p>' . '<p>' . $this->t('Here, you can define which fields are shown and hidden when %type content is displayed in each view mode, and define how the fields are displayed in each view mode.', ['%type' => $type->label()]) . '</p>';
 
       case 'entity.node.version_history':
-        return '<p>' . t('Revisions allow you to track differences between multiple versions of your content, and revert to older versions.') . '</p>';
+        return '<p>' . $this->t('Revisions allow you to track differences between multiple versions of your content, and revert to older versions.') . '</p>';
 
       case 'entity.node.edit_form':
         $node = $route_match->getParameter('node');
@@ -174,10 +177,10 @@ class NodeHooks1 {
   #[Hook('entity_extra_field_info')]
   public function entityExtraFieldInfo(): array {
     $extra = [];
-    $description = t('Node module element');
+    $description = $this->t('Node module element');
     foreach (NodeType::loadMultiple() as $bundle) {
       $extra['node'][$bundle->id()]['display']['links'] = [
-        'label' => t('Links'),
+        'label' => $this->t('Links'),
         'description' => $description,
         'weight' => 100,
         'visible' => TRUE,
@@ -214,17 +217,17 @@ class NodeHooks1 {
     // Create the ranking array and add the basic ranking options.
     $ranking = [
       'relevance' => [
-        'title' => t('Keyword relevance'),
+        'title' => $this->t('Keyword relevance'),
               // Average relevance values hover around 0.15
         'score' => 'i.relevance',
       ],
       'sticky' => [
-        'title' => t('Content is sticky at top of lists'),
+        'title' => $this->t('Content is sticky at top of lists'),
         // The sticky flag is either 0 or 1, which is automatically normalized.
         'score' => 'n.sticky',
       ],
       'promote' => [
-        'title' => t('Content is promoted to the front page'),
+        'title' => $this->t('Content is promoted to the front page'),
         // The promote flag is either 0 or 1, which is automatically normalized.
         'score' => 'n.promote',
       ],
@@ -233,7 +236,7 @@ class NodeHooks1 {
     // been calculated in node_cron().
     if ($node_min_max = \Drupal::state()->get('node.min_max_update_time')) {
       $ranking['recent'] = [
-        'title' => t('Recently created'),
+        'title' => $this->t('Recently created'),
         // Exponential decay with half life of 14% of the age range of nodes.
         'score' => 'EXP(-5 * (1 - (n.created - :node_oldest) / :node_range))',
         'arguments' => [
@@ -295,8 +298,8 @@ class NodeHooks1 {
   public function formSystemThemesAdminFormAlter(&$form, FormStateInterface $form_state, $form_id) : void {
     $form['admin_theme']['use_admin_theme'] = [
       '#type' => 'checkbox',
-      '#title' => t('Use the administration theme when editing or creating content'),
-      '#description' => t('Control which roles can "View the administration theme" on the <a href=":permissions">Permissions page</a>.', [
+      '#title' => $this->t('Use the administration theme when editing or creating content'),
+      '#description' => $this->t('Control which roles can "View the administration theme" on the <a href=":permissions">Permissions page</a>.', [
         ':permissions' => Url::fromRoute('user.admin_permissions.module', [
           'modules' => 'system',
         ])->toString(),

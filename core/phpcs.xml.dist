@@ -181,7 +181,7 @@
     <include-pattern>*/tests/*</include-pattern>
     <include-pattern>./core/lib/*</include-pattern>
     <include-pattern>./core/modules/*</include-pattern>
-    <exclude-pattern>./core/modules/*/Hook/*</exclude-pattern>
+    <include-pattern>*/Hook/*</include-pattern>
   </rule>
 
   <!-- Generic sniffs -->

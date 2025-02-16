@@ -2,6 +2,7 @@
 
 namespace Drupal\taxonomy\Hook;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 
@@ -10,43 +11,45 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class TaxonomyViewsHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_views_data_alter().
    */
   #[Hook('views_data_alter')]
   public function viewsDataAlter(&$data): void {
     $data['node_field_data']['term_node_tid'] = [
-      'title' => t('Taxonomy terms on node'),
-      'help' => t('Relate nodes to taxonomy terms, specifying which vocabulary or vocabularies to use. This relationship will cause duplicated records if there are multiple terms.'),
+      'title' => $this->t('Taxonomy terms on node'),
+      'help' => $this->t('Relate nodes to taxonomy terms, specifying which vocabulary or vocabularies to use. This relationship will cause duplicated records if there are multiple terms.'),
       'relationship' => [
         'id' => 'node_term_data',
-        'label' => t('term'),
+        'label' => $this->t('term'),
         'base' => 'taxonomy_term_field_data',
       ],
       'field' => [
-        'title' => t('All taxonomy terms'),
-        'help' => t('Display all taxonomy terms associated with a node from specified vocabularies.'),
+        'title' => $this->t('All taxonomy terms'),
+        'help' => $this->t('Display all taxonomy terms associated with a node from specified vocabularies.'),
         'id' => 'taxonomy_index_tid',
         'no group by' => TRUE,
         'click sortable' => FALSE,
       ],
     ];
     $data['node_field_data']['term_node_tid_depth'] = [
-      'help' => t('Display content if it has the selected taxonomy terms, or children of the selected terms. Due to additional complexity, this has fewer options than the versions without depth.'),
+      'help' => $this->t('Display content if it has the selected taxonomy terms, or children of the selected terms. Due to additional complexity, this has fewer options than the versions without depth.'),
       'real field' => 'nid',
       'argument' => [
-        'title' => t('Has taxonomy term ID (with depth)'),
+        'title' => $this->t('Has taxonomy term ID (with depth)'),
         'id' => 'taxonomy_index_tid_depth',
         'accept depth modifier' => TRUE,
       ],
       'filter' => [
-        'title' => t('Has taxonomy terms (with depth)'),
+        'title' => $this->t('Has taxonomy terms (with depth)'),
         'id' => 'taxonomy_index_tid_depth',
       ],
     ];
     $data['node_field_data']['term_node_tid_depth_modifier'] = [
-      'title' => t('Has taxonomy term ID depth modifier'),
-      'help' => t('Allows the "depth" for Taxonomy: Term ID (with depth) to be modified via an additional contextual filter value.'),
+      'title' => $this->t('Has taxonomy term ID depth modifier'),
+      'help' => $this->t('Allows the "depth" for Taxonomy: Term ID (with depth) to be modified via an additional contextual filter value.'),
       'argument' => [
         'id' => 'taxonomy_index_tid_depth_modifier',
       ],

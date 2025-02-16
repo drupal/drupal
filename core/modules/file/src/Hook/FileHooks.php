@@ -3,6 +3,7 @@
 namespace Drupal\file\Hook;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\file\Entity\File;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -14,6 +15,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 class FileHooks {
 
   // cspell:ignore widthx
+  use StringTranslationTrait;
 
   /**
    * Implements hook_help().
@@ -23,8 +25,8 @@ class FileHooks {
     switch ($route_name) {
       case 'help.page.file':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The File module allows you to create fields that contain files. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":file_documentation">online documentation for the File module</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The File module allows you to create fields that contain files. See the <a href=":field">Field module help</a> and the <a href=":field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href=":file_documentation">online documentation for the File module</a>.', [
           ':field' => Url::fromRoute('help.page', [
             'name' => 'field',
           ])->toString(),
@@ -33,27 +35,27 @@ class FileHooks {
           ])->toString() : '#',
           ':file_documentation' => 'https://www.drupal.org/documentation/modules/file',
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Managing and displaying file fields') . '</dt>';
-        $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the file field can be configured separately. See the <a href=":field_ui">Field UI help</a> for more information on how to manage fields and their display.', [
+        $output .= '<dt>' . $this->t('Managing and displaying file fields') . '</dt>';
+        $output .= '<dd>' . $this->t('The <em>settings</em> and the <em>display</em> of the file field can be configured separately. See the <a href=":field_ui">Field UI help</a> for more information on how to manage fields and their display.', [
           ':field_ui' => \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', [
             'name' => 'field_ui',
           ])->toString() : '#',
         ]) . '</dd>';
-        $output .= '<dt>' . t('Allowing file extensions') . '</dt>';
-        $output .= '<dd>' . t('In the field settings, you can define the allowed file extensions (for example <em>pdf docx psd</em>) for the files that will be uploaded with the file field.') . '</dd>';
-        $output .= '<dt>' . t('Storing files') . '</dt>';
-        $output .= '<dd>' . t('Uploaded files can either be stored as <em>public</em> or <em>private</em>, depending on the <a href=":file-system">File system settings</a>. For more information, see the <a href=":system-help">System module help page</a>.', [
+        $output .= '<dt>' . $this->t('Allowing file extensions') . '</dt>';
+        $output .= '<dd>' . $this->t('In the field settings, you can define the allowed file extensions (for example <em>pdf docx psd</em>) for the files that will be uploaded with the file field.') . '</dd>';
+        $output .= '<dt>' . $this->t('Storing files') . '</dt>';
+        $output .= '<dd>' . $this->t('Uploaded files can either be stored as <em>public</em> or <em>private</em>, depending on the <a href=":file-system">File system settings</a>. For more information, see the <a href=":system-help">System module help page</a>.', [
           ':file-system' => Url::fromRoute('system.file_system_settings')->toString(),
           ':system-help' => Url::fromRoute('help.page', [
             'name' => 'system',
           ])->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Restricting the maximum file size') . '</dt>';
-        $output .= '<dd>' . t('The maximum file size that users can upload is limited by PHP settings of the server, but you can restrict by entering the desired value as the <em>Maximum upload size</em> setting. The maximum file size is automatically displayed to users in the help text of the file field.') . '</dd>';
-        $output .= '<dt>' . t('Displaying files and descriptions') . '<dt>';
-        $output .= '<dd>' . t('In the field settings, you can allow users to toggle whether individual files are displayed. In the display settings, you can then choose one of the following formats: <ul><li><em>Generic file</em> displays links to the files and adds icons that symbolize the file extensions. If <em>descriptions</em> are enabled and have been submitted, then the description is displayed instead of the file name.</li><li><em>URL to file</em> displays the full path to the file as plain text.</li><li><em>Table of files</em> lists links to the files and the file sizes in a table.</li><li><em>RSS enclosure</em> only displays the first file, and only in a RSS feed, formatted according to the RSS 2.0 syntax for enclosures.</li></ul> A file can still be linked to directly by its URI even if it is not displayed.') . '</dd>';
+        $output .= '<dt>' . $this->t('Restricting the maximum file size') . '</dt>';
+        $output .= '<dd>' . $this->t('The maximum file size that users can upload is limited by PHP settings of the server, but you can restrict by entering the desired value as the <em>Maximum upload size</em> setting. The maximum file size is automatically displayed to users in the help text of the file field.') . '</dd>';
+        $output .= '<dt>' . $this->t('Displaying files and descriptions') . '<dt>';
+        $output .= '<dd>' . $this->t('In the field settings, you can allow users to toggle whether individual files are displayed. In the display settings, you can then choose one of the following formats: <ul><li><em>Generic file</em> displays links to the files and adds icons that symbolize the file extensions. If <em>descriptions</em> are enabled and have been submitted, then the description is displayed instead of the file name.</li><li><em>URL to file</em> displays the full path to the file as plain text.</li><li><em>Table of files</em> lists links to the files and the file sizes in a table.</li><li><em>RSS enclosure</em> only displays the first file, and only in a RSS feed, formatted according to the RSS 2.0 syntax for enclosures.</li></ul> A file can still be linked to directly by its URI even if it is not displayed.') . '</dd>';
         $output .= '</dl>';
         return $output;
     }
@@ -138,46 +140,46 @@ class FileHooks {
     $config = \Drupal::config('file.settings');
     $form['filename_sanitization'] = [
       '#type' => 'details',
-      '#title' => t('Sanitize filenames'),
-      '#description' => t('These settings only apply to new files as they are uploaded. Changes here do not affect existing file names.'),
+      '#title' => $this->t('Sanitize filenames'),
+      '#description' => $this->t('These settings only apply to new files as they are uploaded. Changes here do not affect existing file names.'),
       '#open' => TRUE,
       '#tree' => TRUE,
     ];
     $form['filename_sanitization']['replacement_character'] = [
       '#type' => 'select',
-      '#title' => t('Replacement character'),
+      '#title' => $this->t('Replacement character'),
       '#default_value' => $config->get('filename_sanitization.replacement_character'),
       '#options' => [
-        '-' => t('Dash (-)'),
-        '_' => t('Underscore (_)'),
+        '-' => $this->t('Dash (-)'),
+        '_' => $this->t('Underscore (_)'),
       ],
-      '#description' => t('Used when replacing whitespace, replacing non-alphanumeric characters or transliterating unknown characters.'),
+      '#description' => $this->t('Used when replacing whitespace, replacing non-alphanumeric characters or transliterating unknown characters.'),
     ];
     $form['filename_sanitization']['transliterate'] = [
       '#type' => 'checkbox',
-      '#title' => t('Transliterate'),
+      '#title' => $this->t('Transliterate'),
       '#default_value' => $config->get('filename_sanitization.transliterate'),
-      '#description' => t('Transliteration replaces any characters that are not alphanumeric, underscores, periods or hyphens with the replacement character. It ensures filenames only contain ASCII characters. It is recommended to keep transliteration enabled.'),
+      '#description' => $this->t('Transliteration replaces any characters that are not alphanumeric, underscores, periods or hyphens with the replacement character. It ensures filenames only contain ASCII characters. It is recommended to keep transliteration enabled.'),
     ];
     $form['filename_sanitization']['replace_whitespace'] = [
       '#type' => 'checkbox',
-      '#title' => t('Replace whitespace with the replacement character'),
+      '#title' => $this->t('Replace whitespace with the replacement character'),
       '#default_value' => $config->get('filename_sanitization.replace_whitespace'),
     ];
     $form['filename_sanitization']['replace_non_alphanumeric'] = [
       '#type' => 'checkbox',
-      '#title' => t('Replace non-alphanumeric characters with the replacement character'),
+      '#title' => $this->t('Replace non-alphanumeric characters with the replacement character'),
       '#default_value' => $config->get('filename_sanitization.replace_non_alphanumeric'),
-      '#description' => t('Alphanumeric characters, dots <span aria-hidden="true">(.)</span>, underscores <span aria-hidden="true">(_)</span> and dashes <span aria-hidden="true">(-)</span> are preserved.'),
+      '#description' => $this->t('Alphanumeric characters, dots <span aria-hidden="true">(.)</span>, underscores <span aria-hidden="true">(_)</span> and dashes <span aria-hidden="true">(-)</span> are preserved.'),
     ];
     $form['filename_sanitization']['deduplicate_separators'] = [
       '#type' => 'checkbox',
-      '#title' => t('Replace sequences of dots, underscores and/or dashes with the replacement character'),
+      '#title' => $this->t('Replace sequences of dots, underscores and/or dashes with the replacement character'),
       '#default_value' => $config->get('filename_sanitization.deduplicate_separators'),
     ];
     $form['filename_sanitization']['lowercase'] = [
       '#type' => 'checkbox',
-      '#title' => t('Convert to lowercase'),
+      '#title' => $this->t('Convert to lowercase'),
       '#default_value' => $config->get('filename_sanitization.lowercase'),
     ];
     $form['#submit'][] = 'file_system_settings_submit';

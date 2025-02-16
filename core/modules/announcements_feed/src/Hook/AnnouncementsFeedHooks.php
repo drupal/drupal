@@ -6,11 +6,14 @@ use Drupal\announcements_feed\RenderCallbacks;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Hook implementations for announcements_feed.
  */
 class AnnouncementsFeedHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_help().
@@ -20,14 +23,14 @@ class AnnouncementsFeedHooks {
     switch ($route_name) {
       case 'help.page.announcements_feed':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Announcements module displays announcements from the Drupal community. For more information, see the <a href=":documentation">online documentation for the Announcements module</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Announcements module displays announcements from the Drupal community. For more information, see the <a href=":documentation">online documentation for the Announcements module</a>.', [
           ':documentation' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/announcements-feed',
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
-        $output .= '<dl><dt>' . t('Accessing announcements') . '</dt>';
-        $output .= '<dd>' . t('Users with the "View drupal.org announcements" permission may click on the "Announcements" item in the administration toolbar, or access @link, to see all announcements relevant to the Drupal version of your site.', [
-          '@link' => Link::createFromRoute(t('Announcements'), 'announcements_feed.announcement')->toString(),
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
+        $output .= '<dl><dt>' . $this->t('Accessing announcements') . '</dt>';
+        $output .= '<dd>' . $this->t('Users with the "View drupal.org announcements" permission may click on the "Announcements" item in the administration toolbar, or access @link, to see all announcements relevant to the Drupal version of your site.', [
+          '@link' => Link::createFromRoute($this->t('Announcements'), 'announcements_feed.announcement')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
         return $output;

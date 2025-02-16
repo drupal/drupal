@@ -4,6 +4,7 @@ namespace Drupal\settings_tray\Hook;
 
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\settings_tray\Block\BlockEntitySettingTrayForm;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -14,6 +15,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class SettingsTrayHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -21,8 +24,8 @@ class SettingsTrayHooks {
   public function help($route_name, RouteMatchInterface $route_match) {
     switch ($route_name) {
       case 'help.page.settings_tray':
-        $output = '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Settings Tray module allows users with the <a href=":administer_block_permission">Administer blocks</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit blocks without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Settings Tray module</a>.', [
+        $output = '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Settings Tray module allows users with the <a href=":administer_block_permission">Administer blocks</a> and <a href=":contextual_permission">Use contextual links</a> permissions to edit blocks without visiting a separate page. For more information, see the <a href=":handbook_url">online documentation for the Settings Tray module</a>.', [
           ':handbook_url' => 'https://www.drupal.org/documentation/modules/settings_tray',
           ':administer_block_permission' => Url::fromRoute('user.admin_permissions.module', [
             'modules' => 'block',
@@ -31,17 +34,17 @@ class SettingsTrayHooks {
             'modules' => 'contextual',
           ])->toString(),
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Editing blocks in place') . '</dt>';
+        $output .= '<dt>' . $this->t('Editing blocks in place') . '</dt>';
         $output .= '<dd>';
-        $output .= '<p>' . t('To edit blocks in place, either click the <strong>Edit</strong> button in the toolbar and then click on the block, or choose "Quick edit" from the block\'s contextual link. (See the <a href=":contextual">Contextual Links module help</a> for more information about how to use contextual links.)', [
+        $output .= '<p>' . $this->t('To edit blocks in place, either click the <strong>Edit</strong> button in the toolbar and then click on the block, or choose "Quick edit" from the block\'s contextual link. (See the <a href=":contextual">Contextual Links module help</a> for more information about how to use contextual links.)', [
           ':contextual' => Url::fromRoute('help.page', [
             'name' => 'contextual',
           ])->toString(),
         ]) . '</p>';
-        $output .= '<p>' . t('The Settings Tray for the block will open in a sidebar, with a compact form for configuring what the block shows.') . '</p>';
-        $output .= '<p>' . t('Save the form and the changes will be immediately visible on the page.') . '</p>';
+        $output .= '<p>' . $this->t('The Settings Tray for the block will open in a sidebar, with a compact form for configuring what the block shows.') . '</p>';
+        $output .= '<p>' . $this->t('Save the form and the changes will be immediately visible on the page.') . '</p>';
         $output .= '</dd>';
         $output .= '</dl>';
         return ['#markup' => $output];
@@ -62,7 +65,7 @@ class SettingsTrayHooks {
       $element['#links'] = ['settings-trayblock-configure' => $settings_tray_link] + $element['#links'];
       // If this is content block change title to avoid duplicate "Quick Edit".
       if (isset($element['#links']['block-contentblock-edit'])) {
-        $element['#links']['settings-trayblock-configure']['title'] = t('Quick edit settings');
+        $element['#links']['settings-trayblock-configure']['title'] = $this->t('Quick edit settings');
       }
       $element['#attached']['library'][] = 'core/drupal.dialog.off_canvas';
     }

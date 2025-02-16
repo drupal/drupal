@@ -41,9 +41,9 @@ class NavigationHooks {
     switch ($route_name) {
       case 'help.page.navigation':
         $output = '';
-        $output .= '<h3>' . t('About') . '</h3>';
-        $output .= '<p>' . t('The Navigation module provides a left-aligned, collapsible, vertical sidebar navigation.') . '</p>';
-        $output .= '<p>' . t('For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [':docs' => 'https://www.drupal.org/project/navigation']) . '</p>';
+        $output .= '<h3>' . $this->t('About') . '</h3>';
+        $output .= '<p>' . $this->t('The Navigation module provides a left-aligned, collapsible, vertical sidebar navigation.') . '</p>';
+        $output .= '<p>' . $this->t('For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [':docs' => 'https://www.drupal.org/project/navigation']) . '</p>';
         return $output;
     }
     $configuration_route = 'layout_builder.navigation.';
@@ -51,8 +51,8 @@ class NavigationHooks {
       return \Drupal::moduleHandler()->invoke('layout_builder', 'help', [$route_name, $route_match]);
     }
     if (str_starts_with($route_name, $configuration_route)) {
-      $output = '<p>' . t('This layout builder tool allows you to configure the blocks in the navigation toolbar.') . '</p>';
-      $output .= '<p>' . t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
+      $output = '<p>' . $this->t('This layout builder tool allows you to configure the blocks in the navigation toolbar.') . '</p>';
+      $output .= '<p>' . $this->t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
       return $output;
     }
   }

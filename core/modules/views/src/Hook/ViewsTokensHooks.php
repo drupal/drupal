@@ -4,11 +4,14 @@ namespace Drupal\views\Hook;
 
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Hook implementations for views.
  */
 class ViewsTokensHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_token_info().
@@ -16,41 +19,41 @@ class ViewsTokensHooks {
   #[Hook('token_info')]
   public function tokenInfo(): array {
     $info['types']['view'] = [
-      'name' => t('View', [], [
+      'name' => $this->t('View', [], [
         'context' => 'View entity type',
       ]),
-      'description' => t('Tokens related to views.'),
+      'description' => $this->t('Tokens related to views.'),
       'needs-data' => 'view',
     ];
-    $info['tokens']['view']['label'] = ['name' => t('Label'), 'description' => t('The label of the view.')];
-    $info['tokens']['view']['description'] = ['name' => t('Description'), 'description' => t('The description of the view.')];
-    $info['tokens']['view']['id'] = ['name' => t('ID'), 'description' => t('The machine-readable ID of the view.')];
+    $info['tokens']['view']['label'] = ['name' => $this->t('Label'), 'description' => $this->t('The label of the view.')];
+    $info['tokens']['view']['description'] = ['name' => $this->t('Description'), 'description' => $this->t('The description of the view.')];
+    $info['tokens']['view']['id'] = ['name' => $this->t('ID'), 'description' => $this->t('The machine-readable ID of the view.')];
     $info['tokens']['view']['title'] = [
-      'name' => t('Title'),
-      'description' => t('The title of current display of the view.'),
+      'name' => $this->t('Title'),
+      'description' => $this->t('The title of current display of the view.'),
     ];
-    $info['tokens']['view']['url'] = ['name' => t('URL'), 'description' => t('The URL of the view.'), 'type' => 'url'];
+    $info['tokens']['view']['url'] = ['name' => $this->t('URL'), 'description' => $this->t('The URL of the view.'), 'type' => 'url'];
     $info['tokens']['view']['base-table'] = [
-      'name' => t('Base table'),
-      'description' => t('The base table used for this view.'),
+      'name' => $this->t('Base table'),
+      'description' => $this->t('The base table used for this view.'),
     ];
     $info['tokens']['view']['base-field'] = [
-      'name' => t('Base field'),
-      'description' => t('The base field used for this view.'),
+      'name' => $this->t('Base field'),
+      'description' => $this->t('The base field used for this view.'),
     ];
     $info['tokens']['view']['total-rows'] = [
-      'name' => t('Total rows'),
-      'description' => t('The total amount of results returned from the view. The current display will be used.'),
+      'name' => $this->t('Total rows'),
+      'description' => $this->t('The total amount of results returned from the view. The current display will be used.'),
     ];
     $info['tokens']['view']['items-per-page'] = [
-      'name' => t('Items per page'),
-      'description' => t('The number of items per page.'),
+      'name' => $this->t('Items per page'),
+      'description' => $this->t('The number of items per page.'),
     ];
     $info['tokens']['view']['current-page'] = [
-      'name' => t('Current page'),
-      'description' => t('The current page of results the view is on.'),
+      'name' => $this->t('Current page'),
+      'description' => $this->t('The current page of results the view is on.'),
     ];
-    $info['tokens']['view']['page-count'] = ['name' => t('Page count'), 'description' => t('The total page count.')];
+    $info['tokens']['view']['page-count'] = ['name' => $this->t('Page count'), 'description' => $this->t('The total page count.')];
     return $info;
   }
 

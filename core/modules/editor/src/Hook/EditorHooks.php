@@ -2,6 +2,7 @@
 
 namespace Drupal\editor\Hook;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -19,6 +20,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class EditorHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -27,28 +30,28 @@ class EditorHooks {
     switch ($route_name) {
       case 'help.page.editor':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Text Editor module provides a framework that other modules (such as <a href=":ckeditor5">CKEditor5 module</a>) can use to provide toolbars and other functionality that allow users to format text more easily than typing HTML tags directly. For more information, see the <a href=":documentation">online documentation for the Text Editor module</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Text Editor module provides a framework that other modules (such as <a href=":ckeditor5">CKEditor5 module</a>) can use to provide toolbars and other functionality that allow users to format text more easily than typing HTML tags directly. For more information, see the <a href=":documentation">online documentation for the Text Editor module</a>.', [
           ':documentation' => 'https://www.drupal.org/documentation/modules/editor',
           ':ckeditor5' => \Drupal::moduleHandler()->moduleExists('ckeditor5') ? Url::fromRoute('help.page', [
             'name' => 'ckeditor5',
           ])->toString() : '#',
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Installing text editors') . '</dt>';
-        $output .= '<dd>' . t('The Text Editor module provides a framework for managing editors. To use it, you also need to install a text editor. This can either be the core <a href=":ckeditor5">CKEditor5 module</a>, which can be installed on the <a href=":extend">Extend page</a>, or a contributed module for any other text editor. When installing a contributed text editor module, be sure to check the installation instructions, because you will most likely need to download an external library as well as the Drupal module.', [
+        $output .= '<dt>' . $this->t('Installing text editors') . '</dt>';
+        $output .= '<dd>' . $this->t('The Text Editor module provides a framework for managing editors. To use it, you also need to install a text editor. This can either be the core <a href=":ckeditor5">CKEditor5 module</a>, which can be installed on the <a href=":extend">Extend page</a>, or a contributed module for any other text editor. When installing a contributed text editor module, be sure to check the installation instructions, because you will most likely need to download an external library as well as the Drupal module.', [
           ':ckeditor5' => \Drupal::moduleHandler()->moduleExists('ckeditor5') ? Url::fromRoute('help.page', [
             'name' => 'ckeditor5',
           ])->toString() : '#',
           ':extend' => Url::fromRoute('system.modules_list')->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Enabling a text editor for a text format') . '</dt>';
-        $output .= '<dd>' . t('On the <a href=":formats">Text formats and editors page</a> you can see which text editor is associated with each text format. You can change this by clicking on the <em>Configure</em> link, and then choosing a text editor or <em>none</em> from the <em>Text editor</em> drop-down list. The text editor will then be displayed with any text field for which this text format is chosen.', [':formats' => Url::fromRoute('filter.admin_overview')->toString()]) . '</dd>';
-        $output .= '<dt>' . t('Configuring a text editor') . '</dt>';
-        $output .= '<dd>' . t('Once a text editor is associated with a text format, you can configure it by clicking on the <em>Configure</em> link for this format. Depending on the specific text editor, you can configure it for example by adding buttons to its toolbar. Typically these buttons provide formatting or editing tools, and they often insert HTML tags into the field source. For details, see the help page of the specific text editor.') . '</dd>';
-        $output .= '<dt>' . t('Using different text editors and formats') . '</dt>';
-        $output .= '<dd>' . t('If you change the text format on a text field, the text editor will change as well because the text editor configuration is associated with the individual text format. This allows the use of the same text editor with different options for different text formats. It also allows users to choose between text formats with different text editors if they are installed.') . '</dd>';
+        $output .= '<dt>' . $this->t('Enabling a text editor for a text format') . '</dt>';
+        $output .= '<dd>' . $this->t('On the <a href=":formats">Text formats and editors page</a> you can see which text editor is associated with each text format. You can change this by clicking on the <em>Configure</em> link, and then choosing a text editor or <em>none</em> from the <em>Text editor</em> drop-down list. The text editor will then be displayed with any text field for which this text format is chosen.', [':formats' => Url::fromRoute('filter.admin_overview')->toString()]) . '</dd>';
+        $output .= '<dt>' . $this->t('Configuring a text editor') . '</dt>';
+        $output .= '<dd>' . $this->t('Once a text editor is associated with a text format, you can configure it by clicking on the <em>Configure</em> link for this format. Depending on the specific text editor, you can configure it for example by adding buttons to its toolbar. Typically these buttons provide formatting or editing tools, and they often insert HTML tags into the field source. For details, see the help page of the specific text editor.') . '</dd>';
+        $output .= '<dt>' . $this->t('Using different text editors and formats') . '</dt>';
+        $output .= '<dd>' . $this->t('If you change the text format on a text field, the text editor will change as well because the text editor configuration is associated with the individual text format. This allows the use of the same text editor with different options for different text formats. It also allows users to choose between text formats with different text editors if they are installed.') . '</dd>';
         $output .= '</dl>';
         return $output;
     }
@@ -88,7 +91,7 @@ class EditorHooks {
     // @todo Cleanup column injection: https://www.drupal.org/node/1876718.
     // Splice in the column for "Text editor" into the header.
     $position = array_search('name', $form['formats']['#header']) + 1;
-    $start = array_splice($form['formats']['#header'], 0, $position, ['editor' => t('Text editor')]);
+    $start = array_splice($form['formats']['#header'], 0, $position, ['editor' => $this->t('Text editor')]);
     $form['formats']['#header'] = array_merge($start, $form['formats']['#header']);
     // Then splice in the name of each text editor for each text format.
     $editors = \Drupal::service('plugin.manager.editor')->getDefinitions();
@@ -120,9 +123,9 @@ class EditorHooks {
     $form['editor'] = ['#weight' => -9];
     $form['editor']['editor'] = [
       '#type' => 'select',
-      '#title' => t('Text editor'),
+      '#title' => $this->t('Text editor'),
       '#options' => $editor_options,
-      '#empty_option' => t('None'),
+      '#empty_option' => $this->t('None'),
       '#default_value' => $editor ? $editor->getEditor() : '',
       '#ajax' => [
         'trigger_as' => [
@@ -136,7 +139,7 @@ class EditorHooks {
     $form['editor']['configure'] = [
       '#type' => 'submit',
       '#name' => 'editor_configure',
-      '#value' => t('Configure'),
+      '#value' => $this->t('Configure'),
       '#limit_validation_errors' => [
               [
                 'editor',
@@ -159,7 +162,7 @@ class EditorHooks {
     // If there aren't any options (other than "None"), disable the select list.
     if (empty($editor_options)) {
       $form['editor']['editor']['#disabled'] = TRUE;
-      $form['editor']['editor']['#description'] = t('This option is disabled because no modules that provide a text editor are currently enabled.');
+      $form['editor']['editor']['#description'] = $this->t('This option is disabled because no modules that provide a text editor are currently enabled.');
     }
     $form['editor']['settings'] = [
       '#tree' => TRUE,

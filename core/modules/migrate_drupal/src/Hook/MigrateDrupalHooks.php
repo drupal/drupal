@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal\Hook;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\migrate\Exception\RequirementsException;
@@ -16,6 +17,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class MigrateDrupalHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -24,8 +27,8 @@ class MigrateDrupalHooks {
     switch ($route_name) {
       case 'help.page.migrate_drupal':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Migrate Drupal module provides a framework based on the <a href=":migrate">Migrate module</a> to facilitate migration from a Drupal (6, 7, or 8) site to your website. It does not provide a user interface. For more information, see the <a href=":migrate_drupal">online documentation for the Migrate Drupal module</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Migrate Drupal module provides a framework based on the <a href=":migrate">Migrate module</a> to facilitate migration from a Drupal (6, 7, or 8) site to your website. It does not provide a user interface. For more information, see the <a href=":migrate_drupal">online documentation for the Migrate Drupal module</a>.', [
           ':migrate' => Url::fromRoute('help.page', [
             'name' => 'migrate',
           ])->toString(),
@@ -115,7 +118,7 @@ class MigrateDrupalHooks {
         $version = NodeMigrateType::getLegacyDrupalVersion($source_connection);
       }
       catch (\Exception $e) {
-        \Drupal::messenger()->addError(t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', ['%error' => $e->getMessage()]));
+        \Drupal::messenger()->addError($this->t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname?</li></ul>', ['%error' => $e->getMessage()]));
       }
     }
     // If this is a complete node migration then for all migrations, except the

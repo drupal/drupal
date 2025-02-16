@@ -3,6 +3,7 @@
 namespace Drupal\system\Hook;
 
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -12,82 +13,84 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class SystemTokensHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_token_info().
    */
   #[Hook('token_info')]
   public function tokenInfo(): array {
     $types['site'] = [
-      'name' => t("Site information"),
-      'description' => t("Tokens for site-wide settings and other global information."),
+      'name' => $this->t("Site information"),
+      'description' => $this->t("Tokens for site-wide settings and other global information."),
     ];
-    $types['date'] = ['name' => t("Dates"), 'description' => t("Tokens related to times and dates.")];
+    $types['date'] = ['name' => $this->t("Dates"), 'description' => $this->t("Tokens related to times and dates.")];
     // Site-wide global tokens.
-    $site['name'] = ['name' => t("Name"), 'description' => t("The name of the site.")];
-    $site['slogan'] = ['name' => t("Slogan"), 'description' => t("The slogan of the site.")];
+    $site['name'] = ['name' => $this->t("Name"), 'description' => $this->t("The name of the site.")];
+    $site['slogan'] = ['name' => $this->t("Slogan"), 'description' => $this->t("The slogan of the site.")];
     $site['mail'] = [
-      'name' => t("Email"),
-      'description' => t("The administrative email address for the site."),
+      'name' => $this->t("Email"),
+      'description' => $this->t("The administrative email address for the site."),
     ];
     $site['base-url'] = [
-      'name' => t("Base URL"),
-      'description' => t("The base URL of the site, currently: @base_url", [
+      'name' => $this->t("Base URL"),
+      'description' => $this->t("The base URL of the site, currently: @base_url", [
         '@base_url' => \Drupal::service('router.request_context')->getCompleteBaseUrl(),
       ]),
     ];
     $site['base-path'] = [
-      'name' => t("Base path"),
-      'description' => t("The base path of the site, currently: @base_path", [
+      'name' => $this->t("Base path"),
+      'description' => $this->t("The base path of the site, currently: @base_path", [
         '@base_path' => \Drupal::request()->getBasePath(),
       ]),
     ];
     $site['url'] = [
-      'name' => t("URL"),
-      'description' => t("The URL of the site's front page with the language prefix, if it exists."),
+      'name' => $this->t("URL"),
+      'description' => $this->t("The URL of the site's front page with the language prefix, if it exists."),
     ];
     $site['url-brief'] = [
-      'name' => t("URL (brief)"),
-      'description' => t("The URL of the site's front page without the protocol."),
+      'name' => $this->t("URL (brief)"),
+      'description' => $this->t("The URL of the site's front page without the protocol."),
     ];
     $site['login-url'] = [
-      'name' => t("Login page"),
-      'description' => t("The URL of the site's login page."),
+      'name' => $this->t("Login page"),
+      'description' => $this->t("The URL of the site's login page."),
     ];
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = \Drupal::service('date.formatter');
     // Date related tokens.
     $request_time = \Drupal::time()->getRequestTime();
     $date['short'] = [
-      'name' => t("Short format"),
-      'description' => t("The current date in 'short' format. (%date)", [
+      'name' => $this->t("Short format"),
+      'description' => $this->t("The current date in 'short' format. (%date)", [
         '%date' => $date_formatter->format($request_time, 'short'),
       ]),
     ];
     $date['medium'] = [
-      'name' => t("Medium format"),
-      'description' => t("The current date in 'medium' format. (%date)", [
+      'name' => $this->t("Medium format"),
+      'description' => $this->t("The current date in 'medium' format. (%date)", [
         '%date' => $date_formatter->format($request_time, 'medium'),
       ]),
     ];
     $date['long'] = [
-      'name' => t("Long format"),
-      'description' => t("The current date in 'long' format. (%date)", [
+      'name' => $this->t("Long format"),
+      'description' => $this->t("The current date in 'long' format. (%date)", [
         '%date' => $date_formatter->format($request_time, 'long'),
       ]),
     ];
     $date['custom'] = [
-      'name' => t("Custom format"),
-      'description' => t('The current date in a custom format. See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters">the PHP documentation</a> for details.'),
+      'name' => $this->t("Custom format"),
+      'description' => $this->t('The current date in a custom format. See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters">the PHP documentation</a> for details.'),
     ];
     $date['since'] = [
-      'name' => t("Time-since"),
-      'description' => t("The current date in 'time-since' format. (%date)", [
+      'name' => $this->t("Time-since"),
+      'description' => $this->t("The current date in 'time-since' format. (%date)", [
         '%date' => $date_formatter->formatTimeDiffSince($request_time - 360),
       ]),
     ];
     $date['raw'] = [
-      'name' => t("Raw timestamp"),
-      'description' => t("The current date in UNIX timestamp format (%date)", [
+      'name' => $this->t("Raw timestamp"),
+      'description' => $this->t("The current date in UNIX timestamp format (%date)", [
         '%date' => $request_time,
       ]),
     ];

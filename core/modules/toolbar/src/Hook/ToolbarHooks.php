@@ -2,6 +2,7 @@
 
 namespace Drupal\toolbar\Hook;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\toolbar\Controller\ToolbarController;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -12,6 +13,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class ToolbarHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -19,14 +22,14 @@ class ToolbarHooks {
   public function help($route_name, RouteMatchInterface $route_match) {
     switch ($route_name) {
       case 'help.page.toolbar':
-        $output = '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Toolbar module provides a toolbar for site administrators, which displays tabs and trays provided by the Toolbar module itself and other modules. For more information, see the <a href=":toolbar_docs">online documentation for the Toolbar module</a>.', [':toolbar_docs' => 'https://www.drupal.org/docs/8/core/modules/toolbar']) . '</p>';
-        $output .= '<h4>' . t('Terminology') . '</h4>';
+        $output = '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Toolbar module provides a toolbar for site administrators, which displays tabs and trays provided by the Toolbar module itself and other modules. For more information, see the <a href=":toolbar_docs">online documentation for the Toolbar module</a>.', [':toolbar_docs' => 'https://www.drupal.org/docs/8/core/modules/toolbar']) . '</p>';
+        $output .= '<h4>' . $this->t('Terminology') . '</h4>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Tabs') . '</dt>';
-        $output .= '<dd>' . t('Tabs are buttons, displayed in a bar across the top of the screen. Some tabs execute an action (such as starting Edit mode), while other tabs toggle which tray is open.') . '</dd>';
-        $output .= '<dt>' . t('Trays') . '</dt>';
-        $output .= '<dd>' . t('Trays are usually lists of links, which can be hierarchical like a menu. If a tray has been toggled open, it is displayed either vertically or horizontally below the tab bar, depending on the browser width. Only one tray may be open at a time. If you click another tab, that tray will replace the tray being displayed. In wide browser widths, the user has the ability to toggle from vertical to horizontal, using a link at the bottom or right of the tray. Hierarchical menus only have open/close behavior in vertical mode; if you display a tray containing a hierarchical menu horizontally, only the top-level links will be available.') . '</dd>';
+        $output .= '<dt>' . $this->t('Tabs') . '</dt>';
+        $output .= '<dd>' . $this->t('Tabs are buttons, displayed in a bar across the top of the screen. Some tabs execute an action (such as starting Edit mode), while other tabs toggle which tray is open.') . '</dd>';
+        $output .= '<dt>' . $this->t('Trays') . '</dt>';
+        $output .= '<dd>' . $this->t('Trays are usually lists of links, which can be hierarchical like a menu. If a tray has been toggled open, it is displayed either vertically or horizontally below the tab bar, depending on the browser width. Only one tray may be open at a time. If you click another tab, that tray will replace the tray being displayed. In wide browser widths, the user has the ability to toggle from vertical to horizontal, using a link at the bottom or right of the tray. Hierarchical menus only have open/close behavior in vertical mode; if you display a tray containing a hierarchical menu horizontally, only the top-level links will be available.') . '</dd>';
         $output .= '</dl>';
         return $output;
     }
@@ -80,10 +83,10 @@ class ToolbarHooks {
       '#type' => 'toolbar_item',
       'tab' => [
         '#type' => 'link',
-        '#title' => t('Back to site'),
+        '#title' => $this->t('Back to site'),
         '#url' => Url::fromRoute('<front>'),
         '#attributes' => [
-          'title' => t('Return to site content'),
+          'title' => $this->t('Return to site content'),
           'class' => [
             'toolbar-icon',
             'toolbar-icon-escape-admin',
@@ -116,10 +119,10 @@ class ToolbarHooks {
       '#type' => 'toolbar_item',
       'tab' => [
         '#type' => 'link',
-        '#title' => t('Manage'),
+        '#title' => $this->t('Manage'),
         '#url' => Url::fromRoute('system.admin'),
         '#attributes' => [
-          'title' => t('Admin menu'),
+          'title' => $this->t('Admin menu'),
           'class' => [
             'toolbar-icon',
             'toolbar-icon-menu',
@@ -134,7 +137,7 @@ class ToolbarHooks {
         ],
       ],
       'tray' => [
-        '#heading' => t('Administration menu'),
+        '#heading' => $this->t('Administration menu'),
         '#attached' => $subtrees_attached,
         'toolbar_administration' => [
           '#pre_render' => [

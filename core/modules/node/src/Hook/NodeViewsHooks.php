@@ -2,6 +2,7 @@
 
 namespace Drupal\node\Hook;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\views\Analyzer;
 use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
@@ -12,6 +13,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  * Hook implementations for node.
  */
 class NodeViewsHooks {
+
+  use StringTranslationTrait;
 
   /**
    * Implements hook_views_analyze().
@@ -31,7 +34,7 @@ class NodeViewsHooks {
             $authenticated_role = Role::load(RoleInterface::AUTHENTICATED_ID);
             $authenticated_has_access = $authenticated_role && $authenticated_role->hasPermission('access content');
             if (!$anonymous_has_access || !$authenticated_has_access) {
-              $ret[] = Analyzer::formatMessage(t('Some roles lack permission to access content, but display %display has no access control.', ['%display' => $display->display['display_title']]), 'warning');
+              $ret[] = Analyzer::formatMessage($this->t('Some roles lack permission to access content, but display %display has no access control.', ['%display' => $display->display['display_title']]), 'warning');
             }
             $filters = $display->getOption('filters');
             foreach ($filters as $filter) {
@@ -39,7 +42,7 @@ class NodeViewsHooks {
                 continue 2;
               }
             }
-            $ret[] = Analyzer::formatMessage(t('Display %display has no access control but does not contain a filter for published nodes.', ['%display' => $display->display['display_title']]), 'warning');
+            $ret[] = Analyzer::formatMessage($this->t('Display %display has no access control but does not contain a filter for published nodes.', ['%display' => $display->display['display_title']]), 'warning');
           }
         }
       }
@@ -47,7 +50,7 @@ class NodeViewsHooks {
     foreach ($view->displayHandlers as $display) {
       if ($display->getPluginId() == 'page') {
         if ($display->getOption('path') == 'node/%') {
-          $ret[] = Analyzer::formatMessage(t('Display %display has set node/% as path. This will not produce what you want. If you want to have multiple versions of the node view, use Layout Builder.', ['%display' => $display->display['display_title']]), 'warning');
+          $ret[] = Analyzer::formatMessage($this->t('Display %display has set node/% as path. This will not produce what you want. If you want to have multiple versions of the node view, use Layout Builder.', ['%display' => $display->display['display_title']]), 'warning');
         }
       }
     }

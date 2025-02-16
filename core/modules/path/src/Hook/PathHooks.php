@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\path\PathAliasListBuilder;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
 use Drupal\Core\Entity\ContentEntityDeleteForm;
@@ -20,6 +21,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class PathHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -28,32 +31,32 @@ class PathHooks {
     switch ($route_name) {
       case 'help.page.path':
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Path module allows you to specify an alias, or custom URL, for any existing internal system path. Aliases should not be confused with URL redirects, which allow you to forward a changed or inactive URL to a new URL. In addition to making URLs more readable, aliases also help search engines index content more effectively. Multiple aliases may be used for a single internal system path. To automate the aliasing of paths, you can install the contributed module <a href=":pathauto">Pathauto</a>. For more information, see the <a href=":path">online documentation for the Path module</a>.', [
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Path module allows you to specify an alias, or custom URL, for any existing internal system path. Aliases should not be confused with URL redirects, which allow you to forward a changed or inactive URL to a new URL. In addition to making URLs more readable, aliases also help search engines index content more effectively. Multiple aliases may be used for a single internal system path. To automate the aliasing of paths, you can install the contributed module <a href=":pathauto">Pathauto</a>. For more information, see the <a href=":path">online documentation for the Path module</a>.', [
           ':path' => 'https://www.drupal.org/documentation/modules/path',
           ':pathauto' => 'https://www.drupal.org/project/pathauto',
         ]) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Creating aliases') . '</dt>';
-        $output .= '<dd>' . t('If you create or edit a taxonomy term you can add an alias (for example <em>music/jazz</em>) in the field "URL alias". When creating or editing content you can add an alias (for example <em>about-us/team</em>) under the section "URL path settings" in the field "URL alias". Aliases for any other path can be added through the page <a href=":aliases">URL aliases</a>. To add aliases a user needs the permission <a href=":permissions">Create and edit URL aliases</a>.', [
+        $output .= '<dt>' . $this->t('Creating aliases') . '</dt>';
+        $output .= '<dd>' . $this->t('If you create or edit a taxonomy term you can add an alias (for example <em>music/jazz</em>) in the field "URL alias". When creating or editing content you can add an alias (for example <em>about-us/team</em>) under the section "URL path settings" in the field "URL alias". Aliases for any other path can be added through the page <a href=":aliases">URL aliases</a>. To add aliases a user needs the permission <a href=":permissions">Create and edit URL aliases</a>.', [
           ':aliases' => Url::fromRoute('entity.path_alias.collection')->toString(),
           ':permissions' => Url::fromRoute('user.admin_permissions.module', [
             'modules' => 'path',
           ])->toString(),
         ]) . '</dd>';
-        $output .= '<dt>' . t('Managing aliases') . '</dt>';
-        $output .= '<dd>' . t('The Path module provides a way to search and view a <a href=":aliases">list of all aliases</a> that are in use on your website. Aliases can be added, edited and deleted through this list.', [
+        $output .= '<dt>' . $this->t('Managing aliases') . '</dt>';
+        $output .= '<dd>' . $this->t('The Path module provides a way to search and view a <a href=":aliases">list of all aliases</a> that are in use on your website. Aliases can be added, edited and deleted through this list.', [
           ':aliases' => Url::fromRoute('entity.path_alias.collection')->toString(),
         ]) . '</dd>';
         $output .= '</dl>';
         return $output;
 
       case 'entity.path_alias.collection':
-        return '<p>' . t("An alias defines a different name for an existing URL path - for example, the alias 'about' for the URL path 'node/1'. A URL path can have multiple aliases.") . '</p>';
+        return '<p>' . $this->t("An alias defines a different name for an existing URL path - for example, the alias 'about' for the URL path 'node/1'. A URL path can have multiple aliases.") . '</p>';
 
       case 'entity.path_alias.add_form':
-        return '<p>' . t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
+        return '<p>' . $this->t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
     }
   }
 
@@ -102,7 +105,7 @@ class PathHooks {
   #[Hook('entity_base_field_info')]
   public function entityBaseFieldInfo(EntityTypeInterface $entity_type): array {
     if (in_array($entity_type->id(), ['taxonomy_term', 'node', 'media'], TRUE)) {
-      $fields['path'] = BaseFieldDefinition::create('path')->setLabel(t('URL alias'))->setTranslatable(TRUE)->setDisplayOptions('form', ['type' => 'path', 'weight' => 30])->setDisplayConfigurable('form', TRUE)->setComputed(TRUE);
+      $fields['path'] = BaseFieldDefinition::create('path')->setLabel($this->t('URL alias'))->setTranslatable(TRUE)->setDisplayOptions('form', ['type' => 'path', 'weight' => 30])->setDisplayConfigurable('form', TRUE)->setComputed(TRUE);
       return $fields;
     }
     return [];
@@ -137,15 +140,15 @@ class PathHooks {
         $element['value']['#field_prefix'] = \Drupal::service('router.request_context')->getCompleteBaseUrl();
       }
       if ($field_name === 'langcode') {
-        $element['value']['#description'] = t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set as <em>- Not specified -</em>.');
+        $element['value']['#description'] = $this->t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set as <em>- Not specified -</em>.');
         $element['value']['#empty_value'] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
-        $element['value']['#empty_option'] = t('- Not specified -');
+        $element['value']['#empty_option'] = $this->t('- Not specified -');
       }
       if ($field_name === 'path') {
-        $element['value']['#description'] = t('Specify the existing path you wish to alias. For example: /node/28, /media/1, /taxonomy/term/1.');
+        $element['value']['#description'] = $this->t('Specify the existing path you wish to alias. For example: /node/28, /media/1, /taxonomy/term/1.');
       }
       if ($field_name === 'alias') {
-        $element['value']['#description'] = t('Specify an alternative path by which this data can be accessed. For example, type "/about" when writing an about page.');
+        $element['value']['#description'] = $this->t('Specify an alternative path by which this data can be accessed. For example, type "/about" when writing an about page.');
       }
     }
   }

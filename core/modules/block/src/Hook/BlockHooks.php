@@ -3,6 +3,7 @@
 namespace Drupal\block\Hook;
 
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\system\Entity\Menu;
 use Drupal\block\Entity\Block;
@@ -16,6 +17,8 @@ use Drupal\Core\Hook\Attribute\Hook;
  */
 class BlockHooks {
 
+  use StringTranslationTrait;
+
   /**
    * Implements hook_help().
    */
@@ -25,30 +28,30 @@ class BlockHooks {
       case 'help.page.block':
         $block_content = \Drupal::moduleHandler()->moduleExists('block_content') ? Url::fromRoute('help.page', ['name' => 'block_content'])->toString() : '#';
         $output = '';
-        $output .= '<h2>' . t('About') . '</h2>';
-        $output .= '<p>' . t('The Block module allows you to place blocks in regions of your installed themes, and configure block settings. For more information, see the <a href=":blocks-documentation">online documentation for the Block module</a>.', [':blocks-documentation' => 'https://www.drupal.org/documentation/modules/block/']) . '</p>';
-        $output .= '<h2>' . t('Uses') . '</h2>';
+        $output .= '<h2>' . $this->t('About') . '</h2>';
+        $output .= '<p>' . $this->t('The Block module allows you to place blocks in regions of your installed themes, and configure block settings. For more information, see the <a href=":blocks-documentation">online documentation for the Block module</a>.', [':blocks-documentation' => 'https://www.drupal.org/documentation/modules/block/']) . '</p>';
+        $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
-        $output .= '<dt>' . t('Placing and moving blocks') . '</dt>';
-        $output .= '<dd>' . t('You can place a new block in a region by selecting <em>Place block</em> on the <a href=":blocks">Block layout page</a>. Once a block is placed, it can be moved to a different region by drag-and-drop or by using the <em>Region</em> drop-down list, and then clicking <em>Save blocks</em>.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
-        $output .= '<dt>' . t('Toggling between different themes') . '</dt>';
-        $output .= '<dd>' . t('Blocks are placed and configured specifically for each theme. The Block layout page opens with the default theme, but you can toggle to other installed themes.') . '</dd>';
-        $output .= '<dt>' . t('Demonstrating block regions for a theme') . '</dt>';
-        $output .= '<dd>' . t('You can see where the regions are for the current theme by clicking the <em>Demonstrate block regions</em> link on the <a href=":blocks">Block layout page</a>. Regions are specific to each theme.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
-        $output .= '<dt>' . t('Configuring block settings') . '</dt>';
-        $output .= '<dd>' . t('To change the settings of an individual block click on the <em>Configure</em> link on the <a href=":blocks">Block layout page</a>. The available options vary depending on the module that provides the block. For all blocks you can change the block title and toggle whether to display it.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
-        $output .= '<dt>' . t('Controlling visibility') . '</dt>';
-        $output .= '<dd>' . t('You can control the visibility of a block by restricting it to specific pages, content types, and/or roles by setting the appropriate options under <em>Visibility settings</em> of the block configuration.') . '</dd>';
-        $output .= '<dt>' . t('Adding content blocks') . '</dt>';
-        $output .= '<dd>' . t('You can add content blocks, if the <em>Block Content</em> module is installed. For more information, see the <a href=":blockcontent-help">Block Content help page</a>.', [':blockcontent-help' => $block_content]) . '</dd>';
+        $output .= '<dt>' . $this->t('Placing and moving blocks') . '</dt>';
+        $output .= '<dd>' . $this->t('You can place a new block in a region by selecting <em>Place block</em> on the <a href=":blocks">Block layout page</a>. Once a block is placed, it can be moved to a different region by drag-and-drop or by using the <em>Region</em> drop-down list, and then clicking <em>Save blocks</em>.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
+        $output .= '<dt>' . $this->t('Toggling between different themes') . '</dt>';
+        $output .= '<dd>' . $this->t('Blocks are placed and configured specifically for each theme. The Block layout page opens with the default theme, but you can toggle to other installed themes.') . '</dd>';
+        $output .= '<dt>' . $this->t('Demonstrating block regions for a theme') . '</dt>';
+        $output .= '<dd>' . $this->t('You can see where the regions are for the current theme by clicking the <em>Demonstrate block regions</em> link on the <a href=":blocks">Block layout page</a>. Regions are specific to each theme.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
+        $output .= '<dt>' . $this->t('Configuring block settings') . '</dt>';
+        $output .= '<dd>' . $this->t('To change the settings of an individual block click on the <em>Configure</em> link on the <a href=":blocks">Block layout page</a>. The available options vary depending on the module that provides the block. For all blocks you can change the block title and toggle whether to display it.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</dd>';
+        $output .= '<dt>' . $this->t('Controlling visibility') . '</dt>';
+        $output .= '<dd>' . $this->t('You can control the visibility of a block by restricting it to specific pages, content types, and/or roles by setting the appropriate options under <em>Visibility settings</em> of the block configuration.') . '</dd>';
+        $output .= '<dt>' . $this->t('Adding content blocks') . '</dt>';
+        $output .= '<dd>' . $this->t('You can add content blocks, if the <em>Block Content</em> module is installed. For more information, see the <a href=":blockcontent-help">Block Content help page</a>.', [':blockcontent-help' => $block_content]) . '</dd>';
         $output .= '</dl>';
         return $output;
     }
     if ($route_name == 'block.admin_display' || $route_name == 'block.admin_display_theme') {
       $demo_theme = $route_match->getParameter('theme') ?: \Drupal::config('system.theme')->get('default');
       $themes = \Drupal::service('theme_handler')->listInfo();
-      $output = '<p>' . t('Block placement is specific to each theme on your site. Changes will not be saved until you click <em>Save blocks</em> at the bottom of the page.') . '</p>';
-      $output .= '<p>' . Link::fromTextAndUrl(t('Demonstrate block regions (@theme)', ['@theme' => $themes[$demo_theme]->info['name']]), Url::fromRoute('block.admin_demo', ['theme' => $demo_theme]))->toString() . '</p>';
+      $output = '<p>' . $this->t('Block placement is specific to each theme on your site. Changes will not be saved until you click <em>Save blocks</em> at the bottom of the page.') . '</p>';
+      $output .= '<p>' . Link::fromTextAndUrl($this->t('Demonstrate block regions (@theme)', ['@theme' => $themes[$demo_theme]->info['name']]), Url::fromRoute('block.admin_demo', ['theme' => $demo_theme]))->toString() . '</p>';
       return $output;
     }
   }
@@ -70,7 +73,7 @@ class BlockHooks {
       $theme = \Drupal::theme()->getActiveTheme()->getName();
       $page_top['backlink'] = [
         '#type' => 'link',
-        '#title' => t('Exit block region demonstration'),
+        '#title' => $this->t('Exit block region demonstration'),
         '#options' => [
           'attributes' => [
             'class' => [
@@ -122,7 +125,7 @@ class BlockHooks {
           // Disable blocks in invalid regions.
           if (!isset($regions[$block->getRegion()])) {
             if ($block->status()) {
-              \Drupal::messenger()->addWarning(t('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block_id, '%region' => $block->getRegion()]));
+              \Drupal::messenger()->addWarning($this->t('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block_id, '%region' => $block->getRegion()]));
             }
             $block->setRegion(system_default_region($theme))->disable()->save();
           }
@@ -197,7 +200,7 @@ class BlockHooks {
       'actions' => [
         '#theme' => 'menu_local_action',
         '#link' => [
-          'title' => t('Add'),
+          'title' => $this->t('Add'),
           'url' => Url::fromUserInput('#'),
         ],
       ],
