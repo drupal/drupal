@@ -7,6 +7,9 @@ namespace Drupal\Tests\contact\Functional\Rest;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
+/**
+ * Resource test base for the ContactForm entity.
+ */
 abstract class ContactFormResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**

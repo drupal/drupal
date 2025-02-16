@@ -9,6 +9,9 @@ use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
+/**
+ * Resource test base for ConfigurableLanguage entity.
+ */
 abstract class ConfigurableLanguageResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**

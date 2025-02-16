@@ -10,6 +10,9 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Before;
 
+/**
+ * Resource test base for the user entity.
+ */
 abstract class UserResourceTestBase extends EntityResourceTestBase {
 
   /**

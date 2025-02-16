@@ -8,6 +8,9 @@ use Drupal\block\Entity\Block;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
+/**
+ * Resource test base for the block entity.
+ */
 abstract class BlockResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**

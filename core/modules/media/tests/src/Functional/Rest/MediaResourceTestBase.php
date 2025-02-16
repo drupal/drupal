@@ -16,6 +16,9 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
 
+/**
+ * Resource test base for the media entity.
+ */
 abstract class MediaResourceTestBase extends EntityResourceTestBase {
 
   /**

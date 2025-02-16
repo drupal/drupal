@@ -9,6 +9,9 @@ use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
 
+/**
+ * Resource test base for the action entity.
+ */
 abstract class ActionResourceTestBase extends ConfigEntityResourceTestBase {
 
   use StringTranslationTrait;

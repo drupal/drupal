@@ -7,6 +7,9 @@ namespace Drupal\Tests\field\Functional\Rest;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
+/**
+ * Resource test base for the FieldStorageConfig entity.
+ */
 abstract class FieldStorageConfigResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**

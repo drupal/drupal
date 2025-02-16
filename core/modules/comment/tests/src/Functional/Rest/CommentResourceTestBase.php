@@ -16,6 +16,9 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Before;
 
+/**
+ * Resource test base for the comment entity.
+ */
 abstract class CommentResourceTestBase extends EntityResourceTestBase {
 
   use CommentTestTrait;

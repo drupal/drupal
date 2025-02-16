@@ -11,6 +11,9 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Before;
 
+/**
+ * Resource test base for taxonomy term entity.
+ */
 abstract class TermResourceTestBase extends EntityResourceTestBase {
 
   /**

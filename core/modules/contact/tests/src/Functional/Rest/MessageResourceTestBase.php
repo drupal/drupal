@@ -10,6 +10,9 @@ use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
+/**
+ * Resource test base for the ContactMessage entity.
+ */
 abstract class MessageResourceTestBase extends EntityResourceTestBase {
 
   /**

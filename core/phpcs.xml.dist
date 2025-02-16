@@ -44,8 +44,9 @@
   <rule ref="Drupal.Classes.UnusedUseStatement"/>
   <rule ref="Drupal.Classes.UseGlobalClass"/>
   <rule ref="Drupal.Classes.UseLeadingBackslash"/>
-  <rule ref="Drupal.Commenting.ClassComment">
-    <exclude name="Drupal.Commenting.ClassComment.Missing"/>
+  <rule ref="Drupal.Commenting.ClassComment"/>
+  <rule ref="Drupal.Commenting.ClassComment.Missing">
+    <include-pattern>*/Functional/*</include-pattern>
   </rule>
   <rule ref="Drupal.Commenting.DataTypeNamespace"/>
   <rule ref="Drupal.Commenting.Deprecated"/>
