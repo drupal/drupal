@@ -112,6 +112,7 @@ trait TestFileCreationTrait {
    *   The second class.
    *
    * @return int
+   *   -1 if $file1 is smaller than $file2, 0 if they are the same size, and 1
    */
   protected function compareFiles($file1, $file2): int {
     $compare_size = filesize($file1->uri) - filesize($file2->uri);

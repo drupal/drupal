@@ -612,6 +612,7 @@ trait PerformanceTestTrait {
    *   The message to display.
    *
    * @return void
+   *   No return value.
    *
    * @throws \PHPUnit\Framework\ExpectationFailedException
    */
@@ -653,6 +654,7 @@ trait PerformanceTestTrait {
    *   An instance of the performance data value object.
    *
    * @return void
+   *   No return value.
    */
   protected function assertMetrics(
     array $expected,

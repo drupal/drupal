@@ -63,6 +63,7 @@ class ClientFactoryTest extends UnitTestCase {
    * Data provider for testCreateFromOptions.
    *
    * @return array
+   *   An array of test data for testCreateFromOptions.
    */
   public static function providerTestCreateFromOptions() {
     return [

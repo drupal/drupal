@@ -383,6 +383,7 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
    *   (optional) The prophesize base entity type.
    *
    * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\Core\Entity\EntityTypeInterface>
+   *   The entity type prophecy.
    */
   protected static function getEntityType(?ObjectProphecy $base_entity_type = NULL): ObjectProphecy {
     $entity_type = (new Prophet())->prophesize(EntityTypeInterface::class);

@@ -199,6 +199,7 @@ class CacheContextsManagerTest extends UnitTestCase {
    * Provides a list of cache context token arrays.
    *
    * @return array
+   *   An array of cache context token arrays.
    */
   public static function validateTokensProvider() {
     return [

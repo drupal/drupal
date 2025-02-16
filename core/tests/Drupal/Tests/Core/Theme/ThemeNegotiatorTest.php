@@ -218,6 +218,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
    *   An array of negotiator IDs.
    *
    * @return \Drupal\Core\Theme\ThemeNegotiator
+   *   The theme negotiator.
    */
   protected function createThemeNegotiator(array $negotiators) {
     $resolver = new ClassResolver($this->container);

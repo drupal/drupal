@@ -62,6 +62,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    *   https://www.drupal.org/node/2559847
    *
    * @return array
+   *   An array of test cases.
    */
   public static function providerPlaceholders(): array {
     $args = [static::randomContextValue()];
@@ -1150,6 +1151,7 @@ HTML;
 
   /**
    * @return \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\Builder\InvocationMocker
+   *   The mocked theme manager.
    */
   protected function setupThemeManagerForDetails() {
     return $this->themeManager->expects($this->any())

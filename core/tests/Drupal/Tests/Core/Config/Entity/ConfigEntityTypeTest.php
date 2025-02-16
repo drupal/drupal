@@ -42,6 +42,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
    *   An array of values to use for the ConfigEntityType.
    *
    * @return \Drupal\Core\Config\Entity\ConfigEntityTypeInterface
+   *   The ConfigEntityType object.
    */
   protected function setUpConfigEntityType($definition) {
     if (!isset($definition['id'])) {

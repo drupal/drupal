@@ -104,6 +104,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+   *   The container with a sqlite database service in it.
    */
   protected function getSqliteContainer($service) {
     $container = new ContainerBuilder();
@@ -124,6 +125,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+   *   The container with a mysql database service in it.
    */
   protected function getMysqlContainer($service) {
     $container = new ContainerBuilder();
@@ -142,6 +144,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    *   The service definition.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+   *   The container with a DriverTestMysql database service in it.
    */
   protected function getDriverTestMysqlContainer($service) {
     $container = new ContainerBuilder();

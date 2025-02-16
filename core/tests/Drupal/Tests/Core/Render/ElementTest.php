@@ -141,6 +141,7 @@ class ElementTest extends UnitTestCase {
    * Data provider for testVisibleChildren.
    *
    * @return array
+   *   An array of test cases.
    */
   public static function providerVisibleChildren() {
     return [

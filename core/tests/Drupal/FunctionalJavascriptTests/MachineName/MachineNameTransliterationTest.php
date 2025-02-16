@@ -66,6 +66,8 @@ class MachineNameTransliterationTest extends WebDriverTestBase {
    * Data for the testMachineNameTransliterations.
    *
    * @return array
+   *   An array of arrays, where each sub-array contains a language code,
+   *   input string, and the expected transliterated output string.
    */
   public static function machineNameInputOutput(): array {
     return [

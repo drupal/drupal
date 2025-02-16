@@ -86,6 +86,7 @@ class PlaceholderGeneratorTest extends RendererTestBase {
 
   /**
    * @return array
+   *   An array of test cases with different placeholder inputs.
    */
   public static function providerCreatePlaceholderGeneratesValidHtmlMarkup() {
     return [

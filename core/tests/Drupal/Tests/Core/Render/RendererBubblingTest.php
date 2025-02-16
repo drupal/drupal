@@ -500,6 +500,7 @@ class RendererBubblingTest extends RendererTestBase {
    * Provides two test elements: one without, and one with the theme system.
    *
    * @return array
+   *   An array of test cases, each containing a render array with different configurations.
    */
   public static function providerTestBubblingWithPrerender() {
     $data = [];

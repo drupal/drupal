@@ -362,6 +362,7 @@ class LocalTaskManagerTest extends UnitTestCase {
    * Returns the cache entry expected when running getLocalTaskForRoute().
    *
    * @return array
+   *   The expected cache entry.
    */
   protected function getLocalTasksCache(): array {
     $local_task_fixtures = $this->getLocalTaskFixtures();

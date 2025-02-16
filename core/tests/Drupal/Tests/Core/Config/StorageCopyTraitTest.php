@@ -85,6 +85,7 @@ class StorageCopyTraitTest extends UnitTestCase {
    *   The config storage to extract the data from.
    *
    * @return array
+   *   The config data as an array.
    */
   protected static function toArray(MemoryStorage $storage) {
     $reflection = new \ReflectionObject($storage);

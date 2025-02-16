@@ -52,6 +52,8 @@ class DrupalComponentTest extends TestCase {
    * Data provider.
    *
    * @return array
+   *   An associative array where the keys are component names and the values
+   *   are arrays containing the corresponding component path.
    */
   public static function getComponents(): array {
     $root_component_path = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))) . '/lib/Drupal/Component';

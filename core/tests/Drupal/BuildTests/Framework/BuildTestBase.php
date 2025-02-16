@@ -223,6 +223,7 @@ abstract class BuildTestBase extends TestCase {
    * Set up the Mink session manager.
    *
    * @return \Behat\Mink\Session
+   *   The Mink session.
    */
   protected function initMink() {
     $client = new DrupalTestBrowser();
@@ -327,6 +328,7 @@ abstract class BuildTestBase extends TestCase {
    *   execute the command. Defaults to the workspace directory.
    *
    * @return \Symfony\Component\Process\Process
+   *   The process object.
    */
   public function executeCommand($command_line, $working_dir = NULL) {
     $this->commandProcess = Process::fromShellCommandline($command_line);
@@ -510,6 +512,7 @@ abstract class BuildTestBase extends TestCase {
    *   A number between 1024 and 65536.
    *
    * @return bool
+   *   TRUE if the port is available, FALSE otherwise.
    */
   protected function checkPortIsAvailable($port): bool {
     $fp = @fsockopen(self::$hostName, $port, $errno, $errstr, 1);
@@ -531,6 +534,7 @@ abstract class BuildTestBase extends TestCase {
    * Test should never call this. Used by standUpServer().
    *
    * @return int
+   *   The port number.
    */
   protected function getPortNumber(): int {
     if (empty($this->hostPort)) {

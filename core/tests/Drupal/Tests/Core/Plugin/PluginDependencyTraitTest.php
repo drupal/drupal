@@ -209,6 +209,7 @@ class TestPluginDependency {
 
   /**
    * @return array[]
+   *   The dependencies.
    */
   public function getDependencies() {
     return $this->dependencies;

@@ -23,6 +23,7 @@ class RowCountExceptionTest extends UnitTestCase {
    * Data provider for ::testExceptionMessage()
    *
    * @return array
+   *   An array of test data for ::testExceptionMessage().
    */
   public static function providerTestExceptionMessage() {
     return [

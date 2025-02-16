@@ -18,6 +18,10 @@ class UrlHelperTest extends TestCase {
    * Provides test data for testBuildQuery().
    *
    * @return array
+   *   An array of test cases. Each test case contains:
+   *   - array $query: An array of query parameters.
+   *   - string $expected: The expected query string.
+   *   - string $message: The assertion message.
    */
   public static function providerTestBuildQuery() {
     return [
@@ -50,6 +54,7 @@ class UrlHelperTest extends TestCase {
    * Data provider for testValidAbsolute().
    *
    * @return array
+   *   An array of valid absolute URLs, with various schemes applied.
    */
   public static function providerTestValidAbsoluteData(): array {
     $urls = [
@@ -99,6 +104,7 @@ class UrlHelperTest extends TestCase {
    * Provides data for testInvalidAbsolute().
    *
    * @return array
+   *   An array of invalid absolute URLs.
    */
   public static function providerTestInvalidAbsolute(): array {
     $data = [
@@ -154,6 +160,7 @@ class UrlHelperTest extends TestCase {
    * Provides data for testValidRelative().
    *
    * @return array
+   *   An array of valid relative URLs.
    */
   public static function providerTestValidRelativeData(): array {
     $data = [
@@ -188,6 +195,7 @@ class UrlHelperTest extends TestCase {
    * Provides data for testInvalidRelative().
    *
    * @return array
+   *   An array of invalid relative URLs.
    */
   public static function providerTestInvalidRelativeData(): array {
     $data = [
@@ -239,8 +247,9 @@ class UrlHelperTest extends TestCase {
    * Provides data to self::testFilterQueryParameters().
    *
    * @return array
+   *   An array of test cases with query parameters, exclusions, and expected results.
    */
-  public static function providerTestFilterQueryParameters() {
+  public static function providerTestFilterQueryParameters(): array {
     return [
       // Test without an exclude filter.
       [
@@ -277,6 +286,7 @@ class UrlHelperTest extends TestCase {
    * Provides data for self::testParse().
    *
    * @return array
+   *   An array of test cases with URLs and expected parsed results.
    */
   public static function providerTestParse() {
     return [
@@ -399,6 +409,7 @@ class UrlHelperTest extends TestCase {
    * Provides data for self::testEncodePath().
    *
    * @return array
+   *   An array of test cases with unencoded paths and expected encoded paths.
    */
   public static function providerTestEncodePath() {
     return [
@@ -427,6 +438,7 @@ class UrlHelperTest extends TestCase {
    * Provides data for self::testIsExternal().
    *
    * @return array
+   *   An array of test cases with paths and their expected external status.
    */
   public static function providerTestIsExternal() {
     return [
@@ -491,6 +503,7 @@ class UrlHelperTest extends TestCase {
    * Provides data for self::testTestFilterBadProtocol().
    *
    * @return array
+   *   An array of test cases with URIs, expected filtered results, and allowed protocols.
    */
   public static function providerTestFilterBadProtocol() {
     return [
@@ -529,6 +542,7 @@ class UrlHelperTest extends TestCase {
    * Provides data for self::testStripDangerousProtocols().
    *
    * @return array
+   *   An array of test cases with URIs, expected stripped results, and allowed protocols.
    */
   public static function providerTestStripDangerousProtocols() {
     return [

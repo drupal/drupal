@@ -288,6 +288,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * Data provider for testCalculateDependenciesWithPluginCollections.
    *
    * @return array
+   *   An array of test cases, each containing a plugin definition and expected dependencies.
    */
   public static function providerCalculateDependenciesWithPluginCollections(): array {
     // Start with 'a' so that order of the dependency array is fixed.

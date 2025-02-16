@@ -32,6 +32,7 @@ trait EntityViewTrait {
    *   the current content language.
    *
    * @return array
+   *   The fully built render array of the entity.
    *
    * @see \Drupal\Core\Render\RendererInterface::render()
    */

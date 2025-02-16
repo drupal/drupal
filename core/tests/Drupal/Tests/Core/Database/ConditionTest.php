@@ -113,6 +113,7 @@ class ConditionTest extends UnitTestCase {
    * Provides a list of known operations and the expected output.
    *
    * @return array
+   *   An array of known operations and the expected output.
    */
   public static function dataProviderTestCompileWithKnownOperators() {
     // Below are a list of commented out test cases, which should work but

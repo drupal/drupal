@@ -16,6 +16,7 @@ trait GroupIncludesTestTrait {
 
   /**
    * @return array[]
+   *   An array of module filenames mapped to their virtual file system paths.
    */
   public static function setupGroupIncludes(): array {
     vfsStream::setup('drupal_root');

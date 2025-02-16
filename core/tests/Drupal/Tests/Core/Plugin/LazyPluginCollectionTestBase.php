@@ -105,6 +105,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    *   The plugin definition.
    *
    * @return \Drupal\Component\Plugin\PluginInspectionInterface|\PHPUnit\Framework\MockObject\MockObject
+   *   The mocked plugin object.
    */
   protected function getPluginMock($plugin_id, array $definition) {
     // Create a mock plugin instance.

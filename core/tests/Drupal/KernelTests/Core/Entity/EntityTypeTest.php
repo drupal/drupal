@@ -22,6 +22,7 @@ class EntityTypeTest extends KernelTestBase {
    *   An array of values to use for the EntityType.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface
+   *   The EntityType object.
    */
   protected function setUpEntityType($definition) {
     $definition += [

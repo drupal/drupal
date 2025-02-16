@@ -121,6 +121,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
 
   /**
    * @return array
+   *   An array of test data for testAssembleWithLocalUri.
    */
   public static function providerTestAssembleWithLocalUri() {
     return [

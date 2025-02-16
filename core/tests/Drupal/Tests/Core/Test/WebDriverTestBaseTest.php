@@ -47,6 +47,7 @@ class WebDriverTestBaseTest extends UnitTestCase {
    *   environment variable will be unset.
    *
    * @return void
+   *   No return value.
    */
   private function putEnv(string $variable, ?string $value): void {
     if (is_string($value)) {

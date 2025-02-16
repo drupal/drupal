@@ -678,6 +678,8 @@ class FormBuilderTest extends FormTestBase {
    * Data provider for testChildAccessInheritance.
    *
    * @return array
+   *   An array of test cases, each containing a form element structure and
+   *   its expected access results.
    */
   public static function providerTestChildAccessInheritance() {
     $data = [];
@@ -985,6 +987,8 @@ class FormBuilderTest extends FormTestBase {
    * Data provider for testFormTokenCacheability.
    *
    * @return array
+   *   An array of test cases, each containing a form token, the authentication,
+   *   request method, and expected cacheability outcome.
    */
   public static function providerTestFormTokenCacheability() {
     return [

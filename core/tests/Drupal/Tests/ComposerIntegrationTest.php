@@ -77,6 +77,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    * Data provider for all the composer.json provided by Drupal core.
    *
    * @return array
+   *   An array of composer.json file paths.
    */
   public static function providerTestComposerJson(): array {
     $data = [];
@@ -134,6 +135,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    * Data provider for the scaffold files test for Drupal core.
    *
    * @return array
+   *   An array of scaffold file mappings.
    */
   public static function providerTestExpectedScaffoldFiles() {
     return [

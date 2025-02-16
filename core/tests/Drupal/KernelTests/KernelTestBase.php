@@ -296,6 +296,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
   /**
    * @return string
+   *   The database prefix string used to isolate test database tables.
    */
   public function getDatabasePrefix() {
     return $this->databasePrefix;
@@ -971,6 +972,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *   The fully-qualified class name of this test.
    *
    * @return array
+   *   An array of modules to install.
    */
   private static function getModulesToEnable($class) {
     $modules = [];

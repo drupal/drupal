@@ -204,6 +204,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
    * Gets all libraries for core and all installed modules.
    *
    * @return \Drupal\Core\Extension\Extension[]
+   *   An array of discovered libraries keyed by extension name.
    */
   protected function getAllLibraries() {
     $modules = \Drupal::moduleHandler()->getModuleList();

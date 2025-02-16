@@ -38,6 +38,7 @@ class IsFrontPathCacheContextTest extends UnitTestCase {
    *   Whether the page is the front page.
    *
    * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\Core\Path\PathMatcherInterface>
+   *   The path matcher prophecy.
    */
   protected function createPathMatcher($is_front): ObjectProphecy {
     $path_matcher = $this->prophesize(PathMatcherInterface::class);

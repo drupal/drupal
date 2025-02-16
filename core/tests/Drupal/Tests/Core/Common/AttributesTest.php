@@ -18,6 +18,7 @@ class AttributesTest extends UnitTestCase {
    * Provides data for the Attribute test.
    *
    * @return array
+   *   An array of attributes, expected output, and descriptions.
    */
   public static function providerTestAttributeData() {
     return [

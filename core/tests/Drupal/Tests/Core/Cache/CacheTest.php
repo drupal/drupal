@@ -20,6 +20,7 @@ class CacheTest extends UnitTestCase {
    * Provides a list of cache tags arrays.
    *
    * @return array
+   *   An array of cache tags arrays.
    */
   public function validateTagsProvider() {
     return [
@@ -49,6 +50,7 @@ class CacheTest extends UnitTestCase {
    * Provides a list of pairs of cache tags arrays to be merged.
    *
    * @return array
+   *   An array of pairs of cache tags arrays to be merged.
    */
   public static function mergeTagsProvider() {
     return [
@@ -76,6 +78,7 @@ class CacheTest extends UnitTestCase {
    * Provides a list of pairs of cache tags arrays to be merged.
    *
    * @return array
+   *   An array of pairs of cache tags arrays to be merged.
    */
   public static function mergeMaxAgesProvider() {
     return [
@@ -115,6 +118,7 @@ class CacheTest extends UnitTestCase {
    * Provides a list of pairs of cache contexts arrays to be merged.
    *
    * @return array
+   *   An array of pairs of cache contexts arrays to be merged.
    */
   public static function mergeCacheContextsProvide() {
     return [
@@ -154,6 +158,7 @@ class CacheTest extends UnitTestCase {
    * Provides a list of pairs of (prefix, suffixes) to build cache tags from.
    *
    * @return array
+   *   An array of pairs of (prefix, suffixes) to build cache tags from.
    */
   public static function buildTagsProvider() {
     return [

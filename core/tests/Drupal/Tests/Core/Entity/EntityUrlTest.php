@@ -472,6 +472,7 @@ class EntityUrlTest extends UnitTestCase {
    *   The getEntityType() and entityTypeBundleInfo() methods are always mocked.
    *
    * @return \Drupal\Tests\Core\Entity\StubEntityBase&\PHPUnit\Framework\MockObject\MockObject
+   *   A mock entity object with predefined methods and properties for testing.
    */
   protected function getEntity(string $class, array $values, array $methods = []): StubEntityBase&MockObject {
     $methods = array_merge($methods, ['getEntityType', 'entityTypeBundleInfo']);

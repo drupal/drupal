@@ -71,6 +71,7 @@ class CacheableMetadataTest extends UnitTestCase {
    * Provides test data for testMerge().
    *
    * @return array
+   *   An array of test cases, each containing two CacheableMetadata objects and their expected merged result.
    */
   public static function providerTestMerge() {
     return [
@@ -150,6 +151,7 @@ class CacheableMetadataTest extends UnitTestCase {
    * Provides test data for createFromRenderArray().
    *
    * @return array
+   *   An array of test cases, each containing a render array and the expected CacheableMetadata object.
    */
   public static function providerTestCreateFromRenderArray() {
     $data = [];
@@ -186,6 +188,7 @@ class CacheableMetadataTest extends UnitTestCase {
    * Provides test data for createFromObject().
    *
    * @return array
+   *   An array of test cases, each containing an object and the expected CacheableMetadata.
    */
   public static function providerTestCreateFromObject() {
     $data = [];

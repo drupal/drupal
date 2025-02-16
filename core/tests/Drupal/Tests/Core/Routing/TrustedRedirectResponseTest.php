@@ -74,6 +74,7 @@ class TrustedRedirectResponseTest extends UnitTestCase {
 
   /**
    * @return array
+   *   An array of test cases, each containing a redirect response instance.
    */
   public static function providerCreateFromRedirectResponse() {
     return [

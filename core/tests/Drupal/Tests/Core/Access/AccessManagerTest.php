@@ -506,6 +506,7 @@ class AccessManagerTest extends UnitTestCase {
    * Data provider for testCheckException.
    *
    * @return array
+   *   An array of data for check exceptions.
    */
   public static function providerCheckException() {
     return [

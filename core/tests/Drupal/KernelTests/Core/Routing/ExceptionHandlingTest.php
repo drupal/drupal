@@ -146,6 +146,7 @@ class ExceptionHandlingTest extends KernelTestBase {
    *   The path to test.
    *
    * @return \Drupal\Core\Render\HtmlResponse
+   *   The generated 404 response.
    *
    * @see \Drupal\system\Tests\Routing\ExceptionHandlingTest::testExceptionResponseGeneratedForOriginalRequest()
    */

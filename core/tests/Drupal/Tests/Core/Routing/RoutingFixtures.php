@@ -83,6 +83,7 @@ class RoutingFixtures {
    * Returns a standard set of routes for testing.
    *
    * @return \Symfony\Component\Routing\RouteCollection
+   *   An array of of predefined routes for testing.
    */
   public function sampleRouteCollection() {
     $collection = new RouteCollection();
@@ -115,6 +116,7 @@ class RoutingFixtures {
    * Returns a complex set of routes for testing.
    *
    * @return \Symfony\Component\Routing\RouteCollection
+   *   A RouteCollection with varied route structures.
    */
   public function complexRouteCollection() {
     $collection = new RouteCollection();
@@ -145,6 +147,7 @@ class RoutingFixtures {
    * Returns a complex set of routes for testing.
    *
    * @return \Symfony\Component\Routing\RouteCollection
+   *   A RouteCollection containing routes with mixed casing and Unicode characters.
    */
   public function mixedCaseRouteCollection() {
     $collection = new RouteCollection();
@@ -179,6 +182,7 @@ class RoutingFixtures {
    * Returns a complex set of routes for testing.
    *
    * @return \Symfony\Component\Routing\RouteCollection
+   *   A RouteCollection containing duplicate paths with different route names.
    */
   public function duplicatePathsRouteCollection() {
     $collection = new RouteCollection();
@@ -217,6 +221,7 @@ class RoutingFixtures {
    * Returns a Content-type restricted set of routes for testing.
    *
    * @return \Symfony\Component\Routing\RouteCollection
+   *   A RouteCollection containing routes with Content-type restrictions for testing.
    */
   public function contentRouteCollection() {
     $collection = new RouteCollection();

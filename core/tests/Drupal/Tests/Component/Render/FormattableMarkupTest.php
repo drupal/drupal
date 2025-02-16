@@ -93,6 +93,7 @@ class FormattableMarkupTest extends TestCase {
    * Data provider for FormattableMarkupTest::testUnexpectedPlaceholder().
    *
    * @return array
+   *   An array of test cases.
    */
   public static function providerTestUnexpectedPlaceholder() {
     return [

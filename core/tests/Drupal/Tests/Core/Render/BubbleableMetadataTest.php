@@ -68,6 +68,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Provides test data for testMerge().
    *
    * @return array
+   *   An array of test data for testMerge().
    */
   public static function providerTestMerge() {
     return [
@@ -143,6 +144,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Provides test data for testApplyTo().
    *
    * @return array
+   *   An array of test data for testApplyTo().
    */
   public static function providerTestApplyTo() {
     $data = [];
@@ -207,6 +209,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Provides test data for createFromRenderArray().
    *
    * @return array
+   *   An array of test data for createFromRenderArray().
    */
   public static function providerTestCreateFromRenderArray() {
     $data = [];
@@ -401,6 +404,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Data provider for testMergeAttachmentsHtmlHeadMerging.
    *
    * @return array
+   *   An array of test data for testMergeAttachmentsHtmlHeadMerging.
    */
   public static function providerTestMergeAttachmentsHtmlHeadMerging() {
     $meta = [
@@ -474,6 +478,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Data provider for testMergeAttachmentsHtmlHeadLinkMerging.
    *
    * @return array
+   *   An array of test data for testMergeAttachmentsHtmlHeadLinkMerging.
    */
   public static function providerTestMergeAttachmentsHtmlHeadLinkMerging() {
     $rel = [
@@ -540,6 +545,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Data provider for testMergeAttachmentsHttpHeaderMerging.
    *
    * @return array
+   *   An array of test data for testMergeAttachmentsHttpHeaderMerging.
    */
   public static function providerTestMergeAttachmentsHttpHeaderMerging() {
     $content_type = [
@@ -614,6 +620,7 @@ class BubbleableMetadataTest extends UnitTestCase {
    * Provides test data for testMerge().
    *
    * @return array
+   *   An array of test data for testMerge().
    */
   public function providerTestAddCacheableDependency() {
     return [

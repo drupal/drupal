@@ -69,7 +69,10 @@ class CryptTest extends TestCase {
   /**
    * Provides data for self::testHashBase64().
    *
-   * @return array Test data.
+   * @return array
+   *   An array of test cases. Each test case contains:
+   *   - string $data: The input string to hash.
+   *   - string $expected_hash: The expected Base64-encoded hash value.
    */
   public static function providerTestHashBase64() {
     return [
@@ -89,7 +92,11 @@ class CryptTest extends TestCase {
   /**
    * Provides data for self::testHmacBase64().
    *
-   * @return array Test data.
+   * @return array
+   *   An array of test cases. Each test case contains:
+   *   - string $data: The input string to hash.
+   *   - string $key: The key to use in the hashing process.
+   *   - string $expected_hmac: The expected Base64-encoded HMAC value.
    */
   public static function providerTestHmacBase64() {
     return [
@@ -105,7 +112,10 @@ class CryptTest extends TestCase {
   /**
    * Provides data for self::testHmacBase64().
    *
-   * @return array Test data.
+   * @return array
+   *   An array of test cases. Each test case contains:
+   *   - string $data: The input string to hash.
+   *   - string $key: The key to use in the hashing process.
    */
   public static function providerTestHmacBase64Invalid() {
     return [

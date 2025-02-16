@@ -198,6 +198,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doCreate
    *
    * @return \Drupal\Core\Entity\EntityInterface
+   *   The created entity with ID, language code, and UUID set.
    */
   public function testCreate() {
     $this->cacheTagsInvalidator->invalidateTags(Argument::cetera())->shouldNotBeCalled();
@@ -253,6 +254,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    *   The entity to test.
    *
    * @return \Drupal\Core\Entity\EntityInterface
+   *   The saved entity after insertion.
    *
    * @depends testCreate
    */
@@ -306,6 +308,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    *   The entity to test.
    *
    * @return \Drupal\Core\Entity\EntityInterface
+   *   The saved entity after update.
    *
    * @depends testSaveInsert
    */
@@ -696,6 +699,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    *   (optional) The methods to mock.
    *
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface&\PHPUnit\Framework\MockObject\MockObject
+   *   A mocked configuration entity instance.
    */
   public function getMockEntity(array $values = [], array $methods = []): ConfigEntityInterface&MockObject {
     return $this->getMockBuilder(StubConfigEntity::class)

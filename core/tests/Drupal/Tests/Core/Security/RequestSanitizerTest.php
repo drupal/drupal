@@ -106,6 +106,7 @@ class RequestSanitizerTest extends UnitTestCase {
    * Data provider for testRequestSanitization.
    *
    * @return array
+   *   An array of test data for testRequestSanitization.
    */
   public static function providerTestRequestSanitization() {
     $tests = [];

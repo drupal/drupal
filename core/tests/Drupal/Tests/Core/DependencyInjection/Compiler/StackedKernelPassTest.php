@@ -155,6 +155,7 @@ class StackedKernelPassTest extends UnitTestCase {
    *   The priority to be used for the tag.
    *
    * @return \Symfony\Component\DependencyInjection\Definition
+   *   The middleware definition.
    */
   protected function createMiddlewareServiceDefinition($tag = TRUE, $priority = 0) {
     $definition = new Definition('Symfony\Component\HttpKernel\HttpKernelInterface', ['test']);

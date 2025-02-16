@@ -799,6 +799,7 @@ class UrlTest extends UnitTestCase {
    *   The account to test.
    *
    * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   *   The mocked access manager.
    */
   protected function getMockAccessManager($access, $account = NULL) {
     $access_manager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');

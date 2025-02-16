@@ -127,6 +127,7 @@ class ContentImportTest extends BrowserTestBase {
 
   /**
    * @return array<array<mixed>>
+   *   An array of test cases, each containing an existing entity handling mode.
    */
   public static function providerImportEntityThatAlreadyExists(): array {
     return [

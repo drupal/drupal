@@ -30,6 +30,8 @@ class PluginBaseTest extends TestCase {
    * Returns test data for testGetPluginId().
    *
    * @return array
+   *   An array of test cases, where each item contains a plugin ID and
+   *   the expected plugin ID result.
    */
   public static function providerTestGetPluginId() {
     return [
@@ -56,6 +58,8 @@ class PluginBaseTest extends TestCase {
    * Returns test data for testGetBaseId().
    *
    * @return array
+   *   An array of test cases, where each item contains a plugin ID and
+   *   the expected base ID result.
    */
   public static function providerTestGetBaseId() {
     return [
@@ -82,6 +86,8 @@ class PluginBaseTest extends TestCase {
    * Returns test data for testGetDerivativeId().
    *
    * @return array
+   *   An array of test cases, where each item contains a plugin ID and
+   *   the expected derivative ID result.
    */
   public static function providerTestGetDerivativeId() {
     return [

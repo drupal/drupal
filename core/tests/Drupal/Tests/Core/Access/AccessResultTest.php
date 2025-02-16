@@ -940,6 +940,7 @@ class AccessResultTest extends UnitTestCase {
    * Provides data for the testAllowedIfHasPermissions() method.
    *
    * @return array
+   *   An array of test scenarios with permissions, logic, and expected result.
    */
   public static function providerTestAllowedIfHasPermissions() {
     $access_result = AccessResult::allowedIf(FALSE);

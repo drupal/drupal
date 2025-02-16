@@ -51,6 +51,7 @@ class FormattableMarkupKernelTest extends KernelTestBase {
 
   /**
    * @return array
+   *   Data provider for testFormattableMarkupUri().
    */
   public static function providerTestFormattableMarkupUri() {
     $data = [];
@@ -113,6 +114,7 @@ class FormattableMarkupKernelTest extends KernelTestBase {
 
   /**
    * @return array
+   *   Data provider for testFormattableMarkupUriWithExceptionUri().
    */
   public static function providerTestFormattableMarkupUriWithException() {
     $data = [];

@@ -448,6 +448,7 @@ class TwigExtensionTest extends UnitTestCase {
    * Provides data for ::testTwigAddSuggestionFilter().
    *
    * @return \Iterator
+   *   An iterator of test data.
    */
   public static function providerTestTwigAddSuggestionFilter(): \Iterator {
     yield 'suggestion should be added' => [
@@ -564,6 +565,7 @@ class TwigExtensionTest extends UnitTestCase {
    * Provides data for ::testTwigAddClass().
    *
    * @return \Iterator
+   *   An iterator of test data for ::testTwigAddClass().
    */
   public static function providerTestTwigAddClass(): \Iterator {
     yield 'should add a class on element' => [
@@ -614,6 +616,7 @@ class TwigExtensionTest extends UnitTestCase {
    * A data provider for ::testTwigSetAttribute().
    *
    * @return \Iterator
+   *   An iterator of test data for ::testTwigSetAttribute().
    */
   public static function providerTestTwigSetAttribute(): \Iterator {
     yield 'should add attributes on element' => [

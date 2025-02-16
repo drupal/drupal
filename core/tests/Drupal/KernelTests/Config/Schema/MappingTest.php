@@ -167,6 +167,7 @@ class MappingTest extends KernelTestBase {
    * @see https://www.drupal.org/files/ConfigSchemaCheatSheet2.0.pdf
    *
    * @return \Generator
+   *   The test cases.
    */
   public static function providerMappingInterpretation(): \Generator {
     $available_block_settings_types = [

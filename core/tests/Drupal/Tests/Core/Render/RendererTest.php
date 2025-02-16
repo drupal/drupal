@@ -69,6 +69,7 @@ class RendererTest extends RendererTestBase {
    * Provides a list of render arrays to test basic rendering.
    *
    * @return array
+   *   An array of render arrays and their expected output.
    */
   public static function providerTestRenderBasic(): array {
     $data = [];
@@ -672,6 +673,7 @@ class RendererTest extends RendererTestBase {
    * Provides a list of render array iterations.
    *
    * @return array
+   *   An array of render arrays.
    */
   public static function providerRenderTwice() {
     return [
@@ -726,6 +728,7 @@ class RendererTest extends RendererTestBase {
    * Provides a list of both booleans.
    *
    * @return array
+   *   A list of boolean values and AccessResult objects.
    */
   public static function providerAccessValues() {
     return [
@@ -801,6 +804,7 @@ class RendererTest extends RendererTestBase {
    * Provides a list of access conditions and expected cache metadata.
    *
    * @return array
+   *   An array of access conditions and expected cache metadata.
    */
   public static function providerRenderCache() {
     return [

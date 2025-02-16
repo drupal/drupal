@@ -80,6 +80,7 @@ class ErrorTest extends UnitTestCase {
    * Data provider for testFormatBacktrace.
    *
    * @return array
+   *   An array of test cases, each containing a backtrace array and its expected formatted string.
    */
   public static function providerTestFormatBacktrace(): array {
     $data = [];

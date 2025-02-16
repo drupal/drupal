@@ -51,6 +51,7 @@ class OpenOffCanvasDialogCommandTest extends UnitTestCase {
    * The data provider for potential dialog positions.
    *
    * @return array
+   *   An array of dialog positions.
    */
   public static function dialogPosition() {
     return [
