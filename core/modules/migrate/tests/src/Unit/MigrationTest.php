@@ -249,6 +249,194 @@ class MigrationTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Tests the addition of required dependencies.
+   *
+   * @param string[]|null $initial_dependency
+   *   The migration dependencies configuration being tested.
+   * @param string[] $addition
+   *   Add array of additions.
+   * @param string[] $expected
+   *   The migration dependencies configuration array expected.
+   *
+   * @covers ::addRequiredDependencies
+   * @dataProvider providerTestAddRequiredDependencies
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   */
+  public function testAddRequiredDependencies(?array $initial_dependency, array $addition, array $expected): void {
+    $migration = new TestMigration($initial_dependency);
+    $migration->setMigrationPluginManager($this->getMockPluginManager());
+
+    $migration->addRequiredDependencies($addition);
+    $this->assertSame($expected, $migration->getMigrationDependencies());
+  }
+
+  /**
+   * Provides data for testAddRequiredDependencies.
+   */
+  public static function providerTestAddRequiredDependencies(): array {
+    return [
+      'NULL' => [
+        NULL,
+        ['foo'],
+        [
+          'required' => ['foo'],
+          'optional' => [],
+        ],
+      ],
+      'empty' => [
+        [],
+        ['foo', 'bar'],
+        [
+          'required' => ['foo', 'bar'],
+          'optional' => [],
+        ],
+      ],
+      'add empty' => [
+        ['required' => ['block']],
+        [],
+        [
+          'required' => ['block'],
+          'optional' => [],
+        ],
+      ],
+      'add one' => [
+        ['required' => ['block']],
+        ['foo'],
+        [
+          'required' => ['block', 'foo'],
+          'optional' => [],
+        ],
+      ],
+      'add two' => [
+        ['required' => ['block']],
+        ['foo', 'bar'],
+        [
+          'required' => ['block', 'foo', 'bar'],
+          'optional' => [],
+        ],
+      ],
+      'add existing' => [
+        ['required' => ['foo']],
+        ['foo', 'bar'],
+        [
+          'required' => [0 => 'foo', 2 => 'bar'],
+          'optional' => [],
+        ],
+      ],
+      'add two, with optional' => [
+        ['required' => ['block'], 'optional' => ['foo']],
+        ['foo', 'bar'],
+        [
+          'required' => ['block', 'foo', 'bar'],
+          'optional' => ['foo'],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Tests the addition of optional dependencies.
+   *
+   * @param string[]|null $initial_dependency
+   *   The migration dependencies configuration being tested.
+   * @param string[] $addition
+   *   Add array of additions.
+   * @param string[] $expected
+   *   The migration dependencies configuration array expected.
+   *
+   * @covers ::addOptionalDependencies
+   * @dataProvider providerTestAddOptionalDependencies
+   */
+  public function testAddOptionalDependencies(?array $initial_dependency, array $addition, array $expected): void {
+    $migration = new TestMigration($initial_dependency);
+    $migration->setMigrationPluginManager($this->getMockPluginManager());
+
+    $migration->addOptionalDependencies($addition);
+    $this->assertSame($expected, $migration->getMigrationDependencies());
+  }
+
+  /**
+   * Provides data for testAddOptionalDependencies.
+   */
+  public static function providerTestAddOptionalDependencies(): array {
+    return [
+      'NULL' => [
+        NULL,
+        ['foo'],
+        [
+          'required' => [],
+          'optional' => ['foo'],
+        ],
+      ],
+      'empty' => [
+        [],
+        ['foo', 'bar'],
+        [
+          'required' => [],
+          'optional' => ['foo', 'bar'],
+        ],
+      ],
+      'add empty' => [
+        ['optional' => ['block']],
+        [],
+        [
+          'optional' => ['block'],
+          'required' => [],
+        ],
+      ],
+      'add one' => [
+        ['optional' => ['block']],
+        ['foo'],
+        [
+          'optional' => ['block', 'foo'],
+          'required' => [],
+        ],
+      ],
+      'add two' => [
+        ['optional' => ['block']],
+        ['foo', 'bar'],
+        [
+          'optional' => ['block', 'foo', 'bar'],
+          'required' => [],
+        ],
+      ],
+      'add existing' => [
+        ['optional' => ['foo']],
+        ['foo', 'bar'],
+        [
+          'optional' => [0 => 'foo', 1 => 'bar'],
+          'required' => [],
+        ],
+      ],
+      'add two, with optional' => [
+        ['optional' => ['block'], 'required' => ['foo']],
+        ['foo', 'bar'],
+        [
+          'optional' => ['block', 'foo', 'bar'],
+          'required' => ['foo'],
+        ],
+      ],
+    ];
+  }
+
+  // Set the plugin manager.
+
+  /**
+   * Returns a mock MigrationPluginManager.
+   *
+   * @return \Drupal\migrate\Plugin\MigrationPluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   *   A configured MigrationPluginManager test mock.
+   */
+  public function getMockPluginManager() {
+    $plugin_manager = $this->createMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
+    $plugin_manager->expects($this->exactly(2))
+      ->method('expandPluginIds')
+      ->willReturnArgument(0);
+    return $plugin_manager;
+  }
+
 }
 
 /**
@@ -258,9 +446,17 @@ class TestMigration extends Migration {
 
   /**
    * Constructs an instance of TestMigration object.
+   *
+   * @param string[]|null $initial_dependency
+   *   An associative array of required and optional migrations IDs, keyed by
+   *   'required' and 'optional'.
    */
-  public function __construct() {
+  public function __construct(?array $initial_dependency = NULL) {
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
+    if ($initial_dependency) {
+      $this->migration_dependencies = $initial_dependency;
+    }
+    $this->requirements = ['require1', 'require2'];
   }
 
   /**

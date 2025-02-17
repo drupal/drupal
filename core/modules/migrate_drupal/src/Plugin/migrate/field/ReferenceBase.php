@@ -34,10 +34,7 @@ abstract class ReferenceBase extends FieldPluginBase {
     parent::alterFieldInstanceMigration($migration);
 
     // Add the reference migration as a required dependency to this migration.
-    $migration_dependencies = $migration->getMigrationDependencies();
-    array_push($migration_dependencies['required'], $this->getEntityTypeMigrationId());
-    $migration_dependencies['required'] = array_unique($migration_dependencies['required']);
-    $migration->set('migration_dependencies', $migration_dependencies);
+    $migration->addRequiredDependencies([$this->getEntityTypeMigrationId()]);
   }
 
   /**
