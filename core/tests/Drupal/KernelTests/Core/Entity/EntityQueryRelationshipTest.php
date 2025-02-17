@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Entity\Query\QueryException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -222,6 +223,35 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
       ->accessCheck(FALSE)
       ->condition('langcode.language.foo', 'bar')
       ->execute();
+  }
+
+  /**
+   * Tests a non-existent field name in a complex query relationship.
+   *
+   * @dataProvider providerTestInvalidFieldName
+   */
+  public function testInvalidFieldName(string $field_name): void {
+    $this->expectException(QueryException::class);
+    $this->expectExceptionMessage("'non_existent_field_name' not found");
+
+    // Check that non-existent field names in a complex relationship query
+    // throws a meaningful exception.
+    $this->container->get('entity_type.manager')
+      ->getStorage('entity_test')
+      ->getQuery()
+      ->accessCheck()
+      ->condition($field_name, $this->randomString(), '=')
+      ->execute();
+  }
+
+  /**
+   * Data provider for testInvalidFieldName().
+   */
+  public static function providerTestInvalidFieldName(): array {
+    return [
+      ['non_existent_field_name.entity:user.name.value'],
+      ['user_id.entity:user.non_existent_field_name.value'],
+    ];
   }
 
   /**
