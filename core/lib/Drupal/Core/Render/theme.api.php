@@ -556,7 +556,7 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  * @param string $hook
  *   The name of the theme hook.
  */
-function hook_preprocess(&$variables, $hook) {
+function hook_preprocess(&$variables, $hook): void {
   static $hooks;
 
   // Add contextual links to the variables, if the user has permission.
@@ -807,7 +807,7 @@ function hook_themes_uninstalled(array $themes): void {
  * @return string
  *   The file extension the theme engine will recognize.
  */
-function hook_extension() {
+function hook_extension(): string {
   // Extension for template base names in Twig.
   return '.html.twig';
 }
@@ -833,7 +833,7 @@ function hook_extension() {
  *   The output generated from the template. In most cases this will be a string
  *   containing HTML markup.
  */
-function hook_render_template($template_file, $variables) {
+function hook_render_template($template_file, $variables): string|\Stringable {
   $twig_service = \Drupal::service('twig');
 
   return $twig_service->loadTemplate($template_file)->render($variables);

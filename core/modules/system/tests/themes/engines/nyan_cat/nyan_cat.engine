@@ -21,14 +21,14 @@ function nyan_cat_theme($existing, $type, $theme, $path): array {
 /**
  * Implements hook_extension().
  */
-function nyan_cat_extension() {
+function nyan_cat_extension(): string {
   return '.nyan-cat.html';
 }
 
 /**
  * Implements hook_render_template().
  */
-function nyan_cat_render_template($template_file, $variables) {
+function nyan_cat_render_template($template_file, $variables): string {
   $output = str_replace('div', 'nyancat', file_get_contents(\Drupal::root() . '/' . $template_file));
   foreach ($variables as $key => $variable) {
     if (str_contains($output, '9' . $key)) {

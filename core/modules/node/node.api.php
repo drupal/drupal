@@ -315,12 +315,12 @@ function hook_node_search_result(NodeInterface $node): array {
  * @param \Drupal\node\NodeInterface $node
  *   The node being indexed.
  *
- * @return string
+ * @return string|\Stringable
  *   Additional node information to be indexed.
  *
  * @ingroup entity_crud
  */
-function hook_node_update_index(NodeInterface $node) {
+function hook_node_update_index(NodeInterface $node): string|\Stringable {
   $text = '';
   $ratings = \Drupal::database()->query('SELECT [title], [description] FROM {my_ratings} WHERE [nid] = :nid', [':nid' => $node->id()]);
   foreach ($ratings as $rating) {

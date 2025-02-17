@@ -13,7 +13,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Implements hook_views_pre_render().
  */
-function test_subtheme_views_pre_render(ViewExecutable $view) {
+function test_subtheme_views_pre_render(ViewExecutable $view): void {
   // We append the function name to the title for test to check for.
   $view->setTitle($view->getTitle() . ":" . __FUNCTION__);
 }
@@ -21,7 +21,7 @@ function test_subtheme_views_pre_render(ViewExecutable $view) {
 /**
  * Implements hook_views_post_render().
  */
-function test_subtheme_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+function test_subtheme_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache): void {
   // We append the function name to the title for test to check for.
   $view->setTitle($view->getTitle() . ":" . __FUNCTION__);
   if ($view->id() == 'test_page_display') {

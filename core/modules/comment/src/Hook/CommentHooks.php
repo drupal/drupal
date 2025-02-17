@@ -337,7 +337,7 @@ class CommentHooks {
    * Implements hook_node_update_index().
    */
   #[Hook('node_update_index')]
-  public function nodeUpdateIndex(EntityInterface $node) {
+  public function nodeUpdateIndex(EntityInterface $node): string {
     $index_comments =& drupal_static('comment_node_update_index');
     if ($index_comments === NULL) {
       // Do not index in the following three cases:

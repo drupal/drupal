@@ -81,7 +81,7 @@ function module_test_load($param) {
 /**
  * Implements hook_modules_installed().
  */
-function module_test_modules_installed($modules) {
+function module_test_modules_installed($modules): void {
   // Record the ordered list of modules that were passed in to this hook so we
   // can check that the modules were enabled in the correct sequence.
   \Drupal::state()->set('module_test.install_order', $modules);
@@ -90,7 +90,7 @@ function module_test_modules_installed($modules) {
 /**
  * Implements hook_modules_uninstalled().
  */
-function module_test_modules_uninstalled($modules) {
+function module_test_modules_uninstalled($modules): void {
   // Record the ordered list of modules that were passed in to this hook so we
   // can check that the modules were uninstalled in the correct sequence.
   \Drupal::state()->set('module_test.uninstall_order', $modules);

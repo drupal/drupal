@@ -5,6 +5,7 @@
  * Handles integration of Twig templates with the Drupal theme system.
  */
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Markup;
 use Twig\Error\RuntimeError;
@@ -19,14 +20,14 @@ function twig_theme($existing, $type, $theme, $path): array {
 /**
  * Implements hook_extension().
  */
-function twig_extension() {
+function twig_extension(): string {
   return '.html.twig';
 }
 
 /**
  * Implements hook_render_template().
  */
-function twig_render_template($template_file, array $variables) {
+function twig_render_template($template_file, array $variables): string|MarkupInterface {
   /** @var \Twig\Environment $twig_service */
   $twig_service = \Drupal::service('twig');
   try {

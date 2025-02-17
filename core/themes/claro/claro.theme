@@ -1605,7 +1605,7 @@ function claro_preprocess_fieldset__media_library_widget(array &$variables): voi
 /**
  * Implements hook_views_pre_render().
  */
-function claro_views_pre_render(ViewExecutable $view) {
+function claro_views_pre_render(ViewExecutable $view): void {
   $add_classes = function (&$option, array $classes_to_add) {
     $classes = preg_split('/\s+/', $option);
     $classes = array_filter($classes);

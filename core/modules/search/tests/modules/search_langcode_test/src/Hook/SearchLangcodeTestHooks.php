@@ -15,7 +15,7 @@ class SearchLangcodeTestHooks {
    * Implements hook_search_preprocess().
    */
   #[Hook('search_preprocess')]
-  public function searchPreprocess($text, $langcode = NULL) {
+  public function searchPreprocess($text, $langcode = NULL): string {
     if (isset($langcode) && $langcode == 'en') {
       // Add the alternate verb forms for the word "testing".
       if ($text == 'we are testing') {

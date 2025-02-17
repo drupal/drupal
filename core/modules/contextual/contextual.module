@@ -14,7 +14,7 @@ use Drupal\Core\Language\LanguageInterface;
  * @see contextual_page_attachments()
  * @see \Drupal\contextual\ContextualController::render()
  */
-function contextual_preprocess(&$variables, $hook, $info) {
+function contextual_preprocess(&$variables, $hook, $info): void {
   // Determine the primary theme function argument.
   if (!empty($info['variables'])) {
     $keys = array_keys($info['variables']);

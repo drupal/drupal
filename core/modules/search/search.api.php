@@ -46,7 +46,7 @@
  *
  * @ingroup search
  */
-function hook_search_preprocess($text, $langcode = NULL) {
+function hook_search_preprocess($text, $langcode = NULL): string {
   // If the language is not set, get it from the language manager.
   if (!isset($langcode)) {
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();

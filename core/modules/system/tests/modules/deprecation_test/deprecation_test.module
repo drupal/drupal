@@ -27,7 +27,7 @@ function deprecation_test_function() {
 /**
  * Implements hook_deprecated_hook().
  */
-function deprecation_test_deprecated_hook($arg) {
+function deprecation_test_deprecated_hook($arg): mixed {
   return $arg;
 }
 
