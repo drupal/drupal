@@ -18,7 +18,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [];
+  protected static $modules = ['field_test'];
 
   /**
    * The entity_test storage to create the test entities.
@@ -618,6 +618,44 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ['user_id' => 2],
       ['user_id' => 3],
       ['user_id' => 4],
+    ]);
+  }
+
+  /**
+   * Tests that entity query alter hooks are invoked for aggregate queries.
+   *
+   * Hook functions in field_test.module add additional conditions to the query
+   * removing entities with specific ids.
+   */
+  public function testAlterHook(): void {
+    $basicQuery = $this->entityStorage->getAggregateQuery()
+      ->accessCheck(FALSE)
+      ->groupBy('id');
+
+    // Verify assumptions about the unaltered result.
+    $query = clone $basicQuery;
+    $this->queryResult = $query->execute();
+    $this->assertResults([
+      ['id' => 1],
+      ['id' => 2],
+      ['id' => 3],
+      ['id' => 4],
+      ['id' => 5],
+      ['id' => 6],
+    ]);
+
+    // field_test_entity_query_alter() removes the entity with id '5'.
+    $query = clone $basicQuery;
+    $this->queryResult = $query
+      // Add a tag that no hook function matches.
+      ->addTag('entity_query_alter_hook_test')
+      ->execute();
+    $this->assertResults([
+      ['id' => 1],
+      ['id' => 2],
+      ['id' => 3],
+      ['id' => 4],
+      ['id' => 6],
     ]);
   }
 
