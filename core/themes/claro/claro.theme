@@ -695,7 +695,7 @@ function claro_form_menu_link_content_form_alter(&$form, FormStateInterface $for
     '#group' => 'advanced',
     '#title' => t('Display settings'),
     '#attributes' => ['class' => ['entity-meta__options']],
-    '#tree' => TRUE,
+    '#tree' => FALSE,
     '#accordion' => TRUE,
   ];
   if (!empty($form['weight'])) {
@@ -713,7 +713,7 @@ function claro_form_menu_link_content_form_alter(&$form, FormStateInterface $for
       '#group' => 'advanced',
       '#title' => t('Description'),
       '#attributes' => ['class' => ['entity-meta__description']],
-      '#tree' => TRUE,
+      '#tree' => FALSE,
       '#accordion' => TRUE,
       'description' => $form['description'],
     ];
