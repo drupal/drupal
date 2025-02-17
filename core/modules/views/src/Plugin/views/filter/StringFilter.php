@@ -354,7 +354,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
    * Adds a where clause for the operation, 'equals'.
    */
   public function opEqual($field) {
-    $this->query->addWhere($this->options['group'], $field, $this->value, $this->operator());
+    $this->query->addWhere($this->options['group'], $field, $this->connection->escapeLike($this->value), $this->operator());
   }
 
   protected function opContains($field) {
