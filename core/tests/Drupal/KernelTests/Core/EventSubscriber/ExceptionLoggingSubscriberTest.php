@@ -9,7 +9,6 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Tests that HTTP exceptions are logged correctly.
@@ -64,9 +63,7 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
 
   public static function exceptionDataProvider(): array {
     return [
-      // When a BadRequestException is thrown, DefaultHttpExceptionSubscriber
-      // will rethrow the exception.
-      [400, 'client error', RfcLogLevel::WARNING, HttpException::class],
+      [400, 'client error', RfcLogLevel::WARNING],
       [401, 'client error', RfcLogLevel::WARNING],
       [403, 'access denied', RfcLogLevel::WARNING],
       [404, 'page not found', RfcLogLevel::WARNING],
