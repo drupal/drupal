@@ -78,6 +78,14 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
    * Tests if exposed filtering via AJAX works for the "Content" View.
    */
   public function testExposedFiltering(): void {
+    // Create an account that can update the sticky flag.
+    $user = $this->drupalCreateUser([
+      'access content overview',
+      'administer nodes',
+      'edit any page content',
+    ]);
+    $this->drupalLogin($user);
+
     // Visit the View page.
     $this->drupalGet('admin/content');
 
