@@ -31,7 +31,7 @@ class CommentHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.comment':
         $output = '<h2>' . $this->t('About') . '</h2>';
@@ -68,6 +68,7 @@ class CommentHooks {
         $output = '<p>' . $this->t('This page provides a list of all comment types on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
         return $output;
     }
+    return NULL;
   }
 
   /**

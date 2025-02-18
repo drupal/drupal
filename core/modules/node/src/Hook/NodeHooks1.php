@@ -30,7 +30,7 @@ class NodeHooks1 {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     // Remind site administrators about the {node_access} table being flagged
     // for rebuild. We don't need to issue the message on the confirm form, or
     // while the rebuild is being processed.
@@ -108,6 +108,7 @@ class NodeHooks1 {
         $help = $type->getHelp();
         return !empty($help) ? Xss::filterAdmin($help) : '';
     }
+    return NULL;
   }
 
   /**

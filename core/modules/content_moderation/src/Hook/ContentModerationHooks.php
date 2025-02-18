@@ -41,7 +41,7 @@ class ContentModerationHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       // Main module help for the content_moderation module.
       case 'help.page.content_moderation':
@@ -78,6 +78,7 @@ class ContentModerationHooks {
         $output .= '</dl>';
         return $output;
     }
+    return NULL;
   }
 
   /**

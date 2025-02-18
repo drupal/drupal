@@ -20,7 +20,7 @@ class TaxonomyHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.taxonomy':
         $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
@@ -70,6 +70,7 @@ class TaxonomyHooks {
         $output = '<p>' . $this->t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
         return $output;
     }
+    return NULL;
   }
 
   /**

@@ -19,7 +19,7 @@ class HelpHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): string|array|null {
     switch ($route_name) {
       case 'help.main':
         $output = '<h2>' . $this->t('Getting Started') . '</h2>';
@@ -87,6 +87,7 @@ class HelpHooks {
         $help_home = Url::fromRoute('help.main')->toString();
         return '<p>' . $this->t('See the <a href=":help_page">Help page</a> for more topics.', [':help_page' => $help_home]) . '</p>';
     }
+    return NULL;
   }
 
   /**

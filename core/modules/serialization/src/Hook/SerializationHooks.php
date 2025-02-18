@@ -18,7 +18,7 @@ class SerializationHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.serialization':
         $output = '';
@@ -34,6 +34,7 @@ class SerializationHooks {
         $output .= '<p>' . $this->t('For more information, see the <a href=":doc_url">online documentation for the Serialization module</a>.', [':doc_url' => 'https://www.drupal.org/documentation/modules/serialization']) . '</p>';
         return $output;
     }
+    return NULL;
   }
 
 }

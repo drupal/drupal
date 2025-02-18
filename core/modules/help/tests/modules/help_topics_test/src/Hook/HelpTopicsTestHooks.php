@@ -16,11 +16,12 @@ class HelpTopicsTestHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.help_topics_test':
         return 'Some kind of non-empty output for testing';
     }
+    return NULL;
   }
 
   /**

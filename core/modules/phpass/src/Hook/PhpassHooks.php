@@ -18,7 +18,7 @@ class PhpassHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.phpass':
         $output = '';
@@ -31,6 +31,7 @@ class PhpassHooks {
         $output .= '<p>' . $this->t('Passwords created before Drupal 10.1.0 <strong>will not work</strong> unless they are used at least once while this module is installed. Make sure that you can log in before uninstalling this module.') . '</p>';
         return $output;
     }
+    return NULL;
   }
 
   /**

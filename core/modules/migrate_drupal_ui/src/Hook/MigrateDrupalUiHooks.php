@@ -18,7 +18,7 @@ class MigrateDrupalUiHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.migrate_drupal_ui':
         $output = '';
@@ -47,6 +47,7 @@ class MigrateDrupalUiHooks {
         $output .= '</dl>';
         return $output;
     }
+    return NULL;
   }
 
 }

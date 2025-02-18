@@ -67,7 +67,7 @@ class FieldHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.field':
         $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
@@ -160,6 +160,7 @@ class FieldHooks {
         $output .= '</dl>';
         return $output;
     }
+    return NULL;
   }
 
   /**

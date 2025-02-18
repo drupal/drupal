@@ -21,7 +21,7 @@ class SettingsTrayHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?array {
     switch ($route_name) {
       case 'help.page.settings_tray':
         $output = '<h2>' . $this->t('About') . '</h2>';
@@ -49,6 +49,7 @@ class SettingsTrayHooks {
         $output .= '</dl>';
         return ['#markup' => $output];
     }
+    return NULL;
   }
 
   /**

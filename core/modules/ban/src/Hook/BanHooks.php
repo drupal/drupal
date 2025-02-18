@@ -18,7 +18,7 @@ class BanHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.ban':
         $output = '';
@@ -34,6 +34,7 @@ class BanHooks {
       case 'ban.admin_page':
         return '<p>' . $this->t('IP addresses listed here are banned from your site. Banned addresses are completely forbidden from accessing the site and instead see a brief message explaining the situation.') . '</p>';
     }
+    return NULL;
   }
 
 }

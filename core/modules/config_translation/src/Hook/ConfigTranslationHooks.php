@@ -21,7 +21,7 @@ class ConfigTranslationHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.config_translation':
         $output = '';
@@ -62,6 +62,7 @@ class ConfigTranslationHooks {
         $output = '<p>' . $this->t('This page lists all configuration items on your site that have translatable text, like your site name, role names, etc.') . '</p>';
         return $output;
     }
+    return NULL;
   }
 
   /**

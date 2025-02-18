@@ -27,7 +27,7 @@ class PathHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.path':
         $output = '';
@@ -58,6 +58,7 @@ class PathHooks {
       case 'entity.path_alias.add_form':
         return '<p>' . $this->t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
     }
+    return NULL;
   }
 
   /**

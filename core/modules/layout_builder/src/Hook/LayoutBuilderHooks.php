@@ -38,7 +38,7 @@ class LayoutBuilderHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     // Add help text to the Layout Builder UI.
     if ($route_match->getRouteObject()->getOption('_layout_builder')) {
       $output = '<p>' . $this->t('This layout builder tool allows you to configure the layout of the main content area.') . '</p>';
@@ -82,6 +82,7 @@ class LayoutBuilderHooks {
         $output .= '</dl>';
         return $output;
     }
+    return NULL;
   }
 
   /**

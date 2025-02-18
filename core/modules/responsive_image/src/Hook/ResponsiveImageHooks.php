@@ -18,7 +18,7 @@ class ResponsiveImageHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.responsive_image':
         $output = '';
@@ -68,6 +68,7 @@ class ResponsiveImageHooks {
       case 'entity.responsive_image_style.collection':
         return '<p>' . $this->t('A responsive image style associates an image style with each breakpoint defined by your theme.') . '</p>';
     }
+    return NULL;
   }
 
   /**

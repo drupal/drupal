@@ -27,7 +27,7 @@ class FieldLayoutHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.field_layout':
         $output = '<h2>' . $this->t('About') . '</h2>';
@@ -37,6 +37,7 @@ class FieldLayoutHooks {
         ]) . '</p>';
         return $output;
     }
+    return NULL;
   }
 
   /**

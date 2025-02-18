@@ -25,7 +25,7 @@ class ImageHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.image':
         $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';
@@ -75,6 +75,7 @@ class ImageHooks {
         $effect_definition = $effect->getPluginDefinition();
         return isset($effect_definition['description']) ? '<p>' . $effect_definition['description'] . '</p>' : NULL;
     }
+    return NULL;
   }
 
   /**

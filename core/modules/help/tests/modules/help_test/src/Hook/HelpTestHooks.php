@@ -16,9 +16,10 @@ class HelpTestHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): null {
     // Do not implement a module overview page to test an empty implementation.
     // @see \Drupal\help\Tests\HelpTest
+    return NULL;
   }
 
 }

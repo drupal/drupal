@@ -28,7 +28,7 @@ class MenuUiHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-  public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match): ?string {
     switch ($route_name) {
       case 'help.page.menu_ui':
         $output = '';
@@ -60,6 +60,7 @@ class MenuUiHooks {
     elseif ($route_name == 'entity.menu.collection' && \Drupal::moduleHandler()->moduleExists('block') && \Drupal::currentUser()->hasPermission('administer blocks')) {
       return '<p>' . $this->t('Each menu has a corresponding block that is managed on the <a href=":blocks">Block layout page</a>.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';
     }
+    return NULL;
   }
 
   /**
