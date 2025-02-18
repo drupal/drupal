@@ -53,7 +53,7 @@ abstract class FieldUpdateActionBase extends ActionBase {
     $result = $object->access('update', $account, TRUE);
 
     foreach ($this->getFieldsToUpdate() as $field => $value) {
-      $result->andIf($object->{$field}->access('edit', $account, TRUE));
+      $result = $result->andIf($object->{$field}->access('edit', $account, TRUE));
     }
 
     return $return_as_object ? $result : $result->isAllowed();
