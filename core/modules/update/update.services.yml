@@ -25,3 +25,5 @@ services:
   update.route_subscriber:
     class: Drupal\update\Routing\UpdateRouteSubscriber
     arguments: ['@settings']
+    tags:
+      - { name: event_subscriber }
