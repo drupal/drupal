@@ -788,6 +788,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * Validate the options form.
    */
   public function validateExposeForm($form, FormStateInterface $form_state) {
+    $remember_role_keys = ['options', 'expose', 'remember_roles'];
+    $roles = $form_state->getValue($remember_role_keys);
+    $form_state->setValue($remember_role_keys, array_filter($roles));
     $identifier = $form_state->getValue(['options', 'expose', 'identifier']);
     $this->validateIdentifier($identifier, $form_state, $form['expose']['identifier']);
 

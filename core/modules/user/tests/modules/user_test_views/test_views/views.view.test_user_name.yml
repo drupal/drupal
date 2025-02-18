@@ -45,7 +45,6 @@ display:
             identifier: uid
             remember_roles:
               authenticated: authenticated
-              anonymous: '0'
           entity_type: user
           entity_field: uid
     display_plugin: default

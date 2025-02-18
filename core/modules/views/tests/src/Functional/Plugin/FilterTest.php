@@ -222,4 +222,52 @@ class FilterTest extends ViewTestBase {
     $this->assertSession()->pageTextContains('You selected the "Is equal to" operator as the default value but is not included in the list of limited operators.');
   }
 
+  /**
+   * Tests that disabled user roles of the "Remember the last selection" functionality are removed on save.
+   */
+  public function testRememberUserRoles(): void {
+    // Create a view for user entity and add settings for a role filter.
+    $post_data = [];
+    $post_data['label'] = $this->randomMachineName(16);
+    $post_data['id'] = 'user_list_view';
+    $post_data['description'] = $this->randomMachineName(16);
+    $post_data['show[wizard_key]'] = 'users';
+    $post_data['page[create]'] = 1;
+    $post_data['page[title]'] = $this->randomMachineName(16);
+    $post_data['page[path]'] = '/user_list_view';
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($post_data, 'Save and edit');
+    $this->assertEquals($post_data['page[path]'], $this->cssSelect('#views-page-1-path')[0]->getText());
+
+    // Add Role exposed filter.
+    $this->drupalGet('admin/structure/views/nojs/add-handler/user_list_view/page_1/filter');
+    $this->submitForm(['name[user__roles.roles_target_id]' => TRUE], 'Add and configure filter criteria');
+    $edit = ['options[expose_button][checkbox][checkbox]' => TRUE];
+    $this->drupalGet('admin/structure/views/nojs/handler/user_list_view/page_1/filter/roles_target_id');
+    $this->submitForm($edit, 'Expose filter');
+    $this->submitForm($edit, 'Apply');
+    $this->clickLink('User: Roles (exposed)');
+    $role_id = $this->drupalCreateRole([]);
+    $this->assertSession()->checkboxChecked('options[expose_button][checkbox][checkbox]');
+    $expose_settings = [
+      'options[expose][remember]' => 1,
+      "options[expose][remember_roles][$role_id]" => $role_id,
+      "options[expose][remember_roles][anonymous]" => '0',
+      "options[expose][remember_roles][authenticated]" => '0',
+    ];
+    $this->drupalGet('admin/structure/views/nojs/handler/user_list_view/page_1/filter/roles_target_id');
+    $this->submitForm($expose_settings, 'Apply');
+    $this->drupalGet('admin/structure/views/view/user_list_view/edit/page_1');
+    $this->submitForm([], 'Save');
+
+    // Load view and check settings.
+    $view = Views::getView('user_list_view');
+    $view->setDisplay('page_1');
+    $result = $view->display_handler->getOption('filters')['roles_target_id']['expose']['remember_roles'];
+    $expected = [
+      $role_id => $role_id,
+    ];
+    $this->assertSame($expected, $result);
+  }
+
 }
