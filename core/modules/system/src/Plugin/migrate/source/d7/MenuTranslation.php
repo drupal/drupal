@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\system\Plugin\migrate\source\Menu;
 
 // cspell:ignore objectindex plid textgroup
@@ -13,12 +14,11 @@ use Drupal\system\Plugin\migrate\source\Menu;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_menu_translation",
- *   source_module = "i18n_menu"
- * )
  */
+#[MigrateSource(
+  id: 'd7_menu_translation',
+  source_module: 'i18n_menu',
+)]
 class MenuTranslation extends Menu {
 
   /**

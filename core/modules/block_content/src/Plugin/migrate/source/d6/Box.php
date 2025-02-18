@@ -2,6 +2,7 @@
 
 namespace Drupal\block_content\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -11,12 +12,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_box",
- *   source_module = "block"
- * )
  */
+#[MigrateSource(
+  id: 'd6_box',
+  source_module: 'block',
+)]
 class Box extends DrupalSqlBase {
 
   /**

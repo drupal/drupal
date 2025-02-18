@@ -2,6 +2,7 @@
 
 namespace Drupal\search\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
 
@@ -13,12 +14,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\Variable
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_search_page",
- *   source_module = "search"
- * )
  */
+#[MigrateSource(
+  id: 'd7_search_page',
+  source_module: 'search',
+)]
 class SearchPage extends Variable {
 
   /**

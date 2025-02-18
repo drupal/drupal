@@ -2,6 +2,7 @@
 
 namespace Drupal\file\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -30,12 +31,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  * @see d7_file.yml
- *
- * @MigrateSource(
- *   id = "d7_file",
- *   source_module = "file"
- * )
  */
+#[MigrateSource(
+  id: 'd7_file',
+  source_module: 'file',
+)]
 class File extends DrupalSqlBase {
 
   /**

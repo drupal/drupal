@@ -4,6 +4,7 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
+use Drupal\migrate\Attribute\MigrateSource;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\source\EmptySource as BaseEmptySource;
@@ -18,12 +19,11 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\EmptySource
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "md_empty",
- *   source_module = "system",
- * )
  */
+#[MigrateSource(
+  id: 'md_empty',
+  source_module: 'system',
+)]
 class EmptySource extends BaseEmptySource implements ContainerFactoryPluginInterface, DependentPluginInterface {
 
   use DependencyTrait;

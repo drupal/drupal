@@ -3,6 +3,7 @@
 namespace Drupal\node\Plugin\migrate\source\d6;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\migrate\Attribute\MigrateSource;
 
 /**
  * Drupal 6 node revision source from database.
@@ -11,12 +12,11 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_node_revision",
- *   source_module = "node"
- * )
  */
+#[MigrateSource(
+  id: 'd6_node_revision',
+  source_module: 'node',
+)]
 class NodeRevision extends Node {
 
   /**

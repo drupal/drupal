@@ -2,18 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Plugin\migrate\source;
+namespace Drupal\migrate_plugin_config_test\Plugin\migrate\source;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\Core\Database\Query\SelectInterface;
 
 /**
  * Simple source for testing changing configuration.
- *
- * @MigrateSource(
- *   id = "simple_source",
- * )
  */
+#[MigrateSource('simple_source')]
 class SimpleSource extends SqlBase {
 
   /**

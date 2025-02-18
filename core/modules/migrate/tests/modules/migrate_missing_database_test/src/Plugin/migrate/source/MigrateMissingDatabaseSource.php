@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Drupal\migrate_missing_database_test\Plugin\migrate\source;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 
 /**
  * A simple migrate source for the missing database tests.
- *
- * @MigrateSource(
- *   id = "migrate_missing_database_test",
- *   source_module = "migrate_missing_database_test",
- *   requirements_met = true
- * )
  */
+#[MigrateSource(
+  id: 'migrate_missing_database_test',
+  source_module: 'migrate_missing_database_test',
+  requirements_met: TRUE,
+)]
 class MigrateMissingDatabaseSource extends SqlBase {
 
   /**

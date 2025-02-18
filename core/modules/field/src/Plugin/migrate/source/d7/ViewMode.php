@@ -2,6 +2,8 @@
 
 namespace Drupal\field\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
+
 /**
  * Drupal 7 view mode source from database.
  *
@@ -9,12 +11,11 @@ namespace Drupal\field\Plugin\migrate\source\d7;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_view_mode",
- *   source_module = "field"
- * )
  */
+#[MigrateSource(
+  id: 'd7_view_mode',
+  source_module: 'field',
+)]
 class ViewMode extends FieldInstance {
 
   /**

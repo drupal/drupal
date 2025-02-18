@@ -105,7 +105,7 @@ use Drupal\migrate\Row;
  * In this example, the constant 'foo' is defined with a value of 'bar'. It is
  * later used in the process pipeline to set the value of the field baz.
  *
- * @see \Drupal\migrate\Annotation\MigrateSource
+ * @see \Drupal\migrate\Attribute\MigrateSource
  * @see \Drupal\migrate\Plugin\MigrateIdMapInterface
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Plugin\MigrateSourceInterface

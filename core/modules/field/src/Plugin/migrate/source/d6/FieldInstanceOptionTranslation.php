@@ -2,6 +2,8 @@
 
 namespace Drupal\field\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
+
 // cspell:ignore cnfi
 
 /**
@@ -11,12 +13,11 @@ namespace Drupal\field\Plugin\migrate\source\d6;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_field_instance_option_translation",
- *   source_module = "i18ncck"
- * )
  */
+#[MigrateSource(
+  id: 'd6_field_instance_option_translation',
+  source_module: 'i18ncck',
+)]
 class FieldInstanceOptionTranslation extends FieldOptionTranslation {
 
   /**

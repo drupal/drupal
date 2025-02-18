@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -12,12 +13,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_user",
- *   source_module = "user"
- * )
  */
+#[MigrateSource(
+  id: 'd6_user',
+  source_module: 'user',
+)]
 class User extends DrupalSqlBase {
 
   /**

@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\EntityFieldDefinitionTrait;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -61,13 +62,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * For additional configuration keys, refer to the parent class:
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "content_entity",
- *   source_module = "migrate",
- *   deriver = "\Drupal\migrate\Plugin\migrate\source\ContentEntityDeriver",
- * )
  */
+#[MigrateSource(
+  id: "content_entity",
+  source_module: "migrate",
+  deriver: ContentEntityDeriver::class,
+)]
 class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginInterface {
   use EntityFieldDefinitionTrait;
 

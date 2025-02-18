@@ -47,8 +47,8 @@ use Drupal\migrate\Row;
  * @section sec_source Migrate API source plugins
  * Migrate API source plugins implement
  * \Drupal\migrate\Plugin\MigrateSourceInterface and usually extend
- * \Drupal\migrate\Plugin\migrate\source\SourcePluginBase. They are annotated
- * with \Drupal\migrate\Annotation\MigrateSource annotation and must be in
+ * \Drupal\migrate\Plugin\migrate\source\SourcePluginBase. They have the
+ * \Drupal\migrate\Attribute\MigrateSource attribute and must be in
  * namespace subdirectory 'Plugin\migrate\source' under the namespace of the
  * module that defines them. Migrate API source plugins are managed by the
  * \Drupal\migrate\Plugin\MigrateSourcePluginManager class.

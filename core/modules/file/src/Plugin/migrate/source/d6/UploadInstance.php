@@ -2,6 +2,7 @@
 
 namespace Drupal\file\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
 
@@ -14,12 +15,11 @@ use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_upload_instance",
- *   source_module = "upload"
- * )
  */
+#[MigrateSource(
+  id: 'd6_upload_instance',
+  source_module: 'upload',
+)]
 class UploadInstance extends DrupalSqlBase {
 
   use DummyQueryTrait;

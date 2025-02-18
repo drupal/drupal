@@ -2,6 +2,7 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -29,12 +30,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_term_node",
- *   source_module = "taxonomy"
- * )
  */
+#[MigrateSource(
+  id: 'd6_term_node',
+  source_module: 'taxonomy',
+)]
 class TermNode extends DrupalSqlBase {
 
   /**

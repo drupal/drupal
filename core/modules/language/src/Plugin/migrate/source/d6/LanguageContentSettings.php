@@ -2,6 +2,7 @@
 
 namespace Drupal\language\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -12,12 +13,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBas
- *
- * @MigrateSource(
- *   id = "d6_language_content_settings",
- *   source_module = "locale"
- * )
  */
+#[MigrateSource(
+  id: 'd6_language_content_settings',
+  source_module: 'locale',
+)]
 class LanguageContentSettings extends DrupalSqlBase {
 
   /**

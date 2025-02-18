@@ -2,6 +2,7 @@
 
 namespace Drupal\image\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
@@ -14,12 +15,11 @@ use Drupal\migrate\Row;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_imagecache_presets",
- *   source_module = "imagecache"
- * )
  */
+#[MigrateSource(
+  id: 'd6_imagecache_presets',
+  source_module: 'imagecache',
+)]
 class ImageCachePreset extends DrupalSqlBase {
 
   /**

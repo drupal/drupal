@@ -2,6 +2,7 @@
 
 namespace Drupal\filter\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
 
@@ -12,12 +13,11 @@ use Drupal\migrate\Row;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_filter_format",
- *   source_module = "filter"
- * )
  */
+#[MigrateSource(
+  id: 'd6_filter_format',
+  source_module: 'filter',
+)]
 class FilterFormat extends DrupalSqlBase {
 
   /**

@@ -18,6 +18,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * @see \Drupal\migrate\Plugin\MigrateDestinationInterface
  * @see \Drupal\migrate\Plugin\migrate\destination\DestinationBase
  * @see \Drupal\migrate\Attribute\MigrateProcess
+ * @see \Drupal\migrate\Attribute\MigrateSource
  * @see plugin_api
  *
  * @ingroup migration

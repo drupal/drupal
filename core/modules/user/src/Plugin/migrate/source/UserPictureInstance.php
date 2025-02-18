@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\migrate\source;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
 
@@ -14,12 +15,11 @@ use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @todo Support default picture?
- *
- * @MigrateSource(
- *   id = "user_picture_instance",
- *   source_module = "user"
- * )
  */
+#[MigrateSource(
+  id: 'user_picture_instance',
+  source_module: 'user',
+)]
 class UserPictureInstance extends DrupalSqlBase {
 
   use DummyQueryTrait;

@@ -2,6 +2,7 @@
 
 namespace Drupal\content_translation\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -11,12 +12,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_entity_translation_settings",
- *   source_module = "entity_translation"
- * )
  */
+#[MigrateSource(
+  id: 'd7_entity_translation_settings',
+  source_module: 'entity_translation',
+)]
 class EntityTranslationSettings extends DrupalSqlBase {
 
   /**

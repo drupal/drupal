@@ -2,6 +2,7 @@
 
 namespace Drupal\responsive_image\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -14,12 +15,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * the root of the theme.
  *
  * @see https://www.drupal.org/docs/8/theming-drupal-8/working-with-breakpoints-in-drupal-8
- *
- * @MigrateSource(
- *   id = "d7_responsive_image_styles",
- *   source_module = "picture"
- * )
  */
+#[MigrateSource(
+  id: 'd7_responsive_image_styles',
+  source_module: 'picture',
+)]
 class ResponsiveImageStyles extends DrupalSqlBase {
 
   /**

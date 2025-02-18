@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow;
 
 /**
@@ -12,12 +13,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow;
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_theme_settings",
- *   source_module = "system"
- * )
  */
+#[MigrateSource(
+  id: 'd7_theme_settings',
+  source_module: 'system',
+)]
 class ThemeSettings extends VariableMultiRow {
 
   /**

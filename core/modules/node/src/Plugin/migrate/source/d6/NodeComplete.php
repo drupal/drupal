@@ -2,6 +2,8 @@
 
 namespace Drupal\node\Plugin\migrate\source\d6;
 
+use Drupal\migrate\Attribute\MigrateSource;
+
 /**
  * Drupal 6 all node revisions source, including translation revisions.
  *
@@ -9,12 +11,11 @@ namespace Drupal\node\Plugin\migrate\source\d6;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d6_node_complete",
- *   source_module = "node"
- * )
  */
+#[MigrateSource(
+  id: 'd6_node_complete',
+  source_module: 'node',
+)]
 class NodeComplete extends NodeRevision {
 
   /**

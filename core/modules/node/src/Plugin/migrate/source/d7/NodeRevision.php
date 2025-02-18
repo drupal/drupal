@@ -2,6 +2,8 @@
 
 namespace Drupal\node\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
+
 /**
  * Drupal 7 node revision source from database.
  *
@@ -9,12 +11,11 @@ namespace Drupal\node\Plugin\migrate\source\d7;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_node_revision",
- *   source_module = "node"
- * )
  */
+#[MigrateSource(
+  id: 'd7_node_revision',
+  source_module: 'node',
+)]
 class NodeRevision extends Node {
 
   /**

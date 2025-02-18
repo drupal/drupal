@@ -2,6 +2,7 @@
 
 namespace Drupal\field\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -16,12 +17,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_field",
- *   source_module = "field_sql_storage"
- * )
  */
+#[MigrateSource(
+  id: 'd7_field',
+  source_module: 'field_sql_storage',
+)]
 class Field extends DrupalSqlBase {
 
   /**

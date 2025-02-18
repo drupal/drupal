@@ -2,6 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Attribute\MigrateSource;
+
 // cspell:ignore objectid objectindex plid textgroup
 
 /**
@@ -11,12 +13,11 @@ namespace Drupal\taxonomy\Plugin\migrate\source\d7;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
- *
- * @MigrateSource(
- *   id = "d7_taxonomy_vocabulary_translation",
- *   source_module = "i18n_taxonomy"
- * )
  */
+#[MigrateSource(
+  id: 'd7_taxonomy_vocabulary_translation',
+  source_module: 'i18n_taxonomy',
+)]
 class VocabularyTranslation extends Vocabulary {
 
   /**
