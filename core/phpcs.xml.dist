@@ -175,14 +175,7 @@
   <rule ref="DrupalPractice.Commenting.ExpectedException"/>
   <rule ref="DrupalPractice.General.ExceptionT"/>
   <rule ref="DrupalPractice.InfoFiles.NamespacedDependency"/>
-  <rule ref="DrupalPractice.Objects.GlobalFunction">
-    <include-pattern>*/Plugin/*</include-pattern>
-    <include-pattern>*/ListBuilder/*</include-pattern>
-    <include-pattern>*/tests/*</include-pattern>
-    <include-pattern>./core/lib/*</include-pattern>
-    <include-pattern>./core/modules/*</include-pattern>
-    <include-pattern>*/Hook/*</include-pattern>
-  </rule>
+  <rule ref="DrupalPractice.Objects.GlobalFunction"/>
 
   <!-- Generic sniffs -->
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
