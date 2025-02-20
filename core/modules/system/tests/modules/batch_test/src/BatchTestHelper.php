@@ -6,6 +6,9 @@ namespace Drupal\batch_test;
 
 use Drupal\Core\Form\FormState;
 
+/**
+ * Batch helper for testing batches.
+ */
 class BatchTestHelper {
 
   /**

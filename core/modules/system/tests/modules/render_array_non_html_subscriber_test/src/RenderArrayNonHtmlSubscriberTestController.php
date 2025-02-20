@@ -7,6 +7,9 @@ namespace Drupal\render_array_non_html_subscriber_test;
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Controller for testing testing non-HTML requests.
+ */
 class RenderArrayNonHtmlSubscriberTestController extends ControllerBase {
 
   /**

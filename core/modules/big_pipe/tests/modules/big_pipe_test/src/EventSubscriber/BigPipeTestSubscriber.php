@@ -10,6 +10,9 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Defines a test BigPipe subscriber that checks whether the session is empty.
+ */
 class BigPipeTestSubscriber implements EventSubscriberInterface {
 
   /**

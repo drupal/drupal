@@ -6,6 +6,9 @@ namespace Drupal\destructable_test;
 
 use Drupal\Core\DestructableInterface;
 
+/**
+ * Manages a semaphore file and performs an action upon destruction.
+ */
 final class Destructable implements DestructableInterface {
 
   /**

@@ -12,6 +12,9 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Handles kernel events for request and response.
+ */
 class TestClass implements EventSubscriberInterface, DestructableInterface {
 
   use StringTranslationTrait;

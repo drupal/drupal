@@ -7,6 +7,9 @@ namespace Drupal\form_test\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Provides a form for configuring preferences and dynamically updating select list options via AJAX.
+ */
 class TreeConfigTargetForm extends ConfigFormBase {
 
   /**

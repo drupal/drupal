@@ -6,6 +6,9 @@ namespace Drupal\jswebassert_test\Controller;
 
 use Drupal\Core\Render\Markup;
 
+/**
+ * Provides a test page for JavaScript assertions.
+ */
 class TestController {
 
   public function page() {

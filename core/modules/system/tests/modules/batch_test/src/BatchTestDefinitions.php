@@ -6,6 +6,9 @@ namespace Drupal\batch_test;
 
 use Drupal\Core\Batch\BatchBuilder;
 
+/**
+ * Batch definitions for testing batches.
+ */
 class BatchTestDefinitions {
 
   /**

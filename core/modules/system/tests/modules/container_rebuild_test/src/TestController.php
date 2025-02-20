@@ -7,6 +7,9 @@ namespace Drupal\container_rebuild_test;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DrupalKernelInterface;
 
+/**
+ * Controller for testing module information and container reset functionality.
+ */
 class TestController extends ControllerBase {
 
   /**

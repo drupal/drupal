@@ -7,6 +7,9 @@ namespace Drupal\form_test\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * A form for configuring preferences with AJAX updates.
+ */
 class IncorrectConfigTargetForm extends ConfigFormBase {
 
   /**

@@ -10,6 +10,9 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RenderContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Provides a controller for testing render placeholders and message ordering.
+ */
 class RenderPlaceholderMessageTestController implements TrustedCallbackInterface, ContainerInjectionInterface {
 
   /**

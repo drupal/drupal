@@ -8,6 +8,9 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 
+/**
+ * Controller for testing page that renders a View in a modal.
+ */
 class TestController extends ControllerBase {
 
   /**

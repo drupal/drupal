@@ -8,6 +8,9 @@ use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\AttachmentsTrait;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Test response with implemented AttachmentsInterface.
+ */
 class AttachmentsTestResponse extends Response implements AttachmentsInterface {
 
   use AttachmentsTrait;

@@ -8,6 +8,9 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\Site\Settings;
 
+/**
+ * Service provider for service provider testing module.
+ */
 class ServiceProviderTestServiceProvider implements ServiceModifierInterface {
 
   /**

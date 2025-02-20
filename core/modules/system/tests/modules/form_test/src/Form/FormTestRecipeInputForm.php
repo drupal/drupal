@@ -10,6 +10,9 @@ use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeInputFormTrait;
 use Drupal\Core\Recipe\RecipeRunner;
 
+/**
+ * Form to test recipe input functionality.
+ */
 class FormTestRecipeInputForm extends FormBase {
 
   use RecipeInputFormTrait;

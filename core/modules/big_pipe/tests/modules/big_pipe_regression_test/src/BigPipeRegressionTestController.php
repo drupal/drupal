@@ -8,6 +8,9 @@ use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
+/**
+ * Controller for BigPipe regression tests.
+ */
 class BigPipeRegressionTestController implements TrustedCallbackInterface {
 
   const MARKER_2678662 = '<script>var hitsTheFloor = "</body>";</script>';

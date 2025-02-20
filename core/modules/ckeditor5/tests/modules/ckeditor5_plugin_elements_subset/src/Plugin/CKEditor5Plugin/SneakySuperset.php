@@ -9,6 +9,9 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Provides a plugin for testing CKEditor.
+ */
 class SneakySuperset extends CKEditor5PluginDefault implements CKEditor5PluginElementsSubsetInterface {
 
   use CKEditor5PluginConfigurableTrait;

@@ -8,6 +8,9 @@ use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Controller for generating mock XML metadata for package manager testing.
+ */
 class TestController extends ControllerBase {
 
   /**

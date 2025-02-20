@@ -7,6 +7,9 @@ namespace Drupal\autowire_test;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
 
+/**
+ * Service class for managing injected dependencies.
+ */
 class TestService {
 
   /**

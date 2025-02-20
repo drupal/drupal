@@ -10,6 +10,9 @@ use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\DestructableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Collects and stores performance data for database and cache operations.
+ */
 class PerformanceDataCollector implements EventSubscriberInterface, DestructableInterface {
 
   /**

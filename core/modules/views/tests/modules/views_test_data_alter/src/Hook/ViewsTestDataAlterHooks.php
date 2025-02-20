@@ -6,6 +6,9 @@ namespace Drupal\views_test_data_alter\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 
+/**
+ * Hook implementations for views_test_data_alter.
+ */
 class ViewsTestDataAlterHooks {
 
   /**
