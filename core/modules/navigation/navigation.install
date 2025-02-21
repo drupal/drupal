@@ -6,6 +6,22 @@
  */
 
 /**
+ * Implements hook_install().
+ */
+function navigation_install(bool $is_syncing): void {
+  // Do not modify config during sync. Config should be already consolidated.
+  if ($is_syncing) {
+    return;
+  }
+
+  $blocks = \Drupal::moduleHandler()->invokeAll('navigation_defaults');
+  $manager = \Drupal::service('plugin.manager.config_action');
+  foreach ($blocks as $block) {
+    $manager->applyAction('addNavigationBlock', 'navigation.block_layout', $block);
+  }
+}
+
+/**
  * Implements hook_requirements().
  */
 function navigation_requirements($phase): array {

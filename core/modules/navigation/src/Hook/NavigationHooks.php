@@ -5,6 +5,8 @@ namespace Drupal\navigation\Hook;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Config\Action\ConfigActionManager;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -14,6 +16,7 @@ use Drupal\navigation\NavigationRenderer;
 use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
 use Drupal\navigation\RenderCallbacks;
 use Drupal\navigation\TopBarItemManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Hook implementations for navigation.
@@ -25,11 +28,27 @@ class NavigationHooks {
   /**
    * NavigationHooks constructor.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   The route match.
+   * @param \Drupal\navigation\NavigationRenderer $navigationRenderer
+   *   The navigation renderer.
+   * @param \Drupal\Core\Config\Action\ConfigActionManager $configActionManager
+   *   The config action manager.
+   * @param \Drupal\navigation\TopBarItemManagerInterface $topBarItemManager
+   *   The Top Bar Item manager.
    */
   public function __construct(
+    protected ModuleHandlerInterface $moduleHandler,
     protected AccountInterface $currentUser,
+    protected RouteMatchInterface $routeMatch,
+    protected NavigationRenderer $navigationRenderer,
+    #[Autowire('@plugin.manager.config_action')]
+    protected ConfigActionManager $configActionManager,
+    protected TopBarItemManagerInterface $topBarItemManager,
   ) {
   }
 
@@ -48,7 +67,7 @@ class NavigationHooks {
     }
     $configuration_route = 'layout_builder.navigation.';
     if (!$route_match->getRouteObject()->getOption('_layout_builder') || !str_starts_with($route_name, $configuration_route)) {
-      return \Drupal::moduleHandler()->invoke('layout_builder', 'help', [$route_name, $route_match]);
+      return $this->moduleHandler->invoke('layout_builder', 'help', [$route_name, $route_match]);
     }
     if (str_starts_with($route_name, $configuration_route)) {
       $output = '<p>' . $this->t('This layout builder tool allows you to configure the blocks in the navigation toolbar.') . '</p>';
@@ -63,16 +82,14 @@ class NavigationHooks {
    */
   #[Hook('page_top')]
   public function pageTop(array &$page_top): void {
-    if (!\Drupal::currentUser()->hasPermission('access navigation')) {
+    if (!$this->currentUser->hasPermission('access navigation')) {
       return;
     }
-    $navigation_renderer = \Drupal::service('navigation.renderer');
-    assert($navigation_renderer instanceof NavigationRenderer);
-    $navigation_renderer->removeToolbar($page_top);
-    if (\Drupal::routeMatch()->getRouteName() !== 'layout_builder.navigation.view') {
+    $this->navigationRenderer->removeToolbar($page_top);
+    if ($this->routeMatch->getRouteName() !== 'layout_builder.navigation.view') {
       // Don't render the admin toolbar if in layout edit mode.
-      $navigation_renderer->buildNavigation($page_top);
-      $navigation_renderer->buildTopBar($page_top);
+      $this->navigationRenderer->buildNavigation($page_top);
+      $this->navigationRenderer->buildTopBar($page_top);
       return;
     }
     // But if in layout mode, add an empty element to leave space. We need to
@@ -86,7 +103,7 @@ class NavigationHooks {
         'class' => 'admin-toolbar',
       ],
     ];
-    $navigation_renderer->buildTopBar($page_top);
+    $this->navigationRenderer->buildTopBar($page_top);
   }
 
   /**
@@ -145,12 +162,10 @@ class NavigationHooks {
    */
   #[Hook('block_build_local_tasks_block_alter')]
   public function blockBuildLocalTasksBlockAlter(array &$build, BlockPluginInterface $block): void {
-    $navigation_renderer = \Drupal::service('navigation.renderer');
-    assert($navigation_renderer instanceof NavigationRenderer);
-    if (\Drupal::currentUser()->hasPermission('access navigation') &&
-      array_key_exists('page_actions', \Drupal::service(TopBarItemManagerInterface::class)->getDefinitions())
+    if ($this->currentUser->hasPermission('access navigation') &&
+      array_key_exists('page_actions', $this->topBarItemManager->getDefinitions())
     ) {
-      $navigation_renderer->removeLocalTasks($build, $block);
+      $this->navigationRenderer->removeLocalTasks($build, $block);
     }
   }
 
@@ -268,6 +283,28 @@ class NavigationHooks {
     // customize the experience for the end user, rather than the server side,
     // which would break the render cache.
     $settings['navigation']['user'] = $this->currentUser->getAccountName();
+  }
+
+  /**
+   * Implements hook_modules_installed().
+   */
+  #[Hook('modules_installed')]
+  public function modulesInstalled(array $modules, bool $is_syncing): void {
+    // Do not modify config during sync. Config should be already consolidated.
+    if ($is_syncing) {
+      return;
+    }
+    foreach ($modules as $module) {
+      $blocks = $this->moduleHandler->invoke($module, 'navigation_defaults');
+
+      if (!is_array($blocks)) {
+        return;
+      }
+
+      foreach ($blocks as $block) {
+        $this->configActionManager->applyAction('addNavigationBlock', 'navigation.block_layout', $block);
+      }
+    }
   }
 
 }

@@ -53,5 +53,41 @@ function hook_navigation_content_top_alter(array &$content_top): void {
 }
 
 /**
+ * Provides default content for the Navigation bar.
+ *
+ * @return array
+ *   An associative array of navigation block definitions.
+ *   The following elements should be part of each definition array:
+ *    - delta: The expected delta where the block should be placed in the
+ *    Navigation bar. Defaults to 0.
+ *    - configuration: The key-value array with the Navigation Block definition.
+ *    It should include the following elements, besides the Navigation block
+ *    specific settings:
+ *      - id: The Navigation Block plugin ID.
+ *      - label: The block label.
+ *      -label_display: 0 or 1 depending on whether the label should be
+ *      displayed or not.
+ *      - provider: The module that provides the block. In general, the module
+ *      that defines the Navigation block.
+ */
+function hook_navigation_defaults(): array {
+  $blocks = [];
+
+  $blocks[] = [
+    'delta' => 1,
+    'configuration' => [
+      'id' => 'navigation_test',
+      'label' => 'My test block',
+      'label_display' => 1,
+      'provider' => 'navigation_test_block',
+      'test_block_setting_foo' => 'Foo',
+      'test_block_setting_bar' => 1,
+    ],
+  ];
+
+  return $blocks;
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

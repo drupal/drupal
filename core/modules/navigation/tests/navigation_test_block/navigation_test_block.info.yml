@@ -1,0 +1,5 @@
+name: Navigation test block
+description: 'Provides test block functionality for navigation module'
+package: Testing
+version: VERSION
+type: module
