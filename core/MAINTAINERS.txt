@@ -376,6 +376,9 @@ Settings Tray
 Shortcut
 - Jibran Ijaz 'jibran' https://www.drupal.org/u/jibran
 
+Stable9
+- Mark Conroy 'markconroy' https://www.drupal.org/u/markconroy
+
 Stark
 - John Albin Wilkins 'JohnAlbin' https://www.drupal.org/u/johnalbin
 
