@@ -316,7 +316,7 @@ class NavigationMenuBlockTest extends KernelTestBase {
   /**
    * Tests the generated HTML markup.
    */
-  public function testHtmlMarkup() {
+  public function testHtmlMarkup(): void {
     $block = $this->blockManager->createInstance('navigation_menu:' . $this->menu->id(), [
       'region' => 'content',
       'id' => 'machine_name',

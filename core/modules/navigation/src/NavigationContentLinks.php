@@ -36,7 +36,7 @@ final class NavigationContentLinks implements ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('router.route_provider'),
       $container->get('entity_type.manager')
