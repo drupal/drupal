@@ -30,8 +30,8 @@ class Test extends MediaSourceBase {
     // change the metadata attributes and makes it easier to test different
     // variations.
     $attributes = \Drupal::state()->get('media_source_test_attributes', [
-      'attribute_1' => ['label' => $this->t('Attribute 1'), 'value' => 'Value 1'],
-      'attribute_2' => ['label' => $this->t('Attribute 2'), 'value' => 'Value 1'],
+      'attribute_1' => ['label' => 'Attribute 1', 'value' => 'Value 1'],
+      'attribute_2' => ['label' => 'Attribute 2', 'value' => 'Value 1'],
     ]);
     return array_map(function ($item) {
       return $item['label'];
@@ -43,8 +43,8 @@ class Test extends MediaSourceBase {
    */
   public function getMetadata(MediaInterface $media, $attribute_name) {
     $attributes = \Drupal::state()->get('media_source_test_attributes', [
-      'attribute_1' => ['label' => $this->t('Attribute 1'), 'value' => 'Value 1'],
-      'attribute_2' => ['label' => $this->t('Attribute 2'), 'value' => 'Value 1'],
+      'attribute_1' => ['label' => 'Attribute 1', 'value' => 'Value 1'],
+      'attribute_2' => ['label' => 'Attribute 2', 'value' => 'Value 1'],
     ]);
 
     if (in_array($attribute_name, array_keys($attributes))) {
@@ -81,7 +81,7 @@ class Test extends MediaSourceBase {
 
     $form['test_config_value'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Test config value'),
+      '#title' => 'Test config value',
       '#default_value' => $this->configuration['test_config_value'],
     ];
 

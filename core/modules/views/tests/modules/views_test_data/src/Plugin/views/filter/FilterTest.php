@@ -34,7 +34,7 @@ class FilterTest extends FilterPluginBase {
 
     $form['test_enable'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Controls whether the filter plugin should be active'),
+      '#title' => 'Controls whether the filter plugin should be active',
       '#default_value' => $this->options['test_enable'],
     ];
   }

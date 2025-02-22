@@ -48,7 +48,7 @@ class FieldFormButtonTest extends FieldPluginBase {
     foreach ($this->view->result as $row_index => $row) {
       $form[$this->options['id']][$row_index] = [
         '#type' => 'submit',
-        '#value' => $this->t('Test Button'),
+        '#value' => 'Test Button',
         '#name' => 'test-button-' . $row_index,
         '#test_button' => TRUE,
         '#row_index' => $row_index,
@@ -69,13 +69,10 @@ class FieldFormButtonTest extends FieldPluginBase {
     $triggering_element = $form_state->getTriggeringElement();
     if (!empty($triggering_element['#test_button'])) {
       $row_index = $triggering_element['#row_index'];
-      $view_args = !empty($this->view->args) ? implode(', ', $this->view->args) : $this->t('no arguments');
-      $this->messenger()->addStatus($this->t('The test button at row @row_index for @view_id (@display) View with args: @args was submitted.', [
-        '@display' => $this->view->current_display,
-        '@view_id' => $this->view->id(),
-        '@args' => $view_args,
-        '@row_index' => $row_index,
-      ]));
+      $view_args = !empty($this->view->args) ? implode(', ', $this->view->args) : 'no arguments';
+      $display = $this->view->current_display;
+      $view_id = $this->view->id();
+      $this->messenger()->addStatus("The test button at row $row_index for $view_id ($display) View with args: $view_args was submitted.");
     }
   }
 

@@ -49,19 +49,19 @@ class TopBarItemManagerTest extends UnitTestCase {
     // that are purposefully not in alphabetical order.
     $discovery->getDefinitions()->willReturn([
       'tools' => [
-        'label' => $this->t('Tools'),
+        'label' => 'Tools',
         'region' => TopBarRegion::Tools,
       ],
       'context' => [
-        'admin_label' => $this->t('Context'),
+        'admin_label' => 'Context',
         'region' => TopBarRegion::Context,
       ],
       'actions' => [
-        'label' => $this->t('Actions'),
+        'label' => 'Actions',
         'region' => TopBarRegion::Actions,
       ],
       'more_actions' => [
-        'label' => $this->t('More Actions'),
+        'label' => 'More Actions',
         'region' => TopBarRegion::Actions,
       ],
     ]);

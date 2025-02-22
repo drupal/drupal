@@ -24,18 +24,18 @@ class UpdateRequirementsTest extends KernelTestBase {
 
     \Drupal::service('module_installer')->install(['module_update_requirements']);
     $testRequirements = [
-      'title' => $this->t('UpdateError'),
-      'value' => $this->t('None'),
-      'description' => $this->t('Update Error.'),
+      'title' => 'UpdateError',
+      'value' => 'None',
+      'description' => 'Update Error.',
       'severity' => REQUIREMENT_ERROR,
     ];
     $requirements = update_check_requirements()['test.update.error'];
     $this->assertEquals($testRequirements, $requirements);
 
     $testAlterRequirements = [
-      'title' => $this->t('UpdateWarning'),
-      'value' => $this->t('None'),
-      'description' => $this->t('Update Warning.'),
+      'title' => 'UpdateWarning',
+      'value' => 'None',
+      'description' => 'Update Warning.',
       'severity' => REQUIREMENT_WARNING,
     ];
     $alterRequirements = update_check_requirements()['test.update.error.alter'];

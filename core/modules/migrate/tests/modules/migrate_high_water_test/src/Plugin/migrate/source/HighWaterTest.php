@@ -32,9 +32,9 @@ class HighWaterTest extends SqlBase {
    */
   public function fields() {
     $fields = [
-      'id' => $this->t('Id'),
-      'title' => $this->t('Title'),
-      'changed' => $this->t('Changed'),
+      'id' => 'Id',
+      'title' => 'Title',
+      'changed' => 'Changed',
     ];
 
     return $fields;
