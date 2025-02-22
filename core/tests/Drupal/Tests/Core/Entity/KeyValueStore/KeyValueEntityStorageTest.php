@@ -638,6 +638,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 
 }
 
+/**
+ * A simple entity class for testing key value entity storage.
+ */
 class EntityBaseTest extends EntityBase {
 
   /**

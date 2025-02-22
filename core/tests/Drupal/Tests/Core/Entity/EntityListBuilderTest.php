@@ -146,6 +146,9 @@ class EntityListBuilderTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing EntityListBuilder.
+ */
 class TestEntityListBuilder extends EntityTestListBuilder {
 
   public function buildOperations(EntityInterface $entity) {

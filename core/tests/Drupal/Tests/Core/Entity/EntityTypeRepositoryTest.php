@@ -219,14 +219,26 @@ class EntityTypeRepositoryTest extends UnitTestCase {
 
 }
 
+/**
+ * A simple entity for testing.
+ */
 class Fruit extends EntityBase {
 }
 
+/**
+ * A Fruit class for testing.
+ */
 class Apple extends Fruit {
 }
 
+/**
+ * An Apple class for testing.
+ */
 class RoyalGala extends Apple {
 }
 
+/**
+ * A Fruit class for testing.
+ */
 class Blackcurrant extends Fruit {
 }

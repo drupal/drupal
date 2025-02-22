@@ -77,6 +77,9 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing trait.
+ */
 class TestConditionAccessResolverTrait {
   use \Drupal\Core\Condition\ConditionAccessResolverTrait {
     resolveConditions as public;

@@ -139,6 +139,9 @@ class CustomAccessCheckTest extends UnitTestCase {
 
 }
 
+/**
+ * Controller for testing custom access.
+ */
 class TestController {
 
   public function accessAllow() {

@@ -161,10 +161,16 @@ EOS;
 
 }
 
+/**
+ * Class used to test a service that has no methods.
+ */
 class TestServiceNoMethod {
 
 }
 
+/**
+ * Call used to test a service with a complex method.
+ */
 class TestServiceComplexMethod {
 
   public function complexMethod($parameter, callable $function, ?TestServiceNoMethod $test_service = NULL, array &$elements = []) {

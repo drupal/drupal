@@ -27,6 +27,9 @@ class PluginSettingsBaseTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing PluginSettingsBase.
+ */
 class TestPluginSettingsBase extends PluginSettingsBase {
 
   public function __construct() {

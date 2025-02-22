@@ -69,6 +69,9 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
 
 }
 
+/**
+ * Test class for testing ConfigFormBaseTrait.
+ */
 class ConfiguredTrait {
   use ConfigFormBaseTrait;
 

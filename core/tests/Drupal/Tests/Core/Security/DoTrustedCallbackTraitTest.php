@@ -99,9 +99,15 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
 
 }
 
+/**
+ * Interface representing classes with trusted callbacks.
+ */
 interface TrustedInterface {
 }
 
+/**
+ * Class with a trusted interface implementation with callback.
+ */
 class TrustedObject implements TrustedInterface {
 
   public static function callback() {
@@ -110,6 +116,9 @@ class TrustedObject implements TrustedInterface {
 
 }
 
+/**
+ * Class representing untrusted callback.
+ */
 class UntrustedObject {
 
   public static function callback() {
@@ -118,6 +127,9 @@ class UntrustedObject {
 
 }
 
+/**
+ * Invokable untrusted test class.
+ */
 class InvokableUntrustedObject {
 
   public function __invoke() {
@@ -126,6 +138,9 @@ class InvokableUntrustedObject {
 
 }
 
+/**
+ * Test class with implemented trusted callbacks.
+ */
 class TrustedMethods implements TrustedCallbackInterface {
 
   public static function trustedCallbacks() {

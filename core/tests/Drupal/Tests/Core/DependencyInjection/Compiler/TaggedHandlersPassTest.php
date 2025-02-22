@@ -430,8 +430,15 @@ class TaggedHandlersPassTest extends UnitTestCase {
 
 }
 
+/**
+ * Interface for test handlers.
+ */
 interface HandlerInterface {
 }
+
+/**
+ * Test class of a valid consumer.
+ */
 class ValidConsumer {
 
   public function addHandler(HandlerInterface $instance, $priority = 0) {
@@ -444,12 +451,20 @@ class ValidConsumer {
   }
 
 }
+
+/**
+ * Test class of an invalid consumer.
+ */
 class InvalidConsumer {
 
   public function addHandler($instance, $priority = 0) {
   }
 
 }
+
+/**
+ * Test class of a valid consumer with extra arguments.
+ */
 class ValidConsumerWithExtraArguments {
 
   public function addHandler(HandlerInterface $instance, $priority = 0, $extra1 = '', $extra2 = '') {
@@ -465,7 +480,15 @@ class ValidConsumerWithExtraArguments {
   }
 
 }
+
+/**
+ * Test handler class with interface implemented.
+ */
 class ValidHandler implements HandlerInterface {
 }
+
+/**
+ * Invalid test handler class.
+ */
 class InvalidHandler {
 }

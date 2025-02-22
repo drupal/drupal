@@ -33,6 +33,9 @@ class LoggerChannelFactoryTest extends UnitTestCase {
 
 }
 
+/**
+ * Call to test a logger channel class with no constructor.
+ */
 class LoggerChannelWithoutConstructor extends LoggerChannelFactory {
 
   public function __construct() {}

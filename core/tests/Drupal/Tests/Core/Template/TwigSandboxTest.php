@@ -158,4 +158,7 @@ class TwigSandboxTest extends UnitTestCase {
 
 }
 
+/**
+ * Test class for HTML attributes collector, sanitizer, and renderer.
+ */
 class TestAttribute extends Attribute {}

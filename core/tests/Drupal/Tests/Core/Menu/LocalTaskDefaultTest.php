@@ -339,6 +339,9 @@ class LocalTaskDefaultTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing LocalTaskDefault.
+ */
 class TestLocalTaskDefault extends LocalTaskDefault {
 
   public function setRouteProvider(RouteProviderInterface $route_provider) {

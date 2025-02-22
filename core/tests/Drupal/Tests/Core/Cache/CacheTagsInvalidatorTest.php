@@ -55,4 +55,7 @@ class CacheTagsInvalidatorTest extends UnitTestCase {
 
 }
 
+/**
+ * Test interface for testing the cache tags validator.
+ */
 interface InvalidatingCacheBackendInterface extends CacheTagsInvalidatorInterface, CacheBackendInterface {}

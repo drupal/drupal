@@ -156,17 +156,32 @@ class BackendCompilerPassTest extends UnitTestCase {
 
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassDefault {
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassMysql extends ServiceClassDefault {
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassMariaDb extends ServiceClassMysql {
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassSqlite extends ServiceClassDefault {
 }
 
+/**
+ * A class used for testing the backend compiler passes.
+ */
 class ServiceClassDriverTestMysql extends ServiceClassDefault {
 }

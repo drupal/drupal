@@ -1004,6 +1004,9 @@ class FormBuilderTest extends FormTestBase {
 
 }
 
+/**
+ * Basic test form with interface implemented.
+ */
 class TestForm implements FormInterface {
 
   public function getFormId() {
@@ -1019,6 +1022,10 @@ class TestForm implements FormInterface {
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
 }
+
+/**
+ * Basic test form with container injection interface implemented.
+ */
 class TestFormInjected extends TestForm implements ContainerInjectionInterface {
 
   public static function create(ContainerInterface $container) {
@@ -1027,7 +1034,9 @@ class TestFormInjected extends TestForm implements ContainerInjectionInterface {
 
 }
 
-
+/**
+ * Basic test form with predefined form set.
+ */
 class TestFormWithPredefinedForm extends TestForm {
 
   /**

@@ -46,6 +46,9 @@ class FinalExceptionSubscriberTest extends UnitTestCase {
 
 }
 
+/**
+ * Test class for testing the final exception subscriber.
+ */
 class TestDefaultExceptionSubscriber extends FinalExceptionSubscriber {
 
   protected function isErrorDisplayable($error): bool {

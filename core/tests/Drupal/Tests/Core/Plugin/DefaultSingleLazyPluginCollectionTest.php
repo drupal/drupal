@@ -95,6 +95,9 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
 
 }
 
+/**
+ * Stub configurable plugin class for testing.
+ */
 class ConfigurablePlugin extends PluginBase implements ConfigurableInterface {
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {

@@ -1207,6 +1207,9 @@ class RecursivePlaceholdersTest implements TrustedCallbackInterface {
 
 }
 
+/**
+ * Class for testing the placeholdering render cache.
+ */
 class TestPlaceholderingRenderCache extends PlaceholderingRenderCache {
 
   /**

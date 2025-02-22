@@ -678,6 +678,9 @@ class TwigExtensionTest extends UnitTestCase {
 
 }
 
+/**
+ * A simple string holder for testing Twig extension.
+ */
 class TwigExtensionTestString {
 
   /**

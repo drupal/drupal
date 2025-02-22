@@ -399,6 +399,9 @@ class DefaultHtmlRouteProviderTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing DefaultHtmlRouteProvider.
+ */
 class TestDefaultHtmlRouteProvider extends DefaultHtmlRouteProvider {
 
   public function getEntityTypeIdKeyType(EntityTypeInterface $entity_type) {

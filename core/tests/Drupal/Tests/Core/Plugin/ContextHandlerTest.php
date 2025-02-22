@@ -547,10 +547,16 @@ class ContextHandlerTest extends UnitTestCase {
 
 }
 
+/**
+ * Test interface used for creating mock classes in tests.
+ */
 interface TestConfigurableContextAwarePluginInterface extends ContextAwarePluginInterface, ConfigurableInterface, DependentPluginInterface {
 
 }
 
+/**
+ * Test class of context aware plugin definition.
+ */
 class ContextAwarePluginDefinition extends PluginDefinition implements ContextAwarePluginDefinitionInterface {
   use ContextAwarePluginDefinitionTrait;
 

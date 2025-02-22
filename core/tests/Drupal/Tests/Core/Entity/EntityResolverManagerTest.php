@@ -559,6 +559,9 @@ class BasicFormNoUpcasting extends FormBase {
 
 }
 
+/**
+ * A basic form without a container injection interface implemented.
+ */
 class BasicFormNoContainerInjectionInterface implements FormInterface {
 
   /**
