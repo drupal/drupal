@@ -26,9 +26,8 @@ config:
     # modules already installed.
     node: '*'
   # Configuration actions may be defined. The structure here should be
-  # entity_type.ID.action. Below the user role entity type with an ID of
-  # editor is having the permissions added. The permissions key will be
-  # mapped to the \Drupal\user\Entity\Role::grantPermission() method.
+  # entity_type.ID.action. Below, text.settings is updated to set the default
+  # summary length for text fields to 700 characters.
   actions:
     text.settings:
       simpleConfigUpdate:
