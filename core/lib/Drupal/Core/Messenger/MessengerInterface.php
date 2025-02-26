@@ -30,9 +30,9 @@ interface MessengerInterface {
    * The messages will be displayed in the order they got added later.
    *
    * @param string|\Drupal\Component\Render\MarkupInterface $message
-   *   (optional) The translated message to be displayed to the user. For
-   *   consistency with other messages, it should begin with a capital letter
-   *   and end with a period.
+   *   The translated message to be displayed to the user. For consistency with
+   *   other messages, it should begin with a capital letter and end with a
+   *   period.
    * @param string $type
    *   (optional) The message's type. Either self::TYPE_STATUS,
    *   self::TYPE_WARNING, or self::TYPE_ERROR.
@@ -48,9 +48,9 @@ interface MessengerInterface {
    * Adds a new status message to the queue.
    *
    * @param string|\Drupal\Component\Render\MarkupInterface $message
-   *   (optional) The translated message to be displayed to the user. For
-   *   consistency with other messages, it should begin with a capital letter
-   *   and end with a period.
+   *   The translated message to be displayed to the user. For consistency with
+   *   other messages, it should begin with a capital letter and end with a
+   *   period.
    * @param bool $repeat
    *   (optional) If this is FALSE and the message is already set, then the
    *   message won't be repeated. Defaults to FALSE.
@@ -63,9 +63,9 @@ interface MessengerInterface {
    * Adds a new error message to the queue.
    *
    * @param string|\Drupal\Component\Render\MarkupInterface $message
-   *   (optional) The translated message to be displayed to the user. For
-   *   consistency with other messages, it should begin with a capital letter
-   *   and end with a period.
+   *   The translated message to be displayed to the user. For consistency with
+   *   other messages, it should begin with a capital letter and end with a
+   *   period.
    * @param bool $repeat
    *   (optional) If this is FALSE and the message is already set, then the
    *   message won't be repeated. Defaults to FALSE.
@@ -78,9 +78,9 @@ interface MessengerInterface {
    * Adds a new warning message to the queue.
    *
    * @param string|\Drupal\Component\Render\MarkupInterface $message
-   *   (optional) The translated message to be displayed to the user. For
-   *   consistency with other messages, it should begin with a capital letter
-   *   and end with a period.
+   *   The translated message to be displayed to the user. For consistency with
+   *   other messages, it should begin with a capital letter and end with a
+   *   period.
    * @param bool $repeat
    *   (optional) If this is FALSE and the message is already set, then the
    *   message won't be repeated. Defaults to FALSE.
