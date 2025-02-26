@@ -347,6 +347,31 @@ default:
       - core/.eslintcache
       - core/.stylelintcache
 
+'📔 Spell-checking':
+  <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  script:
+    - *prepare-lint-directory
+    - *cspell-cache
+    - *core-spellcheck
+    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
+    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
+    - mv /build/core/node_modules $CI_PROJECT_DIR/core
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/node_modules
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
+
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
@@ -463,31 +488,6 @@ default:
   artifacts:
     reports:
       codequality: gl-codequality.json
-
-'📔 Spell-checking':
-  <<: [ *default-job-settings-lint ]
-  stage: 🪄 Lint
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-  script:
-    - *prepare-lint-directory
-    - *cspell-cache
-    - *core-spellcheck
-    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
-    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
-    - mv /build/core/node_modules $CI_PROJECT_DIR/core
-  cache:
-    key:
-      files:
-        - ./core/package.json
-        - ./core/yarn.lock
-    paths:
-      - ./core/node_modules
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'yarn-vendor'
-    paths:
-      - core/node_modules/
 
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]
