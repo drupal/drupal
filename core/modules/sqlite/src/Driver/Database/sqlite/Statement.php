@@ -86,6 +86,10 @@ class Statement extends StatementPrefetchIterator implements StatementInterface 
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
+    if (isset($options['fetch']) && is_int($options['fetch'])) {
+      @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+    }
+
     try {
       $return = parent::execute($args, $options);
     }

@@ -4,6 +4,7 @@ namespace Drupal\path_alias;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Language\LanguageInterface;
 
 /**
@@ -53,7 +54,7 @@ class AliasRepository implements AliasRepositoryInterface {
     // 'base_table.id' column, as that would not guarantee other conditions
     // added to the query, such as those in ::addLanguageFallback, would be
     // reversed.
-    $results = $select->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    $results = $select->execute()->fetchAll(FetchAs::Associative);
     $aliases = [];
     foreach (array_reverse($results) as $result) {
       $aliases[$result['path']] = $result['alias'];

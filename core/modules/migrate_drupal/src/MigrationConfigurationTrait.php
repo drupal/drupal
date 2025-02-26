@@ -5,6 +5,7 @@ namespace Drupal\migrate_drupal;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\RequirementsInterface;
 
@@ -70,7 +71,7 @@ trait MigrationConfigurationTrait {
     $system_data = [];
     try {
       $results = $connection->select('system', 's', [
-        'fetch' => \PDO::FETCH_ASSOC,
+        'fetch' => FetchAs::Associative,
       ])
         ->fields('s')
         ->execute();

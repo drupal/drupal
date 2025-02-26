@@ -7,6 +7,7 @@ use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\SchemaException;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageBase;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
@@ -530,7 +531,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // latest revision. Otherwise we fall back to the data table.
       $table = $this->revisionDataTable ?: $this->dataTable;
       $alias = $this->revisionDataTable ? 'revision' : 'data';
-      $query = $this->database->select($table, $alias, ['fetch' => \PDO::FETCH_ASSOC])
+      $query = $this->database->select($table, $alias, ['fetch' => FetchAs::Associative])
         ->fields($alias)
         ->condition($alias . '.' . $record_key, array_keys($values), 'IN')
         ->orderBy($alias . '.' . $record_key);
@@ -1641,7 +1642,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $storage_definition->isDeleted());
 
     // Get the entities which we want to purge first.
-    $entity_query = $this->database->select($table_name, 't', ['fetch' => \PDO::FETCH_ASSOC]);
+    $entity_query = $this->database->select($table_name, 't', ['fetch' => FetchAs::Associative]);
     $or = $entity_query->orConditionGroup();
     foreach ($storage_definition->getColumns() as $column_name => $data) {
       $or->isNotNull($table_mapping->getFieldColumnName($storage_definition, $column_name));
@@ -1661,7 +1662,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $entities = [];
     $items_by_entity = [];
     foreach ($entity_query->execute() as $row) {
-      $item_query = $this->database->select($table_name, 't', ['fetch' => \PDO::FETCH_ASSOC])
+      $item_query = $this->database->select($table_name, 't', ['fetch' => FetchAs::Associative])
         ->fields('t')
         ->condition('entity_id', $row['entity_id'])
         ->condition('deleted', 1)

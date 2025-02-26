@@ -5,6 +5,7 @@ namespace Drupal\migrate\Plugin\migrate\source;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Exception\RequirementsException;
@@ -224,7 +225,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    * Wrapper for database select.
    */
   protected function select($table, $alias = NULL, array $options = []) {
-    $options['fetch'] = \PDO::FETCH_ASSOC;
+    $options['fetch'] = FetchAs::Associative;
     return $this->getDatabase()->select($table, $alias, $options);
   }
 
@@ -347,7 +348,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       $this->query->range($this->batch * $this->batchSize, $this->batchSize);
     }
     $statement = $this->query->execute();
-    $statement->setFetchMode(\PDO::FETCH_ASSOC);
+    $statement->setFetchMode(FetchAs::Associative);
     return new \IteratorIterator($statement);
   }
 

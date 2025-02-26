@@ -57,7 +57,7 @@ function database_test_schema(): array {
   ];
 
   $schema['test_classtype'] = [
-    'description' => 'A duplicate version of the test table, used for fetch_style PDO::FETCH_CLASSTYPE tests.',
+    'description' => 'A duplicate version of the test table, used for obsolete fetch_style PDO::FETCH_CLASSTYPE tests.',
     'fields' => [
       'classname' => [
         'description' => "A custom class name",

@@ -5,6 +5,8 @@ namespace Drupal\Core\Database;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Database\Statement\PdoTrait;
 
 // cSpell:ignore maxlen driverdata INOUT
 
@@ -28,8 +30,9 @@ use Drupal\Core\Database\Event\StatementExecutionStartEvent;
  */
 class StatementWrapperIterator implements \Iterator, StatementInterface {
 
-  use StatementIteratorTrait;
   use FetchModeTrait;
+  use PdoTrait;
+  use StatementIteratorTrait;
 
   /**
    * The client database Statement object.
@@ -37,6 +40,22 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * For a \PDO client connection, this will be a \PDOStatement object.
    */
   protected object $clientStatement;
+
+  /**
+   * Holds the default fetch mode.
+   */
+  protected FetchAs $defaultFetchMode = FetchAs::Object;
+
+  /**
+   * Holds fetch options.
+   *
+   * @var array{'class': class-string, 'constructor_args': array<mixed>, 'column': int}
+   */
+  protected array $fetchOptions = [
+    'class' => 'stdClass',
+    'constructor_args' => [],
+    'column' => 0,
+  ];
 
   /**
    * Constructs a StatementWrapperIterator object.
@@ -60,19 +79,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
     protected readonly bool $rowCountEnabled = FALSE,
   ) {
     $this->clientStatement = $clientConnection->prepare($query, $options);
-    $this->setFetchMode(\PDO::FETCH_OBJ);
-  }
-
-  /**
-   * Returns the client-level database statement object.
-   *
-   * This method should normally be used only within database driver code.
-   *
-   * @return object
-   *   The client-level database statement, for example \PDOStatement.
-   */
-  public function getClientStatement(): object {
-    return $this->clientStatement;
+    $this->setFetchMode(FetchAs::Object);
   }
 
   /**
@@ -86,11 +93,13 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
+    if (isset($options['fetch']) && is_int($options['fetch'])) {
+      @trigger_error("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+    }
+
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
-        // \PDO::FETCH_PROPS_LATE tells __construct() to run before properties
-        // are added to the object.
-        $this->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $options['fetch']);
+        $this->setFetchMode(FetchAs::ClassObject, $options['fetch']);
       }
       else {
         $this->setFetchMode($options['fetch']);
@@ -110,7 +119,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
     }
 
     try {
-      $return = $this->clientStatement->execute($args);
+      $return = $this->clientExecute($args, $options);
       $this->markResultsetIterable($return);
     }
     catch (\Exception $e) {
@@ -150,23 +159,28 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function getQueryString() {
-    return $this->clientStatement->queryString;
+    return $this->clientQueryString();
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetchCol($index = 0) {
-    return $this->fetchAll(\PDO::FETCH_COLUMN, $index);
+    return $this->fetchAll(FetchAs::Column, $index);
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetchAllAssoc($key, $fetch = NULL) {
+    if (is_int($fetch)) {
+      @trigger_error("Passing the \$fetch argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+      $fetch = $this->pdoToFetchAs($fetch);
+    }
+
     if (isset($fetch)) {
       if (is_string($fetch)) {
-        $this->setFetchMode(\PDO::FETCH_CLASS, $fetch);
+        $this->setFetchMode(FetchAs::ClassObject, $fetch);
       }
       else {
         $this->setFetchMode($fetch);
@@ -193,7 +207,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
-    $this->setFetchMode(\PDO::FETCH_NUM);
+    $this->setFetchMode(FetchAs::List);
 
     // Return early if the statement was already fully traversed.
     if (!$this->isResultsetIterable) {
@@ -213,8 +227,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchField($index = 0) {
-    // Call \PDOStatement::fetchColumn to fetch the field.
-    $column = $this->clientStatement->fetchColumn($index);
+    $column = $this->clientFetchColumn($index);
 
     if ($column === FALSE) {
       $this->markResultsetFetchingComplete();
@@ -229,19 +242,14 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAssoc() {
-    return $this->fetch(\PDO::FETCH_ASSOC);
+    return $this->fetch(FetchAs::Associative);
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetchObject(?string $class_name = NULL, array $constructor_arguments = []) {
-    if ($class_name) {
-      $row = $this->clientStatement->fetchObject($class_name, $constructor_arguments);
-    }
-    else {
-      $row = $this->clientStatement->fetchObject();
-    }
+    $row = $this->clientFetchObject($class_name, $constructor_arguments);
 
     if ($row === FALSE) {
       $this->markResultsetFetchingComplete();
@@ -258,7 +266,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
   public function rowCount() {
     // SELECT query should not use the method.
     if ($this->rowCountEnabled) {
-      return $this->clientStatement->rowCount();
+      return $this->clientRowCount();
     }
     else {
       throw new RowCountException();
@@ -269,32 +277,43 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+    if (is_int($mode)) {
+      @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+      $mode = $this->pdoToFetchAs($mode);
+    }
 
-    // Call \PDOStatement::setFetchMode to set fetch mode.
-    // \PDOStatement is picky about the number of arguments in some cases so we
-    // need to be pass the exact number of arguments we where given.
-    return match(func_num_args()) {
-      1 => $this->clientStatement->setFetchMode($mode),
-      2 => $this->clientStatement->setFetchMode($mode, $a1),
-      default => $this->clientStatement->setFetchMode($mode, $a1, $a2),
-    };
+    $this->defaultFetchMode = $mode;
+    switch ($mode) {
+      case FetchAs::ClassObject:
+        $this->fetchOptions['class'] = $a1;
+        if ($a2) {
+          $this->fetchOptions['constructor_args'] = $a2;
+        }
+        break;
+
+      case FetchAs::Column:
+        $this->fetchOptions['column'] = $a1;
+        break;
+
+    }
+
+    return $this->clientSetFetchMode($mode, $a1, $a2);
   }
 
   /**
    * {@inheritdoc}
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL) {
-    assert(!isset($mode) || in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+    if (is_int($mode)) {
+      @trigger_error("Passing the \$mode argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+      $mode = $this->pdoToFetchAs($mode);
+    }
 
-    // Call \PDOStatement::fetchAll to fetch all rows.
-    // \PDOStatement is picky about the number of arguments in some cases so we
-    // need to pass the exact number of arguments we were given.
     $row = match(func_num_args()) {
-      0 => $this->clientStatement->fetch(),
-      1 => $this->clientStatement->fetch($mode),
-      2 => $this->clientStatement->fetch($mode, $cursor_orientation),
-      default => $this->clientStatement->fetch($mode, $cursor_orientation, $cursor_offset),
+      0 => $this->clientFetch(),
+      1 => $this->clientFetch($mode),
+      2 => $this->clientFetch($mode, $cursor_orientation),
+      default => $this->clientFetch($mode, $cursor_orientation, $cursor_offset),
     };
 
     if ($row === FALSE) {
@@ -310,17 +329,20 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    assert(!isset($mode) || in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+    if (is_int($mode)) {
+      @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+      $mode = $this->pdoToFetchAs($mode);
+    }
 
-    // Call \PDOStatement::fetchAll to fetch all rows.
-    // \PDOStatement is picky about the number of arguments in some cases so we
-    // need to be pass the exact number of arguments we where given.
-    $return = match(func_num_args()) {
-      0 => $this->clientStatement->fetchAll(),
-      1 => $this->clientStatement->fetchAll($mode),
-      2 => $this->clientStatement->fetchAll($mode, $column_index),
-      default => $this->clientStatement->fetchAll($mode, $column_index, $constructor_arguments),
-    };
+    $fetchMode = $mode ?? $this->defaultFetchMode;
+    if (isset($column_index)) {
+      $this->fetchOptions['column'] = $column_index;
+    }
+    if (isset($constructor_arguments)) {
+      $this->fetchOptions['constructor_args'] = $constructor_arguments;
+    }
+
+    $return = $this->clientFetchAll($fetchMode, $column_index, $constructor_arguments);
 
     $this->markResultsetFetchingComplete();
 

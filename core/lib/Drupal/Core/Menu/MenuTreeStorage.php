@@ -10,6 +10,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\Statement\FetchAs;
 
 // cspell:ignore mlid
 
@@ -642,7 +643,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       }
       $query->condition($name, $value);
     }
-    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', FetchAs::Associative);
     foreach ($loaded as $id => $link) {
       $loaded[$id] = $this->prepareLink($link);
     }
@@ -671,7 +672,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query->orderBy('depth');
     $query->orderBy('weight');
     $query->orderBy('id');
-    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', FetchAs::Associative);
     foreach ($loaded as $id => $link) {
       $loaded[$id] = $this->prepareLink($link);
     }
@@ -688,7 +689,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query = $this->connection->select($this->table, NULL, $this->options);
       $query->fields($this->table, $this->definitionFields());
       $query->condition('id', $missing_ids, 'IN');
-      $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+      $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', FetchAs::Associative);
       foreach ($loaded as $id => $link) {
         $this->definitions[$id] = $this->prepareLink($link);
       }
@@ -734,7 +735,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->fields($this->table);
     $query->condition('id', $ids, 'IN');
-    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', FetchAs::Associative);
     foreach ($loaded as &$link) {
       foreach ($this->serializedFields() as $name) {
         if (isset($link[$name])) {
@@ -755,7 +756,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     //   https://www.drupal.org/node/2302043
     $subquery->fields($this->table, ['p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9']);
     $subquery->condition('id', $id);
-    $result = current($subquery->execute()->fetchAll(\PDO::FETCH_ASSOC));
+    $result = current($subquery->execute()->fetchAll(FetchAs::Associative));
     $ids = array_filter($result);
     if ($ids) {
       $query = $this->connection->select($this->table, NULL, $this->options);
@@ -942,7 +943,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       }
     }
 
-    $links = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+    $links = $this->safeExecuteSelect($query)->fetchAllAssoc('id', FetchAs::Associative);
 
     return $links;
   }

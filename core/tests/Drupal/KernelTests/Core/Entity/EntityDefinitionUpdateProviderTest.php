@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
@@ -152,7 +153,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
       ->orderBy('revision_id', 'ASC')
       ->orderBy('langcode', 'ASC')
       ->execute()
-      ->fetchAll(\PDO::FETCH_ASSOC);
+      ->fetchAll(FetchAs::Associative);
     $this->assertSameSize($expected, $result);
 
     // Use assertEquals and not assertSame here to prevent that a different
@@ -192,7 +193,7 @@ class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
         ->orderBy('revision_id', 'ASC')
         ->orderBy('langcode', 'ASC')
         ->execute()
-        ->fetchAll(\PDO::FETCH_ASSOC);
+        ->fetchAll(FetchAs::Associative);
       $this->assertSameSize($expected, $result);
 
       // Use assertEquals and not assertSame here to prevent that a different
