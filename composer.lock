@@ -496,7 +496,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "71e78e0d59139e8223b07ae3ee950771150a3e8f"
+                "reference": "bba96164d4ad20ffabd88fff8b13ddfe8089c3c2"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -525,7 +525,7 @@
                 "mck89/peast": "^1.14",
                 "pear/archive_tar": "^1.4.14",
                 "php": ">=8.3.0",
-                "php-tuf/composer-stager": "^2-rc5",
+                "php-tuf/composer-stager": "^2.0",
                 "psr/log": "^3.0",
                 "revolt/event-loop": "^1.0",
                 "sebastian/diff": "^4|^5",

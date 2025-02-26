@@ -50,7 +50,7 @@
         "psr/log": "^3.0",
         "mck89/peast": "^1.14",
         "sebastian/diff": "^4|^5",
-        "php-tuf/composer-stager": "^2-rc5"
+        "php-tuf/composer-stager": "^2.0"
     },
     "conflict": {
         "drush/drush": "<12.4.3"
