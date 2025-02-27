@@ -34,6 +34,7 @@ autoplace
 autoplay
 autoreply
 autosubmit
+avif
 backlink
 bakeware
 barchart
@@ -234,6 +235,7 @@ icann
 iconwrap
 idekey
 iframeupload
+imageavif
 imagecache
 indexname
 inglés

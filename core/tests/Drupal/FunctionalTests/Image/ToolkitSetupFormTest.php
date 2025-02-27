@@ -83,7 +83,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     // Get Status Report.
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->pageTextContains('GD2 image manipulation toolkit');
-    $this->assertSession()->pageTextContains('Supported image file formats: GIF, JPEG, PNG, WEBP.');
+    $this->assertSession()->pageTextContains('Supported image file formats: GIF, JPEG, PNG, WEBP, AVIF.');
   }
 
 }

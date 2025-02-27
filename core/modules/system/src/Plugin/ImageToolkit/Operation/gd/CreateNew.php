@@ -92,6 +92,7 @@ class CreateNew extends GDImageToolkitOperationBase {
     switch ($type) {
       case IMAGETYPE_PNG:
       case IMAGETYPE_WEBP:
+      case IMAGETYPE_AVIF:
         imagealphablending($image, FALSE);
         $transparency = imagecolorallocatealpha($image, 0, 0, 0, 127);
         imagefill($image, 0, 0, $transparency);

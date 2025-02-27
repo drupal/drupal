@@ -270,7 +270,11 @@ class GDToolkit extends ImageToolkitBase {
     }
     else {
       // Image types that support alpha need to be saved accordingly.
-      if (in_array($this->getType(), [IMAGETYPE_PNG, IMAGETYPE_WEBP], TRUE)) {
+      if (in_array($this->getType(), [
+        IMAGETYPE_PNG,
+        IMAGETYPE_WEBP,
+        IMAGETYPE_AVIF,
+      ], TRUE)) {
         imagealphablending($this->getImage(), FALSE);
         imagesavealpha($this->getImage(), TRUE);
       }
@@ -428,8 +432,12 @@ class GDToolkit extends ImageToolkitBase {
       IMG_JPG => 'JPEG',
       IMG_PNG => 'PNG',
       IMG_WEBP => 'WEBP',
+      IMG_AVIF => 'AVIF',
     ];
     $supported_formats = array_filter($check_formats, fn($type) => imagetypes() & $type, ARRAY_FILTER_USE_KEY);
+    if (isset($supported_formats[IMG_AVIF]) && !$this->checkAvifSupport()) {
+      unset($supported_formats[IMG_AVIF]);
+    }
     $unsupported_formats = array_diff_key($check_formats, $supported_formats);
 
     $descriptions = [];
@@ -454,6 +462,11 @@ class GDToolkit extends ImageToolkitBase {
         '@unsupported' => $unsupported,
         '@ref' => $fix_info,
       ]);
+      if (isset($unsupported_formats[IMG_AVIF])) {
+        $descriptions[] = $this->t('AVIF is not supported, likely because of PHP missing a codec for encoding images. See <a href=":cr_url">the change record</a> for more information.', [
+          ':cr_url' => 'https://www.drupal.org/node/3348348',
+        ]);
+      }
     }
 
     // Check for filter and rotate support.
@@ -529,6 +542,31 @@ class GDToolkit extends ImageToolkitBase {
   }
 
   /**
+   * Checks if AVIF can encode image.
+   *
+   * This method tries to create an AVIF image and save it to disk via
+   * imageavif(). If that fails, it's likely a codec missing, or the function
+   * was disabled. This is an expensive operation to run, so we cache its
+   * result.
+   *
+   * @return bool
+   *   TRUE if AVIF is fully supported, FALSE otherwise.
+   */
+  protected function checkAvifSupport(): bool {
+    static $supported = NULL;
+
+    if ($supported !== NULL) {
+      return $supported;
+    }
+
+    $tempFile = fopen('php://memory', 'r+');
+    $supported = imageavif(imagecreatetruecolor(1, 1), $tempFile, 0, 10) && fstat($tempFile)['size'] > 0;
+    fclose($tempFile);
+
+    return $supported;
+  }
+
+  /**
    * Returns a list of image types supported by the toolkit.
    *
    * @return array
@@ -536,7 +574,13 @@ class GDToolkit extends ImageToolkitBase {
    *   IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
    */
   protected static function supportedTypes() {
-    return [IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_WEBP];
+    return [
+      IMAGETYPE_PNG,
+      IMAGETYPE_JPEG,
+      IMAGETYPE_GIF,
+      IMAGETYPE_WEBP,
+      IMAGETYPE_AVIF,
+    ];
   }
 
 }
