@@ -32,6 +32,7 @@ class ElementTest extends BrowserTestBase {
     $this->testRadiosChecked();
     $this->testWrapperIds();
     $this->testButtonClasses();
+    $this->testSubmitButtonAttribute();
     $this->testGroupElements();
     $this->testRequiredFieldsetsAndDetails();
     $this->testFormAutocomplete();
@@ -146,6 +147,18 @@ class ElementTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('xpath', '//*[contains(concat(" ", @class, " "), " button ")]', 2);
     $this->assertSession()->elementsCount('xpath', '//*[contains(concat(" ", @class, " "), " button--foo ")]', 1);
     $this->assertSession()->elementsCount('xpath', '//*[contains(concat(" ", @class, " "), " button--danger ")]', 1);
+  }
+
+  /**
+   * Tests the submit_button attribute.
+   */
+  protected function testSubmitButtonAttribute(): void {
+    // Set the submit_button attribute to true
+    $this->drupalGet('form-test/submit-button-attribute');
+    $this->assertSession()->elementsCount('xpath', '//input[@type="submit"]', 1);
+    // Set the submit_button attribute to false
+    $this->drupalGet('form-test/submit-button-attribute/1');
+    $this->assertSession()->elementsCount('xpath', '//input[@type="button"]', 1);
   }
 
   /**
