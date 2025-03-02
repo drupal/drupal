@@ -9,6 +9,9 @@ parameters:
   cache_default_bin_backends: []
   memory_cache_default_bin_backends: []
   security.enable_super_user: true
+  core.moved_classes:
+    'Drupal\Core\StringTranslation\TranslationWrapper':
+      class: 'Drupal\Core\StringTranslation\TranslatableMarkup'
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100

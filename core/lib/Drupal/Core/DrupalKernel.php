@@ -8,6 +8,7 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\DatabaseBackend;
+use Drupal\Core\ClassLoader\BackwardsCompatibilityClassLoader;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -511,6 +512,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $id = 'class_loader:' . crc32(implode(':', array_keys($this->container->getParameter('container.modules'))));
       $prefix = Settings::getApcuPrefix($id, $this->root);
       $this->classLoader->setApcuPrefix($prefix);
+    }
+
+    if ($this->container->hasParameter('moved_classes')) {
+      $bc_class_loader = new BackwardsCompatibilityClassLoader($this->container->getParameter('moved_classes'));
+      spl_autoload_register([$bc_class_loader, 'loadClass']);
     }
 
     $this->booted = TRUE;
