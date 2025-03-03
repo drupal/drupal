@@ -5,44 +5,45 @@ declare(strict_types=1);
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestForm;
 
 /**
  * Defines a test entity class with UUIDs as IDs.
- *
- * @ContentEntityType(
- *   id = "entity_test_uuid_id",
- *   label = @Translation("Test entity with UUIDs as IDs"),
- *   handlers = {
- *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
- *     "form" = {
- *       "default" = "Drupal\entity_test\EntityTestForm"
- *     },
- *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
- *     },
- *   },
- *   translatable = TRUE,
- *   base_table = "entity_test_uuid_id",
- *   data_table = "entity_test_uuid_id_data",
- *   admin_permission = "administer entity_test content",
- *   entity_keys = {
- *     "id" = "uuid",
- *     "uuid" = "uuid",
- *     "bundle" = "type",
- *     "langcode" = "langcode",
- *     "label" = "name",
- *   },
- *   links = {
- *     "canonical" = "/entity_test_uuid_id/manage/{entity_test_uuid_id}",
- *     "add-form" = "/entity_test_uuid_id/add/{type}",
- *     "add-page" = "/entity_test_uuid_id/add",
- *     "edit-form" = "/entity_test_uuid_id/manage/{entity_test_uuid_id}/edit",
- *   },
- * )
  */
+#[ContentEntityType(
+  id: 'entity_test_uuid_id',
+  label: new TranslatableMarkup('Test entity with UUIDs as IDs'),
+  entity_keys: [
+    'id' => 'uuid',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+    'langcode' => 'langcode',
+    'label' => 'name',
+  ],
+  handlers: [
+    'access' => EntityTestAccessControlHandler::class,
+    'form' => [
+      'default' => EntityTestForm::class,
+    ],
+    'route_provider' => ['html' => DefaultHtmlRouteProvider::class],
+  ],
+  links: [
+    'canonical' => '/entity_test_uuid_id/manage/{entity_test_uuid_id}',
+    'add-form' => '/entity_test_uuid_id/add/{type}',
+    'add-page' => '/entity_test_uuid_id/add',
+    'edit-form' => '/entity_test_uuid_id/manage/{entity_test_uuid_id}/edit',
+  ],
+  admin_permission: 'administer entity_test content',
+  base_table: 'entity_test_uuid_id',
+  data_table: 'entity_test_uuid_id_data',
+  translatable: TRUE,
+)]
 class EntityTestUuidId extends EntityTest {
 
   /**

@@ -7,21 +7,22 @@ namespace Drupal\announcements_feed\Plugin\Block;
 use Drupal\announcements_feed\AnnounceRenderer;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides an 'Announcements Feed' block.
  *
- * @Block(
- *   id = "announce_block",
- *   admin_label = @Translation("Announcements Feed"),
- * )
- *
  * @internal
  */
+#[Block(
+  id: 'announce_block',
+  admin_label: new TranslatableMarkup('Announcements Feed')),
+]
 class AnnounceBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**

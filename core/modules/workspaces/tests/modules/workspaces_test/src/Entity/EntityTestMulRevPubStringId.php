@@ -4,55 +4,34 @@ declare(strict_types=1);
 
 namespace Drupal\workspaces_test\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 
 /**
  * Defines the test entity class.
- *
- * @ContentEntityType(
- *   id = "entity_test_mulrevpub_string_id",
- *   label = @Translation("Test entity - revisions, data table, and published interface"),
- *   handlers = {
- *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
- *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
- *     "form" = {
- *       "default" = "Drupal\entity_test\EntityTestForm",
- *       "delete" = "Drupal\entity_test\EntityTestDeleteForm",
- *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm"
- *     },
- *     "views_data" = "Drupal\views\EntityViewsData",
- *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
- *     },
- *   },
- *   base_table = "entity_test_mulrevpub_string_id",
- *   data_table = "entity_test_mulrevpub_string_id_property_data",
- *   revision_table = "entity_test_mulrevpub_string_id_revision",
- *   revision_data_table = "entity_test_mulrevpub_string_id_property_revision",
- *   admin_permission = "administer entity_test content",
- *   translatable = TRUE,
- *   show_revision_ui = TRUE,
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *     "bundle" = "type",
- *     "revision" = "revision_id",
- *     "label" = "name",
- *     "langcode" = "langcode",
- *     "published" = "status",
- *   },
- *   links = {
- *     "add-form" = "/entity_test_mulrevpub/add",
- *     "canonical" = "/entity_test_mulrevpub/manage/{entity_test_mulrevpub}",
- *     "delete-form" = "/entity_test/delete/entity_test_mulrevpub/{entity_test_mulrevpub}",
- *     "delete-multiple-form" = "/entity_test/delete",
- *     "edit-form" = "/entity_test_mulrevpub/manage/{entity_test_mulrevpub}/edit",
- *     "revision" = "/entity_test_mulrevpub/{entity_test_mulrevpub}/revision/{entity_test_mulrevpub_revision}/view",
- *   }
- * )
  */
+#[ContentEntityType(
+  id: 'entity_test_mulrevpub_string_id',
+  label: new TranslatableMarkup('Test entity - revisions, data table, and published interface'),
+  base_table: 'entity_test_mulrevpub_string_id',
+  data_table: 'entity_test_mulrevpub_string_id_property_data',
+  revision_table: 'entity_test_mulrevpub_string_id_revision',
+  revision_data_table: 'entity_test_mulrevpub_string_id_property_revision',
+  admin_permission: 'administer entity_test content',
+  translatable: TRUE,
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+    'revision' => 'revision_id',
+    'label' => 'name',
+    'langcode' => 'langcode',
+    'published' => 'status',
+  ]
+)]
 class EntityTestMulRevPubStringId extends EntityTestMulRevPub {
 
   /**

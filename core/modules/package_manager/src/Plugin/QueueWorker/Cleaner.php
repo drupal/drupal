@@ -4,18 +4,19 @@ namespace Drupal\package_manager\Plugin\QueueWorker;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Queue\Attribute\QueueWorker;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Processes a queue of defunct stage directories, deleting them.
- *
- * @QueueWorker(
- *   id = "package_manager_cleanup",
- *   title = @Translation("Stage directory cleaner"),
- *   cron = {"time" = 30}
- * )
  */
+#[QueueWorker(
+  id: 'package_manager_cleanup',
+  title: new TranslatableMarkup('Stage directory cleaner'),
+  cron: ['time' => 30],
+)]
 final class Cleaner extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
   public function __construct(array $configuration, string $plugin_id, mixed $plugin_definition, private readonly FileSystemInterface $fileSystem) {
