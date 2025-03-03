@@ -67,6 +67,7 @@ class PoMemoryWriter implements PoWriterInterface {
    * Not implemented. Not relevant for the MemoryWriter.
    */
   public function getLangcode() {
+    throw new \LogicException(__METHOD__ . '() not implemented. Not relevant for the MemoryWriter');
   }
 
   /**

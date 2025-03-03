@@ -390,7 +390,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *   The entity reference item for which to determine the entity property
    *   name.
    *
-   * @return string
+   * @return string|null
    *   The property name which has an entity as its value.
    */
   protected static function getDataReferencePropertyName(EntityReferenceItem $item) {
@@ -399,6 +399,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
         return $property_name;
       }
     }
+    return NULL;
   }
 
   /**

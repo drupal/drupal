@@ -297,9 +297,8 @@ class EntityController implements ContainerInjectionInterface {
    *   The title for the entity delete page.
    */
   public function deleteTitle(RouteMatchInterface $route_match, ?EntityInterface $_entity = NULL) {
-    if ($entity = $this->doGetEntity($route_match, $_entity)) {
-      return $this->t('Delete %label', ['%label' => $entity->label()]);
-    }
+    $entity = $this->doGetEntity($route_match, $_entity);
+    return $entity ? $this->t('Delete %label', ['%label' => $entity->label()]) : '';
   }
 
   /**

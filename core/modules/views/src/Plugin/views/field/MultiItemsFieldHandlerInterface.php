@@ -39,7 +39,7 @@ interface MultiItemsFieldHandlerInterface extends FieldHandlerInterface {
    * @param array $items
    *   The items provided by getItems for a single row.
    *
-   * @return string
+   * @return string|null
    *   The rendered items.
    */
   public function renderItems($items);

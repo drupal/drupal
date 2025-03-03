@@ -93,6 +93,7 @@ abstract class PrerenderList extends FieldPluginBase implements MultiItemsFieldH
       }
       return \Drupal::service('renderer')->render($render);
     }
+    return NULL;
   }
 
   /**

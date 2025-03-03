@@ -268,7 +268,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    * @param \Drupal\locale\StringInterface $string
    *   The string object.
    *
-   * @return string
+   * @return string|null
    *   The table name.
    */
   protected function dbStringTable($string) {
@@ -278,6 +278,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     elseif ($string->isTranslation()) {
       return 'locales_target';
     }
+    return NULL;
   }
 
   /**
