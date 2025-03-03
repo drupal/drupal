@@ -6,6 +6,8 @@ namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\entity_test\Entity\EntityTestMul;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\migrate\MigrateExecutable;
@@ -28,7 +30,13 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate', 'user', 'language', 'entity_test'];
+  protected static $modules = [
+    'entity_test',
+    'field',
+    'language',
+    'migrate',
+    'user',
+  ];
 
   /**
    * The storage for entity_test_mul.
@@ -55,6 +63,9 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     \Drupal::state()->set('entity_test.required_default_field', TRUE);
     \Drupal::state()->set('entity_test.required_multi_default_field', TRUE);
     $this->installEntitySchema('entity_test_mul');
+
+    $this->installEntitySchema('entity_test_with_bundle');
+    $this->installEntitySchema('entity_test_no_bundle');
 
     ConfigurableLanguage::createFromLangcode('en')->save();
     ConfigurableLanguage::createFromLangcode('fr')->save();
@@ -100,7 +111,8 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
       [],
       $this->container->get('entity_field.manager'),
       $this->container->get('plugin.manager.field.field_type'),
-      $this->container->get('account_switcher')
+      $this->container->get('account_switcher'),
+      $this->container->get('entity_type.bundle.info'),
     );
   }
 
@@ -350,6 +362,86 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
 
     $this->container->set('entity_field.manager', $decorated_entity_field_manager);
     $this->createEntityStub('migrate_string_id_entity_test');
+  }
+
+  /**
+   * Test destination fields() method.
+   */
+  public function testFields(): void {
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    // Create two bundles for the entity_test_with_bundle entity type.
+    $bundle_storage = $entity_type_manager->getStorage('entity_test_bundle');
+    $bundle_storage->create([
+      'id' => 'test_bundle_no_fields',
+      'label' => 'Test bundle without fields',
+    ])->save();
+    $bundle_storage->create([
+      'id' => 'test_bundle_with_fields',
+      'label' => 'Test bundle with fields',
+    ])->save();
+
+    // Create a mock migration and get the destination plugin manager.
+    $migration = $this->prophesize(MigrationInterface::class)->reveal();
+    /** @var \Drupal\migrate\Plugin\MigrateDestinationPluginManager $manager */
+    $manager = \Drupal::service('plugin.manager.migrate.destination');
+
+    // Test with an entity type with no bundles.
+    $destination_plugin = $manager->createInstance('entity:entity_test_no_bundle', [], $migration);
+    $fields = $destination_plugin->fields();
+    $this->assertArrayHasKey('id', $fields);
+    // Confirm the test field is not found.
+    $this->assertArrayNotHasKey('field_text', $fields);
+
+    // Create a text field attached to the entity with no bundles.
+    FieldStorageConfig::create([
+      'type' => 'string',
+      'entity_type' => 'entity_test_no_bundle',
+      'field_name' => 'field_text',
+    ])->save();
+
+    FieldConfig::create([
+      'entity_type' => 'entity_test_no_bundle',
+      'bundle' => 'entity_test_no_bundle',
+      'field_name' => 'field_text',
+    ])->save();
+
+    // Confirm that the 'field_text' is now found.
+    $destination_plugin = $manager->createInstance('entity:entity_test_no_bundle', [], $migration);
+    $fields = $destination_plugin->fields();
+    $this->assertArrayHasKey('id', $fields);
+    $this->assertArrayHasKey('field_text', $fields);
+
+    // Repeat the test with an entity with bundles.
+    $destination_plugin = $manager->createInstance('entity:entity_test_with_bundle', [], $migration);
+    $fields = $destination_plugin->fields();
+    $this->assertArrayHasKey('id', $fields);
+    $this->assertArrayNotHasKey('field_text', $fields);
+
+    // Create a text field attached to the entity with bundles.
+    FieldStorageConfig::create([
+      'type' => 'string',
+      'entity_type' => 'entity_test_with_bundle',
+      'field_name' => 'field_text',
+    ])->save();
+
+    FieldConfig::create([
+      'entity_type' => 'entity_test_with_bundle',
+      'bundle' => 'test_bundle_with_fields',
+      'field_name' => 'field_text',
+    ])->save();
+
+    // Confirm that the 'field_text' is found when the default bundle is set.
+    $destination_plugin = $manager->createInstance('entity:entity_test_with_bundle', ['default_bundle' => 'test_bundle_with_fields'], $migration);
+    $fields = $destination_plugin->fields();
+    $this->assertArrayHasKey('id', $fields);
+    $this->assertArrayHasKey('field_text', $fields);
+
+    // Confirm that the 'field_text' is not found when the default bundle is not
+    // set.
+    $destination_plugin = $manager->createInstance('entity:entity_test_with_bundle', [], $migration);
+    $fields = $destination_plugin->fields();
+    $this->assertArrayHasKey('id', $fields);
+    $this->assertArrayNotHasKey('field_text', $fields);
   }
 
 }

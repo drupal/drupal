@@ -7,6 +7,7 @@ namespace Drupal\Tests\migrate\Unit\destination;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\RevisionableStorageInterface;
@@ -53,6 +54,11 @@ class EntityRevisionTest extends UnitTestCase {
   protected AccountSwitcherInterface $accountSwitcher;
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected EntityTypeBundleInfoInterface $entityTypeBundle;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -72,6 +78,7 @@ class EntityRevisionTest extends UnitTestCase {
     $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class)->reveal();
     $this->fieldTypeManager = $this->prophesize(FieldTypePluginManagerInterface::class)->reveal();
     $this->accountSwitcher = $this->prophesize(AccountSwitcherInterface::class)->reveal();
+    $this->entityTypeBundle = $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal();
   }
 
   /**
@@ -199,6 +206,7 @@ class EntityRevisionTest extends UnitTestCase {
       $this->entityFieldManager,
       $this->fieldTypeManager,
       $this->accountSwitcher,
+      $this->entityTypeBundle,
     );
   }
 

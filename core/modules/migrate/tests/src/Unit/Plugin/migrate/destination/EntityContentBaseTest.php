@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\migrate\MigrateException;
@@ -34,7 +35,8 @@ class EntityContentBaseTest extends EntityTestBase {
       $bundles,
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal(),
-      $this->prophesize(AccountSwitcherInterface::class)->reveal()
+      $this->prophesize(AccountSwitcherInterface::class)->reveal(),
+      $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal(),
     );
     $entity = $this->prophesize(ContentEntityInterface::class);
     $entity->isValidationRequired()
@@ -68,7 +70,8 @@ class EntityContentBaseTest extends EntityTestBase {
       $bundles,
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal(),
-      $this->prophesize(AccountSwitcherInterface::class)->reveal()
+      $this->prophesize(AccountSwitcherInterface::class)->reveal(),
+      $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal(),
     );
     $destination->setEntity(FALSE);
     $this->expectException(MigrateException::class);
@@ -95,7 +98,8 @@ class EntityContentBaseTest extends EntityTestBase {
       [],
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal(),
-      $this->prophesize(AccountSwitcherInterface::class)->reveal()
+      $this->prophesize(AccountSwitcherInterface::class)->reveal(),
+      $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal(),
     );
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The "foo" entity type does not support translations.');
