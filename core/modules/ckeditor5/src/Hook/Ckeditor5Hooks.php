@@ -161,7 +161,7 @@ class Ckeditor5Hooks {
         'ckeditor5_only' => 'true',
       ];
     }
-    /**
+    /*
      * Recursively adds AJAX listeners to plugin settings elements.
      *
      * These are added so allowed tags and other fields that have values

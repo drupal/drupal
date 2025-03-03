@@ -77,7 +77,7 @@ class RearrangeFilter extends ViewsFormBase {
 
     $group_options = [];
 
-    /**
+    /*
      * Filter groups is an array that contains:
      * [
      *   'operator' => 'and' || 'or',

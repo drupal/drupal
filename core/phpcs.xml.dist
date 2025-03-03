@@ -99,7 +99,6 @@
   <rule ref="Drupal.Commenting.HookComment"/>
   <rule ref="Drupal.Commenting.InlineComment">
     <!-- Sniff for: NoSpaceBefore, SpacingBefore, WrongStyle -->
-    <exclude name="Drupal.Commenting.InlineComment.DocBlock"/>
     <exclude name="Drupal.Commenting.InlineComment.InvalidEndChar"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingAfter"/>
   </rule>

@@ -9,12 +9,12 @@ namespace Drupal\file_test;
  */
 enum FileTestCdn: string {
 
-  /**
+  /*
    * First Cdn.
    */
   case First = 'http://cdn1.example.com';
 
-  /**
+  /*
    * Second Cdn.
    */
   case Second = 'http://cdn2.example.com';

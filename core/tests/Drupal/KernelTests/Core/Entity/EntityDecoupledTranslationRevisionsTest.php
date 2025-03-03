@@ -417,7 +417,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
     $violations = $entity->validate();
     $messages = [];
     foreach ($violations as $violation) {
-      /** \Symfony\Component\Validator\ConstraintViolationInterface */
+      /** @var \Symfony\Component\Validator\ConstraintViolationInterface */
       $messages[] = $violation->getMessage();
     }
     $this->assertEquals($valid, !$violations->count(), $this->formatMessage('Validation does not match the expected result: %s', implode(', ', $messages)));

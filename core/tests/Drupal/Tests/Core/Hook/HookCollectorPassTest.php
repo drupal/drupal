@@ -89,7 +89,7 @@ __EOF__
    * @covers ::getHookAttributesInClass
    */
   public function testGetHookAttributesInClass(): void {
-    /** @phpstan-ignore-next-line */
+    // @phpstan-ignore-next-line
     $getHookAttributesInClass = fn ($class) => $this->getHookAttributesInClass($class);
     $p = new HookCollectorPass();
     $getHookAttributesInClass = $getHookAttributesInClass->bindTo($p, $p);

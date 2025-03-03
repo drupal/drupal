@@ -140,7 +140,7 @@ function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_sta
   $response->addCommand(new InvokeCommand('[data-drupal-selector="edit-editor-editor"]', $ckeditor5_selected_but_errors ? 'addClass' : 'removeClass', ['error']));
   $response->addCommand(new InvokeCommand('[data-drupal-selector="edit-editor-editor"]', $ckeditor5_selected_but_errors ? 'attr' : 'removeAttr', ['data-error-switching-to-ckeditor5', TRUE]));
 
-  /**
+  /*
    * Recursively find #attach items in the form and add as attachments to the
    * AJAX response.
    *

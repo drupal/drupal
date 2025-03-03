@@ -100,17 +100,16 @@ class TermKernelTest extends KernelTestBase {
     $term[5]->parent = [$term[4]->id()];
     $term[5]->save();
 
-    /**
-     * Expected tree:
-     * term[0] | depth: 0
-     * term[1] | depth: 0
-     * -- term[2] | depth: 1
-     * ---- term[3] | depth: 2
-     * term[4] | depth: 0
-     * -- term[5] | depth: 1
-     * ---- term[2] | depth: 2
-     * ------ term[3] | depth: 3
-     */
+    // Expected tree:
+    // term[0] | depth: 0
+    // term[1] | depth: 0
+    // -- term[2] | depth: 1
+    // ---- term[3] | depth: 2
+    // term[4] | depth: 0
+    // -- term[5] | depth: 1
+    // ---- term[2] | depth: 2
+    // ------ term[3] | depth: 3
+
     // Count $term[1] parents with $max_depth = 1.
     $tree = $taxonomy_storage->loadTree($vocabulary->id(), $term[1]->id(), 1);
     $this->assertCount(1, $tree, 'We have one parent with depth 1.');
