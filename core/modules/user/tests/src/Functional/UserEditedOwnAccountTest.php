@@ -19,6 +19,9 @@ class UserEditedOwnAccountTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * Tests that a user who edits their own account can still log in.
+   */
   public function testUserEditedOwnAccount(): void {
     // Change account setting 'Who can register accounts?' to Administrators
     // only.

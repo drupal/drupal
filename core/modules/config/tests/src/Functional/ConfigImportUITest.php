@@ -379,6 +379,9 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertNotEquals($this->config('system.site')->get('name'), $new_site_name);
   }
 
+  /**
+   * Tests that the Configuration module cannot be uninstalled during config sync.
+   */
   public function testConfigUninstallConfigException(): void {
     $sync = $this->container->get('config.storage.sync');
 
@@ -394,6 +397,9 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
   }
 
+  /**
+   * Prepares a site name update by modifying the synchronized configuration.
+   */
   public function prepareSiteNameUpdate($new_site_name): void {
     $sync = $this->container->get('config.storage.sync');
     // Create updated configuration object.

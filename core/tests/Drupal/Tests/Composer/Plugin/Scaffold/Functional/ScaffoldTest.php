@@ -198,6 +198,9 @@ class ScaffoldTest extends TestCase {
     $this->assertAutoloadFileCorrect($result->docroot());
   }
 
+  /**
+   * Provides test values for testScaffoldOverridingSettingsExcludingHtaccess.
+   */
   public static function scaffoldOverridingSettingsExcludingHtaccessValues() {
     return [
       [

@@ -328,6 +328,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
     return $this->resaveEntity($entity, $account);
   }
 
+  /**
+   * Reloads and updates an entity with test field values before saving it.
+   */
   protected function resaveEntity(EntityInterface $entity, AccountInterface $account): EntityInterface {
     // Reload entity so that it has the new field.
     $reloaded_entity = $this->entityLoadUnchanged($entity->id());

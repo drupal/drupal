@@ -414,6 +414,9 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     }
   }
 
+  /**
+   * Runs common tests for the language user interface.
+   */
   protected function doRunTest($test): void {
     $test += ['path_options' => []];
     if (!empty($test['language_negotiation'])) {

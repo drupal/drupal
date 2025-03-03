@@ -68,6 +68,9 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
     return ['title' => [['value' => $this->randomMachineName()]]] + parent::getNewEntityValues($langcode);
   }
 
+  /**
+   * Tests basic translation functionality for an entity.
+   */
   protected function doTestBasicTranslation(): void {
     parent::doTestBasicTranslation();
 

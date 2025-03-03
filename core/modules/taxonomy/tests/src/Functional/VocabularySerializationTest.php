@@ -39,6 +39,9 @@ class VocabularySerializationTest extends BrowserTestBase {
     Vocabulary::create(['vid' => 'test', 'name' => 'Test'])->save();
   }
 
+  /**
+   * Tests that a Vocabulary entity can be serialized and cached correctly.
+   */
   public function testSerialization(): void {
     $this->drupalGet('/vocabulary_serialization_test/test');
     $this->assertSession()->statusCodeEquals(200);

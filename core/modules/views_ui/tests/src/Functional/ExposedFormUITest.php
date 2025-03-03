@@ -268,6 +268,9 @@ class ExposedFormUITest extends UITestBase {
     $this->assertNoGroupedFilterErrors();
   }
 
+  /**
+   * Tests the error messages used in the grouped filter form.
+   */
   public function testGroupedFilterAdminUiErrors(): void {
     // Select the empty operator without a title specified.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/body_value');

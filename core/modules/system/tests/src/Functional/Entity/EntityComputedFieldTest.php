@@ -33,6 +33,9 @@ class EntityComputedFieldTest extends BrowserTestBase {
    */
   protected StateInterface $state;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

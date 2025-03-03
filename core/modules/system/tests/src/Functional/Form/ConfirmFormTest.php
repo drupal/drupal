@@ -24,6 +24,9 @@ class ConfirmFormTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * Tests the confirm form functionality, including submission and cancellation.
+   */
   public function testConfirmForm(): void {
     // Test the building of the form.
     $this->drupalGet('form-test/confirm-form');

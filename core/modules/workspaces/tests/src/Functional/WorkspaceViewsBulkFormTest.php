@@ -44,6 +44,9 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest {
     $this->switchToWorkspace($stage);
   }
 
+  /**
+   * Tests the Workspaces view bulk form integration.
+   */
   public function testBulkForm(): void {
     // Ignore entity types that are not being tested, in order to fully re-use
     // the parent test method.

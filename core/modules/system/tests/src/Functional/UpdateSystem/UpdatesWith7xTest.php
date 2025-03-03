@@ -53,6 +53,9 @@ class UpdatesWith7xTest extends BrowserTestBase {
     ]);
   }
 
+  /**
+   * Tests updating from Drupal 7.
+   */
   public function testWith7x(): void {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');

@@ -40,6 +40,9 @@ class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
     $this->submitForm(['predefined_langcode' => 'hu'], 'Add language');
   }
 
+  /**
+   * @covers ::\locale_translation_build_projects
+   */
   public function testLocaleUpdateDevelopmentRelease(): void {
     $projects = locale_translation_build_projects();
     $this->assertEquals('8.0.x', $projects['drupal']->info['version'], 'The branch of the core dev release.');

@@ -16,6 +16,9 @@ use GuzzleHttp\RequestOptions;
  */
 class CommentExtrasTest extends CommentTest {
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp(): void {
     // Don't run any test methods from CommentTest because those will get run
     // for CommentTest itself.

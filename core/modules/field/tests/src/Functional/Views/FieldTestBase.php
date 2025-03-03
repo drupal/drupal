@@ -53,6 +53,9 @@ abstract class FieldTestBase extends ViewTestBase {
     ])->save();
   }
 
+  /**
+   * Sets up field storages for testing.
+   */
   public function setUpFieldStorages($amount = 3, $type = 'string') {
     // Create three fields.
     $field_names = [];
@@ -68,6 +71,9 @@ abstract class FieldTestBase extends ViewTestBase {
     return $field_names;
   }
 
+  /**
+   * Sets up fields for a given bundle.
+   */
   public function setUpFields($bundle = 'page') {
     foreach ($this->fieldStorages as $key => $field_storage) {
       $this->fields[$key] = FieldConfig::create([

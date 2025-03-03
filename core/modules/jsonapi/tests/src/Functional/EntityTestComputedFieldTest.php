@@ -170,6 +170,9 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
     ]));
   }
 
+  /**
+   * Retrieves the expected cache contexts for the response.
+   */
   protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     $cache_contexts = parent::getExpectedCacheContexts($sparse_fieldset);
     if ($sparse_fieldset === NULL || in_array('computed_test_cacheable_string_field', $sparse_fieldset)) {
@@ -179,6 +182,9 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
     return $cache_contexts;
   }
 
+  /**
+   * Retrieves the expected cache tags for the response.
+   */
   protected function getExpectedCacheTags(?array $sparse_fieldset = NULL) {
     $expected_cache_tags = parent::getExpectedCacheTags($sparse_fieldset);
     if ($sparse_fieldset === NULL || in_array('computed_test_cacheable_string_field', $sparse_fieldset)) {

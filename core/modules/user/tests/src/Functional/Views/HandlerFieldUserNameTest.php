@@ -27,6 +27,9 @@ class HandlerFieldUserNameTest extends UserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * Tests the rendering of the user name field in Views.
+   */
   public function testUserName(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');

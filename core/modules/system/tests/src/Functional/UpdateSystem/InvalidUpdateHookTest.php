@@ -58,6 +58,9 @@ class InvalidUpdateHookTest extends BrowserTestBase {
     ]);
   }
 
+  /**
+   * Tests updating from a module with a hook_update_8000().
+   */
   public function testInvalidUpdateHook(): void {
     // Confirm that a module with hook_update_8000() cannot be updated.
     $this->drupalLogin($this->updateUser);

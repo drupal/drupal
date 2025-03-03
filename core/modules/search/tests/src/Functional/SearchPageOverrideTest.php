@@ -47,6 +47,9 @@ class SearchPageOverrideTest extends BrowserTestBase {
     $this->drupalLogin($this->searchUser);
   }
 
+  /**
+   * Tests that the search results page can be overridden by a custom plugin.
+   */
   public function testSearchPageHook(): void {
     $keys = 'bike shed ' . $this->randomMachineName();
     $this->drupalGet("search/dummy_path", ['query' => ['keys' => $keys]]);

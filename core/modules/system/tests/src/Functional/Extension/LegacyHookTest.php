@@ -23,6 +23,9 @@ class LegacyHookTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * Tests the LegacyHook attribute.
+   */
   public function testLegacyHook(): void {
     // Calling legacy_hook_test1 leads to a fatal error so there's no need
     // for asserts to show it does not get called.

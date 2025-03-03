@@ -253,6 +253,9 @@ class PagerTest extends ViewTestBase {
     $this->assertEquals(0, $view->pager->getItemsPerPage());
   }
 
+  /**
+   * Tests the total row count in a view without a pager.
+   */
   public function testViewTotalRowsWithoutPager(): void {
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 23; $i++) {

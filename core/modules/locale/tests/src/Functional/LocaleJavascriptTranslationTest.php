@@ -27,6 +27,9 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * @covers ::\_locale_parse_js_file
+   */
   public function testFileParsing(): void {
 
     // This test is for ensuring that the regular expression in

@@ -26,6 +26,9 @@ class AreaEntityUITest extends UITestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * Tests the Views user interface.
+   */
   public function testUI(): void {
     // Set up a block and an entity_test entity.
     $block = Block::create(['id' => 'test_id', 'plugin' => 'system_main_block', 'theme' => 'stark']);
