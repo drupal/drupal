@@ -13,7 +13,8 @@
  */
 #}
 {% set attributes = create_attribute() %}
-<div {{ attributes.addClass('top-bar').setAttribute('data-drupal-admin-styles', '') }}>
+<aside {{ attributes.addClass('top-bar').setAttribute('data-drupal-admin-styles', '').setAttribute('aria-labelledby', 'top-bar__title') }}>
+  <h3 id="top-bar__title" class="visually-hidden">{{ 'Administrative top bar'|t }}</h3>
   <div class="top-bar__content">
     <div class="top-bar__tools">
       {{- tools -}}
@@ -25,4 +26,4 @@
       {{- actions -}}
     </div>
   </div>
-</div>
+</aside>
