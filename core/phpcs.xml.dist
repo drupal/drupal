@@ -132,6 +132,7 @@
   <rule ref="Drupal.NamingConventions.ValidVariableName"/>
   <rule ref="Drupal.NamingConventions.ValidVariableName.LowerCamelName"/>
   <rule ref="Drupal.Scope.MethodScope"/>
+  <rule ref="Drupal.Semantics.ConstantName.ConstantStart"/>
   <rule ref="Drupal.Semantics.EmptyInstall"/>
   <rule ref="Drupal.Semantics.FunctionAlias"/>
   <rule ref="Drupal.Semantics.FunctionT"/>
